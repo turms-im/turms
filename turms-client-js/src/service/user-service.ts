@@ -457,14 +457,14 @@ export default class UserService {
         isBlocked?: boolean,
         groupIndexes?: number[],
         lastUpdatedDate?: Date
-    } = {}): Promise<Response<ParsedModel.IdsWithVersion | undefined>> {
+    } = {}): Promise<Response<ParsedModel.LongsWithVersion | undefined>> {
         return this._turmsClient.driver.send({
             queryRelatedUserIdsRequest: {
                 blocked: isBlocked,
                 groupIndexes: groupIndexes || [],
                 lastUpdatedDate: DataParser.getDateTimeStr(lastUpdatedDate)
             }
-        }).then(n => Response.fromNotification(n, data => NotificationUtil.getIdsWithVer(data)));
+        }).then(n => Response.fromNotification(n, data => NotificationUtil.getLongsWithVersion(data)));
     }
 
     queryFriends({
@@ -610,7 +610,7 @@ export default class UserService {
                 recipientId,
                 content
             }
-        }).then(n => Response.fromNotification(n, data => NotificationUtil.getFirstIdOrThrow(data)));
+        }).then(n => Response.fromNotification(n, data => NotificationUtil.getLongOrThrow(data)));
     }
 
     replyFriendRequest({
@@ -670,7 +670,7 @@ export default class UserService {
             createRelationshipGroupRequest: {
                 name
             }
-        }).then(n => Response.fromNotification(n, data => parseInt(NotificationUtil.getFirstIdOrThrow(data))));
+        }).then(n => Response.fromNotification(n, data => parseInt(NotificationUtil.getLongOrThrow(data))));
     }
 
     deleteRelationshipGroups({

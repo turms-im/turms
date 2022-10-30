@@ -45,7 +45,7 @@ export default class GroupService {
                 muteEndDate: DataParser.getDateTimeStr(muteEndDate),
                 groupTypeId
             }
-        }).then(n => Response.fromNotification(n, data => NotificationUtil.getFirstIdOrThrow(data)));
+        }).then(n => Response.fromNotification(n, data => NotificationUtil.getLongOrThrow(data)));
     }
 
     deleteGroup({
@@ -181,12 +181,12 @@ export default class GroupService {
         lastUpdatedDate
     }: {
         lastUpdatedDate?: Date
-    } = {}): Promise<Response<ParsedModel.IdsWithVersion | undefined>> {
+    } = {}): Promise<Response<ParsedModel.LongsWithVersion | undefined>> {
         return this._turmsClient.driver.send({
             queryJoinedGroupIdsRequest: {
                 lastUpdatedDate: DataParser.getDateTimeStr(lastUpdatedDate)
             }
-        }).then(n => Response.fromNotification(n, data => NotificationUtil.getIdsWithVer(data)));
+        }).then(n => Response.fromNotification(n, data => NotificationUtil.getLongsWithVersion(data)));
     }
 
     queryJoinedGroupInfos({
@@ -243,7 +243,7 @@ export default class GroupService {
                 groupId,
                 questions: newQuestions
             }
-        }).then(n => Response.fromNotification(n, data => data.ids?.values || []));
+        }).then(n => Response.fromNotification(n, data => data.longsWithVersion?.longs || []));
     }
 
     deleteGroupJoinQuestions({
@@ -340,7 +340,7 @@ export default class GroupService {
     }: {
         groupId: string,
         lastUpdatedDate?: Date
-    }): Promise<Response<ParsedModel.IdsWithVersion | undefined>> {
+    }): Promise<Response<ParsedModel.LongsWithVersion | undefined>> {
         if (Validator.isFalsy(groupId)) {
             return ResponseError.notFalsyPromise('groupId');
         }
@@ -349,7 +349,7 @@ export default class GroupService {
                 groupId,
                 lastUpdatedDate: DataParser.getDateTimeStr(lastUpdatedDate)
             }
-        }).then(n => Response.fromNotification(n, data => NotificationUtil.getIdsWithVer(data)));
+        }).then(n => Response.fromNotification(n, data => NotificationUtil.getLongsWithVersion(data)));
     }
 
     queryBlockedUserInfos({
@@ -395,7 +395,7 @@ export default class GroupService {
                 inviteeId,
                 content
             }
-        }).then(n => Response.fromNotification(n, data => NotificationUtil.getFirstIdOrThrow(data)));
+        }).then(n => Response.fromNotification(n, data => NotificationUtil.getLongOrThrow(data)));
     }
 
     deleteInvitation({
@@ -467,7 +467,7 @@ export default class GroupService {
                 groupId,
                 content
             }
-        }).then(n => Response.fromNotification(n, data => NotificationUtil.getFirstIdOrThrow(data)));
+        }).then(n => Response.fromNotification(n, data => NotificationUtil.getLongOrThrow(data)));
     }
 
     deleteJoinRequest({

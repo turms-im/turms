@@ -22,7 +22,7 @@ import com.mongodb.client.result.UpdateResult;
 import com.mongodb.reactivestreams.client.ClientSession;
 import im.turms.server.common.access.client.dto.ClientMessagePool;
 import im.turms.server.common.access.client.dto.constant.GroupMemberRole;
-import im.turms.server.common.access.client.dto.model.common.Int64ValuesWithVersion;
+import im.turms.server.common.access.client.dto.model.common.LongsWithVersion;
 import im.turms.server.common.access.client.dto.model.group.GroupsWithVersion;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.cluster.node.Node;
@@ -647,7 +647,7 @@ public class GroupService {
                         : this.queryGroups(groupIds));
     }
 
-    public Mono<Int64ValuesWithVersion> queryJoinedGroupIdsWithVersion(
+    public Mono<LongsWithVersion> queryJoinedGroupIdsWithVersion(
             @NotNull Long memberId,
             @Nullable Date lastUpdatedDate) {
         return userVersionService
@@ -663,8 +663,8 @@ public class GroupService {
                                     throw ResponseException.get(ResponseStatusCode.NO_CONTENT);
                                 }
                                 return ClientMessagePool
-                                        .getInt64ValuesWithVersionBuilder()
-                                        .addAllValues(ids)
+                                        .getLongsWithVersionBuilder()
+                                        .addAllLongs(ids)
                                         .setLastUpdatedDate(version.getTime())
                                         .build();
                             });

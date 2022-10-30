@@ -19,12 +19,12 @@ extension NotificationExtensions on TurmsNotification {
 }
 
 extension NotificationDataExtensions on TurmsNotification_Data {
-  Int64 getFirstIdOrThrow() {
-    if (!hasIds()) {
-      final reason = 'Cannot get ID from the invalid response: $this';
-      throw ResponseException.fromCodeAndReason(
-          ResponseStatusCode.invalidResponse, reason);
+  Int64 getLongOrThrow() {
+    if (!hasLong()) {
+      throw ResponseException(
+          code: ResponseStatusCode.invalidResponse,
+          reason: 'Cannot get a long value from the invalid response: $this');
     }
-    return ids.values[0];
+    return long;
   }
 }

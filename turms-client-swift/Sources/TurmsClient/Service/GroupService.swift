@@ -39,7 +39,7 @@ public class GroupService {
             }
             .map {
                 try $0.toResponse {
-                    try $0.getFirstId()
+                    try $0.getLongOrThrow()
                 }
             }
     }
@@ -164,7 +164,7 @@ public class GroupService {
             }
     }
 
-    public func queryJoinedGroupIds(_ lastUpdatedDate: Date? = nil) -> Promise<Response<Int64ValuesWithVersion?>> {
+    public func queryJoinedGroupIds(_ lastUpdatedDate: Date? = nil) -> Promise<Response<LongsWithVersion?>> {
         return turmsClient.driver
             .send {
                 $0.queryJoinedGroupIdsRequest = .with {
@@ -175,7 +175,7 @@ public class GroupService {
             }
             .map {
                 try $0.toResponse {
-                    try $0.kind?.getKindData(Int64ValuesWithVersion.self)
+                    try $0.kind?.getKindData(LongsWithVersion.self)
                 }
             }
     }
@@ -206,7 +206,12 @@ public class GroupService {
                     $0.groupID = groupId
                     $0.questions = try questions.map { question in
                         try .with { builder in
-                            let answers = question.answers.array as! [String]
+                            var answers
+                            do {
+                                answers = question.answers.array as! [String]
+                            } catch {
+                                throw ResponseError(.illegalArgument, "The answer of group must be a string")
+                            }
                             if answers.isEmpty {
                                 throw ResponseError(.illegalArgument, "The answers of group must not be empty")
                             }
@@ -219,7 +224,7 @@ public class GroupService {
             }
             .map {
                 try $0.toResponse {
-                    $0.ids.values
+                    $0.longsWithVersion.longs
                 }
             }
     }
@@ -265,6 +270,7 @@ public class GroupService {
     }
 
     // Group Blocklist
+
     public func blockUser(groupId: Int64, userId: Int64) -> Promise<Response<Void>> {
         return turmsClient.driver
             .send {
@@ -294,7 +300,7 @@ public class GroupService {
     public func queryBlockedUserIds(
         groupId: Int64,
         lastUpdatedDate: Date? = nil
-    ) -> Promise<Response<Int64ValuesWithVersion?>> {
+    ) -> Promise<Response<LongsWithVersion?>> {
         return turmsClient.driver
             .send {
                 $0.queryGroupBlockedUserIdsRequest = .with {
@@ -306,7 +312,7 @@ public class GroupService {
             }
             .map {
                 try $0.toResponse {
-                    try $0.kind?.getKindData(Int64ValuesWithVersion.self)
+                    try $0.kind?.getKindData(LongsWithVersion.self)
                 }
             }
     }
@@ -332,6 +338,7 @@ public class GroupService {
     }
 
     // Group Enrollment
+
     public func createInvitation(groupId: Int64, inviteeId: Int64, content: String) -> Promise<Response<Int64>> {
         return turmsClient.driver
             .send {
@@ -343,7 +350,7 @@ public class GroupService {
             }
             .map {
                 try $0.toResponse {
-                    try $0.getFirstId()
+                    try $0.getLongOrThrow()
                 }
             }
     }
@@ -404,7 +411,7 @@ public class GroupService {
             }
             .map {
                 try $0.toResponse {
-                    try $0.getFirstId()
+                    try $0.getLongOrThrow()
                 }
             }
     }
@@ -502,6 +509,7 @@ public class GroupService {
     }
 
     // Group Member
+
     public func addGroupMembers(
         groupId: Int64,
         userIds: [Int64],

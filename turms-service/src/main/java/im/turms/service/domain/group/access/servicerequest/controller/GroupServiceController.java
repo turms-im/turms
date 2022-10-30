@@ -185,7 +185,7 @@ public class GroupServiceController extends BaseServiceController {
                             null,
                             null,
                             null)
-                    .map(group -> RequestHandlerResultFactory.getByDataId(group.getId()));
+                    .map(group -> RequestHandlerResultFactory.getByDataLong(group.getId()));
         };
     }
 
@@ -246,7 +246,7 @@ public class GroupServiceController extends BaseServiceController {
                             lastUpdatedDate)
                     .map(idsWithVersion -> RequestHandlerResultFactory.get(ClientMessagePool
                             .getTurmsNotificationDataBuilder()
-                            .setIdsWithVersion(idsWithVersion)
+                            .setLongsWithVersion(idsWithVersion)
                             .build()));
         };
     }
@@ -358,9 +358,9 @@ public class GroupServiceController extends BaseServiceController {
             return groupBlocklistService.queryGroupBlockedUserIdsWithVersion(
                             request.getGroupId(),
                             lastUpdatedDate)
-                    .map(version -> RequestHandlerResultFactory.get(ClientMessagePool
+                    .map(idsWithVersion -> RequestHandlerResultFactory.get(ClientMessagePool
                             .getTurmsNotificationDataBuilder()
-                            .setIdsWithVersion(version)
+                            .setLongsWithVersion(idsWithVersion)
                             .build()));
         };
     }
@@ -409,7 +409,7 @@ public class GroupServiceController extends BaseServiceController {
                             request.getInviteeId(),
                             request.getContent())
                     .map(invitation -> notifyUserAfterInvitedByGroup
-                            ? RequestHandlerResultFactory.getByDataId(invitation.getId(), request.getInviteeId(), clientRequest.turmsRequest())
+                            ? RequestHandlerResultFactory.getByDataLong(invitation.getId(), request.getInviteeId(), clientRequest.turmsRequest())
                             : RequestHandlerResultFactory.OK);
         };
     }
@@ -431,7 +431,7 @@ public class GroupServiceController extends BaseServiceController {
                                     .map(recipientIds -> recipientIds.isEmpty()
                                             ? RequestHandlerResultFactory.OK
                                             : RequestHandlerResultFactory
-                                            .getByDataId(joinRequest.getId(), CollectionUtil.newSet(recipientIds), false, clientRequest.turmsRequest()))
+                                            .getByDataLong(joinRequest.getId(), CollectionUtil.newSet(recipientIds), false, clientRequest.turmsRequest()))
                                     .doFinally(signalType -> recyclableSet.recycle());
                         }
                         return Mono.just(RequestHandlerResultFactory.OK);
@@ -459,7 +459,7 @@ public class GroupServiceController extends BaseServiceController {
                         for (var question : questionList) {
                             questionIds.add(question.getId());
                         }
-                        return RequestHandlerResultFactory.getByDataIds(questionIds);
+                        return RequestHandlerResultFactory.getByDataLongs(questionIds);
                     });
         };
     }

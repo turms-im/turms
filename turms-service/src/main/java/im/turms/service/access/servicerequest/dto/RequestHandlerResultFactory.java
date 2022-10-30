@@ -123,10 +123,10 @@ public final class RequestHandlerResultFactory {
                 null);
     }
 
-    public static RequestHandlerResult getByDataId(@NotNull Long id) {
+    public static RequestHandlerResult getByDataLong(@NotNull Long value) {
         TurmsNotification.Data data = ClientMessagePool
                 .getTurmsNotificationDataBuilder()
-                .setIds(ClientMessagePool.getInt64ValuesBuilder().addValues(id))
+                .setLong(value)
                 .build();
         return new RequestHandlerResult(
                 data,
@@ -137,25 +137,25 @@ public final class RequestHandlerResultFactory {
                 null);
     }
 
-    public static RequestHandlerResult getByDataId(
-            @NotNull Long id,
+    public static RequestHandlerResult getByDataLong(
+            @NotNull Long value,
             @NotNull Long recipientId,
             @NotNull TurmsRequest dataForRecipient) {
         TurmsNotification.Data data = ClientMessagePool
                 .getTurmsNotificationDataBuilder()
-                .setIds(ClientMessagePool.getInt64ValuesBuilder().addValues(id))
+                .setLong(value)
                 .build();
         return new RequestHandlerResult(data, false, Collections.singleton(recipientId), dataForRecipient, ResponseStatusCode.OK, null);
     }
 
-    public static RequestHandlerResult getByDataId(
-            @NotNull Long id,
+    public static RequestHandlerResult getByDataLong(
+            @NotNull Long value,
             @NotEmpty Set<Long> recipients,
             boolean forwardDataForRecipientsToOtherSenderOnlineDevices,
             TurmsRequest dataForRecipients) {
         TurmsNotification.Data data = ClientMessagePool
                 .getTurmsNotificationDataBuilder()
-                .setIds(ClientMessagePool.getInt64ValuesBuilder().addValues(id))
+                .setLong(value)
                 .build();
         return new RequestHandlerResult(
                 data,
@@ -166,10 +166,10 @@ public final class RequestHandlerResultFactory {
                 null);
     }
 
-    public static RequestHandlerResult getByDataIds(@NotNull Collection<Long> ids) {
+    public static RequestHandlerResult getByDataLongs(@NotNull Collection<Long> values) {
         TurmsNotification.Data data = ClientMessagePool
                 .getTurmsNotificationDataBuilder()
-                .setIds(ClientMessagePool.getInt64ValuesBuilder().addAllValues(ids))
+                .setLongsWithVersion(ClientMessagePool.getLongsWithVersionBuilder().addAllLongs(values))
                 .build();
         return new RequestHandlerResult(
                 data,

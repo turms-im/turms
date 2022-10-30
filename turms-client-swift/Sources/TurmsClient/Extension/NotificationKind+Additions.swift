@@ -4,11 +4,13 @@ public extension TurmsNotification.DataMessage.OneOf_Kind {
     func getKindData<T>(_: T.Type) throws -> T? {
         var message: Any
         switch self {
-        case let .ids(v):
+        case let .long(v):
             message = v
-        case let .idsWithVersion(v):
+        case let .longsWithVersion(v):
             message = v
-        case let .url(v):
+        case let .string(v):
+            message = v
+        case let .stringsWithVersion(v):
             message = v
 
         case let .conversations(v):

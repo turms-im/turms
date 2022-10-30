@@ -11,8 +11,8 @@ export declare namespace ParsedModel {
         data: Uint8Array;
     }
 
-    interface IdsWithVersion {
-        ids?: string[];
+    interface LongsWithVersion {
+        longs?: string[];
         lastUpdatedDate?: Date;
     }
 

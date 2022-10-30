@@ -21,7 +21,7 @@ import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.reactivestreams.client.ClientSession;
 import im.turms.server.common.access.client.dto.ClientMessagePool;
-import im.turms.server.common.access.client.dto.model.common.Int64ValuesWithVersion;
+import im.turms.server.common.access.client.dto.model.common.LongsWithVersion;
 import im.turms.server.common.access.client.dto.model.user.UserRelationshipsWithVersion;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.collection.CollectionUtil;
@@ -190,7 +190,7 @@ public class UserRelationshipService {
                 .retryWhen(TRANSACTION_RETRY);
     }
 
-    public Mono<Int64ValuesWithVersion> queryRelatedUserIdsWithVersion(
+    public Mono<LongsWithVersion> queryRelatedUserIdsWithVersion(
             @NotNull Long ownerId,
             @Nullable Set<Integer> groupIndexes,
             @Nullable Boolean isBlocked,
@@ -208,9 +208,9 @@ public class UserRelationshipService {
                                     throw ResponseException.get(ResponseStatusCode.NO_CONTENT);
                                 }
                                 return ClientMessagePool
-                                        .getInt64ValuesWithVersionBuilder()
+                                        .getLongsWithVersionBuilder()
                                         .setLastUpdatedDate(date.getTime())
-                                        .addAllValues(ids)
+                                        .addAllLongs(ids)
                                         .build();
                             })
                             .doFinally(signalType -> recyclableSet.recycle());

@@ -17,9 +17,9 @@
 
 package system.im.turms.service.domain.user.access.servicerequest.controller;
 
+import helper.NotificationUtil;
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.constant.ResponseAction;
-import im.turms.server.common.access.client.dto.model.common.Int64Values;
 import im.turms.server.common.access.client.dto.request.TurmsRequest;
 import im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest;
 import im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipGroupRequest;
@@ -105,9 +105,7 @@ class UserRelationshipServiceControllerST extends BaseServiceControllerTest<User
         Mono<RequestHandlerResult> resultMono = getController().handleCreateRelationshipGroupRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono, result -> {
-            Int64Values ids = result.dataForRequester().getIds();
-            assertThat(ids.getValuesCount()).isEqualTo(1);
-            relationshipGroupIndex = (int) ids.getValues(0);
+            relationshipGroupIndex = (int) NotificationUtil.getLongOrThrow(result.dataForRequester());
         });
     }
 
@@ -123,7 +121,7 @@ class UserRelationshipServiceControllerST extends BaseServiceControllerTest<User
         Mono<RequestHandlerResult> resultMono = getController().handleCreateFriendRequestRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono, result ->
-                assertThat(result.dataForRequester().getIds().getValuesCount()).isEqualTo(1));
+                assertThat(result.dataForRequester().hasLong()).isTrue());
     }
 
     @Test
@@ -204,7 +202,7 @@ class UserRelationshipServiceControllerST extends BaseServiceControllerTest<User
         Mono<RequestHandlerResult> resultMono = getController().handleQueryRelatedUserIdsRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono, result ->
-                assertThat(result.dataForRequester().getIdsWithVersion().getValuesCount()).isPositive());
+                assertThat(result.dataForRequester().getLongsWithVersion().getLongsCount()).isPositive());
     }
 
     @Test

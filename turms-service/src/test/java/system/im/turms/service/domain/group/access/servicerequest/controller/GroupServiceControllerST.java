@@ -16,6 +16,7 @@
  */
 package system.im.turms.service.domain.group.access.servicerequest.controller;
 
+import helper.NotificationUtil;
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.constant.GroupMemberRole;
 import im.turms.server.common.access.client.dto.model.group.GroupJoinQuestion;
@@ -101,9 +102,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
         Mono<RequestHandlerResult> resultMono = getController().handleCreateGroupRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono, result -> {
-            TurmsNotification.Data data = result.dataForRequester();
-            assertThat(data.hasIds()).isTrue();
-            groupId = data.getIds().getValues(0);
+            groupId = NotificationUtil.getLongOrThrow(result.dataForRequester());
         });
     }
 
@@ -124,8 +123,9 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
                 .handle(clientRequest);
         assertResultIsOk(resultMono, result -> {
             TurmsNotification.Data data = result.dataForRequester();
-            assertThat(data.getIds().getValuesCount()).isEqualTo(1);
-            groupJoinQuestionId = data.getIds().getValues(0);
+            List<Long> ids = data.getLongsWithVersion().getLongsList();
+            assertThat(ids).hasSize(1);
+            groupJoinQuestionId = ids.get(0);
         });
     }
 
@@ -141,9 +141,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
         Mono<RequestHandlerResult> resultMono = getController().handleCreateGroupJoinRequestRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono, result -> {
-            TurmsNotification.Data data = result.dataForRequester();
-            assertThat(data.hasIds()).isTrue();
-            groupJoinRequestId = data.getIds().getValues(0);
+            groupJoinRequestId = NotificationUtil.getLongOrThrow(result.dataForRequester());
         });
     }
 
@@ -190,9 +188,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
         Mono<RequestHandlerResult> resultMono = getController().handleCreateGroupInvitationRequestRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono, result -> {
-            TurmsNotification.Data data = result.dataForRequester();
-            assertThat(data.hasIds()).isTrue();
-            groupInvitationId = data.getIds().getValues(0);
+            groupInvitationId = NotificationUtil.getLongOrThrow(result.dataForRequester());
         });
     }
 
@@ -353,7 +349,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
         ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, USER_IP, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleQueryJoinedGroupIdsRequest()
                 .handle(clientRequest);
-        assertResultIsOk(resultMono, result -> assertThat(result.dataForRequester().getIdsWithVersion().getValuesList())
+        assertResultIsOk(resultMono, result -> assertThat(result.dataForRequester().getLongsWithVersion().getLongsList())
                 .contains(groupId));
     }
 
@@ -380,7 +376,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
         ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, USER_IP, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleQueryGroupBlockedUserIdsRequest()
                 .handle(clientRequest);
-        assertResultIsOk(resultMono, result -> assertThat(result.dataForRequester().getIdsWithVersion().getValuesList())
+        assertResultIsOk(resultMono, result -> assertThat(result.dataForRequester().getLongsWithVersion().getLongsList())
                 .contains(GROUP_BLOCKED_USER_ID));
     }
 
@@ -589,7 +585,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
         Mono<RequestHandlerResult> resultMono = getController().handleCreateGroupRequest()
                 .handle(clientRequest);
         AtomicLong readyToDeleteGroupId = new AtomicLong();
-        assertResultIsOk(resultMono, result -> readyToDeleteGroupId.set(result.dataForRequester().getIds().getValues(0)));
+        assertResultIsOk(resultMono, result -> readyToDeleteGroupId.set(NotificationUtil.getLongOrThrow(result.dataForRequester())));
 
         request = TurmsRequest.newBuilder()
                 .setDeleteGroupRequest(DeleteGroupRequest.newBuilder()

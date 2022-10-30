@@ -205,7 +205,7 @@ internal class GroupServiceET {
     fun queryJoinedGroupIds_shouldEqualNewGroupId() = runBlocking {
         val joinedGroupIdsWithVersion = client.groupService.queryJoinedGroupIds()
             .data
-        assertTrue(joinedGroupIdsWithVersion!!.valuesList.contains(groupId))
+        assertTrue(joinedGroupIdsWithVersion!!.longsList.contains(groupId))
     }
 
     @Test
@@ -224,7 +224,7 @@ internal class GroupServiceET {
     fun queryBlockedUserIds_shouldEqualBlockedUserId() = runBlocking {
         val blockedUserIdsWithVersion = client.groupService.queryBlockedUserIds(groupId)
             .data
-        assertEquals(GROUP_BLOCKED_USER_ID, blockedUserIdsWithVersion!!.getValues(0))
+        assertEquals(GROUP_BLOCKED_USER_ID, blockedUserIdsWithVersion!!.longsList.first())
     }
 
     @Test

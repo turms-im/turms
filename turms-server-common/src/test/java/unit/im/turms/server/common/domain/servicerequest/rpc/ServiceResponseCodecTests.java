@@ -17,7 +17,7 @@
 
 package unit.im.turms.server.common.domain.servicerequest.rpc;
 
-import im.turms.server.common.access.client.dto.model.common.Int64Values;
+import im.turms.server.common.access.client.dto.model.common.LongsWithVersion;
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.access.servicerequest.dto.ServiceResponse;
@@ -32,7 +32,7 @@ class ServiceResponseCodecTests extends BaseCodecTest {
     @Test
     void shouldGetTheSameRequest_afterWriteAndRead_forLegalRequest() {
         TurmsNotification.Data dataForRequester = TurmsNotification.Data.newBuilder()
-                .setIds(Int64Values.newBuilder().addValues(100))
+                .setLongsWithVersion(LongsWithVersion.newBuilder().addLongs(100))
                 .build();
         ServiceResponse expectedResponse = new ServiceResponse(dataForRequester,
                 ResponseStatusCode.OK, "response for the status code");

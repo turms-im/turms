@@ -57,7 +57,7 @@ class GroupServiceTests: XCTestCase {
             XCTAssertEqual(groupId!, $0.data[0].id)
         })
         assertCompleted("queryJoinedGroupIds_shouldEqualNewGroupId", service.queryJoinedGroupIds().done {
-            XCTAssert($0.data!.values.contains(groupId!))
+            XCTAssert($0.data!.longs.contains(groupId!))
         })
         assertCompleted("queryJoinedGroupInfos_shouldEqualNewGroupId", service.queryJoinedGroupInfos().done {
             let groupIds = $0.data!.groups.map {
@@ -66,7 +66,7 @@ class GroupServiceTests: XCTestCase {
             XCTAssert(groupIds.contains(groupId!))
         })
         assertCompleted("queryBlockedUserIds_shouldEqualBlockedUserId", service.queryBlockedUserIds(groupId: groupId!).done {
-            XCTAssertEqual(groupBlockedUserId, $0.data!.values[0])
+            XCTAssertEqual(groupBlockedUserId, $0.data!.longs[0])
         })
         assertCompleted("queryBlockedUserInfos_shouldEqualBlockedUserId", service.queryBlockedUserInfos(groupId: groupId!).done {
             XCTAssertEqual(groupBlockedUserId, $0.data!.userInfos[0].id)

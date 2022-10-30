@@ -200,7 +200,7 @@ class UserService {
         : null);
   }
 
-  Future<Response<Int64ValuesWithVersion?>> queryRelatedUserIds(
+  Future<Response<LongsWithVersion?>> queryRelatedUserIds(
       {bool? isBlocked,
       Set<int>? groupIndexes,
       DateTime? lastUpdatedDate}) async {
@@ -209,7 +209,7 @@ class UserService {
         groupIndexes: groupIndexes,
         lastUpdatedDate: lastUpdatedDate?.toInt64()));
     return n.toResponse(
-        (data) => data.hasIdsWithVersion() ? data.idsWithVersion : null);
+        (data) => data.hasLongsWithVersion() ? data.longsWithVersion : null);
   }
 
   Future<Response<UserRelationshipsWithVersion?>> queryFriends(
@@ -264,7 +264,7 @@ class UserService {
       Int64 recipientId, String content) async {
     final n = await _turmsClient.driver.send(
         CreateFriendRequestRequest(recipientId: recipientId, content: content));
-    return n.toResponse((data) => data.getFirstIdOrThrow());
+    return n.toResponse((data) => data.getLongOrThrow());
   }
 
   Future<Response<void>> replyFriendRequest(
@@ -288,7 +288,7 @@ class UserService {
   Future<Response<Int64>> createRelationshipGroup(String name) async {
     final n = await _turmsClient.driver
         .send(CreateRelationshipGroupRequest(name: name));
-    return n.toResponse((data) => data.getFirstIdOrThrow());
+    return n.toResponse((data) => data.getLongOrThrow());
   }
 
   Future<Response<void>> deleteRelationshipGroups(int groupIndex,

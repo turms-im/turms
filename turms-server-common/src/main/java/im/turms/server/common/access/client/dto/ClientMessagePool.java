@@ -17,8 +17,8 @@
 
 package im.turms.server.common.access.client.dto;
 
-import im.turms.server.common.access.client.dto.model.common.Int64Values;
-import im.turms.server.common.access.client.dto.model.common.Int64ValuesWithVersion;
+import im.turms.server.common.access.client.dto.model.common.LongsWithVersion;
+import im.turms.server.common.access.client.dto.model.common.StringsWithVersion;
 import im.turms.server.common.access.client.dto.model.conversation.Conversations;
 import im.turms.server.common.access.client.dto.model.conversation.GroupConversation;
 import im.turms.server.common.access.client.dto.model.conversation.PrivateConversation;
@@ -167,17 +167,10 @@ public class ClientMessagePool {
         }
     };
 
-    private static final FastThreadLocal<Int64Values.Builder> INT64_VALUES = new FastThreadLocal<>() {
+    private static final FastThreadLocal<LongsWithVersion.Builder> LONGS_WITH_VERSION = new FastThreadLocal<>() {
         @Override
-        protected Int64Values.Builder initialValue() {
-            return Int64Values.newBuilder();
-        }
-    };
-
-    private static final FastThreadLocal<Int64ValuesWithVersion.Builder> INT64_VALUES_WITH_VERSION = new FastThreadLocal<>() {
-        @Override
-        protected Int64ValuesWithVersion.Builder initialValue() {
-            return Int64ValuesWithVersion.newBuilder();
+        protected LongsWithVersion.Builder initialValue() {
+            return LongsWithVersion.newBuilder();
         }
     };
 
@@ -227,6 +220,13 @@ public class ClientMessagePool {
         @Override
         protected PrivateConversation.Builder initialValue() {
             return PrivateConversation.newBuilder();
+        }
+    };
+
+    private static final FastThreadLocal<StringsWithVersion.Builder> STRINGS_WITH_VERSION = new FastThreadLocal<>() {
+        @Override
+        protected StringsWithVersion.Builder initialValue() {
+            return StringsWithVersion.newBuilder();
         }
     };
 
@@ -391,12 +391,8 @@ public class ClientMessagePool {
         return GROUPS_WITH_VERSION.get().clear();
     }
 
-    public static Int64Values.Builder getInt64ValuesBuilder() {
-        return INT64_VALUES.get().clear();
-    }
-
-    public static Int64ValuesWithVersion.Builder getInt64ValuesWithVersionBuilder() {
-        return INT64_VALUES_WITH_VERSION.get().clear();
+    public static LongsWithVersion.Builder getLongsWithVersionBuilder() {
+        return LONGS_WITH_VERSION.get().clear();
     }
 
     public static Message.Builder getMessageBuilder() {
@@ -425,6 +421,10 @@ public class ClientMessagePool {
 
     public static PrivateConversation.Builder getPrivateConversationBuilder() {
         return PRIVATE_CONVERSATION.get().clear();
+    }
+
+    public static StringsWithVersion.Builder getStringsWithVersionBuilder() {
+        return STRINGS_WITH_VERSION.get().clear();
     }
 
     public static TurmsNotification.Builder getTurmsNotificationBuilder() {

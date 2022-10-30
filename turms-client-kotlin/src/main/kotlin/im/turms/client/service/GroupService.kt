@@ -19,12 +19,13 @@ package im.turms.client.service
 import im.turms.client.TurmsClient
 import im.turms.client.annotation.NotEmpty
 import im.turms.client.exception.ResponseException
+import im.turms.client.extension.getLongOrThrow
 import im.turms.client.extension.toResponse
 import im.turms.client.model.NewGroupJoinQuestion
 import im.turms.client.model.Response
 import im.turms.client.model.ResponseStatusCode
 import im.turms.client.model.proto.constant.GroupMemberRole
-import im.turms.client.model.proto.model.common.Int64ValuesWithVersion
+import im.turms.client.model.proto.model.common.LongsWithVersion
 import im.turms.client.model.proto.model.group.Group
 import im.turms.client.model.proto.model.group.GroupInvitationsWithVersion
 import im.turms.client.model.proto.model.group.GroupJoinQuestion
@@ -85,7 +86,7 @@ class GroupService(private val turmsClient: TurmsClient) {
                 groupTypeId?.let { this.groupTypeId = it }
             }
         ).toResponse {
-            it.ids.getValues(0)
+            it.getLongOrThrow()
         }
 
     suspend fun deleteGroup(groupId: Long): Response<Unit> =
@@ -146,14 +147,14 @@ class GroupService(private val turmsClient: TurmsClient) {
                 }
         }
 
-    suspend fun queryJoinedGroupIds(lastUpdatedDate: Date? = null): Response<Int64ValuesWithVersion?> =
+    suspend fun queryJoinedGroupIds(lastUpdatedDate: Date? = null): Response<LongsWithVersion?> =
         turmsClient.driver
             .send(
                 QueryJoinedGroupIdsRequest.newBuilder().apply {
                     lastUpdatedDate?.let { this.lastUpdatedDate = it.time }
                 })
             .toResponse {
-                if (it.hasIdsWithVersion()) it.idsWithVersion else null
+                if (it.hasLongsWithVersion()) it.longsWithVersion else null
             }
 
     suspend fun queryJoinedGroupInfos(lastUpdatedDate: Date? = null): Response<GroupsWithVersion?> =
@@ -190,7 +191,7 @@ class GroupService(private val turmsClient: TurmsClient) {
             }
         )
         .toResponse {
-            it.ids.valuesList
+            it.longsWithVersion.longsList
         }
 
     suspend fun deleteGroupJoinQuestions(questionIds: Set<Long>): Response<Unit> =
@@ -244,7 +245,7 @@ class GroupService(private val turmsClient: TurmsClient) {
     suspend fun queryBlockedUserIds(
         groupId: Long,
         lastUpdatedDate: Date? = null
-    ): Response<Int64ValuesWithVersion?> = turmsClient.driver
+    ): Response<LongsWithVersion?> = turmsClient.driver
         .send(
             QueryGroupBlockedUserIdsRequest.newBuilder().apply {
                 this.groupId = groupId
@@ -252,7 +253,7 @@ class GroupService(private val turmsClient: TurmsClient) {
             }
         )
         .toResponse {
-            if (it.hasIdsWithVersion()) it.idsWithVersion else null
+            if (it.hasLongsWithVersion()) it.longsWithVersion else null
         }
 
     suspend fun queryBlockedUserInfos(
@@ -281,7 +282,7 @@ class GroupService(private val turmsClient: TurmsClient) {
                 this.content = content
             }
         ).toResponse {
-            it.ids.getValues(0)
+            it.getLongOrThrow()
         }
 
     suspend fun deleteInvitation(invitationId: Long): Response<Unit> = turmsClient.driver
@@ -321,7 +322,7 @@ class GroupService(private val turmsClient: TurmsClient) {
                 this.content = content
             }
         ).toResponse {
-            it.ids.getValues(0)
+            it.getLongOrThrow()
         }
 
     suspend fun deleteJoinRequest(requestId: Long): Response<Unit> = turmsClient.driver

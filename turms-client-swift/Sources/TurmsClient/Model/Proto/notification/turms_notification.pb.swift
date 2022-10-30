@@ -117,30 +117,40 @@ public struct TurmsNotification {
 
         public var kind: TurmsNotification.DataMessage.OneOf_Kind?
 
-        public var ids: Int64Values {
+        /// Common
+        public var long: Int64 {
             get {
-                if case let .ids(v)? = kind { return v }
-                return Int64Values()
+                if case let .long(v)? = kind { return v }
+                return 0
             }
-            set { kind = .ids(newValue) }
+            set { kind = .long(newValue) }
         }
 
-        public var idsWithVersion: Int64ValuesWithVersion {
+        public var string: String {
             get {
-                if case let .idsWithVersion(v)? = kind { return v }
-                return Int64ValuesWithVersion()
-            }
-            set { kind = .idsWithVersion(newValue) }
-        }
-
-        public var url: String {
-            get {
-                if case let .url(v)? = kind { return v }
+                if case let .string(v)? = kind { return v }
                 return String()
             }
-            set { kind = .url(newValue) }
+            set { kind = .string(newValue) }
         }
 
+        public var longsWithVersion: LongsWithVersion {
+            get {
+                if case let .longsWithVersion(v)? = kind { return v }
+                return LongsWithVersion()
+            }
+            set { kind = .longsWithVersion(newValue) }
+        }
+
+        public var stringsWithVersion: StringsWithVersion {
+            get {
+                if case let .stringsWithVersion(v)? = kind { return v }
+                return StringsWithVersion()
+            }
+            set { kind = .stringsWithVersion(newValue) }
+        }
+
+        /// Conversation
         public var conversations: Conversations {
             get {
                 if case let .conversations(v)? = kind { return v }
@@ -149,6 +159,7 @@ public struct TurmsNotification {
             set { kind = .conversations(newValue) }
         }
 
+        /// Message
         public var messages: Messages {
             get {
                 if case let .messages(v)? = kind { return v }
@@ -165,6 +176,7 @@ public struct TurmsNotification {
             set { kind = .messagesWithTotalList(newValue) }
         }
 
+        /// User
         public var userSession: UserSession {
             get {
                 if case let .userSession(v)? = kind { return v }
@@ -221,6 +233,7 @@ public struct TurmsNotification {
             set { kind = .nearbyUsers(newValue) }
         }
 
+        /// Group
         public var groupInvitationsWithVersion: GroupInvitationsWithVersion {
             get {
                 if case let .groupInvitationsWithVersion(v)? = kind { return v }
@@ -272,12 +285,17 @@ public struct TurmsNotification {
         public var unknownFields = SwiftProtobuf.UnknownStorage()
 
         public enum OneOf_Kind: Equatable {
-            case ids(Int64Values)
-            case idsWithVersion(Int64ValuesWithVersion)
-            case url(String)
+            /// Common
+            case long(Int64)
+            case string(String)
+            case longsWithVersion(LongsWithVersion)
+            case stringsWithVersion(StringsWithVersion)
+            /// Conversation
             case conversations(Conversations)
+            /// Message
             case messages(Messages)
             case messagesWithTotalList(MessagesWithTotalList)
+            /// User
             case userSession(UserSession)
             case userInfosWithVersion(UserInfosWithVersion)
             case userOnlineStatuses(UserOnlineStatuses)
@@ -285,6 +303,7 @@ public struct TurmsNotification {
             case userRelationshipGroupsWithVersion(UserRelationshipGroupsWithVersion)
             case userRelationshipsWithVersion(UserRelationshipsWithVersion)
             case nearbyUsers(NearbyUsers)
+            /// Group
             case groupInvitationsWithVersion(GroupInvitationsWithVersion)
             case groupJoinQuestionAnswerResult(GroupJoinQuestionsAnswerResult)
             case groupJoinRequestsWithVersion(GroupJoinRequestsWithVersion)
@@ -298,16 +317,20 @@ public struct TurmsNotification {
                     // allocates stack space for every case branch when no optimizations are
                     // enabled. https://github.com/apple/swift-protobuf/issues/1034
                     switch (lhs, rhs) {
-                    case (.ids, .ids): return {
-                            guard case let .ids(l) = lhs, case let .ids(r) = rhs else { preconditionFailure() }
+                    case (.long, .long): return {
+                            guard case let .long(l) = lhs, case let .long(r) = rhs else { preconditionFailure() }
                             return l == r
                         }()
-                    case (.idsWithVersion, .idsWithVersion): return {
-                            guard case let .idsWithVersion(l) = lhs, case let .idsWithVersion(r) = rhs else { preconditionFailure() }
+                    case (.string, .string): return {
+                            guard case let .string(l) = lhs, case let .string(r) = rhs else { preconditionFailure() }
                             return l == r
                         }()
-                    case (.url, .url): return {
-                            guard case let .url(l) = lhs, case let .url(r) = rhs else { preconditionFailure() }
+                    case (.longsWithVersion, .longsWithVersion): return {
+                            guard case let .longsWithVersion(l) = lhs, case let .longsWithVersion(r) = rhs else { preconditionFailure() }
+                            return l == r
+                        }()
+                    case (.stringsWithVersion, .stringsWithVersion): return {
+                            guard case let .stringsWithVersion(l) = lhs, case let .stringsWithVersion(r) = rhs else { preconditionFailure() }
                             return l == r
                         }()
                     case (.conversations, .conversations): return {
@@ -525,25 +548,26 @@ extension TurmsNotification: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
 extension TurmsNotification.DataMessage: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
     public static let protoMessageName: String = TurmsNotification.protoMessageName + ".Data"
     public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-        1: .same(proto: "ids"),
-        2: .standard(proto: "ids_with_version"),
-        3: .same(proto: "url"),
-        4: .same(proto: "conversations"),
-        5: .same(proto: "messages"),
-        6: .standard(proto: "messages_with_total_list"),
-        7: .standard(proto: "user_session"),
-        8: .standard(proto: "user_infos_with_version"),
-        9: .standard(proto: "user_online_statuses"),
-        10: .standard(proto: "user_friend_requests_with_version"),
-        11: .standard(proto: "user_relationship_groups_with_version"),
-        12: .standard(proto: "user_relationships_with_version"),
-        13: .standard(proto: "nearby_users"),
-        14: .standard(proto: "group_invitations_with_version"),
-        15: .standard(proto: "group_join_question_answer_result"),
-        16: .standard(proto: "group_join_requests_with_version"),
-        17: .standard(proto: "group_join_questions_with_version"),
-        18: .standard(proto: "group_members_with_version"),
-        19: .standard(proto: "groups_with_version"),
+        1: .same(proto: "long"),
+        2: .same(proto: "string"),
+        3: .standard(proto: "longs_with_version"),
+        4: .standard(proto: "strings_with_version"),
+        5: .same(proto: "conversations"),
+        6: .same(proto: "messages"),
+        7: .standard(proto: "messages_with_total_list"),
+        8: .standard(proto: "user_session"),
+        9: .standard(proto: "user_infos_with_version"),
+        10: .standard(proto: "user_online_statuses"),
+        11: .standard(proto: "user_friend_requests_with_version"),
+        12: .standard(proto: "user_relationship_groups_with_version"),
+        13: .standard(proto: "user_relationships_with_version"),
+        14: .standard(proto: "nearby_users"),
+        15: .standard(proto: "group_invitations_with_version"),
+        16: .standard(proto: "group_join_question_answer_result"),
+        17: .standard(proto: "group_join_requests_with_version"),
+        18: .standard(proto: "group_join_questions_with_version"),
+        19: .standard(proto: "group_members_with_version"),
+        20: .standard(proto: "groups_with_version"),
     ]
 
     public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -553,40 +577,48 @@ extension TurmsNotification.DataMessage: SwiftProtobuf.Message, SwiftProtobuf._M
             // enabled. https://github.com/apple/swift-protobuf/issues/1034
             switch fieldNumber {
             case 1: try {
-                    var v: Int64Values?
-                    var hadOneofValue = false
-                    if let current = self.kind {
-                        hadOneofValue = true
-                        if case let .ids(m) = current { v = m }
-                    }
-                    try decoder.decodeSingularMessageField(value: &v)
+                    var v: Int64?
+                    try decoder.decodeSingularInt64Field(value: &v)
                     if let v = v {
-                        if hadOneofValue { try decoder.handleConflictingOneOf() }
-                        self.kind = .ids(v)
+                        if self.kind != nil { try decoder.handleConflictingOneOf() }
+                        self.kind = .long(v)
                     }
                 }()
             case 2: try {
-                    var v: Int64ValuesWithVersion?
-                    var hadOneofValue = false
-                    if let current = self.kind {
-                        hadOneofValue = true
-                        if case let .idsWithVersion(m) = current { v = m }
-                    }
-                    try decoder.decodeSingularMessageField(value: &v)
-                    if let v = v {
-                        if hadOneofValue { try decoder.handleConflictingOneOf() }
-                        self.kind = .idsWithVersion(v)
-                    }
-                }()
-            case 3: try {
                     var v: String?
                     try decoder.decodeSingularStringField(value: &v)
                     if let v = v {
                         if self.kind != nil { try decoder.handleConflictingOneOf() }
-                        self.kind = .url(v)
+                        self.kind = .string(v)
+                    }
+                }()
+            case 3: try {
+                    var v: LongsWithVersion?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .longsWithVersion(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .longsWithVersion(v)
                     }
                 }()
             case 4: try {
+                    var v: StringsWithVersion?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .stringsWithVersion(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .stringsWithVersion(v)
+                    }
+                }()
+            case 5: try {
                     var v: Conversations?
                     var hadOneofValue = false
                     if let current = self.kind {
@@ -599,7 +631,7 @@ extension TurmsNotification.DataMessage: SwiftProtobuf.Message, SwiftProtobuf._M
                         self.kind = .conversations(v)
                     }
                 }()
-            case 5: try {
+            case 6: try {
                     var v: Messages?
                     var hadOneofValue = false
                     if let current = self.kind {
@@ -612,7 +644,7 @@ extension TurmsNotification.DataMessage: SwiftProtobuf.Message, SwiftProtobuf._M
                         self.kind = .messages(v)
                     }
                 }()
-            case 6: try {
+            case 7: try {
                     var v: MessagesWithTotalList?
                     var hadOneofValue = false
                     if let current = self.kind {
@@ -625,7 +657,7 @@ extension TurmsNotification.DataMessage: SwiftProtobuf.Message, SwiftProtobuf._M
                         self.kind = .messagesWithTotalList(v)
                     }
                 }()
-            case 7: try {
+            case 8: try {
                     var v: UserSession?
                     var hadOneofValue = false
                     if let current = self.kind {
@@ -638,7 +670,7 @@ extension TurmsNotification.DataMessage: SwiftProtobuf.Message, SwiftProtobuf._M
                         self.kind = .userSession(v)
                     }
                 }()
-            case 8: try {
+            case 9: try {
                     var v: UserInfosWithVersion?
                     var hadOneofValue = false
                     if let current = self.kind {
@@ -651,7 +683,7 @@ extension TurmsNotification.DataMessage: SwiftProtobuf.Message, SwiftProtobuf._M
                         self.kind = .userInfosWithVersion(v)
                     }
                 }()
-            case 9: try {
+            case 10: try {
                     var v: UserOnlineStatuses?
                     var hadOneofValue = false
                     if let current = self.kind {
@@ -664,7 +696,7 @@ extension TurmsNotification.DataMessage: SwiftProtobuf.Message, SwiftProtobuf._M
                         self.kind = .userOnlineStatuses(v)
                     }
                 }()
-            case 10: try {
+            case 11: try {
                     var v: UserFriendRequestsWithVersion?
                     var hadOneofValue = false
                     if let current = self.kind {
@@ -677,7 +709,7 @@ extension TurmsNotification.DataMessage: SwiftProtobuf.Message, SwiftProtobuf._M
                         self.kind = .userFriendRequestsWithVersion(v)
                     }
                 }()
-            case 11: try {
+            case 12: try {
                     var v: UserRelationshipGroupsWithVersion?
                     var hadOneofValue = false
                     if let current = self.kind {
@@ -690,7 +722,7 @@ extension TurmsNotification.DataMessage: SwiftProtobuf.Message, SwiftProtobuf._M
                         self.kind = .userRelationshipGroupsWithVersion(v)
                     }
                 }()
-            case 12: try {
+            case 13: try {
                     var v: UserRelationshipsWithVersion?
                     var hadOneofValue = false
                     if let current = self.kind {
@@ -703,7 +735,7 @@ extension TurmsNotification.DataMessage: SwiftProtobuf.Message, SwiftProtobuf._M
                         self.kind = .userRelationshipsWithVersion(v)
                     }
                 }()
-            case 13: try {
+            case 14: try {
                     var v: NearbyUsers?
                     var hadOneofValue = false
                     if let current = self.kind {
@@ -716,7 +748,7 @@ extension TurmsNotification.DataMessage: SwiftProtobuf.Message, SwiftProtobuf._M
                         self.kind = .nearbyUsers(v)
                     }
                 }()
-            case 14: try {
+            case 15: try {
                     var v: GroupInvitationsWithVersion?
                     var hadOneofValue = false
                     if let current = self.kind {
@@ -729,7 +761,7 @@ extension TurmsNotification.DataMessage: SwiftProtobuf.Message, SwiftProtobuf._M
                         self.kind = .groupInvitationsWithVersion(v)
                     }
                 }()
-            case 15: try {
+            case 16: try {
                     var v: GroupJoinQuestionsAnswerResult?
                     var hadOneofValue = false
                     if let current = self.kind {
@@ -742,7 +774,7 @@ extension TurmsNotification.DataMessage: SwiftProtobuf.Message, SwiftProtobuf._M
                         self.kind = .groupJoinQuestionAnswerResult(v)
                     }
                 }()
-            case 16: try {
+            case 17: try {
                     var v: GroupJoinRequestsWithVersion?
                     var hadOneofValue = false
                     if let current = self.kind {
@@ -755,7 +787,7 @@ extension TurmsNotification.DataMessage: SwiftProtobuf.Message, SwiftProtobuf._M
                         self.kind = .groupJoinRequestsWithVersion(v)
                     }
                 }()
-            case 17: try {
+            case 18: try {
                     var v: GroupJoinQuestionsWithVersion?
                     var hadOneofValue = false
                     if let current = self.kind {
@@ -768,7 +800,7 @@ extension TurmsNotification.DataMessage: SwiftProtobuf.Message, SwiftProtobuf._M
                         self.kind = .groupJoinQuestionsWithVersion(v)
                     }
                 }()
-            case 18: try {
+            case 19: try {
                     var v: GroupMembersWithVersion?
                     var hadOneofValue = false
                     if let current = self.kind {
@@ -781,7 +813,7 @@ extension TurmsNotification.DataMessage: SwiftProtobuf.Message, SwiftProtobuf._M
                         self.kind = .groupMembersWithVersion(v)
                     }
                 }()
-            case 19: try {
+            case 20: try {
                     var v: GroupsWithVersion?
                     var hadOneofValue = false
                     if let current = self.kind {
@@ -805,81 +837,85 @@ extension TurmsNotification.DataMessage: SwiftProtobuf.Message, SwiftProtobuf._M
         // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
         // https://github.com/apple/swift-protobuf/issues/1182
         switch kind {
-        case .ids?: try {
-                guard case let .ids(v)? = self.kind else { preconditionFailure() }
-                try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
+        case .long?: try {
+                guard case let .long(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularInt64Field(value: v, fieldNumber: 1)
             }()
-        case .idsWithVersion?: try {
-                guard case let .idsWithVersion(v)? = self.kind else { preconditionFailure() }
-                try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
+        case .string?: try {
+                guard case let .string(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularStringField(value: v, fieldNumber: 2)
             }()
-        case .url?: try {
-                guard case let .url(v)? = self.kind else { preconditionFailure() }
-                try visitor.visitSingularStringField(value: v, fieldNumber: 3)
+        case .longsWithVersion?: try {
+                guard case let .longsWithVersion(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
+            }()
+        case .stringsWithVersion?: try {
+                guard case let .stringsWithVersion(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 4)
             }()
         case .conversations?: try {
                 guard case let .conversations(v)? = self.kind else { preconditionFailure() }
-                try visitor.visitSingularMessageField(value: v, fieldNumber: 4)
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 5)
             }()
         case .messages?: try {
                 guard case let .messages(v)? = self.kind else { preconditionFailure() }
-                try visitor.visitSingularMessageField(value: v, fieldNumber: 5)
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 6)
             }()
         case .messagesWithTotalList?: try {
                 guard case let .messagesWithTotalList(v)? = self.kind else { preconditionFailure() }
-                try visitor.visitSingularMessageField(value: v, fieldNumber: 6)
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 7)
             }()
         case .userSession?: try {
                 guard case let .userSession(v)? = self.kind else { preconditionFailure() }
-                try visitor.visitSingularMessageField(value: v, fieldNumber: 7)
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 8)
             }()
         case .userInfosWithVersion?: try {
                 guard case let .userInfosWithVersion(v)? = self.kind else { preconditionFailure() }
-                try visitor.visitSingularMessageField(value: v, fieldNumber: 8)
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 9)
             }()
         case .userOnlineStatuses?: try {
                 guard case let .userOnlineStatuses(v)? = self.kind else { preconditionFailure() }
-                try visitor.visitSingularMessageField(value: v, fieldNumber: 9)
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 10)
             }()
         case .userFriendRequestsWithVersion?: try {
                 guard case let .userFriendRequestsWithVersion(v)? = self.kind else { preconditionFailure() }
-                try visitor.visitSingularMessageField(value: v, fieldNumber: 10)
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 11)
             }()
         case .userRelationshipGroupsWithVersion?: try {
                 guard case let .userRelationshipGroupsWithVersion(v)? = self.kind else { preconditionFailure() }
-                try visitor.visitSingularMessageField(value: v, fieldNumber: 11)
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 12)
             }()
         case .userRelationshipsWithVersion?: try {
                 guard case let .userRelationshipsWithVersion(v)? = self.kind else { preconditionFailure() }
-                try visitor.visitSingularMessageField(value: v, fieldNumber: 12)
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 13)
             }()
         case .nearbyUsers?: try {
                 guard case let .nearbyUsers(v)? = self.kind else { preconditionFailure() }
-                try visitor.visitSingularMessageField(value: v, fieldNumber: 13)
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 14)
             }()
         case .groupInvitationsWithVersion?: try {
                 guard case let .groupInvitationsWithVersion(v)? = self.kind else { preconditionFailure() }
-                try visitor.visitSingularMessageField(value: v, fieldNumber: 14)
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 15)
             }()
         case .groupJoinQuestionAnswerResult?: try {
                 guard case let .groupJoinQuestionAnswerResult(v)? = self.kind else { preconditionFailure() }
-                try visitor.visitSingularMessageField(value: v, fieldNumber: 15)
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 16)
             }()
         case .groupJoinRequestsWithVersion?: try {
                 guard case let .groupJoinRequestsWithVersion(v)? = self.kind else { preconditionFailure() }
-                try visitor.visitSingularMessageField(value: v, fieldNumber: 16)
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 17)
             }()
         case .groupJoinQuestionsWithVersion?: try {
                 guard case let .groupJoinQuestionsWithVersion(v)? = self.kind else { preconditionFailure() }
-                try visitor.visitSingularMessageField(value: v, fieldNumber: 17)
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 18)
             }()
         case .groupMembersWithVersion?: try {
                 guard case let .groupMembersWithVersion(v)? = self.kind else { preconditionFailure() }
-                try visitor.visitSingularMessageField(value: v, fieldNumber: 18)
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 19)
             }()
         case .groupsWithVersion?: try {
                 guard case let .groupsWithVersion(v)? = self.kind else { preconditionFailure() }
-                try visitor.visitSingularMessageField(value: v, fieldNumber: 19)
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 20)
             }()
         case nil: break
         }

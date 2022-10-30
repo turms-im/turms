@@ -25,9 +25,8 @@ export 'src/model/proto/constant/profile_access_strategy.pb.dart'
 export 'src/model/proto/constant/request_status.pb.dart' show RequestStatus;
 export 'src/model/proto/constant/response_action.pb.dart' show ResponseAction;
 export 'src/model/proto/constant/user_status.pb.dart' show UserStatus;
-export 'src/model/proto/model/common/int64_values.pb.dart' show Int64Values;
-export 'src/model/proto/model/common/int64_values_with_version.pb.dart'
-    show Int64ValuesWithVersion;
+export 'src/model/proto/model/common/longs_with_version.pb.dart'
+    show LongsWithVersion;
 export 'src/model/proto/model/conversation/conversations.pb.dart'
     show Conversations;
 export 'src/model/proto/model/conversation/group_conversation.pb.dart'

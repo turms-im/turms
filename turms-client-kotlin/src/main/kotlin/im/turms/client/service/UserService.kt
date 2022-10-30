@@ -19,6 +19,7 @@ package im.turms.client.service
 import im.turms.client.TurmsClient
 import im.turms.client.annotation.NotEmpty
 import im.turms.client.exception.ResponseException
+import im.turms.client.extension.getLongOrThrow
 import im.turms.client.extension.toResponse
 import im.turms.client.model.Response
 import im.turms.client.model.ResponseStatusCode
@@ -30,7 +31,7 @@ import im.turms.client.model.proto.constant.DeviceType
 import im.turms.client.model.proto.constant.ProfileAccessStrategy
 import im.turms.client.model.proto.constant.ResponseAction
 import im.turms.client.model.proto.constant.UserStatus
-import im.turms.client.model.proto.model.common.Int64ValuesWithVersion
+import im.turms.client.model.proto.model.common.LongsWithVersion
 import im.turms.client.model.proto.model.user.NearbyUser
 import im.turms.client.model.proto.model.user.UserFriendRequestsWithVersion
 import im.turms.client.model.proto.model.user.UserInfo
@@ -290,7 +291,7 @@ class UserService(private val turmsClient: TurmsClient) {
         isBlocked: Boolean? = null,
         groupIndexes: Set<Int>? = null,
         lastUpdatedDate: Date? = null
-    ): Response<Int64ValuesWithVersion?> = turmsClient.driver
+    ): Response<LongsWithVersion?> = turmsClient.driver
         .send(
             QueryRelatedUserIdsRequest.newBuilder().apply {
                 isBlocked?.let { this.blocked = it }
@@ -298,7 +299,7 @@ class UserService(private val turmsClient: TurmsClient) {
                 lastUpdatedDate?.let { this.lastUpdatedDate = it.time }
             }
         ).toResponse {
-            if (it.hasIdsWithVersion()) it.idsWithVersion else null
+            if (it.hasLongsWithVersion()) it.longsWithVersion else null
         }
 
     suspend fun queryFriends(
@@ -379,7 +380,7 @@ class UserService(private val turmsClient: TurmsClient) {
                 this.content = content
             }
         ).toResponse {
-            it.ids.getValues(0)
+            it.getLongOrThrow()
         }
 
     suspend fun replyFriendRequest(
@@ -415,7 +416,7 @@ class UserService(private val turmsClient: TurmsClient) {
                 this.name = name
             }
         ).toResponse {
-            it.ids.getValues(0).toInt()
+            it.getLongOrThrow().toInt()
         }
 
     suspend fun deleteRelationshipGroups(

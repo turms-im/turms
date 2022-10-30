@@ -93,7 +93,7 @@ export default class MessageService {
                 burnAfter,
                 preMessageId
             }
-        }).then(n => Response.fromNotification(n, data => NotificationUtil.getFirstIdOrThrow(data)));
+        }).then(n => Response.fromNotification(n, data => NotificationUtil.getLongOrThrow(data)));
     }
 
     forwardMessage({
@@ -118,7 +118,7 @@ export default class MessageService {
                 recipientId: !isGroupMessage ? targetId : undefined,
                 records: []
             }
-        }).then(n => Response.fromNotification(n, data => NotificationUtil.getFirstIdOrThrow(data)));
+        }).then(n => Response.fromNotification(n, data => NotificationUtil.getLongOrThrow(data)));
     }
 
     updateSentMessage({

@@ -17,6 +17,7 @@
 
 package im.turms.client.extension
 
+import im.turms.client.exception.ResponseException
 import im.turms.client.model.Response
 import im.turms.client.model.ResponseStatusCode
 import im.turms.client.model.proto.notification.TurmsNotification
@@ -33,3 +34,13 @@ val TurmsNotification.isError: Boolean
 fun <T> TurmsNotification.toResponse(
     dataTransformer: ((TurmsNotification.Data) -> T)? = null
 ): Response<T> = Response.fromNotification(this, dataTransformer)
+
+fun TurmsNotification.Data.getLongOrThrow(): Long {
+    if (!hasLong()) {
+        throw ResponseException.from(
+            ResponseStatusCode.INVALID_RESPONSE,
+            "Cannot get a long value from the invalid response: $this"
+        )
+    }
+    return long
+}

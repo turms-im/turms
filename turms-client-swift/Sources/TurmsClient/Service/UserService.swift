@@ -33,7 +33,7 @@ public class UserService {
         onOnlineListeners.append(listener)
     }
 
-    public func addOfflineListener(listener: @escaping (SessionCloseInfo) -> Void) {
+    public func addOfflineListener(_ listener: @escaping (SessionCloseInfo) -> Void) {
         onOfflineListeners.append(listener)
     }
 
@@ -272,7 +272,7 @@ public class UserService {
             }
     }
 
-    public func queryRelatedUserIds(isBlocked: Bool? = nil, groupIndexes: [Int32]? = nil, lastUpdatedDate: Date? = nil) -> Promise<Response<Int64ValuesWithVersion?>> {
+    public func queryRelatedUserIds(isBlocked: Bool? = nil, groupIndexes: [Int32]? = nil, lastUpdatedDate: Date? = nil) -> Promise<Response<LongsWithVersion?>> {
         return turmsClient.driver
             .send {
                 $0.queryRelatedUserIdsRequest = .with {
@@ -289,7 +289,7 @@ public class UserService {
             }
             .map {
                 try $0.toResponse {
-                    try $0.kind?.getKindData(Int64ValuesWithVersion.self)
+                    try $0.kind?.getKindData(LongsWithVersion.self)
                 }
             }
     }
@@ -391,7 +391,7 @@ public class UserService {
             }
             .map {
                 try $0.toResponse {
-                    try $0.getFirstId()
+                    try $0.getLongOrThrow()
                 }
             }
     }
@@ -438,7 +438,7 @@ public class UserService {
             }
             .map {
                 try $0.toResponse {
-                    try Int32($0.getFirstId())
+                    try Int32($0.getLongOrThrow())
                 }
             }
     }

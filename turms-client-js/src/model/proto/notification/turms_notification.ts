@@ -1,8 +1,8 @@
 /* eslint-disable */
 import Long from "long";
 import _m0 from "protobufjs/minimal";
-import { Int64Values } from "../model/common/int64_values";
-import { Int64ValuesWithVersion } from "../model/common/int64_values_with_version";
+import { LongsWithVersion } from "../model/common/longs_with_version";
+import { StringsWithVersion } from "../model/common/strings_with_version";
 import { Conversations } from "../model/conversation/conversations";
 import { GroupInvitationsWithVersion } from "../model/group/group_invitations_with_version";
 import { GroupJoinQuestionsAnswerResult } from "../model/group/group_join_questions_answer_result";
@@ -47,19 +47,33 @@ export interface TurmsNotification {
 }
 
 export interface TurmsNotification_Data {
-  ids?: Int64Values | undefined;
-  idsWithVersion?: Int64ValuesWithVersion | undefined;
-  url: string | undefined;
-  conversations?: Conversations | undefined;
+  /** Common */
+  long: string | undefined;
+  string: string | undefined;
+  longsWithVersion?: LongsWithVersion | undefined;
+  stringsWithVersion?:
+    | StringsWithVersion
+    | undefined;
+  /** Conversation */
+  conversations?:
+    | Conversations
+    | undefined;
+  /** Message */
   messages?: Messages | undefined;
-  messagesWithTotalList?: MessagesWithTotalList | undefined;
+  messagesWithTotalList?:
+    | MessagesWithTotalList
+    | undefined;
+  /** User */
   userSession?: UserSession | undefined;
   userInfosWithVersion?: UserInfosWithVersion | undefined;
   userOnlineStatuses?: UserOnlineStatuses | undefined;
   userFriendRequestsWithVersion?: UserFriendRequestsWithVersion | undefined;
   userRelationshipGroupsWithVersion?: UserRelationshipGroupsWithVersion | undefined;
   userRelationshipsWithVersion?: UserRelationshipsWithVersion | undefined;
-  nearbyUsers?: NearbyUsers | undefined;
+  nearbyUsers?:
+    | NearbyUsers
+    | undefined;
+  /** Group */
   groupInvitationsWithVersion?: GroupInvitationsWithVersion | undefined;
   groupJoinQuestionAnswerResult?: GroupJoinQuestionsAnswerResult | undefined;
   groupJoinRequestsWithVersion?: GroupJoinRequestsWithVersion | undefined;
@@ -152,9 +166,10 @@ export const TurmsNotification = {
 
 function createBaseTurmsNotification_Data(): TurmsNotification_Data {
   return {
-    ids: undefined,
-    idsWithVersion: undefined,
-    url: undefined,
+    long: undefined,
+    string: undefined,
+    longsWithVersion: undefined,
+    stringsWithVersion: undefined,
     conversations: undefined,
     messages: undefined,
     messagesWithTotalList: undefined,
@@ -176,63 +191,66 @@ function createBaseTurmsNotification_Data(): TurmsNotification_Data {
 
 export const TurmsNotification_Data = {
   encode(message: TurmsNotification_Data, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.ids !== undefined) {
-      Int64Values.encode(message.ids, writer.uint32(10).fork()).ldelim();
+    if (message.long !== undefined) {
+      writer.uint32(8).int64(message.long);
     }
-    if (message.idsWithVersion !== undefined) {
-      Int64ValuesWithVersion.encode(message.idsWithVersion, writer.uint32(18).fork()).ldelim();
+    if (message.string !== undefined) {
+      writer.uint32(18).string(message.string);
     }
-    if (message.url !== undefined) {
-      writer.uint32(26).string(message.url);
+    if (message.longsWithVersion !== undefined) {
+      LongsWithVersion.encode(message.longsWithVersion, writer.uint32(26).fork()).ldelim();
+    }
+    if (message.stringsWithVersion !== undefined) {
+      StringsWithVersion.encode(message.stringsWithVersion, writer.uint32(34).fork()).ldelim();
     }
     if (message.conversations !== undefined) {
-      Conversations.encode(message.conversations, writer.uint32(34).fork()).ldelim();
+      Conversations.encode(message.conversations, writer.uint32(42).fork()).ldelim();
     }
     if (message.messages !== undefined) {
-      Messages.encode(message.messages, writer.uint32(42).fork()).ldelim();
+      Messages.encode(message.messages, writer.uint32(50).fork()).ldelim();
     }
     if (message.messagesWithTotalList !== undefined) {
-      MessagesWithTotalList.encode(message.messagesWithTotalList, writer.uint32(50).fork()).ldelim();
+      MessagesWithTotalList.encode(message.messagesWithTotalList, writer.uint32(58).fork()).ldelim();
     }
     if (message.userSession !== undefined) {
-      UserSession.encode(message.userSession, writer.uint32(58).fork()).ldelim();
+      UserSession.encode(message.userSession, writer.uint32(66).fork()).ldelim();
     }
     if (message.userInfosWithVersion !== undefined) {
-      UserInfosWithVersion.encode(message.userInfosWithVersion, writer.uint32(66).fork()).ldelim();
+      UserInfosWithVersion.encode(message.userInfosWithVersion, writer.uint32(74).fork()).ldelim();
     }
     if (message.userOnlineStatuses !== undefined) {
-      UserOnlineStatuses.encode(message.userOnlineStatuses, writer.uint32(74).fork()).ldelim();
+      UserOnlineStatuses.encode(message.userOnlineStatuses, writer.uint32(82).fork()).ldelim();
     }
     if (message.userFriendRequestsWithVersion !== undefined) {
-      UserFriendRequestsWithVersion.encode(message.userFriendRequestsWithVersion, writer.uint32(82).fork()).ldelim();
+      UserFriendRequestsWithVersion.encode(message.userFriendRequestsWithVersion, writer.uint32(90).fork()).ldelim();
     }
     if (message.userRelationshipGroupsWithVersion !== undefined) {
-      UserRelationshipGroupsWithVersion.encode(message.userRelationshipGroupsWithVersion, writer.uint32(90).fork())
+      UserRelationshipGroupsWithVersion.encode(message.userRelationshipGroupsWithVersion, writer.uint32(98).fork())
         .ldelim();
     }
     if (message.userRelationshipsWithVersion !== undefined) {
-      UserRelationshipsWithVersion.encode(message.userRelationshipsWithVersion, writer.uint32(98).fork()).ldelim();
+      UserRelationshipsWithVersion.encode(message.userRelationshipsWithVersion, writer.uint32(106).fork()).ldelim();
     }
     if (message.nearbyUsers !== undefined) {
-      NearbyUsers.encode(message.nearbyUsers, writer.uint32(106).fork()).ldelim();
+      NearbyUsers.encode(message.nearbyUsers, writer.uint32(114).fork()).ldelim();
     }
     if (message.groupInvitationsWithVersion !== undefined) {
-      GroupInvitationsWithVersion.encode(message.groupInvitationsWithVersion, writer.uint32(114).fork()).ldelim();
+      GroupInvitationsWithVersion.encode(message.groupInvitationsWithVersion, writer.uint32(122).fork()).ldelim();
     }
     if (message.groupJoinQuestionAnswerResult !== undefined) {
-      GroupJoinQuestionsAnswerResult.encode(message.groupJoinQuestionAnswerResult, writer.uint32(122).fork()).ldelim();
+      GroupJoinQuestionsAnswerResult.encode(message.groupJoinQuestionAnswerResult, writer.uint32(130).fork()).ldelim();
     }
     if (message.groupJoinRequestsWithVersion !== undefined) {
-      GroupJoinRequestsWithVersion.encode(message.groupJoinRequestsWithVersion, writer.uint32(130).fork()).ldelim();
+      GroupJoinRequestsWithVersion.encode(message.groupJoinRequestsWithVersion, writer.uint32(138).fork()).ldelim();
     }
     if (message.groupJoinQuestionsWithVersion !== undefined) {
-      GroupJoinQuestionsWithVersion.encode(message.groupJoinQuestionsWithVersion, writer.uint32(138).fork()).ldelim();
+      GroupJoinQuestionsWithVersion.encode(message.groupJoinQuestionsWithVersion, writer.uint32(146).fork()).ldelim();
     }
     if (message.groupMembersWithVersion !== undefined) {
-      GroupMembersWithVersion.encode(message.groupMembersWithVersion, writer.uint32(146).fork()).ldelim();
+      GroupMembersWithVersion.encode(message.groupMembersWithVersion, writer.uint32(154).fork()).ldelim();
     }
     if (message.groupsWithVersion !== undefined) {
-      GroupsWithVersion.encode(message.groupsWithVersion, writer.uint32(154).fork()).ldelim();
+      GroupsWithVersion.encode(message.groupsWithVersion, writer.uint32(162).fork()).ldelim();
     }
     return writer;
   },
@@ -245,60 +263,63 @@ export const TurmsNotification_Data = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.ids = Int64Values.decode(reader, reader.uint32());
+          message.long = longToString(reader.int64() as Long);
           break;
         case 2:
-          message.idsWithVersion = Int64ValuesWithVersion.decode(reader, reader.uint32());
+          message.string = reader.string();
           break;
         case 3:
-          message.url = reader.string();
+          message.longsWithVersion = LongsWithVersion.decode(reader, reader.uint32());
           break;
         case 4:
-          message.conversations = Conversations.decode(reader, reader.uint32());
+          message.stringsWithVersion = StringsWithVersion.decode(reader, reader.uint32());
           break;
         case 5:
-          message.messages = Messages.decode(reader, reader.uint32());
+          message.conversations = Conversations.decode(reader, reader.uint32());
           break;
         case 6:
-          message.messagesWithTotalList = MessagesWithTotalList.decode(reader, reader.uint32());
+          message.messages = Messages.decode(reader, reader.uint32());
           break;
         case 7:
-          message.userSession = UserSession.decode(reader, reader.uint32());
+          message.messagesWithTotalList = MessagesWithTotalList.decode(reader, reader.uint32());
           break;
         case 8:
-          message.userInfosWithVersion = UserInfosWithVersion.decode(reader, reader.uint32());
+          message.userSession = UserSession.decode(reader, reader.uint32());
           break;
         case 9:
-          message.userOnlineStatuses = UserOnlineStatuses.decode(reader, reader.uint32());
+          message.userInfosWithVersion = UserInfosWithVersion.decode(reader, reader.uint32());
           break;
         case 10:
-          message.userFriendRequestsWithVersion = UserFriendRequestsWithVersion.decode(reader, reader.uint32());
+          message.userOnlineStatuses = UserOnlineStatuses.decode(reader, reader.uint32());
           break;
         case 11:
-          message.userRelationshipGroupsWithVersion = UserRelationshipGroupsWithVersion.decode(reader, reader.uint32());
+          message.userFriendRequestsWithVersion = UserFriendRequestsWithVersion.decode(reader, reader.uint32());
           break;
         case 12:
-          message.userRelationshipsWithVersion = UserRelationshipsWithVersion.decode(reader, reader.uint32());
+          message.userRelationshipGroupsWithVersion = UserRelationshipGroupsWithVersion.decode(reader, reader.uint32());
           break;
         case 13:
-          message.nearbyUsers = NearbyUsers.decode(reader, reader.uint32());
+          message.userRelationshipsWithVersion = UserRelationshipsWithVersion.decode(reader, reader.uint32());
           break;
         case 14:
-          message.groupInvitationsWithVersion = GroupInvitationsWithVersion.decode(reader, reader.uint32());
+          message.nearbyUsers = NearbyUsers.decode(reader, reader.uint32());
           break;
         case 15:
-          message.groupJoinQuestionAnswerResult = GroupJoinQuestionsAnswerResult.decode(reader, reader.uint32());
+          message.groupInvitationsWithVersion = GroupInvitationsWithVersion.decode(reader, reader.uint32());
           break;
         case 16:
-          message.groupJoinRequestsWithVersion = GroupJoinRequestsWithVersion.decode(reader, reader.uint32());
+          message.groupJoinQuestionAnswerResult = GroupJoinQuestionsAnswerResult.decode(reader, reader.uint32());
           break;
         case 17:
-          message.groupJoinQuestionsWithVersion = GroupJoinQuestionsWithVersion.decode(reader, reader.uint32());
+          message.groupJoinRequestsWithVersion = GroupJoinRequestsWithVersion.decode(reader, reader.uint32());
           break;
         case 18:
-          message.groupMembersWithVersion = GroupMembersWithVersion.decode(reader, reader.uint32());
+          message.groupJoinQuestionsWithVersion = GroupJoinQuestionsWithVersion.decode(reader, reader.uint32());
           break;
         case 19:
+          message.groupMembersWithVersion = GroupMembersWithVersion.decode(reader, reader.uint32());
+          break;
+        case 20:
           message.groupsWithVersion = GroupsWithVersion.decode(reader, reader.uint32());
           break;
         default:

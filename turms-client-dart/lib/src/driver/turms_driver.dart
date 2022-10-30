@@ -3,7 +3,6 @@ import 'dart:typed_data';
 
 import 'package:protobuf/protobuf.dart';
 
-import '../extension/notification_extensions.dart';
 import '../model/proto/notification/turms_notification.pb.dart';
 import '../model/proto/request/turms_request.pb.dart';
 import '../transport/tcp_metrics.dart';

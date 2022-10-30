@@ -124,8 +124,8 @@ public class UserRelationshipServiceController extends BaseServiceController {
                             new Date())
                     .map(friendRequest -> notifyRecipientWhenReceivingFriendRequest
                             ? RequestHandlerResultFactory
-                            .getByDataId(friendRequest.getId(), request.getRecipientId(), clientRequest.turmsRequest())
-                            : RequestHandlerResultFactory.getByDataId(friendRequest.getId()));
+                            .getByDataLong(friendRequest.getId(), request.getRecipientId(), clientRequest.turmsRequest())
+                            : RequestHandlerResultFactory.getByDataLong(friendRequest.getId()));
         };
     }
 
@@ -139,7 +139,7 @@ public class UserRelationshipServiceController extends BaseServiceController {
                             request.getName(),
                             new Date(),
                             null)
-                    .map(group -> RequestHandlerResultFactory.getByDataId(group.getKey().getGroupIndex().longValue()));
+                    .map(group -> RequestHandlerResultFactory.getByDataLong(group.getKey().getGroupIndex().longValue()));
         };
     }
 
@@ -251,7 +251,7 @@ public class UserRelationshipServiceController extends BaseServiceController {
                     .map(idsWithVersion -> RequestHandlerResultFactory
                             .get(ClientMessagePool
                                     .getTurmsNotificationDataBuilder()
-                                    .setIdsWithVersion(idsWithVersion)
+                                    .setLongsWithVersion(idsWithVersion)
                                     .build()));
         };
     }

@@ -13,12 +13,13 @@ public extension TurmsNotification {
 }
 
 public extension TurmsNotification.DataMessage {
-    func getFirstId() throws -> Int64 {
-        let ids = ids
-        if ids.values.count > 0 {
-            return ids.values[0]
-        } else {
-            throw ResponseError(.invalidResponse)
+    func getLongOrThrow() throws -> Int64 {
+        if case let .long(v)? = kind {
+            return v
         }
+        throw ResponseError(
+            code: .invalidResponse,
+            reason: "Cannot get a long value from the invalid response: \(self)"
+        )
     }
 }

@@ -36,216 +36,267 @@ public  final class TurmsNotification extends
       com.google.protobuf.MessageLiteOrBuilder {
 
     /**
-     * <code>.im.turms.proto.Int64Values ids = 1;</code>
-     * @return Whether the ids field is set.
+     * <pre>
+     * Common
+     * </pre>
+     *
+     * <code>int64 long = 1;</code>
+     * @return Whether the long field is set.
      */
-    boolean hasIds();
+    boolean hasLong();
     /**
-     * <code>.im.turms.proto.Int64Values ids = 1;</code>
-     * @return The ids.
+     * <pre>
+     * Common
+     * </pre>
+     *
+     * <code>int64 long = 1;</code>
+     * @return The long.
      */
-    im.turms.client.model.proto.model.common.Int64Values getIds();
+    long getLong();
 
     /**
-     * <code>.im.turms.proto.Int64ValuesWithVersion ids_with_version = 2;</code>
-     * @return Whether the idsWithVersion field is set.
+     * <code>string string = 2;</code>
+     * @return Whether the string field is set.
      */
-    boolean hasIdsWithVersion();
+    boolean hasString();
     /**
-     * <code>.im.turms.proto.Int64ValuesWithVersion ids_with_version = 2;</code>
-     * @return The idsWithVersion.
+     * <code>string string = 2;</code>
+     * @return The string.
      */
-    im.turms.client.model.proto.model.common.Int64ValuesWithVersion getIdsWithVersion();
-
+    java.lang.String getString();
     /**
-     * <code>string url = 3;</code>
-     * @return Whether the url field is set.
-     */
-    boolean hasUrl();
-    /**
-     * <code>string url = 3;</code>
-     * @return The url.
-     */
-    java.lang.String getUrl();
-    /**
-     * <code>string url = 3;</code>
-     * @return The bytes for url.
+     * <code>string string = 2;</code>
+     * @return The bytes for string.
      */
     com.google.protobuf.ByteString
-        getUrlBytes();
+        getStringBytes();
 
     /**
-     * <code>.im.turms.proto.Conversations conversations = 4;</code>
+     * <code>.im.turms.proto.LongsWithVersion longs_with_version = 3;</code>
+     * @return Whether the longsWithVersion field is set.
+     */
+    boolean hasLongsWithVersion();
+    /**
+     * <code>.im.turms.proto.LongsWithVersion longs_with_version = 3;</code>
+     * @return The longsWithVersion.
+     */
+    im.turms.client.model.proto.model.common.LongsWithVersion getLongsWithVersion();
+
+    /**
+     * <code>.im.turms.proto.StringsWithVersion strings_with_version = 4;</code>
+     * @return Whether the stringsWithVersion field is set.
+     */
+    boolean hasStringsWithVersion();
+    /**
+     * <code>.im.turms.proto.StringsWithVersion strings_with_version = 4;</code>
+     * @return The stringsWithVersion.
+     */
+    im.turms.client.model.proto.model.common.StringsWithVersion getStringsWithVersion();
+
+    /**
+     * <pre>
+     * Conversation
+     * </pre>
+     *
+     * <code>.im.turms.proto.Conversations conversations = 5;</code>
      * @return Whether the conversations field is set.
      */
     boolean hasConversations();
     /**
-     * <code>.im.turms.proto.Conversations conversations = 4;</code>
+     * <pre>
+     * Conversation
+     * </pre>
+     *
+     * <code>.im.turms.proto.Conversations conversations = 5;</code>
      * @return The conversations.
      */
     im.turms.client.model.proto.model.conversation.Conversations getConversations();
 
     /**
-     * <code>.im.turms.proto.Messages messages = 5;</code>
+     * <pre>
+     * Message
+     * </pre>
+     *
+     * <code>.im.turms.proto.Messages messages = 6;</code>
      * @return Whether the messages field is set.
      */
     boolean hasMessages();
     /**
-     * <code>.im.turms.proto.Messages messages = 5;</code>
+     * <pre>
+     * Message
+     * </pre>
+     *
+     * <code>.im.turms.proto.Messages messages = 6;</code>
      * @return The messages.
      */
     im.turms.client.model.proto.model.message.Messages getMessages();
 
     /**
-     * <code>.im.turms.proto.MessagesWithTotalList messages_with_total_list = 6;</code>
+     * <code>.im.turms.proto.MessagesWithTotalList messages_with_total_list = 7;</code>
      * @return Whether the messagesWithTotalList field is set.
      */
     boolean hasMessagesWithTotalList();
     /**
-     * <code>.im.turms.proto.MessagesWithTotalList messages_with_total_list = 6;</code>
+     * <code>.im.turms.proto.MessagesWithTotalList messages_with_total_list = 7;</code>
      * @return The messagesWithTotalList.
      */
     im.turms.client.model.proto.model.message.MessagesWithTotalList getMessagesWithTotalList();
 
     /**
-     * <code>.im.turms.proto.UserSession user_session = 7;</code>
+     * <pre>
+     * User
+     * </pre>
+     *
+     * <code>.im.turms.proto.UserSession user_session = 8;</code>
      * @return Whether the userSession field is set.
      */
     boolean hasUserSession();
     /**
-     * <code>.im.turms.proto.UserSession user_session = 7;</code>
+     * <pre>
+     * User
+     * </pre>
+     *
+     * <code>.im.turms.proto.UserSession user_session = 8;</code>
      * @return The userSession.
      */
     im.turms.client.model.proto.model.user.UserSession getUserSession();
 
     /**
-     * <code>.im.turms.proto.UserInfosWithVersion user_infos_with_version = 8;</code>
+     * <code>.im.turms.proto.UserInfosWithVersion user_infos_with_version = 9;</code>
      * @return Whether the userInfosWithVersion field is set.
      */
     boolean hasUserInfosWithVersion();
     /**
-     * <code>.im.turms.proto.UserInfosWithVersion user_infos_with_version = 8;</code>
+     * <code>.im.turms.proto.UserInfosWithVersion user_infos_with_version = 9;</code>
      * @return The userInfosWithVersion.
      */
     im.turms.client.model.proto.model.user.UserInfosWithVersion getUserInfosWithVersion();
 
     /**
-     * <code>.im.turms.proto.UserOnlineStatuses user_online_statuses = 9;</code>
+     * <code>.im.turms.proto.UserOnlineStatuses user_online_statuses = 10;</code>
      * @return Whether the userOnlineStatuses field is set.
      */
     boolean hasUserOnlineStatuses();
     /**
-     * <code>.im.turms.proto.UserOnlineStatuses user_online_statuses = 9;</code>
+     * <code>.im.turms.proto.UserOnlineStatuses user_online_statuses = 10;</code>
      * @return The userOnlineStatuses.
      */
     im.turms.client.model.proto.model.user.UserOnlineStatuses getUserOnlineStatuses();
 
     /**
-     * <code>.im.turms.proto.UserFriendRequestsWithVersion user_friend_requests_with_version = 10;</code>
+     * <code>.im.turms.proto.UserFriendRequestsWithVersion user_friend_requests_with_version = 11;</code>
      * @return Whether the userFriendRequestsWithVersion field is set.
      */
     boolean hasUserFriendRequestsWithVersion();
     /**
-     * <code>.im.turms.proto.UserFriendRequestsWithVersion user_friend_requests_with_version = 10;</code>
+     * <code>.im.turms.proto.UserFriendRequestsWithVersion user_friend_requests_with_version = 11;</code>
      * @return The userFriendRequestsWithVersion.
      */
     im.turms.client.model.proto.model.user.UserFriendRequestsWithVersion getUserFriendRequestsWithVersion();
 
     /**
-     * <code>.im.turms.proto.UserRelationshipGroupsWithVersion user_relationship_groups_with_version = 11;</code>
+     * <code>.im.turms.proto.UserRelationshipGroupsWithVersion user_relationship_groups_with_version = 12;</code>
      * @return Whether the userRelationshipGroupsWithVersion field is set.
      */
     boolean hasUserRelationshipGroupsWithVersion();
     /**
-     * <code>.im.turms.proto.UserRelationshipGroupsWithVersion user_relationship_groups_with_version = 11;</code>
+     * <code>.im.turms.proto.UserRelationshipGroupsWithVersion user_relationship_groups_with_version = 12;</code>
      * @return The userRelationshipGroupsWithVersion.
      */
     im.turms.client.model.proto.model.user.UserRelationshipGroupsWithVersion getUserRelationshipGroupsWithVersion();
 
     /**
-     * <code>.im.turms.proto.UserRelationshipsWithVersion user_relationships_with_version = 12;</code>
+     * <code>.im.turms.proto.UserRelationshipsWithVersion user_relationships_with_version = 13;</code>
      * @return Whether the userRelationshipsWithVersion field is set.
      */
     boolean hasUserRelationshipsWithVersion();
     /**
-     * <code>.im.turms.proto.UserRelationshipsWithVersion user_relationships_with_version = 12;</code>
+     * <code>.im.turms.proto.UserRelationshipsWithVersion user_relationships_with_version = 13;</code>
      * @return The userRelationshipsWithVersion.
      */
     im.turms.client.model.proto.model.user.UserRelationshipsWithVersion getUserRelationshipsWithVersion();
 
     /**
-     * <code>.im.turms.proto.NearbyUsers nearby_users = 13;</code>
+     * <code>.im.turms.proto.NearbyUsers nearby_users = 14;</code>
      * @return Whether the nearbyUsers field is set.
      */
     boolean hasNearbyUsers();
     /**
-     * <code>.im.turms.proto.NearbyUsers nearby_users = 13;</code>
+     * <code>.im.turms.proto.NearbyUsers nearby_users = 14;</code>
      * @return The nearbyUsers.
      */
     im.turms.client.model.proto.model.user.NearbyUsers getNearbyUsers();
 
     /**
-     * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 14;</code>
+     * <pre>
+     * Group
+     * </pre>
+     *
+     * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 15;</code>
      * @return Whether the groupInvitationsWithVersion field is set.
      */
     boolean hasGroupInvitationsWithVersion();
     /**
-     * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 14;</code>
+     * <pre>
+     * Group
+     * </pre>
+     *
+     * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 15;</code>
      * @return The groupInvitationsWithVersion.
      */
     im.turms.client.model.proto.model.group.GroupInvitationsWithVersion getGroupInvitationsWithVersion();
 
     /**
-     * <code>.im.turms.proto.GroupJoinQuestionsAnswerResult group_join_question_answer_result = 15;</code>
+     * <code>.im.turms.proto.GroupJoinQuestionsAnswerResult group_join_question_answer_result = 16;</code>
      * @return Whether the groupJoinQuestionAnswerResult field is set.
      */
     boolean hasGroupJoinQuestionAnswerResult();
     /**
-     * <code>.im.turms.proto.GroupJoinQuestionsAnswerResult group_join_question_answer_result = 15;</code>
+     * <code>.im.turms.proto.GroupJoinQuestionsAnswerResult group_join_question_answer_result = 16;</code>
      * @return The groupJoinQuestionAnswerResult.
      */
     im.turms.client.model.proto.model.group.GroupJoinQuestionsAnswerResult getGroupJoinQuestionAnswerResult();
 
     /**
-     * <code>.im.turms.proto.GroupJoinRequestsWithVersion group_join_requests_with_version = 16;</code>
+     * <code>.im.turms.proto.GroupJoinRequestsWithVersion group_join_requests_with_version = 17;</code>
      * @return Whether the groupJoinRequestsWithVersion field is set.
      */
     boolean hasGroupJoinRequestsWithVersion();
     /**
-     * <code>.im.turms.proto.GroupJoinRequestsWithVersion group_join_requests_with_version = 16;</code>
+     * <code>.im.turms.proto.GroupJoinRequestsWithVersion group_join_requests_with_version = 17;</code>
      * @return The groupJoinRequestsWithVersion.
      */
     im.turms.client.model.proto.model.group.GroupJoinRequestsWithVersion getGroupJoinRequestsWithVersion();
 
     /**
-     * <code>.im.turms.proto.GroupJoinQuestionsWithVersion group_join_questions_with_version = 17;</code>
+     * <code>.im.turms.proto.GroupJoinQuestionsWithVersion group_join_questions_with_version = 18;</code>
      * @return Whether the groupJoinQuestionsWithVersion field is set.
      */
     boolean hasGroupJoinQuestionsWithVersion();
     /**
-     * <code>.im.turms.proto.GroupJoinQuestionsWithVersion group_join_questions_with_version = 17;</code>
+     * <code>.im.turms.proto.GroupJoinQuestionsWithVersion group_join_questions_with_version = 18;</code>
      * @return The groupJoinQuestionsWithVersion.
      */
     im.turms.client.model.proto.model.group.GroupJoinQuestionsWithVersion getGroupJoinQuestionsWithVersion();
 
     /**
-     * <code>.im.turms.proto.GroupMembersWithVersion group_members_with_version = 18;</code>
+     * <code>.im.turms.proto.GroupMembersWithVersion group_members_with_version = 19;</code>
      * @return Whether the groupMembersWithVersion field is set.
      */
     boolean hasGroupMembersWithVersion();
     /**
-     * <code>.im.turms.proto.GroupMembersWithVersion group_members_with_version = 18;</code>
+     * <code>.im.turms.proto.GroupMembersWithVersion group_members_with_version = 19;</code>
      * @return The groupMembersWithVersion.
      */
     im.turms.client.model.proto.model.group.GroupMembersWithVersion getGroupMembersWithVersion();
 
     /**
-     * <code>.im.turms.proto.GroupsWithVersion groups_with_version = 19;</code>
+     * <code>.im.turms.proto.GroupsWithVersion groups_with_version = 20;</code>
      * @return Whether the groupsWithVersion field is set.
      */
     boolean hasGroupsWithVersion();
     /**
-     * <code>.im.turms.proto.GroupsWithVersion groups_with_version = 19;</code>
+     * <code>.im.turms.proto.GroupsWithVersion groups_with_version = 20;</code>
      * @return The groupsWithVersion.
      */
     im.turms.client.model.proto.model.group.GroupsWithVersion getGroupsWithVersion();
@@ -265,25 +316,26 @@ public  final class TurmsNotification extends
     private int kindCase_ = 0;
     private java.lang.Object kind_;
     public enum KindCase {
-      IDS(1),
-      IDS_WITH_VERSION(2),
-      URL(3),
-      CONVERSATIONS(4),
-      MESSAGES(5),
-      MESSAGES_WITH_TOTAL_LIST(6),
-      USER_SESSION(7),
-      USER_INFOS_WITH_VERSION(8),
-      USER_ONLINE_STATUSES(9),
-      USER_FRIEND_REQUESTS_WITH_VERSION(10),
-      USER_RELATIONSHIP_GROUPS_WITH_VERSION(11),
-      USER_RELATIONSHIPS_WITH_VERSION(12),
-      NEARBY_USERS(13),
-      GROUP_INVITATIONS_WITH_VERSION(14),
-      GROUP_JOIN_QUESTION_ANSWER_RESULT(15),
-      GROUP_JOIN_REQUESTS_WITH_VERSION(16),
-      GROUP_JOIN_QUESTIONS_WITH_VERSION(17),
-      GROUP_MEMBERS_WITH_VERSION(18),
-      GROUPS_WITH_VERSION(19),
+      LONG(1),
+      STRING(2),
+      LONGS_WITH_VERSION(3),
+      STRINGS_WITH_VERSION(4),
+      CONVERSATIONS(5),
+      MESSAGES(6),
+      MESSAGES_WITH_TOTAL_LIST(7),
+      USER_SESSION(8),
+      USER_INFOS_WITH_VERSION(9),
+      USER_ONLINE_STATUSES(10),
+      USER_FRIEND_REQUESTS_WITH_VERSION(11),
+      USER_RELATIONSHIP_GROUPS_WITH_VERSION(12),
+      USER_RELATIONSHIPS_WITH_VERSION(13),
+      NEARBY_USERS(14),
+      GROUP_INVITATIONS_WITH_VERSION(15),
+      GROUP_JOIN_QUESTION_ANSWER_RESULT(16),
+      GROUP_JOIN_REQUESTS_WITH_VERSION(17),
+      GROUP_JOIN_QUESTIONS_WITH_VERSION(18),
+      GROUP_MEMBERS_WITH_VERSION(19),
+      GROUPS_WITH_VERSION(20),
       KIND_NOT_SET(0);
       private final int value;
       private KindCase(int value) {
@@ -299,25 +351,26 @@ public  final class TurmsNotification extends
 
       public static KindCase forNumber(int value) {
         switch (value) {
-          case 1: return IDS;
-          case 2: return IDS_WITH_VERSION;
-          case 3: return URL;
-          case 4: return CONVERSATIONS;
-          case 5: return MESSAGES;
-          case 6: return MESSAGES_WITH_TOTAL_LIST;
-          case 7: return USER_SESSION;
-          case 8: return USER_INFOS_WITH_VERSION;
-          case 9: return USER_ONLINE_STATUSES;
-          case 10: return USER_FRIEND_REQUESTS_WITH_VERSION;
-          case 11: return USER_RELATIONSHIP_GROUPS_WITH_VERSION;
-          case 12: return USER_RELATIONSHIPS_WITH_VERSION;
-          case 13: return NEARBY_USERS;
-          case 14: return GROUP_INVITATIONS_WITH_VERSION;
-          case 15: return GROUP_JOIN_QUESTION_ANSWER_RESULT;
-          case 16: return GROUP_JOIN_REQUESTS_WITH_VERSION;
-          case 17: return GROUP_JOIN_QUESTIONS_WITH_VERSION;
-          case 18: return GROUP_MEMBERS_WITH_VERSION;
-          case 19: return GROUPS_WITH_VERSION;
+          case 1: return LONG;
+          case 2: return STRING;
+          case 3: return LONGS_WITH_VERSION;
+          case 4: return STRINGS_WITH_VERSION;
+          case 5: return CONVERSATIONS;
+          case 6: return MESSAGES;
+          case 7: return MESSAGES_WITH_TOTAL_LIST;
+          case 8: return USER_SESSION;
+          case 9: return USER_INFOS_WITH_VERSION;
+          case 10: return USER_ONLINE_STATUSES;
+          case 11: return USER_FRIEND_REQUESTS_WITH_VERSION;
+          case 12: return USER_RELATIONSHIP_GROUPS_WITH_VERSION;
+          case 13: return USER_RELATIONSHIPS_WITH_VERSION;
+          case 14: return NEARBY_USERS;
+          case 15: return GROUP_INVITATIONS_WITH_VERSION;
+          case 16: return GROUP_JOIN_QUESTION_ANSWER_RESULT;
+          case 17: return GROUP_JOIN_REQUESTS_WITH_VERSION;
+          case 18: return GROUP_JOIN_QUESTIONS_WITH_VERSION;
+          case 19: return GROUP_MEMBERS_WITH_VERSION;
+          case 20: return GROUPS_WITH_VERSION;
           case 0: return KIND_NOT_SET;
           default: return null;
         }
@@ -339,965 +392,1099 @@ public  final class TurmsNotification extends
       kind_ = null;
     }
 
-    public static final int IDS_FIELD_NUMBER = 1;
+    public static final int LONG_FIELD_NUMBER = 1;
     /**
-     * <code>.im.turms.proto.Int64Values ids = 1;</code>
+     * <pre>
+     * Common
+     * </pre>
+     *
+     * <code>int64 long = 1;</code>
+     * @return Whether the long field is set.
      */
     @java.lang.Override
-    public boolean hasIds() {
+    public boolean hasLong() {
       return kindCase_ == 1;
     }
     /**
-     * <code>.im.turms.proto.Int64Values ids = 1;</code>
+     * <pre>
+     * Common
+     * </pre>
+     *
+     * <code>int64 long = 1;</code>
+     * @return The long.
      */
     @java.lang.Override
-    public im.turms.client.model.proto.model.common.Int64Values getIds() {
+    public long getLong() {
       if (kindCase_ == 1) {
-         return (im.turms.client.model.proto.model.common.Int64Values) kind_;
+        return (java.lang.Long) kind_;
       }
-      return im.turms.client.model.proto.model.common.Int64Values.getDefaultInstance();
+      return 0L;
     }
     /**
-     * <code>.im.turms.proto.Int64Values ids = 1;</code>
+     * <pre>
+     * Common
+     * </pre>
+     *
+     * <code>int64 long = 1;</code>
+     * @param value The long to set.
      */
-    private void setIds(im.turms.client.model.proto.model.common.Int64Values value) {
-      value.getClass();
-  kind_ = value;
+    private void setLong(long value) {
       kindCase_ = 1;
+      kind_ = value;
     }
     /**
-     * <code>.im.turms.proto.Int64Values ids = 1;</code>
+     * <pre>
+     * Common
+     * </pre>
+     *
+     * <code>int64 long = 1;</code>
      */
-    private void mergeIds(im.turms.client.model.proto.model.common.Int64Values value) {
-      value.getClass();
-  if (kindCase_ == 1 &&
-          kind_ != im.turms.client.model.proto.model.common.Int64Values.getDefaultInstance()) {
-        kind_ = im.turms.client.model.proto.model.common.Int64Values.newBuilder((im.turms.client.model.proto.model.common.Int64Values) kind_)
-            .mergeFrom(value).buildPartial();
-      } else {
-        kind_ = value;
-      }
-      kindCase_ = 1;
-    }
-    /**
-     * <code>.im.turms.proto.Int64Values ids = 1;</code>
-     */
-    private void clearIds() {
+    private void clearLong() {
       if (kindCase_ == 1) {
         kindCase_ = 0;
         kind_ = null;
       }
     }
 
-    public static final int IDS_WITH_VERSION_FIELD_NUMBER = 2;
+    public static final int STRING_FIELD_NUMBER = 2;
     /**
-     * <code>.im.turms.proto.Int64ValuesWithVersion ids_with_version = 2;</code>
+     * <code>string string = 2;</code>
+     * @return Whether the string field is set.
      */
     @java.lang.Override
-    public boolean hasIdsWithVersion() {
+    public boolean hasString() {
       return kindCase_ == 2;
     }
     /**
-     * <code>.im.turms.proto.Int64ValuesWithVersion ids_with_version = 2;</code>
+     * <code>string string = 2;</code>
+     * @return The string.
      */
     @java.lang.Override
-    public im.turms.client.model.proto.model.common.Int64ValuesWithVersion getIdsWithVersion() {
-      if (kindCase_ == 2) {
-         return (im.turms.client.model.proto.model.common.Int64ValuesWithVersion) kind_;
-      }
-      return im.turms.client.model.proto.model.common.Int64ValuesWithVersion.getDefaultInstance();
-    }
-    /**
-     * <code>.im.turms.proto.Int64ValuesWithVersion ids_with_version = 2;</code>
-     */
-    private void setIdsWithVersion(im.turms.client.model.proto.model.common.Int64ValuesWithVersion value) {
-      value.getClass();
-  kind_ = value;
-      kindCase_ = 2;
-    }
-    /**
-     * <code>.im.turms.proto.Int64ValuesWithVersion ids_with_version = 2;</code>
-     */
-    private void mergeIdsWithVersion(im.turms.client.model.proto.model.common.Int64ValuesWithVersion value) {
-      value.getClass();
-  if (kindCase_ == 2 &&
-          kind_ != im.turms.client.model.proto.model.common.Int64ValuesWithVersion.getDefaultInstance()) {
-        kind_ = im.turms.client.model.proto.model.common.Int64ValuesWithVersion.newBuilder((im.turms.client.model.proto.model.common.Int64ValuesWithVersion) kind_)
-            .mergeFrom(value).buildPartial();
-      } else {
-        kind_ = value;
-      }
-      kindCase_ = 2;
-    }
-    /**
-     * <code>.im.turms.proto.Int64ValuesWithVersion ids_with_version = 2;</code>
-     */
-    private void clearIdsWithVersion() {
-      if (kindCase_ == 2) {
-        kindCase_ = 0;
-        kind_ = null;
-      }
-    }
-
-    public static final int URL_FIELD_NUMBER = 3;
-    /**
-     * <code>string url = 3;</code>
-     * @return Whether the url field is set.
-     */
-    @java.lang.Override
-    public boolean hasUrl() {
-      return kindCase_ == 3;
-    }
-    /**
-     * <code>string url = 3;</code>
-     * @return The url.
-     */
-    @java.lang.Override
-    public java.lang.String getUrl() {
+    public java.lang.String getString() {
       java.lang.String ref = "";
-      if (kindCase_ == 3) {
+      if (kindCase_ == 2) {
         ref = (java.lang.String) kind_;
       }
       return ref;
     }
     /**
-     * <code>string url = 3;</code>
-     * @return The bytes for url.
+     * <code>string string = 2;</code>
+     * @return The bytes for string.
      */
     @java.lang.Override
     public com.google.protobuf.ByteString
-        getUrlBytes() {
+        getStringBytes() {
       java.lang.String ref = "";
-      if (kindCase_ == 3) {
+      if (kindCase_ == 2) {
         ref = (java.lang.String) kind_;
       }
       return com.google.protobuf.ByteString.copyFromUtf8(ref);
     }
     /**
-     * <code>string url = 3;</code>
-     * @param value The url to set.
+     * <code>string string = 2;</code>
+     * @param value The string to set.
      */
-    private void setUrl(
+    private void setString(
         java.lang.String value) {
       java.lang.Class<?> valueClass = value.getClass();
-  kindCase_ = 3;
+  kindCase_ = 2;
       kind_ = value;
     }
     /**
-     * <code>string url = 3;</code>
+     * <code>string string = 2;</code>
      */
-    private void clearUrl() {
-      if (kindCase_ == 3) {
+    private void clearString() {
+      if (kindCase_ == 2) {
         kindCase_ = 0;
         kind_ = null;
       }
     }
     /**
-     * <code>string url = 3;</code>
-     * @param value The bytes for url to set.
+     * <code>string string = 2;</code>
+     * @param value The bytes for string to set.
      */
-    private void setUrlBytes(
+    private void setStringBytes(
         com.google.protobuf.ByteString value) {
       checkByteStringIsUtf8(value);
       kind_ = value.toStringUtf8();
-      kindCase_ = 3;
+      kindCase_ = 2;
     }
 
-    public static final int CONVERSATIONS_FIELD_NUMBER = 4;
+    public static final int LONGS_WITH_VERSION_FIELD_NUMBER = 3;
     /**
-     * <code>.im.turms.proto.Conversations conversations = 4;</code>
+     * <code>.im.turms.proto.LongsWithVersion longs_with_version = 3;</code>
      */
     @java.lang.Override
-    public boolean hasConversations() {
+    public boolean hasLongsWithVersion() {
+      return kindCase_ == 3;
+    }
+    /**
+     * <code>.im.turms.proto.LongsWithVersion longs_with_version = 3;</code>
+     */
+    @java.lang.Override
+    public im.turms.client.model.proto.model.common.LongsWithVersion getLongsWithVersion() {
+      if (kindCase_ == 3) {
+         return (im.turms.client.model.proto.model.common.LongsWithVersion) kind_;
+      }
+      return im.turms.client.model.proto.model.common.LongsWithVersion.getDefaultInstance();
+    }
+    /**
+     * <code>.im.turms.proto.LongsWithVersion longs_with_version = 3;</code>
+     */
+    private void setLongsWithVersion(im.turms.client.model.proto.model.common.LongsWithVersion value) {
+      value.getClass();
+  kind_ = value;
+      kindCase_ = 3;
+    }
+    /**
+     * <code>.im.turms.proto.LongsWithVersion longs_with_version = 3;</code>
+     */
+    private void mergeLongsWithVersion(im.turms.client.model.proto.model.common.LongsWithVersion value) {
+      value.getClass();
+  if (kindCase_ == 3 &&
+          kind_ != im.turms.client.model.proto.model.common.LongsWithVersion.getDefaultInstance()) {
+        kind_ = im.turms.client.model.proto.model.common.LongsWithVersion.newBuilder((im.turms.client.model.proto.model.common.LongsWithVersion) kind_)
+            .mergeFrom(value).buildPartial();
+      } else {
+        kind_ = value;
+      }
+      kindCase_ = 3;
+    }
+    /**
+     * <code>.im.turms.proto.LongsWithVersion longs_with_version = 3;</code>
+     */
+    private void clearLongsWithVersion() {
+      if (kindCase_ == 3) {
+        kindCase_ = 0;
+        kind_ = null;
+      }
+    }
+
+    public static final int STRINGS_WITH_VERSION_FIELD_NUMBER = 4;
+    /**
+     * <code>.im.turms.proto.StringsWithVersion strings_with_version = 4;</code>
+     */
+    @java.lang.Override
+    public boolean hasStringsWithVersion() {
       return kindCase_ == 4;
     }
     /**
-     * <code>.im.turms.proto.Conversations conversations = 4;</code>
+     * <code>.im.turms.proto.StringsWithVersion strings_with_version = 4;</code>
      */
     @java.lang.Override
-    public im.turms.client.model.proto.model.conversation.Conversations getConversations() {
+    public im.turms.client.model.proto.model.common.StringsWithVersion getStringsWithVersion() {
       if (kindCase_ == 4) {
-         return (im.turms.client.model.proto.model.conversation.Conversations) kind_;
+         return (im.turms.client.model.proto.model.common.StringsWithVersion) kind_;
       }
-      return im.turms.client.model.proto.model.conversation.Conversations.getDefaultInstance();
+      return im.turms.client.model.proto.model.common.StringsWithVersion.getDefaultInstance();
     }
     /**
-     * <code>.im.turms.proto.Conversations conversations = 4;</code>
+     * <code>.im.turms.proto.StringsWithVersion strings_with_version = 4;</code>
      */
-    private void setConversations(im.turms.client.model.proto.model.conversation.Conversations value) {
+    private void setStringsWithVersion(im.turms.client.model.proto.model.common.StringsWithVersion value) {
       value.getClass();
   kind_ = value;
       kindCase_ = 4;
     }
     /**
-     * <code>.im.turms.proto.Conversations conversations = 4;</code>
+     * <code>.im.turms.proto.StringsWithVersion strings_with_version = 4;</code>
+     */
+    private void mergeStringsWithVersion(im.turms.client.model.proto.model.common.StringsWithVersion value) {
+      value.getClass();
+  if (kindCase_ == 4 &&
+          kind_ != im.turms.client.model.proto.model.common.StringsWithVersion.getDefaultInstance()) {
+        kind_ = im.turms.client.model.proto.model.common.StringsWithVersion.newBuilder((im.turms.client.model.proto.model.common.StringsWithVersion) kind_)
+            .mergeFrom(value).buildPartial();
+      } else {
+        kind_ = value;
+      }
+      kindCase_ = 4;
+    }
+    /**
+     * <code>.im.turms.proto.StringsWithVersion strings_with_version = 4;</code>
+     */
+    private void clearStringsWithVersion() {
+      if (kindCase_ == 4) {
+        kindCase_ = 0;
+        kind_ = null;
+      }
+    }
+
+    public static final int CONVERSATIONS_FIELD_NUMBER = 5;
+    /**
+     * <pre>
+     * Conversation
+     * </pre>
+     *
+     * <code>.im.turms.proto.Conversations conversations = 5;</code>
+     */
+    @java.lang.Override
+    public boolean hasConversations() {
+      return kindCase_ == 5;
+    }
+    /**
+     * <pre>
+     * Conversation
+     * </pre>
+     *
+     * <code>.im.turms.proto.Conversations conversations = 5;</code>
+     */
+    @java.lang.Override
+    public im.turms.client.model.proto.model.conversation.Conversations getConversations() {
+      if (kindCase_ == 5) {
+         return (im.turms.client.model.proto.model.conversation.Conversations) kind_;
+      }
+      return im.turms.client.model.proto.model.conversation.Conversations.getDefaultInstance();
+    }
+    /**
+     * <pre>
+     * Conversation
+     * </pre>
+     *
+     * <code>.im.turms.proto.Conversations conversations = 5;</code>
+     */
+    private void setConversations(im.turms.client.model.proto.model.conversation.Conversations value) {
+      value.getClass();
+  kind_ = value;
+      kindCase_ = 5;
+    }
+    /**
+     * <pre>
+     * Conversation
+     * </pre>
+     *
+     * <code>.im.turms.proto.Conversations conversations = 5;</code>
      */
     private void mergeConversations(im.turms.client.model.proto.model.conversation.Conversations value) {
       value.getClass();
-  if (kindCase_ == 4 &&
+  if (kindCase_ == 5 &&
           kind_ != im.turms.client.model.proto.model.conversation.Conversations.getDefaultInstance()) {
         kind_ = im.turms.client.model.proto.model.conversation.Conversations.newBuilder((im.turms.client.model.proto.model.conversation.Conversations) kind_)
             .mergeFrom(value).buildPartial();
       } else {
         kind_ = value;
       }
-      kindCase_ = 4;
+      kindCase_ = 5;
     }
     /**
-     * <code>.im.turms.proto.Conversations conversations = 4;</code>
+     * <pre>
+     * Conversation
+     * </pre>
+     *
+     * <code>.im.turms.proto.Conversations conversations = 5;</code>
      */
     private void clearConversations() {
-      if (kindCase_ == 4) {
+      if (kindCase_ == 5) {
         kindCase_ = 0;
         kind_ = null;
       }
     }
 
-    public static final int MESSAGES_FIELD_NUMBER = 5;
+    public static final int MESSAGES_FIELD_NUMBER = 6;
     /**
-     * <code>.im.turms.proto.Messages messages = 5;</code>
+     * <pre>
+     * Message
+     * </pre>
+     *
+     * <code>.im.turms.proto.Messages messages = 6;</code>
      */
     @java.lang.Override
     public boolean hasMessages() {
-      return kindCase_ == 5;
+      return kindCase_ == 6;
     }
     /**
-     * <code>.im.turms.proto.Messages messages = 5;</code>
+     * <pre>
+     * Message
+     * </pre>
+     *
+     * <code>.im.turms.proto.Messages messages = 6;</code>
      */
     @java.lang.Override
     public im.turms.client.model.proto.model.message.Messages getMessages() {
-      if (kindCase_ == 5) {
+      if (kindCase_ == 6) {
          return (im.turms.client.model.proto.model.message.Messages) kind_;
       }
       return im.turms.client.model.proto.model.message.Messages.getDefaultInstance();
     }
     /**
-     * <code>.im.turms.proto.Messages messages = 5;</code>
+     * <pre>
+     * Message
+     * </pre>
+     *
+     * <code>.im.turms.proto.Messages messages = 6;</code>
      */
     private void setMessages(im.turms.client.model.proto.model.message.Messages value) {
       value.getClass();
   kind_ = value;
-      kindCase_ = 5;
+      kindCase_ = 6;
     }
     /**
-     * <code>.im.turms.proto.Messages messages = 5;</code>
+     * <pre>
+     * Message
+     * </pre>
+     *
+     * <code>.im.turms.proto.Messages messages = 6;</code>
      */
     private void mergeMessages(im.turms.client.model.proto.model.message.Messages value) {
       value.getClass();
-  if (kindCase_ == 5 &&
+  if (kindCase_ == 6 &&
           kind_ != im.turms.client.model.proto.model.message.Messages.getDefaultInstance()) {
         kind_ = im.turms.client.model.proto.model.message.Messages.newBuilder((im.turms.client.model.proto.model.message.Messages) kind_)
             .mergeFrom(value).buildPartial();
       } else {
         kind_ = value;
       }
-      kindCase_ = 5;
+      kindCase_ = 6;
     }
     /**
-     * <code>.im.turms.proto.Messages messages = 5;</code>
+     * <pre>
+     * Message
+     * </pre>
+     *
+     * <code>.im.turms.proto.Messages messages = 6;</code>
      */
     private void clearMessages() {
-      if (kindCase_ == 5) {
+      if (kindCase_ == 6) {
         kindCase_ = 0;
         kind_ = null;
       }
     }
 
-    public static final int MESSAGES_WITH_TOTAL_LIST_FIELD_NUMBER = 6;
+    public static final int MESSAGES_WITH_TOTAL_LIST_FIELD_NUMBER = 7;
     /**
-     * <code>.im.turms.proto.MessagesWithTotalList messages_with_total_list = 6;</code>
+     * <code>.im.turms.proto.MessagesWithTotalList messages_with_total_list = 7;</code>
      */
     @java.lang.Override
     public boolean hasMessagesWithTotalList() {
-      return kindCase_ == 6;
+      return kindCase_ == 7;
     }
     /**
-     * <code>.im.turms.proto.MessagesWithTotalList messages_with_total_list = 6;</code>
+     * <code>.im.turms.proto.MessagesWithTotalList messages_with_total_list = 7;</code>
      */
     @java.lang.Override
     public im.turms.client.model.proto.model.message.MessagesWithTotalList getMessagesWithTotalList() {
-      if (kindCase_ == 6) {
+      if (kindCase_ == 7) {
          return (im.turms.client.model.proto.model.message.MessagesWithTotalList) kind_;
       }
       return im.turms.client.model.proto.model.message.MessagesWithTotalList.getDefaultInstance();
     }
     /**
-     * <code>.im.turms.proto.MessagesWithTotalList messages_with_total_list = 6;</code>
+     * <code>.im.turms.proto.MessagesWithTotalList messages_with_total_list = 7;</code>
      */
     private void setMessagesWithTotalList(im.turms.client.model.proto.model.message.MessagesWithTotalList value) {
       value.getClass();
   kind_ = value;
-      kindCase_ = 6;
+      kindCase_ = 7;
     }
     /**
-     * <code>.im.turms.proto.MessagesWithTotalList messages_with_total_list = 6;</code>
+     * <code>.im.turms.proto.MessagesWithTotalList messages_with_total_list = 7;</code>
      */
     private void mergeMessagesWithTotalList(im.turms.client.model.proto.model.message.MessagesWithTotalList value) {
       value.getClass();
-  if (kindCase_ == 6 &&
+  if (kindCase_ == 7 &&
           kind_ != im.turms.client.model.proto.model.message.MessagesWithTotalList.getDefaultInstance()) {
         kind_ = im.turms.client.model.proto.model.message.MessagesWithTotalList.newBuilder((im.turms.client.model.proto.model.message.MessagesWithTotalList) kind_)
             .mergeFrom(value).buildPartial();
       } else {
         kind_ = value;
       }
-      kindCase_ = 6;
+      kindCase_ = 7;
     }
     /**
-     * <code>.im.turms.proto.MessagesWithTotalList messages_with_total_list = 6;</code>
+     * <code>.im.turms.proto.MessagesWithTotalList messages_with_total_list = 7;</code>
      */
     private void clearMessagesWithTotalList() {
-      if (kindCase_ == 6) {
+      if (kindCase_ == 7) {
         kindCase_ = 0;
         kind_ = null;
       }
     }
 
-    public static final int USER_SESSION_FIELD_NUMBER = 7;
+    public static final int USER_SESSION_FIELD_NUMBER = 8;
     /**
-     * <code>.im.turms.proto.UserSession user_session = 7;</code>
+     * <pre>
+     * User
+     * </pre>
+     *
+     * <code>.im.turms.proto.UserSession user_session = 8;</code>
      */
     @java.lang.Override
     public boolean hasUserSession() {
-      return kindCase_ == 7;
+      return kindCase_ == 8;
     }
     /**
-     * <code>.im.turms.proto.UserSession user_session = 7;</code>
+     * <pre>
+     * User
+     * </pre>
+     *
+     * <code>.im.turms.proto.UserSession user_session = 8;</code>
      */
     @java.lang.Override
     public im.turms.client.model.proto.model.user.UserSession getUserSession() {
-      if (kindCase_ == 7) {
+      if (kindCase_ == 8) {
          return (im.turms.client.model.proto.model.user.UserSession) kind_;
       }
       return im.turms.client.model.proto.model.user.UserSession.getDefaultInstance();
     }
     /**
-     * <code>.im.turms.proto.UserSession user_session = 7;</code>
+     * <pre>
+     * User
+     * </pre>
+     *
+     * <code>.im.turms.proto.UserSession user_session = 8;</code>
      */
     private void setUserSession(im.turms.client.model.proto.model.user.UserSession value) {
       value.getClass();
   kind_ = value;
-      kindCase_ = 7;
+      kindCase_ = 8;
     }
     /**
-     * <code>.im.turms.proto.UserSession user_session = 7;</code>
+     * <pre>
+     * User
+     * </pre>
+     *
+     * <code>.im.turms.proto.UserSession user_session = 8;</code>
      */
     private void mergeUserSession(im.turms.client.model.proto.model.user.UserSession value) {
       value.getClass();
-  if (kindCase_ == 7 &&
+  if (kindCase_ == 8 &&
           kind_ != im.turms.client.model.proto.model.user.UserSession.getDefaultInstance()) {
         kind_ = im.turms.client.model.proto.model.user.UserSession.newBuilder((im.turms.client.model.proto.model.user.UserSession) kind_)
             .mergeFrom(value).buildPartial();
       } else {
         kind_ = value;
       }
-      kindCase_ = 7;
+      kindCase_ = 8;
     }
     /**
-     * <code>.im.turms.proto.UserSession user_session = 7;</code>
+     * <pre>
+     * User
+     * </pre>
+     *
+     * <code>.im.turms.proto.UserSession user_session = 8;</code>
      */
     private void clearUserSession() {
-      if (kindCase_ == 7) {
+      if (kindCase_ == 8) {
         kindCase_ = 0;
         kind_ = null;
       }
     }
 
-    public static final int USER_INFOS_WITH_VERSION_FIELD_NUMBER = 8;
+    public static final int USER_INFOS_WITH_VERSION_FIELD_NUMBER = 9;
     /**
-     * <code>.im.turms.proto.UserInfosWithVersion user_infos_with_version = 8;</code>
+     * <code>.im.turms.proto.UserInfosWithVersion user_infos_with_version = 9;</code>
      */
     @java.lang.Override
     public boolean hasUserInfosWithVersion() {
-      return kindCase_ == 8;
+      return kindCase_ == 9;
     }
     /**
-     * <code>.im.turms.proto.UserInfosWithVersion user_infos_with_version = 8;</code>
+     * <code>.im.turms.proto.UserInfosWithVersion user_infos_with_version = 9;</code>
      */
     @java.lang.Override
     public im.turms.client.model.proto.model.user.UserInfosWithVersion getUserInfosWithVersion() {
-      if (kindCase_ == 8) {
+      if (kindCase_ == 9) {
          return (im.turms.client.model.proto.model.user.UserInfosWithVersion) kind_;
       }
       return im.turms.client.model.proto.model.user.UserInfosWithVersion.getDefaultInstance();
     }
     /**
-     * <code>.im.turms.proto.UserInfosWithVersion user_infos_with_version = 8;</code>
+     * <code>.im.turms.proto.UserInfosWithVersion user_infos_with_version = 9;</code>
      */
     private void setUserInfosWithVersion(im.turms.client.model.proto.model.user.UserInfosWithVersion value) {
       value.getClass();
   kind_ = value;
-      kindCase_ = 8;
+      kindCase_ = 9;
     }
     /**
-     * <code>.im.turms.proto.UserInfosWithVersion user_infos_with_version = 8;</code>
+     * <code>.im.turms.proto.UserInfosWithVersion user_infos_with_version = 9;</code>
      */
     private void mergeUserInfosWithVersion(im.turms.client.model.proto.model.user.UserInfosWithVersion value) {
       value.getClass();
-  if (kindCase_ == 8 &&
+  if (kindCase_ == 9 &&
           kind_ != im.turms.client.model.proto.model.user.UserInfosWithVersion.getDefaultInstance()) {
         kind_ = im.turms.client.model.proto.model.user.UserInfosWithVersion.newBuilder((im.turms.client.model.proto.model.user.UserInfosWithVersion) kind_)
             .mergeFrom(value).buildPartial();
       } else {
         kind_ = value;
       }
-      kindCase_ = 8;
+      kindCase_ = 9;
     }
     /**
-     * <code>.im.turms.proto.UserInfosWithVersion user_infos_with_version = 8;</code>
+     * <code>.im.turms.proto.UserInfosWithVersion user_infos_with_version = 9;</code>
      */
     private void clearUserInfosWithVersion() {
-      if (kindCase_ == 8) {
+      if (kindCase_ == 9) {
         kindCase_ = 0;
         kind_ = null;
       }
     }
 
-    public static final int USER_ONLINE_STATUSES_FIELD_NUMBER = 9;
+    public static final int USER_ONLINE_STATUSES_FIELD_NUMBER = 10;
     /**
-     * <code>.im.turms.proto.UserOnlineStatuses user_online_statuses = 9;</code>
+     * <code>.im.turms.proto.UserOnlineStatuses user_online_statuses = 10;</code>
      */
     @java.lang.Override
     public boolean hasUserOnlineStatuses() {
-      return kindCase_ == 9;
+      return kindCase_ == 10;
     }
     /**
-     * <code>.im.turms.proto.UserOnlineStatuses user_online_statuses = 9;</code>
+     * <code>.im.turms.proto.UserOnlineStatuses user_online_statuses = 10;</code>
      */
     @java.lang.Override
     public im.turms.client.model.proto.model.user.UserOnlineStatuses getUserOnlineStatuses() {
-      if (kindCase_ == 9) {
+      if (kindCase_ == 10) {
          return (im.turms.client.model.proto.model.user.UserOnlineStatuses) kind_;
       }
       return im.turms.client.model.proto.model.user.UserOnlineStatuses.getDefaultInstance();
     }
     /**
-     * <code>.im.turms.proto.UserOnlineStatuses user_online_statuses = 9;</code>
+     * <code>.im.turms.proto.UserOnlineStatuses user_online_statuses = 10;</code>
      */
     private void setUserOnlineStatuses(im.turms.client.model.proto.model.user.UserOnlineStatuses value) {
       value.getClass();
   kind_ = value;
-      kindCase_ = 9;
+      kindCase_ = 10;
     }
     /**
-     * <code>.im.turms.proto.UserOnlineStatuses user_online_statuses = 9;</code>
+     * <code>.im.turms.proto.UserOnlineStatuses user_online_statuses = 10;</code>
      */
     private void mergeUserOnlineStatuses(im.turms.client.model.proto.model.user.UserOnlineStatuses value) {
       value.getClass();
-  if (kindCase_ == 9 &&
+  if (kindCase_ == 10 &&
           kind_ != im.turms.client.model.proto.model.user.UserOnlineStatuses.getDefaultInstance()) {
         kind_ = im.turms.client.model.proto.model.user.UserOnlineStatuses.newBuilder((im.turms.client.model.proto.model.user.UserOnlineStatuses) kind_)
             .mergeFrom(value).buildPartial();
       } else {
         kind_ = value;
       }
-      kindCase_ = 9;
+      kindCase_ = 10;
     }
     /**
-     * <code>.im.turms.proto.UserOnlineStatuses user_online_statuses = 9;</code>
+     * <code>.im.turms.proto.UserOnlineStatuses user_online_statuses = 10;</code>
      */
     private void clearUserOnlineStatuses() {
-      if (kindCase_ == 9) {
+      if (kindCase_ == 10) {
         kindCase_ = 0;
         kind_ = null;
       }
     }
 
-    public static final int USER_FRIEND_REQUESTS_WITH_VERSION_FIELD_NUMBER = 10;
+    public static final int USER_FRIEND_REQUESTS_WITH_VERSION_FIELD_NUMBER = 11;
     /**
-     * <code>.im.turms.proto.UserFriendRequestsWithVersion user_friend_requests_with_version = 10;</code>
+     * <code>.im.turms.proto.UserFriendRequestsWithVersion user_friend_requests_with_version = 11;</code>
      */
     @java.lang.Override
     public boolean hasUserFriendRequestsWithVersion() {
-      return kindCase_ == 10;
+      return kindCase_ == 11;
     }
     /**
-     * <code>.im.turms.proto.UserFriendRequestsWithVersion user_friend_requests_with_version = 10;</code>
+     * <code>.im.turms.proto.UserFriendRequestsWithVersion user_friend_requests_with_version = 11;</code>
      */
     @java.lang.Override
     public im.turms.client.model.proto.model.user.UserFriendRequestsWithVersion getUserFriendRequestsWithVersion() {
-      if (kindCase_ == 10) {
+      if (kindCase_ == 11) {
          return (im.turms.client.model.proto.model.user.UserFriendRequestsWithVersion) kind_;
       }
       return im.turms.client.model.proto.model.user.UserFriendRequestsWithVersion.getDefaultInstance();
     }
     /**
-     * <code>.im.turms.proto.UserFriendRequestsWithVersion user_friend_requests_with_version = 10;</code>
+     * <code>.im.turms.proto.UserFriendRequestsWithVersion user_friend_requests_with_version = 11;</code>
      */
     private void setUserFriendRequestsWithVersion(im.turms.client.model.proto.model.user.UserFriendRequestsWithVersion value) {
       value.getClass();
   kind_ = value;
-      kindCase_ = 10;
+      kindCase_ = 11;
     }
     /**
-     * <code>.im.turms.proto.UserFriendRequestsWithVersion user_friend_requests_with_version = 10;</code>
+     * <code>.im.turms.proto.UserFriendRequestsWithVersion user_friend_requests_with_version = 11;</code>
      */
     private void mergeUserFriendRequestsWithVersion(im.turms.client.model.proto.model.user.UserFriendRequestsWithVersion value) {
       value.getClass();
-  if (kindCase_ == 10 &&
+  if (kindCase_ == 11 &&
           kind_ != im.turms.client.model.proto.model.user.UserFriendRequestsWithVersion.getDefaultInstance()) {
         kind_ = im.turms.client.model.proto.model.user.UserFriendRequestsWithVersion.newBuilder((im.turms.client.model.proto.model.user.UserFriendRequestsWithVersion) kind_)
             .mergeFrom(value).buildPartial();
       } else {
         kind_ = value;
       }
-      kindCase_ = 10;
+      kindCase_ = 11;
     }
     /**
-     * <code>.im.turms.proto.UserFriendRequestsWithVersion user_friend_requests_with_version = 10;</code>
+     * <code>.im.turms.proto.UserFriendRequestsWithVersion user_friend_requests_with_version = 11;</code>
      */
     private void clearUserFriendRequestsWithVersion() {
-      if (kindCase_ == 10) {
+      if (kindCase_ == 11) {
         kindCase_ = 0;
         kind_ = null;
       }
     }
 
-    public static final int USER_RELATIONSHIP_GROUPS_WITH_VERSION_FIELD_NUMBER = 11;
+    public static final int USER_RELATIONSHIP_GROUPS_WITH_VERSION_FIELD_NUMBER = 12;
     /**
-     * <code>.im.turms.proto.UserRelationshipGroupsWithVersion user_relationship_groups_with_version = 11;</code>
+     * <code>.im.turms.proto.UserRelationshipGroupsWithVersion user_relationship_groups_with_version = 12;</code>
      */
     @java.lang.Override
     public boolean hasUserRelationshipGroupsWithVersion() {
-      return kindCase_ == 11;
+      return kindCase_ == 12;
     }
     /**
-     * <code>.im.turms.proto.UserRelationshipGroupsWithVersion user_relationship_groups_with_version = 11;</code>
+     * <code>.im.turms.proto.UserRelationshipGroupsWithVersion user_relationship_groups_with_version = 12;</code>
      */
     @java.lang.Override
     public im.turms.client.model.proto.model.user.UserRelationshipGroupsWithVersion getUserRelationshipGroupsWithVersion() {
-      if (kindCase_ == 11) {
+      if (kindCase_ == 12) {
          return (im.turms.client.model.proto.model.user.UserRelationshipGroupsWithVersion) kind_;
       }
       return im.turms.client.model.proto.model.user.UserRelationshipGroupsWithVersion.getDefaultInstance();
     }
     /**
-     * <code>.im.turms.proto.UserRelationshipGroupsWithVersion user_relationship_groups_with_version = 11;</code>
+     * <code>.im.turms.proto.UserRelationshipGroupsWithVersion user_relationship_groups_with_version = 12;</code>
      */
     private void setUserRelationshipGroupsWithVersion(im.turms.client.model.proto.model.user.UserRelationshipGroupsWithVersion value) {
       value.getClass();
   kind_ = value;
-      kindCase_ = 11;
+      kindCase_ = 12;
     }
     /**
-     * <code>.im.turms.proto.UserRelationshipGroupsWithVersion user_relationship_groups_with_version = 11;</code>
+     * <code>.im.turms.proto.UserRelationshipGroupsWithVersion user_relationship_groups_with_version = 12;</code>
      */
     private void mergeUserRelationshipGroupsWithVersion(im.turms.client.model.proto.model.user.UserRelationshipGroupsWithVersion value) {
       value.getClass();
-  if (kindCase_ == 11 &&
+  if (kindCase_ == 12 &&
           kind_ != im.turms.client.model.proto.model.user.UserRelationshipGroupsWithVersion.getDefaultInstance()) {
         kind_ = im.turms.client.model.proto.model.user.UserRelationshipGroupsWithVersion.newBuilder((im.turms.client.model.proto.model.user.UserRelationshipGroupsWithVersion) kind_)
             .mergeFrom(value).buildPartial();
       } else {
         kind_ = value;
       }
-      kindCase_ = 11;
+      kindCase_ = 12;
     }
     /**
-     * <code>.im.turms.proto.UserRelationshipGroupsWithVersion user_relationship_groups_with_version = 11;</code>
+     * <code>.im.turms.proto.UserRelationshipGroupsWithVersion user_relationship_groups_with_version = 12;</code>
      */
     private void clearUserRelationshipGroupsWithVersion() {
-      if (kindCase_ == 11) {
+      if (kindCase_ == 12) {
         kindCase_ = 0;
         kind_ = null;
       }
     }
 
-    public static final int USER_RELATIONSHIPS_WITH_VERSION_FIELD_NUMBER = 12;
+    public static final int USER_RELATIONSHIPS_WITH_VERSION_FIELD_NUMBER = 13;
     /**
-     * <code>.im.turms.proto.UserRelationshipsWithVersion user_relationships_with_version = 12;</code>
+     * <code>.im.turms.proto.UserRelationshipsWithVersion user_relationships_with_version = 13;</code>
      */
     @java.lang.Override
     public boolean hasUserRelationshipsWithVersion() {
-      return kindCase_ == 12;
+      return kindCase_ == 13;
     }
     /**
-     * <code>.im.turms.proto.UserRelationshipsWithVersion user_relationships_with_version = 12;</code>
+     * <code>.im.turms.proto.UserRelationshipsWithVersion user_relationships_with_version = 13;</code>
      */
     @java.lang.Override
     public im.turms.client.model.proto.model.user.UserRelationshipsWithVersion getUserRelationshipsWithVersion() {
-      if (kindCase_ == 12) {
+      if (kindCase_ == 13) {
          return (im.turms.client.model.proto.model.user.UserRelationshipsWithVersion) kind_;
       }
       return im.turms.client.model.proto.model.user.UserRelationshipsWithVersion.getDefaultInstance();
     }
     /**
-     * <code>.im.turms.proto.UserRelationshipsWithVersion user_relationships_with_version = 12;</code>
+     * <code>.im.turms.proto.UserRelationshipsWithVersion user_relationships_with_version = 13;</code>
      */
     private void setUserRelationshipsWithVersion(im.turms.client.model.proto.model.user.UserRelationshipsWithVersion value) {
       value.getClass();
   kind_ = value;
-      kindCase_ = 12;
+      kindCase_ = 13;
     }
     /**
-     * <code>.im.turms.proto.UserRelationshipsWithVersion user_relationships_with_version = 12;</code>
+     * <code>.im.turms.proto.UserRelationshipsWithVersion user_relationships_with_version = 13;</code>
      */
     private void mergeUserRelationshipsWithVersion(im.turms.client.model.proto.model.user.UserRelationshipsWithVersion value) {
       value.getClass();
-  if (kindCase_ == 12 &&
+  if (kindCase_ == 13 &&
           kind_ != im.turms.client.model.proto.model.user.UserRelationshipsWithVersion.getDefaultInstance()) {
         kind_ = im.turms.client.model.proto.model.user.UserRelationshipsWithVersion.newBuilder((im.turms.client.model.proto.model.user.UserRelationshipsWithVersion) kind_)
             .mergeFrom(value).buildPartial();
       } else {
         kind_ = value;
       }
-      kindCase_ = 12;
+      kindCase_ = 13;
     }
     /**
-     * <code>.im.turms.proto.UserRelationshipsWithVersion user_relationships_with_version = 12;</code>
+     * <code>.im.turms.proto.UserRelationshipsWithVersion user_relationships_with_version = 13;</code>
      */
     private void clearUserRelationshipsWithVersion() {
-      if (kindCase_ == 12) {
+      if (kindCase_ == 13) {
         kindCase_ = 0;
         kind_ = null;
       }
     }
 
-    public static final int NEARBY_USERS_FIELD_NUMBER = 13;
+    public static final int NEARBY_USERS_FIELD_NUMBER = 14;
     /**
-     * <code>.im.turms.proto.NearbyUsers nearby_users = 13;</code>
+     * <code>.im.turms.proto.NearbyUsers nearby_users = 14;</code>
      */
     @java.lang.Override
     public boolean hasNearbyUsers() {
-      return kindCase_ == 13;
+      return kindCase_ == 14;
     }
     /**
-     * <code>.im.turms.proto.NearbyUsers nearby_users = 13;</code>
+     * <code>.im.turms.proto.NearbyUsers nearby_users = 14;</code>
      */
     @java.lang.Override
     public im.turms.client.model.proto.model.user.NearbyUsers getNearbyUsers() {
-      if (kindCase_ == 13) {
+      if (kindCase_ == 14) {
          return (im.turms.client.model.proto.model.user.NearbyUsers) kind_;
       }
       return im.turms.client.model.proto.model.user.NearbyUsers.getDefaultInstance();
     }
     /**
-     * <code>.im.turms.proto.NearbyUsers nearby_users = 13;</code>
+     * <code>.im.turms.proto.NearbyUsers nearby_users = 14;</code>
      */
     private void setNearbyUsers(im.turms.client.model.proto.model.user.NearbyUsers value) {
       value.getClass();
   kind_ = value;
-      kindCase_ = 13;
+      kindCase_ = 14;
     }
     /**
-     * <code>.im.turms.proto.NearbyUsers nearby_users = 13;</code>
+     * <code>.im.turms.proto.NearbyUsers nearby_users = 14;</code>
      */
     private void mergeNearbyUsers(im.turms.client.model.proto.model.user.NearbyUsers value) {
       value.getClass();
-  if (kindCase_ == 13 &&
+  if (kindCase_ == 14 &&
           kind_ != im.turms.client.model.proto.model.user.NearbyUsers.getDefaultInstance()) {
         kind_ = im.turms.client.model.proto.model.user.NearbyUsers.newBuilder((im.turms.client.model.proto.model.user.NearbyUsers) kind_)
             .mergeFrom(value).buildPartial();
       } else {
         kind_ = value;
       }
-      kindCase_ = 13;
+      kindCase_ = 14;
     }
     /**
-     * <code>.im.turms.proto.NearbyUsers nearby_users = 13;</code>
+     * <code>.im.turms.proto.NearbyUsers nearby_users = 14;</code>
      */
     private void clearNearbyUsers() {
-      if (kindCase_ == 13) {
+      if (kindCase_ == 14) {
         kindCase_ = 0;
         kind_ = null;
       }
     }
 
-    public static final int GROUP_INVITATIONS_WITH_VERSION_FIELD_NUMBER = 14;
+    public static final int GROUP_INVITATIONS_WITH_VERSION_FIELD_NUMBER = 15;
     /**
-     * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 14;</code>
+     * <pre>
+     * Group
+     * </pre>
+     *
+     * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 15;</code>
      */
     @java.lang.Override
     public boolean hasGroupInvitationsWithVersion() {
-      return kindCase_ == 14;
+      return kindCase_ == 15;
     }
     /**
-     * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 14;</code>
+     * <pre>
+     * Group
+     * </pre>
+     *
+     * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 15;</code>
      */
     @java.lang.Override
     public im.turms.client.model.proto.model.group.GroupInvitationsWithVersion getGroupInvitationsWithVersion() {
-      if (kindCase_ == 14) {
+      if (kindCase_ == 15) {
          return (im.turms.client.model.proto.model.group.GroupInvitationsWithVersion) kind_;
       }
       return im.turms.client.model.proto.model.group.GroupInvitationsWithVersion.getDefaultInstance();
     }
     /**
-     * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 14;</code>
+     * <pre>
+     * Group
+     * </pre>
+     *
+     * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 15;</code>
      */
     private void setGroupInvitationsWithVersion(im.turms.client.model.proto.model.group.GroupInvitationsWithVersion value) {
       value.getClass();
   kind_ = value;
-      kindCase_ = 14;
+      kindCase_ = 15;
     }
     /**
-     * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 14;</code>
+     * <pre>
+     * Group
+     * </pre>
+     *
+     * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 15;</code>
      */
     private void mergeGroupInvitationsWithVersion(im.turms.client.model.proto.model.group.GroupInvitationsWithVersion value) {
       value.getClass();
-  if (kindCase_ == 14 &&
+  if (kindCase_ == 15 &&
           kind_ != im.turms.client.model.proto.model.group.GroupInvitationsWithVersion.getDefaultInstance()) {
         kind_ = im.turms.client.model.proto.model.group.GroupInvitationsWithVersion.newBuilder((im.turms.client.model.proto.model.group.GroupInvitationsWithVersion) kind_)
             .mergeFrom(value).buildPartial();
       } else {
         kind_ = value;
       }
-      kindCase_ = 14;
+      kindCase_ = 15;
     }
     /**
-     * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 14;</code>
+     * <pre>
+     * Group
+     * </pre>
+     *
+     * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 15;</code>
      */
     private void clearGroupInvitationsWithVersion() {
-      if (kindCase_ == 14) {
+      if (kindCase_ == 15) {
         kindCase_ = 0;
         kind_ = null;
       }
     }
 
-    public static final int GROUP_JOIN_QUESTION_ANSWER_RESULT_FIELD_NUMBER = 15;
+    public static final int GROUP_JOIN_QUESTION_ANSWER_RESULT_FIELD_NUMBER = 16;
     /**
-     * <code>.im.turms.proto.GroupJoinQuestionsAnswerResult group_join_question_answer_result = 15;</code>
+     * <code>.im.turms.proto.GroupJoinQuestionsAnswerResult group_join_question_answer_result = 16;</code>
      */
     @java.lang.Override
     public boolean hasGroupJoinQuestionAnswerResult() {
-      return kindCase_ == 15;
+      return kindCase_ == 16;
     }
     /**
-     * <code>.im.turms.proto.GroupJoinQuestionsAnswerResult group_join_question_answer_result = 15;</code>
+     * <code>.im.turms.proto.GroupJoinQuestionsAnswerResult group_join_question_answer_result = 16;</code>
      */
     @java.lang.Override
     public im.turms.client.model.proto.model.group.GroupJoinQuestionsAnswerResult getGroupJoinQuestionAnswerResult() {
-      if (kindCase_ == 15) {
+      if (kindCase_ == 16) {
          return (im.turms.client.model.proto.model.group.GroupJoinQuestionsAnswerResult) kind_;
       }
       return im.turms.client.model.proto.model.group.GroupJoinQuestionsAnswerResult.getDefaultInstance();
     }
     /**
-     * <code>.im.turms.proto.GroupJoinQuestionsAnswerResult group_join_question_answer_result = 15;</code>
+     * <code>.im.turms.proto.GroupJoinQuestionsAnswerResult group_join_question_answer_result = 16;</code>
      */
     private void setGroupJoinQuestionAnswerResult(im.turms.client.model.proto.model.group.GroupJoinQuestionsAnswerResult value) {
       value.getClass();
   kind_ = value;
-      kindCase_ = 15;
+      kindCase_ = 16;
     }
     /**
-     * <code>.im.turms.proto.GroupJoinQuestionsAnswerResult group_join_question_answer_result = 15;</code>
+     * <code>.im.turms.proto.GroupJoinQuestionsAnswerResult group_join_question_answer_result = 16;</code>
      */
     private void mergeGroupJoinQuestionAnswerResult(im.turms.client.model.proto.model.group.GroupJoinQuestionsAnswerResult value) {
       value.getClass();
-  if (kindCase_ == 15 &&
+  if (kindCase_ == 16 &&
           kind_ != im.turms.client.model.proto.model.group.GroupJoinQuestionsAnswerResult.getDefaultInstance()) {
         kind_ = im.turms.client.model.proto.model.group.GroupJoinQuestionsAnswerResult.newBuilder((im.turms.client.model.proto.model.group.GroupJoinQuestionsAnswerResult) kind_)
             .mergeFrom(value).buildPartial();
       } else {
         kind_ = value;
       }
-      kindCase_ = 15;
+      kindCase_ = 16;
     }
     /**
-     * <code>.im.turms.proto.GroupJoinQuestionsAnswerResult group_join_question_answer_result = 15;</code>
+     * <code>.im.turms.proto.GroupJoinQuestionsAnswerResult group_join_question_answer_result = 16;</code>
      */
     private void clearGroupJoinQuestionAnswerResult() {
-      if (kindCase_ == 15) {
+      if (kindCase_ == 16) {
         kindCase_ = 0;
         kind_ = null;
       }
     }
 
-    public static final int GROUP_JOIN_REQUESTS_WITH_VERSION_FIELD_NUMBER = 16;
+    public static final int GROUP_JOIN_REQUESTS_WITH_VERSION_FIELD_NUMBER = 17;
     /**
-     * <code>.im.turms.proto.GroupJoinRequestsWithVersion group_join_requests_with_version = 16;</code>
+     * <code>.im.turms.proto.GroupJoinRequestsWithVersion group_join_requests_with_version = 17;</code>
      */
     @java.lang.Override
     public boolean hasGroupJoinRequestsWithVersion() {
-      return kindCase_ == 16;
+      return kindCase_ == 17;
     }
     /**
-     * <code>.im.turms.proto.GroupJoinRequestsWithVersion group_join_requests_with_version = 16;</code>
+     * <code>.im.turms.proto.GroupJoinRequestsWithVersion group_join_requests_with_version = 17;</code>
      */
     @java.lang.Override
     public im.turms.client.model.proto.model.group.GroupJoinRequestsWithVersion getGroupJoinRequestsWithVersion() {
-      if (kindCase_ == 16) {
+      if (kindCase_ == 17) {
          return (im.turms.client.model.proto.model.group.GroupJoinRequestsWithVersion) kind_;
       }
       return im.turms.client.model.proto.model.group.GroupJoinRequestsWithVersion.getDefaultInstance();
     }
     /**
-     * <code>.im.turms.proto.GroupJoinRequestsWithVersion group_join_requests_with_version = 16;</code>
+     * <code>.im.turms.proto.GroupJoinRequestsWithVersion group_join_requests_with_version = 17;</code>
      */
     private void setGroupJoinRequestsWithVersion(im.turms.client.model.proto.model.group.GroupJoinRequestsWithVersion value) {
       value.getClass();
   kind_ = value;
-      kindCase_ = 16;
+      kindCase_ = 17;
     }
     /**
-     * <code>.im.turms.proto.GroupJoinRequestsWithVersion group_join_requests_with_version = 16;</code>
+     * <code>.im.turms.proto.GroupJoinRequestsWithVersion group_join_requests_with_version = 17;</code>
      */
     private void mergeGroupJoinRequestsWithVersion(im.turms.client.model.proto.model.group.GroupJoinRequestsWithVersion value) {
       value.getClass();
-  if (kindCase_ == 16 &&
+  if (kindCase_ == 17 &&
           kind_ != im.turms.client.model.proto.model.group.GroupJoinRequestsWithVersion.getDefaultInstance()) {
         kind_ = im.turms.client.model.proto.model.group.GroupJoinRequestsWithVersion.newBuilder((im.turms.client.model.proto.model.group.GroupJoinRequestsWithVersion) kind_)
             .mergeFrom(value).buildPartial();
       } else {
         kind_ = value;
       }
-      kindCase_ = 16;
+      kindCase_ = 17;
     }
     /**
-     * <code>.im.turms.proto.GroupJoinRequestsWithVersion group_join_requests_with_version = 16;</code>
+     * <code>.im.turms.proto.GroupJoinRequestsWithVersion group_join_requests_with_version = 17;</code>
      */
     private void clearGroupJoinRequestsWithVersion() {
-      if (kindCase_ == 16) {
+      if (kindCase_ == 17) {
         kindCase_ = 0;
         kind_ = null;
       }
     }
 
-    public static final int GROUP_JOIN_QUESTIONS_WITH_VERSION_FIELD_NUMBER = 17;
+    public static final int GROUP_JOIN_QUESTIONS_WITH_VERSION_FIELD_NUMBER = 18;
     /**
-     * <code>.im.turms.proto.GroupJoinQuestionsWithVersion group_join_questions_with_version = 17;</code>
+     * <code>.im.turms.proto.GroupJoinQuestionsWithVersion group_join_questions_with_version = 18;</code>
      */
     @java.lang.Override
     public boolean hasGroupJoinQuestionsWithVersion() {
-      return kindCase_ == 17;
+      return kindCase_ == 18;
     }
     /**
-     * <code>.im.turms.proto.GroupJoinQuestionsWithVersion group_join_questions_with_version = 17;</code>
+     * <code>.im.turms.proto.GroupJoinQuestionsWithVersion group_join_questions_with_version = 18;</code>
      */
     @java.lang.Override
     public im.turms.client.model.proto.model.group.GroupJoinQuestionsWithVersion getGroupJoinQuestionsWithVersion() {
-      if (kindCase_ == 17) {
+      if (kindCase_ == 18) {
          return (im.turms.client.model.proto.model.group.GroupJoinQuestionsWithVersion) kind_;
       }
       return im.turms.client.model.proto.model.group.GroupJoinQuestionsWithVersion.getDefaultInstance();
     }
     /**
-     * <code>.im.turms.proto.GroupJoinQuestionsWithVersion group_join_questions_with_version = 17;</code>
+     * <code>.im.turms.proto.GroupJoinQuestionsWithVersion group_join_questions_with_version = 18;</code>
      */
     private void setGroupJoinQuestionsWithVersion(im.turms.client.model.proto.model.group.GroupJoinQuestionsWithVersion value) {
       value.getClass();
   kind_ = value;
-      kindCase_ = 17;
+      kindCase_ = 18;
     }
     /**
-     * <code>.im.turms.proto.GroupJoinQuestionsWithVersion group_join_questions_with_version = 17;</code>
+     * <code>.im.turms.proto.GroupJoinQuestionsWithVersion group_join_questions_with_version = 18;</code>
      */
     private void mergeGroupJoinQuestionsWithVersion(im.turms.client.model.proto.model.group.GroupJoinQuestionsWithVersion value) {
       value.getClass();
-  if (kindCase_ == 17 &&
+  if (kindCase_ == 18 &&
           kind_ != im.turms.client.model.proto.model.group.GroupJoinQuestionsWithVersion.getDefaultInstance()) {
         kind_ = im.turms.client.model.proto.model.group.GroupJoinQuestionsWithVersion.newBuilder((im.turms.client.model.proto.model.group.GroupJoinQuestionsWithVersion) kind_)
             .mergeFrom(value).buildPartial();
       } else {
         kind_ = value;
       }
-      kindCase_ = 17;
+      kindCase_ = 18;
     }
     /**
-     * <code>.im.turms.proto.GroupJoinQuestionsWithVersion group_join_questions_with_version = 17;</code>
+     * <code>.im.turms.proto.GroupJoinQuestionsWithVersion group_join_questions_with_version = 18;</code>
      */
     private void clearGroupJoinQuestionsWithVersion() {
-      if (kindCase_ == 17) {
+      if (kindCase_ == 18) {
         kindCase_ = 0;
         kind_ = null;
       }
     }
 
-    public static final int GROUP_MEMBERS_WITH_VERSION_FIELD_NUMBER = 18;
+    public static final int GROUP_MEMBERS_WITH_VERSION_FIELD_NUMBER = 19;
     /**
-     * <code>.im.turms.proto.GroupMembersWithVersion group_members_with_version = 18;</code>
+     * <code>.im.turms.proto.GroupMembersWithVersion group_members_with_version = 19;</code>
      */
     @java.lang.Override
     public boolean hasGroupMembersWithVersion() {
-      return kindCase_ == 18;
+      return kindCase_ == 19;
     }
     /**
-     * <code>.im.turms.proto.GroupMembersWithVersion group_members_with_version = 18;</code>
+     * <code>.im.turms.proto.GroupMembersWithVersion group_members_with_version = 19;</code>
      */
     @java.lang.Override
     public im.turms.client.model.proto.model.group.GroupMembersWithVersion getGroupMembersWithVersion() {
-      if (kindCase_ == 18) {
+      if (kindCase_ == 19) {
          return (im.turms.client.model.proto.model.group.GroupMembersWithVersion) kind_;
       }
       return im.turms.client.model.proto.model.group.GroupMembersWithVersion.getDefaultInstance();
     }
     /**
-     * <code>.im.turms.proto.GroupMembersWithVersion group_members_with_version = 18;</code>
+     * <code>.im.turms.proto.GroupMembersWithVersion group_members_with_version = 19;</code>
      */
     private void setGroupMembersWithVersion(im.turms.client.model.proto.model.group.GroupMembersWithVersion value) {
       value.getClass();
   kind_ = value;
-      kindCase_ = 18;
+      kindCase_ = 19;
     }
     /**
-     * <code>.im.turms.proto.GroupMembersWithVersion group_members_with_version = 18;</code>
+     * <code>.im.turms.proto.GroupMembersWithVersion group_members_with_version = 19;</code>
      */
     private void mergeGroupMembersWithVersion(im.turms.client.model.proto.model.group.GroupMembersWithVersion value) {
       value.getClass();
-  if (kindCase_ == 18 &&
+  if (kindCase_ == 19 &&
           kind_ != im.turms.client.model.proto.model.group.GroupMembersWithVersion.getDefaultInstance()) {
         kind_ = im.turms.client.model.proto.model.group.GroupMembersWithVersion.newBuilder((im.turms.client.model.proto.model.group.GroupMembersWithVersion) kind_)
             .mergeFrom(value).buildPartial();
       } else {
         kind_ = value;
       }
-      kindCase_ = 18;
+      kindCase_ = 19;
     }
     /**
-     * <code>.im.turms.proto.GroupMembersWithVersion group_members_with_version = 18;</code>
+     * <code>.im.turms.proto.GroupMembersWithVersion group_members_with_version = 19;</code>
      */
     private void clearGroupMembersWithVersion() {
-      if (kindCase_ == 18) {
+      if (kindCase_ == 19) {
         kindCase_ = 0;
         kind_ = null;
       }
     }
 
-    public static final int GROUPS_WITH_VERSION_FIELD_NUMBER = 19;
+    public static final int GROUPS_WITH_VERSION_FIELD_NUMBER = 20;
     /**
-     * <code>.im.turms.proto.GroupsWithVersion groups_with_version = 19;</code>
+     * <code>.im.turms.proto.GroupsWithVersion groups_with_version = 20;</code>
      */
     @java.lang.Override
     public boolean hasGroupsWithVersion() {
-      return kindCase_ == 19;
+      return kindCase_ == 20;
     }
     /**
-     * <code>.im.turms.proto.GroupsWithVersion groups_with_version = 19;</code>
+     * <code>.im.turms.proto.GroupsWithVersion groups_with_version = 20;</code>
      */
     @java.lang.Override
     public im.turms.client.model.proto.model.group.GroupsWithVersion getGroupsWithVersion() {
-      if (kindCase_ == 19) {
+      if (kindCase_ == 20) {
          return (im.turms.client.model.proto.model.group.GroupsWithVersion) kind_;
       }
       return im.turms.client.model.proto.model.group.GroupsWithVersion.getDefaultInstance();
     }
     /**
-     * <code>.im.turms.proto.GroupsWithVersion groups_with_version = 19;</code>
+     * <code>.im.turms.proto.GroupsWithVersion groups_with_version = 20;</code>
      */
     private void setGroupsWithVersion(im.turms.client.model.proto.model.group.GroupsWithVersion value) {
       value.getClass();
   kind_ = value;
-      kindCase_ = 19;
+      kindCase_ = 20;
     }
     /**
-     * <code>.im.turms.proto.GroupsWithVersion groups_with_version = 19;</code>
+     * <code>.im.turms.proto.GroupsWithVersion groups_with_version = 20;</code>
      */
     private void mergeGroupsWithVersion(im.turms.client.model.proto.model.group.GroupsWithVersion value) {
       value.getClass();
-  if (kindCase_ == 19 &&
+  if (kindCase_ == 20 &&
           kind_ != im.turms.client.model.proto.model.group.GroupsWithVersion.getDefaultInstance()) {
         kind_ = im.turms.client.model.proto.model.group.GroupsWithVersion.newBuilder((im.turms.client.model.proto.model.group.GroupsWithVersion) kind_)
             .mergeFrom(value).buildPartial();
       } else {
         kind_ = value;
       }
-      kindCase_ = 19;
+      kindCase_ = 20;
     }
     /**
-     * <code>.im.turms.proto.GroupsWithVersion groups_with_version = 19;</code>
+     * <code>.im.turms.proto.GroupsWithVersion groups_with_version = 20;</code>
      */
     private void clearGroupsWithVersion() {
-      if (kindCase_ == 19) {
+      if (kindCase_ == 20) {
         kindCase_ = 0;
         kind_ = null;
       }
@@ -1411,174 +1598,238 @@ public  final class TurmsNotification extends
 
 
       /**
-       * <code>.im.turms.proto.Int64Values ids = 1;</code>
+       * <pre>
+       * Common
+       * </pre>
+       *
+       * <code>int64 long = 1;</code>
+       * @return Whether the long field is set.
        */
       @java.lang.Override
-      public boolean hasIds() {
-        return instance.hasIds();
+      public boolean hasLong() {
+        return instance.hasLong();
       }
       /**
-       * <code>.im.turms.proto.Int64Values ids = 1;</code>
+       * <pre>
+       * Common
+       * </pre>
+       *
+       * <code>int64 long = 1;</code>
+       * @return The long.
        */
       @java.lang.Override
-      public im.turms.client.model.proto.model.common.Int64Values getIds() {
-        return instance.getIds();
+      public long getLong() {
+        return instance.getLong();
       }
       /**
-       * <code>.im.turms.proto.Int64Values ids = 1;</code>
+       * <pre>
+       * Common
+       * </pre>
+       *
+       * <code>int64 long = 1;</code>
+       * @param value The long to set.
+       * @return This builder for chaining.
        */
-      public Builder setIds(im.turms.client.model.proto.model.common.Int64Values value) {
+      public Builder setLong(long value) {
         copyOnWrite();
-        instance.setIds(value);
+        instance.setLong(value);
         return this;
       }
       /**
-       * <code>.im.turms.proto.Int64Values ids = 1;</code>
+       * <pre>
+       * Common
+       * </pre>
+       *
+       * <code>int64 long = 1;</code>
+       * @return This builder for chaining.
        */
-      public Builder setIds(
-          im.turms.client.model.proto.model.common.Int64Values.Builder builderForValue) {
+      public Builder clearLong() {
         copyOnWrite();
-        instance.setIds(builderForValue.build());
-        return this;
-      }
-      /**
-       * <code>.im.turms.proto.Int64Values ids = 1;</code>
-       */
-      public Builder mergeIds(im.turms.client.model.proto.model.common.Int64Values value) {
-        copyOnWrite();
-        instance.mergeIds(value);
-        return this;
-      }
-      /**
-       * <code>.im.turms.proto.Int64Values ids = 1;</code>
-       */
-      public Builder clearIds() {
-        copyOnWrite();
-        instance.clearIds();
+        instance.clearLong();
         return this;
       }
 
       /**
-       * <code>.im.turms.proto.Int64ValuesWithVersion ids_with_version = 2;</code>
+       * <code>string string = 2;</code>
+       * @return Whether the string field is set.
        */
       @java.lang.Override
-      public boolean hasIdsWithVersion() {
-        return instance.hasIdsWithVersion();
+      public boolean hasString() {
+        return instance.hasString();
       }
       /**
-       * <code>.im.turms.proto.Int64ValuesWithVersion ids_with_version = 2;</code>
+       * <code>string string = 2;</code>
+       * @return The string.
        */
       @java.lang.Override
-      public im.turms.client.model.proto.model.common.Int64ValuesWithVersion getIdsWithVersion() {
-        return instance.getIdsWithVersion();
+      public java.lang.String getString() {
+        return instance.getString();
       }
       /**
-       * <code>.im.turms.proto.Int64ValuesWithVersion ids_with_version = 2;</code>
-       */
-      public Builder setIdsWithVersion(im.turms.client.model.proto.model.common.Int64ValuesWithVersion value) {
-        copyOnWrite();
-        instance.setIdsWithVersion(value);
-        return this;
-      }
-      /**
-       * <code>.im.turms.proto.Int64ValuesWithVersion ids_with_version = 2;</code>
-       */
-      public Builder setIdsWithVersion(
-          im.turms.client.model.proto.model.common.Int64ValuesWithVersion.Builder builderForValue) {
-        copyOnWrite();
-        instance.setIdsWithVersion(builderForValue.build());
-        return this;
-      }
-      /**
-       * <code>.im.turms.proto.Int64ValuesWithVersion ids_with_version = 2;</code>
-       */
-      public Builder mergeIdsWithVersion(im.turms.client.model.proto.model.common.Int64ValuesWithVersion value) {
-        copyOnWrite();
-        instance.mergeIdsWithVersion(value);
-        return this;
-      }
-      /**
-       * <code>.im.turms.proto.Int64ValuesWithVersion ids_with_version = 2;</code>
-       */
-      public Builder clearIdsWithVersion() {
-        copyOnWrite();
-        instance.clearIdsWithVersion();
-        return this;
-      }
-
-      /**
-       * <code>string url = 3;</code>
-       * @return Whether the url field is set.
-       */
-      @java.lang.Override
-      public boolean hasUrl() {
-        return instance.hasUrl();
-      }
-      /**
-       * <code>string url = 3;</code>
-       * @return The url.
-       */
-      @java.lang.Override
-      public java.lang.String getUrl() {
-        return instance.getUrl();
-      }
-      /**
-       * <code>string url = 3;</code>
-       * @return The bytes for url.
+       * <code>string string = 2;</code>
+       * @return The bytes for string.
        */
       @java.lang.Override
       public com.google.protobuf.ByteString
-          getUrlBytes() {
-        return instance.getUrlBytes();
+          getStringBytes() {
+        return instance.getStringBytes();
       }
       /**
-       * <code>string url = 3;</code>
-       * @param value The url to set.
+       * <code>string string = 2;</code>
+       * @param value The string to set.
        * @return This builder for chaining.
        */
-      public Builder setUrl(
+      public Builder setString(
           java.lang.String value) {
         copyOnWrite();
-        instance.setUrl(value);
+        instance.setString(value);
         return this;
       }
       /**
-       * <code>string url = 3;</code>
+       * <code>string string = 2;</code>
        * @return This builder for chaining.
        */
-      public Builder clearUrl() {
+      public Builder clearString() {
         copyOnWrite();
-        instance.clearUrl();
+        instance.clearString();
         return this;
       }
       /**
-       * <code>string url = 3;</code>
-       * @param value The bytes for url to set.
+       * <code>string string = 2;</code>
+       * @param value The bytes for string to set.
        * @return This builder for chaining.
        */
-      public Builder setUrlBytes(
+      public Builder setStringBytes(
           com.google.protobuf.ByteString value) {
         copyOnWrite();
-        instance.setUrlBytes(value);
+        instance.setStringBytes(value);
         return this;
       }
 
       /**
-       * <code>.im.turms.proto.Conversations conversations = 4;</code>
+       * <code>.im.turms.proto.LongsWithVersion longs_with_version = 3;</code>
+       */
+      @java.lang.Override
+      public boolean hasLongsWithVersion() {
+        return instance.hasLongsWithVersion();
+      }
+      /**
+       * <code>.im.turms.proto.LongsWithVersion longs_with_version = 3;</code>
+       */
+      @java.lang.Override
+      public im.turms.client.model.proto.model.common.LongsWithVersion getLongsWithVersion() {
+        return instance.getLongsWithVersion();
+      }
+      /**
+       * <code>.im.turms.proto.LongsWithVersion longs_with_version = 3;</code>
+       */
+      public Builder setLongsWithVersion(im.turms.client.model.proto.model.common.LongsWithVersion value) {
+        copyOnWrite();
+        instance.setLongsWithVersion(value);
+        return this;
+      }
+      /**
+       * <code>.im.turms.proto.LongsWithVersion longs_with_version = 3;</code>
+       */
+      public Builder setLongsWithVersion(
+          im.turms.client.model.proto.model.common.LongsWithVersion.Builder builderForValue) {
+        copyOnWrite();
+        instance.setLongsWithVersion(builderForValue.build());
+        return this;
+      }
+      /**
+       * <code>.im.turms.proto.LongsWithVersion longs_with_version = 3;</code>
+       */
+      public Builder mergeLongsWithVersion(im.turms.client.model.proto.model.common.LongsWithVersion value) {
+        copyOnWrite();
+        instance.mergeLongsWithVersion(value);
+        return this;
+      }
+      /**
+       * <code>.im.turms.proto.LongsWithVersion longs_with_version = 3;</code>
+       */
+      public Builder clearLongsWithVersion() {
+        copyOnWrite();
+        instance.clearLongsWithVersion();
+        return this;
+      }
+
+      /**
+       * <code>.im.turms.proto.StringsWithVersion strings_with_version = 4;</code>
+       */
+      @java.lang.Override
+      public boolean hasStringsWithVersion() {
+        return instance.hasStringsWithVersion();
+      }
+      /**
+       * <code>.im.turms.proto.StringsWithVersion strings_with_version = 4;</code>
+       */
+      @java.lang.Override
+      public im.turms.client.model.proto.model.common.StringsWithVersion getStringsWithVersion() {
+        return instance.getStringsWithVersion();
+      }
+      /**
+       * <code>.im.turms.proto.StringsWithVersion strings_with_version = 4;</code>
+       */
+      public Builder setStringsWithVersion(im.turms.client.model.proto.model.common.StringsWithVersion value) {
+        copyOnWrite();
+        instance.setStringsWithVersion(value);
+        return this;
+      }
+      /**
+       * <code>.im.turms.proto.StringsWithVersion strings_with_version = 4;</code>
+       */
+      public Builder setStringsWithVersion(
+          im.turms.client.model.proto.model.common.StringsWithVersion.Builder builderForValue) {
+        copyOnWrite();
+        instance.setStringsWithVersion(builderForValue.build());
+        return this;
+      }
+      /**
+       * <code>.im.turms.proto.StringsWithVersion strings_with_version = 4;</code>
+       */
+      public Builder mergeStringsWithVersion(im.turms.client.model.proto.model.common.StringsWithVersion value) {
+        copyOnWrite();
+        instance.mergeStringsWithVersion(value);
+        return this;
+      }
+      /**
+       * <code>.im.turms.proto.StringsWithVersion strings_with_version = 4;</code>
+       */
+      public Builder clearStringsWithVersion() {
+        copyOnWrite();
+        instance.clearStringsWithVersion();
+        return this;
+      }
+
+      /**
+       * <pre>
+       * Conversation
+       * </pre>
+       *
+       * <code>.im.turms.proto.Conversations conversations = 5;</code>
        */
       @java.lang.Override
       public boolean hasConversations() {
         return instance.hasConversations();
       }
       /**
-       * <code>.im.turms.proto.Conversations conversations = 4;</code>
+       * <pre>
+       * Conversation
+       * </pre>
+       *
+       * <code>.im.turms.proto.Conversations conversations = 5;</code>
        */
       @java.lang.Override
       public im.turms.client.model.proto.model.conversation.Conversations getConversations() {
         return instance.getConversations();
       }
       /**
-       * <code>.im.turms.proto.Conversations conversations = 4;</code>
+       * <pre>
+       * Conversation
+       * </pre>
+       *
+       * <code>.im.turms.proto.Conversations conversations = 5;</code>
        */
       public Builder setConversations(im.turms.client.model.proto.model.conversation.Conversations value) {
         copyOnWrite();
@@ -1586,7 +1837,11 @@ public  final class TurmsNotification extends
         return this;
       }
       /**
-       * <code>.im.turms.proto.Conversations conversations = 4;</code>
+       * <pre>
+       * Conversation
+       * </pre>
+       *
+       * <code>.im.turms.proto.Conversations conversations = 5;</code>
        */
       public Builder setConversations(
           im.turms.client.model.proto.model.conversation.Conversations.Builder builderForValue) {
@@ -1595,7 +1850,11 @@ public  final class TurmsNotification extends
         return this;
       }
       /**
-       * <code>.im.turms.proto.Conversations conversations = 4;</code>
+       * <pre>
+       * Conversation
+       * </pre>
+       *
+       * <code>.im.turms.proto.Conversations conversations = 5;</code>
        */
       public Builder mergeConversations(im.turms.client.model.proto.model.conversation.Conversations value) {
         copyOnWrite();
@@ -1603,7 +1862,11 @@ public  final class TurmsNotification extends
         return this;
       }
       /**
-       * <code>.im.turms.proto.Conversations conversations = 4;</code>
+       * <pre>
+       * Conversation
+       * </pre>
+       *
+       * <code>.im.turms.proto.Conversations conversations = 5;</code>
        */
       public Builder clearConversations() {
         copyOnWrite();
@@ -1612,21 +1875,33 @@ public  final class TurmsNotification extends
       }
 
       /**
-       * <code>.im.turms.proto.Messages messages = 5;</code>
+       * <pre>
+       * Message
+       * </pre>
+       *
+       * <code>.im.turms.proto.Messages messages = 6;</code>
        */
       @java.lang.Override
       public boolean hasMessages() {
         return instance.hasMessages();
       }
       /**
-       * <code>.im.turms.proto.Messages messages = 5;</code>
+       * <pre>
+       * Message
+       * </pre>
+       *
+       * <code>.im.turms.proto.Messages messages = 6;</code>
        */
       @java.lang.Override
       public im.turms.client.model.proto.model.message.Messages getMessages() {
         return instance.getMessages();
       }
       /**
-       * <code>.im.turms.proto.Messages messages = 5;</code>
+       * <pre>
+       * Message
+       * </pre>
+       *
+       * <code>.im.turms.proto.Messages messages = 6;</code>
        */
       public Builder setMessages(im.turms.client.model.proto.model.message.Messages value) {
         copyOnWrite();
@@ -1634,7 +1909,11 @@ public  final class TurmsNotification extends
         return this;
       }
       /**
-       * <code>.im.turms.proto.Messages messages = 5;</code>
+       * <pre>
+       * Message
+       * </pre>
+       *
+       * <code>.im.turms.proto.Messages messages = 6;</code>
        */
       public Builder setMessages(
           im.turms.client.model.proto.model.message.Messages.Builder builderForValue) {
@@ -1643,7 +1922,11 @@ public  final class TurmsNotification extends
         return this;
       }
       /**
-       * <code>.im.turms.proto.Messages messages = 5;</code>
+       * <pre>
+       * Message
+       * </pre>
+       *
+       * <code>.im.turms.proto.Messages messages = 6;</code>
        */
       public Builder mergeMessages(im.turms.client.model.proto.model.message.Messages value) {
         copyOnWrite();
@@ -1651,7 +1934,11 @@ public  final class TurmsNotification extends
         return this;
       }
       /**
-       * <code>.im.turms.proto.Messages messages = 5;</code>
+       * <pre>
+       * Message
+       * </pre>
+       *
+       * <code>.im.turms.proto.Messages messages = 6;</code>
        */
       public Builder clearMessages() {
         copyOnWrite();
@@ -1660,21 +1947,21 @@ public  final class TurmsNotification extends
       }
 
       /**
-       * <code>.im.turms.proto.MessagesWithTotalList messages_with_total_list = 6;</code>
+       * <code>.im.turms.proto.MessagesWithTotalList messages_with_total_list = 7;</code>
        */
       @java.lang.Override
       public boolean hasMessagesWithTotalList() {
         return instance.hasMessagesWithTotalList();
       }
       /**
-       * <code>.im.turms.proto.MessagesWithTotalList messages_with_total_list = 6;</code>
+       * <code>.im.turms.proto.MessagesWithTotalList messages_with_total_list = 7;</code>
        */
       @java.lang.Override
       public im.turms.client.model.proto.model.message.MessagesWithTotalList getMessagesWithTotalList() {
         return instance.getMessagesWithTotalList();
       }
       /**
-       * <code>.im.turms.proto.MessagesWithTotalList messages_with_total_list = 6;</code>
+       * <code>.im.turms.proto.MessagesWithTotalList messages_with_total_list = 7;</code>
        */
       public Builder setMessagesWithTotalList(im.turms.client.model.proto.model.message.MessagesWithTotalList value) {
         copyOnWrite();
@@ -1682,7 +1969,7 @@ public  final class TurmsNotification extends
         return this;
       }
       /**
-       * <code>.im.turms.proto.MessagesWithTotalList messages_with_total_list = 6;</code>
+       * <code>.im.turms.proto.MessagesWithTotalList messages_with_total_list = 7;</code>
        */
       public Builder setMessagesWithTotalList(
           im.turms.client.model.proto.model.message.MessagesWithTotalList.Builder builderForValue) {
@@ -1691,7 +1978,7 @@ public  final class TurmsNotification extends
         return this;
       }
       /**
-       * <code>.im.turms.proto.MessagesWithTotalList messages_with_total_list = 6;</code>
+       * <code>.im.turms.proto.MessagesWithTotalList messages_with_total_list = 7;</code>
        */
       public Builder mergeMessagesWithTotalList(im.turms.client.model.proto.model.message.MessagesWithTotalList value) {
         copyOnWrite();
@@ -1699,7 +1986,7 @@ public  final class TurmsNotification extends
         return this;
       }
       /**
-       * <code>.im.turms.proto.MessagesWithTotalList messages_with_total_list = 6;</code>
+       * <code>.im.turms.proto.MessagesWithTotalList messages_with_total_list = 7;</code>
        */
       public Builder clearMessagesWithTotalList() {
         copyOnWrite();
@@ -1708,21 +1995,33 @@ public  final class TurmsNotification extends
       }
 
       /**
-       * <code>.im.turms.proto.UserSession user_session = 7;</code>
+       * <pre>
+       * User
+       * </pre>
+       *
+       * <code>.im.turms.proto.UserSession user_session = 8;</code>
        */
       @java.lang.Override
       public boolean hasUserSession() {
         return instance.hasUserSession();
       }
       /**
-       * <code>.im.turms.proto.UserSession user_session = 7;</code>
+       * <pre>
+       * User
+       * </pre>
+       *
+       * <code>.im.turms.proto.UserSession user_session = 8;</code>
        */
       @java.lang.Override
       public im.turms.client.model.proto.model.user.UserSession getUserSession() {
         return instance.getUserSession();
       }
       /**
-       * <code>.im.turms.proto.UserSession user_session = 7;</code>
+       * <pre>
+       * User
+       * </pre>
+       *
+       * <code>.im.turms.proto.UserSession user_session = 8;</code>
        */
       public Builder setUserSession(im.turms.client.model.proto.model.user.UserSession value) {
         copyOnWrite();
@@ -1730,7 +2029,11 @@ public  final class TurmsNotification extends
         return this;
       }
       /**
-       * <code>.im.turms.proto.UserSession user_session = 7;</code>
+       * <pre>
+       * User
+       * </pre>
+       *
+       * <code>.im.turms.proto.UserSession user_session = 8;</code>
        */
       public Builder setUserSession(
           im.turms.client.model.proto.model.user.UserSession.Builder builderForValue) {
@@ -1739,7 +2042,11 @@ public  final class TurmsNotification extends
         return this;
       }
       /**
-       * <code>.im.turms.proto.UserSession user_session = 7;</code>
+       * <pre>
+       * User
+       * </pre>
+       *
+       * <code>.im.turms.proto.UserSession user_session = 8;</code>
        */
       public Builder mergeUserSession(im.turms.client.model.proto.model.user.UserSession value) {
         copyOnWrite();
@@ -1747,7 +2054,11 @@ public  final class TurmsNotification extends
         return this;
       }
       /**
-       * <code>.im.turms.proto.UserSession user_session = 7;</code>
+       * <pre>
+       * User
+       * </pre>
+       *
+       * <code>.im.turms.proto.UserSession user_session = 8;</code>
        */
       public Builder clearUserSession() {
         copyOnWrite();
@@ -1756,21 +2067,21 @@ public  final class TurmsNotification extends
       }
 
       /**
-       * <code>.im.turms.proto.UserInfosWithVersion user_infos_with_version = 8;</code>
+       * <code>.im.turms.proto.UserInfosWithVersion user_infos_with_version = 9;</code>
        */
       @java.lang.Override
       public boolean hasUserInfosWithVersion() {
         return instance.hasUserInfosWithVersion();
       }
       /**
-       * <code>.im.turms.proto.UserInfosWithVersion user_infos_with_version = 8;</code>
+       * <code>.im.turms.proto.UserInfosWithVersion user_infos_with_version = 9;</code>
        */
       @java.lang.Override
       public im.turms.client.model.proto.model.user.UserInfosWithVersion getUserInfosWithVersion() {
         return instance.getUserInfosWithVersion();
       }
       /**
-       * <code>.im.turms.proto.UserInfosWithVersion user_infos_with_version = 8;</code>
+       * <code>.im.turms.proto.UserInfosWithVersion user_infos_with_version = 9;</code>
        */
       public Builder setUserInfosWithVersion(im.turms.client.model.proto.model.user.UserInfosWithVersion value) {
         copyOnWrite();
@@ -1778,7 +2089,7 @@ public  final class TurmsNotification extends
         return this;
       }
       /**
-       * <code>.im.turms.proto.UserInfosWithVersion user_infos_with_version = 8;</code>
+       * <code>.im.turms.proto.UserInfosWithVersion user_infos_with_version = 9;</code>
        */
       public Builder setUserInfosWithVersion(
           im.turms.client.model.proto.model.user.UserInfosWithVersion.Builder builderForValue) {
@@ -1787,7 +2098,7 @@ public  final class TurmsNotification extends
         return this;
       }
       /**
-       * <code>.im.turms.proto.UserInfosWithVersion user_infos_with_version = 8;</code>
+       * <code>.im.turms.proto.UserInfosWithVersion user_infos_with_version = 9;</code>
        */
       public Builder mergeUserInfosWithVersion(im.turms.client.model.proto.model.user.UserInfosWithVersion value) {
         copyOnWrite();
@@ -1795,7 +2106,7 @@ public  final class TurmsNotification extends
         return this;
       }
       /**
-       * <code>.im.turms.proto.UserInfosWithVersion user_infos_with_version = 8;</code>
+       * <code>.im.turms.proto.UserInfosWithVersion user_infos_with_version = 9;</code>
        */
       public Builder clearUserInfosWithVersion() {
         copyOnWrite();
@@ -1804,21 +2115,21 @@ public  final class TurmsNotification extends
       }
 
       /**
-       * <code>.im.turms.proto.UserOnlineStatuses user_online_statuses = 9;</code>
+       * <code>.im.turms.proto.UserOnlineStatuses user_online_statuses = 10;</code>
        */
       @java.lang.Override
       public boolean hasUserOnlineStatuses() {
         return instance.hasUserOnlineStatuses();
       }
       /**
-       * <code>.im.turms.proto.UserOnlineStatuses user_online_statuses = 9;</code>
+       * <code>.im.turms.proto.UserOnlineStatuses user_online_statuses = 10;</code>
        */
       @java.lang.Override
       public im.turms.client.model.proto.model.user.UserOnlineStatuses getUserOnlineStatuses() {
         return instance.getUserOnlineStatuses();
       }
       /**
-       * <code>.im.turms.proto.UserOnlineStatuses user_online_statuses = 9;</code>
+       * <code>.im.turms.proto.UserOnlineStatuses user_online_statuses = 10;</code>
        */
       public Builder setUserOnlineStatuses(im.turms.client.model.proto.model.user.UserOnlineStatuses value) {
         copyOnWrite();
@@ -1826,7 +2137,7 @@ public  final class TurmsNotification extends
         return this;
       }
       /**
-       * <code>.im.turms.proto.UserOnlineStatuses user_online_statuses = 9;</code>
+       * <code>.im.turms.proto.UserOnlineStatuses user_online_statuses = 10;</code>
        */
       public Builder setUserOnlineStatuses(
           im.turms.client.model.proto.model.user.UserOnlineStatuses.Builder builderForValue) {
@@ -1835,7 +2146,7 @@ public  final class TurmsNotification extends
         return this;
       }
       /**
-       * <code>.im.turms.proto.UserOnlineStatuses user_online_statuses = 9;</code>
+       * <code>.im.turms.proto.UserOnlineStatuses user_online_statuses = 10;</code>
        */
       public Builder mergeUserOnlineStatuses(im.turms.client.model.proto.model.user.UserOnlineStatuses value) {
         copyOnWrite();
@@ -1843,7 +2154,7 @@ public  final class TurmsNotification extends
         return this;
       }
       /**
-       * <code>.im.turms.proto.UserOnlineStatuses user_online_statuses = 9;</code>
+       * <code>.im.turms.proto.UserOnlineStatuses user_online_statuses = 10;</code>
        */
       public Builder clearUserOnlineStatuses() {
         copyOnWrite();
@@ -1852,21 +2163,21 @@ public  final class TurmsNotification extends
       }
 
       /**
-       * <code>.im.turms.proto.UserFriendRequestsWithVersion user_friend_requests_with_version = 10;</code>
+       * <code>.im.turms.proto.UserFriendRequestsWithVersion user_friend_requests_with_version = 11;</code>
        */
       @java.lang.Override
       public boolean hasUserFriendRequestsWithVersion() {
         return instance.hasUserFriendRequestsWithVersion();
       }
       /**
-       * <code>.im.turms.proto.UserFriendRequestsWithVersion user_friend_requests_with_version = 10;</code>
+       * <code>.im.turms.proto.UserFriendRequestsWithVersion user_friend_requests_with_version = 11;</code>
        */
       @java.lang.Override
       public im.turms.client.model.proto.model.user.UserFriendRequestsWithVersion getUserFriendRequestsWithVersion() {
         return instance.getUserFriendRequestsWithVersion();
       }
       /**
-       * <code>.im.turms.proto.UserFriendRequestsWithVersion user_friend_requests_with_version = 10;</code>
+       * <code>.im.turms.proto.UserFriendRequestsWithVersion user_friend_requests_with_version = 11;</code>
        */
       public Builder setUserFriendRequestsWithVersion(im.turms.client.model.proto.model.user.UserFriendRequestsWithVersion value) {
         copyOnWrite();
@@ -1874,7 +2185,7 @@ public  final class TurmsNotification extends
         return this;
       }
       /**
-       * <code>.im.turms.proto.UserFriendRequestsWithVersion user_friend_requests_with_version = 10;</code>
+       * <code>.im.turms.proto.UserFriendRequestsWithVersion user_friend_requests_with_version = 11;</code>
        */
       public Builder setUserFriendRequestsWithVersion(
           im.turms.client.model.proto.model.user.UserFriendRequestsWithVersion.Builder builderForValue) {
@@ -1883,7 +2194,7 @@ public  final class TurmsNotification extends
         return this;
       }
       /**
-       * <code>.im.turms.proto.UserFriendRequestsWithVersion user_friend_requests_with_version = 10;</code>
+       * <code>.im.turms.proto.UserFriendRequestsWithVersion user_friend_requests_with_version = 11;</code>
        */
       public Builder mergeUserFriendRequestsWithVersion(im.turms.client.model.proto.model.user.UserFriendRequestsWithVersion value) {
         copyOnWrite();
@@ -1891,7 +2202,7 @@ public  final class TurmsNotification extends
         return this;
       }
       /**
-       * <code>.im.turms.proto.UserFriendRequestsWithVersion user_friend_requests_with_version = 10;</code>
+       * <code>.im.turms.proto.UserFriendRequestsWithVersion user_friend_requests_with_version = 11;</code>
        */
       public Builder clearUserFriendRequestsWithVersion() {
         copyOnWrite();
@@ -1900,21 +2211,21 @@ public  final class TurmsNotification extends
       }
 
       /**
-       * <code>.im.turms.proto.UserRelationshipGroupsWithVersion user_relationship_groups_with_version = 11;</code>
+       * <code>.im.turms.proto.UserRelationshipGroupsWithVersion user_relationship_groups_with_version = 12;</code>
        */
       @java.lang.Override
       public boolean hasUserRelationshipGroupsWithVersion() {
         return instance.hasUserRelationshipGroupsWithVersion();
       }
       /**
-       * <code>.im.turms.proto.UserRelationshipGroupsWithVersion user_relationship_groups_with_version = 11;</code>
+       * <code>.im.turms.proto.UserRelationshipGroupsWithVersion user_relationship_groups_with_version = 12;</code>
        */
       @java.lang.Override
       public im.turms.client.model.proto.model.user.UserRelationshipGroupsWithVersion getUserRelationshipGroupsWithVersion() {
         return instance.getUserRelationshipGroupsWithVersion();
       }
       /**
-       * <code>.im.turms.proto.UserRelationshipGroupsWithVersion user_relationship_groups_with_version = 11;</code>
+       * <code>.im.turms.proto.UserRelationshipGroupsWithVersion user_relationship_groups_with_version = 12;</code>
        */
       public Builder setUserRelationshipGroupsWithVersion(im.turms.client.model.proto.model.user.UserRelationshipGroupsWithVersion value) {
         copyOnWrite();
@@ -1922,7 +2233,7 @@ public  final class TurmsNotification extends
         return this;
       }
       /**
-       * <code>.im.turms.proto.UserRelationshipGroupsWithVersion user_relationship_groups_with_version = 11;</code>
+       * <code>.im.turms.proto.UserRelationshipGroupsWithVersion user_relationship_groups_with_version = 12;</code>
        */
       public Builder setUserRelationshipGroupsWithVersion(
           im.turms.client.model.proto.model.user.UserRelationshipGroupsWithVersion.Builder builderForValue) {
@@ -1931,7 +2242,7 @@ public  final class TurmsNotification extends
         return this;
       }
       /**
-       * <code>.im.turms.proto.UserRelationshipGroupsWithVersion user_relationship_groups_with_version = 11;</code>
+       * <code>.im.turms.proto.UserRelationshipGroupsWithVersion user_relationship_groups_with_version = 12;</code>
        */
       public Builder mergeUserRelationshipGroupsWithVersion(im.turms.client.model.proto.model.user.UserRelationshipGroupsWithVersion value) {
         copyOnWrite();
@@ -1939,7 +2250,7 @@ public  final class TurmsNotification extends
         return this;
       }
       /**
-       * <code>.im.turms.proto.UserRelationshipGroupsWithVersion user_relationship_groups_with_version = 11;</code>
+       * <code>.im.turms.proto.UserRelationshipGroupsWithVersion user_relationship_groups_with_version = 12;</code>
        */
       public Builder clearUserRelationshipGroupsWithVersion() {
         copyOnWrite();
@@ -1948,21 +2259,21 @@ public  final class TurmsNotification extends
       }
 
       /**
-       * <code>.im.turms.proto.UserRelationshipsWithVersion user_relationships_with_version = 12;</code>
+       * <code>.im.turms.proto.UserRelationshipsWithVersion user_relationships_with_version = 13;</code>
        */
       @java.lang.Override
       public boolean hasUserRelationshipsWithVersion() {
         return instance.hasUserRelationshipsWithVersion();
       }
       /**
-       * <code>.im.turms.proto.UserRelationshipsWithVersion user_relationships_with_version = 12;</code>
+       * <code>.im.turms.proto.UserRelationshipsWithVersion user_relationships_with_version = 13;</code>
        */
       @java.lang.Override
       public im.turms.client.model.proto.model.user.UserRelationshipsWithVersion getUserRelationshipsWithVersion() {
         return instance.getUserRelationshipsWithVersion();
       }
       /**
-       * <code>.im.turms.proto.UserRelationshipsWithVersion user_relationships_with_version = 12;</code>
+       * <code>.im.turms.proto.UserRelationshipsWithVersion user_relationships_with_version = 13;</code>
        */
       public Builder setUserRelationshipsWithVersion(im.turms.client.model.proto.model.user.UserRelationshipsWithVersion value) {
         copyOnWrite();
@@ -1970,7 +2281,7 @@ public  final class TurmsNotification extends
         return this;
       }
       /**
-       * <code>.im.turms.proto.UserRelationshipsWithVersion user_relationships_with_version = 12;</code>
+       * <code>.im.turms.proto.UserRelationshipsWithVersion user_relationships_with_version = 13;</code>
        */
       public Builder setUserRelationshipsWithVersion(
           im.turms.client.model.proto.model.user.UserRelationshipsWithVersion.Builder builderForValue) {
@@ -1979,7 +2290,7 @@ public  final class TurmsNotification extends
         return this;
       }
       /**
-       * <code>.im.turms.proto.UserRelationshipsWithVersion user_relationships_with_version = 12;</code>
+       * <code>.im.turms.proto.UserRelationshipsWithVersion user_relationships_with_version = 13;</code>
        */
       public Builder mergeUserRelationshipsWithVersion(im.turms.client.model.proto.model.user.UserRelationshipsWithVersion value) {
         copyOnWrite();
@@ -1987,7 +2298,7 @@ public  final class TurmsNotification extends
         return this;
       }
       /**
-       * <code>.im.turms.proto.UserRelationshipsWithVersion user_relationships_with_version = 12;</code>
+       * <code>.im.turms.proto.UserRelationshipsWithVersion user_relationships_with_version = 13;</code>
        */
       public Builder clearUserRelationshipsWithVersion() {
         copyOnWrite();
@@ -1996,21 +2307,21 @@ public  final class TurmsNotification extends
       }
 
       /**
-       * <code>.im.turms.proto.NearbyUsers nearby_users = 13;</code>
+       * <code>.im.turms.proto.NearbyUsers nearby_users = 14;</code>
        */
       @java.lang.Override
       public boolean hasNearbyUsers() {
         return instance.hasNearbyUsers();
       }
       /**
-       * <code>.im.turms.proto.NearbyUsers nearby_users = 13;</code>
+       * <code>.im.turms.proto.NearbyUsers nearby_users = 14;</code>
        */
       @java.lang.Override
       public im.turms.client.model.proto.model.user.NearbyUsers getNearbyUsers() {
         return instance.getNearbyUsers();
       }
       /**
-       * <code>.im.turms.proto.NearbyUsers nearby_users = 13;</code>
+       * <code>.im.turms.proto.NearbyUsers nearby_users = 14;</code>
        */
       public Builder setNearbyUsers(im.turms.client.model.proto.model.user.NearbyUsers value) {
         copyOnWrite();
@@ -2018,7 +2329,7 @@ public  final class TurmsNotification extends
         return this;
       }
       /**
-       * <code>.im.turms.proto.NearbyUsers nearby_users = 13;</code>
+       * <code>.im.turms.proto.NearbyUsers nearby_users = 14;</code>
        */
       public Builder setNearbyUsers(
           im.turms.client.model.proto.model.user.NearbyUsers.Builder builderForValue) {
@@ -2027,7 +2338,7 @@ public  final class TurmsNotification extends
         return this;
       }
       /**
-       * <code>.im.turms.proto.NearbyUsers nearby_users = 13;</code>
+       * <code>.im.turms.proto.NearbyUsers nearby_users = 14;</code>
        */
       public Builder mergeNearbyUsers(im.turms.client.model.proto.model.user.NearbyUsers value) {
         copyOnWrite();
@@ -2035,7 +2346,7 @@ public  final class TurmsNotification extends
         return this;
       }
       /**
-       * <code>.im.turms.proto.NearbyUsers nearby_users = 13;</code>
+       * <code>.im.turms.proto.NearbyUsers nearby_users = 14;</code>
        */
       public Builder clearNearbyUsers() {
         copyOnWrite();
@@ -2044,21 +2355,33 @@ public  final class TurmsNotification extends
       }
 
       /**
-       * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 14;</code>
+       * <pre>
+       * Group
+       * </pre>
+       *
+       * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 15;</code>
        */
       @java.lang.Override
       public boolean hasGroupInvitationsWithVersion() {
         return instance.hasGroupInvitationsWithVersion();
       }
       /**
-       * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 14;</code>
+       * <pre>
+       * Group
+       * </pre>
+       *
+       * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 15;</code>
        */
       @java.lang.Override
       public im.turms.client.model.proto.model.group.GroupInvitationsWithVersion getGroupInvitationsWithVersion() {
         return instance.getGroupInvitationsWithVersion();
       }
       /**
-       * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 14;</code>
+       * <pre>
+       * Group
+       * </pre>
+       *
+       * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 15;</code>
        */
       public Builder setGroupInvitationsWithVersion(im.turms.client.model.proto.model.group.GroupInvitationsWithVersion value) {
         copyOnWrite();
@@ -2066,7 +2389,11 @@ public  final class TurmsNotification extends
         return this;
       }
       /**
-       * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 14;</code>
+       * <pre>
+       * Group
+       * </pre>
+       *
+       * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 15;</code>
        */
       public Builder setGroupInvitationsWithVersion(
           im.turms.client.model.proto.model.group.GroupInvitationsWithVersion.Builder builderForValue) {
@@ -2075,7 +2402,11 @@ public  final class TurmsNotification extends
         return this;
       }
       /**
-       * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 14;</code>
+       * <pre>
+       * Group
+       * </pre>
+       *
+       * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 15;</code>
        */
       public Builder mergeGroupInvitationsWithVersion(im.turms.client.model.proto.model.group.GroupInvitationsWithVersion value) {
         copyOnWrite();
@@ -2083,7 +2414,11 @@ public  final class TurmsNotification extends
         return this;
       }
       /**
-       * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 14;</code>
+       * <pre>
+       * Group
+       * </pre>
+       *
+       * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 15;</code>
        */
       public Builder clearGroupInvitationsWithVersion() {
         copyOnWrite();
@@ -2092,21 +2427,21 @@ public  final class TurmsNotification extends
       }
 
       /**
-       * <code>.im.turms.proto.GroupJoinQuestionsAnswerResult group_join_question_answer_result = 15;</code>
+       * <code>.im.turms.proto.GroupJoinQuestionsAnswerResult group_join_question_answer_result = 16;</code>
        */
       @java.lang.Override
       public boolean hasGroupJoinQuestionAnswerResult() {
         return instance.hasGroupJoinQuestionAnswerResult();
       }
       /**
-       * <code>.im.turms.proto.GroupJoinQuestionsAnswerResult group_join_question_answer_result = 15;</code>
+       * <code>.im.turms.proto.GroupJoinQuestionsAnswerResult group_join_question_answer_result = 16;</code>
        */
       @java.lang.Override
       public im.turms.client.model.proto.model.group.GroupJoinQuestionsAnswerResult getGroupJoinQuestionAnswerResult() {
         return instance.getGroupJoinQuestionAnswerResult();
       }
       /**
-       * <code>.im.turms.proto.GroupJoinQuestionsAnswerResult group_join_question_answer_result = 15;</code>
+       * <code>.im.turms.proto.GroupJoinQuestionsAnswerResult group_join_question_answer_result = 16;</code>
        */
       public Builder setGroupJoinQuestionAnswerResult(im.turms.client.model.proto.model.group.GroupJoinQuestionsAnswerResult value) {
         copyOnWrite();
@@ -2114,7 +2449,7 @@ public  final class TurmsNotification extends
         return this;
       }
       /**
-       * <code>.im.turms.proto.GroupJoinQuestionsAnswerResult group_join_question_answer_result = 15;</code>
+       * <code>.im.turms.proto.GroupJoinQuestionsAnswerResult group_join_question_answer_result = 16;</code>
        */
       public Builder setGroupJoinQuestionAnswerResult(
           im.turms.client.model.proto.model.group.GroupJoinQuestionsAnswerResult.Builder builderForValue) {
@@ -2123,7 +2458,7 @@ public  final class TurmsNotification extends
         return this;
       }
       /**
-       * <code>.im.turms.proto.GroupJoinQuestionsAnswerResult group_join_question_answer_result = 15;</code>
+       * <code>.im.turms.proto.GroupJoinQuestionsAnswerResult group_join_question_answer_result = 16;</code>
        */
       public Builder mergeGroupJoinQuestionAnswerResult(im.turms.client.model.proto.model.group.GroupJoinQuestionsAnswerResult value) {
         copyOnWrite();
@@ -2131,7 +2466,7 @@ public  final class TurmsNotification extends
         return this;
       }
       /**
-       * <code>.im.turms.proto.GroupJoinQuestionsAnswerResult group_join_question_answer_result = 15;</code>
+       * <code>.im.turms.proto.GroupJoinQuestionsAnswerResult group_join_question_answer_result = 16;</code>
        */
       public Builder clearGroupJoinQuestionAnswerResult() {
         copyOnWrite();
@@ -2140,21 +2475,21 @@ public  final class TurmsNotification extends
       }
 
       /**
-       * <code>.im.turms.proto.GroupJoinRequestsWithVersion group_join_requests_with_version = 16;</code>
+       * <code>.im.turms.proto.GroupJoinRequestsWithVersion group_join_requests_with_version = 17;</code>
        */
       @java.lang.Override
       public boolean hasGroupJoinRequestsWithVersion() {
         return instance.hasGroupJoinRequestsWithVersion();
       }
       /**
-       * <code>.im.turms.proto.GroupJoinRequestsWithVersion group_join_requests_with_version = 16;</code>
+       * <code>.im.turms.proto.GroupJoinRequestsWithVersion group_join_requests_with_version = 17;</code>
        */
       @java.lang.Override
       public im.turms.client.model.proto.model.group.GroupJoinRequestsWithVersion getGroupJoinRequestsWithVersion() {
         return instance.getGroupJoinRequestsWithVersion();
       }
       /**
-       * <code>.im.turms.proto.GroupJoinRequestsWithVersion group_join_requests_with_version = 16;</code>
+       * <code>.im.turms.proto.GroupJoinRequestsWithVersion group_join_requests_with_version = 17;</code>
        */
       public Builder setGroupJoinRequestsWithVersion(im.turms.client.model.proto.model.group.GroupJoinRequestsWithVersion value) {
         copyOnWrite();
@@ -2162,7 +2497,7 @@ public  final class TurmsNotification extends
         return this;
       }
       /**
-       * <code>.im.turms.proto.GroupJoinRequestsWithVersion group_join_requests_with_version = 16;</code>
+       * <code>.im.turms.proto.GroupJoinRequestsWithVersion group_join_requests_with_version = 17;</code>
        */
       public Builder setGroupJoinRequestsWithVersion(
           im.turms.client.model.proto.model.group.GroupJoinRequestsWithVersion.Builder builderForValue) {
@@ -2171,7 +2506,7 @@ public  final class TurmsNotification extends
         return this;
       }
       /**
-       * <code>.im.turms.proto.GroupJoinRequestsWithVersion group_join_requests_with_version = 16;</code>
+       * <code>.im.turms.proto.GroupJoinRequestsWithVersion group_join_requests_with_version = 17;</code>
        */
       public Builder mergeGroupJoinRequestsWithVersion(im.turms.client.model.proto.model.group.GroupJoinRequestsWithVersion value) {
         copyOnWrite();
@@ -2179,7 +2514,7 @@ public  final class TurmsNotification extends
         return this;
       }
       /**
-       * <code>.im.turms.proto.GroupJoinRequestsWithVersion group_join_requests_with_version = 16;</code>
+       * <code>.im.turms.proto.GroupJoinRequestsWithVersion group_join_requests_with_version = 17;</code>
        */
       public Builder clearGroupJoinRequestsWithVersion() {
         copyOnWrite();
@@ -2188,21 +2523,21 @@ public  final class TurmsNotification extends
       }
 
       /**
-       * <code>.im.turms.proto.GroupJoinQuestionsWithVersion group_join_questions_with_version = 17;</code>
+       * <code>.im.turms.proto.GroupJoinQuestionsWithVersion group_join_questions_with_version = 18;</code>
        */
       @java.lang.Override
       public boolean hasGroupJoinQuestionsWithVersion() {
         return instance.hasGroupJoinQuestionsWithVersion();
       }
       /**
-       * <code>.im.turms.proto.GroupJoinQuestionsWithVersion group_join_questions_with_version = 17;</code>
+       * <code>.im.turms.proto.GroupJoinQuestionsWithVersion group_join_questions_with_version = 18;</code>
        */
       @java.lang.Override
       public im.turms.client.model.proto.model.group.GroupJoinQuestionsWithVersion getGroupJoinQuestionsWithVersion() {
         return instance.getGroupJoinQuestionsWithVersion();
       }
       /**
-       * <code>.im.turms.proto.GroupJoinQuestionsWithVersion group_join_questions_with_version = 17;</code>
+       * <code>.im.turms.proto.GroupJoinQuestionsWithVersion group_join_questions_with_version = 18;</code>
        */
       public Builder setGroupJoinQuestionsWithVersion(im.turms.client.model.proto.model.group.GroupJoinQuestionsWithVersion value) {
         copyOnWrite();
@@ -2210,7 +2545,7 @@ public  final class TurmsNotification extends
         return this;
       }
       /**
-       * <code>.im.turms.proto.GroupJoinQuestionsWithVersion group_join_questions_with_version = 17;</code>
+       * <code>.im.turms.proto.GroupJoinQuestionsWithVersion group_join_questions_with_version = 18;</code>
        */
       public Builder setGroupJoinQuestionsWithVersion(
           im.turms.client.model.proto.model.group.GroupJoinQuestionsWithVersion.Builder builderForValue) {
@@ -2219,7 +2554,7 @@ public  final class TurmsNotification extends
         return this;
       }
       /**
-       * <code>.im.turms.proto.GroupJoinQuestionsWithVersion group_join_questions_with_version = 17;</code>
+       * <code>.im.turms.proto.GroupJoinQuestionsWithVersion group_join_questions_with_version = 18;</code>
        */
       public Builder mergeGroupJoinQuestionsWithVersion(im.turms.client.model.proto.model.group.GroupJoinQuestionsWithVersion value) {
         copyOnWrite();
@@ -2227,7 +2562,7 @@ public  final class TurmsNotification extends
         return this;
       }
       /**
-       * <code>.im.turms.proto.GroupJoinQuestionsWithVersion group_join_questions_with_version = 17;</code>
+       * <code>.im.turms.proto.GroupJoinQuestionsWithVersion group_join_questions_with_version = 18;</code>
        */
       public Builder clearGroupJoinQuestionsWithVersion() {
         copyOnWrite();
@@ -2236,21 +2571,21 @@ public  final class TurmsNotification extends
       }
 
       /**
-       * <code>.im.turms.proto.GroupMembersWithVersion group_members_with_version = 18;</code>
+       * <code>.im.turms.proto.GroupMembersWithVersion group_members_with_version = 19;</code>
        */
       @java.lang.Override
       public boolean hasGroupMembersWithVersion() {
         return instance.hasGroupMembersWithVersion();
       }
       /**
-       * <code>.im.turms.proto.GroupMembersWithVersion group_members_with_version = 18;</code>
+       * <code>.im.turms.proto.GroupMembersWithVersion group_members_with_version = 19;</code>
        */
       @java.lang.Override
       public im.turms.client.model.proto.model.group.GroupMembersWithVersion getGroupMembersWithVersion() {
         return instance.getGroupMembersWithVersion();
       }
       /**
-       * <code>.im.turms.proto.GroupMembersWithVersion group_members_with_version = 18;</code>
+       * <code>.im.turms.proto.GroupMembersWithVersion group_members_with_version = 19;</code>
        */
       public Builder setGroupMembersWithVersion(im.turms.client.model.proto.model.group.GroupMembersWithVersion value) {
         copyOnWrite();
@@ -2258,7 +2593,7 @@ public  final class TurmsNotification extends
         return this;
       }
       /**
-       * <code>.im.turms.proto.GroupMembersWithVersion group_members_with_version = 18;</code>
+       * <code>.im.turms.proto.GroupMembersWithVersion group_members_with_version = 19;</code>
        */
       public Builder setGroupMembersWithVersion(
           im.turms.client.model.proto.model.group.GroupMembersWithVersion.Builder builderForValue) {
@@ -2267,7 +2602,7 @@ public  final class TurmsNotification extends
         return this;
       }
       /**
-       * <code>.im.turms.proto.GroupMembersWithVersion group_members_with_version = 18;</code>
+       * <code>.im.turms.proto.GroupMembersWithVersion group_members_with_version = 19;</code>
        */
       public Builder mergeGroupMembersWithVersion(im.turms.client.model.proto.model.group.GroupMembersWithVersion value) {
         copyOnWrite();
@@ -2275,7 +2610,7 @@ public  final class TurmsNotification extends
         return this;
       }
       /**
-       * <code>.im.turms.proto.GroupMembersWithVersion group_members_with_version = 18;</code>
+       * <code>.im.turms.proto.GroupMembersWithVersion group_members_with_version = 19;</code>
        */
       public Builder clearGroupMembersWithVersion() {
         copyOnWrite();
@@ -2284,21 +2619,21 @@ public  final class TurmsNotification extends
       }
 
       /**
-       * <code>.im.turms.proto.GroupsWithVersion groups_with_version = 19;</code>
+       * <code>.im.turms.proto.GroupsWithVersion groups_with_version = 20;</code>
        */
       @java.lang.Override
       public boolean hasGroupsWithVersion() {
         return instance.hasGroupsWithVersion();
       }
       /**
-       * <code>.im.turms.proto.GroupsWithVersion groups_with_version = 19;</code>
+       * <code>.im.turms.proto.GroupsWithVersion groups_with_version = 20;</code>
        */
       @java.lang.Override
       public im.turms.client.model.proto.model.group.GroupsWithVersion getGroupsWithVersion() {
         return instance.getGroupsWithVersion();
       }
       /**
-       * <code>.im.turms.proto.GroupsWithVersion groups_with_version = 19;</code>
+       * <code>.im.turms.proto.GroupsWithVersion groups_with_version = 20;</code>
        */
       public Builder setGroupsWithVersion(im.turms.client.model.proto.model.group.GroupsWithVersion value) {
         copyOnWrite();
@@ -2306,7 +2641,7 @@ public  final class TurmsNotification extends
         return this;
       }
       /**
-       * <code>.im.turms.proto.GroupsWithVersion groups_with_version = 19;</code>
+       * <code>.im.turms.proto.GroupsWithVersion groups_with_version = 20;</code>
        */
       public Builder setGroupsWithVersion(
           im.turms.client.model.proto.model.group.GroupsWithVersion.Builder builderForValue) {
@@ -2315,7 +2650,7 @@ public  final class TurmsNotification extends
         return this;
       }
       /**
-       * <code>.im.turms.proto.GroupsWithVersion groups_with_version = 19;</code>
+       * <code>.im.turms.proto.GroupsWithVersion groups_with_version = 20;</code>
        */
       public Builder mergeGroupsWithVersion(im.turms.client.model.proto.model.group.GroupsWithVersion value) {
         copyOnWrite();
@@ -2323,7 +2658,7 @@ public  final class TurmsNotification extends
         return this;
       }
       /**
-       * <code>.im.turms.proto.GroupsWithVersion groups_with_version = 19;</code>
+       * <code>.im.turms.proto.GroupsWithVersion groups_with_version = 20;</code>
        */
       public Builder clearGroupsWithVersion() {
         copyOnWrite();
@@ -2349,8 +2684,8 @@ public  final class TurmsNotification extends
             java.lang.Object[] objects = new java.lang.Object[] {
               "kind_",
               "kindCase_",
-              im.turms.client.model.proto.model.common.Int64Values.class,
-              im.turms.client.model.proto.model.common.Int64ValuesWithVersion.class,
+              im.turms.client.model.proto.model.common.LongsWithVersion.class,
+              im.turms.client.model.proto.model.common.StringsWithVersion.class,
               im.turms.client.model.proto.model.conversation.Conversations.class,
               im.turms.client.model.proto.model.message.Messages.class,
               im.turms.client.model.proto.model.message.MessagesWithTotalList.class,
@@ -2369,10 +2704,10 @@ public  final class TurmsNotification extends
               im.turms.client.model.proto.model.group.GroupsWithVersion.class,
             };
             java.lang.String info =
-                "\u0000\u0013\u0001\u0000\u0001\u0013\u0013\u0000\u0000\u0000\u0001<\u0000\u0002<" +
-                "\u0000\u0003\u023b\u0000\u0004<\u0000\u0005<\u0000\u0006<\u0000\u0007<\u0000\b<\u0000" +
+                "\u0000\u0014\u0001\u0000\u0001\u0014\u0014\u0000\u0000\u0000\u00015\u0000\u0002\u023b" +
+                "\u0000\u0003<\u0000\u0004<\u0000\u0005<\u0000\u0006<\u0000\u0007<\u0000\b<\u0000" +
                 "\t<\u0000\n<\u0000\u000b<\u0000\f<\u0000\r<\u0000\u000e<\u0000\u000f<\u0000\u0010" +
-                "<\u0000\u0011<\u0000\u0012<\u0000\u0013<\u0000";
+                "<\u0000\u0011<\u0000\u0012<\u0000\u0013<\u0000\u0014<\u0000";
             return newMessageInfo(DEFAULT_INSTANCE, info, objects);
         }
         // fall through

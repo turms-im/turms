@@ -2,8 +2,6 @@ import 'package:fixnum/fixnum.dart' show Int64;
 
 import '../../turms_client.dart';
 import '../extension/notification_extensions.dart';
-import '../model/new_group_join_question.dart';
-import '../model/proto/model/user/user_infos_with_version.pb.dart';
 
 class GroupService {
   final TurmsClient _turmsClient;
@@ -23,7 +21,7 @@ class GroupService {
         minimumScore: minimumScore,
         muteEndDate: muteEndDate?.toInt64(),
         groupTypeId: groupTypeId));
-    return n.toResponse((data) => data.getFirstIdOrThrow());
+    return n.toResponse((data) => data.getLongOrThrow());
   }
 
   Future<Response<void>> deleteGroup(Int64 groupId) async {
@@ -86,14 +84,14 @@ class GroupService {
     return n.toResponse((data) => data.groupsWithVersion.groups);
   }
 
-  Future<Response<Int64ValuesWithVersion?>> queryJoinedGroupIds(
+  Future<Response<LongsWithVersion?>> queryJoinedGroupIds(
       {DateTime? lastUpdatedDate}) async {
     final n = await _turmsClient.driver.send(QueryJoinedGroupIdsRequest(
         lastUpdatedDate: lastUpdatedDate == null
             ? null
             : Int64(lastUpdatedDate.millisecondsSinceEpoch)));
     return n.toResponse(
-        (data) => data.hasIdsWithVersion() ? data.idsWithVersion : null);
+        (data) => data.hasLongsWithVersion() ? data.longsWithVersion : null);
   }
 
   Future<Response<GroupsWithVersion?>> queryJoinedGroupInfos(
@@ -122,7 +120,7 @@ class GroupService {
     });
     final n = await _turmsClient.driver.send(CreateGroupJoinQuestionsRequest(
         groupId: groupId, questions: newQuestions));
-    return n.toResponse((data) => data.ids.values);
+    return n.toResponse((data) => data.longsWithVersion.longs);
   }
 
   Future<Response<void>> deleteGroupJoinQuestions(
@@ -158,12 +156,12 @@ class GroupService {
     return n.toNullResponse();
   }
 
-  Future<Response<Int64ValuesWithVersion?>> queryBlockedUserIds(Int64 groupId,
+  Future<Response<LongsWithVersion?>> queryBlockedUserIds(Int64 groupId,
       {DateTime? lastUpdatedDate}) async {
     final n = await _turmsClient.driver.send(QueryGroupBlockedUserIdsRequest(
         groupId: groupId, lastUpdatedDate: lastUpdatedDate?.toInt64()));
     return n.toResponse(
-        (data) => data.hasIdsWithVersion() ? data.idsWithVersion : null);
+        (data) => data.hasLongsWithVersion() ? data.longsWithVersion : null);
   }
 
   Future<Response<UserInfosWithVersion?>> queryBlockedUserInfos(Int64 groupId,
@@ -179,7 +177,7 @@ class GroupService {
       Int64 groupId, Int64 inviteeId, String content) async {
     final n = await _turmsClient.driver.send(CreateGroupInvitationRequest(
         groupId: groupId, inviteeId: inviteeId, content: content));
-    return n.toResponse((data) => data.getFirstIdOrThrow());
+    return n.toResponse((data) => data.getLongOrThrow());
   }
 
   Future<Response<void>> deleteInvitation(Int64 invitationId) async {
@@ -212,7 +210,7 @@ class GroupService {
       Int64 groupId, String content) async {
     final n = await _turmsClient.driver.send(
         CreateGroupJoinRequestRequest(groupId: groupId, content: content));
-    return n.toResponse((data) => data.getFirstIdOrThrow());
+    return n.toResponse((data) => data.getLongOrThrow());
   }
 
   Future<Response<void>> deleteJoinRequest(Int64 requestId) async {

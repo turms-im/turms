@@ -21,7 +21,7 @@ import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.reactivestreams.client.ClientSession;
 import im.turms.server.common.access.client.dto.ClientMessagePool;
-import im.turms.server.common.access.client.dto.model.common.Int64ValuesWithVersion;
+import im.turms.server.common.access.client.dto.model.common.LongsWithVersion;
 import im.turms.server.common.access.client.dto.model.user.UserInfosWithVersion;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.domain.user.po.User;
@@ -231,7 +231,7 @@ public class GroupBlocklistService {
         return groupBlocklistRepository.count(groupIds, userIds, blockDateRange, requesterIds);
     }
 
-    public Mono<Int64ValuesWithVersion> queryGroupBlockedUserIdsWithVersion(
+    public Mono<LongsWithVersion> queryGroupBlockedUserIdsWithVersion(
             @NotNull Long groupId,
             @Nullable Date lastUpdatedDate) {
         try {
@@ -253,9 +253,9 @@ public class GroupBlocklistService {
                                     throw ResponseException.get(ResponseStatusCode.NO_CONTENT);
                                 }
                                 return ClientMessagePool
-                                        .getInt64ValuesWithVersionBuilder()
+                                        .getLongsWithVersionBuilder()
                                         .setLastUpdatedDate(version.getTime())
-                                        .addAllValues(ids)
+                                        .addAllLongs(ids)
                                         .build();
                             })
                             .doFinally(signalType -> recyclableList.recycle());

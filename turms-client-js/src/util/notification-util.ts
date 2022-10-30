@@ -54,22 +54,24 @@ export default class NotificationUtil {
         return newMap;
     }
 
-    static getFirstIdOrThrow(data?: TurmsNotification_Data): string {
-        const value = data?.ids?.values?.[0];
-        if (value == null) {
-            const reason = `Cannot get ID from the invalid response: ${JSON.stringify(data)}`;
-            throw ResponseError.fromCodeAndReason(ResponseStatusCode.INVALID_RESPONSE, reason);
+    static getLongOrThrow(data?: TurmsNotification_Data): string {
+        const long = data?.long;
+        if (long == null) {
+            throw ResponseError.from({
+                code: ResponseStatusCode.INVALID_RESPONSE,
+                reason: `Cannot get a long value from the invalid response: ${JSON.stringify(data)}`
+            });
         }
-        return value;
+        return long;
     }
 
-    static getIdsWithVer(data?: TurmsNotification_Data): ParsedModel.IdsWithVersion | undefined {
-        const idsWithVersion = data?.idsWithVersion;
-        const arr = idsWithVersion?.values;
-        if (arr?.length) {
+    static getLongsWithVersion(data?: TurmsNotification_Data): ParsedModel.LongsWithVersion | undefined {
+        const longsWithVersion = data?.longsWithVersion;
+        const longs = longsWithVersion?.longs;
+        if (longs?.length) {
             return {
-                ids: arr,
-                lastUpdatedDate: this.transformDate(idsWithVersion.lastUpdatedDate)
+                longs,
+                lastUpdatedDate: this.transformDate(longsWithVersion.lastUpdatedDate)
             };
         }
     }

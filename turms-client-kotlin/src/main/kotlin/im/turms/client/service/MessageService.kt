@@ -19,6 +19,7 @@ package im.turms.client.service
 import com.google.protobuf.ByteString
 import im.turms.client.TurmsClient
 import im.turms.client.exception.ResponseException
+import im.turms.client.extension.getLongOrThrow
 import im.turms.client.extension.toResponse
 import im.turms.client.model.BuiltinSystemMessageType
 import im.turms.client.model.MessageAddition
@@ -35,7 +36,6 @@ import im.turms.client.model.proto.request.TurmsRequest
 import im.turms.client.model.proto.request.message.CreateMessageRequest
 import im.turms.client.model.proto.request.message.QueryMessagesRequest
 import im.turms.client.model.proto.request.message.UpdateMessageRequest
-import im.turms.client.util.MapUtil
 import im.turms.client.util.Validator
 import java.nio.ByteBuffer
 import java.util.Date
@@ -80,7 +80,7 @@ class MessageService(private val turmsClient: TurmsClient) {
                     preMessageId?.let { this.preMessageId = it }
                 }
             ).toResponse {
-                it.ids.getValues(0)
+                it.getLongOrThrow()
             }
     }
 
@@ -99,7 +99,7 @@ class MessageService(private val turmsClient: TurmsClient) {
                 }
             }
         ).toResponse {
-            it.ids.getValues(0)
+            it.getLongOrThrow()
         }
 
     suspend fun updateSentMessage(
@@ -202,8 +202,7 @@ class MessageService(private val turmsClient: TurmsClient) {
             }
         }
         val recalledMessageIds: Set<Long> = if (systemMessageType === BuiltinSystemMessageType.RECALL_MESSAGE) {
-            val size = message.recordsCount
-            HashSet<Long>(MapUtil.getCapability(size)).apply {
+            mutableSetOf<Long>().apply {
                 for (i in 1 until size) {
                     val id = message.getRecords(i).asReadOnlyByteBuffer().long
                     add(id)

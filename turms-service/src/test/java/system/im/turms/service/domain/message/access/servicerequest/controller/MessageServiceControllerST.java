@@ -16,6 +16,7 @@
  */
 package system.im.turms.service.domain.message.access.servicerequest.controller;
 
+import helper.NotificationUtil;
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.request.TurmsRequest;
 import im.turms.server.common.access.client.dto.request.message.CreateMessageRequest;
@@ -65,7 +66,7 @@ class MessageServiceControllerST extends BaseServiceControllerTest<MessageServic
         Mono<RequestHandlerResult> resultMono = getController().handleCreateMessageRequest()
                 .handle(clientRequest);
         assertResultIsOkAndRecipients(resultMono,
-                result -> privateMessageId = result.dataForRequester().getIds().getValues(0),
+                result -> privateMessageId = NotificationUtil.getLongOrThrow(result.dataForRequester()),
                 RECIPIENT_ID);
     }
 
@@ -81,7 +82,7 @@ class MessageServiceControllerST extends BaseServiceControllerTest<MessageServic
         ClientRequest clientRequest = new ClientRequest(SENDER_ID, SENDER_DEVICE_TYPE, SENDER_IP, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleCreateMessageRequest()
                 .handle(clientRequest);
-        assertResultIsOk(resultMono, result -> groupMessageId = result.dataForRequester().getIds().getValues(0));
+        assertResultIsOk(resultMono, result -> groupMessageId = NotificationUtil.getLongOrThrow(result.dataForRequester()));
     }
 
     @Test
@@ -95,7 +96,7 @@ class MessageServiceControllerST extends BaseServiceControllerTest<MessageServic
         ClientRequest clientRequest = new ClientRequest(SENDER_ID, SENDER_DEVICE_TYPE, SENDER_IP, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleCreateMessageRequest()
                 .handle(clientRequest);
-        assertResultIsOk(resultMono, result -> assertThat(result.dataForRequester().getIds().getValuesList()).isNotEmpty());
+        assertResultIsOk(resultMono, result -> assertThat(result.dataForRequester().hasLong()).isTrue());
     }
 
     @Test
@@ -109,7 +110,7 @@ class MessageServiceControllerST extends BaseServiceControllerTest<MessageServic
         ClientRequest clientRequest = new ClientRequest(SENDER_ID, SENDER_DEVICE_TYPE, SENDER_IP, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleCreateMessageRequest()
                 .handle(clientRequest);
-        assertResultIsOk(resultMono, result -> assertThat(result.dataForRequester().getIds().getValuesList()).isNotEmpty());
+        assertResultIsOk(resultMono, result -> assertThat(result.dataForRequester().hasLong()).isTrue());
     }
 
     // Update

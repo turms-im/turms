@@ -79,7 +79,7 @@ public class MessageService {
             }
             .map {
                 try $0.toResponse {
-                    try $0.getFirstId()
+                    try $0.getLongOrThrow()
                 }
             }
     }
@@ -102,7 +102,7 @@ public class MessageService {
             }
             .map {
                 try $0.toResponse {
-                    try $0.getFirstId()
+                    try $0.getLongOrThrow()
                 }
             }
     }

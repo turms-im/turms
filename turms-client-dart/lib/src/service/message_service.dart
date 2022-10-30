@@ -15,18 +15,6 @@ class DriverMessageService {
   static final RegExp _defaultMentionedUserIdsParserRegex =
       RegExp(r'@{(\d+?)}', multiLine: true);
 
-  Set<Int64> _defaultMentionedUserIdsParser(Message message) {
-    if (message.hasText()) {
-      final userIds = <Int64>{};
-      for (final matches
-          in _defaultMentionedUserIdsParserRegex.allMatches(message.text)) {
-        userIds.add(Int64.parseInt(matches.group(1)!));
-      }
-      return userIds;
-    }
-    return {};
-  }
-
   final TurmsClient _turmsClient;
   MentionedUserIdsParser? _mentionedUserIdsParser;
   final List<MessageListener> _messageListeners = [];
@@ -45,6 +33,18 @@ class DriverMessageService {
         }
       }
     });
+  }
+
+  Set<Int64> _defaultMentionedUserIdsParser(Message message) {
+    if (message.hasText()) {
+      final userIds = <Int64>{};
+      for (final matches
+          in _defaultMentionedUserIdsParserRegex.allMatches(message.text)) {
+        userIds.add(Int64.parseInt(matches.group(1)!));
+      }
+      return userIds;
+    }
+    return {};
   }
 
   void addMessageListener(MessageListener listener) =>
@@ -72,7 +72,7 @@ class DriverMessageService {
         records: records,
         burnAfter: burnAfter,
         preMessageId: preMessageId));
-    return n.toResponse((data) => data.getFirstIdOrThrow());
+    return n.toResponse((data) => data.getLongOrThrow());
   }
 
   Future<Response<Int64>> forwardMessage(
@@ -81,7 +81,7 @@ class DriverMessageService {
         messageId: messageId,
         groupId: isGroupMessage ? targetId : null,
         recipientId: !isGroupMessage ? targetId : null));
-    return n.toResponse((data) => data.getFirstIdOrThrow());
+    return n.toResponse((data) => data.getLongOrThrow());
   }
 
   Future<Response<void>> updateSentMessage(Int64 messageId,
