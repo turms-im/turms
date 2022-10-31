@@ -106,14 +106,24 @@ public class PluginRepository {
     }
 
     public List<Plugin> removePlugins(Set<String> ids) {
-        List<Plugin> plugins = new ArrayList<>(ids.size());
+        List<Plugin> removedPlugins = new ArrayList<>(ids.size());
         for (String id : ids) {
             Plugin plugin = idToPlugin.remove(id);
-            if (plugin != null) {
-                plugins.add(plugin);
+            if (plugin == null) {
+                continue;
             }
+            for (TurmsExtension extension : plugin.extensions()) {
+                ExtensionPoint extensionPoint = extension.getExtensionPoint();
+                for (Class<? extends ExtensionPoint> extensionPointClass : extension.getExtensionPointClasses()) {
+                    List<ExtensionPoint> extensionPoints = classToExtensionPoint.get(extensionPointClass);
+                    if (extensionPoints != null) {
+                        extensionPoints.remove(extensionPoint);
+                    }
+                }
+            }
+            removedPlugins.add(plugin);
         }
-        return plugins;
+        return removedPlugins;
     }
 
 }
