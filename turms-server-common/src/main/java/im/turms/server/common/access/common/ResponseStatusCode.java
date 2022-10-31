@@ -57,7 +57,8 @@ public enum ResponseStatusCode {
     UNAUTHORIZED(1300, "Unauthorized", 401),
     NO_FILTER_FOR_DELETE_OPERATION(1301, "Delete operation should have at least one filter", 400),
     RESOURCE_NOT_FOUND(1302, "Resource not found", 404),
-    ADMIN_REQUESTS_TOO_FREQUENT(1303, "The admin requests are too frequent", 429),
+    DUPLICATE_RESOURCE(1303, "Duplicate resource", 409),
+    ADMIN_REQUESTS_TOO_FREQUENT(1304, "The admin requests are too frequent", 429),
 
     // Admin - JFR
     DUMP_JFR_IN_ILLEGAL_STATUS(1310, "Dumping JFR should be executed in a legal status", 406),

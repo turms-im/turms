@@ -29,6 +29,7 @@ import im.turms.server.common.infra.cluster.node.NodeType;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.context.JobShutdownOrder;
 import im.turms.server.common.infra.context.TurmsApplicationContext;
+import im.turms.server.common.infra.exception.DuplicateResourceException;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.io.BaseFileResource;
 import im.turms.server.common.infra.io.ByteBufFileResource;
@@ -58,7 +59,6 @@ import io.netty.handler.codec.http.HttpResponseStatus;
 import lombok.Getter;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.core.io.buffer.DataBufferLimitException;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -391,8 +391,8 @@ public class HttpRequestDispatcher {
                 statusCode = ResponseStatusCode.ILLEGAL_ARGUMENT;
             } else if (throwable instanceof DuplicateKeyException) {
                 statusCode = ResponseStatusCode.RECORD_CONTAINS_DUPLICATE_KEY;
-            } else if (throwable instanceof DataBufferLimitException) {
-                statusCode = ResponseStatusCode.FILE_TOO_LARGE;
+            } else if (throwable instanceof DuplicateResourceException) {
+                statusCode = ResponseStatusCode.DUPLICATE_RESOURCE;
             } else {
                 statusCode = ResponseStatusCode.SERVER_INTERNAL_ERROR;
             }

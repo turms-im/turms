@@ -61,6 +61,10 @@ public abstract class TurmsExtension {
         return context.getBean(PluginManager.class).loadProperties(propertiesClass);
     }
 
+    ExtensionPoint getExtensionPoint() {
+        return (ExtensionPoint) this;
+    }
+
     List<Class<? extends ExtensionPoint>> getExtensionPointClasses() {
         if (extensionPointClasses == null) {
             Class<?>[] interfaces = getClass().getInterfaces();

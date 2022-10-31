@@ -18,27 +18,24 @@
 package im.turms.server.common.infra.plugin;
 
 import im.turms.server.common.infra.collection.CollectionUtil;
-import im.turms.server.common.infra.logging.core.logger.Logger;
-import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
+import im.turms.server.common.infra.exception.DuplicateResourceException;
 import org.jctools.maps.NonBlockingIdentityHashMap;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * @author James Chen
  */
 public class PluginRepository {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(PluginRepository.class);
-
-    private final Map<String, Plugin> idToPlugin = new ConcurrentHashMap<>(16);
-    private final Map<Class<? extends ExtensionPoint>, List<ExtensionPoint>> extensionPointMap =
+    private final ConcurrentHashMap<String, Plugin> idToPlugin = new ConcurrentHashMap<>(16);
+    private final NonBlockingIdentityHashMap<Class<? extends ExtensionPoint>, List<ExtensionPoint>> classToExtensionPoint =
             new NonBlockingIdentityHashMap<>(16);
     private final Set<Class<? extends ExtensionPoint>> singletonExtensionPointClasses;
 
@@ -47,25 +44,21 @@ public class PluginRepository {
     }
 
     public void register(Plugin plugin) {
-        idToPlugin.computeIfAbsent(plugin.descriptor().getId(), id -> {
+        idToPlugin.computeIfAbsent(plugin.descriptor().getId(), pluginId -> {
             for (TurmsExtension extension : plugin.extensions()) {
-                ExtensionPoint extensionPoint = extension instanceof JsTurmsExtensionAdaptor jsTurmsExtensionAdaptor
-                        ? jsTurmsExtensionAdaptor.getProxy()
-                        : (ExtensionPoint) extension;
-                for (Class<? extends ExtensionPoint> interfaceClass : extension.getExtensionPointClasses()) {
-                    extensionPointMap.compute(interfaceClass, (extensionPointClass, extensionPoints) -> {
-                        if (extensionPoints == null) {
-                            extensionPoints = new ArrayList<>(2);
-                        } else if (singletonExtensionPointClasses.contains(extensionPointClass)) {
-                            String message =
-                                    "The singleton extension point %s in the plugin %s cannot be registered because an extension point has been registered"
-                                            .formatted(extensionPointClass.getName(), plugin.descriptor().getId());
-                            LOGGER.warn(message);
-                            return extensionPoints;
-                        }
-                        extensionPoints.add(extensionPoint);
-                        return extensionPoints;
-                    });
+                ExtensionPoint extensionPoint = extension.getExtensionPoint();
+                for (Class<? extends ExtensionPoint> extensionPointClass : extension.getExtensionPointClasses()) {
+                    List<ExtensionPoint> extensionPoints = classToExtensionPoint
+                            .computeIfAbsent(extensionPointClass, key -> new CopyOnWriteArrayList<>());
+                    if (singletonExtensionPointClasses.contains(extensionPointClass) &&
+                            !extensionPoints.isEmpty()) {
+                        throw new DuplicateResourceException(("The singleton extension point [" +
+                                extensionPointClass.getName() +
+                                "] in the plugin [" +
+                                pluginId +
+                                "] cannot be registered because an extension point has been registered"));
+                    }
+                    extensionPoints.add(extensionPoint);
                 }
             }
             return plugin;
@@ -73,7 +66,7 @@ public class PluginRepository {
     }
 
     public <T extends ExtensionPoint> boolean hasRunningExtensions(Class<T> clazz) {
-        List<? extends ExtensionPoint> extensionPoints = extensionPointMap.get(clazz);
+        List<? extends ExtensionPoint> extensionPoints = classToExtensionPoint.get(clazz);
         if (extensionPoints == null || extensionPoints.isEmpty()) {
             return false;
         }
@@ -87,7 +80,7 @@ public class PluginRepository {
     }
 
     public <T extends ExtensionPoint> List<T> getExtensionPoints(Class<T> clazz) {
-        List<T> list = (List<T>) extensionPointMap.get(clazz);
+        List<T> list = (List<T>) classToExtensionPoint.get(clazz);
         if (list == null) {
             return Collections.emptyList();
         }

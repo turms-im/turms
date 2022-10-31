@@ -49,6 +49,11 @@ public class JsTurmsExtensionAdaptor extends TurmsExtension {
     }
 
     @Override
+    ExtensionPoint getExtensionPoint() {
+        return proxy;
+    }
+
+    @Override
     protected void onStarted() {
         if (onStarted != null) {
             onStarted.execute();

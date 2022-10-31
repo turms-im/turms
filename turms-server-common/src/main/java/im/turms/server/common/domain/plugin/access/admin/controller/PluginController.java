@@ -125,7 +125,7 @@ public class PluginController {
         try {
             pluginManager.loadJavaPlugins(files, save);
         } catch (MalformedPluginArchiveException e) {
-            throw new HttpResponseException(ResponseStatusCode.INVALID_REQUEST, e);
+            throw new HttpResponseException(ResponseStatusCode.ILLEGAL_ARGUMENT, e);
         } catch (UnsupportedSaveOperationException e) {
             throw new HttpResponseException(ResponseStatusCode.SAVING_JAVA_PLUGIN_IS_DISABLED, e);
         }
