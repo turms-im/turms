@@ -40,7 +40,6 @@ import im.turms.server.common.storage.mongo.entity.annotation.TieredStorage;
 import lombok.SneakyThrows;
 import org.bson.BsonDocument;
 import org.bson.BsonValue;
-import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Nullable;
@@ -52,6 +51,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -70,6 +70,10 @@ public final class MongoEntityFactory {
         EntityFieldsInfo entityFieldsInfo = parseFields(clazz, constructor);
         ShardKey shardKey = parseShardKey(clazz);
         String collectionName = parseCollectionName(clazz);
+        List<EntityField<?>> fields = new ArrayList<>(entityFieldsInfo.nameToField.values());
+        // Sort the fields by name to ensure serializing fields in a consistent order.
+        // And that's important when querying embedded documents
+        fields.sort(Comparator.comparing(EntityField::getName));
         return new MongoEntity<>(
                 clazz,
                 constructor,
@@ -81,7 +85,7 @@ public final class MongoEntityFactory {
                 entityFieldsInfo.indexes,
                 entityFieldsInfo.idFieldName,
                 entityFieldsInfo.nameToField,
-                new ArrayList<>(entityFieldsInfo.nameToField.values())
+                fields
         );
     }
 
@@ -138,8 +142,7 @@ public final class MongoEntityFactory {
     @Nullable
     private static BsonDocument findCollectionSchema(String name) {
         String resourceName = "schema/" + StringUtil.lowerCamelToLowerHyphenLatin1(name) + ".json";
-        InputStream stream = ClassUtils.getDefaultClassLoader()
-                .getResourceAsStream(resourceName);
+        InputStream stream = MongoEntityFactory.class.getClassLoader().getResourceAsStream(resourceName);
         if (stream == null) {
             return null;
         }
@@ -215,7 +218,7 @@ public final class MongoEntityFactory {
 
     private static <T> EntityFieldsInfo parseFields(Class<T> clazz, Constructor<T> constructor) {
         String idField = null;
-        Map<String, EntityField<?>> entityFields = null;
+        Map<String, EntityField<?>> nameToField = null;
         List<Index> entityIndexes = null;
         Map<String, MethodHandle> setterMethods = parseSetterMethods(clazz.getDeclaredMethods());
         Field[] fields = clazz.getDeclaredFields();
@@ -262,10 +265,10 @@ public final class MongoEntityFactory {
             int ctorParamIndex = constructor.getParameterCount() == 0
                     ? EntityField.UNSET_CTOR_PARAM_INDEX
                     : parseCtorParamIndex(constructor, field);
-            if (entityFields == null) {
-                entityFields = CollectionUtil.newMapWithExpectedSize(fields.length);
+            if (nameToField == null) {
+                nameToField = CollectionUtil.newMapWithExpectedSize(fields.length);
             }
-            entityFields.put(fieldName,
+            nameToField.put(fieldName,
                     new EntityField<>(fieldClass,
                             keyClass,
                             elementClass,
@@ -277,7 +280,7 @@ public final class MongoEntityFactory {
         }
         return new EntityFieldsInfo(
                 idField,
-                entityFields == null ? Collections.emptyMap() : Map.copyOf(entityFields),
+                nameToField == null ? Collections.emptyMap() : Map.copyOf(nameToField),
                 entityIndexes == null ? Collections.emptyList() : entityIndexes);
     }
 
