@@ -532,6 +532,7 @@ public final class ProtoModelConvertor {
         Long targetId = message.getTargetId();
         List<byte[]> records = message.getRecords();
         Integer burnAfter = message.getBurnAfter();
+        Long preMessageId = message.getPreMessageId();
         if (messageId != null) {
             builder.setMessageId(messageId);
         }
@@ -556,6 +557,9 @@ public final class ProtoModelConvertor {
         }
         if (burnAfter != null) {
             builder.setBurnAfter(burnAfter);
+        }
+        if (preMessageId != null) {
+            builder.setPreMessageId(preMessageId);
         }
         return builder;
     }

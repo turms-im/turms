@@ -1027,8 +1027,10 @@ public class MessageService {
     private Mono<Boolean> sendMessage(@NotNull Message message,
                                       @NotNull Set<Long> recipientIds,
                                       @Nullable DeviceType senderDeviceType) {
+        Long senderId = message.getSenderId();
         TurmsNotification notification = ClientMessagePool
                 .getTurmsNotificationBuilder()
+                .setRequesterId(senderId)
                 .setTimestamp(System.currentTimeMillis())
                 .setRelayedRequest(ClientMessagePool
                         .getTurmsRequestBuilder()
@@ -1037,7 +1039,6 @@ public class MessageService {
                 .build();
         Set<UserSessionId> excludedUserSessionIds;
         if (sendMessageToOtherSenderOnlineDevices && senderDeviceType != null) {
-            Long senderId = message.getSenderId();
             recipientIds = CollectionUtil.add(recipientIds, senderId);
             excludedUserSessionIds = Set.of(new UserSessionId(senderId, senderDeviceType));
         } else {
