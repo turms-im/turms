@@ -56,10 +56,13 @@ import static im.turms.server.common.access.admin.web.MediaTypeConst.TEXT_PLAIN_
  */
 public class HttpEndpointCollector {
 
-    private HttpEndpointCollector() {
+    private final HttpRequestParamParser requestParamParser;
+
+    public HttpEndpointCollector(HttpRequestParamParser requestParamParser) {
+        this.requestParamParser = requestParamParser;
     }
 
-    public static Map<ApiEndpointKey, ApiEndpoint> collectionEndpoints(ConfigurableApplicationContext context) {
+    public Map<ApiEndpointKey, ApiEndpoint> collectionEndpoints(ConfigurableApplicationContext context) {
         Map<ApiEndpointKey, ApiEndpoint> keyToEndpoint = new HashMap<>(64);
         Map<String, Object> beans = context.getBeansWithAnnotation(RestController.class);
         for (Object controller : beans.values()) {
@@ -100,16 +103,14 @@ public class HttpEndpointCollector {
         return Map.copyOf(keyToEndpoint);
     }
 
-    private static String findMediaType(Method method) {
+    private String findMediaType(Method method) {
         Type type = OpenApiBuilder.unwrapType(method.getGenericReturnType());
         if (!(type instanceof Class<?> returnValueClass)) {
             return APPLICATION_JSON;
         }
-        if (method.isAnnotationPresent(GetMapping.class)) {
-            GetMapping mapping = method.getDeclaredAnnotation(GetMapping.class);
-            if (!mapping.produces().isBlank()) {
-                return mapping.produces();
-            }
+        GetMapping mapping = method.getDeclaredAnnotation(GetMapping.class);
+        if (mapping != null && !mapping.produces().isBlank()) {
+            return mapping.produces();
         }
         if (ByteBuf.class.isAssignableFrom(returnValueClass)
                 || BaseFileResource.class.isAssignableFrom(returnValueClass)) {
@@ -120,12 +121,13 @@ public class HttpEndpointCollector {
         return APPLICATION_JSON;
     }
 
-    private static MethodParameterInfo[] parseParameters(Method method) {
+    private MethodParameterInfo[] parseParameters(Method method) {
         Parameter[] parameters = method.getParameters();
-        MethodParameterInfo[] parameterInfos = new MethodParameterInfo[parameters.length];
+        int paramCount = parameters.length;
+        MethodParameterInfo[] parameterInfos = new MethodParameterInfo[paramCount];
         boolean hasRequestBody = false;
         boolean hasRequestFormData = false;
-        for (int i = 0; i < parameters.length; i++) {
+        for (int i = 0; i < paramCount; i++) {
             Parameter parameter = parameters[i];
             MethodParameterInfo info = parseAsRequestBody(parameter);
             if (info != null) {
@@ -170,8 +172,7 @@ public class HttpEndpointCollector {
         return parameterInfos;
     }
 
-
-    private static MethodParameterInfo parseAsRequestParam(Parameter parameter) {
+    private MethodParameterInfo parseAsRequestParam(Parameter parameter) {
         QueryParam queryParam = parameter.getDeclaredAnnotation(QueryParam.class);
         Class<?> type = parameter.getType();
         JavaType typeForJackson = JsonUtil.constructJavaType(type);
@@ -195,7 +196,7 @@ public class HttpEndpointCollector {
         String name = queryParam.value().isBlank() ? parameter.getName() : queryParam.value();
         Object parsedDefaultValue = queryParam.defaultValue().isBlank()
                 ? PrimitiveUtil.getDefaultValue(type)
-                : HttpRequestParamParser.parsePlainValue(queryParam.defaultValue(), type, typeForJackson);
+                : requestParamParser.parsePlainValue(queryParam.defaultValue(), type, typeForJackson);
         return new MethodParameterInfo(name,
                 type,
                 typeForJackson,
@@ -210,7 +211,7 @@ public class HttpEndpointCollector {
                 true);
     }
 
-    private static MethodParameterInfo parseAsRequestHeader(Parameter parameter) {
+    private MethodParameterInfo parseAsRequestHeader(Parameter parameter) {
         RequestHeader requestHeader = parameter.getDeclaredAnnotation(RequestHeader.class);
         if (requestHeader == null) {
             return null;
@@ -232,7 +233,7 @@ public class HttpEndpointCollector {
                 true);
     }
 
-    private static MethodParameterInfo parseAsRequestBody(Parameter parameter) {
+    private MethodParameterInfo parseAsRequestBody(Parameter parameter) {
         RequestBody requestBody = parameter.getDeclaredAnnotation(RequestBody.class);
         if (requestBody == null) {
             return null;
@@ -253,7 +254,7 @@ public class HttpEndpointCollector {
                 true);
     }
 
-    private static MethodParameterInfo parseAsRequestFormData(Parameter parameter) {
+    private MethodParameterInfo parseAsRequestFormData(Parameter parameter) {
         FormData requestFormData = parameter.getDeclaredAnnotation(FormData.class);
         if (requestFormData == null) {
             return null;
@@ -277,7 +278,7 @@ public class HttpEndpointCollector {
     }
 
     @Nullable
-    private static Pair<HttpMethod, String> parseMethod(Method method) {
+    private Pair<HttpMethod, String> parseMethod(Method method) {
         if (method.isAnnotationPresent(GetMapping.class)) {
             return Pair.of(HttpMethod.GET, method.getDeclaredAnnotation(GetMapping.class).value());
         } else if (method.isAnnotationPresent(PostMapping.class)) {

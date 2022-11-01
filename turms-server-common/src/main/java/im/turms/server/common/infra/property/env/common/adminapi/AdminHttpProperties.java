@@ -22,6 +22,8 @@ import im.turms.server.common.infra.property.env.common.SslProperties;
 import lombok.Data;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
+import static im.turms.server.common.infra.unit.ByteSizeUnit.MB;
+
 /**
  * @author James Chen
  */
@@ -31,6 +33,8 @@ public class AdminHttpProperties {
     private String host = "0.0.0.0";
 
     private int port = -1;
+
+    private int maxRequestBodySizeBytes = 10 * MB;
 
     @NestedConfigurationProperty
     private transient SslProperties ssl = new SslProperties();

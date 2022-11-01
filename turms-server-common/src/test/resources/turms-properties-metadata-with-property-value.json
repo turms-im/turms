@@ -223,6 +223,13 @@
           "type": "string",
           "value": "0.0.0.0"
         },
+        "maxRequestBodySizeBytes": {
+          "deprecated": false,
+          "global": false,
+          "mutable": false,
+          "type": "int",
+          "value": 10485760
+        },
         "port": {
           "deprecated": false,
           "global": false,
@@ -2108,6 +2115,13 @@
           "mutable": false,
           "type": "string",
           "value": "0.0.0.0"
+        },
+        "maxRequestBodySizeBytes": {
+          "deprecated": false,
+          "global": false,
+          "mutable": false,
+          "type": "int",
+          "value": 10485760
         },
         "port": {
           "deprecated": false,

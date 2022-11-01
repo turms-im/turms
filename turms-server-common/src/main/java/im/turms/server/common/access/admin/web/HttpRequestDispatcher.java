@@ -98,6 +98,7 @@ public class HttpRequestDispatcher {
     private final PluginManager pluginManager;
     private final BaseAdminApiRateLimitingManager adminApiRateLimitingManager;
     private final HttpRequestAuthenticator authenticator;
+    private final HttpRequestParamParser requestParamParser;
 
     private final DisposableServer server;
     @Getter
@@ -124,9 +125,8 @@ public class HttpRequestDispatcher {
                                  BaseAdminApiRateLimitingManager adminApiRateLimitingManager,
                                  BaseAdminService adminService) {
         this.node = node;
-        this.adminApiRateLimitingManager = adminApiRateLimitingManager;
-        keyToEndpoint = HttpEndpointCollector.collectionEndpoints((ConfigurableApplicationContext) context);
         this.pluginManager = pluginManager;
+        this.adminApiRateLimitingManager = adminApiRateLimitingManager;
         authenticator = new HttpRequestAuthenticator(adminService);
 
         CommonAdminApiProperties apiProperties = node.getNodeType() == NodeType.GATEWAY
@@ -136,6 +136,9 @@ public class HttpRequestDispatcher {
         if (apiProperties.isEnabled()) {
             propertiesManager.triggerAndAddGlobalPropertiesChangeListener(this::updateGlobalProperties);
             AdminHttpProperties httpProperties = apiProperties.getHttp();
+            this.requestParamParser = new HttpRequestParamParser(httpProperties.getMaxRequestBodySizeBytes());
+            keyToEndpoint = new HttpEndpointCollector(requestParamParser)
+                    .collectionEndpoints((ConfigurableApplicationContext) context);
             server = HttpServerFactory.createHttpServer(httpProperties)
                     .handle((request, response) -> {
                         handle(request, response)
@@ -149,6 +152,8 @@ public class HttpRequestDispatcher {
                 return server.onDispose();
             });
         } else {
+            requestParamParser = null;
+            keyToEndpoint = null;
             server = null;
         }
     }
@@ -244,7 +249,7 @@ public class HttpRequestDispatcher {
         // 3. check frequency
         return checkFrequency(ip)
                 // 4. parse request parameters
-                .then(Mono.defer(() -> HttpRequestParamParser.parse(request,
+                .then(Mono.defer(() -> requestParamParser.parse(request,
                         requestContext,
                         pathAndQueryParams.second(),
                         endpoint.parameters())))
