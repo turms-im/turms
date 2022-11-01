@@ -52,6 +52,7 @@ import java.util.stream.Collectors;
 
 import static im.turms.server.common.access.admin.web.MediaTypeConst.TEXT_CSV_UTF_8;
 import static im.turms.server.common.access.admin.web.MediaTypeConst.TEXT_PLAIN_UTF_8;
+import static im.turms.server.common.infra.unit.ByteSizeUnit.KB;
 
 /**
  * @author James Chen
@@ -62,7 +63,7 @@ public class MetricsController {
     private final MetricsPool pool;
     private final PrometheusMeterRegistry prometheusMeterRegistry;
 
-    private int expectedPrometheusDataSize = 8 * 1024;
+    private int expectedPrometheusDataSize = 8 * KB;
 
     public MetricsController(CompositeMeterRegistry registry) {
         pool = new MetricsPool(registry);

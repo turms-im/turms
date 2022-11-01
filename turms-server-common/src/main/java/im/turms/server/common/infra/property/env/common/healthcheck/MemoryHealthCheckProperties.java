@@ -26,6 +26,8 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
+import static im.turms.server.common.infra.unit.ByteSizeUnit.MB;
+
 /**
  * @author James Chen
  */
@@ -56,7 +58,7 @@ public class MemoryHealthCheckProperties {
     private int maxAvailableDirectMemoryPercentage = 95;
 
     @Description("The server will refuse to serve when the free system memory is less than minFreeSystemMemoryBytes")
-    private int minFreeSystemMemoryBytes = 128 * 1024 * 1024;
+    private int minFreeSystemMemoryBytes = 128 * MB;
 
     // Memory Usage Warning
 

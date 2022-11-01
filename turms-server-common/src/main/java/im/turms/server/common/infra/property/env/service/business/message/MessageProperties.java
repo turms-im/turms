@@ -31,6 +31,8 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 import javax.validation.constraints.Min;
 
+import static im.turms.server.common.infra.unit.ByteSizeUnit.MB;
+
 /**
  * @author James Chen
  */
@@ -68,7 +70,7 @@ public class MessageProperties {
     @GlobalProperty
     @MutableProperty
     @Min(0)
-    private int maxRecordsSizeBytes = 15 * 1024 * 1024;
+    private int maxRecordsSizeBytes = 15 * MB;
 
     @Description("Whether to persist messages in databases.\n" +
             "Note: If false, senders will not get the message ID after the message has sent and cannot edit it")

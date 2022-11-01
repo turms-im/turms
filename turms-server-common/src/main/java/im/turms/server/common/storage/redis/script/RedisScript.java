@@ -31,6 +31,8 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
+import static im.turms.server.common.infra.unit.ByteSizeUnit.KB;
+
 /**
  * @author James Chen
  */
@@ -39,7 +41,7 @@ public record RedisScript(
         ByteBuf digest,
         ScriptOutputType outputType
 ) {
-    private static final int MAX_SCRIPT_SIZE = 10 * 1024;
+    private static final int MAX_SCRIPT_SIZE = 10 * KB;
 
     /**
      * @param outputType {@link BaseRedisCommandBuilder#newScriptOutput}

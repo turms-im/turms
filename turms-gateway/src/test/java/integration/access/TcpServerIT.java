@@ -32,6 +32,7 @@ import reactor.netty.tcp.TcpClient;
 
 import java.util.List;
 
+import static im.turms.server.common.infra.unit.ByteSizeUnit.KB;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -65,7 +66,7 @@ class TcpServerIT {
                 serverStatusManager,
                 sessionService,
                 NEVER_CLOSE,
-                8 * 1024);
+                8 * KB);
 
         int i = 0;
         for (Boolean isActive : isActiveReturnValues) {

@@ -43,12 +43,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static im.turms.server.common.infra.unit.ByteSizeUnit.MB;
+
 /**
  * @author James Chen
  */
 public class HttpRequestParamParser {
 
-    private static final int MAX_BODY_SIZE = 10 * 1024 * 1024;
+    private static final int MAX_BODY_SIZE = 100 * MB;
 
     private static final HttpResponseException BODY_TOO_LARGE_EXCEPTION =
             new HttpResponseException(HttpHandlerResult.create(HttpResponseStatus.REQUEST_ENTITY_TOO_LARGE,

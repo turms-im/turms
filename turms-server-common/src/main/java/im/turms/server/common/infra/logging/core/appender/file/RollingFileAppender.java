@@ -42,6 +42,9 @@ import java.util.Deque;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import static im.turms.server.common.infra.unit.ByteSizeUnit.GB;
+import static im.turms.server.common.infra.unit.ByteSizeUnit.MB;
+
 /**
  * @author James Chen
  */
@@ -106,14 +109,14 @@ public class RollingFileAppender extends Appender {
 
         this.maxFiles = Math.max(maxFiles, 0);
         this.maxFileBytes = maxFileMb > 0
-                ? maxFileMb * 1024 * 1024
-                : 1024 * 1024 * 1024;
+                ? maxFileMb * MB
+                : GB;
         minUsableSpaceBytes = (long) (maxFileBytes * 2.5);
 
         this.enableCompression = enableCompression;
         gzipOutputStream = enableCompression
                 // Use large buffer to reduce the number of JNI calls
-                ? new FastGzipOutputStream(COMPRESSION_LEVEL, (int) Math.min(1024L * 1024, maxFileBytes / 10))
+                ? new FastGzipOutputStream(COMPRESSION_LEVEL, (int) Math.min(MB, maxFileBytes / 10))
                 : null;
 
         Files.createDirectories(fileDirectory);

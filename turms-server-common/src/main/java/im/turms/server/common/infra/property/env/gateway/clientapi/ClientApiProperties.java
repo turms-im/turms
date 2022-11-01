@@ -25,6 +25,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
+import static im.turms.server.common.infra.unit.ByteSizeUnit.KB;
+
 /**
  * @author James Chen
  */
@@ -42,7 +44,7 @@ public class ClientApiProperties {
     @Description("The client session will be closed and may be blocked if it tries " +
             "to send a request larger than the size. " +
             "Note: The average size of turms requests is 16~64 bytes")
-    private int maxRequestSizeBytes = 16 * 1024;
+    private int maxRequestSizeBytes = 16 * KB;
 
     @NestedConfigurationProperty
     private ClientApiLoggingProperties logging = new ClientApiLoggingProperties();

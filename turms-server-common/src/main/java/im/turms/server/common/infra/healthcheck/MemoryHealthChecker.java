@@ -32,6 +32,8 @@ import java.lang.management.MemoryMXBean;
 import java.util.List;
 import java.util.Optional;
 
+import static im.turms.server.common.infra.unit.ByteSizeUnit.MB;
+
 /**
  * @author James Chen
  * @implNote JVM Total Memory:
@@ -117,7 +119,7 @@ public final class MemoryHealthChecker extends HealthChecker {
         }
         totalPhysicalMemorySize = operatingSystemBean.getTotalMemorySize();
         maxAvailableMemory = (long) (totalPhysicalMemorySize * (properties.getMaxAvailableMemoryPercentage() / 100F));
-        int minAvailableMemory = 1000 * 1024 * 1024;
+        int minAvailableMemory = 1000 * MB;
         if (maxAvailableMemory < minAvailableMemory) {
             throw new IllegalStateException("The max available memory is too small to run. Actual: %s. Expected: >= %s"
                     .formatted(asMbString(maxAvailableMemory), asMbString(minAvailableMemory)));
@@ -126,7 +128,7 @@ public final class MemoryHealthChecker extends HealthChecker {
             throw new IllegalStateException("The max available memory %s should not be less than the max heap memory %s"
                     .formatted(asMbString(maxAvailableMemory), asMbString(maxHeapMemory)));
         }
-        int estimatedMaxNonHeapMemory = 256 * 1024 * 1024;
+        int estimatedMaxNonHeapMemory = 256 * MB;
         if (maxAvailableMemory > maxAvailableDirectMemory + maxHeapMemory + estimatedMaxNonHeapMemory) {
             LOGGER.warn("The max available memory %s is larger than the total of the available direct memory %s, the max heap memory %s, and the estimated max non-heap memory %s, "
                     .formatted(asMbString(maxAvailableMemory), asMbString(maxAvailableDirectMemory), asMbString(maxHeapMemory), asMbString(estimatedMaxNonHeapMemory))
@@ -217,7 +219,7 @@ public final class MemoryHealthChecker extends HealthChecker {
     }
 
     private String asMbString(long bytes) {
-        return bytes / 1024 / 1024 + "MB";
+        return bytes / MB + "MB";
     }
 
 }

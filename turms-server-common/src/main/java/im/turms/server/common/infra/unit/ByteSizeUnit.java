@@ -15,29 +15,20 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.infra.lang;
-
-import io.netty.util.concurrent.FastThreadLocal;
-
-import static im.turms.server.common.infra.unit.ByteSizeUnit.KB;
+package im.turms.server.common.infra.unit;
 
 /**
  * @author James Chen
  */
-public final class StringBuilderPool {
+public final class ByteSizeUnit {
 
-    private static final FastThreadLocal<StringBuilderWriter> WRITER = new FastThreadLocal<>() {
-        @Override
-        protected StringBuilderWriter initialValue() {
-            return new StringBuilderWriter(512, 10 * KB);
-        }
-    };
+    public static final int KB = 1024;
+    public static final int MB = 1024 * KB;
+    public static final int GB = 1024 * MB;
+    public static final long TB = 1024L * GB;
+    public static final long PB = 1024L * TB;
 
-    private StringBuilderPool() {
-    }
-
-    public static StringBuilderWriter getWriter() {
-        return WRITER.get();
+    private ByteSizeUnit() {
     }
 
 }

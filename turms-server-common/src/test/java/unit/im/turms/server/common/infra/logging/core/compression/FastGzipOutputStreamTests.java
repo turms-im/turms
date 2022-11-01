@@ -29,6 +29,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.zip.GZIPOutputStream;
 
+import static im.turms.server.common.infra.unit.ByteSizeUnit.KB;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -59,7 +60,7 @@ class FastGzipOutputStreamTests {
                 """
                 .getBytes();
 
-        FastGzipOutputStream stream = new FastGzipOutputStream(compressionLevel, 1024);
+        FastGzipOutputStream stream = new FastGzipOutputStream(compressionLevel, KB);
         stream.init(FileChannel.open(
                 outputPath,
                 StandardOpenOption.CREATE,

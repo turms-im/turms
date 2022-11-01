@@ -27,6 +27,8 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
+import static im.turms.server.common.infra.unit.ByteSizeUnit.MB;
+
 /**
  * There properties are "recommended" and optional for plugin providers to implement
  *
@@ -54,7 +56,7 @@ public class StorageItemProperties {
     @Description("The maximum size of the resource that the client can upload. " +
             "0 means no limit")
     @Min(0)
-    private int maxSizeBytes = 1024 * 1024;
+    private int maxSizeBytes = MB;
 
     @Description("The presigned URLs are valid only for the specified duration. " +
             "0 means no expiration")
