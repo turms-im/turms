@@ -206,11 +206,11 @@ public class GroupService {
                     $0.groupID = groupId
                     $0.questions = try questions.map { question in
                         try .with { builder in
-                            var answers
-                            do {
-                                answers = question.answers.array as! [String]
-                            } catch {
-                                throw ResponseError(.illegalArgument, "The answer of group must be a string")
+                            guard let answers = question.answers.array as? [String] else {
+                                throw ResponseError(
+                                        code: .illegalArgument,
+                                        reason: "The answer of group must be a string"
+                                )
                             }
                             if answers.isEmpty {
                                 throw ResponseError(
