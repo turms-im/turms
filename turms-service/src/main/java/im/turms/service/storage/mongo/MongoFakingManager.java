@@ -156,14 +156,15 @@ public final class MongoFakingManager {
         List<Object> messageRelatedObjs = new LinkedList<>();
 
         // Admin
-        final Date now = new Date();
+        // "2000-01-01:00:00:00Z"
+        final Date epoch = new Date(946684800000L);
         final long guestRoleId = 2L;
         Admin guest = new Admin(
                 "guest",
                 passwordManager.encodeAdminPassword("guest"),
                 "guest",
                 guestRoleId,
-                now);
+                epoch);
         adminRelatedObjs.add(guest);
         for (int i = 1; i <= adminCount; i++) {
             Admin admin = new Admin(
@@ -171,7 +172,7 @@ public final class MongoFakingManager {
                     passwordManager.encodeAdminPassword("123"),
                     "my-name",
                     1L,
-                    DateUtils.addDays(now, -i));
+                    DateUtils.addDays(epoch, i));
             adminRelatedObjs.add(admin);
         }
         AdminRole adminRole = new AdminRole(
@@ -179,14 +180,14 @@ public final class MongoFakingManager {
                 "ADMIN",
                 AdminPermission.ALL,
                 0,
-                now);
+                epoch);
         AdminRole guestRole = new AdminRole(
                 guestRoleId,
                 "GUEST",
                 CollectionUtil.newSet(AdminPermission.matchPermission("*" + AdminPermission.SUFFIX_QUERY),
                         AdminPermission.matchPermission("*" + AdminPermission.SUFFIX_CREATE)),
                 0,
-                now);
+                epoch);
         adminRelatedObjs.add(adminRole);
         adminRelatedObjs.add(guestRole);
 
@@ -200,19 +201,19 @@ public final class MongoFakingManager {
                 "This is a group for the developers who are interested in Turms",
                 "nope",
                 0,
-                now,
+                epoch,
                 null,
-                now,
+                epoch,
                 null,
                 true);
         groupRelatedObjs.add(group);
-        GroupVersion groupVersion = new GroupVersion(1L, now, now, now, now, now);
+        GroupVersion groupVersion = new GroupVersion(1L, epoch, epoch, epoch, epoch, epoch);
         groupRelatedObjs.add(groupVersion);
         for (int i = targetUserToBlockInGroupStart; i <= targetUserToBlockInGroupEnd; i++) {
             GroupBlockedUser groupBlockedUser = new GroupBlockedUser(
                     1L,
                     (long) i,
-                    now,
+                    epoch,
                     1L);
             groupRelatedObjs.add(groupBlockedUser);
         }
@@ -224,7 +225,7 @@ public final class MongoFakingManager {
                     (long) i,
                     "test-content",
                     RequestStatus.PENDING,
-                    DateUtils.addDays(now, -i),
+                    DateUtils.addDays(epoch, i),
                     null);
             groupRelatedObjs.add(groupInvitation);
         }
@@ -240,7 +241,7 @@ public final class MongoFakingManager {
                     nextId(),
                     "test-content",
                     RequestStatus.PENDING,
-                    now,
+                    epoch,
                     null,
                     1L,
                     (long) i,
@@ -256,7 +257,7 @@ public final class MongoFakingManager {
                     groupMemberId,
                     "test-name",
                     i == 1 ? GroupMemberRole.OWNER : GroupMemberRole.MEMBER,
-                    now,
+                    epoch,
                     i > userCount / 10 / 2 ? new Date(9999999999999L) : null);
             groupRelatedObjs.add(groupMember);
         }
@@ -276,50 +277,70 @@ public final class MongoFakingManager {
         // Message
         long senderId = 1L;
         Set<Long> targetIds = CollectionUtil.newSetWithExpectedSize(100);
-        byte[] senderIp = new byte[]{127, 0, 0, 1};
+        byte[] ip = new byte[]{127, 0, 0, 1};
+        Integer ipBytes = InetAddressUtil.ipBytesToInt(ip);
         for (int i = 1; i <= 100; i++) {
-            long id = nextId();
             long targetId = (long) 2 + (i % 9);
             targetIds.add(targetId);
-            Message privateMessage = new Message(
-                    id,
-                    MessageRepository.getPrivateConversationId(senderId, targetId),
+            byte[] privateConversationId = MessageRepository.getPrivateConversationId(senderId, targetId);
+            Date deliveryDate = DateUtils.addHours(epoch, i);
+            Message privateMessage1 = new Message(
+                    nextId(),
+                    privateConversationId,
                     false,
                     false,
-                    DateUtils.addHours(now, -i),
+                    deliveryDate,
                     null,
                     null,
                     null,
                     "private-message-text" + RandomStringUtils.randomAlphanumeric(16),
                     senderId,
-                    InetAddressUtil.ipBytesToInt(senderIp),
+                    ipBytes,
                     targetId,
                     null,
                     30,
                     null,
                     null,
                     null);
-            id = nextId();
+            Message privateMessage2 = new Message(
+                    nextId(),
+                    privateConversationId,
+                    false,
+                    false,
+                    deliveryDate,
+                    null,
+                    null,
+                    null,
+                    "private-message-text" + RandomStringUtils.randomAlphanumeric(16),
+                    targetId,
+                    ipBytes,
+                    senderId,
+                    null,
+                    30,
+                    null,
+                    null,
+                    null);
             long groupId = 1L;
             Message groupMessage = new Message(
-                    id,
+                    nextId(),
                     MessageRepository.getGroupConversationId(groupId),
                     true,
                     false,
-                    now,
+                    epoch,
                     null,
                     null,
                     null,
                     "group-message-text" + RandomStringUtils.randomAlphanumeric(16),
                     1L,
-                    InetAddressUtil.ipBytesToInt(senderIp),
+                    ipBytes,
                     groupId,
                     null,
                     30,
                     null,
                     null,
                     null);
-            messageRelatedObjs.add(privateMessage);
+            messageRelatedObjs.add(privateMessage1);
+            messageRelatedObjs.add(privateMessage2);
             messageRelatedObjs.add(groupMessage);
         }
 
@@ -327,16 +348,16 @@ public final class MongoFakingManager {
         for (Long targetId : targetIds) {
             PrivateConversation privateConversation = new PrivateConversation(
                     new PrivateConversation.Key(senderId, targetId),
-                    now);
+                    epoch);
             conversationRelatedObjs.add(privateConversation);
         }
         GroupConversation groupConversation = new GroupConversation(1L,
-                CollectionUtil.newMap(groupMemberIds, id -> now));
+                CollectionUtil.newMap(groupMemberIds, id -> epoch));
         conversationRelatedObjs.add(groupConversation);
 
         // User
         for (int i = 1; i <= userCount; i++) {
-            Date userDate = DateUtils.addDays(now, -i);
+            Date userDate = DateUtils.addDays(epoch, i);
             User user = new User(
                     (long) i,
                     passwordManager.encodeUserPassword("123"),
@@ -364,7 +385,7 @@ public final class MongoFakingManager {
                     "test-request",
                     RequestStatus.PENDING,
                     null,
-                    now,
+                    epoch,
                     null,
                     1L,
                     (long) i);
@@ -377,15 +398,15 @@ public final class MongoFakingManager {
             UserRelationship userRelationship1 = new UserRelationship(
                     new UserRelationship.Key(1L, (long) i),
                     null,
-                    now);
+                    epoch);
             UserRelationship userRelationship2 = new UserRelationship(
                     new UserRelationship.Key((long) i, 1L),
                     null,
-                    now);
+                    epoch);
             UserRelationshipGroupMember relationshipGroupMember1 = new UserRelationshipGroupMember(
-                    1L, 0, (long) i, now);
+                    1L, 0, (long) i, epoch);
             UserRelationshipGroupMember relationshipGroupMember2 = new UserRelationshipGroupMember(
-                    (long) i, 0, 1L, now);
+                    (long) i, 0, 1L, epoch);
             userRelatedObjs.add(userRelationship1);
             userRelatedObjs.add(userRelationship2);
             userRelatedObjs.add(relationshipGroupMember1);
