@@ -211,22 +211,19 @@ public class MessageServiceController extends BaseServiceController {
             Boolean areSystemMessages = request.hasAreSystemMessages() ? request.getAreSystemMessages() : null;
             Set<Long> fromIds = request.getFromIdsCount() > 0 ? CollectionUtil.newSet(request.getFromIdsList()) : null;
             Date deliveryDateAfter = request.hasDeliveryDateAfter() ? new Date(request.getDeliveryDateAfter()) : null;
-            Date deliveryDateBefore = request.hasDeliveryDateBefore() && deliveryDateAfter == null ?
-                    new Date(request.getDeliveryDateBefore()) : null;
-            Integer size = request.hasMaxCount() ? request.getMaxCount() : null;
+            Date deliveryDateBefore = request.hasDeliveryDateBefore() ? new Date(request.getDeliveryDateBefore()) : null;
+            Integer maxCount = request.hasMaxCount() ? request.getMaxCount() : null;
             boolean withTotal = request.getWithTotal();
             Long userId = clientRequest.userId();
             DateRange dateRange = DateRange.of(deliveryDateAfter, deliveryDateBefore);
             return messageService.authAndQueryCompleteMessages(
                             userId,
-                            true,
                             ids,
                             areGroupMessages,
                             areSystemMessages,
                             fromIds,
                             dateRange,
-                            0,
-                            size,
+                            maxCount,
                             withTotal)
                     .collect(CollectorUtil.toChunkedList())
                     .flatMap(messages -> {
@@ -314,8 +311,9 @@ public class MessageServiceController extends BaseServiceController {
             long messageId = request.getMessageId();
             String text = request.hasText() ? request.getText() : null;
             List<byte[]> records = null;
-            if (request.getRecordsCount() > 0) {
-                records = new ArrayList<>(request.getRecordsCount());
+            int recordCount = request.getRecordsCount();
+            if (recordCount > 0) {
+                records = new ArrayList<>(recordCount);
                 for (ByteString byteString : request.getRecordsList()) {
                     // We don't support storing ByteString as ByteBuffer directly
                     // because "org.bson.BsonBinaryWriter.doWriteBinaryData" don't support writing ByteBuffer

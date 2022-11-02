@@ -302,35 +302,33 @@ public class MessageService {
 
     public Flux<Message> authAndQueryCompleteMessages(
             Long requesterId,
-            boolean closeToDate,
             @Nullable Collection<Long> messageIds,
             @NotNull Boolean areGroupMessages,
             @Nullable Boolean areSystemMessages,
             @Nullable Set<Long> fromIds,
             @Nullable DateRange deliveryDateRange,
-            @Nullable Integer page,
-            @Nullable Integer size,
+            @Nullable Integer maxCount,
             boolean withTotal) {
         // We don't support the case when "areGroupMessages" is null currently (meaning we will support it in the future)
         // because it makes the pagination implementation complex
         if (areGroupMessages == null) {
             return Flux.error(ResponseException.get(ResponseStatusCode.INVALID_REQUEST, "\"areGroupMessages\" must be either true or false currently"));
         }
-        if (size == null) {
-            size = withTotal
-                    ? defaultAvailableMessagesNumberWithTotal
-                    : null;
+        if (maxCount == null) {
+            if (withTotal) {
+                maxCount = defaultAvailableMessagesNumberWithTotal;
+            }
         } else {
             // TODO: make configurable
-            size = Math.min(size, 1000);
+            maxCount = Math.min(maxCount, 1000);
         }
         if (areGroupMessages) {
-            Integer finalSize = size;
+            Integer finalMaxCount = maxCount;
             Recyclable<Set<Long>> recyclableSet = SetRecycler.obtain();
             if (CollectionUtil.isEmpty(fromIds)) {
                 return groupMemberService.queryUserJoinedGroupIds(requesterId)
                         .collect(Collectors.toCollection(recyclableSet::getValue))
-                        .flatMapMany(groupIds -> queryMessages(closeToDate,
+                        .flatMapMany(groupIds -> queryMessages(true,
                                 messageIds,
                                 true,
                                 areSystemMessages,
@@ -338,8 +336,8 @@ public class MessageService {
                                 groupIds,
                                 deliveryDateRange,
                                 DateRange.NULL,
-                                page,
-                                finalSize))
+                                0,
+                                finalMaxCount))
                         .doFinally(signalType -> recyclableSet.recycle());
             }
             return groupMemberService.findExistentMemberGroupIds(fromIds, requesterId)
@@ -357,7 +355,7 @@ public class MessageService {
                                     "User isn't the member of the groups: " + nonGroupMemberGroupIds));
                         }
                         return queryMessages(
-                                closeToDate,
+                                true,
                                 messageIds,
                                 true,
                                 areSystemMessages,
@@ -365,13 +363,13 @@ public class MessageService {
                                 fromIds,
                                 deliveryDateRange,
                                 DateRange.NULL,
-                                page,
-                                finalSize);
+                                0,
+                                finalMaxCount);
                     })
                     .doFinally(signalType -> recyclableSet.recycle());
         }
         return queryMessages(
-                closeToDate,
+                true,
                 messageIds,
                 false,
                 areSystemMessages,
@@ -379,8 +377,8 @@ public class MessageService {
                 Set.of(requesterId),
                 deliveryDateRange,
                 DateRange.NULL,
-                page,
-                size);
+                0,
+                maxCount);
     }
 
     public Mono<Message> queryMessage(@NotNull Long messageId) {
@@ -923,25 +921,25 @@ public class MessageService {
                     if (code != OK) {
                         return Mono.error(ResponseException.get(code, permission.reason()));
                     }
-                    Mono<Set<Long>> recipientIdsMono = isGroupMessage
+                    return isGroupMessage
                             ? groupMemberService.queryGroupMemberIds(targetId, true)
                             .map(memberIds -> CollectionUtil.remove(memberIds, senderId))
                             : Mono.just(Set.of(targetId));
-                    return recipientIdsMono.flatMap(recipientIds -> {
-                        if (!persistMessage) {
-                            return recipientIds.isEmpty()
-                                    ? Mono.empty()
-                                    : Mono.just(new MessageAndRecipientIds(null, recipientIds));
-                        }
-                        Mono<Message> saveMono = saveMessage(messageId, senderId, senderIp, targetId, isGroupMessage,
-                                isSystemMessage, text, records, burnAfter, deliveryDate, null, referenceId, preMessageId);
-                        return saveMono.map(message -> {
-                            if (message.getId() != null && sentMessageCache != null) {
-                                cacheSentMessage(message);
-                            }
-                            return new MessageAndRecipientIds(message, recipientIds);
-                        });
-                    });
+                })
+                .flatMap(recipientIds -> {
+                    if (!persistMessage) {
+                        return recipientIds.isEmpty()
+                                ? Mono.empty()
+                                : Mono.just(new MessageAndRecipientIds(null, recipientIds));
+                    }
+                    return saveMessage(messageId, senderId, senderIp, targetId, isGroupMessage,
+                            isSystemMessage, text, records, burnAfter, deliveryDate, null, referenceId, preMessageId)
+                            .map(message -> {
+                                if (message.getId() != null && sentMessageCache != null) {
+                                    cacheSentMessage(message);
+                                }
+                                return new MessageAndRecipientIds(message, recipientIds);
+                            });
                 });
     }
 

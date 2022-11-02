@@ -193,8 +193,7 @@ public class MessageRepository extends BaseRepository<Message, Long> {
         QueryOptions options = QueryOptions.newBuilder(closeToDate ? 3 : 2)
                 .paginateIfNotNull(page, size);
         if (closeToDate) {
-            boolean isAsc = deliveryDateRange != null && deliveryDateRange.start() != null;
-            options.sort(isAsc, Message.Fields.DELIVERY_DATE);
+            options.sort(true, Message.Fields.DELIVERY_DATE);
         }
         filter.inIfNotNull(DomainFieldName.ID, messageIds);
         return mongoClient.findMany(entityClass, filter, options);
