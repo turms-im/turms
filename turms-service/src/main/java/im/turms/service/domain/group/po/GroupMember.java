@@ -64,7 +64,7 @@ public final class GroupMember extends BaseEntity {
     private Date joinDate;
 
     @Field(Fields.MUTE_END_DATE)
-    @Indexed(optional = true, reason = EXTENDED_FEATURE)
+    @Indexed(optional = true, reason = EXTENDED_FEATURE, partialFilter = "{" + Fields.MUTE_END_DATE + ":{$exists:true}}")
     private Date muteEndDate;
 
     public GroupMember(

@@ -75,7 +75,7 @@ public class UserFriendRequest extends BaseEntity implements Expirable {
     private final Date creationDate;
 
     @Field(Fields.RESPONSE_DATE)
-    @Indexed(optional = true, reason = EXTENDED_FEATURE)
+    @Indexed(optional = true, reason = EXTENDED_FEATURE, partialFilter = "{" + Fields.RESPONSE_DATE + ":{$exists:true}}")
     private final Date responseDate;
 
     /**

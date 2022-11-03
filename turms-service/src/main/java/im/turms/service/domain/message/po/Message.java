@@ -104,7 +104,7 @@ public final class Message extends BaseEntity {
     private final Date modificationDate;
 
     @Field(Fields.DELETION_DATE)
-    @Indexed(optional = true, reason = EXPIRABLE)
+    @Indexed(optional = true, reason = EXPIRABLE, partialFilter = "{" + Fields.DELETION_DATE + ":{$exists:true}}")
     private final Date deletionDate;
 
     @Field(Fields.RECALL_DATE)
@@ -142,7 +142,7 @@ public final class Message extends BaseEntity {
     private final Integer burnAfter;
 
     @Field(Fields.REFERENCE_ID)
-    @Indexed(optional = true, value = HASH, reason = EXTENDED_FEATURE)
+    @Indexed(optional = true, value = HASH, reason = EXTENDED_FEATURE, partialFilter = "{" + Fields.REFERENCE_ID + ":{$exists:true}}")
     private final Long referenceId;
 
     @Field(Fields.SEQUENCE_ID)

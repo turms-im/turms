@@ -75,7 +75,7 @@ public class GroupJoinRequest extends BaseEntity implements Expirable {
     private final Date creationDate;
 
     @Field(Fields.RESPONSE_DATE)
-    @Indexed(optional = true, reason = EXTENDED_FEATURE)
+    @Indexed(optional = true, reason = EXTENDED_FEATURE, partialFilter = "{" + Fields.RESPONSE_DATE + ":{$exists:true}}")
     private final Date responseDate;
 
     /**
@@ -89,7 +89,7 @@ public class GroupJoinRequest extends BaseEntity implements Expirable {
     private final Long requesterId;
 
     @Field(Fields.RESPONDER_ID)
-    @Indexed(optional = true, value = HASH, reason = EXTENDED_FEATURE)
+    @Indexed(optional = true, value = HASH, reason = EXTENDED_FEATURE, partialFilter = "{" + Fields.RESPONDER_ID + ":{$exists:true}}")
     private final Long responderId;
 
     public static final class Fields {

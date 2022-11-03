@@ -77,14 +77,14 @@ public final class Group extends BaseEntity {
     private final Date creationDate;
 
     @Field(Fields.DELETION_DATE)
-    @Indexed(optional = true, reason = EXPIRABLE)
+    @Indexed(optional = true, reason = EXPIRABLE, partialFilter = "{" + Fields.DELETION_DATE + ":{$exists:true}}")
     private final Date deletionDate;
 
     @Field(Fields.LAST_UPDATED_DATE)
     private final Date lastUpdatedDate;
 
     @Field(Fields.MUTE_END_DATE)
-    @Indexed(optional = true, reason = EXTENDED_FEATURE)
+    @Indexed(optional = true, reason = EXTENDED_FEATURE, partialFilter = "{" + Fields.MUTE_END_DATE + ":{$exists:true}}")
     private final Date muteEndDate;
 
     @Field(Fields.IS_ACTIVE)
