@@ -17,12 +17,13 @@
 
 package im.turms.server.common.infra.security.jwt.algorithm;
 
-import im.turms.server.common.infra.lang.ByteUtil;
+import im.turms.server.common.infra.exception.IncompatibleJvmException;
 import im.turms.server.common.infra.security.jwt.Jwt;
-import lombok.SneakyThrows;
 
-import java.math.BigInteger;
-import java.security.SignatureException;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.NoSuchAlgorithmException;
+import java.security.Signature;
 import java.security.interfaces.ECPublicKey;
 
 /**
@@ -33,17 +34,34 @@ public class EcdsaAlgorithm extends AsymmetricAlgorithm {
     private final int ecNumberSize;
     private final ECPublicKey publicKey;
 
+    static {
+        KeyPair keys;
+        try {
+            keys = KeyPairGenerator.getInstance("EC").generateKeyPair();
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("Failed to validate the availability of EC algorithm", e);
+        }
+        try {
+            Signature signature = Signature.getInstance("SHA256WithECDSAInP1363Format");
+            signature.initVerify(keys.getPublic());
+            signature.update("CVE-2022-21449".getBytes());
+            if (signature.verify(new byte[64])) {
+                throw new IncompatibleJvmException("The Java runtime is vulnerable to CVE-2022-21449. Please upgrade to a patched Java version");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to validate the availability of EC algorithm", e);
+        }
+    }
+
     public EcdsaAlgorithm(JwtAlgorithmDefinition definition, int ecNumberSize, ECPublicKey publicKey) {
         super(definition);
         this.ecNumberSize = ecNumberSize;
         this.publicKey = publicKey;
     }
 
-    @SneakyThrows
     @Override
     public boolean verify(Jwt jwt) {
         byte[] signatureBytes = jwt.decodedSignatureBytes();
-        validateSignatureStructure(signatureBytes, publicKey);
         return verifySignature(getJavaAlgorithmName(),
                 publicKey,
                 jwt.encodedHeaderBytes(),
@@ -51,62 +69,6 @@ public class EcdsaAlgorithm extends AsymmetricAlgorithm {
                 jose2Der(signatureBytes));
     }
 
-    /**
-     * Added check for extra protection against CVE-2022-21449.
-     * This method ensures the signature's structure is as expected.
-     *
-     * @param joseSignature is the signature from the JWT
-     * @param publicKey     public key used to verify the JWT
-     * @throws SignatureException if the signature's structure is not as per expectation
-     */
-    private void validateSignatureStructure(byte[] joseSignature, ECPublicKey publicKey) throws SignatureException {
-        // check signature length, moved this check from JOSEToDER method
-        if (joseSignature.length != ecNumberSize * 2) {
-            throw new SignatureException("Invalid JOSE signature format");
-        }
-
-        if (ByteUtil.isAllZeros(joseSignature)) {
-            throw new SignatureException("Invalid signature format");
-        }
-
-        // get R
-        byte[] rBytes = new byte[ecNumberSize];
-        System.arraycopy(joseSignature, 0, rBytes, 0, ecNumberSize);
-        if (ByteUtil.isAllZeros(rBytes)) {
-            throw new SignatureException("Invalid signature format");
-        }
-
-        // get S
-        byte[] sBytes = new byte[ecNumberSize];
-        System.arraycopy(joseSignature, ecNumberSize, sBytes, 0, ecNumberSize);
-        if (ByteUtil.isAllZeros(sBytes)) {
-            throw new SignatureException("Invalid signature format");
-        }
-
-        //moved this check from JOSEToDER method
-        int rPadding = countPadding(joseSignature, 0, ecNumberSize);
-        int sPadding = countPadding(joseSignature, ecNumberSize, joseSignature.length);
-        int rLength = ecNumberSize - rPadding;
-        int sLength = ecNumberSize - sPadding;
-
-        int length = 2 + rLength + 2 + sLength;
-        if (length > 255) {
-            throw new SignatureException("Invalid JOSE signature format");
-        }
-
-        BigInteger order = publicKey.getParams().getOrder();
-        BigInteger r = new BigInteger(1, rBytes);
-        BigInteger s = new BigInteger(1, sBytes);
-
-        // R and S must be less than N
-        if (order.compareTo(r) < 1) {
-            throw new SignatureException("Invalid signature format");
-        }
-
-        if (order.compareTo(s) < 1) {
-            throw new SignatureException("Invalid signature format");
-        }
-    }
 
     private byte[] jose2Der(byte[] joseSignature) {
         // Retrieve R and S number's length and padding.
