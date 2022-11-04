@@ -3,7 +3,7 @@
 ####################################################################
 # Stage 0 : BUILD JAR
 ####################################################################
-FROM maven:3.8.4-eclipse-temurin-17 AS maven-builder
+FROM maven:3.8.6-eclipse-temurin-17-focal AS maven-builder
 COPY . ./
 #RUN sed -i '/<mirrors>/a                                       \
 #<mirror>                                                       \
@@ -17,7 +17,7 @@ RUN mvn clean package -am -B -DskipUTs -DskipITs -P artifact-fat-jar -pl turms-g
 ####################################################################
 # Stage 1:  BUILD LAYERS
 ####################################################################
-FROM eclipse-temurin:17.0.1_12-jre-focal AS layers-builder
+FROM eclipse-temurin:17.0.4.1_1-jre-focal AS layers-builder
 WORKDIR /build/
 COPY --from=maven-builder /turms-gateway/target/*-exec.jar ./app.jar
 RUN ["mkdir", "dependencies", "snapshot-dependencies", "spring-boot-loader", "application"]
@@ -28,7 +28,7 @@ RUN java -Djarmode=layertools -jar app.jar extract
 ####################################################################
 # Declare the exact version to ensure there is no unexpected behavior in Java
 # because we have some UNSAFE operations on Java internal classes
-FROM eclipse-temurin:17.0.1_12-jre-focal
+FROM eclipse-temurin:17.0.4.1_1-jre-focal
 
 ENV TURMS_GATEWAY_HOME=/opt/turms/turms-gateway
 WORKDIR ${TURMS_GATEWAY_HOME}
