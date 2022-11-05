@@ -439,9 +439,13 @@ public class PluginManager {
     }
 
     private Exception translateException(Throwable t, Method method, TurmsExtension extension) {
-        // TODO: add plugin ID
-        String message = "Failed to invoke the method \"%s\" in the extension %s"
-                .formatted(method.getName(), extension.getClass().getName());
+        String message = "Failed to invoke the method [" +
+                method.getName() +
+                "] of the extension [" +
+                extension.getClass().getName() +
+                "] of the plugin [" +
+                extension.getPlugin().descriptor().getId() +
+                "]";
         return new ExtensionPointExecutionException(message, t);
     }
 

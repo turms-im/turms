@@ -51,7 +51,11 @@ public class JavaPluginFactory {
                         " via the no-arg constructor", e);
             }
             List<TurmsExtension> extensions = createExtensions(plugin.getExtensions(), context);
-            return new JavaPlugin(descriptor, extensions, classLoader);
+            JavaPlugin javaPlugin = new JavaPlugin(descriptor, extensions, classLoader);
+            for (TurmsExtension extension : extensions) {
+                extension.setPlugin(javaPlugin);
+            }
+            return javaPlugin;
         } catch (Exception e) {
             try {
                 classLoader.close();

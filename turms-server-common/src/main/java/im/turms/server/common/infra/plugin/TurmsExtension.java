@@ -17,6 +17,8 @@
 
 package im.turms.server.common.infra.plugin;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.context.ApplicationContext;
 
 import java.util.ArrayList;
@@ -28,6 +30,9 @@ import java.util.List;
 public abstract class TurmsExtension {
 
     private ApplicationContext context;
+    @Setter
+    @Getter
+    private Plugin plugin;
     private boolean initialized;
     private boolean started;
     private boolean running;
