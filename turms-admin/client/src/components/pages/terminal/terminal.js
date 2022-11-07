@@ -87,6 +87,9 @@ export default class Terminal extends XTerm {
             this.fit();
         };
         window.addEventListener('resize', this._onWinResize);
+        if (options.disableStdin) {
+            this.hideCursor();
+        }
     }
 
     // Lifecycle
@@ -109,6 +112,10 @@ export default class Terminal extends XTerm {
         this.cursor = pos;
         this.write(escapes.cursorTo(PREFIX.length + pos));
         this._triggerOnCursorChangedListeners();
+    }
+
+    hideCursor() {
+        this.write(escapes.cursorHide);
     }
 
     // Line
