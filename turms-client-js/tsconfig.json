@@ -29,7 +29,7 @@
     "lib": [
       "dom",
       "WebWorker",
-      "ES2018"
+      "ES2020"
     ],
     "target": "es5",
 
@@ -39,6 +39,7 @@
   "include": [
     // Added for eslint to lint ".eslintrc.js"
     ".eslintrc.js",
+    "rollup.config.ts",
     "src/**/*",
     "tests/**/*"
   ]
