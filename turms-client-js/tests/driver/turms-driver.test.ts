@@ -23,7 +23,10 @@ describe('TurmsDriver Class', () => {
         expect(driver.isConnected).toBeTruthy();
     });
     it('login_shouldSucceed', async () => {
-        await client.userService.login('1', '123');
+        await client.userService.login({
+            userId: '1',
+            password: '123'
+        });
         expect(client.userService.isLoggedIn).toBeTruthy();
     });
     it('sendHeartbeat_shouldSucceed', async () => {
@@ -32,8 +35,8 @@ describe('TurmsDriver Class', () => {
     });
     it('sendTurmsRequest_shouldSucceed', async () => {
         const result = await driver.send({
-            queryUserProfileRequest: {
-                userId: '1'
+            queryUserProfilesRequest: {
+                userIds: ['1']
             }
         });
         expect(ResponseStatusCode.isSuccessCode(result.code)).toBeTruthy();
