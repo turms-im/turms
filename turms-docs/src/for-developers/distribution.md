@@ -1,8 +1,8 @@
 # 发布
 
-## 服务端发布目录结构
+## 服务端发布包的目录结构
 
-turms-gateway与turms-service服务端的发布目录结构如下：
+turms-gateway与turms-service服务端发布包的目录结构如下：
 
 ```
 ├─bin

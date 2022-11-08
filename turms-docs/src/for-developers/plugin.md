@@ -13,6 +13,23 @@
 | 服务实现类                 | StorageServiceProvider         | 存储服务Provider。Turms项目本身没有存储服务的具体实现，仅对外暴露了存储服务相关的接口，供该插件实现。（可参考turms-plugin-minio） |
 | 业务模型生命周期类（TODO） |                                |                                                              |
 
+## 插件加载方式
+
+* 本地加载：Turms服务端会检测发布包`plugins`目录下，以`.jar`文件名结尾的JAR包，以及以`.js`文件名结尾的JavaScript文件是否为插件实现，如果是插件，则会在Turms服务端启动时加载它们。
+
+  注意：Turms服务端不会加载存放在`lib`目录下的插件。
+
+  拓展资料：[Turms服务端发布包的目录结构](https://turms-im.github.io/docs/for-developers/distribution.html#%E6%9C%8D%E5%8A%A1%E7%AB%AF%E5%8F%91%E5%B8%83%E5%8C%85%E7%9A%84%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84)
+
+* 通过HTTP接口加载：
+
+  * 添加Java插件的API接口：`POST /plugins/java`
+  * 添加JavaScript插件的API接口：`POST /plugins/js`
+
+  拓展资料：[插件相关API接口](https://turms-im.github.io/docs/for-developers/plugin.html#%E6%8F%92%E4%BB%B6%E7%9B%B8%E5%85%B3api%E6%8E%A5%E5%8F%A3)
+
+* 通过turms-admin加载（基于“通过HTTP加载”实现）：在`/cluster/plugin`页面，管理员也能通过UI的方式上传Java插件与JavaScript插件。
+
 ## 插件实现
 
 Turms服务端支持基于JVM或JavaScript语言的插件实现。
@@ -150,7 +167,7 @@ Turms服务端支持基于JVM或JavaScript语言的插件实现。
 
 注意事项：
 
-* Turms服务端只会检测`plugins`目录下，以`jar`结尾的JAR包是否为插件实现，因此如果您将插件JAR包放到`lib`目录下，则这些插件将不会被识别与使用。
+* Turms服务端只会检测`plugins`目录下，以`.jar`文件名结尾的JAR包是否为插件实现，因此如果您将插件JAR包放到`lib`目录下，则这些插件将不会被识别与使用。
 * Turms不对插件进行访问控制，您需要自行确保插件中没有恶意代码。注意：恶意插件不仅可以调用函数直接强制关闭Turms服务端，甚至可以直接控制操作系统。
 * 由于Turms服务端未来将引入Valhalla项目，因此开发过程需要特别注意不要使用`synchronized`关键字来锁八大基本包装类的对象，否则将直接抛出异常。
 
@@ -245,7 +262,7 @@ export default MyTurmsPlugin;
 
 注意事项：
 
-* Turms服务端只会检测`plugins`目录下，以`js`结尾的文件是否为插件实现，因此如果您将插件JAR包放到`lib`目录下，则这些插件将不会被识别与使用。
+* Turms服务端只会检测`plugins`目录下，以`.js`文件名结尾的文件是否为插件实现，因此如果您将插件JAR包放到`lib`目录下，则这些插件将不会被识别与使用。
 * Turms不对插件进行访问控制，您需要自行确保插件中没有恶意代码。注意：恶意插件不仅可以调用函数直接强制关闭Turms服务端，甚至可以直接控制操作系统。
 * 上下文环境以插件为单位，即每个插件都有它独立的上下文环境，并且一个插件的所有函数公用一个上下文环境。换言之，下次执行的函数可以查看上次执行的函数对上下文环境的改动。
 * JavaScript插件也能像Java插件那样访问Turms服务端的Java类与实例，甚至直接调用`System.exit()`，只是不推荐用JavaScript写复杂的插件
