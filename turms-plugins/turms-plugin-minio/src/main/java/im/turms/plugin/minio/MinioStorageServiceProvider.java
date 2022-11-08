@@ -23,6 +23,7 @@ import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.exception.ResponseExceptionPublisherPool;
+import im.turms.server.common.infra.json.JsonUtil;
 import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
@@ -410,27 +411,26 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
     }
 
     private Mono<Void> setBucketPolicy(String bucket) {
-        //language=JSON
-        String policy = """
-                {
-                  "Version": "2012-10-17",
-                  "Statement": [
-                    {
-                      "Action": [
-                        "s3:GetObject"
-                      ],
-                      "Effect": "Allow",
-                      "Resource": "arn:aws:s3:::%s/*",
-                      "Principal": "*"
-                    }
-                  ]
-                }""".formatted(bucket);
+        BucketPolicyStatement.BucketPolicyStatementBuilder statementBuilder = BucketPolicyStatement
+                .builder()
+                .sid("PublicRead")
+                .effect(BucketPolicyEffect.ALLOW)
+                .principal("*")
+                .action(List.of(BucketPolicyAction.GET_OBJECT))
+                .resource(List.of(
+                        "arn:aws:s3:::" + bucket + "/*"
+                ));
+        BucketPolicy policy = BucketPolicy.builder()
+                .version("2012-10-17")
+                .statement(List.of(statementBuilder.build()))
+                .build();
+        String config = JsonUtil.writeAsString(policy);
         return PublisherUtil.fromFuture(() -> client.setBucketPolicy(SetBucketPolicyArgs.builder()
                         .bucket(bucket)
-                        .config(policy)
+                        .config(config)
                         .build()))
                 .onErrorMap(t -> new RuntimeException("Failed to set the bucket policy [" +
-                        StringUtil.sanitizeLatin1(policy) +
+                        StringUtil.sanitizeLatin1(config) +
                         "] to the bucket [" +
                         bucket
                         + "]", t))

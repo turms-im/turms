@@ -101,6 +101,11 @@ public final class JsonUtil {
         }
     }
 
+    @SneakyThrows
+    public static String writeAsString(Object value) {
+        return MAPPER.writeValueAsString(value);
+    }
+
     public static int estimateSize(@Nullable Object value) {
         if (value == null) {
             return 0;
