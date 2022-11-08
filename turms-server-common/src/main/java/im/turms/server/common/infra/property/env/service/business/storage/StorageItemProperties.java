@@ -26,6 +26,8 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import java.util.Collections;
+import java.util.List;
 
 import static im.turms.server.common.infra.unit.ByteSizeUnit.MB;
 
@@ -44,6 +46,9 @@ public class StorageItemProperties {
             "0 means no expiration")
     @Min(0)
     private int expireAfterDays = 30;
+
+    @Description("Restrict access to the resource to only allow the specific referrers (e.g. \"https://github.com/turms-im/turms/*\")")
+    private List<String> allowedReferrers = Collections.emptyList();
 
     @Description("The allowed \"Content-Type\" of the resource that the client can upload")
     private String allowedContentType = MediaTypeConst.ALL_VALUE;

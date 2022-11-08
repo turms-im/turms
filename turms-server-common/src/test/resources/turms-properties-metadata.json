@@ -3051,6 +3051,14 @@
           "mutable": false,
           "type": "string"
         },
+        "allowedReferrers": {
+          "deprecated": false,
+          "desc": "Restrict access to the resource to only allow the specific referrers (e.g. \"https://github.com/turms-im/turms/*\")",
+          "elementType": "string",
+          "global": false,
+          "mutable": false,
+          "type": "java.util.List"
+        },
         "downloadUrlExpireAfterSeconds": {
           "deprecated": false,
           "desc": "The presigned URLs are valid only for the specified duration. 0 means no expiration",
@@ -3095,6 +3103,14 @@
           "mutable": false,
           "type": "string"
         },
+        "allowedReferrers": {
+          "deprecated": false,
+          "desc": "Restrict access to the resource to only allow the specific referrers (e.g. \"https://github.com/turms-im/turms/*\")",
+          "elementType": "string",
+          "global": false,
+          "mutable": false,
+          "type": "java.util.List"
+        },
         "downloadUrlExpireAfterSeconds": {
           "deprecated": false,
           "desc": "The presigned URLs are valid only for the specified duration. 0 means no expiration",
@@ -3138,6 +3154,14 @@
           "global": false,
           "mutable": false,
           "type": "string"
+        },
+        "allowedReferrers": {
+          "deprecated": false,
+          "desc": "Restrict access to the resource to only allow the specific referrers (e.g. \"https://github.com/turms-im/turms/*\")",
+          "elementType": "string",
+          "global": false,
+          "mutable": false,
+          "type": "java.util.List"
         },
         "downloadUrlExpireAfterSeconds": {
           "deprecated": false,

@@ -377,21 +377,21 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
                             LOGGER.info("Bucket {} has already existed", bucket);
                             return Mono.empty();
                         }
+                        StorageItemProperties itemProperties = switch (resourceType) {
+                            case USER_PROFILE_PICTURE -> storageProperties.getUserProfilePicture();
+                            case GROUP_PROFILE_PICTURE -> storageProperties.getGroupProfilePicture();
+                            case MESSAGE_ATTACHMENT -> storageProperties.getMessageAttachment();
+                            default -> throw ResponseException
+                                    .get(ResponseStatusCode.ILLEGAL_ARGUMENT, "The resource type is unknown: " + resourceType);
+                        };
                         Mono<Void> createBucket = createBucket(resourceType)
-                                .then(Mono.defer(() -> {
-                                    int days = switch (resourceType) {
-                                        case USER_PROFILE_PICTURE -> storageProperties.getUserProfilePicture().getExpireAfterDays();
-                                        case GROUP_PROFILE_PICTURE -> storageProperties.getGroupProfilePicture().getExpireAfterDays();
-                                        case MESSAGE_ATTACHMENT -> storageProperties.getMessageAttachment().getExpireAfterDays();
-                                        default -> throw ResponseException
-                                                .get(ResponseStatusCode.ILLEGAL_ARGUMENT, "The resource type is unknown: " + resourceType);
-                                    };
-                                    return setBucketLifecycle(bucket, days);
-                                }));
+                                .then(Mono.defer(() ->
+                                        setBucketLifecycle(bucket, itemProperties.getExpireAfterDays())));
                         if (resourceType == StorageResourceType.USER_PROFILE_PICTURE ||
                                 resourceType == GROUP_PROFILE_PICTURE) {
                             createBucket = createBucket
-                                    .then(Mono.defer(() -> setBucketPolicy(bucket)));
+                                    .then(Mono.defer(() ->
+                                            setBucketPolicy(bucket, itemProperties.getAllowedReferrers())));
                         }
                         return createBucket
                                 .doOnSuccess(unused -> LOGGER.info("Bucket {} is created", bucket));
@@ -410,7 +410,7 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
                 .onErrorMap(t -> new RuntimeException("Failed to create the bucket [" + bucketName + "]", t));
     }
 
-    private Mono<Void> setBucketPolicy(String bucket) {
+    private Mono<Void> setBucketPolicy(String bucket, List<String> allowedReferrers) {
         BucketPolicyStatement.BucketPolicyStatementBuilder statementBuilder = BucketPolicyStatement
                 .builder()
                 .sid("PublicRead")
@@ -420,6 +420,11 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
                 .resource(List.of(
                         "arn:aws:s3:::" + bucket + "/*"
                 ));
+        if (CollectionUtil.isNotEmpty(allowedReferrers)) {
+            statementBuilder.conditions(Map.of(
+                    BucketPolicyConditionOperator.STRING_LIKE, new BucketPolicyConditionCriteria()
+                            .withCondition(BucketPolicyConditionKey.REFERER, allowedReferrers)));
+        }
         BucketPolicy policy = BucketPolicy.builder()
                 .version("2012-10-17")
                 .statement(List.of(statementBuilder.build()))
