@@ -494,4 +494,27 @@ public final class StringUtil {
             return false;
         }
     }
+
+    public static String sanitizeLatin1(String src) {
+        byte[] bytes = getBytes(src);
+        int length = bytes.length;
+        int newLength = length;
+        for (byte b : bytes) {
+            if (b == '\n' || b == ' ') {
+                newLength--;
+            }
+        }
+        if (length == newLength) {
+            return src;
+        }
+        byte[] newBytes = new byte[newLength];
+        int writerIndex = 0;
+        for (byte b : bytes) {
+            if (b != '\n' && b != ' ') {
+                newBytes[writerIndex++] = b;
+            }
+        }
+        return newLatin1String(newBytes);
+    }
+
 }

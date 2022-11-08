@@ -18,11 +18,13 @@
 package im.turms.server.common.infra.reactor;
 
 import im.turms.server.common.infra.collection.CollectorUtil;
+import im.turms.server.common.infra.function.ThrowingSupplier;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author James Chen
@@ -30,6 +32,14 @@ import java.util.List;
 public final class PublisherUtil {
 
     private PublisherUtil() {
+    }
+
+    public static <T> Mono<T> fromFuture(ThrowingSupplier<CompletableFuture<T>> future) {
+        try {
+            return Mono.fromFuture(future.get());
+        } catch (Exception e) {
+            return Mono.error(e);
+        }
     }
 
     public static Mono<Boolean> areAllTrue(Mono<Boolean>... monos) {
