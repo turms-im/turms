@@ -45,6 +45,7 @@ import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
 import javax.annotation.Nullable;
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
@@ -177,16 +178,7 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
         for (MultipartFile file : files) {
             String fileName = file.name();
             ZipFile zipFile;
-            try {
-                zipFile = new ZipFile(file.file());
-            } catch (IOException e) {
-                throw new MalformedPluginArchiveException("Failed to load the jar file: " + fileName, e);
-            }
-            JavaPluginDescriptor descriptor = JavaPluginDescriptorFactory.load(zipFile);
-            if (descriptor == null) {
-                throw new MalformedPluginArchiveException("Cannot load a Java plugin from the file \"%s\" because it isn't a Java plugin jar file"
-                        .formatted(fileName));
-            }
+            File jarFile;
             if (save) {
                 fileName = file.basename() + ".jar";
                 Path target = pluginDir.resolve(EXTERNAL_PLUGIN_ARCHIVE_NAME_PREFIX + fileName);
@@ -197,6 +189,19 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
                 // because it may be removed by users unexpectedly
                 Files.createDirectories(pluginDir);
                 Files.move(file.file().toPath(), target);
+                jarFile = target.toFile();
+            } else {
+                jarFile = file.file();
+            }
+            try {
+                zipFile = new ZipFile(jarFile);
+            } catch (IOException e) {
+                throw new MalformedPluginArchiveException("Failed to load the jar file: " + fileName, e);
+            }
+            JavaPluginDescriptor descriptor = JavaPluginDescriptorFactory.load(zipFile);
+            if (descriptor == null) {
+                throw new MalformedPluginArchiveException("Cannot load a Java plugin from the file \"%s\" because it isn't a Java plugin jar file"
+                        .formatted(fileName));
             }
             Plugin plugin = JavaPluginFactory.create(descriptor, context);
             pluginRepository.register(plugin);
