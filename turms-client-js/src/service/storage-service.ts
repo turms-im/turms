@@ -99,8 +99,7 @@ export default class StorageService {
             }));
         }
         return this._queryResourceUploadInfo({
-            type: StorageResourceType.USER_PROFILE_PICTURE,
-            keyNum: userId
+            type: StorageResourceType.USER_PROFILE_PICTURE
         });
     }
 

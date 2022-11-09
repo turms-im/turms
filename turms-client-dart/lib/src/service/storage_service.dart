@@ -68,8 +68,7 @@ class StorageService {
       throw ResponseException(
           code: ResponseStatusCode.queryUserProfilePictureBeforeLogin);
     }
-    return _queryResourceUploadInfo(StorageResourceType.USER_PROFILE_PICTURE,
-        keyNum: userId);
+    return _queryResourceUploadInfo(StorageResourceType.USER_PROFILE_PICTURE);
   }
 
   Future<Response<Map<String, String>>> queryUserProfilePictureDownloadInfo(

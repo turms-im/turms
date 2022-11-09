@@ -47,7 +47,7 @@ public class StorageService {
 
     public func queryUserProfilePictureUploadInfo() -> Promise<Response<[String: String]>> {
         if let userId = turmsClient.userService.userInfo?.userId {
-            return getResourceUploadInfo(type: .userProfilePicture, keyNum: userId)
+            return getResourceUploadInfo(type: .userProfilePicture)
         } else {
             return Promise(error: ResponseError(code: .queryUserProfilePictureBeforeLogin))
         }

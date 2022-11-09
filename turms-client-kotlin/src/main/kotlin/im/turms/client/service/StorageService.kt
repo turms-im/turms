@@ -96,7 +96,7 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
         return if (userId == null) {
             throw ResponseException.from(ResponseStatusCode.QUERY_USER_PROFILE_PICTURE_BEFORE_LOGIN)
         } else {
-            queryResourceUploadInfo(StorageResourceType.USER_PROFILE_PICTURE, keyNum = userId)
+            queryResourceUploadInfo(StorageResourceType.USER_PROFILE_PICTURE)
         }
     }
 
