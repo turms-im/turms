@@ -32,6 +32,11 @@ public record MultipartFile(
         String basename,
         File file
 ) {
+
+    public void retain() {
+        data.retain();
+    }
+
     public void release() {
         data.release();
     }

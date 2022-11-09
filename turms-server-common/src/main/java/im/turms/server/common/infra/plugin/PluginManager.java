@@ -192,6 +192,10 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
                 jarFile = target.toFile();
             } else {
                 jarFile = file.file();
+                jarFile.deleteOnExit();
+                // We need to retain the JAR file because there may some
+                // classes or resources in the JAR file haven't been loaded
+                file.retain();
             }
             try {
                 zipFile = new ZipFile(jarFile);
