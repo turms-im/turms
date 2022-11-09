@@ -39,6 +39,8 @@ import lombok.SneakyThrows;
 import org.graalvm.polyglot.Engine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
@@ -54,14 +56,13 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Consumer;
 import java.util.zip.ZipFile;
 
 /**
  * @author James Chen
  */
 @Component
-public class PluginManager {
+public class PluginManager implements ApplicationListener<ContextRefreshedEvent> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PluginManager.class);
 
@@ -122,10 +123,18 @@ public class PluginManager {
             jsInspectHost = null;
             jsInspectPort = 0;
         }
+        applicationContext.addShutdownHook(JobShutdownOrder.CLOSE_PLUGINS, timeoutMillis -> destroy());
+    }
+
+    /**
+     * @implNote Start plugins after all beans are ready
+     * so that plugins can get any bean when starting
+     */
+    @Override
+    public void onApplicationEvent(ContextRefreshedEvent event) {
         if (enabled) {
             startPlugins();
         }
-        applicationContext.addShutdownHook(JobShutdownOrder.CLOSE_PLUGINS, timeoutMillis -> destroy());
     }
 
     private Path getPluginDir(Path home, String pluginsDir) {
