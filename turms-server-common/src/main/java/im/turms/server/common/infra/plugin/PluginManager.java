@@ -193,6 +193,9 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
                 if (Files.exists(target)) {
                     throw new IllegalArgumentException("The plugin jar file \"%s\" already exists".formatted(fileName));
                 }
+                // Ensure the plugin directory exists every time
+                // because it may be removed by users unexpectedly
+                Files.createDirectories(pluginDir);
                 Files.move(file.file().toPath(), target);
             }
             Plugin plugin = JavaPluginFactory.create(descriptor, context);
