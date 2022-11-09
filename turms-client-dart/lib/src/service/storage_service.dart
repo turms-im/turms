@@ -152,6 +152,11 @@ class StorageService {
     return _upload(url, uploadInfo.data, resourceName, type, data);
   }
 
+  Future<Response<void>> deleteMessageAttachment(Int64 messageId,
+          {String? name}) =>
+      _deleteResource(StorageResourceType.MESSAGE_ATTACHMENT,
+          keyNum: messageId, keyStr: name);
+
   Future<Response<StorageResource>> queryMessageAttachment(Int64 messageId,
       {String? name, String urlKeyName = _defaultUrlKeyName}) async {
     final response =

@@ -124,6 +124,10 @@ public class StorageService {
             }
     }
 
+    public func deleteMessageAttachment(messageId: Int64, name: String? = nil) -> Promise<Response<Void>> {
+        return deleteResource(type: .messageAttachment, keyStr: name, keyNum: messageId)
+    }
+
     public func queryMessageAttachment(messageId: Int64, name: String? = nil, urlKeyName: String? = nil) -> Promise<Response<StorageResource>> {
         return queryMessageAttachmentDownloadInfo(messageId: messageId, name: name)
             .then { downloadInfo -> Promise<Response<StorageResource>> in

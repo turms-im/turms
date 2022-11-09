@@ -188,6 +188,9 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
         return upload(url, responseData, resourceName, type, data)
     }
 
+    suspend fun deleteMessageAttachment(messageId: Long, name: String? = null) =
+        deleteResource(StorageResourceType.MESSAGE_ATTACHMENT, keyNum = messageId, keyStr = name)
+
     suspend fun queryMessageAttachment(
         messageId: Long,
         name: String? = null,

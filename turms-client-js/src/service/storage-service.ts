@@ -253,6 +253,20 @@ export default class StorageService {
         });
     }
 
+    public deleteMessageAttachment({
+        messageId,
+        name
+    }: {
+        messageId: string,
+        name?: string
+    }): Promise<Response<void>> {
+        return this._deleteResource({
+            type: StorageResourceType.MESSAGE_ATTACHMENT,
+            keyNum: messageId,
+            keyStr: name
+        });
+    }
+
     public queryMessageAttachment({
         messageId,
         name,
