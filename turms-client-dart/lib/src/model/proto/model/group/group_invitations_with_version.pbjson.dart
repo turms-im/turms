@@ -8,12 +8,28 @@
 import 'dart:core' as $core;
 import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
+
 @$core.Deprecated('Use groupInvitationsWithVersionDescriptor instead')
 const GroupInvitationsWithVersion$json = const {
   '1': 'GroupInvitationsWithVersion',
   '2': const [
-    const {'1': 'group_invitations', '3': 1, '4': 3, '5': 11, '6': '.im.turms.proto.GroupInvitation', '10': 'groupInvitations'},
-    const {'1': 'last_updated_date', '3': 2, '4': 1, '5': 3, '9': 0, '10': 'lastUpdatedDate', '17': true},
+    const {
+      '1': 'group_invitations',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.im.turms.proto.GroupInvitation',
+      '10': 'groupInvitations'
+    },
+    const {
+      '1': 'last_updated_date',
+      '3': 2,
+      '4': 1,
+      '5': 3,
+      '9': 0,
+      '10': 'lastUpdatedDate',
+      '17': true
+    },
   ],
   '8': const [
     const {'1': '_last_updated_date'},
@@ -21,4 +37,6 @@ const GroupInvitationsWithVersion$json = const {
 };
 
 /// Descriptor for `GroupInvitationsWithVersion`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List groupInvitationsWithVersionDescriptor = $convert.base64Decode('ChtHcm91cEludml0YXRpb25zV2l0aFZlcnNpb24STAoRZ3JvdXBfaW52aXRhdGlvbnMYASADKAsyHy5pbS50dXJtcy5wcm90by5Hcm91cEludml0YXRpb25SEGdyb3VwSW52aXRhdGlvbnMSLwoRbGFzdF91cGRhdGVkX2RhdGUYAiABKANIAFIPbGFzdFVwZGF0ZWREYXRliAEBQhQKEl9sYXN0X3VwZGF0ZWRfZGF0ZQ==');
+final $typed_data.Uint8List groupInvitationsWithVersionDescriptor =
+    $convert.base64Decode(
+        'ChtHcm91cEludml0YXRpb25zV2l0aFZlcnNpb24STAoRZ3JvdXBfaW52aXRhdGlvbnMYASADKAsyHy5pbS50dXJtcy5wcm90by5Hcm91cEludml0YXRpb25SEGdyb3VwSW52aXRhdGlvbnMSLwoRbGFzdF91cGRhdGVkX2RhdGUYAiABKANIAFIPbGFzdFVwZGF0ZWREYXRliAEBQhQKEl9sYXN0X3VwZGF0ZWRfZGF0ZQ==');

@@ -8,6 +8,7 @@
 import 'dart:core' as $core;
 import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
+
 @$core.Deprecated('Use groupMemberRoleDescriptor instead')
 const GroupMemberRole$json = const {
   '1': 'GroupMemberRole',
@@ -21,4 +22,5 @@ const GroupMemberRole$json = const {
 };
 
 /// Descriptor for `GroupMemberRole`. Decode as a `google.protobuf.EnumDescriptorProto`.
-final $typed_data.Uint8List groupMemberRoleDescriptor = $convert.base64Decode('Cg9Hcm91cE1lbWJlclJvbGUSCQoFT1dORVIQABILCgdNQU5BR0VSEAESCgoGTUVNQkVSEAISCQoFR1VFU1QQAxITCg9BTk9OWU1PVVNfR1VFU1QQBA==');
+final $typed_data.Uint8List groupMemberRoleDescriptor = $convert.base64Decode(
+    'Cg9Hcm91cE1lbWJlclJvbGUSCQoFT1dORVIQABILCgdNQU5BR0VSEAESCgoGTUVNQkVSEAISCQoFR1VFU1QQAxITCg9BTk9OWU1PVVNfR1VFU1QQBA==');

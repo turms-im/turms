@@ -8,4 +8,3 @@
 import 'dart:core' as $core;
 
 export 'request_status.pbenum.dart';
-

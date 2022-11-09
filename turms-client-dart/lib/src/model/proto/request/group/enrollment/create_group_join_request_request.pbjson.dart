@@ -8,6 +8,7 @@
 import 'dart:core' as $core;
 import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
+
 @$core.Deprecated('Use createGroupJoinRequestRequestDescriptor instead')
 const CreateGroupJoinRequestRequest$json = const {
   '1': 'CreateGroupJoinRequestRequest',
@@ -18,4 +19,6 @@ const CreateGroupJoinRequestRequest$json = const {
 };
 
 /// Descriptor for `CreateGroupJoinRequestRequest`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List createGroupJoinRequestRequestDescriptor = $convert.base64Decode('Ch1DcmVhdGVHcm91cEpvaW5SZXF1ZXN0UmVxdWVzdBIZCghncm91cF9pZBgBIAEoA1IHZ3JvdXBJZBIYCgdjb250ZW50GAIgASgJUgdjb250ZW50');
+final $typed_data.Uint8List createGroupJoinRequestRequestDescriptor =
+    $convert.base64Decode(
+        'Ch1DcmVhdGVHcm91cEpvaW5SZXF1ZXN0UmVxdWVzdBIZCghncm91cF9pZBgBIAEoA1IHZ3JvdXBJZBIYCgdjb250ZW50GAIgASgJUgdjb250ZW50');

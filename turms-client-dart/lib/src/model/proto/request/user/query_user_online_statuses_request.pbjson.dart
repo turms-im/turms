@@ -8,6 +8,7 @@
 import 'dart:core' as $core;
 import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
+
 @$core.Deprecated('Use queryUserOnlineStatusesRequestDescriptor instead')
 const QueryUserOnlineStatusesRequest$json = const {
   '1': 'QueryUserOnlineStatusesRequest',
@@ -17,4 +18,6 @@ const QueryUserOnlineStatusesRequest$json = const {
 };
 
 /// Descriptor for `QueryUserOnlineStatusesRequest`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List queryUserOnlineStatusesRequestDescriptor = $convert.base64Decode('Ch5RdWVyeVVzZXJPbmxpbmVTdGF0dXNlc1JlcXVlc3QSGQoIdXNlcl9pZHMYASADKANSB3VzZXJJZHM=');
+final $typed_data.Uint8List queryUserOnlineStatusesRequestDescriptor =
+    $convert.base64Decode(
+        'Ch5RdWVyeVVzZXJPbmxpbmVTdGF0dXNlc1JlcXVlc3QSGQoIdXNlcl9pZHMYASADKANSB3VzZXJJZHM=');

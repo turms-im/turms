@@ -18,9 +18,9 @@ jobs:
         working-directory: turms-client-dart
         run: dart pub get
 
-#      - name: Verify formatting
-#        working-directory: turms-client-dart
-#        run: dart format --output=none --set-exit-if-changed .
+      - name: Verify formatting
+        working-directory: turms-client-dart
+        run: dart format --output=none --set-exit-if-changed .
 
       - name: Analyze project source
         working-directory: turms-client-dart

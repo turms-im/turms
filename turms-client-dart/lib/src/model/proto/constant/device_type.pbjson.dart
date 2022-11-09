@@ -8,6 +8,7 @@
 import 'dart:core' as $core;
 import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
+
 @$core.Deprecated('Use deviceTypeDescriptor instead')
 const DeviceType$json = const {
   '1': 'DeviceType',
@@ -22,4 +23,5 @@ const DeviceType$json = const {
 };
 
 /// Descriptor for `DeviceType`. Decode as a `google.protobuf.EnumDescriptorProto`.
-final $typed_data.Uint8List deviceTypeDescriptor = $convert.base64Decode('CgpEZXZpY2VUeXBlEgsKB0RFU0tUT1AQABILCgdCUk9XU0VSEAESBwoDSU9TEAISCwoHQU5EUk9JRBADEgoKBk9USEVSUxAEEgsKB1VOS05PV04QBQ==');
+final $typed_data.Uint8List deviceTypeDescriptor = $convert.base64Decode(
+    'CgpEZXZpY2VUeXBlEgsKB0RFU0tUT1AQABILCgdCUk9XU0VSEAESBwoDSU9TEAISCwoHQU5EUk9JRBADEgoKBk9USEVSUxAEEgsKB1VOS05PV04QBQ==');

@@ -8,6 +8,7 @@
 import 'dart:core' as $core;
 import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
+
 @$core.Deprecated('Use deleteGroupJoinQuestionsRequestDescriptor instead')
 const DeleteGroupJoinQuestionsRequest$json = const {
   '1': 'DeleteGroupJoinQuestionsRequest',
@@ -18,4 +19,6 @@ const DeleteGroupJoinQuestionsRequest$json = const {
 };
 
 /// Descriptor for `DeleteGroupJoinQuestionsRequest`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List deleteGroupJoinQuestionsRequestDescriptor = $convert.base64Decode('Ch9EZWxldGVHcm91cEpvaW5RdWVzdGlvbnNSZXF1ZXN0EhkKCGdyb3VwX2lkGAEgASgDUgdncm91cElkEiEKDHF1ZXN0aW9uX2lkcxgCIAMoA1ILcXVlc3Rpb25JZHM=');
+final $typed_data.Uint8List deleteGroupJoinQuestionsRequestDescriptor =
+    $convert.base64Decode(
+        'Ch9EZWxldGVHcm91cEpvaW5RdWVzdGlvbnNSZXF1ZXN0EhkKCGdyb3VwX2lkGAEgASgDUgdncm91cElkEiEKDHF1ZXN0aW9uX2lkcxgCIAMoA1ILcXVlc3Rpb25JZHM=');

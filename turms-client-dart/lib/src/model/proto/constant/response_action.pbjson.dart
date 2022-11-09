@@ -8,6 +8,7 @@
 import 'dart:core' as $core;
 import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
+
 @$core.Deprecated('Use responseActionDescriptor instead')
 const ResponseAction$json = const {
   '1': 'ResponseAction',
@@ -19,4 +20,5 @@ const ResponseAction$json = const {
 };
 
 /// Descriptor for `ResponseAction`. Decode as a `google.protobuf.EnumDescriptorProto`.
-final $typed_data.Uint8List responseActionDescriptor = $convert.base64Decode('Cg5SZXNwb25zZUFjdGlvbhIKCgZBQ0NFUFQQABILCgdERUNMSU5FEAESCgoGSUdOT1JFEAI=');
+final $typed_data.Uint8List responseActionDescriptor = $convert.base64Decode(
+    'Cg5SZXNwb25zZUFjdGlvbhIKCgZBQ0NFUFQQABILCgdERUNMSU5FEAESCgoGSUdOT1JFEAI=');

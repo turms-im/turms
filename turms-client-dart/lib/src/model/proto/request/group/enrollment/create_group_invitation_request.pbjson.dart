@@ -8,6 +8,7 @@
 import 'dart:core' as $core;
 import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
+
 @$core.Deprecated('Use createGroupInvitationRequestDescriptor instead')
 const CreateGroupInvitationRequest$json = const {
   '1': 'CreateGroupInvitationRequest',
@@ -19,4 +20,6 @@ const CreateGroupInvitationRequest$json = const {
 };
 
 /// Descriptor for `CreateGroupInvitationRequest`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List createGroupInvitationRequestDescriptor = $convert.base64Decode('ChxDcmVhdGVHcm91cEludml0YXRpb25SZXF1ZXN0EhkKCGdyb3VwX2lkGAEgASgDUgdncm91cElkEh0KCmludml0ZWVfaWQYAiABKANSCWludml0ZWVJZBIYCgdjb250ZW50GAMgASgJUgdjb250ZW50');
+final $typed_data.Uint8List createGroupInvitationRequestDescriptor =
+    $convert.base64Decode(
+        'ChxDcmVhdGVHcm91cEludml0YXRpb25SZXF1ZXN0EhkKCGdyb3VwX2lkGAEgASgDUgdncm91cElkEh0KCmludml0ZWVfaWQYAiABKANSCWludml0ZWVJZBIYCgdjb250ZW50GAMgASgJUgdjb250ZW50');

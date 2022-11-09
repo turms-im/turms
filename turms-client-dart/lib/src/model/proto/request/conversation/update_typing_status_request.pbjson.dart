@@ -8,14 +8,23 @@
 import 'dart:core' as $core;
 import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
+
 @$core.Deprecated('Use updateTypingStatusRequestDescriptor instead')
 const UpdateTypingStatusRequest$json = const {
   '1': 'UpdateTypingStatusRequest',
   '2': const [
-    const {'1': 'is_group_message', '3': 1, '4': 1, '5': 8, '10': 'isGroupMessage'},
+    const {
+      '1': 'is_group_message',
+      '3': 1,
+      '4': 1,
+      '5': 8,
+      '10': 'isGroupMessage'
+    },
     const {'1': 'to_id', '3': 2, '4': 1, '5': 3, '10': 'toId'},
   ],
 };
 
 /// Descriptor for `UpdateTypingStatusRequest`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List updateTypingStatusRequestDescriptor = $convert.base64Decode('ChlVcGRhdGVUeXBpbmdTdGF0dXNSZXF1ZXN0EigKEGlzX2dyb3VwX21lc3NhZ2UYASABKAhSDmlzR3JvdXBNZXNzYWdlEhMKBXRvX2lkGAIgASgDUgR0b0lk');
+final $typed_data.Uint8List updateTypingStatusRequestDescriptor =
+    $convert.base64Decode(
+        'ChlVcGRhdGVUeXBpbmdTdGF0dXNSZXF1ZXN0EigKEGlzX2dyb3VwX21lc3NhZ2UYASABKAhSDmlzR3JvdXBNZXNzYWdlEhMKBXRvX2lkGAIgASgDUgR0b0lk');

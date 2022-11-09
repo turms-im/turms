@@ -8,6 +8,7 @@
 import 'dart:core' as $core;
 import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
+
 @$core.Deprecated('Use privateConversationDescriptor instead')
 const PrivateConversation$json = const {
   '1': 'PrivateConversation',
@@ -19,4 +20,5 @@ const PrivateConversation$json = const {
 };
 
 /// Descriptor for `PrivateConversation`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List privateConversationDescriptor = $convert.base64Decode('ChNQcml2YXRlQ29udmVyc2F0aW9uEhkKCG93bmVyX2lkGAEgASgDUgdvd25lcklkEhsKCXRhcmdldF9pZBgCIAEoA1IIdGFyZ2V0SWQSGwoJcmVhZF9kYXRlGAMgASgDUghyZWFkRGF0ZQ==');
+final $typed_data.Uint8List privateConversationDescriptor = $convert.base64Decode(
+    'ChNQcml2YXRlQ29udmVyc2F0aW9uEhkKCG93bmVyX2lkGAEgASgDUgdvd25lcklkEhsKCXRhcmdldF9pZBgCIAEoA1IIdGFyZ2V0SWQSGwoJcmVhZF9kYXRlGAMgASgDUghyZWFkRGF0ZQ==');

@@ -8,6 +8,7 @@
 import 'dart:core' as $core;
 import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
+
 @$core.Deprecated('Use updateRelationshipGroupRequestDescriptor instead')
 const UpdateRelationshipGroupRequest$json = const {
   '1': 'UpdateRelationshipGroupRequest',
@@ -18,4 +19,6 @@ const UpdateRelationshipGroupRequest$json = const {
 };
 
 /// Descriptor for `UpdateRelationshipGroupRequest`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List updateRelationshipGroupRequestDescriptor = $convert.base64Decode('Ch5VcGRhdGVSZWxhdGlvbnNoaXBHcm91cFJlcXVlc3QSHwoLZ3JvdXBfaW5kZXgYASABKAVSCmdyb3VwSW5kZXgSGQoIbmV3X25hbWUYAiABKAlSB25ld05hbWU=');
+final $typed_data.Uint8List updateRelationshipGroupRequestDescriptor =
+    $convert.base64Decode(
+        'Ch5VcGRhdGVSZWxhdGlvbnNoaXBHcm91cFJlcXVlc3QSHwoLZ3JvdXBfaW5kZXgYASABKAVSCmdyb3VwSW5kZXgSGQoIbmV3X25hbWUYAiABKAlSB25ld05hbWU=');

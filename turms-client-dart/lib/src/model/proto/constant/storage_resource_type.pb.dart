@@ -8,4 +8,3 @@
 import 'dart:core' as $core;
 
 export 'storage_resource_type.pbenum.dart';
-

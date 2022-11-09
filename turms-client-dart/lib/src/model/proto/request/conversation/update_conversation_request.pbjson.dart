@@ -8,12 +8,29 @@
 import 'dart:core' as $core;
 import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
+
 @$core.Deprecated('Use updateConversationRequestDescriptor instead')
 const UpdateConversationRequest$json = const {
   '1': 'UpdateConversationRequest',
   '2': const [
-    const {'1': 'target_id', '3': 1, '4': 1, '5': 3, '9': 0, '10': 'targetId', '17': true},
-    const {'1': 'group_id', '3': 2, '4': 1, '5': 3, '9': 1, '10': 'groupId', '17': true},
+    const {
+      '1': 'target_id',
+      '3': 1,
+      '4': 1,
+      '5': 3,
+      '9': 0,
+      '10': 'targetId',
+      '17': true
+    },
+    const {
+      '1': 'group_id',
+      '3': 2,
+      '4': 1,
+      '5': 3,
+      '9': 1,
+      '10': 'groupId',
+      '17': true
+    },
     const {'1': 'read_date', '3': 3, '4': 1, '5': 3, '10': 'readDate'},
   ],
   '8': const [
@@ -23,4 +40,6 @@ const UpdateConversationRequest$json = const {
 };
 
 /// Descriptor for `UpdateConversationRequest`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List updateConversationRequestDescriptor = $convert.base64Decode('ChlVcGRhdGVDb252ZXJzYXRpb25SZXF1ZXN0EiAKCXRhcmdldF9pZBgBIAEoA0gAUgh0YXJnZXRJZIgBARIeCghncm91cF9pZBgCIAEoA0gBUgdncm91cElkiAEBEhsKCXJlYWRfZGF0ZRgDIAEoA1IIcmVhZERhdGVCDAoKX3RhcmdldF9pZEILCglfZ3JvdXBfaWQ=');
+final $typed_data.Uint8List updateConversationRequestDescriptor =
+    $convert.base64Decode(
+        'ChlVcGRhdGVDb252ZXJzYXRpb25SZXF1ZXN0EiAKCXRhcmdldF9pZBgBIAEoA0gAUgh0YXJnZXRJZIgBARIeCghncm91cF9pZBgCIAEoA0gBUgdncm91cElkiAEBEhsKCXJlYWRfZGF0ZRgDIAEoA1IIcmVhZERhdGVCDAoKX3RhcmdldF9pZEILCglfZ3JvdXBfaWQ=');

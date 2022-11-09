@@ -8,6 +8,7 @@
 import 'dart:core' as $core;
 import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
+
 @$core.Deprecated('Use deleteGroupInvitationRequestDescriptor instead')
 const DeleteGroupInvitationRequest$json = const {
   '1': 'DeleteGroupInvitationRequest',
@@ -17,4 +18,6 @@ const DeleteGroupInvitationRequest$json = const {
 };
 
 /// Descriptor for `DeleteGroupInvitationRequest`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List deleteGroupInvitationRequestDescriptor = $convert.base64Decode('ChxEZWxldGVHcm91cEludml0YXRpb25SZXF1ZXN0EiMKDWludml0YXRpb25faWQYASABKANSDGludml0YXRpb25JZA==');
+final $typed_data.Uint8List deleteGroupInvitationRequestDescriptor =
+    $convert.base64Decode(
+        'ChxEZWxldGVHcm91cEludml0YXRpb25SZXF1ZXN0EiMKDWludml0YXRpb25faWQYASABKANSDGludml0YXRpb25JZA==');

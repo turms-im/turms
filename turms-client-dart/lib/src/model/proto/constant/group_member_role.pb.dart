@@ -8,4 +8,3 @@
 import 'dart:core' as $core;
 
 export 'group_member_role.pbenum.dart';
-

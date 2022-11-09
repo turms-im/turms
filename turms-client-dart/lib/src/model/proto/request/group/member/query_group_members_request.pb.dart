@@ -11,13 +11,37 @@ import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 class QueryGroupMembersRequest extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'QueryGroupMembersRequest', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'im.turms.proto'), createEmptyInstance: create)
-    ..aInt64(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'groupId')
-    ..aInt64(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'lastUpdatedDate')
-    ..p<$fixnum.Int64>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'memberIds', $pb.PbFieldType.P6)
-    ..aOB(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'withStatus')
-    ..hasRequiredFields = false
-  ;
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      const $core.bool.fromEnvironment('protobuf.omit_message_names')
+          ? ''
+          : 'QueryGroupMembersRequest',
+      package: const $pb.PackageName(
+          const $core.bool.fromEnvironment('protobuf.omit_message_names')
+              ? ''
+              : 'im.turms.proto'),
+      createEmptyInstance: create)
+    ..aInt64(
+        1,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'groupId')
+    ..aInt64(
+        2,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'lastUpdatedDate')
+    ..p<$fixnum.Int64>(
+        3,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'memberIds',
+        $pb.PbFieldType.P6)
+    ..aOB(
+        4,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'withStatus')
+    ..hasRequiredFields = false;
 
   QueryGroupMembersRequest._() : super();
   factory QueryGroupMembersRequest({
@@ -41,31 +65,42 @@ class QueryGroupMembersRequest extends $pb.GeneratedMessage {
     }
     return _result;
   }
-  factory QueryGroupMembersRequest.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory QueryGroupMembersRequest.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-  'Will be removed in next major version')
-  QueryGroupMembersRequest clone() => QueryGroupMembersRequest()..mergeFromMessage(this);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-  'Will be removed in next major version')
-  QueryGroupMembersRequest copyWith(void Function(QueryGroupMembersRequest) updates) => super.copyWith((message) => updates(message as QueryGroupMembersRequest)) as QueryGroupMembersRequest; // ignore: deprecated_member_use
+  factory QueryGroupMembersRequest.fromBuffer($core.List<$core.int> i,
+          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(i, r);
+  factory QueryGroupMembersRequest.fromJson($core.String i,
+          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(i, r);
+  @$core.Deprecated('Using this can add significant overhead to your binary. '
+      'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+      'Will be removed in next major version')
+  QueryGroupMembersRequest clone() =>
+      QueryGroupMembersRequest()..mergeFromMessage(this);
+  @$core.Deprecated('Using this can add significant overhead to your binary. '
+      'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+      'Will be removed in next major version')
+  QueryGroupMembersRequest copyWith(
+          void Function(QueryGroupMembersRequest) updates) =>
+      super.copyWith((message) => updates(message as QueryGroupMembersRequest))
+          as QueryGroupMembersRequest; // ignore: deprecated_member_use
   $pb.BuilderInfo get info_ => _i;
   @$core.pragma('dart2js:noInline')
   static QueryGroupMembersRequest create() => QueryGroupMembersRequest._();
   QueryGroupMembersRequest createEmptyInstance() => create();
-  static $pb.PbList<QueryGroupMembersRequest> createRepeated() => $pb.PbList<QueryGroupMembersRequest>();
+  static $pb.PbList<QueryGroupMembersRequest> createRepeated() =>
+      $pb.PbList<QueryGroupMembersRequest>();
   @$core.pragma('dart2js:noInline')
-  static QueryGroupMembersRequest getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<QueryGroupMembersRequest>(create);
+  static QueryGroupMembersRequest getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<QueryGroupMembersRequest>(create);
   static QueryGroupMembersRequest? _defaultInstance;
 
   @$pb.TagNumber(1)
   $fixnum.Int64 get groupId => $_getI64(0);
   @$pb.TagNumber(1)
-  set groupId($fixnum.Int64 v) { $_setInt64(0, v); }
+  set groupId($fixnum.Int64 v) {
+    $_setInt64(0, v);
+  }
+
   @$pb.TagNumber(1)
   $core.bool hasGroupId() => $_has(0);
   @$pb.TagNumber(1)
@@ -74,7 +109,10 @@ class QueryGroupMembersRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $fixnum.Int64 get lastUpdatedDate => $_getI64(1);
   @$pb.TagNumber(2)
-  set lastUpdatedDate($fixnum.Int64 v) { $_setInt64(1, v); }
+  set lastUpdatedDate($fixnum.Int64 v) {
+    $_setInt64(1, v);
+  }
+
   @$pb.TagNumber(2)
   $core.bool hasLastUpdatedDate() => $_has(1);
   @$pb.TagNumber(2)
@@ -86,10 +124,12 @@ class QueryGroupMembersRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   $core.bool get withStatus => $_getBF(3);
   @$pb.TagNumber(4)
-  set withStatus($core.bool v) { $_setBool(3, v); }
+  set withStatus($core.bool v) {
+    $_setBool(3, v);
+  }
+
   @$pb.TagNumber(4)
   $core.bool hasWithStatus() => $_has(3);
   @$pb.TagNumber(4)
   void clearWithStatus() => clearField(4);
 }
-

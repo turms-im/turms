@@ -8,6 +8,7 @@
 import 'dart:core' as $core;
 import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
+
 @$core.Deprecated('Use requestStatusDescriptor instead')
 const RequestStatus$json = const {
   '1': 'RequestStatus',
@@ -23,4 +24,5 @@ const RequestStatus$json = const {
 };
 
 /// Descriptor for `RequestStatus`. Decode as a `google.protobuf.EnumDescriptorProto`.
-final $typed_data.Uint8List requestStatusDescriptor = $convert.base64Decode('Cg1SZXF1ZXN0U3RhdHVzEgsKB1BFTkRJTkcQABIMCghBQ0NFUFRFRBABEhwKGEFDQ0VQVEVEX1dJVEhPVVRfQ09ORklSTRACEgwKCERFQ0xJTkVEEAMSCwoHSUdOT1JFRBAEEgsKB0VYUElSRUQQBRIMCghDQU5DRUxFRBAG');
+final $typed_data.Uint8List requestStatusDescriptor = $convert.base64Decode(
+    'Cg1SZXF1ZXN0U3RhdHVzEgsKB1BFTkRJTkcQABIMCghBQ0NFUFRFRBABEhwKGEFDQ0VQVEVEX1dJVEhPVVRfQ09ORklSTRACEgwKCERFQ0xJTkVEEAMSCwoHSUdOT1JFRBAEEgsKB0VYUElSRUQQBRIMCghDQU5DRUxFRBAG');

@@ -8,4 +8,3 @@
 import 'dart:core' as $core;
 
 export 'device_type.pbenum.dart';
-

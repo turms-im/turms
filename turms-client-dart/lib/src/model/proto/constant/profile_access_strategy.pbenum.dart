@@ -10,19 +10,33 @@ import 'dart:core' as $core;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 class ProfileAccessStrategy extends $pb.ProtobufEnum {
-  static const ProfileAccessStrategy ALL = ProfileAccessStrategy._(0, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'ALL');
-  static const ProfileAccessStrategy ALL_EXCEPT_BLOCKED_USERS = ProfileAccessStrategy._(1, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'ALL_EXCEPT_BLOCKED_USERS');
-  static const ProfileAccessStrategy FRIENDS = ProfileAccessStrategy._(2, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'FRIENDS');
+  static const ProfileAccessStrategy ALL = ProfileAccessStrategy._(
+      0,
+      const $core.bool.fromEnvironment('protobuf.omit_enum_names')
+          ? ''
+          : 'ALL');
+  static const ProfileAccessStrategy ALL_EXCEPT_BLOCKED_USERS =
+      ProfileAccessStrategy._(
+          1,
+          const $core.bool.fromEnvironment('protobuf.omit_enum_names')
+              ? ''
+              : 'ALL_EXCEPT_BLOCKED_USERS');
+  static const ProfileAccessStrategy FRIENDS = ProfileAccessStrategy._(
+      2,
+      const $core.bool.fromEnvironment('protobuf.omit_enum_names')
+          ? ''
+          : 'FRIENDS');
 
-  static const $core.List<ProfileAccessStrategy> values = <ProfileAccessStrategy> [
+  static const $core.List<ProfileAccessStrategy> values =
+      <ProfileAccessStrategy>[
     ALL,
     ALL_EXCEPT_BLOCKED_USERS,
     FRIENDS,
   ];
 
-  static final $core.Map<$core.int, ProfileAccessStrategy> _byValue = $pb.ProtobufEnum.initByValue(values);
+  static final $core.Map<$core.int, ProfileAccessStrategy> _byValue =
+      $pb.ProtobufEnum.initByValue(values);
   static ProfileAccessStrategy? valueOf($core.int value) => _byValue[value];
 
   const ProfileAccessStrategy._($core.int v, $core.String n) : super(v, n);
 }
-

@@ -8,11 +8,20 @@
 import 'dart:core' as $core;
 import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
+
 @$core.Deprecated('Use queryRelationshipGroupsRequestDescriptor instead')
 const QueryRelationshipGroupsRequest$json = const {
   '1': 'QueryRelationshipGroupsRequest',
   '2': const [
-    const {'1': 'last_updated_date', '3': 1, '4': 1, '5': 3, '9': 0, '10': 'lastUpdatedDate', '17': true},
+    const {
+      '1': 'last_updated_date',
+      '3': 1,
+      '4': 1,
+      '5': 3,
+      '9': 0,
+      '10': 'lastUpdatedDate',
+      '17': true
+    },
   ],
   '8': const [
     const {'1': '_last_updated_date'},
@@ -20,4 +29,6 @@ const QueryRelationshipGroupsRequest$json = const {
 };
 
 /// Descriptor for `QueryRelationshipGroupsRequest`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List queryRelationshipGroupsRequestDescriptor = $convert.base64Decode('Ch5RdWVyeVJlbGF0aW9uc2hpcEdyb3Vwc1JlcXVlc3QSLwoRbGFzdF91cGRhdGVkX2RhdGUYASABKANIAFIPbGFzdFVwZGF0ZWREYXRliAEBQhQKEl9sYXN0X3VwZGF0ZWRfZGF0ZQ==');
+final $typed_data.Uint8List queryRelationshipGroupsRequestDescriptor =
+    $convert.base64Decode(
+        'Ch5RdWVyeVJlbGF0aW9uc2hpcEdyb3Vwc1JlcXVlc3QSLwoRbGFzdF91cGRhdGVkX2RhdGUYASABKANIAFIPbGFzdFVwZGF0ZWREYXRliAEBQhQKEl9sYXN0X3VwZGF0ZWRfZGF0ZQ==');

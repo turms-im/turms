@@ -31,77 +31,184 @@ import '../model/group/group_members_with_version.pb.dart' as $17;
 import '../model/group/groups_with_version.pb.dart' as $18;
 
 enum TurmsNotification_Data_Kind {
-  long, 
-  string, 
-  longsWithVersion, 
-  stringsWithVersion, 
-  conversations, 
-  messages, 
-  messagesWithTotalList, 
-  userSession, 
-  userInfosWithVersion, 
-  userOnlineStatuses, 
-  userFriendRequestsWithVersion, 
-  userRelationshipGroupsWithVersion, 
-  userRelationshipsWithVersion, 
-  nearbyUsers, 
-  groupInvitationsWithVersion, 
-  groupJoinQuestionAnswerResult, 
-  groupJoinRequestsWithVersion, 
-  groupJoinQuestionsWithVersion, 
-  groupMembersWithVersion, 
-  groupsWithVersion, 
+  long,
+  string,
+  longsWithVersion,
+  stringsWithVersion,
+  conversations,
+  messages,
+  messagesWithTotalList,
+  userSession,
+  userInfosWithVersion,
+  userOnlineStatuses,
+  userFriendRequestsWithVersion,
+  userRelationshipGroupsWithVersion,
+  userRelationshipsWithVersion,
+  nearbyUsers,
+  groupInvitationsWithVersion,
+  groupJoinQuestionAnswerResult,
+  groupJoinRequestsWithVersion,
+  groupJoinQuestionsWithVersion,
+  groupMembersWithVersion,
+  groupsWithVersion,
   notSet
 }
 
 class TurmsNotification_Data extends $pb.GeneratedMessage {
-  static const $core.Map<$core.int, TurmsNotification_Data_Kind> _TurmsNotification_Data_KindByTag = {
-    1 : TurmsNotification_Data_Kind.long,
-    2 : TurmsNotification_Data_Kind.string,
-    3 : TurmsNotification_Data_Kind.longsWithVersion,
-    4 : TurmsNotification_Data_Kind.stringsWithVersion,
-    5 : TurmsNotification_Data_Kind.conversations,
-    6 : TurmsNotification_Data_Kind.messages,
-    7 : TurmsNotification_Data_Kind.messagesWithTotalList,
-    8 : TurmsNotification_Data_Kind.userSession,
-    9 : TurmsNotification_Data_Kind.userInfosWithVersion,
-    10 : TurmsNotification_Data_Kind.userOnlineStatuses,
-    11 : TurmsNotification_Data_Kind.userFriendRequestsWithVersion,
-    12 : TurmsNotification_Data_Kind.userRelationshipGroupsWithVersion,
-    13 : TurmsNotification_Data_Kind.userRelationshipsWithVersion,
-    14 : TurmsNotification_Data_Kind.nearbyUsers,
-    15 : TurmsNotification_Data_Kind.groupInvitationsWithVersion,
-    16 : TurmsNotification_Data_Kind.groupJoinQuestionAnswerResult,
-    17 : TurmsNotification_Data_Kind.groupJoinRequestsWithVersion,
-    18 : TurmsNotification_Data_Kind.groupJoinQuestionsWithVersion,
-    19 : TurmsNotification_Data_Kind.groupMembersWithVersion,
-    20 : TurmsNotification_Data_Kind.groupsWithVersion,
-    0 : TurmsNotification_Data_Kind.notSet
+  static const $core.Map<$core.int, TurmsNotification_Data_Kind>
+      _TurmsNotification_Data_KindByTag = {
+    1: TurmsNotification_Data_Kind.long,
+    2: TurmsNotification_Data_Kind.string,
+    3: TurmsNotification_Data_Kind.longsWithVersion,
+    4: TurmsNotification_Data_Kind.stringsWithVersion,
+    5: TurmsNotification_Data_Kind.conversations,
+    6: TurmsNotification_Data_Kind.messages,
+    7: TurmsNotification_Data_Kind.messagesWithTotalList,
+    8: TurmsNotification_Data_Kind.userSession,
+    9: TurmsNotification_Data_Kind.userInfosWithVersion,
+    10: TurmsNotification_Data_Kind.userOnlineStatuses,
+    11: TurmsNotification_Data_Kind.userFriendRequestsWithVersion,
+    12: TurmsNotification_Data_Kind.userRelationshipGroupsWithVersion,
+    13: TurmsNotification_Data_Kind.userRelationshipsWithVersion,
+    14: TurmsNotification_Data_Kind.nearbyUsers,
+    15: TurmsNotification_Data_Kind.groupInvitationsWithVersion,
+    16: TurmsNotification_Data_Kind.groupJoinQuestionAnswerResult,
+    17: TurmsNotification_Data_Kind.groupJoinRequestsWithVersion,
+    18: TurmsNotification_Data_Kind.groupJoinQuestionsWithVersion,
+    19: TurmsNotification_Data_Kind.groupMembersWithVersion,
+    20: TurmsNotification_Data_Kind.groupsWithVersion,
+    0: TurmsNotification_Data_Kind.notSet
   };
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'TurmsNotification.Data', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'im.turms.proto'), createEmptyInstance: create)
-    ..oo(0, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20])
-    ..aInt64(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'long')
-    ..aOS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'string')
-    ..aOM<$1.LongsWithVersion>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'longsWithVersion', subBuilder: $1.LongsWithVersion.create)
-    ..aOM<$2.StringsWithVersion>(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'stringsWithVersion', subBuilder: $2.StringsWithVersion.create)
-    ..aOM<$3.Conversations>(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'conversations', subBuilder: $3.Conversations.create)
-    ..aOM<$4.Messages>(6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'messages', subBuilder: $4.Messages.create)
-    ..aOM<$5.MessagesWithTotalList>(7, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'messagesWithTotalList', subBuilder: $5.MessagesWithTotalList.create)
-    ..aOM<$6.UserSession>(8, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'userSession', subBuilder: $6.UserSession.create)
-    ..aOM<$7.UserInfosWithVersion>(9, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'userInfosWithVersion', subBuilder: $7.UserInfosWithVersion.create)
-    ..aOM<$8.UserOnlineStatuses>(10, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'userOnlineStatuses', subBuilder: $8.UserOnlineStatuses.create)
-    ..aOM<$9.UserFriendRequestsWithVersion>(11, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'userFriendRequestsWithVersion', subBuilder: $9.UserFriendRequestsWithVersion.create)
-    ..aOM<$10.UserRelationshipGroupsWithVersion>(12, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'userRelationshipGroupsWithVersion', subBuilder: $10.UserRelationshipGroupsWithVersion.create)
-    ..aOM<$11.UserRelationshipsWithVersion>(13, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'userRelationshipsWithVersion', subBuilder: $11.UserRelationshipsWithVersion.create)
-    ..aOM<$12.NearbyUsers>(14, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'nearbyUsers', subBuilder: $12.NearbyUsers.create)
-    ..aOM<$13.GroupInvitationsWithVersion>(15, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'groupInvitationsWithVersion', subBuilder: $13.GroupInvitationsWithVersion.create)
-    ..aOM<$14.GroupJoinQuestionsAnswerResult>(16, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'groupJoinQuestionAnswerResult', subBuilder: $14.GroupJoinQuestionsAnswerResult.create)
-    ..aOM<$15.GroupJoinRequestsWithVersion>(17, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'groupJoinRequestsWithVersion', subBuilder: $15.GroupJoinRequestsWithVersion.create)
-    ..aOM<$16.GroupJoinQuestionsWithVersion>(18, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'groupJoinQuestionsWithVersion', subBuilder: $16.GroupJoinQuestionsWithVersion.create)
-    ..aOM<$17.GroupMembersWithVersion>(19, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'groupMembersWithVersion', subBuilder: $17.GroupMembersWithVersion.create)
-    ..aOM<$18.GroupsWithVersion>(20, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'groupsWithVersion', subBuilder: $18.GroupsWithVersion.create)
-    ..hasRequiredFields = false
-  ;
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      const $core.bool.fromEnvironment('protobuf.omit_message_names')
+          ? ''
+          : 'TurmsNotification.Data',
+      package: const $pb.PackageName(
+          const $core.bool.fromEnvironment('protobuf.omit_message_names')
+              ? ''
+              : 'im.turms.proto'),
+      createEmptyInstance: create)
+    ..oo(0,
+        [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20])
+    ..aInt64(
+        1,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'long')
+    ..aOS(
+        2,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'string')
+    ..aOM<$1.LongsWithVersion>(
+        3,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'longsWithVersion',
+        subBuilder: $1.LongsWithVersion.create)
+    ..aOM<$2.StringsWithVersion>(
+        4,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'stringsWithVersion',
+        subBuilder: $2.StringsWithVersion.create)
+    ..aOM<$3.Conversations>(
+        5,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'conversations',
+        subBuilder: $3.Conversations.create)
+    ..aOM<$4.Messages>(
+        6,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'messages',
+        subBuilder: $4.Messages.create)
+    ..aOM<$5.MessagesWithTotalList>(
+        7,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'messagesWithTotalList',
+        subBuilder: $5.MessagesWithTotalList.create)
+    ..aOM<$6.UserSession>(
+        8,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'userSession',
+        subBuilder: $6.UserSession.create)
+    ..aOM<$7.UserInfosWithVersion>(
+        9,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'userInfosWithVersion',
+        subBuilder: $7.UserInfosWithVersion.create)
+    ..aOM<$8.UserOnlineStatuses>(
+        10,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'userOnlineStatuses',
+        subBuilder: $8.UserOnlineStatuses.create)
+    ..aOM<$9.UserFriendRequestsWithVersion>(
+        11,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'userFriendRequestsWithVersion',
+        subBuilder: $9.UserFriendRequestsWithVersion.create)
+    ..aOM<$10.UserRelationshipGroupsWithVersion>(
+        12,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'userRelationshipGroupsWithVersion',
+        subBuilder: $10.UserRelationshipGroupsWithVersion.create)
+    ..aOM<$11.UserRelationshipsWithVersion>(
+        13,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'userRelationshipsWithVersion',
+        subBuilder: $11.UserRelationshipsWithVersion.create)
+    ..aOM<$12.NearbyUsers>(
+        14,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'nearbyUsers',
+        subBuilder: $12.NearbyUsers.create)
+    ..aOM<$13.GroupInvitationsWithVersion>(
+        15,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'groupInvitationsWithVersion',
+        subBuilder: $13.GroupInvitationsWithVersion.create)
+    ..aOM<$14.GroupJoinQuestionsAnswerResult>(
+        16,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'groupJoinQuestionAnswerResult',
+        subBuilder: $14.GroupJoinQuestionsAnswerResult.create)
+    ..aOM<$15.GroupJoinRequestsWithVersion>(
+        17,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'groupJoinRequestsWithVersion',
+        subBuilder: $15.GroupJoinRequestsWithVersion.create)
+    ..aOM<$16.GroupJoinQuestionsWithVersion>(
+        18,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'groupJoinQuestionsWithVersion',
+        subBuilder: $16.GroupJoinQuestionsWithVersion.create)
+    ..aOM<$17.GroupMembersWithVersion>(
+        19,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'groupMembersWithVersion',
+        subBuilder: $17.GroupMembersWithVersion.create)
+    ..aOM<$18.GroupsWithVersion>(
+        20,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'groupsWithVersion',
+        subBuilder: $18.GroupsWithVersion.create)
+    ..hasRequiredFields = false;
 
   TurmsNotification_Data._() : super();
   factory TurmsNotification_Data({
@@ -161,7 +268,8 @@ class TurmsNotification_Data extends $pb.GeneratedMessage {
       _result.userFriendRequestsWithVersion = userFriendRequestsWithVersion;
     }
     if (userRelationshipGroupsWithVersion != null) {
-      _result.userRelationshipGroupsWithVersion = userRelationshipGroupsWithVersion;
+      _result.userRelationshipGroupsWithVersion =
+          userRelationshipGroupsWithVersion;
     }
     if (userRelationshipsWithVersion != null) {
       _result.userRelationshipsWithVersion = userRelationshipsWithVersion;
@@ -189,34 +297,46 @@ class TurmsNotification_Data extends $pb.GeneratedMessage {
     }
     return _result;
   }
-  factory TurmsNotification_Data.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory TurmsNotification_Data.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-  'Will be removed in next major version')
-  TurmsNotification_Data clone() => TurmsNotification_Data()..mergeFromMessage(this);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-  'Will be removed in next major version')
-  TurmsNotification_Data copyWith(void Function(TurmsNotification_Data) updates) => super.copyWith((message) => updates(message as TurmsNotification_Data)) as TurmsNotification_Data; // ignore: deprecated_member_use
+  factory TurmsNotification_Data.fromBuffer($core.List<$core.int> i,
+          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(i, r);
+  factory TurmsNotification_Data.fromJson($core.String i,
+          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(i, r);
+  @$core.Deprecated('Using this can add significant overhead to your binary. '
+      'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+      'Will be removed in next major version')
+  TurmsNotification_Data clone() =>
+      TurmsNotification_Data()..mergeFromMessage(this);
+  @$core.Deprecated('Using this can add significant overhead to your binary. '
+      'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+      'Will be removed in next major version')
+  TurmsNotification_Data copyWith(
+          void Function(TurmsNotification_Data) updates) =>
+      super.copyWith((message) => updates(message as TurmsNotification_Data))
+          as TurmsNotification_Data; // ignore: deprecated_member_use
   $pb.BuilderInfo get info_ => _i;
   @$core.pragma('dart2js:noInline')
   static TurmsNotification_Data create() => TurmsNotification_Data._();
   TurmsNotification_Data createEmptyInstance() => create();
-  static $pb.PbList<TurmsNotification_Data> createRepeated() => $pb.PbList<TurmsNotification_Data>();
+  static $pb.PbList<TurmsNotification_Data> createRepeated() =>
+      $pb.PbList<TurmsNotification_Data>();
   @$core.pragma('dart2js:noInline')
-  static TurmsNotification_Data getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<TurmsNotification_Data>(create);
+  static TurmsNotification_Data getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<TurmsNotification_Data>(create);
   static TurmsNotification_Data? _defaultInstance;
 
-  TurmsNotification_Data_Kind whichKind() => _TurmsNotification_Data_KindByTag[$_whichOneof(0)]!;
+  TurmsNotification_Data_Kind whichKind() =>
+      _TurmsNotification_Data_KindByTag[$_whichOneof(0)]!;
   void clearKind() => clearField($_whichOneof(0));
 
   @$pb.TagNumber(1)
   $fixnum.Int64 get long => $_getI64(0);
   @$pb.TagNumber(1)
-  set long($fixnum.Int64 v) { $_setInt64(0, v); }
+  set long($fixnum.Int64 v) {
+    $_setInt64(0, v);
+  }
+
   @$pb.TagNumber(1)
   $core.bool hasLong() => $_has(0);
   @$pb.TagNumber(1)
@@ -225,7 +345,10 @@ class TurmsNotification_Data extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.String get string => $_getSZ(1);
   @$pb.TagNumber(2)
-  set string($core.String v) { $_setString(1, v); }
+  set string($core.String v) {
+    $_setString(1, v);
+  }
+
   @$pb.TagNumber(2)
   $core.bool hasString() => $_has(1);
   @$pb.TagNumber(2)
@@ -234,7 +357,10 @@ class TurmsNotification_Data extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $1.LongsWithVersion get longsWithVersion => $_getN(2);
   @$pb.TagNumber(3)
-  set longsWithVersion($1.LongsWithVersion v) { setField(3, v); }
+  set longsWithVersion($1.LongsWithVersion v) {
+    setField(3, v);
+  }
+
   @$pb.TagNumber(3)
   $core.bool hasLongsWithVersion() => $_has(2);
   @$pb.TagNumber(3)
@@ -245,7 +371,10 @@ class TurmsNotification_Data extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   $2.StringsWithVersion get stringsWithVersion => $_getN(3);
   @$pb.TagNumber(4)
-  set stringsWithVersion($2.StringsWithVersion v) { setField(4, v); }
+  set stringsWithVersion($2.StringsWithVersion v) {
+    setField(4, v);
+  }
+
   @$pb.TagNumber(4)
   $core.bool hasStringsWithVersion() => $_has(3);
   @$pb.TagNumber(4)
@@ -256,7 +385,10 @@ class TurmsNotification_Data extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   $3.Conversations get conversations => $_getN(4);
   @$pb.TagNumber(5)
-  set conversations($3.Conversations v) { setField(5, v); }
+  set conversations($3.Conversations v) {
+    setField(5, v);
+  }
+
   @$pb.TagNumber(5)
   $core.bool hasConversations() => $_has(4);
   @$pb.TagNumber(5)
@@ -267,7 +399,10 @@ class TurmsNotification_Data extends $pb.GeneratedMessage {
   @$pb.TagNumber(6)
   $4.Messages get messages => $_getN(5);
   @$pb.TagNumber(6)
-  set messages($4.Messages v) { setField(6, v); }
+  set messages($4.Messages v) {
+    setField(6, v);
+  }
+
   @$pb.TagNumber(6)
   $core.bool hasMessages() => $_has(5);
   @$pb.TagNumber(6)
@@ -278,7 +413,10 @@ class TurmsNotification_Data extends $pb.GeneratedMessage {
   @$pb.TagNumber(7)
   $5.MessagesWithTotalList get messagesWithTotalList => $_getN(6);
   @$pb.TagNumber(7)
-  set messagesWithTotalList($5.MessagesWithTotalList v) { setField(7, v); }
+  set messagesWithTotalList($5.MessagesWithTotalList v) {
+    setField(7, v);
+  }
+
   @$pb.TagNumber(7)
   $core.bool hasMessagesWithTotalList() => $_has(6);
   @$pb.TagNumber(7)
@@ -289,7 +427,10 @@ class TurmsNotification_Data extends $pb.GeneratedMessage {
   @$pb.TagNumber(8)
   $6.UserSession get userSession => $_getN(7);
   @$pb.TagNumber(8)
-  set userSession($6.UserSession v) { setField(8, v); }
+  set userSession($6.UserSession v) {
+    setField(8, v);
+  }
+
   @$pb.TagNumber(8)
   $core.bool hasUserSession() => $_has(7);
   @$pb.TagNumber(8)
@@ -300,7 +441,10 @@ class TurmsNotification_Data extends $pb.GeneratedMessage {
   @$pb.TagNumber(9)
   $7.UserInfosWithVersion get userInfosWithVersion => $_getN(8);
   @$pb.TagNumber(9)
-  set userInfosWithVersion($7.UserInfosWithVersion v) { setField(9, v); }
+  set userInfosWithVersion($7.UserInfosWithVersion v) {
+    setField(9, v);
+  }
+
   @$pb.TagNumber(9)
   $core.bool hasUserInfosWithVersion() => $_has(8);
   @$pb.TagNumber(9)
@@ -311,7 +455,10 @@ class TurmsNotification_Data extends $pb.GeneratedMessage {
   @$pb.TagNumber(10)
   $8.UserOnlineStatuses get userOnlineStatuses => $_getN(9);
   @$pb.TagNumber(10)
-  set userOnlineStatuses($8.UserOnlineStatuses v) { setField(10, v); }
+  set userOnlineStatuses($8.UserOnlineStatuses v) {
+    setField(10, v);
+  }
+
   @$pb.TagNumber(10)
   $core.bool hasUserOnlineStatuses() => $_has(9);
   @$pb.TagNumber(10)
@@ -320,42 +467,61 @@ class TurmsNotification_Data extends $pb.GeneratedMessage {
   $8.UserOnlineStatuses ensureUserOnlineStatuses() => $_ensure(9);
 
   @$pb.TagNumber(11)
-  $9.UserFriendRequestsWithVersion get userFriendRequestsWithVersion => $_getN(10);
+  $9.UserFriendRequestsWithVersion get userFriendRequestsWithVersion =>
+      $_getN(10);
   @$pb.TagNumber(11)
-  set userFriendRequestsWithVersion($9.UserFriendRequestsWithVersion v) { setField(11, v); }
+  set userFriendRequestsWithVersion($9.UserFriendRequestsWithVersion v) {
+    setField(11, v);
+  }
+
   @$pb.TagNumber(11)
   $core.bool hasUserFriendRequestsWithVersion() => $_has(10);
   @$pb.TagNumber(11)
   void clearUserFriendRequestsWithVersion() => clearField(11);
   @$pb.TagNumber(11)
-  $9.UserFriendRequestsWithVersion ensureUserFriendRequestsWithVersion() => $_ensure(10);
+  $9.UserFriendRequestsWithVersion ensureUserFriendRequestsWithVersion() =>
+      $_ensure(10);
 
   @$pb.TagNumber(12)
-  $10.UserRelationshipGroupsWithVersion get userRelationshipGroupsWithVersion => $_getN(11);
+  $10.UserRelationshipGroupsWithVersion get userRelationshipGroupsWithVersion =>
+      $_getN(11);
   @$pb.TagNumber(12)
-  set userRelationshipGroupsWithVersion($10.UserRelationshipGroupsWithVersion v) { setField(12, v); }
+  set userRelationshipGroupsWithVersion(
+      $10.UserRelationshipGroupsWithVersion v) {
+    setField(12, v);
+  }
+
   @$pb.TagNumber(12)
   $core.bool hasUserRelationshipGroupsWithVersion() => $_has(11);
   @$pb.TagNumber(12)
   void clearUserRelationshipGroupsWithVersion() => clearField(12);
   @$pb.TagNumber(12)
-  $10.UserRelationshipGroupsWithVersion ensureUserRelationshipGroupsWithVersion() => $_ensure(11);
+  $10.UserRelationshipGroupsWithVersion
+      ensureUserRelationshipGroupsWithVersion() => $_ensure(11);
 
   @$pb.TagNumber(13)
-  $11.UserRelationshipsWithVersion get userRelationshipsWithVersion => $_getN(12);
+  $11.UserRelationshipsWithVersion get userRelationshipsWithVersion =>
+      $_getN(12);
   @$pb.TagNumber(13)
-  set userRelationshipsWithVersion($11.UserRelationshipsWithVersion v) { setField(13, v); }
+  set userRelationshipsWithVersion($11.UserRelationshipsWithVersion v) {
+    setField(13, v);
+  }
+
   @$pb.TagNumber(13)
   $core.bool hasUserRelationshipsWithVersion() => $_has(12);
   @$pb.TagNumber(13)
   void clearUserRelationshipsWithVersion() => clearField(13);
   @$pb.TagNumber(13)
-  $11.UserRelationshipsWithVersion ensureUserRelationshipsWithVersion() => $_ensure(12);
+  $11.UserRelationshipsWithVersion ensureUserRelationshipsWithVersion() =>
+      $_ensure(12);
 
   @$pb.TagNumber(14)
   $12.NearbyUsers get nearbyUsers => $_getN(13);
   @$pb.TagNumber(14)
-  set nearbyUsers($12.NearbyUsers v) { setField(14, v); }
+  set nearbyUsers($12.NearbyUsers v) {
+    setField(14, v);
+  }
+
   @$pb.TagNumber(14)
   $core.bool hasNearbyUsers() => $_has(13);
   @$pb.TagNumber(14)
@@ -366,51 +532,73 @@ class TurmsNotification_Data extends $pb.GeneratedMessage {
   @$pb.TagNumber(15)
   $13.GroupInvitationsWithVersion get groupInvitationsWithVersion => $_getN(14);
   @$pb.TagNumber(15)
-  set groupInvitationsWithVersion($13.GroupInvitationsWithVersion v) { setField(15, v); }
+  set groupInvitationsWithVersion($13.GroupInvitationsWithVersion v) {
+    setField(15, v);
+  }
+
   @$pb.TagNumber(15)
   $core.bool hasGroupInvitationsWithVersion() => $_has(14);
   @$pb.TagNumber(15)
   void clearGroupInvitationsWithVersion() => clearField(15);
   @$pb.TagNumber(15)
-  $13.GroupInvitationsWithVersion ensureGroupInvitationsWithVersion() => $_ensure(14);
+  $13.GroupInvitationsWithVersion ensureGroupInvitationsWithVersion() =>
+      $_ensure(14);
 
   @$pb.TagNumber(16)
-  $14.GroupJoinQuestionsAnswerResult get groupJoinQuestionAnswerResult => $_getN(15);
+  $14.GroupJoinQuestionsAnswerResult get groupJoinQuestionAnswerResult =>
+      $_getN(15);
   @$pb.TagNumber(16)
-  set groupJoinQuestionAnswerResult($14.GroupJoinQuestionsAnswerResult v) { setField(16, v); }
+  set groupJoinQuestionAnswerResult($14.GroupJoinQuestionsAnswerResult v) {
+    setField(16, v);
+  }
+
   @$pb.TagNumber(16)
   $core.bool hasGroupJoinQuestionAnswerResult() => $_has(15);
   @$pb.TagNumber(16)
   void clearGroupJoinQuestionAnswerResult() => clearField(16);
   @$pb.TagNumber(16)
-  $14.GroupJoinQuestionsAnswerResult ensureGroupJoinQuestionAnswerResult() => $_ensure(15);
+  $14.GroupJoinQuestionsAnswerResult ensureGroupJoinQuestionAnswerResult() =>
+      $_ensure(15);
 
   @$pb.TagNumber(17)
-  $15.GroupJoinRequestsWithVersion get groupJoinRequestsWithVersion => $_getN(16);
+  $15.GroupJoinRequestsWithVersion get groupJoinRequestsWithVersion =>
+      $_getN(16);
   @$pb.TagNumber(17)
-  set groupJoinRequestsWithVersion($15.GroupJoinRequestsWithVersion v) { setField(17, v); }
+  set groupJoinRequestsWithVersion($15.GroupJoinRequestsWithVersion v) {
+    setField(17, v);
+  }
+
   @$pb.TagNumber(17)
   $core.bool hasGroupJoinRequestsWithVersion() => $_has(16);
   @$pb.TagNumber(17)
   void clearGroupJoinRequestsWithVersion() => clearField(17);
   @$pb.TagNumber(17)
-  $15.GroupJoinRequestsWithVersion ensureGroupJoinRequestsWithVersion() => $_ensure(16);
+  $15.GroupJoinRequestsWithVersion ensureGroupJoinRequestsWithVersion() =>
+      $_ensure(16);
 
   @$pb.TagNumber(18)
-  $16.GroupJoinQuestionsWithVersion get groupJoinQuestionsWithVersion => $_getN(17);
+  $16.GroupJoinQuestionsWithVersion get groupJoinQuestionsWithVersion =>
+      $_getN(17);
   @$pb.TagNumber(18)
-  set groupJoinQuestionsWithVersion($16.GroupJoinQuestionsWithVersion v) { setField(18, v); }
+  set groupJoinQuestionsWithVersion($16.GroupJoinQuestionsWithVersion v) {
+    setField(18, v);
+  }
+
   @$pb.TagNumber(18)
   $core.bool hasGroupJoinQuestionsWithVersion() => $_has(17);
   @$pb.TagNumber(18)
   void clearGroupJoinQuestionsWithVersion() => clearField(18);
   @$pb.TagNumber(18)
-  $16.GroupJoinQuestionsWithVersion ensureGroupJoinQuestionsWithVersion() => $_ensure(17);
+  $16.GroupJoinQuestionsWithVersion ensureGroupJoinQuestionsWithVersion() =>
+      $_ensure(17);
 
   @$pb.TagNumber(19)
   $17.GroupMembersWithVersion get groupMembersWithVersion => $_getN(18);
   @$pb.TagNumber(19)
-  set groupMembersWithVersion($17.GroupMembersWithVersion v) { setField(19, v); }
+  set groupMembersWithVersion($17.GroupMembersWithVersion v) {
+    setField(19, v);
+  }
+
   @$pb.TagNumber(19)
   $core.bool hasGroupMembersWithVersion() => $_has(18);
   @$pb.TagNumber(19)
@@ -421,7 +609,10 @@ class TurmsNotification_Data extends $pb.GeneratedMessage {
   @$pb.TagNumber(20)
   $18.GroupsWithVersion get groupsWithVersion => $_getN(19);
   @$pb.TagNumber(20)
-  set groupsWithVersion($18.GroupsWithVersion v) { setField(20, v); }
+  set groupsWithVersion($18.GroupsWithVersion v) {
+    setField(20, v);
+  }
+
   @$pb.TagNumber(20)
   $core.bool hasGroupsWithVersion() => $_has(19);
   @$pb.TagNumber(20)
@@ -431,17 +622,60 @@ class TurmsNotification_Data extends $pb.GeneratedMessage {
 }
 
 class TurmsNotification extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'TurmsNotification', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'im.turms.proto'), createEmptyInstance: create)
-    ..aInt64(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'timestamp')
-    ..aInt64(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'requestId')
-    ..a<$core.int>(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'code', $pb.PbFieldType.O3)
-    ..aOS(6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'reason')
-    ..aOM<TurmsNotification_Data>(7, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'data', subBuilder: TurmsNotification_Data.create)
-    ..aInt64(10, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'requesterId')
-    ..a<$core.int>(11, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'closeStatus', $pb.PbFieldType.O3)
-    ..aOM<$0.TurmsRequest>(12, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'relayedRequest', subBuilder: $0.TurmsRequest.create)
-    ..hasRequiredFields = false
-  ;
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      const $core.bool.fromEnvironment('protobuf.omit_message_names')
+          ? ''
+          : 'TurmsNotification',
+      package: const $pb.PackageName(
+          const $core.bool.fromEnvironment('protobuf.omit_message_names')
+              ? ''
+              : 'im.turms.proto'),
+      createEmptyInstance: create)
+    ..aInt64(
+        1,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'timestamp')
+    ..aInt64(
+        4,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'requestId')
+    ..a<$core.int>(
+        5,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'code',
+        $pb.PbFieldType.O3)
+    ..aOS(
+        6,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'reason')
+    ..aOM<TurmsNotification_Data>(
+        7,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'data',
+        subBuilder: TurmsNotification_Data.create)
+    ..aInt64(
+        10,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'requesterId')
+    ..a<$core.int>(
+        11,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'closeStatus',
+        $pb.PbFieldType.O3)
+    ..aOM<$0.TurmsRequest>(
+        12,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'relayedRequest',
+        subBuilder: $0.TurmsRequest.create)
+    ..hasRequiredFields = false;
 
   TurmsNotification._() : super();
   factory TurmsNotification({
@@ -481,31 +715,40 @@ class TurmsNotification extends $pb.GeneratedMessage {
     }
     return _result;
   }
-  factory TurmsNotification.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory TurmsNotification.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-  'Will be removed in next major version')
+  factory TurmsNotification.fromBuffer($core.List<$core.int> i,
+          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(i, r);
+  factory TurmsNotification.fromJson($core.String i,
+          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(i, r);
+  @$core.Deprecated('Using this can add significant overhead to your binary. '
+      'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+      'Will be removed in next major version')
   TurmsNotification clone() => TurmsNotification()..mergeFromMessage(this);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-  'Will be removed in next major version')
-  TurmsNotification copyWith(void Function(TurmsNotification) updates) => super.copyWith((message) => updates(message as TurmsNotification)) as TurmsNotification; // ignore: deprecated_member_use
+  @$core.Deprecated('Using this can add significant overhead to your binary. '
+      'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+      'Will be removed in next major version')
+  TurmsNotification copyWith(void Function(TurmsNotification) updates) =>
+      super.copyWith((message) => updates(message as TurmsNotification))
+          as TurmsNotification; // ignore: deprecated_member_use
   $pb.BuilderInfo get info_ => _i;
   @$core.pragma('dart2js:noInline')
   static TurmsNotification create() => TurmsNotification._();
   TurmsNotification createEmptyInstance() => create();
-  static $pb.PbList<TurmsNotification> createRepeated() => $pb.PbList<TurmsNotification>();
+  static $pb.PbList<TurmsNotification> createRepeated() =>
+      $pb.PbList<TurmsNotification>();
   @$core.pragma('dart2js:noInline')
-  static TurmsNotification getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<TurmsNotification>(create);
+  static TurmsNotification getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<TurmsNotification>(create);
   static TurmsNotification? _defaultInstance;
 
   @$pb.TagNumber(1)
   $fixnum.Int64 get timestamp => $_getI64(0);
   @$pb.TagNumber(1)
-  set timestamp($fixnum.Int64 v) { $_setInt64(0, v); }
+  set timestamp($fixnum.Int64 v) {
+    $_setInt64(0, v);
+  }
+
   @$pb.TagNumber(1)
   $core.bool hasTimestamp() => $_has(0);
   @$pb.TagNumber(1)
@@ -514,7 +757,10 @@ class TurmsNotification extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   $fixnum.Int64 get requestId => $_getI64(1);
   @$pb.TagNumber(4)
-  set requestId($fixnum.Int64 v) { $_setInt64(1, v); }
+  set requestId($fixnum.Int64 v) {
+    $_setInt64(1, v);
+  }
+
   @$pb.TagNumber(4)
   $core.bool hasRequestId() => $_has(1);
   @$pb.TagNumber(4)
@@ -523,7 +769,10 @@ class TurmsNotification extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   $core.int get code => $_getIZ(2);
   @$pb.TagNumber(5)
-  set code($core.int v) { $_setSignedInt32(2, v); }
+  set code($core.int v) {
+    $_setSignedInt32(2, v);
+  }
+
   @$pb.TagNumber(5)
   $core.bool hasCode() => $_has(2);
   @$pb.TagNumber(5)
@@ -532,7 +781,10 @@ class TurmsNotification extends $pb.GeneratedMessage {
   @$pb.TagNumber(6)
   $core.String get reason => $_getSZ(3);
   @$pb.TagNumber(6)
-  set reason($core.String v) { $_setString(3, v); }
+  set reason($core.String v) {
+    $_setString(3, v);
+  }
+
   @$pb.TagNumber(6)
   $core.bool hasReason() => $_has(3);
   @$pb.TagNumber(6)
@@ -541,7 +793,10 @@ class TurmsNotification extends $pb.GeneratedMessage {
   @$pb.TagNumber(7)
   TurmsNotification_Data get data => $_getN(4);
   @$pb.TagNumber(7)
-  set data(TurmsNotification_Data v) { setField(7, v); }
+  set data(TurmsNotification_Data v) {
+    setField(7, v);
+  }
+
   @$pb.TagNumber(7)
   $core.bool hasData() => $_has(4);
   @$pb.TagNumber(7)
@@ -552,7 +807,10 @@ class TurmsNotification extends $pb.GeneratedMessage {
   @$pb.TagNumber(10)
   $fixnum.Int64 get requesterId => $_getI64(5);
   @$pb.TagNumber(10)
-  set requesterId($fixnum.Int64 v) { $_setInt64(5, v); }
+  set requesterId($fixnum.Int64 v) {
+    $_setInt64(5, v);
+  }
+
   @$pb.TagNumber(10)
   $core.bool hasRequesterId() => $_has(5);
   @$pb.TagNumber(10)
@@ -561,7 +819,10 @@ class TurmsNotification extends $pb.GeneratedMessage {
   @$pb.TagNumber(11)
   $core.int get closeStatus => $_getIZ(6);
   @$pb.TagNumber(11)
-  set closeStatus($core.int v) { $_setSignedInt32(6, v); }
+  set closeStatus($core.int v) {
+    $_setSignedInt32(6, v);
+  }
+
   @$pb.TagNumber(11)
   $core.bool hasCloseStatus() => $_has(6);
   @$pb.TagNumber(11)
@@ -570,7 +831,10 @@ class TurmsNotification extends $pb.GeneratedMessage {
   @$pb.TagNumber(12)
   $0.TurmsRequest get relayedRequest => $_getN(7);
   @$pb.TagNumber(12)
-  set relayedRequest($0.TurmsRequest v) { setField(12, v); }
+  set relayedRequest($0.TurmsRequest v) {
+    setField(12, v);
+  }
+
   @$pb.TagNumber(12)
   $core.bool hasRelayedRequest() => $_has(7);
   @$pb.TagNumber(12)
@@ -578,4 +842,3 @@ class TurmsNotification extends $pb.GeneratedMessage {
   @$pb.TagNumber(12)
   $0.TurmsRequest ensureRelayedRequest() => $_ensure(7);
 }
-

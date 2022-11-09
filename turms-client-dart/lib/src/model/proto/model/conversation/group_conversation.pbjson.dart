@@ -8,12 +8,20 @@
 import 'dart:core' as $core;
 import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
+
 @$core.Deprecated('Use groupConversationDescriptor instead')
 const GroupConversation$json = const {
   '1': 'GroupConversation',
   '2': const [
     const {'1': 'group_id', '3': 1, '4': 1, '5': 3, '10': 'groupId'},
-    const {'1': 'member_id_to_read_date', '3': 2, '4': 3, '5': 11, '6': '.im.turms.proto.GroupConversation.MemberIdToReadDateEntry', '10': 'memberIdToReadDate'},
+    const {
+      '1': 'member_id_to_read_date',
+      '3': 2,
+      '4': 3,
+      '5': 11,
+      '6': '.im.turms.proto.GroupConversation.MemberIdToReadDateEntry',
+      '10': 'memberIdToReadDate'
+    },
   ],
   '3': const [GroupConversation_MemberIdToReadDateEntry$json],
 };
@@ -29,4 +37,5 @@ const GroupConversation_MemberIdToReadDateEntry$json = const {
 };
 
 /// Descriptor for `GroupConversation`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List groupConversationDescriptor = $convert.base64Decode('ChFHcm91cENvbnZlcnNhdGlvbhIZCghncm91cF9pZBgBIAEoA1IHZ3JvdXBJZBJtChZtZW1iZXJfaWRfdG9fcmVhZF9kYXRlGAIgAygLMjkuaW0udHVybXMucHJvdG8uR3JvdXBDb252ZXJzYXRpb24uTWVtYmVySWRUb1JlYWREYXRlRW50cnlSEm1lbWJlcklkVG9SZWFkRGF0ZRpFChdNZW1iZXJJZFRvUmVhZERhdGVFbnRyeRIQCgNrZXkYASABKANSA2tleRIUCgV2YWx1ZRgCIAEoA1IFdmFsdWU6AjgB');
+final $typed_data.Uint8List groupConversationDescriptor = $convert.base64Decode(
+    'ChFHcm91cENvbnZlcnNhdGlvbhIZCghncm91cF9pZBgBIAEoA1IHZ3JvdXBJZBJtChZtZW1iZXJfaWRfdG9fcmVhZF9kYXRlGAIgAygLMjkuaW0udHVybXMucHJvdG8uR3JvdXBDb252ZXJzYXRpb24uTWVtYmVySWRUb1JlYWREYXRlRW50cnlSEm1lbWJlcklkVG9SZWFkRGF0ZRpFChdNZW1iZXJJZFRvUmVhZERhdGVFbnRyeRIQCgNrZXkYASABKANSA2tleRIUCgV2YWx1ZRgCIAEoA1IFdmFsdWU6AjgB');

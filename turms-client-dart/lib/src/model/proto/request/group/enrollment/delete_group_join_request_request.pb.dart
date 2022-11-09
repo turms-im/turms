@@ -11,10 +11,21 @@ import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 class DeleteGroupJoinRequestRequest extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'DeleteGroupJoinRequestRequest', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'im.turms.proto'), createEmptyInstance: create)
-    ..aInt64(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'requestId')
-    ..hasRequiredFields = false
-  ;
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      const $core.bool.fromEnvironment('protobuf.omit_message_names')
+          ? ''
+          : 'DeleteGroupJoinRequestRequest',
+      package: const $pb.PackageName(
+          const $core.bool.fromEnvironment('protobuf.omit_message_names')
+              ? ''
+              : 'im.turms.proto'),
+      createEmptyInstance: create)
+    ..aInt64(
+        1,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'requestId')
+    ..hasRequiredFields = false;
 
   DeleteGroupJoinRequestRequest._() : super();
   factory DeleteGroupJoinRequestRequest({
@@ -26,34 +37,46 @@ class DeleteGroupJoinRequestRequest extends $pb.GeneratedMessage {
     }
     return _result;
   }
-  factory DeleteGroupJoinRequestRequest.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory DeleteGroupJoinRequestRequest.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-  'Will be removed in next major version')
-  DeleteGroupJoinRequestRequest clone() => DeleteGroupJoinRequestRequest()..mergeFromMessage(this);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-  'Will be removed in next major version')
-  DeleteGroupJoinRequestRequest copyWith(void Function(DeleteGroupJoinRequestRequest) updates) => super.copyWith((message) => updates(message as DeleteGroupJoinRequestRequest)) as DeleteGroupJoinRequestRequest; // ignore: deprecated_member_use
+  factory DeleteGroupJoinRequestRequest.fromBuffer($core.List<$core.int> i,
+          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(i, r);
+  factory DeleteGroupJoinRequestRequest.fromJson($core.String i,
+          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(i, r);
+  @$core.Deprecated('Using this can add significant overhead to your binary. '
+      'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+      'Will be removed in next major version')
+  DeleteGroupJoinRequestRequest clone() =>
+      DeleteGroupJoinRequestRequest()..mergeFromMessage(this);
+  @$core.Deprecated('Using this can add significant overhead to your binary. '
+      'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+      'Will be removed in next major version')
+  DeleteGroupJoinRequestRequest copyWith(
+          void Function(DeleteGroupJoinRequestRequest) updates) =>
+      super.copyWith(
+              (message) => updates(message as DeleteGroupJoinRequestRequest))
+          as DeleteGroupJoinRequestRequest; // ignore: deprecated_member_use
   $pb.BuilderInfo get info_ => _i;
   @$core.pragma('dart2js:noInline')
-  static DeleteGroupJoinRequestRequest create() => DeleteGroupJoinRequestRequest._();
+  static DeleteGroupJoinRequestRequest create() =>
+      DeleteGroupJoinRequestRequest._();
   DeleteGroupJoinRequestRequest createEmptyInstance() => create();
-  static $pb.PbList<DeleteGroupJoinRequestRequest> createRepeated() => $pb.PbList<DeleteGroupJoinRequestRequest>();
+  static $pb.PbList<DeleteGroupJoinRequestRequest> createRepeated() =>
+      $pb.PbList<DeleteGroupJoinRequestRequest>();
   @$core.pragma('dart2js:noInline')
-  static DeleteGroupJoinRequestRequest getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<DeleteGroupJoinRequestRequest>(create);
+  static DeleteGroupJoinRequestRequest getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<DeleteGroupJoinRequestRequest>(create);
   static DeleteGroupJoinRequestRequest? _defaultInstance;
 
   @$pb.TagNumber(1)
   $fixnum.Int64 get requestId => $_getI64(0);
   @$pb.TagNumber(1)
-  set requestId($fixnum.Int64 v) { $_setInt64(0, v); }
+  set requestId($fixnum.Int64 v) {
+    $_setInt64(0, v);
+  }
+
   @$pb.TagNumber(1)
   $core.bool hasRequestId() => $_has(0);
   @$pb.TagNumber(1)
   void clearRequestId() => clearField(1);
 }
-

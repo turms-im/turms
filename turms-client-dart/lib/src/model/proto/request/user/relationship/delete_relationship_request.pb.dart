@@ -11,12 +11,33 @@ import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 class DeleteRelationshipRequest extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'DeleteRelationshipRequest', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'im.turms.proto'), createEmptyInstance: create)
-    ..aInt64(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'userId')
-    ..a<$core.int>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'groupIndex', $pb.PbFieldType.O3)
-    ..a<$core.int>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'targetGroupIndex', $pb.PbFieldType.O3)
-    ..hasRequiredFields = false
-  ;
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      const $core.bool.fromEnvironment('protobuf.omit_message_names')
+          ? ''
+          : 'DeleteRelationshipRequest',
+      package: const $pb.PackageName(
+          const $core.bool.fromEnvironment('protobuf.omit_message_names')
+              ? ''
+              : 'im.turms.proto'),
+      createEmptyInstance: create)
+    ..aInt64(
+        1,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'userId')
+    ..a<$core.int>(
+        2,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'groupIndex',
+        $pb.PbFieldType.O3)
+    ..a<$core.int>(
+        3,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'targetGroupIndex',
+        $pb.PbFieldType.O3)
+    ..hasRequiredFields = false;
 
   DeleteRelationshipRequest._() : super();
   factory DeleteRelationshipRequest({
@@ -36,31 +57,42 @@ class DeleteRelationshipRequest extends $pb.GeneratedMessage {
     }
     return _result;
   }
-  factory DeleteRelationshipRequest.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory DeleteRelationshipRequest.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-  'Will be removed in next major version')
-  DeleteRelationshipRequest clone() => DeleteRelationshipRequest()..mergeFromMessage(this);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-  'Will be removed in next major version')
-  DeleteRelationshipRequest copyWith(void Function(DeleteRelationshipRequest) updates) => super.copyWith((message) => updates(message as DeleteRelationshipRequest)) as DeleteRelationshipRequest; // ignore: deprecated_member_use
+  factory DeleteRelationshipRequest.fromBuffer($core.List<$core.int> i,
+          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(i, r);
+  factory DeleteRelationshipRequest.fromJson($core.String i,
+          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(i, r);
+  @$core.Deprecated('Using this can add significant overhead to your binary. '
+      'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+      'Will be removed in next major version')
+  DeleteRelationshipRequest clone() =>
+      DeleteRelationshipRequest()..mergeFromMessage(this);
+  @$core.Deprecated('Using this can add significant overhead to your binary. '
+      'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+      'Will be removed in next major version')
+  DeleteRelationshipRequest copyWith(
+          void Function(DeleteRelationshipRequest) updates) =>
+      super.copyWith((message) => updates(message as DeleteRelationshipRequest))
+          as DeleteRelationshipRequest; // ignore: deprecated_member_use
   $pb.BuilderInfo get info_ => _i;
   @$core.pragma('dart2js:noInline')
   static DeleteRelationshipRequest create() => DeleteRelationshipRequest._();
   DeleteRelationshipRequest createEmptyInstance() => create();
-  static $pb.PbList<DeleteRelationshipRequest> createRepeated() => $pb.PbList<DeleteRelationshipRequest>();
+  static $pb.PbList<DeleteRelationshipRequest> createRepeated() =>
+      $pb.PbList<DeleteRelationshipRequest>();
   @$core.pragma('dart2js:noInline')
-  static DeleteRelationshipRequest getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<DeleteRelationshipRequest>(create);
+  static DeleteRelationshipRequest getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<DeleteRelationshipRequest>(create);
   static DeleteRelationshipRequest? _defaultInstance;
 
   @$pb.TagNumber(1)
   $fixnum.Int64 get userId => $_getI64(0);
   @$pb.TagNumber(1)
-  set userId($fixnum.Int64 v) { $_setInt64(0, v); }
+  set userId($fixnum.Int64 v) {
+    $_setInt64(0, v);
+  }
+
   @$pb.TagNumber(1)
   $core.bool hasUserId() => $_has(0);
   @$pb.TagNumber(1)
@@ -69,7 +101,10 @@ class DeleteRelationshipRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.int get groupIndex => $_getIZ(1);
   @$pb.TagNumber(2)
-  set groupIndex($core.int v) { $_setSignedInt32(1, v); }
+  set groupIndex($core.int v) {
+    $_setSignedInt32(1, v);
+  }
+
   @$pb.TagNumber(2)
   $core.bool hasGroupIndex() => $_has(1);
   @$pb.TagNumber(2)
@@ -78,10 +113,12 @@ class DeleteRelationshipRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $core.int get targetGroupIndex => $_getIZ(2);
   @$pb.TagNumber(3)
-  set targetGroupIndex($core.int v) { $_setSignedInt32(2, v); }
+  set targetGroupIndex($core.int v) {
+    $_setSignedInt32(2, v);
+  }
+
   @$pb.TagNumber(3)
   $core.bool hasTargetGroupIndex() => $_has(2);
   @$pb.TagNumber(3)
   void clearTargetGroupIndex() => clearField(3);
 }
-

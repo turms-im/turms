@@ -8,11 +8,20 @@
 import 'dart:core' as $core;
 import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
+
 @$core.Deprecated('Use queryJoinedGroupInfosRequestDescriptor instead')
 const QueryJoinedGroupInfosRequest$json = const {
   '1': 'QueryJoinedGroupInfosRequest',
   '2': const [
-    const {'1': 'last_updated_date', '3': 1, '4': 1, '5': 3, '9': 0, '10': 'lastUpdatedDate', '17': true},
+    const {
+      '1': 'last_updated_date',
+      '3': 1,
+      '4': 1,
+      '5': 3,
+      '9': 0,
+      '10': 'lastUpdatedDate',
+      '17': true
+    },
   ],
   '8': const [
     const {'1': '_last_updated_date'},
@@ -20,4 +29,6 @@ const QueryJoinedGroupInfosRequest$json = const {
 };
 
 /// Descriptor for `QueryJoinedGroupInfosRequest`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List queryJoinedGroupInfosRequestDescriptor = $convert.base64Decode('ChxRdWVyeUpvaW5lZEdyb3VwSW5mb3NSZXF1ZXN0Ei8KEWxhc3RfdXBkYXRlZF9kYXRlGAEgASgDSABSD2xhc3RVcGRhdGVkRGF0ZYgBAUIUChJfbGFzdF91cGRhdGVkX2RhdGU=');
+final $typed_data.Uint8List queryJoinedGroupInfosRequestDescriptor =
+    $convert.base64Decode(
+        'ChxRdWVyeUpvaW5lZEdyb3VwSW5mb3NSZXF1ZXN0Ei8KEWxhc3RfdXBkYXRlZF9kYXRlGAEgASgDSABSD2xhc3RVcGRhdGVkRGF0ZYgBAUIUChJfbGFzdF91cGRhdGVkX2RhdGU=');

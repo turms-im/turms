@@ -10,13 +10,33 @@ import 'dart:core' as $core;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 class GroupMemberRole extends $pb.ProtobufEnum {
-  static const GroupMemberRole OWNER = GroupMemberRole._(0, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'OWNER');
-  static const GroupMemberRole MANAGER = GroupMemberRole._(1, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'MANAGER');
-  static const GroupMemberRole MEMBER = GroupMemberRole._(2, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'MEMBER');
-  static const GroupMemberRole GUEST = GroupMemberRole._(3, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'GUEST');
-  static const GroupMemberRole ANONYMOUS_GUEST = GroupMemberRole._(4, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'ANONYMOUS_GUEST');
+  static const GroupMemberRole OWNER = GroupMemberRole._(
+      0,
+      const $core.bool.fromEnvironment('protobuf.omit_enum_names')
+          ? ''
+          : 'OWNER');
+  static const GroupMemberRole MANAGER = GroupMemberRole._(
+      1,
+      const $core.bool.fromEnvironment('protobuf.omit_enum_names')
+          ? ''
+          : 'MANAGER');
+  static const GroupMemberRole MEMBER = GroupMemberRole._(
+      2,
+      const $core.bool.fromEnvironment('protobuf.omit_enum_names')
+          ? ''
+          : 'MEMBER');
+  static const GroupMemberRole GUEST = GroupMemberRole._(
+      3,
+      const $core.bool.fromEnvironment('protobuf.omit_enum_names')
+          ? ''
+          : 'GUEST');
+  static const GroupMemberRole ANONYMOUS_GUEST = GroupMemberRole._(
+      4,
+      const $core.bool.fromEnvironment('protobuf.omit_enum_names')
+          ? ''
+          : 'ANONYMOUS_GUEST');
 
-  static const $core.List<GroupMemberRole> values = <GroupMemberRole> [
+  static const $core.List<GroupMemberRole> values = <GroupMemberRole>[
     OWNER,
     MANAGER,
     MEMBER,
@@ -24,9 +44,9 @@ class GroupMemberRole extends $pb.ProtobufEnum {
     ANONYMOUS_GUEST,
   ];
 
-  static final $core.Map<$core.int, GroupMemberRole> _byValue = $pb.ProtobufEnum.initByValue(values);
+  static final $core.Map<$core.int, GroupMemberRole> _byValue =
+      $pb.ProtobufEnum.initByValue(values);
   static GroupMemberRole? valueOf($core.int value) => _byValue[value];
 
   const GroupMemberRole._($core.int v, $core.String n) : super(v, n);
 }
-

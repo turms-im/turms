@@ -8,14 +8,31 @@
 import 'dart:core' as $core;
 import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
+
 @$core.Deprecated('Use queryGroupMembersRequestDescriptor instead')
 const QueryGroupMembersRequest$json = const {
   '1': 'QueryGroupMembersRequest',
   '2': const [
     const {'1': 'group_id', '3': 1, '4': 1, '5': 3, '10': 'groupId'},
-    const {'1': 'last_updated_date', '3': 2, '4': 1, '5': 3, '9': 0, '10': 'lastUpdatedDate', '17': true},
+    const {
+      '1': 'last_updated_date',
+      '3': 2,
+      '4': 1,
+      '5': 3,
+      '9': 0,
+      '10': 'lastUpdatedDate',
+      '17': true
+    },
     const {'1': 'member_ids', '3': 3, '4': 3, '5': 3, '10': 'memberIds'},
-    const {'1': 'with_status', '3': 4, '4': 1, '5': 8, '9': 1, '10': 'withStatus', '17': true},
+    const {
+      '1': 'with_status',
+      '3': 4,
+      '4': 1,
+      '5': 8,
+      '9': 1,
+      '10': 'withStatus',
+      '17': true
+    },
   ],
   '8': const [
     const {'1': '_last_updated_date'},
@@ -24,4 +41,6 @@ const QueryGroupMembersRequest$json = const {
 };
 
 /// Descriptor for `QueryGroupMembersRequest`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List queryGroupMembersRequestDescriptor = $convert.base64Decode('ChhRdWVyeUdyb3VwTWVtYmVyc1JlcXVlc3QSGQoIZ3JvdXBfaWQYASABKANSB2dyb3VwSWQSLwoRbGFzdF91cGRhdGVkX2RhdGUYAiABKANIAFIPbGFzdFVwZGF0ZWREYXRliAEBEh0KCm1lbWJlcl9pZHMYAyADKANSCW1lbWJlcklkcxIkCgt3aXRoX3N0YXR1cxgEIAEoCEgBUgp3aXRoU3RhdHVziAEBQhQKEl9sYXN0X3VwZGF0ZWRfZGF0ZUIOCgxfd2l0aF9zdGF0dXM=');
+final $typed_data.Uint8List queryGroupMembersRequestDescriptor =
+    $convert.base64Decode(
+        'ChhRdWVyeUdyb3VwTWVtYmVyc1JlcXVlc3QSGQoIZ3JvdXBfaWQYASABKANSB2dyb3VwSWQSLwoRbGFzdF91cGRhdGVkX2RhdGUYAiABKANIAFIPbGFzdFVwZGF0ZWREYXRliAEBEh0KCm1lbWJlcl9pZHMYAyADKANSCW1lbWJlcklkcxIkCgt3aXRoX3N0YXR1cxgEIAEoCEgBUgp3aXRoU3RhdHVziAEBQhQKEl9sYXN0X3VwZGF0ZWRfZGF0ZUIOCgxfd2l0aF9zdGF0dXM=');

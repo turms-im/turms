@@ -8,13 +8,21 @@
 import 'dart:core' as $core;
 import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
+
 @$core.Deprecated('Use updateUserLocationRequestDescriptor instead')
 const UpdateUserLocationRequest$json = const {
   '1': 'UpdateUserLocationRequest',
   '2': const [
     const {'1': 'latitude', '3': 1, '4': 1, '5': 2, '10': 'latitude'},
     const {'1': 'longitude', '3': 2, '4': 1, '5': 2, '10': 'longitude'},
-    const {'1': 'details', '3': 3, '4': 3, '5': 11, '6': '.im.turms.proto.UpdateUserLocationRequest.DetailsEntry', '10': 'details'},
+    const {
+      '1': 'details',
+      '3': 3,
+      '4': 3,
+      '5': 11,
+      '6': '.im.turms.proto.UpdateUserLocationRequest.DetailsEntry',
+      '10': 'details'
+    },
   ],
   '3': const [UpdateUserLocationRequest_DetailsEntry$json],
 };
@@ -30,4 +38,6 @@ const UpdateUserLocationRequest_DetailsEntry$json = const {
 };
 
 /// Descriptor for `UpdateUserLocationRequest`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List updateUserLocationRequestDescriptor = $convert.base64Decode('ChlVcGRhdGVVc2VyTG9jYXRpb25SZXF1ZXN0EhoKCGxhdGl0dWRlGAEgASgCUghsYXRpdHVkZRIcCglsb25naXR1ZGUYAiABKAJSCWxvbmdpdHVkZRJQCgdkZXRhaWxzGAMgAygLMjYuaW0udHVybXMucHJvdG8uVXBkYXRlVXNlckxvY2F0aW9uUmVxdWVzdC5EZXRhaWxzRW50cnlSB2RldGFpbHMaOgoMRGV0YWlsc0VudHJ5EhAKA2tleRgBIAEoCVIDa2V5EhQKBXZhbHVlGAIgASgJUgV2YWx1ZToCOAE=');
+final $typed_data.Uint8List updateUserLocationRequestDescriptor =
+    $convert.base64Decode(
+        'ChlVcGRhdGVVc2VyTG9jYXRpb25SZXF1ZXN0EhoKCGxhdGl0dWRlGAEgASgCUghsYXRpdHVkZRIcCglsb25naXR1ZGUYAiABKAJSCWxvbmdpdHVkZRJQCgdkZXRhaWxzGAMgAygLMjYuaW0udHVybXMucHJvdG8uVXBkYXRlVXNlckxvY2F0aW9uUmVxdWVzdC5EZXRhaWxzRW50cnlSB2RldGFpbHMaOgoMRGV0YWlsc0VudHJ5EhAKA2tleRgBIAEoCVIDa2V5EhQKBXZhbHVlGAIgASgJUgV2YWx1ZToCOAE=');

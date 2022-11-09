@@ -10,19 +10,31 @@ import 'dart:core' as $core;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 class ResponseAction extends $pb.ProtobufEnum {
-  static const ResponseAction ACCEPT = ResponseAction._(0, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'ACCEPT');
-  static const ResponseAction DECLINE = ResponseAction._(1, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'DECLINE');
-  static const ResponseAction IGNORE = ResponseAction._(2, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'IGNORE');
+  static const ResponseAction ACCEPT = ResponseAction._(
+      0,
+      const $core.bool.fromEnvironment('protobuf.omit_enum_names')
+          ? ''
+          : 'ACCEPT');
+  static const ResponseAction DECLINE = ResponseAction._(
+      1,
+      const $core.bool.fromEnvironment('protobuf.omit_enum_names')
+          ? ''
+          : 'DECLINE');
+  static const ResponseAction IGNORE = ResponseAction._(
+      2,
+      const $core.bool.fromEnvironment('protobuf.omit_enum_names')
+          ? ''
+          : 'IGNORE');
 
-  static const $core.List<ResponseAction> values = <ResponseAction> [
+  static const $core.List<ResponseAction> values = <ResponseAction>[
     ACCEPT,
     DECLINE,
     IGNORE,
   ];
 
-  static final $core.Map<$core.int, ResponseAction> _byValue = $pb.ProtobufEnum.initByValue(values);
+  static final $core.Map<$core.int, ResponseAction> _byValue =
+      $pb.ProtobufEnum.initByValue(values);
   static ResponseAction? valueOf($core.int value) => _byValue[value];
 
   const ResponseAction._($core.int v, $core.String n) : super(v, n);
 }
-

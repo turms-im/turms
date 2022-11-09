@@ -8,6 +8,7 @@
 import 'dart:core' as $core;
 import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
+
 @$core.Deprecated('Use groupJoinQuestionsAnswerResultDescriptor instead')
 const GroupJoinQuestionsAnswerResult$json = const {
   '1': 'GroupJoinQuestionsAnswerResult',
@@ -19,4 +20,6 @@ const GroupJoinQuestionsAnswerResult$json = const {
 };
 
 /// Descriptor for `GroupJoinQuestionsAnswerResult`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List groupJoinQuestionsAnswerResultDescriptor = $convert.base64Decode('Ch5Hcm91cEpvaW5RdWVzdGlvbnNBbnN3ZXJSZXN1bHQSFAoFc2NvcmUYASABKAVSBXNjb3JlEiEKDHF1ZXN0aW9uX2lkcxgCIAMoA1ILcXVlc3Rpb25JZHMSFgoGam9pbmVkGAMgASgIUgZqb2luZWQ=');
+final $typed_data.Uint8List groupJoinQuestionsAnswerResultDescriptor =
+    $convert.base64Decode(
+        'Ch5Hcm91cEpvaW5RdWVzdGlvbnNBbnN3ZXJSZXN1bHQSFAoFc2NvcmUYASABKAVSBXNjb3JlEiEKDHF1ZXN0aW9uX2lkcxgCIAMoA1ILcXVlc3Rpb25JZHMSFgoGam9pbmVkGAMgASgIUgZqb2luZWQ=');

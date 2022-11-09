@@ -8,6 +8,7 @@
 import 'dart:core' as $core;
 import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
+
 @$core.Deprecated('Use queryConversationsRequestDescriptor instead')
 const QueryConversationsRequest$json = const {
   '1': 'QueryConversationsRequest',
@@ -18,4 +19,6 @@ const QueryConversationsRequest$json = const {
 };
 
 /// Descriptor for `QueryConversationsRequest`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List queryConversationsRequestDescriptor = $convert.base64Decode('ChlRdWVyeUNvbnZlcnNhdGlvbnNSZXF1ZXN0Eh0KCnRhcmdldF9pZHMYASADKANSCXRhcmdldElkcxIbCglncm91cF9pZHMYAiADKANSCGdyb3VwSWRz');
+final $typed_data.Uint8List queryConversationsRequestDescriptor =
+    $convert.base64Decode(
+        'ChlRdWVyeUNvbnZlcnNhdGlvbnNSZXF1ZXN0Eh0KCnRhcmdldF9pZHMYASADKANSCXRhcmdldElkcxIbCglncm91cF9pZHMYAiADKANSCGdyb3VwSWRz');

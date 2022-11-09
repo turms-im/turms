@@ -10,12 +10,37 @@ import 'dart:core' as $core;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 class UpdateUserLocationRequest extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'UpdateUserLocationRequest', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'im.turms.proto'), createEmptyInstance: create)
-    ..a<$core.double>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'latitude', $pb.PbFieldType.OF)
-    ..a<$core.double>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'longitude', $pb.PbFieldType.OF)
-    ..m<$core.String, $core.String>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'details', entryClassName: 'UpdateUserLocationRequest.DetailsEntry', keyFieldType: $pb.PbFieldType.OS, valueFieldType: $pb.PbFieldType.OS, packageName: const $pb.PackageName('im.turms.proto'))
-    ..hasRequiredFields = false
-  ;
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      const $core.bool.fromEnvironment('protobuf.omit_message_names')
+          ? ''
+          : 'UpdateUserLocationRequest',
+      package: const $pb.PackageName(
+          const $core.bool.fromEnvironment('protobuf.omit_message_names')
+              ? ''
+              : 'im.turms.proto'),
+      createEmptyInstance: create)
+    ..a<$core.double>(
+        1,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'latitude',
+        $pb.PbFieldType.OF)
+    ..a<$core.double>(
+        2,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'longitude',
+        $pb.PbFieldType.OF)
+    ..m<$core.String, $core.String>(
+        3,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'details',
+        entryClassName: 'UpdateUserLocationRequest.DetailsEntry',
+        keyFieldType: $pb.PbFieldType.OS,
+        valueFieldType: $pb.PbFieldType.OS,
+        packageName: const $pb.PackageName('im.turms.proto'))
+    ..hasRequiredFields = false;
 
   UpdateUserLocationRequest._() : super();
   factory UpdateUserLocationRequest({
@@ -35,31 +60,42 @@ class UpdateUserLocationRequest extends $pb.GeneratedMessage {
     }
     return _result;
   }
-  factory UpdateUserLocationRequest.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory UpdateUserLocationRequest.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-  'Will be removed in next major version')
-  UpdateUserLocationRequest clone() => UpdateUserLocationRequest()..mergeFromMessage(this);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-  'Will be removed in next major version')
-  UpdateUserLocationRequest copyWith(void Function(UpdateUserLocationRequest) updates) => super.copyWith((message) => updates(message as UpdateUserLocationRequest)) as UpdateUserLocationRequest; // ignore: deprecated_member_use
+  factory UpdateUserLocationRequest.fromBuffer($core.List<$core.int> i,
+          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(i, r);
+  factory UpdateUserLocationRequest.fromJson($core.String i,
+          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(i, r);
+  @$core.Deprecated('Using this can add significant overhead to your binary. '
+      'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+      'Will be removed in next major version')
+  UpdateUserLocationRequest clone() =>
+      UpdateUserLocationRequest()..mergeFromMessage(this);
+  @$core.Deprecated('Using this can add significant overhead to your binary. '
+      'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+      'Will be removed in next major version')
+  UpdateUserLocationRequest copyWith(
+          void Function(UpdateUserLocationRequest) updates) =>
+      super.copyWith((message) => updates(message as UpdateUserLocationRequest))
+          as UpdateUserLocationRequest; // ignore: deprecated_member_use
   $pb.BuilderInfo get info_ => _i;
   @$core.pragma('dart2js:noInline')
   static UpdateUserLocationRequest create() => UpdateUserLocationRequest._();
   UpdateUserLocationRequest createEmptyInstance() => create();
-  static $pb.PbList<UpdateUserLocationRequest> createRepeated() => $pb.PbList<UpdateUserLocationRequest>();
+  static $pb.PbList<UpdateUserLocationRequest> createRepeated() =>
+      $pb.PbList<UpdateUserLocationRequest>();
   @$core.pragma('dart2js:noInline')
-  static UpdateUserLocationRequest getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<UpdateUserLocationRequest>(create);
+  static UpdateUserLocationRequest getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<UpdateUserLocationRequest>(create);
   static UpdateUserLocationRequest? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.double get latitude => $_getN(0);
   @$pb.TagNumber(1)
-  set latitude($core.double v) { $_setFloat(0, v); }
+  set latitude($core.double v) {
+    $_setFloat(0, v);
+  }
+
   @$pb.TagNumber(1)
   $core.bool hasLatitude() => $_has(0);
   @$pb.TagNumber(1)
@@ -68,7 +104,10 @@ class UpdateUserLocationRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.double get longitude => $_getN(1);
   @$pb.TagNumber(2)
-  set longitude($core.double v) { $_setFloat(1, v); }
+  set longitude($core.double v) {
+    $_setFloat(1, v);
+  }
+
   @$pb.TagNumber(2)
   $core.bool hasLongitude() => $_has(1);
   @$pb.TagNumber(2)
@@ -77,4 +116,3 @@ class UpdateUserLocationRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $core.Map<$core.String, $core.String> get details => $_getMap(2);
 }
-

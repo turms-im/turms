@@ -8,6 +8,7 @@
 import 'dart:core' as $core;
 import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
+
 @$core.Deprecated('Use deleteGroupBlockedUserRequestDescriptor instead')
 const DeleteGroupBlockedUserRequest$json = const {
   '1': 'DeleteGroupBlockedUserRequest',
@@ -18,4 +19,6 @@ const DeleteGroupBlockedUserRequest$json = const {
 };
 
 /// Descriptor for `DeleteGroupBlockedUserRequest`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List deleteGroupBlockedUserRequestDescriptor = $convert.base64Decode('Ch1EZWxldGVHcm91cEJsb2NrZWRVc2VyUmVxdWVzdBIZCghncm91cF9pZBgBIAEoA1IHZ3JvdXBJZBIXCgd1c2VyX2lkGAIgASgDUgZ1c2VySWQ=');
+final $typed_data.Uint8List deleteGroupBlockedUserRequestDescriptor =
+    $convert.base64Decode(
+        'Ch1EZWxldGVHcm91cEJsb2NrZWRVc2VyUmVxdWVzdBIZCghncm91cF9pZBgBIAEoA1IHZ3JvdXBJZBIXCgd1c2VyX2lkGAIgASgDUgZ1c2VySWQ=');

@@ -8,10 +8,12 @@
 import 'dart:core' as $core;
 import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
+
 @$core.Deprecated('Use deleteSessionRequestDescriptor instead')
 const DeleteSessionRequest$json = const {
   '1': 'DeleteSessionRequest',
 };
 
 /// Descriptor for `DeleteSessionRequest`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List deleteSessionRequestDescriptor = $convert.base64Decode('ChREZWxldGVTZXNzaW9uUmVxdWVzdA==');
+final $typed_data.Uint8List deleteSessionRequestDescriptor =
+    $convert.base64Decode('ChREZWxldGVTZXNzaW9uUmVxdWVzdA==');

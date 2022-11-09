@@ -8,6 +8,7 @@
 import 'dart:core' as $core;
 import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
+
 @$core.Deprecated('Use userSessionDescriptor instead')
 const UserSession$json = const {
   '1': 'UserSession',
@@ -18,4 +19,5 @@ const UserSession$json = const {
 };
 
 /// Descriptor for `UserSession`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List userSessionDescriptor = $convert.base64Decode('CgtVc2VyU2Vzc2lvbhIdCgpzZXNzaW9uX2lkGAEgASgJUglzZXNzaW9uSWQSGwoJc2VydmVyX2lkGAIgASgJUghzZXJ2ZXJJZA==');
+final $typed_data.Uint8List userSessionDescriptor = $convert.base64Decode(
+    'CgtVc2VyU2Vzc2lvbhIdCgpzZXNzaW9uX2lkGAEgASgJUglzZXNzaW9uSWQSGwoJc2VydmVyX2lkGAIgASgJUghzZXJ2ZXJJZA==');
