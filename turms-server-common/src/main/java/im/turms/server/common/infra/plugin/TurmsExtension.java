@@ -17,6 +17,8 @@
 
 package im.turms.server.common.infra.plugin;
 
+import im.turms.server.common.infra.property.TurmsPropertiesManager;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.context.ApplicationContext;
@@ -29,22 +31,16 @@ import java.util.List;
  */
 public abstract class TurmsExtension {
 
-    private ApplicationContext context;
-    @Setter
+    @Setter(AccessLevel.PACKAGE)
     @Getter
+    private ApplicationContext context;
+    @Setter(AccessLevel.PACKAGE)
+    @Getter(AccessLevel.PACKAGE)
     private Plugin plugin;
     private boolean initialized;
     private boolean started;
     private boolean running;
     private List<Class<? extends ExtensionPoint>> extensionPointClasses;
-
-    protected ApplicationContext getContext() {
-        return context;
-    }
-
-    void setContext(ApplicationContext context) {
-        this.context = context;
-    }
 
     public boolean isStarted() {
         return started;
@@ -63,7 +59,7 @@ public abstract class TurmsExtension {
     }
 
     protected <T> T loadProperties(Class<T> propertiesClass) {
-        return context.getBean(PluginManager.class).loadProperties(propertiesClass);
+        return context.getBean(TurmsPropertiesManager.class).loadProperties(propertiesClass);
     }
 
     ExtensionPoint getExtensionPoint() {

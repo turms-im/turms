@@ -38,7 +38,6 @@ import lombok.Getter;
 import lombok.SneakyThrows;
 import org.graalvm.polyglot.Engine;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.ConfigurationPropertiesBindingPostProcessor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
@@ -55,7 +54,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.zip.ZipFile;
 
@@ -246,14 +244,6 @@ public class PluginManager {
                 jsInspectPort);
         pluginRepository.register(jsPlugin);
         return jsPlugin;
-    }
-
-    @SneakyThrows
-    public <T> T loadProperties(Class<T> propertiesClass) {
-        T properties = propertiesClass.getDeclaredConstructor().newInstance();
-        String s = propertiesClass.getName() + UUID.randomUUID();
-        return (T) context.getBean(ConfigurationPropertiesBindingPostProcessor.class)
-                .postProcessBeforeInitialization(properties, s);
     }
 
     @SneakyThrows

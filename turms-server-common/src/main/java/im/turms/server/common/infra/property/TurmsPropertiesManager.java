@@ -24,15 +24,19 @@ import im.turms.server.common.infra.context.TurmsApplicationContext;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
+import org.springframework.boot.context.properties.ConfigurationPropertiesBindingPostProcessor;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
 import java.io.IOException;
+import java.lang.reflect.Constructor;
 import java.nio.file.Path;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.Consumer;
 
 import static im.turms.server.common.infra.property.TurmsPropertiesConvertor.mergeProperties;
@@ -57,22 +61,25 @@ public class TurmsPropertiesManager {
 
     private final Path latestConfigFilePath;
     private final Node node;
+    private final ApplicationContext context;
     private TurmsProperties localTurmsProperties;
 
     /**
      * @param node is lazy because: Node -> TurmsPropertiesManager -> Node
      */
     public TurmsPropertiesManager(@Lazy Node node,
+                                  ApplicationContext context,
                                   TurmsProperties localTurmsProperties,
-                                  TurmsApplicationContext context) {
+                                  TurmsApplicationContext applicationContext) {
         this.node = node;
+        this.context = context;
         this.localTurmsProperties = localTurmsProperties;
         // Get latestConfigFilePath according to the active profiles
-        String activeProfile = context.getActiveEnvProfile();
+        String activeProfile = applicationContext.getActiveEnvProfile();
         String latestConfigFileName = activeProfile == null
                 ? "application-latest.yaml"
-                : "application-%s-latest.yaml".formatted(activeProfile);
-        latestConfigFilePath = Path.of("%s/%s".formatted(context.getConfigDir(), latestConfigFileName));
+                : "application-" + activeProfile + "-latest.yaml";
+        latestConfigFilePath = Path.of(applicationContext.getConfigDir() + "/" + latestConfigFileName);
         InvalidPropertyException exception = validate(localTurmsProperties);
         if (exception != null) {
             throw exception;
@@ -89,6 +96,26 @@ public class TurmsPropertiesManager {
      */
     public TurmsProperties getLocalProperties() {
         return localTurmsProperties;
+    }
+
+    // Load
+
+    public <T> T loadProperties(Class<T> propertiesClass) {
+        Constructor<T> constructor;
+        try {
+            constructor = propertiesClass.getDeclaredConstructor();
+        } catch (Exception e) {
+            throw new IllegalArgumentException("The properties class must have a public no-arg constructor", e);
+        }
+        T properties;
+        try {
+            properties = constructor.newInstance();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to initialize the properties class", e);
+        }
+        String s = propertiesClass.getName() + UUID.randomUUID();
+        return (T) context.getBean(ConfigurationPropertiesBindingPostProcessor.class)
+                .postProcessBeforeInitialization(properties, s);
     }
 
     // Update
