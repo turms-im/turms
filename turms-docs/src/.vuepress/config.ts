@@ -83,6 +83,7 @@ export default defineUserConfig({
                             '/for-developers/system-resource-management.md',
                             '/for-developers/observability.md',
                             '/for-developers/security.md',
+                            '/for-developers/storage.md',
                             '/for-developers/anti-spam.md',
                             '/for-developers/data-analytics.md'
                         ]
