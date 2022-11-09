@@ -1,0 +1,31 @@
+name: Test turms-client-dart
+
+on: [ push, pull_request ]
+
+jobs:
+  test:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Dart
+        uses: dart-lang/setup-dart@v1.3
+        with:
+          sdk: 2.18.4
+
+      - name: Install dependencies
+        working-directory: turms-client-dart
+        run: dart pub get
+
+#      - name: Verify formatting
+#        working-directory: turms-client-dart
+#        run: dart format --output=none --set-exit-if-changed .
+
+      - name: Analyze project source
+        working-directory: turms-client-dart
+        run: dart analyze
+
+      - name: Run tests
+        working-directory: turms-client-dart
+        run: dart test

@@ -1,0 +1,27 @@
+name: Test turms-client-js
+
+on: [ push, pull_request ]
+
+jobs:
+  test:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install
+        working-directory: turms-client-js
+        run: npm install
+
+      - name: Build
+        working-directory: turms-client-js
+        run: npm run build
+
+#      - name: Test
+#        working-directory: turms-client-js
+#        run: npm run test
