@@ -61,6 +61,12 @@
                         <goals>
                             <goal>shade</goal>
                         </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.outputDirectory}</outputDirectory>
+                            <!-- Prevent generating the "original" jar file -->
+                            <finalName>${project.artifactId}-${project.version}</finalName>
+                            <minimizeJar>true</minimizeJar>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>

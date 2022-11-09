@@ -87,6 +87,9 @@ Turms服务端支持基于JVM或JavaScript语言的插件实现。
                         <goal>shade</goal>
                     </goals>
                     <configuration>
+                        <outputDirectory>${project.build.outputDirectory}</outputDirectory>
+                        <!-- Prevent generating the "original" jar file -->
+                        <finalName>${project.artifactId}-${project.version}</finalName>
                         <minimizeJar>true</minimizeJar>
                     </configuration>
                 </execution>
