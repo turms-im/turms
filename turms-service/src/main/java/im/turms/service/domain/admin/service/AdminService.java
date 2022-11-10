@@ -30,6 +30,7 @@ import im.turms.server.common.infra.security.password.PasswordManager;
 import im.turms.server.common.infra.validation.NoWhitespace;
 import im.turms.server.common.infra.validation.Validator;
 import im.turms.server.common.storage.mongo.IMongoCollectionInitializer;
+import im.turms.server.common.storage.mongo.exception.DuplicateKeyException;
 import im.turms.service.domain.admin.repository.AdminRepository;
 import im.turms.service.storage.mongo.OperationResultPublisherPool;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -177,13 +178,14 @@ public class AdminService extends BaseAdminService {
         }));
     }
 
-    public Mono<Admin> addRootAdmin() {
+    protected Mono<Admin> addRootAdmin() {
         return addAdmin(ROOT_ADMIN_ACCOUNT,
                 propertiesManager.getLocalProperties().getSecurity().getPassword().getInitialRootPassword(),
                 ADMIN_ROLE_ROOT_ID,
                 ROOT_ADMIN_ACCOUNT,
                 new Date(),
-                false);
+                false)
+                .onErrorComplete(DuplicateKeyException.class);
     }
 
     public Flux<Admin> queryAdmins(

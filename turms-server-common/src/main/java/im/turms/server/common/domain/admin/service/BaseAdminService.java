@@ -100,7 +100,7 @@ public abstract class BaseAdminService {
                 .subscribe(null, t -> LOGGER.error("Caught an error while finding all admins", t));
     }
 
-    public Mono<Admin> addRootAdmin() {
+    protected Mono<Admin> addRootAdmin() {
         return Mono.empty();
     }
 
