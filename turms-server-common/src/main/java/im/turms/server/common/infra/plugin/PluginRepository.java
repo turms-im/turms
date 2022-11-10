@@ -44,7 +44,8 @@ public class PluginRepository {
     }
 
     public void register(Plugin plugin) {
-        idToPlugin.computeIfAbsent(plugin.descriptor().getId(), pluginId -> {
+        String id = plugin.descriptor().getId();
+        Plugin currentPlugin = idToPlugin.computeIfAbsent(id, pluginId -> {
             for (TurmsExtension extension : plugin.extensions()) {
                 ExtensionPoint extensionPoint = extension.getExtensionPoint();
                 for (Class<? extends ExtensionPoint> extensionPointClass : extension.getExtensionPointClasses()) {
@@ -52,17 +53,22 @@ public class PluginRepository {
                             .computeIfAbsent(extensionPointClass, key -> new CopyOnWriteArrayList<>());
                     if (singletonExtensionPointClasses.contains(extensionPointClass) &&
                             !extensionPoints.isEmpty()) {
-                        throw new DuplicateResourceException(("The singleton extension point [" +
+                        throw new DuplicateResourceException("The singleton extension point [" +
                                 extensionPointClass.getName() +
                                 "] in the plugin [" +
                                 pluginId +
-                                "] cannot be registered because an extension point has been registered"));
+                                "] cannot be registered because an extension point has been registered");
                     }
                     extensionPoints.add(extensionPoint);
                 }
             }
             return plugin;
         });
+        if (currentPlugin != plugin) {
+            throw new DuplicateResourceException("The plugin with the ID [" +
+                    id +
+                    "] has been registered");
+        }
     }
 
     public <T extends ExtensionPoint> boolean hasRunningExtensions(Class<T> clazz) {
