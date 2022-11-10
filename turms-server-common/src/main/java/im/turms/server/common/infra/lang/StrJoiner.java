@@ -44,6 +44,20 @@ public class StrJoiner {
         return StringUtil.newLatin1String(newBytes);
     }
 
+    public String toStringWithBrackets() {
+        int size = charCount + 2;
+        byte[] newBytes = new byte[size];
+        newBytes[0] = '[';
+        newBytes[size - 1] = ']';
+        int writerIndex = 1;
+        for (String element : elements) {
+            byte[] elementBytes = StringUtil.getBytes(element);
+            System.arraycopy(elementBytes, 0, newBytes, writerIndex, elementBytes.length);
+            writerIndex += elementBytes.length;
+        }
+        return StringUtil.newLatin1String(newBytes);
+    }
+
     public StrJoiner add(String element) {
         if (!StringUtil.isLatin1(element)) {
             throw new IllegalArgumentException("Only Latin1 string is supported");

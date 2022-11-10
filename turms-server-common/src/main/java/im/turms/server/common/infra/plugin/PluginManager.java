@@ -142,30 +142,30 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
         return home.resolve(pluginsDir).toAbsolutePath();
     }
 
-    private void startPlugins() {
-        for (Plugin plugin : getPlugins()) {
-            for (TurmsExtension extension : plugin.extensions()) {
-                try {
-                    extension.start();
-                } catch (Exception e) {
-                    LOGGER.error("Caught an error while starting the extension " + extension.getClass().getName(), e);
-                }
-            }
-        }
-    }
-
     private Mono<Void> destroy() {
-        for (Plugin plugin : getPlugins()) {
-            for (TurmsExtension extension : plugin.extensions()) {
-                try {
-                    extension.stop();
-                } catch (Exception e) {
-                    LOGGER.error("Caught an error while stopping the extension " + extension.getClass().getName(), e);
-                }
-            }
+        Exception stopPluginsException = null;
+        Exception closeEngineException = null;
+        try {
+            stopPlugins();
+        } catch (Exception e) {
+            stopPluginsException = e;
         }
         if (engine != null) {
-            ((Engine) engine).close();
+            try {
+                ((Engine) engine).close(true);
+            } catch (Exception e) {
+                closeEngineException = e;
+            }
+        }
+        if (stopPluginsException != null || closeEngineException != null) {
+            Exception e = new RuntimeException("Caught errors while destroying");
+            if (stopPluginsException != null) {
+                e.addSuppressed(stopPluginsException);
+            }
+            if (closeEngineException != null) {
+                e.addSuppressed(closeEngineException);
+            }
+            return Mono.error(e);
         }
         return Mono.empty();
     }
@@ -303,8 +303,17 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
         return pluginRepository.getPlugins(ids);
     }
 
+    public int startPlugins() {
+        Collection<Plugin> plugins = pluginRepository.getPlugins();
+        return startPlugins(plugins);
+    }
+
     public int startPlugins(Set<String> ids) {
         List<Plugin> plugins = pluginRepository.getPlugins(ids);
+        return startPlugins(plugins);
+    }
+
+    public int startPlugins(Collection<Plugin> plugins) {
         List<Runnable> runnables = new ArrayList<>(plugins.size());
         for (Plugin plugin : plugins) {
             runnables.add(plugin::start);
@@ -313,12 +322,17 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
         return plugins.size();
     }
 
+    public int stopPlugins() {
+        Collection<Plugin> plugins = pluginRepository.getPlugins();
+        return stopPlugins(plugins);
+    }
+
     public int stopPlugins(Set<String> ids) {
         List<Plugin> plugins = pluginRepository.getPlugins(ids);
         return stopPlugins(plugins);
     }
 
-    public int stopPlugins(List<Plugin> plugins) {
+    public int stopPlugins(Collection<Plugin> plugins) {
         List<Runnable> runnables = new ArrayList<>(plugins.size());
         for (Plugin plugin : plugins) {
             runnables.add(plugin::stop);

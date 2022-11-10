@@ -17,6 +17,8 @@
 
 package im.turms.server.common.infra.plugin;
 
+import im.turms.server.common.infra.logging.core.logger.Logger;
+import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -30,6 +32,8 @@ import java.util.List;
  * @author James Chen
  */
 public abstract class TurmsExtension {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(TurmsExtension.class);
 
     @Setter(AccessLevel.PACKAGE)
     @Getter
@@ -89,6 +93,9 @@ public abstract class TurmsExtension {
         initialized = true;
         started = true;
         running = true;
+        LOGGER.info("The extension [{}] of the plugin [{}] has been started",
+                getClass().getName(),
+                plugin.descriptor().getId());
     }
 
     synchronized void stop() {
@@ -100,6 +107,9 @@ public abstract class TurmsExtension {
         } finally {
             running = false;
             started = false;
+            LOGGER.info("The extension [{}] of the plugin [{}] has been stopped",
+                    getClass().getName(),
+                    plugin.descriptor().getId());
         }
     }
 
@@ -111,6 +121,9 @@ public abstract class TurmsExtension {
             onResumed();
         } finally {
             running = true;
+            LOGGER.info("The extension [{}] of the plugin [{}] has been resumed",
+                    getClass().getName(),
+                    plugin.descriptor().getId());
         }
     }
 
@@ -122,6 +135,9 @@ public abstract class TurmsExtension {
             onPaused();
         } finally {
             running = false;
+            LOGGER.info("The extension [{}] of the plugin [{}] has been paused",
+                    getClass().getName(),
+                    plugin.descriptor().getId());
         }
     }
 

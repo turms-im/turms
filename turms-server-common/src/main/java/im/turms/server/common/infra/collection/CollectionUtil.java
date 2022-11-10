@@ -18,6 +18,7 @@
 package im.turms.server.common.infra.collection;
 
 import im.turms.server.common.infra.lang.PrimitiveUtil;
+import im.turms.server.common.infra.lang.StrJoiner;
 import org.eclipse.collections.api.collection.ImmutableCollection;
 import org.eclipse.collections.api.map.ImmutableMap;
 import org.eclipse.collections.impl.set.mutable.UnifiedSet;
@@ -335,6 +336,14 @@ public final class CollectionUtil {
             return Collections.emptySet();
         }
         return (Set<T>) Set.of(collection.toArray());
+    }
+
+    public static <T> String toLatin1String(Collection<T> values, Function<T, String> mapper) {
+        StrJoiner joiner = new StrJoiner(values.size());
+        for (T value : values) {
+            joiner.add(mapper.apply(value));
+        }
+        return joiner.toStringWithBrackets();
     }
     //endregion
 

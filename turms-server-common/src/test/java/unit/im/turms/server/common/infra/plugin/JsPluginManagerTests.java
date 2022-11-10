@@ -27,6 +27,7 @@ import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.common.plugin.PluginProperties;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
 import org.springframework.context.ApplicationContext;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
@@ -40,6 +41,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.CALLS_REAL_METHODS;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.times;
@@ -84,12 +86,15 @@ class JsPluginManagerTests {
 
     @Test
     void testLog() {
-        mockStatic(LoggerFactory.class);
-        Logger logger = mock(Logger.class);
-        when(logger.isEnabled(any())).thenReturn(true);
-        when(LoggerFactory.getLogger(anyString())).thenReturn(logger);
-        MyExtensionPointForJs extensionPoint = createExtensionPoint();
-        extensionPoint.testLog();
+        Logger logger;
+        try (MockedStatic<LoggerFactory> factory = mockStatic(LoggerFactory.class, CALLS_REAL_METHODS)) {
+            logger = mock(Logger.class);
+            when(logger.isEnabled(any())).thenReturn(true);
+            factory.when(() -> LoggerFactory.getLogger(anyString()))
+                    .thenReturn(logger);
+            MyExtensionPointForJs extensionPoint = createExtensionPoint();
+            extensionPoint.testLog();
+        }
 
         verify(logger, times(0)).info("A log from plugin.js");
     }
