@@ -61,11 +61,9 @@ public abstract class BaseAdminService {
         this.passwordManager = passwordManager;
         this.adminRepository = adminRepository;
         this.adminRoleService = adminRoleService;
-
-        listenAndLoadAdmins();
     }
 
-    public void listenAndLoadAdmins() {
+    protected void listenAndLoadAdmins() {
         // Listen
         adminRepository.watch(FullDocument.UPDATE_LOOKUP)
                 .doOnNext(event -> {
@@ -91,17 +89,13 @@ public abstract class BaseAdminService {
                     for (Admin admin : admins) {
                         accountToAdmin.put(admin.getAccount(), new AdminInfo(admin, null));
                     }
-                    boolean rootAdminExists = false;
                     for (Admin admin : admins) {
                         if (admin.getRoleId().equals(ADMIN_ROLE_ROOT_ID)) {
-                            rootAdminExists = true;
                             break;
                         }
                     }
-                    if (!rootAdminExists) {
-                        addRootAdmin()
-                                .subscribe(null, t -> LOGGER.error("Caught an error while adding the root admin", t));
-                    }
+                    addRootAdmin()
+                            .subscribe(null, t -> LOGGER.error("Caught an error while adding the root admin", t));
                 })
                 .subscribe(null, t -> LOGGER.error("Caught an error while finding all admins", t));
     }

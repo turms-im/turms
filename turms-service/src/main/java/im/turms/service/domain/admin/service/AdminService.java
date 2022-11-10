@@ -84,6 +84,7 @@ public class AdminService extends BaseAdminService {
         this.propertiesManager = propertiesManager;
         this.adminRepository = adminRepository;
         this.adminRoleService = adminRoleService;
+        listenAndLoadAdmins();
     }
 
     public Flux<Long> queryRoleIds(@NotEmpty Set<String> accounts) {

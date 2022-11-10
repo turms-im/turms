@@ -36,6 +36,7 @@ public class AdminService extends BaseAdminService {
             AdminRepository adminRepository,
             AdminRoleService adminRoleService) {
         super(passwordManager, adminRepository, adminRoleService);
+        listenAndLoadAdmins();
     }
 
 }
