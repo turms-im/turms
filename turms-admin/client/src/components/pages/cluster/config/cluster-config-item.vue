@@ -1,9 +1,9 @@
 <template>
     <div class="cluster-config-item">
         <a-tooltip
-            v-if="property.desc"
+            v-if="property.description"
             placement="right"
-            :title="property.desc"
+            :title="property.description"
         >
             <span class="cluster-config-item__info">
                 <icon type="question-circle" />

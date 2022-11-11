@@ -27,23 +27,25 @@ public record FieldMetadata(
         boolean deprecated,
         boolean global,
         boolean mutable,
+        boolean sensitive,
         String type,
         @Nullable
         String elementType,
         @Nullable
         Object[] options,
         @Nullable
-        String desc
+        String description
 ) {
 
     public static final class Fields {
         public static final String deprecated = "deprecated";
         public static final String global = "global";
         public static final String mutable = "mutable";
+        public static final String sensitive = "sensitive";
         public static final String type = "type";
         public static final String elementType = "elementType";
         public static final String options = "options";
-        public static final String desc = "desc";
+        public static final String description = "description";
 
         private Fields() {
         }

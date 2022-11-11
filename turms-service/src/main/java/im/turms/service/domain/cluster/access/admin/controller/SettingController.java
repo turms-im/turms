@@ -56,9 +56,12 @@ public class SettingController extends BaseController {
     public HttpHandlerResult<ResponseDTO<SettingsDTO>> queryClusterSettings(
             boolean queryLocalSettings,
             boolean onlyMutable) {
+        TurmsProperties properties = queryLocalSettings
+                ? propertiesManager.getLocalProperties()
+                : propertiesManager.getGlobalProperties();
         return HttpHandlerResult.okIfTruthy(new SettingsDTO(
                 TurmsProperties.SCHEMA_VERSION,
-                getPropertyToValueMap(queryLocalSettings ? propertiesManager.getLocalProperties() : propertiesManager.getGlobalProperties(), onlyMutable)
+                getPropertyToValueMap(properties, onlyMutable)
         ));
     }
 

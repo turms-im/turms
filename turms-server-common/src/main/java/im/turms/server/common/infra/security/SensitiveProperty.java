@@ -15,28 +15,17 @@
  * limitations under the License.
  */
 
-package im.turms.service.domain.admin.access.admin.dto.request;
+package im.turms.server.common.infra.security;
 
-
-import im.turms.server.common.domain.common.access.dto.ControllerDTO;
-import im.turms.server.common.infra.security.SensitiveProperty;
-import im.turms.server.common.infra.security.SecurityValueConst;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * @author James Chen
  */
-public record UpdateAdminDTO(
-        @SensitiveProperty
-        String password,
-        String name,
-        Long roleId
-) implements ControllerDTO {
-    @Override
-    public String toString() {
-        return "UpdateAdminDTO[" +
-                "password=" + SecurityValueConst.SENSITIVE_VALUE +
-                ", name=" + name +
-                ", roleId=" + roleId +
-                ']';
-    }
+@Target(ElementType.FIELD)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface SensitiveProperty {
 }

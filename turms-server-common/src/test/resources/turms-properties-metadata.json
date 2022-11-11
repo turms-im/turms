@@ -6,18 +6,21 @@
           "deprecated": false,
           "global": false,
           "mutable": false,
+          "sensitive": false,
           "type": "int"
         },
         "keepaliveTimeoutSeconds": {
           "deprecated": false,
           "global": false,
           "mutable": false,
+          "sensitive": false,
           "type": "int"
         },
         "reconnectIntervalSeconds": {
           "deprecated": false,
           "global": false,
           "mutable": false,
+          "sensitive": false,
           "type": "int"
         }
       },
@@ -26,24 +29,28 @@
           "deprecated": false,
           "global": false,
           "mutable": false,
+          "sensitive": false,
           "type": "string"
         },
         "port": {
           "deprecated": false,
           "global": false,
           "mutable": false,
+          "sensitive": false,
           "type": "int"
         },
         "portAutoIncrement": {
           "deprecated": false,
           "global": false,
           "mutable": false,
+          "sensitive": false,
           "type": "boolean"
         },
         "portCount": {
           "deprecated": false,
           "global": false,
           "mutable": false,
+          "sensitive": false,
           "type": "int"
         }
       }
@@ -52,14 +59,15 @@
       "address": {
         "advertiseHost": {
           "deprecated": false,
-          "desc": "The advertise address of the local node exposed to admins. (e.g. 100.131.251.96)",
+          "description": "The advertise address of the local node exposed to admins. (e.g. 100.131.251.96)",
           "global": false,
           "mutable": true,
+          "sensitive": false,
           "type": "string"
         },
         "advertiseStrategy": {
           "deprecated": false,
-          "desc": "The advertise strategy is used to decide which type of address should be used so that admins can access admin APIs and metrics APIs",
+          "description": "The advertise strategy is used to decide which type of address should be used so that admins can access admin APIs and metrics APIs",
           "global": false,
           "mutable": true,
           "options": [
@@ -68,33 +76,38 @@
             "PRIVATE_ADDRESS",
             "PUBLIC_ADDRESS"
           ],
+          "sensitive": false,
           "type": "enum"
         },
         "attachPortToHost": {
           "deprecated": false,
-          "desc": "Whether to attach the local port to the host.\ne.g. The local host is 100.131.251.96, and the port is 9510 so the service address will be 100.131.251.96:9510",
+          "description": "Whether to attach the local port to the host.\ne.g. The local host is 100.131.251.96, and the port is 9510 so the service address will be 100.131.251.96:9510",
           "global": false,
           "mutable": true,
+          "sensitive": false,
           "type": "boolean"
         }
       },
       "delayToNotifyMembersChangeSeconds": {
         "deprecated": false,
-        "desc": "Delay notifying listeners on members change. Waits for seconds to avoid thundering herd",
+        "description": "Delay notifying listeners on members change. Waits for seconds to avoid thundering herd",
         "global": false,
         "mutable": false,
+        "sensitive": false,
         "type": "int"
       },
       "heartbeatIntervalSeconds": {
         "deprecated": false,
         "global": false,
         "mutable": false,
+        "sensitive": false,
         "type": "int"
       },
       "heartbeatTimeoutSeconds": {
         "deprecated": false,
         "global": false,
         "mutable": false,
+        "sensitive": false,
         "type": "int"
       }
     },
@@ -102,6 +115,7 @@
       "deprecated": false,
       "global": false,
       "mutable": false,
+      "sensitive": false,
       "type": "string"
     },
     "node": {
@@ -109,36 +123,41 @@
         "deprecated": false,
         "global": false,
         "mutable": false,
+        "sensitive": false,
         "type": "boolean"
       },
       "id": {
         "deprecated": false,
-        "desc": "The node ID must start with a letter or underscore, and matches zero or more of characters [a-zA-Z0-9_] after the beginning. e.g. \"turms001\", \"turms_002\"",
+        "description": "The node ID must start with a letter or underscore, and matches zero or more of characters [a-zA-Z0-9_] after the beginning. e.g. \"turms001\", \"turms_002\"",
         "global": false,
         "mutable": false,
+        "sensitive": false,
         "type": "string"
       },
       "leaderEligible": {
         "deprecated": false,
-        "desc": "Only works when it's a turms-service node",
+        "description": "Only works when it's a turms-service node",
         "global": false,
         "mutable": false,
+        "sensitive": false,
         "type": "boolean"
       },
       "zone": {
         "deprecated": false,
-        "desc": "e.g. \"us-east-1\" and \"ap-east-1\"",
+        "description": "e.g. \"us-east-1\" and \"ap-east-1\"",
         "global": false,
         "mutable": false,
+        "sensitive": false,
         "type": "string"
       }
     },
     "rpc": {
       "requestTimeoutMillis": {
         "deprecated": false,
-        "desc": "The timeout for RPC requests in milliseconds",
+        "description": "The timeout for RPC requests in milliseconds",
         "global": false,
         "mutable": false,
+        "sensitive": false,
         "type": "int"
       }
     },
@@ -147,9 +166,10 @@
   "flightRecorder": {
     "closedRecordingRetentionPeriod": {
       "deprecated": false,
-      "desc": "A closed recording will be retained for the given period and will be removed from the file system after the retention period. 0 means no retention. -1 means unlimited retention.",
+      "description": "A closed recording will be retained for the given period and will be removed from the file system after the retention period. 0 means no retention. -1 means unlimited retention.",
       "global": false,
       "mutable": false,
+      "sensitive": false,
       "type": "int"
     }
   },
@@ -158,14 +178,15 @@
       "address": {
         "advertiseHost": {
           "deprecated": false,
-          "desc": "The advertise address of the local node exposed to admins. (e.g. 100.131.251.96)",
+          "description": "The advertise address of the local node exposed to admins. (e.g. 100.131.251.96)",
           "global": false,
           "mutable": true,
+          "sensitive": false,
           "type": "string"
         },
         "advertiseStrategy": {
           "deprecated": false,
-          "desc": "The advertise strategy is used to decide which type of address should be used so that admins can access admin APIs and metrics APIs",
+          "description": "The advertise strategy is used to decide which type of address should be used so that admins can access admin APIs and metrics APIs",
           "global": false,
           "mutable": true,
           "options": [
@@ -174,21 +195,24 @@
             "PRIVATE_ADDRESS",
             "PUBLIC_ADDRESS"
           ],
+          "sensitive": false,
           "type": "enum"
         },
         "attachPortToHost": {
           "deprecated": false,
-          "desc": "Whether to attach the local port to the host.\ne.g. The local host is 100.131.251.96, and the port is 9510 so the service address will be 100.131.251.96:9510",
+          "description": "Whether to attach the local port to the host.\ne.g. The local host is 100.131.251.96, and the port is 9510 so the service address will be 100.131.251.96:9510",
           "global": false,
           "mutable": true,
+          "sensitive": false,
           "type": "boolean"
         }
       },
       "enabled": {
         "deprecated": false,
-        "desc": "Whether to enable the APIs for administrators",
+        "description": "Whether to enable the APIs for administrators",
         "global": false,
         "mutable": false,
+        "sensitive": false,
         "type": "boolean"
       },
       "http": {
@@ -196,72 +220,82 @@
           "deprecated": false,
           "global": false,
           "mutable": false,
+          "sensitive": false,
           "type": "string"
         },
         "maxRequestBodySizeBytes": {
           "deprecated": false,
           "global": false,
           "mutable": false,
+          "sensitive": false,
           "type": "int"
         },
         "port": {
           "deprecated": false,
           "global": false,
           "mutable": false,
+          "sensitive": false,
           "type": "int"
         }
       },
       "log": {
         "enabled": {
           "deprecated": false,
-          "desc": "Whether to log API calls",
+          "description": "Whether to log API calls",
           "global": true,
           "mutable": true,
+          "sensitive": false,
           "type": "boolean"
         },
         "logRequestParams": {
           "deprecated": false,
-          "desc": "Whether to log the parameters of requests",
+          "description": "Whether to log the parameters of requests",
           "global": true,
           "mutable": true,
+          "sensitive": false,
           "type": "boolean"
         }
       },
       "rateLimiting": {
         "capacity": {
           "deprecated": false,
-          "desc": "The maximum number of tokens that the bucket can hold",
+          "description": "The maximum number of tokens that the bucket can hold",
           "global": true,
           "mutable": true,
+          "sensitive": false,
           "type": "int"
         },
         "initialTokens": {
           "deprecated": false,
-          "desc": "The initial number of tokens for new session",
+          "description": "The initial number of tokens for new session",
           "global": true,
           "mutable": true,
+          "sensitive": false,
           "type": "int"
         },
         "refillIntervalMillis": {
           "deprecated": false,
-          "desc": "The time interval to refill. 0 means never refill",
+          "description": "The time interval to refill. 0 means never refill",
           "global": true,
           "mutable": true,
+          "sensitive": false,
           "type": "int"
         },
         "tokensPerPeriod": {
           "deprecated": false,
-          "desc": "Refills the bucket with the specified number of tokens per period if the bucket isn't full",
+          "description": "Refills the bucket with the specified number of tokens per period if the bucket isn't full",
           "global": true,
           "mutable": true,
+          "sensitive": false,
           "type": "int"
         }
       },
       "useAuthentication": {
         "deprecated": false,
-        "desc": "Whether to use authentication. If false, all HTTP requesters will personate the root user and all HTTP requests will be passed. You may set it to false when you want to manage authentication via security groups, NACL, etc",
+        "description": "Whether to use authentication. If false, all HTTP requesters will personate the root user and all HTTP requests will be passed. You may set it to false when you want to manage authentication via security groups, NACL, etc",
         "global": false,
         "mutable": false,
+        "sensitive": false,
         "type": "boolean"
       }
     },
@@ -269,7 +303,7 @@
       "logging": {
         "excludedNotificationCategories": {
           "deprecated": false,
-          "desc": "Turms will get the notifications to log from the union of \"includedNotificationCategories\" and \"includedNotifications\" except the notifications included in \"excludedNotificationCategories\" and \"excludedNotificationTypes\"",
+          "description": "Turms will get the notifications to log from the union of \"includedNotificationCategories\" and \"includedNotifications\" except the notifications included in \"excludedNotificationCategories\" and \"excludedNotificationTypes\"",
           "elementType": "enum",
           "global": false,
           "mutable": false,
@@ -290,11 +324,12 @@
             "GROUP_ENROLLMENT",
             "GROUP_MEMBER"
           ],
+          "sensitive": false,
           "type": "java.util.Set"
         },
         "excludedNotificationTypes": {
           "deprecated": false,
-          "desc": "Turms will get the notifications to log from the union of \"includedNotificationCategories\" and \"includedNotifications\" except the notifications included in \"excludedNotificationCategories\" and \"excludedNotificationTypes\"",
+          "description": "Turms will get the notifications to log from the union of \"includedNotificationCategories\" and \"includedNotifications\" except the notifications included in \"excludedNotificationCategories\" and \"excludedNotificationTypes\"",
           "elementType": "enum",
           "global": false,
           "mutable": false,
@@ -355,11 +390,12 @@
             "QUERY_RESOURCE_UPLOAD_INFO_REQUEST",
             "KIND_NOT_SET"
           ],
+          "sensitive": false,
           "type": "java.util.Set"
         },
         "excludedRequestCategories": {
           "deprecated": false,
-          "desc": "Turms will get the requests to log from the union of \"includedRequestCategories\" and \"includedRequests\" except the requests included in \"excludedRequestCategories\" and \"excludedRequestTypes\"",
+          "description": "Turms will get the requests to log from the union of \"includedRequestCategories\" and \"includedRequests\" except the requests included in \"excludedRequestCategories\" and \"excludedRequestTypes\"",
           "elementType": "enum",
           "global": false,
           "mutable": false,
@@ -380,11 +416,12 @@
             "GROUP_ENROLLMENT",
             "GROUP_MEMBER"
           ],
+          "sensitive": false,
           "type": "java.util.Set"
         },
         "excludedRequestTypes": {
           "deprecated": false,
-          "desc": "Turms will get the requests to log from the union of \"includedRequestCategories\" and \"includedRequests\" except the requests included in \"excludedRequestCategories\" and \"excludedRequestTypes\"",
+          "description": "Turms will get the requests to log from the union of \"includedRequestCategories\" and \"includedRequests\" except the requests included in \"excludedRequestCategories\" and \"excludedRequestTypes\"",
           "elementType": "enum",
           "global": false,
           "mutable": false,
@@ -445,125 +482,142 @@
             "QUERY_RESOURCE_UPLOAD_INFO_REQUEST",
             "KIND_NOT_SET"
           ],
+          "sensitive": false,
           "type": "java.util.Set"
         },
         "heartbeatSampleRate": {
           "deprecated": false,
           "global": false,
           "mutable": false,
+          "sensitive": false,
           "type": "float"
         },
         "includedNotificationCategories": {
           "deprecated": false,
-          "desc": "Turms will get the notifications to log from the union of \"includedNotificationCategories\" and \"includedNotifications\" except the notifications included in \"excludedNotificationCategories\" and \"excludedNotificationTypes\"",
+          "description": "Turms will get the notifications to log from the union of \"includedNotificationCategories\" and \"includedNotifications\" except the notifications included in \"excludedNotificationCategories\" and \"excludedNotificationTypes\"",
           "elementType": "im.turms.server.common.infra.property.env.service.env.clientapi.property.LoggingCategoryProperties",
           "global": false,
           "mutable": false,
+          "sensitive": false,
           "type": "java.util.LinkedHashSet"
         },
         "includedNotifications": {
           "deprecated": false,
-          "desc": "Turms will get the notifications to log from the union of \"includedNotificationCategories\" and \"includedNotifications\" except the notifications included in \"excludedNotificationCategories\" and \"excludedNotificationTypes\"",
+          "description": "Turms will get the notifications to log from the union of \"includedNotificationCategories\" and \"includedNotifications\" except the notifications included in \"excludedNotificationCategories\" and \"excludedNotificationTypes\"",
           "elementType": "im.turms.server.common.infra.property.env.service.env.clientapi.property.LoggingRequestProperties",
           "global": false,
           "mutable": false,
+          "sensitive": false,
           "type": "java.util.LinkedHashSet"
         },
         "includedRequestCategories": {
           "deprecated": false,
-          "desc": "Turms will get the requests to log from the union of \"includedRequestCategories\" and \"includedRequests\" except the requests included in \"excludedRequestCategories\" and \"excludedRequestTypes\"",
+          "description": "Turms will get the requests to log from the union of \"includedRequestCategories\" and \"includedRequests\" except the requests included in \"excludedRequestCategories\" and \"excludedRequestTypes\"",
           "elementType": "im.turms.server.common.infra.property.env.service.env.clientapi.property.LoggingCategoryProperties",
           "global": false,
           "mutable": false,
+          "sensitive": false,
           "type": "java.util.LinkedHashSet"
         },
         "includedRequests": {
           "deprecated": false,
-          "desc": "Turms will get the requests to log from the union of \"includedRequestCategories\" and \"includedRequests\" except the requests included in \"excludedRequestCategories\" and \"excludedRequestTypes\"",
+          "description": "Turms will get the requests to log from the union of \"includedRequestCategories\" and \"includedRequests\" except the requests included in \"excludedRequestCategories\" and \"excludedRequestTypes\"",
           "elementType": "im.turms.server.common.infra.property.env.service.env.clientapi.property.LoggingRequestProperties",
           "global": false,
           "mutable": false,
+          "sensitive": false,
           "type": "java.util.LinkedHashSet"
         }
       },
       "maxRequestSizeBytes": {
         "deprecated": false,
-        "desc": "The client session will be closed and may be blocked if it tries to send a request larger than the size. Note: The average size of turms requests is 16~64 bytes",
+        "description": "The client session will be closed and may be blocked if it tries to send a request larger than the size. Note: The average size of turms requests is 16~64 bytes",
         "global": false,
         "mutable": false,
+        "sensitive": false,
         "type": "int"
       },
       "rateLimiting": {
         "capacity": {
           "deprecated": false,
-          "desc": "The maximum number of tokens that the bucket can hold",
+          "description": "The maximum number of tokens that the bucket can hold",
           "global": true,
           "mutable": true,
+          "sensitive": false,
           "type": "int"
         },
         "initialTokens": {
           "deprecated": false,
-          "desc": "The initial number of tokens for new session",
+          "description": "The initial number of tokens for new session",
           "global": true,
           "mutable": true,
+          "sensitive": false,
           "type": "int"
         },
         "refillIntervalMillis": {
           "deprecated": false,
-          "desc": "The time interval to refill. 0 means never refill",
+          "description": "The time interval to refill. 0 means never refill",
           "global": true,
           "mutable": true,
+          "sensitive": false,
           "type": "int"
         },
         "tokensPerPeriod": {
           "deprecated": false,
-          "desc": "Refills the bucket with the specified number of tokens per period if the bucket isn't full",
+          "description": "Refills the bucket with the specified number of tokens per period if the bucket isn't full",
           "global": true,
           "mutable": true,
+          "sensitive": false,
           "type": "int"
         }
       },
       "returnReasonForServerError": {
         "deprecated": false,
-        "desc": "Whether to return the reason for the server error to the client. Note: 1. It may reveal sensitive data like the IP of internal servers if true; 2. turms-gateway never return the information of stack traces no matter it is true or false.",
+        "description": "Whether to return the reason for the server error to the client. Note: 1. It may reveal sensitive data like the IP of internal servers if true; 2. turms-gateway never return the information of stack traces no matter it is true or false.",
         "global": false,
         "mutable": false,
+        "sensitive": false,
         "type": "boolean"
       }
     },
     "fake": {
       "enabled": {
         "deprecated": false,
-        "desc": "Whether to fake clients. Note that faking only works in non-production environments",
+        "description": "Whether to fake clients. Note that faking only works in non-production environments",
         "global": false,
         "mutable": false,
+        "sensitive": false,
         "type": "boolean"
       },
       "firstUserId": {
         "deprecated": false,
         "global": false,
         "mutable": false,
+        "sensitive": false,
         "type": "long"
       },
       "requestCountPerInterval": {
         "deprecated": false,
-        "desc": "The number of requests to send per interval. If requestIntervalMillis is 1000, requestCountPerInterval is TPS in fact",
+        "description": "The number of requests to send per interval. If requestIntervalMillis is 1000, requestCountPerInterval is TPS in fact",
         "global": false,
         "mutable": false,
+        "sensitive": false,
         "type": "int"
       },
       "requestIntervalMillis": {
         "deprecated": false,
-        "desc": "The interval to send request",
+        "description": "The interval to send request",
         "global": false,
         "mutable": false,
+        "sensitive": false,
         "type": "int"
       },
       "userCount": {
         "deprecated": false,
-        "desc": "Run the number of real clients as faked users with an ID from [firstUserId, firstUserId + userCount) to connect to turms-gateway. So please ensure you have set turms.service.fake.userCount to a number larger than or equals to (firstUserId + userCount)",
+        "description": "Run the number of real clients as faked users with an ID from [firstUserId, firstUserId + userCount) to connect to turms-gateway. So please ensure you have set turms.service.fake.userCount to a number larger than or equals to (firstUserId + userCount)",
         "global": false,
         "mutable": false,
+        "sensitive": false,
         "type": "int"
       }
     },
@@ -574,9 +628,10 @@
     "notificationLogging": {
       "enabled": {
         "deprecated": false,
-        "desc": "Whether to parse the buffer of TurmsNotification to log. Note that the property has an impact on performance",
+        "description": "Whether to parse the buffer of TurmsNotification to log. Note that the property has an impact on performance",
         "global": false,
         "mutable": false,
+        "sensitive": false,
         "type": "boolean"
       }
     },
@@ -584,14 +639,15 @@
     "serviceDiscovery": {
       "advertiseHost": {
         "deprecated": false,
-        "desc": "The advertise address of the local node exposed to the public. The property can be used to advertise the DDoS Protected IP address to hide the origin IP address (e.g. 100.131.251.96)",
+        "description": "The advertise address of the local node exposed to the public. The property can be used to advertise the DDoS Protected IP address to hide the origin IP address (e.g. 100.131.251.96)",
         "global": false,
         "mutable": true,
+        "sensitive": false,
         "type": "string"
       },
       "advertiseStrategy": {
         "deprecated": false,
-        "desc": "The advertise strategy is used to help clients or load balancing servers to access the local node. Note: For security, do NOT use \"PUBLIC_ADDRESS\" in production to prevent from exposing the origin IP address for DDoS attack.",
+        "description": "The advertise strategy is used to help clients or load balancing servers to access the local node. Note: For security, do NOT use \"PUBLIC_ADDRESS\" in production to prevent from exposing the origin IP address for DDoS attack.",
         "global": false,
         "mutable": true,
         "options": [
@@ -600,44 +656,50 @@
           "PRIVATE_ADDRESS",
           "PUBLIC_ADDRESS"
         ],
+        "sensitive": false,
         "type": "enum"
       },
       "attachPortToHost": {
         "deprecated": false,
-        "desc": "Whether to attach the local port to the host. For example, if the local host is 100.131.251.96, and the port is 10510, so the service address will be 100.131.251.96:10510",
+        "description": "Whether to attach the local port to the host. For example, if the local host is 100.131.251.96, and the port is 10510, so the service address will be 100.131.251.96:10510",
         "global": false,
         "mutable": true,
+        "sensitive": false,
         "type": "boolean"
       },
       "identity": {
         "deprecated": false,
-        "desc": "The identity of the local node will be sent to clients as a notification if identity is not blank and \"turms.gateway.session.notifyClientsOfSessionInfoAfterConnected\" is true (e.g. \"turms-east-0001\")",
+        "description": "The identity of the local node will be sent to clients as a notification if identity is not blank and \"turms.gateway.session.notifyClientsOfSessionInfoAfterConnected\" is true (e.g. \"turms-east-0001\")",
         "global": false,
         "mutable": true,
+        "sensitive": false,
         "type": "string"
       }
     },
     "session": {
       "clientHeartbeatIntervalSeconds": {
         "deprecated": false,
-        "desc": "The client heartbeat interval. Note that the value will NOT change the actual heartbeat behavior of clients, and the value is only used to facilitate related operations of turms-gateway",
+        "description": "The client heartbeat interval. Note that the value will NOT change the actual heartbeat behavior of clients, and the value is only used to facilitate related operations of turms-gateway",
         "global": true,
         "mutable": true,
+        "sensitive": false,
         "type": "int"
       },
       "closeIdleSessionAfterSeconds": {
         "deprecated": false,
-        "desc": "A session will be closed if turms server doesn't receive any request (including heartbeat request) from the client during closeIdleSessionAfterSeconds. References: https://mp.weixin.qq.com/s?__biz=MzAwNDY1ODY2OQ==&mid=207243549&idx=1&sn=4ebe4beb8123f1b5ab58810ac8bc5994&scene=0#rd",
+        "description": "A session will be closed if turms server doesn't receive any request (including heartbeat request) from the client during closeIdleSessionAfterSeconds. References: https://mp.weixin.qq.com/s?__biz=MzAwNDY1ODY2OQ==&mid=207243549&idx=1&sn=4ebe4beb8123f1b5ab58810ac8bc5994&scene=0#rd",
         "global": true,
         "mutable": true,
+        "sensitive": false,
         "type": "int"
       },
       "identityAccessManagement": {
         "enabled": {
           "deprecated": false,
-          "desc": "Whether to authenticate and authorize users when logging in. Note that user ID is always required even if enabled is false. If false at startup, turms-gateway won't connect to the MongoDB server for user records",
+          "description": "Whether to authenticate and authorize users when logging in. Note that user ID is always required even if enabled is false. If false at startup, turms-gateway won't connect to the MongoDB server for user records",
           "global": true,
           "mutable": true,
+          "sensitive": false,
           "type": "boolean"
         },
         "http": {
@@ -647,12 +709,14 @@
                 "deprecated": false,
                 "global": false,
                 "mutable": false,
+                "sensitive": false,
                 "type": "java.util.Map"
               },
               "headers": {
                 "deprecated": false,
                 "global": false,
                 "mutable": false,
+                "sensitive": false,
                 "type": "java.util.Map"
               },
               "statusCodes": {
@@ -660,6 +724,7 @@
                 "elementType": "string",
                 "global": false,
                 "mutable": false,
+                "sensitive": false,
                 "type": "java.util.Set"
               }
             }
@@ -669,6 +734,7 @@
               "deprecated": false,
               "global": false,
               "mutable": false,
+              "sensitive": false,
               "type": "java.util.Map"
             },
             "httpMethod": {
@@ -683,18 +749,21 @@
                 "DELETE",
                 "HEAD"
               ],
+              "sensitive": false,
               "type": "enum"
             },
             "timeoutMillis": {
               "deprecated": false,
               "global": false,
               "mutable": false,
+              "sensitive": false,
               "type": "int"
             },
             "url": {
               "deprecated": false,
               "global": false,
               "mutable": false,
+              "sensitive": false,
               "type": "string"
             }
           }
@@ -707,18 +776,21 @@
                   "deprecated": false,
                   "global": false,
                   "mutable": false,
+                  "sensitive": false,
                   "type": "string"
                 },
                 "keyAlias": {
                   "deprecated": false,
                   "global": false,
                   "mutable": false,
+                  "sensitive": false,
                   "type": "string"
                 },
                 "password": {
                   "deprecated": false,
                   "global": false,
                   "mutable": false,
+                  "sensitive": false,
                   "type": "string"
                 }
               },
@@ -726,6 +798,7 @@
                 "deprecated": false,
                 "global": false,
                 "mutable": false,
+                "sensitive": false,
                 "type": "string"
               }
             },
@@ -735,18 +808,21 @@
                   "deprecated": false,
                   "global": false,
                   "mutable": false,
+                  "sensitive": false,
                   "type": "string"
                 },
                 "keyAlias": {
                   "deprecated": false,
                   "global": false,
                   "mutable": false,
+                  "sensitive": false,
                   "type": "string"
                 },
                 "password": {
                   "deprecated": false,
                   "global": false,
                   "mutable": false,
+                  "sensitive": false,
                   "type": "string"
                 }
               },
@@ -754,6 +830,7 @@
                 "deprecated": false,
                 "global": false,
                 "mutable": false,
+                "sensitive": false,
                 "type": "string"
               }
             },
@@ -763,18 +840,21 @@
                   "deprecated": false,
                   "global": false,
                   "mutable": false,
+                  "sensitive": false,
                   "type": "string"
                 },
                 "keyAlias": {
                   "deprecated": false,
                   "global": false,
                   "mutable": false,
+                  "sensitive": false,
                   "type": "string"
                 },
                 "password": {
                   "deprecated": false,
                   "global": false,
                   "mutable": false,
+                  "sensitive": false,
                   "type": "string"
                 }
               },
@@ -782,6 +862,7 @@
                 "deprecated": false,
                 "global": false,
                 "mutable": false,
+                "sensitive": false,
                 "type": "string"
               }
             },
@@ -790,6 +871,7 @@
                 "deprecated": false,
                 "global": false,
                 "mutable": false,
+                "sensitive": false,
                 "type": "string"
               },
               "p12": {
@@ -797,18 +879,21 @@
                   "deprecated": false,
                   "global": false,
                   "mutable": false,
+                  "sensitive": false,
                   "type": "string"
                 },
                 "keyAlias": {
                   "deprecated": false,
                   "global": false,
                   "mutable": false,
+                  "sensitive": false,
                   "type": "string"
                 },
                 "password": {
                   "deprecated": false,
                   "global": false,
                   "mutable": false,
+                  "sensitive": false,
                   "type": "string"
                 }
               }
@@ -818,6 +903,7 @@
                 "deprecated": false,
                 "global": false,
                 "mutable": false,
+                "sensitive": false,
                 "type": "string"
               },
               "p12": {
@@ -825,18 +911,21 @@
                   "deprecated": false,
                   "global": false,
                   "mutable": false,
+                  "sensitive": false,
                   "type": "string"
                 },
                 "keyAlias": {
                   "deprecated": false,
                   "global": false,
                   "mutable": false,
+                  "sensitive": false,
                   "type": "string"
                 },
                 "password": {
                   "deprecated": false,
                   "global": false,
                   "mutable": false,
+                  "sensitive": false,
                   "type": "string"
                 }
               }
@@ -846,6 +935,7 @@
                 "deprecated": false,
                 "global": false,
                 "mutable": false,
+                "sensitive": false,
                 "type": "string"
               },
               "p12": {
@@ -853,18 +943,21 @@
                   "deprecated": false,
                   "global": false,
                   "mutable": false,
+                  "sensitive": false,
                   "type": "string"
                 },
                 "keyAlias": {
                   "deprecated": false,
                   "global": false,
                   "mutable": false,
+                  "sensitive": false,
                   "type": "string"
                 },
                 "password": {
                   "deprecated": false,
                   "global": false,
                   "mutable": false,
+                  "sensitive": false,
                   "type": "string"
                 }
               }
@@ -875,18 +968,21 @@
                   "deprecated": false,
                   "global": false,
                   "mutable": false,
+                  "sensitive": false,
                   "type": "string"
                 },
                 "keyAlias": {
                   "deprecated": false,
                   "global": false,
                   "mutable": false,
+                  "sensitive": false,
                   "type": "string"
                 },
                 "password": {
                   "deprecated": false,
                   "global": false,
                   "mutable": false,
+                  "sensitive": false,
                   "type": "string"
                 }
               },
@@ -894,6 +990,7 @@
                 "deprecated": false,
                 "global": false,
                 "mutable": false,
+                "sensitive": false,
                 "type": "string"
               }
             },
@@ -903,18 +1000,21 @@
                   "deprecated": false,
                   "global": false,
                   "mutable": false,
+                  "sensitive": false,
                   "type": "string"
                 },
                 "keyAlias": {
                   "deprecated": false,
                   "global": false,
                   "mutable": false,
+                  "sensitive": false,
                   "type": "string"
                 },
                 "password": {
                   "deprecated": false,
                   "global": false,
                   "mutable": false,
+                  "sensitive": false,
                   "type": "string"
                 }
               },
@@ -922,6 +1022,7 @@
                 "deprecated": false,
                 "global": false,
                 "mutable": false,
+                "sensitive": false,
                 "type": "string"
               }
             },
@@ -931,18 +1032,21 @@
                   "deprecated": false,
                   "global": false,
                   "mutable": false,
+                  "sensitive": false,
                   "type": "string"
                 },
                 "keyAlias": {
                   "deprecated": false,
                   "global": false,
                   "mutable": false,
+                  "sensitive": false,
                   "type": "string"
                 },
                 "password": {
                   "deprecated": false,
                   "global": false,
                   "mutable": false,
+                  "sensitive": false,
                   "type": "string"
                 }
               },
@@ -950,6 +1054,7 @@
                 "deprecated": false,
                 "global": false,
                 "mutable": false,
+                "sensitive": false,
                 "type": "string"
               }
             },
@@ -959,18 +1064,21 @@
                   "deprecated": false,
                   "global": false,
                   "mutable": false,
+                  "sensitive": false,
                   "type": "string"
                 },
                 "keyAlias": {
                   "deprecated": false,
                   "global": false,
                   "mutable": false,
+                  "sensitive": false,
                   "type": "string"
                 },
                 "password": {
                   "deprecated": false,
                   "global": false,
                   "mutable": false,
+                  "sensitive": false,
                   "type": "string"
                 }
               },
@@ -978,6 +1086,7 @@
                 "deprecated": false,
                 "global": false,
                 "mutable": false,
+                "sensitive": false,
                 "type": "string"
               }
             },
@@ -987,18 +1096,21 @@
                   "deprecated": false,
                   "global": false,
                   "mutable": false,
+                  "sensitive": false,
                   "type": "string"
                 },
                 "keyAlias": {
                   "deprecated": false,
                   "global": false,
                   "mutable": false,
+                  "sensitive": false,
                   "type": "string"
                 },
                 "password": {
                   "deprecated": false,
                   "global": false,
                   "mutable": false,
+                  "sensitive": false,
                   "type": "string"
                 }
               },
@@ -1006,6 +1118,7 @@
                 "deprecated": false,
                 "global": false,
                 "mutable": false,
+                "sensitive": false,
                 "type": "string"
               }
             },
@@ -1015,18 +1128,21 @@
                   "deprecated": false,
                   "global": false,
                   "mutable": false,
+                  "sensitive": false,
                   "type": "string"
                 },
                 "keyAlias": {
                   "deprecated": false,
                   "global": false,
                   "mutable": false,
+                  "sensitive": false,
                   "type": "string"
                 },
                 "password": {
                   "deprecated": false,
                   "global": false,
                   "mutable": false,
+                  "sensitive": false,
                   "type": "string"
                 }
               },
@@ -1034,6 +1150,7 @@
                 "deprecated": false,
                 "global": false,
                 "mutable": false,
+                "sensitive": false,
                 "type": "string"
               }
             }
@@ -1044,6 +1161,7 @@
                 "deprecated": false,
                 "global": false,
                 "mutable": false,
+                "sensitive": false,
                 "type": "java.util.Map"
               }
             }
@@ -1053,18 +1171,21 @@
               "deprecated": false,
               "global": false,
               "mutable": false,
+              "sensitive": false,
               "type": "string"
             },
             "customPayloadClaims": {
               "deprecated": false,
               "global": false,
               "mutable": false,
+              "sensitive": false,
               "type": "java.util.Map"
             },
             "issuer": {
               "deprecated": false,
               "global": false,
               "mutable": false,
+              "sensitive": false,
               "type": "string"
             }
           }
@@ -1079,60 +1200,67 @@
             "JWT",
             "PASSWORD"
           ],
+          "sensitive": false,
           "type": "enum"
         }
       },
       "minHeartbeatIntervalSeconds": {
         "deprecated": false,
-        "desc": "The minimum interval to refresh the heartbeat status by client requests to avoid refreshing the heartbeat status frequently",
+        "description": "The minimum interval to refresh the heartbeat status by client requests to avoid refreshing the heartbeat status frequently",
         "global": true,
         "mutable": true,
+        "sensitive": false,
         "type": "int"
       },
       "notifyClientsOfSessionInfoAfterConnected": {
         "deprecated": false,
-        "desc": "Whether to notify clients of the session information after connected with the server",
+        "description": "Whether to notify clients of the session information after connected with the server",
         "global": true,
         "mutable": true,
+        "sensitive": false,
         "type": "boolean"
       },
       "switchProtocolAfterSeconds": {
         "deprecated": false,
-        "desc": "If the turms server only receives heartbeat requests from the client during switchProtocolAfterSeconds, the TCP/WebSocket connection will be closed with the close status \"SWITCH\" to indicate the client should keep sending heartbeat requests over UDP if they want to keep online. Note: 1. The property only works if UDP is enabled; 2. For browser clients, UDP isn't supported",
+        "description": "If the turms server only receives heartbeat requests from the client during switchProtocolAfterSeconds, the TCP/WebSocket connection will be closed with the close status \"SWITCH\" to indicate the client should keep sending heartbeat requests over UDP if they want to keep online. Note: 1. The property only works if UDP is enabled; 2. For browser clients, UDP isn't supported",
         "global": true,
         "mutable": true,
+        "sensitive": false,
         "type": "int"
       }
     },
     "simultaneousLogin": {
       "allowDeviceTypeOthersLogin": {
         "deprecated": false,
-        "desc": "Whether to allow the devices of DeviceType.OTHERS to login",
+        "description": "Whether to allow the devices of DeviceType.OTHERS to login",
         "global": true,
         "mutable": true,
+        "sensitive": false,
         "type": "boolean"
       },
       "allowDeviceTypeUnknownLogin": {
         "deprecated": false,
-        "desc": "Whether to allow the devices of DeviceType.UNKNOWN to login",
+        "description": "Whether to allow the devices of DeviceType.UNKNOWN to login",
         "global": true,
         "mutable": true,
+        "sensitive": false,
         "type": "boolean"
       },
       "loginConflictStrategy": {
         "deprecated": false,
-        "desc": "The login conflict strategy is used for servers to know how to behave if a device is logging in when there are conflicted and logged-in devices",
+        "description": "The login conflict strategy is used for servers to know how to behave if a device is logging in when there are conflicted and logged-in devices",
         "global": true,
         "mutable": true,
         "options": [
           "DISCONNECT_LOGGED_IN_DEVICES",
           "DISCONNECT_LOGGING_IN_DEVICE"
         ],
+        "sensitive": false,
         "type": "enum"
       },
       "strategy": {
         "deprecated": false,
-        "desc": "The simultaneous login strategy is used to control which devices can be online at the same time",
+        "description": "The simultaneous login strategy is used to control which devices can be online at the same time",
         "global": true,
         "mutable": true,
         "options": [
@@ -1144,52 +1272,60 @@
           "ALLOW_ONE_DEVICE_OF_DESKTOP_OR_MOBILE_ONLINE",
           "ALLOW_ONE_DEVICE_OF_DESKTOP_OR_BROWSER_OR_MOBILE_ONLINE"
         ],
+        "sensitive": false,
         "type": "enum"
       }
     },
     "tcp": {
       "backlog": {
         "deprecated": false,
-        "desc": "The maximum number of connection requests waiting in the backlog queue. Large enough to handle bursts and GC pauses but don't set too large to prevent SYN-Flood attacks",
+        "description": "The maximum number of connection requests waiting in the backlog queue. Large enough to handle bursts and GC pauses but don't set too large to prevent SYN-Flood attacks",
         "global": false,
         "mutable": false,
+        "sensitive": false,
         "type": "int"
       },
       "closeIdleConnectionAfterSeconds": {
         "deprecated": false,
-        "desc": "A TCP connection will be closed on the server side if a client hasn't established a user session in a specified time. Note that the developers on the client side should take the responsibility to close the TCP connection according to their business requirements",
+        "description": "A TCP connection will be closed on the server side if a client hasn't established a user session in a specified time. Note that the developers on the client side should take the responsibility to close the TCP connection according to their business requirements",
         "global": false,
         "mutable": false,
+        "sensitive": false,
         "type": "int"
       },
       "connectionTimeout": {
         "deprecated": false,
         "global": false,
         "mutable": false,
+        "sensitive": false,
         "type": "int"
       },
       "enabled": {
         "deprecated": false,
         "global": false,
         "mutable": false,
+        "sensitive": false,
         "type": "boolean"
       },
       "host": {
         "deprecated": false,
         "global": false,
         "mutable": false,
+        "sensitive": false,
         "type": "string"
       },
       "port": {
         "deprecated": false,
         "global": false,
         "mutable": false,
+        "sensitive": false,
         "type": "int"
       },
       "wiretap": {
         "deprecated": false,
         "global": false,
         "mutable": false,
+        "sensitive": false,
         "type": "boolean"
       }
     },
@@ -1198,59 +1334,68 @@
         "deprecated": false,
         "global": false,
         "mutable": false,
+        "sensitive": false,
         "type": "boolean"
       },
       "host": {
         "deprecated": false,
         "global": false,
         "mutable": false,
+        "sensitive": false,
         "type": "string"
       },
       "port": {
         "deprecated": false,
         "global": false,
         "mutable": false,
+        "sensitive": false,
         "type": "int"
       }
     },
     "websocket": {
       "backlog": {
         "deprecated": false,
-        "desc": "The maximum number of connection requests waiting in the backlog queue. Large enough to handle bursts and GC pauses but don't set too large to prevent SYN-Flood attacks",
+        "description": "The maximum number of connection requests waiting in the backlog queue. Large enough to handle bursts and GC pauses but don't set too large to prevent SYN-Flood attacks",
         "global": false,
         "mutable": false,
+        "sensitive": false,
         "type": "int"
       },
       "closeIdleConnectionAfterSeconds": {
         "deprecated": false,
-        "desc": "A WebSocket connection will be closed on the server side if a client hasn't established a user session in a specified time. Note that the developers on the client side should take the responsibility to close the WebSocket connection according to their business requirements",
+        "description": "A WebSocket connection will be closed on the server side if a client hasn't established a user session in a specified time. Note that the developers on the client side should take the responsibility to close the WebSocket connection according to their business requirements",
         "global": false,
         "mutable": false,
+        "sensitive": false,
         "type": "int"
       },
       "connectTimeout": {
         "deprecated": false,
-        "desc": "Used to mitigate the Slowloris DoS attack by lowering the timeout for the TCP connection handshake",
+        "description": "Used to mitigate the Slowloris DoS attack by lowering the timeout for the TCP connection handshake",
         "global": false,
         "mutable": false,
+        "sensitive": false,
         "type": "int"
       },
       "enabled": {
         "deprecated": false,
         "global": false,
         "mutable": false,
+        "sensitive": false,
         "type": "boolean"
       },
       "host": {
         "deprecated": false,
         "global": false,
         "mutable": false,
+        "sensitive": false,
         "type": "string"
       },
       "port": {
         "deprecated": false,
         "global": false,
         "mutable": false,
+        "sensitive": false,
         "type": "int"
       }
     }
@@ -1260,6 +1405,7 @@
       "deprecated": false,
       "global": false,
       "mutable": false,
+      "sensitive": false,
       "type": "int"
     },
     "cpu": {
@@ -1267,68 +1413,78 @@
         "deprecated": false,
         "global": false,
         "mutable": false,
+        "sensitive": false,
         "type": "int"
       },
       "unhealthyLoadThresholdPercentage": {
         "deprecated": false,
         "global": false,
         "mutable": false,
+        "sensitive": false,
         "type": "int"
       }
     },
     "memory": {
       "directMemoryWarningThresholdPercentage": {
         "deprecated": false,
-        "desc": "Log warning messages if the used direct memory exceeds the max direct memory of the percentage",
+        "description": "Log warning messages if the used direct memory exceeds the max direct memory of the percentage",
         "global": false,
         "mutable": false,
+        "sensitive": false,
         "type": "int"
       },
       "heapMemoryGcThresholdPercentage": {
         "deprecated": false,
-        "desc": "If the used memory has used the reserved memory specified by maxAvailableMemoryPercentage and minFreeSystemMemoryBytes, try to start GC when the used heap memory exceeds the max heap memory of the percentage",
+        "description": "If the used memory has used the reserved memory specified by maxAvailableMemoryPercentage and minFreeSystemMemoryBytes, try to start GC when the used heap memory exceeds the max heap memory of the percentage",
         "global": false,
         "mutable": false,
+        "sensitive": false,
         "type": "int"
       },
       "heapMemoryWarningThresholdPercentage": {
         "deprecated": false,
-        "desc": "Log warning messages if the used heap memory exceeds the max heap memory of the percentage",
+        "description": "Log warning messages if the used heap memory exceeds the max heap memory of the percentage",
         "global": false,
         "mutable": false,
+        "sensitive": false,
         "type": "int"
       },
       "maxAvailableDirectMemoryPercentage": {
         "deprecated": false,
-        "desc": "The server will refuse to serve when the used direct memory exceeds the max direct memory of the percentage to try to avoid OutOfMemoryError",
+        "description": "The server will refuse to serve when the used direct memory exceeds the max direct memory of the percentage to try to avoid OutOfMemoryError",
         "global": false,
         "mutable": false,
+        "sensitive": false,
         "type": "int"
       },
       "maxAvailableMemoryPercentage": {
         "deprecated": false,
-        "desc": "The server will refuse to serve when the used memory (heap memory + JVM internal non-heap memory + direct buffer pool) exceeds the physical memory of the percentage. The server will try to reserve max(maxAvailableMemoryPercentage of the physical memory, minFreeSystemMemoryBytes) for kernel and other processes. Note that the max available memory percentage doesn't conflict with the usage of limiting memory in docker because docker limits the memory of the container, while this memory percentage only limits the available memory for JVM",
+        "description": "The server will refuse to serve when the used memory (heap memory + JVM internal non-heap memory + direct buffer pool) exceeds the physical memory of the percentage. The server will try to reserve max(maxAvailableMemoryPercentage of the physical memory, minFreeSystemMemoryBytes) for kernel and other processes. Note that the max available memory percentage doesn't conflict with the usage of limiting memory in docker because docker limits the memory of the container, while this memory percentage only limits the available memory for JVM",
         "global": false,
         "mutable": false,
+        "sensitive": false,
         "type": "int"
       },
       "minFreeSystemMemoryBytes": {
         "deprecated": false,
-        "desc": "The server will refuse to serve when the free system memory is less than minFreeSystemMemoryBytes",
+        "description": "The server will refuse to serve when the free system memory is less than minFreeSystemMemoryBytes",
         "global": false,
         "mutable": false,
+        "sensitive": false,
         "type": "int"
       },
       "minHeapMemoryGcIntervalSeconds": {
         "deprecated": false,
         "global": false,
         "mutable": false,
+        "sensitive": false,
         "type": "int"
       },
       "minMemoryWarningIntervalSeconds": {
         "deprecated": false,
         "global": false,
         "mutable": false,
+        "sensitive": false,
         "type": "int"
       }
     }
@@ -1336,70 +1492,79 @@
   "ip": {
     "cachedPrivateIpExpireAfterMillis": {
       "deprecated": false,
-      "desc": "The cached private IP will expire after the specified time has elapsed. 0 means no cache",
+      "description": "The cached private IP will expire after the specified time has elapsed. 0 means no cache",
       "global": false,
       "mutable": true,
+      "sensitive": false,
       "type": "int"
     },
     "cachedPublicIpExpireAfterMillis": {
       "deprecated": false,
-      "desc": "The cached public IP will expire after the specified time has elapsed. 0 means no cache",
+      "description": "The cached public IP will expire after the specified time has elapsed. 0 means no cache",
       "global": false,
       "mutable": true,
+      "sensitive": false,
       "type": "int"
     },
     "publicIpDetectorAddresses": {
       "deprecated": false,
-      "desc": "The public IP detectors will only be used to query the public IP of the local node if needed (e.g. If the node discovery property \"advertiseStrategy\" is \"PUBLIC_ADDRESS\". Note that the HTTP response body must be a string of IP instead of a JSON",
+      "description": "The public IP detectors will only be used to query the public IP of the local node if needed (e.g. If the node discovery property \"advertiseStrategy\" is \"PUBLIC_ADDRESS\". Note that the HTTP response body must be a string of IP instead of a JSON",
       "elementType": "string",
       "global": false,
       "mutable": true,
+      "sensitive": false,
       "type": "java.util.List"
     }
   },
   "location": {
     "enabled": {
       "deprecated": false,
-      "desc": "Whether to handle users' locations",
+      "description": "Whether to handle users' locations",
       "global": false,
       "mutable": false,
+      "sensitive": false,
       "type": "boolean"
     },
     "nearbyUserRequest": {
       "defaultMaxDistanceMeters": {
         "deprecated": false,
-        "desc": "The default maximum allowed distance in meters",
+        "description": "The default maximum allowed distance in meters",
         "global": true,
         "mutable": true,
+        "sensitive": false,
         "type": "int"
       },
       "defaultMaxNearbyUserCount": {
         "deprecated": false,
-        "desc": "The default maximum allowed number of nearby users",
+        "description": "The default maximum allowed number of nearby users",
         "global": true,
         "mutable": true,
+        "sensitive": false,
         "type": "short"
       },
       "maxDistanceMeters": {
         "deprecated": false,
-        "desc": "The maximum allowed distance in meters",
+        "description": "The maximum allowed distance in meters",
         "global": true,
         "mutable": true,
+        "sensitive": false,
         "type": "int"
       },
       "maxNearbyUserCount": {
         "deprecated": false,
-        "desc": "The maximum allowed number of nearby users",
+        "description": "The maximum allowed number of nearby users",
         "global": true,
         "mutable": true,
+        "sensitive": false,
         "type": "short"
       }
     },
     "treatUserIdAndDeviceTypeAsUniqueUser": {
       "deprecated": false,
-      "desc": "Whether to treat the pair of user ID and device type as a unique user when querying users nearby. If false, only the user ID is used to identify a unique user",
+      "description": "Whether to treat the pair of user ID and device type as a unique user when querying users nearby. If false, only the user ID is used to identify a unique user",
       "global": false,
       "mutable": false,
+      "sensitive": false,
       "type": "boolean"
     }
   },
@@ -1409,6 +1574,7 @@
         "deprecated": false,
         "global": false,
         "mutable": false,
+        "sensitive": false,
         "type": "boolean"
       },
       "level": {
@@ -1423,6 +1589,7 @@
           "ERROR",
           "FATAL"
         ],
+        "sensitive": false,
         "type": "enum"
       }
     },
@@ -1432,6 +1599,7 @@
           "deprecated": false,
           "global": false,
           "mutable": false,
+          "sensitive": false,
           "type": "boolean"
         }
       },
@@ -1439,12 +1607,14 @@
         "deprecated": false,
         "global": false,
         "mutable": false,
+        "sensitive": false,
         "type": "boolean"
       },
       "filePath": {
         "deprecated": false,
         "global": false,
         "mutable": false,
+        "sensitive": false,
         "type": "string"
       },
       "level": {
@@ -1459,18 +1629,21 @@
           "ERROR",
           "FATAL"
         ],
+        "sensitive": false,
         "type": "enum"
       },
       "maxFileSizeMb": {
         "deprecated": false,
         "global": false,
         "mutable": false,
+        "sensitive": false,
         "type": "int"
       },
       "maxFiles": {
         "deprecated": false,
         "global": false,
         "mutable": false,
+        "sensitive": false,
         "type": "int"
       }
     }
@@ -1478,55 +1651,62 @@
   "plugin": {
     "dir": {
       "deprecated": false,
-      "desc": "The relative path of plugins",
+      "description": "The relative path of plugins",
       "global": false,
       "mutable": false,
+      "sensitive": false,
       "type": "string"
     },
     "enabled": {
       "deprecated": false,
-      "desc": "Whether to enable plugins",
+      "description": "Whether to enable plugins",
       "global": false,
       "mutable": false,
+      "sensitive": false,
       "type": "boolean"
     },
     "java": {
       "allowSave": {
         "deprecated": false,
-        "desc": "Whether to allow to save plugins using HTTP API",
+        "description": "Whether to allow to save plugins using HTTP API",
         "global": false,
         "mutable": false,
+        "sensitive": false,
         "type": "boolean"
       }
     },
     "js": {
       "allowSave": {
         "deprecated": false,
-        "desc": "Whether to allow to save plugins using HTTP API",
+        "description": "Whether to allow to save plugins using HTTP API",
         "global": false,
         "mutable": false,
+        "sensitive": false,
         "type": "boolean"
       },
       "debug": {
         "enabled": {
           "deprecated": false,
-          "desc": "Whether to enable debugging",
+          "description": "Whether to enable debugging",
           "global": false,
           "mutable": false,
+          "sensitive": false,
           "type": "boolean"
         },
         "inspectHost": {
           "deprecated": false,
-          "desc": "The inspect host",
+          "description": "The inspect host",
           "global": false,
           "mutable": false,
+          "sensitive": false,
           "type": "string"
         },
         "inspectPort": {
           "deprecated": false,
-          "desc": "The inspect port",
+          "description": "The inspect port",
           "global": false,
           "mutable": false,
+          "sensitive": false,
           "type": "int"
         }
       }
@@ -1542,19 +1722,22 @@
               "elementType": "im.turms.server.common.infra.property.env.common.security.AutoBlockItemProperties$BlockLevel",
               "global": false,
               "mutable": false,
+              "sensitive": false,
               "type": "java.util.List"
             },
             "blockTriggerTimes": {
               "deprecated": false,
-              "desc": "Block the client when the block condition is triggered the times",
+              "description": "Block the client when the block condition is triggered the times",
               "global": false,
               "mutable": false,
+              "sensitive": false,
               "type": "int"
             },
             "enabled": {
               "deprecated": false,
               "global": false,
               "mutable": false,
+              "sensitive": false,
               "type": "boolean"
             }
           },
@@ -1564,19 +1747,22 @@
               "elementType": "im.turms.server.common.infra.property.env.common.security.AutoBlockItemProperties$BlockLevel",
               "global": false,
               "mutable": false,
+              "sensitive": false,
               "type": "java.util.List"
             },
             "blockTriggerTimes": {
               "deprecated": false,
-              "desc": "Block the client when the block condition is triggered the times",
+              "description": "Block the client when the block condition is triggered the times",
               "global": false,
               "mutable": false,
+              "sensitive": false,
               "type": "int"
             },
             "enabled": {
               "deprecated": false,
               "global": false,
               "mutable": false,
+              "sensitive": false,
               "type": "boolean"
             }
           },
@@ -1586,19 +1772,22 @@
               "elementType": "im.turms.server.common.infra.property.env.common.security.AutoBlockItemProperties$BlockLevel",
               "global": false,
               "mutable": false,
+              "sensitive": false,
               "type": "java.util.List"
             },
             "blockTriggerTimes": {
               "deprecated": false,
-              "desc": "Block the client when the block condition is triggered the times",
+              "description": "Block the client when the block condition is triggered the times",
               "global": false,
               "mutable": false,
+              "sensitive": false,
               "type": "int"
             },
             "enabled": {
               "deprecated": false,
               "global": false,
               "mutable": false,
+              "sensitive": false,
               "type": "boolean"
             }
           }
@@ -1607,12 +1796,14 @@
           "deprecated": false,
           "global": false,
           "mutable": false,
+          "sensitive": false,
           "type": "boolean"
         },
         "syncBlocklistIntervalMillis": {
           "deprecated": false,
           "global": false,
           "mutable": false,
+          "sensitive": false,
           "type": "int"
         }
       },
@@ -1624,19 +1815,22 @@
               "elementType": "im.turms.server.common.infra.property.env.common.security.AutoBlockItemProperties$BlockLevel",
               "global": false,
               "mutable": false,
+              "sensitive": false,
               "type": "java.util.List"
             },
             "blockTriggerTimes": {
               "deprecated": false,
-              "desc": "Block the client when the block condition is triggered the times",
+              "description": "Block the client when the block condition is triggered the times",
               "global": false,
               "mutable": false,
+              "sensitive": false,
               "type": "int"
             },
             "enabled": {
               "deprecated": false,
               "global": false,
               "mutable": false,
+              "sensitive": false,
               "type": "boolean"
             }
           },
@@ -1646,19 +1840,22 @@
               "elementType": "im.turms.server.common.infra.property.env.common.security.AutoBlockItemProperties$BlockLevel",
               "global": false,
               "mutable": false,
+              "sensitive": false,
               "type": "java.util.List"
             },
             "blockTriggerTimes": {
               "deprecated": false,
-              "desc": "Block the client when the block condition is triggered the times",
+              "description": "Block the client when the block condition is triggered the times",
               "global": false,
               "mutable": false,
+              "sensitive": false,
               "type": "int"
             },
             "enabled": {
               "deprecated": false,
               "global": false,
               "mutable": false,
+              "sensitive": false,
               "type": "boolean"
             }
           },
@@ -1668,19 +1865,22 @@
               "elementType": "im.turms.server.common.infra.property.env.common.security.AutoBlockItemProperties$BlockLevel",
               "global": false,
               "mutable": false,
+              "sensitive": false,
               "type": "java.util.List"
             },
             "blockTriggerTimes": {
               "deprecated": false,
-              "desc": "Block the client when the block condition is triggered the times",
+              "description": "Block the client when the block condition is triggered the times",
               "global": false,
               "mutable": false,
+              "sensitive": false,
               "type": "int"
             },
             "enabled": {
               "deprecated": false,
               "global": false,
               "mutable": false,
+              "sensitive": false,
               "type": "boolean"
             }
           }
@@ -1689,12 +1889,14 @@
           "deprecated": false,
           "global": false,
           "mutable": false,
+          "sensitive": false,
           "type": "boolean"
         },
         "syncBlocklistIntervalMillis": {
           "deprecated": false,
           "global": false,
           "mutable": false,
+          "sensitive": false,
           "type": "int"
         }
       }
@@ -1702,7 +1904,7 @@
     "password": {
       "adminPasswordEncodingAlgorithm": {
         "deprecated": false,
-        "desc": "The password encoding algorithm for admins",
+        "description": "The password encoding algorithm for admins",
         "global": false,
         "mutable": false,
         "options": [
@@ -1710,18 +1912,20 @@
           "SALTED_SHA256",
           "NOOP"
         ],
+        "sensitive": false,
         "type": "enum"
       },
       "initialRootPassword": {
         "deprecated": false,
-        "desc": "The initial password of the root user",
+        "description": "The initial password of the root user",
         "global": false,
         "mutable": false,
+        "sensitive": true,
         "type": "string"
       },
       "userPasswordEncodingAlgorithm": {
         "deprecated": false,
-        "desc": "The password encoding algorithm for users",
+        "description": "The password encoding algorithm for users",
         "global": false,
         "mutable": false,
         "options": [
@@ -1729,6 +1933,7 @@
           "SALTED_SHA256",
           "NOOP"
         ],
+        "sensitive": false,
         "type": "enum"
       }
     }
@@ -1738,14 +1943,15 @@
       "address": {
         "advertiseHost": {
           "deprecated": false,
-          "desc": "The advertise address of the local node exposed to admins. (e.g. 100.131.251.96)",
+          "description": "The advertise address of the local node exposed to admins. (e.g. 100.131.251.96)",
           "global": false,
           "mutable": true,
+          "sensitive": false,
           "type": "string"
         },
         "advertiseStrategy": {
           "deprecated": false,
-          "desc": "The advertise strategy is used to decide which type of address should be used so that admins can access admin APIs and metrics APIs",
+          "description": "The advertise strategy is used to decide which type of address should be used so that admins can access admin APIs and metrics APIs",
           "global": false,
           "mutable": true,
           "options": [
@@ -1754,35 +1960,40 @@
             "PRIVATE_ADDRESS",
             "PUBLIC_ADDRESS"
           ],
+          "sensitive": false,
           "type": "enum"
         },
         "attachPortToHost": {
           "deprecated": false,
-          "desc": "Whether to attach the local port to the host.\ne.g. The local host is 100.131.251.96, and the port is 9510 so the service address will be 100.131.251.96:9510",
+          "description": "Whether to attach the local port to the host.\ne.g. The local host is 100.131.251.96, and the port is 9510 so the service address will be 100.131.251.96:9510",
           "global": false,
           "mutable": true,
+          "sensitive": false,
           "type": "boolean"
         }
       },
       "allowDeleteWithoutFilter": {
         "deprecated": false,
-        "desc": "Whether to allow administrators to delete data without any filter. Better false to prevent administrators from deleting all data by accident",
+        "description": "Whether to allow administrators to delete data without any filter. Better false to prevent administrators from deleting all data by accident",
         "global": true,
         "mutable": true,
+        "sensitive": false,
         "type": "boolean"
       },
       "defaultAvailableRecordsPerRequest": {
         "deprecated": false,
-        "desc": "The default available records per query request",
+        "description": "The default available records per query request",
         "global": true,
         "mutable": true,
+        "sensitive": false,
         "type": "int"
       },
       "enabled": {
         "deprecated": false,
-        "desc": "Whether to enable the APIs for administrators",
+        "description": "Whether to enable the APIs for administrators",
         "global": false,
         "mutable": false,
+        "sensitive": false,
         "type": "boolean"
       },
       "http": {
@@ -1790,121 +2001,137 @@
           "deprecated": false,
           "global": false,
           "mutable": false,
+          "sensitive": false,
           "type": "string"
         },
         "maxRequestBodySizeBytes": {
           "deprecated": false,
           "global": false,
           "mutable": false,
+          "sensitive": false,
           "type": "int"
         },
         "port": {
           "deprecated": false,
           "global": false,
           "mutable": false,
+          "sensitive": false,
           "type": "int"
         }
       },
       "log": {
         "enabled": {
           "deprecated": false,
-          "desc": "Whether to log API calls",
+          "description": "Whether to log API calls",
           "global": true,
           "mutable": true,
+          "sensitive": false,
           "type": "boolean"
         },
         "logRequestParams": {
           "deprecated": false,
-          "desc": "Whether to log the parameters of requests",
+          "description": "Whether to log the parameters of requests",
           "global": true,
           "mutable": true,
+          "sensitive": false,
           "type": "boolean"
         }
       },
       "maxAvailableOnlineUsersStatusPerRequest": {
         "deprecated": false,
-        "desc": "The maximum available online users' status per query request",
+        "description": "The maximum available online users' status per query request",
         "global": true,
         "mutable": true,
+        "sensitive": false,
         "type": "int"
       },
       "maxAvailableRecordsPerRequest": {
         "deprecated": false,
-        "desc": "The maximum available records per query request",
+        "description": "The maximum available records per query request",
         "global": true,
         "mutable": true,
+        "sensitive": false,
         "type": "int"
       },
       "maxDayDifferencePerCountRequest": {
         "deprecated": false,
-        "desc": "The maximum day difference per count request",
+        "description": "The maximum day difference per count request",
         "global": true,
         "mutable": true,
+        "sensitive": false,
         "type": "int"
       },
       "maxDayDifferencePerRequest": {
         "deprecated": false,
-        "desc": "The maximum day difference per query request",
+        "description": "The maximum day difference per query request",
         "global": true,
         "mutable": true,
+        "sensitive": false,
         "type": "int"
       },
       "maxHourDifferencePerCountRequest": {
         "deprecated": false,
-        "desc": "The maximum hour difference per count request",
+        "description": "The maximum hour difference per count request",
         "global": true,
         "mutable": true,
+        "sensitive": false,
         "type": "int"
       },
       "maxMonthDifferencePerCountRequest": {
         "deprecated": false,
-        "desc": "The maximum month difference per count request",
+        "description": "The maximum month difference per count request",
         "global": true,
         "mutable": true,
+        "sensitive": false,
         "type": "int"
       },
       "rateLimiting": {
         "capacity": {
           "deprecated": false,
-          "desc": "The maximum number of tokens that the bucket can hold",
+          "description": "The maximum number of tokens that the bucket can hold",
           "global": true,
           "mutable": true,
+          "sensitive": false,
           "type": "int"
         },
         "initialTokens": {
           "deprecated": false,
-          "desc": "The initial number of tokens for new session",
+          "description": "The initial number of tokens for new session",
           "global": true,
           "mutable": true,
+          "sensitive": false,
           "type": "int"
         },
         "refillIntervalMillis": {
           "deprecated": false,
-          "desc": "The time interval to refill. 0 means never refill",
+          "description": "The time interval to refill. 0 means never refill",
           "global": true,
           "mutable": true,
+          "sensitive": false,
           "type": "int"
         },
         "tokensPerPeriod": {
           "deprecated": false,
-          "desc": "Refills the bucket with the specified number of tokens per period if the bucket isn't full",
+          "description": "Refills the bucket with the specified number of tokens per period if the bucket isn't full",
           "global": true,
           "mutable": true,
+          "sensitive": false,
           "type": "int"
         }
       },
       "useAuthentication": {
         "deprecated": false,
-        "desc": "Whether to use authentication. If false, all HTTP requesters will personate the root user and all HTTP requests will be passed. You may set it to false when you want to manage authentication via security groups, NACL, etc",
+        "description": "Whether to use authentication. If false, all HTTP requesters will personate the root user and all HTTP requests will be passed. You may set it to false when you want to manage authentication via security groups, NACL, etc",
         "global": false,
         "mutable": false,
+        "sensitive": false,
         "type": "boolean"
       }
     },
     "clientApi": {
       "disabledEndpoints": {
         "deprecated": false,
-        "desc": "The disabled endpoints for client requests. Return ILLEGAL_ARGUMENT if a client tries to access them",
+        "description": "The disabled endpoints for client requests. Return ILLEGAL_ARGUMENT if a client tries to access them",
         "elementType": "enum",
         "global": false,
         "mutable": false,
@@ -1965,12 +2192,13 @@
           "QUERY_RESOURCE_UPLOAD_INFO_REQUEST",
           "KIND_NOT_SET"
         ],
+        "sensitive": false,
         "type": "java.util.Set"
       },
       "logging": {
         "excludedNotificationCategories": {
           "deprecated": false,
-          "desc": "Turms will get the notifications to log from the union of \"includedNotificationCategories\" and \"includedNotifications\" except the notifications included in \"excludedNotificationCategories\" and \"excludedNotificationTypes\"",
+          "description": "Turms will get the notifications to log from the union of \"includedNotificationCategories\" and \"includedNotifications\" except the notifications included in \"excludedNotificationCategories\" and \"excludedNotificationTypes\"",
           "elementType": "enum",
           "global": false,
           "mutable": false,
@@ -1991,11 +2219,12 @@
             "GROUP_ENROLLMENT",
             "GROUP_MEMBER"
           ],
+          "sensitive": false,
           "type": "java.util.Set"
         },
         "excludedNotificationTypes": {
           "deprecated": false,
-          "desc": "Turms will get the notifications to log from the union of \"includedNotificationCategories\" and \"includedNotifications\" except the notifications included in \"excludedNotificationCategories\" and \"excludedNotificationTypes\"",
+          "description": "Turms will get the notifications to log from the union of \"includedNotificationCategories\" and \"includedNotifications\" except the notifications included in \"excludedNotificationCategories\" and \"excludedNotificationTypes\"",
           "elementType": "enum",
           "global": false,
           "mutable": false,
@@ -2056,11 +2285,12 @@
             "QUERY_RESOURCE_UPLOAD_INFO_REQUEST",
             "KIND_NOT_SET"
           ],
+          "sensitive": false,
           "type": "java.util.Set"
         },
         "excludedRequestCategories": {
           "deprecated": false,
-          "desc": "Turms will get the requests to log from the union of \"includedRequestCategories\" and \"includedRequests\" except the requests included in \"excludedRequestCategories\" and \"excludedRequestTypes\"",
+          "description": "Turms will get the requests to log from the union of \"includedRequestCategories\" and \"includedRequests\" except the requests included in \"excludedRequestCategories\" and \"excludedRequestTypes\"",
           "elementType": "enum",
           "global": false,
           "mutable": false,
@@ -2081,11 +2311,12 @@
             "GROUP_ENROLLMENT",
             "GROUP_MEMBER"
           ],
+          "sensitive": false,
           "type": "java.util.Set"
         },
         "excludedRequestTypes": {
           "deprecated": false,
-          "desc": "Turms will get the requests to log from the union of \"includedRequestCategories\" and \"includedRequests\" except the requests included in \"excludedRequestCategories\" and \"excludedRequestTypes\"",
+          "description": "Turms will get the requests to log from the union of \"includedRequestCategories\" and \"includedRequests\" except the requests included in \"excludedRequestCategories\" and \"excludedRequestTypes\"",
           "elementType": "enum",
           "global": false,
           "mutable": false,
@@ -2146,38 +2377,43 @@
             "QUERY_RESOURCE_UPLOAD_INFO_REQUEST",
             "KIND_NOT_SET"
           ],
+          "sensitive": false,
           "type": "java.util.Set"
         },
         "includedNotificationCategories": {
           "deprecated": false,
-          "desc": "Turms will get the notifications to log from the union of \"includedNotificationCategories\" and \"includedNotifications\" except the notifications included in \"excludedNotificationCategories\" and \"excludedNotificationTypes\"",
+          "description": "Turms will get the notifications to log from the union of \"includedNotificationCategories\" and \"includedNotifications\" except the notifications included in \"excludedNotificationCategories\" and \"excludedNotificationTypes\"",
           "elementType": "im.turms.server.common.infra.property.env.service.env.clientapi.property.LoggingCategoryProperties",
           "global": false,
           "mutable": false,
+          "sensitive": false,
           "type": "java.util.LinkedHashSet"
         },
         "includedNotifications": {
           "deprecated": false,
-          "desc": "Turms will get the notifications to log from the union of \"includedNotificationCategories\" and \"includedNotifications\" except the notifications included in \"excludedNotificationCategories\" and \"excludedNotificationTypes\"",
+          "description": "Turms will get the notifications to log from the union of \"includedNotificationCategories\" and \"includedNotifications\" except the notifications included in \"excludedNotificationCategories\" and \"excludedNotificationTypes\"",
           "elementType": "im.turms.server.common.infra.property.env.service.env.clientapi.property.LoggingRequestProperties",
           "global": false,
           "mutable": false,
+          "sensitive": false,
           "type": "java.util.LinkedHashSet"
         },
         "includedRequestCategories": {
           "deprecated": false,
-          "desc": "Turms will get the requests to log from the union of \"includedRequestCategories\" and \"includedRequests\" except the requests included in \"excludedRequestCategories\" and \"excludedRequestTypes\"",
+          "description": "Turms will get the requests to log from the union of \"includedRequestCategories\" and \"includedRequests\" except the requests included in \"excludedRequestCategories\" and \"excludedRequestTypes\"",
           "elementType": "im.turms.server.common.infra.property.env.service.env.clientapi.property.LoggingCategoryProperties",
           "global": false,
           "mutable": false,
+          "sensitive": false,
           "type": "java.util.LinkedHashSet"
         },
         "includedRequests": {
           "deprecated": false,
-          "desc": "Turms will get the requests to log from the union of \"includedRequestCategories\" and \"includedRequests\" except the requests included in \"excludedRequestCategories\" and \"excludedRequestTypes\"",
+          "description": "Turms will get the requests to log from the union of \"includedRequestCategories\" and \"includedRequests\" except the requests included in \"excludedRequestCategories\" and \"excludedRequestTypes\"",
           "elementType": "im.turms.server.common.infra.property.env.service.env.clientapi.property.LoggingRequestProperties",
           "global": false,
           "mutable": false,
+          "sensitive": false,
           "type": "java.util.LinkedHashSet"
         }
       }
@@ -2186,46 +2422,52 @@
       "readReceipt": {
         "allowMoveReadDateForward": {
           "deprecated": false,
-          "desc": "Whether to allow to move the last read date forward",
+          "description": "Whether to allow to move the last read date forward",
           "global": true,
           "mutable": true,
+          "sensitive": false,
           "type": "boolean"
         },
         "enabled": {
           "deprecated": false,
-          "desc": "Whether to allow to update the last read date",
+          "description": "Whether to allow to update the last read date",
           "global": true,
           "mutable": true,
+          "sensitive": false,
           "type": "boolean"
         },
         "updateReadDateAfterMessageSent": {
           "deprecated": false,
-          "desc": "Whether to update the read date after a user sent a message",
+          "description": "Whether to update the read date after a user sent a message",
           "global": true,
           "mutable": true,
+          "sensitive": false,
           "type": "boolean"
         },
         "updateReadDateWhenUserQueryingMessage": {
           "deprecated": false,
-          "desc": "Whether to update the read date when a user queries messages",
+          "description": "Whether to update the read date when a user queries messages",
           "global": true,
           "mutable": true,
+          "sensitive": false,
           "type": "boolean"
         },
         "useServerTime": {
           "deprecated": false,
-          "desc": "Whether to use the server time to set the last read date when updating",
+          "description": "Whether to use the server time to set the last read date when updating",
           "global": true,
           "mutable": true,
+          "sensitive": false,
           "type": "boolean"
         }
       },
       "typingStatus": {
         "enabled": {
           "deprecated": false,
-          "desc": "Whether to notify users of typing statuses sent by other users",
+          "description": "Whether to notify users of typing statuses sent by other users",
           "global": true,
           "mutable": true,
+          "sensitive": false,
           "type": "boolean"
         }
       }
@@ -2233,149 +2475,169 @@
     "fake": {
       "clearAllCollectionsBeforeFaking": {
         "deprecated": false,
-        "desc": "Whether to clear all collections before faking at startup",
+        "description": "Whether to clear all collections before faking at startup",
         "global": false,
         "mutable": false,
+        "sensitive": false,
         "type": "boolean"
       },
       "enabled": {
         "deprecated": false,
-        "desc": "Whether to fake data. Note that faking only works in non-production environments",
+        "description": "Whether to fake data. Note that faking only works in non-production environments",
         "global": false,
         "mutable": false,
+        "sensitive": false,
         "type": "boolean"
       },
       "fakeIfCollectionExists": {
         "deprecated": false,
-        "desc": "Whether to fake data even if the collection has already existed",
+        "description": "Whether to fake data even if the collection has already existed",
         "global": false,
         "mutable": false,
+        "sensitive": false,
         "type": "boolean"
       },
       "userCount": {
         "deprecated": false,
-        "desc": "the total number of users to fake",
+        "description": "the total number of users to fake",
         "global": false,
         "mutable": false,
+        "sensitive": false,
         "type": "int"
       }
     },
     "group": {
       "activateGroupWhenCreated": {
         "deprecated": false,
-        "desc": "Whether to activate a group when created by default",
+        "description": "Whether to activate a group when created by default",
         "global": true,
         "mutable": true,
+        "sensitive": false,
         "type": "boolean"
       },
       "deleteGroupLogicallyByDefault": {
         "deprecated": false,
-        "desc": "Whether to delete groups logically by default",
+        "description": "Whether to delete groups logically by default",
         "global": true,
         "mutable": true,
+        "sensitive": false,
         "type": "boolean"
       },
       "invitation": {
         "allowRecallPendingInvitationByOwnerAndManager": {
           "deprecated": false,
-          "desc": "Whether to allow the owner and managers of a group to recall pending group invitations",
+          "description": "Whether to allow the owner and managers of a group to recall pending group invitations",
           "global": true,
           "mutable": true,
+          "sensitive": false,
           "type": "boolean"
         },
         "deleteExpiredInvitationsWhenCronTriggered": {
           "deprecated": false,
-          "desc": "Whether to delete expired group invitations when the cron expression is triggered",
+          "description": "Whether to delete expired group invitations when the cron expression is triggered",
           "global": true,
           "mutable": true,
+          "sensitive": false,
           "type": "boolean"
         },
         "expireAfterSeconds": {
           "deprecated": false,
-          "desc": "A group invitation will become expired after the specified time has passed",
+          "description": "A group invitation will become expired after the specified time has passed",
           "global": true,
           "mutable": true,
+          "sensitive": false,
           "type": "int"
         },
         "expiredInvitationsCleanupCron": {
           "deprecated": false,
-          "desc": "Clean the expired group invitations when the cron expression is triggered if \"deleteExpiredInvitationsWhenCronTriggered\" is true",
+          "description": "Clean the expired group invitations when the cron expression is triggered if \"deleteExpiredInvitationsWhenCronTriggered\" is true",
           "global": false,
           "mutable": false,
+          "sensitive": false,
           "type": "string"
         },
         "maxContentLength": {
           "deprecated": false,
-          "desc": "The maximum allowed length for the text of a group invitation",
+          "description": "The maximum allowed length for the text of a group invitation",
           "global": true,
           "mutable": true,
+          "sensitive": false,
           "type": "int"
         }
       },
       "joinRequest": {
         "allowRecallJoinRequestSentByOneself": {
           "deprecated": false,
-          "desc": "Whether to allow users to recall the join requests sent by themselves",
+          "description": "Whether to allow users to recall the join requests sent by themselves",
           "global": true,
           "mutable": true,
+          "sensitive": false,
           "type": "boolean"
         },
         "deleteExpiredJoinRequestsWhenCronTriggered": {
           "deprecated": false,
-          "desc": "Whether to delete expired group join requests when the cron expression is triggered",
+          "description": "Whether to delete expired group join requests when the cron expression is triggered",
           "global": true,
           "mutable": true,
+          "sensitive": false,
           "type": "boolean"
         },
         "expireAfterSeconds": {
           "deprecated": false,
-          "desc": "A group join request will become expired after the specified time has elapsed",
+          "description": "A group join request will become expired after the specified time has elapsed",
           "global": true,
           "mutable": true,
+          "sensitive": false,
           "type": "int"
         },
         "expiredJoinRequestsCleanupCron": {
           "deprecated": false,
-          "desc": "Clean the expired group join requests when the cron expression is triggered if \"deleteExpiredJoinRequestsWhenCronTriggered\" is true",
+          "description": "Clean the expired group join requests when the cron expression is triggered if \"deleteExpiredJoinRequestsWhenCronTriggered\" is true",
           "global": false,
           "mutable": false,
+          "sensitive": false,
           "type": "string"
         },
         "maxContentLength": {
           "deprecated": false,
-          "desc": "The maximum allowed length for the text of a group join request",
+          "description": "The maximum allowed length for the text of a group join request",
           "global": true,
           "mutable": true,
+          "sensitive": false,
           "type": "int"
         }
       },
       "memberCacheExpireAfterSeconds": {
         "deprecated": false,
-        "desc": "The group member cache will expire after the specified seconds. If 0, no group member cache",
+        "description": "The group member cache will expire after the specified seconds. If 0, no group member cache",
         "global": true,
         "mutable": false,
+        "sensitive": false,
         "type": "int"
       },
       "question": {
         "answerContentLimit": {
           "deprecated": false,
-          "desc": "The maximum allowed length for the text of a group question's answer",
+          "description": "The maximum allowed length for the text of a group question's answer",
           "global": true,
           "mutable": true,
+          "sensitive": false,
           "type": "int"
         },
         "maxAnswerCount": {
           "deprecated": false,
-          "desc": "The maximum number of answers for a group question",
+          "description": "The maximum number of answers for a group question",
           "global": true,
           "mutable": true,
+          "sensitive": false,
           "type": "int"
         },
         "questionContentLimit": {
           "deprecated": false,
-          "desc": "The maximum allowed length for the text of a group question",
+          "description": "The maximum allowed length for the text of a group question",
           "global": true,
           "mutable": true,
+          "sensitive": false,
           "type": "int"
         }
       }
@@ -2383,171 +2645,194 @@
     "message": {
       "allowEditMessageBySender": {
         "deprecated": false,
-        "desc": "Whether to allow the sender of a message to edit the message",
+        "description": "Whether to allow the sender of a message to edit the message",
         "global": true,
         "mutable": true,
+        "sensitive": false,
         "type": "boolean"
       },
       "allowRecallMessage": {
         "deprecated": false,
-        "desc": "Whether to allow users to recall messages.\nNote: To recall messages, more system resources are needed",
+        "description": "Whether to allow users to recall messages.\nNote: To recall messages, more system resources are needed",
         "global": true,
         "mutable": true,
+        "sensitive": false,
         "type": "boolean"
       },
       "allowSendMessagesToOneself": {
         "deprecated": false,
-        "desc": "Whether to allow users to send messages to themselves",
+        "description": "Whether to allow users to send messages to themselves",
         "global": true,
         "mutable": true,
+        "sensitive": false,
         "type": "boolean"
       },
       "allowSendMessagesToStranger": {
         "deprecated": false,
-        "desc": "Whether to allow users to send messages to a stranger",
+        "description": "Whether to allow users to send messages to a stranger",
         "global": true,
         "mutable": true,
+        "sensitive": false,
         "type": "boolean"
       },
       "availableRecallDurationSeconds": {
         "deprecated": false,
-        "desc": "The available recall duration for the sender of a message",
+        "description": "The available recall duration for the sender of a message",
         "global": true,
         "mutable": true,
+        "sensitive": false,
         "type": "int"
       },
       "cache": {
         "sentMessageCacheMaxSize": {
           "deprecated": false,
-          "desc": "The maximum size of the cache of sent messages.",
+          "description": "The maximum size of the cache of sent messages.",
           "global": false,
           "mutable": false,
+          "sensitive": false,
           "type": "int"
         },
         "sentMessageExpireAfter": {
           "deprecated": false,
-          "desc": "The retention period of sent messages in the cache. For a better performance, it is a good practice to keep the value greater than the allowed recall duration",
+          "description": "The retention period of sent messages in the cache. For a better performance, it is a good practice to keep the value greater than the allowed recall duration",
           "global": false,
           "mutable": false,
+          "sensitive": false,
           "type": "int"
         }
       },
       "checkIfTargetActiveAndNotDeleted": {
         "deprecated": false,
-        "desc": "Whether to check if the target (recipient or group) of a message is active and not deleted",
+        "description": "Whether to check if the target (recipient or group) of a message is active and not deleted",
         "global": true,
         "mutable": true,
+        "sensitive": false,
         "type": "boolean"
       },
       "defaultAvailableMessagesNumberWithTotal": {
         "deprecated": false,
-        "desc": "The default available messages number with the \"total\" field that users request",
+        "description": "The default available messages number with the \"total\" field that users request",
         "global": true,
         "mutable": true,
+        "sensitive": false,
         "type": "int"
       },
       "deleteMessageLogicallyByDefault": {
         "deprecated": false,
-        "desc": "Whether to delete messages logically by default",
+        "description": "Whether to delete messages logically by default",
         "global": true,
         "mutable": true,
+        "sensitive": false,
         "type": "boolean"
       },
       "expiredMessagesCleanupCron": {
         "deprecated": false,
-        "desc": "Clean the expired messages when the cron expression is triggered",
+        "description": "Clean the expired messages when the cron expression is triggered",
         "global": false,
         "mutable": false,
+        "sensitive": false,
         "type": "string"
       },
       "maxRecordsSizeBytes": {
         "deprecated": false,
-        "desc": "The maximum allowed size for the records of a message",
+        "description": "The maximum allowed size for the records of a message",
         "global": true,
         "mutable": true,
+        "sensitive": false,
         "type": "int"
       },
       "maxTextLimit": {
         "deprecated": false,
-        "desc": "The maximum allowed length for the text of a message",
+        "description": "The maximum allowed length for the text of a message",
         "global": true,
         "mutable": true,
+        "sensitive": false,
         "type": "int"
       },
       "messageRetentionPeriodHours": {
         "deprecated": false,
-        "desc": "A message will be retained for the given period and will be removed from the database after the retention period",
+        "description": "A message will be retained for the given period and will be removed from the database after the retention period",
         "global": true,
         "mutable": true,
+        "sensitive": false,
         "type": "int"
       },
       "persistMessage": {
         "deprecated": false,
-        "desc": "Whether to persist messages in databases.\nNote: If false, senders will not get the message ID after the message has sent and cannot edit it",
+        "description": "Whether to persist messages in databases.\nNote: If false, senders will not get the message ID after the message has sent and cannot edit it",
         "global": true,
         "mutable": true,
+        "sensitive": false,
         "type": "boolean"
       },
       "persistPreMessageId": {
         "deprecated": false,
-        "desc": "Whether to persist the previous message ID of messages in databases",
+        "description": "Whether to persist the previous message ID of messages in databases",
         "global": true,
         "mutable": true,
+        "sensitive": false,
         "type": "boolean"
       },
       "persistRecord": {
         "deprecated": false,
-        "desc": "Whether to persist the records of messages in databases",
+        "description": "Whether to persist the records of messages in databases",
         "global": true,
         "mutable": true,
+        "sensitive": false,
         "type": "boolean"
       },
       "persistSenderIp": {
         "deprecated": false,
-        "desc": "Whether to persist the sender IP of messages in databases",
+        "description": "Whether to persist the sender IP of messages in databases",
         "global": true,
         "mutable": true,
+        "sensitive": false,
         "type": "boolean"
       },
       "sendMessageToOtherSenderOnlineDevices": {
         "deprecated": false,
-        "desc": "Whether to send the message to the other sender's online devices when sending a message",
+        "description": "Whether to send the message to the other sender's online devices when sending a message",
         "global": true,
         "mutable": true,
+        "sensitive": false,
         "type": "boolean"
       },
       "sequenceId": {
         "useSequenceIdForGroupConversation": {
           "deprecated": false,
-          "desc": "Whether to use the sequence ID for group conversations so that the client can be aware of the loss of messages. Note that the property has a significant impact on performance",
+          "description": "Whether to use the sequence ID for group conversations so that the client can be aware of the loss of messages. Note that the property has a significant impact on performance",
           "global": true,
           "mutable": false,
+          "sensitive": false,
           "type": "boolean"
         },
         "useSequenceIdForPrivateConversation": {
           "deprecated": false,
-          "desc": "Whether to use the sequence ID for private conversations so that the client can be aware of the loss of messages. Note that the property has a significant impact on performance",
+          "description": "Whether to use the sequence ID for private conversations so that the client can be aware of the loss of messages. Note that the property has a significant impact on performance",
           "global": true,
           "mutable": false,
+          "sensitive": false,
           "type": "boolean"
         }
       },
       "timeType": {
         "deprecated": false,
-        "desc": "The time type for the delivery time of message",
+        "description": "The time type for the delivery time of message",
         "global": true,
         "mutable": true,
         "options": [
           "CLIENT_TIME",
           "LOCAL_SERVER_TIME"
         ],
+        "sensitive": false,
         "type": "enum"
       },
       "useConversationId": {
         "deprecated": false,
-        "desc": "Whether to use conversation ID so that a user can query the messages sent by themselves in a conversation quickly",
+        "description": "Whether to use conversation ID so that a user can query the messages sent by themselves in a conversation quickly",
         "global": true,
         "mutable": false,
+        "sensitive": false,
         "type": "boolean"
       }
     },
@@ -2559,12 +2844,14 @@
               "deprecated": false,
               "global": false,
               "mutable": false,
+              "sensitive": false,
               "type": "boolean"
             },
             "roleId": {
               "deprecated": false,
               "global": false,
               "mutable": false,
+              "sensitive": false,
               "type": "boolean"
             }
           }
@@ -2578,36 +2865,42 @@
               "deprecated": false,
               "global": false,
               "mutable": false,
+              "sensitive": false,
               "type": "boolean"
             },
             "creatorId": {
               "deprecated": false,
               "global": false,
               "mutable": false,
+              "sensitive": false,
               "type": "boolean"
             },
             "deletionDate": {
               "deprecated": false,
               "global": false,
               "mutable": false,
+              "sensitive": false,
               "type": "boolean"
             },
             "muteEndDate": {
               "deprecated": false,
               "global": false,
               "mutable": false,
+              "sensitive": false,
               "type": "boolean"
             },
             "ownerId": {
               "deprecated": false,
               "global": false,
               "mutable": false,
+              "sensitive": false,
               "type": "boolean"
             },
             "typeId": {
               "deprecated": false,
               "global": false,
               "mutable": false,
+              "sensitive": false,
               "type": "boolean"
             }
           },
@@ -2616,12 +2909,14 @@
               "deprecated": false,
               "global": false,
               "mutable": false,
+              "sensitive": false,
               "type": "boolean"
             },
             "requesterId": {
               "deprecated": false,
               "global": false,
               "mutable": false,
+              "sensitive": false,
               "type": "boolean"
             }
           },
@@ -2630,18 +2925,21 @@
               "deprecated": false,
               "global": false,
               "mutable": false,
+              "sensitive": false,
               "type": "boolean"
             },
             "inviterId": {
               "deprecated": false,
               "global": false,
               "mutable": false,
+              "sensitive": false,
               "type": "boolean"
             },
             "responseDate": {
               "deprecated": false,
               "global": false,
               "mutable": false,
+              "sensitive": false,
               "type": "boolean"
             }
           },
@@ -2650,24 +2948,28 @@
               "deprecated": false,
               "global": false,
               "mutable": false,
+              "sensitive": false,
               "type": "boolean"
             },
             "groupId": {
               "deprecated": false,
               "global": false,
               "mutable": false,
+              "sensitive": false,
               "type": "boolean"
             },
             "responderId": {
               "deprecated": false,
               "global": false,
               "mutable": false,
+              "sensitive": false,
               "type": "boolean"
             },
             "responseDate": {
               "deprecated": false,
               "global": false,
               "mutable": false,
+              "sensitive": false,
               "type": "boolean"
             }
           },
@@ -2676,12 +2978,14 @@
               "deprecated": false,
               "global": false,
               "mutable": false,
+              "sensitive": false,
               "type": "boolean"
             },
             "muteEndDate": {
               "deprecated": false,
               "global": false,
               "mutable": false,
+              "sensitive": false,
               "type": "boolean"
             }
           }
@@ -2694,24 +2998,28 @@
               "deprecated": false,
               "global": false,
               "mutable": false,
+              "sensitive": false,
               "type": "boolean"
             },
             "referenceId": {
               "deprecated": false,
               "global": false,
               "mutable": false,
+              "sensitive": false,
               "type": "boolean"
             },
             "senderId": {
               "deprecated": false,
               "global": false,
               "mutable": false,
+              "sensitive": false,
               "type": "boolean"
             },
             "senderIp": {
               "deprecated": false,
               "global": false,
               "mutable": false,
+              "sensitive": false,
               "type": "boolean"
             }
           }
@@ -2722,12 +3030,14 @@
               "deprecated": false,
               "global": false,
               "mutable": false,
+              "sensitive": false,
               "type": "string"
             },
             "enabled": {
               "deprecated": false,
               "global": true,
               "mutable": true,
+              "sensitive": false,
               "type": "boolean"
             }
           },
@@ -2735,13 +3045,15 @@
             "deprecated": false,
             "global": false,
             "mutable": false,
+            "sensitive": false,
             "type": "boolean"
           },
           "tiers": {
             "deprecated": false,
-            "desc": "The storage properties for tiers from hot to cold. Note that the order of the tiers is important",
+            "description": "The storage properties for tiers from hot to cold. Note that the order of the tiers is important",
             "global": false,
             "mutable": false,
+            "sensitive": false,
             "type": "java.util.LinkedHashMap"
           }
         }
@@ -2753,18 +3065,21 @@
               "deprecated": false,
               "global": false,
               "mutable": false,
+              "sensitive": false,
               "type": "boolean"
             },
             "requesterId": {
               "deprecated": false,
               "global": false,
               "mutable": false,
+              "sensitive": false,
               "type": "boolean"
             },
             "responseDate": {
               "deprecated": false,
               "global": false,
               "mutable": false,
+              "sensitive": false,
               "type": "boolean"
             }
           },
@@ -2773,6 +3088,7 @@
               "deprecated": false,
               "global": false,
               "mutable": false,
+              "sensitive": false,
               "type": "boolean"
             }
           },
@@ -2781,18 +3097,21 @@
               "deprecated": false,
               "global": false,
               "mutable": false,
+              "sensitive": false,
               "type": "boolean"
             },
             "joinDate": {
               "deprecated": false,
               "global": false,
               "mutable": false,
+              "sensitive": false,
               "type": "boolean"
             },
             "relatedUserId": {
               "deprecated": false,
               "global": false,
               "mutable": false,
+              "sensitive": false,
               "type": "boolean"
             }
           }
@@ -2802,170 +3121,194 @@
     "notification": {
       "notifyGroupConversationParticipantsAfterReadDateUpdated": {
         "deprecated": false,
-        "desc": "Whether to notify the group conversation participants after the read receipt of a conversation has been updated by recipients",
+        "description": "Whether to notify the group conversation participants after the read receipt of a conversation has been updated by recipients",
         "global": true,
         "mutable": true,
+        "sensitive": false,
         "type": "boolean"
       },
       "notifyInviteeAfterGroupInvitationRecalled": {
         "deprecated": false,
-        "desc": "Whether to notify the invitee after a group invitation has been recalled",
+        "description": "Whether to notify the invitee after a group invitation has been recalled",
         "global": true,
         "mutable": true,
+        "sensitive": false,
         "type": "boolean"
       },
       "notifyMemberAfterInfoUpdatedByOthers": {
         "deprecated": false,
-        "desc": "Whether to notify members after its member information has been updated by others",
+        "description": "Whether to notify members after its member information has been updated by others",
         "global": true,
         "mutable": true,
+        "sensitive": false,
         "type": "boolean"
       },
       "notifyMemberAfterRemovedFromRelationshipGroupByOthers": {
         "deprecated": false,
-        "desc": "Whether to notify the member after removed from a one-sided relationship group by others",
+        "description": "Whether to notify the member after removed from a one-sided relationship group by others",
         "global": true,
         "mutable": true,
+        "sensitive": false,
         "type": "boolean"
       },
       "notifyMembersAfterGroupDeleted": {
         "deprecated": false,
-        "desc": "Whether to notify members after a group has been removed",
+        "description": "Whether to notify members after a group has been removed",
         "global": true,
         "mutable": true,
+        "sensitive": false,
         "type": "boolean"
       },
       "notifyMembersAfterGroupUpdated": {
         "deprecated": false,
-        "desc": "Whether to notify members after a group has been updated",
+        "description": "Whether to notify members after a group has been updated",
         "global": true,
         "mutable": true,
+        "sensitive": false,
         "type": "boolean"
       },
       "notifyMembersAfterOneSidedRelationshipGroupUpdatedByOthers": {
         "deprecated": false,
-        "desc": "Whether to notify members after a one-sided relationship group has been updated by others",
+        "description": "Whether to notify members after a one-sided relationship group has been updated by others",
         "global": true,
         "mutable": true,
+        "sensitive": false,
         "type": "boolean"
       },
       "notifyMembersAfterOtherMemberInfoUpdated": {
         "deprecated": false,
-        "desc": "Whether to notify members after other group member's information has been updated",
+        "description": "Whether to notify members after other group member's information has been updated",
         "global": true,
         "mutable": true,
+        "sensitive": false,
         "type": "boolean"
       },
       "notifyMembersAfterOtherMemberOnlineStatusUpdated": {
         "deprecated": false,
-        "desc": "Whether to notify members after other group member's online status has been updated",
+        "description": "Whether to notify members after other group member's online status has been updated",
         "global": true,
         "mutable": true,
+        "sensitive": false,
         "type": "boolean"
       },
       "notifyOwnerAndManagersAfterGroupJoinRequestRecalled": {
         "deprecated": false,
-        "desc": "Whether to notify the owner and managers after a group invitation has been recalled",
+        "description": "Whether to notify the owner and managers after a group invitation has been recalled",
         "global": true,
         "mutable": true,
+        "sensitive": false,
         "type": "boolean"
       },
       "notifyOwnerAndManagersAfterReceivingJoinRequest": {
         "deprecated": false,
-        "desc": "Whether to notify the owner and managers after a join request has been received",
+        "description": "Whether to notify the owner and managers after a join request has been received",
         "global": true,
         "mutable": true,
+        "sensitive": false,
         "type": "boolean"
       },
       "notifyPrivateConversationParticipantAfterReadDateUpdated": {
         "deprecated": false,
-        "desc": "Whether to notify the private conversation participant after the read receipt of a conversation has been updated by the recipient",
+        "description": "Whether to notify the private conversation participant after the read receipt of a conversation has been updated by the recipient",
         "global": true,
         "mutable": true,
+        "sensitive": false,
         "type": "boolean"
       },
       "notifyRecipientWhenReceivingFriendRequest": {
         "deprecated": false,
-        "desc": "Whether to notify the recipient when receiving a friend request",
+        "description": "Whether to notify the recipient when receiving a friend request",
         "global": true,
         "mutable": true,
+        "sensitive": false,
         "type": "boolean"
       },
       "notifyRecipientsAfterMessageUpdatedBySender": {
         "deprecated": false,
-        "desc": "Whether to notify the recipients after a message has been updated by the sender",
+        "description": "Whether to notify the recipients after a message has been updated by the sender",
         "global": true,
         "mutable": true,
+        "sensitive": false,
         "type": "boolean"
       },
       "notifyRelatedUserAfterAddedToOneSidedRelationshipGroupByOthers": {
         "deprecated": false,
-        "desc": "Whether to notify the related user after added to a one-sided relationship group by others",
+        "description": "Whether to notify the related user after added to a one-sided relationship group by others",
         "global": true,
         "mutable": true,
+        "sensitive": false,
         "type": "boolean"
       },
       "notifyRelatedUserAfterOneSidedRelationshipUpdatedByOthers": {
         "deprecated": false,
-        "desc": "Whether to notify the related user after a one-sided relationship has benn updated by others",
+        "description": "Whether to notify the related user after a one-sided relationship has benn updated by others",
         "global": true,
         "mutable": true,
+        "sensitive": false,
         "type": "boolean"
       },
       "notifyRelatedUsersAfterOtherRelatedUserInfoUpdated": {
         "deprecated": false,
-        "desc": "Whether to notify related users after other related user's information has been updated",
+        "description": "Whether to notify related users after other related user's information has been updated",
         "global": true,
         "mutable": true,
+        "sensitive": false,
         "type": "boolean"
       },
       "notifyRelatedUsersAfterOtherRelatedUserOnlineStatusUpdated": {
         "deprecated": false,
-        "desc": "Whether to notify related users after other related user's online status has been updated",
+        "description": "Whether to notify related users after other related user's online status has been updated",
         "global": true,
         "mutable": true,
+        "sensitive": false,
         "type": "boolean"
       },
       "notifyRequesterAfterFriendRequestUpdated": {
         "deprecated": false,
-        "desc": "Whether to notify the requester after a friend request has been updated",
+        "description": "Whether to notify the requester after a friend request has been updated",
         "global": true,
         "mutable": true,
+        "sensitive": false,
         "type": "boolean"
       },
       "notifyUserAfterAddedToGroupByOthers": {
         "deprecated": false,
-        "desc": "Whether to notify the user after added to a group by others",
+        "description": "Whether to notify the user after added to a group by others",
         "global": true,
         "mutable": true,
+        "sensitive": false,
         "type": "boolean"
       },
       "notifyUserAfterBlockedByGroup": {
         "deprecated": false,
-        "desc": "Whether to notify the user after blocked by a group",
+        "description": "Whether to notify the user after blocked by a group",
         "global": true,
         "mutable": true,
+        "sensitive": false,
         "type": "boolean"
       },
       "notifyUserAfterInvitedByGroup": {
         "deprecated": false,
-        "desc": "Whether to notify the user after invited by a group",
+        "description": "Whether to notify the user after invited by a group",
         "global": true,
         "mutable": true,
+        "sensitive": false,
         "type": "boolean"
       },
       "notifyUserAfterRemovedFromGroupByOthers": {
         "deprecated": false,
-        "desc": "Whether to notify the user after removed from a group by others",
+        "description": "Whether to notify the user after removed from a group by others",
         "global": true,
         "mutable": true,
+        "sensitive": false,
         "type": "boolean"
       },
       "notifyUserAfterUnblockedByGroup": {
         "deprecated": false,
-        "desc": "Whether to notify the user after unblocked by a group",
+        "description": "Whether to notify the user after unblocked by a group",
         "global": true,
         "mutable": true,
+        "sensitive": false,
         "type": "boolean"
       }
     },
@@ -2975,36 +3318,42 @@
           "deprecated": false,
           "global": false,
           "mutable": false,
+          "sensitive": false,
           "type": "string"
         },
         "enabled": {
           "deprecated": false,
           "global": false,
           "mutable": false,
+          "sensitive": false,
           "type": "boolean"
         },
         "keyId": {
           "deprecated": false,
           "global": false,
           "mutable": false,
+          "sensitive": false,
           "type": "string"
         },
         "sandboxEnabled": {
           "deprecated": false,
           "global": false,
           "mutable": false,
+          "sensitive": false,
           "type": "boolean"
         },
         "signingKey": {
           "deprecated": false,
           "global": false,
           "mutable": false,
+          "sensitive": false,
           "type": "string"
         },
         "teamId": {
           "deprecated": false,
           "global": false,
           "mutable": false,
+          "sensitive": false,
           "type": "string"
         }
       },
@@ -3013,12 +3362,14 @@
           "deprecated": false,
           "global": false,
           "mutable": false,
+          "sensitive": false,
           "type": "string"
         },
         "enabled": {
           "deprecated": false,
           "global": false,
           "mutable": false,
+          "sensitive": false,
           "type": "boolean"
         }
       }
@@ -3029,16 +3380,18 @@
     "statistics": {
       "logOnlineUsersNumber": {
         "deprecated": false,
-        "desc": "Whether to log online users number",
+        "description": "Whether to log online users number",
         "global": true,
         "mutable": true,
+        "sensitive": false,
         "type": "boolean"
       },
       "onlineUsersNumberLoggingCron": {
         "deprecated": false,
-        "desc": "The cron expression to specify the time to log online users' number",
+        "description": "The cron expression to specify the time to log online users' number",
         "global": false,
         "mutable": false,
+        "sensitive": false,
         "type": "string"
       }
     },
@@ -3046,156 +3399,177 @@
       "groupProfilePicture": {
         "allowedContentType": {
           "deprecated": false,
-          "desc": "The allowed \"Content-Type\" of the resource that the client can upload",
+          "description": "The allowed \"Content-Type\" of the resource that the client can upload",
           "global": false,
           "mutable": false,
+          "sensitive": false,
           "type": "string"
         },
         "allowedReferrers": {
           "deprecated": false,
-          "desc": "Restrict access to the resource to only allow the specific referrers (e.g. \"https://github.com/turms-im/turms/*\")",
+          "description": "Restrict access to the resource to only allow the specific referrers (e.g. \"https://github.com/turms-im/turms/*\")",
           "elementType": "string",
           "global": false,
           "mutable": false,
+          "sensitive": false,
           "type": "java.util.List"
         },
         "downloadUrlExpireAfterSeconds": {
           "deprecated": false,
-          "desc": "The presigned URLs are valid only for the specified duration. 0 means no expiration",
+          "description": "The presigned URLs are valid only for the specified duration. 0 means no expiration",
           "global": false,
           "mutable": false,
+          "sensitive": false,
           "type": "int"
         },
         "expireAfterDays": {
           "deprecated": false,
-          "desc": "Delete the resource the specific days after creation. 0 means no expiration",
+          "description": "Delete the resource the specific days after creation. 0 means no expiration",
           "global": false,
           "mutable": false,
+          "sensitive": false,
           "type": "int"
         },
         "maxSizeBytes": {
           "deprecated": false,
-          "desc": "The maximum size of the resource that the client can upload. 0 means no limit",
+          "description": "The maximum size of the resource that the client can upload. 0 means no limit",
           "global": false,
           "mutable": false,
+          "sensitive": false,
           "type": "int"
         },
         "minSizeBytes": {
           "deprecated": false,
-          "desc": "The minimum size of the resource that the client can upload. 0 means no limit",
+          "description": "The minimum size of the resource that the client can upload. 0 means no limit",
           "global": false,
           "mutable": false,
+          "sensitive": false,
           "type": "int"
         },
         "uploadUrlExpireAfterSeconds": {
           "deprecated": false,
-          "desc": "The presigned URLs are valid only for the specified duration. 0 means no expiration",
+          "description": "The presigned URLs are valid only for the specified duration. 0 means no expiration",
           "global": false,
           "mutable": false,
+          "sensitive": false,
           "type": "int"
         }
       },
       "messageAttachment": {
         "allowedContentType": {
           "deprecated": false,
-          "desc": "The allowed \"Content-Type\" of the resource that the client can upload",
+          "description": "The allowed \"Content-Type\" of the resource that the client can upload",
           "global": false,
           "mutable": false,
+          "sensitive": false,
           "type": "string"
         },
         "allowedReferrers": {
           "deprecated": false,
-          "desc": "Restrict access to the resource to only allow the specific referrers (e.g. \"https://github.com/turms-im/turms/*\")",
+          "description": "Restrict access to the resource to only allow the specific referrers (e.g. \"https://github.com/turms-im/turms/*\")",
           "elementType": "string",
           "global": false,
           "mutable": false,
+          "sensitive": false,
           "type": "java.util.List"
         },
         "downloadUrlExpireAfterSeconds": {
           "deprecated": false,
-          "desc": "The presigned URLs are valid only for the specified duration. 0 means no expiration",
+          "description": "The presigned URLs are valid only for the specified duration. 0 means no expiration",
           "global": false,
           "mutable": false,
+          "sensitive": false,
           "type": "int"
         },
         "expireAfterDays": {
           "deprecated": false,
-          "desc": "Delete the resource the specific days after creation. 0 means no expiration",
+          "description": "Delete the resource the specific days after creation. 0 means no expiration",
           "global": false,
           "mutable": false,
+          "sensitive": false,
           "type": "int"
         },
         "maxSizeBytes": {
           "deprecated": false,
-          "desc": "The maximum size of the resource that the client can upload. 0 means no limit",
+          "description": "The maximum size of the resource that the client can upload. 0 means no limit",
           "global": false,
           "mutable": false,
+          "sensitive": false,
           "type": "int"
         },
         "minSizeBytes": {
           "deprecated": false,
-          "desc": "The minimum size of the resource that the client can upload. 0 means no limit",
+          "description": "The minimum size of the resource that the client can upload. 0 means no limit",
           "global": false,
           "mutable": false,
+          "sensitive": false,
           "type": "int"
         },
         "uploadUrlExpireAfterSeconds": {
           "deprecated": false,
-          "desc": "The presigned URLs are valid only for the specified duration. 0 means no expiration",
+          "description": "The presigned URLs are valid only for the specified duration. 0 means no expiration",
           "global": false,
           "mutable": false,
+          "sensitive": false,
           "type": "int"
         }
       },
       "userProfilePicture": {
         "allowedContentType": {
           "deprecated": false,
-          "desc": "The allowed \"Content-Type\" of the resource that the client can upload",
+          "description": "The allowed \"Content-Type\" of the resource that the client can upload",
           "global": false,
           "mutable": false,
+          "sensitive": false,
           "type": "string"
         },
         "allowedReferrers": {
           "deprecated": false,
-          "desc": "Restrict access to the resource to only allow the specific referrers (e.g. \"https://github.com/turms-im/turms/*\")",
+          "description": "Restrict access to the resource to only allow the specific referrers (e.g. \"https://github.com/turms-im/turms/*\")",
           "elementType": "string",
           "global": false,
           "mutable": false,
+          "sensitive": false,
           "type": "java.util.List"
         },
         "downloadUrlExpireAfterSeconds": {
           "deprecated": false,
-          "desc": "The presigned URLs are valid only for the specified duration. 0 means no expiration",
+          "description": "The presigned URLs are valid only for the specified duration. 0 means no expiration",
           "global": false,
           "mutable": false,
+          "sensitive": false,
           "type": "int"
         },
         "expireAfterDays": {
           "deprecated": false,
-          "desc": "Delete the resource the specific days after creation. 0 means no expiration",
+          "description": "Delete the resource the specific days after creation. 0 means no expiration",
           "global": false,
           "mutable": false,
+          "sensitive": false,
           "type": "int"
         },
         "maxSizeBytes": {
           "deprecated": false,
-          "desc": "The maximum size of the resource that the client can upload. 0 means no limit",
+          "description": "The maximum size of the resource that the client can upload. 0 means no limit",
           "global": false,
           "mutable": false,
+          "sensitive": false,
           "type": "int"
         },
         "minSizeBytes": {
           "deprecated": false,
-          "desc": "The minimum size of the resource that the client can upload. 0 means no limit",
+          "description": "The minimum size of the resource that the client can upload. 0 means no limit",
           "global": false,
           "mutable": false,
+          "sensitive": false,
           "type": "int"
         },
         "uploadUrlExpireAfterSeconds": {
           "deprecated": false,
-          "desc": "The presigned URLs are valid only for the specified duration. 0 means no expiration",
+          "description": "The presigned URLs are valid only for the specified duration. 0 means no expiration",
           "global": false,
           "mutable": false,
+          "sensitive": false,
           "type": "int"
         }
       }
@@ -3203,95 +3577,108 @@
     "user": {
       "activateUserWhenAdded": {
         "deprecated": false,
-        "desc": "Whether to activate a user when added by default",
+        "description": "Whether to activate a user when added by default",
         "global": true,
         "mutable": true,
+        "sensitive": false,
         "type": "boolean"
       },
       "deleteTwoSidedRelationships": {
         "deprecated": false,
-        "desc": "Whether to delete the two-sided relationships when a user requests to delete a relationship",
+        "description": "Whether to delete the two-sided relationships when a user requests to delete a relationship",
         "global": true,
         "mutable": true,
+        "sensitive": false,
         "type": "boolean"
       },
       "deleteUserLogically": {
         "deprecated": false,
-        "desc": "Whether to delete a user logically",
+        "description": "Whether to delete a user logically",
         "global": true,
         "mutable": true,
+        "sensitive": false,
         "type": "boolean"
       },
       "friendRequest": {
         "allowSendRequestAfterDeclinedOrIgnoredOrExpired": {
           "deprecated": false,
-          "desc": "Whether to allow resending a friend request after the previous request has been declined, ignored, or expired",
+          "description": "Whether to allow resending a friend request after the previous request has been declined, ignored, or expired",
           "global": true,
           "mutable": true,
+          "sensitive": false,
           "type": "boolean"
         },
         "deleteExpiredRequestsWhenCronTriggered": {
           "deprecated": false,
-          "desc": "Whether to delete expired when the cron expression is triggered",
+          "description": "Whether to delete expired when the cron expression is triggered",
           "global": true,
           "mutable": true,
+          "sensitive": false,
           "type": "boolean"
         },
         "expiredUserFriendRequestsCleanupCron": {
           "deprecated": false,
-          "desc": "Clean expired friend requests when the cron expression is triggered if deleteExpiredRequestsWhenCronTriggered is true",
+          "description": "Clean expired friend requests when the cron expression is triggered if deleteExpiredRequestsWhenCronTriggered is true",
           "global": false,
           "mutable": false,
+          "sensitive": false,
           "type": "string"
         },
         "friendRequestExpireAfterSeconds": {
           "deprecated": false,
-          "desc": "A friend request will become expired after the specified time has elapsed",
+          "description": "A friend request will become expired after the specified time has elapsed",
           "global": true,
           "mutable": true,
+          "sensitive": false,
           "type": "int"
         },
         "maxContentLength": {
           "deprecated": false,
-          "desc": "The maximum allowed length for the text of a friend request",
+          "description": "The maximum allowed length for the text of a friend request",
           "global": true,
           "mutable": true,
+          "sensitive": false,
           "type": "int"
         }
       },
       "maxIntroLength": {
         "deprecated": false,
-        "desc": "The maximum allowed length for a user's intro",
+        "description": "The maximum allowed length for a user's intro",
         "global": true,
         "mutable": true,
+        "sensitive": false,
         "type": "int"
       },
       "maxNameLength": {
         "deprecated": false,
-        "desc": "The maximum allowed length for a user's name",
+        "description": "The maximum allowed length for a user's name",
         "global": true,
         "mutable": true,
+        "sensitive": false,
         "type": "int"
       },
       "maxPasswordLength": {
         "deprecated": false,
-        "desc": "The maximum allowed length for a user's password",
+        "description": "The maximum allowed length for a user's password",
         "global": true,
         "mutable": true,
+        "sensitive": false,
         "type": "int"
       },
       "maxProfilePictureLength": {
         "deprecated": false,
-        "desc": "The maximum allowed length for a user's profile picture",
+        "description": "The maximum allowed length for a user's profile picture",
         "global": true,
         "mutable": true,
+        "sensitive": false,
         "type": "int"
       },
       "respondOfflineIfInvisible": {
         "deprecated": false,
-        "desc": "Whether to respond to client with the OFFLINE status if a user is in INVISIBLE status",
+        "description": "Whether to respond to client with the OFFLINE status if a user is in INVISIBLE status",
         "global": true,
         "mutable": true,
+        "sensitive": false,
         "type": "boolean"
       }
     }
@@ -3299,32 +3686,36 @@
   "shutdown": {
     "jobTimeoutMillis": {
       "deprecated": false,
-      "desc": "Wait for a job 2 minutes at most for extreme cases by default. Though it's a long time, graceful shutdown is usually better than force shutdown.",
+      "description": "Wait for a job 2 minutes at most for extreme cases by default. Though it's a long time, graceful shutdown is usually better than force shutdown.",
       "global": false,
       "mutable": false,
+      "sensitive": false,
       "type": "long"
     }
   },
   "userStatus": {
     "cacheUserSessionsStatus": {
       "deprecated": false,
-      "desc": "Whether to cache the user sessions status",
+      "description": "Whether to cache the user sessions status",
       "global": false,
       "mutable": false,
+      "sensitive": false,
       "type": "boolean"
     },
     "userSessionsStatusCacheMaxSize": {
       "deprecated": false,
-      "desc": "The maximum size of the cache of users' sessions status",
+      "description": "The maximum size of the cache of users' sessions status",
       "global": false,
       "mutable": false,
+      "sensitive": false,
       "type": "int"
     },
     "userSessionsStatusExpireAfter": {
       "deprecated": false,
-      "desc": "The life duration of each remote user's sessions status in the cache. Note that the cache will make the presentation of users' sessions status inconsistent during the time",
+      "description": "The life duration of each remote user's sessions status in the cache. Note that the cache will make the presentation of users' sessions status inconsistent during the time",
       "global": false,
       "mutable": false,
+      "sensitive": false,
       "type": "int"
     }
   }

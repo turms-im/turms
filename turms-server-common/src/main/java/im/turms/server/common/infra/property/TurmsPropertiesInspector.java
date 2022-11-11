@@ -33,6 +33,7 @@ import im.turms.server.common.infra.property.metadata.GlobalProperty;
 import im.turms.server.common.infra.property.metadata.MutableProperty;
 import im.turms.server.common.infra.reflect.ReflectionUtil;
 import im.turms.server.common.infra.reflect.VarAccessorFactory;
+import im.turms.server.common.infra.security.SensitiveProperty;
 import im.turms.server.common.infra.validation.ValidCron;
 import lombok.SneakyThrows;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
@@ -70,7 +71,9 @@ public class TurmsPropertiesInspector {
                         return true;
                     }
                     if (m instanceof AnnotatedField) {
-                        return !_hasAnnotation(m, NestedConfigurationProperty.class) && !_hasAnnotation(m, MutableProperty.class);
+                        return (!_hasAnnotation(m, NestedConfigurationProperty.class)
+                                && !_hasAnnotation(m, MutableProperty.class))
+                                || _hasAnnotation(m, SensitiveProperty.class);
                     }
                     return false;
                 }
@@ -192,6 +195,7 @@ public class TurmsPropertiesInspector {
         return new FieldMetadata(field.isAnnotationPresent(Deprecated.class),
                 field.isAnnotationPresent(GlobalProperty.class),
                 fieldInfo.isMutableProperty(),
+                field.isAnnotationPresent(SensitiveProperty.class),
                 getTypeName(type),
                 elementType,
                 options,

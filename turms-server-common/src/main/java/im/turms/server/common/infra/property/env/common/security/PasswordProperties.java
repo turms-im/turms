@@ -21,6 +21,8 @@ package im.turms.server.common.infra.property.env.common.security;
 import im.turms.server.common.infra.property.constant.PasswordEncodingAlgorithm;
 import im.turms.server.common.infra.property.metadata.Description;
 import im.turms.server.common.infra.property.metadata.ImmutableOnceApplied;
+import im.turms.server.common.infra.security.SensitiveProperty;
+import im.turms.server.common.infra.security.SecurityValueConst;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -36,6 +38,7 @@ import lombok.NoArgsConstructor;
 public class PasswordProperties {
 
     @Description("The initial password of the root user")
+    @SensitiveProperty
     private String initialRootPassword = "turms";
 
     @ImmutableOnceApplied
@@ -46,4 +49,12 @@ public class PasswordProperties {
     @Description("The password encoding algorithm for admins")
     private PasswordEncodingAlgorithm adminPasswordEncodingAlgorithm = PasswordEncodingAlgorithm.BCRYPT;
 
+    @Override
+    public String toString() {
+        return "PasswordProperties{" +
+                "initialRootPassword='" + SecurityValueConst.SENSITIVE_VALUE + '\'' +
+                ", userPasswordEncodingAlgorithm=" + userPasswordEncodingAlgorithm +
+                ", adminPasswordEncodingAlgorithm=" + adminPasswordEncodingAlgorithm +
+                '}';
+    }
 }

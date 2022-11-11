@@ -22,7 +22,6 @@ import com.fasterxml.jackson.databind.ObjectReader;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
-import lombok.SneakyThrows;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
@@ -111,7 +110,6 @@ public class TurmsPropertiesConvertor {
         return mergeMetadataWithPropertyValue0(metadata, properties);
     }
 
-    @SneakyThrows
     private static Map<String, Object> mergeMetadataWithPropertyValue0(Map<String, Object> metadata,
                                                                        Object properties) {
         Class<?> propertiesClass = properties.getClass();
@@ -130,25 +128,26 @@ public class TurmsPropertiesConvertor {
                 metadataWithValue.put(key, mergeMetadataWithPropertyValue0(originalValueMetadata, value));
             } else {
                 FieldMetadata fieldMetadata = (FieldMetadata) entry.getValue();
-                int entryCount = 5;
+                int entryCount = 6;
                 String elementType = fieldMetadata.elementType();
                 Object[] options = fieldMetadata.options();
-                String desc = fieldMetadata.desc();
+                String description = fieldMetadata.description();
                 if (elementType != null) {
                     entryCount++;
                 }
                 if (options != null) {
                     entryCount++;
                 }
-                if (desc != null) {
+                if (description != null) {
                     entryCount++;
                 }
                 Map.Entry<String, Object>[] entries = new Map.Entry[entryCount];
                 int i = 0;
-                entries[i++] = Map.entry("value", value);
+                entries[i++] = Map.entry("value", fieldMetadata.sensitive() ? "" : value);
                 entries[i++] = Map.entry(FieldMetadata.Fields.deprecated, fieldMetadata.deprecated());
                 entries[i++] = Map.entry(FieldMetadata.Fields.global, fieldMetadata.global());
                 entries[i++] = Map.entry(FieldMetadata.Fields.mutable, fieldMetadata.mutable());
+                entries[i++] = Map.entry(FieldMetadata.Fields.sensitive, fieldMetadata.sensitive());
                 entries[i++] = Map.entry(FieldMetadata.Fields.type, fieldMetadata.type());
                 if (elementType != null) {
                     entries[i++] = Map.entry(FieldMetadata.Fields.elementType, elementType);
@@ -156,8 +155,8 @@ public class TurmsPropertiesConvertor {
                 if (options != null) {
                     entries[i++] = Map.entry(FieldMetadata.Fields.options, options);
                 }
-                if (desc != null) {
-                    entries[i] = Map.entry(FieldMetadata.Fields.desc, desc);
+                if (description != null) {
+                    entries[i] = Map.entry(FieldMetadata.Fields.description, description);
                 }
                 metadataWithValue.put(key, Map.ofEntries(entries));
             }

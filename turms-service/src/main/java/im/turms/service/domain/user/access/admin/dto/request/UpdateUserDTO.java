@@ -19,6 +19,7 @@ package im.turms.service.domain.user.access.admin.dto.request;
 
 import im.turms.server.common.access.client.dto.constant.ProfileAccessStrategy;
 import im.turms.server.common.domain.common.access.dto.ControllerDTO;
+import im.turms.server.common.infra.security.SensitiveProperty;
 import im.turms.server.common.infra.security.SecurityValueConst;
 
 import java.util.Date;
@@ -27,6 +28,7 @@ import java.util.Date;
  * @author James Chen
  */
 public record UpdateUserDTO(
+        @SensitiveProperty
         String password,
         String name,
         String intro,

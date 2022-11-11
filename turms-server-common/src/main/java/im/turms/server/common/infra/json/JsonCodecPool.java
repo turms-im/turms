@@ -18,10 +18,14 @@
 package im.turms.server.common.infra.json;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.AnnotationIntrospector;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.introspect.AnnotatedField;
+import com.fasterxml.jackson.databind.introspect.AnnotatedMember;
+import com.fasterxml.jackson.databind.introspect.NopAnnotationIntrospector;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.fasterxml.jackson.databind.util.StdDateFormat;
@@ -29,6 +33,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import im.turms.server.common.infra.jackson.CaffeineLookupCache;
 import im.turms.server.common.infra.jackson.RawStringModule;
+import im.turms.server.common.infra.security.SensitiveProperty;
 import im.turms.server.common.infra.time.TimeZoneConst;
 
 /**
@@ -59,5 +64,21 @@ public class JsonCodecPool {
             // type factory
             .typeFactory(TypeFactory.defaultInstance().withCache(new CaffeineLookupCache<>()))
             .build();
+
+    static {
+        AnnotationIntrospector introspector = MAPPER
+                .getSerializationConfig().getAnnotationIntrospector();
+        MAPPER.setAnnotationIntrospector(AnnotationIntrospector.pair(introspector,
+                new NopAnnotationIntrospector() {
+                    @Override
+                    public boolean hasIgnoreMarker(AnnotatedMember m) {
+                        if (super.hasIgnoreMarker(m)) {
+                            return true;
+                        }
+                        return m instanceof AnnotatedField
+                                && _hasAnnotation(m, SensitiveProperty.class);
+                    }
+                }));
+    }
 
 }
