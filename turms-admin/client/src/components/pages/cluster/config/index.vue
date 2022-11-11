@@ -124,7 +124,8 @@ export default {
                         };
                     }
                     return [];
-                });
+                })
+                .sort((title1, title2) => title1.text.localeCompare(title2.text));
         }
     },
     watch: {

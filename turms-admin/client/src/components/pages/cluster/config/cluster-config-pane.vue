@@ -72,6 +72,16 @@ export default {
                             property: value
                         };
                     }
+                })
+                .sort((property1, property2) => {
+                    if (property1.properties) {
+                        return property2.properties
+                            ? property1.title.localeCompare(property2.title)
+                            : 1;
+                    }
+                    return property2.properties
+                        ? -1
+                        : property1.name.localeCompare(property2.name);
                 });
         }
     },
