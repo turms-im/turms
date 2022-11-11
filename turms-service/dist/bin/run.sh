@@ -121,7 +121,7 @@ JVM_OPTIONS="$(
 JVM_OPTIONS+=" -Dspring.config.location=classpath:/,$TURMS_SERVICE_APP_CONF"
 JVM_OPTIONS+=" ${TURMS_SERVICE_JVM_OPTS}"
 
-MAIN_CLASS="im.turms.service.TurmsApplication"
+MAIN_CLASS="im.turms.service.TurmsServiceApplication"
 if [ "$USE_FAT_JAR" = true ]; then
   MAIN_CLASS="org.springframework.boot.loader.JarLauncher"
 fi
