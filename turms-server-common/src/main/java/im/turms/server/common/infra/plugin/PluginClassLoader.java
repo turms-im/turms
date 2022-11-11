@@ -17,6 +17,7 @@
 
 package im.turms.server.common.infra.plugin;
 
+import im.turms.server.common.BaseTurmsApplication;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.lang.PackageConst;
 
@@ -31,10 +32,17 @@ import java.util.Enumeration;
  */
 public class PluginClassLoader extends URLClassLoader {
 
-    private static final ClassLoader parentClassLoader = ClassLoader.getSystemClassLoader();
+    /**
+     * @implNote The parent class loader isn't always the system class loader:
+     * When running in IDE or as a thin jar, the main class is the concrete class of {@link BaseTurmsApplication},
+     * the plugin parent class loader is the system class loader.
+     * But when running in a fat jar, the main class is {@link org.springframework.boot.loader.JarLauncher},
+     * the plugin parent class loader is {@link org.springframework.boot.loader.LaunchedURLClassLoader}.
+     */
+    private static final ClassLoader PARENT_CLASS_LOADER = PluginClassLoader.class.getClassLoader();
 
     public PluginClassLoader(URL jarUrl) {
-        super(new URL[]{jarUrl}, parentClassLoader);
+        super(new URL[]{jarUrl}, PARENT_CLASS_LOADER);
     }
 
     @Override
@@ -57,14 +65,14 @@ public class PluginClassLoader extends URLClassLoader {
         if (url != null) {
             return url;
         }
-        return parentClassLoader.getResource(name);
+        return PARENT_CLASS_LOADER.getResource(name);
     }
 
     @Override
     public Enumeration<URL> getResources(String name) throws IOException {
         return Collections.enumeration(CollectionUtil.newList(
                 findResources(name).asIterator(),
-                parentClassLoader.getResources(name).asIterator()
+                PARENT_CLASS_LOADER.getResources(name).asIterator()
         ));
     }
 
