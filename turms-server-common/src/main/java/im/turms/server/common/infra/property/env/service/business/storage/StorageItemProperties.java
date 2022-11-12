@@ -45,7 +45,7 @@ public class StorageItemProperties {
     @Description("Delete the resource the specific days after creation. " +
             "0 means no expiration")
     @Min(0)
-    private int expireAfterDays = 30;
+    private int expireAfterDays;
 
     @Description("Restrict access to the resource to only allow the specific referrers (e.g. \"https://github.com/turms-im/turms/*\")")
     private List<String> allowedReferrers = Collections.emptyList();

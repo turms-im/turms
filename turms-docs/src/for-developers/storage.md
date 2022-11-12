@@ -30,7 +30,7 @@ Turms自身并不直接提供存储服务，而是在服务端侧开放了存储
 
 | 配置项                                                       | 默认值 | 说明                                                  |
 | ------------------------------------------------------------ | ------ | ----------------------------------------------------- |
-| turms.service.storage.user-profile-picture.expire-after-days | 30     | 自创建时间开始，资源的有效时长（天）。0值代表不会过期 |
+| turms.service.storage.user-profile-picture.expire-after-days | 0      | 自创建时间开始，资源的有效时长（天）。0值代表不会过期 |
 | turms.service.storage.user-profile-picture.allowed-referrers | 空     | 只允许指定的Referrers访问资源                         |
 | turms.service.storage.user-profile-picture.allowed-content-type | `*/*`  | 允许上传的资源`Content-Type`。`*/*`值代表无限制       |
 | turms.service.storage.user-profile-picture.min-size-bytes    | 0      | 允许上传的资源最小值。0值代表无限制                   |
