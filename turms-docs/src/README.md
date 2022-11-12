@@ -26,7 +26,7 @@ Turms是一套全球范围内最为先进的、为同时在线用户数为100K~1
 
 您可以使用任意turms-client-(java/js/swift)客户端，向turms-gateway服务端发送请求，并与其他用户进行交互。
 
-另外，Playground由一条指令全自动搭建：`ENV=dev,demo docker-compose -f docker-compose.standalone.yml --profile monitoring up --force-recreate -d`
+另外，Playground由一条指令全自动搭建：`ENV=dev,demo docker compose -f docker-compose.standalone.yml --profile monitoring up --force-recreate -d`
 
 ## Quick Start
 
@@ -36,7 +36,7 @@ Turms是一套全球范围内最为先进的、为同时在线用户数为100K~1
 git clone --depth 1 https://github.com/turms-im/turms.git
 cd turms
 docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions
-docker-compose -f docker-compose.standalone.yml up --force-recreate
+docker compose -f docker-compose.standalone.yml up --force-recreate
 ```
 
 等集群完成搭建后，可以通过 http://localhost:6510 访问turms-admin后台管理系统，并输入账号密码（默认均为`turms`）。如果登录成功，则说明Turms服务端也已经成功启动。

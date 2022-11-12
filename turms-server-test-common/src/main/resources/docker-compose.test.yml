@@ -1,7 +1,5 @@
 # The file is used by tests of servers
 
-version: "3.9"
-
 services:
   # MongoDB
   mongodb-router:

@@ -6,7 +6,7 @@
 
 适用场景：搭建流程方便快捷，但无法满足容灾、弹性扩展、零宕机升级与负载均衡等需求，主要用于搭建Demo用于展示，与服务对SLA无要求的用户。
 
-#### 基于docker-compose
+#### 基于Docker Compose
 
 通过以下命令，可以全自动地搭建一套完整的Turms最小集群（包含turms-gateway、turms-service与turms-admin）及其依赖服务端（MongoDB分片集群与Redis）
 
@@ -14,8 +14,8 @@
 git clone --depth 1 https://github.com/turms-im/turms.git
 cd turms
 docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions
-# Or "ENV=dev,demo docker-compose -f docker-compose.standalone.yml --profile monitoring up --force-recreate -d" to run with sidecar services in dev profile
-docker-compose -f docker-compose.standalone.yml up --force-recreate
+# Or "ENV=dev,demo docker compose -f docker-compose.standalone.yml --profile monitoring up --force-recreate -d" to run with sidecar services in dev profile
+docker compose -f docker-compose.standalone.yml up --force-recreate
 ```
 
 等集群完成搭建后，可以通过 http://localhost:6510 访问turms-admin后台管理系统，并输入账号密码（默认均为`turms`）。如果登录成功，则说明Turms集群搭建成功。
@@ -43,16 +43,16 @@ sudo docker plugin enable loki
 
 补充：
 
-* 配合`--profile monitoring`（`docker-compose -f docker-compose.standalone.yml --profile monitoring up --force-recreate`），还可以额外自动搭建Prometheus与Grafana服务端。
+* 配合`--profile monitoring`（`docker compose -f docker-compose.standalone.yml --profile monitoring up --force-recreate`），还可以额外自动搭建Prometheus与Grafana服务端。
 * Turms服务端默认使用生产环境配置，不会向控制台打印日志，只会打印日志文件，因此您通过`docker logs <TURMS_CONTAINER_ID>`是无法查看到Turms服务端的运行日志的。为了方便排查问题，您可以在本地开发测试时，把环境变量设置为`ENV=dev`，然后再次启动`docker-compose.standalone.yml`。在dev环境下，Turms会向控制台打印日志，并自动生成测试用的Fake数据，与模拟真实客户端TCP连接与请求
-* 如果您通过上述指令，无法启动`docker-compose.standalone.yml`。则确保服务器的`docker-compose`版本为`1.29.x`，`docker`版本为`19.x.x`或`20.x.x`
-* Turms的Playground环境与网站每次都是通过`ENV=dev,demo docker-compose -f docker-compose.standalone.yml --profile monitoring up --force-recreate -d`这一条命令自动搭建的
+* 如果您通过上述指令，无法启动`docker-compose.standalone.yml`。则确保服务器的`Docker`版本为`20.x.x`与`Docker Compose`插件版本为`2.x.x`，
+* Turms的Playground环境与网站每次都是通过`ENV=dev,demo docker compose -f docker-compose.standalone.yml --profile monitoring up --force-recreate -d`这一条命令自动搭建的
 
-#### 基于Terraform与docker-compose
+#### 基于Terraform与Docker Compose
 
-（由于Turms目前并没有提供封装好的镜像，因此仍需要使用docker-compose进行环境搭建）
+（由于Turms目前并没有提供封装好的镜像，因此仍需要使用Docker Compose进行环境搭建）
 
-该方案是在上述docker-compose方案的基础上，引入了Turms自定义的Terraform模块，以帮助用户自动开通并配置VPC、交换机、安全组与单机ECS抢占式实例。在这台ECS上，Terraform会通过user-data系统初始化脚本，来安装docker-compose与Turms等服务，并最终启动Turms单机集群。
+该方案是在上述Docker Compose方案的基础上，引入了Turms自定义的Terraform模块，以帮助用户自动开通并配置VPC、交换机、安全组与单机ECS抢占式实例。在这台ECS上，Terraform会通过user-data系统初始化脚本，来安装Docker、Docker Compose与Turms等服务，并最终启动Turms单机集群。
 
 具体操作命令如下：
 

@@ -3,20 +3,15 @@
 # docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions
 #
 # Ways to Run:
-# docker-compose -f docker-compose.standalone.yml up --force-recreate
+# docker compose -f docker-compose.standalone.yml up --force-recreate
 #
 # Run in a specific environment (e.g. "dev"):
-# Powershell: $env:ENV="dev";docker-compose -f docker-compose.standalone.yml up --force-recreate
-# Unix: ENV=dev docker-compose -f docker-compose.standalone.yml up --force-recreate
+# Powershell: $env:ENV="dev";docker compose -f docker-compose.standalone.yml up --force-recreate
+# Unix: ENV=dev docker compose -f docker-compose.standalone.yml up --force-recreate
 #
 # Run with optional monitoring services (Prometheus+Grafana)
-# Run with "--profile monitoring": docker-compose -f docker-compose.standalone.yml --profile monitoring up --force-recreate
+# Run with "--profile monitoring": docker compose -f docker-compose.standalone.yml --profile monitoring up --force-recreate
 #
-
-# Note:
-# 1. "mem_limit" is mentioned removed in v3 but still can work in fact if running with compose-v1.29.2
-
-version: "3.9"
 
 # Disable loki because it has a critical bug:
 # https://github.com/grafana/loki/issues/2361

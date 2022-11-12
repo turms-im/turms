@@ -26,7 +26,7 @@ Turms是一套全球范围内最为先进的、为同时在线用户数为100K~1
 
 您可以使用任意turms-client-(java/js/swift)客户端，向turms-gateway服务端发送请求，并与其他用户进行交互。
 
-另外，Playground由一条指令全自动搭建：`ENV=dev,demo docker-compose -f docker-compose.standalone.yml --profile monitoring up --force-recreate -d`
+另外，Playground由一条指令全自动搭建：`ENV=dev,demo docker compose -f docker-compose.standalone.yml --profile monitoring up --force-recreate -d`
 
 ## Quick Start
 
@@ -36,7 +36,7 @@ Turms是一套全球范围内最为先进的、为同时在线用户数为100K~1
 git clone --depth 1 https://github.com/turms-im/turms.git
 cd turms
 docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions
-docker-compose -f docker-compose.standalone.yml up --force-recreate
+docker compose -f docker-compose.standalone.yml up --force-recreate
 ```
 
 等集群完成搭建后，可以通过 http://localhost:6510 访问turms-admin后台管理系统，并输入账号密码（默认均为`turms`）。如果登录成功，则说明Turms服务端也已经成功启动。
@@ -74,7 +74,7 @@ Turms基于读扩散消息模型进行架构设计，对业务数据变化感知
 
 1. （敏捷性）支持在用户无感知的情况下，对Turms服务端进行停机更新，为快速迭代提供可能
 2. （可伸缩性）无状态架构，Turms集群支持弹性扩展与异地多活的部署实现，用户可通过DNS就近接入
-3. （可部署性）支持容器化部署，方便与云服务对接，以实现全自动化部署与运维。Turms默认提供了docker镜像、docker-compose脚本、Terraform模块三套容器化部署方案
+3. （可部署性）支持容器化部署，方便与云服务对接，以实现全自动化部署与运维。Turms默认提供了Docker镜像、Docker compose脚本、Terraform模块三套容器化部署方案
 4. （可观测性）具备相对完善的可观测性体系设计，为业务统计与错误排查提供可能
 5. （可拓展性）能同时支持中大型即时通讯场景，即便用户体量由小变大也无需重构（当然，对于大型运用场景还有很多优化的工作需要做，但当前架构不影响后期的无痛升级）
 6. （安全性）提供限流防刷机制与全局用户/IP黑名单机制，以抵御大部分CC攻击

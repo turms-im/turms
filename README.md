@@ -24,7 +24,7 @@ Please refer to [Turms Documentation](https://turms-im.github.io/docs) (no Engli
 
 You can use any turms-client-(java/js/swift) implementation to send requests to turms-gateway and interact with other users.
 
-In addition, Playground is set up automatically by just one command: `ENV=dev,demo docker-compose -f docker-compose.standalone.yml --profile monitoring up --force-recreate -d`
+In addition, Playground is set up automatically by just one command: `ENV=dev,demo docker compose -f docker-compose.standalone.yml --profile monitoring up --force-recreate -d`
 
 ## Quick Start
 Running the following commands to setup a minimum viable cluster (including turms-gateway, turms-service and turms-admin) and its dependent servers (MongoDB sharded cluster and Redis) automatically:
@@ -32,7 +32,7 @@ Running the following commands to setup a minimum viable cluster (including turm
 git clone --depth 1 https://github.com/turms-im/turms.git
 cd turms
 docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions
-docker-compose -f docker-compose.standalone.yml up --force-recreate
+docker compose -f docker-compose.standalone.yml up --force-recreate
 ```
 After the cluster is set up, you can visit turms-admin at http://localhost:6510, and enter the account and password (`turms` by default). If you log in successfully, it means that the cluster of Turms has been setup successfully.
 
@@ -71,7 +71,7 @@ Note: The main disadvantage of the current Turms project is that it does not pro
 
 1. (Agility) Support updating Turms servers without the users' awareness of shutdown to support rapid iteration
 2. (Scalability) The Turms server is stateless to be scaled out; Support multi-active across data centers
-3. (Deployability) Support container deployment to facilitate integration (CI/CD) with cloud services. Turms provides three solutions for container deployment out of the box: docker image, docker-compose script, and Terraform module
+3. (Deployability) Support container deployment to facilitate integration (CI/CD) with cloud services. Turms provides three solutions for container deployment out of the box: Docker image, Docker compose file, and Terraform module
 4. (Observability) Support relatively complete features of observability for business analysis and troubleshoot
 5. (Scalability) Support medium to large scale instant messaging applications, and there is no need to refactor even if the application becomes large from medium-scale (There is still a lot of optimization work to be done for large applications, but Turms servers are easy to upgrade)
 6. (Security) Support API throttling and global user/IP blocklist to resist most CC attacks
