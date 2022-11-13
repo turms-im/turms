@@ -15,28 +15,29 @@
  * limitations under the License.
  */
 
-package im.turms.service.domain.admin.access.admin.dto.request;
+package im.turms.server.common.infra.security;
 
+import io.netty.util.concurrent.FastThreadLocal;
 
-import im.turms.server.common.domain.common.access.dto.ControllerDTO;
-import im.turms.server.common.infra.security.SecurityValueConst;
-import im.turms.server.common.infra.security.SensitiveProperty;
+import javax.crypto.Cipher;
 
 /**
  * @author James Chen
  */
-public record UpdateAdminDTO(
-        @SensitiveProperty
-        String password,
-        String name,
-        Long roleId
-) implements ControllerDTO {
-    @Override
-    public String toString() {
-        return "UpdateAdminDTO[" +
-                "password=" + SecurityValueConst.SENSITIVE_VALUE +
-                ", name=" + name +
-                ", roleId=" + roleId +
-                ']';
+public final class CypherPool {
+
+    private CypherPool() {
     }
+
+    private static final FastThreadLocal<Cipher> AES_GCM = new FastThreadLocal<>() {
+        @Override
+        protected Cipher initialValue() throws Exception {
+            return Cipher.getInstance("AES/GCM/NoPadding");
+        }
+    };
+
+    public static Cipher getAesGcm() {
+        return AES_GCM.get();
+    }
+
 }

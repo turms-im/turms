@@ -19,6 +19,7 @@ package im.turms.plugin.minio;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 /**
  * @author James Chen
@@ -33,15 +34,41 @@ public class MinioStorageProperties {
     private String accessKey = "minioadmin";
     private String secretKey = "minioadmin";
 
+    @NestedConfigurationProperty
     private Retry retry = new Retry();
+
+    @NestedConfigurationProperty
+    private ResourceKey resourceKey = new ResourceKey();
 
     @Data
     public static class Retry {
-
         private boolean enabled = true;
         private int initialIntervalMillis = 30 * 1000;
         private int intervalMillis = 30 * 1000;
         private int maxAttempts = 3;
+    }
 
+    @Data
+    public static class ResourceKey {
+        @NestedConfigurationProperty
+        private ResourceKeyBase62 base62 = new ResourceKeyBase62();
+
+        @NestedConfigurationProperty
+        private ResourceKeyMac mac = new ResourceKeyMac();
+    }
+
+    @Data
+    public static class ResourceKeyBase62 {
+        private boolean enabled;
+        private String charset = "s5EW4wypaOFg1AmcLxj9VDnJdozIhKYuCTPvk0MNqe8bBRlQ2SifXr63UHG7Zt";
+    }
+
+    @Data
+    public static class ResourceKeyMac {
+        private boolean enabled;
+        /**
+         * Default: base64("\u0000turms-im/turms\u0080")
+         */
+        private String base64Key = "AHR1cm1zLWltL3R1cm1zgA==";
     }
 }

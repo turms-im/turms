@@ -27,7 +27,6 @@ import io.minio.errors.InternalException;
 import io.minio.errors.XmlParserException;
 import io.minio.http.HttpUtils;
 import io.minio.http.Method;
-import lombok.Getter;
 import okhttp3.HttpUrl;
 import okhttp3.Request;
 

@@ -15,28 +15,28 @@
  * limitations under the License.
  */
 
-package im.turms.service.domain.admin.access.admin.dto.request;
+package im.turms.server.common.infra.security;
 
-
-import im.turms.server.common.domain.common.access.dto.ControllerDTO;
-import im.turms.server.common.infra.security.SecurityValueConst;
-import im.turms.server.common.infra.security.SensitiveProperty;
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+import java.security.InvalidKeyException;
 
 /**
  * @author James Chen
  */
-public record UpdateAdminDTO(
-        @SensitiveProperty
-        String password,
-        String name,
-        Long roleId
-) implements ControllerDTO {
-    @Override
-    public String toString() {
-        return "UpdateAdminDTO[" +
-                "password=" + SecurityValueConst.SENSITIVE_VALUE +
-                ", name=" + name +
-                ", roleId=" + roleId +
-                ']';
+public final class MacUtil {
+
+    private MacUtil() {
     }
+
+    public static byte[] signMd5(byte[] data, SecretKeySpec key) {
+        Mac mac = MacPool.getMd5();
+        try {
+            mac.init(key);
+        } catch (InvalidKeyException e) {
+            throw new IllegalArgumentException(e);
+        }
+        return mac.doFinal(data);
+    }
+
 }

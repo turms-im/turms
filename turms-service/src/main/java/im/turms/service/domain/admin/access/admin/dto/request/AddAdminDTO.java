@@ -18,8 +18,8 @@
 package im.turms.service.domain.admin.access.admin.dto.request;
 
 import im.turms.server.common.domain.common.access.dto.ControllerDTO;
-import im.turms.server.common.infra.security.SensitiveProperty;
 import im.turms.server.common.infra.security.SecurityValueConst;
+import im.turms.server.common.infra.security.SensitiveProperty;
 
 /**
  * @author James Chen

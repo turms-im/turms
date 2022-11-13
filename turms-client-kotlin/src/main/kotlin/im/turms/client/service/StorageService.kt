@@ -73,7 +73,8 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
         val uploadInfo = queryUserProfilePictureUploadInfo()
         val responseData = uploadInfo.data.toMutableMap()
         val url = getAndRemoveResourceUrl(responseData, urlKeyName)
-        return upload(url, responseData, userId.toString(), type, data)
+        val resourceName = responseData.remove(RESOURCE_KEY_NAME) ?: userId.toString()
+        return upload(url, responseData, resourceName, type, data)
     }
 
     suspend fun deleteUserProfilePicture(): Response<Unit> =
@@ -81,11 +82,13 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
 
     suspend fun queryUserProfilePicture(
         userId: Long,
+        fetchDownloadInfo: Boolean = false,
         urlKeyName: String = DEFAULT_URL_KEY_NAME
     ): Response<StorageResource> {
         val downloadInfo = queryUserProfilePictureDownloadInfo(
             userId,
-            urlKeyName = urlKeyName
+            fetchDownloadInfo,
+            urlKeyName
         )
         val url = getResourceUrl(downloadInfo.data, urlKeyName)
         return queryResource(url)
@@ -134,7 +137,8 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
         val uploadInfo = queryGroupProfilePictureUploadInfo(groupId)
         val responseData = uploadInfo.data.toMutableMap()
         val url = getAndRemoveResourceUrl(responseData, urlKeyName)
-        return upload(url, responseData, groupId.toString(), type, data)
+        val resourceName = responseData.remove(RESOURCE_KEY_NAME) ?: groupId.toString()
+        return upload(url, responseData, resourceName, type, data)
     }
 
     suspend fun deleteGroupProfilePicture(groupId: Long) =
@@ -142,9 +146,10 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
 
     suspend fun queryGroupProfilePicture(
         groupId: Long,
+        fetchDownloadInfo: Boolean = false,
         urlKeyName: String = DEFAULT_URL_KEY_NAME
     ): Response<StorageResource> {
-        val downloadInfo = queryGroupProfilePictureDownloadInfo(groupId, urlKeyName = urlKeyName)
+        val downloadInfo = queryGroupProfilePictureDownloadInfo(groupId, fetchDownloadInfo, urlKeyName)
         val url = getResourceUrl(downloadInfo.data, urlKeyName)
         return queryResource(url)
     }
@@ -184,7 +189,7 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
         val uploadInfo = queryMessageAttachmentUploadInfo(messageId, name)
         val responseData = uploadInfo.data.toMutableMap()
         val url = getAndRemoveResourceUrl(responseData, urlKeyName)
-        val resourceName = if (name == null) messageId.toString() else "$messageId/$name"
+        val resourceName = responseData.remove(RESOURCE_KEY_NAME) ?: (if (name == null) messageId.toString() else "$messageId/$name")
         return upload(url, responseData, resourceName, type, data)
     }
 
@@ -194,9 +199,10 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
     suspend fun queryMessageAttachment(
         messageId: Long,
         name: String? = null,
+        fetchDownloadInfo: Boolean = false,
         urlKeyName: String = DEFAULT_URL_KEY_NAME
     ): Response<StorageResource> {
-        val downloadInfo = queryMessageAttachmentDownloadInfo(messageId, name)
+        val downloadInfo = queryMessageAttachmentDownloadInfo(messageId, name, fetchDownloadInfo, urlKeyName)
         val url = getResourceUrl(downloadInfo.data, urlKeyName)
         return queryResource(url)
     }
@@ -204,8 +210,19 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
     suspend fun queryMessageAttachmentUploadInfo(messageId: Long, name: String?): Response<Map<String, String>> =
         queryResourceUploadInfo(StorageResourceType.MESSAGE_ATTACHMENT, name, messageId)
 
-    suspend fun queryMessageAttachmentDownloadInfo(messageId: Long, name: String? = null): Response<Map<String, String>> =
-        queryResourceDownloadInfo(StorageResourceType.MESSAGE_ATTACHMENT, name, messageId)
+    suspend fun queryMessageAttachmentDownloadInfo(
+        messageId: Long,
+        name: String? = null,
+        fetch: Boolean = false,
+        urlKeyName: String = DEFAULT_URL_KEY_NAME
+    ): Response<Map<String, String>> {
+        if (fetch) {
+            return queryResourceDownloadInfo(StorageResourceType.MESSAGE_ATTACHMENT, name, messageId)
+        }
+        return Response.value(
+            mapOf(urlKeyName to "$serverUrl/${getBucketName(StorageResourceType.MESSAGE_ATTACHMENT)}/${if (name == null) messageId else "$messageId/$name"}")
+        )
+    }
 
     // Base
 
@@ -424,6 +441,7 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
     }
 
     companion object {
+        private const val RESOURCE_KEY_NAME = "key"
         private const val DEFAULT_URL_KEY_NAME = "url"
         private val RESOURCE_TYPE_TO_BUCKET_NAME = StorageResourceType.values()
             .filter { it !== StorageResourceType.UNRECOGNIZED }

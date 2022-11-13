@@ -21,9 +21,11 @@ import im.turms.server.common.access.admin.web.MediaType;
 import im.turms.server.common.access.client.dto.constant.StorageResourceType;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.collection.CollectionUtil;
+import im.turms.server.common.infra.encoding.Base62;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.exception.ResponseExceptionPublisherPool;
 import im.turms.server.common.infra.json.JsonUtil;
+import im.turms.server.common.infra.lang.LongUtil;
 import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
@@ -32,6 +34,7 @@ import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.service.business.storage.StorageItemProperties;
 import im.turms.server.common.infra.property.env.service.business.storage.StorageProperties;
 import im.turms.server.common.infra.reactor.PublisherUtil;
+import im.turms.server.common.infra.security.MacUtil;
 import im.turms.service.domain.group.service.GroupMemberService;
 import im.turms.service.domain.message.service.MessageService;
 import im.turms.service.infra.plugin.extension.StorageServiceProvider;
@@ -53,12 +56,14 @@ import org.springframework.context.ApplicationContext;
 import reactor.core.publisher.Mono;
 
 import javax.annotation.Nullable;
+import javax.crypto.spec.SecretKeySpec;
 import javax.validation.constraints.NotNull;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 
@@ -75,12 +80,18 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
 
     private static final int INIT_BUCKETS_TIMEOUT_SECONDS = 60;
     private static final Map<StorageResourceType, String> RESOURCE_TYPE_TO_BUCKET_NAME;
+    private static final String RESOURCE_KEY = "key";
     private static final String RESOURCE_URL = "url";
 
     private static final String HTTP_HEADER_CONTENT_TYPE = "Content-Type";
 
     private TurmsMinioAsyncClient client;
     private String baseUrl;
+
+    private boolean isBase62Enabled;
+    private Base62 base62;
+    private boolean isMacEnabled;
+    private SecretKeySpec macKey;
 
     private StorageProperties storageProperties;
 
@@ -126,8 +137,41 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
         TurmsPropertiesManager propertiesManager = context.getBean(TurmsPropertiesManager.class);
         storageProperties = propertiesManager.getLocalProperties().getService().getStorage();
         baseUrl = uri.getScheme() + "://" + uri.getAuthority();
-        initClient(endpoint, properties.getRegion(),
-                properties.getAccessKey(), properties.getSecretKey());
+        MinioStorageProperties.ResourceKeyBase62 base62Properties = properties.getResourceKey().getBase62();
+        MinioStorageProperties.ResourceKeyMac macProperties = properties.getResourceKey().getMac();
+        isMacEnabled = macProperties.isEnabled();
+        isBase62Enabled = isMacEnabled || base62Properties.isEnabled();
+        if (isBase62Enabled) {
+            String charset = base62Properties.getCharset();
+            base62 = StringUtil.isEmpty(charset)
+                    ? new Base62()
+                    : new Base62(charset);
+        } else {
+            base62 = null;
+        }
+        if (isMacEnabled) {
+            byte[] key;
+            String base64Key = macProperties.getBase64Key();
+            try {
+                key = Base64.getDecoder().decode(base64Key);
+            } catch (Exception e) {
+                throw new IllegalArgumentException("The HMAC key must be Base64-encoded, but got [" +
+                        base64Key +
+                        "]", e);
+            }
+            if (key.length < 16) {
+                throw new IllegalArgumentException("The length of HMAC key must be greater than or equal to 16, but got [" +
+                        key.length +
+                        "]");
+            }
+            macKey = new SecretKeySpec(key, "HmacMD5");
+        } else {
+            macKey = null;
+        }
+        initClient(endpoint,
+                properties.getRegion(),
+                properties.getAccessKey(),
+                properties.getSecretKey());
         Duration timeout = Duration.ofSeconds(INIT_BUCKETS_TIMEOUT_SECONDS);
         try {
             initBuckets()
@@ -182,7 +226,7 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
         if (!isServing) {
             return ResponseExceptionPublisherPool.serverUnavailable();
         }
-        String objectKey = requesterId.toString();
+        String objectKey = getObjectKey(requesterId);
         String bucketName = getBucketName(StorageResourceType.USER_PROFILE_PICTURE);
         return PublisherUtil
                 .fromFuture(() -> client.removeObject(RemoveObjectArgs.builder()
@@ -204,7 +248,7 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
         if (!isServing) {
             return ResponseExceptionPublisherPool.serverUnavailable();
         }
-        String objectKey = requesterId.toString();
+        String objectKey = getObjectKey(requesterId);
         StorageItemProperties itemProperties = storageProperties.getUserProfilePicture();
         Map<String, String> uploadInfo = getResourceUploadInfo(getBucketName(USER_PROFILE_PICTURE),
                 objectKey,
@@ -226,7 +270,7 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
             return Mono.error(ResponseException
                     .get(ResponseStatusCode.ILLEGAL_ARGUMENT, "The user ID must not be null"));
         }
-        String url = baseUrl + "/" + getBucketName(StorageResourceType.USER_PROFILE_PICTURE) + "/" + resourceKeyNum;
+        String url = baseUrl + "/" + getBucketName(StorageResourceType.USER_PROFILE_PICTURE) + "/" + getObjectKey(resourceKeyNum);
         return Mono.just(Map.of(RESOURCE_URL, url));
     }
 
@@ -246,7 +290,7 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
                     if (!hasPermission) {
                         return ResponseExceptionPublisherPool.unauthorized();
                     }
-                    String objectKey = resourceKeyNum.toString();
+                    String objectKey = getObjectKey(resourceKeyNum);
                     String bucketName = getBucketName(GROUP_PROFILE_PICTURE);
                     return PublisherUtil
                             .fromFuture(() -> client.removeObject(RemoveObjectArgs.builder()
@@ -279,7 +323,7 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
                         return ResponseExceptionPublisherPool.unauthorized();
                     }
                     StorageItemProperties itemProperties = storageProperties.getGroupProfilePicture();
-                    String objectKey = resourceKeyNum.toString();
+                    String objectKey = getObjectKey(resourceKeyNum);
                     Map<String, String> uploadInfo = getResourceUploadInfo(getBucketName(GROUP_PROFILE_PICTURE),
                             objectKey,
                             itemProperties.getAllowedContentType(),
@@ -301,7 +345,7 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
             return Mono.error(ResponseException
                     .get(ResponseStatusCode.ILLEGAL_ARGUMENT, "The group ID must not be null"));
         }
-        String url = baseUrl + "/" + getBucketName(GROUP_PROFILE_PICTURE) + "/" + resourceKeyNum;
+        String url = baseUrl + "/" + getBucketName(GROUP_PROFILE_PICTURE) + "/" + getObjectKey(resourceKeyNum);
         return Mono.just(Map.of(RESOURCE_URL, url));
     }
 
@@ -325,8 +369,8 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
                     .get(ResponseStatusCode.ILLEGAL_ARGUMENT, "The message ID must not be null"));
         }
         String objectKey = resourceKeyStr == null
-                ? resourceKeyNum.toString()
-                : resourceKeyNum + "/" + resourceKeyStr;
+                ? getObjectKey(resourceKeyNum)
+                : getObjectKey(resourceKeyNum) + getObjectKey("/" + resourceKeyStr);
         StorageItemProperties itemProperties = storageProperties.getMessageAttachment();
         Map<String, String> uploadInfo = getResourceUploadInfo(getBucketName(MESSAGE_ATTACHMENT),
                 objectKey,
@@ -350,11 +394,11 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
         }
         return messageService.isMessageRecipientOrSender(resourceKeyNum, requesterId)
                 .flatMap(hasPermission -> {
-                    String key = resourceKeyStr == null
-                            ? resourceKeyNum.toString()
-                            : resourceKeyNum + "/" + resourceKeyStr;
+                    String objectKey = resourceKeyStr == null
+                            ? getObjectKey(resourceKeyNum)
+                            : getObjectKey(resourceKeyNum) + getObjectKey("/" + resourceKeyStr);
                     return getPresignedDownloadUrl(getBucketName(MESSAGE_ATTACHMENT),
-                            key,
+                            objectKey,
                             storageProperties
                                     .getMessageAttachment()
                                     .getDownloadUrlExpireAfterSeconds())
@@ -396,7 +440,7 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
                         return createBucket
                                 .doOnSuccess(unused -> LOGGER.info("Bucket {} is created", bucket));
                     })
-                    .onErrorMap(t -> new RuntimeException("Failed to initialize bucket", t));
+                    .onErrorMap(t -> new RuntimeException("Caught an error while creating buckets", t));
             initBuckets.add(initBucket);
         }
         return Mono.whenDelayError(initBuckets);
@@ -522,7 +566,8 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
         }
         try {
             Map<String, String> map = client.getPresignedPostFormData(policy);
-            CollectionUtil.add(map, RESOURCE_URL, baseUrl + "/" + bucket);
+            map = CollectionUtil.add(map, RESOURCE_KEY, objectKey);
+            map.put(RESOURCE_URL, baseUrl + "/" + bucket);
             return map;
         } catch (Exception e) {
             throw new RuntimeException("Failed to get the presigned post form data for the resource object [" +
@@ -532,6 +577,34 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
                     "]"
                     , e);
         }
+    }
+    //endregion
+
+    //region object key
+    private String getObjectKey(String str) {
+        if (isMacEnabled) {
+            byte[] md5 = MacUtil.signMd5(StringUtil.getBytes(str), macKey);
+            byte[] base62 = this.base62.encode(md5);
+            return StringUtil.newLatin1String(base62);
+        }
+        if (isBase62Enabled) {
+            byte[] base62 = this.base62.encode(StringUtil.getBytes(str));
+            return StringUtil.newLatin1String(base62);
+        }
+        return str;
+    }
+
+    private String getObjectKey(long num) {
+        if (isMacEnabled) {
+            byte[] md5 = MacUtil.signMd5(LongUtil.toBytes(num), macKey);
+            byte[] base62 = this.base62.encode(md5);
+            return new String(base62);
+        }
+        if (isBase62Enabled) {
+            byte[] base62 = this.base62.encode(num);
+            return StringUtil.newLatin1String(base62);
+        }
+        return Long.toString(num);
     }
     //endregion
 

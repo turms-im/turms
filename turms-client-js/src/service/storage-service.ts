@@ -11,6 +11,7 @@ import StorageUpdateResult from '../model/storage-update-result';
 const isResponseSuccessful = (res): boolean => res.statusText.startsWith('2');
 
 export default class StorageService {
+    private static readonly _RESOURCE_KEY_NAME = 'key';
     private static readonly _DEFAULT_URL_KEY_NAME = 'url';
     private static readonly _RESOURCE_TYPE_TO_BUCKET_NAME = Object
         .keys(StorageResourceType)
@@ -59,10 +60,11 @@ export default class StorageService {
         }
         return this.queryUserProfilePictureUploadInfo().then(uploadInfo => {
             const url = StorageService._getAndRemoveResourceUrl(uploadInfo.data, urlKeyName);
+            const resourceName = StorageService._getAndRemoveResourceKey(uploadInfo.data) ?? userId;
             return this._upload({
                 url,
                 formData: uploadInfo.data,
-                resourceName: userId,
+                resourceName,
                 mediaType,
                 data
             });
@@ -77,13 +79,16 @@ export default class StorageService {
 
     public queryUserProfilePicture({
         userId,
-        urlKeyName
+        urlKeyName,
+        fetchDownloadInfo
     }: {
         userId: string,
-        urlKeyName?: string
+        urlKeyName?: string,
+        fetchDownloadInfo?: boolean
     }): Promise<Response<StorageResource>> {
         return this.queryUserProfilePictureDownloadInfo({
             userId,
+            fetch: fetchDownloadInfo,
             urlKeyName
         }).then(downloadInfo => {
             const url = StorageService._getAndRemoveResourceUrl(downloadInfo.data, urlKeyName);
@@ -148,10 +153,11 @@ export default class StorageService {
         })
             .then(uploadInfo => {
                 const url = StorageService._getAndRemoveResourceUrl(uploadInfo.data, urlKeyName);
+                const resourceName = StorageService._getAndRemoveResourceKey(uploadInfo.data) ?? groupId;
                 return this._upload({
                     url,
                     formData: uploadInfo.data,
-                    resourceName: groupId,
+                    resourceName,
                     mediaType,
                     data
                 });
@@ -171,13 +177,17 @@ export default class StorageService {
 
     public queryGroupProfilePicture({
         groupId,
+        fetchDownloadInfo,
         urlKeyName
     }: {
         groupId: string
+        fetchDownloadInfo?: boolean,
         urlKeyName?: string
     }): Promise<Response<StorageResource>> {
         return this.queryGroupProfilePictureDownloadInfo({
-            groupId
+            groupId,
+            fetch: fetchDownloadInfo,
+            urlKeyName
         }).then(downloadInfo => {
             const url = StorageService._getAndRemoveResourceUrl(downloadInfo.data, urlKeyName);
             return this._queryResource(url);
@@ -242,7 +252,8 @@ export default class StorageService {
             name
         }).then(uploadInfo => {
             const url = StorageService._getAndRemoveResourceUrl(uploadInfo.data, urlKeyName);
-            const resourceName = name == null ? messageId : `${messageId}/${name}`;
+            const resourceName = StorageService._getAndRemoveResourceKey(uploadInfo.data)
+                ?? (name == null ? messageId : `${messageId}/${name}`);
             return this._upload({
                 url,
                 formData: uploadInfo.data,
@@ -270,15 +281,19 @@ export default class StorageService {
     public queryMessageAttachment({
         messageId,
         name,
+        fetchDownloadInfo,
         urlKeyName
     }: {
         messageId: string,
-        name?: string
+        name?: string,
+        fetchDownloadInfo?: boolean,
         urlKeyName?: string
     }): Promise<Response<StorageResource>> {
         return this.queryMessageAttachmentDownloadInfo({
             messageId,
-            name
+            name,
+            fetch: fetchDownloadInfo,
+            urlKeyName
         }).then(downloadInfo => {
             const url = StorageService._getAndRemoveResourceUrl(downloadInfo.data, urlKeyName);
             return this._queryResource(url);
@@ -301,16 +316,26 @@ export default class StorageService {
 
     public queryMessageAttachmentDownloadInfo({
         messageId,
-        name
+        name,
+        fetch,
+        urlKeyName
     }: {
         messageId: string,
-        name?: string
+        name?: string,
+        fetch?: boolean,
+        urlKeyName?: string
     }): Promise<Response<Record<string, string>>> {
-        return this._queryResourceDownloadInfo({
-            type: StorageResourceType.MESSAGE_ATTACHMENT,
-            keyStr: name,
-            keyNum: messageId
-        });
+        if (fetch) {
+            return this._queryResourceDownloadInfo({
+                type: StorageResourceType.MESSAGE_ATTACHMENT,
+                keyStr: name,
+                keyNum: messageId
+            });
+        }
+        const url = `${this._serverUrl}/${StorageService._getBucketName(StorageResourceType.MESSAGE_ATTACHMENT)}/${name == null ? messageId : `${messageId}/${name}`}`;
+        const info = {};
+        info[urlKeyName || StorageService._DEFAULT_URL_KEY_NAME] = url;
+        return Promise.resolve(Response.value(info));
     }
 
     // Base
@@ -455,6 +480,12 @@ export default class StorageService {
 
     private static _getBucketName(resourceType: StorageResourceType): string {
         return StorageService._RESOURCE_TYPE_TO_BUCKET_NAME[resourceType];
+    }
+
+    private static _getAndRemoveResourceKey(data: Record<string, string>): string | undefined {
+        const name = data[StorageService._RESOURCE_KEY_NAME];
+        delete data[StorageService._RESOURCE_KEY_NAME];
+        return name;
     }
 
     private static _getAndRemoveResourceUrl(data: Record<string, string>, urlKeyName?: string): string {

@@ -18,7 +18,6 @@
 package im.turms.server.common.infra.property;
 
 import im.turms.server.common.infra.validation.ValidCron;
-import lombok.SneakyThrows;
 import org.springframework.scheduling.support.CronExpression;
 
 import javax.annotation.Nullable;
@@ -63,7 +62,6 @@ public class TurmsPropertiesValidator {
         return errorMessages;
     }
 
-    @SneakyThrows
     private static void validateProperties(Object properties, List<String> errorMessages) {
         List<PropertyFieldInfo> propertyFieldInfos = getFieldInfos(properties.getClass());
         for (PropertyFieldInfo propertyFieldInfo : propertyFieldInfos) {
@@ -76,7 +74,6 @@ public class TurmsPropertiesValidator {
         }
     }
 
-    @SneakyThrows
     private static void validateProperty(Object properties, PropertyFieldInfo fieldInfo, List<String> errorMessages) {
         PropertyConstraints constraints = fieldInfo.constraints();
         Min min = constraints.min();

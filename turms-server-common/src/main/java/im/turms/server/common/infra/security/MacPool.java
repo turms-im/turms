@@ -31,6 +31,13 @@ public final class MacPool {
     private MacPool() {
     }
 
+    private static final FastThreadLocal<Mac> HMAC_MD5 = new FastThreadLocal<>() {
+        @Override
+        protected Mac initialValue() throws Exception {
+            return Mac.getInstance("HmacMD5");
+        }
+    };
+
     private static final FastThreadLocal<Mac> HMAC_SHA_256 = new FastThreadLocal<>() {
         @Override
         protected Mac initialValue() throws Exception {
@@ -69,6 +76,12 @@ public final class MacPool {
             throw new IllegalArgumentException("Unknown algorithm: " + algorithm);
         }
         Mac mac = threadLocal.get();
+        mac.reset();
+        return mac;
+    }
+
+    public static Mac getMd5() {
+        Mac mac = HMAC_MD5.get();
         mac.reset();
         return mac;
     }

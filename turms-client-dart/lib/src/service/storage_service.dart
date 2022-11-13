@@ -12,6 +12,7 @@ import '../model/storage_upload_result.dart';
 typedef ResourceUrlExtractor = String Function(Map<String, String>);
 
 class StorageService {
+  static const String _resourceKeyName = 'key';
   static const String _defaultUrlKeyName = 'url';
   static final Map<StorageResourceType, String> _resourceTypeToBucketName = {
     for (final type in StorageResourceType.values)
@@ -47,16 +48,19 @@ class StorageService {
     }
     final uploadInfo = await queryUserProfilePictureUploadInfo();
     final url = _getAndRemoveResourceUrl(uploadInfo.data, urlKeyName);
-    return _upload(url, uploadInfo.data, userId.toString(), type, data);
+    final resourceName =
+        uploadInfo.data.remove(_resourceKeyName) ?? userId.toString();
+    return _upload(url, uploadInfo.data, resourceName, type, data);
   }
 
   Future<Response<void>> deleteUserProfilePicture() =>
       _deleteResource(StorageResourceType.USER_PROFILE_PICTURE);
 
   Future<Response<StorageResource>> queryUserProfilePicture(Int64 userId,
-      {String urlKeyName = _defaultUrlKeyName}) async {
+      {bool fetchDownloadInfo = false,
+      String urlKeyName = _defaultUrlKeyName}) async {
     final downloadInfo = await queryUserProfilePictureDownloadInfo(userId,
-        urlKeyName: urlKeyName);
+        fetch: fetchDownloadInfo, urlKeyName: urlKeyName);
     final url = _getAndRemoveResourceUrl(downloadInfo.data, urlKeyName);
     return _queryResource(url);
   }
@@ -99,7 +103,9 @@ class StorageService {
     }
     final uploadInfo = await queryGroupProfilePictureUploadInfo(groupId);
     final url = _getAndRemoveResourceUrl(uploadInfo.data, urlKeyName);
-    return _upload(url, uploadInfo.data, groupId.toString(), type, data);
+    final resourceName =
+        uploadInfo.data.remove(_resourceKeyName) ?? groupId.toString();
+    return _upload(url, uploadInfo.data, resourceName, type, data);
   }
 
   Future<Response<void>> deleteGroupProfilePicture(Int64 groupId) =>
@@ -107,9 +113,10 @@ class StorageService {
           keyNum: groupId);
 
   Future<Response<StorageResource>> queryGroupProfilePicture(Int64 groupId,
-      {String urlKeyName = _defaultUrlKeyName}) async {
+      {bool fetchDownloadInfo = false,
+      String urlKeyName = _defaultUrlKeyName}) async {
     final downloadInfo = await queryGroupProfilePictureDownloadInfo(groupId,
-        urlKeyName: urlKeyName);
+        fetch: fetchDownloadInfo, urlKeyName: urlKeyName);
     final url = _getAndRemoveResourceUrl(downloadInfo.data, urlKeyName);
     return _queryResource(url);
   }
@@ -145,10 +152,11 @@ class StorageService {
           code: ResponseStatusCode.illegalArgument,
           reason: 'The data of message attachment must not be empty');
     }
-    final uploadInfo = await queryMessageAttachmentUploadInfo(messageId);
+    final uploadInfo =
+        await queryMessageAttachmentUploadInfo(messageId, name: name);
     final url = _getAndRemoveResourceUrl(uploadInfo.data, urlKeyName);
-    final resourceName =
-        name == null ? messageId.toString() : '$messageId/$name';
+    final resourceName = uploadInfo.data.remove(_resourceKeyName) ??
+        (name == null ? messageId.toString() : '$messageId/$name');
     return _upload(url, uploadInfo.data, resourceName, type, data);
   }
 
@@ -158,9 +166,11 @@ class StorageService {
           keyNum: messageId, keyStr: name);
 
   Future<Response<StorageResource>> queryMessageAttachment(Int64 messageId,
-      {String? name, String urlKeyName = _defaultUrlKeyName}) async {
-    final response =
-        await queryMessageAttachmentDownloadInfo(messageId, name: name);
+      {String? name,
+      bool fetchDownloadInfo = false,
+      String urlKeyName = _defaultUrlKeyName}) async {
+    final response = await queryMessageAttachmentDownloadInfo(messageId,
+        name: name, fetch: fetchDownloadInfo, urlKeyName: urlKeyName);
     final url = _getAndRemoveResourceUrl(response.data, urlKeyName);
     return _queryResource(url);
   }
@@ -172,10 +182,19 @@ class StorageService {
           keyStr: name, keyNum: messageId);
 
   Future<Response<Map<String, String>>> queryMessageAttachmentDownloadInfo(
-          Int64 messageId,
-          {String? name}) =>
-      _queryResourceDownloadInfo(StorageResourceType.MESSAGE_ATTACHMENT,
+      Int64 messageId,
+      {String? name,
+      bool fetch = false,
+      String urlKeyName = _defaultUrlKeyName}) async {
+    if (fetch) {
+      return _queryResourceDownloadInfo(StorageResourceType.MESSAGE_ATTACHMENT,
           keyStr: name, keyNum: messageId);
+    }
+    return Response.value({
+      urlKeyName:
+          '$serverUrl/${_getBucketName(StorageResourceType.MESSAGE_ATTACHMENT)}/${name == null ? messageId : '$messageId/$name'}'
+    });
+  }
 
   // Base
 

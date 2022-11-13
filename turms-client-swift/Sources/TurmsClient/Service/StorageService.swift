@@ -2,6 +2,7 @@ import Foundation
 import PromiseKit
 
 public class StorageService {
+    private static let RESOURCE_KEY_NAME = "key"
     private static let DEFAULT_URL_KEY_NAME = "url"
     private static let RESOURCE_TYPE_TO_BUCKET_NAME: [StorageResourceType: String] = Dictionary(uniqueKeysWithValues: StorageResourceType
         .allCases.map { ($0, "\($0)".camelCaseToSnakeCase) })
@@ -29,7 +30,8 @@ public class StorageService {
             .then { uploadInfo -> Promise<Response<StorageUploadResult>> in
                 var infoData = uploadInfo.data
                 let url = try self.getAndRemoveResourceUrl(&infoData, urlKeyName ?? StorageService.DEFAULT_URL_KEY_NAME)
-                return self.upload(url: url, formData: infoData, resourceName: "\(userId)", mediaType: mediaType, data: data)
+                let resourceName = infoData.removeValue(forKey: StorageService.RESOURCE_KEY_NAME) ?? "\(userId)"
+                return self.upload(url: url, formData: infoData, resourceName: resourceName, mediaType: mediaType, data: data)
             }
     }
 
@@ -37,8 +39,8 @@ public class StorageService {
         return deleteResource(type: .userProfilePicture)
     }
 
-    public func queryUserProfilePicture(userId: Int64, urlKeyName: String? = nil) -> Promise<Response<StorageResource>> {
-        return queryUserProfilePictureDownloadInfo(userId: userId, urlKeyName: urlKeyName)
+    public func queryUserProfilePicture(userId: Int64, fetchDownloadInfo: Bool = false, urlKeyName: String? = nil) -> Promise<Response<StorageResource>> {
+        return queryUserProfilePictureDownloadInfo(userId: userId, fetch: fetchDownloadInfo, urlKeyName: urlKeyName)
             .then { downloadInfo -> Promise<Response<StorageResource>> in
                 let url = try self.getResourceUrl(downloadInfo.data, urlKeyName ?? StorageService.DEFAULT_URL_KEY_NAME)
                 return self.getResource(url)
@@ -76,7 +78,8 @@ public class StorageService {
             .then { uploadInfo -> Promise<Response<StorageUploadResult>> in
                 var infoData = uploadInfo.data
                 let url = try self.getAndRemoveResourceUrl(&infoData, urlKeyName ?? StorageService.DEFAULT_URL_KEY_NAME)
-                return self.upload(url: url, formData: infoData, resourceName: "\(groupId)", mediaType: mediaType, data: data)
+                let resourceName = infoData.removeValue(forKey: StorageService.RESOURCE_KEY_NAME) ?? "\(groupId)"
+                return self.upload(url: url, formData: infoData, resourceName: resourceName, mediaType: mediaType, data: data)
             }
     }
 
@@ -84,8 +87,8 @@ public class StorageService {
         return deleteResource(type: .groupProfilePicture, keyNum: groupId)
     }
 
-    public func queryGroupProfilePicture(groupId: Int64, urlKeyName: String? = nil) -> Promise<Response<StorageResource>> {
-        return queryGroupProfilePictureDownloadInfo(groupId: groupId, urlKeyName: urlKeyName)
+    public func queryGroupProfilePicture(groupId: Int64, fetchDownloadInfo: Bool = false, urlKeyName: String? = nil) -> Promise<Response<StorageResource>> {
+        return queryGroupProfilePictureDownloadInfo(groupId: groupId, fetch: fetchDownloadInfo, urlKeyName: urlKeyName)
             .then { downloadInfo -> Promise<Response<StorageResource>> in
                 let url = try self.getResourceUrl(downloadInfo.data, urlKeyName ?? StorageService.DEFAULT_URL_KEY_NAME)
                 return self.getResource(url)
@@ -115,11 +118,11 @@ public class StorageService {
                 reason: "The data of message attachment must not be empty"
             ))
         }
-        return queryMessageAttachmentUploadInfo(messageId: messageId)
+        return queryMessageAttachmentUploadInfo(messageId: messageId, name: name)
             .then { uploadInfo -> Promise<Response<StorageUploadResult>> in
                 var infoData = uploadInfo.data
                 let url = try self.getAndRemoveResourceUrl(&infoData, urlKeyName ?? StorageService.DEFAULT_URL_KEY_NAME)
-                let resourceName = name == nil ? "\(messageId)" : "\(messageId)/\(name!)"
+                let resourceName = infoData.removeValue(forKey: StorageService.RESOURCE_KEY_NAME) ?? (name == nil ? "\(messageId)" : "\(messageId)/\(name!)")
                 return self.upload(url: url, formData: infoData, resourceName: resourceName, mediaType: mediaType, data: data)
             }
     }
@@ -128,8 +131,8 @@ public class StorageService {
         return deleteResource(type: .messageAttachment, keyStr: name, keyNum: messageId)
     }
 
-    public func queryMessageAttachment(messageId: Int64, name: String? = nil, urlKeyName: String? = nil) -> Promise<Response<StorageResource>> {
-        return queryMessageAttachmentDownloadInfo(messageId: messageId, name: name)
+    public func queryMessageAttachment(messageId: Int64, name: String? = nil, fetchDownloadInfo: Bool = false, urlKeyName: String? = nil) -> Promise<Response<StorageResource>> {
+        return queryMessageAttachmentDownloadInfo(messageId: messageId, name: name, fetch: fetchDownloadInfo, urlKeyName: urlKeyName)
             .then { downloadInfo -> Promise<Response<StorageResource>> in
                 let url = try self.getResourceUrl(downloadInfo.data, urlKeyName ?? StorageService.DEFAULT_URL_KEY_NAME)
                 return self.getResource(url)
@@ -140,8 +143,14 @@ public class StorageService {
         return getResourceUploadInfo(type: .messageAttachment, keyStr: name, keyNum: messageId)
     }
 
-    public func queryMessageAttachmentDownloadInfo(messageId: Int64, name: String? = nil) -> Promise<Response<[String: String]>> {
-        return queryResourceDownloadInfo(type: .messageAttachment, keyStr: name, keyNum: messageId)
+    public func queryMessageAttachmentDownloadInfo(messageId: Int64, name: String? = nil, fetch: Bool = false, urlKeyName: String? = nil) -> Promise<Response<[String: String]>> {
+        if fetch {
+            return queryResourceDownloadInfo(type: .messageAttachment, keyStr: name, keyNum: messageId)
+        }
+        let url = "\(serverUrl)/\(getBucketName(.messageAttachment))/\(name == nil ? "\(messageId)" : "\(messageId)/\(name!)")"
+        return Promise.value(Response.value([
+            urlKeyName ?? StorageService.DEFAULT_URL_KEY_NAME: url,
+        ]))
     }
 
     // Base
