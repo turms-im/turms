@@ -20,6 +20,7 @@ package im.turms.plugin.minio;
 import im.turms.server.common.access.admin.web.MediaType;
 import im.turms.server.common.access.client.dto.constant.StorageResourceType;
 import im.turms.server.common.access.common.ResponseStatusCode;
+import im.turms.server.common.infra.collection.ArrayUtil;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.encoding.Base62;
 import im.turms.server.common.infra.exception.ResponseException;
@@ -581,30 +582,34 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
     //endregion
 
     //region object key
-    private String getObjectKey(String str) {
+    private String getObjectKey(String key) {
         if (isMacEnabled) {
-            byte[] md5 = MacUtil.signMd5(StringUtil.getBytes(str), macKey);
-            byte[] base62 = this.base62.encode(md5);
-            return StringUtil.newLatin1String(base62);
+            byte[] keyBytes = StringUtil.getBytes(key);
+            byte[] md5 = MacUtil.signMd5(keyBytes, macKey);
+            byte[] base62Key = base62.encode(keyBytes);
+            byte[] base62Md5 = base62.encode(md5);
+            return StringUtil.newLatin1String(ArrayUtil.concat(base62Key, base62Md5));
         }
         if (isBase62Enabled) {
-            byte[] base62 = this.base62.encode(StringUtil.getBytes(str));
-            return StringUtil.newLatin1String(base62);
+            byte[] base62Key = base62.encode(StringUtil.getBytes(key));
+            return StringUtil.newLatin1String(base62Key);
         }
-        return str;
+        return key;
     }
 
-    private String getObjectKey(long num) {
+    private String getObjectKey(long key) {
         if (isMacEnabled) {
-            byte[] md5 = MacUtil.signMd5(LongUtil.toBytes(num), macKey);
-            byte[] base62 = this.base62.encode(md5);
-            return new String(base62);
+            byte[] keyBytes = LongUtil.toBytes(key);
+            byte[] md5 = MacUtil.signMd5(keyBytes, macKey);
+            byte[] base62Key = base62.encode(keyBytes);
+            byte[] base62Md5 = base62.encode(md5);
+            return StringUtil.newLatin1String(ArrayUtil.concat(base62Key, base62Md5));
         }
         if (isBase62Enabled) {
-            byte[] base62 = this.base62.encode(num);
-            return StringUtil.newLatin1String(base62);
+            byte[] base62Key = base62.encode(key);
+            return StringUtil.newLatin1String(base62Key);
         }
-        return Long.toString(num);
+        return Long.toString(key);
     }
     //endregion
 
