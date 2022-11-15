@@ -91,6 +91,12 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
 
     private boolean isBase62Enabled;
     private Base62 base62;
+    /**
+     * @implNote 1. We use HMAC(key, message) instead of a HASH(key + message) to avoid the length extension attack.
+     * To put simply, if a hacker knows the signature of the resource "1", and he can also know the signature of
+     * resource "12", "13", "123", and so on without knowing the key.
+     * 2. Use MD5 because its output size (128 bits) is small, and it's a 22-character Base62-encoded string.
+     */
     private boolean isMacEnabled;
     private SecretKeySpec macKey;
 
