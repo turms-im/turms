@@ -18,5 +18,4 @@ jobs:
       - name: Maven Verify
         run: |
           mvn clean install -Dmaven.test.skip=true -am -B -pl turms-plugins/turms-plugin-minio --no-transfer-progress
-        # TODO: Enable surefire once we have tests for "turms-plugin-minio"
-        # mvn surefire:test -pl turms-plugins/turms-plugin-minio
+          mvn verify -pl turms-plugins/turms-plugin-minio

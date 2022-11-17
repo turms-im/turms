@@ -18,5 +18,4 @@ jobs:
       - name: Maven Verify
         run: |
           mvn clean install -Dmaven.test.skip=true -am -B -pl turms-client-kotlin --no-transfer-progress
-        # TODO: Enable surefire once we have tests for "turms-plugin-kotlin"
-        # mvn surefire:test -pl turms-client-kotlin
+          mvn verify -pl turms-client-kotlin

@@ -18,4 +18,4 @@ jobs:
       - name: Maven Verify
         run: |
           mvn clean install -Dmaven.test.skip=true -am -B -pl turms-plugins/turms-plugin-antispam --no-transfer-progress
-          mvn surefire:test -pl turms-plugins/turms-plugin-antispam
+          mvn verify -pl turms-plugins/turms-plugin-antispam
