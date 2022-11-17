@@ -22,8 +22,10 @@ import im.turms.plugin.antispam.property.AntiSpamProperties;
 import im.turms.plugin.antispam.property.TextParsingStrategy;
 import im.turms.plugin.antispam.property.UnwantedWordHandleStrategy;
 import im.turms.server.common.access.client.dto.constant.DeviceType;
+import im.turms.server.common.access.client.dto.model.group.GroupJoinQuestion;
 import im.turms.server.common.access.client.dto.request.TurmsRequest;
 import im.turms.server.common.access.client.dto.request.group.CreateGroupRequest;
+import im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequest;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.service.access.servicerequest.dto.ClientRequest;
@@ -50,6 +52,7 @@ class AntiSpamHandlerTests {
 
     @Test
     void shouldRejectRequest() {
+        // Plain field validation
         AntiSpamHandler handler = createHandler(UnwantedWordHandleStrategy.REJECT_REQUEST,
                 TextParsingStrategy.NORMALIZATION_TRANSLITERATION, false);
         TurmsRequest.Builder builder = TurmsRequest
@@ -59,6 +62,23 @@ class AntiSpamHandlerTests {
                         .build());
         ClientRequest clientRequest = new ClientRequest(1L, DeviceType.DESKTOP, CLIENT_IP, 1L, builder, null);
         Mono<ClientRequest> result = handler.transform(clientRequest);
+        StepVerifier.create(result)
+                .expectErrorSatisfies(t -> {
+                    assertThat(t).isInstanceOf(ResponseException.class);
+                    assertThat(((ResponseException) t).getCode()).isEqualTo(ResponseStatusCode.MESSAGE_IS_ILLEGAL);
+                })
+                .verify();
+
+        // Nested field validation
+        builder = TurmsRequest
+                .newBuilder()
+                .setCreateGroupJoinQuestionsRequest(CreateGroupJoinQuestionsRequest.newBuilder()
+                        .addQuestions(GroupJoinQuestion.newBuilder()
+                                .setQuestion(new String(Store.UNWANTED_WORDS.get(0).getWord()))
+                                .build())
+                        .build());
+        clientRequest = new ClientRequest(1L, DeviceType.DESKTOP, CLIENT_IP, 1L, builder, null);
+        result = handler.transform(clientRequest);
         StepVerifier.create(result)
                 .expectErrorSatisfies(t -> {
                     assertThat(t).isInstanceOf(ResponseException.class);
@@ -130,6 +150,7 @@ class AntiSpamHandlerTests {
 
     void testMask(String original, String expected, TextParsingStrategy strategy) {
         AntiSpamHandler handler = createHandler(UnwantedWordHandleStrategy.MASK_TEXT, strategy, false);
+        // Plain field validation
         TurmsRequest.Builder builder = TurmsRequest
                 .newBuilder()
                 .setCreateGroupRequest(CreateGroupRequest.newBuilder()
@@ -143,10 +164,44 @@ class AntiSpamHandlerTests {
                     return true;
                 })
                 .verifyComplete();
+
+        // Nested field validation
+        String legalQuestion1 = "ok";
+        String legalQuestion2 = "ko";
+        builder = TurmsRequest
+                .newBuilder()
+                .setCreateGroupJoinQuestionsRequest(CreateGroupJoinQuestionsRequest.newBuilder()
+                        .addQuestions(GroupJoinQuestion.newBuilder()
+                                .setQuestion(legalQuestion1)
+                                .build())
+                        .addQuestions(GroupJoinQuestion.newBuilder()
+                                .setQuestion(original)
+                                .build())
+                        .addQuestions(GroupJoinQuestion.newBuilder()
+                                .setQuestion(legalQuestion2)
+                                .build())
+                        .build());
+        clientRequest = new ClientRequest(1L, DeviceType.DESKTOP, CLIENT_IP, 1L, builder, null);
+        result = handler.transform(clientRequest);
+        StepVerifier.create(result)
+                .expectNextMatches(request -> {
+                    CreateGroupJoinQuestionsRequest createGroupJoinQuestionsRequest = request
+                            .turmsRequest().getCreateGroupJoinQuestionsRequest();
+                    List<String> questions = createGroupJoinQuestionsRequest
+                            .getQuestionsList()
+                            .stream()
+                            .map(GroupJoinQuestion::getQuestion)
+                            .toList();
+                    assertThat(questions).containsExactly(legalQuestion1, expected, legalQuestion2);
+                    return true;
+                })
+                .verifyComplete();
     }
 
     void testReturnUnwantedWords(String original, List<String> words, TextParsingStrategy strategy) {
-        AntiSpamHandler handler = createHandler(UnwantedWordHandleStrategy.REJECT_REQUEST, strategy, true);
+        AntiSpamHandler handler = createHandler(UnwantedWordHandleStrategy.REJECT_REQUEST,
+                strategy,
+                true);
         TurmsRequest.Builder builder = TurmsRequest
                 .newBuilder()
                 .setCreateGroupRequest(CreateGroupRequest.newBuilder()

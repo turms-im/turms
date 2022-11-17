@@ -30,15 +30,14 @@ import im.turms.plugin.antispam.property.UnwantedWordHandleStrategy;
 import im.turms.server.common.access.client.dto.request.TurmsRequest;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.exception.ResponseException;
-import im.turms.server.common.infra.exception.ResponseExceptionPublisherPool;
 import im.turms.server.common.infra.plugin.TurmsExtension;
 import im.turms.service.access.servicerequest.dto.ClientRequest;
 import im.turms.service.infra.plugin.extension.ClientRequestTransformer;
 import reactor.core.publisher.Mono;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.IdentityHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -56,7 +55,7 @@ public class AntiSpamHandler extends TurmsExtension implements ClientRequestTran
     private final SpamDetector spamDetector;
     private final TextPreprocessor textPreprocessor;
 
-    private final Map<TurmsRequest.KindCase, TextTypeProperties> textTypeMap = new IdentityHashMap<>();
+    private final Map<TurmsRequest.KindCase, TextTypeProperties> textTypeToProperties;
 
     public AntiSpamHandler() {
         AntiSpamProperties properties = loadProperties(AntiSpamProperties.class);
@@ -68,7 +67,8 @@ public class AntiSpamHandler extends TurmsExtension implements ClientRequestTran
         spamDetector = enabled
                 ? new SpamDetector(textPreprocessor, buildTrie(properties.getDictParsing(), textPreprocessor))
                 : null;
-        initTextTypeMap(textTypeMap, properties.getTextTypes(), properties.getSilentIllegalTextTypes());
+        textTypeToProperties = createTextTypeToPropertiesMap(properties.getTextTypes(),
+                properties.getSilentIllegalTextTypes());
     }
 
     public AntiSpamHandler(AntiSpamProperties properties) {
@@ -80,23 +80,27 @@ public class AntiSpamHandler extends TurmsExtension implements ClientRequestTran
         spamDetector = enabled
                 ? new SpamDetector(textPreprocessor, buildTrie(properties.getDictParsing(), textPreprocessor))
                 : null;
-        initTextTypeMap(textTypeMap, properties.getTextTypes(), properties.getSilentIllegalTextTypes());
+        textTypeToProperties = createTextTypeToPropertiesMap(properties.getTextTypes(),
+                properties.getSilentIllegalTextTypes());
     }
 
-    private void initTextTypeMap(Map<TurmsRequest.KindCase, TextTypeProperties> map,
-                                 Set<TextType> textTypes,
-                                 Set<TextType> silentIllegalTextTypes) {
+    private Map<TurmsRequest.KindCase, TextTypeProperties> createTextTypeToPropertiesMap(
+            Set<TextType> textTypes,
+            Set<TextType> silentIllegalTextTypes) {
+        Map<TurmsRequest.KindCase, TextTypeProperties> map = new IdentityHashMap<>(textTypes.size());
         for (TextType textType : textTypes) {
             TextTypeProperties properties = map.get(textType.getType());
             boolean rejectSilently = silentIllegalTextTypes.contains(textType);
+            List<RequestField> fields;
             if (properties == null) {
-                List<RequestField> fields = new LinkedList<>();
-                fields.add(new RequestField(textType.getFieldDescriptor(), rejectSilently));
+                fields = new ArrayList<>(4);
                 map.put(textType.getType(), new TextTypeProperties(textType.getRequestFieldDescriptor(), fields));
             } else {
-                properties.fields.add(new RequestField(textType.getFieldDescriptor(), rejectSilently));
+                fields = properties.fields;
             }
+            fields.add(new RequestField(textType.getFieldDescriptor(), textType.getSubfieldDescriptor(), rejectSilently));
         }
+        return map;
     }
 
     @Override
@@ -106,40 +110,99 @@ public class AntiSpamHandler extends TurmsExtension implements ClientRequestTran
         }
         TurmsRequest.Builder builder = clientRequest.turmsRequestBuilder();
         TurmsRequest.KindCase requestType = builder.getKindCase();
-        TextTypeProperties properties = textTypeMap.get(requestType);
+        TextTypeProperties properties = textTypeToProperties.get(requestType);
         FieldDescriptor requestFieldDescriptor = properties.requestFieldDescriptor;
-        Message.Builder req = builder.getFieldBuilder(requestFieldDescriptor);
+        Message.Builder request = builder.getFieldBuilder(requestFieldDescriptor);
         for (RequestField field : properties.fields) {
-            FieldDescriptor fieldDescriptor = field.descriptor;
-            String text = (String) req.getField(fieldDescriptor);
-            if (text == null || text.isEmpty()) {
-                continue;
-            }
-            switch (unwantedWordHandleStrategy) {
-                case REJECT_REQUEST -> {
-                    if (field.shouldRejectSilently()) {
-                        if (spamDetector.containsUnwantedWords(text)) {
-                            return ResponseExceptionPublisherPool.ok();
+            FieldDescriptor fieldDescriptor = field.fieldDescriptor;
+            FieldDescriptor subfieldDescriptor = field.subfieldDescriptor;
+            if (subfieldDescriptor == null) {
+                String text = (String) request.getField(fieldDescriptor);
+                if (text == null || text.isEmpty()) {
+                    continue;
+                }
+                switch (unwantedWordHandleStrategy) {
+                    case REJECT_REQUEST -> {
+                        RuntimeException exception = rejectRequestIfFindUnwantedWord(field.shouldRejectSilently, text);
+                        if (exception != null) {
+                            return Mono.error(exception);
                         }
-                    } else if (maxNumberOfUnwantedWordsToReturn > 0) {
-                        String words = spamDetector.findUnwantedWords(text, maxNumberOfUnwantedWordsToReturn);
-                        if (words != null) {
-                            return Mono.error(ResponseException.get(ResponseStatusCode.MESSAGE_IS_ILLEGAL, words));
+                    }
+                    case MASK_TEXT -> {
+                        String maskedStr = spamDetector.mask(text, mask);
+                        if (maskedStr != null) {
+                            request.setField(fieldDescriptor, maskedStr);
                         }
-                    } else if (spamDetector.containsUnwantedWords(text)) {
-                        return Mono.error(ResponseException.get(ResponseStatusCode.MESSAGE_IS_ILLEGAL));
                     }
                 }
-                case MASK_TEXT -> {
-                    String maskedStr = spamDetector.mask(text, mask);
-                    if (maskedStr != null) {
-                        req.setField(fieldDescriptor, maskedStr);
+            } else {
+                List<Message> fieldValues = (List<Message>) request.getField(fieldDescriptor);
+                List<Message> newFieldValues = null;
+                boolean hasNewFieldValues = false;
+                int index = -1;
+                for (Message fieldValue : fieldValues) {
+                    index++;
+                    String text = (String) fieldValue.getField(subfieldDescriptor);
+                    if (text == null || text.isEmpty()) {
+                        continue;
+                    }
+                    Message.Builder fieldValueBuilder = null;
+                    switch (unwantedWordHandleStrategy) {
+                        case REJECT_REQUEST -> {
+                            RuntimeException exception = rejectRequestIfFindUnwantedWord(field.shouldRejectSilently, text);
+                            if (exception != null) {
+                                return Mono.error(exception);
+                            }
+                        }
+                        case MASK_TEXT -> {
+                            String maskedStr = spamDetector.mask(text, mask);
+                            if (maskedStr != null) {
+                                fieldValueBuilder = fieldValue
+                                        .toBuilder()
+                                        .setField(subfieldDescriptor, maskedStr);
+                            }
+                        }
+                    }
+                    if (hasNewFieldValues) {
+                        if (fieldValueBuilder == null) {
+                            newFieldValues.add(fieldValue);
+                        } else {
+                            newFieldValues.add(fieldValueBuilder.build());
+                        }
+                    } else {
+                        if (fieldValueBuilder != null) {
+                            hasNewFieldValues = true;
+                            newFieldValues = new ArrayList<>(fieldValues.size());
+                            for (int i = 0; i < index; i++) {
+                                Message value = fieldValues.get(i);
+                                newFieldValues.add(value);
+                            }
+                            newFieldValues.add(fieldValueBuilder.build());
+                        }
                     }
                 }
-                default -> throw new IllegalStateException("Unexpected value: " + unwantedWordHandleStrategy);
+                if (hasNewFieldValues) {
+                    request.setField(fieldDescriptor, newFieldValues);
+                }
             }
         }
         return Mono.just(clientRequest);
+    }
+
+    private RuntimeException rejectRequestIfFindUnwantedWord(boolean shouldRejectSilently, String text) {
+        if (shouldRejectSilently) {
+            if (spamDetector.containsUnwantedWords(text)) {
+                return ResponseException.get(ResponseStatusCode.OK);
+            }
+        } else if (maxNumberOfUnwantedWordsToReturn > 0) {
+            String words = spamDetector.findUnwantedWords(text, maxNumberOfUnwantedWordsToReturn);
+            if (words != null) {
+                return ResponseException.get(ResponseStatusCode.MESSAGE_IS_ILLEGAL, words);
+            }
+        } else if (spamDetector.containsUnwantedWords(text)) {
+            return ResponseException.get(ResponseStatusCode.MESSAGE_IS_ILLEGAL);
+        }
+        return null;
     }
 
     private AhoCorasickDoubleArrayTrie buildTrie(DictionaryParsingProperties dictParsing,
@@ -166,7 +229,11 @@ public class AntiSpamHandler extends TurmsExtension implements ClientRequestTran
     ) {
     }
 
-    private record RequestField(FieldDescriptor descriptor, boolean shouldRejectSilently) {
+    private record RequestField(
+            FieldDescriptor fieldDescriptor,
+            FieldDescriptor subfieldDescriptor,
+            boolean shouldRejectSilently
+    ) {
     }
 
 }
