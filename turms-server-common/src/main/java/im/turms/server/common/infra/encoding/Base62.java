@@ -29,6 +29,7 @@ public class Base62 {
     private static final int STANDARD_BASE = 256;
     private static final int TARGET_BASE = 62;
     private static final double SCALE = Math.log(STANDARD_BASE) / Math.log(TARGET_BASE);
+    private static final int ESTIMATED_BASE62_LONG_LENGTH = ((int) (SCALE * Long.BYTES)) + 1;
     private static final byte[] GMP = {
             '0', '1', '2', '3', '4', '5', '6', '7',
             '8', '9', 'A', 'B', 'C', 'D', 'E', 'F',
@@ -89,9 +90,8 @@ public class Base62 {
     }
 
     public byte[] encode(long base10) {
-        int estimatedLength = ((int) (SCALE * Long.BYTES)) + 1;
-        byte[] out = new byte[estimatedLength];
-        int writerIndex = estimatedLength - 1;
+        byte[] out = new byte[ESTIMATED_BASE62_LONG_LENGTH];
+        int writerIndex = ESTIMATED_BASE62_LONG_LENGTH - 1;
         byte[] localAlphabet = alphabet;
         do {
             int remainder = (int) (base10 % TARGET_BASE);
@@ -99,7 +99,7 @@ public class Base62 {
             base10 /= TARGET_BASE;
         } while (base10 > 0);
         if (writerIndex >= 0) {
-            out = Arrays.copyOfRange(out, writerIndex + 1, estimatedLength);
+            out = Arrays.copyOfRange(out, writerIndex + 1, ESTIMATED_BASE62_LONG_LENGTH);
         }
         return out;
     }
