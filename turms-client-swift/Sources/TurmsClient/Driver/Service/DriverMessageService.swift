@@ -110,7 +110,7 @@ class DriverMessageService: BaseService {
         return Promise.value(())
     }
 
-    override func onDisconnected() {
-        rejectRequests(ResponseError(code: .clientSessionHasBeenClosed))
+    override func onDisconnected(_ error: Error? = nil) {
+        rejectRequests(ResponseError(code: .clientSessionHasBeenClosed, cause: error))
     }
 }

@@ -140,7 +140,7 @@ public class ConnectionService: BaseService {
             }
             resetStates()
             let tcp = TcpClient(onClosed: { [weak self] error in
-                self?.onSocketClose(error)
+                self?.onSocketClosed(error)
             }, onDataReceived: { [weak self] data in
                 guard let s = self else { return }
                 let messages = try s.decoder.decodeMessages(data)
@@ -150,7 +150,7 @@ public class ConnectionService: BaseService {
             })
             tcp.connect(host: host ?? initialHost, port: port ?? initialPort, useTls: useTls ?? false, certificatePinning: certificatePinning)
                 .done { [weak self] in
-                    self?.onSocketOpen()
+                    self?.onSocketOpened()
                     seal.fulfill_()
                 }.catch { error in
                     seal.reject(error)
@@ -172,12 +172,12 @@ public class ConnectionService: BaseService {
 
     // Lifecycle hooks
 
-    private func onSocketOpen() {
+    private func onSocketOpened() {
         stateStore.isConnected = true
         notifyOnConnectedListeners()
     }
 
-    private func onSocketClose(_ error: Error?) {
+    private func onSocketClosed(_ error: Error?) {
         decoder.clear()
         stateStore.isConnected = false
         notifyOnDisconnectedListeners(error)

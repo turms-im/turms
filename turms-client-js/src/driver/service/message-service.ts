@@ -174,10 +174,11 @@ export default class MessageService extends BaseService {
         return Promise.resolve();
     }
 
-    override onDisconnected(): void {
-        const error = ResponseError.from({
-            code: ResponseStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED
+    override onDisconnected(error?: Error): void {
+        const e = ResponseError.from({
+            code: ResponseStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED,
+            cause: error
         });
-        this._rejectRequestPromises(error);
+        this._rejectRequestPromises(e);
     }
 }

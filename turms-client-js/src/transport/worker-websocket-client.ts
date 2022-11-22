@@ -22,13 +22,13 @@ export default class WorkerWebSocketClient extends WebSocketClient {
             this._isConnecting = false;
             this._isConnected = true;
             this._metrics.connectTime = Date.now() - connectStart;
-            this.notifyOnOpen();
+            this.notifyOnOpened();
         });
         sharedContextService.addNotificationListener(NotificationType.WEBSOCKET_CLOSED, notification => {
             this._isConnecting = false;
             this._isConnected = false;
             this._metrics = new WebSocketMetrics();
-            this.notifyOnClose({
+            this.notifyOnClosed({
                 code: notification.data.code,
                 reason: notification.data.reason
             });
@@ -44,10 +44,10 @@ export default class WorkerWebSocketClient extends WebSocketClient {
             data: url
         }).then(alreadyCreated => {
             if (alreadyCreated) {
-                this.notifyOnOpen();
+                this.notifyOnOpened();
             }
         }).catch((error: Error) => {
-            this.notifyOnClose({
+            this.notifyOnClosed({
                 code: 1006,
                 reason: error.message
             });

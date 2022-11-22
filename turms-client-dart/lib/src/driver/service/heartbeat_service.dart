@@ -91,10 +91,12 @@ class HeartbeatService extends BaseService {
   }
 
   @override
-  void onDisconnected() {
+  void onDisconnected({Object? error, StackTrace? stackTrace}) {
     stop();
-    final exception =
-        ResponseException(code: ResponseStatusCode.clientSessionHasBeenClosed);
+    final exception = ResponseException(
+        code: ResponseStatusCode.clientSessionHasBeenClosed,
+        cause: error,
+        stackTrace: stackTrace);
     _rejectHeartbeatCompleters(exception);
   }
 }

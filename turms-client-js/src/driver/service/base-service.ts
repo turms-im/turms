@@ -26,5 +26,5 @@ export default abstract class BaseService {
 
     abstract close(): Promise<void>;
 
-    abstract onDisconnected(): void;
+    abstract onDisconnected(error?: Error): void;
 }

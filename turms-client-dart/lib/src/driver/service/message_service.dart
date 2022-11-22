@@ -51,8 +51,8 @@ class MessageService extends BaseService {
     for (final listener in _notificationListeners) {
       try {
         listener.call(notification);
-      } catch (e) {
-        print(e);
+      } catch (e, s) {
+        print('$e\n$s');
       }
     }
   }
@@ -144,9 +144,11 @@ class MessageService extends BaseService {
   }
 
   @override
-  void onDisconnected() {
-    final exception =
-        ResponseException(code: ResponseStatusCode.clientSessionHasBeenClosed);
+  void onDisconnected({Object? error, StackTrace? stackTrace}) {
+    final exception = ResponseException(
+        code: ResponseStatusCode.clientSessionHasBeenClosed,
+        cause: error,
+        stackTrace: stackTrace);
     _rejectRequestCompleter(exception);
   }
 }

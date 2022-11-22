@@ -28,5 +28,5 @@ abstract class BaseService protected constructor(
     protected val stateStore: StateStore
 ) : CoroutineScope {
     abstract suspend fun close()
-    abstract fun onDisconnected()
+    abstract fun onDisconnected(throwable: Throwable? = null)
 }

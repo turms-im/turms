@@ -5,7 +5,7 @@ import 'dart:typed_data';
 import 'tcp_metrics.dart';
 
 typedef OnBytesReceived = void Function(List<int> bytes);
-typedef OnClose = void Function(dynamic error);
+typedef OnClosed = void Function({Object? error, StackTrace? stackTrace});
 
 class TcpClient {
   late int port;
@@ -17,10 +17,10 @@ class TcpClient {
   bool isReading = false;
   TcpMetrics metrics = TcpMetrics();
 
-  final OnClose _onClose;
+  final OnClosed _onClosed;
   final OnBytesReceived _onBytesReceived;
 
-  TcpClient(this._onClose, this._onBytesReceived);
+  TcpClient(this._onClosed, this._onBytesReceived);
 
   // TODO: support passing InternetAddress
   Future<void> connect(String host, int port, bool useTls,
@@ -62,10 +62,18 @@ class TcpClient {
       try {
         metrics.dataReceived += bytes.length;
         _onBytesReceived.call(bytes);
-      } catch (e) {
-        close(e);
+      } catch (e, s) {
+        close(error: e, stackTrace: s);
       }
-    }, onDone: () => onClose(null), onError: onClose);
+    },
+        onDone: () => _onClosed0(null, null),
+        onError: (dynamic error, dynamic stackTrace) => {
+              if (stackTrace is StackTrace)
+                {_onClosed0(error, stackTrace)}
+              else
+                {_onClosed0(error, null)}
+            },
+        cancelOnError: true);
   }
 
   void write(List<int> bytes) {
@@ -90,19 +98,19 @@ class TcpClient {
     write(bytes);
   }
 
-  Future<void> close(dynamic error) async {
+  Future<void> close({Object? error, StackTrace? stackTrace}) async {
     try {
       await _socket.flush();
       await _socket.close();
     } finally {
-      onClose(error);
+      _onClosed0(error, stackTrace);
     }
   }
 
-  void onClose(dynamic error) {
+  void _onClosed0(Object? error, StackTrace? stackTrace) {
     if (isOpen) {
       try {
-        _onClose.call(error);
+        _onClosed.call(error: error, stackTrace: stackTrace);
       } catch (e) {
         // TODO: log
       }

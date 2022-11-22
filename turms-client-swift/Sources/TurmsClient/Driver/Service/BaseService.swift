@@ -12,5 +12,5 @@ public class BaseService {
         return Promise.value(())
     }
 
-    func onDisconnected() {}
+    func onDisconnected(_ error: Error? = nil) {}
 }

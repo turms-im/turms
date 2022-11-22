@@ -32,6 +32,7 @@ import kotlinx.coroutines.coroutineScope
 import java.lang.reflect.Method
 import java.nio.ByteBuffer
 import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.ConcurrentMap
 import java.util.concurrent.ScheduledThreadPoolExecutor
 import java.util.logging.Level
 import java.util.logging.Logger
@@ -57,7 +58,7 @@ class TurmsDriver(
 
     private val connectionService: ConnectionService =
         ConnectionService(coroutineContext, stateStore, host, port, connectTimeoutMillis).apply {
-            addOnDisconnectedListener { onConnectionDisconnected() }
+            addOnDisconnectedListener { t -> onConnectionDisconnected(t) }
             addMessageListener { byteBuffer: ByteBuffer -> onMessage(byteBuffer) }
         }
     private val heartbeatService: HeartbeatService =
@@ -152,10 +153,10 @@ class TurmsDriver(
 
     // Intermediary functions as a mediator between services
 
-    private fun onConnectionDisconnected() {
+    private fun onConnectionDisconnected(throwable: Throwable?) {
         stateStore.reset()
-        heartbeatService.onDisconnected()
-        messageService.onDisconnected()
+        heartbeatService.onDisconnected(throwable)
+        messageService.onDisconnected(throwable)
     }
 
     private fun onMessage(byteBuffer: ByteBuffer) {

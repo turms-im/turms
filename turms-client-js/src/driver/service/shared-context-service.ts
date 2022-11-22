@@ -149,7 +149,7 @@ export default class SharedContextService extends BaseService {
         return Promise.resolve();
     }
 
-    override onDisconnected(): void {
+    override onDisconnected(error?: Error): void {
         // do nothing
     }
 

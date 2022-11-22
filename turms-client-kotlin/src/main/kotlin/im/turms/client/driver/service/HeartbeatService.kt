@@ -28,6 +28,7 @@ import kotlinx.coroutines.launch
 import java.util.concurrent.ConcurrentLinkedQueue
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.cancellation.CancellationException
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
@@ -67,11 +68,11 @@ class HeartbeatService(
         }
     }
 
-    fun stop() {
-        heartbeatTimerDeferred?.cancel()
+    fun stop(throwable: Throwable? = null) {
+        heartbeatTimerDeferred?.cancel(CancellationException(throwable))
     }
 
-    suspend fun send() = suspendCoroutine<Unit> { cont ->
+    suspend fun send() = suspendCoroutine { cont ->
         if (!stateStore.isConnected || !stateStore.isSessionOpen) {
             cont.resumeWithException(ResponseException.from(ResponseStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED))
             return@suspendCoroutine
@@ -110,9 +111,11 @@ class HeartbeatService(
         onDisconnected()
     }
 
-    override fun onDisconnected() {
-        stop()
-        rejectHeartbeatRequests(ResponseException.from(ResponseStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED))
+    override fun onDisconnected(throwable: Throwable?) {
+        stop(throwable)
+        rejectHeartbeatRequests(
+            ResponseException.from(ResponseStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED, cause = throwable)
+        )
     }
 
     companion object {

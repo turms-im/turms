@@ -22,5 +22,6 @@ package im.turms.client.model
 data class SessionCloseInfo(
     val closeStatus: Int,
     val businessStatus: Int? = null,
-    val reason: String? = null
+    val reason: String? = null,
+    val cause: Throwable? = null
 )

@@ -10,5 +10,5 @@ abstract class BaseService {
 
   Future<void> close();
 
-  void onDisconnected();
+  void onDisconnected({Object? error, StackTrace? stackTrace});
 }

@@ -93,8 +93,8 @@ class HeartbeatService: BaseService {
         return Promise.value(())
     }
 
-    override func onDisconnected() {
+    override func onDisconnected(_ error: Error? = nil) {
         stop()
-        rejectHeartbeatPromises(ResponseError(code: .clientSessionHasBeenClosed))
+        rejectHeartbeatPromises(ResponseError(code: .clientSessionHasBeenClosed, cause: error))
     }
 }

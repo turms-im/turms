@@ -18,12 +18,12 @@ public class UserService {
 
     init(_ turmsClient: TurmsClient) {
         self.turmsClient = turmsClient
-        turmsClient.driver.addOnDisconnectedListener { [weak self] _ in
-            self?.changeToOffline(SessionCloseInfo(closeStatus: Int32(SessionCloseStatus.connectionClosed.rawValue), businessStatus: nil, reason: nil))
+        turmsClient.driver.addOnDisconnectedListener { [weak self] error in
+            self?.changeToOffline(SessionCloseInfo(closeStatus: Int32(SessionCloseStatus.connectionClosed.rawValue), businessStatus: nil, reason: nil, cause: error))
         }
         turmsClient.driver.addNotificationListener { [weak self] n in
             if n.hasCloseStatus, self?.isLoggedIn == true {
-                let info = SessionCloseInfo(closeStatus: n.closeStatus, businessStatus: n.hasCode ? n.code : nil, reason: n.hasReason ? n.reason : nil)
+                let info = SessionCloseInfo(closeStatus: n.closeStatus, businessStatus: n.hasCode ? n.code : nil, reason: n.hasReason ? n.reason : nil, cause: nil)
                 self?.changeToOffline(info)
             }
         }
@@ -105,7 +105,7 @@ public class UserService {
                 try $0.toResponse()
             }
         return d.get { _ in
-            self.changeToOffline(SessionCloseInfo(closeStatus: Int32(SessionCloseStatus.disconnectedByClient.rawValue), businessStatus: nil, reason: nil))
+            self.changeToOffline(SessionCloseInfo(closeStatus: Int32(SessionCloseStatus.disconnectedByClient.rawValue), businessStatus: nil, reason: nil, cause: nil))
         }
     }
 

@@ -1,13 +1,13 @@
 import WebSocketMetrics from './websocket-metrics';
 
-type OnCloseParams = {
+type OnClosedParams = {
     code: number,
     reason: string
 };
 
 export interface EventListener {
-    onOpen: (() => any);
-    onClose: ((event: OnCloseParams) => any);
+    onOpened: (() => any);
+    onClosed: ((event: OnClosedParams) => any);
     onMessage: ((data: ArrayBuffer) => any);
 }
 
@@ -31,12 +31,12 @@ export default abstract class WebSocketClient {
 
     abstract get metrics(): WebSocketMetrics;
 
-    protected notifyOnOpen(): void {
-        this._listener.onOpen();
+    protected notifyOnOpened(): void {
+        this._listener.onOpened();
     }
 
-    protected notifyOnClose(event: OnCloseParams): void {
-        this._listener.onClose(event);
+    protected notifyOnClosed(event: OnClosedParams): void {
+        this._listener.onClosed(event);
     }
 
     protected notifyOnMessage(data: ArrayBuffer): void {

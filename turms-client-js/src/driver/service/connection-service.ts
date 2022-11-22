@@ -119,18 +119,18 @@ export default class ConnectionService extends BaseService {
             }
             this._resetStates();
             this._stateStore.websocket = WebSocketFactory.create(wsUrl, {
-                onOpen: (): void => {
+                onOpened: (): void => {
                     if (connectTimeoutId) {
                         clearTimeout(connectTimeoutId);
                     }
                     this._onWebSocketOpen();
                     resolve();
                 },
-                onClose: (event): void => {
+                onClosed: (event): void => {
                     if (connectTimeoutId) {
                         clearTimeout(connectTimeoutId);
                     }
-                    const info = this._onWebSocketClose(wsUrl, event);
+                    const info = this._onWebSocketClosed(wsUrl, event);
                     reject(info);
                 },
                 onMessage: (data): void => this._notifyMessageListeners(data)
@@ -164,7 +164,7 @@ export default class ConnectionService extends BaseService {
         this._notifyOnConnectedListeners();
     }
 
-    private _onWebSocketClose(url: string, event: {
+    private _onWebSocketClosed(url: string, event: {
         code: number,
         reason: string
     }): ConnectionDisconnectInfo {
@@ -186,7 +186,7 @@ export default class ConnectionService extends BaseService {
         return this.disconnect();
     }
 
-    override onDisconnected(): void {
+    override onDisconnected(error?: Error): void {
         // do nothing
     }
 

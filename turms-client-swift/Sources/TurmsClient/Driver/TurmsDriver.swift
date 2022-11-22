@@ -21,8 +21,8 @@ public class TurmsDriver {
     // Lifecycle Hook
 
     private func initConnectionService() {
-        connectionService.addOnDisconnectedListener { [weak self] _ in
-            self?.onConnectionDisconnected()
+        connectionService.addOnDisconnectedListener { [weak self] in
+            self?.onConnectionDisconnected($0)
         }
         connectionService.addMessageListener { [weak self] in
             self?.onMessage($0)
@@ -100,10 +100,10 @@ public class TurmsDriver {
 
     // Intermediary functions as a mediator between services
 
-    private func onConnectionDisconnected() {
+    private func onConnectionDisconnected(_ error: Error?) {
         stateStore.reset()
-        heartbeatService.onDisconnected()
-        messageService.onDisconnected()
+        heartbeatService.onDisconnected(error)
+        messageService.onDisconnected(error)
     }
 
     private func onMessage(_ message: Data) {

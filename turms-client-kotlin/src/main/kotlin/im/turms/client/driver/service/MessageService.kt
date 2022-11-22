@@ -159,8 +159,8 @@ class MessageService(
 
     override suspend fun close() = onDisconnected()
 
-    override fun onDisconnected() =
-        rejectRequests(ResponseException.from(ResponseStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED))
+    override fun onDisconnected(throwable: Throwable?) =
+        rejectRequests(ResponseException.from(ResponseStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED, cause = throwable))
 
     private data class TurmsRequestContext(
         val cont: Continuation<TurmsNotification>,

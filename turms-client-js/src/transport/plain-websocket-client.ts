@@ -13,7 +13,7 @@ export default class PlainWebSocketClient extends WebSocketClient {
         ws.binaryType = 'arraybuffer';
         ws.onopen = (): void => {
             this._metrics.connectTime = Date.now() - connectStart;
-            this.notifyOnOpen();
+            this.notifyOnOpened();
         };
         // onClose will always be triggered with a CloseEvent instance when
         // 1. rejected by the HTTP upgrade error response
@@ -21,7 +21,7 @@ export default class PlainWebSocketClient extends WebSocketClient {
         // so we don't need to add a listener on onerror
         ws.onclose = (e): void => {
             this._metrics = new WebSocketMetrics();
-            this.notifyOnClose(e);
+            this.notifyOnClosed(e);
         };
         ws.onmessage = (e): void => {
             const data = e.data as ArrayBufferLike;

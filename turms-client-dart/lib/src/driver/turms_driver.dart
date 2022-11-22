@@ -27,7 +27,7 @@ class TurmsDriver {
       int? heartbeatIntervalMillis) {
     _connectionService =
         ConnectionService(stateStore, host, port, connectTimeoutMillis)
-          ..addOnDisconnectedListener((_) => _onConnectionDisconnected)
+          ..addOnDisconnectedListener(_onConnectionDisconnected)
           ..addMessageListener(_onMessage);
     _heartbeatService = HeartbeatService(_stateStore, heartbeatIntervalMillis);
     _messageService = MessageService(
@@ -117,10 +117,10 @@ class TurmsDriver {
 
   // Intermediary functions as a mediator between services
 
-  void _onConnectionDisconnected() {
+  void _onConnectionDisconnected({Object? error, StackTrace? stackTrace}) {
     _stateStore.reset();
-    _heartbeatService.onDisconnected();
-    _messageService.onDisconnected();
+    _heartbeatService.onDisconnected(error: error, stackTrace: stackTrace);
+    _messageService.onDisconnected(error: error, stackTrace: stackTrace);
   }
 
   void _onMessage(Uint8List message) {
@@ -128,8 +128,8 @@ class TurmsDriver {
       TurmsNotification notification;
       try {
         notification = TurmsNotification.fromBuffer(message);
-      } catch (e) {
-        print('Failed to parse TurmsNotification: $e');
+      } catch (e, s) {
+        print('Failed to parse TurmsNotification: $e\n$s');
         return;
       }
       if (_heartbeatService.rejectHeartbeatCompletersIfFail(notification)) {

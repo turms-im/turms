@@ -36,13 +36,17 @@ class UserService {
 
   UserService(this._turmsClient) {
     _turmsClient.driver
-      ..addOnDisconnectedListener((_) => _changeToOffline(
-          SessionCloseInfo.fromCloseStatus(
-              SessionCloseStatus.connectionClosed)))
+      ..addOnDisconnectedListener(({error, stackTrace}) => _changeToOffline(
+          SessionCloseInfo.from(
+              closeStatus: SessionCloseStatus.connectionClosed,
+              cause: error,
+              stackTrace: stackTrace)))
       ..addNotificationListener((notification) {
         if (notification.hasCloseStatus() && isLoggedIn) {
-          _changeToOffline(SessionCloseInfo(notification.closeStatus,
-              notification.code, notification.reason));
+          _changeToOffline(SessionCloseInfo.from(
+              closeStatus: notification.closeStatus,
+              businessStatus: notification.code,
+              reason: notification.reason));
         }
       });
   }
@@ -99,8 +103,8 @@ class UserService {
     } else {
       await _turmsClient.driver.send(DeleteSessionRequest());
     }
-    _changeToOffline(SessionCloseInfo.fromCloseStatus(
-        SessionCloseStatus.disconnectedByClient));
+    _changeToOffline(SessionCloseInfo.from(
+        closeStatus: SessionCloseStatus.disconnectedByClient));
     return Response.nullValue();
   }
 

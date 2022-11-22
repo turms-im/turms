@@ -125,7 +125,7 @@ class ConnectionService(
         resetStates()
         val tcp = TcpClient(coroutineContext)
         tcp.onClose = {
-            onSocketClose(it)
+            onSocketClosed(it)
         }
         if (connectTimeoutMillis == null) {
             tcp.connect(
@@ -156,7 +156,7 @@ class ConnectionService(
             }
         }
         stateStore.tcp = tcp
-        onSocketOpen()
+        onSocketOpened()
         tcp.startReading {
             while (stateStore.isConnected) {
                 val length = try {
@@ -183,12 +183,12 @@ class ConnectionService(
     }
 
     // Lifecycle hooks
-    private fun onSocketOpen() {
+    private fun onSocketOpened() {
         stateStore.isConnected = true
         notifyOnConnectedListeners()
     }
 
-    private fun onSocketClose(t: Throwable?) {
+    private fun onSocketClosed(t: Throwable?) {
         stateStore.isConnected = false
         completeDisconnectFutures(t)
         notifyOnDisconnectedListeners(t)
@@ -198,7 +198,7 @@ class ConnectionService(
         disconnect()
     }
 
-    override fun onDisconnected() {
+    override fun onDisconnected(throwable: Throwable?) {
     }
 
     companion object {

@@ -23,10 +23,15 @@ class ResponseException implements Exception {
   final Int64? requestId;
   final int code;
   final String? reason;
-  final Exception? cause;
+  final Object? cause;
+  final StackTrace? stackTrace;
 
   ResponseException(
-      {this.requestId, required this.code, this.reason, this.cause});
+      {this.requestId,
+      required this.code,
+      this.reason,
+      this.cause,
+      this.stackTrace});
 
   ResponseException.fromNotification(TurmsNotification notification)
       : this(
@@ -36,7 +41,12 @@ class ResponseException implements Exception {
             reason: notification.hasReason() ? notification.reason : null);
 
   @override
-  int get hashCode => requestId.hashCode ^ code.hashCode ^ reason.hashCode;
+  int get hashCode =>
+      requestId.hashCode ^
+      code.hashCode ^
+      reason.hashCode ^
+      cause.hashCode ^
+      stackTrace.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -46,8 +56,9 @@ class ResponseException implements Exception {
           requestId == other.requestId &&
           code == other.code &&
           reason == other.reason &&
-          cause == other.cause;
+          cause == other.cause &&
+          stackTrace == other.stackTrace;
 
   @override
-  String toString() => '$requestId:$code:$reason:$cause';
+  String toString() => '$requestId:$code:$reason:$cause:$stackTrace';
 }

@@ -9,7 +9,8 @@ import '../state_store.dart';
 import 'base_service.dart';
 
 typedef OnConnectedListener = void Function();
-typedef OnDisconnectedListener = void Function(dynamic error);
+typedef OnDisconnectedListener = void Function(
+    {Object? error, StackTrace? stackTrace});
 typedef MessageListener = void Function(Uint8List message);
 
 class _MessageDecoder {
@@ -124,9 +125,9 @@ class ConnectionService extends BaseService {
     }
   }
 
-  void _notifyOnDisconnectedListeners(dynamic error) {
+  void _notifyOnDisconnectedListeners(Object? error, StackTrace? stackTrace) {
     for (final listener in _onDisconnectedListeners) {
-      listener.call(error);
+      listener.call(error: error, stackTrace: stackTrace);
     }
   }
 
@@ -152,7 +153,7 @@ class ConnectionService extends BaseService {
             code: ResponseStatusCode.clientSessionAlreadyEstablished);
       }
     }
-    final tcp = TcpClient(_onSocketClose, (bytes) {
+    final tcp = TcpClient(_onSocketClosed, (bytes) {
       final messages = _decoder.decodeMessages(bytes);
       for (final message in messages) {
         _notifyMessageListeners(message);
@@ -165,33 +166,33 @@ class ConnectionService extends BaseService {
     await tcp.connect(host ?? _initialHost, port ?? _initialPort,
         useTls ?? false, context, timeout);
     stateStore.tcp = tcp;
-    _onSocketOpen();
+    _onSocketOpened();
   }
 
   Future<void> disconnect() async {
     if (stateStore.isConnected) {
       stateStore.isConnected = false;
-      await stateStore.tcp?.close(null);
+      await stateStore.tcp?.close();
     }
     _decoder.clear();
   }
 
   // Lifecycle hooks
 
-  void _onSocketOpen() {
+  void _onSocketOpened() {
     stateStore.isConnected = true;
     _notifyOnConnectedListeners();
   }
 
-  void _onSocketClose(dynamic error) {
+  void _onSocketClosed({Object? error, StackTrace? stackTrace}) {
     _decoder.clear();
     stateStore.isConnected = false;
-    _notifyOnDisconnectedListeners(error);
+    _notifyOnDisconnectedListeners(error, stackTrace);
   }
 
   @override
   Future<void> close() => disconnect();
 
   @override
-  void onDisconnected() {}
+  void onDisconnected({Object? error, StackTrace? stackTrace}) {}
 }
