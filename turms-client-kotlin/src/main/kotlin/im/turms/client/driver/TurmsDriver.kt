@@ -29,7 +29,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
+import java.lang.reflect.Method
 import java.nio.ByteBuffer
+import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ScheduledThreadPoolExecutor
 import java.util.logging.Level
 import java.util.logging.Logger
@@ -131,10 +133,13 @@ class TurmsDriver(
 
     suspend fun send(builder: MessageLite.Builder): TurmsNotification {
         val requestBuilder: TurmsRequest.Builder = TurmsRequest.newBuilder()
-        val method = requestBuilder.javaClass.getDeclaredMethod(
-            "set${builder.defaultInstanceForType.javaClass.simpleName}",
-            builder.javaClass
-        )
+        val instanceClass = builder.defaultInstanceForType.javaClass
+        val method = REQUEST_CLASS_TO_SET_METHOD.computeIfAbsent(instanceClass) {
+            requestBuilder.javaClass.getDeclaredMethod(
+                "set${it.simpleName}",
+                builder.javaClass
+            )
+        }
         method.invoke(requestBuilder, builder)
         return send(requestBuilder)
     }
@@ -179,5 +184,6 @@ class TurmsDriver(
 
     companion object {
         private val LOGGER = Logger.getLogger(TurmsDriver::class.java.name)
+        private val REQUEST_CLASS_TO_SET_METHOD: ConcurrentHashMap<Class<MessageLite>, Method> = ConcurrentHashMap(64)
     }
 }
