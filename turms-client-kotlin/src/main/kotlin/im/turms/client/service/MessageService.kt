@@ -245,15 +245,18 @@ class MessageService(private val turmsClient: TurmsClient) {
          * Note that some IDEs complain that "\\" before "}" is redundant,
          * but do NOT remove it otherwise Android will fail to compile it.
          */
-        private val regex = Pattern.compile("@\\{(\\d+?)\\}")
+        private val REGEX = Pattern.compile("@\\{(\\d+?)\\}")
         private val DEFAULT_MENTIONED_USER_IDS_PARSER: (Message) -> Set<Long> = {
             if (it.hasText()) {
                 val text = it.text
-                val matcher = regex.matcher(text)
+                val matcher = REGEX.matcher(text)
                 val userIds: MutableSet<Long> = LinkedHashSet()
                 while (matcher.find()) {
                     val group = matcher.group(1)
-                    userIds.add(group.toLong())
+                    try {
+                        userIds.add(group.toLong())
+                    } catch (e: NumberFormatException) {
+                    }
                 }
                 userIds
             } else {

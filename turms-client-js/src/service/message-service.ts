@@ -26,7 +26,10 @@ export default class MessageService {
             const userIds = [];
             let matches;
             while ((matches = regex.exec(message.text))) {
-                userIds.push(matches[1]);
+                const match = matches[1];
+                if (!isNaN(match)) {
+                    userIds.push(match);
+                }
             }
             return userIds;
         }

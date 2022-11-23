@@ -11,8 +11,10 @@ public class MessageService {
         if $0.hasText {
             let text = $0.text
             let results = DEFAULT_MENTIONED_USER_IDS_REGEX.matches(in: text, range: NSRange(text.startIndex..., in: text))
-            return results.map {
-                Int64(String(text[Range($0.range(at: 1), in: text)!]))!
+            return results.compactMap {
+                let groupRange = Range($0.range(at: 1), in: text)!
+                let group = text[groupRange]
+                return Int64(group)
             }
         }
         return []

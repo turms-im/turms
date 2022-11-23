@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:typed_data';
 
 import 'package:fixnum/fixnum.dart' show Int64;
@@ -40,7 +41,9 @@ class DriverMessageService {
       final userIds = <Int64>{};
       for (final matches
           in _defaultMentionedUserIdsParserRegex.allMatches(message.text)) {
-        userIds.add(Int64.parseInt(matches.group(1)!));
+        try {
+          userIds.add(Int64.parseInt(matches.group(1)!));
+        } on FormatException catch (_) {}
       }
       return userIds;
     }
