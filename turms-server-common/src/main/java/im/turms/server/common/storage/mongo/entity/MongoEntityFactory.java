@@ -21,6 +21,7 @@ import com.mongodb.client.model.IndexModel;
 import com.mongodb.client.model.IndexOptions;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.lang.AsciiCode;
+import im.turms.server.common.infra.lang.ClassUtil;
 import im.turms.server.common.infra.lang.Pair;
 import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.reflect.ReflectionUtil;
@@ -48,6 +49,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -232,9 +234,9 @@ public final class MongoEntityFactory {
             Class keyClass = null;
             Class elementClass = null;
             if (Iterable.class.isAssignableFrom(fieldClass)) {
-                elementClass = ReflectionUtil.getIterableElementClass(field);
+                elementClass = ClassUtil.getIterableElementClass(field);
             } else if (Map.class.isAssignableFrom(fieldClass)) {
-                Pair<Class<?>, Class<?>> keyAndElement = ReflectionUtil.getMapKeyClassAndElementClass(field);
+                Pair<Class<?>, Class<?>> keyAndElement = ClassUtil.getMapKeyClassAndElementClass(field);
                 keyClass = keyAndElement.first();
                 elementClass = keyAndElement.second();
             }
@@ -303,7 +305,7 @@ public final class MongoEntityFactory {
     private static <T> int parseCtorParamIndex(Constructor<T> constructor, Field field) {
         String fieldName = parseFieldName(field);
         String propertyName = field.getName();
-        var params = constructor.getParameters();
+        Parameter[] params = constructor.getParameters();
         for (int i = 0; i < params.length; i++) {
             String paramName = params[i].getName();
             if (paramName.equals(fieldName) || paramName.equals(propertyName)) {
@@ -355,7 +357,9 @@ public final class MongoEntityFactory {
      * @return The index of the current field without its nested fields
      */
     @Nullable
-    private static IndexModel parseIndex(String parentFieldName, Field field, @Nullable Indexed indexed) {
+    private static IndexModel parseIndex(@Nullable String parentFieldName,
+                                         Field field,
+                                         @Nullable Indexed indexed) {
         if (indexed == null) {
             return null;
         }

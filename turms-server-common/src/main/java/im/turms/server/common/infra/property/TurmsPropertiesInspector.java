@@ -28,6 +28,7 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.json.JsonUtil;
+import im.turms.server.common.infra.lang.ClassUtil;
 import im.turms.server.common.infra.property.metadata.Description;
 import im.turms.server.common.infra.property.metadata.GlobalProperty;
 import im.turms.server.common.infra.property.metadata.MutableProperty;
@@ -135,7 +136,7 @@ public class TurmsPropertiesInspector {
 
     private static void collectFieldInfos(Class<?> propertiesClass,
                                           Map<Class<?>, List<PropertyFieldInfo>> classToFieldInfosOutput) {
-        List<Field> fields = ReflectionUtil.getNonStaticFields(propertiesClass);
+        List<Field> fields = ClassUtil.getNonStaticFields(propertiesClass);
         List<PropertyFieldInfo> propertyFieldInfos = new ArrayList<>(fields.size());
         for (Field field : fields) {
             ReflectionUtil.setAccessible(field);
@@ -181,7 +182,7 @@ public class TurmsPropertiesInspector {
         String elementType = null;
         Object[] options = null;
         if (Iterable.class.isAssignableFrom(type)) {
-            Class<?> elementClass = ReflectionUtil.getElementClass(field.getGenericType());
+            Class<?> elementClass = ClassUtil.getElementClass(field.getGenericType());
             elementType = getTypeName(elementClass);
             if (elementClass.isEnum()) {
                 options = elementClass.getEnumConstants();

@@ -31,6 +31,7 @@ import im.turms.server.common.access.admin.web.annotation.RequestHeader;
 import im.turms.server.common.access.admin.web.annotation.RestController;
 import im.turms.server.common.infra.io.BaseFileResource;
 import im.turms.server.common.infra.json.JsonUtil;
+import im.turms.server.common.infra.lang.ClassUtil;
 import im.turms.server.common.infra.lang.Pair;
 import im.turms.server.common.infra.lang.PrimitiveUtil;
 import im.turms.server.common.infra.openapi.OpenApiBuilder;
@@ -176,7 +177,7 @@ public class HttpEndpointCollector {
         QueryParam queryParam = parameter.getDeclaredAnnotation(QueryParam.class);
         Class<?> type = parameter.getType();
         JavaType typeForJackson = JsonUtil.constructJavaType(type);
-        Class<?> elementClass = ReflectionUtil.getElementClass(parameter.getParameterizedType());
+        Class<?> elementClass = ClassUtil.getElementClass(parameter.getParameterizedType());
         JavaType elementTypeForJackson = elementClass == null ? null : JsonUtil.constructJavaType(elementClass);
         if (queryParam == null) {
             Object defaultValue = PrimitiveUtil.getDefaultValue(type);
@@ -218,7 +219,7 @@ public class HttpEndpointCollector {
         }
         String name = requestHeader.value().isBlank() ? parameter.getName() : requestHeader.value();
         Class<?> type = parameter.getType();
-        Class<?> elementClass = ReflectionUtil.getElementClass(parameter.getParameterizedType());
+        Class<?> elementClass = ClassUtil.getElementClass(parameter.getParameterizedType());
         return new MethodParameterInfo(name,
                 type,
                 JsonUtil.constructJavaType(type),
@@ -238,7 +239,7 @@ public class HttpEndpointCollector {
         if (requestBody == null) {
             return null;
         }
-        Class<?> elementClass = ReflectionUtil.getElementClass(parameter.getParameterizedType());
+        Class<?> elementClass = ClassUtil.getElementClass(parameter.getParameterizedType());
         Class<?> type = parameter.getType();
         return new MethodParameterInfo(parameter.getName(),
                 type,
@@ -259,7 +260,7 @@ public class HttpEndpointCollector {
         if (requestFormData == null) {
             return null;
         }
-        if (!ReflectionUtil.isListOf(parameter.getParameterizedType(), MultipartFile.class)) {
+        if (!ClassUtil.isListOf(parameter.getParameterizedType(), MultipartFile.class)) {
             throw new IllegalArgumentException("The type of the form data parameter must be List<MultipartFile>: " + parameter);
         }
         String contentType = requestFormData.contentType();

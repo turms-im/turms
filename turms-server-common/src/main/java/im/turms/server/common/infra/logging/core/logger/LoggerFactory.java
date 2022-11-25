@@ -33,7 +33,6 @@ import im.turms.server.common.infra.property.env.common.logging.ConsoleLoggingPr
 import im.turms.server.common.infra.property.env.common.logging.FileLoggingProperties;
 import im.turms.server.common.infra.property.env.common.logging.LoggingProperties;
 import lombok.Getter;
-import lombok.SneakyThrows;
 import org.jctools.queues.MpscUnboundedArrayQueue;
 import reactor.core.publisher.Mono;
 
@@ -73,7 +72,6 @@ public class LoggerFactory {
     private LoggerFactory() {
     }
 
-    @SneakyThrows
     public static synchronized void init(@Nullable NodeType nodeType,
                                          String nodeId,
                                          LoggingProperties properties) {
