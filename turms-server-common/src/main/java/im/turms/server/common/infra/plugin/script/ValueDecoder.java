@@ -21,11 +21,11 @@ import im.turms.server.common.infra.collection.CollectionUtil;
 import org.graalvm.polyglot.PolyglotException;
 import org.graalvm.polyglot.Value;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen

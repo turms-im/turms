@@ -17,9 +17,9 @@
 
 package im.turms.server.common.infra.collection;
 
+import im.turms.server.common.infra.thread.ThreadSafe;
 import org.jctools.maps.NonBlockingHashMapLong;
 
-import javax.annotation.concurrent.ThreadSafe;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;

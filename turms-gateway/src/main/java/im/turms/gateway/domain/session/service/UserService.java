@@ -24,8 +24,8 @@ import im.turms.server.common.infra.validation.Validator;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
-import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * @author James Chen

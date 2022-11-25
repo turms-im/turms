@@ -29,7 +29,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
-import javax.validation.constraints.Min;
+import jakarta.validation.constraints.Min;
 
 import static im.turms.server.common.infra.unit.ByteSizeUnit.MB;
 

@@ -27,9 +27,9 @@ import lombok.Data;
 import org.springframework.context.ApplicationContext;
 import reactor.core.publisher.Mono;
 
-import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
 import java.util.Set;
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * @author James Chen

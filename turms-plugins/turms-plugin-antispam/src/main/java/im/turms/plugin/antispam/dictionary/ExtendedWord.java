@@ -20,8 +20,8 @@ package im.turms.plugin.antispam.dictionary;
 import lombok.Data;
 import lombok.Getter;
 
-import javax.annotation.Nullable;
 import java.util.Date;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen

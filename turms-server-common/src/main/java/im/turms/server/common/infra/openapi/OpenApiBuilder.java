@@ -59,7 +59,6 @@ import io.swagger.v3.oas.models.servers.Server;
 import lombok.SneakyThrows;
 import reactor.core.publisher.Mono;
 
-import javax.annotation.Nullable;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -67,6 +66,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import jakarta.annotation.Nullable;
 
 import static im.turms.server.common.access.admin.web.MediaTypeConst.APPLICATION_JAVASCRIPT;
 import static im.turms.server.common.access.admin.web.MediaTypeConst.APPLICATION_OCTET_STREAM;

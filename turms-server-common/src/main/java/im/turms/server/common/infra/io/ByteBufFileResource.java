@@ -21,7 +21,7 @@ import im.turms.server.common.infra.netty.ReferenceCountUtil;
 import io.netty.buffer.ByteBuf;
 import lombok.Getter;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen

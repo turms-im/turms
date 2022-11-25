@@ -29,8 +29,8 @@ import im.turms.server.common.storage.mongo.entity.annotation.Sharded;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import javax.validation.constraints.NotNull;
 import java.util.Date;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * @author James Chen

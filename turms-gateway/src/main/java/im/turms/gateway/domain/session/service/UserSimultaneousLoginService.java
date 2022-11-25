@@ -28,10 +28,10 @@ import im.turms.server.common.infra.property.env.gateway.SimultaneousLoginProper
 import im.turms.server.common.infra.validation.ValidDeviceType;
 import org.springframework.stereotype.Service;
 
-import javax.validation.constraints.NotNull;
 import java.util.EnumSet;
 import java.util.Map;
 import java.util.Set;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * @author James Chen

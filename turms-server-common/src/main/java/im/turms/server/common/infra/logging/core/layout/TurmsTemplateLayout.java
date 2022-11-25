@@ -31,9 +31,9 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
 import org.springframework.util.StringUtils;
 
-import javax.annotation.Nullable;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen

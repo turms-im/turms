@@ -26,8 +26,8 @@ import io.netty.buffer.ByteBuf;
 import lombok.Data;
 import org.jctools.queues.MpscUnboundedArrayQueue;
 
-import javax.annotation.Nullable;
 import java.util.List;
+import jakarta.annotation.Nullable;
 
 import static im.turms.server.common.infra.logging.core.model.LogLevel.DEBUG_VALUE;
 import static im.turms.server.common.infra.logging.core.model.LogLevel.ERROR_VALUE;

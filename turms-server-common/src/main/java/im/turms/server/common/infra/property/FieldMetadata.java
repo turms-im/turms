@@ -17,7 +17,7 @@
 
 package im.turms.server.common.infra.property;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen

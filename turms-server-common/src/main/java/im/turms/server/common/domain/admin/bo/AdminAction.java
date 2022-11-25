@@ -17,9 +17,9 @@
 
 package im.turms.server.common.domain.admin.bo;
 
-import javax.annotation.Nullable;
 import java.util.Date;
 import java.util.Map;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen

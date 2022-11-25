@@ -22,10 +22,10 @@ import com.google.protobuf.ByteString;
 import com.google.protobuf.ByteStringUtil;
 import com.google.protobuf.Message;
 import im.turms.server.common.infra.lang.Range;
+import im.turms.server.common.infra.thread.ThreadSafe;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.jctools.maps.NonBlockingHashMapLong;
 
-import javax.annotation.concurrent.ThreadSafe;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

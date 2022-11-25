@@ -37,7 +37,6 @@ import im.turms.server.common.infra.security.jwt.exception.InvalidJwtException;
 import im.turms.server.common.infra.security.jwt.exception.SignatureVerificationException;
 import lombok.SneakyThrows;
 
-import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -54,6 +53,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen

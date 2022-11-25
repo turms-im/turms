@@ -19,10 +19,10 @@ package im.turms.server.common.storage.mongo.entity;
 
 import org.bson.BsonDocument;
 
-import javax.annotation.Nullable;
 import java.lang.reflect.Constructor;
 import java.util.List;
 import java.util.Map;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen

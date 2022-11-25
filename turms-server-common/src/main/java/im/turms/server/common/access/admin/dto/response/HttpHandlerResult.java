@@ -28,10 +28,10 @@ import io.netty.handler.codec.http.HttpResponseStatus;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen

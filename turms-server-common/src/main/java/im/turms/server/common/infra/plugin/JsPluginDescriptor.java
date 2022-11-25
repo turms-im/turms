@@ -17,8 +17,8 @@
 
 package im.turms.server.common.infra.plugin;
 
-import javax.annotation.Nullable;
 import java.nio.file.Path;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen

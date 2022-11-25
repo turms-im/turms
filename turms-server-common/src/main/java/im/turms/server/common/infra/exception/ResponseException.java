@@ -23,8 +23,8 @@ import im.turms.server.common.infra.collection.FastEnumMap;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * @author James Chen

@@ -21,13 +21,13 @@ import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.lang.StringUtil;
 import io.netty.buffer.ByteBuf;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import jakarta.annotation.Nullable;
 
 import static im.turms.server.common.infra.net.InetAddressUtil.IPV4_BYTE_LENGTH;
 import static im.turms.server.common.infra.net.InetAddressUtil.IPV6_BYTE_LENGTH;

@@ -21,8 +21,8 @@ import im.turms.plugin.antispam.ac.AhoCorasickDoubleArrayTrie;
 import im.turms.server.common.infra.lang.FastStringBuilder;
 import im.turms.server.common.infra.lang.StringUtil;
 
-import javax.annotation.Nullable;
 import java.util.Arrays;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen

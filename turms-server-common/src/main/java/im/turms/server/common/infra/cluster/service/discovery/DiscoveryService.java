@@ -49,8 +49,6 @@ import org.bson.BsonValue;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -67,6 +65,8 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * Responsibilities:

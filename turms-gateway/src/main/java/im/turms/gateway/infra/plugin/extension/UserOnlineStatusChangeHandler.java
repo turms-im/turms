@@ -23,7 +23,7 @@ import im.turms.server.common.domain.session.bo.CloseReason;
 import im.turms.server.common.infra.plugin.ExtensionPoint;
 import reactor.core.publisher.Mono;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * UserOnlineStatusChangeHandler notifies when user goes online or offline.

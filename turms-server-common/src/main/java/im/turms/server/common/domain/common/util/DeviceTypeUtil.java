@@ -23,10 +23,10 @@ import org.eclipse.collections.api.map.primitive.ByteObjectMap;
 import org.eclipse.collections.api.map.primitive.MutableByteObjectMap;
 import org.eclipse.collections.impl.factory.primitive.ByteObjectMaps;
 
-import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.Set;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen

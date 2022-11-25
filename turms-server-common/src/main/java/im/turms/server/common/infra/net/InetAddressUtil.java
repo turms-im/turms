@@ -19,11 +19,11 @@ package im.turms.server.common.infra.net;
 
 import im.turms.server.common.infra.lang.StringUtil;
 
-import javax.annotation.Nullable;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen

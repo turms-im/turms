@@ -23,7 +23,6 @@ import org.eclipse.collections.api.collection.ImmutableCollection;
 import org.eclipse.collections.api.map.ImmutableMap;
 import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -36,6 +35,7 @@ import java.util.Objects;
 import java.util.RandomAccess;
 import java.util.Set;
 import java.util.function.Function;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen

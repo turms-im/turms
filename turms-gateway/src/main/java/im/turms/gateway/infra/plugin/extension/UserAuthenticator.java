@@ -21,7 +21,7 @@ import im.turms.gateway.domain.session.bo.UserLoginInfo;
 import im.turms.server.common.infra.plugin.ExtensionPoint;
 import reactor.core.publisher.Mono;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * @author James Chen

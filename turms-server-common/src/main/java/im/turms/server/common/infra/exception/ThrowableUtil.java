@@ -22,7 +22,6 @@ import im.turms.server.common.access.common.ResponseStatusCode;
 import org.apache.commons.lang3.StringUtils;
 import reactor.netty.channel.AbortedException;
 
-import javax.annotation.Nullable;
 import java.io.EOFException;
 import java.io.IOException;
 import java.nio.channels.ClosedChannelException;
@@ -30,6 +29,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen

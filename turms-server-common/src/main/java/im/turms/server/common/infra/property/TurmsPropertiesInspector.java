@@ -38,16 +38,16 @@ import im.turms.server.common.infra.validation.ValidCron;
 import lombok.SneakyThrows;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
-import javax.annotation.Nullable;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.Size;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Size;
 
 import static im.turms.server.common.infra.json.JsonCodecPool.MAPPER;
 

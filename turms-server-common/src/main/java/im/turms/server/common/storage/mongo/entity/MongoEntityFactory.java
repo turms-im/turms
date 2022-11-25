@@ -42,7 +42,6 @@ import org.bson.BsonDocument;
 import org.bson.BsonValue;
 import org.springframework.util.StringUtils;
 
-import javax.annotation.Nullable;
 import java.io.InputStream;
 import java.lang.invoke.MethodHandle;
 import java.lang.reflect.Constructor;
@@ -56,6 +55,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen
@@ -316,6 +316,7 @@ public final class MongoEntityFactory {
     /**
      * @implNote Note that we just follow the original name without any naming convention
      */
+    @Nullable
     private static String parseFieldName(Field field) {
         var property = field.getAnnotation(im.turms.server.common.storage.mongo.entity.annotation.Field.class);
         return property == null ? field.getName() : property.value();

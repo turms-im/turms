@@ -39,13 +39,13 @@ import io.netty.buffer.ByteBuf;
 import io.netty.handler.codec.http.HttpMethod;
 import org.springframework.context.ConfigurableApplicationContext;
 
-import javax.annotation.Nullable;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import jakarta.annotation.Nullable;
 
 import static im.turms.server.common.access.admin.web.MediaTypeConst.APPLICATION_JSON;
 import static im.turms.server.common.access.admin.web.MediaTypeConst.APPLICATION_OCTET_STREAM;

@@ -31,7 +31,6 @@ import io.netty.buffer.PooledByteBufAllocator;
 import lombok.SneakyThrows;
 import org.jctools.maps.NonBlockingIdentityHashMap;
 
-import javax.annotation.Nullable;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
@@ -39,6 +38,7 @@ import java.lang.reflect.RecordComponent;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen

@@ -26,7 +26,7 @@ import im.turms.server.common.domain.session.bo.SessionCloseStatus;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import static com.google.protobuf.CodedOutputStream.computeInt32Size;
 import static com.google.protobuf.CodedOutputStream.computeInt64Size;

@@ -34,10 +34,10 @@ import im.turms.server.common.infra.validation.NoWhitespace;
 import im.turms.server.common.infra.validation.Validator;
 import reactor.core.publisher.Mono;
 
-import javax.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import jakarta.validation.constraints.NotNull;
 
 import static im.turms.server.common.domain.admin.constant.AdminConst.ADMIN_ROLE_ROOT_ID;
 

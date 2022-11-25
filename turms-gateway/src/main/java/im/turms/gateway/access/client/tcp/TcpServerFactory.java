@@ -34,7 +34,7 @@ import reactor.netty.Connection;
 import reactor.netty.DisposableServer;
 import reactor.netty.tcp.TcpServer;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import static io.netty.channel.ChannelOption.CONNECT_TIMEOUT_MILLIS;
 import static io.netty.channel.ChannelOption.SO_BACKLOG;

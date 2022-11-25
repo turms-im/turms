@@ -17,14 +17,14 @@
 
 package im.turms.server.common.infra.collection;
 
+import im.turms.server.common.infra.thread.NotThreadSafe;
 import org.jctools.util.Pow2;
 
-import javax.annotation.concurrent.NotThreadSafe;
-import javax.validation.constraints.NotNull;
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.RandomAccess;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * @author James Chen

@@ -22,9 +22,9 @@ import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.domain.location.bo.Location;
 import im.turms.server.common.infra.net.InetAddressUtil;
 
-import javax.annotation.Nullable;
 import java.util.Date;
 import java.util.Map;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen

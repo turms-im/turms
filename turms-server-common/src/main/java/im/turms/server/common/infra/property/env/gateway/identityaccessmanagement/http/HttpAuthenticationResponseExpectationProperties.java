@@ -22,10 +22,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.Size;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
+import jakarta.validation.constraints.Size;
 
 /**
  * @author James Chen

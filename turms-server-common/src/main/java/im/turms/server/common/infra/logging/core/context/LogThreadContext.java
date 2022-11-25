@@ -20,7 +20,7 @@ package im.turms.server.common.infra.logging.core.context;
 import im.turms.server.common.infra.tracing.TracingContext;
 import io.netty.util.concurrent.FastThreadLocal;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen

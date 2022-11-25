@@ -21,7 +21,6 @@ import im.turms.server.common.infra.lang.Pair;
 import im.turms.server.common.infra.unsafe.UnsafeUtil;
 import sun.misc.Unsafe;
 
-import javax.annotation.Nullable;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.AccessibleObject;
@@ -33,6 +32,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.LinkedList;
 import java.util.List;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen

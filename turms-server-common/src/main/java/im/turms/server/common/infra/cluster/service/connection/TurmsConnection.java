@@ -21,9 +21,9 @@ import im.turms.server.common.infra.cluster.service.discovery.MemberConnectionLi
 import lombok.Data;
 import reactor.netty.channel.ChannelOperations;
 
-import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen

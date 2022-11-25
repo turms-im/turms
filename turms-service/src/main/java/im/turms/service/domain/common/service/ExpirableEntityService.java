@@ -22,8 +22,8 @@ import im.turms.service.domain.common.po.Expirable;
 import im.turms.service.domain.common.repository.ExpirableEntityRepository;
 import im.turms.service.domain.common.util.ExpirableRequestInspector;
 
-import javax.annotation.Nullable;
 import java.util.Date;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen

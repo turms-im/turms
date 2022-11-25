@@ -27,10 +27,10 @@ import io.netty.util.HashedWheelTimer;
 import io.netty.util.Timeout;
 import lombok.Data;
 
-import javax.annotation.Nullable;
 import java.net.InetSocketAddress;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
+import jakarta.annotation.Nullable;
 
 /**
  * Bind the network connection and the user session together

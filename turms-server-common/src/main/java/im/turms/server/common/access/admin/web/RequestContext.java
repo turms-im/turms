@@ -19,7 +19,7 @@ package im.turms.server.common.access.admin.web;
 
 import lombok.Data;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen

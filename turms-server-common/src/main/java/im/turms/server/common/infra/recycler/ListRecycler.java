@@ -17,7 +17,8 @@
 
 package im.turms.server.common.infra.recycler;
 
-import javax.annotation.concurrent.ThreadSafe;
+import im.turms.server.common.infra.thread.ThreadSafe;
+
 import java.util.ArrayList;
 import java.util.List;
 

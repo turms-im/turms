@@ -22,7 +22,6 @@ import im.turms.server.common.infra.unsafe.UnsafeUtil;
 import lombok.SneakyThrows;
 import sun.misc.Unsafe;
 
-import javax.annotation.Nullable;
 import java.lang.invoke.MethodHandle;
 import java.lang.reflect.Constructor;
 import java.nio.charset.StandardCharsets;
@@ -32,6 +31,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen

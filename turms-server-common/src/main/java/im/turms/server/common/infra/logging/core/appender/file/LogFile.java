@@ -17,9 +17,9 @@
 
 package im.turms.server.common.infra.logging.core.appender.file;
 
-import javax.annotation.Nullable;
 import java.nio.file.Path;
 import java.time.ZonedDateTime;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen

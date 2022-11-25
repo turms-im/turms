@@ -22,10 +22,10 @@ import im.turms.server.common.storage.mongo.BsonPool;
 import im.turms.server.common.storage.mongo.codec.BsonValueEncoder;
 import org.bson.BsonDocument;
 
-import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.Date;
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * @author James Chen

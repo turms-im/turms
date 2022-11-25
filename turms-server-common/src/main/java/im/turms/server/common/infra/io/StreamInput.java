@@ -19,10 +19,10 @@ package im.turms.server.common.infra.io;
 
 import io.netty.buffer.ByteBuf;
 
-import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen

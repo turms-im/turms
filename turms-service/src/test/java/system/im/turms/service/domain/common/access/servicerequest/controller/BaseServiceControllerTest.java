@@ -24,9 +24,9 @@ import im.turms.service.access.servicerequest.dto.RequestHandlerResult;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-import javax.annotation.Nullable;
 import java.lang.reflect.ParameterizedType;
 import java.util.function.Consumer;
+import jakarta.annotation.Nullable;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

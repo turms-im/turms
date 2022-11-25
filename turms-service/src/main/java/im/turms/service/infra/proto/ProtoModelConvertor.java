@@ -43,14 +43,14 @@ import im.turms.server.common.domain.user.po.User;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.service.domain.message.po.Message;
 
-import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * @author James Chen

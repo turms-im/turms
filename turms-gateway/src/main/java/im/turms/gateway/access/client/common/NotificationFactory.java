@@ -26,7 +26,7 @@ import im.turms.server.common.infra.exception.ThrowableInfo;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import io.netty.buffer.ByteBuf;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen

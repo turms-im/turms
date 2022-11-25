@@ -23,9 +23,9 @@ import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 
-import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.Map;
+import jakarta.annotation.Nullable;
 
 import static im.turms.server.common.infra.json.JsonCodecPool.MAPPER;
 import static im.turms.server.common.infra.property.TurmsPropertiesInspector.MUTABLE_PROPERTIES_WRITER;

@@ -22,9 +22,9 @@ import im.turms.server.common.infra.function.ThrowingSupplier;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * @author James Chen

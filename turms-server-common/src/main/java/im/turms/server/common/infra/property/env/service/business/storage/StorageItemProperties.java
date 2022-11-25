@@ -24,10 +24,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import java.util.Collections;
 import java.util.List;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 
 import static im.turms.server.common.infra.unit.ByteSizeUnit.MB;
 

@@ -58,10 +58,10 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
-import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.Set;
+import jakarta.validation.constraints.NotNull;
 
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.CREATE_SESSION_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.DELETE_SESSION_REQUEST;

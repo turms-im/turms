@@ -26,9 +26,9 @@ import im.turms.service.infra.plugin.extension.StorageServiceProvider;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
-import javax.annotation.Nullable;
 import java.lang.reflect.Method;
 import java.util.Map;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen

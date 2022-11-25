@@ -54,7 +54,6 @@ import io.netty.handler.codec.http.HttpMethod;
 import reactor.core.publisher.Mono;
 import reactor.netty.http.client.HttpClient;
 
-import javax.annotation.Nullable;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
@@ -63,6 +62,7 @@ import java.time.Duration;
 import java.util.Date;
 import java.util.Map;
 import java.util.Set;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen

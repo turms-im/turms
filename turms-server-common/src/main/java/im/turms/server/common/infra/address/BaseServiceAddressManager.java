@@ -31,11 +31,11 @@ import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 import reactor.util.function.Tuple3;
 
-import javax.annotation.Nullable;
 import java.net.UnknownHostException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen

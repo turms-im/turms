@@ -27,9 +27,9 @@ import im.turms.server.common.storage.mongo.entity.annotation.Sharded;
 import im.turms.server.common.storage.mongo.entity.annotation.TieredStorage;
 import lombok.Data;
 
-import javax.annotation.Nullable;
 import java.util.Date;
 import java.util.List;
+import jakarta.annotation.Nullable;
 
 import static im.turms.server.common.storage.mongo.entity.IndexType.HASH;
 import static im.turms.server.common.storage.mongo.entity.annotation.IndexedReason.EXPIRABLE;

@@ -15,18 +15,19 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.infra.cluster.service.rpc.dto;
+package im.turms.server.common.infra.thread;
 
-import im.turms.server.common.infra.cluster.service.rpc.exception.RpcException;
-
-import jakarta.annotation.Nullable;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * @author James Chen
  */
-public record RpcResponse(
-        int requestId,
-        @Nullable Object result,
-        @Nullable RpcException exception
-) {
+@Documented
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.CLASS)
+public @interface NotThreadSafe {
 }

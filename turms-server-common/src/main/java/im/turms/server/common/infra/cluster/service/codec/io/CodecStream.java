@@ -24,10 +24,10 @@ import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.io.Stream;
 import io.netty.buffer.ByteBuf;
 
-import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen

@@ -17,9 +17,9 @@
 
 package im.turms.server.common.infra.recycler;
 
+import im.turms.server.common.infra.thread.ThreadSafe;
 import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 
-import javax.annotation.concurrent.ThreadSafe;
 import java.util.Set;
 
 /**

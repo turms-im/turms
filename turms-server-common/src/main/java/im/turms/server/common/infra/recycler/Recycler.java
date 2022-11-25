@@ -17,9 +17,8 @@
 
 package im.turms.server.common.infra.recycler;
 
+import im.turms.server.common.infra.thread.ThreadSafe;
 import org.jctools.queues.MpmcArrayQueue;
-
-import javax.annotation.concurrent.ThreadSafe;
 
 /**
  * Note that if the user forgets to recycle a value,

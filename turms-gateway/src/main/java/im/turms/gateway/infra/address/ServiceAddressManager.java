@@ -33,9 +33,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen

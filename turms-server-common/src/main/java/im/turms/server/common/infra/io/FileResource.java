@@ -19,9 +19,9 @@ package im.turms.server.common.infra.io;
 
 import lombok.Getter;
 
-import javax.annotation.Nullable;
 import java.nio.file.Path;
 import java.util.function.Consumer;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen

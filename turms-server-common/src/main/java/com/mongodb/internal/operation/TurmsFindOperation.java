@@ -89,7 +89,7 @@ public class TurmsFindOperation<T> implements AsyncExplainableReadOperation<Asyn
                     logRetryExecute(retryState);
                     withAsyncSourceAndConnection(binding::getReadConnectionSource, false, funcCallback,
                             (source, connection, releasingCallback) -> {
-                                if (retryState.breakAndCompleteIfRetryAnd(() -> !canRetryRead(source.getServerDescription(), connection.getDescription(),
+                                if (retryState.breakAndCompleteIfRetryAnd(() -> !canRetryRead(source.getServerDescription(),
                                         binding.getSessionContext()), releasingCallback)) {
                                     return;
                                 }
@@ -106,9 +106,8 @@ public class TurmsFindOperation<T> implements AsyncExplainableReadOperation<Asyn
         return (result, t) -> {
             if (t != null) {
                 if (t instanceof MongoCommandException e) {
-                    callback.onResult(result, new MongoQueryException(e.getServerAddress(),
-                            e.getErrorCode(),
-                            e.getErrorMessage()));
+                    MongoQueryException exception = new MongoQueryException(e.getResponse(), e.getServerAddress());
+                    callback.onResult(result, exception);
                 } else {
                     callback.onResult(result, t);
                 }
@@ -140,14 +139,6 @@ public class TurmsFindOperation<T> implements AsyncExplainableReadOperation<Asyn
         return (serverDescription, connectionDescription) -> {
             appendReadConcernToCommand(sessionContext, connectionDescription.getMaxWireVersion(), command);
             return command;
-        };
-    }
-
-    private CommandOperationHelper.CommandReadTransformer<BsonDocument, AggregateResponseBatchCursor<T>> transformer() {
-        return (result, source, connection) -> {
-            QueryResult<T> queryResult = cursorDocumentToQueryResult(result.getDocument("cursor"),
-                    connection.getDescription().getServerAddress());
-            return new QueryBatchCursor<>(queryResult, getLimit(), getBatchSize(), 0, decoder, null, source, connection, result);
         };
     }
 

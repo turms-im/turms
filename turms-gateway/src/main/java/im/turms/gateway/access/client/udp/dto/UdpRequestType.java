@@ -17,7 +17,7 @@
 
 package im.turms.gateway.access.client.udp.dto;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen

@@ -23,12 +23,12 @@ import im.turms.server.common.access.client.dto.request.TurmsRequest;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.collection.FastEnumMap;
 
-import javax.annotation.Nullable;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * @author James Chen

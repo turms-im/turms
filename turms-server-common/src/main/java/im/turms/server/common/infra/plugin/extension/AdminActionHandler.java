@@ -21,7 +21,7 @@ import im.turms.server.common.domain.admin.bo.AdminAction;
 import im.turms.server.common.infra.plugin.ExtensionPoint;
 import reactor.core.publisher.Mono;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * @author James Chen

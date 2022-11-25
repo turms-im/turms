@@ -26,7 +26,7 @@ import im.turms.server.common.infra.cluster.service.rpc.RpcErrorCode;
 import im.turms.server.common.infra.cluster.service.rpc.exception.RpcException;
 import im.turms.server.common.infra.lang.StringUtil;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen

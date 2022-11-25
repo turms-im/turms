@@ -30,10 +30,10 @@ import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import lombok.Data;
 import org.springframework.util.Assert;
 
-import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
 import java.util.Map;
 import java.util.Set;
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * @author James Chen

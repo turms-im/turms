@@ -17,7 +17,8 @@
 
 package im.turms.server.common.infra.collection;
 
-import javax.annotation.concurrent.NotThreadSafe;
+import im.turms.server.common.infra.thread.NotThreadSafe;
+
 import java.util.AbstractMap;
 import java.util.Collection;
 import java.util.Collections;

@@ -21,7 +21,7 @@ import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.proto.ProtoFormatter;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen

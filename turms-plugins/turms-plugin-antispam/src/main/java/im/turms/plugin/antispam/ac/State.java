@@ -24,8 +24,8 @@ import org.eclipse.collections.api.map.primitive.MutableCharObjectMap;
 import org.eclipse.collections.impl.factory.primitive.CharObjectMaps;
 import org.eclipse.collections.impl.set.mutable.primitive.IntHashSet;
 
-import javax.annotation.Nullable;
 import java.util.Collection;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen

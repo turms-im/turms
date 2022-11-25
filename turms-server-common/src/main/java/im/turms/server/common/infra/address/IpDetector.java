@@ -25,13 +25,13 @@ import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 import reactor.netty.http.client.HttpClient;
 
-import javax.annotation.Nullable;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.nio.channels.DatagramChannel;
 import java.util.ArrayList;
 import java.util.List;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen

@@ -20,7 +20,7 @@ package im.turms.server.common.infra.logging.core.logger;
 import im.turms.server.common.infra.logging.core.model.LogLevel;
 import io.netty.buffer.ByteBuf;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen

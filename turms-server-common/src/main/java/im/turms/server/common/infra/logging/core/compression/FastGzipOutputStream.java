@@ -18,8 +18,8 @@
 package im.turms.server.common.infra.logging.core.compression;
 
 import im.turms.server.common.infra.memory.ByteBufferUtil;
+import im.turms.server.common.infra.thread.NotThreadSafe;
 
-import javax.annotation.concurrent.NotThreadSafe;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;

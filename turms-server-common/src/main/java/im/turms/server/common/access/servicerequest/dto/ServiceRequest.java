@@ -24,8 +24,8 @@ import io.netty.buffer.ByteBuf;
 import io.netty.util.NetUtil;
 import lombok.Data;
 
-import javax.annotation.Nullable;
 import java.util.Arrays;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen

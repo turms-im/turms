@@ -17,9 +17,9 @@
 
 package im.turms.server.common.infra.lang;
 
-import javax.annotation.Nullable;
 import java.nio.CharBuffer;
 import java.util.Arrays;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen

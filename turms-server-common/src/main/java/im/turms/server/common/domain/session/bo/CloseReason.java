@@ -21,7 +21,7 @@ import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.collection.FastEnumMap;
 import im.turms.server.common.infra.exception.ThrowableInfo;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen

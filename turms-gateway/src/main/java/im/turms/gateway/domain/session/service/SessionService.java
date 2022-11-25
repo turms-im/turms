@@ -61,9 +61,6 @@ import lombok.experimental.Delegate;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
-import javax.annotation.Nullable;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -78,6 +75,9 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Consumer;
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 import static im.turms.gateway.infra.metrics.MetricNameConst.LOGGED_IN_USERS_COUNTER;
 import static im.turms.gateway.infra.metrics.MetricNameConst.ONLINE_USERS_GAUGE;

@@ -31,9 +31,9 @@ import im.turms.server.common.storage.mongo.entity.annotation.Sharded;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
 import java.util.Date;
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotNull;
 
 import static im.turms.server.common.storage.mongo.entity.annotation.IndexedReason.EXTENDED_FEATURE;
 

@@ -20,7 +20,6 @@ package im.turms.server.common.infra.suggestion;
 import com.sun.management.UnixOperatingSystemMXBean;
 import org.apache.commons.lang3.SystemUtils;
 
-import javax.annotation.Nullable;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
@@ -31,6 +30,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import jakarta.annotation.Nullable;
 
 public class OsConfigurationAdvisor {
 

@@ -22,7 +22,7 @@ import im.turms.server.common.access.admin.dto.response.ResponseDTO;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import lombok.Getter;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen

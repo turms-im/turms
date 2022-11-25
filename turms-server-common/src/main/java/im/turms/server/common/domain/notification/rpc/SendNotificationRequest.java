@@ -26,10 +26,10 @@ import io.netty.buffer.ByteBuf;
 import lombok.Data;
 import org.springframework.context.ApplicationContext;
 
-import javax.annotation.Nullable;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.util.Set;
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * @author James Chen

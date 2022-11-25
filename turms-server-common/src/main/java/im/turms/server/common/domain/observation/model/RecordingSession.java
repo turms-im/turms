@@ -22,12 +22,12 @@ import jdk.jfr.Recording;
 import jdk.jfr.RecordingState;
 import lombok.SneakyThrows;
 
-import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Date;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen

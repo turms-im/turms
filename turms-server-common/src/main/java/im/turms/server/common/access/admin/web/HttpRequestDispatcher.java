@@ -67,14 +67,14 @@ import reactor.netty.NettyOutbound;
 import reactor.netty.http.server.HttpServerRequest;
 import reactor.netty.http.server.HttpServerResponse;
 
-import javax.annotation.Nullable;
-import javax.validation.ConstraintViolationException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import jakarta.annotation.Nullable;
+import jakarta.validation.ConstraintViolationException;
 
 import static im.turms.server.common.access.admin.web.HttpUtil.isPreFlightRequest;
 import static im.turms.server.common.access.admin.web.MediaTypeConst.APPLICATION_JSON;

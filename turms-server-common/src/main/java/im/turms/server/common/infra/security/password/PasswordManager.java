@@ -24,8 +24,8 @@ import im.turms.server.common.infra.property.constant.PasswordEncodingAlgorithm;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
-import javax.annotation.Nullable;
 import java.util.Arrays;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen

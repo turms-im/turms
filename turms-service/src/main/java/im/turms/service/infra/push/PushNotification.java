@@ -17,7 +17,7 @@
 
 package im.turms.service.infra.push;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen

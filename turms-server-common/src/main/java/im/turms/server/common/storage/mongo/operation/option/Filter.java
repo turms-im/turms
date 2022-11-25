@@ -27,13 +27,13 @@ import org.bson.BsonDocument;
 import org.bson.BsonNull;
 import org.bson.BsonValue;
 
-import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * @author James Chen

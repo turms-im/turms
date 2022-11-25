@@ -17,9 +17,9 @@
 
 package im.turms.server.common.infra.security;
 
+import java.security.InvalidKeyException;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-import java.security.InvalidKeyException;
 
 /**
  * @author James Chen

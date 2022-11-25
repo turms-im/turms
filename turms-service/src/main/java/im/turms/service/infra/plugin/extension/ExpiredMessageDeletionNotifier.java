@@ -21,8 +21,8 @@ import im.turms.server.common.infra.plugin.ExtensionPoint;
 import im.turms.service.domain.message.po.Message;
 import reactor.core.publisher.Mono;
 
-import javax.validation.constraints.NotEmpty;
 import java.util.List;
+import jakarta.validation.constraints.NotEmpty;
 
 /**
  * The plugin is useful when developers needing to persist messages in other places

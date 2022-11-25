@@ -53,13 +53,13 @@ import reactor.core.publisher.Mono;
 import reactor.netty.channel.ChannelOperations;
 import reactor.util.context.ContextView;
 
-import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * @author James Chen

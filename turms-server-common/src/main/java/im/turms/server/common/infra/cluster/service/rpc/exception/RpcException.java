@@ -24,10 +24,10 @@ import im.turms.server.common.infra.lang.Pair;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
-import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotNull;
 
 import static im.turms.server.common.access.common.ResponseStatusCode.STATUS_CODE_LENGTH;
 import static im.turms.server.common.infra.cluster.service.rpc.RpcErrorCode.ERROR_CODE_LENGTH;

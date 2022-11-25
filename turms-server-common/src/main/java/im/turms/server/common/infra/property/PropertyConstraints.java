@@ -19,10 +19,10 @@ package im.turms.server.common.infra.property;
 
 import im.turms.server.common.infra.validation.ValidCron;
 
-import javax.annotation.Nullable;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.Size;
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Size;
 
 /**
  * @author James Chen

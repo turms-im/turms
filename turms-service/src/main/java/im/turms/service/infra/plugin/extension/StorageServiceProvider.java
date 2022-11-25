@@ -20,9 +20,9 @@ package im.turms.service.infra.plugin.extension;
 import im.turms.server.common.infra.plugin.ExtensionPoint;
 import reactor.core.publisher.Mono;
 
-import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
 import java.util.Map;
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * @author James Chen

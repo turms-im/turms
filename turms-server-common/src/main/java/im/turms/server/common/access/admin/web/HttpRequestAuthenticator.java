@@ -27,8 +27,8 @@ import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpHeaders;
 import reactor.core.publisher.Mono;
 
-import javax.annotation.Nullable;
 import java.util.Base64;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen

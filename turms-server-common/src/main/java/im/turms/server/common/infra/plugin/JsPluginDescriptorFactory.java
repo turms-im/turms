@@ -20,9 +20,9 @@ package im.turms.server.common.infra.plugin;
 import im.turms.server.common.infra.plugin.script.CorruptedScriptException;
 import org.graalvm.polyglot.Value;
 
-import javax.annotation.Nullable;
 import java.nio.file.Path;
 import java.util.Map;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen

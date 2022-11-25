@@ -42,10 +42,10 @@ import im.turms.server.common.infra.cluster.service.rpc.codec.RpcExceptionCodec;
 import io.netty.util.collection.IntObjectHashMap;
 import org.springframework.core.GenericTypeResolver;
 
-import javax.annotation.Nullable;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen

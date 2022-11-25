@@ -26,10 +26,10 @@ import lombok.Data;
 import reactor.util.retry.Retry;
 import reactor.util.retry.RetryBackoffSpec;
 
-import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
 import java.net.InetSocketAddress;
 import java.time.Duration;
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * @author James Chen

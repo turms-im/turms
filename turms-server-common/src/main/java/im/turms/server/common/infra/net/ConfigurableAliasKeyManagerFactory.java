@@ -17,8 +17,8 @@
 
 package im.turms.server.common.infra.net;
 
-import javax.net.ssl.KeyManagerFactory;
 import java.security.NoSuchAlgorithmException;
+import javax.net.ssl.KeyManagerFactory;
 
 /**
  * @author James Chen

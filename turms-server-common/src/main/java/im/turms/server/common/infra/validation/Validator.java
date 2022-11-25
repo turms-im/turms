@@ -22,12 +22,12 @@ import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.net.InetAddressUtil;
 import org.springframework.util.StringUtils;
 
-import javax.annotation.Nullable;
-import javax.validation.constraints.NotEmpty;
 import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotEmpty;
 
 /**
  * @author James Chen

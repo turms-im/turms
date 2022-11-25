@@ -22,10 +22,10 @@ import im.turms.server.common.domain.session.bo.UserSessionId;
 import im.turms.server.common.infra.tracing.TracingContext;
 import io.netty.buffer.ByteBuf;
 
-import javax.annotation.Nullable;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.util.Set;
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * @author James Chen

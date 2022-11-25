@@ -30,7 +30,6 @@ import io.micrometer.core.instrument.composite.CompositeMeterRegistry;
 import lombok.SneakyThrows;
 import org.eclipse.collections.impl.factory.Sets;
 
-import javax.annotation.Nullable;
 import java.lang.invoke.MethodHandle;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -41,6 +40,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen

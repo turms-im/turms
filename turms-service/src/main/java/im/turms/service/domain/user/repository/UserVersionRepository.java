@@ -30,9 +30,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 
-import javax.annotation.Nullable;
 import java.util.Date;
 import java.util.Set;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen

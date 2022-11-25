@@ -31,9 +31,9 @@ import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import javax.annotation.Nullable;
 import java.util.Date;
 import java.util.Set;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen

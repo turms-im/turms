@@ -21,7 +21,7 @@ import im.turms.server.common.infra.plugin.ExtensionPoint;
 import im.turms.service.access.servicerequest.dto.ClientRequest;
 import reactor.core.publisher.Mono;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * @author James Chen

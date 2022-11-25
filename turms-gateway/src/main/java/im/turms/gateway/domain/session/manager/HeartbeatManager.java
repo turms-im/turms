@@ -30,10 +30,10 @@ import io.lettuce.core.protocol.LongKeyGenerator;
 import io.netty.util.concurrent.DefaultThreadFactory;
 import lombok.Setter;
 
-import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen

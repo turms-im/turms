@@ -26,10 +26,10 @@ import io.netty.buffer.ByteBuf;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.CollectionUtils;
 
-import javax.annotation.Nullable;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
+import jakarta.annotation.Nullable;
 
 import static im.turms.server.common.infra.unit.ByteSizeUnit.KB;
 

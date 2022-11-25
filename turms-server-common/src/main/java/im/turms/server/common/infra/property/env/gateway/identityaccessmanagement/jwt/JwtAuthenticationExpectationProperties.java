@@ -22,8 +22,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.Size;
 import java.util.Map;
+import jakarta.validation.constraints.Size;
 
 /**
  * @author James Chen

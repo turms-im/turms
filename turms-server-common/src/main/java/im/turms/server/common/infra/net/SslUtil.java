@@ -29,13 +29,13 @@ import reactor.netty.tcp.AbstractProtocolSslContextSpec;
 import reactor.netty.tcp.DefaultSslContextSpec;
 import reactor.netty.tcp.SslProvider;
 
-import javax.annotation.Nullable;
-import javax.net.ssl.KeyManagerFactory;
-import javax.net.ssl.TrustManagerFactory;
 import java.io.InputStream;
 import java.net.URL;
 import java.security.KeyStore;
 import java.util.Arrays;
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.TrustManagerFactory;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen

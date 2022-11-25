@@ -26,7 +26,7 @@ import im.turms.server.common.infra.tracing.TracingContext;
 import org.springframework.context.ApplicationContext;
 import reactor.core.publisher.Mono;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen

@@ -26,7 +26,7 @@ import im.turms.server.common.infra.netty.ByteBufUtil;
 import im.turms.server.common.infra.time.DateUtil;
 import io.netty.buffer.ByteBuf;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import static im.turms.server.common.infra.logging.CommonLogger.CLIENT_API_LOGGER;
 import static im.turms.server.common.infra.logging.CommonLogger.LOG_FIELD_DELIMITER;

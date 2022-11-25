@@ -19,8 +19,8 @@ package im.turms.server.common.infra.cluster.service.codec.io;
 
 import im.turms.server.common.infra.io.StreamOutput;
 
-import javax.annotation.Nullable;
 import java.util.Map;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen

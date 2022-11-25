@@ -20,10 +20,10 @@ package im.turms.service.domain.user.access.admin.dto.response;
 import im.turms.server.common.domain.common.access.dto.ControllerDTO;
 import im.turms.service.domain.user.po.UserRelationship;
 
-import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.Set;
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * @author James Chen

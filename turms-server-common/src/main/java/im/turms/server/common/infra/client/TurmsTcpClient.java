@@ -33,7 +33,7 @@ import reactor.netty.channel.ChannelOperations;
 import reactor.netty.resources.LoopResources;
 import reactor.netty.tcp.TcpClient;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen

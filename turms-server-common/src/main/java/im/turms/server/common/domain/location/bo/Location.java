@@ -17,9 +17,9 @@
 
 package im.turms.server.common.domain.location.bo;
 
-import javax.annotation.Nullable;
 import java.util.Date;
 import java.util.Map;
+import jakarta.annotation.Nullable;
 
 /**
  * Note that though the first number is always the latitude and the second is the longitude,

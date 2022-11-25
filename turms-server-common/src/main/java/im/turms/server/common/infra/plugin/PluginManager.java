@@ -44,7 +44,6 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
-import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -58,6 +57,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.zip.ZipFile;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen

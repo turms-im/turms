@@ -23,8 +23,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.Min;
 import java.util.List;
+import jakarta.validation.constraints.Min;
 
 /**
  * @author James Chen

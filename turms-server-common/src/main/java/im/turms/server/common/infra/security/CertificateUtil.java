@@ -20,7 +20,6 @@ package im.turms.server.common.infra.security;
 import im.turms.server.common.infra.lang.FastStringBuilder;
 import lombok.SneakyThrows;
 
-import javax.annotation.Nullable;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -36,6 +35,7 @@ import java.security.interfaces.RSAPublicKey;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 import java.util.Enumeration;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen

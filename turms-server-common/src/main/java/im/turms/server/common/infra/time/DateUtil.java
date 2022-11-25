@@ -23,13 +23,13 @@ import im.turms.server.common.infra.lang.StringUtil;
 import io.netty.util.concurrent.FastThreadLocal;
 import org.apache.commons.lang3.tuple.Pair;
 
-import javax.annotation.Nullable;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
 import java.util.List;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen

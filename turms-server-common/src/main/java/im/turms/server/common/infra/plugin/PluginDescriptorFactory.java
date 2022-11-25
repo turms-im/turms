@@ -19,8 +19,8 @@ package im.turms.server.common.infra.plugin;
 
 import org.springframework.util.StringUtils;
 
-import javax.annotation.Nullable;
 import java.util.Map;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen

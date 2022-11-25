@@ -19,7 +19,6 @@ package im.turms.server.common.infra.plugin;
 
 import im.turms.server.common.infra.yaml.YamlUtil;
 
-import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -30,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen

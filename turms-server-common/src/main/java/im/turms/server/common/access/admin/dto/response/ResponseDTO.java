@@ -20,8 +20,8 @@ package im.turms.server.common.access.admin.dto.response;
 
 import im.turms.server.common.access.common.ResponseStatusCode;
 
-import javax.annotation.Nullable;
 import java.util.Date;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen

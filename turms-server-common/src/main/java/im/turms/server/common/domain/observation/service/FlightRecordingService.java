@@ -37,8 +37,6 @@ import lombok.SneakyThrows;
 import org.jctools.queues.MpscUnboundedArrayQueue;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Nullable;
-import javax.validation.constraints.Min;
 import java.io.File;
 import java.io.IOException;
 import java.time.Duration;
@@ -50,6 +48,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.Min;
 
 /**
  * @author James Chen

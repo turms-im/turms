@@ -8,7 +8,7 @@ import im.turms.service.access.servicerequest.dto.ClientRequest;
 import im.turms.service.infra.plugin.extension.ClientRequestTransformer;
 import reactor.core.publisher.Mono;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * @author James Chen
