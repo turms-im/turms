@@ -13,7 +13,8 @@
   ],
   "scripts": {
     "build": "rollup --config rollup.config.ts --configPlugin @rollup/plugin-typescript",
-    "lint": "eslint --fix --ext .ts src tests",
+    "lint": "eslint --ext .ts src tests",
+    "lint:fix": "eslint --fix --ext .ts src tests",
     "protoc:compile": "node protoc.js compile",
     "protoc:install": "node protoc.js install",
     "fullbuild": "npm i && npm run protoc:install && npm run protoc:compile && npm run build",

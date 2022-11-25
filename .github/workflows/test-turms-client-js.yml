@@ -14,11 +14,15 @@ jobs:
         with:
           node-version: 18
 
-      - name: Install
+      - name: Install dependencies
         working-directory: turms-client-js
         run: npm install
 
-      - name: Build
+      - name: Verify formatting
+        working-directory: turms-client-js
+        run: npm run lint
+
+      - name: Build artifacts
         working-directory: turms-client-js
         run: npm run build
 
