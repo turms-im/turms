@@ -21,11 +21,14 @@ import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.model.LogLevel;
 import org.slf4j.helpers.MarkerIgnoringBase;
 
-public class Slf4jBridge extends MarkerIgnoringBase {
+/**
+ * @author James Chen
+ */
+public class Slf4jLogger extends MarkerIgnoringBase {
 
     private final Logger logger;
 
-    public Slf4jBridge(String name, Logger logger) {
+    public Slf4jLogger(String name, Logger logger) {
         this.name = name;
         this.logger = logger;
     }
