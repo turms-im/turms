@@ -20,13 +20,13 @@ package im.turms.client.model
  * @author James Chen
  */
 object ResponseStatusCode {
-    //**********************************************************
-    //* Defined on the client side
-    //**********************************************************
+    // **********************************************************
+    // * Defined on the client side
+    // **********************************************************
 
-    //**********************************************************
-    //* For application error
-    //**********************************************************
+    // **********************************************************
+    // * For application error
+    // **********************************************************
 
     // Client - Common
     const val CONNECT_TIMEOUT = 1
@@ -43,9 +43,9 @@ object ResponseStatusCode {
     const val INVALID_NOTIFICATION = 200
     const val INVALID_RESPONSE = 201
 
-    //**********************************************************
-    //* For business error
-    //**********************************************************
+    // **********************************************************
+    // * For business error
+    // **********************************************************
 
     // User
     const val CLIENT_SESSION_ALREADY_ESTABLISHED = 300
@@ -61,18 +61,18 @@ object ResponseStatusCode {
     const val UPLOAD_USER_PROFILE_PICTURE_BEFORE_LOGIN = 700
     const val QUERY_USER_PROFILE_PICTURE_BEFORE_LOGIN = 701
 
-    //**********************************************************
-    //* Defined on the server side
-    //**********************************************************
+    // **********************************************************
+    // * Defined on the server side
+    // **********************************************************
 
     // Successful responses
     const val OK = 1000
     const val NO_CONTENT = 1001
     const val ALREADY_UP_TO_DATE = 1002
 
-    //**********************************************************
-    //* For application error
-    //**********************************************************
+    // **********************************************************
+    // * For application error
+    // **********************************************************
 
     // Client
     const val INVALID_REQUEST_FROM_SERVER = 1100
@@ -87,9 +87,9 @@ object ResponseStatusCode {
     const val SERVER_INTERNAL_ERROR = 1200
     const val SERVER_UNAVAILABLE = 1201
 
-    //**********************************************************
-    //* For business error
-    //**********************************************************
+    // **********************************************************
+    // * For business error
+    // **********************************************************
 
     // User
 

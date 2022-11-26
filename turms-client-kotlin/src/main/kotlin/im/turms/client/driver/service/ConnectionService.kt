@@ -204,5 +204,4 @@ class ConnectionService(
     companion object {
         private val EMPTY_BUFFER = ByteBuffer.allocate(0)
     }
-
 }

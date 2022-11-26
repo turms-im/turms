@@ -5,6 +5,10 @@ on: [ push, pull_request ]
 jobs:
   test:
     runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        java: [ '8', '17' ]
+    name: Test in Java ${{ matrix.Java }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -13,9 +17,10 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
-          java-version: 17
+          java-version: ${{ matrix.java }}
 
-      - name: Maven Verify
-        run: |
-          mvn clean install -Dmaven.test.skip=true -am -B -pl turms-client-kotlin --no-transfer-progress
-          mvn verify -pl turms-client-kotlin
+      - name: Verify formatting
+        run: mvn validate --projects turms-client-kotlin --activate-profiles lint --batch-mode --no-transfer-progress
+
+      - name: Run tests
+        run: mvn verify --projects turms-client-kotlin

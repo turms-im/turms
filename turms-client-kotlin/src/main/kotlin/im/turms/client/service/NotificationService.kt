@@ -31,9 +31,9 @@ class NotificationService(turmsClient: TurmsClient) {
     init {
         turmsClient.driver
             .addNotificationListener { notification ->
-                val isBusinessNotification = notification.hasRelayedRequest()
-                        && !notification.relayedRequest.hasCreateMessageRequest()
-                        && !notification.hasCloseStatus()
+                val isBusinessNotification = notification.hasRelayedRequest() &&
+                    !notification.relayedRequest.hasCreateMessageRequest() &&
+                    !notification.hasCloseStatus()
                 if (isBusinessNotification) {
                     val n = Notification(Date(notification.timestamp), notification.relayedRequest)
                     notificationListeners.forEach { it(n) }
@@ -46,5 +46,4 @@ class NotificationService(turmsClient: TurmsClient) {
 
     fun removeNotificationListener(listener: ((Notification) -> Unit)) =
         this.notificationListeners.remove(listener)
-
 }

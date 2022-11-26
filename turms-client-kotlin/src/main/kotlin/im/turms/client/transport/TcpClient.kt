@@ -147,7 +147,7 @@ class TcpClient(override val coroutineContext: CoroutineContext) : CoroutineScop
               |    certificate: ${CertificatePinner.pin(cert)}
               |    DN: ${cert.subjectDN.name}
               |    subjectAltNames: ${OkHostnameVerifier.allSubjectAltNames(cert)}
-              """.trimMargin()
+                    """.trimMargin()
                 )
             } else {
                 throw SSLPeerUnverifiedException(
@@ -233,7 +233,7 @@ class TcpClient(override val coroutineContext: CoroutineContext) : CoroutineScop
                     throw exception
                 } else {
                     readBuffer = ByteBuffer.allocate(readBuffer.capacity() * 2)
-                        .put(readBuffer.flip())
+                        .put(readBuffer.flip() as ByteBuffer)
                         .put(data.toByte())
                 }
             }
@@ -309,5 +309,4 @@ class TcpClient(override val coroutineContext: CoroutineContext) : CoroutineScop
         const val INITIAL_READ_BUFFER_CAPACITY: Int = 1024 * 1024
         const val MAX_READ_BUFFER_CAPACITY: Int = 8 * 1024 * 1024
     }
-
 }

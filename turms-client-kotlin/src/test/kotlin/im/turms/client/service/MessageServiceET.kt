@@ -165,7 +165,9 @@ internal class MessageServiceET {
     @Test
     fun generateLocationRecord() {
         val data = generateLocationRecord(
-            1.0f, 1.0f, mapOf(
+            1.0f,
+            1.0f,
+            mapOf(
                 "name" to "value1",
                 "address" to "value2"
             )

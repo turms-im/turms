@@ -75,9 +75,9 @@ class UserService(private val turmsClient: TurmsClient) {
     private val onOfflineListeners: MutableList<((SessionCloseInfo) -> Unit)> = LinkedList()
 
     val isLoggedIn: Boolean
-        get() = userInfo?.onlineStatus != null
-                && userInfo?.onlineStatus != UserStatus.UNRECOGNIZED
-                && userInfo?.onlineStatus != UserStatus.OFFLINE
+        get() = userInfo?.onlineStatus != null &&
+            userInfo?.onlineStatus != UserStatus.UNRECOGNIZED &&
+            userInfo?.onlineStatus != UserStatus.OFFLINE
 
     init {
         turmsClient.driver.addOnDisconnectedListener { t ->
@@ -88,7 +88,7 @@ class UserService(private val turmsClient: TurmsClient) {
                 val info = SessionCloseInfo(
                     it.closeStatus,
                     if (it.hasCode()) it.code else null,
-                    if (it.hasReason()) it.reason else null,
+                    if (it.hasReason()) it.reason else null
                 )
                 changeToOffline(info)
             }
@@ -122,20 +122,22 @@ class UserService(private val turmsClient: TurmsClient) {
         if (!turmsClient.driver.isConnected) {
             turmsClient.driver.connect()
         }
-        val notification = turmsClient.driver.send(CreateSessionRequest.newBuilder().apply {
-            this.version = 1
-            this.userId = userId
-            password?.let { this.password = it }
-            deviceType.let { this.deviceType = it }
-            deviceDetails?.let { this.putAllDeviceDetails(it) }
-            onlineStatus.let { this.userStatus = it }
-            location?.let {
-                this.location = im.turms.client.model.proto.model.user.UserLocation.newBuilder().apply {
-                    this.longitude = it.longitude
-                    this.latitude = it.latitude
-                }.build()
+        val notification = turmsClient.driver.send(
+            CreateSessionRequest.newBuilder().apply {
+                this.version = 1
+                this.userId = userId
+                password?.let { this.password = it }
+                deviceType.let { this.deviceType = it }
+                deviceDetails?.let { this.putAllDeviceDetails(it) }
+                onlineStatus.let { this.userStatus = it }
+                location?.let {
+                    this.location = im.turms.client.model.proto.model.user.UserLocation.newBuilder().apply {
+                        this.longitude = it.longitude
+                        this.latitude = it.latitude
+                    }.build()
+                }
             }
-        })
+        )
         changeToOnline()
         this.storePassword = storePassword
         userInfo = user
@@ -164,26 +166,30 @@ class UserService(private val turmsClient: TurmsClient) {
                 ResponseStatusCode.ILLEGAL_ARGUMENT,
                 "The online status must not be $onlineStatus"
             )
-        } else turmsClient.driver
-            .send(
-                UpdateUserOnlineStatusRequest.newBuilder().apply {
-                    this.userStatus = onlineStatus
+        } else {
+            turmsClient.driver
+                .send(
+                    UpdateUserOnlineStatusRequest.newBuilder().apply {
+                        this.userStatus = onlineStatus
+                    }
+                ).toResponse<Unit>()
+                .apply {
+                    userInfo?.onlineStatus = onlineStatus
                 }
-            ).toResponse<Unit>()
-            .apply {
-                userInfo?.onlineStatus = onlineStatus
-            }
+        }
 
     suspend fun disconnectOnlineDevices(@NotEmpty deviceTypes: Set<DeviceType>): Response<Unit> =
         if (deviceTypes.isEmpty()) {
             throw ResponseException.from(ResponseStatusCode.ILLEGAL_ARGUMENT, "\"deviceTypes\" must not be null or empty")
-        } else turmsClient.driver
-            .send(
-                UpdateUserOnlineStatusRequest.newBuilder().apply {
-                    this.userStatus = UserStatus.OFFLINE
-                    this.addAllDeviceTypes(deviceTypes)
-                }
-            ).toResponse()
+        } else {
+            turmsClient.driver
+                .send(
+                    UpdateUserOnlineStatusRequest.newBuilder().apply {
+                        this.userStatus = UserStatus.OFFLINE
+                        this.addAllDeviceTypes(deviceTypes)
+                    }
+                ).toResponse()
+        }
 
     suspend fun updatePassword(password: String): Response<Unit> = turmsClient.driver
         .send(
@@ -241,7 +247,7 @@ class UserService(private val turmsClient: TurmsClient) {
         maxDistance: Int? = null,
         withCoordinates: Boolean? = null,
         withDistance: Boolean? = null,
-        withUserInfo: Boolean? = null,
+        withUserInfo: Boolean? = null
     ): Response<List<NearbyUser>> = turmsClient.driver
         .send(
             QueryNearbyUsersRequest.newBuilder().apply {
@@ -500,5 +506,4 @@ class UserService(private val turmsClient: TurmsClient) {
             onOfflineListeners.forEach { it(sessionCloseInfo) }
         }
     }
-
 }

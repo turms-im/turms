@@ -36,7 +36,7 @@ class TurmsClient constructor(
     minRequestIntervalMillis: Int? = null,
     heartbeatIntervalMillis: Int? = null,
     storageServerUrl: String? = null,
-    coroutineContext: CoroutineContext? = null,
+    coroutineContext: CoroutineContext? = null
 ) {
     val driver: TurmsDriver = TurmsDriver(
         host,
@@ -57,5 +57,4 @@ class TurmsClient constructor(
     suspend fun close() {
         return this.driver.close()
     }
-
 }

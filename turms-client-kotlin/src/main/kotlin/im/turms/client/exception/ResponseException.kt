@@ -40,15 +40,15 @@ data class ResponseException internal constructor(
         fun from(notification: TurmsNotification): ResponseException {
             val code = notification.code
             val requestId = if (notification.hasRequestId()) notification.requestId else null
-            return if (notification.hasReason())
+            return if (notification.hasReason()) {
                 ResponseException(requestId, code, notification.reason)
-            else
+            } else {
                 ResponseException(requestId, code)
+            }
         }
 
         fun from(code: Int, reason: String? = null, cause: Throwable? = null): ResponseException {
             return ResponseException(null, code, reason, cause)
         }
     }
-
 }

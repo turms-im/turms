@@ -91,9 +91,11 @@ class GroupService(private val turmsClient: TurmsClient) {
 
     suspend fun deleteGroup(groupId: Long): Response<Unit> =
         turmsClient.driver
-            .send(DeleteGroupRequest.newBuilder().apply {
-                this.groupId = groupId
-            })
+            .send(
+                DeleteGroupRequest.newBuilder().apply {
+                    this.groupId = groupId
+                }
+            )
             .toResponse()
 
     suspend fun updateGroup(
@@ -107,22 +109,33 @@ class GroupService(private val turmsClient: TurmsClient) {
         successorId: Long? = null,
         quitAfterTransfer: Boolean? = null
     ): Response<Unit> = if (Validator.areAllFalsy(
-            groupName, intro, announcement, minimumScore, groupTypeId,
-            muteEndDate, successorId
+            groupName,
+            intro,
+            announcement,
+            minimumScore,
+            groupTypeId,
+            muteEndDate,
+            successorId
         )
-    ) Response.unitValue() else turmsClient.driver
-        .send(UpdateGroupRequest.newBuilder().apply {
-            this.groupId = groupId
-            groupName?.let { this.groupName = it }
-            intro?.let { this.intro = it }
-            announcement?.let { this.announcement = it }
-            muteEndDate?.let { this.muteEndDate = it.time }
-            minimumScore?.let { this.minimumScore = it }
-            groupTypeId?.let { this.groupTypeId = it }
-            successorId?.let { this.successorId = it }
-            quitAfterTransfer?.let { this.quitAfterTransfer = it }
-        })
-        .toResponse()
+    ) {
+        Response.unitValue()
+    } else {
+        turmsClient.driver
+            .send(
+                UpdateGroupRequest.newBuilder().apply {
+                    this.groupId = groupId
+                    groupName?.let { this.groupName = it }
+                    intro?.let { this.intro = it }
+                    announcement?.let { this.announcement = it }
+                    muteEndDate?.let { this.muteEndDate = it.time }
+                    minimumScore?.let { this.minimumScore = it }
+                    groupTypeId?.let { this.groupTypeId = it }
+                    successorId?.let { this.successorId = it }
+                    quitAfterTransfer?.let { this.quitAfterTransfer = it }
+                }
+            )
+            .toResponse()
+    }
 
     suspend fun transferOwnership(groupId: Long, successorId: Long, quitAfterTransfer: Boolean = false): Response<Unit> =
         updateGroup(groupId, null, null, null, null, null, null, successorId, quitAfterTransfer)
@@ -152,7 +165,8 @@ class GroupService(private val turmsClient: TurmsClient) {
             .send(
                 QueryJoinedGroupIdsRequest.newBuilder().apply {
                     lastUpdatedDate?.let { this.lastUpdatedDate = it.time }
-                })
+                }
+            )
             .toResponse {
                 if (it.hasLongsWithVersion()) it.longsWithVersion else null
             }
@@ -173,36 +187,43 @@ class GroupService(private val turmsClient: TurmsClient) {
         questions: List<NewGroupJoinQuestion>
     ): Response<List<Long>> = if (questions.isEmpty()) {
         Response.emptyList()
-    } else turmsClient.driver
-        .send(
-            CreateGroupJoinQuestionsRequest.newBuilder().apply {
-                this.groupId = groupId
-                this.addAllQuestions(questions.map {
-                    GroupJoinQuestion.newBuilder().apply {
-                        val answers = it.answers
-                        if (answers.isEmpty()) {
-                            throw ResponseException.from(ResponseStatusCode.ILLEGAL_ARGUMENT, "The answers of group must not be empty")
+    } else {
+        turmsClient.driver
+            .send(
+                CreateGroupJoinQuestionsRequest.newBuilder().apply {
+                    this.groupId = groupId
+                    this.addAllQuestions(
+                        questions.map {
+                            GroupJoinQuestion.newBuilder().apply {
+                                val answers = it.answers
+                                if (answers.isEmpty()) {
+                                    throw ResponseException.from(ResponseStatusCode.ILLEGAL_ARGUMENT, "The answers of group must not be empty")
+                                }
+                                this.question = it.question
+                                this.addAllAnswers(answers)
+                                this.score = it.score
+                            }.build()
                         }
-                        this.question = it.question
-                        this.addAllAnswers(answers)
-                        this.score = it.score
-                    }.build()
-                })
+                    )
+                }
+            )
+            .toResponse {
+                it.longsWithVersion.longsList
             }
-        )
-        .toResponse {
-            it.longsWithVersion.longsList
-        }
+    }
 
     suspend fun deleteGroupJoinQuestions(questionIds: Set<Long>): Response<Unit> =
         if (questionIds.isEmpty()) {
             Response.unitValue()
-        } else turmsClient.driver
-            .send(
-                DeleteGroupJoinQuestionsRequest.newBuilder().apply {
-                    this.addAllQuestionIds(questionIds)
-                })
-            .toResponse()
+        } else {
+            turmsClient.driver
+                .send(
+                    DeleteGroupJoinQuestionsRequest.newBuilder().apply {
+                        this.addAllQuestionIds(questionIds)
+                    }
+                )
+                .toResponse()
+        }
 
     suspend fun updateGroupJoinQuestion(
         questionId: Long,
@@ -334,7 +355,8 @@ class GroupService(private val turmsClient: TurmsClient) {
         .toResponse()
 
     suspend fun queryJoinRequests(
-        groupId: Long, lastUpdatedDate: Date? = null
+        groupId: Long,
+        lastUpdatedDate: Date? = null
     ): Response<GroupJoinRequestsWithVersion?> = turmsClient.driver
         .send(
             QueryGroupJoinRequestsRequest.newBuilder().apply {
@@ -379,18 +401,20 @@ class GroupService(private val turmsClient: TurmsClient) {
                 ResponseStatusCode.ILLEGAL_ARGUMENT,
                 "\"questionIdToAnswer\" must not be null or empty"
             )
-        } else turmsClient.driver
-            .send(
-                CheckGroupJoinQuestionsAnswersRequest.newBuilder().apply {
-                    putAllQuestionIdToAnswer(questionIdToAnswer)
+        } else {
+            turmsClient.driver
+                .send(
+                    CheckGroupJoinQuestionsAnswersRequest.newBuilder().apply {
+                        putAllQuestionIdToAnswer(questionIdToAnswer)
+                    }
+                ).toResponse {
+                    if (it.hasGroupJoinQuestionAnswerResult()) {
+                        it.groupJoinQuestionAnswerResult
+                    } else {
+                        throw ResponseException.from(ResponseStatusCode.INVALID_RESPONSE)
+                    }
                 }
-            ).toResponse {
-                if (it.hasGroupJoinQuestionAnswerResult()) {
-                    it.groupJoinQuestionAnswerResult
-                } else {
-                    throw ResponseException.from(ResponseStatusCode.INVALID_RESPONSE)
-                }
-            }
+        }
 
     // Group Member
     suspend fun addGroupMembers(
@@ -402,17 +426,19 @@ class GroupService(private val turmsClient: TurmsClient) {
     ): Response<Unit> =
         if (userIds.isEmpty()) {
             Response.unitValue()
-        } else turmsClient.driver
-            .send(
-                CreateGroupMembersRequest.newBuilder().apply {
-                    this.groupId = groupId
-                    this.addAllUserIds(userIds)
-                    name?.let { this.name = it }
-                    role?.let { this.role = it }
-                    muteEndDate?.let { this.muteEndDate = it.time }
-                }
-            )
-            .toResponse()
+        } else {
+            turmsClient.driver
+                .send(
+                    CreateGroupMembersRequest.newBuilder().apply {
+                        this.groupId = groupId
+                        this.addAllUserIds(userIds)
+                        name?.let { this.name = it }
+                        role?.let { this.role = it }
+                        muteEndDate?.let { this.muteEndDate = it.time }
+                    }
+                )
+                .toResponse()
+        }
 
     suspend fun quitGroup(
         groupId: Long,
@@ -432,14 +458,16 @@ class GroupService(private val turmsClient: TurmsClient) {
     suspend fun removeGroupMembers(groupId: Long, memberIds: Set<Long>): Response<Unit> =
         if (memberIds.isEmpty()) {
             Response.unitValue()
-        } else turmsClient.driver
-            .send(
-                DeleteGroupMembersRequest.newBuilder().apply {
-                    this.groupId = groupId
-                    this.addAllMemberIds(memberIds)
-                }
-            )
-            .toResponse()
+        } else {
+            turmsClient.driver
+                .send(
+                    DeleteGroupMembersRequest.newBuilder().apply {
+                        this.groupId = groupId
+                        this.addAllMemberIds(memberIds)
+                    }
+                )
+                .toResponse()
+        }
 
     suspend fun updateGroupMemberInfo(
         groupId: Long,
@@ -492,15 +520,16 @@ class GroupService(private val turmsClient: TurmsClient) {
         withStatus: Boolean = false
     ): Response<GroupMembersWithVersion?> = if (memberIds.isEmpty()) {
         throw ResponseException.from(ResponseStatusCode.ILLEGAL_ARGUMENT, "\"memberIds\" must not be null or empty")
-    } else turmsClient.driver
-        .send(
-            QueryGroupMembersRequest.newBuilder().apply {
-                this.groupId = groupId
-                addAllMemberIds(memberIds)
-                this.withStatus = withStatus
+    } else {
+        turmsClient.driver
+            .send(
+                QueryGroupMembersRequest.newBuilder().apply {
+                    this.groupId = groupId
+                    addAllMemberIds(memberIds)
+                    this.withStatus = withStatus
+                }
+            ).toResponse {
+                if (it.hasGroupMembersWithVersion()) it.groupMembersWithVersion else null
             }
-        ).toResponse {
-            if (it.hasGroupMembersWithVersion()) it.groupMembersWithVersion else null
-        }
-
+    }
 }

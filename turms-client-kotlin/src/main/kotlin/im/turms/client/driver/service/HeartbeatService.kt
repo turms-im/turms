@@ -122,5 +122,4 @@ class HeartbeatService(
         private const val HEARTBEAT_FAILURE_REQUEST_ID = -100L
         private val HEARTBEAT = byteArrayOf(0)
     }
-
 }

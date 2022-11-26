@@ -317,13 +317,15 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
         keyNum: Long? = null
     ): Response<Unit> {
         val request = TurmsRequest.newBuilder()
-            .setDeleteResourceRequest(DeleteResourceRequest.newBuilder()
-                .setType(type)
-                .apply {
-                    keyStr?.let { this.keyStr = it }
-                    keyNum?.let { this.keyNum = it }
-                }
-                .build())
+            .setDeleteResourceRequest(
+                DeleteResourceRequest.newBuilder()
+                    .setType(type)
+                    .apply {
+                        keyStr?.let { this.keyStr = it }
+                        keyNum?.let { this.keyNum = it }
+                    }
+                    .build()
+            )
         return turmsClient.driver
             .send(request)
             .toResponse()
@@ -386,7 +388,8 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
                         keyStr?.let { this.keyStr = it }
                         keyNum?.let { this.keyNum = it }
                     }
-                    .build())
+                    .build()
+            )
         return turmsClient.driver.send(request)
             .toResponse { it.stringsWithVersion.stringsList.toMap() }
     }
@@ -397,13 +400,15 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
         keyNum: Long? = null
     ): Response<Map<String, String>> {
         val request: TurmsRequest.Builder = TurmsRequest.newBuilder()
-            .setQueryResourceDownloadInfoRequest(QueryResourceDownloadInfoRequest.newBuilder()
-                .setType(type)
-                .apply {
-                    keyStr?.let { this.keyStr = it }
-                    keyNum?.let { this.keyNum = it }
-                }
-                .build())
+            .setQueryResourceDownloadInfoRequest(
+                QueryResourceDownloadInfoRequest.newBuilder()
+                    .setType(type)
+                    .apply {
+                        keyStr?.let { this.keyStr = it }
+                        keyNum?.let { this.keyNum = it }
+                    }
+                    .build()
+            )
         return turmsClient.driver.send(request)
             .toResponse { it.stringsWithVersion.stringsList.toMap() }
     }
@@ -447,5 +452,4 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
             .filter { it !== StorageResourceType.UNRECOGNIZED }
             .associateBy({ it }, { it.name.lowercase().replace('_', '-') })
     }
-
 }

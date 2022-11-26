@@ -283,12 +283,14 @@ class MessageService(private val turmsClient: TurmsClient) {
             format: String? = null,
             size: Int? = null
         ): ByteBuffer = AudioFile.newBuilder().run {
-            setDescription(AudioFile.Description.newBuilder().apply {
-                this.url = url
-                duration?.let { this.duration = it }
-                format?.let { this.format = it }
-                size?.let { this.size = it }
-            })
+            setDescription(
+                AudioFile.Description.newBuilder().apply {
+                    this.url = url
+                    duration?.let { this.duration = it }
+                    format?.let { this.format = it }
+                    size?.let { this.size = it }
+                }
+            )
                 .build()
                 .toByteString()
                 .asReadOnlyByteBuffer()
@@ -309,12 +311,14 @@ class MessageService(private val turmsClient: TurmsClient) {
             format: String? = null,
             size: Int? = null
         ): ByteBuffer = VideoFile.newBuilder().run {
-            setDescription(VideoFile.Description.newBuilder().apply {
-                this.url = url
-                duration?.let { this.duration = it }
-                format?.let { this.format = it }
-                size?.let { this.size = it }
-            })
+            setDescription(
+                VideoFile.Description.newBuilder().apply {
+                    this.url = url
+                    duration?.let { this.duration = it }
+                    format?.let { this.format = it }
+                    size?.let { this.size = it }
+                }
+            )
                 .build()
                 .toByteString()
                 .asReadOnlyByteBuffer()
@@ -341,12 +345,14 @@ class MessageService(private val turmsClient: TurmsClient) {
             imageSize: Int? = null,
             original: Boolean? = null
         ): ByteBuffer = ImageFile.newBuilder()
-            .setDescription(ImageFile.Description.newBuilder().apply {
-                setUrl(url)
-                fileSize?.let { this.fileSize = it }
-                imageSize?.let { this.imageSize = it }
-                original?.let { this.original = it }
-            })
+            .setDescription(
+                ImageFile.Description.newBuilder().apply {
+                    setUrl(url)
+                    fileSize?.let { this.fileSize = it }
+                    imageSize?.let { this.imageSize = it }
+                    original?.let { this.original = it }
+                }
+            )
             .build()
             .toByteString()
             .asReadOnlyByteBuffer()
@@ -364,11 +370,13 @@ class MessageService(private val turmsClient: TurmsClient) {
             format: String? = null,
             size: Int? = null
         ): ByteBuffer = File.newBuilder()
-            .setDescription(File.Description.newBuilder().apply {
-                setUrl(url)
-                format?.let { this.format = it }
-                size?.let { this.size = it }
-            })
+            .setDescription(
+                File.Description.newBuilder().apply {
+                    setUrl(url)
+                    format?.let { this.format = it }
+                    size?.let { this.size = it }
+                }
+            )
             .build()
             .toByteString()
             .asReadOnlyByteBuffer()
@@ -391,5 +399,4 @@ class MessageService(private val turmsClient: TurmsClient) {
                 messageListeners.forEach { listener -> listener(message, addition) }
             }
     }
-
 }

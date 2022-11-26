@@ -28,6 +28,8 @@ object ExceptionUtil {
     fun isResponseException(throwable: Throwable?, code: Int): Boolean {
         return if (throwable is ResponseException) {
             throwable.code == code
-        } else false
+        } else {
+            false
+        }
     }
 }

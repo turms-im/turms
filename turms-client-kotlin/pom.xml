@@ -39,6 +39,9 @@
 
         <junit.version>5.9.1</junit.version>
 
+        <ktlint.version>0.47.1</ktlint.version>
+
+        <maven-antrun-plugin.version>3.1.0</maven-antrun-plugin.version>
         <maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
     </properties>
 
@@ -146,5 +149,71 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <profiles>
+        <profile>
+            <id>lint</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <version>${maven-antrun-plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>ktlint</id>
+                                <phase>validate</phase>
+                                <configuration>
+                                    <target name="ktlint">
+                                        <java taskname="ktlint"
+                                              dir="${basedir}"
+                                              fork="true"
+                                              failonerror="true"
+                                              classpathref="maven.plugin.classpath"
+                                              classname="com.pinterest.ktlint.Main">
+                                            <arg value="src/**/*.kt"/>
+                                            <jvmarg value="-XX:+IgnoreUnrecognizedVMOptions"/>
+                                            <jvmarg value="--add-opens=java.base/java.lang=ALL-UNNAMED"/>
+                                        </java>
+                                    </target>
+                                </configuration>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>ktlint-format</id>
+                                <configuration>
+                                    <target name="ktlint">
+                                        <java taskname="ktlint"
+                                              dir="${basedir}"
+                                              fork="true"
+                                              failonerror="true"
+                                              classpathref="maven.plugin.classpath"
+                                              classname="com.pinterest.ktlint.Main">
+                                            <arg value="--format"/>
+                                            <arg value="src/**/*.kt"/>
+                                            <jvmarg value="-XX:+IgnoreUnrecognizedVMOptions"/>
+                                            <jvmarg value="--add-opens=java.base/java.lang=ALL-UNNAMED"/>
+                                        </java>
+                                    </target>
+                                </configuration>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <dependencies>
+                            <dependency>
+                                <groupId>com.pinterest</groupId>
+                                <artifactId>ktlint</artifactId>
+                                <version>${ktlint.version}</version>
+                            </dependency>
+                        </dependencies>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>

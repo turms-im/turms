@@ -35,53 +35,68 @@ class ConversationService(private val turmsClient: TurmsClient) {
     suspend fun queryPrivateConversations(targetIds: Set<Long>?): Response<List<PrivateConversation>> =
         if (Validator.areAllFalsy(targetIds)) {
             Response.emptyList()
-        } else turmsClient.driver
-            .send(QueryConversationsRequest.newBuilder().apply {
-                addAllTargetIds(targetIds)
-            }).toResponse {
-                it.conversations.privateConversationsList
-            }
+        } else {
+            turmsClient.driver
+                .send(
+                    QueryConversationsRequest.newBuilder().apply {
+                        addAllTargetIds(targetIds)
+                    }
+                ).toResponse {
+                    it.conversations.privateConversationsList
+                }
+        }
 
     suspend fun queryGroupConversations(groupIds: Set<Long>?): Response<List<GroupConversation>> =
         if (Validator.areAllFalsy(groupIds)) {
             Response.emptyList()
-        } else turmsClient.driver
-            .send(QueryConversationsRequest.newBuilder().apply {
-                addAllGroupIds(groupIds)
-            }).toResponse {
-                it.conversations.groupConversationsList
-            }
+        } else {
+            turmsClient.driver
+                .send(
+                    QueryConversationsRequest.newBuilder().apply {
+                        addAllGroupIds(groupIds)
+                    }
+                ).toResponse {
+                    it.conversations.groupConversationsList
+                }
+        }
 
     suspend fun updatePrivateConversationReadDate(targetId: Long, readDate: Date? = null): Response<Unit> =
         turmsClient.driver
-            .send(UpdateConversationRequest.newBuilder().apply {
-                this.targetId = targetId
-                this.readDate = readDate?.time ?: Date().time
-            })
+            .send(
+                UpdateConversationRequest.newBuilder().apply {
+                    this.targetId = targetId
+                    this.readDate = readDate?.time ?: Date().time
+                }
+            )
             .toResponse()
 
     suspend fun updateGroupConversationReadDate(groupId: Long, readDate: Date? = null): Response<Unit> =
         turmsClient.driver
-            .send(UpdateConversationRequest.newBuilder().apply {
-                this.groupId = groupId
-                this.readDate = readDate?.time ?: Date().time
-            })
+            .send(
+                UpdateConversationRequest.newBuilder().apply {
+                    this.groupId = groupId
+                    this.readDate = readDate?.time ?: Date().time
+                }
+            )
             .toResponse()
 
     suspend fun updatePrivateConversationTypingStatus(targetId: Long): Response<Unit> =
         turmsClient.driver
-            .send(UpdateTypingStatusRequest.newBuilder().apply {
-                toId = targetId
-                isGroupMessage = false
-            })
+            .send(
+                UpdateTypingStatusRequest.newBuilder().apply {
+                    toId = targetId
+                    isGroupMessage = false
+                }
+            )
             .toResponse()
 
     suspend fun updateGroupConversationTypingStatus(groupId: Long): Response<Unit> =
         turmsClient.driver
-            .send(UpdateTypingStatusRequest.newBuilder().apply {
-                toId = groupId
-                isGroupMessage = true
-            })
+            .send(
+                UpdateTypingStatusRequest.newBuilder().apply {
+                    toId = groupId
+                    isGroupMessage = true
+                }
+            )
             .toResponse()
-
 }

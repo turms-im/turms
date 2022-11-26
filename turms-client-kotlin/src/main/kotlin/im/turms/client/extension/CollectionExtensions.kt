@@ -35,5 +35,4 @@ fun List<String>.toMap(): Map<String, String> {
         map[this[i]] = this[i + 1]
     }
     return map
-
 }
