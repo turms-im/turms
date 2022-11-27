@@ -8,16 +8,17 @@ public class MessageService {
      */
     private static let DEFAULT_MENTIONED_USER_IDS_REGEX = try! NSRegularExpression(pattern: "@\\{(\\d+?)\\}", options: [])
     private static let DEFAULT_MENTIONED_USER_IDS_PARSER: (_ message: Message) -> [Int64] = {
-        if $0.hasText {
-            let text = $0.text
-            let results = DEFAULT_MENTIONED_USER_IDS_REGEX.matches(in: text, range: NSRange(text.startIndex..., in: text))
-            return results.compactMap {
-                let groupRange = Range($0.range(at: 1), in: text)!
-                let group = text[groupRange]
-                return Int64(group)
-            }
+        if !$0.hasText {
+            return []
         }
-        return []
+        let text = $0.text
+        let results = DEFAULT_MENTIONED_USER_IDS_REGEX.matches(in: text, range: NSRange(text.startIndex..., in: text))
+        let userIds = results.compactMap {
+            let groupRange = Range($0.range(at: 1), in: text)!
+            let group = text[groupRange]
+            return Int64(group)
+        }
+        return Array(NSOrderedSet(array: userIds)) as! [Int64]
     }
 
     private weak var turmsClient: TurmsClient!

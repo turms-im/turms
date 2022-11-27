@@ -14,6 +14,7 @@ import TurmsClient from '../turms-client';
 import { UserLocation } from '../model/proto/model/user/user_location';
 import Validator from '../util/validator';
 import { VideoFile } from '../model/proto/model/file/video_file';
+import CollectionUtil from '../util/collection-util';
 
 export default class MessageService {
     /**
@@ -22,18 +23,18 @@ export default class MessageService {
      */
     private static readonly DEFAULT_MENTIONED_USER_IDS_PARSER = function (message: ParsedModel.Message): string[] {
         const regex = /@{(\d+?)}/g;
-        if (message.text) {
-            const userIds = [];
-            let matches;
-            while ((matches = regex.exec(message.text))) {
-                const match = matches[1];
-                if (!isNaN(match)) {
-                    userIds.push(match);
-                }
-            }
-            return userIds;
+        if (!message.text) {
+            return [];
         }
-        return [];
+        const userIds = [];
+        let matches;
+        while ((matches = regex.exec(message.text))) {
+            const match = matches[1];
+            if (!isNaN(match)) {
+                userIds.push(match);
+            }
+        }
+        return CollectionUtil.uniqueArray(userIds);
     };
 
     private _turmsClient: TurmsClient;
