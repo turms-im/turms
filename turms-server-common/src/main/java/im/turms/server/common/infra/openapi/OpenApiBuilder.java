@@ -21,10 +21,8 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import im.turms.server.common.access.admin.dto.response.HttpHandlerResult;
 import im.turms.server.common.access.admin.web.ApiEndpoint;
 import im.turms.server.common.access.admin.web.ApiEndpointKey;
-import im.turms.server.common.access.admin.web.HttpRequestDispatcher;
 import im.turms.server.common.access.admin.web.MediaTypeConst;
 import im.turms.server.common.access.admin.web.MethodParameterInfo;
-import im.turms.server.common.infra.address.BaseServiceAddressManager;
 import im.turms.server.common.infra.lang.StringUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.handler.codec.http.HttpMethod;
@@ -92,14 +90,14 @@ public class OpenApiBuilder {
     @SneakyThrows
     public static byte[] build(String version,
                                String nodeType,
-                               HttpRequestDispatcher httpRequestDispatcher,
-                               BaseServiceAddressManager serviceAddressManager) {
+                               String serverUrl,
+                               Map<ApiEndpointKey, ApiEndpoint> keyToEndpoint) {
         OpenAPI api = new OpenAPI()
                 .info(new Info()
                         .title(TITLE + " - " + nodeType)
                         .version(version))
                 .addServersItem(new Server()
-                        .url(serviceAddressManager.getAdminApiAddress()))
+                        .url(serverUrl))
                 .externalDocs(new ExternalDocumentation()
                         .description(EXTERNAL_DOCUMENTATION_DESCRIPTION)
                         .url(EXTERNAL_DOCUMENTATION_URL))
@@ -109,7 +107,6 @@ public class OpenApiBuilder {
                                 .scheme("basic")));
         TreeMap<String, Schema> schemas = new TreeMap<>();
         TreeMap<String, PathItem> paths = new TreeMap<>();
-        Map<ApiEndpointKey, ApiEndpoint> keyToEndpoint = httpRequestDispatcher.getKeyToEndpoint();
         for (Map.Entry<ApiEndpointKey, ApiEndpoint> entry : keyToEndpoint.entrySet()) {
             ApiEndpoint endpoint = entry.getValue();
             ResolvedSchema responseSchema = getResponseSchema(endpoint.method());

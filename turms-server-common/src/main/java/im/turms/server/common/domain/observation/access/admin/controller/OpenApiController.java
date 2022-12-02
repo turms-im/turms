@@ -107,8 +107,8 @@ public class OpenApiController {
                 if (apiBuffer == null) {
                     byte[] bytes = OpenApiBuilder.build(context.getBean(TurmsApplicationContext.class).getBuildProperties().version(),
                             context.getBean(Node.class).getNodeType().getDisplayName(),
-                            context.getBean(HttpRequestDispatcher.class),
-                            context.getBean(BaseServiceAddressManager.class));
+                            context.getBean(BaseServiceAddressManager.class).getAdminApiAddress(),
+                            context.getBean(HttpRequestDispatcher.class).getKeyToEndpoint());
                     apiBuffer = ByteBufUtil.getUnreleasableDirectBuffer(bytes);
                 }
             }
