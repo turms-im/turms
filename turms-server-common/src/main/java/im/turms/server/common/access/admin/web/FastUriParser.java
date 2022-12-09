@@ -163,7 +163,11 @@ public class FastUriParser {
                                         "e.g. \"keys[0]=1&keys[1]=2&keys[2]=3\"");
                             }
                             String s = StringUtil.newLatin1String(srcBytes, currentArrayIndexCharBeginIndex, currentItemCharCount);
-                            currentArrayIndex = Integer.parseInt(s);
+                            try {
+                                currentArrayIndex = Integer.parseInt(s);
+                            } catch (NumberFormatException e) {
+                                throw new IllegalArgumentException("\"[indexed]\" should contain an integer greater than or equal to 0");
+                            }
                             if (currentArrayIndex < previousArrayIndex) {
                                 throw new IllegalArgumentException("The array index should come from 0 increasingly");
                             }
