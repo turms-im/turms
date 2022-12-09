@@ -45,6 +45,28 @@ docker pull ghcr.io/turms-im/turms-gateway:latest
 docker pull ghcr.io/turms-im/turms-service:latest
 ```
 
+## 自定义发布制品
+
+用户如果不想使用Turms官方提供的制品（如Docker镜像），也可以自行根据Turms各项目的源码与脚本生成自己所需要的制品。尽管Turms各子项目的打包与发布流程都是开源的，但考虑到如果需要用户自己翻仓库研究的话，学习效率就相对比较低，因此本文总结了各制品的生成方法：
+
+| 项目               | 制品                                      | 参考方法                                                     |
+| ------------------ | ----------------------------------------- | ------------------------------------------------------------ |
+| turms-gateway      | Fat/Uber JAR包（包中包括依赖包）          | 1. 安装[Temurin JDK 17](https://adoptium.net/temurin/releases)<br />2. 安装[Maven 3](https://maven.apache.org/download.cgi)<br />3. 在Turms项目的根目录执行`mvn clean package -am -B -DskipUTs -DskipITs -P artifact-fat-jar -pl turms-gateway --no-transfer-progress` |
+|                    | Thin JAR包（包中不包括依赖包）            | 1. 安装[Temurin JDK 17](https://adoptium.net/temurin/releases)<br />2. 安装[Maven 3](https://maven.apache.org/download.cgi)<br />3. 在Turms项目的根目录执行命令`mvn clean package -am -B -DskipUTs -DskipITs -P artifact-thin-jar -pl turms-gateway --no-transfer-progress` |
+|                    | Docker镜像（linux/amd64）                 | 1. 安装[Docker](https://docs.docker.com/engine/install)<br />2. 在Turms项目的根目录执行命令`docker build --rm=false -t "www.mydomain.com/turms-im/turms-gateway:latest" -f turms-gateway/Dockerfile .` |
+|                    | Docker镜像（linux/arm64）                 | （交叉编译）<br />如果用户使用GitHub Action，可以直接复用Turms项目下的`.github/workflows/publish-turms-gateway.yml`脚本进行镜像打包。<br />如果用户不使用GitHub Action，且系统也不是`linux/arm64`，则需要进行交叉编译。具体方法如下：<br />1. 安装[Docker](https://docs.docker.com/engine/install)<br />2. 安装[buildx与QEMU](https://docs.docker.com/build/building/multi-platform)<br />3. 在Turms项目的根目录执行命令`DOCKER_BUILDKIT=1 docker buildx build --platform linux/arm64 --rm=false -t "www.mydomain.com/turms-im/turms-gateway:latest" -f turms-gateway/Dockerfile .` |
+| turms-service      | Fat/Uber JAR包（包中包括依赖包）          | 1. 安装[Temurin JDK 17](https://adoptium.net/temurin/releases)<br />2. 安装[Maven 3](https://maven.apache.org/download.cgi)<br />3. 在Turms项目的根目录执行`mvn clean package -am -B -DskipUTs -DskipITs -P artifact-fat-jar -pl turms-service --no-transfer-progress` |
+|                    | Thin JAR包（包中不包括依赖包）            | 1. 安装[Temurin JDK 17](https://adoptium.net/temurin/releases)<br />2. 安装[Maven 3](https://maven.apache.org/download.cgi)<br />3. 在Turms项目的根目录执行命令`mvn clean package -am -B -DskipUTs -DskipITs -P artifact-thin-jar -pl turms-service --no-transfer-progress` |
+|                    | Docker镜像（linux/amd64）                 | 1. 安装[Docker](https://docs.docker.com/engine/install)<br />2. 在Turms项目的根目录执行命令`docker build --rm=false -t "www.mydomain.com/turms-im/turms-service:latest" -f turms-service/Dockerfile .` |
+|                    | Docker镜像（linux/arm64）                 | （交叉编译）<br />如果用户使用GitHub Action，可以直接复用Turms项目下的`.github/workflows/publish-turms-service.yml`脚本进行镜像打包。<br />如果用户不使用GitHub Action，且系统也不是`linux/arm64`，则需要进行交叉编译。具体方法如下：<br />1. 安装[Docker](https://docs.docker.com/engine/install)<br />2. 安装[buildx与QEMU](https://docs.docker.com/build/building/multi-platform)<br />3. 在Turms项目的根目录执行命令`DOCKER_BUILDKIT=1 docker buildx build --platform linux/arm64 --rm=false -t "www.mydomain.com/turms-im/turms-service:latest" -f turms-service/Dockerfile .` |
+| turms-admin        | 静态资源（如HTML、JavaScript、CSS等文件） | 1. 安装[Node.js 18](https://nodejs.org/en/download)<br />2. 在turms-admin项目下执行命令`npm i --no-optional && npm run build` |
+|                    | 带Nginx服务的Docker镜像（linux/amd64）    | 1. 安装[Docker](https://docs.docker.com/engine/install)<br />2. 在Turms项目的根目录执行命令`docker build --rm=false -t "www.mydomain.com/turms-im/turms-admin:latest" -f turms-admin/Dockerfile .` |
+|                    | 带Nginx服务的Docker镜像（linux/arm64）    | （交叉编译）<br />如果用户使用GitHub Action，可以直接复用Turms项目下的`.github/workflows/publish-turms-admin.yml`脚本进行镜像打包。<br />如果用户不使用GitHub Action，且系统也不是`linux/arm64`，则需要进行交叉编译。具体方法如下：<br />1. 安装[Docker](https://docs.docker.com/engine/install)<br />2. 安装[buildx与QEMU](https://docs.docker.com/build/building/multi-platform)<br />3. 在Turms项目的根目录执行命令`DOCKER_BUILDKIT=1 docker buildx build --platform linux/arm64 --rm=false -t "www.mydomain.com/turms-im/turms-admin:latest" -f turms-admin/Dockerfile .` |
+| turms-client-dart  | 无需打包                                  | 无                                                           |
+| turms-client-java  | JAR包                                     | 1. 安装[Temurin JDK 17](https://adoptium.net/temurin/releases)<br />2. 安装[Maven 3](https://maven.apache.org/download.cgi)<br />3. 在turms-client-java项目的根目录执行命令`mvn clean install` |
+| turms-client-js    | 静态资源                                  | 1. 安装[Node.js 18](https://nodejs.org/en/download)<br />2. 在turms-client-js项目下执行命令`npm i --no-optional && npm run build` |
+| turms-client-swift | 无需打包                                  | 无                                                           |
+
 ## Linux系统的参考配置
 
 ### /etc/security/limits.conf
