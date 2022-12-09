@@ -29,7 +29,6 @@ import java.lang.management.MonitorInfo;
 import java.lang.management.RuntimeMXBean;
 import java.lang.management.ThreadInfo;
 import java.util.ArrayList;
-import java.util.HexFormat;
 import java.util.List;
 
 /**
@@ -39,6 +38,7 @@ public class ThreadDumpFormatter {
 
     private static final byte[] AT = StringUtil.getBytes("\tat ");
     private static final byte[] FULL_THREAD_DUMP;
+    private static final byte[] LOCK_INFO_BEFORE = StringUtil.getBytes("> (a ");
     private static final byte[] LOCKED = StringUtil.getBytes("\t- Locked ");
     private static final byte[] LOCKED_FOR_MONITOR = StringUtil.getBytes("\t- locked ");
     private static final byte[] LOCKED_OWNABLE_SYNCHRONIZERS = StringUtil.getBytes("   Locked ownable synchronizers:\n");
@@ -46,12 +46,11 @@ public class ThreadDumpFormatter {
     private static final byte[] OWNED_BY = StringUtil.getBytes(" owned by \"");
     private static final byte[] PARKING_TO_WAIT_FOR = StringUtil.getBytes("\t- parking to wait for %s\n");
     private static final byte[] THREAD = StringUtil.getBytes(" - Thread t@");
+    private static final byte[] THREAD_STATE_CLASS_NAME = StringUtil.getBytes(Thread.State.class.getCanonicalName());
     private static final byte[] THREE_SPACES = StringUtil.getBytes("   ");
     private static final byte[] THREAD_T = StringUtil.getBytes("\" t@");
     private static final byte[] WAITING_ON = StringUtil.getBytes("\t- waiting on ");
     private static final byte[] WAITING_TO_LOCK = StringUtil.getBytes("\t- waiting to lock ");
-
-    private static final HexFormat HEX_FORMAT = HexFormat.of();
 
     static {
         RuntimeMXBean runtime = ManagementFactory.getRuntimeMXBean();
@@ -80,14 +79,6 @@ public class ThreadDumpFormatter {
         return buffer;
     }
 
-    private static byte[] format(LockInfo lockInfo) {
-        return StringUtil.getBytes("<"
-                + HEX_FORMAT.toHexDigits(lockInfo.getIdentityHashCode())
-                + "> (a "
-                + lockInfo.getClassName()
-                + ")");
-    }
-
     private static List<MonitorInfo> getLockedMonitorsForDepth(MonitorInfo[] lockedMonitors,
                                                                int depth) {
         List<MonitorInfo> monitors = new ArrayList<>(lockedMonitors.length);
@@ -108,7 +99,7 @@ public class ThreadDumpFormatter {
                 .writeBytes(NumberFormatter.toCharBytes(info.getThreadId()))
                 .writeByte('\n')
                 .writeBytes(THREE_SPACES)
-                .writeBytes(StringUtil.getBytes(Thread.State.class.getCanonicalName()))
+                .writeBytes(THREAD_STATE_CLASS_NAME)
                 .writeByte(':')
                 .writeByte(' ')
                 .writeBytes(StringUtil.getBytes(info.getThreadState().toString()));
@@ -116,6 +107,14 @@ public class ThreadDumpFormatter {
         buffer.writeByte('\n');
         writeLockedOwnableSynchronizers(buffer, info);
         buffer.writeByte('\n');
+    }
+
+    private static void writeLockInfo(ByteBuf buffer, LockInfo lockInfo) {
+        buffer.writeByte('<')
+                .writeBytes(StringUtil.getBytes(Integer.toHexString(lockInfo.getIdentityHashCode())))
+                .writeBytes(LOCK_INFO_BEFORE)
+                .writeBytes(StringUtil.getBytes(lockInfo.getClassName()))
+                .writeByte(')');
     }
 
     private static void writeStackTrace(ByteBuf buffer,
@@ -143,18 +142,18 @@ public class ThreadDumpFormatter {
         LockInfo lockInfo = info.getLockInfo();
         if (firstElement && lockInfo != null) {
             if (element.getClassName().equals(Object.class.getName()) && element.getMethodName().equals("wait")) {
-                buffer.writeBytes(WAITING_ON)
-                        .writeBytes(format(lockInfo))
-                        .writeByte('\n');
+                buffer.writeBytes(WAITING_ON);
+                writeLockInfo(buffer, lockInfo);
+                buffer.writeByte('\n');
             } else {
                 String lockOwner = info.getLockOwnerName();
                 if (lockOwner == null) {
-                    buffer.writeBytes(PARKING_TO_WAIT_FOR)
-                            .writeBytes(format(lockInfo));
+                    buffer.writeBytes(PARKING_TO_WAIT_FOR);
+                    writeLockInfo(buffer, lockInfo);
                 } else {
-                    buffer.writeBytes(WAITING_TO_LOCK)
-                            .writeBytes(format(lockInfo))
-                            .writeBytes(OWNED_BY)
+                    buffer.writeBytes(WAITING_TO_LOCK);
+                    writeLockInfo(buffer, lockInfo);
+                    buffer.writeBytes(OWNED_BY)
                             .writeBytes(StringUtil.getBytes(lockOwner))
                             .writeBytes(THREAD_T)
                             .writeBytes(NumberFormatter.toCharBytes(info.getLockOwnerId()))
@@ -168,9 +167,9 @@ public class ThreadDumpFormatter {
     private static void writeMonitors(ByteBuf buffer,
                                       List<MonitorInfo> lockedMonitorsAtCurrentDepth) {
         for (MonitorInfo lockedMonitor : lockedMonitorsAtCurrentDepth) {
-            buffer.writeBytes(LOCKED_FOR_MONITOR)
-                    .writeBytes(format(lockedMonitor))
-                    .writeByte('\n');
+            buffer.writeBytes(LOCKED_FOR_MONITOR);
+            writeLockInfo(buffer, lockedMonitor);
+            buffer.writeByte('\n');
         }
     }
 
@@ -182,9 +181,9 @@ public class ThreadDumpFormatter {
             buffer.writeBytes(NONE);
         } else {
             for (LockInfo lockedSynchronizer : lockedSynchronizers) {
-                buffer.writeBytes(LOCKED)
-                        .writeBytes(format(lockedSynchronizer))
-                        .writeByte('\n');
+                buffer.writeBytes(LOCKED);
+                writeLockInfo(buffer, lockedSynchronizer);
+                buffer.writeByte('\n');
             }
         }
     }
