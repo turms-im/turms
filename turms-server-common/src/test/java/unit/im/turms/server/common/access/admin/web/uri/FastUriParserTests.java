@@ -20,6 +20,8 @@ package unit.im.turms.server.common.access.admin.web.uri;
 import im.turms.server.common.infra.lang.Pair;
 import org.junit.jupiter.api.Test;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -35,39 +37,85 @@ class FastUriParserTests {
 
     @Test
     void test() {
-        Pair<String, Map<String, List<Object>>> actual = parsePathAndQueryParams("/hello/world");
-        assertThat(actual)
-                .isEqualTo(Pair.of("/hello/world", Collections.emptyMap()));
+        testUrl("/hello/world",
+                Pair.of("/hello/world", Collections.emptyMap()));
 
-        actual = parsePathAndQueryParams("/hello/world?");
-        assertThat(actual)
-                .isEqualTo(Pair.of("/hello/world", Collections.emptyMap()));
+        testUrl("/hello/world?",
+                Pair.of("/hello/world", Collections.emptyMap()));
 
-        actual = parsePathAndQueryParams("/hello/world?&&");
-        assertThat(actual)
-                .isEqualTo(Pair.of("/hello/world", Collections.emptyMap()));
+        testUrl("/hello/world?&&",
+                Pair.of("/hello/world", Collections.emptyMap()));
 
-        actual = parsePathAndQueryParams("/hello/world?" +
-                "empty=&" +
-                "ids=123,321,789,987&" +
-                "mybool=true");
-        assertThat(actual)
-                .isEqualTo(Pair.of("/hello/world", Map.of(
+        testUrl("/hello/world?" +
+                        "empty=&" +
+                        "ids=123,321,789,987&" +
+                        "mybool=true",
+                Pair.of("/hello/world", Map.of(
                         "empty", List.of(""),
                         "ids", List.of("123", "321", "789", "987"),
                         "mybool", List.of("true")
                 )));
 
-        actual = parsePathAndQueryParams("/hello/world?" +
-                "singleKey=singleValue&" +
-                "nestObjects[0].a=1&nestObjects[0].b=2&nestObjects[1].a=3&nestObjects[1].b=4&" +
-                "firstValues=value&firstValues=value2&firstValues=value3&" +
-                "secondValues[]=value&secondValues[]=value2&secondValues[]=value3&" +
-                "thirdValues[0]=1&thirdValues[1]=2&thirdValues[2]=3&thirdValues[3]=4&thirdValues[4]=5&" +
-                "thirdValues[5]=1&thirdValues[6]=2&thirdValues[7]=3&thirdValues[8]=4&thirdValues[9]=5&" +
-                "thirdValues[10]=1&thirdValues[11]=2&thirdValues[12]=3&thirdValues[13]=4&thirdValues[14]=5&");
-        assertThat(actual)
-                .isEqualTo(Pair.of("/hello/world", Map.of(
+        testUrl("/hello/world?" +
+                        "keys%5B0%5D.a=1&keys%5B0%5D.b=1&" +
+                        "keys%5B1%5D.a=2&keys%5B1%5D.b=2&" +
+                        "keys%5B2%5D.a=3&keys%5B2%5D.b=3&" +
+                        "keys%5B3%5D.a=4&keys%5B3%5D.b=4&" +
+                        "keys%5B4%5D.a=5&keys%5B4%5D.b=5&" +
+                        "keys%5B5%5D.a=6&keys%5B5%5D.b=6&" +
+                        "keys%5B6%5D.a=7&keys%5B6%5D.b=7&" +
+                        "keys%5B7%5D.a=8&keys%5B7%5D.b=8&" +
+                        "keys%5B8%5D.a=9&keys%5B8%5D.b=9&" +
+                        "keys%5B9%5D.a=10&keys%5B9%5D.b=10&" +
+                        "keys%5B10%5D.a=11&keys%5B10%5D.b=11&" +
+                        "keys%5B11%5D.a=12&keys%5B11%5D.b=12&" +
+                        "keys%5B12%5D.a=12&keys%5B12%5D.b=12",
+                Pair.of("/hello/world", Map.of(
+                        "keys", List.of(
+                                Map.of("a", "1", "b", "1"),
+                                Map.of("a", "2", "b", "2"),
+                                Map.of("a", "3", "b", "3"),
+                                Map.of("a", "4", "b", "4"),
+                                Map.of("a", "5", "b", "5"),
+                                Map.of("a", "6", "b", "6"),
+                                Map.of("a", "7", "b", "7"),
+                                Map.of("a", "8", "b", "8"),
+                                Map.of("a", "9", "b", "9"),
+                                Map.of("a", "10", "b", "10"),
+                                Map.of("a", "11", "b", "11"),
+                                Map.of("a", "12", "b", "12"),
+                                Map.of("a", "12", "b", "12")
+                        )
+                )));
+
+        testUrl("/hello/world?" +
+                        "singleKey=singleValue&" +
+                        "nestObjects%5B0%5D.a=1&" +
+                        "nestObjects%5B0%5D.b=2&" +
+                        "nestObjects%5B1%5D.a=3&" +
+                        "nestObjects%5B1%5D.b=4&" +
+                        "firstValues=value&" +
+                        "firstValues=value2&" +
+                        "firstValues=value3&" +
+                        "secondValues%5B%5D=value&" +
+                        "secondValues%5B%5D=value2&" +
+                        "secondValues%5B%5D=value3&" +
+                        "thirdValues%5B0%5D=1&" +
+                        "thirdValues%5B1%5D=2&" +
+                        "thirdValues%5B2%5D=3&" +
+                        "thirdValues%5B3%5D=4&" +
+                        "thirdValues%5B4%5D=5&" +
+                        "thirdValues%5B5%5D=1&" +
+                        "thirdValues%5B6%5D=2&" +
+                        "thirdValues%5B7%5D=3&" +
+                        "thirdValues%5B8%5D=4&" +
+                        "thirdValues%5B9%5D=5&" +
+                        "thirdValues%5B10%5D=1&" +
+                        "thirdValues%5B11%5D=2&" +
+                        "thirdValues%5B12%5D=3&" +
+                        "thirdValues%5B13%5D=4&" +
+                        "thirdValues%5B14%5D=5&",
+                Pair.of("/hello/world", Map.of(
                         "singleKey", List.of("singleValue"),
                         "nestObjects", List.of(
                                 Map.of("a", "1",
@@ -80,24 +128,44 @@ class FastUriParserTests {
                         "thirdValues", List.of("1", "2", "3", "4", "5", "1", "2", "3", "4", "5", "1", "2", "3", "4", "5")
                 )));
 
-        actual = parsePathAndQueryParams("/hello/world?firstValues[]=1&firstValues[]=2&" +
-                "secondValues[0]=1&secondValues[1]=2&secondValues[2]=3&secondValues[3]=4");
-        assertThat(actual)
-                .isEqualTo(Pair.of("/hello/world", Map.of(
+        testUrl("/hello/world?" +
+                        "firstValues%5B%5D=1&" +
+                        "firstValues%5B%5D=2&" +
+                        "secondValues%5B0%5D=1&" +
+                        "secondValues%5B1%5D=2&" +
+                        "secondValues%5B2%5D=3&" +
+                        "secondValues%5B2%5D=4&" +
+                        "secondValues%5B2%5D=5&" +
+                        "secondValues%5B2%5D=6&" +
+                        "secondValues%5B2%5D=7&" +
+                        "secondValues%5B2%5D=8&" +
+                        "secondValues%5B2%5D=9&" +
+                        "secondValues%5B2%5D=10&" +
+                        "secondValues%5B2%5D=11&" +
+                        "secondValues%5B2%5D=12&" +
+                        "secondValues%5B3%5D=13",
+                Pair.of("/hello/world", Map.of(
                         "firstValues", List.of("1", "2"),
-                        "secondValues", List.of("1", "2", "3", "4")
+                        "secondValues", List.of("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13")
                 )));
 
-        assertThatThrownBy(() -> parsePathAndQueryParams("/hello/world?values[]=1&values[1]=2"))
+        assertThatThrownBy(() -> parsePathAndQueryParams("/hello/world?values%5B%5D=1&values%5B1%5D=2"))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("The array items should be all indexed or not indexed");
 
-        actual = parsePathAndQueryParams("/metrics?names=system.cpu.usage%2Csystem.memory.total%2Csystem.memory.free%2Cdisk.total%2Cdisk.free");
-        assertThat(actual)
-                .isEqualTo(Pair.of("/metrics", Map.of(
+        testUrl("/metrics?names=system.cpu.usage%2Csystem.memory.total%2Csystem.memory.free%2Cdisk.total%2Cdisk.free",
+                Pair.of("/metrics", Map.of(
                         "names", List.of("system.cpu.usage", "system.memory.total", "system.memory.free", "disk.total", "disk.free")
                 )));
+    }
 
+    void testUrl(String encodedUrl, Object expected) {
+        Pair<String, Map<String, List<Object>>> actual = parsePathAndQueryParams(encodedUrl);
+        assertThat(actual).isEqualTo(expected);
+
+        String decodedUrl = URLDecoder.decode(encodedUrl, StandardCharsets.UTF_8);
+        actual = parsePathAndQueryParams(decodedUrl);
+        assertThat(actual).isEqualTo(expected);
     }
 
 }
