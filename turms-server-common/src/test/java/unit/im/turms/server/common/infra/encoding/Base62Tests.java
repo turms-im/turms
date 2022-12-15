@@ -17,7 +17,7 @@
 
 package unit.im.turms.server.common.infra.encoding;
 
-import im.turms.server.common.infra.encoding.Base62;
+import im.turms.server.common.infra.codec.Base62;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
