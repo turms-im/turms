@@ -3,7 +3,7 @@
 //  source: request/group/update_group_request.proto
 //
 // @dart = 2.12
-// ignore_for_file: annotate_overrides,camel_case_types,unnecessary_const,non_constant_identifier_names,library_prefixes,unused_import,unused_shown_name,return_of_invalid_type,unnecessary_this,prefer_final_fields
+// ignore_for_file: annotate_overrides,camel_case_types,constant_identifier_names,directives_ordering,library_prefixes,non_constant_identifier_names,prefer_final_fields,return_of_invalid_type,unnecessary_const,unnecessary_import,unnecessary_this,unused_import,unused_shown_name
 
 import 'dart:core' as $core;
 
@@ -16,7 +16,7 @@ class UpdateGroupRequest extends $pb.GeneratedMessage {
           ? ''
           : 'UpdateGroupRequest',
       package: const $pb.PackageName(
-          const $core.bool.fromEnvironment('protobuf.omit_message_names')
+          $core.bool.fromEnvironment('protobuf.omit_message_names')
               ? ''
               : 'im.turms.proto'),
       createEmptyInstance: create)
@@ -25,67 +25,70 @@ class UpdateGroupRequest extends $pb.GeneratedMessage {
         const $core.bool.fromEnvironment('protobuf.omit_field_names')
             ? ''
             : 'groupId')
-    ..aOS(
+    ..aOB(
         2,
         const $core.bool.fromEnvironment('protobuf.omit_field_names')
             ? ''
-            : 'groupName')
+            : 'quitAfterTransfer')
     ..aOS(
         3,
         const $core.bool.fromEnvironment('protobuf.omit_field_names')
             ? ''
-            : 'intro')
+            : 'name')
     ..aOS(
         4,
         const $core.bool.fromEnvironment('protobuf.omit_field_names')
             ? ''
-            : 'announcement')
-    ..a<$core.int>(
+            : 'intro')
+    ..aOS(
         5,
         const $core.bool.fromEnvironment('protobuf.omit_field_names')
             ? ''
-            : 'minimumScore',
-        $pb.PbFieldType.O3)
-    ..aInt64(
+            : 'announcement')
+    ..a<$core.int>(
         6,
         const $core.bool.fromEnvironment('protobuf.omit_field_names')
             ? ''
-            : 'groupTypeId')
+            : 'minScore',
+        $pb.PbFieldType.O3)
     ..aInt64(
         7,
         const $core.bool.fromEnvironment('protobuf.omit_field_names')
             ? ''
-            : 'muteEndDate')
+            : 'typeId')
     ..aInt64(
         8,
         const $core.bool.fromEnvironment('protobuf.omit_field_names')
             ? ''
-            : 'successorId')
-    ..aOB(
+            : 'muteEndDate')
+    ..aInt64(
         9,
         const $core.bool.fromEnvironment('protobuf.omit_field_names')
             ? ''
-            : 'quitAfterTransfer')
+            : 'successorId')
     ..hasRequiredFields = false;
 
   UpdateGroupRequest._() : super();
   factory UpdateGroupRequest({
     $fixnum.Int64? groupId,
-    $core.String? groupName,
+    $core.bool? quitAfterTransfer,
+    $core.String? name,
     $core.String? intro,
     $core.String? announcement,
-    $core.int? minimumScore,
-    $fixnum.Int64? groupTypeId,
+    $core.int? minScore,
+    $fixnum.Int64? typeId,
     $fixnum.Int64? muteEndDate,
     $fixnum.Int64? successorId,
-    $core.bool? quitAfterTransfer,
   }) {
     final _result = create();
     if (groupId != null) {
       _result.groupId = groupId;
     }
-    if (groupName != null) {
-      _result.groupName = groupName;
+    if (quitAfterTransfer != null) {
+      _result.quitAfterTransfer = quitAfterTransfer;
+    }
+    if (name != null) {
+      _result.name = name;
     }
     if (intro != null) {
       _result.intro = intro;
@@ -93,20 +96,17 @@ class UpdateGroupRequest extends $pb.GeneratedMessage {
     if (announcement != null) {
       _result.announcement = announcement;
     }
-    if (minimumScore != null) {
-      _result.minimumScore = minimumScore;
+    if (minScore != null) {
+      _result.minScore = minScore;
     }
-    if (groupTypeId != null) {
-      _result.groupTypeId = groupTypeId;
+    if (typeId != null) {
+      _result.typeId = typeId;
     }
     if (muteEndDate != null) {
       _result.muteEndDate = muteEndDate;
     }
     if (successorId != null) {
       _result.successorId = successorId;
-    }
-    if (quitAfterTransfer != null) {
-      _result.quitAfterTransfer = quitAfterTransfer;
     }
     return _result;
   }
@@ -150,98 +150,98 @@ class UpdateGroupRequest extends $pb.GeneratedMessage {
   void clearGroupId() => clearField(1);
 
   @$pb.TagNumber(2)
-  $core.String get groupName => $_getSZ(1);
+  $core.bool get quitAfterTransfer => $_getBF(1);
   @$pb.TagNumber(2)
-  set groupName($core.String v) {
-    $_setString(1, v);
+  set quitAfterTransfer($core.bool v) {
+    $_setBool(1, v);
   }
 
   @$pb.TagNumber(2)
-  $core.bool hasGroupName() => $_has(1);
+  $core.bool hasQuitAfterTransfer() => $_has(1);
   @$pb.TagNumber(2)
-  void clearGroupName() => clearField(2);
+  void clearQuitAfterTransfer() => clearField(2);
 
   @$pb.TagNumber(3)
-  $core.String get intro => $_getSZ(2);
+  $core.String get name => $_getSZ(2);
   @$pb.TagNumber(3)
-  set intro($core.String v) {
+  set name($core.String v) {
     $_setString(2, v);
   }
 
   @$pb.TagNumber(3)
-  $core.bool hasIntro() => $_has(2);
+  $core.bool hasName() => $_has(2);
   @$pb.TagNumber(3)
-  void clearIntro() => clearField(3);
+  void clearName() => clearField(3);
 
   @$pb.TagNumber(4)
-  $core.String get announcement => $_getSZ(3);
+  $core.String get intro => $_getSZ(3);
   @$pb.TagNumber(4)
-  set announcement($core.String v) {
+  set intro($core.String v) {
     $_setString(3, v);
   }
 
   @$pb.TagNumber(4)
-  $core.bool hasAnnouncement() => $_has(3);
+  $core.bool hasIntro() => $_has(3);
   @$pb.TagNumber(4)
-  void clearAnnouncement() => clearField(4);
+  void clearIntro() => clearField(4);
 
   @$pb.TagNumber(5)
-  $core.int get minimumScore => $_getIZ(4);
+  $core.String get announcement => $_getSZ(4);
   @$pb.TagNumber(5)
-  set minimumScore($core.int v) {
-    $_setSignedInt32(4, v);
+  set announcement($core.String v) {
+    $_setString(4, v);
   }
 
   @$pb.TagNumber(5)
-  $core.bool hasMinimumScore() => $_has(4);
+  $core.bool hasAnnouncement() => $_has(4);
   @$pb.TagNumber(5)
-  void clearMinimumScore() => clearField(5);
+  void clearAnnouncement() => clearField(5);
 
   @$pb.TagNumber(6)
-  $fixnum.Int64 get groupTypeId => $_getI64(5);
+  $core.int get minScore => $_getIZ(5);
   @$pb.TagNumber(6)
-  set groupTypeId($fixnum.Int64 v) {
-    $_setInt64(5, v);
+  set minScore($core.int v) {
+    $_setSignedInt32(5, v);
   }
 
   @$pb.TagNumber(6)
-  $core.bool hasGroupTypeId() => $_has(5);
+  $core.bool hasMinScore() => $_has(5);
   @$pb.TagNumber(6)
-  void clearGroupTypeId() => clearField(6);
+  void clearMinScore() => clearField(6);
 
   @$pb.TagNumber(7)
-  $fixnum.Int64 get muteEndDate => $_getI64(6);
+  $fixnum.Int64 get typeId => $_getI64(6);
   @$pb.TagNumber(7)
-  set muteEndDate($fixnum.Int64 v) {
+  set typeId($fixnum.Int64 v) {
     $_setInt64(6, v);
   }
 
   @$pb.TagNumber(7)
-  $core.bool hasMuteEndDate() => $_has(6);
+  $core.bool hasTypeId() => $_has(6);
   @$pb.TagNumber(7)
-  void clearMuteEndDate() => clearField(7);
+  void clearTypeId() => clearField(7);
 
   @$pb.TagNumber(8)
-  $fixnum.Int64 get successorId => $_getI64(7);
+  $fixnum.Int64 get muteEndDate => $_getI64(7);
   @$pb.TagNumber(8)
-  set successorId($fixnum.Int64 v) {
+  set muteEndDate($fixnum.Int64 v) {
     $_setInt64(7, v);
   }
 
   @$pb.TagNumber(8)
-  $core.bool hasSuccessorId() => $_has(7);
+  $core.bool hasMuteEndDate() => $_has(7);
   @$pb.TagNumber(8)
-  void clearSuccessorId() => clearField(8);
+  void clearMuteEndDate() => clearField(8);
 
   @$pb.TagNumber(9)
-  $core.bool get quitAfterTransfer => $_getBF(8);
+  $fixnum.Int64 get successorId => $_getI64(8);
   @$pb.TagNumber(9)
-  set quitAfterTransfer($core.bool v) {
-    $_setBool(8, v);
+  set successorId($fixnum.Int64 v) {
+    $_setInt64(8, v);
   }
 
   @$pb.TagNumber(9)
-  $core.bool hasQuitAfterTransfer() => $_has(8);
+  $core.bool hasSuccessorId() => $_has(8);
   @$pb.TagNumber(9)
-  void clearQuitAfterTransfer() => clearField(9);
+  void clearSuccessorId() => clearField(9);
 }

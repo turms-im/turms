@@ -46,7 +46,7 @@ public struct UserLocation {
 
     public init() {}
 
-    private var _timestamp: Int64?
+    fileprivate var _timestamp: Int64?
 }
 
 #if swift(>=5.5) && canImport(_Concurrency)

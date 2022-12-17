@@ -21,42 +21,52 @@
 package im.turms.server.common.access.client.dto.model.common;
 
 public interface StringsWithVersionOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:im.turms.proto.StringsWithVersion)
-    com.google.protobuf.MessageOrBuilder {
+        // @@protoc_insertion_point(interface_extends:im.turms.proto.StringsWithVersion)
+        com.google.protobuf.MessageOrBuilder {
 
-  /**
-   * <code>repeated string strings = 1;</code>
-   * @return A list containing the strings.
-   */
-  java.util.List<java.lang.String>
-      getStringsList();
-  /**
-   * <code>repeated string strings = 1;</code>
-   * @return The count of strings.
-   */
-  int getStringsCount();
-  /**
-   * <code>repeated string strings = 1;</code>
-   * @param index The index of the element to return.
-   * @return The strings at the given index.
-   */
-  java.lang.String getStrings(int index);
-  /**
-   * <code>repeated string strings = 1;</code>
-   * @param index The index of the value to return.
-   * @return The bytes of the strings at the given index.
-   */
-  com.google.protobuf.ByteString
-      getStringsBytes(int index);
+    /**
+     * <code>repeated string strings = 1;</code>
+     *
+     * @return A list containing the strings.
+     */
+    java.util.List<java.lang.String>
+    getStringsList();
 
-  /**
-   * <code>optional int64 last_updated_date = 2;</code>
-   * @return Whether the lastUpdatedDate field is set.
-   */
-  boolean hasLastUpdatedDate();
-  /**
-   * <code>optional int64 last_updated_date = 2;</code>
-   * @return The lastUpdatedDate.
-   */
-  long getLastUpdatedDate();
+    /**
+     * <code>repeated string strings = 1;</code>
+     *
+     * @return The count of strings.
+     */
+    int getStringsCount();
+
+    /**
+     * <code>repeated string strings = 1;</code>
+     *
+     * @param index The index of the element to return.
+     * @return The strings at the given index.
+     */
+    java.lang.String getStrings(int index);
+
+    /**
+     * <code>repeated string strings = 1;</code>
+     *
+     * @param index The index of the value to return.
+     * @return The bytes of the strings at the given index.
+     */
+    com.google.protobuf.ByteString
+    getStringsBytes(int index);
+
+    /**
+     * <code>optional int64 last_updated_date = 2;</code>
+     *
+     * @return Whether the lastUpdatedDate field is set.
+     */
+    boolean hasLastUpdatedDate();
+
+    /**
+     * <code>optional int64 last_updated_date = 2;</code>
+     *
+     * @return The lastUpdatedDate.
+     */
+    long getLastUpdatedDate();
 }

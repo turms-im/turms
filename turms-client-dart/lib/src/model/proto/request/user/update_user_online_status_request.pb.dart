@@ -3,14 +3,14 @@
 //  source: request/user/update_user_online_status_request.proto
 //
 // @dart = 2.12
-// ignore_for_file: annotate_overrides,camel_case_types,unnecessary_const,non_constant_identifier_names,library_prefixes,unused_import,unused_shown_name,return_of_invalid_type,unnecessary_this,prefer_final_fields
+// ignore_for_file: annotate_overrides,camel_case_types,constant_identifier_names,directives_ordering,library_prefixes,non_constant_identifier_names,prefer_final_fields,return_of_invalid_type,unnecessary_const,unnecessary_import,unnecessary_this,unused_import,unused_shown_name
 
 import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import '../../constant/user_status.pbenum.dart' as $0;
-import '../../constant/device_type.pbenum.dart' as $1;
+import '../../constant/device_type.pbenum.dart' as $0;
+import '../../constant/user_status.pbenum.dart' as $1;
 
 class UpdateUserOnlineStatusRequest extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -18,40 +18,41 @@ class UpdateUserOnlineStatusRequest extends $pb.GeneratedMessage {
           ? ''
           : 'UpdateUserOnlineStatusRequest',
       package: const $pb.PackageName(
-          const $core.bool.fromEnvironment('protobuf.omit_message_names')
+          $core.bool.fromEnvironment('protobuf.omit_message_names')
               ? ''
               : 'im.turms.proto'),
       createEmptyInstance: create)
-    ..e<$0.UserStatus>(
+    ..pc<$0.DeviceType>(
         1,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'deviceTypes',
+        $pb.PbFieldType.KE,
+        valueOf: $0.DeviceType.valueOf,
+        enumValues: $0.DeviceType.values,
+        defaultEnumValue: $0.DeviceType.DESKTOP)
+    ..e<$1.UserStatus>(
+        2,
         const $core.bool.fromEnvironment('protobuf.omit_field_names')
             ? ''
             : 'userStatus',
         $pb.PbFieldType.OE,
-        defaultOrMaker: $0.UserStatus.AVAILABLE,
-        valueOf: $0.UserStatus.valueOf,
-        enumValues: $0.UserStatus.values)
-    ..pc<$1.DeviceType>(
-        2,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'deviceTypes',
-        $pb.PbFieldType.PE,
-        valueOf: $1.DeviceType.valueOf,
-        enumValues: $1.DeviceType.values)
+        defaultOrMaker: $1.UserStatus.AVAILABLE,
+        valueOf: $1.UserStatus.valueOf,
+        enumValues: $1.UserStatus.values)
     ..hasRequiredFields = false;
 
   UpdateUserOnlineStatusRequest._() : super();
   factory UpdateUserOnlineStatusRequest({
-    $0.UserStatus? userStatus,
-    $core.Iterable<$1.DeviceType>? deviceTypes,
+    $core.Iterable<$0.DeviceType>? deviceTypes,
+    $1.UserStatus? userStatus,
   }) {
     final _result = create();
-    if (userStatus != null) {
-      _result.userStatus = userStatus;
-    }
     if (deviceTypes != null) {
       _result.deviceTypes.addAll(deviceTypes);
+    }
+    if (userStatus != null) {
+      _result.userStatus = userStatus;
     }
     return _result;
   }
@@ -87,17 +88,17 @@ class UpdateUserOnlineStatusRequest extends $pb.GeneratedMessage {
   static UpdateUserOnlineStatusRequest? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $0.UserStatus get userStatus => $_getN(0);
-  @$pb.TagNumber(1)
-  set userStatus($0.UserStatus v) {
-    setField(1, v);
-  }
-
-  @$pb.TagNumber(1)
-  $core.bool hasUserStatus() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearUserStatus() => clearField(1);
+  $core.List<$0.DeviceType> get deviceTypes => $_getList(0);
 
   @$pb.TagNumber(2)
-  $core.List<$1.DeviceType> get deviceTypes => $_getList(1);
+  $1.UserStatus get userStatus => $_getN(1);
+  @$pb.TagNumber(2)
+  set userStatus($1.UserStatus v) {
+    setField(2, v);
+  }
+
+  @$pb.TagNumber(2)
+  $core.bool hasUserStatus() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearUserStatus() => clearField(2);
 }

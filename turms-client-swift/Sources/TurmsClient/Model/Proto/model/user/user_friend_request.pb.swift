@@ -109,14 +109,14 @@ public struct UserFriendRequest {
 
     public init() {}
 
-    private var _id: Int64?
-    private var _creationDate: Int64?
-    private var _content: String?
-    private var _requestStatus: RequestStatus?
-    private var _reason: String?
-    private var _expirationDate: Int64?
-    private var _requesterID: Int64?
-    private var _recipientID: Int64?
+    fileprivate var _id: Int64?
+    fileprivate var _creationDate: Int64?
+    fileprivate var _content: String?
+    fileprivate var _requestStatus: RequestStatus?
+    fileprivate var _reason: String?
+    fileprivate var _expirationDate: Int64?
+    fileprivate var _requesterID: Int64?
+    fileprivate var _recipientID: Int64?
 }
 
 #if swift(>=5.5) && canImport(_Concurrency)

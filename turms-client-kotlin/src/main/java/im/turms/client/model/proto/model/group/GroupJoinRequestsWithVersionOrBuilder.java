@@ -21,31 +21,36 @@
 package im.turms.client.model.proto.model.group;
 
 public interface GroupJoinRequestsWithVersionOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:im.turms.proto.GroupJoinRequestsWithVersion)
-    com.google.protobuf.MessageLiteOrBuilder {
+        // @@protoc_insertion_point(interface_extends:im.turms.proto.GroupJoinRequestsWithVersion)
+        com.google.protobuf.MessageLiteOrBuilder {
 
-  /**
-   * <code>repeated .im.turms.proto.GroupJoinRequest group_join_requests = 1;</code>
-   */
-  java.util.List<im.turms.client.model.proto.model.group.GroupJoinRequest>
-      getGroupJoinRequestsList();
-  /**
-   * <code>repeated .im.turms.proto.GroupJoinRequest group_join_requests = 1;</code>
-   */
-  im.turms.client.model.proto.model.group.GroupJoinRequest getGroupJoinRequests(int index);
-  /**
-   * <code>repeated .im.turms.proto.GroupJoinRequest group_join_requests = 1;</code>
-   */
-  int getGroupJoinRequestsCount();
+    /**
+     * <code>repeated .im.turms.proto.GroupJoinRequest group_join_requests = 1;</code>
+     */
+    java.util.List<im.turms.client.model.proto.model.group.GroupJoinRequest>
+    getGroupJoinRequestsList();
 
-  /**
-   * <code>optional int64 last_updated_date = 2;</code>
-   * @return Whether the lastUpdatedDate field is set.
-   */
-  boolean hasLastUpdatedDate();
-  /**
-   * <code>optional int64 last_updated_date = 2;</code>
-   * @return The lastUpdatedDate.
-   */
-  long getLastUpdatedDate();
+    /**
+     * <code>repeated .im.turms.proto.GroupJoinRequest group_join_requests = 1;</code>
+     */
+    im.turms.client.model.proto.model.group.GroupJoinRequest getGroupJoinRequests(int index);
+
+    /**
+     * <code>repeated .im.turms.proto.GroupJoinRequest group_join_requests = 1;</code>
+     */
+    int getGroupJoinRequestsCount();
+
+    /**
+     * <code>optional int64 last_updated_date = 2;</code>
+     *
+     * @return Whether the lastUpdatedDate field is set.
+     */
+    boolean hasLastUpdatedDate();
+
+    /**
+     * <code>optional int64 last_updated_date = 2;</code>
+     *
+     * @return The lastUpdatedDate.
+     */
+    long getLastUpdatedDate();
 }

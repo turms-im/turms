@@ -53,8 +53,8 @@ public struct QueryGroupMembersRequest {
 
     public init() {}
 
-    private var _lastUpdatedDate: Int64?
-    private var _withStatus: Bool?
+    fileprivate var _lastUpdatedDate: Int64?
+    fileprivate var _withStatus: Bool?
 }
 
 #if swift(>=5.5) && canImport(_Concurrency)

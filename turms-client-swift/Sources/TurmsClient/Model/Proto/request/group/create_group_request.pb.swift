@@ -47,25 +47,25 @@ public struct CreateGroupRequest {
     /// Clears the value of `announcement`. Subsequent reads from it will return its default value.
     public mutating func clearAnnouncement() { _announcement = nil }
 
-    public var minimumScore: Int32 {
-        get { return _minimumScore ?? 0 }
-        set { _minimumScore = newValue }
+    public var minScore: Int32 {
+        get { return _minScore ?? 0 }
+        set { _minScore = newValue }
     }
 
-    /// Returns true if `minimumScore` has been explicitly set.
-    public var hasMinimumScore: Bool { return _minimumScore != nil }
-    /// Clears the value of `minimumScore`. Subsequent reads from it will return its default value.
-    public mutating func clearMinimumScore() { _minimumScore = nil }
+    /// Returns true if `minScore` has been explicitly set.
+    public var hasMinScore: Bool { return _minScore != nil }
+    /// Clears the value of `minScore`. Subsequent reads from it will return its default value.
+    public mutating func clearMinScore() { _minScore = nil }
 
-    public var groupTypeID: Int64 {
-        get { return _groupTypeID ?? 0 }
-        set { _groupTypeID = newValue }
+    public var typeID: Int64 {
+        get { return _typeID ?? 0 }
+        set { _typeID = newValue }
     }
 
-    /// Returns true if `groupTypeID` has been explicitly set.
-    public var hasGroupTypeID: Bool { return _groupTypeID != nil }
-    /// Clears the value of `groupTypeID`. Subsequent reads from it will return its default value.
-    public mutating func clearGroupTypeID() { _groupTypeID = nil }
+    /// Returns true if `typeID` has been explicitly set.
+    public var hasTypeID: Bool { return _typeID != nil }
+    /// Clears the value of `typeID`. Subsequent reads from it will return its default value.
+    public mutating func clearTypeID() { _typeID = nil }
 
     public var muteEndDate: Int64 {
         get { return _muteEndDate ?? 0 }
@@ -81,11 +81,11 @@ public struct CreateGroupRequest {
 
     public init() {}
 
-    private var _intro: String?
-    private var _announcement: String?
-    private var _minimumScore: Int32?
-    private var _groupTypeID: Int64?
-    private var _muteEndDate: Int64?
+    fileprivate var _intro: String?
+    fileprivate var _announcement: String?
+    fileprivate var _minScore: Int32?
+    fileprivate var _typeID: Int64?
+    fileprivate var _muteEndDate: Int64?
 }
 
 #if swift(>=5.5) && canImport(_Concurrency)
@@ -102,8 +102,8 @@ extension CreateGroupRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImple
         1: .same(proto: "name"),
         2: .same(proto: "intro"),
         3: .same(proto: "announcement"),
-        4: .standard(proto: "minimum_score"),
-        5: .standard(proto: "group_type_id"),
+        4: .standard(proto: "min_score"),
+        5: .standard(proto: "type_id"),
         6: .standard(proto: "mute_end_date"),
     ]
 
@@ -116,8 +116,8 @@ extension CreateGroupRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImple
             case 1: try try decoder.decodeSingularStringField(value: &name)
             case 2: try try decoder.decodeSingularStringField(value: &_intro)
             case 3: try try decoder.decodeSingularStringField(value: &_announcement)
-            case 4: try try decoder.decodeSingularInt32Field(value: &_minimumScore)
-            case 5: try try decoder.decodeSingularInt64Field(value: &_groupTypeID)
+            case 4: try try decoder.decodeSingularInt32Field(value: &_minScore)
+            case 5: try try decoder.decodeSingularInt64Field(value: &_typeID)
             case 6: try try decoder.decodeSingularInt64Field(value: &_muteEndDate)
             default: break
             }
@@ -138,10 +138,10 @@ extension CreateGroupRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImple
         try { if let v = self._announcement {
             try visitor.visitSingularStringField(value: v, fieldNumber: 3)
         } }()
-        try { if let v = self._minimumScore {
+        try { if let v = self._minScore {
             try visitor.visitSingularInt32Field(value: v, fieldNumber: 4)
         } }()
-        try { if let v = self._groupTypeID {
+        try { if let v = self._typeID {
             try visitor.visitSingularInt64Field(value: v, fieldNumber: 5)
         } }()
         try { if let v = self._muteEndDate {
@@ -154,8 +154,8 @@ extension CreateGroupRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImple
         if lhs.name != rhs.name { return false }
         if lhs._intro != rhs._intro { return false }
         if lhs._announcement != rhs._announcement { return false }
-        if lhs._minimumScore != rhs._minimumScore { return false }
-        if lhs._groupTypeID != rhs._groupTypeID { return false }
+        if lhs._minScore != rhs._minScore { return false }
+        if lhs._typeID != rhs._typeID { return false }
         if lhs._muteEndDate != rhs._muteEndDate { return false }
         if lhs.unknownFields != rhs.unknownFields { return false }
         return true

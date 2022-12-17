@@ -3,18 +3,18 @@
 //  source: model/group/group_join_question.proto
 //
 // @dart = 2.12
-// ignore_for_file: annotate_overrides,camel_case_types,unnecessary_const,non_constant_identifier_names,library_prefixes,unused_import,unused_shown_name,return_of_invalid_type,unnecessary_this,prefer_final_fields,deprecated_member_use_from_same_package
+// ignore_for_file: annotate_overrides,camel_case_types,constant_identifier_names,deprecated_member_use_from_same_package,directives_ordering,library_prefixes,non_constant_identifier_names,prefer_final_fields,return_of_invalid_type,unnecessary_const,unnecessary_import,unnecessary_this,unused_import,unused_shown_name
 
 import 'dart:core' as $core;
 import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
 
 @$core.Deprecated('Use groupJoinQuestionDescriptor instead')
-const GroupJoinQuestion$json = const {
+const GroupJoinQuestion$json = {
   '1': 'GroupJoinQuestion',
-  '2': const [
-    const {'1': 'id', '3': 1, '4': 1, '5': 3, '9': 0, '10': 'id', '17': true},
-    const {
+  '2': [
+    {'1': 'id', '3': 1, '4': 1, '5': 3, '9': 0, '10': 'id', '17': true},
+    {
       '1': 'group_id',
       '3': 2,
       '4': 1,
@@ -23,7 +23,7 @@ const GroupJoinQuestion$json = const {
       '10': 'groupId',
       '17': true
     },
-    const {
+    {
       '1': 'question',
       '3': 3,
       '4': 1,
@@ -32,22 +32,14 @@ const GroupJoinQuestion$json = const {
       '10': 'question',
       '17': true
     },
-    const {'1': 'answers', '3': 4, '4': 3, '5': 9, '10': 'answers'},
-    const {
-      '1': 'score',
-      '3': 5,
-      '4': 1,
-      '5': 5,
-      '9': 3,
-      '10': 'score',
-      '17': true
-    },
+    {'1': 'answers', '3': 4, '4': 3, '5': 9, '10': 'answers'},
+    {'1': 'score', '3': 5, '4': 1, '5': 5, '9': 3, '10': 'score', '17': true},
   ],
-  '8': const [
-    const {'1': '_id'},
-    const {'1': '_group_id'},
-    const {'1': '_question'},
-    const {'1': '_score'},
+  '8': [
+    {'1': '_id'},
+    {'1': '_group_id'},
+    {'1': '_question'},
+    {'1': '_score'},
   ],
 };
 

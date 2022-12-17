@@ -23,433 +23,480 @@ package im.turms.client.model.proto.request.group.enrollment;
 /**
  * Protobuf type {@code im.turms.proto.CreateGroupJoinQuestionsRequest}
  */
-public  final class CreateGroupJoinQuestionsRequest extends
-    com.google.protobuf.GeneratedMessageLite<
-        CreateGroupJoinQuestionsRequest, CreateGroupJoinQuestionsRequest.Builder> implements
-    // @@protoc_insertion_point(message_implements:im.turms.proto.CreateGroupJoinQuestionsRequest)
-    CreateGroupJoinQuestionsRequestOrBuilder {
-  private CreateGroupJoinQuestionsRequest() {
-    questions_ = emptyProtobufList();
-  }
-  public static final int GROUP_ID_FIELD_NUMBER = 1;
-  private long groupId_;
-  /**
-   * <code>int64 group_id = 1;</code>
-   * @return The groupId.
-   */
-  @java.lang.Override
-  public long getGroupId() {
-    return groupId_;
-  }
-  /**
-   * <code>int64 group_id = 1;</code>
-   * @param value The groupId to set.
-   */
-  private void setGroupId(long value) {
-
-    groupId_ = value;
-  }
-  /**
-   * <code>int64 group_id = 1;</code>
-   */
-  private void clearGroupId() {
-
-    groupId_ = 0L;
-  }
-
-  public static final int QUESTIONS_FIELD_NUMBER = 2;
-  private com.google.protobuf.Internal.ProtobufList<im.turms.client.model.proto.model.group.GroupJoinQuestion> questions_;
-  /**
-   * <code>repeated .im.turms.proto.GroupJoinQuestion questions = 2;</code>
-   */
-  @java.lang.Override
-  public java.util.List<im.turms.client.model.proto.model.group.GroupJoinQuestion> getQuestionsList() {
-    return questions_;
-  }
-  /**
-   * <code>repeated .im.turms.proto.GroupJoinQuestion questions = 2;</code>
-   */
-  public java.util.List<? extends im.turms.client.model.proto.model.group.GroupJoinQuestionOrBuilder>
-      getQuestionsOrBuilderList() {
-    return questions_;
-  }
-  /**
-   * <code>repeated .im.turms.proto.GroupJoinQuestion questions = 2;</code>
-   */
-  @java.lang.Override
-  public int getQuestionsCount() {
-    return questions_.size();
-  }
-  /**
-   * <code>repeated .im.turms.proto.GroupJoinQuestion questions = 2;</code>
-   */
-  @java.lang.Override
-  public im.turms.client.model.proto.model.group.GroupJoinQuestion getQuestions(int index) {
-    return questions_.get(index);
-  }
-  /**
-   * <code>repeated .im.turms.proto.GroupJoinQuestion questions = 2;</code>
-   */
-  public im.turms.client.model.proto.model.group.GroupJoinQuestionOrBuilder getQuestionsOrBuilder(
-      int index) {
-    return questions_.get(index);
-  }
-  private void ensureQuestionsIsMutable() {
-    com.google.protobuf.Internal.ProtobufList<im.turms.client.model.proto.model.group.GroupJoinQuestion> tmp = questions_;
-    if (!tmp.isModifiable()) {
-      questions_ =
-          com.google.protobuf.GeneratedMessageLite.mutableCopy(tmp);
-     }
-  }
-
-  /**
-   * <code>repeated .im.turms.proto.GroupJoinQuestion questions = 2;</code>
-   */
-  private void setQuestions(
-      int index, im.turms.client.model.proto.model.group.GroupJoinQuestion value) {
-    value.getClass();
-  ensureQuestionsIsMutable();
-    questions_.set(index, value);
-  }
-  /**
-   * <code>repeated .im.turms.proto.GroupJoinQuestion questions = 2;</code>
-   */
-  private void addQuestions(im.turms.client.model.proto.model.group.GroupJoinQuestion value) {
-    value.getClass();
-  ensureQuestionsIsMutable();
-    questions_.add(value);
-  }
-  /**
-   * <code>repeated .im.turms.proto.GroupJoinQuestion questions = 2;</code>
-   */
-  private void addQuestions(
-      int index, im.turms.client.model.proto.model.group.GroupJoinQuestion value) {
-    value.getClass();
-  ensureQuestionsIsMutable();
-    questions_.add(index, value);
-  }
-  /**
-   * <code>repeated .im.turms.proto.GroupJoinQuestion questions = 2;</code>
-   */
-  private void addAllQuestions(
-      java.lang.Iterable<? extends im.turms.client.model.proto.model.group.GroupJoinQuestion> values) {
-    ensureQuestionsIsMutable();
-    com.google.protobuf.AbstractMessageLite.addAll(
-        values, questions_);
-  }
-  /**
-   * <code>repeated .im.turms.proto.GroupJoinQuestion questions = 2;</code>
-   */
-  private void clearQuestions() {
-    questions_ = emptyProtobufList();
-  }
-  /**
-   * <code>repeated .im.turms.proto.GroupJoinQuestion questions = 2;</code>
-   */
-  private void removeQuestions(int index) {
-    ensureQuestionsIsMutable();
-    questions_.remove(index);
-  }
-
-  public static im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionsRequest parseFrom(
-      java.nio.ByteBuffer data)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return com.google.protobuf.GeneratedMessageLite.parseFrom(
-        DEFAULT_INSTANCE, data);
-  }
-  public static im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionsRequest parseFrom(
-      java.nio.ByteBuffer data,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return com.google.protobuf.GeneratedMessageLite.parseFrom(
-        DEFAULT_INSTANCE, data, extensionRegistry);
-  }
-  public static im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionsRequest parseFrom(
-      com.google.protobuf.ByteString data)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return com.google.protobuf.GeneratedMessageLite.parseFrom(
-        DEFAULT_INSTANCE, data);
-  }
-  public static im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionsRequest parseFrom(
-      com.google.protobuf.ByteString data,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return com.google.protobuf.GeneratedMessageLite.parseFrom(
-        DEFAULT_INSTANCE, data, extensionRegistry);
-  }
-  public static im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionsRequest parseFrom(byte[] data)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return com.google.protobuf.GeneratedMessageLite.parseFrom(
-        DEFAULT_INSTANCE, data);
-  }
-  public static im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionsRequest parseFrom(
-      byte[] data,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return com.google.protobuf.GeneratedMessageLite.parseFrom(
-        DEFAULT_INSTANCE, data, extensionRegistry);
-  }
-  public static im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionsRequest parseFrom(java.io.InputStream input)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageLite.parseFrom(
-        DEFAULT_INSTANCE, input);
-  }
-  public static im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionsRequest parseFrom(
-      java.io.InputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageLite.parseFrom(
-        DEFAULT_INSTANCE, input, extensionRegistry);
-  }
-  public static im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionsRequest parseDelimitedFrom(java.io.InputStream input)
-      throws java.io.IOException {
-    return parseDelimitedFrom(DEFAULT_INSTANCE, input);
-  }
-  public static im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionsRequest parseDelimitedFrom(
-      java.io.InputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws java.io.IOException {
-    return parseDelimitedFrom(DEFAULT_INSTANCE, input, extensionRegistry);
-  }
-  public static im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionsRequest parseFrom(
-      com.google.protobuf.CodedInputStream input)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageLite.parseFrom(
-        DEFAULT_INSTANCE, input);
-  }
-  public static im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionsRequest parseFrom(
-      com.google.protobuf.CodedInputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageLite.parseFrom(
-        DEFAULT_INSTANCE, input, extensionRegistry);
-  }
-
-  public static Builder newBuilder() {
-    return (Builder) DEFAULT_INSTANCE.createBuilder();
-  }
-  public static Builder newBuilder(im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionsRequest prototype) {
-    return (Builder) DEFAULT_INSTANCE.createBuilder(prototype);
-  }
-
-  /**
-   * Protobuf type {@code im.turms.proto.CreateGroupJoinQuestionsRequest}
-   */
-  public static final class Builder extends
-      com.google.protobuf.GeneratedMessageLite.Builder<
-        im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionsRequest, Builder> implements
-      // @@protoc_insertion_point(builder_implements:im.turms.proto.CreateGroupJoinQuestionsRequest)
-      im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionsRequestOrBuilder {
-    // Construct using im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionsRequest.newBuilder()
-    private Builder() {
-      super(DEFAULT_INSTANCE);
+public final class CreateGroupJoinQuestionsRequest extends
+        com.google.protobuf.GeneratedMessageLite<
+                CreateGroupJoinQuestionsRequest, CreateGroupJoinQuestionsRequest.Builder> implements
+        // @@protoc_insertion_point(message_implements:im.turms.proto.CreateGroupJoinQuestionsRequest)
+        CreateGroupJoinQuestionsRequestOrBuilder {
+    private CreateGroupJoinQuestionsRequest() {
+        questions_ = emptyProtobufList();
     }
 
+    public static final int GROUP_ID_FIELD_NUMBER = 1;
+    private long groupId_;
 
     /**
      * <code>int64 group_id = 1;</code>
+     *
      * @return The groupId.
      */
     @java.lang.Override
     public long getGroupId() {
-      return instance.getGroupId();
+        return groupId_;
     }
+
     /**
      * <code>int64 group_id = 1;</code>
+     *
      * @param value The groupId to set.
-     * @return This builder for chaining.
      */
-    public Builder setGroupId(long value) {
-      copyOnWrite();
-      instance.setGroupId(value);
-      return this;
+    private void setGroupId(long value) {
+
+        groupId_ = value;
     }
+
     /**
      * <code>int64 group_id = 1;</code>
-     * @return This builder for chaining.
      */
-    public Builder clearGroupId() {
-      copyOnWrite();
-      instance.clearGroupId();
-      return this;
+    private void clearGroupId() {
+
+        groupId_ = 0L;
     }
+
+    public static final int QUESTIONS_FIELD_NUMBER = 2;
+    private com.google.protobuf.Internal.ProtobufList<im.turms.client.model.proto.model.group.GroupJoinQuestion> questions_;
 
     /**
      * <code>repeated .im.turms.proto.GroupJoinQuestion questions = 2;</code>
      */
     @java.lang.Override
     public java.util.List<im.turms.client.model.proto.model.group.GroupJoinQuestion> getQuestionsList() {
-      return java.util.Collections.unmodifiableList(
-          instance.getQuestionsList());
+        return questions_;
     }
+
+    /**
+     * <code>repeated .im.turms.proto.GroupJoinQuestion questions = 2;</code>
+     */
+    public java.util.List<? extends im.turms.client.model.proto.model.group.GroupJoinQuestionOrBuilder>
+    getQuestionsOrBuilderList() {
+        return questions_;
+    }
+
     /**
      * <code>repeated .im.turms.proto.GroupJoinQuestion questions = 2;</code>
      */
     @java.lang.Override
     public int getQuestionsCount() {
-      return instance.getQuestionsCount();
-    }/**
+        return questions_.size();
+    }
+
+    /**
      * <code>repeated .im.turms.proto.GroupJoinQuestion questions = 2;</code>
      */
     @java.lang.Override
     public im.turms.client.model.proto.model.group.GroupJoinQuestion getQuestions(int index) {
-      return instance.getQuestions(index);
-    }
-    /**
-     * <code>repeated .im.turms.proto.GroupJoinQuestion questions = 2;</code>
-     */
-    public Builder setQuestions(
-        int index, im.turms.client.model.proto.model.group.GroupJoinQuestion value) {
-      copyOnWrite();
-      instance.setQuestions(index, value);
-      return this;
-    }
-    /**
-     * <code>repeated .im.turms.proto.GroupJoinQuestion questions = 2;</code>
-     */
-    public Builder setQuestions(
-        int index, im.turms.client.model.proto.model.group.GroupJoinQuestion.Builder builderForValue) {
-      copyOnWrite();
-      instance.setQuestions(index,
-          builderForValue.build());
-      return this;
-    }
-    /**
-     * <code>repeated .im.turms.proto.GroupJoinQuestion questions = 2;</code>
-     */
-    public Builder addQuestions(im.turms.client.model.proto.model.group.GroupJoinQuestion value) {
-      copyOnWrite();
-      instance.addQuestions(value);
-      return this;
-    }
-    /**
-     * <code>repeated .im.turms.proto.GroupJoinQuestion questions = 2;</code>
-     */
-    public Builder addQuestions(
-        int index, im.turms.client.model.proto.model.group.GroupJoinQuestion value) {
-      copyOnWrite();
-      instance.addQuestions(index, value);
-      return this;
-    }
-    /**
-     * <code>repeated .im.turms.proto.GroupJoinQuestion questions = 2;</code>
-     */
-    public Builder addQuestions(
-        im.turms.client.model.proto.model.group.GroupJoinQuestion.Builder builderForValue) {
-      copyOnWrite();
-      instance.addQuestions(builderForValue.build());
-      return this;
-    }
-    /**
-     * <code>repeated .im.turms.proto.GroupJoinQuestion questions = 2;</code>
-     */
-    public Builder addQuestions(
-        int index, im.turms.client.model.proto.model.group.GroupJoinQuestion.Builder builderForValue) {
-      copyOnWrite();
-      instance.addQuestions(index,
-          builderForValue.build());
-      return this;
-    }
-    /**
-     * <code>repeated .im.turms.proto.GroupJoinQuestion questions = 2;</code>
-     */
-    public Builder addAllQuestions(
-        java.lang.Iterable<? extends im.turms.client.model.proto.model.group.GroupJoinQuestion> values) {
-      copyOnWrite();
-      instance.addAllQuestions(values);
-      return this;
-    }
-    /**
-     * <code>repeated .im.turms.proto.GroupJoinQuestion questions = 2;</code>
-     */
-    public Builder clearQuestions() {
-      copyOnWrite();
-      instance.clearQuestions();
-      return this;
-    }
-    /**
-     * <code>repeated .im.turms.proto.GroupJoinQuestion questions = 2;</code>
-     */
-    public Builder removeQuestions(int index) {
-      copyOnWrite();
-      instance.removeQuestions(index);
-      return this;
+        return questions_.get(index);
     }
 
-    // @@protoc_insertion_point(builder_scope:im.turms.proto.CreateGroupJoinQuestionsRequest)
-  }
-  @java.lang.Override
-  @java.lang.SuppressWarnings({"unchecked", "fallthrough"})
-  protected final java.lang.Object dynamicMethod(
-      com.google.protobuf.GeneratedMessageLite.MethodToInvoke method,
-      java.lang.Object arg0, java.lang.Object arg1) {
-    switch (method) {
-      case NEW_MUTABLE_INSTANCE: {
-        return new im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionsRequest();
-      }
-      case NEW_BUILDER: {
-        return new Builder();
-      }
-      case BUILD_MESSAGE_INFO: {
-          java.lang.Object[] objects = new java.lang.Object[] {
-            "groupId_",
-            "questions_",
-            im.turms.client.model.proto.model.group.GroupJoinQuestion.class,
-          };
-          java.lang.String info =
-              "\u0000\u0002\u0000\u0000\u0001\u0002\u0002\u0000\u0001\u0000\u0001\u0002\u0002\u001b" +
-              "";
-          return newMessageInfo(DEFAULT_INSTANCE, info, objects);
-      }
-      // fall through
-      case GET_DEFAULT_INSTANCE: {
-        return DEFAULT_INSTANCE;
-      }
-      case GET_PARSER: {
-        com.google.protobuf.Parser<im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionsRequest> parser = PARSER;
-        if (parser == null) {
-          synchronized (im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionsRequest.class) {
-            parser = PARSER;
-            if (parser == null) {
-              parser =
-                  new DefaultInstanceBasedParser<im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionsRequest>(
-                      DEFAULT_INSTANCE);
-              PARSER = parser;
-            }
-          }
+    /**
+     * <code>repeated .im.turms.proto.GroupJoinQuestion questions = 2;</code>
+     */
+    public im.turms.client.model.proto.model.group.GroupJoinQuestionOrBuilder getQuestionsOrBuilder(
+            int index) {
+        return questions_.get(index);
+    }
+
+    private void ensureQuestionsIsMutable() {
+        com.google.protobuf.Internal.ProtobufList<im.turms.client.model.proto.model.group.GroupJoinQuestion> tmp = questions_;
+        if (!tmp.isModifiable()) {
+            questions_ =
+                    com.google.protobuf.GeneratedMessageLite.mutableCopy(tmp);
         }
-        return parser;
     }
-    case GET_MEMOIZED_IS_INITIALIZED: {
-      return (byte) 1;
+
+    /**
+     * <code>repeated .im.turms.proto.GroupJoinQuestion questions = 2;</code>
+     */
+    private void setQuestions(
+            int index, im.turms.client.model.proto.model.group.GroupJoinQuestion value) {
+        value.getClass();
+        ensureQuestionsIsMutable();
+        questions_.set(index, value);
     }
-    case SET_MEMOIZED_IS_INITIALIZED: {
-      return null;
+
+    /**
+     * <code>repeated .im.turms.proto.GroupJoinQuestion questions = 2;</code>
+     */
+    private void addQuestions(im.turms.client.model.proto.model.group.GroupJoinQuestion value) {
+        value.getClass();
+        ensureQuestionsIsMutable();
+        questions_.add(value);
     }
+
+    /**
+     * <code>repeated .im.turms.proto.GroupJoinQuestion questions = 2;</code>
+     */
+    private void addQuestions(
+            int index, im.turms.client.model.proto.model.group.GroupJoinQuestion value) {
+        value.getClass();
+        ensureQuestionsIsMutable();
+        questions_.add(index, value);
     }
-    throw new UnsupportedOperationException();
-  }
+
+    /**
+     * <code>repeated .im.turms.proto.GroupJoinQuestion questions = 2;</code>
+     */
+    private void addAllQuestions(
+            java.lang.Iterable<? extends im.turms.client.model.proto.model.group.GroupJoinQuestion> values) {
+        ensureQuestionsIsMutable();
+        com.google.protobuf.AbstractMessageLite.addAll(
+                values, questions_);
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.GroupJoinQuestion questions = 2;</code>
+     */
+    private void clearQuestions() {
+        questions_ = emptyProtobufList();
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.GroupJoinQuestion questions = 2;</code>
+     */
+    private void removeQuestions(int index) {
+        ensureQuestionsIsMutable();
+        questions_.remove(index);
+    }
+
+    public static im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionsRequest parseFrom(
+            java.nio.ByteBuffer data)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        return com.google.protobuf.GeneratedMessageLite.parseFrom(
+                DEFAULT_INSTANCE, data);
+    }
+
+    public static im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionsRequest parseFrom(
+            java.nio.ByteBuffer data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        return com.google.protobuf.GeneratedMessageLite.parseFrom(
+                DEFAULT_INSTANCE, data, extensionRegistry);
+    }
+
+    public static im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionsRequest parseFrom(
+            com.google.protobuf.ByteString data)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        return com.google.protobuf.GeneratedMessageLite.parseFrom(
+                DEFAULT_INSTANCE, data);
+    }
+
+    public static im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionsRequest parseFrom(
+            com.google.protobuf.ByteString data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        return com.google.protobuf.GeneratedMessageLite.parseFrom(
+                DEFAULT_INSTANCE, data, extensionRegistry);
+    }
+
+    public static im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionsRequest parseFrom(byte[] data)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        return com.google.protobuf.GeneratedMessageLite.parseFrom(
+                DEFAULT_INSTANCE, data);
+    }
+
+    public static im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionsRequest parseFrom(
+            byte[] data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        return com.google.protobuf.GeneratedMessageLite.parseFrom(
+                DEFAULT_INSTANCE, data, extensionRegistry);
+    }
+
+    public static im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionsRequest parseFrom(java.io.InputStream input)
+            throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageLite.parseFrom(
+                DEFAULT_INSTANCE, input);
+    }
+
+    public static im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionsRequest parseFrom(
+            java.io.InputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageLite.parseFrom(
+                DEFAULT_INSTANCE, input, extensionRegistry);
+    }
+
+    public static im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionsRequest parseDelimitedFrom(java.io.InputStream input)
+            throws java.io.IOException {
+        return parseDelimitedFrom(DEFAULT_INSTANCE, input);
+    }
+
+    public static im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionsRequest parseDelimitedFrom(
+            java.io.InputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+        return parseDelimitedFrom(DEFAULT_INSTANCE, input, extensionRegistry);
+    }
+
+    public static im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionsRequest parseFrom(
+            com.google.protobuf.CodedInputStream input)
+            throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageLite.parseFrom(
+                DEFAULT_INSTANCE, input);
+    }
+
+    public static im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionsRequest parseFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageLite.parseFrom(
+                DEFAULT_INSTANCE, input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() {
+        return (Builder) DEFAULT_INSTANCE.createBuilder();
+    }
+
+    public static Builder newBuilder(im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionsRequest prototype) {
+        return (Builder) DEFAULT_INSTANCE.createBuilder(prototype);
+    }
+
+    /**
+     * Protobuf type {@code im.turms.proto.CreateGroupJoinQuestionsRequest}
+     */
+    public static final class Builder extends
+            com.google.protobuf.GeneratedMessageLite.Builder<
+                    im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionsRequest, Builder> implements
+            // @@protoc_insertion_point(builder_implements:im.turms.proto.CreateGroupJoinQuestionsRequest)
+            im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionsRequestOrBuilder {
+        // Construct using im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionsRequest.newBuilder()
+        private Builder() {
+            super(DEFAULT_INSTANCE);
+        }
 
 
-  // @@protoc_insertion_point(class_scope:im.turms.proto.CreateGroupJoinQuestionsRequest)
-  private static final im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionsRequest DEFAULT_INSTANCE;
-  static {
-    CreateGroupJoinQuestionsRequest defaultInstance = new CreateGroupJoinQuestionsRequest();
-    // New instances are implicitly immutable so no need to make
-    // immutable.
-    DEFAULT_INSTANCE = defaultInstance;
-    com.google.protobuf.GeneratedMessageLite.registerDefaultInstance(
-      CreateGroupJoinQuestionsRequest.class, defaultInstance);
-  }
+        /**
+         * <code>int64 group_id = 1;</code>
+         *
+         * @return The groupId.
+         */
+        @java.lang.Override
+        public long getGroupId() {
+            return instance.getGroupId();
+        }
 
-  public static im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionsRequest getDefaultInstance() {
-    return DEFAULT_INSTANCE;
-  }
+        /**
+         * <code>int64 group_id = 1;</code>
+         *
+         * @param value The groupId to set.
+         * @return This builder for chaining.
+         */
+        public Builder setGroupId(long value) {
+            copyOnWrite();
+            instance.setGroupId(value);
+            return this;
+        }
 
-  private static volatile com.google.protobuf.Parser<CreateGroupJoinQuestionsRequest> PARSER;
+        /**
+         * <code>int64 group_id = 1;</code>
+         *
+         * @return This builder for chaining.
+         */
+        public Builder clearGroupId() {
+            copyOnWrite();
+            instance.clearGroupId();
+            return this;
+        }
 
-  public static com.google.protobuf.Parser<CreateGroupJoinQuestionsRequest> parser() {
-    return DEFAULT_INSTANCE.getParserForType();
-  }
+        /**
+         * <code>repeated .im.turms.proto.GroupJoinQuestion questions = 2;</code>
+         */
+        @java.lang.Override
+        public java.util.List<im.turms.client.model.proto.model.group.GroupJoinQuestion> getQuestionsList() {
+            return java.util.Collections.unmodifiableList(
+                    instance.getQuestionsList());
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.GroupJoinQuestion questions = 2;</code>
+         */
+        @java.lang.Override
+        public int getQuestionsCount() {
+            return instance.getQuestionsCount();
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.GroupJoinQuestion questions = 2;</code>
+         */
+        @java.lang.Override
+        public im.turms.client.model.proto.model.group.GroupJoinQuestion getQuestions(int index) {
+            return instance.getQuestions(index);
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.GroupJoinQuestion questions = 2;</code>
+         */
+        public Builder setQuestions(
+                int index, im.turms.client.model.proto.model.group.GroupJoinQuestion value) {
+            copyOnWrite();
+            instance.setQuestions(index, value);
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.GroupJoinQuestion questions = 2;</code>
+         */
+        public Builder setQuestions(
+                int index, im.turms.client.model.proto.model.group.GroupJoinQuestion.Builder builderForValue) {
+            copyOnWrite();
+            instance.setQuestions(index,
+                    builderForValue.build());
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.GroupJoinQuestion questions = 2;</code>
+         */
+        public Builder addQuestions(im.turms.client.model.proto.model.group.GroupJoinQuestion value) {
+            copyOnWrite();
+            instance.addQuestions(value);
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.GroupJoinQuestion questions = 2;</code>
+         */
+        public Builder addQuestions(
+                int index, im.turms.client.model.proto.model.group.GroupJoinQuestion value) {
+            copyOnWrite();
+            instance.addQuestions(index, value);
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.GroupJoinQuestion questions = 2;</code>
+         */
+        public Builder addQuestions(
+                im.turms.client.model.proto.model.group.GroupJoinQuestion.Builder builderForValue) {
+            copyOnWrite();
+            instance.addQuestions(builderForValue.build());
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.GroupJoinQuestion questions = 2;</code>
+         */
+        public Builder addQuestions(
+                int index, im.turms.client.model.proto.model.group.GroupJoinQuestion.Builder builderForValue) {
+            copyOnWrite();
+            instance.addQuestions(index,
+                    builderForValue.build());
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.GroupJoinQuestion questions = 2;</code>
+         */
+        public Builder addAllQuestions(
+                java.lang.Iterable<? extends im.turms.client.model.proto.model.group.GroupJoinQuestion> values) {
+            copyOnWrite();
+            instance.addAllQuestions(values);
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.GroupJoinQuestion questions = 2;</code>
+         */
+        public Builder clearQuestions() {
+            copyOnWrite();
+            instance.clearQuestions();
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.GroupJoinQuestion questions = 2;</code>
+         */
+        public Builder removeQuestions(int index) {
+            copyOnWrite();
+            instance.removeQuestions(index);
+            return this;
+        }
+
+        // @@protoc_insertion_point(builder_scope:im.turms.proto.CreateGroupJoinQuestionsRequest)
+    }
+
+    @java.lang.Override
+    @java.lang.SuppressWarnings({"unchecked", "fallthrough"})
+    protected final java.lang.Object dynamicMethod(
+            com.google.protobuf.GeneratedMessageLite.MethodToInvoke method,
+            java.lang.Object arg0, java.lang.Object arg1) {
+        switch (method) {
+            case NEW_MUTABLE_INSTANCE: {
+                return new im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionsRequest();
+            }
+            case NEW_BUILDER: {
+                return new Builder();
+            }
+            case BUILD_MESSAGE_INFO: {
+                java.lang.Object[] objects = new java.lang.Object[]{
+                        "groupId_",
+                        "questions_",
+                        im.turms.client.model.proto.model.group.GroupJoinQuestion.class,
+                };
+                java.lang.String info =
+                        "\u0000\u0002\u0000\u0000\u0001\u0002\u0002\u0000\u0001\u0000\u0001\u0002\u0002\u001b" +
+                        "";
+                return newMessageInfo(DEFAULT_INSTANCE, info, objects);
+            }
+            // fall through
+            case GET_DEFAULT_INSTANCE: {
+                return DEFAULT_INSTANCE;
+            }
+            case GET_PARSER: {
+                com.google.protobuf.Parser<im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionsRequest> parser = PARSER;
+                if (parser == null) {
+                    synchronized (im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionsRequest.class) {
+                        parser = PARSER;
+                        if (parser == null) {
+                            parser =
+                                    new DefaultInstanceBasedParser<im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionsRequest>(
+                                            DEFAULT_INSTANCE);
+                            PARSER = parser;
+                        }
+                    }
+                }
+                return parser;
+            }
+            case GET_MEMOIZED_IS_INITIALIZED: {
+                return (byte) 1;
+            }
+            case SET_MEMOIZED_IS_INITIALIZED: {
+                return null;
+            }
+        }
+        throw new UnsupportedOperationException();
+    }
+
+
+    // @@protoc_insertion_point(class_scope:im.turms.proto.CreateGroupJoinQuestionsRequest)
+    private static final im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionsRequest DEFAULT_INSTANCE;
+
+    static {
+        CreateGroupJoinQuestionsRequest defaultInstance = new CreateGroupJoinQuestionsRequest();
+        // New instances are implicitly immutable so no need to make
+        // immutable.
+        DEFAULT_INSTANCE = defaultInstance;
+        com.google.protobuf.GeneratedMessageLite.registerDefaultInstance(
+                CreateGroupJoinQuestionsRequest.class, defaultInstance);
+    }
+
+    public static im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionsRequest getDefaultInstance() {
+        return DEFAULT_INSTANCE;
+    }
+
+    private static volatile com.google.protobuf.Parser<CreateGroupJoinQuestionsRequest> PARSER;
+
+    public static com.google.protobuf.Parser<CreateGroupJoinQuestionsRequest> parser() {
+        return DEFAULT_INSTANCE.getParserForType();
+    }
 }
-

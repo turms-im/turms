@@ -21,34 +21,41 @@
 package im.turms.client.model.proto.request.user.relationship;
 
 public interface DeleteRelationshipRequestOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:im.turms.proto.DeleteRelationshipRequest)
-    com.google.protobuf.MessageLiteOrBuilder {
+        // @@protoc_insertion_point(interface_extends:im.turms.proto.DeleteRelationshipRequest)
+        com.google.protobuf.MessageLiteOrBuilder {
 
-  /**
-   * <code>int64 user_id = 1;</code>
-   * @return The userId.
-   */
-  long getUserId();
+    /**
+     * <code>int64 user_id = 1;</code>
+     *
+     * @return The userId.
+     */
+    long getUserId();
 
-  /**
-   * <code>optional int32 group_index = 2;</code>
-   * @return Whether the groupIndex field is set.
-   */
-  boolean hasGroupIndex();
-  /**
-   * <code>optional int32 group_index = 2;</code>
-   * @return The groupIndex.
-   */
-  int getGroupIndex();
+    /**
+     * <code>optional int32 group_index = 2;</code>
+     *
+     * @return Whether the groupIndex field is set.
+     */
+    boolean hasGroupIndex();
 
-  /**
-   * <code>optional int32 target_group_index = 3;</code>
-   * @return Whether the targetGroupIndex field is set.
-   */
-  boolean hasTargetGroupIndex();
-  /**
-   * <code>optional int32 target_group_index = 3;</code>
-   * @return The targetGroupIndex.
-   */
-  int getTargetGroupIndex();
+    /**
+     * <code>optional int32 group_index = 2;</code>
+     *
+     * @return The groupIndex.
+     */
+    int getGroupIndex();
+
+    /**
+     * <code>optional int32 target_group_index = 3;</code>
+     *
+     * @return Whether the targetGroupIndex field is set.
+     */
+    boolean hasTargetGroupIndex();
+
+    /**
+     * <code>optional int32 target_group_index = 3;</code>
+     *
+     * @return The targetGroupIndex.
+     */
+    int getTargetGroupIndex();
 }

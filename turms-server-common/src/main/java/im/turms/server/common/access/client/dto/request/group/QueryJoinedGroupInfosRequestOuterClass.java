@@ -21,48 +21,53 @@
 package im.turms.server.common.access.client.dto.request.group;
 
 public final class QueryJoinedGroupInfosRequestOuterClass {
-  private QueryJoinedGroupInfosRequestOuterClass() {}
-  public static void registerAllExtensions(
-      com.google.protobuf.ExtensionRegistryLite registry) {
-  }
+    private QueryJoinedGroupInfosRequestOuterClass() {
+    }
 
-  public static void registerAllExtensions(
-      com.google.protobuf.ExtensionRegistry registry) {
-    registerAllExtensions(
-        (com.google.protobuf.ExtensionRegistryLite) registry);
-  }
-  static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_im_turms_proto_QueryJoinedGroupInfosRequest_descriptor;
-  static final
+    public static void registerAllExtensions(
+            com.google.protobuf.ExtensionRegistryLite registry) {
+    }
+
+    public static void registerAllExtensions(
+            com.google.protobuf.ExtensionRegistry registry) {
+        registerAllExtensions(
+                (com.google.protobuf.ExtensionRegistryLite) registry);
+    }
+
+    static final com.google.protobuf.Descriptors.Descriptor
+            internal_static_im_turms_proto_QueryJoinedGroupInfosRequest_descriptor;
+    static final
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_im_turms_proto_QueryJoinedGroupInfosRequest_fieldAccessorTable;
+            internal_static_im_turms_proto_QueryJoinedGroupInfosRequest_fieldAccessorTable;
 
-  public static com.google.protobuf.Descriptors.FileDescriptor
-      getDescriptor() {
-    return descriptor;
-  }
-  private static  com.google.protobuf.Descriptors.FileDescriptor
-      descriptor;
-  static {
-    java.lang.String[] descriptorData = {
-      "\n4request/group/query_joined_group_infos" +
-      "_request.proto\022\016im.turms.proto\"T\n\034QueryJ" +
-      "oinedGroupInfosRequest\022\036\n\021last_updated_d" +
-      "ate\030\001 \001(\003H\000\210\001\001B\024\n\022_last_updated_dateB=\n6" +
-      "im.turms.server.common.access.client.dto" +
-      ".request.groupP\001\272\002\000b\006proto3"
-    };
-    descriptor = com.google.protobuf.Descriptors.FileDescriptor
-      .internalBuildGeneratedFileFrom(descriptorData,
-        new com.google.protobuf.Descriptors.FileDescriptor[] {
-        });
-    internal_static_im_turms_proto_QueryJoinedGroupInfosRequest_descriptor =
-      getDescriptor().getMessageTypes().get(0);
-    internal_static_im_turms_proto_QueryJoinedGroupInfosRequest_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_im_turms_proto_QueryJoinedGroupInfosRequest_descriptor,
-        new java.lang.String[] { "LastUpdatedDate", "LastUpdatedDate", });
-  }
+    public static com.google.protobuf.Descriptors.FileDescriptor
+    getDescriptor() {
+        return descriptor;
+    }
 
-  // @@protoc_insertion_point(outer_class_scope)
+    private static com.google.protobuf.Descriptors.FileDescriptor
+            descriptor;
+
+    static {
+        java.lang.String[] descriptorData = {
+                "\n4request/group/query_joined_group_infos" +
+                "_request.proto\022\016im.turms.proto\"T\n\034QueryJ" +
+                "oinedGroupInfosRequest\022\036\n\021last_updated_d" +
+                "ate\030\001 \001(\003H\000\210\001\001B\024\n\022_last_updated_dateB=\n6" +
+                "im.turms.server.common.access.client.dto" +
+                ".request.groupP\001\272\002\000b\006proto3"
+        };
+        descriptor = com.google.protobuf.Descriptors.FileDescriptor
+                .internalBuildGeneratedFileFrom(descriptorData,
+                        new com.google.protobuf.Descriptors.FileDescriptor[]{
+                        });
+        internal_static_im_turms_proto_QueryJoinedGroupInfosRequest_descriptor =
+                getDescriptor().getMessageTypes().get(0);
+        internal_static_im_turms_proto_QueryJoinedGroupInfosRequest_fieldAccessorTable = new
+                com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+                internal_static_im_turms_proto_QueryJoinedGroupInfosRequest_descriptor,
+                new java.lang.String[]{"LastUpdatedDate", "LastUpdatedDate",});
+    }
+
+    // @@protoc_insertion_point(outer_class_scope)
 }

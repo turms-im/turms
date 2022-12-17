@@ -21,50 +21,55 @@
 package im.turms.server.common.access.client.dto.model.user;
 
 public final class NearbyUsersOuterClass {
-  private NearbyUsersOuterClass() {}
-  public static void registerAllExtensions(
-      com.google.protobuf.ExtensionRegistryLite registry) {
-  }
+    private NearbyUsersOuterClass() {
+    }
 
-  public static void registerAllExtensions(
-      com.google.protobuf.ExtensionRegistry registry) {
-    registerAllExtensions(
-        (com.google.protobuf.ExtensionRegistryLite) registry);
-  }
-  static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_im_turms_proto_NearbyUsers_descriptor;
-  static final
+    public static void registerAllExtensions(
+            com.google.protobuf.ExtensionRegistryLite registry) {
+    }
+
+    public static void registerAllExtensions(
+            com.google.protobuf.ExtensionRegistry registry) {
+        registerAllExtensions(
+                (com.google.protobuf.ExtensionRegistryLite) registry);
+    }
+
+    static final com.google.protobuf.Descriptors.Descriptor
+            internal_static_im_turms_proto_NearbyUsers_descriptor;
+    static final
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_im_turms_proto_NearbyUsers_fieldAccessorTable;
+            internal_static_im_turms_proto_NearbyUsers_fieldAccessorTable;
 
-  public static com.google.protobuf.Descriptors.FileDescriptor
-      getDescriptor() {
-    return descriptor;
-  }
-  private static  com.google.protobuf.Descriptors.FileDescriptor
-      descriptor;
-  static {
-    java.lang.String[] descriptorData = {
-      "\n\035model/user/nearby_users.proto\022\016im.turm" +
-      "s.proto\032\034model/user/nearby_user.proto\"?\n" +
-      "\013NearbyUsers\0220\n\014nearby_users\030\001 \003(\0132\032.im." +
-      "turms.proto.NearbyUserB:\n3im.turms.serve" +
-      "r.common.access.client.dto.model.userP\001\272" +
-      "\002\000b\006proto3"
-    };
-    descriptor = com.google.protobuf.Descriptors.FileDescriptor
-      .internalBuildGeneratedFileFrom(descriptorData,
-        new com.google.protobuf.Descriptors.FileDescriptor[] {
-          im.turms.server.common.access.client.dto.model.user.NearbyUserOuterClass.getDescriptor(),
-        });
-    internal_static_im_turms_proto_NearbyUsers_descriptor =
-      getDescriptor().getMessageTypes().get(0);
-    internal_static_im_turms_proto_NearbyUsers_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_im_turms_proto_NearbyUsers_descriptor,
-        new java.lang.String[] { "NearbyUsers", });
-    im.turms.server.common.access.client.dto.model.user.NearbyUserOuterClass.getDescriptor();
-  }
+    public static com.google.protobuf.Descriptors.FileDescriptor
+    getDescriptor() {
+        return descriptor;
+    }
 
-  // @@protoc_insertion_point(outer_class_scope)
+    private static com.google.protobuf.Descriptors.FileDescriptor
+            descriptor;
+
+    static {
+        java.lang.String[] descriptorData = {
+                "\n\035model/user/nearby_users.proto\022\016im.turm" +
+                "s.proto\032\034model/user/nearby_user.proto\"?\n" +
+                "\013NearbyUsers\0220\n\014nearby_users\030\001 \003(\0132\032.im." +
+                "turms.proto.NearbyUserB:\n3im.turms.serve" +
+                "r.common.access.client.dto.model.userP\001\272" +
+                "\002\000b\006proto3"
+        };
+        descriptor = com.google.protobuf.Descriptors.FileDescriptor
+                .internalBuildGeneratedFileFrom(descriptorData,
+                        new com.google.protobuf.Descriptors.FileDescriptor[]{
+                                im.turms.server.common.access.client.dto.model.user.NearbyUserOuterClass.getDescriptor(),
+                        });
+        internal_static_im_turms_proto_NearbyUsers_descriptor =
+                getDescriptor().getMessageTypes().get(0);
+        internal_static_im_turms_proto_NearbyUsers_fieldAccessorTable = new
+                com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+                internal_static_im_turms_proto_NearbyUsers_descriptor,
+                new java.lang.String[]{"NearbyUsers",});
+        im.turms.server.common.access.client.dto.model.user.NearbyUserOuterClass.getDescriptor();
+    }
+
+    // @@protoc_insertion_point(outer_class_scope)
 }

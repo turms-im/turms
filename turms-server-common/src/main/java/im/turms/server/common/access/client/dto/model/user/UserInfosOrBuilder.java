@@ -21,30 +21,34 @@
 package im.turms.server.common.access.client.dto.model.user;
 
 public interface UserInfosOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:im.turms.proto.UserInfos)
-    com.google.protobuf.MessageOrBuilder {
+        // @@protoc_insertion_point(interface_extends:im.turms.proto.UserInfos)
+        com.google.protobuf.MessageOrBuilder {
 
-  /**
-   * <code>repeated .im.turms.proto.UserInfo user_infos = 1;</code>
-   */
-  java.util.List<im.turms.server.common.access.client.dto.model.user.UserInfo>
-      getUserInfosList();
-  /**
-   * <code>repeated .im.turms.proto.UserInfo user_infos = 1;</code>
-   */
-  im.turms.server.common.access.client.dto.model.user.UserInfo getUserInfos(int index);
-  /**
-   * <code>repeated .im.turms.proto.UserInfo user_infos = 1;</code>
-   */
-  int getUserInfosCount();
-  /**
-   * <code>repeated .im.turms.proto.UserInfo user_infos = 1;</code>
-   */
-  java.util.List<? extends im.turms.server.common.access.client.dto.model.user.UserInfoOrBuilder>
-      getUserInfosOrBuilderList();
-  /**
-   * <code>repeated .im.turms.proto.UserInfo user_infos = 1;</code>
-   */
-  im.turms.server.common.access.client.dto.model.user.UserInfoOrBuilder getUserInfosOrBuilder(
-      int index);
+    /**
+     * <code>repeated .im.turms.proto.UserInfo user_infos = 1;</code>
+     */
+    java.util.List<im.turms.server.common.access.client.dto.model.user.UserInfo>
+    getUserInfosList();
+
+    /**
+     * <code>repeated .im.turms.proto.UserInfo user_infos = 1;</code>
+     */
+    im.turms.server.common.access.client.dto.model.user.UserInfo getUserInfos(int index);
+
+    /**
+     * <code>repeated .im.turms.proto.UserInfo user_infos = 1;</code>
+     */
+    int getUserInfosCount();
+
+    /**
+     * <code>repeated .im.turms.proto.UserInfo user_infos = 1;</code>
+     */
+    java.util.List<? extends im.turms.server.common.access.client.dto.model.user.UserInfoOrBuilder>
+    getUserInfosOrBuilderList();
+
+    /**
+     * <code>repeated .im.turms.proto.UserInfo user_infos = 1;</code>
+     */
+    im.turms.server.common.access.client.dto.model.user.UserInfoOrBuilder getUserInfosOrBuilder(
+            int index);
 }

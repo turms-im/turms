@@ -3,17 +3,17 @@
 //  source: request/group/enrollment/check_group_join_questions_answers_request.proto
 //
 // @dart = 2.12
-// ignore_for_file: annotate_overrides,camel_case_types,unnecessary_const,non_constant_identifier_names,library_prefixes,unused_import,unused_shown_name,return_of_invalid_type,unnecessary_this,prefer_final_fields,deprecated_member_use_from_same_package
+// ignore_for_file: annotate_overrides,camel_case_types,constant_identifier_names,deprecated_member_use_from_same_package,directives_ordering,library_prefixes,non_constant_identifier_names,prefer_final_fields,return_of_invalid_type,unnecessary_const,unnecessary_import,unnecessary_this,unused_import,unused_shown_name
 
 import 'dart:core' as $core;
 import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
 
 @$core.Deprecated('Use checkGroupJoinQuestionsAnswersRequestDescriptor instead')
-const CheckGroupJoinQuestionsAnswersRequest$json = const {
+const CheckGroupJoinQuestionsAnswersRequest$json = {
   '1': 'CheckGroupJoinQuestionsAnswersRequest',
-  '2': const [
-    const {
+  '2': [
+    {
       '1': 'question_id_to_answer',
       '3': 1,
       '4': 3,
@@ -23,20 +23,17 @@ const CheckGroupJoinQuestionsAnswersRequest$json = const {
       '10': 'questionIdToAnswer'
     },
   ],
-  '3': const [
-    CheckGroupJoinQuestionsAnswersRequest_QuestionIdToAnswerEntry$json
-  ],
+  '3': [CheckGroupJoinQuestionsAnswersRequest_QuestionIdToAnswerEntry$json],
 };
 
 @$core.Deprecated('Use checkGroupJoinQuestionsAnswersRequestDescriptor instead')
-const CheckGroupJoinQuestionsAnswersRequest_QuestionIdToAnswerEntry$json =
-    const {
+const CheckGroupJoinQuestionsAnswersRequest_QuestionIdToAnswerEntry$json = {
   '1': 'QuestionIdToAnswerEntry',
-  '2': const [
-    const {'1': 'key', '3': 1, '4': 1, '5': 3, '10': 'key'},
-    const {'1': 'value', '3': 2, '4': 1, '5': 9, '10': 'value'},
+  '2': [
+    {'1': 'key', '3': 1, '4': 1, '5': 3, '10': 'key'},
+    {'1': 'value', '3': 2, '4': 1, '5': 9, '10': 'value'},
   ],
-  '7': const {'7': true},
+  '7': {'7': true},
 };
 
 /// Descriptor for `CheckGroupJoinQuestionsAnswersRequest`. Decode as a `google.protobuf.DescriptorProto`.

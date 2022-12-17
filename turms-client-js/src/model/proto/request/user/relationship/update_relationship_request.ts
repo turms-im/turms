@@ -5,7 +5,9 @@ import _m0 from "protobufjs/minimal";
 export const protobufPackage = "im.turms.proto";
 
 export interface UpdateRelationshipRequest {
+  /** Query filter */
   userId: string;
+  /** Update */
   blocked?: boolean | undefined;
   newGroupIndex?: number | undefined;
   deleteGroupIndex?: number | undefined;

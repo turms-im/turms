@@ -21,34 +21,42 @@
 package im.turms.server.common.access.client.dto.request.group;
 
 public interface QueryGroupsRequestOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:im.turms.proto.QueryGroupsRequest)
-    com.google.protobuf.MessageOrBuilder {
+        // @@protoc_insertion_point(interface_extends:im.turms.proto.QueryGroupsRequest)
+        com.google.protobuf.MessageOrBuilder {
 
-  /**
-   * <code>repeated int64 group_ids = 1;</code>
-   * @return A list containing the groupIds.
-   */
-  java.util.List<java.lang.Long> getGroupIdsList();
-  /**
-   * <code>repeated int64 group_ids = 1;</code>
-   * @return The count of groupIds.
-   */
-  int getGroupIdsCount();
-  /**
-   * <code>repeated int64 group_ids = 1;</code>
-   * @param index The index of the element to return.
-   * @return The groupIds at the given index.
-   */
-  long getGroupIds(int index);
+    /**
+     * <code>repeated int64 group_ids = 1;</code>
+     *
+     * @return A list containing the groupIds.
+     */
+    java.util.List<java.lang.Long> getGroupIdsList();
 
-  /**
-   * <code>optional int64 last_updated_date = 2;</code>
-   * @return Whether the lastUpdatedDate field is set.
-   */
-  boolean hasLastUpdatedDate();
-  /**
-   * <code>optional int64 last_updated_date = 2;</code>
-   * @return The lastUpdatedDate.
-   */
-  long getLastUpdatedDate();
+    /**
+     * <code>repeated int64 group_ids = 1;</code>
+     *
+     * @return The count of groupIds.
+     */
+    int getGroupIdsCount();
+
+    /**
+     * <code>repeated int64 group_ids = 1;</code>
+     *
+     * @param index The index of the element to return.
+     * @return The groupIds at the given index.
+     */
+    long getGroupIds(int index);
+
+    /**
+     * <code>optional int64 last_updated_date = 2;</code>
+     *
+     * @return Whether the lastUpdatedDate field is set.
+     */
+    boolean hasLastUpdatedDate();
+
+    /**
+     * <code>optional int64 last_updated_date = 2;</code>
+     *
+     * @return The lastUpdatedDate.
+     */
+    long getLastUpdatedDate();
 }

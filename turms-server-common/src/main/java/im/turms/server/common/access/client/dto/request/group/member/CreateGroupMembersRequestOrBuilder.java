@@ -21,68 +21,85 @@
 package im.turms.server.common.access.client.dto.request.group.member;
 
 public interface CreateGroupMembersRequestOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:im.turms.proto.CreateGroupMembersRequest)
-    com.google.protobuf.MessageOrBuilder {
+        // @@protoc_insertion_point(interface_extends:im.turms.proto.CreateGroupMembersRequest)
+        com.google.protobuf.MessageOrBuilder {
 
-  /**
-   * <code>int64 group_id = 1;</code>
-   * @return The groupId.
-   */
-  long getGroupId();
+    /**
+     * <code>int64 group_id = 1;</code>
+     *
+     * @return The groupId.
+     */
+    long getGroupId();
 
-  /**
-   * <code>repeated int64 user_ids = 2;</code>
-   * @return A list containing the userIds.
-   */
-  java.util.List<java.lang.Long> getUserIdsList();
-  /**
-   * <code>repeated int64 user_ids = 2;</code>
-   * @return The count of userIds.
-   */
-  int getUserIdsCount();
-  /**
-   * <code>repeated int64 user_ids = 2;</code>
-   * @param index The index of the element to return.
-   * @return The userIds at the given index.
-   */
-  long getUserIds(int index);
+    /**
+     * <code>repeated int64 user_ids = 2;</code>
+     *
+     * @return A list containing the userIds.
+     */
+    java.util.List<java.lang.Long> getUserIdsList();
 
-  /**
-   * <code>optional string name = 3;</code>
-   * @return Whether the name field is set.
-   */
-  boolean hasName();
-  /**
-   * <code>optional string name = 3;</code>
-   * @return The name.
-   */
-  java.lang.String getName();
-  /**
-   * <code>optional string name = 3;</code>
-   * @return The bytes for name.
-   */
-  com.google.protobuf.ByteString
-      getNameBytes();
+    /**
+     * <code>repeated int64 user_ids = 2;</code>
+     *
+     * @return The count of userIds.
+     */
+    int getUserIdsCount();
 
-  /**
-   * <code>.im.turms.proto.GroupMemberRole role = 4;</code>
-   * @return The enum numeric value on the wire for role.
-   */
-  int getRoleValue();
-  /**
-   * <code>.im.turms.proto.GroupMemberRole role = 4;</code>
-   * @return The role.
-   */
-  im.turms.server.common.access.client.dto.constant.GroupMemberRole getRole();
+    /**
+     * <code>repeated int64 user_ids = 2;</code>
+     *
+     * @param index The index of the element to return.
+     * @return The userIds at the given index.
+     */
+    long getUserIds(int index);
 
-  /**
-   * <code>optional int64 mute_end_date = 5;</code>
-   * @return Whether the muteEndDate field is set.
-   */
-  boolean hasMuteEndDate();
-  /**
-   * <code>optional int64 mute_end_date = 5;</code>
-   * @return The muteEndDate.
-   */
-  long getMuteEndDate();
+    /**
+     * <code>optional string name = 3;</code>
+     *
+     * @return Whether the name field is set.
+     */
+    boolean hasName();
+
+    /**
+     * <code>optional string name = 3;</code>
+     *
+     * @return The name.
+     */
+    java.lang.String getName();
+
+    /**
+     * <code>optional string name = 3;</code>
+     *
+     * @return The bytes for name.
+     */
+    com.google.protobuf.ByteString
+    getNameBytes();
+
+    /**
+     * <code>.im.turms.proto.GroupMemberRole role = 4;</code>
+     *
+     * @return The enum numeric value on the wire for role.
+     */
+    int getRoleValue();
+
+    /**
+     * <code>.im.turms.proto.GroupMemberRole role = 4;</code>
+     *
+     * @return The role.
+     */
+    im.turms.server.common.access.client.dto.constant.GroupMemberRole getRole();
+
+    /**
+     * <code>optional int64 mute_end_date = 5;</code>
+     *
+     * @return Whether the muteEndDate field is set.
+     */
+    boolean hasMuteEndDate();
+
+    /**
+     * <code>optional int64 mute_end_date = 5;</code>
+     *
+     * @return The muteEndDate.
+     */
+    long getMuteEndDate();
 }

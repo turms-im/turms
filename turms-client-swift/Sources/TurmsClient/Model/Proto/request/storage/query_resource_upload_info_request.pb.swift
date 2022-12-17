@@ -27,32 +27,56 @@ public struct QueryResourceUploadInfoRequest {
 
     public var type: StorageResourceType = .userProfilePicture
 
-    public var keyStr: String {
-        get { return _keyStr ?? String() }
-        set { _keyStr = newValue }
+    public var idNum: Int64 {
+        get { return _idNum ?? 0 }
+        set { _idNum = newValue }
     }
 
-    /// Returns true if `keyStr` has been explicitly set.
-    public var hasKeyStr: Bool { return _keyStr != nil }
-    /// Clears the value of `keyStr`. Subsequent reads from it will return its default value.
-    public mutating func clearKeyStr() { _keyStr = nil }
+    /// Returns true if `idNum` has been explicitly set.
+    public var hasIDNum: Bool { return _idNum != nil }
+    /// Clears the value of `idNum`. Subsequent reads from it will return its default value.
+    public mutating func clearIDNum() { _idNum = nil }
 
-    public var keyNum: Int64 {
-        get { return _keyNum ?? 0 }
-        set { _keyNum = newValue }
+    public var idStr: String {
+        get { return _idStr ?? String() }
+        set { _idStr = newValue }
     }
 
-    /// Returns true if `keyNum` has been explicitly set.
-    public var hasKeyNum: Bool { return _keyNum != nil }
-    /// Clears the value of `keyNum`. Subsequent reads from it will return its default value.
-    public mutating func clearKeyNum() { _keyNum = nil }
+    /// Returns true if `idStr` has been explicitly set.
+    public var hasIDStr: Bool { return _idStr != nil }
+    /// Clears the value of `idStr`. Subsequent reads from it will return its default value.
+    public mutating func clearIDStr() { _idStr = nil }
+
+    public var name: String {
+        get { return _name ?? String() }
+        set { _name = newValue }
+    }
+
+    /// Returns true if `name` has been explicitly set.
+    public var hasName: Bool { return _name != nil }
+    /// Clears the value of `name`. Subsequent reads from it will return its default value.
+    public mutating func clearName() { _name = nil }
+
+    public var mediaType: String {
+        get { return _mediaType ?? String() }
+        set { _mediaType = newValue }
+    }
+
+    /// Returns true if `mediaType` has been explicitly set.
+    public var hasMediaType: Bool { return _mediaType != nil }
+    /// Clears the value of `mediaType`. Subsequent reads from it will return its default value.
+    public mutating func clearMediaType() { _mediaType = nil }
+
+    public var extra: [String: String] = [:]
 
     public var unknownFields = SwiftProtobuf.UnknownStorage()
 
     public init() {}
 
-    private var _keyStr: String?
-    private var _keyNum: Int64?
+    fileprivate var _idNum: Int64?
+    fileprivate var _idStr: String?
+    fileprivate var _name: String?
+    fileprivate var _mediaType: String?
 }
 
 #if swift(>=5.5) && canImport(_Concurrency)
@@ -67,8 +91,11 @@ extension QueryResourceUploadInfoRequest: SwiftProtobuf.Message, SwiftProtobuf._
     public static let protoMessageName: String = _protobuf_package + ".QueryResourceUploadInfoRequest"
     public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
         1: .same(proto: "type"),
-        2: .standard(proto: "key_str"),
-        3: .standard(proto: "key_num"),
+        2: .standard(proto: "id_num"),
+        3: .standard(proto: "id_str"),
+        4: .same(proto: "name"),
+        5: .standard(proto: "media_type"),
+        6: .same(proto: "extra"),
     ]
 
     public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -78,8 +105,11 @@ extension QueryResourceUploadInfoRequest: SwiftProtobuf.Message, SwiftProtobuf._
             // enabled. https://github.com/apple/swift-protobuf/issues/1034
             switch fieldNumber {
             case 1: try try decoder.decodeSingularEnumField(value: &type)
-            case 2: try try decoder.decodeSingularStringField(value: &_keyStr)
-            case 3: try try decoder.decodeSingularInt64Field(value: &_keyNum)
+            case 2: try try decoder.decodeSingularInt64Field(value: &_idNum)
+            case 3: try try decoder.decodeSingularStringField(value: &_idStr)
+            case 4: try try decoder.decodeSingularStringField(value: &_name)
+            case 5: try try decoder.decodeSingularStringField(value: &_mediaType)
+            case 6: try { try decoder.decodeMapField(fieldType: SwiftProtobuf._ProtobufMap<SwiftProtobuf.ProtobufString, SwiftProtobuf.ProtobufString>.self, value: &self.extra) }()
             default: break
             }
         }
@@ -93,19 +123,31 @@ extension QueryResourceUploadInfoRequest: SwiftProtobuf.Message, SwiftProtobuf._
         if type != .userProfilePicture {
             try visitor.visitSingularEnumField(value: type, fieldNumber: 1)
         }
-        try { if let v = self._keyStr {
-            try visitor.visitSingularStringField(value: v, fieldNumber: 2)
+        try { if let v = self._idNum {
+            try visitor.visitSingularInt64Field(value: v, fieldNumber: 2)
         } }()
-        try { if let v = self._keyNum {
-            try visitor.visitSingularInt64Field(value: v, fieldNumber: 3)
+        try { if let v = self._idStr {
+            try visitor.visitSingularStringField(value: v, fieldNumber: 3)
         } }()
+        try { if let v = self._name {
+            try visitor.visitSingularStringField(value: v, fieldNumber: 4)
+        } }()
+        try { if let v = self._mediaType {
+            try visitor.visitSingularStringField(value: v, fieldNumber: 5)
+        } }()
+        if !extra.isEmpty {
+            try visitor.visitMapField(fieldType: SwiftProtobuf._ProtobufMap<SwiftProtobuf.ProtobufString, SwiftProtobuf.ProtobufString>.self, value: extra, fieldNumber: 6)
+        }
         try unknownFields.traverse(visitor: &visitor)
     }
 
     public static func == (lhs: QueryResourceUploadInfoRequest, rhs: QueryResourceUploadInfoRequest) -> Bool {
         if lhs.type != rhs.type { return false }
-        if lhs._keyStr != rhs._keyStr { return false }
-        if lhs._keyNum != rhs._keyNum { return false }
+        if lhs._idNum != rhs._idNum { return false }
+        if lhs._idStr != rhs._idStr { return false }
+        if lhs._name != rhs._name { return false }
+        if lhs._mediaType != rhs._mediaType { return false }
+        if lhs.extra != rhs.extra { return false }
         if lhs.unknownFields != rhs.unknownFields { return false }
         return true
     }

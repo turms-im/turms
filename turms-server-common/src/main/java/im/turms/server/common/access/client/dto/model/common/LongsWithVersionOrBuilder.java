@@ -21,34 +21,42 @@
 package im.turms.server.common.access.client.dto.model.common;
 
 public interface LongsWithVersionOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:im.turms.proto.LongsWithVersion)
-    com.google.protobuf.MessageOrBuilder {
+        // @@protoc_insertion_point(interface_extends:im.turms.proto.LongsWithVersion)
+        com.google.protobuf.MessageOrBuilder {
 
-  /**
-   * <code>repeated int64 longs = 1;</code>
-   * @return A list containing the longs.
-   */
-  java.util.List<java.lang.Long> getLongsList();
-  /**
-   * <code>repeated int64 longs = 1;</code>
-   * @return The count of longs.
-   */
-  int getLongsCount();
-  /**
-   * <code>repeated int64 longs = 1;</code>
-   * @param index The index of the element to return.
-   * @return The longs at the given index.
-   */
-  long getLongs(int index);
+    /**
+     * <code>repeated int64 longs = 1;</code>
+     *
+     * @return A list containing the longs.
+     */
+    java.util.List<java.lang.Long> getLongsList();
 
-  /**
-   * <code>optional int64 last_updated_date = 2;</code>
-   * @return Whether the lastUpdatedDate field is set.
-   */
-  boolean hasLastUpdatedDate();
-  /**
-   * <code>optional int64 last_updated_date = 2;</code>
-   * @return The lastUpdatedDate.
-   */
-  long getLastUpdatedDate();
+    /**
+     * <code>repeated int64 longs = 1;</code>
+     *
+     * @return The count of longs.
+     */
+    int getLongsCount();
+
+    /**
+     * <code>repeated int64 longs = 1;</code>
+     *
+     * @param index The index of the element to return.
+     * @return The longs at the given index.
+     */
+    long getLongs(int index);
+
+    /**
+     * <code>optional int64 last_updated_date = 2;</code>
+     *
+     * @return Whether the lastUpdatedDate field is set.
+     */
+    boolean hasLastUpdatedDate();
+
+    /**
+     * <code>optional int64 last_updated_date = 2;</code>
+     *
+     * @return The lastUpdatedDate.
+     */
+    long getLastUpdatedDate();
 }

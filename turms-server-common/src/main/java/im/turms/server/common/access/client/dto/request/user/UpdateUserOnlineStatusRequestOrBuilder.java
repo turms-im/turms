@@ -21,46 +21,86 @@
 package im.turms.server.common.access.client.dto.request.user;
 
 public interface UpdateUserOnlineStatusRequestOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:im.turms.proto.UpdateUserOnlineStatusRequest)
-    com.google.protobuf.MessageOrBuilder {
+        // @@protoc_insertion_point(interface_extends:im.turms.proto.UpdateUserOnlineStatusRequest)
+        com.google.protobuf.MessageOrBuilder {
 
-  /**
-   * <code>.im.turms.proto.UserStatus user_status = 1;</code>
-   * @return The enum numeric value on the wire for userStatus.
-   */
-  int getUserStatusValue();
-  /**
-   * <code>.im.turms.proto.UserStatus user_status = 1;</code>
-   * @return The userStatus.
-   */
-  im.turms.server.common.access.client.dto.constant.UserStatus getUserStatus();
+    /**
+     * <pre>
+     * Query filter
+     * </pre>
+     *
+     * <code>repeated .im.turms.proto.DeviceType device_types = 1;</code>
+     *
+     * @return A list containing the deviceTypes.
+     */
+    java.util.List<im.turms.server.common.access.client.dto.constant.DeviceType> getDeviceTypesList();
 
-  /**
-   * <code>repeated .im.turms.proto.DeviceType device_types = 2;</code>
-   * @return A list containing the deviceTypes.
-   */
-  java.util.List<im.turms.server.common.access.client.dto.constant.DeviceType> getDeviceTypesList();
-  /**
-   * <code>repeated .im.turms.proto.DeviceType device_types = 2;</code>
-   * @return The count of deviceTypes.
-   */
-  int getDeviceTypesCount();
-  /**
-   * <code>repeated .im.turms.proto.DeviceType device_types = 2;</code>
-   * @param index The index of the element to return.
-   * @return The deviceTypes at the given index.
-   */
-  im.turms.server.common.access.client.dto.constant.DeviceType getDeviceTypes(int index);
-  /**
-   * <code>repeated .im.turms.proto.DeviceType device_types = 2;</code>
-   * @return A list containing the enum numeric values on the wire for deviceTypes.
-   */
-  java.util.List<java.lang.Integer>
-  getDeviceTypesValueList();
-  /**
-   * <code>repeated .im.turms.proto.DeviceType device_types = 2;</code>
-   * @param index The index of the value to return.
-   * @return The enum numeric value on the wire of deviceTypes at the given index.
-   */
-  int getDeviceTypesValue(int index);
+    /**
+     * <pre>
+     * Query filter
+     * </pre>
+     *
+     * <code>repeated .im.turms.proto.DeviceType device_types = 1;</code>
+     *
+     * @return The count of deviceTypes.
+     */
+    int getDeviceTypesCount();
+
+    /**
+     * <pre>
+     * Query filter
+     * </pre>
+     *
+     * <code>repeated .im.turms.proto.DeviceType device_types = 1;</code>
+     *
+     * @param index The index of the element to return.
+     * @return The deviceTypes at the given index.
+     */
+    im.turms.server.common.access.client.dto.constant.DeviceType getDeviceTypes(int index);
+
+    /**
+     * <pre>
+     * Query filter
+     * </pre>
+     *
+     * <code>repeated .im.turms.proto.DeviceType device_types = 1;</code>
+     *
+     * @return A list containing the enum numeric values on the wire for deviceTypes.
+     */
+    java.util.List<java.lang.Integer>
+    getDeviceTypesValueList();
+
+    /**
+     * <pre>
+     * Query filter
+     * </pre>
+     *
+     * <code>repeated .im.turms.proto.DeviceType device_types = 1;</code>
+     *
+     * @param index The index of the value to return.
+     * @return The enum numeric value on the wire of deviceTypes at the given index.
+     */
+    int getDeviceTypesValue(int index);
+
+    /**
+     * <pre>
+     * Update
+     * </pre>
+     *
+     * <code>.im.turms.proto.UserStatus user_status = 2;</code>
+     *
+     * @return The enum numeric value on the wire for userStatus.
+     */
+    int getUserStatusValue();
+
+    /**
+     * <pre>
+     * Update
+     * </pre>
+     *
+     * <code>.im.turms.proto.UserStatus user_status = 2;</code>
+     *
+     * @return The userStatus.
+     */
+    im.turms.server.common.access.client.dto.constant.UserStatus getUserStatus();
 }

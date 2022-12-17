@@ -21,35 +21,42 @@
 package im.turms.client.model.proto.model.group;
 
 public interface GroupJoinQuestionsAnswerResultOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:im.turms.proto.GroupJoinQuestionsAnswerResult)
-    com.google.protobuf.MessageLiteOrBuilder {
+        // @@protoc_insertion_point(interface_extends:im.turms.proto.GroupJoinQuestionsAnswerResult)
+        com.google.protobuf.MessageLiteOrBuilder {
 
-  /**
-   * <code>int32 score = 1;</code>
-   * @return The score.
-   */
-  int getScore();
+    /**
+     * <code>int32 score = 1;</code>
+     *
+     * @return The score.
+     */
+    int getScore();
 
-  /**
-   * <code>repeated int64 question_ids = 2;</code>
-   * @return A list containing the questionIds.
-   */
-  java.util.List<java.lang.Long> getQuestionIdsList();
-  /**
-   * <code>repeated int64 question_ids = 2;</code>
-   * @return The count of questionIds.
-   */
-  int getQuestionIdsCount();
-  /**
-   * <code>repeated int64 question_ids = 2;</code>
-   * @param index The index of the element to return.
-   * @return The questionIds at the given index.
-   */
-  long getQuestionIds(int index);
+    /**
+     * <code>repeated int64 question_ids = 2;</code>
+     *
+     * @return A list containing the questionIds.
+     */
+    java.util.List<java.lang.Long> getQuestionIdsList();
 
-  /**
-   * <code>bool joined = 3;</code>
-   * @return The joined.
-   */
-  boolean getJoined();
+    /**
+     * <code>repeated int64 question_ids = 2;</code>
+     *
+     * @return The count of questionIds.
+     */
+    int getQuestionIdsCount();
+
+    /**
+     * <code>repeated int64 question_ids = 2;</code>
+     *
+     * @param index The index of the element to return.
+     * @return The questionIds at the given index.
+     */
+    long getQuestionIds(int index);
+
+    /**
+     * <code>bool joined = 3;</code>
+     *
+     * @return The joined.
+     */
+    boolean getJoined();
 }

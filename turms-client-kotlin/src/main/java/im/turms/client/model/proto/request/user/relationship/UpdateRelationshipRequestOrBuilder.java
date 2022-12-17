@@ -21,45 +21,67 @@
 package im.turms.client.model.proto.request.user.relationship;
 
 public interface UpdateRelationshipRequestOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:im.turms.proto.UpdateRelationshipRequest)
-    com.google.protobuf.MessageLiteOrBuilder {
+        // @@protoc_insertion_point(interface_extends:im.turms.proto.UpdateRelationshipRequest)
+        com.google.protobuf.MessageLiteOrBuilder {
 
-  /**
-   * <code>int64 user_id = 1;</code>
-   * @return The userId.
-   */
-  long getUserId();
+    /**
+     * <pre>
+     * Query filter
+     * </pre>
+     *
+     * <code>int64 user_id = 1;</code>
+     *
+     * @return The userId.
+     */
+    long getUserId();
 
-  /**
-   * <code>optional bool blocked = 2;</code>
-   * @return Whether the blocked field is set.
-   */
-  boolean hasBlocked();
-  /**
-   * <code>optional bool blocked = 2;</code>
-   * @return The blocked.
-   */
-  boolean getBlocked();
+    /**
+     * <pre>
+     * Update
+     * </pre>
+     *
+     * <code>optional bool blocked = 2;</code>
+     *
+     * @return Whether the blocked field is set.
+     */
+    boolean hasBlocked();
 
-  /**
-   * <code>optional int32 new_group_index = 3;</code>
-   * @return Whether the newGroupIndex field is set.
-   */
-  boolean hasNewGroupIndex();
-  /**
-   * <code>optional int32 new_group_index = 3;</code>
-   * @return The newGroupIndex.
-   */
-  int getNewGroupIndex();
+    /**
+     * <pre>
+     * Update
+     * </pre>
+     *
+     * <code>optional bool blocked = 2;</code>
+     *
+     * @return The blocked.
+     */
+    boolean getBlocked();
 
-  /**
-   * <code>optional int32 delete_group_index = 4;</code>
-   * @return Whether the deleteGroupIndex field is set.
-   */
-  boolean hasDeleteGroupIndex();
-  /**
-   * <code>optional int32 delete_group_index = 4;</code>
-   * @return The deleteGroupIndex.
-   */
-  int getDeleteGroupIndex();
+    /**
+     * <code>optional int32 new_group_index = 3;</code>
+     *
+     * @return Whether the newGroupIndex field is set.
+     */
+    boolean hasNewGroupIndex();
+
+    /**
+     * <code>optional int32 new_group_index = 3;</code>
+     *
+     * @return The newGroupIndex.
+     */
+    int getNewGroupIndex();
+
+    /**
+     * <code>optional int32 delete_group_index = 4;</code>
+     *
+     * @return Whether the deleteGroupIndex field is set.
+     */
+    boolean hasDeleteGroupIndex();
+
+    /**
+     * <code>optional int32 delete_group_index = 4;</code>
+     *
+     * @return The deleteGroupIndex.
+     */
+    int getDeleteGroupIndex();
 }

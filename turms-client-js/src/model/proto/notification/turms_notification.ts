@@ -12,6 +12,7 @@ import { GroupMembersWithVersion } from "../model/group/group_members_with_versi
 import { GroupsWithVersion } from "../model/group/groups_with_version";
 import { Messages } from "../model/message/messages";
 import { MessagesWithTotalList } from "../model/message/messages_with_total_list";
+import { StorageResourceInfos } from "../model/storage/storage_resource_infos";
 import { NearbyUsers } from "../model/user/nearby_users";
 import { UserFriendRequestsWithVersion } from "../model/user/user_friend_requests_with_version";
 import { UserInfosWithVersion } from "../model/user/user_infos_with_version";
@@ -48,8 +49,8 @@ export interface TurmsNotification {
 
 export interface TurmsNotification_Data {
   /** Common */
-  long: string | undefined;
-  string: string | undefined;
+  long?: string | undefined;
+  string?: string | undefined;
   longsWithVersion?: LongsWithVersion | undefined;
   stringsWithVersion?:
     | StringsWithVersion
@@ -79,7 +80,11 @@ export interface TurmsNotification_Data {
   groupJoinRequestsWithVersion?: GroupJoinRequestsWithVersion | undefined;
   groupJoinQuestionsWithVersion?: GroupJoinQuestionsWithVersion | undefined;
   groupMembersWithVersion?: GroupMembersWithVersion | undefined;
-  groupsWithVersion?: GroupsWithVersion | undefined;
+  groupsWithVersion?:
+    | GroupsWithVersion
+    | undefined;
+  /** Storage */
+  storageResourceInfos?: StorageResourceInfos | undefined;
 }
 
 function createBaseTurmsNotification(): TurmsNotification {
@@ -186,6 +191,7 @@ function createBaseTurmsNotification_Data(): TurmsNotification_Data {
     groupJoinQuestionsWithVersion: undefined,
     groupMembersWithVersion: undefined,
     groupsWithVersion: undefined,
+    storageResourceInfos: undefined,
   };
 }
 
@@ -251,6 +257,9 @@ export const TurmsNotification_Data = {
     }
     if (message.groupsWithVersion !== undefined) {
       GroupsWithVersion.encode(message.groupsWithVersion, writer.uint32(162).fork()).ldelim();
+    }
+    if (message.storageResourceInfos !== undefined) {
+      StorageResourceInfos.encode(message.storageResourceInfos, writer.uint32(402).fork()).ldelim();
     }
     return writer;
   },
@@ -321,6 +330,9 @@ export const TurmsNotification_Data = {
           break;
         case 20:
           message.groupsWithVersion = GroupsWithVersion.decode(reader, reader.uint32());
+          break;
+        case 50:
+          message.storageResourceInfos = StorageResourceInfos.decode(reader, reader.uint32());
           break;
         default:
           reader.skipType(tag & 7);

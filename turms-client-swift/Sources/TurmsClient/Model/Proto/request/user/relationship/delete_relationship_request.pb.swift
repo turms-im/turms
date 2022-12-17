@@ -51,8 +51,8 @@ public struct DeleteRelationshipRequest {
 
     public init() {}
 
-    private var _groupIndex: Int32?
-    private var _targetGroupIndex: Int32?
+    fileprivate var _groupIndex: Int32?
+    fileprivate var _targetGroupIndex: Int32?
 }
 
 #if swift(>=5.5) && canImport(_Concurrency)

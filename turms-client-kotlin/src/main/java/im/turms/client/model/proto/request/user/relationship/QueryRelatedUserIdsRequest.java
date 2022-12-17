@@ -23,465 +23,535 @@ package im.turms.client.model.proto.request.user.relationship;
 /**
  * Protobuf type {@code im.turms.proto.QueryRelatedUserIdsRequest}
  */
-public  final class QueryRelatedUserIdsRequest extends
-    com.google.protobuf.GeneratedMessageLite<
-        QueryRelatedUserIdsRequest, QueryRelatedUserIdsRequest.Builder> implements
-    // @@protoc_insertion_point(message_implements:im.turms.proto.QueryRelatedUserIdsRequest)
-    QueryRelatedUserIdsRequestOrBuilder {
-  private QueryRelatedUserIdsRequest() {
-    groupIndexes_ = emptyIntList();
-  }
-  private int bitField0_;
-  public static final int BLOCKED_FIELD_NUMBER = 1;
-  private boolean blocked_;
-  /**
-   * <code>optional bool blocked = 1;</code>
-   * @return Whether the blocked field is set.
-   */
-  @java.lang.Override
-  public boolean hasBlocked() {
-    return ((bitField0_ & 0x00000001) != 0);
-  }
-  /**
-   * <code>optional bool blocked = 1;</code>
-   * @return The blocked.
-   */
-  @java.lang.Override
-  public boolean getBlocked() {
-    return blocked_;
-  }
-  /**
-   * <code>optional bool blocked = 1;</code>
-   * @param value The blocked to set.
-   */
-  private void setBlocked(boolean value) {
-    bitField0_ |= 0x00000001;
-    blocked_ = value;
-  }
-  /**
-   * <code>optional bool blocked = 1;</code>
-   */
-  private void clearBlocked() {
-    bitField0_ = (bitField0_ & ~0x00000001);
-    blocked_ = false;
-  }
-
-  public static final int GROUP_INDEXES_FIELD_NUMBER = 2;
-  private com.google.protobuf.Internal.IntList groupIndexes_;
-  /**
-   * <code>repeated int32 group_indexes = 2;</code>
-   * @return A list containing the groupIndexes.
-   */
-  @java.lang.Override
-  public java.util.List<java.lang.Integer>
-      getGroupIndexesList() {
-    return groupIndexes_;
-  }
-  /**
-   * <code>repeated int32 group_indexes = 2;</code>
-   * @return The count of groupIndexes.
-   */
-  @java.lang.Override
-  public int getGroupIndexesCount() {
-    return groupIndexes_.size();
-  }
-  /**
-   * <code>repeated int32 group_indexes = 2;</code>
-   * @param index The index of the element to return.
-   * @return The groupIndexes at the given index.
-   */
-  @java.lang.Override
-  public int getGroupIndexes(int index) {
-    return groupIndexes_.getInt(index);
-  }
-  private int groupIndexesMemoizedSerializedSize = -1;
-  private void ensureGroupIndexesIsMutable() {
-    com.google.protobuf.Internal.IntList tmp = groupIndexes_;
-    if (!tmp.isModifiable()) {
-      groupIndexes_ =
-          com.google.protobuf.GeneratedMessageLite.mutableCopy(tmp);
-     }
-  }
-  /**
-   * <code>repeated int32 group_indexes = 2;</code>
-   * @param index The index to set the value at.
-   * @param value The groupIndexes to set.
-   */
-  private void setGroupIndexes(
-      int index, int value) {
-    ensureGroupIndexesIsMutable();
-    groupIndexes_.setInt(index, value);
-  }
-  /**
-   * <code>repeated int32 group_indexes = 2;</code>
-   * @param value The groupIndexes to add.
-   */
-  private void addGroupIndexes(int value) {
-    ensureGroupIndexesIsMutable();
-    groupIndexes_.addInt(value);
-  }
-  /**
-   * <code>repeated int32 group_indexes = 2;</code>
-   * @param values The groupIndexes to add.
-   */
-  private void addAllGroupIndexes(
-      java.lang.Iterable<? extends java.lang.Integer> values) {
-    ensureGroupIndexesIsMutable();
-    com.google.protobuf.AbstractMessageLite.addAll(
-        values, groupIndexes_);
-  }
-  /**
-   * <code>repeated int32 group_indexes = 2;</code>
-   */
-  private void clearGroupIndexes() {
-    groupIndexes_ = emptyIntList();
-  }
-
-  public static final int LAST_UPDATED_DATE_FIELD_NUMBER = 3;
-  private long lastUpdatedDate_;
-  /**
-   * <code>optional int64 last_updated_date = 3;</code>
-   * @return Whether the lastUpdatedDate field is set.
-   */
-  @java.lang.Override
-  public boolean hasLastUpdatedDate() {
-    return ((bitField0_ & 0x00000002) != 0);
-  }
-  /**
-   * <code>optional int64 last_updated_date = 3;</code>
-   * @return The lastUpdatedDate.
-   */
-  @java.lang.Override
-  public long getLastUpdatedDate() {
-    return lastUpdatedDate_;
-  }
-  /**
-   * <code>optional int64 last_updated_date = 3;</code>
-   * @param value The lastUpdatedDate to set.
-   */
-  private void setLastUpdatedDate(long value) {
-    bitField0_ |= 0x00000002;
-    lastUpdatedDate_ = value;
-  }
-  /**
-   * <code>optional int64 last_updated_date = 3;</code>
-   */
-  private void clearLastUpdatedDate() {
-    bitField0_ = (bitField0_ & ~0x00000002);
-    lastUpdatedDate_ = 0L;
-  }
-
-  public static im.turms.client.model.proto.request.user.relationship.QueryRelatedUserIdsRequest parseFrom(
-      java.nio.ByteBuffer data)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return com.google.protobuf.GeneratedMessageLite.parseFrom(
-        DEFAULT_INSTANCE, data);
-  }
-  public static im.turms.client.model.proto.request.user.relationship.QueryRelatedUserIdsRequest parseFrom(
-      java.nio.ByteBuffer data,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return com.google.protobuf.GeneratedMessageLite.parseFrom(
-        DEFAULT_INSTANCE, data, extensionRegistry);
-  }
-  public static im.turms.client.model.proto.request.user.relationship.QueryRelatedUserIdsRequest parseFrom(
-      com.google.protobuf.ByteString data)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return com.google.protobuf.GeneratedMessageLite.parseFrom(
-        DEFAULT_INSTANCE, data);
-  }
-  public static im.turms.client.model.proto.request.user.relationship.QueryRelatedUserIdsRequest parseFrom(
-      com.google.protobuf.ByteString data,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return com.google.protobuf.GeneratedMessageLite.parseFrom(
-        DEFAULT_INSTANCE, data, extensionRegistry);
-  }
-  public static im.turms.client.model.proto.request.user.relationship.QueryRelatedUserIdsRequest parseFrom(byte[] data)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return com.google.protobuf.GeneratedMessageLite.parseFrom(
-        DEFAULT_INSTANCE, data);
-  }
-  public static im.turms.client.model.proto.request.user.relationship.QueryRelatedUserIdsRequest parseFrom(
-      byte[] data,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return com.google.protobuf.GeneratedMessageLite.parseFrom(
-        DEFAULT_INSTANCE, data, extensionRegistry);
-  }
-  public static im.turms.client.model.proto.request.user.relationship.QueryRelatedUserIdsRequest parseFrom(java.io.InputStream input)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageLite.parseFrom(
-        DEFAULT_INSTANCE, input);
-  }
-  public static im.turms.client.model.proto.request.user.relationship.QueryRelatedUserIdsRequest parseFrom(
-      java.io.InputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageLite.parseFrom(
-        DEFAULT_INSTANCE, input, extensionRegistry);
-  }
-  public static im.turms.client.model.proto.request.user.relationship.QueryRelatedUserIdsRequest parseDelimitedFrom(java.io.InputStream input)
-      throws java.io.IOException {
-    return parseDelimitedFrom(DEFAULT_INSTANCE, input);
-  }
-  public static im.turms.client.model.proto.request.user.relationship.QueryRelatedUserIdsRequest parseDelimitedFrom(
-      java.io.InputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws java.io.IOException {
-    return parseDelimitedFrom(DEFAULT_INSTANCE, input, extensionRegistry);
-  }
-  public static im.turms.client.model.proto.request.user.relationship.QueryRelatedUserIdsRequest parseFrom(
-      com.google.protobuf.CodedInputStream input)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageLite.parseFrom(
-        DEFAULT_INSTANCE, input);
-  }
-  public static im.turms.client.model.proto.request.user.relationship.QueryRelatedUserIdsRequest parseFrom(
-      com.google.protobuf.CodedInputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageLite.parseFrom(
-        DEFAULT_INSTANCE, input, extensionRegistry);
-  }
-
-  public static Builder newBuilder() {
-    return (Builder) DEFAULT_INSTANCE.createBuilder();
-  }
-  public static Builder newBuilder(im.turms.client.model.proto.request.user.relationship.QueryRelatedUserIdsRequest prototype) {
-    return (Builder) DEFAULT_INSTANCE.createBuilder(prototype);
-  }
-
-  /**
-   * Protobuf type {@code im.turms.proto.QueryRelatedUserIdsRequest}
-   */
-  public static final class Builder extends
-      com.google.protobuf.GeneratedMessageLite.Builder<
-        im.turms.client.model.proto.request.user.relationship.QueryRelatedUserIdsRequest, Builder> implements
-      // @@protoc_insertion_point(builder_implements:im.turms.proto.QueryRelatedUserIdsRequest)
-      im.turms.client.model.proto.request.user.relationship.QueryRelatedUserIdsRequestOrBuilder {
-    // Construct using im.turms.client.model.proto.request.user.relationship.QueryRelatedUserIdsRequest.newBuilder()
-    private Builder() {
-      super(DEFAULT_INSTANCE);
+public final class QueryRelatedUserIdsRequest extends
+        com.google.protobuf.GeneratedMessageLite<
+                QueryRelatedUserIdsRequest, QueryRelatedUserIdsRequest.Builder> implements
+        // @@protoc_insertion_point(message_implements:im.turms.proto.QueryRelatedUserIdsRequest)
+        QueryRelatedUserIdsRequestOrBuilder {
+    private QueryRelatedUserIdsRequest() {
+        groupIndexes_ = emptyIntList();
     }
 
+    private int bitField0_;
+    public static final int BLOCKED_FIELD_NUMBER = 1;
+    private boolean blocked_;
 
     /**
      * <code>optional bool blocked = 1;</code>
+     *
      * @return Whether the blocked field is set.
      */
     @java.lang.Override
     public boolean hasBlocked() {
-      return instance.hasBlocked();
+        return ((bitField0_ & 0x00000001) != 0);
     }
+
     /**
      * <code>optional bool blocked = 1;</code>
+     *
      * @return The blocked.
      */
     @java.lang.Override
     public boolean getBlocked() {
-      return instance.getBlocked();
-    }
-    /**
-     * <code>optional bool blocked = 1;</code>
-     * @param value The blocked to set.
-     * @return This builder for chaining.
-     */
-    public Builder setBlocked(boolean value) {
-      copyOnWrite();
-      instance.setBlocked(value);
-      return this;
-    }
-    /**
-     * <code>optional bool blocked = 1;</code>
-     * @return This builder for chaining.
-     */
-    public Builder clearBlocked() {
-      copyOnWrite();
-      instance.clearBlocked();
-      return this;
+        return blocked_;
     }
 
     /**
+     * <code>optional bool blocked = 1;</code>
+     *
+     * @param value The blocked to set.
+     */
+    private void setBlocked(boolean value) {
+        bitField0_ |= 0x00000001;
+        blocked_ = value;
+    }
+
+    /**
+     * <code>optional bool blocked = 1;</code>
+     */
+    private void clearBlocked() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        blocked_ = false;
+    }
+
+    public static final int GROUP_INDEXES_FIELD_NUMBER = 2;
+    private com.google.protobuf.Internal.IntList groupIndexes_;
+
+    /**
      * <code>repeated int32 group_indexes = 2;</code>
+     *
      * @return A list containing the groupIndexes.
      */
     @java.lang.Override
     public java.util.List<java.lang.Integer>
-        getGroupIndexesList() {
-      return java.util.Collections.unmodifiableList(
-          instance.getGroupIndexesList());
+    getGroupIndexesList() {
+        return groupIndexes_;
     }
+
     /**
      * <code>repeated int32 group_indexes = 2;</code>
+     *
      * @return The count of groupIndexes.
      */
     @java.lang.Override
     public int getGroupIndexesCount() {
-      return instance.getGroupIndexesCount();
+        return groupIndexes_.size();
     }
+
     /**
      * <code>repeated int32 group_indexes = 2;</code>
+     *
      * @param index The index of the element to return.
      * @return The groupIndexes at the given index.
      */
     @java.lang.Override
     public int getGroupIndexes(int index) {
-      return instance.getGroupIndexes(index);
+        return groupIndexes_.getInt(index);
     }
-    /**
-     * <code>repeated int32 group_indexes = 2;</code>
-     * @param value The groupIndexes to set.
-     * @return This builder for chaining.
-     */
-    public Builder setGroupIndexes(
-        int index, int value) {
-      copyOnWrite();
-      instance.setGroupIndexes(index, value);
-      return this;
-    }
-    /**
-     * <code>repeated int32 group_indexes = 2;</code>
-     * @param value The groupIndexes to add.
-     * @return This builder for chaining.
-     */
-    public Builder addGroupIndexes(int value) {
-      copyOnWrite();
-      instance.addGroupIndexes(value);
-      return this;
-    }
-    /**
-     * <code>repeated int32 group_indexes = 2;</code>
-     * @param values The groupIndexes to add.
-     * @return This builder for chaining.
-     */
-    public Builder addAllGroupIndexes(
-        java.lang.Iterable<? extends java.lang.Integer> values) {
-      copyOnWrite();
-      instance.addAllGroupIndexes(values);
-      return this;
-    }
-    /**
-     * <code>repeated int32 group_indexes = 2;</code>
-     * @return This builder for chaining.
-     */
-    public Builder clearGroupIndexes() {
-      copyOnWrite();
-      instance.clearGroupIndexes();
-      return this;
+
+    private int groupIndexesMemoizedSerializedSize = -1;
+
+    private void ensureGroupIndexesIsMutable() {
+        com.google.protobuf.Internal.IntList tmp = groupIndexes_;
+        if (!tmp.isModifiable()) {
+            groupIndexes_ =
+                    com.google.protobuf.GeneratedMessageLite.mutableCopy(tmp);
+        }
     }
 
     /**
+     * <code>repeated int32 group_indexes = 2;</code>
+     *
+     * @param index The index to set the value at.
+     * @param value The groupIndexes to set.
+     */
+    private void setGroupIndexes(
+            int index, int value) {
+        ensureGroupIndexesIsMutable();
+        groupIndexes_.setInt(index, value);
+    }
+
+    /**
+     * <code>repeated int32 group_indexes = 2;</code>
+     *
+     * @param value The groupIndexes to add.
+     */
+    private void addGroupIndexes(int value) {
+        ensureGroupIndexesIsMutable();
+        groupIndexes_.addInt(value);
+    }
+
+    /**
+     * <code>repeated int32 group_indexes = 2;</code>
+     *
+     * @param values The groupIndexes to add.
+     */
+    private void addAllGroupIndexes(
+            java.lang.Iterable<? extends java.lang.Integer> values) {
+        ensureGroupIndexesIsMutable();
+        com.google.protobuf.AbstractMessageLite.addAll(
+                values, groupIndexes_);
+    }
+
+    /**
+     * <code>repeated int32 group_indexes = 2;</code>
+     */
+    private void clearGroupIndexes() {
+        groupIndexes_ = emptyIntList();
+    }
+
+    public static final int LAST_UPDATED_DATE_FIELD_NUMBER = 3;
+    private long lastUpdatedDate_;
+
+    /**
      * <code>optional int64 last_updated_date = 3;</code>
+     *
      * @return Whether the lastUpdatedDate field is set.
      */
     @java.lang.Override
     public boolean hasLastUpdatedDate() {
-      return instance.hasLastUpdatedDate();
+        return ((bitField0_ & 0x00000002) != 0);
     }
+
     /**
      * <code>optional int64 last_updated_date = 3;</code>
+     *
      * @return The lastUpdatedDate.
      */
     @java.lang.Override
     public long getLastUpdatedDate() {
-      return instance.getLastUpdatedDate();
+        return lastUpdatedDate_;
     }
+
     /**
      * <code>optional int64 last_updated_date = 3;</code>
+     *
      * @param value The lastUpdatedDate to set.
-     * @return This builder for chaining.
      */
-    public Builder setLastUpdatedDate(long value) {
-      copyOnWrite();
-      instance.setLastUpdatedDate(value);
-      return this;
+    private void setLastUpdatedDate(long value) {
+        bitField0_ |= 0x00000002;
+        lastUpdatedDate_ = value;
     }
+
     /**
      * <code>optional int64 last_updated_date = 3;</code>
-     * @return This builder for chaining.
      */
-    public Builder clearLastUpdatedDate() {
-      copyOnWrite();
-      instance.clearLastUpdatedDate();
-      return this;
+    private void clearLastUpdatedDate() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        lastUpdatedDate_ = 0L;
     }
 
-    // @@protoc_insertion_point(builder_scope:im.turms.proto.QueryRelatedUserIdsRequest)
-  }
-  @java.lang.Override
-  @java.lang.SuppressWarnings({"unchecked", "fallthrough"})
-  protected final java.lang.Object dynamicMethod(
-      com.google.protobuf.GeneratedMessageLite.MethodToInvoke method,
-      java.lang.Object arg0, java.lang.Object arg1) {
-    switch (method) {
-      case NEW_MUTABLE_INSTANCE: {
-        return new im.turms.client.model.proto.request.user.relationship.QueryRelatedUserIdsRequest();
-      }
-      case NEW_BUILDER: {
-        return new Builder();
-      }
-      case BUILD_MESSAGE_INFO: {
-          java.lang.Object[] objects = new java.lang.Object[] {
-            "bitField0_",
-            "blocked_",
-            "groupIndexes_",
-            "lastUpdatedDate_",
-          };
-          java.lang.String info =
-              "\u0000\u0003\u0000\u0001\u0001\u0003\u0003\u0000\u0001\u0000\u0001\u1007\u0000\u0002" +
-              "\'\u0003\u1002\u0001";
-          return newMessageInfo(DEFAULT_INSTANCE, info, objects);
-      }
-      // fall through
-      case GET_DEFAULT_INSTANCE: {
-        return DEFAULT_INSTANCE;
-      }
-      case GET_PARSER: {
-        com.google.protobuf.Parser<im.turms.client.model.proto.request.user.relationship.QueryRelatedUserIdsRequest> parser = PARSER;
-        if (parser == null) {
-          synchronized (im.turms.client.model.proto.request.user.relationship.QueryRelatedUserIdsRequest.class) {
-            parser = PARSER;
-            if (parser == null) {
-              parser =
-                  new DefaultInstanceBasedParser<im.turms.client.model.proto.request.user.relationship.QueryRelatedUserIdsRequest>(
-                      DEFAULT_INSTANCE);
-              PARSER = parser;
-            }
-          }
+    public static im.turms.client.model.proto.request.user.relationship.QueryRelatedUserIdsRequest parseFrom(
+            java.nio.ByteBuffer data)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        return com.google.protobuf.GeneratedMessageLite.parseFrom(
+                DEFAULT_INSTANCE, data);
+    }
+
+    public static im.turms.client.model.proto.request.user.relationship.QueryRelatedUserIdsRequest parseFrom(
+            java.nio.ByteBuffer data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        return com.google.protobuf.GeneratedMessageLite.parseFrom(
+                DEFAULT_INSTANCE, data, extensionRegistry);
+    }
+
+    public static im.turms.client.model.proto.request.user.relationship.QueryRelatedUserIdsRequest parseFrom(
+            com.google.protobuf.ByteString data)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        return com.google.protobuf.GeneratedMessageLite.parseFrom(
+                DEFAULT_INSTANCE, data);
+    }
+
+    public static im.turms.client.model.proto.request.user.relationship.QueryRelatedUserIdsRequest parseFrom(
+            com.google.protobuf.ByteString data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        return com.google.protobuf.GeneratedMessageLite.parseFrom(
+                DEFAULT_INSTANCE, data, extensionRegistry);
+    }
+
+    public static im.turms.client.model.proto.request.user.relationship.QueryRelatedUserIdsRequest parseFrom(byte[] data)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        return com.google.protobuf.GeneratedMessageLite.parseFrom(
+                DEFAULT_INSTANCE, data);
+    }
+
+    public static im.turms.client.model.proto.request.user.relationship.QueryRelatedUserIdsRequest parseFrom(
+            byte[] data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        return com.google.protobuf.GeneratedMessageLite.parseFrom(
+                DEFAULT_INSTANCE, data, extensionRegistry);
+    }
+
+    public static im.turms.client.model.proto.request.user.relationship.QueryRelatedUserIdsRequest parseFrom(java.io.InputStream input)
+            throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageLite.parseFrom(
+                DEFAULT_INSTANCE, input);
+    }
+
+    public static im.turms.client.model.proto.request.user.relationship.QueryRelatedUserIdsRequest parseFrom(
+            java.io.InputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageLite.parseFrom(
+                DEFAULT_INSTANCE, input, extensionRegistry);
+    }
+
+    public static im.turms.client.model.proto.request.user.relationship.QueryRelatedUserIdsRequest parseDelimitedFrom(java.io.InputStream input)
+            throws java.io.IOException {
+        return parseDelimitedFrom(DEFAULT_INSTANCE, input);
+    }
+
+    public static im.turms.client.model.proto.request.user.relationship.QueryRelatedUserIdsRequest parseDelimitedFrom(
+            java.io.InputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+        return parseDelimitedFrom(DEFAULT_INSTANCE, input, extensionRegistry);
+    }
+
+    public static im.turms.client.model.proto.request.user.relationship.QueryRelatedUserIdsRequest parseFrom(
+            com.google.protobuf.CodedInputStream input)
+            throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageLite.parseFrom(
+                DEFAULT_INSTANCE, input);
+    }
+
+    public static im.turms.client.model.proto.request.user.relationship.QueryRelatedUserIdsRequest parseFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageLite.parseFrom(
+                DEFAULT_INSTANCE, input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() {
+        return (Builder) DEFAULT_INSTANCE.createBuilder();
+    }
+
+    public static Builder newBuilder(im.turms.client.model.proto.request.user.relationship.QueryRelatedUserIdsRequest prototype) {
+        return (Builder) DEFAULT_INSTANCE.createBuilder(prototype);
+    }
+
+    /**
+     * Protobuf type {@code im.turms.proto.QueryRelatedUserIdsRequest}
+     */
+    public static final class Builder extends
+            com.google.protobuf.GeneratedMessageLite.Builder<
+                    im.turms.client.model.proto.request.user.relationship.QueryRelatedUserIdsRequest, Builder> implements
+            // @@protoc_insertion_point(builder_implements:im.turms.proto.QueryRelatedUserIdsRequest)
+            im.turms.client.model.proto.request.user.relationship.QueryRelatedUserIdsRequestOrBuilder {
+        // Construct using im.turms.client.model.proto.request.user.relationship.QueryRelatedUserIdsRequest.newBuilder()
+        private Builder() {
+            super(DEFAULT_INSTANCE);
         }
-        return parser;
+
+
+        /**
+         * <code>optional bool blocked = 1;</code>
+         *
+         * @return Whether the blocked field is set.
+         */
+        @java.lang.Override
+        public boolean hasBlocked() {
+            return instance.hasBlocked();
+        }
+
+        /**
+         * <code>optional bool blocked = 1;</code>
+         *
+         * @return The blocked.
+         */
+        @java.lang.Override
+        public boolean getBlocked() {
+            return instance.getBlocked();
+        }
+
+        /**
+         * <code>optional bool blocked = 1;</code>
+         *
+         * @param value The blocked to set.
+         * @return This builder for chaining.
+         */
+        public Builder setBlocked(boolean value) {
+            copyOnWrite();
+            instance.setBlocked(value);
+            return this;
+        }
+
+        /**
+         * <code>optional bool blocked = 1;</code>
+         *
+         * @return This builder for chaining.
+         */
+        public Builder clearBlocked() {
+            copyOnWrite();
+            instance.clearBlocked();
+            return this;
+        }
+
+        /**
+         * <code>repeated int32 group_indexes = 2;</code>
+         *
+         * @return A list containing the groupIndexes.
+         */
+        @java.lang.Override
+        public java.util.List<java.lang.Integer>
+        getGroupIndexesList() {
+            return java.util.Collections.unmodifiableList(
+                    instance.getGroupIndexesList());
+        }
+
+        /**
+         * <code>repeated int32 group_indexes = 2;</code>
+         *
+         * @return The count of groupIndexes.
+         */
+        @java.lang.Override
+        public int getGroupIndexesCount() {
+            return instance.getGroupIndexesCount();
+        }
+
+        /**
+         * <code>repeated int32 group_indexes = 2;</code>
+         *
+         * @param index The index of the element to return.
+         * @return The groupIndexes at the given index.
+         */
+        @java.lang.Override
+        public int getGroupIndexes(int index) {
+            return instance.getGroupIndexes(index);
+        }
+
+        /**
+         * <code>repeated int32 group_indexes = 2;</code>
+         *
+         * @param value The groupIndexes to set.
+         * @return This builder for chaining.
+         */
+        public Builder setGroupIndexes(
+                int index, int value) {
+            copyOnWrite();
+            instance.setGroupIndexes(index, value);
+            return this;
+        }
+
+        /**
+         * <code>repeated int32 group_indexes = 2;</code>
+         *
+         * @param value The groupIndexes to add.
+         * @return This builder for chaining.
+         */
+        public Builder addGroupIndexes(int value) {
+            copyOnWrite();
+            instance.addGroupIndexes(value);
+            return this;
+        }
+
+        /**
+         * <code>repeated int32 group_indexes = 2;</code>
+         *
+         * @param values The groupIndexes to add.
+         * @return This builder for chaining.
+         */
+        public Builder addAllGroupIndexes(
+                java.lang.Iterable<? extends java.lang.Integer> values) {
+            copyOnWrite();
+            instance.addAllGroupIndexes(values);
+            return this;
+        }
+
+        /**
+         * <code>repeated int32 group_indexes = 2;</code>
+         *
+         * @return This builder for chaining.
+         */
+        public Builder clearGroupIndexes() {
+            copyOnWrite();
+            instance.clearGroupIndexes();
+            return this;
+        }
+
+        /**
+         * <code>optional int64 last_updated_date = 3;</code>
+         *
+         * @return Whether the lastUpdatedDate field is set.
+         */
+        @java.lang.Override
+        public boolean hasLastUpdatedDate() {
+            return instance.hasLastUpdatedDate();
+        }
+
+        /**
+         * <code>optional int64 last_updated_date = 3;</code>
+         *
+         * @return The lastUpdatedDate.
+         */
+        @java.lang.Override
+        public long getLastUpdatedDate() {
+            return instance.getLastUpdatedDate();
+        }
+
+        /**
+         * <code>optional int64 last_updated_date = 3;</code>
+         *
+         * @param value The lastUpdatedDate to set.
+         * @return This builder for chaining.
+         */
+        public Builder setLastUpdatedDate(long value) {
+            copyOnWrite();
+            instance.setLastUpdatedDate(value);
+            return this;
+        }
+
+        /**
+         * <code>optional int64 last_updated_date = 3;</code>
+         *
+         * @return This builder for chaining.
+         */
+        public Builder clearLastUpdatedDate() {
+            copyOnWrite();
+            instance.clearLastUpdatedDate();
+            return this;
+        }
+
+        // @@protoc_insertion_point(builder_scope:im.turms.proto.QueryRelatedUserIdsRequest)
     }
-    case GET_MEMOIZED_IS_INITIALIZED: {
-      return (byte) 1;
+
+    @java.lang.Override
+    @java.lang.SuppressWarnings({"unchecked", "fallthrough"})
+    protected final java.lang.Object dynamicMethod(
+            com.google.protobuf.GeneratedMessageLite.MethodToInvoke method,
+            java.lang.Object arg0, java.lang.Object arg1) {
+        switch (method) {
+            case NEW_MUTABLE_INSTANCE: {
+                return new im.turms.client.model.proto.request.user.relationship.QueryRelatedUserIdsRequest();
+            }
+            case NEW_BUILDER: {
+                return new Builder();
+            }
+            case BUILD_MESSAGE_INFO: {
+                java.lang.Object[] objects = new java.lang.Object[]{
+                        "bitField0_",
+                        "blocked_",
+                        "groupIndexes_",
+                        "lastUpdatedDate_",
+                };
+                java.lang.String info =
+                        "\u0000\u0003\u0000\u0001\u0001\u0003\u0003\u0000\u0001\u0000\u0001\u1007\u0000\u0002" +
+                        "\'\u0003\u1002\u0001";
+                return newMessageInfo(DEFAULT_INSTANCE, info, objects);
+            }
+            // fall through
+            case GET_DEFAULT_INSTANCE: {
+                return DEFAULT_INSTANCE;
+            }
+            case GET_PARSER: {
+                com.google.protobuf.Parser<im.turms.client.model.proto.request.user.relationship.QueryRelatedUserIdsRequest> parser = PARSER;
+                if (parser == null) {
+                    synchronized (im.turms.client.model.proto.request.user.relationship.QueryRelatedUserIdsRequest.class) {
+                        parser = PARSER;
+                        if (parser == null) {
+                            parser =
+                                    new DefaultInstanceBasedParser<im.turms.client.model.proto.request.user.relationship.QueryRelatedUserIdsRequest>(
+                                            DEFAULT_INSTANCE);
+                            PARSER = parser;
+                        }
+                    }
+                }
+                return parser;
+            }
+            case GET_MEMOIZED_IS_INITIALIZED: {
+                return (byte) 1;
+            }
+            case SET_MEMOIZED_IS_INITIALIZED: {
+                return null;
+            }
+        }
+        throw new UnsupportedOperationException();
     }
-    case SET_MEMOIZED_IS_INITIALIZED: {
-      return null;
+
+
+    // @@protoc_insertion_point(class_scope:im.turms.proto.QueryRelatedUserIdsRequest)
+    private static final im.turms.client.model.proto.request.user.relationship.QueryRelatedUserIdsRequest DEFAULT_INSTANCE;
+
+    static {
+        QueryRelatedUserIdsRequest defaultInstance = new QueryRelatedUserIdsRequest();
+        // New instances are implicitly immutable so no need to make
+        // immutable.
+        DEFAULT_INSTANCE = defaultInstance;
+        com.google.protobuf.GeneratedMessageLite.registerDefaultInstance(
+                QueryRelatedUserIdsRequest.class, defaultInstance);
     }
+
+    public static im.turms.client.model.proto.request.user.relationship.QueryRelatedUserIdsRequest getDefaultInstance() {
+        return DEFAULT_INSTANCE;
     }
-    throw new UnsupportedOperationException();
-  }
 
+    private static volatile com.google.protobuf.Parser<QueryRelatedUserIdsRequest> PARSER;
 
-  // @@protoc_insertion_point(class_scope:im.turms.proto.QueryRelatedUserIdsRequest)
-  private static final im.turms.client.model.proto.request.user.relationship.QueryRelatedUserIdsRequest DEFAULT_INSTANCE;
-  static {
-    QueryRelatedUserIdsRequest defaultInstance = new QueryRelatedUserIdsRequest();
-    // New instances are implicitly immutable so no need to make
-    // immutable.
-    DEFAULT_INSTANCE = defaultInstance;
-    com.google.protobuf.GeneratedMessageLite.registerDefaultInstance(
-      QueryRelatedUserIdsRequest.class, defaultInstance);
-  }
-
-  public static im.turms.client.model.proto.request.user.relationship.QueryRelatedUserIdsRequest getDefaultInstance() {
-    return DEFAULT_INSTANCE;
-  }
-
-  private static volatile com.google.protobuf.Parser<QueryRelatedUserIdsRequest> PARSER;
-
-  public static com.google.protobuf.Parser<QueryRelatedUserIdsRequest> parser() {
-    return DEFAULT_INSTANCE.getParserForType();
-  }
+    public static com.google.protobuf.Parser<QueryRelatedUserIdsRequest> parser() {
+        return DEFAULT_INSTANCE.getParserForType();
+    }
 }
-

@@ -21,47 +21,52 @@
 package im.turms.server.common.access.client.dto.request.user;
 
 public final class QueryUserOnlineStatusesRequestOuterClass {
-  private QueryUserOnlineStatusesRequestOuterClass() {}
-  public static void registerAllExtensions(
-      com.google.protobuf.ExtensionRegistryLite registry) {
-  }
+    private QueryUserOnlineStatusesRequestOuterClass() {
+    }
 
-  public static void registerAllExtensions(
-      com.google.protobuf.ExtensionRegistry registry) {
-    registerAllExtensions(
-        (com.google.protobuf.ExtensionRegistryLite) registry);
-  }
-  static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_im_turms_proto_QueryUserOnlineStatusesRequest_descriptor;
-  static final
+    public static void registerAllExtensions(
+            com.google.protobuf.ExtensionRegistryLite registry) {
+    }
+
+    public static void registerAllExtensions(
+            com.google.protobuf.ExtensionRegistry registry) {
+        registerAllExtensions(
+                (com.google.protobuf.ExtensionRegistryLite) registry);
+    }
+
+    static final com.google.protobuf.Descriptors.Descriptor
+            internal_static_im_turms_proto_QueryUserOnlineStatusesRequest_descriptor;
+    static final
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_im_turms_proto_QueryUserOnlineStatusesRequest_fieldAccessorTable;
+            internal_static_im_turms_proto_QueryUserOnlineStatusesRequest_fieldAccessorTable;
 
-  public static com.google.protobuf.Descriptors.FileDescriptor
-      getDescriptor() {
-    return descriptor;
-  }
-  private static  com.google.protobuf.Descriptors.FileDescriptor
-      descriptor;
-  static {
-    java.lang.String[] descriptorData = {
-      "\n5request/user/query_user_online_statuse" +
-      "s_request.proto\022\016im.turms.proto\"2\n\036Query" +
-      "UserOnlineStatusesRequest\022\020\n\010user_ids\030\001 " +
-      "\003(\003B<\n5im.turms.server.common.access.cli" +
-      "ent.dto.request.userP\001\272\002\000b\006proto3"
-    };
-    descriptor = com.google.protobuf.Descriptors.FileDescriptor
-      .internalBuildGeneratedFileFrom(descriptorData,
-        new com.google.protobuf.Descriptors.FileDescriptor[] {
-        });
-    internal_static_im_turms_proto_QueryUserOnlineStatusesRequest_descriptor =
-      getDescriptor().getMessageTypes().get(0);
-    internal_static_im_turms_proto_QueryUserOnlineStatusesRequest_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_im_turms_proto_QueryUserOnlineStatusesRequest_descriptor,
-        new java.lang.String[] { "UserIds", });
-  }
+    public static com.google.protobuf.Descriptors.FileDescriptor
+    getDescriptor() {
+        return descriptor;
+    }
 
-  // @@protoc_insertion_point(outer_class_scope)
+    private static com.google.protobuf.Descriptors.FileDescriptor
+            descriptor;
+
+    static {
+        java.lang.String[] descriptorData = {
+                "\n5request/user/query_user_online_statuse" +
+                "s_request.proto\022\016im.turms.proto\"2\n\036Query" +
+                "UserOnlineStatusesRequest\022\020\n\010user_ids\030\001 " +
+                "\003(\003B<\n5im.turms.server.common.access.cli" +
+                "ent.dto.request.userP\001\272\002\000b\006proto3"
+        };
+        descriptor = com.google.protobuf.Descriptors.FileDescriptor
+                .internalBuildGeneratedFileFrom(descriptorData,
+                        new com.google.protobuf.Descriptors.FileDescriptor[]{
+                        });
+        internal_static_im_turms_proto_QueryUserOnlineStatusesRequest_descriptor =
+                getDescriptor().getMessageTypes().get(0);
+        internal_static_im_turms_proto_QueryUserOnlineStatusesRequest_fieldAccessorTable = new
+                com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+                internal_static_im_turms_proto_QueryUserOnlineStatusesRequest_descriptor,
+                new java.lang.String[]{"UserIds",});
+    }
+
+    // @@protoc_insertion_point(outer_class_scope)
 }

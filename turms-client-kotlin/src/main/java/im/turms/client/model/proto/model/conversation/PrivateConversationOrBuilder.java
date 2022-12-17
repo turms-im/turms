@@ -21,24 +21,27 @@
 package im.turms.client.model.proto.model.conversation;
 
 public interface PrivateConversationOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:im.turms.proto.PrivateConversation)
-    com.google.protobuf.MessageLiteOrBuilder {
+        // @@protoc_insertion_point(interface_extends:im.turms.proto.PrivateConversation)
+        com.google.protobuf.MessageLiteOrBuilder {
 
-  /**
-   * <code>int64 owner_id = 1;</code>
-   * @return The ownerId.
-   */
-  long getOwnerId();
+    /**
+     * <code>int64 owner_id = 1;</code>
+     *
+     * @return The ownerId.
+     */
+    long getOwnerId();
 
-  /**
-   * <code>int64 target_id = 2;</code>
-   * @return The targetId.
-   */
-  long getTargetId();
+    /**
+     * <code>int64 target_id = 2;</code>
+     *
+     * @return The targetId.
+     */
+    long getTargetId();
 
-  /**
-   * <code>int64 read_date = 3;</code>
-   * @return The readDate.
-   */
-  long getReadDate();
+    /**
+     * <code>int64 read_date = 3;</code>
+     *
+     * @return The readDate.
+     */
+    long getReadDate();
 }

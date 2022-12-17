@@ -24,658 +24,740 @@ package im.turms.server.common.access.client.dto.request.user;
  * Protobuf type {@code im.turms.proto.QueryUserProfilesRequest}
  */
 public final class QueryUserProfilesRequest extends
-    com.google.protobuf.GeneratedMessageV3 implements
-    // @@protoc_insertion_point(message_implements:im.turms.proto.QueryUserProfilesRequest)
-    QueryUserProfilesRequestOrBuilder {
-private static final long serialVersionUID = 0L;
-  // Use QueryUserProfilesRequest.newBuilder() to construct.
-  private QueryUserProfilesRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
-    super(builder);
-  }
-  private QueryUserProfilesRequest() {
-    userIds_ = emptyLongList();
-  }
+        com.google.protobuf.GeneratedMessageV3 implements
+        // @@protoc_insertion_point(message_implements:im.turms.proto.QueryUserProfilesRequest)
+        QueryUserProfilesRequestOrBuilder {
+    private static final long serialVersionUID = 0L;
 
-  @java.lang.Override
-  @SuppressWarnings({"unused"})
-  protected java.lang.Object newInstance(
-      UnusedPrivateParameter unused) {
-    return new QueryUserProfilesRequest();
-  }
-
-  @java.lang.Override
-  public final com.google.protobuf.UnknownFieldSet
-  getUnknownFields() {
-    return this.unknownFields;
-  }
-  public static final com.google.protobuf.Descriptors.Descriptor
-      getDescriptor() {
-    return im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequestOuterClass.internal_static_im_turms_proto_QueryUserProfilesRequest_descriptor;
-  }
-
-  @java.lang.Override
-  protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internalGetFieldAccessorTable() {
-    return im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequestOuterClass.internal_static_im_turms_proto_QueryUserProfilesRequest_fieldAccessorTable
-        .ensureFieldAccessorsInitialized(
-            im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest.class, im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest.Builder.class);
-  }
-
-  private int bitField0_;
-  public static final int USER_IDS_FIELD_NUMBER = 1;
-  private com.google.protobuf.Internal.LongList userIds_;
-  /**
-   * <code>repeated int64 user_ids = 1;</code>
-   * @return A list containing the userIds.
-   */
-  @java.lang.Override
-  public java.util.List<java.lang.Long>
-      getUserIdsList() {
-    return userIds_;
-  }
-  /**
-   * <code>repeated int64 user_ids = 1;</code>
-   * @return The count of userIds.
-   */
-  public int getUserIdsCount() {
-    return userIds_.size();
-  }
-  /**
-   * <code>repeated int64 user_ids = 1;</code>
-   * @param index The index of the element to return.
-   * @return The userIds at the given index.
-   */
-  public long getUserIds(int index) {
-    return userIds_.getLong(index);
-  }
-  private int userIdsMemoizedSerializedSize = -1;
-
-  public static final int LAST_UPDATED_DATE_FIELD_NUMBER = 2;
-  private long lastUpdatedDate_;
-  /**
-   * <code>optional int64 last_updated_date = 2;</code>
-   * @return Whether the lastUpdatedDate field is set.
-   */
-  @java.lang.Override
-  public boolean hasLastUpdatedDate() {
-    return ((bitField0_ & 0x00000001) != 0);
-  }
-  /**
-   * <code>optional int64 last_updated_date = 2;</code>
-   * @return The lastUpdatedDate.
-   */
-  @java.lang.Override
-  public long getLastUpdatedDate() {
-    return lastUpdatedDate_;
-  }
-
-  private byte memoizedIsInitialized = -1;
-  @java.lang.Override
-  public final boolean isInitialized() {
-    byte isInitialized = memoizedIsInitialized;
-    if (isInitialized == 1) return true;
-    if (isInitialized == 0) return false;
-
-    memoizedIsInitialized = 1;
-    return true;
-  }
-
-  @java.lang.Override
-  public void writeTo(com.google.protobuf.CodedOutputStream output)
-                      throws java.io.IOException {
-    getSerializedSize();
-    if (getUserIdsList().size() > 0) {
-      output.writeUInt32NoTag(10);
-      output.writeUInt32NoTag(userIdsMemoizedSerializedSize);
+    // Use QueryUserProfilesRequest.newBuilder() to construct.
+    private QueryUserProfilesRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+        super(builder);
     }
-    for (int i = 0; i < userIds_.size(); i++) {
-      output.writeInt64NoTag(userIds_.getLong(i));
-    }
-    if (((bitField0_ & 0x00000001) != 0)) {
-      output.writeInt64(2, lastUpdatedDate_);
-    }
-    getUnknownFields().writeTo(output);
-  }
 
-  @java.lang.Override
-  public int getSerializedSize() {
-    int size = memoizedSize;
-    if (size != -1) return size;
+    private QueryUserProfilesRequest() {
+        userIds_ = emptyLongList();
+    }
 
-    size = 0;
-    {
-      int dataSize = 0;
-      for (int i = 0; i < userIds_.size(); i++) {
-        dataSize += com.google.protobuf.CodedOutputStream
-          .computeInt64SizeNoTag(userIds_.getLong(i));
-      }
-      size += dataSize;
-      if (!getUserIdsList().isEmpty()) {
-        size += 1;
-        size += com.google.protobuf.CodedOutputStream
-            .computeInt32SizeNoTag(dataSize);
-      }
-      userIdsMemoizedSerializedSize = dataSize;
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+            UnusedPrivateParameter unused) {
+        return new QueryUserProfilesRequest();
     }
-    if (((bitField0_ & 0x00000001) != 0)) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeInt64Size(2, lastUpdatedDate_);
-    }
-    size += getUnknownFields().getSerializedSize();
-    memoizedSize = size;
-    return size;
-  }
 
-  @java.lang.Override
-  public boolean equals(final java.lang.Object obj) {
-    if (obj == this) {
-     return true;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+        return this.unknownFields;
     }
-    if (!(obj instanceof im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest)) {
-      return super.equals(obj);
-    }
-    im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest other = (im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest) obj;
 
-    if (!getUserIdsList()
-        .equals(other.getUserIdsList())) return false;
-    if (hasLastUpdatedDate() != other.hasLastUpdatedDate()) return false;
-    if (hasLastUpdatedDate()) {
-      if (getLastUpdatedDate()
-          != other.getLastUpdatedDate()) return false;
-    }
-    if (!getUnknownFields().equals(other.getUnknownFields())) return false;
-    return true;
-  }
-
-  @java.lang.Override
-  public int hashCode() {
-    if (memoizedHashCode != 0) {
-      return memoizedHashCode;
-    }
-    int hash = 41;
-    hash = (19 * hash) + getDescriptor().hashCode();
-    if (getUserIdsCount() > 0) {
-      hash = (37 * hash) + USER_IDS_FIELD_NUMBER;
-      hash = (53 * hash) + getUserIdsList().hashCode();
-    }
-    if (hasLastUpdatedDate()) {
-      hash = (37 * hash) + LAST_UPDATED_DATE_FIELD_NUMBER;
-      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-          getLastUpdatedDate());
-    }
-    hash = (29 * hash) + getUnknownFields().hashCode();
-    memoizedHashCode = hash;
-    return hash;
-  }
-
-  public static im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest parseFrom(
-      java.nio.ByteBuffer data)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return PARSER.parseFrom(data);
-  }
-  public static im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest parseFrom(
-      java.nio.ByteBuffer data,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return PARSER.parseFrom(data, extensionRegistry);
-  }
-  public static im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest parseFrom(
-      com.google.protobuf.ByteString data)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return PARSER.parseFrom(data);
-  }
-  public static im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest parseFrom(
-      com.google.protobuf.ByteString data,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return PARSER.parseFrom(data, extensionRegistry);
-  }
-  public static im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest parseFrom(byte[] data)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return PARSER.parseFrom(data);
-  }
-  public static im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest parseFrom(
-      byte[] data,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return PARSER.parseFrom(data, extensionRegistry);
-  }
-  public static im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest parseFrom(java.io.InputStream input)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input);
-  }
-  public static im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest parseFrom(
-      java.io.InputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input, extensionRegistry);
-  }
-  public static im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest parseDelimitedFrom(java.io.InputStream input)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseDelimitedWithIOException(PARSER, input);
-  }
-  public static im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest parseDelimitedFrom(
-      java.io.InputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
-  }
-  public static im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest parseFrom(
-      com.google.protobuf.CodedInputStream input)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input);
-  }
-  public static im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest parseFrom(
-      com.google.protobuf.CodedInputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input, extensionRegistry);
-  }
-
-  @java.lang.Override
-  public Builder newBuilderForType() { return newBuilder(); }
-  public static Builder newBuilder() {
-    return DEFAULT_INSTANCE.toBuilder();
-  }
-  public static Builder newBuilder(im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest prototype) {
-    return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-  }
-  @java.lang.Override
-  public Builder toBuilder() {
-    return this == DEFAULT_INSTANCE
-        ? new Builder() : new Builder().mergeFrom(this);
-  }
-
-  @java.lang.Override
-  protected Builder newBuilderForType(
-      com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-    Builder builder = new Builder(parent);
-    return builder;
-  }
-  /**
-   * Protobuf type {@code im.turms.proto.QueryUserProfilesRequest}
-   */
-  public static final class Builder extends
-      com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-      // @@protoc_insertion_point(builder_implements:im.turms.proto.QueryUserProfilesRequest)
-      im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequestOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequestOuterClass.internal_static_im_turms_proto_QueryUserProfilesRequest_descriptor;
+    getDescriptor() {
+        return im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequestOuterClass.internal_static_im_turms_proto_QueryUserProfilesRequest_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequestOuterClass.internal_static_im_turms_proto_QueryUserProfilesRequest_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest.class, im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest.Builder.class);
+    internalGetFieldAccessorTable() {
+        return im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequestOuterClass.internal_static_im_turms_proto_QueryUserProfilesRequest_fieldAccessorTable
+                .ensureFieldAccessorsInitialized(
+                        im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest.class,
+                        im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest.Builder.class);
     }
 
-    // Construct using im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest.newBuilder()
-    private Builder() {
-
-    }
-
-    private Builder(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-      super(parent);
-
-    }
-    @java.lang.Override
-    public Builder clear() {
-      super.clear();
-      userIds_ = emptyLongList();
-      bitField0_ = (bitField0_ & ~0x00000001);
-      lastUpdatedDate_ = 0L;
-      bitField0_ = (bitField0_ & ~0x00000002);
-      return this;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Descriptors.Descriptor
-        getDescriptorForType() {
-      return im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequestOuterClass.internal_static_im_turms_proto_QueryUserProfilesRequest_descriptor;
-    }
-
-    @java.lang.Override
-    public im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest getDefaultInstanceForType() {
-      return im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest.getDefaultInstance();
-    }
-
-    @java.lang.Override
-    public im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest build() {
-      im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest result = buildPartial();
-      if (!result.isInitialized()) {
-        throw newUninitializedMessageException(result);
-      }
-      return result;
-    }
-
-    @java.lang.Override
-    public im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest buildPartial() {
-      im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest result = new im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest(this);
-      int from_bitField0_ = bitField0_;
-      int to_bitField0_ = 0;
-      if (((bitField0_ & 0x00000001) != 0)) {
-        userIds_.makeImmutable();
-        bitField0_ = (bitField0_ & ~0x00000001);
-      }
-      result.userIds_ = userIds_;
-      if (((from_bitField0_ & 0x00000002) != 0)) {
-        result.lastUpdatedDate_ = lastUpdatedDate_;
-        to_bitField0_ |= 0x00000001;
-      }
-      result.bitField0_ = to_bitField0_;
-      onBuilt();
-      return result;
-    }
-
-    @java.lang.Override
-    public Builder clone() {
-      return super.clone();
-    }
-    @java.lang.Override
-    public Builder setField(
-        com.google.protobuf.Descriptors.FieldDescriptor field,
-        java.lang.Object value) {
-      return super.setField(field, value);
-    }
-    @java.lang.Override
-    public Builder clearField(
-        com.google.protobuf.Descriptors.FieldDescriptor field) {
-      return super.clearField(field);
-    }
-    @java.lang.Override
-    public Builder clearOneof(
-        com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-      return super.clearOneof(oneof);
-    }
-    @java.lang.Override
-    public Builder setRepeatedField(
-        com.google.protobuf.Descriptors.FieldDescriptor field,
-        int index, java.lang.Object value) {
-      return super.setRepeatedField(field, index, value);
-    }
-    @java.lang.Override
-    public Builder addRepeatedField(
-        com.google.protobuf.Descriptors.FieldDescriptor field,
-        java.lang.Object value) {
-      return super.addRepeatedField(field, value);
-    }
-    @java.lang.Override
-    public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest) {
-        return mergeFrom((im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest)other);
-      } else {
-        super.mergeFrom(other);
-        return this;
-      }
-    }
-
-    public Builder mergeFrom(im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest other) {
-      if (other == im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest.getDefaultInstance()) return this;
-      if (!other.userIds_.isEmpty()) {
-        if (userIds_.isEmpty()) {
-          userIds_ = other.userIds_;
-          bitField0_ = (bitField0_ & ~0x00000001);
-        } else {
-          ensureUserIdsIsMutable();
-          userIds_.addAll(other.userIds_);
-        }
-        onChanged();
-      }
-      if (other.hasLastUpdatedDate()) {
-        setLastUpdatedDate(other.getLastUpdatedDate());
-      }
-      this.mergeUnknownFields(other.getUnknownFields());
-      onChanged();
-      return this;
-    }
-
-    @java.lang.Override
-    public final boolean isInitialized() {
-      return true;
-    }
-
-    @java.lang.Override
-    public Builder mergeFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            case 8: {
-              long v = input.readInt64();
-              ensureUserIdsIsMutable();
-              userIds_.addLong(v);
-              break;
-            } // case 8
-            case 10: {
-              int length = input.readRawVarint32();
-              int limit = input.pushLimit(length);
-              ensureUserIdsIsMutable();
-              while (input.getBytesUntilLimit() > 0) {
-                userIds_.addLong(input.readInt64());
-              }
-              input.popLimit(limit);
-              break;
-            } // case 10
-            case 16: {
-              lastUpdatedDate_ = input.readInt64();
-              bitField0_ |= 0x00000002;
-              break;
-            } // case 16
-            default: {
-              if (!super.parseUnknownField(input, extensionRegistry, tag)) {
-                done = true; // was an endgroup tag
-              }
-              break;
-            } // default:
-          } // switch (tag)
-        } // while (!done)
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.unwrapIOException();
-      } finally {
-        onChanged();
-      } // finally
-      return this;
-    }
     private int bitField0_;
+    public static final int USER_IDS_FIELD_NUMBER = 1;
+    private com.google.protobuf.Internal.LongList userIds_;
 
-    private com.google.protobuf.Internal.LongList userIds_ = emptyLongList();
-    private void ensureUserIdsIsMutable() {
-      if (!((bitField0_ & 0x00000001) != 0)) {
-        userIds_ = mutableCopy(userIds_);
-        bitField0_ |= 0x00000001;
-       }
-    }
     /**
      * <code>repeated int64 user_ids = 1;</code>
+     *
      * @return A list containing the userIds.
      */
+    @java.lang.Override
     public java.util.List<java.lang.Long>
-        getUserIdsList() {
-      return ((bitField0_ & 0x00000001) != 0) ?
-               java.util.Collections.unmodifiableList(userIds_) : userIds_;
+    getUserIdsList() {
+        return userIds_;
     }
+
     /**
      * <code>repeated int64 user_ids = 1;</code>
+     *
      * @return The count of userIds.
      */
     public int getUserIdsCount() {
-      return userIds_.size();
+        return userIds_.size();
     }
+
     /**
      * <code>repeated int64 user_ids = 1;</code>
+     *
      * @param index The index of the element to return.
      * @return The userIds at the given index.
      */
     public long getUserIds(int index) {
-      return userIds_.getLong(index);
-    }
-    /**
-     * <code>repeated int64 user_ids = 1;</code>
-     * @param index The index to set the value at.
-     * @param value The userIds to set.
-     * @return This builder for chaining.
-     */
-    public Builder setUserIds(
-        int index, long value) {
-      ensureUserIdsIsMutable();
-      userIds_.setLong(index, value);
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>repeated int64 user_ids = 1;</code>
-     * @param value The userIds to add.
-     * @return This builder for chaining.
-     */
-    public Builder addUserIds(long value) {
-      ensureUserIdsIsMutable();
-      userIds_.addLong(value);
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>repeated int64 user_ids = 1;</code>
-     * @param values The userIds to add.
-     * @return This builder for chaining.
-     */
-    public Builder addAllUserIds(
-        java.lang.Iterable<? extends java.lang.Long> values) {
-      ensureUserIdsIsMutable();
-      com.google.protobuf.AbstractMessageLite.Builder.addAll(
-          values, userIds_);
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>repeated int64 user_ids = 1;</code>
-     * @return This builder for chaining.
-     */
-    public Builder clearUserIds() {
-      userIds_ = emptyLongList();
-      bitField0_ = (bitField0_ & ~0x00000001);
-      onChanged();
-      return this;
+        return userIds_.getLong(index);
     }
 
-    private long lastUpdatedDate_ ;
+    private int userIdsMemoizedSerializedSize = -1;
+
+    public static final int LAST_UPDATED_DATE_FIELD_NUMBER = 2;
+    private long lastUpdatedDate_;
+
     /**
      * <code>optional int64 last_updated_date = 2;</code>
+     *
      * @return Whether the lastUpdatedDate field is set.
      */
     @java.lang.Override
     public boolean hasLastUpdatedDate() {
-      return ((bitField0_ & 0x00000002) != 0);
+        return ((bitField0_ & 0x00000001) != 0);
     }
+
     /**
      * <code>optional int64 last_updated_date = 2;</code>
+     *
      * @return The lastUpdatedDate.
      */
     @java.lang.Override
     public long getLastUpdatedDate() {
-      return lastUpdatedDate_;
+        return lastUpdatedDate_;
     }
+
+    private byte memoizedIsInitialized = -1;
+
+    @java.lang.Override
+    public final boolean isInitialized() {
+        byte isInitialized = memoizedIsInitialized;
+        if (isInitialized == 1) {
+            return true;
+        }
+        if (isInitialized == 0) {
+            return false;
+        }
+
+        memoizedIsInitialized = 1;
+        return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+            throws java.io.IOException {
+        getSerializedSize();
+        if (getUserIdsList().size() > 0) {
+            output.writeUInt32NoTag(10);
+            output.writeUInt32NoTag(userIdsMemoizedSerializedSize);
+        }
+        for (int i = 0; i < userIds_.size(); i++) {
+            output.writeInt64NoTag(userIds_.getLong(i));
+        }
+        if (((bitField0_ & 0x00000001) != 0)) {
+            output.writeInt64(2, lastUpdatedDate_);
+        }
+        getUnknownFields().writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+        int size = memoizedSize;
+        if (size != -1) {
+            return size;
+        }
+
+        size = 0;
+        {
+            int dataSize = 0;
+            for (int i = 0; i < userIds_.size(); i++) {
+                dataSize += com.google.protobuf.CodedOutputStream
+                        .computeInt64SizeNoTag(userIds_.getLong(i));
+            }
+            size += dataSize;
+            if (!getUserIdsList().isEmpty()) {
+                size += 1;
+                size += com.google.protobuf.CodedOutputStream
+                        .computeInt32SizeNoTag(dataSize);
+            }
+            userIdsMemoizedSerializedSize = dataSize;
+        }
+        if (((bitField0_ & 0x00000001) != 0)) {
+            size += com.google.protobuf.CodedOutputStream
+                    .computeInt64Size(2, lastUpdatedDate_);
+        }
+        size += getUnknownFields().getSerializedSize();
+        memoizedSize = size;
+        return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (!(obj instanceof im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest)) {
+            return super.equals(obj);
+        }
+        im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest other = (im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest) obj;
+
+        if (!getUserIdsList()
+                .equals(other.getUserIdsList())) {
+            return false;
+        }
+        if (hasLastUpdatedDate() != other.hasLastUpdatedDate()) {
+            return false;
+        }
+        if (hasLastUpdatedDate()) {
+            if (getLastUpdatedDate()
+                != other.getLastUpdatedDate()) {
+                return false;
+            }
+        }
+        if (!getUnknownFields().equals(other.getUnknownFields())) {
+            return false;
+        }
+        return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+        if (memoizedHashCode != 0) {
+            return memoizedHashCode;
+        }
+        int hash = 41;
+        hash = (19 * hash) + getDescriptor().hashCode();
+        if (getUserIdsCount() > 0) {
+            hash = (37 * hash) + USER_IDS_FIELD_NUMBER;
+            hash = (53 * hash) + getUserIdsList().hashCode();
+        }
+        if (hasLastUpdatedDate()) {
+            hash = (37 * hash) + LAST_UPDATED_DATE_FIELD_NUMBER;
+            hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+                    getLastUpdatedDate());
+        }
+        hash = (29 * hash) + getUnknownFields().hashCode();
+        memoizedHashCode = hash;
+        return hash;
+    }
+
+    public static im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest parseFrom(
+            java.nio.ByteBuffer data)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+    }
+
+    public static im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest parseFrom(
+            java.nio.ByteBuffer data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+    }
+
+    public static im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest parseFrom(
+            com.google.protobuf.ByteString data)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+    }
+
+    public static im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest parseFrom(
+            com.google.protobuf.ByteString data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+    }
+
+    public static im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest parseFrom(byte[] data)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+    }
+
+    public static im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest parseFrom(
+            byte[] data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+    }
+
+    public static im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest parseFrom(java.io.InputStream input)
+            throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+                .parseWithIOException(PARSER, input);
+    }
+
+    public static im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest parseFrom(
+            java.io.InputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+                .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public static im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest parseDelimitedFrom(java.io.InputStream input)
+            throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+                .parseDelimitedWithIOException(PARSER, input);
+    }
+
+    public static im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest parseDelimitedFrom(
+            java.io.InputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+                .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public static im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest parseFrom(
+            com.google.protobuf.CodedInputStream input)
+            throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+                .parseWithIOException(PARSER, input);
+    }
+
+    public static im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest parseFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+                .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() {
+        return newBuilder();
+    }
+
+    public static Builder newBuilder() {
+        return DEFAULT_INSTANCE.toBuilder();
+    }
+
+    public static Builder newBuilder(im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest prototype) {
+        return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+
+    @java.lang.Override
+    public Builder toBuilder() {
+        return this == DEFAULT_INSTANCE
+                ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+            com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        Builder builder = new Builder(parent);
+        return builder;
+    }
+
     /**
-     * <code>optional int64 last_updated_date = 2;</code>
-     * @param value The lastUpdatedDate to set.
-     * @return This builder for chaining.
+     * Protobuf type {@code im.turms.proto.QueryUserProfilesRequest}
      */
-    public Builder setLastUpdatedDate(long value) {
-      bitField0_ |= 0x00000002;
-      lastUpdatedDate_ = value;
-      onChanged();
-      return this;
+    public static final class Builder extends
+            com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+            // @@protoc_insertion_point(builder_implements:im.turms.proto.QueryUserProfilesRequest)
+            im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequestOrBuilder {
+        public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+            return im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequestOuterClass.internal_static_im_turms_proto_QueryUserProfilesRequest_descriptor;
+        }
+
+        @java.lang.Override
+        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+            return im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequestOuterClass.internal_static_im_turms_proto_QueryUserProfilesRequest_fieldAccessorTable
+                    .ensureFieldAccessorsInitialized(
+                            im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest.class,
+                            im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest.Builder.class);
+        }
+
+        // Construct using im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest.newBuilder()
+        private Builder() {
+
+        }
+
+        private Builder(
+                com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+            super(parent);
+
+        }
+
+        @java.lang.Override
+        public Builder clear() {
+            super.clear();
+            userIds_ = emptyLongList();
+            bitField0_ = (bitField0_ & ~0x00000001);
+            lastUpdatedDate_ = 0L;
+            bitField0_ = (bitField0_ & ~0x00000002);
+            return this;
+        }
+
+        @java.lang.Override
+        public com.google.protobuf.Descriptors.Descriptor
+        getDescriptorForType() {
+            return im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequestOuterClass.internal_static_im_turms_proto_QueryUserProfilesRequest_descriptor;
+        }
+
+        @java.lang.Override
+        public im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest getDefaultInstanceForType() {
+            return im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest.getDefaultInstance();
+        }
+
+        @java.lang.Override
+        public im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest build() {
+            im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest result = buildPartial();
+            if (!result.isInitialized()) {
+                throw newUninitializedMessageException(result);
+            }
+            return result;
+        }
+
+        @java.lang.Override
+        public im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest buildPartial() {
+            im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest result = new im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest(this);
+            int from_bitField0_ = bitField0_;
+            int to_bitField0_ = 0;
+            if (((bitField0_ & 0x00000001) != 0)) {
+                userIds_.makeImmutable();
+                bitField0_ = (bitField0_ & ~0x00000001);
+            }
+            result.userIds_ = userIds_;
+            if (((from_bitField0_ & 0x00000002) != 0)) {
+                result.lastUpdatedDate_ = lastUpdatedDate_;
+                to_bitField0_ |= 0x00000001;
+            }
+            result.bitField0_ = to_bitField0_;
+            onBuilt();
+            return result;
+        }
+
+        @java.lang.Override
+        public Builder clone() {
+            return super.clone();
+        }
+
+        @java.lang.Override
+        public Builder setField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value) {
+            return super.setField(field, value);
+        }
+
+        @java.lang.Override
+        public Builder clearField(
+                com.google.protobuf.Descriptors.FieldDescriptor field) {
+            return super.clearField(field);
+        }
+
+        @java.lang.Override
+        public Builder clearOneof(
+                com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+            return super.clearOneof(oneof);
+        }
+
+        @java.lang.Override
+        public Builder setRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                int index, java.lang.Object value) {
+            return super.setRepeatedField(field, index, value);
+        }
+
+        @java.lang.Override
+        public Builder addRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value) {
+            return super.addRepeatedField(field, value);
+        }
+
+        @java.lang.Override
+        public Builder mergeFrom(com.google.protobuf.Message other) {
+            if (other instanceof im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest) {
+                return mergeFrom((im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest) other);
+            } else {
+                super.mergeFrom(other);
+                return this;
+            }
+        }
+
+        public Builder mergeFrom(im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest other) {
+            if (other == im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest.getDefaultInstance()) {
+                return this;
+            }
+            if (!other.userIds_.isEmpty()) {
+                if (userIds_.isEmpty()) {
+                    userIds_ = other.userIds_;
+                    bitField0_ = (bitField0_ & ~0x00000001);
+                } else {
+                    ensureUserIdsIsMutable();
+                    userIds_.addAll(other.userIds_);
+                }
+                onChanged();
+            }
+            if (other.hasLastUpdatedDate()) {
+                setLastUpdatedDate(other.getLastUpdatedDate());
+            }
+            this.mergeUnknownFields(other.getUnknownFields());
+            onChanged();
+            return this;
+        }
+
+        @java.lang.Override
+        public final boolean isInitialized() {
+            return true;
+        }
+
+        @java.lang.Override
+        public Builder mergeFrom(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            if (extensionRegistry == null) {
+                throw new java.lang.NullPointerException();
+            }
+            try {
+                boolean done = false;
+                while (!done) {
+                    int tag = input.readTag();
+                    switch (tag) {
+                        case 0:
+                            done = true;
+                            break;
+                        case 8: {
+                            long v = input.readInt64();
+                            ensureUserIdsIsMutable();
+                            userIds_.addLong(v);
+                            break;
+                        } // case 8
+                        case 10: {
+                            int length = input.readRawVarint32();
+                            int limit = input.pushLimit(length);
+                            ensureUserIdsIsMutable();
+                            while (input.getBytesUntilLimit() > 0) {
+                                userIds_.addLong(input.readInt64());
+                            }
+                            input.popLimit(limit);
+                            break;
+                        } // case 10
+                        case 16: {
+                            lastUpdatedDate_ = input.readInt64();
+                            bitField0_ |= 0x00000002;
+                            break;
+                        } // case 16
+                        default: {
+                            if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                                done = true; // was an endgroup tag
+                            }
+                            break;
+                        } // default:
+                    } // switch (tag)
+                } // while (!done)
+            } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                throw e.unwrapIOException();
+            } finally {
+                onChanged();
+            } // finally
+            return this;
+        }
+
+        private int bitField0_;
+
+        private com.google.protobuf.Internal.LongList userIds_ = emptyLongList();
+
+        private void ensureUserIdsIsMutable() {
+            if (!((bitField0_ & 0x00000001) != 0)) {
+                userIds_ = mutableCopy(userIds_);
+                bitField0_ |= 0x00000001;
+            }
+        }
+
+        /**
+         * <code>repeated int64 user_ids = 1;</code>
+         *
+         * @return A list containing the userIds.
+         */
+        public java.util.List<java.lang.Long>
+        getUserIdsList() {
+            return ((bitField0_ & 0x00000001) != 0) ?
+                    java.util.Collections.unmodifiableList(userIds_) : userIds_;
+        }
+
+        /**
+         * <code>repeated int64 user_ids = 1;</code>
+         *
+         * @return The count of userIds.
+         */
+        public int getUserIdsCount() {
+            return userIds_.size();
+        }
+
+        /**
+         * <code>repeated int64 user_ids = 1;</code>
+         *
+         * @param index The index of the element to return.
+         * @return The userIds at the given index.
+         */
+        public long getUserIds(int index) {
+            return userIds_.getLong(index);
+        }
+
+        /**
+         * <code>repeated int64 user_ids = 1;</code>
+         *
+         * @param index The index to set the value at.
+         * @param value The userIds to set.
+         * @return This builder for chaining.
+         */
+        public Builder setUserIds(
+                int index, long value) {
+            ensureUserIdsIsMutable();
+            userIds_.setLong(index, value);
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <code>repeated int64 user_ids = 1;</code>
+         *
+         * @param value The userIds to add.
+         * @return This builder for chaining.
+         */
+        public Builder addUserIds(long value) {
+            ensureUserIdsIsMutable();
+            userIds_.addLong(value);
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <code>repeated int64 user_ids = 1;</code>
+         *
+         * @param values The userIds to add.
+         * @return This builder for chaining.
+         */
+        public Builder addAllUserIds(
+                java.lang.Iterable<? extends java.lang.Long> values) {
+            ensureUserIdsIsMutable();
+            com.google.protobuf.AbstractMessageLite.Builder.addAll(
+                    values, userIds_);
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <code>repeated int64 user_ids = 1;</code>
+         *
+         * @return This builder for chaining.
+         */
+        public Builder clearUserIds() {
+            userIds_ = emptyLongList();
+            bitField0_ = (bitField0_ & ~0x00000001);
+            onChanged();
+            return this;
+        }
+
+        private long lastUpdatedDate_;
+
+        /**
+         * <code>optional int64 last_updated_date = 2;</code>
+         *
+         * @return Whether the lastUpdatedDate field is set.
+         */
+        @java.lang.Override
+        public boolean hasLastUpdatedDate() {
+            return ((bitField0_ & 0x00000002) != 0);
+        }
+
+        /**
+         * <code>optional int64 last_updated_date = 2;</code>
+         *
+         * @return The lastUpdatedDate.
+         */
+        @java.lang.Override
+        public long getLastUpdatedDate() {
+            return lastUpdatedDate_;
+        }
+
+        /**
+         * <code>optional int64 last_updated_date = 2;</code>
+         *
+         * @param value The lastUpdatedDate to set.
+         * @return This builder for chaining.
+         */
+        public Builder setLastUpdatedDate(long value) {
+            bitField0_ |= 0x00000002;
+            lastUpdatedDate_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <code>optional int64 last_updated_date = 2;</code>
+         *
+         * @return This builder for chaining.
+         */
+        public Builder clearLastUpdatedDate() {
+            bitField0_ = (bitField0_ & ~0x00000002);
+            lastUpdatedDate_ = 0L;
+            onChanged();
+            return this;
+        }
+
+        @java.lang.Override
+        public final Builder setUnknownFields(
+                final com.google.protobuf.UnknownFieldSet unknownFields) {
+            return super.setUnknownFields(unknownFields);
+        }
+
+        @java.lang.Override
+        public final Builder mergeUnknownFields(
+                final com.google.protobuf.UnknownFieldSet unknownFields) {
+            return super.mergeUnknownFields(unknownFields);
+        }
+
+
+        // @@protoc_insertion_point(builder_scope:im.turms.proto.QueryUserProfilesRequest)
     }
-    /**
-     * <code>optional int64 last_updated_date = 2;</code>
-     * @return This builder for chaining.
-     */
-    public Builder clearLastUpdatedDate() {
-      bitField0_ = (bitField0_ & ~0x00000002);
-      lastUpdatedDate_ = 0L;
-      onChanged();
-      return this;
+
+    // @@protoc_insertion_point(class_scope:im.turms.proto.QueryUserProfilesRequest)
+    private static final im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest DEFAULT_INSTANCE;
+
+    static {
+        DEFAULT_INSTANCE = new im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest();
     }
+
+    public static im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest getDefaultInstance() {
+        return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<QueryUserProfilesRequest>
+            PARSER = new com.google.protobuf.AbstractParser<QueryUserProfilesRequest>() {
+        @java.lang.Override
+        public QueryUserProfilesRequest parsePartialFrom(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            Builder builder = newBuilder();
+            try {
+                builder.mergeFrom(input, extensionRegistry);
+            } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                throw e.setUnfinishedMessage(builder.buildPartial());
+            } catch (com.google.protobuf.UninitializedMessageException e) {
+                throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
+            } catch (java.io.IOException e) {
+                throw new com.google.protobuf.InvalidProtocolBufferException(e)
+                        .setUnfinishedMessage(builder.buildPartial());
+            }
+            return builder.buildPartial();
+        }
+    };
+
+    public static com.google.protobuf.Parser<QueryUserProfilesRequest> parser() {
+        return PARSER;
+    }
+
     @java.lang.Override
-    public final Builder setUnknownFields(
-        final com.google.protobuf.UnknownFieldSet unknownFields) {
-      return super.setUnknownFields(unknownFields);
+    public com.google.protobuf.Parser<QueryUserProfilesRequest> getParserForType() {
+        return PARSER;
     }
 
     @java.lang.Override
-    public final Builder mergeUnknownFields(
-        final com.google.protobuf.UnknownFieldSet unknownFields) {
-      return super.mergeUnknownFields(unknownFields);
+    public im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest getDefaultInstanceForType() {
+        return DEFAULT_INSTANCE;
     }
-
-
-    // @@protoc_insertion_point(builder_scope:im.turms.proto.QueryUserProfilesRequest)
-  }
-
-  // @@protoc_insertion_point(class_scope:im.turms.proto.QueryUserProfilesRequest)
-  private static final im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest DEFAULT_INSTANCE;
-  static {
-    DEFAULT_INSTANCE = new im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest();
-  }
-
-  public static im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest getDefaultInstance() {
-    return DEFAULT_INSTANCE;
-  }
-
-  private static final com.google.protobuf.Parser<QueryUserProfilesRequest>
-      PARSER = new com.google.protobuf.AbstractParser<QueryUserProfilesRequest>() {
-    @java.lang.Override
-    public QueryUserProfilesRequest parsePartialFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      Builder builder = newBuilder();
-      try {
-        builder.mergeFrom(input, extensionRegistry);
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(builder.buildPartial());
-      } catch (com.google.protobuf.UninitializedMessageException e) {
-        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(e)
-            .setUnfinishedMessage(builder.buildPartial());
-      }
-      return builder.buildPartial();
-    }
-  };
-
-  public static com.google.protobuf.Parser<QueryUserProfilesRequest> parser() {
-    return PARSER;
-  }
-
-  @java.lang.Override
-  public com.google.protobuf.Parser<QueryUserProfilesRequest> getParserForType() {
-    return PARSER;
-  }
-
-  @java.lang.Override
-  public im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest getDefaultInstanceForType() {
-    return DEFAULT_INSTANCE;
-  }
 
 }
-

@@ -131,16 +131,16 @@ public struct Message {
 
     public init() {}
 
-    private var _id: Int64?
-    private var _deliveryDate: Int64?
-    private var _modificationDate: Int64?
-    private var _text: String?
-    private var _senderID: Int64?
-    private var _groupID: Int64?
-    private var _isSystemMessage: Bool?
-    private var _recipientID: Int64?
-    private var _sequenceID: Int32?
-    private var _preMessageID: Int64?
+    fileprivate var _id: Int64?
+    fileprivate var _deliveryDate: Int64?
+    fileprivate var _modificationDate: Int64?
+    fileprivate var _text: String?
+    fileprivate var _senderID: Int64?
+    fileprivate var _groupID: Int64?
+    fileprivate var _isSystemMessage: Bool?
+    fileprivate var _recipientID: Int64?
+    fileprivate var _sequenceID: Int32?
+    fileprivate var _preMessageID: Int64?
 }
 
 #if swift(>=5.5) && canImport(_Concurrency)

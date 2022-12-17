@@ -3,17 +3,17 @@
 //  source: request/user/relationship/query_related_user_ids_request.proto
 //
 // @dart = 2.12
-// ignore_for_file: annotate_overrides,camel_case_types,unnecessary_const,non_constant_identifier_names,library_prefixes,unused_import,unused_shown_name,return_of_invalid_type,unnecessary_this,prefer_final_fields,deprecated_member_use_from_same_package
+// ignore_for_file: annotate_overrides,camel_case_types,constant_identifier_names,deprecated_member_use_from_same_package,directives_ordering,library_prefixes,non_constant_identifier_names,prefer_final_fields,return_of_invalid_type,unnecessary_const,unnecessary_import,unnecessary_this,unused_import,unused_shown_name
 
 import 'dart:core' as $core;
 import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
 
 @$core.Deprecated('Use queryRelatedUserIdsRequestDescriptor instead')
-const QueryRelatedUserIdsRequest$json = const {
+const QueryRelatedUserIdsRequest$json = {
   '1': 'QueryRelatedUserIdsRequest',
-  '2': const [
-    const {
+  '2': [
+    {
       '1': 'blocked',
       '3': 1,
       '4': 1,
@@ -22,8 +22,8 @@ const QueryRelatedUserIdsRequest$json = const {
       '10': 'blocked',
       '17': true
     },
-    const {'1': 'group_indexes', '3': 2, '4': 3, '5': 5, '10': 'groupIndexes'},
-    const {
+    {'1': 'group_indexes', '3': 2, '4': 3, '5': 5, '10': 'groupIndexes'},
+    {
       '1': 'last_updated_date',
       '3': 3,
       '4': 1,
@@ -33,9 +33,9 @@ const QueryRelatedUserIdsRequest$json = const {
       '17': true
     },
   ],
-  '8': const [
-    const {'1': '_blocked'},
-    const {'1': '_last_updated_date'},
+  '8': [
+    {'1': '_blocked'},
+    {'1': '_last_updated_date'},
   ],
 };
 

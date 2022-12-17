@@ -37,6 +37,8 @@ import im.turms.server.common.access.client.dto.model.message.Message;
 import im.turms.server.common.access.client.dto.model.message.Messages;
 import im.turms.server.common.access.client.dto.model.message.MessagesWithTotal;
 import im.turms.server.common.access.client.dto.model.message.MessagesWithTotalList;
+import im.turms.server.common.access.client.dto.model.storage.StorageResourceInfo;
+import im.turms.server.common.access.client.dto.model.storage.StorageResourceInfos;
 import im.turms.server.common.access.client.dto.model.user.NearbyUser;
 import im.turms.server.common.access.client.dto.model.user.NearbyUsers;
 import im.turms.server.common.access.client.dto.model.user.UserFriendRequest;
@@ -220,6 +222,20 @@ public class ClientMessagePool {
         @Override
         protected PrivateConversation.Builder initialValue() {
             return PrivateConversation.newBuilder();
+        }
+    };
+
+    private static final FastThreadLocal<StorageResourceInfo.Builder> STORAGE_RESOURCE_INFO = new FastThreadLocal<>() {
+        @Override
+        protected StorageResourceInfo.Builder initialValue() {
+            return StorageResourceInfo.newBuilder();
+        }
+    };
+
+    private static final FastThreadLocal<StorageResourceInfos.Builder> STORAGE_RESOURCE_INFOS = new FastThreadLocal<>() {
+        @Override
+        protected StorageResourceInfos.Builder initialValue() {
+            return StorageResourceInfos.newBuilder();
         }
     };
 
@@ -421,6 +437,14 @@ public class ClientMessagePool {
 
     public static PrivateConversation.Builder getPrivateConversationBuilder() {
         return PRIVATE_CONVERSATION.get().clear();
+    }
+
+    public static StorageResourceInfo.Builder getStorageResourceInfoBuilder() {
+        return STORAGE_RESOURCE_INFO.get().clear();
+    }
+
+    public static StorageResourceInfos.Builder getStorageResourceInfosBuilder() {
+        return STORAGE_RESOURCE_INFOS.get().clear();
     }
 
     public static StringsWithVersion.Builder getStringsWithVersionBuilder() {

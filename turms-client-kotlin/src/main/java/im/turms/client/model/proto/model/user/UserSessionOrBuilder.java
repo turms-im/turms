@@ -21,30 +21,36 @@
 package im.turms.client.model.proto.model.user;
 
 public interface UserSessionOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:im.turms.proto.UserSession)
-    com.google.protobuf.MessageLiteOrBuilder {
+        // @@protoc_insertion_point(interface_extends:im.turms.proto.UserSession)
+        com.google.protobuf.MessageLiteOrBuilder {
 
-  /**
-   * <code>string session_id = 1;</code>
-   * @return The sessionId.
-   */
-  java.lang.String getSessionId();
-  /**
-   * <code>string session_id = 1;</code>
-   * @return The bytes for sessionId.
-   */
-  com.google.protobuf.ByteString
-      getSessionIdBytes();
+    /**
+     * <code>string session_id = 1;</code>
+     *
+     * @return The sessionId.
+     */
+    java.lang.String getSessionId();
 
-  /**
-   * <code>string server_id = 2;</code>
-   * @return The serverId.
-   */
-  java.lang.String getServerId();
-  /**
-   * <code>string server_id = 2;</code>
-   * @return The bytes for serverId.
-   */
-  com.google.protobuf.ByteString
-      getServerIdBytes();
+    /**
+     * <code>string session_id = 1;</code>
+     *
+     * @return The bytes for sessionId.
+     */
+    com.google.protobuf.ByteString
+    getSessionIdBytes();
+
+    /**
+     * <code>string server_id = 2;</code>
+     *
+     * @return The serverId.
+     */
+    java.lang.String getServerId();
+
+    /**
+     * <code>string server_id = 2;</code>
+     *
+     * @return The bytes for serverId.
+     */
+    com.google.protobuf.ByteString
+    getServerIdBytes();
 }

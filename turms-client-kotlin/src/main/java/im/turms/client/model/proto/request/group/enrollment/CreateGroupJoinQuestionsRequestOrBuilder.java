@@ -21,26 +21,29 @@
 package im.turms.client.model.proto.request.group.enrollment;
 
 public interface CreateGroupJoinQuestionsRequestOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:im.turms.proto.CreateGroupJoinQuestionsRequest)
-    com.google.protobuf.MessageLiteOrBuilder {
+        // @@protoc_insertion_point(interface_extends:im.turms.proto.CreateGroupJoinQuestionsRequest)
+        com.google.protobuf.MessageLiteOrBuilder {
 
-  /**
-   * <code>int64 group_id = 1;</code>
-   * @return The groupId.
-   */
-  long getGroupId();
+    /**
+     * <code>int64 group_id = 1;</code>
+     *
+     * @return The groupId.
+     */
+    long getGroupId();
 
-  /**
-   * <code>repeated .im.turms.proto.GroupJoinQuestion questions = 2;</code>
-   */
-  java.util.List<im.turms.client.model.proto.model.group.GroupJoinQuestion>
-      getQuestionsList();
-  /**
-   * <code>repeated .im.turms.proto.GroupJoinQuestion questions = 2;</code>
-   */
-  im.turms.client.model.proto.model.group.GroupJoinQuestion getQuestions(int index);
-  /**
-   * <code>repeated .im.turms.proto.GroupJoinQuestion questions = 2;</code>
-   */
-  int getQuestionsCount();
+    /**
+     * <code>repeated .im.turms.proto.GroupJoinQuestion questions = 2;</code>
+     */
+    java.util.List<im.turms.client.model.proto.model.group.GroupJoinQuestion>
+    getQuestionsList();
+
+    /**
+     * <code>repeated .im.turms.proto.GroupJoinQuestion questions = 2;</code>
+     */
+    im.turms.client.model.proto.model.group.GroupJoinQuestion getQuestions(int index);
+
+    /**
+     * <code>repeated .im.turms.proto.GroupJoinQuestion questions = 2;</code>
+     */
+    int getQuestionsCount();
 }

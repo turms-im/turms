@@ -282,6 +282,15 @@ public struct TurmsNotification {
             set { kind = .groupsWithVersion(newValue) }
         }
 
+        /// Storage
+        public var storageResourceInfos: StorageResourceInfos {
+            get {
+                if case let .storageResourceInfos(v)? = kind { return v }
+                return StorageResourceInfos()
+            }
+            set { kind = .storageResourceInfos(newValue) }
+        }
+
         public var unknownFields = SwiftProtobuf.UnknownStorage()
 
         public enum OneOf_Kind: Equatable {
@@ -310,6 +319,8 @@ public struct TurmsNotification {
             case groupJoinQuestionsWithVersion(GroupJoinQuestionsWithVersion)
             case groupMembersWithVersion(GroupMembersWithVersion)
             case groupsWithVersion(GroupsWithVersion)
+            /// Storage
+            case storageResourceInfos(StorageResourceInfos)
 
             #if !swift(>=4.1)
                 public static func == (lhs: TurmsNotification.DataMessage.OneOf_Kind, rhs: TurmsNotification.DataMessage.OneOf_Kind) -> Bool {
@@ -397,6 +408,10 @@ public struct TurmsNotification {
                             guard case let .groupsWithVersion(l) = lhs, case let .groupsWithVersion(r) = rhs else { preconditionFailure() }
                             return l == r
                         }()
+                    case (.storageResourceInfos, .storageResourceInfos): return {
+                            guard case let .storageResourceInfos(l) = lhs, case let .storageResourceInfos(r) = rhs else { preconditionFailure() }
+                            return l == r
+                        }()
                     default: return false
                     }
                 }
@@ -408,7 +423,7 @@ public struct TurmsNotification {
 
     public init() {}
 
-    private var _storage = _StorageClass.defaultInstance
+    fileprivate var _storage = _StorageClass.defaultInstance
 }
 
 #if swift(>=5.5) && canImport(_Concurrency)
@@ -568,6 +583,7 @@ extension TurmsNotification.DataMessage: SwiftProtobuf.Message, SwiftProtobuf._M
         18: .standard(proto: "group_join_questions_with_version"),
         19: .standard(proto: "group_members_with_version"),
         20: .standard(proto: "groups_with_version"),
+        50: .standard(proto: "storage_resource_infos"),
     ]
 
     public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -826,6 +842,19 @@ extension TurmsNotification.DataMessage: SwiftProtobuf.Message, SwiftProtobuf._M
                         self.kind = .groupsWithVersion(v)
                     }
                 }()
+            case 50: try {
+                    var v: StorageResourceInfos?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .storageResourceInfos(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .storageResourceInfos(v)
+                    }
+                }()
             default: break
             }
         }
@@ -916,6 +945,10 @@ extension TurmsNotification.DataMessage: SwiftProtobuf.Message, SwiftProtobuf._M
         case .groupsWithVersion?: try {
                 guard case let .groupsWithVersion(v)? = self.kind else { preconditionFailure() }
                 try visitor.visitSingularMessageField(value: v, fieldNumber: 20)
+            }()
+        case .storageResourceInfos?: try {
+                guard case let .storageResourceInfos(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 50)
             }()
         case nil: break
         }

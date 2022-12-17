@@ -21,51 +21,56 @@
 package im.turms.server.common.access.client.dto.model.message;
 
 public final class MessagesWithTotalListOuterClass {
-  private MessagesWithTotalListOuterClass() {}
-  public static void registerAllExtensions(
-      com.google.protobuf.ExtensionRegistryLite registry) {
-  }
+    private MessagesWithTotalListOuterClass() {
+    }
 
-  public static void registerAllExtensions(
-      com.google.protobuf.ExtensionRegistry registry) {
-    registerAllExtensions(
-        (com.google.protobuf.ExtensionRegistryLite) registry);
-  }
-  static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_im_turms_proto_MessagesWithTotalList_descriptor;
-  static final
+    public static void registerAllExtensions(
+            com.google.protobuf.ExtensionRegistryLite registry) {
+    }
+
+    public static void registerAllExtensions(
+            com.google.protobuf.ExtensionRegistry registry) {
+        registerAllExtensions(
+                (com.google.protobuf.ExtensionRegistryLite) registry);
+    }
+
+    static final com.google.protobuf.Descriptors.Descriptor
+            internal_static_im_turms_proto_MessagesWithTotalList_descriptor;
+    static final
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_im_turms_proto_MessagesWithTotalList_fieldAccessorTable;
+            internal_static_im_turms_proto_MessagesWithTotalList_fieldAccessorTable;
 
-  public static com.google.protobuf.Descriptors.FileDescriptor
-      getDescriptor() {
-    return descriptor;
-  }
-  private static  com.google.protobuf.Descriptors.FileDescriptor
-      descriptor;
-  static {
-    java.lang.String[] descriptorData = {
-      "\n,model/message/messages_with_total_list" +
-      ".proto\022\016im.turms.proto\032\'model/message/me" +
-      "ssages_with_total.proto\"\\\n\025MessagesWithT" +
-      "otalList\022C\n\030messages_with_total_list\030\001 \003" +
-      "(\0132!.im.turms.proto.MessagesWithTotalB=\n" +
-      "6im.turms.server.common.access.client.dt" +
-      "o.model.messageP\001\272\002\000b\006proto3"
-    };
-    descriptor = com.google.protobuf.Descriptors.FileDescriptor
-      .internalBuildGeneratedFileFrom(descriptorData,
-        new com.google.protobuf.Descriptors.FileDescriptor[] {
-          im.turms.server.common.access.client.dto.model.message.MessagesWithTotalOuterClass.getDescriptor(),
-        });
-    internal_static_im_turms_proto_MessagesWithTotalList_descriptor =
-      getDescriptor().getMessageTypes().get(0);
-    internal_static_im_turms_proto_MessagesWithTotalList_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_im_turms_proto_MessagesWithTotalList_descriptor,
-        new java.lang.String[] { "MessagesWithTotalList", });
-    im.turms.server.common.access.client.dto.model.message.MessagesWithTotalOuterClass.getDescriptor();
-  }
+    public static com.google.protobuf.Descriptors.FileDescriptor
+    getDescriptor() {
+        return descriptor;
+    }
 
-  // @@protoc_insertion_point(outer_class_scope)
+    private static com.google.protobuf.Descriptors.FileDescriptor
+            descriptor;
+
+    static {
+        java.lang.String[] descriptorData = {
+                "\n,model/message/messages_with_total_list" +
+                ".proto\022\016im.turms.proto\032\'model/message/me" +
+                "ssages_with_total.proto\"\\\n\025MessagesWithT" +
+                "otalList\022C\n\030messages_with_total_list\030\001 \003" +
+                "(\0132!.im.turms.proto.MessagesWithTotalB=\n" +
+                "6im.turms.server.common.access.client.dt" +
+                "o.model.messageP\001\272\002\000b\006proto3"
+        };
+        descriptor = com.google.protobuf.Descriptors.FileDescriptor
+                .internalBuildGeneratedFileFrom(descriptorData,
+                        new com.google.protobuf.Descriptors.FileDescriptor[]{
+                                im.turms.server.common.access.client.dto.model.message.MessagesWithTotalOuterClass.getDescriptor(),
+                        });
+        internal_static_im_turms_proto_MessagesWithTotalList_descriptor =
+                getDescriptor().getMessageTypes().get(0);
+        internal_static_im_turms_proto_MessagesWithTotalList_fieldAccessorTable = new
+                com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+                internal_static_im_turms_proto_MessagesWithTotalList_descriptor,
+                new java.lang.String[]{"MessagesWithTotalList",});
+        im.turms.server.common.access.client.dto.model.message.MessagesWithTotalOuterClass.getDescriptor();
+    }
+
+    // @@protoc_insertion_point(outer_class_scope)
 }

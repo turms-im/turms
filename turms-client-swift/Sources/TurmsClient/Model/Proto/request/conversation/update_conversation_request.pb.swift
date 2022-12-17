@@ -25,6 +25,7 @@ public struct UpdateConversationRequest {
     // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
     // methods supported on all messages.
 
+    /// Query filter
     public var targetID: Int64 {
         get { return _targetID ?? 0 }
         set { _targetID = newValue }
@@ -45,14 +46,15 @@ public struct UpdateConversationRequest {
     /// Clears the value of `groupID`. Subsequent reads from it will return its default value.
     public mutating func clearGroupID() { _groupID = nil }
 
+    /// Update
     public var readDate: Int64 = 0
 
     public var unknownFields = SwiftProtobuf.UnknownStorage()
 
     public init() {}
 
-    private var _targetID: Int64?
-    private var _groupID: Int64?
+    fileprivate var _targetID: Int64?
+    fileprivate var _groupID: Int64?
 }
 
 #if swift(>=5.5) && canImport(_Concurrency)

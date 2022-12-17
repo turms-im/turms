@@ -21,41 +21,48 @@
 package im.turms.server.common.access.client.dto.model.group;
 
 public interface GroupJoinQuestionsWithVersionOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:im.turms.proto.GroupJoinQuestionsWithVersion)
-    com.google.protobuf.MessageOrBuilder {
+        // @@protoc_insertion_point(interface_extends:im.turms.proto.GroupJoinQuestionsWithVersion)
+        com.google.protobuf.MessageOrBuilder {
 
-  /**
-   * <code>repeated .im.turms.proto.GroupJoinQuestion group_join_questions = 1;</code>
-   */
-  java.util.List<im.turms.server.common.access.client.dto.model.group.GroupJoinQuestion>
-      getGroupJoinQuestionsList();
-  /**
-   * <code>repeated .im.turms.proto.GroupJoinQuestion group_join_questions = 1;</code>
-   */
-  im.turms.server.common.access.client.dto.model.group.GroupJoinQuestion getGroupJoinQuestions(int index);
-  /**
-   * <code>repeated .im.turms.proto.GroupJoinQuestion group_join_questions = 1;</code>
-   */
-  int getGroupJoinQuestionsCount();
-  /**
-   * <code>repeated .im.turms.proto.GroupJoinQuestion group_join_questions = 1;</code>
-   */
-  java.util.List<? extends im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionOrBuilder>
-      getGroupJoinQuestionsOrBuilderList();
-  /**
-   * <code>repeated .im.turms.proto.GroupJoinQuestion group_join_questions = 1;</code>
-   */
-  im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionOrBuilder getGroupJoinQuestionsOrBuilder(
-      int index);
+    /**
+     * <code>repeated .im.turms.proto.GroupJoinQuestion group_join_questions = 1;</code>
+     */
+    java.util.List<im.turms.server.common.access.client.dto.model.group.GroupJoinQuestion>
+    getGroupJoinQuestionsList();
 
-  /**
-   * <code>optional int64 last_updated_date = 2;</code>
-   * @return Whether the lastUpdatedDate field is set.
-   */
-  boolean hasLastUpdatedDate();
-  /**
-   * <code>optional int64 last_updated_date = 2;</code>
-   * @return The lastUpdatedDate.
-   */
-  long getLastUpdatedDate();
+    /**
+     * <code>repeated .im.turms.proto.GroupJoinQuestion group_join_questions = 1;</code>
+     */
+    im.turms.server.common.access.client.dto.model.group.GroupJoinQuestion getGroupJoinQuestions(int index);
+
+    /**
+     * <code>repeated .im.turms.proto.GroupJoinQuestion group_join_questions = 1;</code>
+     */
+    int getGroupJoinQuestionsCount();
+
+    /**
+     * <code>repeated .im.turms.proto.GroupJoinQuestion group_join_questions = 1;</code>
+     */
+    java.util.List<? extends im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionOrBuilder>
+    getGroupJoinQuestionsOrBuilderList();
+
+    /**
+     * <code>repeated .im.turms.proto.GroupJoinQuestion group_join_questions = 1;</code>
+     */
+    im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionOrBuilder getGroupJoinQuestionsOrBuilder(
+            int index);
+
+    /**
+     * <code>optional int64 last_updated_date = 2;</code>
+     *
+     * @return Whether the lastUpdatedDate field is set.
+     */
+    boolean hasLastUpdatedDate();
+
+    /**
+     * <code>optional int64 last_updated_date = 2;</code>
+     *
+     * @return The lastUpdatedDate.
+     */
+    long getLastUpdatedDate();
 }

@@ -85,11 +85,11 @@ public struct QueryMessagesRequest {
 
     public init() {}
 
-    private var _areGroupMessages: Bool?
-    private var _areSystemMessages: Bool?
-    private var _deliveryDateAfter: Int64?
-    private var _deliveryDateBefore: Int64?
-    private var _maxCount: Int32?
+    fileprivate var _areGroupMessages: Bool?
+    fileprivate var _areSystemMessages: Bool?
+    fileprivate var _deliveryDateAfter: Int64?
+    fileprivate var _deliveryDateBefore: Int64?
+    fileprivate var _maxCount: Int32?
 }
 
 #if swift(>=5.5) && canImport(_Concurrency)

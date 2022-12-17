@@ -53,8 +53,8 @@ public struct DeleteGroupMembersRequest {
 
     public init() {}
 
-    private var _successorID: Int64?
-    private var _quitAfterTransfer: Bool?
+    fileprivate var _successorID: Int64?
+    fileprivate var _quitAfterTransfer: Bool?
 }
 
 #if swift(>=5.5) && canImport(_Concurrency)

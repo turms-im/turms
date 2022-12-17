@@ -55,8 +55,8 @@ public struct CreateGroupMembersRequest {
 
     public init() {}
 
-    private var _name: String?
-    private var _muteEndDate: Int64?
+    fileprivate var _name: String?
+    fileprivate var _muteEndDate: Int64?
 }
 
 #if swift(>=5.5) && canImport(_Concurrency)

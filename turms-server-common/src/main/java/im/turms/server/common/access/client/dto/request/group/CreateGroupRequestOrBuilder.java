@@ -21,85 +21,107 @@
 package im.turms.server.common.access.client.dto.request.group;
 
 public interface CreateGroupRequestOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:im.turms.proto.CreateGroupRequest)
-    com.google.protobuf.MessageOrBuilder {
+        // @@protoc_insertion_point(interface_extends:im.turms.proto.CreateGroupRequest)
+        com.google.protobuf.MessageOrBuilder {
 
-  /**
-   * <code>string name = 1;</code>
-   * @return The name.
-   */
-  java.lang.String getName();
-  /**
-   * <code>string name = 1;</code>
-   * @return The bytes for name.
-   */
-  com.google.protobuf.ByteString
-      getNameBytes();
+    /**
+     * <code>string name = 1;</code>
+     *
+     * @return The name.
+     */
+    java.lang.String getName();
 
-  /**
-   * <code>optional string intro = 2;</code>
-   * @return Whether the intro field is set.
-   */
-  boolean hasIntro();
-  /**
-   * <code>optional string intro = 2;</code>
-   * @return The intro.
-   */
-  java.lang.String getIntro();
-  /**
-   * <code>optional string intro = 2;</code>
-   * @return The bytes for intro.
-   */
-  com.google.protobuf.ByteString
-      getIntroBytes();
+    /**
+     * <code>string name = 1;</code>
+     *
+     * @return The bytes for name.
+     */
+    com.google.protobuf.ByteString
+    getNameBytes();
 
-  /**
-   * <code>optional string announcement = 3;</code>
-   * @return Whether the announcement field is set.
-   */
-  boolean hasAnnouncement();
-  /**
-   * <code>optional string announcement = 3;</code>
-   * @return The announcement.
-   */
-  java.lang.String getAnnouncement();
-  /**
-   * <code>optional string announcement = 3;</code>
-   * @return The bytes for announcement.
-   */
-  com.google.protobuf.ByteString
-      getAnnouncementBytes();
+    /**
+     * <code>optional string intro = 2;</code>
+     *
+     * @return Whether the intro field is set.
+     */
+    boolean hasIntro();
 
-  /**
-   * <code>optional int32 minimum_score = 4;</code>
-   * @return Whether the minimumScore field is set.
-   */
-  boolean hasMinimumScore();
-  /**
-   * <code>optional int32 minimum_score = 4;</code>
-   * @return The minimumScore.
-   */
-  int getMinimumScore();
+    /**
+     * <code>optional string intro = 2;</code>
+     *
+     * @return The intro.
+     */
+    java.lang.String getIntro();
 
-  /**
-   * <code>optional int64 group_type_id = 5;</code>
-   * @return Whether the groupTypeId field is set.
-   */
-  boolean hasGroupTypeId();
-  /**
-   * <code>optional int64 group_type_id = 5;</code>
-   * @return The groupTypeId.
-   */
-  long getGroupTypeId();
+    /**
+     * <code>optional string intro = 2;</code>
+     *
+     * @return The bytes for intro.
+     */
+    com.google.protobuf.ByteString
+    getIntroBytes();
 
-  /**
-   * <code>optional int64 mute_end_date = 6;</code>
-   * @return Whether the muteEndDate field is set.
-   */
-  boolean hasMuteEndDate();
-  /**
-   * <code>optional int64 mute_end_date = 6;</code>
-   * @return The muteEndDate.
-   */
-  long getMuteEndDate();
+    /**
+     * <code>optional string announcement = 3;</code>
+     *
+     * @return Whether the announcement field is set.
+     */
+    boolean hasAnnouncement();
+
+    /**
+     * <code>optional string announcement = 3;</code>
+     *
+     * @return The announcement.
+     */
+    java.lang.String getAnnouncement();
+
+    /**
+     * <code>optional string announcement = 3;</code>
+     *
+     * @return The bytes for announcement.
+     */
+    com.google.protobuf.ByteString
+    getAnnouncementBytes();
+
+    /**
+     * <code>optional int32 min_score = 4;</code>
+     *
+     * @return Whether the minScore field is set.
+     */
+    boolean hasMinScore();
+
+    /**
+     * <code>optional int32 min_score = 4;</code>
+     *
+     * @return The minScore.
+     */
+    int getMinScore();
+
+    /**
+     * <code>optional int64 type_id = 5;</code>
+     *
+     * @return Whether the typeId field is set.
+     */
+    boolean hasTypeId();
+
+    /**
+     * <code>optional int64 type_id = 5;</code>
+     *
+     * @return The typeId.
+     */
+    long getTypeId();
+
+    /**
+     * <code>optional int64 mute_end_date = 6;</code>
+     *
+     * @return Whether the muteEndDate field is set.
+     */
+    boolean hasMuteEndDate();
+
+    /**
+     * <code>optional int64 mute_end_date = 6;</code>
+     *
+     * @return The muteEndDate.
+     */
+    long getMuteEndDate();
 }

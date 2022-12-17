@@ -21,18 +21,24 @@
 package im.turms.client.model.proto.request.conversation;
 
 public interface UpdateTypingStatusRequestOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:im.turms.proto.UpdateTypingStatusRequest)
-    com.google.protobuf.MessageLiteOrBuilder {
+        // @@protoc_insertion_point(interface_extends:im.turms.proto.UpdateTypingStatusRequest)
+        com.google.protobuf.MessageLiteOrBuilder {
 
-  /**
-   * <code>bool is_group_message = 1;</code>
-   * @return The isGroupMessage.
-   */
-  boolean getIsGroupMessage();
+    /**
+     * <pre>
+     * Query filter
+     * </pre>
+     *
+     * <code>bool is_group_message = 1;</code>
+     *
+     * @return The isGroupMessage.
+     */
+    boolean getIsGroupMessage();
 
-  /**
-   * <code>int64 to_id = 2;</code>
-   * @return The toId.
-   */
-  long getToId();
+    /**
+     * <code>int64 to_id = 2;</code>
+     *
+     * @return The toId.
+     */
+    long getToId();
 }

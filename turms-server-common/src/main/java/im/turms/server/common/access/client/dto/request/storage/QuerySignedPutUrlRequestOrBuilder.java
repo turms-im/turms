@@ -21,51 +21,63 @@
 package im.turms.server.common.access.client.dto.request.storage;
 
 public interface QuerySignedPutUrlRequestOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:im.turms.proto.QuerySignedPutUrlRequest)
-    com.google.protobuf.MessageOrBuilder {
+        // @@protoc_insertion_point(interface_extends:im.turms.proto.QuerySignedPutUrlRequest)
+        com.google.protobuf.MessageOrBuilder {
 
-  /**
-   * <code>.im.turms.proto.ContentType content_type = 1;</code>
-   * @return The enum numeric value on the wire for contentType.
-   */
-  int getContentTypeValue();
-  /**
-   * <code>.im.turms.proto.ContentType content_type = 1;</code>
-   * @return The contentType.
-   */
-  im.turms.server.common.access.client.dto.constant.ContentType getContentType();
+    /**
+     * <code>.im.turms.proto.ContentType content_type = 1;</code>
+     *
+     * @return The enum numeric value on the wire for contentType.
+     */
+    int getContentTypeValue();
 
-  /**
-   * <code>optional string key_str = 2;</code>
-   * @return Whether the keyStr field is set.
-   */
-  boolean hasKeyStr();
-  /**
-   * <code>optional string key_str = 2;</code>
-   * @return The keyStr.
-   */
-  java.lang.String getKeyStr();
-  /**
-   * <code>optional string key_str = 2;</code>
-   * @return The bytes for keyStr.
-   */
-  com.google.protobuf.ByteString
-      getKeyStrBytes();
+    /**
+     * <code>.im.turms.proto.ContentType content_type = 1;</code>
+     *
+     * @return The contentType.
+     */
+    im.turms.server.common.access.client.dto.constant.ContentType getContentType();
 
-  /**
-   * <code>optional int64 key_num = 3;</code>
-   * @return Whether the keyNum field is set.
-   */
-  boolean hasKeyNum();
-  /**
-   * <code>optional int64 key_num = 3;</code>
-   * @return The keyNum.
-   */
-  long getKeyNum();
+    /**
+     * <code>optional string key_str = 2;</code>
+     *
+     * @return Whether the keyStr field is set.
+     */
+    boolean hasKeyStr();
 
-  /**
-   * <code>int64 content_length = 4;</code>
-   * @return The contentLength.
-   */
-  long getContentLength();
+    /**
+     * <code>optional string key_str = 2;</code>
+     *
+     * @return The keyStr.
+     */
+    java.lang.String getKeyStr();
+
+    /**
+     * <code>optional string key_str = 2;</code>
+     *
+     * @return The bytes for keyStr.
+     */
+    com.google.protobuf.ByteString
+    getKeyStrBytes();
+
+    /**
+     * <code>optional int64 key_num = 3;</code>
+     *
+     * @return Whether the keyNum field is set.
+     */
+    boolean hasKeyNum();
+
+    /**
+     * <code>optional int64 key_num = 3;</code>
+     *
+     * @return The keyNum.
+     */
+    long getKeyNum();
+
+    /**
+     * <code>int64 content_length = 4;</code>
+     *
+     * @return The contentLength.
+     */
+    long getContentLength();
 }

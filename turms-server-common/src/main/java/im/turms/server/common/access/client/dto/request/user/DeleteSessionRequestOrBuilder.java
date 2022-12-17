@@ -21,6 +21,6 @@
 package im.turms.server.common.access.client.dto.request.user;
 
 public interface DeleteSessionRequestOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:im.turms.proto.DeleteSessionRequest)
-    com.google.protobuf.MessageOrBuilder {
+        // @@protoc_insertion_point(interface_extends:im.turms.proto.DeleteSessionRequest)
+        com.google.protobuf.MessageOrBuilder {
 }

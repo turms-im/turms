@@ -21,49 +21,54 @@
 package im.turms.server.common.access.client.dto.model.user;
 
 public final class UserInfosOuterClass {
-  private UserInfosOuterClass() {}
-  public static void registerAllExtensions(
-      com.google.protobuf.ExtensionRegistryLite registry) {
-  }
+    private UserInfosOuterClass() {
+    }
 
-  public static void registerAllExtensions(
-      com.google.protobuf.ExtensionRegistry registry) {
-    registerAllExtensions(
-        (com.google.protobuf.ExtensionRegistryLite) registry);
-  }
-  static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_im_turms_proto_UserInfos_descriptor;
-  static final
+    public static void registerAllExtensions(
+            com.google.protobuf.ExtensionRegistryLite registry) {
+    }
+
+    public static void registerAllExtensions(
+            com.google.protobuf.ExtensionRegistry registry) {
+        registerAllExtensions(
+                (com.google.protobuf.ExtensionRegistryLite) registry);
+    }
+
+    static final com.google.protobuf.Descriptors.Descriptor
+            internal_static_im_turms_proto_UserInfos_descriptor;
+    static final
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_im_turms_proto_UserInfos_fieldAccessorTable;
+            internal_static_im_turms_proto_UserInfos_fieldAccessorTable;
 
-  public static com.google.protobuf.Descriptors.FileDescriptor
-      getDescriptor() {
-    return descriptor;
-  }
-  private static  com.google.protobuf.Descriptors.FileDescriptor
-      descriptor;
-  static {
-    java.lang.String[] descriptorData = {
-      "\n\033model/user/user_infos.proto\022\016im.turms." +
-      "proto\032\032model/user/user_info.proto\"9\n\tUse" +
-      "rInfos\022,\n\nuser_infos\030\001 \003(\0132\030.im.turms.pr" +
-      "oto.UserInfoB:\n3im.turms.server.common.a" +
-      "ccess.client.dto.model.userP\001\272\002\000b\006proto3"
-    };
-    descriptor = com.google.protobuf.Descriptors.FileDescriptor
-      .internalBuildGeneratedFileFrom(descriptorData,
-        new com.google.protobuf.Descriptors.FileDescriptor[] {
-          im.turms.server.common.access.client.dto.model.user.UserInfoOuterClass.getDescriptor(),
-        });
-    internal_static_im_turms_proto_UserInfos_descriptor =
-      getDescriptor().getMessageTypes().get(0);
-    internal_static_im_turms_proto_UserInfos_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_im_turms_proto_UserInfos_descriptor,
-        new java.lang.String[] { "UserInfos", });
-    im.turms.server.common.access.client.dto.model.user.UserInfoOuterClass.getDescriptor();
-  }
+    public static com.google.protobuf.Descriptors.FileDescriptor
+    getDescriptor() {
+        return descriptor;
+    }
 
-  // @@protoc_insertion_point(outer_class_scope)
+    private static com.google.protobuf.Descriptors.FileDescriptor
+            descriptor;
+
+    static {
+        java.lang.String[] descriptorData = {
+                "\n\033model/user/user_infos.proto\022\016im.turms." +
+                "proto\032\032model/user/user_info.proto\"9\n\tUse" +
+                "rInfos\022,\n\nuser_infos\030\001 \003(\0132\030.im.turms.pr" +
+                "oto.UserInfoB:\n3im.turms.server.common.a" +
+                "ccess.client.dto.model.userP\001\272\002\000b\006proto3"
+        };
+        descriptor = com.google.protobuf.Descriptors.FileDescriptor
+                .internalBuildGeneratedFileFrom(descriptorData,
+                        new com.google.protobuf.Descriptors.FileDescriptor[]{
+                                im.turms.server.common.access.client.dto.model.user.UserInfoOuterClass.getDescriptor(),
+                        });
+        internal_static_im_turms_proto_UserInfos_descriptor =
+                getDescriptor().getMessageTypes().get(0);
+        internal_static_im_turms_proto_UserInfos_fieldAccessorTable = new
+                com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+                internal_static_im_turms_proto_UserInfos_descriptor,
+                new java.lang.String[]{"UserInfos",});
+        im.turms.server.common.access.client.dto.model.user.UserInfoOuterClass.getDescriptor();
+    }
+
+    // @@protoc_insertion_point(outer_class_scope)
 }

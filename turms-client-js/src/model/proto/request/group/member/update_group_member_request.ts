@@ -6,8 +6,10 @@ import { GroupMemberRole } from "../../../constant/group_member_role";
 export const protobufPackage = "im.turms.proto";
 
 export interface UpdateGroupMemberRequest {
+  /** Query filter */
   groupId: string;
   memberId: string;
+  /** Update */
   name?: string | undefined;
   role?: GroupMemberRole | undefined;
   muteEndDate?: string | undefined;

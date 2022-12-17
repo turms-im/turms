@@ -21,29 +21,35 @@
 package im.turms.server.common.access.client.dto.request.group.enrollment;
 
 public interface DeleteGroupJoinQuestionsRequestOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:im.turms.proto.DeleteGroupJoinQuestionsRequest)
-    com.google.protobuf.MessageOrBuilder {
+        // @@protoc_insertion_point(interface_extends:im.turms.proto.DeleteGroupJoinQuestionsRequest)
+        com.google.protobuf.MessageOrBuilder {
 
-  /**
-   * <code>int64 group_id = 1;</code>
-   * @return The groupId.
-   */
-  long getGroupId();
+    /**
+     * <code>int64 group_id = 1;</code>
+     *
+     * @return The groupId.
+     */
+    long getGroupId();
 
-  /**
-   * <code>repeated int64 question_ids = 2;</code>
-   * @return A list containing the questionIds.
-   */
-  java.util.List<java.lang.Long> getQuestionIdsList();
-  /**
-   * <code>repeated int64 question_ids = 2;</code>
-   * @return The count of questionIds.
-   */
-  int getQuestionIdsCount();
-  /**
-   * <code>repeated int64 question_ids = 2;</code>
-   * @param index The index of the element to return.
-   * @return The questionIds at the given index.
-   */
-  long getQuestionIds(int index);
+    /**
+     * <code>repeated int64 question_ids = 2;</code>
+     *
+     * @return A list containing the questionIds.
+     */
+    java.util.List<java.lang.Long> getQuestionIdsList();
+
+    /**
+     * <code>repeated int64 question_ids = 2;</code>
+     *
+     * @return The count of questionIds.
+     */
+    int getQuestionIdsCount();
+
+    /**
+     * <code>repeated int64 question_ids = 2;</code>
+     *
+     * @param index The index of the element to return.
+     * @return The questionIds at the given index.
+     */
+    long getQuestionIds(int index);
 }

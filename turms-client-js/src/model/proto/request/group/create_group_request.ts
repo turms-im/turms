@@ -8,8 +8,8 @@ export interface CreateGroupRequest {
   name: string;
   intro?: string | undefined;
   announcement?: string | undefined;
-  minimumScore?: number | undefined;
-  groupTypeId?: string | undefined;
+  minScore?: number | undefined;
+  typeId?: string | undefined;
   muteEndDate?: string | undefined;
 }
 
@@ -18,8 +18,8 @@ function createBaseCreateGroupRequest(): CreateGroupRequest {
     name: "",
     intro: undefined,
     announcement: undefined,
-    minimumScore: undefined,
-    groupTypeId: undefined,
+    minScore: undefined,
+    typeId: undefined,
     muteEndDate: undefined,
   };
 }
@@ -35,11 +35,11 @@ export const CreateGroupRequest = {
     if (message.announcement !== undefined) {
       writer.uint32(26).string(message.announcement);
     }
-    if (message.minimumScore !== undefined) {
-      writer.uint32(32).int32(message.minimumScore);
+    if (message.minScore !== undefined) {
+      writer.uint32(32).int32(message.minScore);
     }
-    if (message.groupTypeId !== undefined) {
-      writer.uint32(40).int64(message.groupTypeId);
+    if (message.typeId !== undefined) {
+      writer.uint32(40).int64(message.typeId);
     }
     if (message.muteEndDate !== undefined) {
       writer.uint32(48).int64(message.muteEndDate);
@@ -64,10 +64,10 @@ export const CreateGroupRequest = {
           message.announcement = reader.string();
           break;
         case 4:
-          message.minimumScore = reader.int32();
+          message.minScore = reader.int32();
           break;
         case 5:
-          message.groupTypeId = longToString(reader.int64() as Long);
+          message.typeId = longToString(reader.int64() as Long);
           break;
         case 6:
           message.muteEndDate = longToString(reader.int64() as Long);

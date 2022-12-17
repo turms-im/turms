@@ -25,8 +25,10 @@ public struct UpdateGroupJoinQuestionRequest {
     // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
     // methods supported on all messages.
 
+    /// Query filter
     public var questionID: Int64 = 0
 
+    /// Update
     public var question: String {
         get { return _question ?? String() }
         set { _question = newValue }
@@ -53,8 +55,8 @@ public struct UpdateGroupJoinQuestionRequest {
 
     public init() {}
 
-    private var _question: String?
-    private var _score: Int32?
+    fileprivate var _question: String?
+    fileprivate var _score: Int32?
 }
 
 #if swift(>=5.5) && canImport(_Concurrency)

@@ -5,6 +5,7 @@ import _m0 from "protobufjs/minimal";
 export const protobufPackage = "im.turms.proto";
 
 export interface UpdateTypingStatusRequest {
+  /** Query filter */
   isGroupMessage: boolean;
   toId: string;
 }

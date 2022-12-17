@@ -49,8 +49,8 @@ public struct QueryGroupJoinRequestsRequest {
 
     public init() {}
 
-    private var _groupID: Int64?
-    private var _lastUpdatedDate: Int64?
+    fileprivate var _groupID: Int64?
+    fileprivate var _lastUpdatedDate: Int64?
 }
 
 #if swift(>=5.5) && canImport(_Concurrency)

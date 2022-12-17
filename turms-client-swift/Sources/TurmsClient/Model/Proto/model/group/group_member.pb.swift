@@ -101,13 +101,13 @@ public struct GroupMember {
 
     public init() {}
 
-    private var _groupID: Int64?
-    private var _userID: Int64?
-    private var _name: String?
-    private var _role: GroupMemberRole?
-    private var _joinDate: Int64?
-    private var _muteEndDate: Int64?
-    private var _userStatus: UserStatus?
+    fileprivate var _groupID: Int64?
+    fileprivate var _userID: Int64?
+    fileprivate var _name: String?
+    fileprivate var _role: GroupMemberRole?
+    fileprivate var _joinDate: Int64?
+    fileprivate var _muteEndDate: Int64?
+    fileprivate var _userStatus: UserStatus?
 }
 
 #if swift(>=5.5) && canImport(_Concurrency)

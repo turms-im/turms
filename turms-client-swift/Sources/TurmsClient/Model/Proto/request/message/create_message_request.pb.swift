@@ -113,14 +113,14 @@ public struct CreateMessageRequest {
 
     public init() {}
 
-    private var _messageID: Int64?
-    private var _isSystemMessage: Bool?
-    private var _groupID: Int64?
-    private var _recipientID: Int64?
-    private var _deliveryDate: Int64?
-    private var _text: String?
-    private var _burnAfter: Int32?
-    private var _preMessageID: Int64?
+    fileprivate var _messageID: Int64?
+    fileprivate var _isSystemMessage: Bool?
+    fileprivate var _groupID: Int64?
+    fileprivate var _recipientID: Int64?
+    fileprivate var _deliveryDate: Int64?
+    fileprivate var _text: String?
+    fileprivate var _burnAfter: Int32?
+    fileprivate var _preMessageID: Int64?
 }
 
 #if swift(>=5.5) && canImport(_Concurrency)

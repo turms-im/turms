@@ -4,6 +4,7 @@ import _m0 from "protobufjs/minimal";
 export const protobufPackage = "im.turms.proto";
 
 export interface UpdateUserLocationRequest {
+  /** Update */
   latitude: number;
   longitude: number;
   details: { [key: string]: string };

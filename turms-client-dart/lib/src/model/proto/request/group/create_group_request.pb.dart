@@ -3,7 +3,7 @@
 //  source: request/group/create_group_request.proto
 //
 // @dart = 2.12
-// ignore_for_file: annotate_overrides,camel_case_types,unnecessary_const,non_constant_identifier_names,library_prefixes,unused_import,unused_shown_name,return_of_invalid_type,unnecessary_this,prefer_final_fields
+// ignore_for_file: annotate_overrides,camel_case_types,constant_identifier_names,directives_ordering,library_prefixes,non_constant_identifier_names,prefer_final_fields,return_of_invalid_type,unnecessary_const,unnecessary_import,unnecessary_this,unused_import,unused_shown_name
 
 import 'dart:core' as $core;
 
@@ -16,7 +16,7 @@ class CreateGroupRequest extends $pb.GeneratedMessage {
           ? ''
           : 'CreateGroupRequest',
       package: const $pb.PackageName(
-          const $core.bool.fromEnvironment('protobuf.omit_message_names')
+          $core.bool.fromEnvironment('protobuf.omit_message_names')
               ? ''
               : 'im.turms.proto'),
       createEmptyInstance: create)
@@ -39,13 +39,13 @@ class CreateGroupRequest extends $pb.GeneratedMessage {
         4,
         const $core.bool.fromEnvironment('protobuf.omit_field_names')
             ? ''
-            : 'minimumScore',
+            : 'minScore',
         $pb.PbFieldType.O3)
     ..aInt64(
         5,
         const $core.bool.fromEnvironment('protobuf.omit_field_names')
             ? ''
-            : 'groupTypeId')
+            : 'typeId')
     ..aInt64(
         6,
         const $core.bool.fromEnvironment('protobuf.omit_field_names')
@@ -58,8 +58,8 @@ class CreateGroupRequest extends $pb.GeneratedMessage {
     $core.String? name,
     $core.String? intro,
     $core.String? announcement,
-    $core.int? minimumScore,
-    $fixnum.Int64? groupTypeId,
+    $core.int? minScore,
+    $fixnum.Int64? typeId,
     $fixnum.Int64? muteEndDate,
   }) {
     final _result = create();
@@ -72,11 +72,11 @@ class CreateGroupRequest extends $pb.GeneratedMessage {
     if (announcement != null) {
       _result.announcement = announcement;
     }
-    if (minimumScore != null) {
-      _result.minimumScore = minimumScore;
+    if (minScore != null) {
+      _result.minScore = minScore;
     }
-    if (groupTypeId != null) {
-      _result.groupTypeId = groupTypeId;
+    if (typeId != null) {
+      _result.typeId = typeId;
     }
     if (muteEndDate != null) {
       _result.muteEndDate = muteEndDate;
@@ -147,28 +147,28 @@ class CreateGroupRequest extends $pb.GeneratedMessage {
   void clearAnnouncement() => clearField(3);
 
   @$pb.TagNumber(4)
-  $core.int get minimumScore => $_getIZ(3);
+  $core.int get minScore => $_getIZ(3);
   @$pb.TagNumber(4)
-  set minimumScore($core.int v) {
+  set minScore($core.int v) {
     $_setSignedInt32(3, v);
   }
 
   @$pb.TagNumber(4)
-  $core.bool hasMinimumScore() => $_has(3);
+  $core.bool hasMinScore() => $_has(3);
   @$pb.TagNumber(4)
-  void clearMinimumScore() => clearField(4);
+  void clearMinScore() => clearField(4);
 
   @$pb.TagNumber(5)
-  $fixnum.Int64 get groupTypeId => $_getI64(4);
+  $fixnum.Int64 get typeId => $_getI64(4);
   @$pb.TagNumber(5)
-  set groupTypeId($fixnum.Int64 v) {
+  set typeId($fixnum.Int64 v) {
     $_setInt64(4, v);
   }
 
   @$pb.TagNumber(5)
-  $core.bool hasGroupTypeId() => $_has(4);
+  $core.bool hasTypeId() => $_has(4);
   @$pb.TagNumber(5)
-  void clearGroupTypeId() => clearField(5);
+  void clearTypeId() => clearField(5);
 
   @$pb.TagNumber(6)
   $fixnum.Int64 get muteEndDate => $_getI64(5);

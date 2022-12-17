@@ -21,20 +21,22 @@
 package im.turms.client.model.proto.model.user;
 
 public interface NearbyUsersOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:im.turms.proto.NearbyUsers)
-    com.google.protobuf.MessageLiteOrBuilder {
+        // @@protoc_insertion_point(interface_extends:im.turms.proto.NearbyUsers)
+        com.google.protobuf.MessageLiteOrBuilder {
 
-  /**
-   * <code>repeated .im.turms.proto.NearbyUser nearby_users = 1;</code>
-   */
-  java.util.List<im.turms.client.model.proto.model.user.NearbyUser>
-      getNearbyUsersList();
-  /**
-   * <code>repeated .im.turms.proto.NearbyUser nearby_users = 1;</code>
-   */
-  im.turms.client.model.proto.model.user.NearbyUser getNearbyUsers(int index);
-  /**
-   * <code>repeated .im.turms.proto.NearbyUser nearby_users = 1;</code>
-   */
-  int getNearbyUsersCount();
+    /**
+     * <code>repeated .im.turms.proto.NearbyUser nearby_users = 1;</code>
+     */
+    java.util.List<im.turms.client.model.proto.model.user.NearbyUser>
+    getNearbyUsersList();
+
+    /**
+     * <code>repeated .im.turms.proto.NearbyUser nearby_users = 1;</code>
+     */
+    im.turms.client.model.proto.model.user.NearbyUser getNearbyUsers(int index);
+
+    /**
+     * <code>repeated .im.turms.proto.NearbyUser nearby_users = 1;</code>
+     */
+    int getNearbyUsersCount();
 }

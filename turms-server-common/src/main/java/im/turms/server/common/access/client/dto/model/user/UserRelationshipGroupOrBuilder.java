@@ -21,24 +21,28 @@
 package im.turms.server.common.access.client.dto.model.user;
 
 public interface UserRelationshipGroupOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:im.turms.proto.UserRelationshipGroup)
-    com.google.protobuf.MessageOrBuilder {
+        // @@protoc_insertion_point(interface_extends:im.turms.proto.UserRelationshipGroup)
+        com.google.protobuf.MessageOrBuilder {
 
-  /**
-   * <code>int32 index = 1;</code>
-   * @return The index.
-   */
-  int getIndex();
+    /**
+     * <code>int32 index = 1;</code>
+     *
+     * @return The index.
+     */
+    int getIndex();
 
-  /**
-   * <code>string name = 2;</code>
-   * @return The name.
-   */
-  java.lang.String getName();
-  /**
-   * <code>string name = 2;</code>
-   * @return The bytes for name.
-   */
-  com.google.protobuf.ByteString
-      getNameBytes();
+    /**
+     * <code>string name = 2;</code>
+     *
+     * @return The name.
+     */
+    java.lang.String getName();
+
+    /**
+     * <code>string name = 2;</code>
+     *
+     * @return The bytes for name.
+     */
+    com.google.protobuf.ByteString
+    getNameBytes();
 }

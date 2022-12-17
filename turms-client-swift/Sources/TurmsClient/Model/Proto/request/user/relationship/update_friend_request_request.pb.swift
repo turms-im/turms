@@ -25,8 +25,10 @@ public struct UpdateFriendRequestRequest {
     // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
     // methods supported on all messages.
 
+    /// Query filter
     public var requestID: Int64 = 0
 
+    /// Update
     public var responseAction: ResponseAction = .accept
 
     public var reason: String {
@@ -43,7 +45,7 @@ public struct UpdateFriendRequestRequest {
 
     public init() {}
 
-    private var _reason: String?
+    fileprivate var _reason: String?
 }
 
 #if swift(>=5.5) && canImport(_Concurrency)

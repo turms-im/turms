@@ -21,54 +21,59 @@
 package im.turms.server.common.access.client.dto.request.group.member;
 
 public final class CreateGroupMembersRequestOuterClass {
-  private CreateGroupMembersRequestOuterClass() {}
-  public static void registerAllExtensions(
-      com.google.protobuf.ExtensionRegistryLite registry) {
-  }
+    private CreateGroupMembersRequestOuterClass() {
+    }
 
-  public static void registerAllExtensions(
-      com.google.protobuf.ExtensionRegistry registry) {
-    registerAllExtensions(
-        (com.google.protobuf.ExtensionRegistryLite) registry);
-  }
-  static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_im_turms_proto_CreateGroupMembersRequest_descriptor;
-  static final
+    public static void registerAllExtensions(
+            com.google.protobuf.ExtensionRegistryLite registry) {
+    }
+
+    public static void registerAllExtensions(
+            com.google.protobuf.ExtensionRegistry registry) {
+        registerAllExtensions(
+                (com.google.protobuf.ExtensionRegistryLite) registry);
+    }
+
+    static final com.google.protobuf.Descriptors.Descriptor
+            internal_static_im_turms_proto_CreateGroupMembersRequest_descriptor;
+    static final
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_im_turms_proto_CreateGroupMembersRequest_fieldAccessorTable;
+            internal_static_im_turms_proto_CreateGroupMembersRequest_fieldAccessorTable;
 
-  public static com.google.protobuf.Descriptors.FileDescriptor
-      getDescriptor() {
-    return descriptor;
-  }
-  private static  com.google.protobuf.Descriptors.FileDescriptor
-      descriptor;
-  static {
-    java.lang.String[] descriptorData = {
-      "\n7request/group/member/create_group_memb" +
-      "ers_request.proto\022\016im.turms.proto\032 const" +
-      "ant/group_member_role.proto\"\270\001\n\031CreateGr" +
-      "oupMembersRequest\022\020\n\010group_id\030\001 \001(\003\022\020\n\010u" +
-      "ser_ids\030\002 \003(\003\022\021\n\004name\030\003 \001(\tH\000\210\001\001\022-\n\004role" +
-      "\030\004 \001(\0162\037.im.turms.proto.GroupMemberRole\022" +
-      "\032\n\rmute_end_date\030\005 \001(\003H\001\210\001\001B\007\n\005_nameB\020\n\016" +
-      "_mute_end_dateBD\n=im.turms.server.common" +
-      ".access.client.dto.request.group.memberP" +
-      "\001\272\002\000b\006proto3"
-    };
-    descriptor = com.google.protobuf.Descriptors.FileDescriptor
-      .internalBuildGeneratedFileFrom(descriptorData,
-        new com.google.protobuf.Descriptors.FileDescriptor[] {
-          im.turms.server.common.access.client.dto.constant.GroupMemberRoleOuterClass.getDescriptor(),
-        });
-    internal_static_im_turms_proto_CreateGroupMembersRequest_descriptor =
-      getDescriptor().getMessageTypes().get(0);
-    internal_static_im_turms_proto_CreateGroupMembersRequest_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_im_turms_proto_CreateGroupMembersRequest_descriptor,
-        new java.lang.String[] { "GroupId", "UserIds", "Name", "Role", "MuteEndDate", "Name", "MuteEndDate", });
-    im.turms.server.common.access.client.dto.constant.GroupMemberRoleOuterClass.getDescriptor();
-  }
+    public static com.google.protobuf.Descriptors.FileDescriptor
+    getDescriptor() {
+        return descriptor;
+    }
 
-  // @@protoc_insertion_point(outer_class_scope)
+    private static com.google.protobuf.Descriptors.FileDescriptor
+            descriptor;
+
+    static {
+        java.lang.String[] descriptorData = {
+                "\n7request/group/member/create_group_memb" +
+                "ers_request.proto\022\016im.turms.proto\032 const" +
+                "ant/group_member_role.proto\"\270\001\n\031CreateGr" +
+                "oupMembersRequest\022\020\n\010group_id\030\001 \001(\003\022\020\n\010u" +
+                "ser_ids\030\002 \003(\003\022\021\n\004name\030\003 \001(\tH\000\210\001\001\022-\n\004role" +
+                "\030\004 \001(\0162\037.im.turms.proto.GroupMemberRole\022" +
+                "\032\n\rmute_end_date\030\005 \001(\003H\001\210\001\001B\007\n\005_nameB\020\n\016" +
+                "_mute_end_dateBD\n=im.turms.server.common" +
+                ".access.client.dto.request.group.memberP" +
+                "\001\272\002\000b\006proto3"
+        };
+        descriptor = com.google.protobuf.Descriptors.FileDescriptor
+                .internalBuildGeneratedFileFrom(descriptorData,
+                        new com.google.protobuf.Descriptors.FileDescriptor[]{
+                                im.turms.server.common.access.client.dto.constant.GroupMemberRoleOuterClass.getDescriptor(),
+                        });
+        internal_static_im_turms_proto_CreateGroupMembersRequest_descriptor =
+                getDescriptor().getMessageTypes().get(0);
+        internal_static_im_turms_proto_CreateGroupMembersRequest_fieldAccessorTable = new
+                com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+                internal_static_im_turms_proto_CreateGroupMembersRequest_descriptor,
+                new java.lang.String[]{"GroupId", "UserIds", "Name", "Role", "MuteEndDate", "Name", "MuteEndDate",});
+        im.turms.server.common.access.client.dto.constant.GroupMemberRoleOuterClass.getDescriptor();
+    }
+
+    // @@protoc_insertion_point(outer_class_scope)
 }

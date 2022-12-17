@@ -21,23 +21,27 @@
 package im.turms.server.common.access.client.dto.request.user.relationship;
 
 public interface QueryFriendRequestsRequestOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:im.turms.proto.QueryFriendRequestsRequest)
-    com.google.protobuf.MessageOrBuilder {
+        // @@protoc_insertion_point(interface_extends:im.turms.proto.QueryFriendRequestsRequest)
+        com.google.protobuf.MessageOrBuilder {
 
-  /**
-   * <code>bool are_sent_by_me = 1;</code>
-   * @return The areSentByMe.
-   */
-  boolean getAreSentByMe();
+    /**
+     * <code>bool are_sent_by_me = 1;</code>
+     *
+     * @return The areSentByMe.
+     */
+    boolean getAreSentByMe();
 
-  /**
-   * <code>optional int64 last_updated_date = 2;</code>
-   * @return Whether the lastUpdatedDate field is set.
-   */
-  boolean hasLastUpdatedDate();
-  /**
-   * <code>optional int64 last_updated_date = 2;</code>
-   * @return The lastUpdatedDate.
-   */
-  long getLastUpdatedDate();
+    /**
+     * <code>optional int64 last_updated_date = 2;</code>
+     *
+     * @return Whether the lastUpdatedDate field is set.
+     */
+    boolean hasLastUpdatedDate();
+
+    /**
+     * <code>optional int64 last_updated_date = 2;</code>
+     *
+     * @return The lastUpdatedDate.
+     */
+    long getLastUpdatedDate();
 }

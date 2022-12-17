@@ -21,12 +21,13 @@
 package im.turms.server.common.access.client.dto.request.group.enrollment;
 
 public interface DeleteGroupJoinRequestRequestOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:im.turms.proto.DeleteGroupJoinRequestRequest)
-    com.google.protobuf.MessageOrBuilder {
+        // @@protoc_insertion_point(interface_extends:im.turms.proto.DeleteGroupJoinRequestRequest)
+        com.google.protobuf.MessageOrBuilder {
 
-  /**
-   * <code>int64 request_id = 1;</code>
-   * @return The requestId.
-   */
-  long getRequestId();
+    /**
+     * <code>int64 request_id = 1;</code>
+     *
+     * @return The requestId.
+     */
+    long getRequestId();
 }

@@ -21,31 +21,36 @@
 package im.turms.client.model.proto.model.user;
 
 public interface UserRelationshipGroupsWithVersionOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:im.turms.proto.UserRelationshipGroupsWithVersion)
-    com.google.protobuf.MessageLiteOrBuilder {
+        // @@protoc_insertion_point(interface_extends:im.turms.proto.UserRelationshipGroupsWithVersion)
+        com.google.protobuf.MessageLiteOrBuilder {
 
-  /**
-   * <code>repeated .im.turms.proto.UserRelationshipGroup user_relationship_groups = 1;</code>
-   */
-  java.util.List<im.turms.client.model.proto.model.user.UserRelationshipGroup>
-      getUserRelationshipGroupsList();
-  /**
-   * <code>repeated .im.turms.proto.UserRelationshipGroup user_relationship_groups = 1;</code>
-   */
-  im.turms.client.model.proto.model.user.UserRelationshipGroup getUserRelationshipGroups(int index);
-  /**
-   * <code>repeated .im.turms.proto.UserRelationshipGroup user_relationship_groups = 1;</code>
-   */
-  int getUserRelationshipGroupsCount();
+    /**
+     * <code>repeated .im.turms.proto.UserRelationshipGroup user_relationship_groups = 1;</code>
+     */
+    java.util.List<im.turms.client.model.proto.model.user.UserRelationshipGroup>
+    getUserRelationshipGroupsList();
 
-  /**
-   * <code>optional int64 last_updated_date = 2;</code>
-   * @return Whether the lastUpdatedDate field is set.
-   */
-  boolean hasLastUpdatedDate();
-  /**
-   * <code>optional int64 last_updated_date = 2;</code>
-   * @return The lastUpdatedDate.
-   */
-  long getLastUpdatedDate();
+    /**
+     * <code>repeated .im.turms.proto.UserRelationshipGroup user_relationship_groups = 1;</code>
+     */
+    im.turms.client.model.proto.model.user.UserRelationshipGroup getUserRelationshipGroups(int index);
+
+    /**
+     * <code>repeated .im.turms.proto.UserRelationshipGroup user_relationship_groups = 1;</code>
+     */
+    int getUserRelationshipGroupsCount();
+
+    /**
+     * <code>optional int64 last_updated_date = 2;</code>
+     *
+     * @return Whether the lastUpdatedDate field is set.
+     */
+    boolean hasLastUpdatedDate();
+
+    /**
+     * <code>optional int64 last_updated_date = 2;</code>
+     *
+     * @return The lastUpdatedDate.
+     */
+    long getLastUpdatedDate();
 }

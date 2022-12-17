@@ -21,56 +21,61 @@
 package im.turms.server.common.access.client.dto.model.conversation;
 
 public final class ConversationsOuterClass {
-  private ConversationsOuterClass() {}
-  public static void registerAllExtensions(
-      com.google.protobuf.ExtensionRegistryLite registry) {
-  }
+    private ConversationsOuterClass() {
+    }
 
-  public static void registerAllExtensions(
-      com.google.protobuf.ExtensionRegistry registry) {
-    registerAllExtensions(
-        (com.google.protobuf.ExtensionRegistryLite) registry);
-  }
-  static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_im_turms_proto_Conversations_descriptor;
-  static final
+    public static void registerAllExtensions(
+            com.google.protobuf.ExtensionRegistryLite registry) {
+    }
+
+    public static void registerAllExtensions(
+            com.google.protobuf.ExtensionRegistry registry) {
+        registerAllExtensions(
+                (com.google.protobuf.ExtensionRegistryLite) registry);
+    }
+
+    static final com.google.protobuf.Descriptors.Descriptor
+            internal_static_im_turms_proto_Conversations_descriptor;
+    static final
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_im_turms_proto_Conversations_fieldAccessorTable;
+            internal_static_im_turms_proto_Conversations_fieldAccessorTable;
 
-  public static com.google.protobuf.Descriptors.FileDescriptor
-      getDescriptor() {
-    return descriptor;
-  }
-  private static  com.google.protobuf.Descriptors.FileDescriptor
-      descriptor;
-  static {
-    java.lang.String[] descriptorData = {
-      "\n&model/conversation/conversations.proto" +
-      "\022\016im.turms.proto\032-model/conversation/pri" +
-      "vate_conversation.proto\032+model/conversat" +
-      "ion/group_conversation.proto\"\223\001\n\rConvers" +
-      "ations\022B\n\025private_conversations\030\001 \003(\0132#." +
-      "im.turms.proto.PrivateConversation\022>\n\023gr" +
-      "oup_conversations\030\002 \003(\0132!.im.turms.proto" +
-      ".GroupConversationBB\n;im.turms.server.co" +
-      "mmon.access.client.dto.model.conversatio" +
-      "nP\001\272\002\000b\006proto3"
-    };
-    descriptor = com.google.protobuf.Descriptors.FileDescriptor
-      .internalBuildGeneratedFileFrom(descriptorData,
-        new com.google.protobuf.Descriptors.FileDescriptor[] {
-          im.turms.server.common.access.client.dto.model.conversation.PrivateConversationOuterClass.getDescriptor(),
-          im.turms.server.common.access.client.dto.model.conversation.GroupConversationOuterClass.getDescriptor(),
-        });
-    internal_static_im_turms_proto_Conversations_descriptor =
-      getDescriptor().getMessageTypes().get(0);
-    internal_static_im_turms_proto_Conversations_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_im_turms_proto_Conversations_descriptor,
-        new java.lang.String[] { "PrivateConversations", "GroupConversations", });
-    im.turms.server.common.access.client.dto.model.conversation.PrivateConversationOuterClass.getDescriptor();
-    im.turms.server.common.access.client.dto.model.conversation.GroupConversationOuterClass.getDescriptor();
-  }
+    public static com.google.protobuf.Descriptors.FileDescriptor
+    getDescriptor() {
+        return descriptor;
+    }
 
-  // @@protoc_insertion_point(outer_class_scope)
+    private static com.google.protobuf.Descriptors.FileDescriptor
+            descriptor;
+
+    static {
+        java.lang.String[] descriptorData = {
+                "\n&model/conversation/conversations.proto" +
+                "\022\016im.turms.proto\032-model/conversation/pri" +
+                "vate_conversation.proto\032+model/conversat" +
+                "ion/group_conversation.proto\"\223\001\n\rConvers" +
+                "ations\022B\n\025private_conversations\030\001 \003(\0132#." +
+                "im.turms.proto.PrivateConversation\022>\n\023gr" +
+                "oup_conversations\030\002 \003(\0132!.im.turms.proto" +
+                ".GroupConversationBB\n;im.turms.server.co" +
+                "mmon.access.client.dto.model.conversatio" +
+                "nP\001\272\002\000b\006proto3"
+        };
+        descriptor = com.google.protobuf.Descriptors.FileDescriptor
+                .internalBuildGeneratedFileFrom(descriptorData,
+                        new com.google.protobuf.Descriptors.FileDescriptor[]{
+                                im.turms.server.common.access.client.dto.model.conversation.PrivateConversationOuterClass.getDescriptor(),
+                                im.turms.server.common.access.client.dto.model.conversation.GroupConversationOuterClass.getDescriptor(),
+                        });
+        internal_static_im_turms_proto_Conversations_descriptor =
+                getDescriptor().getMessageTypes().get(0);
+        internal_static_im_turms_proto_Conversations_fieldAccessorTable = new
+                com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+                internal_static_im_turms_proto_Conversations_descriptor,
+                new java.lang.String[]{"PrivateConversations", "GroupConversations",});
+        im.turms.server.common.access.client.dto.model.conversation.PrivateConversationOuterClass.getDescriptor();
+        im.turms.server.common.access.client.dto.model.conversation.GroupConversationOuterClass.getDescriptor();
+    }
+
+    // @@protoc_insertion_point(outer_class_scope)
 }

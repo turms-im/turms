@@ -21,32 +21,39 @@
 package im.turms.server.common.access.client.dto.model.file;
 
 public interface VideoFileOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:im.turms.proto.VideoFile)
-    com.google.protobuf.MessageOrBuilder {
+        // @@protoc_insertion_point(interface_extends:im.turms.proto.VideoFile)
+        com.google.protobuf.MessageOrBuilder {
 
-  /**
-   * <code>optional .im.turms.proto.VideoFile.Description description = 1;</code>
-   * @return Whether the description field is set.
-   */
-  boolean hasDescription();
-  /**
-   * <code>optional .im.turms.proto.VideoFile.Description description = 1;</code>
-   * @return The description.
-   */
-  im.turms.server.common.access.client.dto.model.file.VideoFile.Description getDescription();
-  /**
-   * <code>optional .im.turms.proto.VideoFile.Description description = 1;</code>
-   */
-  im.turms.server.common.access.client.dto.model.file.VideoFile.DescriptionOrBuilder getDescriptionOrBuilder();
+    /**
+     * <code>optional .im.turms.proto.VideoFile.Description description = 1;</code>
+     *
+     * @return Whether the description field is set.
+     */
+    boolean hasDescription();
 
-  /**
-   * <code>optional bytes data = 2;</code>
-   * @return Whether the data field is set.
-   */
-  boolean hasData();
-  /**
-   * <code>optional bytes data = 2;</code>
-   * @return The data.
-   */
-  com.google.protobuf.ByteString getData();
+    /**
+     * <code>optional .im.turms.proto.VideoFile.Description description = 1;</code>
+     *
+     * @return The description.
+     */
+    im.turms.server.common.access.client.dto.model.file.VideoFile.Description getDescription();
+
+    /**
+     * <code>optional .im.turms.proto.VideoFile.Description description = 1;</code>
+     */
+    im.turms.server.common.access.client.dto.model.file.VideoFile.DescriptionOrBuilder getDescriptionOrBuilder();
+
+    /**
+     * <code>optional bytes data = 2;</code>
+     *
+     * @return Whether the data field is set.
+     */
+    boolean hasData();
+
+    /**
+     * <code>optional bytes data = 2;</code>
+     *
+     * @return The data.
+     */
+    com.google.protobuf.ByteString getData();
 }

@@ -3,7 +3,7 @@
 //  source: request/turms_request.proto
 //
 // @dart = 2.12
-// ignore_for_file: annotate_overrides,camel_case_types,unnecessary_const,non_constant_identifier_names,library_prefixes,unused_import,unused_shown_name,return_of_invalid_type,unnecessary_this,prefer_final_fields
+// ignore_for_file: annotate_overrides,camel_case_types,constant_identifier_names,directives_ordering,library_prefixes,non_constant_identifier_names,prefer_final_fields,return_of_invalid_type,unnecessary_const,unnecessary_import,unnecessary_this,unused_import,unused_shown_name
 
 import 'dart:core' as $core;
 
@@ -65,6 +65,8 @@ import 'group/enrollment/update_group_join_question_request.pb.dart' as $50;
 import 'storage/delete_resource_request.pb.dart' as $51;
 import 'storage/query_resource_download_info_request.pb.dart' as $52;
 import 'storage/query_resource_upload_info_request.pb.dart' as $53;
+import 'storage/query_message_attachment_infos_request.pb.dart' as $54;
+import 'storage/update_message_attachment_info_request.pb.dart' as $55;
 
 enum TurmsRequest_Kind {
   createSessionRequest,
@@ -121,6 +123,8 @@ enum TurmsRequest_Kind {
   deleteResourceRequest,
   queryResourceDownloadInfoRequest,
   queryResourceUploadInfoRequest,
+  queryMessageAttachmentInfosRequest,
+  updateMessageAttachmentInfoRequest,
   notSet
 }
 
@@ -181,6 +185,8 @@ class TurmsRequest extends $pb.GeneratedMessage {
     1000: TurmsRequest_Kind.deleteResourceRequest,
     1001: TurmsRequest_Kind.queryResourceDownloadInfoRequest,
     1002: TurmsRequest_Kind.queryResourceUploadInfoRequest,
+    1003: TurmsRequest_Kind.queryMessageAttachmentInfosRequest,
+    1004: TurmsRequest_Kind.updateMessageAttachmentInfoRequest,
     0: TurmsRequest_Kind.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -188,7 +194,7 @@ class TurmsRequest extends $pb.GeneratedMessage {
           ? ''
           : 'TurmsRequest',
       package: const $pb.PackageName(
-          const $core.bool.fromEnvironment('protobuf.omit_message_names')
+          $core.bool.fromEnvironment('protobuf.omit_message_names')
               ? ''
               : 'im.turms.proto'),
       createEmptyInstance: create)
@@ -246,7 +252,9 @@ class TurmsRequest extends $pb.GeneratedMessage {
       510,
       1000,
       1001,
-      1002
+      1002,
+      1003,
+      1004
     ])
     ..aInt64(
         1,
@@ -577,6 +585,18 @@ class TurmsRequest extends $pb.GeneratedMessage {
             ? ''
             : 'queryResourceUploadInfoRequest',
         subBuilder: $53.QueryResourceUploadInfoRequest.create)
+    ..aOM<$54.QueryMessageAttachmentInfosRequest>(
+        1003,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'queryMessageAttachmentInfosRequest',
+        subBuilder: $54.QueryMessageAttachmentInfosRequest.create)
+    ..aOM<$55.UpdateMessageAttachmentInfoRequest>(
+        1004,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'updateMessageAttachmentInfoRequest',
+        subBuilder: $55.UpdateMessageAttachmentInfoRequest.create)
     ..hasRequiredFields = false;
 
   TurmsRequest._() : super();
@@ -637,6 +657,8 @@ class TurmsRequest extends $pb.GeneratedMessage {
     $51.DeleteResourceRequest? deleteResourceRequest,
     $52.QueryResourceDownloadInfoRequest? queryResourceDownloadInfoRequest,
     $53.QueryResourceUploadInfoRequest? queryResourceUploadInfoRequest,
+    $54.QueryMessageAttachmentInfosRequest? queryMessageAttachmentInfosRequest,
+    $55.UpdateMessageAttachmentInfoRequest? updateMessageAttachmentInfoRequest,
   }) {
     final _result = create();
     if (requestId != null) {
@@ -806,6 +828,14 @@ class TurmsRequest extends $pb.GeneratedMessage {
     }
     if (queryResourceUploadInfoRequest != null) {
       _result.queryResourceUploadInfoRequest = queryResourceUploadInfoRequest;
+    }
+    if (queryMessageAttachmentInfosRequest != null) {
+      _result.queryMessageAttachmentInfosRequest =
+          queryMessageAttachmentInfosRequest;
+    }
+    if (updateMessageAttachmentInfoRequest != null) {
+      _result.updateMessageAttachmentInfoRequest =
+          updateMessageAttachmentInfoRequest;
     }
     return _result;
   }
@@ -1667,4 +1697,38 @@ class TurmsRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(1002)
   $53.QueryResourceUploadInfoRequest ensureQueryResourceUploadInfoRequest() =>
       $_ensure(54);
+
+  @$pb.TagNumber(1003)
+  $54.QueryMessageAttachmentInfosRequest
+      get queryMessageAttachmentInfosRequest => $_getN(55);
+  @$pb.TagNumber(1003)
+  set queryMessageAttachmentInfosRequest(
+      $54.QueryMessageAttachmentInfosRequest v) {
+    setField(1003, v);
+  }
+
+  @$pb.TagNumber(1003)
+  $core.bool hasQueryMessageAttachmentInfosRequest() => $_has(55);
+  @$pb.TagNumber(1003)
+  void clearQueryMessageAttachmentInfosRequest() => clearField(1003);
+  @$pb.TagNumber(1003)
+  $54.QueryMessageAttachmentInfosRequest
+      ensureQueryMessageAttachmentInfosRequest() => $_ensure(55);
+
+  @$pb.TagNumber(1004)
+  $55.UpdateMessageAttachmentInfoRequest
+      get updateMessageAttachmentInfoRequest => $_getN(56);
+  @$pb.TagNumber(1004)
+  set updateMessageAttachmentInfoRequest(
+      $55.UpdateMessageAttachmentInfoRequest v) {
+    setField(1004, v);
+  }
+
+  @$pb.TagNumber(1004)
+  $core.bool hasUpdateMessageAttachmentInfoRequest() => $_has(56);
+  @$pb.TagNumber(1004)
+  void clearUpdateMessageAttachmentInfoRequest() => clearField(1004);
+  @$pb.TagNumber(1004)
+  $55.UpdateMessageAttachmentInfoRequest
+      ensureUpdateMessageAttachmentInfoRequest() => $_ensure(56);
 }

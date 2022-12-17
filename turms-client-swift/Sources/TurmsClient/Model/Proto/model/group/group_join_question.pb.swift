@@ -71,10 +71,10 @@ public struct GroupJoinQuestion {
 
     public init() {}
 
-    private var _id: Int64?
-    private var _groupID: Int64?
-    private var _question: String?
-    private var _score: Int32?
+    fileprivate var _id: Int64?
+    fileprivate var _groupID: Int64?
+    fileprivate var _question: String?
+    fileprivate var _score: Int32?
 }
 
 #if swift(>=5.5) && canImport(_Concurrency)

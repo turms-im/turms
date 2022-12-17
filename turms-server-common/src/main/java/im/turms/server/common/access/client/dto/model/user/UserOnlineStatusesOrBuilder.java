@@ -21,30 +21,34 @@
 package im.turms.server.common.access.client.dto.model.user;
 
 public interface UserOnlineStatusesOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:im.turms.proto.UserOnlineStatuses)
-    com.google.protobuf.MessageOrBuilder {
+        // @@protoc_insertion_point(interface_extends:im.turms.proto.UserOnlineStatuses)
+        com.google.protobuf.MessageOrBuilder {
 
-  /**
-   * <code>repeated .im.turms.proto.UserOnlineStatus statuses = 1;</code>
-   */
-  java.util.List<im.turms.server.common.access.client.dto.model.user.UserOnlineStatus>
-      getStatusesList();
-  /**
-   * <code>repeated .im.turms.proto.UserOnlineStatus statuses = 1;</code>
-   */
-  im.turms.server.common.access.client.dto.model.user.UserOnlineStatus getStatuses(int index);
-  /**
-   * <code>repeated .im.turms.proto.UserOnlineStatus statuses = 1;</code>
-   */
-  int getStatusesCount();
-  /**
-   * <code>repeated .im.turms.proto.UserOnlineStatus statuses = 1;</code>
-   */
-  java.util.List<? extends im.turms.server.common.access.client.dto.model.user.UserOnlineStatusOrBuilder>
-      getStatusesOrBuilderList();
-  /**
-   * <code>repeated .im.turms.proto.UserOnlineStatus statuses = 1;</code>
-   */
-  im.turms.server.common.access.client.dto.model.user.UserOnlineStatusOrBuilder getStatusesOrBuilder(
-      int index);
+    /**
+     * <code>repeated .im.turms.proto.UserOnlineStatus statuses = 1;</code>
+     */
+    java.util.List<im.turms.server.common.access.client.dto.model.user.UserOnlineStatus>
+    getStatusesList();
+
+    /**
+     * <code>repeated .im.turms.proto.UserOnlineStatus statuses = 1;</code>
+     */
+    im.turms.server.common.access.client.dto.model.user.UserOnlineStatus getStatuses(int index);
+
+    /**
+     * <code>repeated .im.turms.proto.UserOnlineStatus statuses = 1;</code>
+     */
+    int getStatusesCount();
+
+    /**
+     * <code>repeated .im.turms.proto.UserOnlineStatus statuses = 1;</code>
+     */
+    java.util.List<? extends im.turms.server.common.access.client.dto.model.user.UserOnlineStatusOrBuilder>
+    getStatusesOrBuilderList();
+
+    /**
+     * <code>repeated .im.turms.proto.UserOnlineStatus statuses = 1;</code>
+     */
+    im.turms.server.common.access.client.dto.model.user.UserOnlineStatusOrBuilder getStatusesOrBuilder(
+            int index);
 }

@@ -25,6 +25,7 @@ public struct UpdateTypingStatusRequest {
     // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
     // methods supported on all messages.
 
+    /// Query filter
     public var isGroupMessage: Bool = false
 
     public var toID: Int64 = 0

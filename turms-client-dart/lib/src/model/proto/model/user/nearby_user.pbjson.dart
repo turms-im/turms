@@ -3,18 +3,18 @@
 //  source: model/user/nearby_user.proto
 //
 // @dart = 2.12
-// ignore_for_file: annotate_overrides,camel_case_types,unnecessary_const,non_constant_identifier_names,library_prefixes,unused_import,unused_shown_name,return_of_invalid_type,unnecessary_this,prefer_final_fields,deprecated_member_use_from_same_package
+// ignore_for_file: annotate_overrides,camel_case_types,constant_identifier_names,deprecated_member_use_from_same_package,directives_ordering,library_prefixes,non_constant_identifier_names,prefer_final_fields,return_of_invalid_type,unnecessary_const,unnecessary_import,unnecessary_this,unused_import,unused_shown_name
 
 import 'dart:core' as $core;
 import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
 
 @$core.Deprecated('Use nearbyUserDescriptor instead')
-const NearbyUser$json = const {
+const NearbyUser$json = {
   '1': 'NearbyUser',
-  '2': const [
-    const {'1': 'user_id', '3': 1, '4': 1, '5': 3, '10': 'userId'},
-    const {
+  '2': [
+    {'1': 'user_id', '3': 1, '4': 1, '5': 3, '10': 'userId'},
+    {
       '1': 'device_type',
       '3': 2,
       '4': 1,
@@ -24,7 +24,7 @@ const NearbyUser$json = const {
       '10': 'deviceType',
       '17': true
     },
-    const {
+    {
       '1': 'info',
       '3': 3,
       '4': 1,
@@ -34,7 +34,7 @@ const NearbyUser$json = const {
       '10': 'info',
       '17': true
     },
-    const {
+    {
       '1': 'distance',
       '3': 4,
       '4': 1,
@@ -43,7 +43,7 @@ const NearbyUser$json = const {
       '10': 'distance',
       '17': true
     },
-    const {
+    {
       '1': 'location',
       '3': 5,
       '4': 1,
@@ -54,11 +54,11 @@ const NearbyUser$json = const {
       '17': true
     },
   ],
-  '8': const [
-    const {'1': '_device_type'},
-    const {'1': '_info'},
-    const {'1': '_distance'},
-    const {'1': '_location'},
+  '8': [
+    {'1': '_device_type'},
+    {'1': '_info'},
+    {'1': '_distance'},
+    {'1': '_location'},
   ],
 };
 

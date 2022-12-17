@@ -95,8 +95,8 @@ public struct ImageFile {
 
     public init() {}
 
-    private var _description_p: ImageFile.Description?
-    private var _data: Data?
+    fileprivate var _description_p: ImageFile.Description?
+    fileprivate var _data: Data?
 }
 
 #if swift(>=5.5) && canImport(_Concurrency)

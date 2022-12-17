@@ -21,52 +21,65 @@
 package im.turms.client.model.proto.model.user;
 
 public interface UserOnlineStatusOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:im.turms.proto.UserOnlineStatus)
-    com.google.protobuf.MessageLiteOrBuilder {
+        // @@protoc_insertion_point(interface_extends:im.turms.proto.UserOnlineStatus)
+        com.google.protobuf.MessageLiteOrBuilder {
 
-  /**
-   * <code>int64 user_id = 1;</code>
-   * @return The userId.
-   */
-  long getUserId();
+    /**
+     * <code>int64 user_id = 1;</code>
+     *
+     * @return The userId.
+     */
+    long getUserId();
 
-  /**
-   * <code>.im.turms.proto.UserStatus user_status = 2;</code>
-   * @return The enum numeric value on the wire for userStatus.
-   */
-  int getUserStatusValue();
-  /**
-   * <code>.im.turms.proto.UserStatus user_status = 2;</code>
-   * @return The userStatus.
-   */
-  im.turms.client.model.proto.constant.UserStatus getUserStatus();
+    /**
+     * <code>.im.turms.proto.UserStatus user_status = 2;</code>
+     *
+     * @return The enum numeric value on the wire for userStatus.
+     */
+    int getUserStatusValue();
 
-  /**
-   * <code>repeated .im.turms.proto.DeviceType using_device_types = 3;</code>
-   * @return A list containing the usingDeviceTypes.
-   */
-  java.util.List<im.turms.client.model.proto.constant.DeviceType> getUsingDeviceTypesList();
-  /**
-   * <code>repeated .im.turms.proto.DeviceType using_device_types = 3;</code>
-   * @return The count of usingDeviceTypes.
-   */
-  int getUsingDeviceTypesCount();
-  /**
-   * <code>repeated .im.turms.proto.DeviceType using_device_types = 3;</code>
-   * @param index The index of the element to return.
-   * @return The usingDeviceTypes at the given index.
-   */
-  im.turms.client.model.proto.constant.DeviceType getUsingDeviceTypes(int index);
-  /**
-   * <code>repeated .im.turms.proto.DeviceType using_device_types = 3;</code>
-   * @return A list containing the enum numeric values on the wire for usingDeviceTypes.
-   */
-  java.util.List<java.lang.Integer>
-  getUsingDeviceTypesValueList();
-  /**
-   * <code>repeated .im.turms.proto.DeviceType using_device_types = 3;</code>
-   * @param index The index of the value to return.
-   * @return The enum numeric value on the wire of usingDeviceTypes at the given index.
-   */
-  int getUsingDeviceTypesValue(int index);
+    /**
+     * <code>.im.turms.proto.UserStatus user_status = 2;</code>
+     *
+     * @return The userStatus.
+     */
+    im.turms.client.model.proto.constant.UserStatus getUserStatus();
+
+    /**
+     * <code>repeated .im.turms.proto.DeviceType using_device_types = 3;</code>
+     *
+     * @return A list containing the usingDeviceTypes.
+     */
+    java.util.List<im.turms.client.model.proto.constant.DeviceType> getUsingDeviceTypesList();
+
+    /**
+     * <code>repeated .im.turms.proto.DeviceType using_device_types = 3;</code>
+     *
+     * @return The count of usingDeviceTypes.
+     */
+    int getUsingDeviceTypesCount();
+
+    /**
+     * <code>repeated .im.turms.proto.DeviceType using_device_types = 3;</code>
+     *
+     * @param index The index of the element to return.
+     * @return The usingDeviceTypes at the given index.
+     */
+    im.turms.client.model.proto.constant.DeviceType getUsingDeviceTypes(int index);
+
+    /**
+     * <code>repeated .im.turms.proto.DeviceType using_device_types = 3;</code>
+     *
+     * @return A list containing the enum numeric values on the wire for usingDeviceTypes.
+     */
+    java.util.List<java.lang.Integer>
+    getUsingDeviceTypesValueList();
+
+    /**
+     * <code>repeated .im.turms.proto.DeviceType using_device_types = 3;</code>
+     *
+     * @param index The index of the value to return.
+     * @return The enum numeric value on the wire of usingDeviceTypes at the given index.
+     */
+    int getUsingDeviceTypesValue(int index);
 }

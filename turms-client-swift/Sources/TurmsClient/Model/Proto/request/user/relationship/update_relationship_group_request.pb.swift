@@ -25,8 +25,10 @@ public struct UpdateRelationshipGroupRequest {
     // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
     // methods supported on all messages.
 
+    /// Query filter
     public var groupIndex: Int32 = 0
 
+    /// Update
     public var newName: String = .init()
 
     public var unknownFields = SwiftProtobuf.UnknownStorage()

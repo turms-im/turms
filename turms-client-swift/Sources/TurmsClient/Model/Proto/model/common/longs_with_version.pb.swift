@@ -41,7 +41,7 @@ public struct LongsWithVersion {
 
     public init() {}
 
-    private var _lastUpdatedDate: Int64?
+    fileprivate var _lastUpdatedDate: Int64?
 }
 
 #if swift(>=5.5) && canImport(_Concurrency)

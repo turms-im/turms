@@ -21,65 +21,97 @@
 package im.turms.server.common.access.client.dto.request.group.enrollment;
 
 public interface UpdateGroupJoinQuestionRequestOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:im.turms.proto.UpdateGroupJoinQuestionRequest)
-    com.google.protobuf.MessageOrBuilder {
+        // @@protoc_insertion_point(interface_extends:im.turms.proto.UpdateGroupJoinQuestionRequest)
+        com.google.protobuf.MessageOrBuilder {
 
-  /**
-   * <code>int64 question_id = 1;</code>
-   * @return The questionId.
-   */
-  long getQuestionId();
+    /**
+     * <pre>
+     * Query filter
+     * </pre>
+     *
+     * <code>int64 question_id = 1;</code>
+     *
+     * @return The questionId.
+     */
+    long getQuestionId();
 
-  /**
-   * <code>optional string question = 2;</code>
-   * @return Whether the question field is set.
-   */
-  boolean hasQuestion();
-  /**
-   * <code>optional string question = 2;</code>
-   * @return The question.
-   */
-  java.lang.String getQuestion();
-  /**
-   * <code>optional string question = 2;</code>
-   * @return The bytes for question.
-   */
-  com.google.protobuf.ByteString
-      getQuestionBytes();
+    /**
+     * <pre>
+     * Update
+     * </pre>
+     *
+     * <code>optional string question = 2;</code>
+     *
+     * @return Whether the question field is set.
+     */
+    boolean hasQuestion();
 
-  /**
-   * <code>repeated string answers = 3;</code>
-   * @return A list containing the answers.
-   */
-  java.util.List<java.lang.String>
-      getAnswersList();
-  /**
-   * <code>repeated string answers = 3;</code>
-   * @return The count of answers.
-   */
-  int getAnswersCount();
-  /**
-   * <code>repeated string answers = 3;</code>
-   * @param index The index of the element to return.
-   * @return The answers at the given index.
-   */
-  java.lang.String getAnswers(int index);
-  /**
-   * <code>repeated string answers = 3;</code>
-   * @param index The index of the value to return.
-   * @return The bytes of the answers at the given index.
-   */
-  com.google.protobuf.ByteString
-      getAnswersBytes(int index);
+    /**
+     * <pre>
+     * Update
+     * </pre>
+     *
+     * <code>optional string question = 2;</code>
+     *
+     * @return The question.
+     */
+    java.lang.String getQuestion();
 
-  /**
-   * <code>optional int32 score = 4;</code>
-   * @return Whether the score field is set.
-   */
-  boolean hasScore();
-  /**
-   * <code>optional int32 score = 4;</code>
-   * @return The score.
-   */
-  int getScore();
+    /**
+     * <pre>
+     * Update
+     * </pre>
+     *
+     * <code>optional string question = 2;</code>
+     *
+     * @return The bytes for question.
+     */
+    com.google.protobuf.ByteString
+    getQuestionBytes();
+
+    /**
+     * <code>repeated string answers = 3;</code>
+     *
+     * @return A list containing the answers.
+     */
+    java.util.List<java.lang.String>
+    getAnswersList();
+
+    /**
+     * <code>repeated string answers = 3;</code>
+     *
+     * @return The count of answers.
+     */
+    int getAnswersCount();
+
+    /**
+     * <code>repeated string answers = 3;</code>
+     *
+     * @param index The index of the element to return.
+     * @return The answers at the given index.
+     */
+    java.lang.String getAnswers(int index);
+
+    /**
+     * <code>repeated string answers = 3;</code>
+     *
+     * @param index The index of the value to return.
+     * @return The bytes of the answers at the given index.
+     */
+    com.google.protobuf.ByteString
+    getAnswersBytes(int index);
+
+    /**
+     * <code>optional int32 score = 4;</code>
+     *
+     * @return Whether the score field is set.
+     */
+    boolean hasScore();
+
+    /**
+     * <code>optional int32 score = 4;</code>
+     *
+     * @return The score.
+     */
+    int getScore();
 }

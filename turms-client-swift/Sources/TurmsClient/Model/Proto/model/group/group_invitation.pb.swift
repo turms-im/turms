@@ -109,14 +109,14 @@ public struct GroupInvitation {
 
     public init() {}
 
-    private var _id: Int64?
-    private var _creationDate: Int64?
-    private var _content: String?
-    private var _status: RequestStatus?
-    private var _expirationDate: Int64?
-    private var _groupID: Int64?
-    private var _inviterID: Int64?
-    private var _inviteeID: Int64?
+    fileprivate var _id: Int64?
+    fileprivate var _creationDate: Int64?
+    fileprivate var _content: String?
+    fileprivate var _status: RequestStatus?
+    fileprivate var _expirationDate: Int64?
+    fileprivate var _groupID: Int64?
+    fileprivate var _inviterID: Int64?
+    fileprivate var _inviteeID: Int64?
 }
 
 #if swift(>=5.5) && canImport(_Concurrency)

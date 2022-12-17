@@ -21,49 +21,54 @@
 package im.turms.server.common.access.client.dto.request.user.relationship;
 
 public final class CreateRelationshipRequestOuterClass {
-  private CreateRelationshipRequestOuterClass() {}
-  public static void registerAllExtensions(
-      com.google.protobuf.ExtensionRegistryLite registry) {
-  }
+    private CreateRelationshipRequestOuterClass() {
+    }
 
-  public static void registerAllExtensions(
-      com.google.protobuf.ExtensionRegistry registry) {
-    registerAllExtensions(
-        (com.google.protobuf.ExtensionRegistryLite) registry);
-  }
-  static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_im_turms_proto_CreateRelationshipRequest_descriptor;
-  static final
+    public static void registerAllExtensions(
+            com.google.protobuf.ExtensionRegistryLite registry) {
+    }
+
+    public static void registerAllExtensions(
+            com.google.protobuf.ExtensionRegistry registry) {
+        registerAllExtensions(
+                (com.google.protobuf.ExtensionRegistryLite) registry);
+    }
+
+    static final com.google.protobuf.Descriptors.Descriptor
+            internal_static_im_turms_proto_CreateRelationshipRequest_descriptor;
+    static final
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_im_turms_proto_CreateRelationshipRequest_fieldAccessorTable;
+            internal_static_im_turms_proto_CreateRelationshipRequest_fieldAccessorTable;
 
-  public static com.google.protobuf.Descriptors.FileDescriptor
-      getDescriptor() {
-    return descriptor;
-  }
-  private static  com.google.protobuf.Descriptors.FileDescriptor
-      descriptor;
-  static {
-    java.lang.String[] descriptorData = {
-      "\n;request/user/relationship/create_relat" +
-      "ionship_request.proto\022\016im.turms.proto\"g\n" +
-      "\031CreateRelationshipRequest\022\017\n\007user_id\030\001 " +
-      "\001(\003\022\017\n\007blocked\030\002 \001(\010\022\030\n\013group_index\030\003 \001(" +
-      "\005H\000\210\001\001B\016\n\014_group_indexBI\nBim.turms.serve" +
-      "r.common.access.client.dto.request.user." +
-      "relationshipP\001\272\002\000b\006proto3"
-    };
-    descriptor = com.google.protobuf.Descriptors.FileDescriptor
-      .internalBuildGeneratedFileFrom(descriptorData,
-        new com.google.protobuf.Descriptors.FileDescriptor[] {
-        });
-    internal_static_im_turms_proto_CreateRelationshipRequest_descriptor =
-      getDescriptor().getMessageTypes().get(0);
-    internal_static_im_turms_proto_CreateRelationshipRequest_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_im_turms_proto_CreateRelationshipRequest_descriptor,
-        new java.lang.String[] { "UserId", "Blocked", "GroupIndex", "GroupIndex", });
-  }
+    public static com.google.protobuf.Descriptors.FileDescriptor
+    getDescriptor() {
+        return descriptor;
+    }
 
-  // @@protoc_insertion_point(outer_class_scope)
+    private static com.google.protobuf.Descriptors.FileDescriptor
+            descriptor;
+
+    static {
+        java.lang.String[] descriptorData = {
+                "\n;request/user/relationship/create_relat" +
+                "ionship_request.proto\022\016im.turms.proto\"g\n" +
+                "\031CreateRelationshipRequest\022\017\n\007user_id\030\001 " +
+                "\001(\003\022\017\n\007blocked\030\002 \001(\010\022\030\n\013group_index\030\003 \001(" +
+                "\005H\000\210\001\001B\016\n\014_group_indexBI\nBim.turms.serve" +
+                "r.common.access.client.dto.request.user." +
+                "relationshipP\001\272\002\000b\006proto3"
+        };
+        descriptor = com.google.protobuf.Descriptors.FileDescriptor
+                .internalBuildGeneratedFileFrom(descriptorData,
+                        new com.google.protobuf.Descriptors.FileDescriptor[]{
+                        });
+        internal_static_im_turms_proto_CreateRelationshipRequest_descriptor =
+                getDescriptor().getMessageTypes().get(0);
+        internal_static_im_turms_proto_CreateRelationshipRequest_fieldAccessorTable = new
+                com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+                internal_static_im_turms_proto_CreateRelationshipRequest_descriptor,
+                new java.lang.String[]{"UserId", "Blocked", "GroupIndex", "GroupIndex",});
+    }
+
+    // @@protoc_insertion_point(outer_class_scope)
 }

@@ -21,85 +21,95 @@
 package im.turms.server.common.access.client.dto.model.user;
 
 public interface UserLocationOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:im.turms.proto.UserLocation)
-    com.google.protobuf.MessageOrBuilder {
+        // @@protoc_insertion_point(interface_extends:im.turms.proto.UserLocation)
+        com.google.protobuf.MessageOrBuilder {
 
-  /**
-   * <code>float latitude = 1;</code>
-   * @return The latitude.
-   */
-  float getLatitude();
+    /**
+     * <code>float latitude = 1;</code>
+     *
+     * @return The latitude.
+     */
+    float getLatitude();
 
-  /**
-   * <code>float longitude = 2;</code>
-   * @return The longitude.
-   */
-  float getLongitude();
+    /**
+     * <code>float longitude = 2;</code>
+     *
+     * @return The longitude.
+     */
+    float getLongitude();
 
-  /**
-   * <code>optional int64 timestamp = 3;</code>
-   * @return Whether the timestamp field is set.
-   */
-  boolean hasTimestamp();
-  /**
-   * <code>optional int64 timestamp = 3;</code>
-   * @return The timestamp.
-   */
-  long getTimestamp();
+    /**
+     * <code>optional int64 timestamp = 3;</code>
+     *
+     * @return Whether the timestamp field is set.
+     */
+    boolean hasTimestamp();
 
-  /**
-   * <pre>
-   * e.g. street address, city, state, country, etc.
-   * </pre>
-   *
-   * <code>map&lt;string, string&gt; details = 4;</code>
-   */
-  int getDetailsCount();
-  /**
-   * <pre>
-   * e.g. street address, city, state, country, etc.
-   * </pre>
-   *
-   * <code>map&lt;string, string&gt; details = 4;</code>
-   */
-  boolean containsDetails(
-      java.lang.String key);
-  /**
-   * Use {@link #getDetailsMap()} instead.
-   */
-  @java.lang.Deprecated
-  java.util.Map<java.lang.String, java.lang.String>
-  getDetails();
-  /**
-   * <pre>
-   * e.g. street address, city, state, country, etc.
-   * </pre>
-   *
-   * <code>map&lt;string, string&gt; details = 4;</code>
-   */
-  java.util.Map<java.lang.String, java.lang.String>
-  getDetailsMap();
-  /**
-   * <pre>
-   * e.g. street address, city, state, country, etc.
-   * </pre>
-   *
-   * <code>map&lt;string, string&gt; details = 4;</code>
-   */
+    /**
+     * <code>optional int64 timestamp = 3;</code>
+     *
+     * @return The timestamp.
+     */
+    long getTimestamp();
 
-  /* nullable */
-java.lang.String getDetailsOrDefault(
-      java.lang.String key,
-      /* nullable */
-java.lang.String defaultValue);
-  /**
-   * <pre>
-   * e.g. street address, city, state, country, etc.
-   * </pre>
-   *
-   * <code>map&lt;string, string&gt; details = 4;</code>
-   */
+    /**
+     * <pre>
+     * e.g. street address, city, state, country, etc.
+     * </pre>
+     *
+     * <code>map&lt;string, string&gt; details = 4;</code>
+     */
+    int getDetailsCount();
 
-  java.lang.String getDetailsOrThrow(
-      java.lang.String key);
+    /**
+     * <pre>
+     * e.g. street address, city, state, country, etc.
+     * </pre>
+     *
+     * <code>map&lt;string, string&gt; details = 4;</code>
+     */
+    boolean containsDetails(
+            java.lang.String key);
+
+    /**
+     * Use {@link #getDetailsMap()} instead.
+     */
+    @java.lang.Deprecated
+    java.util.Map<java.lang.String, java.lang.String>
+    getDetails();
+
+    /**
+     * <pre>
+     * e.g. street address, city, state, country, etc.
+     * </pre>
+     *
+     * <code>map&lt;string, string&gt; details = 4;</code>
+     */
+    java.util.Map<java.lang.String, java.lang.String>
+    getDetailsMap();
+
+    /**
+     * <pre>
+     * e.g. street address, city, state, country, etc.
+     * </pre>
+     *
+     * <code>map&lt;string, string&gt; details = 4;</code>
+     */
+
+    /* nullable */
+    java.lang.String getDetailsOrDefault(
+            java.lang.String key,
+            /* nullable */
+            java.lang.String defaultValue);
+
+    /**
+     * <pre>
+     * e.g. street address, city, state, country, etc.
+     * </pre>
+     *
+     * <code>map&lt;string, string&gt; details = 4;</code>
+     */
+
+    java.lang.String getDetailsOrThrow(
+            java.lang.String key);
 }

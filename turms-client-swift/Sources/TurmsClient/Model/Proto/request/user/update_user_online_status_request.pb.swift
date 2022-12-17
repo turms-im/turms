@@ -25,9 +25,11 @@ public struct UpdateUserOnlineStatusRequest {
     // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
     // methods supported on all messages.
 
-    public var userStatus: UserStatus = .available
-
+    /// Query filter
     public var deviceTypes: [DeviceType] = []
+
+    /// Update
+    public var userStatus: UserStatus = .available
 
     public var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -45,8 +47,8 @@ private let _protobuf_package = "im.turms.proto"
 extension UpdateUserOnlineStatusRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
     public static let protoMessageName: String = _protobuf_package + ".UpdateUserOnlineStatusRequest"
     public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-        1: .standard(proto: "user_status"),
-        2: .standard(proto: "device_types"),
+        1: .standard(proto: "device_types"),
+        2: .standard(proto: "user_status"),
     ]
 
     public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -55,26 +57,26 @@ extension UpdateUserOnlineStatusRequest: SwiftProtobuf.Message, SwiftProtobuf._M
             // allocates stack space for every case branch when no optimizations are
             // enabled. https://github.com/apple/swift-protobuf/issues/1034
             switch fieldNumber {
-            case 1: try try decoder.decodeSingularEnumField(value: &userStatus)
-            case 2: try try decoder.decodeRepeatedEnumField(value: &deviceTypes)
+            case 1: try try decoder.decodeRepeatedEnumField(value: &deviceTypes)
+            case 2: try try decoder.decodeSingularEnumField(value: &userStatus)
             default: break
             }
         }
     }
 
     public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-        if userStatus != .available {
-            try visitor.visitSingularEnumField(value: userStatus, fieldNumber: 1)
-        }
         if !deviceTypes.isEmpty {
-            try visitor.visitPackedEnumField(value: deviceTypes, fieldNumber: 2)
+            try visitor.visitPackedEnumField(value: deviceTypes, fieldNumber: 1)
+        }
+        if userStatus != .available {
+            try visitor.visitSingularEnumField(value: userStatus, fieldNumber: 2)
         }
         try unknownFields.traverse(visitor: &visitor)
     }
 
     public static func == (lhs: UpdateUserOnlineStatusRequest, rhs: UpdateUserOnlineStatusRequest) -> Bool {
-        if lhs.userStatus != rhs.userStatus { return false }
         if lhs.deviceTypes != rhs.deviceTypes { return false }
+        if lhs.userStatus != rhs.userStatus { return false }
         if lhs.unknownFields != rhs.unknownFields { return false }
         return true
     }

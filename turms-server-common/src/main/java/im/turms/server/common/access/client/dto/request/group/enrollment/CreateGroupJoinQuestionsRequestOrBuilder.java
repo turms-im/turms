@@ -21,36 +21,41 @@
 package im.turms.server.common.access.client.dto.request.group.enrollment;
 
 public interface CreateGroupJoinQuestionsRequestOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:im.turms.proto.CreateGroupJoinQuestionsRequest)
-    com.google.protobuf.MessageOrBuilder {
+        // @@protoc_insertion_point(interface_extends:im.turms.proto.CreateGroupJoinQuestionsRequest)
+        com.google.protobuf.MessageOrBuilder {
 
-  /**
-   * <code>int64 group_id = 1;</code>
-   * @return The groupId.
-   */
-  long getGroupId();
+    /**
+     * <code>int64 group_id = 1;</code>
+     *
+     * @return The groupId.
+     */
+    long getGroupId();
 
-  /**
-   * <code>repeated .im.turms.proto.GroupJoinQuestion questions = 2;</code>
-   */
-  java.util.List<im.turms.server.common.access.client.dto.model.group.GroupJoinQuestion>
-      getQuestionsList();
-  /**
-   * <code>repeated .im.turms.proto.GroupJoinQuestion questions = 2;</code>
-   */
-  im.turms.server.common.access.client.dto.model.group.GroupJoinQuestion getQuestions(int index);
-  /**
-   * <code>repeated .im.turms.proto.GroupJoinQuestion questions = 2;</code>
-   */
-  int getQuestionsCount();
-  /**
-   * <code>repeated .im.turms.proto.GroupJoinQuestion questions = 2;</code>
-   */
-  java.util.List<? extends im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionOrBuilder>
-      getQuestionsOrBuilderList();
-  /**
-   * <code>repeated .im.turms.proto.GroupJoinQuestion questions = 2;</code>
-   */
-  im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionOrBuilder getQuestionsOrBuilder(
-      int index);
+    /**
+     * <code>repeated .im.turms.proto.GroupJoinQuestion questions = 2;</code>
+     */
+    java.util.List<im.turms.server.common.access.client.dto.model.group.GroupJoinQuestion>
+    getQuestionsList();
+
+    /**
+     * <code>repeated .im.turms.proto.GroupJoinQuestion questions = 2;</code>
+     */
+    im.turms.server.common.access.client.dto.model.group.GroupJoinQuestion getQuestions(int index);
+
+    /**
+     * <code>repeated .im.turms.proto.GroupJoinQuestion questions = 2;</code>
+     */
+    int getQuestionsCount();
+
+    /**
+     * <code>repeated .im.turms.proto.GroupJoinQuestion questions = 2;</code>
+     */
+    java.util.List<? extends im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionOrBuilder>
+    getQuestionsOrBuilderList();
+
+    /**
+     * <code>repeated .im.turms.proto.GroupJoinQuestion questions = 2;</code>
+     */
+    im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionOrBuilder getQuestionsOrBuilder(
+            int index);
 }

@@ -21,23 +21,27 @@
 package im.turms.server.common.access.client.dto.request.user.relationship;
 
 public interface DeleteRelationshipGroupRequestOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:im.turms.proto.DeleteRelationshipGroupRequest)
-    com.google.protobuf.MessageOrBuilder {
+        // @@protoc_insertion_point(interface_extends:im.turms.proto.DeleteRelationshipGroupRequest)
+        com.google.protobuf.MessageOrBuilder {
 
-  /**
-   * <code>int32 group_index = 1;</code>
-   * @return The groupIndex.
-   */
-  int getGroupIndex();
+    /**
+     * <code>int32 group_index = 1;</code>
+     *
+     * @return The groupIndex.
+     */
+    int getGroupIndex();
 
-  /**
-   * <code>optional int32 target_group_index = 2;</code>
-   * @return Whether the targetGroupIndex field is set.
-   */
-  boolean hasTargetGroupIndex();
-  /**
-   * <code>optional int32 target_group_index = 2;</code>
-   * @return The targetGroupIndex.
-   */
-  int getTargetGroupIndex();
+    /**
+     * <code>optional int32 target_group_index = 2;</code>
+     *
+     * @return Whether the targetGroupIndex field is set.
+     */
+    boolean hasTargetGroupIndex();
+
+    /**
+     * <code>optional int32 target_group_index = 2;</code>
+     *
+     * @return The targetGroupIndex.
+     */
+    int getTargetGroupIndex();
 }

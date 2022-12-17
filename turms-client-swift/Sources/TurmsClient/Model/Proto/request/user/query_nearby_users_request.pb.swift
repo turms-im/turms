@@ -83,11 +83,11 @@ public struct QueryNearbyUsersRequest {
 
     public init() {}
 
-    private var _maxCount: Int32?
-    private var _maxDistance: Int32?
-    private var _withCoordinates: Bool?
-    private var _withDistance: Bool?
-    private var _withUserInfo: Bool?
+    fileprivate var _maxCount: Int32?
+    fileprivate var _maxDistance: Int32?
+    fileprivate var _withCoordinates: Bool?
+    fileprivate var _withDistance: Bool?
+    fileprivate var _withUserInfo: Bool?
 }
 
 #if swift(>=5.5) && canImport(_Concurrency)

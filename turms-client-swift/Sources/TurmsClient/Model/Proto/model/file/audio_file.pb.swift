@@ -95,8 +95,8 @@ public struct AudioFile {
 
     public init() {}
 
-    private var _description_p: AudioFile.Description?
-    private var _data: Data?
+    fileprivate var _description_p: AudioFile.Description?
+    fileprivate var _data: Data?
 }
 
 #if swift(>=5.5) && canImport(_Concurrency)

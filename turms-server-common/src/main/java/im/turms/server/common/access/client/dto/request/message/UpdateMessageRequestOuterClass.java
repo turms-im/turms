@@ -21,49 +21,54 @@
 package im.turms.server.common.access.client.dto.request.message;
 
 public final class UpdateMessageRequestOuterClass {
-  private UpdateMessageRequestOuterClass() {}
-  public static void registerAllExtensions(
-      com.google.protobuf.ExtensionRegistryLite registry) {
-  }
+    private UpdateMessageRequestOuterClass() {
+    }
 
-  public static void registerAllExtensions(
-      com.google.protobuf.ExtensionRegistry registry) {
-    registerAllExtensions(
-        (com.google.protobuf.ExtensionRegistryLite) registry);
-  }
-  static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_im_turms_proto_UpdateMessageRequest_descriptor;
-  static final
+    public static void registerAllExtensions(
+            com.google.protobuf.ExtensionRegistryLite registry) {
+    }
+
+    public static void registerAllExtensions(
+            com.google.protobuf.ExtensionRegistry registry) {
+        registerAllExtensions(
+                (com.google.protobuf.ExtensionRegistryLite) registry);
+    }
+
+    static final com.google.protobuf.Descriptors.Descriptor
+            internal_static_im_turms_proto_UpdateMessageRequest_descriptor;
+    static final
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_im_turms_proto_UpdateMessageRequest_fieldAccessorTable;
+            internal_static_im_turms_proto_UpdateMessageRequest_fieldAccessorTable;
 
-  public static com.google.protobuf.Descriptors.FileDescriptor
-      getDescriptor() {
-    return descriptor;
-  }
-  private static  com.google.protobuf.Descriptors.FileDescriptor
-      descriptor;
-  static {
-    java.lang.String[] descriptorData = {
-      "\n,request/message/update_message_request" +
-      ".proto\022\016im.turms.proto\"\201\001\n\024UpdateMessage" +
-      "Request\022\022\n\nmessage_id\030\001 \001(\003\022\021\n\004text\030\002 \001(" +
-      "\tH\000\210\001\001\022\017\n\007records\030\003 \003(\014\022\030\n\013recall_date\030\004" +
-      " \001(\003H\001\210\001\001B\007\n\005_textB\016\n\014_recall_dateB?\n8im" +
-      ".turms.server.common.access.client.dto.r" +
-      "equest.messageP\001\272\002\000b\006proto3"
-    };
-    descriptor = com.google.protobuf.Descriptors.FileDescriptor
-      .internalBuildGeneratedFileFrom(descriptorData,
-        new com.google.protobuf.Descriptors.FileDescriptor[] {
-        });
-    internal_static_im_turms_proto_UpdateMessageRequest_descriptor =
-      getDescriptor().getMessageTypes().get(0);
-    internal_static_im_turms_proto_UpdateMessageRequest_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_im_turms_proto_UpdateMessageRequest_descriptor,
-        new java.lang.String[] { "MessageId", "Text", "Records", "RecallDate", "Text", "RecallDate", });
-  }
+    public static com.google.protobuf.Descriptors.FileDescriptor
+    getDescriptor() {
+        return descriptor;
+    }
 
-  // @@protoc_insertion_point(outer_class_scope)
+    private static com.google.protobuf.Descriptors.FileDescriptor
+            descriptor;
+
+    static {
+        java.lang.String[] descriptorData = {
+                "\n,request/message/update_message_request" +
+                ".proto\022\016im.turms.proto\"\201\001\n\024UpdateMessage" +
+                "Request\022\022\n\nmessage_id\030\001 \001(\003\022\021\n\004text\030\002 \001(" +
+                "\tH\000\210\001\001\022\017\n\007records\030\003 \003(\014\022\030\n\013recall_date\030\004" +
+                " \001(\003H\001\210\001\001B\007\n\005_textB\016\n\014_recall_dateB?\n8im" +
+                ".turms.server.common.access.client.dto.r" +
+                "equest.messageP\001\272\002\000b\006proto3"
+        };
+        descriptor = com.google.protobuf.Descriptors.FileDescriptor
+                .internalBuildGeneratedFileFrom(descriptorData,
+                        new com.google.protobuf.Descriptors.FileDescriptor[]{
+                        });
+        internal_static_im_turms_proto_UpdateMessageRequest_descriptor =
+                getDescriptor().getMessageTypes().get(0);
+        internal_static_im_turms_proto_UpdateMessageRequest_fieldAccessorTable = new
+                com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+                internal_static_im_turms_proto_UpdateMessageRequest_descriptor,
+                new java.lang.String[]{"MessageId", "Text", "Records", "RecallDate", "Text", "RecallDate",});
+    }
+
+    // @@protoc_insertion_point(outer_class_scope)
 }

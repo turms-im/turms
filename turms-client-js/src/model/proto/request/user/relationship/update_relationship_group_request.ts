@@ -4,7 +4,9 @@ import _m0 from "protobufjs/minimal";
 export const protobufPackage = "im.turms.proto";
 
 export interface UpdateRelationshipGroupRequest {
+  /** Query filter */
   groupIndex: number;
+  /** Update */
   newName: string;
 }
 

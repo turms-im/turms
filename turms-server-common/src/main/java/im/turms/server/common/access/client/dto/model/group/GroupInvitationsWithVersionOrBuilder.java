@@ -21,41 +21,48 @@
 package im.turms.server.common.access.client.dto.model.group;
 
 public interface GroupInvitationsWithVersionOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:im.turms.proto.GroupInvitationsWithVersion)
-    com.google.protobuf.MessageOrBuilder {
+        // @@protoc_insertion_point(interface_extends:im.turms.proto.GroupInvitationsWithVersion)
+        com.google.protobuf.MessageOrBuilder {
 
-  /**
-   * <code>repeated .im.turms.proto.GroupInvitation group_invitations = 1;</code>
-   */
-  java.util.List<im.turms.server.common.access.client.dto.model.group.GroupInvitation>
-      getGroupInvitationsList();
-  /**
-   * <code>repeated .im.turms.proto.GroupInvitation group_invitations = 1;</code>
-   */
-  im.turms.server.common.access.client.dto.model.group.GroupInvitation getGroupInvitations(int index);
-  /**
-   * <code>repeated .im.turms.proto.GroupInvitation group_invitations = 1;</code>
-   */
-  int getGroupInvitationsCount();
-  /**
-   * <code>repeated .im.turms.proto.GroupInvitation group_invitations = 1;</code>
-   */
-  java.util.List<? extends im.turms.server.common.access.client.dto.model.group.GroupInvitationOrBuilder>
-      getGroupInvitationsOrBuilderList();
-  /**
-   * <code>repeated .im.turms.proto.GroupInvitation group_invitations = 1;</code>
-   */
-  im.turms.server.common.access.client.dto.model.group.GroupInvitationOrBuilder getGroupInvitationsOrBuilder(
-      int index);
+    /**
+     * <code>repeated .im.turms.proto.GroupInvitation group_invitations = 1;</code>
+     */
+    java.util.List<im.turms.server.common.access.client.dto.model.group.GroupInvitation>
+    getGroupInvitationsList();
 
-  /**
-   * <code>optional int64 last_updated_date = 2;</code>
-   * @return Whether the lastUpdatedDate field is set.
-   */
-  boolean hasLastUpdatedDate();
-  /**
-   * <code>optional int64 last_updated_date = 2;</code>
-   * @return The lastUpdatedDate.
-   */
-  long getLastUpdatedDate();
+    /**
+     * <code>repeated .im.turms.proto.GroupInvitation group_invitations = 1;</code>
+     */
+    im.turms.server.common.access.client.dto.model.group.GroupInvitation getGroupInvitations(int index);
+
+    /**
+     * <code>repeated .im.turms.proto.GroupInvitation group_invitations = 1;</code>
+     */
+    int getGroupInvitationsCount();
+
+    /**
+     * <code>repeated .im.turms.proto.GroupInvitation group_invitations = 1;</code>
+     */
+    java.util.List<? extends im.turms.server.common.access.client.dto.model.group.GroupInvitationOrBuilder>
+    getGroupInvitationsOrBuilderList();
+
+    /**
+     * <code>repeated .im.turms.proto.GroupInvitation group_invitations = 1;</code>
+     */
+    im.turms.server.common.access.client.dto.model.group.GroupInvitationOrBuilder getGroupInvitationsOrBuilder(
+            int index);
+
+    /**
+     * <code>optional int64 last_updated_date = 2;</code>
+     *
+     * @return Whether the lastUpdatedDate field is set.
+     */
+    boolean hasLastUpdatedDate();
+
+    /**
+     * <code>optional int64 last_updated_date = 2;</code>
+     *
+     * @return The lastUpdatedDate.
+     */
+    long getLastUpdatedDate();
 }

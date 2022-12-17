@@ -24,597 +24,666 @@ package im.turms.server.common.access.client.dto.request.user.relationship;
  * Protobuf type {@code im.turms.proto.CreateFriendRequestRequest}
  */
 public final class CreateFriendRequestRequest extends
-    com.google.protobuf.GeneratedMessageV3 implements
-    // @@protoc_insertion_point(message_implements:im.turms.proto.CreateFriendRequestRequest)
-    CreateFriendRequestRequestOrBuilder {
-private static final long serialVersionUID = 0L;
-  // Use CreateFriendRequestRequest.newBuilder() to construct.
-  private CreateFriendRequestRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
-    super(builder);
-  }
-  private CreateFriendRequestRequest() {
-    content_ = "";
-  }
+        com.google.protobuf.GeneratedMessageV3 implements
+        // @@protoc_insertion_point(message_implements:im.turms.proto.CreateFriendRequestRequest)
+        CreateFriendRequestRequestOrBuilder {
+    private static final long serialVersionUID = 0L;
 
-  @java.lang.Override
-  @SuppressWarnings({"unused"})
-  protected java.lang.Object newInstance(
-      UnusedPrivateParameter unused) {
-    return new CreateFriendRequestRequest();
-  }
-
-  @java.lang.Override
-  public final com.google.protobuf.UnknownFieldSet
-  getUnknownFields() {
-    return this.unknownFields;
-  }
-  public static final com.google.protobuf.Descriptors.Descriptor
-      getDescriptor() {
-    return im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequestOuterClass.internal_static_im_turms_proto_CreateFriendRequestRequest_descriptor;
-  }
-
-  @java.lang.Override
-  protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internalGetFieldAccessorTable() {
-    return im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequestOuterClass.internal_static_im_turms_proto_CreateFriendRequestRequest_fieldAccessorTable
-        .ensureFieldAccessorsInitialized(
-            im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest.class, im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest.Builder.class);
-  }
-
-  public static final int RECIPIENT_ID_FIELD_NUMBER = 1;
-  private long recipientId_;
-  /**
-   * <code>int64 recipient_id = 1;</code>
-   * @return The recipientId.
-   */
-  @java.lang.Override
-  public long getRecipientId() {
-    return recipientId_;
-  }
-
-  public static final int CONTENT_FIELD_NUMBER = 2;
-  private volatile java.lang.Object content_;
-  /**
-   * <code>string content = 2;</code>
-   * @return The content.
-   */
-  @java.lang.Override
-  public java.lang.String getContent() {
-    java.lang.Object ref = content_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs =
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      content_ = s;
-      return s;
+    // Use CreateFriendRequestRequest.newBuilder() to construct.
+    private CreateFriendRequestRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+        super(builder);
     }
-  }
-  /**
-   * <code>string content = 2;</code>
-   * @return The bytes for content.
-   */
-  @java.lang.Override
-  public com.google.protobuf.ByteString
-      getContentBytes() {
-    java.lang.Object ref = content_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b =
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      content_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
+
+    private CreateFriendRequestRequest() {
+        content_ = "";
     }
-  }
 
-  private byte memoizedIsInitialized = -1;
-  @java.lang.Override
-  public final boolean isInitialized() {
-    byte isInitialized = memoizedIsInitialized;
-    if (isInitialized == 1) return true;
-    if (isInitialized == 0) return false;
-
-    memoizedIsInitialized = 1;
-    return true;
-  }
-
-  @java.lang.Override
-  public void writeTo(com.google.protobuf.CodedOutputStream output)
-                      throws java.io.IOException {
-    if (recipientId_ != 0L) {
-      output.writeInt64(1, recipientId_);
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+            UnusedPrivateParameter unused) {
+        return new CreateFriendRequestRequest();
     }
-    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(content_)) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 2, content_);
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+        return this.unknownFields;
     }
-    getUnknownFields().writeTo(output);
-  }
 
-  @java.lang.Override
-  public int getSerializedSize() {
-    int size = memoizedSize;
-    if (size != -1) return size;
-
-    size = 0;
-    if (recipientId_ != 0L) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeInt64Size(1, recipientId_);
-    }
-    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(content_)) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, content_);
-    }
-    size += getUnknownFields().getSerializedSize();
-    memoizedSize = size;
-    return size;
-  }
-
-  @java.lang.Override
-  public boolean equals(final java.lang.Object obj) {
-    if (obj == this) {
-     return true;
-    }
-    if (!(obj instanceof im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest)) {
-      return super.equals(obj);
-    }
-    im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest other = (im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest) obj;
-
-    if (getRecipientId()
-        != other.getRecipientId()) return false;
-    if (!getContent()
-        .equals(other.getContent())) return false;
-    if (!getUnknownFields().equals(other.getUnknownFields())) return false;
-    return true;
-  }
-
-  @java.lang.Override
-  public int hashCode() {
-    if (memoizedHashCode != 0) {
-      return memoizedHashCode;
-    }
-    int hash = 41;
-    hash = (19 * hash) + getDescriptor().hashCode();
-    hash = (37 * hash) + RECIPIENT_ID_FIELD_NUMBER;
-    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-        getRecipientId());
-    hash = (37 * hash) + CONTENT_FIELD_NUMBER;
-    hash = (53 * hash) + getContent().hashCode();
-    hash = (29 * hash) + getUnknownFields().hashCode();
-    memoizedHashCode = hash;
-    return hash;
-  }
-
-  public static im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest parseFrom(
-      java.nio.ByteBuffer data)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return PARSER.parseFrom(data);
-  }
-  public static im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest parseFrom(
-      java.nio.ByteBuffer data,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return PARSER.parseFrom(data, extensionRegistry);
-  }
-  public static im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest parseFrom(
-      com.google.protobuf.ByteString data)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return PARSER.parseFrom(data);
-  }
-  public static im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest parseFrom(
-      com.google.protobuf.ByteString data,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return PARSER.parseFrom(data, extensionRegistry);
-  }
-  public static im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest parseFrom(byte[] data)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return PARSER.parseFrom(data);
-  }
-  public static im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest parseFrom(
-      byte[] data,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return PARSER.parseFrom(data, extensionRegistry);
-  }
-  public static im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest parseFrom(java.io.InputStream input)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input);
-  }
-  public static im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest parseFrom(
-      java.io.InputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input, extensionRegistry);
-  }
-  public static im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest parseDelimitedFrom(java.io.InputStream input)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseDelimitedWithIOException(PARSER, input);
-  }
-  public static im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest parseDelimitedFrom(
-      java.io.InputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
-  }
-  public static im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest parseFrom(
-      com.google.protobuf.CodedInputStream input)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input);
-  }
-  public static im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest parseFrom(
-      com.google.protobuf.CodedInputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input, extensionRegistry);
-  }
-
-  @java.lang.Override
-  public Builder newBuilderForType() { return newBuilder(); }
-  public static Builder newBuilder() {
-    return DEFAULT_INSTANCE.toBuilder();
-  }
-  public static Builder newBuilder(im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest prototype) {
-    return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-  }
-  @java.lang.Override
-  public Builder toBuilder() {
-    return this == DEFAULT_INSTANCE
-        ? new Builder() : new Builder().mergeFrom(this);
-  }
-
-  @java.lang.Override
-  protected Builder newBuilderForType(
-      com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-    Builder builder = new Builder(parent);
-    return builder;
-  }
-  /**
-   * Protobuf type {@code im.turms.proto.CreateFriendRequestRequest}
-   */
-  public static final class Builder extends
-      com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-      // @@protoc_insertion_point(builder_implements:im.turms.proto.CreateFriendRequestRequest)
-      im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequestOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequestOuterClass.internal_static_im_turms_proto_CreateFriendRequestRequest_descriptor;
+    getDescriptor() {
+        return im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequestOuterClass.internal_static_im_turms_proto_CreateFriendRequestRequest_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequestOuterClass.internal_static_im_turms_proto_CreateFriendRequestRequest_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest.class, im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest.Builder.class);
+    internalGetFieldAccessorTable() {
+        return im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequestOuterClass.internal_static_im_turms_proto_CreateFriendRequestRequest_fieldAccessorTable
+                .ensureFieldAccessorsInitialized(
+                        im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest.class,
+                        im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest.Builder.class);
     }
 
-    // Construct using im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest.newBuilder()
-    private Builder() {
+    public static final int RECIPIENT_ID_FIELD_NUMBER = 1;
+    private long recipientId_;
 
-    }
-
-    private Builder(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-      super(parent);
-
-    }
-    @java.lang.Override
-    public Builder clear() {
-      super.clear();
-      recipientId_ = 0L;
-
-      content_ = "";
-
-      return this;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Descriptors.Descriptor
-        getDescriptorForType() {
-      return im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequestOuterClass.internal_static_im_turms_proto_CreateFriendRequestRequest_descriptor;
-    }
-
-    @java.lang.Override
-    public im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest getDefaultInstanceForType() {
-      return im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest.getDefaultInstance();
-    }
-
-    @java.lang.Override
-    public im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest build() {
-      im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest result = buildPartial();
-      if (!result.isInitialized()) {
-        throw newUninitializedMessageException(result);
-      }
-      return result;
-    }
-
-    @java.lang.Override
-    public im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest buildPartial() {
-      im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest result = new im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest(this);
-      result.recipientId_ = recipientId_;
-      result.content_ = content_;
-      onBuilt();
-      return result;
-    }
-
-    @java.lang.Override
-    public Builder clone() {
-      return super.clone();
-    }
-    @java.lang.Override
-    public Builder setField(
-        com.google.protobuf.Descriptors.FieldDescriptor field,
-        java.lang.Object value) {
-      return super.setField(field, value);
-    }
-    @java.lang.Override
-    public Builder clearField(
-        com.google.protobuf.Descriptors.FieldDescriptor field) {
-      return super.clearField(field);
-    }
-    @java.lang.Override
-    public Builder clearOneof(
-        com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-      return super.clearOneof(oneof);
-    }
-    @java.lang.Override
-    public Builder setRepeatedField(
-        com.google.protobuf.Descriptors.FieldDescriptor field,
-        int index, java.lang.Object value) {
-      return super.setRepeatedField(field, index, value);
-    }
-    @java.lang.Override
-    public Builder addRepeatedField(
-        com.google.protobuf.Descriptors.FieldDescriptor field,
-        java.lang.Object value) {
-      return super.addRepeatedField(field, value);
-    }
-    @java.lang.Override
-    public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest) {
-        return mergeFrom((im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest)other);
-      } else {
-        super.mergeFrom(other);
-        return this;
-      }
-    }
-
-    public Builder mergeFrom(im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest other) {
-      if (other == im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest.getDefaultInstance()) return this;
-      if (other.getRecipientId() != 0L) {
-        setRecipientId(other.getRecipientId());
-      }
-      if (!other.getContent().isEmpty()) {
-        content_ = other.content_;
-        onChanged();
-      }
-      this.mergeUnknownFields(other.getUnknownFields());
-      onChanged();
-      return this;
-    }
-
-    @java.lang.Override
-    public final boolean isInitialized() {
-      return true;
-    }
-
-    @java.lang.Override
-    public Builder mergeFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            case 8: {
-              recipientId_ = input.readInt64();
-
-              break;
-            } // case 8
-            case 18: {
-              content_ = input.readStringRequireUtf8();
-
-              break;
-            } // case 18
-            default: {
-              if (!super.parseUnknownField(input, extensionRegistry, tag)) {
-                done = true; // was an endgroup tag
-              }
-              break;
-            } // default:
-          } // switch (tag)
-        } // while (!done)
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.unwrapIOException();
-      } finally {
-        onChanged();
-      } // finally
-      return this;
-    }
-
-    private long recipientId_ ;
     /**
      * <code>int64 recipient_id = 1;</code>
+     *
      * @return The recipientId.
      */
     @java.lang.Override
     public long getRecipientId() {
-      return recipientId_;
-    }
-    /**
-     * <code>int64 recipient_id = 1;</code>
-     * @param value The recipientId to set.
-     * @return This builder for chaining.
-     */
-    public Builder setRecipientId(long value) {
-
-      recipientId_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>int64 recipient_id = 1;</code>
-     * @return This builder for chaining.
-     */
-    public Builder clearRecipientId() {
-
-      recipientId_ = 0L;
-      onChanged();
-      return this;
+        return recipientId_;
     }
 
-    private java.lang.Object content_ = "";
+    public static final int CONTENT_FIELD_NUMBER = 2;
+    private volatile java.lang.Object content_;
+
     /**
      * <code>string content = 2;</code>
+     *
      * @return The content.
      */
+    @java.lang.Override
     public java.lang.String getContent() {
-      java.lang.Object ref = content_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        content_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
+        java.lang.Object ref = content_;
+        if (ref instanceof java.lang.String) {
+            return (java.lang.String) ref;
+        } else {
+            com.google.protobuf.ByteString bs =
+                    (com.google.protobuf.ByteString) ref;
+            java.lang.String s = bs.toStringUtf8();
+            content_ = s;
+            return s;
+        }
     }
+
     /**
      * <code>string content = 2;</code>
+     *
      * @return The bytes for content.
      */
+    @java.lang.Override
     public com.google.protobuf.ByteString
+    getContentBytes() {
+        java.lang.Object ref = content_;
+        if (ref instanceof java.lang.String) {
+            com.google.protobuf.ByteString b =
+                    com.google.protobuf.ByteString.copyFromUtf8(
+                            (java.lang.String) ref);
+            content_ = b;
+            return b;
+        } else {
+            return (com.google.protobuf.ByteString) ref;
+        }
+    }
+
+    private byte memoizedIsInitialized = -1;
+
+    @java.lang.Override
+    public final boolean isInitialized() {
+        byte isInitialized = memoizedIsInitialized;
+        if (isInitialized == 1) {
+            return true;
+        }
+        if (isInitialized == 0) {
+            return false;
+        }
+
+        memoizedIsInitialized = 1;
+        return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+            throws java.io.IOException {
+        if (recipientId_ != 0L) {
+            output.writeInt64(1, recipientId_);
+        }
+        if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(content_)) {
+            com.google.protobuf.GeneratedMessageV3.writeString(output, 2, content_);
+        }
+        getUnknownFields().writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+        int size = memoizedSize;
+        if (size != -1) {
+            return size;
+        }
+
+        size = 0;
+        if (recipientId_ != 0L) {
+            size += com.google.protobuf.CodedOutputStream
+                    .computeInt64Size(1, recipientId_);
+        }
+        if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(content_)) {
+            size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, content_);
+        }
+        size += getUnknownFields().getSerializedSize();
+        memoizedSize = size;
+        return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (!(obj instanceof im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest)) {
+            return super.equals(obj);
+        }
+        im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest other =
+                (im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest) obj;
+
+        if (getRecipientId()
+            != other.getRecipientId()) {
+            return false;
+        }
+        if (!getContent()
+                .equals(other.getContent())) {
+            return false;
+        }
+        if (!getUnknownFields().equals(other.getUnknownFields())) {
+            return false;
+        }
+        return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+        if (memoizedHashCode != 0) {
+            return memoizedHashCode;
+        }
+        int hash = 41;
+        hash = (19 * hash) + getDescriptor().hashCode();
+        hash = (37 * hash) + RECIPIENT_ID_FIELD_NUMBER;
+        hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+                getRecipientId());
+        hash = (37 * hash) + CONTENT_FIELD_NUMBER;
+        hash = (53 * hash) + getContent().hashCode();
+        hash = (29 * hash) + getUnknownFields().hashCode();
+        memoizedHashCode = hash;
+        return hash;
+    }
+
+    public static im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest parseFrom(
+            java.nio.ByteBuffer data)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+    }
+
+    public static im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest parseFrom(
+            java.nio.ByteBuffer data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+    }
+
+    public static im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest parseFrom(
+            com.google.protobuf.ByteString data)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+    }
+
+    public static im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest parseFrom(
+            com.google.protobuf.ByteString data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+    }
+
+    public static im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest parseFrom(byte[] data)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+    }
+
+    public static im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest parseFrom(
+            byte[] data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+    }
+
+    public static im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest parseFrom(java.io.InputStream input)
+            throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+                .parseWithIOException(PARSER, input);
+    }
+
+    public static im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest parseFrom(
+            java.io.InputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+                .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public static im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest parseDelimitedFrom(java.io.InputStream input)
+            throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+                .parseDelimitedWithIOException(PARSER, input);
+    }
+
+    public static im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest parseDelimitedFrom(
+            java.io.InputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+                .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public static im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest parseFrom(
+            com.google.protobuf.CodedInputStream input)
+            throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+                .parseWithIOException(PARSER, input);
+    }
+
+    public static im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest parseFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+                .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() {
+        return newBuilder();
+    }
+
+    public static Builder newBuilder() {
+        return DEFAULT_INSTANCE.toBuilder();
+    }
+
+    public static Builder newBuilder(im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest prototype) {
+        return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+
+    @java.lang.Override
+    public Builder toBuilder() {
+        return this == DEFAULT_INSTANCE
+                ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+            com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        Builder builder = new Builder(parent);
+        return builder;
+    }
+
+    /**
+     * Protobuf type {@code im.turms.proto.CreateFriendRequestRequest}
+     */
+    public static final class Builder extends
+            com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+            // @@protoc_insertion_point(builder_implements:im.turms.proto.CreateFriendRequestRequest)
+            im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequestOrBuilder {
+        public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+            return im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequestOuterClass.internal_static_im_turms_proto_CreateFriendRequestRequest_descriptor;
+        }
+
+        @java.lang.Override
+        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+            return im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequestOuterClass.internal_static_im_turms_proto_CreateFriendRequestRequest_fieldAccessorTable
+                    .ensureFieldAccessorsInitialized(
+                            im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest.class,
+                            im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest.Builder.class);
+        }
+
+        // Construct using im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest.newBuilder()
+        private Builder() {
+
+        }
+
+        private Builder(
+                com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+            super(parent);
+
+        }
+
+        @java.lang.Override
+        public Builder clear() {
+            super.clear();
+            recipientId_ = 0L;
+
+            content_ = "";
+
+            return this;
+        }
+
+        @java.lang.Override
+        public com.google.protobuf.Descriptors.Descriptor
+        getDescriptorForType() {
+            return im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequestOuterClass.internal_static_im_turms_proto_CreateFriendRequestRequest_descriptor;
+        }
+
+        @java.lang.Override
+        public im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest getDefaultInstanceForType() {
+            return im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest.getDefaultInstance();
+        }
+
+        @java.lang.Override
+        public im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest build() {
+            im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest result = buildPartial();
+            if (!result.isInitialized()) {
+                throw newUninitializedMessageException(result);
+            }
+            return result;
+        }
+
+        @java.lang.Override
+        public im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest buildPartial() {
+            im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest result =
+                    new im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest(this);
+            result.recipientId_ = recipientId_;
+            result.content_ = content_;
+            onBuilt();
+            return result;
+        }
+
+        @java.lang.Override
+        public Builder clone() {
+            return super.clone();
+        }
+
+        @java.lang.Override
+        public Builder setField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value) {
+            return super.setField(field, value);
+        }
+
+        @java.lang.Override
+        public Builder clearField(
+                com.google.protobuf.Descriptors.FieldDescriptor field) {
+            return super.clearField(field);
+        }
+
+        @java.lang.Override
+        public Builder clearOneof(
+                com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+            return super.clearOneof(oneof);
+        }
+
+        @java.lang.Override
+        public Builder setRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                int index, java.lang.Object value) {
+            return super.setRepeatedField(field, index, value);
+        }
+
+        @java.lang.Override
+        public Builder addRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value) {
+            return super.addRepeatedField(field, value);
+        }
+
+        @java.lang.Override
+        public Builder mergeFrom(com.google.protobuf.Message other) {
+            if (other instanceof im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest) {
+                return mergeFrom((im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest) other);
+            } else {
+                super.mergeFrom(other);
+                return this;
+            }
+        }
+
+        public Builder mergeFrom(im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest other) {
+            if (other == im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest.getDefaultInstance()) {
+                return this;
+            }
+            if (other.getRecipientId() != 0L) {
+                setRecipientId(other.getRecipientId());
+            }
+            if (!other.getContent().isEmpty()) {
+                content_ = other.content_;
+                onChanged();
+            }
+            this.mergeUnknownFields(other.getUnknownFields());
+            onChanged();
+            return this;
+        }
+
+        @java.lang.Override
+        public final boolean isInitialized() {
+            return true;
+        }
+
+        @java.lang.Override
+        public Builder mergeFrom(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            if (extensionRegistry == null) {
+                throw new java.lang.NullPointerException();
+            }
+            try {
+                boolean done = false;
+                while (!done) {
+                    int tag = input.readTag();
+                    switch (tag) {
+                        case 0:
+                            done = true;
+                            break;
+                        case 8: {
+                            recipientId_ = input.readInt64();
+
+                            break;
+                        } // case 8
+                        case 18: {
+                            content_ = input.readStringRequireUtf8();
+
+                            break;
+                        } // case 18
+                        default: {
+                            if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                                done = true; // was an endgroup tag
+                            }
+                            break;
+                        } // default:
+                    } // switch (tag)
+                } // while (!done)
+            } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                throw e.unwrapIOException();
+            } finally {
+                onChanged();
+            } // finally
+            return this;
+        }
+
+        private long recipientId_;
+
+        /**
+         * <code>int64 recipient_id = 1;</code>
+         *
+         * @return The recipientId.
+         */
+        @java.lang.Override
+        public long getRecipientId() {
+            return recipientId_;
+        }
+
+        /**
+         * <code>int64 recipient_id = 1;</code>
+         *
+         * @param value The recipientId to set.
+         * @return This builder for chaining.
+         */
+        public Builder setRecipientId(long value) {
+
+            recipientId_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <code>int64 recipient_id = 1;</code>
+         *
+         * @return This builder for chaining.
+         */
+        public Builder clearRecipientId() {
+
+            recipientId_ = 0L;
+            onChanged();
+            return this;
+        }
+
+        private java.lang.Object content_ = "";
+
+        /**
+         * <code>string content = 2;</code>
+         *
+         * @return The content.
+         */
+        public java.lang.String getContent() {
+            java.lang.Object ref = content_;
+            if (!(ref instanceof java.lang.String)) {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                java.lang.String s = bs.toStringUtf8();
+                content_ = s;
+                return s;
+            } else {
+                return (java.lang.String) ref;
+            }
+        }
+
+        /**
+         * <code>string content = 2;</code>
+         *
+         * @return The bytes for content.
+         */
+        public com.google.protobuf.ByteString
         getContentBytes() {
-      java.lang.Object ref = content_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b =
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        content_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <code>string content = 2;</code>
-     * @param value The content to set.
-     * @return This builder for chaining.
-     */
-    public Builder setContent(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
+            java.lang.Object ref = content_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (java.lang.String) ref);
+                content_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
 
-      content_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>string content = 2;</code>
-     * @return This builder for chaining.
-     */
-    public Builder clearContent() {
+        /**
+         * <code>string content = 2;</code>
+         *
+         * @param value The content to set.
+         * @return This builder for chaining.
+         */
+        public Builder setContent(
+                java.lang.String value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
 
-      content_ = getDefaultInstance().getContent();
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>string content = 2;</code>
-     * @param value The bytes for content to set.
-     * @return This builder for chaining.
-     */
-    public Builder setContentBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
+            content_ = value;
+            onChanged();
+            return this;
+        }
 
-      content_ = value;
-      onChanged();
-      return this;
+        /**
+         * <code>string content = 2;</code>
+         *
+         * @return This builder for chaining.
+         */
+        public Builder clearContent() {
+
+            content_ = getDefaultInstance().getContent();
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <code>string content = 2;</code>
+         *
+         * @param value The bytes for content to set.
+         * @return This builder for chaining.
+         */
+        public Builder setContentBytes(
+                com.google.protobuf.ByteString value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+            checkByteStringIsUtf8(value);
+
+            content_ = value;
+            onChanged();
+            return this;
+        }
+
+        @java.lang.Override
+        public final Builder setUnknownFields(
+                final com.google.protobuf.UnknownFieldSet unknownFields) {
+            return super.setUnknownFields(unknownFields);
+        }
+
+        @java.lang.Override
+        public final Builder mergeUnknownFields(
+                final com.google.protobuf.UnknownFieldSet unknownFields) {
+            return super.mergeUnknownFields(unknownFields);
+        }
+
+
+        // @@protoc_insertion_point(builder_scope:im.turms.proto.CreateFriendRequestRequest)
     }
+
+    // @@protoc_insertion_point(class_scope:im.turms.proto.CreateFriendRequestRequest)
+    private static final im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest DEFAULT_INSTANCE;
+
+    static {
+        DEFAULT_INSTANCE = new im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest();
+    }
+
+    public static im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest getDefaultInstance() {
+        return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<CreateFriendRequestRequest>
+            PARSER = new com.google.protobuf.AbstractParser<CreateFriendRequestRequest>() {
+        @java.lang.Override
+        public CreateFriendRequestRequest parsePartialFrom(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            Builder builder = newBuilder();
+            try {
+                builder.mergeFrom(input, extensionRegistry);
+            } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                throw e.setUnfinishedMessage(builder.buildPartial());
+            } catch (com.google.protobuf.UninitializedMessageException e) {
+                throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
+            } catch (java.io.IOException e) {
+                throw new com.google.protobuf.InvalidProtocolBufferException(e)
+                        .setUnfinishedMessage(builder.buildPartial());
+            }
+            return builder.buildPartial();
+        }
+    };
+
+    public static com.google.protobuf.Parser<CreateFriendRequestRequest> parser() {
+        return PARSER;
+    }
+
     @java.lang.Override
-    public final Builder setUnknownFields(
-        final com.google.protobuf.UnknownFieldSet unknownFields) {
-      return super.setUnknownFields(unknownFields);
+    public com.google.protobuf.Parser<CreateFriendRequestRequest> getParserForType() {
+        return PARSER;
     }
 
     @java.lang.Override
-    public final Builder mergeUnknownFields(
-        final com.google.protobuf.UnknownFieldSet unknownFields) {
-      return super.mergeUnknownFields(unknownFields);
+    public im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest getDefaultInstanceForType() {
+        return DEFAULT_INSTANCE;
     }
-
-
-    // @@protoc_insertion_point(builder_scope:im.turms.proto.CreateFriendRequestRequest)
-  }
-
-  // @@protoc_insertion_point(class_scope:im.turms.proto.CreateFriendRequestRequest)
-  private static final im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest DEFAULT_INSTANCE;
-  static {
-    DEFAULT_INSTANCE = new im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest();
-  }
-
-  public static im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest getDefaultInstance() {
-    return DEFAULT_INSTANCE;
-  }
-
-  private static final com.google.protobuf.Parser<CreateFriendRequestRequest>
-      PARSER = new com.google.protobuf.AbstractParser<CreateFriendRequestRequest>() {
-    @java.lang.Override
-    public CreateFriendRequestRequest parsePartialFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      Builder builder = newBuilder();
-      try {
-        builder.mergeFrom(input, extensionRegistry);
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(builder.buildPartial());
-      } catch (com.google.protobuf.UninitializedMessageException e) {
-        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(e)
-            .setUnfinishedMessage(builder.buildPartial());
-      }
-      return builder.buildPartial();
-    }
-  };
-
-  public static com.google.protobuf.Parser<CreateFriendRequestRequest> parser() {
-    return PARSER;
-  }
-
-  @java.lang.Override
-  public com.google.protobuf.Parser<CreateFriendRequestRequest> getParserForType() {
-    return PARSER;
-  }
-
-  @java.lang.Override
-  public im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest getDefaultInstanceForType() {
-    return DEFAULT_INSTANCE;
-  }
 
 }
-

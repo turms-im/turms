@@ -21,20 +21,22 @@
 package im.turms.client.model.proto.model.user;
 
 public interface UserOnlineStatusesOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:im.turms.proto.UserOnlineStatuses)
-    com.google.protobuf.MessageLiteOrBuilder {
+        // @@protoc_insertion_point(interface_extends:im.turms.proto.UserOnlineStatuses)
+        com.google.protobuf.MessageLiteOrBuilder {
 
-  /**
-   * <code>repeated .im.turms.proto.UserOnlineStatus statuses = 1;</code>
-   */
-  java.util.List<im.turms.client.model.proto.model.user.UserOnlineStatus>
-      getStatusesList();
-  /**
-   * <code>repeated .im.turms.proto.UserOnlineStatus statuses = 1;</code>
-   */
-  im.turms.client.model.proto.model.user.UserOnlineStatus getStatuses(int index);
-  /**
-   * <code>repeated .im.turms.proto.UserOnlineStatus statuses = 1;</code>
-   */
-  int getStatusesCount();
+    /**
+     * <code>repeated .im.turms.proto.UserOnlineStatus statuses = 1;</code>
+     */
+    java.util.List<im.turms.client.model.proto.model.user.UserOnlineStatus>
+    getStatusesList();
+
+    /**
+     * <code>repeated .im.turms.proto.UserOnlineStatus statuses = 1;</code>
+     */
+    im.turms.client.model.proto.model.user.UserOnlineStatus getStatuses(int index);
+
+    /**
+     * <code>repeated .im.turms.proto.UserOnlineStatus statuses = 1;</code>
+     */
+    int getStatusesCount();
 }

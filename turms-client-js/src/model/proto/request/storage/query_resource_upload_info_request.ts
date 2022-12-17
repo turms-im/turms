@@ -7,12 +7,20 @@ export const protobufPackage = "im.turms.proto";
 
 export interface QueryResourceUploadInfoRequest {
   type: StorageResourceType;
-  keyStr?: string | undefined;
-  keyNum?: string | undefined;
+  idNum?: string | undefined;
+  idStr?: string | undefined;
+  name?: string | undefined;
+  mediaType?: string | undefined;
+  extra: { [key: string]: string };
+}
+
+export interface QueryResourceUploadInfoRequest_ExtraEntry {
+  key: string;
+  value: string;
 }
 
 function createBaseQueryResourceUploadInfoRequest(): QueryResourceUploadInfoRequest {
-  return { type: 0, keyStr: undefined, keyNum: undefined };
+  return { type: 0, idNum: undefined, idStr: undefined, name: undefined, mediaType: undefined, extra: {} };
 }
 
 export const QueryResourceUploadInfoRequest = {
@@ -20,12 +28,21 @@ export const QueryResourceUploadInfoRequest = {
     if (message.type !== 0) {
       writer.uint32(8).int32(message.type);
     }
-    if (message.keyStr !== undefined) {
-      writer.uint32(18).string(message.keyStr);
+    if (message.idNum !== undefined) {
+      writer.uint32(16).int64(message.idNum);
     }
-    if (message.keyNum !== undefined) {
-      writer.uint32(24).int64(message.keyNum);
+    if (message.idStr !== undefined) {
+      writer.uint32(26).string(message.idStr);
     }
+    if (message.name !== undefined) {
+      writer.uint32(34).string(message.name);
+    }
+    if (message.mediaType !== undefined) {
+      writer.uint32(42).string(message.mediaType);
+    }
+    Object.entries(message.extra).forEach(([key, value]) => {
+      QueryResourceUploadInfoRequest_ExtraEntry.encode({ key: key as any, value }, writer.uint32(50).fork()).ldelim();
+    });
     return writer;
   },
 
@@ -40,10 +57,59 @@ export const QueryResourceUploadInfoRequest = {
           message.type = reader.int32() as any;
           break;
         case 2:
-          message.keyStr = reader.string();
+          message.idNum = longToString(reader.int64() as Long);
           break;
         case 3:
-          message.keyNum = longToString(reader.int64() as Long);
+          message.idStr = reader.string();
+          break;
+        case 4:
+          message.name = reader.string();
+          break;
+        case 5:
+          message.mediaType = reader.string();
+          break;
+        case 6:
+          const entry6 = QueryResourceUploadInfoRequest_ExtraEntry.decode(reader, reader.uint32());
+          if (entry6.value !== undefined) {
+            message.extra[entry6.key] = entry6.value;
+          }
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+};
+
+function createBaseQueryResourceUploadInfoRequest_ExtraEntry(): QueryResourceUploadInfoRequest_ExtraEntry {
+  return { key: "", value: "" };
+}
+
+export const QueryResourceUploadInfoRequest_ExtraEntry = {
+  encode(message: QueryResourceUploadInfoRequest_ExtraEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.key !== "") {
+      writer.uint32(10).string(message.key);
+    }
+    if (message.value !== "") {
+      writer.uint32(18).string(message.value);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryResourceUploadInfoRequest_ExtraEntry {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryResourceUploadInfoRequest_ExtraEntry();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.key = reader.string();
+          break;
+        case 2:
+          message.value = reader.string();
           break;
         default:
           reader.skipType(tag & 7);

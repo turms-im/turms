@@ -6,7 +6,9 @@ import { ResponseAction } from "../../../constant/response_action";
 export const protobufPackage = "im.turms.proto";
 
 export interface UpdateFriendRequestRequest {
+  /** Query filter */
   requestId: string;
+  /** Update */
   responseAction: ResponseAction;
   reason?: string | undefined;
 }

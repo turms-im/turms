@@ -25,8 +25,10 @@ public struct UpdateRelationshipRequest {
     // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
     // methods supported on all messages.
 
+    /// Query filter
     public var userID: Int64 = 0
 
+    /// Update
     public var blocked: Bool {
         get { return _blocked ?? false }
         set { _blocked = newValue }
@@ -61,9 +63,9 @@ public struct UpdateRelationshipRequest {
 
     public init() {}
 
-    private var _blocked: Bool?
-    private var _newGroupIndex: Int32?
-    private var _deleteGroupIndex: Int32?
+    fileprivate var _blocked: Bool?
+    fileprivate var _newGroupIndex: Int32?
+    fileprivate var _deleteGroupIndex: Int32?
 }
 
 #if swift(>=5.5) && canImport(_Concurrency)

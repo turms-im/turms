@@ -3,7 +3,7 @@
 //  source: notification/turms_notification.proto
 //
 // @dart = 2.12
-// ignore_for_file: annotate_overrides,camel_case_types,unnecessary_const,non_constant_identifier_names,library_prefixes,unused_import,unused_shown_name,return_of_invalid_type,unnecessary_this,prefer_final_fields
+// ignore_for_file: annotate_overrides,camel_case_types,constant_identifier_names,directives_ordering,library_prefixes,non_constant_identifier_names,prefer_final_fields,return_of_invalid_type,unnecessary_const,unnecessary_import,unnecessary_this,unused_import,unused_shown_name
 
 import 'dart:core' as $core;
 
@@ -29,6 +29,7 @@ import '../model/group/group_join_requests_with_version.pb.dart' as $15;
 import '../model/group/group_join_questions_with_version.pb.dart' as $16;
 import '../model/group/group_members_with_version.pb.dart' as $17;
 import '../model/group/groups_with_version.pb.dart' as $18;
+import '../model/storage/storage_resource_infos.pb.dart' as $19;
 
 enum TurmsNotification_Data_Kind {
   long,
@@ -51,6 +52,7 @@ enum TurmsNotification_Data_Kind {
   groupJoinQuestionsWithVersion,
   groupMembersWithVersion,
   groupsWithVersion,
+  storageResourceInfos,
   notSet
 }
 
@@ -77,6 +79,7 @@ class TurmsNotification_Data extends $pb.GeneratedMessage {
     18: TurmsNotification_Data_Kind.groupJoinQuestionsWithVersion,
     19: TurmsNotification_Data_Kind.groupMembersWithVersion,
     20: TurmsNotification_Data_Kind.groupsWithVersion,
+    50: TurmsNotification_Data_Kind.storageResourceInfos,
     0: TurmsNotification_Data_Kind.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -84,12 +87,33 @@ class TurmsNotification_Data extends $pb.GeneratedMessage {
           ? ''
           : 'TurmsNotification.Data',
       package: const $pb.PackageName(
-          const $core.bool.fromEnvironment('protobuf.omit_message_names')
+          $core.bool.fromEnvironment('protobuf.omit_message_names')
               ? ''
               : 'im.turms.proto'),
       createEmptyInstance: create)
-    ..oo(0,
-        [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20])
+    ..oo(0, [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      50
+    ])
     ..aInt64(
         1,
         const $core.bool.fromEnvironment('protobuf.omit_field_names')
@@ -208,6 +232,12 @@ class TurmsNotification_Data extends $pb.GeneratedMessage {
             ? ''
             : 'groupsWithVersion',
         subBuilder: $18.GroupsWithVersion.create)
+    ..aOM<$19.StorageResourceInfos>(
+        50,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'storageResourceInfos',
+        subBuilder: $19.StorageResourceInfos.create)
     ..hasRequiredFields = false;
 
   TurmsNotification_Data._() : super();
@@ -232,6 +262,7 @@ class TurmsNotification_Data extends $pb.GeneratedMessage {
     $16.GroupJoinQuestionsWithVersion? groupJoinQuestionsWithVersion,
     $17.GroupMembersWithVersion? groupMembersWithVersion,
     $18.GroupsWithVersion? groupsWithVersion,
+    $19.StorageResourceInfos? storageResourceInfos,
   }) {
     final _result = create();
     if (long != null) {
@@ -294,6 +325,9 @@ class TurmsNotification_Data extends $pb.GeneratedMessage {
     }
     if (groupsWithVersion != null) {
       _result.groupsWithVersion = groupsWithVersion;
+    }
+    if (storageResourceInfos != null) {
+      _result.storageResourceInfos = storageResourceInfos;
     }
     return _result;
   }
@@ -619,6 +653,20 @@ class TurmsNotification_Data extends $pb.GeneratedMessage {
   void clearGroupsWithVersion() => clearField(20);
   @$pb.TagNumber(20)
   $18.GroupsWithVersion ensureGroupsWithVersion() => $_ensure(19);
+
+  @$pb.TagNumber(50)
+  $19.StorageResourceInfos get storageResourceInfos => $_getN(20);
+  @$pb.TagNumber(50)
+  set storageResourceInfos($19.StorageResourceInfos v) {
+    setField(50, v);
+  }
+
+  @$pb.TagNumber(50)
+  $core.bool hasStorageResourceInfos() => $_has(20);
+  @$pb.TagNumber(50)
+  void clearStorageResourceInfos() => clearField(50);
+  @$pb.TagNumber(50)
+  $19.StorageResourceInfos ensureStorageResourceInfos() => $_ensure(20);
 }
 
 class TurmsNotification extends $pb.GeneratedMessage {
@@ -627,7 +675,7 @@ class TurmsNotification extends $pb.GeneratedMessage {
           ? ''
           : 'TurmsNotification',
       package: const $pb.PackageName(
-          const $core.bool.fromEnvironment('protobuf.omit_message_names')
+          $core.bool.fromEnvironment('protobuf.omit_message_names')
               ? ''
               : 'im.turms.proto'),
       createEmptyInstance: create)

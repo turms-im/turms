@@ -139,17 +139,17 @@ public struct Group {
 
     public init() {}
 
-    private var _id: Int64?
-    private var _typeID: Int64?
-    private var _creatorID: Int64?
-    private var _ownerID: Int64?
-    private var _name: String?
-    private var _intro: String?
-    private var _announcement: String?
-    private var _creationDate: Int64?
-    private var _lastUpdatedDate: Int64?
-    private var _muteEndDate: Int64?
-    private var _active: Bool?
+    fileprivate var _id: Int64?
+    fileprivate var _typeID: Int64?
+    fileprivate var _creatorID: Int64?
+    fileprivate var _ownerID: Int64?
+    fileprivate var _name: String?
+    fileprivate var _intro: String?
+    fileprivate var _announcement: String?
+    fileprivate var _creationDate: Int64?
+    fileprivate var _lastUpdatedDate: Int64?
+    fileprivate var _muteEndDate: Int64?
+    fileprivate var _active: Bool?
 }
 
 #if swift(>=5.5) && canImport(_Concurrency)

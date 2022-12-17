@@ -21,48 +21,53 @@
 package im.turms.server.common.access.client.dto.request.group;
 
 public final class QueryGroupsRequestOuterClass {
-  private QueryGroupsRequestOuterClass() {}
-  public static void registerAllExtensions(
-      com.google.protobuf.ExtensionRegistryLite registry) {
-  }
+    private QueryGroupsRequestOuterClass() {
+    }
 
-  public static void registerAllExtensions(
-      com.google.protobuf.ExtensionRegistry registry) {
-    registerAllExtensions(
-        (com.google.protobuf.ExtensionRegistryLite) registry);
-  }
-  static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_im_turms_proto_QueryGroupsRequest_descriptor;
-  static final
+    public static void registerAllExtensions(
+            com.google.protobuf.ExtensionRegistryLite registry) {
+    }
+
+    public static void registerAllExtensions(
+            com.google.protobuf.ExtensionRegistry registry) {
+        registerAllExtensions(
+                (com.google.protobuf.ExtensionRegistryLite) registry);
+    }
+
+    static final com.google.protobuf.Descriptors.Descriptor
+            internal_static_im_turms_proto_QueryGroupsRequest_descriptor;
+    static final
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_im_turms_proto_QueryGroupsRequest_fieldAccessorTable;
+            internal_static_im_turms_proto_QueryGroupsRequest_fieldAccessorTable;
 
-  public static com.google.protobuf.Descriptors.FileDescriptor
-      getDescriptor() {
-    return descriptor;
-  }
-  private static  com.google.protobuf.Descriptors.FileDescriptor
-      descriptor;
-  static {
-    java.lang.String[] descriptorData = {
-      "\n(request/group/query_groups_request.pro" +
-      "to\022\016im.turms.proto\"]\n\022QueryGroupsRequest" +
-      "\022\021\n\tgroup_ids\030\001 \003(\003\022\036\n\021last_updated_date" +
-      "\030\002 \001(\003H\000\210\001\001B\024\n\022_last_updated_dateB=\n6im." +
-      "turms.server.common.access.client.dto.re" +
-      "quest.groupP\001\272\002\000b\006proto3"
-    };
-    descriptor = com.google.protobuf.Descriptors.FileDescriptor
-      .internalBuildGeneratedFileFrom(descriptorData,
-        new com.google.protobuf.Descriptors.FileDescriptor[] {
-        });
-    internal_static_im_turms_proto_QueryGroupsRequest_descriptor =
-      getDescriptor().getMessageTypes().get(0);
-    internal_static_im_turms_proto_QueryGroupsRequest_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_im_turms_proto_QueryGroupsRequest_descriptor,
-        new java.lang.String[] { "GroupIds", "LastUpdatedDate", "LastUpdatedDate", });
-  }
+    public static com.google.protobuf.Descriptors.FileDescriptor
+    getDescriptor() {
+        return descriptor;
+    }
 
-  // @@protoc_insertion_point(outer_class_scope)
+    private static com.google.protobuf.Descriptors.FileDescriptor
+            descriptor;
+
+    static {
+        java.lang.String[] descriptorData = {
+                "\n(request/group/query_groups_request.pro" +
+                "to\022\016im.turms.proto\"]\n\022QueryGroupsRequest" +
+                "\022\021\n\tgroup_ids\030\001 \003(\003\022\036\n\021last_updated_date" +
+                "\030\002 \001(\003H\000\210\001\001B\024\n\022_last_updated_dateB=\n6im." +
+                "turms.server.common.access.client.dto.re" +
+                "quest.groupP\001\272\002\000b\006proto3"
+        };
+        descriptor = com.google.protobuf.Descriptors.FileDescriptor
+                .internalBuildGeneratedFileFrom(descriptorData,
+                        new com.google.protobuf.Descriptors.FileDescriptor[]{
+                        });
+        internal_static_im_turms_proto_QueryGroupsRequest_descriptor =
+                getDescriptor().getMessageTypes().get(0);
+        internal_static_im_turms_proto_QueryGroupsRequest_fieldAccessorTable = new
+                com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+                internal_static_im_turms_proto_QueryGroupsRequest_descriptor,
+                new java.lang.String[]{"GroupIds", "LastUpdatedDate", "LastUpdatedDate",});
+    }
+
+    // @@protoc_insertion_point(outer_class_scope)
 }

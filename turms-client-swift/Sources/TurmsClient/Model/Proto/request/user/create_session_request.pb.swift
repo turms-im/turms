@@ -67,9 +67,9 @@ public struct CreateSessionRequest {
 
     public init() {}
 
-    private var _password: String?
-    private var _userStatus: UserStatus?
-    private var _location: UserLocation?
+    fileprivate var _password: String?
+    fileprivate var _userStatus: UserStatus?
+    fileprivate var _location: UserLocation?
 }
 
 #if swift(>=5.5) && canImport(_Concurrency)

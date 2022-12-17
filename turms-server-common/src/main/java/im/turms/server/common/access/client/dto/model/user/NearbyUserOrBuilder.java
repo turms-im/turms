@@ -21,93 +21,110 @@
 package im.turms.server.common.access.client.dto.model.user;
 
 public interface NearbyUserOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:im.turms.proto.NearbyUser)
-    com.google.protobuf.MessageOrBuilder {
+        // @@protoc_insertion_point(interface_extends:im.turms.proto.NearbyUser)
+        com.google.protobuf.MessageOrBuilder {
 
-  /**
-   * <pre>
-   * session info
-   * </pre>
-   *
-   * <code>int64 user_id = 1;</code>
-   * @return The userId.
-   */
-  long getUserId();
+    /**
+     * <pre>
+     * session info
+     * </pre>
+     *
+     * <code>int64 user_id = 1;</code>
+     *
+     * @return The userId.
+     */
+    long getUserId();
 
-  /**
-   * <code>optional .im.turms.proto.DeviceType device_type = 2;</code>
-   * @return Whether the deviceType field is set.
-   */
-  boolean hasDeviceType();
-  /**
-   * <code>optional .im.turms.proto.DeviceType device_type = 2;</code>
-   * @return The enum numeric value on the wire for deviceType.
-   */
-  int getDeviceTypeValue();
-  /**
-   * <code>optional .im.turms.proto.DeviceType device_type = 2;</code>
-   * @return The deviceType.
-   */
-  im.turms.server.common.access.client.dto.constant.DeviceType getDeviceType();
+    /**
+     * <code>optional .im.turms.proto.DeviceType device_type = 2;</code>
+     *
+     * @return Whether the deviceType field is set.
+     */
+    boolean hasDeviceType();
 
-  /**
-   * <pre>
-   * user info
-   * </pre>
-   *
-   * <code>optional .im.turms.proto.UserInfo info = 3;</code>
-   * @return Whether the info field is set.
-   */
-  boolean hasInfo();
-  /**
-   * <pre>
-   * user info
-   * </pre>
-   *
-   * <code>optional .im.turms.proto.UserInfo info = 3;</code>
-   * @return The info.
-   */
-  im.turms.server.common.access.client.dto.model.user.UserInfo getInfo();
-  /**
-   * <pre>
-   * user info
-   * </pre>
-   *
-   * <code>optional .im.turms.proto.UserInfo info = 3;</code>
-   */
-  im.turms.server.common.access.client.dto.model.user.UserInfoOrBuilder getInfoOrBuilder();
+    /**
+     * <code>optional .im.turms.proto.DeviceType device_type = 2;</code>
+     *
+     * @return The enum numeric value on the wire for deviceType.
+     */
+    int getDeviceTypeValue();
 
-  /**
-   * <pre>
-   * geo info
-   * </pre>
-   *
-   * <code>optional int32 distance = 4;</code>
-   * @return Whether the distance field is set.
-   */
-  boolean hasDistance();
-  /**
-   * <pre>
-   * geo info
-   * </pre>
-   *
-   * <code>optional int32 distance = 4;</code>
-   * @return The distance.
-   */
-  int getDistance();
+    /**
+     * <code>optional .im.turms.proto.DeviceType device_type = 2;</code>
+     *
+     * @return The deviceType.
+     */
+    im.turms.server.common.access.client.dto.constant.DeviceType getDeviceType();
 
-  /**
-   * <code>optional .im.turms.proto.UserLocation location = 5;</code>
-   * @return Whether the location field is set.
-   */
-  boolean hasLocation();
-  /**
-   * <code>optional .im.turms.proto.UserLocation location = 5;</code>
-   * @return The location.
-   */
-  im.turms.server.common.access.client.dto.model.user.UserLocation getLocation();
-  /**
-   * <code>optional .im.turms.proto.UserLocation location = 5;</code>
-   */
-  im.turms.server.common.access.client.dto.model.user.UserLocationOrBuilder getLocationOrBuilder();
+    /**
+     * <pre>
+     * user info
+     * </pre>
+     *
+     * <code>optional .im.turms.proto.UserInfo info = 3;</code>
+     *
+     * @return Whether the info field is set.
+     */
+    boolean hasInfo();
+
+    /**
+     * <pre>
+     * user info
+     * </pre>
+     *
+     * <code>optional .im.turms.proto.UserInfo info = 3;</code>
+     *
+     * @return The info.
+     */
+    im.turms.server.common.access.client.dto.model.user.UserInfo getInfo();
+
+    /**
+     * <pre>
+     * user info
+     * </pre>
+     *
+     * <code>optional .im.turms.proto.UserInfo info = 3;</code>
+     */
+    im.turms.server.common.access.client.dto.model.user.UserInfoOrBuilder getInfoOrBuilder();
+
+    /**
+     * <pre>
+     * geo info
+     * </pre>
+     *
+     * <code>optional int32 distance = 4;</code>
+     *
+     * @return Whether the distance field is set.
+     */
+    boolean hasDistance();
+
+    /**
+     * <pre>
+     * geo info
+     * </pre>
+     *
+     * <code>optional int32 distance = 4;</code>
+     *
+     * @return The distance.
+     */
+    int getDistance();
+
+    /**
+     * <code>optional .im.turms.proto.UserLocation location = 5;</code>
+     *
+     * @return Whether the location field is set.
+     */
+    boolean hasLocation();
+
+    /**
+     * <code>optional .im.turms.proto.UserLocation location = 5;</code>
+     *
+     * @return The location.
+     */
+    im.turms.server.common.access.client.dto.model.user.UserLocation getLocation();
+
+    /**
+     * <code>optional .im.turms.proto.UserLocation location = 5;</code>
+     */
+    im.turms.server.common.access.client.dto.model.user.UserLocationOrBuilder getLocationOrBuilder();
 }

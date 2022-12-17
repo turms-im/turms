@@ -5,7 +5,9 @@ import _m0 from "protobufjs/minimal";
 export const protobufPackage = "im.turms.proto";
 
 export interface UpdateMessageRequest {
+  /** Query filter */
   messageId: string;
+  /** Update */
   text?: string | undefined;
   records: Uint8Array[];
   recallDate?: string | undefined;

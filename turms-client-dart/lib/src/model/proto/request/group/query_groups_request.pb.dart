@@ -3,7 +3,7 @@
 //  source: request/group/query_groups_request.proto
 //
 // @dart = 2.12
-// ignore_for_file: annotate_overrides,camel_case_types,unnecessary_const,non_constant_identifier_names,library_prefixes,unused_import,unused_shown_name,return_of_invalid_type,unnecessary_this,prefer_final_fields
+// ignore_for_file: annotate_overrides,camel_case_types,constant_identifier_names,directives_ordering,library_prefixes,non_constant_identifier_names,prefer_final_fields,return_of_invalid_type,unnecessary_const,unnecessary_import,unnecessary_this,unused_import,unused_shown_name
 
 import 'dart:core' as $core;
 
@@ -16,7 +16,7 @@ class QueryGroupsRequest extends $pb.GeneratedMessage {
           ? ''
           : 'QueryGroupsRequest',
       package: const $pb.PackageName(
-          const $core.bool.fromEnvironment('protobuf.omit_message_names')
+          $core.bool.fromEnvironment('protobuf.omit_message_names')
               ? ''
               : 'im.turms.proto'),
       createEmptyInstance: create)
@@ -25,7 +25,7 @@ class QueryGroupsRequest extends $pb.GeneratedMessage {
         const $core.bool.fromEnvironment('protobuf.omit_field_names')
             ? ''
             : 'groupIds',
-        $pb.PbFieldType.P6)
+        $pb.PbFieldType.K6)
     ..aInt64(
         2,
         const $core.bool.fromEnvironment('protobuf.omit_field_names')

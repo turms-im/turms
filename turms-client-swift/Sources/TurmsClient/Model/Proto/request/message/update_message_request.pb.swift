@@ -25,8 +25,10 @@ public struct UpdateMessageRequest {
     // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
     // methods supported on all messages.
 
+    /// Query filter
     public var messageID: Int64 = 0
 
+    /// Update
     public var text: String {
         get { return _text ?? String() }
         set { _text = newValue }
@@ -53,8 +55,8 @@ public struct UpdateMessageRequest {
 
     public init() {}
 
-    private var _text: String?
-    private var _recallDate: Int64?
+    fileprivate var _text: String?
+    fileprivate var _recallDate: Int64?
 }
 
 #if swift(>=5.5) && canImport(_Concurrency)

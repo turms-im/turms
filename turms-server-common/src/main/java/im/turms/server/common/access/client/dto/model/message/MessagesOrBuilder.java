@@ -21,30 +21,34 @@
 package im.turms.server.common.access.client.dto.model.message;
 
 public interface MessagesOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:im.turms.proto.Messages)
-    com.google.protobuf.MessageOrBuilder {
+        // @@protoc_insertion_point(interface_extends:im.turms.proto.Messages)
+        com.google.protobuf.MessageOrBuilder {
 
-  /**
-   * <code>repeated .im.turms.proto.Message messages = 1;</code>
-   */
-  java.util.List<im.turms.server.common.access.client.dto.model.message.Message>
-      getMessagesList();
-  /**
-   * <code>repeated .im.turms.proto.Message messages = 1;</code>
-   */
-  im.turms.server.common.access.client.dto.model.message.Message getMessages(int index);
-  /**
-   * <code>repeated .im.turms.proto.Message messages = 1;</code>
-   */
-  int getMessagesCount();
-  /**
-   * <code>repeated .im.turms.proto.Message messages = 1;</code>
-   */
-  java.util.List<? extends im.turms.server.common.access.client.dto.model.message.MessageOrBuilder>
-      getMessagesOrBuilderList();
-  /**
-   * <code>repeated .im.turms.proto.Message messages = 1;</code>
-   */
-  im.turms.server.common.access.client.dto.model.message.MessageOrBuilder getMessagesOrBuilder(
-      int index);
+    /**
+     * <code>repeated .im.turms.proto.Message messages = 1;</code>
+     */
+    java.util.List<im.turms.server.common.access.client.dto.model.message.Message>
+    getMessagesList();
+
+    /**
+     * <code>repeated .im.turms.proto.Message messages = 1;</code>
+     */
+    im.turms.server.common.access.client.dto.model.message.Message getMessages(int index);
+
+    /**
+     * <code>repeated .im.turms.proto.Message messages = 1;</code>
+     */
+    int getMessagesCount();
+
+    /**
+     * <code>repeated .im.turms.proto.Message messages = 1;</code>
+     */
+    java.util.List<? extends im.turms.server.common.access.client.dto.model.message.MessageOrBuilder>
+    getMessagesOrBuilderList();
+
+    /**
+     * <code>repeated .im.turms.proto.Message messages = 1;</code>
+     */
+    im.turms.server.common.access.client.dto.model.message.MessageOrBuilder getMessagesOrBuilder(
+            int index);
 }

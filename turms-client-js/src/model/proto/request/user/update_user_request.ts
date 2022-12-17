@@ -5,6 +5,7 @@ import { ProfileAccessStrategy } from "../../constant/profile_access_strategy";
 export const protobufPackage = "im.turms.proto";
 
 export interface UpdateUserRequest {
+  /** Update */
   password?: string | undefined;
   name?: string | undefined;
   intro?: string | undefined;

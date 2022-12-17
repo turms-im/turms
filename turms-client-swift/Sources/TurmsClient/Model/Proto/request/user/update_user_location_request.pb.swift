@@ -25,6 +25,7 @@ public struct UpdateUserLocationRequest {
     // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
     // methods supported on all messages.
 
+    /// Update
     public var latitude: Float = 0
 
     public var longitude: Float = 0

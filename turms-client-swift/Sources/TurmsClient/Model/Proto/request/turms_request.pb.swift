@@ -482,6 +482,22 @@ public struct TurmsRequest {
         set { kind = .queryResourceUploadInfoRequest(newValue) }
     }
 
+    public var queryMessageAttachmentInfosRequest: QueryMessageAttachmentInfosRequest {
+        get {
+            if case let .queryMessageAttachmentInfosRequest(v)? = kind { return v }
+            return QueryMessageAttachmentInfosRequest()
+        }
+        set { kind = .queryMessageAttachmentInfosRequest(newValue) }
+    }
+
+    public var updateMessageAttachmentInfoRequest: UpdateMessageAttachmentInfoRequest {
+        get {
+            if case let .updateMessageAttachmentInfoRequest(v)? = kind { return v }
+            return UpdateMessageAttachmentInfoRequest()
+        }
+        set { kind = .updateMessageAttachmentInfoRequest(newValue) }
+    }
+
     public var unknownFields = SwiftProtobuf.UnknownStorage()
 
     public enum OneOf_Kind: Equatable {
@@ -549,6 +565,8 @@ public struct TurmsRequest {
         case deleteResourceRequest(DeleteResourceRequest)
         case queryResourceDownloadInfoRequest(QueryResourceDownloadInfoRequest)
         case queryResourceUploadInfoRequest(QueryResourceUploadInfoRequest)
+        case queryMessageAttachmentInfosRequest(QueryMessageAttachmentInfosRequest)
+        case updateMessageAttachmentInfoRequest(UpdateMessageAttachmentInfoRequest)
 
         #if !swift(>=4.1)
             public static func == (lhs: TurmsRequest.OneOf_Kind, rhs: TurmsRequest.OneOf_Kind) -> Bool {
@@ -772,6 +790,14 @@ public struct TurmsRequest {
                         guard case let .queryResourceUploadInfoRequest(l) = lhs, case let .queryResourceUploadInfoRequest(r) = rhs else { preconditionFailure() }
                         return l == r
                     }()
+                case (.queryMessageAttachmentInfosRequest, .queryMessageAttachmentInfosRequest): return {
+                        guard case let .queryMessageAttachmentInfosRequest(l) = lhs, case let .queryMessageAttachmentInfosRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                case (.updateMessageAttachmentInfoRequest, .updateMessageAttachmentInfoRequest): return {
+                        guard case let .updateMessageAttachmentInfoRequest(l) = lhs, case let .updateMessageAttachmentInfoRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
                 default: return false
                 }
             }
@@ -780,7 +806,7 @@ public struct TurmsRequest {
 
     public init() {}
 
-    private var _requestID: Int64?
+    fileprivate var _requestID: Int64?
 }
 
 #if swift(>=5.5) && canImport(_Concurrency)
@@ -850,6 +876,8 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
         1000: .standard(proto: "delete_resource_request"),
         1001: .standard(proto: "query_resource_download_info_request"),
         1002: .standard(proto: "query_resource_upload_info_request"),
+        1003: .standard(proto: "query_message_attachment_infos_request"),
+        1004: .standard(proto: "update_message_attachment_info_request"),
     ]
 
     public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -1561,6 +1589,32 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
                         self.kind = .queryResourceUploadInfoRequest(v)
                     }
                 }()
+            case 1003: try {
+                    var v: QueryMessageAttachmentInfosRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .queryMessageAttachmentInfosRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .queryMessageAttachmentInfosRequest(v)
+                    }
+                }()
+            case 1004: try {
+                    var v: UpdateMessageAttachmentInfoRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .updateMessageAttachmentInfoRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .updateMessageAttachmentInfoRequest(v)
+                    }
+                }()
             default: break
             }
         }
@@ -1790,6 +1844,14 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
         case .queryResourceUploadInfoRequest?: try {
                 guard case let .queryResourceUploadInfoRequest(v)? = self.kind else { preconditionFailure() }
                 try visitor.visitSingularMessageField(value: v, fieldNumber: 1002)
+            }()
+        case .queryMessageAttachmentInfosRequest?: try {
+                guard case let .queryMessageAttachmentInfosRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 1003)
+            }()
+        case .updateMessageAttachmentInfoRequest?: try {
+                guard case let .updateMessageAttachmentInfoRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 1004)
             }()
         case nil: break
         }

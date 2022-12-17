@@ -21,30 +21,35 @@
 package im.turms.server.common.access.client.dto.request.group.enrollment;
 
 public interface CreateGroupInvitationRequestOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:im.turms.proto.CreateGroupInvitationRequest)
-    com.google.protobuf.MessageOrBuilder {
+        // @@protoc_insertion_point(interface_extends:im.turms.proto.CreateGroupInvitationRequest)
+        com.google.protobuf.MessageOrBuilder {
 
-  /**
-   * <code>int64 group_id = 1;</code>
-   * @return The groupId.
-   */
-  long getGroupId();
+    /**
+     * <code>int64 group_id = 1;</code>
+     *
+     * @return The groupId.
+     */
+    long getGroupId();
 
-  /**
-   * <code>int64 invitee_id = 2;</code>
-   * @return The inviteeId.
-   */
-  long getInviteeId();
+    /**
+     * <code>int64 invitee_id = 2;</code>
+     *
+     * @return The inviteeId.
+     */
+    long getInviteeId();
 
-  /**
-   * <code>string content = 3;</code>
-   * @return The content.
-   */
-  java.lang.String getContent();
-  /**
-   * <code>string content = 3;</code>
-   * @return The bytes for content.
-   */
-  com.google.protobuf.ByteString
-      getContentBytes();
+    /**
+     * <code>string content = 3;</code>
+     *
+     * @return The content.
+     */
+    java.lang.String getContent();
+
+    /**
+     * <code>string content = 3;</code>
+     *
+     * @return The bytes for content.
+     */
+    com.google.protobuf.ByteString
+    getContentBytes();
 }

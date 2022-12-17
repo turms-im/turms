@@ -21,73 +21,90 @@
 package im.turms.client.model.proto.request.user;
 
 public interface QueryNearbyUsersRequestOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:im.turms.proto.QueryNearbyUsersRequest)
-    com.google.protobuf.MessageLiteOrBuilder {
+        // @@protoc_insertion_point(interface_extends:im.turms.proto.QueryNearbyUsersRequest)
+        com.google.protobuf.MessageLiteOrBuilder {
 
-  /**
-   * <code>float latitude = 1;</code>
-   * @return The latitude.
-   */
-  float getLatitude();
+    /**
+     * <code>float latitude = 1;</code>
+     *
+     * @return The latitude.
+     */
+    float getLatitude();
 
-  /**
-   * <code>float longitude = 2;</code>
-   * @return The longitude.
-   */
-  float getLongitude();
+    /**
+     * <code>float longitude = 2;</code>
+     *
+     * @return The longitude.
+     */
+    float getLongitude();
 
-  /**
-   * <code>optional int32 max_count = 3;</code>
-   * @return Whether the maxCount field is set.
-   */
-  boolean hasMaxCount();
-  /**
-   * <code>optional int32 max_count = 3;</code>
-   * @return The maxCount.
-   */
-  int getMaxCount();
+    /**
+     * <code>optional int32 max_count = 3;</code>
+     *
+     * @return Whether the maxCount field is set.
+     */
+    boolean hasMaxCount();
 
-  /**
-   * <code>optional int32 max_distance = 4;</code>
-   * @return Whether the maxDistance field is set.
-   */
-  boolean hasMaxDistance();
-  /**
-   * <code>optional int32 max_distance = 4;</code>
-   * @return The maxDistance.
-   */
-  int getMaxDistance();
+    /**
+     * <code>optional int32 max_count = 3;</code>
+     *
+     * @return The maxCount.
+     */
+    int getMaxCount();
 
-  /**
-   * <code>optional bool with_coordinates = 5;</code>
-   * @return Whether the withCoordinates field is set.
-   */
-  boolean hasWithCoordinates();
-  /**
-   * <code>optional bool with_coordinates = 5;</code>
-   * @return The withCoordinates.
-   */
-  boolean getWithCoordinates();
+    /**
+     * <code>optional int32 max_distance = 4;</code>
+     *
+     * @return Whether the maxDistance field is set.
+     */
+    boolean hasMaxDistance();
 
-  /**
-   * <code>optional bool with_distance = 6;</code>
-   * @return Whether the withDistance field is set.
-   */
-  boolean hasWithDistance();
-  /**
-   * <code>optional bool with_distance = 6;</code>
-   * @return The withDistance.
-   */
-  boolean getWithDistance();
+    /**
+     * <code>optional int32 max_distance = 4;</code>
+     *
+     * @return The maxDistance.
+     */
+    int getMaxDistance();
 
-  /**
-   * <code>optional bool with_user_info = 7;</code>
-   * @return Whether the withUserInfo field is set.
-   */
-  boolean hasWithUserInfo();
-  /**
-   * <code>optional bool with_user_info = 7;</code>
-   * @return The withUserInfo.
-   */
-  boolean getWithUserInfo();
+    /**
+     * <code>optional bool with_coordinates = 5;</code>
+     *
+     * @return Whether the withCoordinates field is set.
+     */
+    boolean hasWithCoordinates();
+
+    /**
+     * <code>optional bool with_coordinates = 5;</code>
+     *
+     * @return The withCoordinates.
+     */
+    boolean getWithCoordinates();
+
+    /**
+     * <code>optional bool with_distance = 6;</code>
+     *
+     * @return Whether the withDistance field is set.
+     */
+    boolean hasWithDistance();
+
+    /**
+     * <code>optional bool with_distance = 6;</code>
+     *
+     * @return The withDistance.
+     */
+    boolean getWithDistance();
+
+    /**
+     * <code>optional bool with_user_info = 7;</code>
+     *
+     * @return Whether the withUserInfo field is set.
+     */
+    boolean hasWithUserInfo();
+
+    /**
+     * <code>optional bool with_user_info = 7;</code>
+     *
+     * @return The withUserInfo.
+     */
+    boolean getWithUserInfo();
 }

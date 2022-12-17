@@ -53,8 +53,8 @@ public struct QueryRelationshipsRequest {
 
     public init() {}
 
-    private var _blocked: Bool?
-    private var _lastUpdatedDate: Int64?
+    fileprivate var _blocked: Bool?
+    fileprivate var _lastUpdatedDate: Int64?
 }
 
 #if swift(>=5.5) && canImport(_Concurrency)

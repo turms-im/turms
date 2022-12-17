@@ -21,34 +21,53 @@
 package im.turms.server.common.access.client.dto.request.conversation;
 
 public interface UpdateConversationRequestOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:im.turms.proto.UpdateConversationRequest)
-    com.google.protobuf.MessageOrBuilder {
+        // @@protoc_insertion_point(interface_extends:im.turms.proto.UpdateConversationRequest)
+        com.google.protobuf.MessageOrBuilder {
 
-  /**
-   * <code>optional int64 target_id = 1;</code>
-   * @return Whether the targetId field is set.
-   */
-  boolean hasTargetId();
-  /**
-   * <code>optional int64 target_id = 1;</code>
-   * @return The targetId.
-   */
-  long getTargetId();
+    /**
+     * <pre>
+     * Query filter
+     * </pre>
+     *
+     * <code>optional int64 target_id = 1;</code>
+     *
+     * @return Whether the targetId field is set.
+     */
+    boolean hasTargetId();
 
-  /**
-   * <code>optional int64 group_id = 2;</code>
-   * @return Whether the groupId field is set.
-   */
-  boolean hasGroupId();
-  /**
-   * <code>optional int64 group_id = 2;</code>
-   * @return The groupId.
-   */
-  long getGroupId();
+    /**
+     * <pre>
+     * Query filter
+     * </pre>
+     *
+     * <code>optional int64 target_id = 1;</code>
+     *
+     * @return The targetId.
+     */
+    long getTargetId();
 
-  /**
-   * <code>int64 read_date = 3;</code>
-   * @return The readDate.
-   */
-  long getReadDate();
+    /**
+     * <code>optional int64 group_id = 2;</code>
+     *
+     * @return Whether the groupId field is set.
+     */
+    boolean hasGroupId();
+
+    /**
+     * <code>optional int64 group_id = 2;</code>
+     *
+     * @return The groupId.
+     */
+    long getGroupId();
+
+    /**
+     * <pre>
+     * Update
+     * </pre>
+     *
+     * <code>int64 read_date = 3;</code>
+     *
+     * @return The readDate.
+     */
+    long getReadDate();
 }

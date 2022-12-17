@@ -21,20 +21,22 @@
 package im.turms.client.model.proto.model.message;
 
 public interface MessagesWithTotalListOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:im.turms.proto.MessagesWithTotalList)
-    com.google.protobuf.MessageLiteOrBuilder {
+        // @@protoc_insertion_point(interface_extends:im.turms.proto.MessagesWithTotalList)
+        com.google.protobuf.MessageLiteOrBuilder {
 
-  /**
-   * <code>repeated .im.turms.proto.MessagesWithTotal messages_with_total_list = 1;</code>
-   */
-  java.util.List<im.turms.client.model.proto.model.message.MessagesWithTotal>
-      getMessagesWithTotalListList();
-  /**
-   * <code>repeated .im.turms.proto.MessagesWithTotal messages_with_total_list = 1;</code>
-   */
-  im.turms.client.model.proto.model.message.MessagesWithTotal getMessagesWithTotalList(int index);
-  /**
-   * <code>repeated .im.turms.proto.MessagesWithTotal messages_with_total_list = 1;</code>
-   */
-  int getMessagesWithTotalListCount();
+    /**
+     * <code>repeated .im.turms.proto.MessagesWithTotal messages_with_total_list = 1;</code>
+     */
+    java.util.List<im.turms.client.model.proto.model.message.MessagesWithTotal>
+    getMessagesWithTotalListList();
+
+    /**
+     * <code>repeated .im.turms.proto.MessagesWithTotal messages_with_total_list = 1;</code>
+     */
+    im.turms.client.model.proto.model.message.MessagesWithTotal getMessagesWithTotalList(int index);
+
+    /**
+     * <code>repeated .im.turms.proto.MessagesWithTotal messages_with_total_list = 1;</code>
+     */
+    int getMessagesWithTotalListCount();
 }

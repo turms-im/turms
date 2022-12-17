@@ -21,38 +21,43 @@
 package im.turms.client.model.proto.model.message;
 
 public interface MessagesWithTotalOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:im.turms.proto.MessagesWithTotal)
-    com.google.protobuf.MessageLiteOrBuilder {
+        // @@protoc_insertion_point(interface_extends:im.turms.proto.MessagesWithTotal)
+        com.google.protobuf.MessageLiteOrBuilder {
 
-  /**
-   * <code>int32 total = 1;</code>
-   * @return The total.
-   */
-  int getTotal();
+    /**
+     * <code>int32 total = 1;</code>
+     *
+     * @return The total.
+     */
+    int getTotal();
 
-  /**
-   * <code>bool is_group_message = 2;</code>
-   * @return The isGroupMessage.
-   */
-  boolean getIsGroupMessage();
+    /**
+     * <code>bool is_group_message = 2;</code>
+     *
+     * @return The isGroupMessage.
+     */
+    boolean getIsGroupMessage();
 
-  /**
-   * <code>int64 from_id = 3;</code>
-   * @return The fromId.
-   */
-  long getFromId();
+    /**
+     * <code>int64 from_id = 3;</code>
+     *
+     * @return The fromId.
+     */
+    long getFromId();
 
-  /**
-   * <code>repeated .im.turms.proto.Message messages = 4;</code>
-   */
-  java.util.List<im.turms.client.model.proto.model.message.Message>
-      getMessagesList();
-  /**
-   * <code>repeated .im.turms.proto.Message messages = 4;</code>
-   */
-  im.turms.client.model.proto.model.message.Message getMessages(int index);
-  /**
-   * <code>repeated .im.turms.proto.Message messages = 4;</code>
-   */
-  int getMessagesCount();
+    /**
+     * <code>repeated .im.turms.proto.Message messages = 4;</code>
+     */
+    java.util.List<im.turms.client.model.proto.model.message.Message>
+    getMessagesList();
+
+    /**
+     * <code>repeated .im.turms.proto.Message messages = 4;</code>
+     */
+    im.turms.client.model.proto.model.message.Message getMessages(int index);
+
+    /**
+     * <code>repeated .im.turms.proto.Message messages = 4;</code>
+     */
+    int getMessagesCount();
 }

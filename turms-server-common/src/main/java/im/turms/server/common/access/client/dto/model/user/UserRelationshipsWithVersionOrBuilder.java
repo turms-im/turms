@@ -21,41 +21,48 @@
 package im.turms.server.common.access.client.dto.model.user;
 
 public interface UserRelationshipsWithVersionOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:im.turms.proto.UserRelationshipsWithVersion)
-    com.google.protobuf.MessageOrBuilder {
+        // @@protoc_insertion_point(interface_extends:im.turms.proto.UserRelationshipsWithVersion)
+        com.google.protobuf.MessageOrBuilder {
 
-  /**
-   * <code>repeated .im.turms.proto.UserRelationship user_relationships = 1;</code>
-   */
-  java.util.List<im.turms.server.common.access.client.dto.model.user.UserRelationship>
-      getUserRelationshipsList();
-  /**
-   * <code>repeated .im.turms.proto.UserRelationship user_relationships = 1;</code>
-   */
-  im.turms.server.common.access.client.dto.model.user.UserRelationship getUserRelationships(int index);
-  /**
-   * <code>repeated .im.turms.proto.UserRelationship user_relationships = 1;</code>
-   */
-  int getUserRelationshipsCount();
-  /**
-   * <code>repeated .im.turms.proto.UserRelationship user_relationships = 1;</code>
-   */
-  java.util.List<? extends im.turms.server.common.access.client.dto.model.user.UserRelationshipOrBuilder>
-      getUserRelationshipsOrBuilderList();
-  /**
-   * <code>repeated .im.turms.proto.UserRelationship user_relationships = 1;</code>
-   */
-  im.turms.server.common.access.client.dto.model.user.UserRelationshipOrBuilder getUserRelationshipsOrBuilder(
-      int index);
+    /**
+     * <code>repeated .im.turms.proto.UserRelationship user_relationships = 1;</code>
+     */
+    java.util.List<im.turms.server.common.access.client.dto.model.user.UserRelationship>
+    getUserRelationshipsList();
 
-  /**
-   * <code>optional int64 last_updated_date = 2;</code>
-   * @return Whether the lastUpdatedDate field is set.
-   */
-  boolean hasLastUpdatedDate();
-  /**
-   * <code>optional int64 last_updated_date = 2;</code>
-   * @return The lastUpdatedDate.
-   */
-  long getLastUpdatedDate();
+    /**
+     * <code>repeated .im.turms.proto.UserRelationship user_relationships = 1;</code>
+     */
+    im.turms.server.common.access.client.dto.model.user.UserRelationship getUserRelationships(int index);
+
+    /**
+     * <code>repeated .im.turms.proto.UserRelationship user_relationships = 1;</code>
+     */
+    int getUserRelationshipsCount();
+
+    /**
+     * <code>repeated .im.turms.proto.UserRelationship user_relationships = 1;</code>
+     */
+    java.util.List<? extends im.turms.server.common.access.client.dto.model.user.UserRelationshipOrBuilder>
+    getUserRelationshipsOrBuilderList();
+
+    /**
+     * <code>repeated .im.turms.proto.UserRelationship user_relationships = 1;</code>
+     */
+    im.turms.server.common.access.client.dto.model.user.UserRelationshipOrBuilder getUserRelationshipsOrBuilder(
+            int index);
+
+    /**
+     * <code>optional int64 last_updated_date = 2;</code>
+     *
+     * @return Whether the lastUpdatedDate field is set.
+     */
+    boolean hasLastUpdatedDate();
+
+    /**
+     * <code>optional int64 last_updated_date = 2;</code>
+     *
+     * @return The lastUpdatedDate.
+     */
+    long getLastUpdatedDate();
 }

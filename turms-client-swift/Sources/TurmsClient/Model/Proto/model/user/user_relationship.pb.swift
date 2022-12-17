@@ -79,11 +79,11 @@ public struct UserRelationship {
 
     public init() {}
 
-    private var _ownerID: Int64?
-    private var _relatedUserID: Int64?
-    private var _blockDate: Int64?
-    private var _groupIndex: Int64?
-    private var _establishmentDate: Int64?
+    fileprivate var _ownerID: Int64?
+    fileprivate var _relatedUserID: Int64?
+    fileprivate var _blockDate: Int64?
+    fileprivate var _groupIndex: Int64?
+    fileprivate var _establishmentDate: Int64?
 }
 
 #if swift(>=5.5) && canImport(_Concurrency)

@@ -24,745 +24,1533 @@ package im.turms.server.common.access.client.dto.request.storage;
  * Protobuf type {@code im.turms.proto.QueryResourceUploadInfoRequest}
  */
 public final class QueryResourceUploadInfoRequest extends
-    com.google.protobuf.GeneratedMessageV3 implements
-    // @@protoc_insertion_point(message_implements:im.turms.proto.QueryResourceUploadInfoRequest)
-    QueryResourceUploadInfoRequestOrBuilder {
-private static final long serialVersionUID = 0L;
-  // Use QueryResourceUploadInfoRequest.newBuilder() to construct.
-  private QueryResourceUploadInfoRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
-    super(builder);
-  }
-  private QueryResourceUploadInfoRequest() {
-    type_ = 0;
-    keyStr_ = "";
-  }
+        com.google.protobuf.GeneratedMessageV3 implements
+        // @@protoc_insertion_point(message_implements:im.turms.proto.QueryResourceUploadInfoRequest)
+        QueryResourceUploadInfoRequestOrBuilder {
+    private static final long serialVersionUID = 0L;
 
-  @java.lang.Override
-  @SuppressWarnings({"unused"})
-  protected java.lang.Object newInstance(
-      UnusedPrivateParameter unused) {
-    return new QueryResourceUploadInfoRequest();
-  }
-
-  @java.lang.Override
-  public final com.google.protobuf.UnknownFieldSet
-  getUnknownFields() {
-    return this.unknownFields;
-  }
-  public static final com.google.protobuf.Descriptors.Descriptor
-      getDescriptor() {
-    return im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequestOuterClass.internal_static_im_turms_proto_QueryResourceUploadInfoRequest_descriptor;
-  }
-
-  @java.lang.Override
-  protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internalGetFieldAccessorTable() {
-    return im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequestOuterClass.internal_static_im_turms_proto_QueryResourceUploadInfoRequest_fieldAccessorTable
-        .ensureFieldAccessorsInitialized(
-            im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest.class, im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest.Builder.class);
-  }
-
-  private int bitField0_;
-  public static final int TYPE_FIELD_NUMBER = 1;
-  private int type_;
-  /**
-   * <code>.im.turms.proto.StorageResourceType type = 1;</code>
-   * @return The enum numeric value on the wire for type.
-   */
-  @java.lang.Override public int getTypeValue() {
-    return type_;
-  }
-  /**
-   * <code>.im.turms.proto.StorageResourceType type = 1;</code>
-   * @return The type.
-   */
-  @java.lang.Override public im.turms.server.common.access.client.dto.constant.StorageResourceType getType() {
-    @SuppressWarnings("deprecation")
-    im.turms.server.common.access.client.dto.constant.StorageResourceType result = im.turms.server.common.access.client.dto.constant.StorageResourceType.valueOf(type_);
-    return result == null ? im.turms.server.common.access.client.dto.constant.StorageResourceType.UNRECOGNIZED : result;
-  }
-
-  public static final int KEY_STR_FIELD_NUMBER = 2;
-  private volatile java.lang.Object keyStr_;
-  /**
-   * <code>optional string key_str = 2;</code>
-   * @return Whether the keyStr field is set.
-   */
-  @java.lang.Override
-  public boolean hasKeyStr() {
-    return ((bitField0_ & 0x00000001) != 0);
-  }
-  /**
-   * <code>optional string key_str = 2;</code>
-   * @return The keyStr.
-   */
-  @java.lang.Override
-  public java.lang.String getKeyStr() {
-    java.lang.Object ref = keyStr_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs =
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      keyStr_ = s;
-      return s;
+    // Use QueryResourceUploadInfoRequest.newBuilder() to construct.
+    private QueryResourceUploadInfoRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+        super(builder);
     }
-  }
-  /**
-   * <code>optional string key_str = 2;</code>
-   * @return The bytes for keyStr.
-   */
-  @java.lang.Override
-  public com.google.protobuf.ByteString
-      getKeyStrBytes() {
-    java.lang.Object ref = keyStr_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b =
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      keyStr_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
-  }
 
-  public static final int KEY_NUM_FIELD_NUMBER = 3;
-  private long keyNum_;
-  /**
-   * <code>optional int64 key_num = 3;</code>
-   * @return Whether the keyNum field is set.
-   */
-  @java.lang.Override
-  public boolean hasKeyNum() {
-    return ((bitField0_ & 0x00000002) != 0);
-  }
-  /**
-   * <code>optional int64 key_num = 3;</code>
-   * @return The keyNum.
-   */
-  @java.lang.Override
-  public long getKeyNum() {
-    return keyNum_;
-  }
+    private QueryResourceUploadInfoRequest() {
+        type_ = 0;
+        idStr_ = "";
+        name_ = "";
+        mediaType_ = "";
+    }
 
-  private byte memoizedIsInitialized = -1;
-  @java.lang.Override
-  public final boolean isInitialized() {
-    byte isInitialized = memoizedIsInitialized;
-    if (isInitialized == 1) return true;
-    if (isInitialized == 0) return false;
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+            UnusedPrivateParameter unused) {
+        return new QueryResourceUploadInfoRequest();
+    }
 
-    memoizedIsInitialized = 1;
-    return true;
-  }
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+        return this.unknownFields;
+    }
 
-  @java.lang.Override
-  public void writeTo(com.google.protobuf.CodedOutputStream output)
-                      throws java.io.IOException {
-    if (type_ != im.turms.server.common.access.client.dto.constant.StorageResourceType.USER_PROFILE_PICTURE.getNumber()) {
-      output.writeEnum(1, type_);
-    }
-    if (((bitField0_ & 0x00000001) != 0)) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 2, keyStr_);
-    }
-    if (((bitField0_ & 0x00000002) != 0)) {
-      output.writeInt64(3, keyNum_);
-    }
-    getUnknownFields().writeTo(output);
-  }
-
-  @java.lang.Override
-  public int getSerializedSize() {
-    int size = memoizedSize;
-    if (size != -1) return size;
-
-    size = 0;
-    if (type_ != im.turms.server.common.access.client.dto.constant.StorageResourceType.USER_PROFILE_PICTURE.getNumber()) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeEnumSize(1, type_);
-    }
-    if (((bitField0_ & 0x00000001) != 0)) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, keyStr_);
-    }
-    if (((bitField0_ & 0x00000002) != 0)) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeInt64Size(3, keyNum_);
-    }
-    size += getUnknownFields().getSerializedSize();
-    memoizedSize = size;
-    return size;
-  }
-
-  @java.lang.Override
-  public boolean equals(final java.lang.Object obj) {
-    if (obj == this) {
-     return true;
-    }
-    if (!(obj instanceof im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest)) {
-      return super.equals(obj);
-    }
-    im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest other = (im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest) obj;
-
-    if (type_ != other.type_) return false;
-    if (hasKeyStr() != other.hasKeyStr()) return false;
-    if (hasKeyStr()) {
-      if (!getKeyStr()
-          .equals(other.getKeyStr())) return false;
-    }
-    if (hasKeyNum() != other.hasKeyNum()) return false;
-    if (hasKeyNum()) {
-      if (getKeyNum()
-          != other.getKeyNum()) return false;
-    }
-    if (!getUnknownFields().equals(other.getUnknownFields())) return false;
-    return true;
-  }
-
-  @java.lang.Override
-  public int hashCode() {
-    if (memoizedHashCode != 0) {
-      return memoizedHashCode;
-    }
-    int hash = 41;
-    hash = (19 * hash) + getDescriptor().hashCode();
-    hash = (37 * hash) + TYPE_FIELD_NUMBER;
-    hash = (53 * hash) + type_;
-    if (hasKeyStr()) {
-      hash = (37 * hash) + KEY_STR_FIELD_NUMBER;
-      hash = (53 * hash) + getKeyStr().hashCode();
-    }
-    if (hasKeyNum()) {
-      hash = (37 * hash) + KEY_NUM_FIELD_NUMBER;
-      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-          getKeyNum());
-    }
-    hash = (29 * hash) + getUnknownFields().hashCode();
-    memoizedHashCode = hash;
-    return hash;
-  }
-
-  public static im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest parseFrom(
-      java.nio.ByteBuffer data)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return PARSER.parseFrom(data);
-  }
-  public static im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest parseFrom(
-      java.nio.ByteBuffer data,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return PARSER.parseFrom(data, extensionRegistry);
-  }
-  public static im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest parseFrom(
-      com.google.protobuf.ByteString data)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return PARSER.parseFrom(data);
-  }
-  public static im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest parseFrom(
-      com.google.protobuf.ByteString data,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return PARSER.parseFrom(data, extensionRegistry);
-  }
-  public static im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest parseFrom(byte[] data)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return PARSER.parseFrom(data);
-  }
-  public static im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest parseFrom(
-      byte[] data,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    return PARSER.parseFrom(data, extensionRegistry);
-  }
-  public static im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest parseFrom(java.io.InputStream input)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input);
-  }
-  public static im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest parseFrom(
-      java.io.InputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input, extensionRegistry);
-  }
-  public static im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest parseDelimitedFrom(java.io.InputStream input)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseDelimitedWithIOException(PARSER, input);
-  }
-  public static im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest parseDelimitedFrom(
-      java.io.InputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
-  }
-  public static im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest parseFrom(
-      com.google.protobuf.CodedInputStream input)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input);
-  }
-  public static im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest parseFrom(
-      com.google.protobuf.CodedInputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input, extensionRegistry);
-  }
-
-  @java.lang.Override
-  public Builder newBuilderForType() { return newBuilder(); }
-  public static Builder newBuilder() {
-    return DEFAULT_INSTANCE.toBuilder();
-  }
-  public static Builder newBuilder(im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest prototype) {
-    return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-  }
-  @java.lang.Override
-  public Builder toBuilder() {
-    return this == DEFAULT_INSTANCE
-        ? new Builder() : new Builder().mergeFrom(this);
-  }
-
-  @java.lang.Override
-  protected Builder newBuilderForType(
-      com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-    Builder builder = new Builder(parent);
-    return builder;
-  }
-  /**
-   * Protobuf type {@code im.turms.proto.QueryResourceUploadInfoRequest}
-   */
-  public static final class Builder extends
-      com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-      // @@protoc_insertion_point(builder_implements:im.turms.proto.QueryResourceUploadInfoRequest)
-      im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequestOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequestOuterClass.internal_static_im_turms_proto_QueryResourceUploadInfoRequest_descriptor;
+    getDescriptor() {
+        return im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequestOuterClass.internal_static_im_turms_proto_QueryResourceUploadInfoRequest_descriptor;
+    }
+
+    @SuppressWarnings({"rawtypes"})
+    @java.lang.Override
+    protected com.google.protobuf.MapField internalGetMapField(
+            int number) {
+        switch (number) {
+            case 6:
+                return internalGetExtra();
+            default:
+                throw new RuntimeException(
+                        "Invalid map field number: " + number);
+        }
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequestOuterClass.internal_static_im_turms_proto_QueryResourceUploadInfoRequest_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest.class, im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest.Builder.class);
+    internalGetFieldAccessorTable() {
+        return im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequestOuterClass.internal_static_im_turms_proto_QueryResourceUploadInfoRequest_fieldAccessorTable
+                .ensureFieldAccessorsInitialized(
+                        im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest.class,
+                        im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest.Builder.class);
     }
 
-    // Construct using im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest.newBuilder()
-    private Builder() {
-
-    }
-
-    private Builder(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-      super(parent);
-
-    }
-    @java.lang.Override
-    public Builder clear() {
-      super.clear();
-      type_ = 0;
-
-      keyStr_ = "";
-      bitField0_ = (bitField0_ & ~0x00000001);
-      keyNum_ = 0L;
-      bitField0_ = (bitField0_ & ~0x00000002);
-      return this;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Descriptors.Descriptor
-        getDescriptorForType() {
-      return im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequestOuterClass.internal_static_im_turms_proto_QueryResourceUploadInfoRequest_descriptor;
-    }
-
-    @java.lang.Override
-    public im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest getDefaultInstanceForType() {
-      return im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest.getDefaultInstance();
-    }
-
-    @java.lang.Override
-    public im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest build() {
-      im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest result = buildPartial();
-      if (!result.isInitialized()) {
-        throw newUninitializedMessageException(result);
-      }
-      return result;
-    }
-
-    @java.lang.Override
-    public im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest buildPartial() {
-      im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest result = new im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest(this);
-      int from_bitField0_ = bitField0_;
-      int to_bitField0_ = 0;
-      result.type_ = type_;
-      if (((from_bitField0_ & 0x00000001) != 0)) {
-        to_bitField0_ |= 0x00000001;
-      }
-      result.keyStr_ = keyStr_;
-      if (((from_bitField0_ & 0x00000002) != 0)) {
-        result.keyNum_ = keyNum_;
-        to_bitField0_ |= 0x00000002;
-      }
-      result.bitField0_ = to_bitField0_;
-      onBuilt();
-      return result;
-    }
-
-    @java.lang.Override
-    public Builder clone() {
-      return super.clone();
-    }
-    @java.lang.Override
-    public Builder setField(
-        com.google.protobuf.Descriptors.FieldDescriptor field,
-        java.lang.Object value) {
-      return super.setField(field, value);
-    }
-    @java.lang.Override
-    public Builder clearField(
-        com.google.protobuf.Descriptors.FieldDescriptor field) {
-      return super.clearField(field);
-    }
-    @java.lang.Override
-    public Builder clearOneof(
-        com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-      return super.clearOneof(oneof);
-    }
-    @java.lang.Override
-    public Builder setRepeatedField(
-        com.google.protobuf.Descriptors.FieldDescriptor field,
-        int index, java.lang.Object value) {
-      return super.setRepeatedField(field, index, value);
-    }
-    @java.lang.Override
-    public Builder addRepeatedField(
-        com.google.protobuf.Descriptors.FieldDescriptor field,
-        java.lang.Object value) {
-      return super.addRepeatedField(field, value);
-    }
-    @java.lang.Override
-    public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest) {
-        return mergeFrom((im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest)other);
-      } else {
-        super.mergeFrom(other);
-        return this;
-      }
-    }
-
-    public Builder mergeFrom(im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest other) {
-      if (other == im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest.getDefaultInstance()) return this;
-      if (other.type_ != 0) {
-        setTypeValue(other.getTypeValue());
-      }
-      if (other.hasKeyStr()) {
-        bitField0_ |= 0x00000001;
-        keyStr_ = other.keyStr_;
-        onChanged();
-      }
-      if (other.hasKeyNum()) {
-        setKeyNum(other.getKeyNum());
-      }
-      this.mergeUnknownFields(other.getUnknownFields());
-      onChanged();
-      return this;
-    }
-
-    @java.lang.Override
-    public final boolean isInitialized() {
-      return true;
-    }
-
-    @java.lang.Override
-    public Builder mergeFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            case 8: {
-              type_ = input.readEnum();
-
-              break;
-            } // case 8
-            case 18: {
-              keyStr_ = input.readStringRequireUtf8();
-              bitField0_ |= 0x00000001;
-              break;
-            } // case 18
-            case 24: {
-              keyNum_ = input.readInt64();
-              bitField0_ |= 0x00000002;
-              break;
-            } // case 24
-            default: {
-              if (!super.parseUnknownField(input, extensionRegistry, tag)) {
-                done = true; // was an endgroup tag
-              }
-              break;
-            } // default:
-          } // switch (tag)
-        } // while (!done)
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.unwrapIOException();
-      } finally {
-        onChanged();
-      } // finally
-      return this;
-    }
     private int bitField0_;
+    public static final int TYPE_FIELD_NUMBER = 1;
+    private int type_;
 
-    private int type_ = 0;
     /**
      * <code>.im.turms.proto.StorageResourceType type = 1;</code>
+     *
      * @return The enum numeric value on the wire for type.
      */
-    @java.lang.Override public int getTypeValue() {
-      return type_;
+    @java.lang.Override
+    public int getTypeValue() {
+        return type_;
     }
-    /**
-     * <code>.im.turms.proto.StorageResourceType type = 1;</code>
-     * @param value The enum numeric value on the wire for type to set.
-     * @return This builder for chaining.
-     */
-    public Builder setTypeValue(int value) {
 
-      type_ = value;
-      onChanged();
-      return this;
-    }
     /**
      * <code>.im.turms.proto.StorageResourceType type = 1;</code>
+     *
      * @return The type.
      */
     @java.lang.Override
     public im.turms.server.common.access.client.dto.constant.StorageResourceType getType() {
-      @SuppressWarnings("deprecation")
-      im.turms.server.common.access.client.dto.constant.StorageResourceType result = im.turms.server.common.access.client.dto.constant.StorageResourceType.valueOf(type_);
-      return result == null ? im.turms.server.common.access.client.dto.constant.StorageResourceType.UNRECOGNIZED : result;
-    }
-    /**
-     * <code>.im.turms.proto.StorageResourceType type = 1;</code>
-     * @param value The type to set.
-     * @return This builder for chaining.
-     */
-    public Builder setType(im.turms.server.common.access.client.dto.constant.StorageResourceType value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-
-      type_ = value.getNumber();
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>.im.turms.proto.StorageResourceType type = 1;</code>
-     * @return This builder for chaining.
-     */
-    public Builder clearType() {
-
-      type_ = 0;
-      onChanged();
-      return this;
+        @SuppressWarnings("deprecation")
+        im.turms.server.common.access.client.dto.constant.StorageResourceType result = im.turms.server.common.access.client.dto.constant.StorageResourceType.valueOf(type_);
+        return result == null ? im.turms.server.common.access.client.dto.constant.StorageResourceType.UNRECOGNIZED : result;
     }
 
-    private java.lang.Object keyStr_ = "";
+    public static final int ID_NUM_FIELD_NUMBER = 2;
+    private long idNum_;
+
     /**
-     * <code>optional string key_str = 2;</code>
-     * @return Whether the keyStr field is set.
+     * <code>optional int64 id_num = 2;</code>
+     *
+     * @return Whether the idNum field is set.
      */
-    public boolean hasKeyStr() {
-      return ((bitField0_ & 0x00000001) != 0);
+    @java.lang.Override
+    public boolean hasIdNum() {
+        return ((bitField0_ & 0x00000001) != 0);
     }
+
     /**
-     * <code>optional string key_str = 2;</code>
-     * @return The keyStr.
+     * <code>optional int64 id_num = 2;</code>
+     *
+     * @return The idNum.
      */
-    public java.lang.String getKeyStr() {
-      java.lang.Object ref = keyStr_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        keyStr_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
+    @java.lang.Override
+    public long getIdNum() {
+        return idNum_;
     }
+
+    public static final int ID_STR_FIELD_NUMBER = 3;
+    private volatile java.lang.Object idStr_;
+
     /**
-     * <code>optional string key_str = 2;</code>
-     * @return The bytes for keyStr.
+     * <code>optional string id_str = 3;</code>
+     *
+     * @return Whether the idStr field is set.
      */
+    @java.lang.Override
+    public boolean hasIdStr() {
+        return ((bitField0_ & 0x00000002) != 0);
+    }
+
+    /**
+     * <code>optional string id_str = 3;</code>
+     *
+     * @return The idStr.
+     */
+    @java.lang.Override
+    public java.lang.String getIdStr() {
+        java.lang.Object ref = idStr_;
+        if (ref instanceof java.lang.String) {
+            return (java.lang.String) ref;
+        } else {
+            com.google.protobuf.ByteString bs =
+                    (com.google.protobuf.ByteString) ref;
+            java.lang.String s = bs.toStringUtf8();
+            idStr_ = s;
+            return s;
+        }
+    }
+
+    /**
+     * <code>optional string id_str = 3;</code>
+     *
+     * @return The bytes for idStr.
+     */
+    @java.lang.Override
     public com.google.protobuf.ByteString
-        getKeyStrBytes() {
-      java.lang.Object ref = keyStr_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b =
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        keyStr_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <code>optional string key_str = 2;</code>
-     * @param value The keyStr to set.
-     * @return This builder for chaining.
-     */
-    public Builder setKeyStr(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
-      keyStr_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>optional string key_str = 2;</code>
-     * @return This builder for chaining.
-     */
-    public Builder clearKeyStr() {
-      bitField0_ = (bitField0_ & ~0x00000001);
-      keyStr_ = getDefaultInstance().getKeyStr();
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>optional string key_str = 2;</code>
-     * @param value The bytes for keyStr to set.
-     * @return This builder for chaining.
-     */
-    public Builder setKeyStrBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      bitField0_ |= 0x00000001;
-      keyStr_ = value;
-      onChanged();
-      return this;
+    getIdStrBytes() {
+        java.lang.Object ref = idStr_;
+        if (ref instanceof java.lang.String) {
+            com.google.protobuf.ByteString b =
+                    com.google.protobuf.ByteString.copyFromUtf8(
+                            (java.lang.String) ref);
+            idStr_ = b;
+            return b;
+        } else {
+            return (com.google.protobuf.ByteString) ref;
+        }
     }
 
-    private long keyNum_ ;
+    public static final int NAME_FIELD_NUMBER = 4;
+    private volatile java.lang.Object name_;
+
     /**
-     * <code>optional int64 key_num = 3;</code>
-     * @return Whether the keyNum field is set.
+     * <code>optional string name = 4;</code>
+     *
+     * @return Whether the name field is set.
      */
     @java.lang.Override
-    public boolean hasKeyNum() {
-      return ((bitField0_ & 0x00000002) != 0);
+    public boolean hasName() {
+        return ((bitField0_ & 0x00000004) != 0);
     }
+
     /**
-     * <code>optional int64 key_num = 3;</code>
-     * @return The keyNum.
+     * <code>optional string name = 4;</code>
+     *
+     * @return The name.
      */
     @java.lang.Override
-    public long getKeyNum() {
-      return keyNum_;
+    public java.lang.String getName() {
+        java.lang.Object ref = name_;
+        if (ref instanceof java.lang.String) {
+            return (java.lang.String) ref;
+        } else {
+            com.google.protobuf.ByteString bs =
+                    (com.google.protobuf.ByteString) ref;
+            java.lang.String s = bs.toStringUtf8();
+            name_ = s;
+            return s;
+        }
     }
+
     /**
-     * <code>optional int64 key_num = 3;</code>
-     * @param value The keyNum to set.
-     * @return This builder for chaining.
+     * <code>optional string name = 4;</code>
+     *
+     * @return The bytes for name.
      */
-    public Builder setKeyNum(long value) {
-      bitField0_ |= 0x00000002;
-      keyNum_ = value;
-      onChanged();
-      return this;
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+    getNameBytes() {
+        java.lang.Object ref = name_;
+        if (ref instanceof java.lang.String) {
+            com.google.protobuf.ByteString b =
+                    com.google.protobuf.ByteString.copyFromUtf8(
+                            (java.lang.String) ref);
+            name_ = b;
+            return b;
+        } else {
+            return (com.google.protobuf.ByteString) ref;
+        }
     }
+
+    public static final int MEDIA_TYPE_FIELD_NUMBER = 5;
+    private volatile java.lang.Object mediaType_;
+
     /**
-     * <code>optional int64 key_num = 3;</code>
-     * @return This builder for chaining.
+     * <code>optional string media_type = 5;</code>
+     *
+     * @return Whether the mediaType field is set.
      */
-    public Builder clearKeyNum() {
-      bitField0_ = (bitField0_ & ~0x00000002);
-      keyNum_ = 0L;
-      onChanged();
-      return this;
-    }
     @java.lang.Override
-    public final Builder setUnknownFields(
-        final com.google.protobuf.UnknownFieldSet unknownFields) {
-      return super.setUnknownFields(unknownFields);
+    public boolean hasMediaType() {
+        return ((bitField0_ & 0x00000008) != 0);
+    }
+
+    /**
+     * <code>optional string media_type = 5;</code>
+     *
+     * @return The mediaType.
+     */
+    @java.lang.Override
+    public java.lang.String getMediaType() {
+        java.lang.Object ref = mediaType_;
+        if (ref instanceof java.lang.String) {
+            return (java.lang.String) ref;
+        } else {
+            com.google.protobuf.ByteString bs =
+                    (com.google.protobuf.ByteString) ref;
+            java.lang.String s = bs.toStringUtf8();
+            mediaType_ = s;
+            return s;
+        }
+    }
+
+    /**
+     * <code>optional string media_type = 5;</code>
+     *
+     * @return The bytes for mediaType.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+    getMediaTypeBytes() {
+        java.lang.Object ref = mediaType_;
+        if (ref instanceof java.lang.String) {
+            com.google.protobuf.ByteString b =
+                    com.google.protobuf.ByteString.copyFromUtf8(
+                            (java.lang.String) ref);
+            mediaType_ = b;
+            return b;
+        } else {
+            return (com.google.protobuf.ByteString) ref;
+        }
+    }
+
+    public static final int EXTRA_FIELD_NUMBER = 6;
+
+    private static final class ExtraDefaultEntryHolder {
+        static final com.google.protobuf.MapEntry<
+                java.lang.String, java.lang.String> defaultEntry =
+                com.google.protobuf.MapEntry
+                        .<java.lang.String, java.lang.String>newDefaultInstance(
+                                im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequestOuterClass.internal_static_im_turms_proto_QueryResourceUploadInfoRequest_ExtraEntry_descriptor,
+                                com.google.protobuf.WireFormat.FieldType.STRING,
+                                "",
+                                com.google.protobuf.WireFormat.FieldType.STRING,
+                                "");
+    }
+
+    private com.google.protobuf.MapField<
+            java.lang.String, java.lang.String> extra_;
+
+    private com.google.protobuf.MapField<java.lang.String, java.lang.String>
+    internalGetExtra() {
+        if (extra_ == null) {
+            return com.google.protobuf.MapField.emptyMapField(
+                    ExtraDefaultEntryHolder.defaultEntry);
+        }
+        return extra_;
+    }
+
+    public int getExtraCount() {
+        return internalGetExtra().getMap().size();
+    }
+
+    /**
+     * <code>map&lt;string, string&gt; extra = 6;</code>
+     */
+
+    @java.lang.Override
+    public boolean containsExtra(
+            java.lang.String key) {
+        if (key == null) {
+            throw new NullPointerException("map key");
+        }
+        return internalGetExtra().getMap().containsKey(key);
+    }
+
+    /**
+     * Use {@link #getExtraMap()} instead.
+     */
+    @java.lang.Override
+    @java.lang.Deprecated
+    public java.util.Map<java.lang.String, java.lang.String> getExtra() {
+        return getExtraMap();
+    }
+
+    /**
+     * <code>map&lt;string, string&gt; extra = 6;</code>
+     */
+    @java.lang.Override
+
+    public java.util.Map<java.lang.String, java.lang.String> getExtraMap() {
+        return internalGetExtra().getMap();
+    }
+
+    /**
+     * <code>map&lt;string, string&gt; extra = 6;</code>
+     */
+    @java.lang.Override
+
+    public java.lang.String getExtraOrDefault(
+            java.lang.String key,
+            java.lang.String defaultValue) {
+        if (key == null) {
+            throw new NullPointerException("map key");
+        }
+        java.util.Map<java.lang.String, java.lang.String> map =
+                internalGetExtra().getMap();
+        return map.containsKey(key) ? map.get(key) : defaultValue;
+    }
+
+    /**
+     * <code>map&lt;string, string&gt; extra = 6;</code>
+     */
+    @java.lang.Override
+
+    public java.lang.String getExtraOrThrow(
+            java.lang.String key) {
+        if (key == null) {
+            throw new NullPointerException("map key");
+        }
+        java.util.Map<java.lang.String, java.lang.String> map =
+                internalGetExtra().getMap();
+        if (!map.containsKey(key)) {
+            throw new java.lang.IllegalArgumentException();
+        }
+        return map.get(key);
+    }
+
+    private byte memoizedIsInitialized = -1;
+
+    @java.lang.Override
+    public final boolean isInitialized() {
+        byte isInitialized = memoizedIsInitialized;
+        if (isInitialized == 1) {
+            return true;
+        }
+        if (isInitialized == 0) {
+            return false;
+        }
+
+        memoizedIsInitialized = 1;
+        return true;
     }
 
     @java.lang.Override
-    public final Builder mergeUnknownFields(
-        final com.google.protobuf.UnknownFieldSet unknownFields) {
-      return super.mergeUnknownFields(unknownFields);
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+            throws java.io.IOException {
+        if (type_ != im.turms.server.common.access.client.dto.constant.StorageResourceType.USER_PROFILE_PICTURE.getNumber()) {
+            output.writeEnum(1, type_);
+        }
+        if (((bitField0_ & 0x00000001) != 0)) {
+            output.writeInt64(2, idNum_);
+        }
+        if (((bitField0_ & 0x00000002) != 0)) {
+            com.google.protobuf.GeneratedMessageV3.writeString(output, 3, idStr_);
+        }
+        if (((bitField0_ & 0x00000004) != 0)) {
+            com.google.protobuf.GeneratedMessageV3.writeString(output, 4, name_);
+        }
+        if (((bitField0_ & 0x00000008) != 0)) {
+            com.google.protobuf.GeneratedMessageV3.writeString(output, 5, mediaType_);
+        }
+        com.google.protobuf.GeneratedMessageV3
+                .serializeStringMapTo(
+                        output,
+                        internalGetExtra(),
+                        ExtraDefaultEntryHolder.defaultEntry,
+                        6);
+        getUnknownFields().writeTo(output);
     }
 
-
-    // @@protoc_insertion_point(builder_scope:im.turms.proto.QueryResourceUploadInfoRequest)
-  }
-
-  // @@protoc_insertion_point(class_scope:im.turms.proto.QueryResourceUploadInfoRequest)
-  private static final im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest DEFAULT_INSTANCE;
-  static {
-    DEFAULT_INSTANCE = new im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest();
-  }
-
-  public static im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest getDefaultInstance() {
-    return DEFAULT_INSTANCE;
-  }
-
-  private static final com.google.protobuf.Parser<QueryResourceUploadInfoRequest>
-      PARSER = new com.google.protobuf.AbstractParser<QueryResourceUploadInfoRequest>() {
     @java.lang.Override
-    public QueryResourceUploadInfoRequest parsePartialFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      Builder builder = newBuilder();
-      try {
-        builder.mergeFrom(input, extensionRegistry);
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(builder.buildPartial());
-      } catch (com.google.protobuf.UninitializedMessageException e) {
-        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(e)
-            .setUnfinishedMessage(builder.buildPartial());
-      }
-      return builder.buildPartial();
+    public int getSerializedSize() {
+        int size = memoizedSize;
+        if (size != -1) {
+            return size;
+        }
+
+        size = 0;
+        if (type_ != im.turms.server.common.access.client.dto.constant.StorageResourceType.USER_PROFILE_PICTURE.getNumber()) {
+            size += com.google.protobuf.CodedOutputStream
+                    .computeEnumSize(1, type_);
+        }
+        if (((bitField0_ & 0x00000001) != 0)) {
+            size += com.google.protobuf.CodedOutputStream
+                    .computeInt64Size(2, idNum_);
+        }
+        if (((bitField0_ & 0x00000002) != 0)) {
+            size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, idStr_);
+        }
+        if (((bitField0_ & 0x00000004) != 0)) {
+            size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, name_);
+        }
+        if (((bitField0_ & 0x00000008) != 0)) {
+            size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, mediaType_);
+        }
+        for (java.util.Map.Entry<java.lang.String, java.lang.String> entry
+                : internalGetExtra().getMap().entrySet()) {
+            com.google.protobuf.MapEntry<java.lang.String, java.lang.String>
+                    extra__ = ExtraDefaultEntryHolder.defaultEntry.newBuilderForType()
+                    .setKey(entry.getKey())
+                    .setValue(entry.getValue())
+                    .build();
+            size += com.google.protobuf.CodedOutputStream
+                    .computeMessageSize(6, extra__);
+        }
+        size += getUnknownFields().getSerializedSize();
+        memoizedSize = size;
+        return size;
     }
-  };
 
-  public static com.google.protobuf.Parser<QueryResourceUploadInfoRequest> parser() {
-    return PARSER;
-  }
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (!(obj instanceof im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest)) {
+            return super.equals(obj);
+        }
+        im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest other = (im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest) obj;
 
-  @java.lang.Override
-  public com.google.protobuf.Parser<QueryResourceUploadInfoRequest> getParserForType() {
-    return PARSER;
-  }
+        if (type_ != other.type_) {
+            return false;
+        }
+        if (hasIdNum() != other.hasIdNum()) {
+            return false;
+        }
+        if (hasIdNum()) {
+            if (getIdNum()
+                != other.getIdNum()) {
+                return false;
+            }
+        }
+        if (hasIdStr() != other.hasIdStr()) {
+            return false;
+        }
+        if (hasIdStr()) {
+            if (!getIdStr()
+                    .equals(other.getIdStr())) {
+                return false;
+            }
+        }
+        if (hasName() != other.hasName()) {
+            return false;
+        }
+        if (hasName()) {
+            if (!getName()
+                    .equals(other.getName())) {
+                return false;
+            }
+        }
+        if (hasMediaType() != other.hasMediaType()) {
+            return false;
+        }
+        if (hasMediaType()) {
+            if (!getMediaType()
+                    .equals(other.getMediaType())) {
+                return false;
+            }
+        }
+        if (!internalGetExtra().equals(
+                other.internalGetExtra())) {
+            return false;
+        }
+        if (!getUnknownFields().equals(other.getUnknownFields())) {
+            return false;
+        }
+        return true;
+    }
 
-  @java.lang.Override
-  public im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest getDefaultInstanceForType() {
-    return DEFAULT_INSTANCE;
-  }
+    @java.lang.Override
+    public int hashCode() {
+        if (memoizedHashCode != 0) {
+            return memoizedHashCode;
+        }
+        int hash = 41;
+        hash = (19 * hash) + getDescriptor().hashCode();
+        hash = (37 * hash) + TYPE_FIELD_NUMBER;
+        hash = (53 * hash) + type_;
+        if (hasIdNum()) {
+            hash = (37 * hash) + ID_NUM_FIELD_NUMBER;
+            hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+                    getIdNum());
+        }
+        if (hasIdStr()) {
+            hash = (37 * hash) + ID_STR_FIELD_NUMBER;
+            hash = (53 * hash) + getIdStr().hashCode();
+        }
+        if (hasName()) {
+            hash = (37 * hash) + NAME_FIELD_NUMBER;
+            hash = (53 * hash) + getName().hashCode();
+        }
+        if (hasMediaType()) {
+            hash = (37 * hash) + MEDIA_TYPE_FIELD_NUMBER;
+            hash = (53 * hash) + getMediaType().hashCode();
+        }
+        if (!internalGetExtra().getMap().isEmpty()) {
+            hash = (37 * hash) + EXTRA_FIELD_NUMBER;
+            hash = (53 * hash) + internalGetExtra().hashCode();
+        }
+        hash = (29 * hash) + getUnknownFields().hashCode();
+        memoizedHashCode = hash;
+        return hash;
+    }
+
+    public static im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest parseFrom(
+            java.nio.ByteBuffer data)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+    }
+
+    public static im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest parseFrom(
+            java.nio.ByteBuffer data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+    }
+
+    public static im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest parseFrom(
+            com.google.protobuf.ByteString data)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+    }
+
+    public static im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest parseFrom(
+            com.google.protobuf.ByteString data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+    }
+
+    public static im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest parseFrom(byte[] data)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+    }
+
+    public static im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest parseFrom(
+            byte[] data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+    }
+
+    public static im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest parseFrom(java.io.InputStream input)
+            throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+                .parseWithIOException(PARSER, input);
+    }
+
+    public static im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest parseFrom(
+            java.io.InputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+                .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public static im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest parseDelimitedFrom(java.io.InputStream input)
+            throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+                .parseDelimitedWithIOException(PARSER, input);
+    }
+
+    public static im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest parseDelimitedFrom(
+            java.io.InputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+                .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public static im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest parseFrom(
+            com.google.protobuf.CodedInputStream input)
+            throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+                .parseWithIOException(PARSER, input);
+    }
+
+    public static im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest parseFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+                .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() {
+        return newBuilder();
+    }
+
+    public static Builder newBuilder() {
+        return DEFAULT_INSTANCE.toBuilder();
+    }
+
+    public static Builder newBuilder(im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest prototype) {
+        return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+
+    @java.lang.Override
+    public Builder toBuilder() {
+        return this == DEFAULT_INSTANCE
+                ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+            com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        Builder builder = new Builder(parent);
+        return builder;
+    }
+
+    /**
+     * Protobuf type {@code im.turms.proto.QueryResourceUploadInfoRequest}
+     */
+    public static final class Builder extends
+            com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+            // @@protoc_insertion_point(builder_implements:im.turms.proto.QueryResourceUploadInfoRequest)
+            im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequestOrBuilder {
+        public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+            return im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequestOuterClass.internal_static_im_turms_proto_QueryResourceUploadInfoRequest_descriptor;
+        }
+
+        @SuppressWarnings({"rawtypes"})
+        protected com.google.protobuf.MapField internalGetMapField(
+                int number) {
+            switch (number) {
+                case 6:
+                    return internalGetExtra();
+                default:
+                    throw new RuntimeException(
+                            "Invalid map field number: " + number);
+            }
+        }
+
+        @SuppressWarnings({"rawtypes"})
+        protected com.google.protobuf.MapField internalGetMutableMapField(
+                int number) {
+            switch (number) {
+                case 6:
+                    return internalGetMutableExtra();
+                default:
+                    throw new RuntimeException(
+                            "Invalid map field number: " + number);
+            }
+        }
+
+        @java.lang.Override
+        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+            return im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequestOuterClass.internal_static_im_turms_proto_QueryResourceUploadInfoRequest_fieldAccessorTable
+                    .ensureFieldAccessorsInitialized(
+                            im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest.class,
+                            im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest.Builder.class);
+        }
+
+        // Construct using im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest.newBuilder()
+        private Builder() {
+
+        }
+
+        private Builder(
+                com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+            super(parent);
+
+        }
+
+        @java.lang.Override
+        public Builder clear() {
+            super.clear();
+            type_ = 0;
+
+            idNum_ = 0L;
+            bitField0_ = (bitField0_ & ~0x00000001);
+            idStr_ = "";
+            bitField0_ = (bitField0_ & ~0x00000002);
+            name_ = "";
+            bitField0_ = (bitField0_ & ~0x00000004);
+            mediaType_ = "";
+            bitField0_ = (bitField0_ & ~0x00000008);
+            internalGetMutableExtra().clear();
+            return this;
+        }
+
+        @java.lang.Override
+        public com.google.protobuf.Descriptors.Descriptor
+        getDescriptorForType() {
+            return im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequestOuterClass.internal_static_im_turms_proto_QueryResourceUploadInfoRequest_descriptor;
+        }
+
+        @java.lang.Override
+        public im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest getDefaultInstanceForType() {
+            return im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest.getDefaultInstance();
+        }
+
+        @java.lang.Override
+        public im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest build() {
+            im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest result = buildPartial();
+            if (!result.isInitialized()) {
+                throw newUninitializedMessageException(result);
+            }
+            return result;
+        }
+
+        @java.lang.Override
+        public im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest buildPartial() {
+            im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest result =
+                    new im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest(this);
+            int from_bitField0_ = bitField0_;
+            int to_bitField0_ = 0;
+            result.type_ = type_;
+            if (((from_bitField0_ & 0x00000001) != 0)) {
+                result.idNum_ = idNum_;
+                to_bitField0_ |= 0x00000001;
+            }
+            if (((from_bitField0_ & 0x00000002) != 0)) {
+                to_bitField0_ |= 0x00000002;
+            }
+            result.idStr_ = idStr_;
+            if (((from_bitField0_ & 0x00000004) != 0)) {
+                to_bitField0_ |= 0x00000004;
+            }
+            result.name_ = name_;
+            if (((from_bitField0_ & 0x00000008) != 0)) {
+                to_bitField0_ |= 0x00000008;
+            }
+            result.mediaType_ = mediaType_;
+            result.extra_ = internalGetExtra();
+            result.extra_.makeImmutable();
+            result.bitField0_ = to_bitField0_;
+            onBuilt();
+            return result;
+        }
+
+        @java.lang.Override
+        public Builder clone() {
+            return super.clone();
+        }
+
+        @java.lang.Override
+        public Builder setField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value) {
+            return super.setField(field, value);
+        }
+
+        @java.lang.Override
+        public Builder clearField(
+                com.google.protobuf.Descriptors.FieldDescriptor field) {
+            return super.clearField(field);
+        }
+
+        @java.lang.Override
+        public Builder clearOneof(
+                com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+            return super.clearOneof(oneof);
+        }
+
+        @java.lang.Override
+        public Builder setRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                int index, java.lang.Object value) {
+            return super.setRepeatedField(field, index, value);
+        }
+
+        @java.lang.Override
+        public Builder addRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value) {
+            return super.addRepeatedField(field, value);
+        }
+
+        @java.lang.Override
+        public Builder mergeFrom(com.google.protobuf.Message other) {
+            if (other instanceof im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest) {
+                return mergeFrom((im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest) other);
+            } else {
+                super.mergeFrom(other);
+                return this;
+            }
+        }
+
+        public Builder mergeFrom(im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest other) {
+            if (other == im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest.getDefaultInstance()) {
+                return this;
+            }
+            if (other.type_ != 0) {
+                setTypeValue(other.getTypeValue());
+            }
+            if (other.hasIdNum()) {
+                setIdNum(other.getIdNum());
+            }
+            if (other.hasIdStr()) {
+                bitField0_ |= 0x00000002;
+                idStr_ = other.idStr_;
+                onChanged();
+            }
+            if (other.hasName()) {
+                bitField0_ |= 0x00000004;
+                name_ = other.name_;
+                onChanged();
+            }
+            if (other.hasMediaType()) {
+                bitField0_ |= 0x00000008;
+                mediaType_ = other.mediaType_;
+                onChanged();
+            }
+            internalGetMutableExtra().mergeFrom(
+                    other.internalGetExtra());
+            this.mergeUnknownFields(other.getUnknownFields());
+            onChanged();
+            return this;
+        }
+
+        @java.lang.Override
+        public final boolean isInitialized() {
+            return true;
+        }
+
+        @java.lang.Override
+        public Builder mergeFrom(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+            if (extensionRegistry == null) {
+                throw new java.lang.NullPointerException();
+            }
+            try {
+                boolean done = false;
+                while (!done) {
+                    int tag = input.readTag();
+                    switch (tag) {
+                        case 0:
+                            done = true;
+                            break;
+                        case 8: {
+                            type_ = input.readEnum();
+
+                            break;
+                        } // case 8
+                        case 16: {
+                            idNum_ = input.readInt64();
+                            bitField0_ |= 0x00000001;
+                            break;
+                        } // case 16
+                        case 26: {
+                            idStr_ = input.readStringRequireUtf8();
+                            bitField0_ |= 0x00000002;
+                            break;
+                        } // case 26
+                        case 34: {
+                            name_ = input.readStringRequireUtf8();
+                            bitField0_ |= 0x00000004;
+                            break;
+                        } // case 34
+                        case 42: {
+                            mediaType_ = input.readStringRequireUtf8();
+                            bitField0_ |= 0x00000008;
+                            break;
+                        } // case 42
+                        case 50: {
+                            com.google.protobuf.MapEntry<java.lang.String, java.lang.String>
+                                    extra__ = input.readMessage(
+                                    ExtraDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
+                            internalGetMutableExtra().getMutableMap().put(
+                                    extra__.getKey(), extra__.getValue());
+                            break;
+                        } // case 50
+                        default: {
+                            if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                                done = true; // was an endgroup tag
+                            }
+                            break;
+                        } // default:
+                    } // switch (tag)
+                } // while (!done)
+            } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                throw e.unwrapIOException();
+            } finally {
+                onChanged();
+            } // finally
+            return this;
+        }
+
+        private int bitField0_;
+
+        private int type_ = 0;
+
+        /**
+         * <code>.im.turms.proto.StorageResourceType type = 1;</code>
+         *
+         * @return The enum numeric value on the wire for type.
+         */
+        @java.lang.Override
+        public int getTypeValue() {
+            return type_;
+        }
+
+        /**
+         * <code>.im.turms.proto.StorageResourceType type = 1;</code>
+         *
+         * @param value The enum numeric value on the wire for type to set.
+         * @return This builder for chaining.
+         */
+        public Builder setTypeValue(int value) {
+
+            type_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.StorageResourceType type = 1;</code>
+         *
+         * @return The type.
+         */
+        @java.lang.Override
+        public im.turms.server.common.access.client.dto.constant.StorageResourceType getType() {
+            @SuppressWarnings("deprecation")
+            im.turms.server.common.access.client.dto.constant.StorageResourceType result = im.turms.server.common.access.client.dto.constant.StorageResourceType.valueOf(type_);
+            return result == null ? im.turms.server.common.access.client.dto.constant.StorageResourceType.UNRECOGNIZED : result;
+        }
+
+        /**
+         * <code>.im.turms.proto.StorageResourceType type = 1;</code>
+         *
+         * @param value The type to set.
+         * @return This builder for chaining.
+         */
+        public Builder setType(im.turms.server.common.access.client.dto.constant.StorageResourceType value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+
+            type_ = value.getNumber();
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.StorageResourceType type = 1;</code>
+         *
+         * @return This builder for chaining.
+         */
+        public Builder clearType() {
+
+            type_ = 0;
+            onChanged();
+            return this;
+        }
+
+        private long idNum_;
+
+        /**
+         * <code>optional int64 id_num = 2;</code>
+         *
+         * @return Whether the idNum field is set.
+         */
+        @java.lang.Override
+        public boolean hasIdNum() {
+            return ((bitField0_ & 0x00000001) != 0);
+        }
+
+        /**
+         * <code>optional int64 id_num = 2;</code>
+         *
+         * @return The idNum.
+         */
+        @java.lang.Override
+        public long getIdNum() {
+            return idNum_;
+        }
+
+        /**
+         * <code>optional int64 id_num = 2;</code>
+         *
+         * @param value The idNum to set.
+         * @return This builder for chaining.
+         */
+        public Builder setIdNum(long value) {
+            bitField0_ |= 0x00000001;
+            idNum_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <code>optional int64 id_num = 2;</code>
+         *
+         * @return This builder for chaining.
+         */
+        public Builder clearIdNum() {
+            bitField0_ = (bitField0_ & ~0x00000001);
+            idNum_ = 0L;
+            onChanged();
+            return this;
+        }
+
+        private java.lang.Object idStr_ = "";
+
+        /**
+         * <code>optional string id_str = 3;</code>
+         *
+         * @return Whether the idStr field is set.
+         */
+        public boolean hasIdStr() {
+            return ((bitField0_ & 0x00000002) != 0);
+        }
+
+        /**
+         * <code>optional string id_str = 3;</code>
+         *
+         * @return The idStr.
+         */
+        public java.lang.String getIdStr() {
+            java.lang.Object ref = idStr_;
+            if (!(ref instanceof java.lang.String)) {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                java.lang.String s = bs.toStringUtf8();
+                idStr_ = s;
+                return s;
+            } else {
+                return (java.lang.String) ref;
+            }
+        }
+
+        /**
+         * <code>optional string id_str = 3;</code>
+         *
+         * @return The bytes for idStr.
+         */
+        public com.google.protobuf.ByteString
+        getIdStrBytes() {
+            java.lang.Object ref = idStr_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (java.lang.String) ref);
+                idStr_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        /**
+         * <code>optional string id_str = 3;</code>
+         *
+         * @param value The idStr to set.
+         * @return This builder for chaining.
+         */
+        public Builder setIdStr(
+                java.lang.String value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+            bitField0_ |= 0x00000002;
+            idStr_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <code>optional string id_str = 3;</code>
+         *
+         * @return This builder for chaining.
+         */
+        public Builder clearIdStr() {
+            bitField0_ = (bitField0_ & ~0x00000002);
+            idStr_ = getDefaultInstance().getIdStr();
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <code>optional string id_str = 3;</code>
+         *
+         * @param value The bytes for idStr to set.
+         * @return This builder for chaining.
+         */
+        public Builder setIdStrBytes(
+                com.google.protobuf.ByteString value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+            checkByteStringIsUtf8(value);
+            bitField0_ |= 0x00000002;
+            idStr_ = value;
+            onChanged();
+            return this;
+        }
+
+        private java.lang.Object name_ = "";
+
+        /**
+         * <code>optional string name = 4;</code>
+         *
+         * @return Whether the name field is set.
+         */
+        public boolean hasName() {
+            return ((bitField0_ & 0x00000004) != 0);
+        }
+
+        /**
+         * <code>optional string name = 4;</code>
+         *
+         * @return The name.
+         */
+        public java.lang.String getName() {
+            java.lang.Object ref = name_;
+            if (!(ref instanceof java.lang.String)) {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                java.lang.String s = bs.toStringUtf8();
+                name_ = s;
+                return s;
+            } else {
+                return (java.lang.String) ref;
+            }
+        }
+
+        /**
+         * <code>optional string name = 4;</code>
+         *
+         * @return The bytes for name.
+         */
+        public com.google.protobuf.ByteString
+        getNameBytes() {
+            java.lang.Object ref = name_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (java.lang.String) ref);
+                name_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        /**
+         * <code>optional string name = 4;</code>
+         *
+         * @param value The name to set.
+         * @return This builder for chaining.
+         */
+        public Builder setName(
+                java.lang.String value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+            bitField0_ |= 0x00000004;
+            name_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <code>optional string name = 4;</code>
+         *
+         * @return This builder for chaining.
+         */
+        public Builder clearName() {
+            bitField0_ = (bitField0_ & ~0x00000004);
+            name_ = getDefaultInstance().getName();
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <code>optional string name = 4;</code>
+         *
+         * @param value The bytes for name to set.
+         * @return This builder for chaining.
+         */
+        public Builder setNameBytes(
+                com.google.protobuf.ByteString value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+            checkByteStringIsUtf8(value);
+            bitField0_ |= 0x00000004;
+            name_ = value;
+            onChanged();
+            return this;
+        }
+
+        private java.lang.Object mediaType_ = "";
+
+        /**
+         * <code>optional string media_type = 5;</code>
+         *
+         * @return Whether the mediaType field is set.
+         */
+        public boolean hasMediaType() {
+            return ((bitField0_ & 0x00000008) != 0);
+        }
+
+        /**
+         * <code>optional string media_type = 5;</code>
+         *
+         * @return The mediaType.
+         */
+        public java.lang.String getMediaType() {
+            java.lang.Object ref = mediaType_;
+            if (!(ref instanceof java.lang.String)) {
+                com.google.protobuf.ByteString bs =
+                        (com.google.protobuf.ByteString) ref;
+                java.lang.String s = bs.toStringUtf8();
+                mediaType_ = s;
+                return s;
+            } else {
+                return (java.lang.String) ref;
+            }
+        }
+
+        /**
+         * <code>optional string media_type = 5;</code>
+         *
+         * @return The bytes for mediaType.
+         */
+        public com.google.protobuf.ByteString
+        getMediaTypeBytes() {
+            java.lang.Object ref = mediaType_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8(
+                                (java.lang.String) ref);
+                mediaType_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        /**
+         * <code>optional string media_type = 5;</code>
+         *
+         * @param value The mediaType to set.
+         * @return This builder for chaining.
+         */
+        public Builder setMediaType(
+                java.lang.String value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+            bitField0_ |= 0x00000008;
+            mediaType_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <code>optional string media_type = 5;</code>
+         *
+         * @return This builder for chaining.
+         */
+        public Builder clearMediaType() {
+            bitField0_ = (bitField0_ & ~0x00000008);
+            mediaType_ = getDefaultInstance().getMediaType();
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <code>optional string media_type = 5;</code>
+         *
+         * @param value The bytes for mediaType to set.
+         * @return This builder for chaining.
+         */
+        public Builder setMediaTypeBytes(
+                com.google.protobuf.ByteString value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+            checkByteStringIsUtf8(value);
+            bitField0_ |= 0x00000008;
+            mediaType_ = value;
+            onChanged();
+            return this;
+        }
+
+        private com.google.protobuf.MapField<
+                java.lang.String, java.lang.String> extra_;
+
+        private com.google.protobuf.MapField<java.lang.String, java.lang.String>
+        internalGetExtra() {
+            if (extra_ == null) {
+                return com.google.protobuf.MapField.emptyMapField(
+                        ExtraDefaultEntryHolder.defaultEntry);
+            }
+            return extra_;
+        }
+
+        private com.google.protobuf.MapField<java.lang.String, java.lang.String>
+        internalGetMutableExtra() {
+            onChanged();
+            ;
+            if (extra_ == null) {
+                extra_ = com.google.protobuf.MapField.newMapField(
+                        ExtraDefaultEntryHolder.defaultEntry);
+            }
+            if (!extra_.isMutable()) {
+                extra_ = extra_.copy();
+            }
+            return extra_;
+        }
+
+        public int getExtraCount() {
+            return internalGetExtra().getMap().size();
+        }
+
+        /**
+         * <code>map&lt;string, string&gt; extra = 6;</code>
+         */
+
+        @java.lang.Override
+        public boolean containsExtra(
+                java.lang.String key) {
+            if (key == null) {
+                throw new NullPointerException("map key");
+            }
+            return internalGetExtra().getMap().containsKey(key);
+        }
+
+        /**
+         * Use {@link #getExtraMap()} instead.
+         */
+        @java.lang.Override
+        @java.lang.Deprecated
+        public java.util.Map<java.lang.String, java.lang.String> getExtra() {
+            return getExtraMap();
+        }
+
+        /**
+         * <code>map&lt;string, string&gt; extra = 6;</code>
+         */
+        @java.lang.Override
+
+        public java.util.Map<java.lang.String, java.lang.String> getExtraMap() {
+            return internalGetExtra().getMap();
+        }
+
+        /**
+         * <code>map&lt;string, string&gt; extra = 6;</code>
+         */
+        @java.lang.Override
+
+        public java.lang.String getExtraOrDefault(
+                java.lang.String key,
+                java.lang.String defaultValue) {
+            if (key == null) {
+                throw new NullPointerException("map key");
+            }
+            java.util.Map<java.lang.String, java.lang.String> map =
+                    internalGetExtra().getMap();
+            return map.containsKey(key) ? map.get(key) : defaultValue;
+        }
+
+        /**
+         * <code>map&lt;string, string&gt; extra = 6;</code>
+         */
+        @java.lang.Override
+
+        public java.lang.String getExtraOrThrow(
+                java.lang.String key) {
+            if (key == null) {
+                throw new NullPointerException("map key");
+            }
+            java.util.Map<java.lang.String, java.lang.String> map =
+                    internalGetExtra().getMap();
+            if (!map.containsKey(key)) {
+                throw new java.lang.IllegalArgumentException();
+            }
+            return map.get(key);
+        }
+
+        public Builder clearExtra() {
+            internalGetMutableExtra().getMutableMap()
+                    .clear();
+            return this;
+        }
+
+        /**
+         * <code>map&lt;string, string&gt; extra = 6;</code>
+         */
+
+        public Builder removeExtra(
+                java.lang.String key) {
+            if (key == null) {
+                throw new NullPointerException("map key");
+            }
+            internalGetMutableExtra().getMutableMap()
+                    .remove(key);
+            return this;
+        }
+
+        /**
+         * Use alternate mutation accessors instead.
+         */
+        @java.lang.Deprecated
+        public java.util.Map<java.lang.String, java.lang.String>
+        getMutableExtra() {
+            return internalGetMutableExtra().getMutableMap();
+        }
+
+        /**
+         * <code>map&lt;string, string&gt; extra = 6;</code>
+         */
+        public Builder putExtra(
+                java.lang.String key,
+                java.lang.String value) {
+            if (key == null) {
+                throw new NullPointerException("map key");
+            }
+            if (value == null) {
+                throw new NullPointerException("map value");
+            }
+
+            internalGetMutableExtra().getMutableMap()
+                    .put(key, value);
+            return this;
+        }
+
+        /**
+         * <code>map&lt;string, string&gt; extra = 6;</code>
+         */
+
+        public Builder putAllExtra(
+                java.util.Map<java.lang.String, java.lang.String> values) {
+            internalGetMutableExtra().getMutableMap()
+                    .putAll(values);
+            return this;
+        }
+
+        @java.lang.Override
+        public final Builder setUnknownFields(
+                final com.google.protobuf.UnknownFieldSet unknownFields) {
+            return super.setUnknownFields(unknownFields);
+        }
+
+        @java.lang.Override
+        public final Builder mergeUnknownFields(
+                final com.google.protobuf.UnknownFieldSet unknownFields) {
+            return super.mergeUnknownFields(unknownFields);
+        }
+
+
+        // @@protoc_insertion_point(builder_scope:im.turms.proto.QueryResourceUploadInfoRequest)
+    }
+
+    // @@protoc_insertion_point(class_scope:im.turms.proto.QueryResourceUploadInfoRequest)
+    private static final im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest DEFAULT_INSTANCE;
+
+    static {
+        DEFAULT_INSTANCE = new im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest();
+    }
+
+    public static im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest getDefaultInstance() {
+        return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<QueryResourceUploadInfoRequest>
+            PARSER = new com.google.protobuf.AbstractParser<QueryResourceUploadInfoRequest>() {
+        @java.lang.Override
+        public QueryResourceUploadInfoRequest parsePartialFrom(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+            Builder builder = newBuilder();
+            try {
+                builder.mergeFrom(input, extensionRegistry);
+            } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                throw e.setUnfinishedMessage(builder.buildPartial());
+            } catch (com.google.protobuf.UninitializedMessageException e) {
+                throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
+            } catch (java.io.IOException e) {
+                throw new com.google.protobuf.InvalidProtocolBufferException(e)
+                        .setUnfinishedMessage(builder.buildPartial());
+            }
+            return builder.buildPartial();
+        }
+    };
+
+    public static com.google.protobuf.Parser<QueryResourceUploadInfoRequest> parser() {
+        return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<QueryResourceUploadInfoRequest> getParserForType() {
+        return PARSER;
+    }
+
+    @java.lang.Override
+    public im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest getDefaultInstanceForType() {
+        return DEFAULT_INSTANCE;
+    }
 
 }
-

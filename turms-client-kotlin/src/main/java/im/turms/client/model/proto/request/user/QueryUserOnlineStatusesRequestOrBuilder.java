@@ -21,23 +21,28 @@
 package im.turms.client.model.proto.request.user;
 
 public interface QueryUserOnlineStatusesRequestOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:im.turms.proto.QueryUserOnlineStatusesRequest)
-    com.google.protobuf.MessageLiteOrBuilder {
+        // @@protoc_insertion_point(interface_extends:im.turms.proto.QueryUserOnlineStatusesRequest)
+        com.google.protobuf.MessageLiteOrBuilder {
 
-  /**
-   * <code>repeated int64 user_ids = 1;</code>
-   * @return A list containing the userIds.
-   */
-  java.util.List<java.lang.Long> getUserIdsList();
-  /**
-   * <code>repeated int64 user_ids = 1;</code>
-   * @return The count of userIds.
-   */
-  int getUserIdsCount();
-  /**
-   * <code>repeated int64 user_ids = 1;</code>
-   * @param index The index of the element to return.
-   * @return The userIds at the given index.
-   */
-  long getUserIds(int index);
+    /**
+     * <code>repeated int64 user_ids = 1;</code>
+     *
+     * @return A list containing the userIds.
+     */
+    java.util.List<java.lang.Long> getUserIdsList();
+
+    /**
+     * <code>repeated int64 user_ids = 1;</code>
+     *
+     * @return The count of userIds.
+     */
+    int getUserIdsCount();
+
+    /**
+     * <code>repeated int64 user_ids = 1;</code>
+     *
+     * @param index The index of the element to return.
+     * @return The userIds at the given index.
+     */
+    long getUserIds(int index);
 }

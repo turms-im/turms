@@ -43,7 +43,7 @@ public struct CreateRelationshipRequest {
 
     public init() {}
 
-    private var _groupIndex: Int32?
+    fileprivate var _groupIndex: Int32?
 }
 
 #if swift(>=5.5) && canImport(_Concurrency)

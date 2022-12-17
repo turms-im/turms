@@ -5,7 +5,9 @@ import _m0 from "protobufjs/minimal";
 export const protobufPackage = "im.turms.proto";
 
 export interface UpdateGroupJoinQuestionRequest {
+  /** Query filter */
   questionId: string;
+  /** Update */
   question?: string | undefined;
   answers: string[];
   score?: number | undefined;

@@ -21,50 +21,55 @@
 package im.turms.server.common.access.client.dto.request.user.relationship;
 
 public final class QueryRelatedUserIdsRequestOuterClass {
-  private QueryRelatedUserIdsRequestOuterClass() {}
-  public static void registerAllExtensions(
-      com.google.protobuf.ExtensionRegistryLite registry) {
-  }
+    private QueryRelatedUserIdsRequestOuterClass() {
+    }
 
-  public static void registerAllExtensions(
-      com.google.protobuf.ExtensionRegistry registry) {
-    registerAllExtensions(
-        (com.google.protobuf.ExtensionRegistryLite) registry);
-  }
-  static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_im_turms_proto_QueryRelatedUserIdsRequest_descriptor;
-  static final
+    public static void registerAllExtensions(
+            com.google.protobuf.ExtensionRegistryLite registry) {
+    }
+
+    public static void registerAllExtensions(
+            com.google.protobuf.ExtensionRegistry registry) {
+        registerAllExtensions(
+                (com.google.protobuf.ExtensionRegistryLite) registry);
+    }
+
+    static final com.google.protobuf.Descriptors.Descriptor
+            internal_static_im_turms_proto_QueryRelatedUserIdsRequest_descriptor;
+    static final
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_im_turms_proto_QueryRelatedUserIdsRequest_fieldAccessorTable;
+            internal_static_im_turms_proto_QueryRelatedUserIdsRequest_fieldAccessorTable;
 
-  public static com.google.protobuf.Descriptors.FileDescriptor
-      getDescriptor() {
-    return descriptor;
-  }
-  private static  com.google.protobuf.Descriptors.FileDescriptor
-      descriptor;
-  static {
-    java.lang.String[] descriptorData = {
-      "\n>request/user/relationship/query_relate" +
-      "d_user_ids_request.proto\022\016im.turms.proto" +
-      "\"\213\001\n\032QueryRelatedUserIdsRequest\022\024\n\007block" +
-      "ed\030\001 \001(\010H\000\210\001\001\022\025\n\rgroup_indexes\030\002 \003(\005\022\036\n\021" +
-      "last_updated_date\030\003 \001(\003H\001\210\001\001B\n\n\010_blocked" +
-      "B\024\n\022_last_updated_dateBI\nBim.turms.serve" +
-      "r.common.access.client.dto.request.user." +
-      "relationshipP\001\272\002\000b\006proto3"
-    };
-    descriptor = com.google.protobuf.Descriptors.FileDescriptor
-      .internalBuildGeneratedFileFrom(descriptorData,
-        new com.google.protobuf.Descriptors.FileDescriptor[] {
-        });
-    internal_static_im_turms_proto_QueryRelatedUserIdsRequest_descriptor =
-      getDescriptor().getMessageTypes().get(0);
-    internal_static_im_turms_proto_QueryRelatedUserIdsRequest_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_im_turms_proto_QueryRelatedUserIdsRequest_descriptor,
-        new java.lang.String[] { "Blocked", "GroupIndexes", "LastUpdatedDate", "Blocked", "LastUpdatedDate", });
-  }
+    public static com.google.protobuf.Descriptors.FileDescriptor
+    getDescriptor() {
+        return descriptor;
+    }
 
-  // @@protoc_insertion_point(outer_class_scope)
+    private static com.google.protobuf.Descriptors.FileDescriptor
+            descriptor;
+
+    static {
+        java.lang.String[] descriptorData = {
+                "\n>request/user/relationship/query_relate" +
+                "d_user_ids_request.proto\022\016im.turms.proto" +
+                "\"\213\001\n\032QueryRelatedUserIdsRequest\022\024\n\007block" +
+                "ed\030\001 \001(\010H\000\210\001\001\022\025\n\rgroup_indexes\030\002 \003(\005\022\036\n\021" +
+                "last_updated_date\030\003 \001(\003H\001\210\001\001B\n\n\010_blocked" +
+                "B\024\n\022_last_updated_dateBI\nBim.turms.serve" +
+                "r.common.access.client.dto.request.user." +
+                "relationshipP\001\272\002\000b\006proto3"
+        };
+        descriptor = com.google.protobuf.Descriptors.FileDescriptor
+                .internalBuildGeneratedFileFrom(descriptorData,
+                        new com.google.protobuf.Descriptors.FileDescriptor[]{
+                        });
+        internal_static_im_turms_proto_QueryRelatedUserIdsRequest_descriptor =
+                getDescriptor().getMessageTypes().get(0);
+        internal_static_im_turms_proto_QueryRelatedUserIdsRequest_fieldAccessorTable = new
+                com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+                internal_static_im_turms_proto_QueryRelatedUserIdsRequest_descriptor,
+                new java.lang.String[]{"Blocked", "GroupIndexes", "LastUpdatedDate", "Blocked", "LastUpdatedDate",});
+    }
+
+    // @@protoc_insertion_point(outer_class_scope)
 }

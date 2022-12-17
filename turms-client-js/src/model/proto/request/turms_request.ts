@@ -33,8 +33,10 @@ import { CreateMessageRequest } from "./message/create_message_request";
 import { QueryMessagesRequest } from "./message/query_messages_request";
 import { UpdateMessageRequest } from "./message/update_message_request";
 import { DeleteResourceRequest } from "./storage/delete_resource_request";
+import { QueryMessageAttachmentInfosRequest } from "./storage/query_message_attachment_infos_request";
 import { QueryResourceDownloadInfoRequest } from "./storage/query_resource_download_info_request";
 import { QueryResourceUploadInfoRequest } from "./storage/query_resource_upload_info_request";
+import { UpdateMessageAttachmentInfoRequest } from "./storage/update_message_attachment_info_request";
 import { CreateSessionRequest } from "./user/create_session_request";
 import { DeleteSessionRequest } from "./user/delete_session_request";
 import { QueryNearbyUsersRequest } from "./user/query_nearby_users_request";
@@ -149,6 +151,8 @@ export interface TurmsRequest {
   deleteResourceRequest?: DeleteResourceRequest | undefined;
   queryResourceDownloadInfoRequest?: QueryResourceDownloadInfoRequest | undefined;
   queryResourceUploadInfoRequest?: QueryResourceUploadInfoRequest | undefined;
+  queryMessageAttachmentInfosRequest?: QueryMessageAttachmentInfosRequest | undefined;
+  updateMessageAttachmentInfoRequest?: UpdateMessageAttachmentInfoRequest | undefined;
 }
 
 function createBaseTurmsRequest(): TurmsRequest {
@@ -208,6 +212,8 @@ function createBaseTurmsRequest(): TurmsRequest {
     deleteResourceRequest: undefined,
     queryResourceDownloadInfoRequest: undefined,
     queryResourceUploadInfoRequest: undefined,
+    queryMessageAttachmentInfosRequest: undefined,
+    updateMessageAttachmentInfoRequest: undefined,
   };
 }
 
@@ -393,6 +399,14 @@ export const TurmsRequest = {
       QueryResourceUploadInfoRequest.encode(message.queryResourceUploadInfoRequest, writer.uint32(8018).fork())
         .ldelim();
     }
+    if (message.queryMessageAttachmentInfosRequest !== undefined) {
+      QueryMessageAttachmentInfosRequest.encode(message.queryMessageAttachmentInfosRequest, writer.uint32(8026).fork())
+        .ldelim();
+    }
+    if (message.updateMessageAttachmentInfoRequest !== undefined) {
+      UpdateMessageAttachmentInfoRequest.encode(message.updateMessageAttachmentInfoRequest, writer.uint32(8034).fork())
+        .ldelim();
+    }
     return writer;
   },
 
@@ -570,6 +584,18 @@ export const TurmsRequest = {
           break;
         case 1002:
           message.queryResourceUploadInfoRequest = QueryResourceUploadInfoRequest.decode(reader, reader.uint32());
+          break;
+        case 1003:
+          message.queryMessageAttachmentInfosRequest = QueryMessageAttachmentInfosRequest.decode(
+            reader,
+            reader.uint32(),
+          );
+          break;
+        case 1004:
+          message.updateMessageAttachmentInfoRequest = UpdateMessageAttachmentInfoRequest.decode(
+            reader,
+            reader.uint32(),
+          );
           break;
         default:
           reader.skipType(tag & 7);

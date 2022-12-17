@@ -21,20 +21,22 @@
 package im.turms.client.model.proto.model.message;
 
 public interface MessagesOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:im.turms.proto.Messages)
-    com.google.protobuf.MessageLiteOrBuilder {
+        // @@protoc_insertion_point(interface_extends:im.turms.proto.Messages)
+        com.google.protobuf.MessageLiteOrBuilder {
 
-  /**
-   * <code>repeated .im.turms.proto.Message messages = 1;</code>
-   */
-  java.util.List<im.turms.client.model.proto.model.message.Message>
-      getMessagesList();
-  /**
-   * <code>repeated .im.turms.proto.Message messages = 1;</code>
-   */
-  im.turms.client.model.proto.model.message.Message getMessages(int index);
-  /**
-   * <code>repeated .im.turms.proto.Message messages = 1;</code>
-   */
-  int getMessagesCount();
+    /**
+     * <code>repeated .im.turms.proto.Message messages = 1;</code>
+     */
+    java.util.List<im.turms.client.model.proto.model.message.Message>
+    getMessagesList();
+
+    /**
+     * <code>repeated .im.turms.proto.Message messages = 1;</code>
+     */
+    im.turms.client.model.proto.model.message.Message getMessages(int index);
+
+    /**
+     * <code>repeated .im.turms.proto.Message messages = 1;</code>
+     */
+    int getMessagesCount();
 }

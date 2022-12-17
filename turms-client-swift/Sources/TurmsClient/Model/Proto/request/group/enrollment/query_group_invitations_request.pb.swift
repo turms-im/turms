@@ -59,9 +59,9 @@ public struct QueryGroupInvitationsRequest {
 
     public init() {}
 
-    private var _groupID: Int64?
-    private var _areSentByMe: Bool?
-    private var _lastUpdatedDate: Int64?
+    fileprivate var _groupID: Int64?
+    fileprivate var _areSentByMe: Bool?
+    fileprivate var _lastUpdatedDate: Int64?
 }
 
 #if swift(>=5.5) && canImport(_Concurrency)

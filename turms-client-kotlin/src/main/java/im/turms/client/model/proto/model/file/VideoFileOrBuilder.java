@@ -21,28 +21,34 @@
 package im.turms.client.model.proto.model.file;
 
 public interface VideoFileOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:im.turms.proto.VideoFile)
-    com.google.protobuf.MessageLiteOrBuilder {
+        // @@protoc_insertion_point(interface_extends:im.turms.proto.VideoFile)
+        com.google.protobuf.MessageLiteOrBuilder {
 
-  /**
-   * <code>optional .im.turms.proto.VideoFile.Description description = 1;</code>
-   * @return Whether the description field is set.
-   */
-  boolean hasDescription();
-  /**
-   * <code>optional .im.turms.proto.VideoFile.Description description = 1;</code>
-   * @return The description.
-   */
-  im.turms.client.model.proto.model.file.VideoFile.Description getDescription();
+    /**
+     * <code>optional .im.turms.proto.VideoFile.Description description = 1;</code>
+     *
+     * @return Whether the description field is set.
+     */
+    boolean hasDescription();
 
-  /**
-   * <code>optional bytes data = 2;</code>
-   * @return Whether the data field is set.
-   */
-  boolean hasData();
-  /**
-   * <code>optional bytes data = 2;</code>
-   * @return The data.
-   */
-  com.google.protobuf.ByteString getData();
+    /**
+     * <code>optional .im.turms.proto.VideoFile.Description description = 1;</code>
+     *
+     * @return The description.
+     */
+    im.turms.client.model.proto.model.file.VideoFile.Description getDescription();
+
+    /**
+     * <code>optional bytes data = 2;</code>
+     *
+     * @return Whether the data field is set.
+     */
+    boolean hasData();
+
+    /**
+     * <code>optional bytes data = 2;</code>
+     *
+     * @return The data.
+     */
+    com.google.protobuf.ByteString getData();
 }

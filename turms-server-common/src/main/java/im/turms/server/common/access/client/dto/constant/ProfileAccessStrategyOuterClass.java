@@ -21,36 +21,40 @@
 package im.turms.server.common.access.client.dto.constant;
 
 public final class ProfileAccessStrategyOuterClass {
-  private ProfileAccessStrategyOuterClass() {}
-  public static void registerAllExtensions(
-      com.google.protobuf.ExtensionRegistryLite registry) {
-  }
+    private ProfileAccessStrategyOuterClass() {
+    }
 
-  public static void registerAllExtensions(
-      com.google.protobuf.ExtensionRegistry registry) {
-    registerAllExtensions(
-        (com.google.protobuf.ExtensionRegistryLite) registry);
-  }
+    public static void registerAllExtensions(
+            com.google.protobuf.ExtensionRegistryLite registry) {
+    }
 
-  public static com.google.protobuf.Descriptors.FileDescriptor
-      getDescriptor() {
-    return descriptor;
-  }
-  private static  com.google.protobuf.Descriptors.FileDescriptor
-      descriptor;
-  static {
-    java.lang.String[] descriptorData = {
-      "\n&constant/profile_access_strategy.proto" +
-      "\022\016im.turms.proto*K\n\025ProfileAccessStrateg" +
-      "y\022\007\n\003ALL\020\000\022\034\n\030ALL_EXCEPT_BLOCKED_USERS\020\001" +
-      "\022\013\n\007FRIENDS\020\002B8\n1im.turms.server.common." +
-      "access.client.dto.constantP\001\272\002\000b\006proto3"
-    };
-    descriptor = com.google.protobuf.Descriptors.FileDescriptor
-      .internalBuildGeneratedFileFrom(descriptorData,
-        new com.google.protobuf.Descriptors.FileDescriptor[] {
-        });
-  }
+    public static void registerAllExtensions(
+            com.google.protobuf.ExtensionRegistry registry) {
+        registerAllExtensions(
+                (com.google.protobuf.ExtensionRegistryLite) registry);
+    }
 
-  // @@protoc_insertion_point(outer_class_scope)
+    public static com.google.protobuf.Descriptors.FileDescriptor
+    getDescriptor() {
+        return descriptor;
+    }
+
+    private static com.google.protobuf.Descriptors.FileDescriptor
+            descriptor;
+
+    static {
+        java.lang.String[] descriptorData = {
+                "\n&constant/profile_access_strategy.proto" +
+                "\022\016im.turms.proto*K\n\025ProfileAccessStrateg" +
+                "y\022\007\n\003ALL\020\000\022\034\n\030ALL_EXCEPT_BLOCKED_USERS\020\001" +
+                "\022\013\n\007FRIENDS\020\002B8\n1im.turms.server.common." +
+                "access.client.dto.constantP\001\272\002\000b\006proto3"
+        };
+        descriptor = com.google.protobuf.Descriptors.FileDescriptor
+                .internalBuildGeneratedFileFrom(descriptorData,
+                        new com.google.protobuf.Descriptors.FileDescriptor[]{
+                        });
+    }
+
+    // @@protoc_insertion_point(outer_class_scope)
 }

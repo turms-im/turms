@@ -21,40 +21,61 @@
 package im.turms.server.common.access.client.dto.request.user.relationship;
 
 public interface UpdateFriendRequestRequestOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:im.turms.proto.UpdateFriendRequestRequest)
-    com.google.protobuf.MessageOrBuilder {
+        // @@protoc_insertion_point(interface_extends:im.turms.proto.UpdateFriendRequestRequest)
+        com.google.protobuf.MessageOrBuilder {
 
-  /**
-   * <code>int64 request_id = 1;</code>
-   * @return The requestId.
-   */
-  long getRequestId();
+    /**
+     * <pre>
+     * Query filter
+     * </pre>
+     *
+     * <code>int64 request_id = 1;</code>
+     *
+     * @return The requestId.
+     */
+    long getRequestId();
 
-  /**
-   * <code>.im.turms.proto.ResponseAction response_action = 2;</code>
-   * @return The enum numeric value on the wire for responseAction.
-   */
-  int getResponseActionValue();
-  /**
-   * <code>.im.turms.proto.ResponseAction response_action = 2;</code>
-   * @return The responseAction.
-   */
-  im.turms.server.common.access.client.dto.constant.ResponseAction getResponseAction();
+    /**
+     * <pre>
+     * Update
+     * </pre>
+     *
+     * <code>.im.turms.proto.ResponseAction response_action = 2;</code>
+     *
+     * @return The enum numeric value on the wire for responseAction.
+     */
+    int getResponseActionValue();
 
-  /**
-   * <code>optional string reason = 3;</code>
-   * @return Whether the reason field is set.
-   */
-  boolean hasReason();
-  /**
-   * <code>optional string reason = 3;</code>
-   * @return The reason.
-   */
-  java.lang.String getReason();
-  /**
-   * <code>optional string reason = 3;</code>
-   * @return The bytes for reason.
-   */
-  com.google.protobuf.ByteString
-      getReasonBytes();
+    /**
+     * <pre>
+     * Update
+     * </pre>
+     *
+     * <code>.im.turms.proto.ResponseAction response_action = 2;</code>
+     *
+     * @return The responseAction.
+     */
+    im.turms.server.common.access.client.dto.constant.ResponseAction getResponseAction();
+
+    /**
+     * <code>optional string reason = 3;</code>
+     *
+     * @return Whether the reason field is set.
+     */
+    boolean hasReason();
+
+    /**
+     * <code>optional string reason = 3;</code>
+     *
+     * @return The reason.
+     */
+    java.lang.String getReason();
+
+    /**
+     * <code>optional string reason = 3;</code>
+     *
+     * @return The bytes for reason.
+     */
+    com.google.protobuf.ByteString
+    getReasonBytes();
 }

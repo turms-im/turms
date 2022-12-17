@@ -21,28 +21,34 @@
 package im.turms.server.common.access.client.dto.request.group.enrollment;
 
 public interface QueryGroupJoinRequestsRequestOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:im.turms.proto.QueryGroupJoinRequestsRequest)
-    com.google.protobuf.MessageOrBuilder {
+        // @@protoc_insertion_point(interface_extends:im.turms.proto.QueryGroupJoinRequestsRequest)
+        com.google.protobuf.MessageOrBuilder {
 
-  /**
-   * <code>optional int64 group_id = 1;</code>
-   * @return Whether the groupId field is set.
-   */
-  boolean hasGroupId();
-  /**
-   * <code>optional int64 group_id = 1;</code>
-   * @return The groupId.
-   */
-  long getGroupId();
+    /**
+     * <code>optional int64 group_id = 1;</code>
+     *
+     * @return Whether the groupId field is set.
+     */
+    boolean hasGroupId();
 
-  /**
-   * <code>optional int64 last_updated_date = 2;</code>
-   * @return Whether the lastUpdatedDate field is set.
-   */
-  boolean hasLastUpdatedDate();
-  /**
-   * <code>optional int64 last_updated_date = 2;</code>
-   * @return The lastUpdatedDate.
-   */
-  long getLastUpdatedDate();
+    /**
+     * <code>optional int64 group_id = 1;</code>
+     *
+     * @return The groupId.
+     */
+    long getGroupId();
+
+    /**
+     * <code>optional int64 last_updated_date = 2;</code>
+     *
+     * @return Whether the lastUpdatedDate field is set.
+     */
+    boolean hasLastUpdatedDate();
+
+    /**
+     * <code>optional int64 last_updated_date = 2;</code>
+     *
+     * @return The lastUpdatedDate.
+     */
+    long getLastUpdatedDate();
 }

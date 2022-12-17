@@ -21,29 +21,34 @@
 package im.turms.server.common.access.client.dto.request.user.relationship;
 
 public interface CreateRelationshipRequestOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:im.turms.proto.CreateRelationshipRequest)
-    com.google.protobuf.MessageOrBuilder {
+        // @@protoc_insertion_point(interface_extends:im.turms.proto.CreateRelationshipRequest)
+        com.google.protobuf.MessageOrBuilder {
 
-  /**
-   * <code>int64 user_id = 1;</code>
-   * @return The userId.
-   */
-  long getUserId();
+    /**
+     * <code>int64 user_id = 1;</code>
+     *
+     * @return The userId.
+     */
+    long getUserId();
 
-  /**
-   * <code>bool blocked = 2;</code>
-   * @return The blocked.
-   */
-  boolean getBlocked();
+    /**
+     * <code>bool blocked = 2;</code>
+     *
+     * @return The blocked.
+     */
+    boolean getBlocked();
 
-  /**
-   * <code>optional int32 group_index = 3;</code>
-   * @return Whether the groupIndex field is set.
-   */
-  boolean hasGroupIndex();
-  /**
-   * <code>optional int32 group_index = 3;</code>
-   * @return The groupIndex.
-   */
-  int getGroupIndex();
+    /**
+     * <code>optional int32 group_index = 3;</code>
+     *
+     * @return Whether the groupIndex field is set.
+     */
+    boolean hasGroupIndex();
+
+    /**
+     * <code>optional int32 group_index = 3;</code>
+     *
+     * @return The groupIndex.
+     */
+    int getGroupIndex();
 }

@@ -25,6 +25,7 @@ public struct UpdateUserRequest {
     // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
     // methods supported on all messages.
 
+    /// Update
     public var password: String {
         get { return _password ?? String() }
         set { _password = newValue }
@@ -79,11 +80,11 @@ public struct UpdateUserRequest {
 
     public init() {}
 
-    private var _password: String?
-    private var _name: String?
-    private var _intro: String?
-    private var _profilePicture: String?
-    private var _profileAccessStrategy: ProfileAccessStrategy?
+    fileprivate var _password: String?
+    fileprivate var _name: String?
+    fileprivate var _intro: String?
+    fileprivate var _profilePicture: String?
+    fileprivate var _profileAccessStrategy: ProfileAccessStrategy?
 }
 
 #if swift(>=5.5) && canImport(_Concurrency)

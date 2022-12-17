@@ -21,31 +21,36 @@
 package im.turms.client.model.proto.model.user;
 
 public interface UserRelationshipsWithVersionOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:im.turms.proto.UserRelationshipsWithVersion)
-    com.google.protobuf.MessageLiteOrBuilder {
+        // @@protoc_insertion_point(interface_extends:im.turms.proto.UserRelationshipsWithVersion)
+        com.google.protobuf.MessageLiteOrBuilder {
 
-  /**
-   * <code>repeated .im.turms.proto.UserRelationship user_relationships = 1;</code>
-   */
-  java.util.List<im.turms.client.model.proto.model.user.UserRelationship>
-      getUserRelationshipsList();
-  /**
-   * <code>repeated .im.turms.proto.UserRelationship user_relationships = 1;</code>
-   */
-  im.turms.client.model.proto.model.user.UserRelationship getUserRelationships(int index);
-  /**
-   * <code>repeated .im.turms.proto.UserRelationship user_relationships = 1;</code>
-   */
-  int getUserRelationshipsCount();
+    /**
+     * <code>repeated .im.turms.proto.UserRelationship user_relationships = 1;</code>
+     */
+    java.util.List<im.turms.client.model.proto.model.user.UserRelationship>
+    getUserRelationshipsList();
 
-  /**
-   * <code>optional int64 last_updated_date = 2;</code>
-   * @return Whether the lastUpdatedDate field is set.
-   */
-  boolean hasLastUpdatedDate();
-  /**
-   * <code>optional int64 last_updated_date = 2;</code>
-   * @return The lastUpdatedDate.
-   */
-  long getLastUpdatedDate();
+    /**
+     * <code>repeated .im.turms.proto.UserRelationship user_relationships = 1;</code>
+     */
+    im.turms.client.model.proto.model.user.UserRelationship getUserRelationships(int index);
+
+    /**
+     * <code>repeated .im.turms.proto.UserRelationship user_relationships = 1;</code>
+     */
+    int getUserRelationshipsCount();
+
+    /**
+     * <code>optional int64 last_updated_date = 2;</code>
+     *
+     * @return Whether the lastUpdatedDate field is set.
+     */
+    boolean hasLastUpdatedDate();
+
+    /**
+     * <code>optional int64 last_updated_date = 2;</code>
+     *
+     * @return The lastUpdatedDate.
+     */
+    long getLastUpdatedDate();
 }

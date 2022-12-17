@@ -21,62 +21,67 @@
 package im.turms.server.common.access.client.dto.model.file;
 
 public final class VideoFileOuterClass {
-  private VideoFileOuterClass() {}
-  public static void registerAllExtensions(
-      com.google.protobuf.ExtensionRegistryLite registry) {
-  }
+    private VideoFileOuterClass() {
+    }
 
-  public static void registerAllExtensions(
-      com.google.protobuf.ExtensionRegistry registry) {
-    registerAllExtensions(
-        (com.google.protobuf.ExtensionRegistryLite) registry);
-  }
-  static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_im_turms_proto_VideoFile_descriptor;
-  static final
+    public static void registerAllExtensions(
+            com.google.protobuf.ExtensionRegistryLite registry) {
+    }
+
+    public static void registerAllExtensions(
+            com.google.protobuf.ExtensionRegistry registry) {
+        registerAllExtensions(
+                (com.google.protobuf.ExtensionRegistryLite) registry);
+    }
+
+    static final com.google.protobuf.Descriptors.Descriptor
+            internal_static_im_turms_proto_VideoFile_descriptor;
+    static final
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_im_turms_proto_VideoFile_fieldAccessorTable;
-  static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_im_turms_proto_VideoFile_Description_descriptor;
-  static final
+            internal_static_im_turms_proto_VideoFile_fieldAccessorTable;
+    static final com.google.protobuf.Descriptors.Descriptor
+            internal_static_im_turms_proto_VideoFile_Description_descriptor;
+    static final
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_im_turms_proto_VideoFile_Description_fieldAccessorTable;
+            internal_static_im_turms_proto_VideoFile_Description_fieldAccessorTable;
 
-  public static com.google.protobuf.Descriptors.FileDescriptor
-      getDescriptor() {
-    return descriptor;
-  }
-  private static  com.google.protobuf.Descriptors.FileDescriptor
-      descriptor;
-  static {
-    java.lang.String[] descriptorData = {
-      "\n\033model/file/video_file.proto\022\016im.turms." +
-      "proto\"\364\001\n\tVideoFile\022?\n\013description\030\001 \001(\013" +
-      "2%.im.turms.proto.VideoFile.DescriptionH" +
-      "\000\210\001\001\022\021\n\004data\030\002 \001(\014H\001\210\001\001\032z\n\013Description\022\013" +
-      "\n\003url\030\001 \001(\t\022\025\n\010duration\030\002 \001(\005H\000\210\001\001\022\021\n\004si" +
-      "ze\030\003 \001(\005H\001\210\001\001\022\023\n\006format\030\004 \001(\tH\002\210\001\001B\013\n\t_d" +
-      "urationB\007\n\005_sizeB\t\n\007_formatB\016\n\014_descript" +
-      "ionB\007\n\005_dataB:\n3im.turms.server.common.a" +
-      "ccess.client.dto.model.fileP\001\272\002\000b\006proto3"
-    };
-    descriptor = com.google.protobuf.Descriptors.FileDescriptor
-      .internalBuildGeneratedFileFrom(descriptorData,
-        new com.google.protobuf.Descriptors.FileDescriptor[] {
-        });
-    internal_static_im_turms_proto_VideoFile_descriptor =
-      getDescriptor().getMessageTypes().get(0);
-    internal_static_im_turms_proto_VideoFile_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_im_turms_proto_VideoFile_descriptor,
-        new java.lang.String[] { "Description", "Data", "Description", "Data", });
-    internal_static_im_turms_proto_VideoFile_Description_descriptor =
-      internal_static_im_turms_proto_VideoFile_descriptor.getNestedTypes().get(0);
-    internal_static_im_turms_proto_VideoFile_Description_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_im_turms_proto_VideoFile_Description_descriptor,
-        new java.lang.String[] { "Url", "Duration", "Size", "Format", "Duration", "Size", "Format", });
-  }
+    public static com.google.protobuf.Descriptors.FileDescriptor
+    getDescriptor() {
+        return descriptor;
+    }
 
-  // @@protoc_insertion_point(outer_class_scope)
+    private static com.google.protobuf.Descriptors.FileDescriptor
+            descriptor;
+
+    static {
+        java.lang.String[] descriptorData = {
+                "\n\033model/file/video_file.proto\022\016im.turms." +
+                "proto\"\364\001\n\tVideoFile\022?\n\013description\030\001 \001(\013" +
+                "2%.im.turms.proto.VideoFile.DescriptionH" +
+                "\000\210\001\001\022\021\n\004data\030\002 \001(\014H\001\210\001\001\032z\n\013Description\022\013" +
+                "\n\003url\030\001 \001(\t\022\025\n\010duration\030\002 \001(\005H\000\210\001\001\022\021\n\004si" +
+                "ze\030\003 \001(\005H\001\210\001\001\022\023\n\006format\030\004 \001(\tH\002\210\001\001B\013\n\t_d" +
+                "urationB\007\n\005_sizeB\t\n\007_formatB\016\n\014_descript" +
+                "ionB\007\n\005_dataB:\n3im.turms.server.common.a" +
+                "ccess.client.dto.model.fileP\001\272\002\000b\006proto3"
+        };
+        descriptor = com.google.protobuf.Descriptors.FileDescriptor
+                .internalBuildGeneratedFileFrom(descriptorData,
+                        new com.google.protobuf.Descriptors.FileDescriptor[]{
+                        });
+        internal_static_im_turms_proto_VideoFile_descriptor =
+                getDescriptor().getMessageTypes().get(0);
+        internal_static_im_turms_proto_VideoFile_fieldAccessorTable = new
+                com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+                internal_static_im_turms_proto_VideoFile_descriptor,
+                new java.lang.String[]{"Description", "Data", "Description", "Data",});
+        internal_static_im_turms_proto_VideoFile_Description_descriptor =
+                internal_static_im_turms_proto_VideoFile_descriptor.getNestedTypes().get(0);
+        internal_static_im_turms_proto_VideoFile_Description_fieldAccessorTable = new
+                com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+                internal_static_im_turms_proto_VideoFile_Description_descriptor,
+                new java.lang.String[]{"Url", "Duration", "Size", "Format", "Duration", "Size", "Format",});
+    }
+
+    // @@protoc_insertion_point(outer_class_scope)
 }

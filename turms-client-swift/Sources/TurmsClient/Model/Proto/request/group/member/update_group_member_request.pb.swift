@@ -25,10 +25,12 @@ public struct UpdateGroupMemberRequest {
     // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
     // methods supported on all messages.
 
+    /// Query filter
     public var groupID: Int64 = 0
 
     public var memberID: Int64 = 0
 
+    /// Update
     public var name: String {
         get { return _name ?? String() }
         set { _name = newValue }
@@ -63,9 +65,9 @@ public struct UpdateGroupMemberRequest {
 
     public init() {}
 
-    private var _name: String?
-    private var _role: GroupMemberRole?
-    private var _muteEndDate: Int64?
+    fileprivate var _name: String?
+    fileprivate var _role: GroupMemberRole?
+    fileprivate var _muteEndDate: Int64?
 }
 
 #if swift(>=5.5) && canImport(_Concurrency)

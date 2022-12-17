@@ -21,41 +21,48 @@
 package im.turms.server.common.access.client.dto.model.group;
 
 public interface GroupsWithVersionOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:im.turms.proto.GroupsWithVersion)
-    com.google.protobuf.MessageOrBuilder {
+        // @@protoc_insertion_point(interface_extends:im.turms.proto.GroupsWithVersion)
+        com.google.protobuf.MessageOrBuilder {
 
-  /**
-   * <code>repeated .im.turms.proto.Group groups = 1;</code>
-   */
-  java.util.List<im.turms.server.common.access.client.dto.model.group.Group>
-      getGroupsList();
-  /**
-   * <code>repeated .im.turms.proto.Group groups = 1;</code>
-   */
-  im.turms.server.common.access.client.dto.model.group.Group getGroups(int index);
-  /**
-   * <code>repeated .im.turms.proto.Group groups = 1;</code>
-   */
-  int getGroupsCount();
-  /**
-   * <code>repeated .im.turms.proto.Group groups = 1;</code>
-   */
-  java.util.List<? extends im.turms.server.common.access.client.dto.model.group.GroupOrBuilder>
-      getGroupsOrBuilderList();
-  /**
-   * <code>repeated .im.turms.proto.Group groups = 1;</code>
-   */
-  im.turms.server.common.access.client.dto.model.group.GroupOrBuilder getGroupsOrBuilder(
-      int index);
+    /**
+     * <code>repeated .im.turms.proto.Group groups = 1;</code>
+     */
+    java.util.List<im.turms.server.common.access.client.dto.model.group.Group>
+    getGroupsList();
 
-  /**
-   * <code>optional int64 last_updated_date = 2;</code>
-   * @return Whether the lastUpdatedDate field is set.
-   */
-  boolean hasLastUpdatedDate();
-  /**
-   * <code>optional int64 last_updated_date = 2;</code>
-   * @return The lastUpdatedDate.
-   */
-  long getLastUpdatedDate();
+    /**
+     * <code>repeated .im.turms.proto.Group groups = 1;</code>
+     */
+    im.turms.server.common.access.client.dto.model.group.Group getGroups(int index);
+
+    /**
+     * <code>repeated .im.turms.proto.Group groups = 1;</code>
+     */
+    int getGroupsCount();
+
+    /**
+     * <code>repeated .im.turms.proto.Group groups = 1;</code>
+     */
+    java.util.List<? extends im.turms.server.common.access.client.dto.model.group.GroupOrBuilder>
+    getGroupsOrBuilderList();
+
+    /**
+     * <code>repeated .im.turms.proto.Group groups = 1;</code>
+     */
+    im.turms.server.common.access.client.dto.model.group.GroupOrBuilder getGroupsOrBuilder(
+            int index);
+
+    /**
+     * <code>optional int64 last_updated_date = 2;</code>
+     *
+     * @return Whether the lastUpdatedDate field is set.
+     */
+    boolean hasLastUpdatedDate();
+
+    /**
+     * <code>optional int64 last_updated_date = 2;</code>
+     *
+     * @return The lastUpdatedDate.
+     */
+    long getLastUpdatedDate();
 }

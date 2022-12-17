@@ -25,17 +25,30 @@ public struct UpdateGroupRequest {
     // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
     // methods supported on all messages.
 
+    /// Query filter
     public var groupID: Int64 = 0
 
-    public var groupName: String {
-        get { return _groupName ?? String() }
-        set { _groupName = newValue }
+    /// Update options
+    public var quitAfterTransfer: Bool {
+        get { return _quitAfterTransfer ?? false }
+        set { _quitAfterTransfer = newValue }
     }
 
-    /// Returns true if `groupName` has been explicitly set.
-    public var hasGroupName: Bool { return _groupName != nil }
-    /// Clears the value of `groupName`. Subsequent reads from it will return its default value.
-    public mutating func clearGroupName() { _groupName = nil }
+    /// Returns true if `quitAfterTransfer` has been explicitly set.
+    public var hasQuitAfterTransfer: Bool { return _quitAfterTransfer != nil }
+    /// Clears the value of `quitAfterTransfer`. Subsequent reads from it will return its default value.
+    public mutating func clearQuitAfterTransfer() { _quitAfterTransfer = nil }
+
+    /// Update
+    public var name: String {
+        get { return _name ?? String() }
+        set { _name = newValue }
+    }
+
+    /// Returns true if `name` has been explicitly set.
+    public var hasName: Bool { return _name != nil }
+    /// Clears the value of `name`. Subsequent reads from it will return its default value.
+    public mutating func clearName() { _name = nil }
 
     public var intro: String {
         get { return _intro ?? String() }
@@ -57,25 +70,25 @@ public struct UpdateGroupRequest {
     /// Clears the value of `announcement`. Subsequent reads from it will return its default value.
     public mutating func clearAnnouncement() { _announcement = nil }
 
-    public var minimumScore: Int32 {
-        get { return _minimumScore ?? 0 }
-        set { _minimumScore = newValue }
+    public var minScore: Int32 {
+        get { return _minScore ?? 0 }
+        set { _minScore = newValue }
     }
 
-    /// Returns true if `minimumScore` has been explicitly set.
-    public var hasMinimumScore: Bool { return _minimumScore != nil }
-    /// Clears the value of `minimumScore`. Subsequent reads from it will return its default value.
-    public mutating func clearMinimumScore() { _minimumScore = nil }
+    /// Returns true if `minScore` has been explicitly set.
+    public var hasMinScore: Bool { return _minScore != nil }
+    /// Clears the value of `minScore`. Subsequent reads from it will return its default value.
+    public mutating func clearMinScore() { _minScore = nil }
 
-    public var groupTypeID: Int64 {
-        get { return _groupTypeID ?? 0 }
-        set { _groupTypeID = newValue }
+    public var typeID: Int64 {
+        get { return _typeID ?? 0 }
+        set { _typeID = newValue }
     }
 
-    /// Returns true if `groupTypeID` has been explicitly set.
-    public var hasGroupTypeID: Bool { return _groupTypeID != nil }
-    /// Clears the value of `groupTypeID`. Subsequent reads from it will return its default value.
-    public mutating func clearGroupTypeID() { _groupTypeID = nil }
+    /// Returns true if `typeID` has been explicitly set.
+    public var hasTypeID: Bool { return _typeID != nil }
+    /// Clears the value of `typeID`. Subsequent reads from it will return its default value.
+    public mutating func clearTypeID() { _typeID = nil }
 
     public var muteEndDate: Int64 {
         get { return _muteEndDate ?? 0 }
@@ -97,28 +110,18 @@ public struct UpdateGroupRequest {
     /// Clears the value of `successorID`. Subsequent reads from it will return its default value.
     public mutating func clearSuccessorID() { _successorID = nil }
 
-    public var quitAfterTransfer: Bool {
-        get { return _quitAfterTransfer ?? false }
-        set { _quitAfterTransfer = newValue }
-    }
-
-    /// Returns true if `quitAfterTransfer` has been explicitly set.
-    public var hasQuitAfterTransfer: Bool { return _quitAfterTransfer != nil }
-    /// Clears the value of `quitAfterTransfer`. Subsequent reads from it will return its default value.
-    public mutating func clearQuitAfterTransfer() { _quitAfterTransfer = nil }
-
     public var unknownFields = SwiftProtobuf.UnknownStorage()
 
     public init() {}
 
-    private var _groupName: String?
-    private var _intro: String?
-    private var _announcement: String?
-    private var _minimumScore: Int32?
-    private var _groupTypeID: Int64?
-    private var _muteEndDate: Int64?
-    private var _successorID: Int64?
-    private var _quitAfterTransfer: Bool?
+    fileprivate var _quitAfterTransfer: Bool?
+    fileprivate var _name: String?
+    fileprivate var _intro: String?
+    fileprivate var _announcement: String?
+    fileprivate var _minScore: Int32?
+    fileprivate var _typeID: Int64?
+    fileprivate var _muteEndDate: Int64?
+    fileprivate var _successorID: Int64?
 }
 
 #if swift(>=5.5) && canImport(_Concurrency)
@@ -133,14 +136,14 @@ extension UpdateGroupRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImple
     public static let protoMessageName: String = _protobuf_package + ".UpdateGroupRequest"
     public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
         1: .standard(proto: "group_id"),
-        2: .standard(proto: "group_name"),
-        3: .same(proto: "intro"),
-        4: .same(proto: "announcement"),
-        5: .standard(proto: "minimum_score"),
-        6: .standard(proto: "group_type_id"),
-        7: .standard(proto: "mute_end_date"),
-        8: .standard(proto: "successor_id"),
-        9: .standard(proto: "quit_after_transfer"),
+        2: .standard(proto: "quit_after_transfer"),
+        3: .same(proto: "name"),
+        4: .same(proto: "intro"),
+        5: .same(proto: "announcement"),
+        6: .standard(proto: "min_score"),
+        7: .standard(proto: "type_id"),
+        8: .standard(proto: "mute_end_date"),
+        9: .standard(proto: "successor_id"),
     ]
 
     public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -150,14 +153,14 @@ extension UpdateGroupRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImple
             // enabled. https://github.com/apple/swift-protobuf/issues/1034
             switch fieldNumber {
             case 1: try try decoder.decodeSingularInt64Field(value: &groupID)
-            case 2: try try decoder.decodeSingularStringField(value: &_groupName)
-            case 3: try try decoder.decodeSingularStringField(value: &_intro)
-            case 4: try try decoder.decodeSingularStringField(value: &_announcement)
-            case 5: try try decoder.decodeSingularInt32Field(value: &_minimumScore)
-            case 6: try try decoder.decodeSingularInt64Field(value: &_groupTypeID)
-            case 7: try try decoder.decodeSingularInt64Field(value: &_muteEndDate)
-            case 8: try try decoder.decodeSingularInt64Field(value: &_successorID)
-            case 9: try try decoder.decodeSingularBoolField(value: &_quitAfterTransfer)
+            case 2: try try decoder.decodeSingularBoolField(value: &_quitAfterTransfer)
+            case 3: try try decoder.decodeSingularStringField(value: &_name)
+            case 4: try try decoder.decodeSingularStringField(value: &_intro)
+            case 5: try try decoder.decodeSingularStringField(value: &_announcement)
+            case 6: try try decoder.decodeSingularInt32Field(value: &_minScore)
+            case 7: try try decoder.decodeSingularInt64Field(value: &_typeID)
+            case 8: try try decoder.decodeSingularInt64Field(value: &_muteEndDate)
+            case 9: try try decoder.decodeSingularInt64Field(value: &_successorID)
             default: break
             }
         }
@@ -171,43 +174,43 @@ extension UpdateGroupRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImple
         if groupID != 0 {
             try visitor.visitSingularInt64Field(value: groupID, fieldNumber: 1)
         }
-        try { if let v = self._groupName {
-            try visitor.visitSingularStringField(value: v, fieldNumber: 2)
+        try { if let v = self._quitAfterTransfer {
+            try visitor.visitSingularBoolField(value: v, fieldNumber: 2)
         } }()
-        try { if let v = self._intro {
+        try { if let v = self._name {
             try visitor.visitSingularStringField(value: v, fieldNumber: 3)
         } }()
-        try { if let v = self._announcement {
+        try { if let v = self._intro {
             try visitor.visitSingularStringField(value: v, fieldNumber: 4)
         } }()
-        try { if let v = self._minimumScore {
-            try visitor.visitSingularInt32Field(value: v, fieldNumber: 5)
+        try { if let v = self._announcement {
+            try visitor.visitSingularStringField(value: v, fieldNumber: 5)
         } }()
-        try { if let v = self._groupTypeID {
-            try visitor.visitSingularInt64Field(value: v, fieldNumber: 6)
+        try { if let v = self._minScore {
+            try visitor.visitSingularInt32Field(value: v, fieldNumber: 6)
         } }()
-        try { if let v = self._muteEndDate {
+        try { if let v = self._typeID {
             try visitor.visitSingularInt64Field(value: v, fieldNumber: 7)
         } }()
-        try { if let v = self._successorID {
+        try { if let v = self._muteEndDate {
             try visitor.visitSingularInt64Field(value: v, fieldNumber: 8)
         } }()
-        try { if let v = self._quitAfterTransfer {
-            try visitor.visitSingularBoolField(value: v, fieldNumber: 9)
+        try { if let v = self._successorID {
+            try visitor.visitSingularInt64Field(value: v, fieldNumber: 9)
         } }()
         try unknownFields.traverse(visitor: &visitor)
     }
 
     public static func == (lhs: UpdateGroupRequest, rhs: UpdateGroupRequest) -> Bool {
         if lhs.groupID != rhs.groupID { return false }
-        if lhs._groupName != rhs._groupName { return false }
+        if lhs._quitAfterTransfer != rhs._quitAfterTransfer { return false }
+        if lhs._name != rhs._name { return false }
         if lhs._intro != rhs._intro { return false }
         if lhs._announcement != rhs._announcement { return false }
-        if lhs._minimumScore != rhs._minimumScore { return false }
-        if lhs._groupTypeID != rhs._groupTypeID { return false }
+        if lhs._minScore != rhs._minScore { return false }
+        if lhs._typeID != rhs._typeID { return false }
         if lhs._muteEndDate != rhs._muteEndDate { return false }
         if lhs._successorID != rhs._successorID { return false }
-        if lhs._quitAfterTransfer != rhs._quitAfterTransfer { return false }
         if lhs.unknownFields != rhs.unknownFields { return false }
         return true
     }

@@ -74,10 +74,10 @@ public struct NearbyUser {
 
     public init() {}
 
-    private var _deviceType: DeviceType?
-    private var _info: UserInfo?
-    private var _distance: Int32?
-    private var _location: UserLocation?
+    fileprivate var _deviceType: DeviceType?
+    fileprivate var _info: UserInfo?
+    fileprivate var _distance: Int32?
+    fileprivate var _location: UserLocation?
 }
 
 #if swift(>=5.5) && canImport(_Concurrency)

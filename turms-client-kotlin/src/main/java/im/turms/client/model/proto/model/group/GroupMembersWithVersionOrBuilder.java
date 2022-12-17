@@ -21,31 +21,36 @@
 package im.turms.client.model.proto.model.group;
 
 public interface GroupMembersWithVersionOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:im.turms.proto.GroupMembersWithVersion)
-    com.google.protobuf.MessageLiteOrBuilder {
+        // @@protoc_insertion_point(interface_extends:im.turms.proto.GroupMembersWithVersion)
+        com.google.protobuf.MessageLiteOrBuilder {
 
-  /**
-   * <code>repeated .im.turms.proto.GroupMember group_members = 1;</code>
-   */
-  java.util.List<im.turms.client.model.proto.model.group.GroupMember>
-      getGroupMembersList();
-  /**
-   * <code>repeated .im.turms.proto.GroupMember group_members = 1;</code>
-   */
-  im.turms.client.model.proto.model.group.GroupMember getGroupMembers(int index);
-  /**
-   * <code>repeated .im.turms.proto.GroupMember group_members = 1;</code>
-   */
-  int getGroupMembersCount();
+    /**
+     * <code>repeated .im.turms.proto.GroupMember group_members = 1;</code>
+     */
+    java.util.List<im.turms.client.model.proto.model.group.GroupMember>
+    getGroupMembersList();
 
-  /**
-   * <code>optional int64 last_updated_date = 2;</code>
-   * @return Whether the lastUpdatedDate field is set.
-   */
-  boolean hasLastUpdatedDate();
-  /**
-   * <code>optional int64 last_updated_date = 2;</code>
-   * @return The lastUpdatedDate.
-   */
-  long getLastUpdatedDate();
+    /**
+     * <code>repeated .im.turms.proto.GroupMember group_members = 1;</code>
+     */
+    im.turms.client.model.proto.model.group.GroupMember getGroupMembers(int index);
+
+    /**
+     * <code>repeated .im.turms.proto.GroupMember group_members = 1;</code>
+     */
+    int getGroupMembersCount();
+
+    /**
+     * <code>optional int64 last_updated_date = 2;</code>
+     *
+     * @return Whether the lastUpdatedDate field is set.
+     */
+    boolean hasLastUpdatedDate();
+
+    /**
+     * <code>optional int64 last_updated_date = 2;</code>
+     *
+     * @return The lastUpdatedDate.
+     */
+    long getLastUpdatedDate();
 }

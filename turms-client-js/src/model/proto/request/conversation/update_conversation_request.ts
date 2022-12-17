@@ -5,8 +5,12 @@ import _m0 from "protobufjs/minimal";
 export const protobufPackage = "im.turms.proto";
 
 export interface UpdateConversationRequest {
+  /** Query filter */
   targetId?: string | undefined;
-  groupId?: string | undefined;
+  groupId?:
+    | string
+    | undefined;
+  /** Update */
   readDate: string;
 }
 

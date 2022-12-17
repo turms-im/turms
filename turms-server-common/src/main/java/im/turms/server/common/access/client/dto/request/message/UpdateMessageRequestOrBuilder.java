@@ -21,57 +21,87 @@
 package im.turms.server.common.access.client.dto.request.message;
 
 public interface UpdateMessageRequestOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:im.turms.proto.UpdateMessageRequest)
-    com.google.protobuf.MessageOrBuilder {
+        // @@protoc_insertion_point(interface_extends:im.turms.proto.UpdateMessageRequest)
+        com.google.protobuf.MessageOrBuilder {
 
-  /**
-   * <code>int64 message_id = 1;</code>
-   * @return The messageId.
-   */
-  long getMessageId();
+    /**
+     * <pre>
+     * Query filter
+     * </pre>
+     *
+     * <code>int64 message_id = 1;</code>
+     *
+     * @return The messageId.
+     */
+    long getMessageId();
 
-  /**
-   * <code>optional string text = 2;</code>
-   * @return Whether the text field is set.
-   */
-  boolean hasText();
-  /**
-   * <code>optional string text = 2;</code>
-   * @return The text.
-   */
-  java.lang.String getText();
-  /**
-   * <code>optional string text = 2;</code>
-   * @return The bytes for text.
-   */
-  com.google.protobuf.ByteString
-      getTextBytes();
+    /**
+     * <pre>
+     * Update
+     * </pre>
+     *
+     * <code>optional string text = 2;</code>
+     *
+     * @return Whether the text field is set.
+     */
+    boolean hasText();
 
-  /**
-   * <code>repeated bytes records = 3;</code>
-   * @return A list containing the records.
-   */
-  java.util.List<com.google.protobuf.ByteString> getRecordsList();
-  /**
-   * <code>repeated bytes records = 3;</code>
-   * @return The count of records.
-   */
-  int getRecordsCount();
-  /**
-   * <code>repeated bytes records = 3;</code>
-   * @param index The index of the element to return.
-   * @return The records at the given index.
-   */
-  com.google.protobuf.ByteString getRecords(int index);
+    /**
+     * <pre>
+     * Update
+     * </pre>
+     *
+     * <code>optional string text = 2;</code>
+     *
+     * @return The text.
+     */
+    java.lang.String getText();
 
-  /**
-   * <code>optional int64 recall_date = 4;</code>
-   * @return Whether the recallDate field is set.
-   */
-  boolean hasRecallDate();
-  /**
-   * <code>optional int64 recall_date = 4;</code>
-   * @return The recallDate.
-   */
-  long getRecallDate();
+    /**
+     * <pre>
+     * Update
+     * </pre>
+     *
+     * <code>optional string text = 2;</code>
+     *
+     * @return The bytes for text.
+     */
+    com.google.protobuf.ByteString
+    getTextBytes();
+
+    /**
+     * <code>repeated bytes records = 3;</code>
+     *
+     * @return A list containing the records.
+     */
+    java.util.List<com.google.protobuf.ByteString> getRecordsList();
+
+    /**
+     * <code>repeated bytes records = 3;</code>
+     *
+     * @return The count of records.
+     */
+    int getRecordsCount();
+
+    /**
+     * <code>repeated bytes records = 3;</code>
+     *
+     * @param index The index of the element to return.
+     * @return The records at the given index.
+     */
+    com.google.protobuf.ByteString getRecords(int index);
+
+    /**
+     * <code>optional int64 recall_date = 4;</code>
+     *
+     * @return Whether the recallDate field is set.
+     */
+    boolean hasRecallDate();
+
+    /**
+     * <code>optional int64 recall_date = 4;</code>
+     *
+     * @return The recallDate.
+     */
+    long getRecallDate();
 }

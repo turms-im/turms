@@ -21,24 +21,40 @@
 package im.turms.client.model.proto.request.user.relationship;
 
 public interface UpdateRelationshipGroupRequestOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:im.turms.proto.UpdateRelationshipGroupRequest)
-    com.google.protobuf.MessageLiteOrBuilder {
+        // @@protoc_insertion_point(interface_extends:im.turms.proto.UpdateRelationshipGroupRequest)
+        com.google.protobuf.MessageLiteOrBuilder {
 
-  /**
-   * <code>int32 group_index = 1;</code>
-   * @return The groupIndex.
-   */
-  int getGroupIndex();
+    /**
+     * <pre>
+     * Query filter
+     * </pre>
+     *
+     * <code>int32 group_index = 1;</code>
+     *
+     * @return The groupIndex.
+     */
+    int getGroupIndex();
 
-  /**
-   * <code>string new_name = 2;</code>
-   * @return The newName.
-   */
-  java.lang.String getNewName();
-  /**
-   * <code>string new_name = 2;</code>
-   * @return The bytes for newName.
-   */
-  com.google.protobuf.ByteString
-      getNewNameBytes();
+    /**
+     * <pre>
+     * Update
+     * </pre>
+     *
+     * <code>string new_name = 2;</code>
+     *
+     * @return The newName.
+     */
+    java.lang.String getNewName();
+
+    /**
+     * <pre>
+     * Update
+     * </pre>
+     *
+     * <code>string new_name = 2;</code>
+     *
+     * @return The bytes for newName.
+     */
+    com.google.protobuf.ByteString
+    getNewNameBytes();
 }

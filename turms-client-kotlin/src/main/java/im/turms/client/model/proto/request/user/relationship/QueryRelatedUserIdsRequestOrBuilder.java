@@ -21,45 +21,56 @@
 package im.turms.client.model.proto.request.user.relationship;
 
 public interface QueryRelatedUserIdsRequestOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:im.turms.proto.QueryRelatedUserIdsRequest)
-    com.google.protobuf.MessageLiteOrBuilder {
+        // @@protoc_insertion_point(interface_extends:im.turms.proto.QueryRelatedUserIdsRequest)
+        com.google.protobuf.MessageLiteOrBuilder {
 
-  /**
-   * <code>optional bool blocked = 1;</code>
-   * @return Whether the blocked field is set.
-   */
-  boolean hasBlocked();
-  /**
-   * <code>optional bool blocked = 1;</code>
-   * @return The blocked.
-   */
-  boolean getBlocked();
+    /**
+     * <code>optional bool blocked = 1;</code>
+     *
+     * @return Whether the blocked field is set.
+     */
+    boolean hasBlocked();
 
-  /**
-   * <code>repeated int32 group_indexes = 2;</code>
-   * @return A list containing the groupIndexes.
-   */
-  java.util.List<java.lang.Integer> getGroupIndexesList();
-  /**
-   * <code>repeated int32 group_indexes = 2;</code>
-   * @return The count of groupIndexes.
-   */
-  int getGroupIndexesCount();
-  /**
-   * <code>repeated int32 group_indexes = 2;</code>
-   * @param index The index of the element to return.
-   * @return The groupIndexes at the given index.
-   */
-  int getGroupIndexes(int index);
+    /**
+     * <code>optional bool blocked = 1;</code>
+     *
+     * @return The blocked.
+     */
+    boolean getBlocked();
 
-  /**
-   * <code>optional int64 last_updated_date = 3;</code>
-   * @return Whether the lastUpdatedDate field is set.
-   */
-  boolean hasLastUpdatedDate();
-  /**
-   * <code>optional int64 last_updated_date = 3;</code>
-   * @return The lastUpdatedDate.
-   */
-  long getLastUpdatedDate();
+    /**
+     * <code>repeated int32 group_indexes = 2;</code>
+     *
+     * @return A list containing the groupIndexes.
+     */
+    java.util.List<java.lang.Integer> getGroupIndexesList();
+
+    /**
+     * <code>repeated int32 group_indexes = 2;</code>
+     *
+     * @return The count of groupIndexes.
+     */
+    int getGroupIndexesCount();
+
+    /**
+     * <code>repeated int32 group_indexes = 2;</code>
+     *
+     * @param index The index of the element to return.
+     * @return The groupIndexes at the given index.
+     */
+    int getGroupIndexes(int index);
+
+    /**
+     * <code>optional int64 last_updated_date = 3;</code>
+     *
+     * @return Whether the lastUpdatedDate field is set.
+     */
+    boolean hasLastUpdatedDate();
+
+    /**
+     * <code>optional int64 last_updated_date = 3;</code>
+     *
+     * @return The lastUpdatedDate.
+     */
+    long getLastUpdatedDate();
 }

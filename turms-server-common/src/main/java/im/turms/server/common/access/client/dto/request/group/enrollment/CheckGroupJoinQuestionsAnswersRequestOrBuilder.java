@@ -21,42 +21,47 @@
 package im.turms.server.common.access.client.dto.request.group.enrollment;
 
 public interface CheckGroupJoinQuestionsAnswersRequestOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:im.turms.proto.CheckGroupJoinQuestionsAnswersRequest)
-    com.google.protobuf.MessageOrBuilder {
+        // @@protoc_insertion_point(interface_extends:im.turms.proto.CheckGroupJoinQuestionsAnswersRequest)
+        com.google.protobuf.MessageOrBuilder {
 
-  /**
-   * <code>map&lt;int64, string&gt; question_id_to_answer = 1;</code>
-   */
-  int getQuestionIdToAnswerCount();
-  /**
-   * <code>map&lt;int64, string&gt; question_id_to_answer = 1;</code>
-   */
-  boolean containsQuestionIdToAnswer(
-      long key);
-  /**
-   * Use {@link #getQuestionIdToAnswerMap()} instead.
-   */
-  @java.lang.Deprecated
-  java.util.Map<java.lang.Long, java.lang.String>
-  getQuestionIdToAnswer();
-  /**
-   * <code>map&lt;int64, string&gt; question_id_to_answer = 1;</code>
-   */
-  java.util.Map<java.lang.Long, java.lang.String>
-  getQuestionIdToAnswerMap();
-  /**
-   * <code>map&lt;int64, string&gt; question_id_to_answer = 1;</code>
-   */
+    /**
+     * <code>map&lt;int64, string&gt; question_id_to_answer = 1;</code>
+     */
+    int getQuestionIdToAnswerCount();
 
-  /* nullable */
-java.lang.String getQuestionIdToAnswerOrDefault(
-      long key,
-      /* nullable */
-java.lang.String defaultValue);
-  /**
-   * <code>map&lt;int64, string&gt; question_id_to_answer = 1;</code>
-   */
+    /**
+     * <code>map&lt;int64, string&gt; question_id_to_answer = 1;</code>
+     */
+    boolean containsQuestionIdToAnswer(
+            long key);
 
-  java.lang.String getQuestionIdToAnswerOrThrow(
-      long key);
+    /**
+     * Use {@link #getQuestionIdToAnswerMap()} instead.
+     */
+    @java.lang.Deprecated
+    java.util.Map<java.lang.Long, java.lang.String>
+    getQuestionIdToAnswer();
+
+    /**
+     * <code>map&lt;int64, string&gt; question_id_to_answer = 1;</code>
+     */
+    java.util.Map<java.lang.Long, java.lang.String>
+    getQuestionIdToAnswerMap();
+
+    /**
+     * <code>map&lt;int64, string&gt; question_id_to_answer = 1;</code>
+     */
+
+    /* nullable */
+    java.lang.String getQuestionIdToAnswerOrDefault(
+            long key,
+            /* nullable */
+            java.lang.String defaultValue);
+
+    /**
+     * <code>map&lt;int64, string&gt; question_id_to_answer = 1;</code>
+     */
+
+    java.lang.String getQuestionIdToAnswerOrThrow(
+            long key);
 }

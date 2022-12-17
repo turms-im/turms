@@ -24,97 +24,104 @@ package im.turms.client.model.proto.constant;
  * Protobuf enum {@code im.turms.proto.ProfileAccessStrategy}
  */
 public enum ProfileAccessStrategy
-    implements com.google.protobuf.Internal.EnumLite {
-  /**
-   * <code>ALL = 0;</code>
-   */
-  ALL(0),
-  /**
-   * <code>ALL_EXCEPT_BLOCKED_USERS = 1;</code>
-   */
-  ALL_EXCEPT_BLOCKED_USERS(1),
-  /**
-   * <code>FRIENDS = 2;</code>
-   */
-  FRIENDS(2),
-  UNRECOGNIZED(-1),
-  ;
+        implements com.google.protobuf.Internal.EnumLite {
+    /**
+     * <code>ALL = 0;</code>
+     */
+    ALL(0),
+    /**
+     * <code>ALL_EXCEPT_BLOCKED_USERS = 1;</code>
+     */
+    ALL_EXCEPT_BLOCKED_USERS(1),
+    /**
+     * <code>FRIENDS = 2;</code>
+     */
+    FRIENDS(2),
+    UNRECOGNIZED(-1),
+    ;
 
-  /**
-   * <code>ALL = 0;</code>
-   */
-  public static final int ALL_VALUE = 0;
-  /**
-   * <code>ALL_EXCEPT_BLOCKED_USERS = 1;</code>
-   */
-  public static final int ALL_EXCEPT_BLOCKED_USERS_VALUE = 1;
-  /**
-   * <code>FRIENDS = 2;</code>
-   */
-  public static final int FRIENDS_VALUE = 2;
+    /**
+     * <code>ALL = 0;</code>
+     */
+    public static final int ALL_VALUE = 0;
+    /**
+     * <code>ALL_EXCEPT_BLOCKED_USERS = 1;</code>
+     */
+    public static final int ALL_EXCEPT_BLOCKED_USERS_VALUE = 1;
+    /**
+     * <code>FRIENDS = 2;</code>
+     */
+    public static final int FRIENDS_VALUE = 2;
 
 
-  @java.lang.Override
-  public final int getNumber() {
-    if (this == UNRECOGNIZED) {
-      throw new java.lang.IllegalArgumentException(
-          "Can't get the number of an unknown enum value.");
+    @java.lang.Override
+    public final int getNumber() {
+        if (this == UNRECOGNIZED) {
+            throw new java.lang.IllegalArgumentException(
+                    "Can't get the number of an unknown enum value.");
+        }
+        return value;
     }
-    return value;
-  }
 
-  /**
-   * @param value The number of the enum to look for.
-   * @return The enum associated with the given number.
-   * @deprecated Use {@link #forNumber(int)} instead.
-   */
-  @java.lang.Deprecated
-  public static ProfileAccessStrategy valueOf(int value) {
-    return forNumber(value);
-  }
-
-  public static ProfileAccessStrategy forNumber(int value) {
-    switch (value) {
-      case 0: return ALL;
-      case 1: return ALL_EXCEPT_BLOCKED_USERS;
-      case 2: return FRIENDS;
-      default: return null;
+    /**
+     * @param value The number of the enum to look for.
+     * @return The enum associated with the given number.
+     * @deprecated Use {@link #forNumber(int)} instead.
+     */
+    @java.lang.Deprecated
+    public static ProfileAccessStrategy valueOf(int value) {
+        return forNumber(value);
     }
-  }
 
-  public static com.google.protobuf.Internal.EnumLiteMap<ProfileAccessStrategy>
-      internalGetValueMap() {
-    return internalValueMap;
-  }
-  private static final com.google.protobuf.Internal.EnumLiteMap<
-      ProfileAccessStrategy> internalValueMap =
-        new com.google.protobuf.Internal.EnumLiteMap<ProfileAccessStrategy>() {
-          @java.lang.Override
-          public ProfileAccessStrategy findValueByNumber(int number) {
-            return ProfileAccessStrategy.forNumber(number);
-          }
-        };
+    public static ProfileAccessStrategy forNumber(int value) {
+        switch (value) {
+            case 0:
+                return ALL;
+            case 1:
+                return ALL_EXCEPT_BLOCKED_USERS;
+            case 2:
+                return FRIENDS;
+            default:
+                return null;
+        }
+    }
 
-  public static com.google.protobuf.Internal.EnumVerifier
-      internalGetVerifier() {
-    return ProfileAccessStrategyVerifier.INSTANCE;
-  }
+    public static com.google.protobuf.Internal.EnumLiteMap<ProfileAccessStrategy>
+    internalGetValueMap() {
+        return internalValueMap;
+    }
 
-  private static final class ProfileAccessStrategyVerifier implements
-       com.google.protobuf.Internal.EnumVerifier {
-          static final com.google.protobuf.Internal.EnumVerifier           INSTANCE = new ProfileAccessStrategyVerifier();
-          @java.lang.Override
-          public boolean isInRange(int number) {
+    private static final com.google.protobuf.Internal.EnumLiteMap<
+            ProfileAccessStrategy> internalValueMap =
+            new com.google.protobuf.Internal.EnumLiteMap<ProfileAccessStrategy>() {
+                @java.lang.Override
+                public ProfileAccessStrategy findValueByNumber(int number) {
+                    return ProfileAccessStrategy.forNumber(number);
+                }
+            };
+
+    public static com.google.protobuf.Internal.EnumVerifier
+    internalGetVerifier() {
+        return ProfileAccessStrategyVerifier.INSTANCE;
+    }
+
+    private static final class ProfileAccessStrategyVerifier implements
+            com.google.protobuf.Internal.EnumVerifier {
+        static final com.google.protobuf.Internal.EnumVerifier INSTANCE = new ProfileAccessStrategyVerifier();
+
+        @java.lang.Override
+        public boolean isInRange(int number) {
             return ProfileAccessStrategy.forNumber(number) != null;
-          }
-        };
+        }
+    }
 
-  private final int value;
+    ;
 
-  private ProfileAccessStrategy(int value) {
-    this.value = value;
-  }
+    private final int value;
 
-  // @@protoc_insertion_point(enum_scope:im.turms.proto.ProfileAccessStrategy)
+    private ProfileAccessStrategy(int value) {
+        this.value = value;
+    }
+
+    // @@protoc_insertion_point(enum_scope:im.turms.proto.ProfileAccessStrategy)
 }
-

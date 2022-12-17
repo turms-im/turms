@@ -3,19 +3,19 @@
 //  source: request/user/create_session_request.proto
 //
 // @dart = 2.12
-// ignore_for_file: annotate_overrides,camel_case_types,unnecessary_const,non_constant_identifier_names,library_prefixes,unused_import,unused_shown_name,return_of_invalid_type,unnecessary_this,prefer_final_fields,deprecated_member_use_from_same_package
+// ignore_for_file: annotate_overrides,camel_case_types,constant_identifier_names,deprecated_member_use_from_same_package,directives_ordering,library_prefixes,non_constant_identifier_names,prefer_final_fields,return_of_invalid_type,unnecessary_const,unnecessary_import,unnecessary_this,unused_import,unused_shown_name
 
 import 'dart:core' as $core;
 import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
 
 @$core.Deprecated('Use createSessionRequestDescriptor instead')
-const CreateSessionRequest$json = const {
+const CreateSessionRequest$json = {
   '1': 'CreateSessionRequest',
-  '2': const [
-    const {'1': 'version', '3': 1, '4': 1, '5': 5, '10': 'version'},
-    const {'1': 'user_id', '3': 2, '4': 1, '5': 3, '10': 'userId'},
-    const {
+  '2': [
+    {'1': 'version', '3': 1, '4': 1, '5': 5, '10': 'version'},
+    {'1': 'user_id', '3': 2, '4': 1, '5': 3, '10': 'userId'},
+    {
       '1': 'password',
       '3': 3,
       '4': 1,
@@ -24,7 +24,7 @@ const CreateSessionRequest$json = const {
       '10': 'password',
       '17': true
     },
-    const {
+    {
       '1': 'user_status',
       '3': 4,
       '4': 1,
@@ -34,7 +34,7 @@ const CreateSessionRequest$json = const {
       '10': 'userStatus',
       '17': true
     },
-    const {
+    {
       '1': 'device_type',
       '3': 5,
       '4': 1,
@@ -42,7 +42,7 @@ const CreateSessionRequest$json = const {
       '6': '.im.turms.proto.DeviceType',
       '10': 'deviceType'
     },
-    const {
+    {
       '1': 'device_details',
       '3': 6,
       '4': 3,
@@ -50,7 +50,7 @@ const CreateSessionRequest$json = const {
       '6': '.im.turms.proto.CreateSessionRequest.DeviceDetailsEntry',
       '10': 'deviceDetails'
     },
-    const {
+    {
       '1': 'location',
       '3': 7,
       '4': 1,
@@ -61,22 +61,22 @@ const CreateSessionRequest$json = const {
       '17': true
     },
   ],
-  '3': const [CreateSessionRequest_DeviceDetailsEntry$json],
-  '8': const [
-    const {'1': '_password'},
-    const {'1': '_user_status'},
-    const {'1': '_location'},
+  '3': [CreateSessionRequest_DeviceDetailsEntry$json],
+  '8': [
+    {'1': '_password'},
+    {'1': '_user_status'},
+    {'1': '_location'},
   ],
 };
 
 @$core.Deprecated('Use createSessionRequestDescriptor instead')
-const CreateSessionRequest_DeviceDetailsEntry$json = const {
+const CreateSessionRequest_DeviceDetailsEntry$json = {
   '1': 'DeviceDetailsEntry',
-  '2': const [
-    const {'1': 'key', '3': 1, '4': 1, '5': 9, '10': 'key'},
-    const {'1': 'value', '3': 2, '4': 1, '5': 9, '10': 'value'},
+  '2': [
+    {'1': 'key', '3': 1, '4': 1, '5': 9, '10': 'key'},
+    {'1': 'value', '3': 2, '4': 1, '5': 9, '10': 'value'},
   ],
-  '7': const {'7': true},
+  '7': {'7': true},
 };
 
 /// Descriptor for `CreateSessionRequest`. Decode as a `google.protobuf.DescriptorProto`.

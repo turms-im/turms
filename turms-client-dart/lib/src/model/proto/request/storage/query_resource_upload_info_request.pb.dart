@@ -3,7 +3,7 @@
 //  source: request/storage/query_resource_upload_info_request.proto
 //
 // @dart = 2.12
-// ignore_for_file: annotate_overrides,camel_case_types,unnecessary_const,non_constant_identifier_names,library_prefixes,unused_import,unused_shown_name,return_of_invalid_type,unnecessary_this,prefer_final_fields
+// ignore_for_file: annotate_overrides,camel_case_types,constant_identifier_names,directives_ordering,library_prefixes,non_constant_identifier_names,prefer_final_fields,return_of_invalid_type,unnecessary_const,unnecessary_import,unnecessary_this,unused_import,unused_shown_name
 
 import 'dart:core' as $core;
 
@@ -18,7 +18,7 @@ class QueryResourceUploadInfoRequest extends $pb.GeneratedMessage {
           ? ''
           : 'QueryResourceUploadInfoRequest',
       package: const $pb.PackageName(
-          const $core.bool.fromEnvironment('protobuf.omit_message_names')
+          $core.bool.fromEnvironment('protobuf.omit_message_names')
               ? ''
               : 'im.turms.proto'),
       createEmptyInstance: create)
@@ -31,33 +31,64 @@ class QueryResourceUploadInfoRequest extends $pb.GeneratedMessage {
         defaultOrMaker: $0.StorageResourceType.USER_PROFILE_PICTURE,
         valueOf: $0.StorageResourceType.valueOf,
         enumValues: $0.StorageResourceType.values)
-    ..aOS(
+    ..aInt64(
         2,
         const $core.bool.fromEnvironment('protobuf.omit_field_names')
             ? ''
-            : 'keyStr')
-    ..aInt64(
+            : 'idNum')
+    ..aOS(
         3,
         const $core.bool.fromEnvironment('protobuf.omit_field_names')
             ? ''
-            : 'keyNum')
+            : 'idStr')
+    ..aOS(
+        4,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'name')
+    ..aOS(
+        5,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'mediaType')
+    ..m<$core.String, $core.String>(
+        6,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'extra',
+        entryClassName: 'QueryResourceUploadInfoRequest.ExtraEntry',
+        keyFieldType: $pb.PbFieldType.OS,
+        valueFieldType: $pb.PbFieldType.OS,
+        packageName: const $pb.PackageName('im.turms.proto'))
     ..hasRequiredFields = false;
 
   QueryResourceUploadInfoRequest._() : super();
   factory QueryResourceUploadInfoRequest({
     $0.StorageResourceType? type,
-    $core.String? keyStr,
-    $fixnum.Int64? keyNum,
+    $fixnum.Int64? idNum,
+    $core.String? idStr,
+    $core.String? name,
+    $core.String? mediaType,
+    $core.Map<$core.String, $core.String>? extra,
   }) {
     final _result = create();
     if (type != null) {
       _result.type = type;
     }
-    if (keyStr != null) {
-      _result.keyStr = keyStr;
+    if (idNum != null) {
+      _result.idNum = idNum;
     }
-    if (keyNum != null) {
-      _result.keyNum = keyNum;
+    if (idStr != null) {
+      _result.idStr = idStr;
+    }
+    if (name != null) {
+      _result.name = name;
+    }
+    if (mediaType != null) {
+      _result.mediaType = mediaType;
+    }
+    if (extra != null) {
+      _result.extra.addAll(extra);
     }
     return _result;
   }
@@ -105,26 +136,53 @@ class QueryResourceUploadInfoRequest extends $pb.GeneratedMessage {
   void clearType() => clearField(1);
 
   @$pb.TagNumber(2)
-  $core.String get keyStr => $_getSZ(1);
+  $fixnum.Int64 get idNum => $_getI64(1);
   @$pb.TagNumber(2)
-  set keyStr($core.String v) {
-    $_setString(1, v);
+  set idNum($fixnum.Int64 v) {
+    $_setInt64(1, v);
   }
 
   @$pb.TagNumber(2)
-  $core.bool hasKeyStr() => $_has(1);
+  $core.bool hasIdNum() => $_has(1);
   @$pb.TagNumber(2)
-  void clearKeyStr() => clearField(2);
+  void clearIdNum() => clearField(2);
 
   @$pb.TagNumber(3)
-  $fixnum.Int64 get keyNum => $_getI64(2);
+  $core.String get idStr => $_getSZ(2);
   @$pb.TagNumber(3)
-  set keyNum($fixnum.Int64 v) {
-    $_setInt64(2, v);
+  set idStr($core.String v) {
+    $_setString(2, v);
   }
 
   @$pb.TagNumber(3)
-  $core.bool hasKeyNum() => $_has(2);
+  $core.bool hasIdStr() => $_has(2);
   @$pb.TagNumber(3)
-  void clearKeyNum() => clearField(3);
+  void clearIdStr() => clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.String get name => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set name($core.String v) {
+    $_setString(3, v);
+  }
+
+  @$pb.TagNumber(4)
+  $core.bool hasName() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearName() => clearField(4);
+
+  @$pb.TagNumber(5)
+  $core.String get mediaType => $_getSZ(4);
+  @$pb.TagNumber(5)
+  set mediaType($core.String v) {
+    $_setString(4, v);
+  }
+
+  @$pb.TagNumber(5)
+  $core.bool hasMediaType() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearMediaType() => clearField(5);
+
+  @$pb.TagNumber(6)
+  $core.Map<$core.String, $core.String> get extra => $_getMap(5);
 }

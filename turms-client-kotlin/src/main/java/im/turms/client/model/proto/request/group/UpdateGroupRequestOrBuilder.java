@@ -21,118 +21,173 @@
 package im.turms.client.model.proto.request.group;
 
 public interface UpdateGroupRequestOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:im.turms.proto.UpdateGroupRequest)
-    com.google.protobuf.MessageLiteOrBuilder {
+        // @@protoc_insertion_point(interface_extends:im.turms.proto.UpdateGroupRequest)
+        com.google.protobuf.MessageLiteOrBuilder {
 
-  /**
-   * <code>int64 group_id = 1;</code>
-   * @return The groupId.
-   */
-  long getGroupId();
+    /**
+     * <pre>
+     * Query filter
+     * </pre>
+     *
+     * <code>int64 group_id = 1;</code>
+     *
+     * @return The groupId.
+     */
+    long getGroupId();
 
-  /**
-   * <code>optional string group_name = 2;</code>
-   * @return Whether the groupName field is set.
-   */
-  boolean hasGroupName();
-  /**
-   * <code>optional string group_name = 2;</code>
-   * @return The groupName.
-   */
-  java.lang.String getGroupName();
-  /**
-   * <code>optional string group_name = 2;</code>
-   * @return The bytes for groupName.
-   */
-  com.google.protobuf.ByteString
-      getGroupNameBytes();
+    /**
+     * <pre>
+     * Update options
+     * </pre>
+     *
+     * <code>optional bool quit_after_transfer = 2;</code>
+     *
+     * @return Whether the quitAfterTransfer field is set.
+     */
+    boolean hasQuitAfterTransfer();
 
-  /**
-   * <code>optional string intro = 3;</code>
-   * @return Whether the intro field is set.
-   */
-  boolean hasIntro();
-  /**
-   * <code>optional string intro = 3;</code>
-   * @return The intro.
-   */
-  java.lang.String getIntro();
-  /**
-   * <code>optional string intro = 3;</code>
-   * @return The bytes for intro.
-   */
-  com.google.protobuf.ByteString
-      getIntroBytes();
+    /**
+     * <pre>
+     * Update options
+     * </pre>
+     *
+     * <code>optional bool quit_after_transfer = 2;</code>
+     *
+     * @return The quitAfterTransfer.
+     */
+    boolean getQuitAfterTransfer();
 
-  /**
-   * <code>optional string announcement = 4;</code>
-   * @return Whether the announcement field is set.
-   */
-  boolean hasAnnouncement();
-  /**
-   * <code>optional string announcement = 4;</code>
-   * @return The announcement.
-   */
-  java.lang.String getAnnouncement();
-  /**
-   * <code>optional string announcement = 4;</code>
-   * @return The bytes for announcement.
-   */
-  com.google.protobuf.ByteString
-      getAnnouncementBytes();
+    /**
+     * <pre>
+     * Update
+     * </pre>
+     *
+     * <code>optional string name = 3;</code>
+     *
+     * @return Whether the name field is set.
+     */
+    boolean hasName();
 
-  /**
-   * <code>optional int32 minimum_score = 5;</code>
-   * @return Whether the minimumScore field is set.
-   */
-  boolean hasMinimumScore();
-  /**
-   * <code>optional int32 minimum_score = 5;</code>
-   * @return The minimumScore.
-   */
-  int getMinimumScore();
+    /**
+     * <pre>
+     * Update
+     * </pre>
+     *
+     * <code>optional string name = 3;</code>
+     *
+     * @return The name.
+     */
+    java.lang.String getName();
 
-  /**
-   * <code>optional int64 group_type_id = 6;</code>
-   * @return Whether the groupTypeId field is set.
-   */
-  boolean hasGroupTypeId();
-  /**
-   * <code>optional int64 group_type_id = 6;</code>
-   * @return The groupTypeId.
-   */
-  long getGroupTypeId();
+    /**
+     * <pre>
+     * Update
+     * </pre>
+     *
+     * <code>optional string name = 3;</code>
+     *
+     * @return The bytes for name.
+     */
+    com.google.protobuf.ByteString
+    getNameBytes();
 
-  /**
-   * <code>optional int64 mute_end_date = 7;</code>
-   * @return Whether the muteEndDate field is set.
-   */
-  boolean hasMuteEndDate();
-  /**
-   * <code>optional int64 mute_end_date = 7;</code>
-   * @return The muteEndDate.
-   */
-  long getMuteEndDate();
+    /**
+     * <code>optional string intro = 4;</code>
+     *
+     * @return Whether the intro field is set.
+     */
+    boolean hasIntro();
 
-  /**
-   * <code>optional int64 successor_id = 8;</code>
-   * @return Whether the successorId field is set.
-   */
-  boolean hasSuccessorId();
-  /**
-   * <code>optional int64 successor_id = 8;</code>
-   * @return The successorId.
-   */
-  long getSuccessorId();
+    /**
+     * <code>optional string intro = 4;</code>
+     *
+     * @return The intro.
+     */
+    java.lang.String getIntro();
 
-  /**
-   * <code>optional bool quit_after_transfer = 9;</code>
-   * @return Whether the quitAfterTransfer field is set.
-   */
-  boolean hasQuitAfterTransfer();
-  /**
-   * <code>optional bool quit_after_transfer = 9;</code>
-   * @return The quitAfterTransfer.
-   */
-  boolean getQuitAfterTransfer();
+    /**
+     * <code>optional string intro = 4;</code>
+     *
+     * @return The bytes for intro.
+     */
+    com.google.protobuf.ByteString
+    getIntroBytes();
+
+    /**
+     * <code>optional string announcement = 5;</code>
+     *
+     * @return Whether the announcement field is set.
+     */
+    boolean hasAnnouncement();
+
+    /**
+     * <code>optional string announcement = 5;</code>
+     *
+     * @return The announcement.
+     */
+    java.lang.String getAnnouncement();
+
+    /**
+     * <code>optional string announcement = 5;</code>
+     *
+     * @return The bytes for announcement.
+     */
+    com.google.protobuf.ByteString
+    getAnnouncementBytes();
+
+    /**
+     * <code>optional int32 min_score = 6;</code>
+     *
+     * @return Whether the minScore field is set.
+     */
+    boolean hasMinScore();
+
+    /**
+     * <code>optional int32 min_score = 6;</code>
+     *
+     * @return The minScore.
+     */
+    int getMinScore();
+
+    /**
+     * <code>optional int64 type_id = 7;</code>
+     *
+     * @return Whether the typeId field is set.
+     */
+    boolean hasTypeId();
+
+    /**
+     * <code>optional int64 type_id = 7;</code>
+     *
+     * @return The typeId.
+     */
+    long getTypeId();
+
+    /**
+     * <code>optional int64 mute_end_date = 8;</code>
+     *
+     * @return Whether the muteEndDate field is set.
+     */
+    boolean hasMuteEndDate();
+
+    /**
+     * <code>optional int64 mute_end_date = 8;</code>
+     *
+     * @return The muteEndDate.
+     */
+    long getMuteEndDate();
+
+    /**
+     * <code>optional int64 successor_id = 9;</code>
+     *
+     * @return Whether the successorId field is set.
+     */
+    boolean hasSuccessorId();
+
+    /**
+     * <code>optional int64 successor_id = 9;</code>
+     *
+     * @return The successorId.
+     */
+    long getSuccessorId();
 }

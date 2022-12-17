@@ -21,30 +21,34 @@
 package im.turms.server.common.access.client.dto.model.user;
 
 public interface NearbyUsersOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:im.turms.proto.NearbyUsers)
-    com.google.protobuf.MessageOrBuilder {
+        // @@protoc_insertion_point(interface_extends:im.turms.proto.NearbyUsers)
+        com.google.protobuf.MessageOrBuilder {
 
-  /**
-   * <code>repeated .im.turms.proto.NearbyUser nearby_users = 1;</code>
-   */
-  java.util.List<im.turms.server.common.access.client.dto.model.user.NearbyUser>
-      getNearbyUsersList();
-  /**
-   * <code>repeated .im.turms.proto.NearbyUser nearby_users = 1;</code>
-   */
-  im.turms.server.common.access.client.dto.model.user.NearbyUser getNearbyUsers(int index);
-  /**
-   * <code>repeated .im.turms.proto.NearbyUser nearby_users = 1;</code>
-   */
-  int getNearbyUsersCount();
-  /**
-   * <code>repeated .im.turms.proto.NearbyUser nearby_users = 1;</code>
-   */
-  java.util.List<? extends im.turms.server.common.access.client.dto.model.user.NearbyUserOrBuilder>
-      getNearbyUsersOrBuilderList();
-  /**
-   * <code>repeated .im.turms.proto.NearbyUser nearby_users = 1;</code>
-   */
-  im.turms.server.common.access.client.dto.model.user.NearbyUserOrBuilder getNearbyUsersOrBuilder(
-      int index);
+    /**
+     * <code>repeated .im.turms.proto.NearbyUser nearby_users = 1;</code>
+     */
+    java.util.List<im.turms.server.common.access.client.dto.model.user.NearbyUser>
+    getNearbyUsersList();
+
+    /**
+     * <code>repeated .im.turms.proto.NearbyUser nearby_users = 1;</code>
+     */
+    im.turms.server.common.access.client.dto.model.user.NearbyUser getNearbyUsers(int index);
+
+    /**
+     * <code>repeated .im.turms.proto.NearbyUser nearby_users = 1;</code>
+     */
+    int getNearbyUsersCount();
+
+    /**
+     * <code>repeated .im.turms.proto.NearbyUser nearby_users = 1;</code>
+     */
+    java.util.List<? extends im.turms.server.common.access.client.dto.model.user.NearbyUserOrBuilder>
+    getNearbyUsersOrBuilderList();
+
+    /**
+     * <code>repeated .im.turms.proto.NearbyUser nearby_users = 1;</code>
+     */
+    im.turms.server.common.access.client.dto.model.user.NearbyUserOrBuilder getNearbyUsersOrBuilder(
+            int index);
 }

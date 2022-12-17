@@ -21,24 +21,28 @@
 package im.turms.server.common.access.client.dto.request.user.relationship;
 
 public interface CreateFriendRequestRequestOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:im.turms.proto.CreateFriendRequestRequest)
-    com.google.protobuf.MessageOrBuilder {
+        // @@protoc_insertion_point(interface_extends:im.turms.proto.CreateFriendRequestRequest)
+        com.google.protobuf.MessageOrBuilder {
 
-  /**
-   * <code>int64 recipient_id = 1;</code>
-   * @return The recipientId.
-   */
-  long getRecipientId();
+    /**
+     * <code>int64 recipient_id = 1;</code>
+     *
+     * @return The recipientId.
+     */
+    long getRecipientId();
 
-  /**
-   * <code>string content = 2;</code>
-   * @return The content.
-   */
-  java.lang.String getContent();
-  /**
-   * <code>string content = 2;</code>
-   * @return The bytes for content.
-   */
-  com.google.protobuf.ByteString
-      getContentBytes();
+    /**
+     * <code>string content = 2;</code>
+     *
+     * @return The content.
+     */
+    java.lang.String getContent();
+
+    /**
+     * <code>string content = 2;</code>
+     *
+     * @return The bytes for content.
+     */
+    com.google.protobuf.ByteString
+    getContentBytes();
 }

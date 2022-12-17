@@ -21,13 +21,15 @@
 package im.turms.client.model.proto.model.common;
 
 public final class StringValuesWithVersion {
-  private StringValuesWithVersion() {}
-  public static void registerAllExtensions(
-      com.google.protobuf.ExtensionRegistryLite registry) {
-  }
+    private StringValuesWithVersion() {
+    }
 
-  static {
-  }
+    public static void registerAllExtensions(
+            com.google.protobuf.ExtensionRegistryLite registry) {
+    }
 
-  // @@protoc_insertion_point(outer_class_scope)
+    static {
+    }
+
+    // @@protoc_insertion_point(outer_class_scope)
 }
