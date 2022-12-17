@@ -17,7 +17,6 @@
 
 package im.turms.gateway.access.client.common.authorization.policy;
 
-import im.turms.server.common.access.client.dto.request.TurmsRequest;
 import im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import lombok.Getter;
@@ -60,6 +59,7 @@ import static im.turms.server.common.access.client.dto.request.TurmsRequest.Kind
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_JOINED_GROUP_IDS_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_JOINED_GROUP_INFOS_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_MESSAGES_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_MESSAGE_ATTACHMENT_INFOS_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_NEARBY_USERS_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_RELATED_USER_IDS_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_RELATIONSHIPS_REQUEST;
@@ -73,6 +73,7 @@ import static im.turms.server.common.access.client.dto.request.TurmsRequest.Kind
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.UPDATE_GROUP_JOIN_QUESTION_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.UPDATE_GROUP_MEMBER_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.UPDATE_GROUP_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.UPDATE_MESSAGE_ATTACHMENT_INFO_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.UPDATE_MESSAGE_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.UPDATE_RELATIONSHIP_GROUP_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.UPDATE_RELATIONSHIP_REQUEST;
@@ -180,13 +181,14 @@ public enum PolicyStatementResource {
     //region storage
     RESOURCE(Collections.emptySet(),
             Set.of(DELETE_RESOURCE_REQUEST),
-            Collections.emptySet(),
+            Set.of(UPDATE_MESSAGE_ATTACHMENT_INFO_REQUEST),
             Set.of(QUERY_RESOURCE_DOWNLOAD_INFO_REQUEST,
-                    QUERY_RESOURCE_UPLOAD_INFO_REQUEST));
+                    QUERY_RESOURCE_UPLOAD_INFO_REQUEST,
+                    QUERY_MESSAGE_ATTACHMENT_INFOS_REQUEST));
     //endregion
 
     public static final Set<PolicyStatementResource> ALL = EnumSet.allOf(PolicyStatementResource.class);
-    public static final Set<TurmsRequest.KindCase> ALL_REQUEST_TYPES;
+    public static final Set<KindCase> ALL_REQUEST_TYPES;
 
     private final Set<KindCase> allRequestTypes;
     private final Set<KindCase> requestTypesForCreating;
@@ -195,12 +197,11 @@ public enum PolicyStatementResource {
     private final Set<KindCase> requestTypesForQuerying;
 
     static {
-        PolicyStatementResource[] resources = PolicyStatementResource.values();
-        List<Collection<KindCase>> requestTypes = new ArrayList<>(resources.length);
-        for (PolicyStatementResource resource : resources) {
+        List<Collection<KindCase>> requestTypes = new ArrayList<>(ALL.size());
+        for (PolicyStatementResource resource : ALL) {
             requestTypes.add(resource.allRequestTypes);
         }
-        ALL_REQUEST_TYPES = CollectionUtil.newSet(requestTypes);
+        ALL_REQUEST_TYPES = CollectionUtil.toImmutableSet(CollectionUtil.newSet(requestTypes));
     }
 
     PolicyStatementResource(Set<KindCase> requestTypesForCreating,
@@ -211,9 +212,9 @@ public enum PolicyStatementResource {
         this.requestTypesForDeleting = requestTypesForDeleting;
         this.requestTypesForUpdating = requestTypesForUpdating;
         this.requestTypesForQuerying = requestTypesForQuerying;
-        allRequestTypes = CollectionUtil.newSet(requestTypesForCreating,
+        allRequestTypes = CollectionUtil.toImmutableSet(CollectionUtil.newSet(requestTypesForCreating,
                 requestTypesForDeleting,
                 requestTypesForUpdating,
-                requestTypesForQuerying);
+                requestTypesForQuerying));
     }
 }

@@ -50,23 +50,35 @@ public class Base62 {
             'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
             'u', 'v', 'w', 'x', 'y', 'z'
     };
+    private static Base62 defaultInstance;
 
     private final byte[] alphabet;
 
-    public Base62() {
+    private Base62() {
         this.alphabet = GMP;
     }
 
     public Base62(String alphabet) {
         if (!StringUtil.isLatin1(alphabet)) {
             throw new IllegalArgumentException("The charset must only contain Latin-1 bytes, but got [" +
-                    alphabet +
-                    "]");
+                                               alphabet +
+                                               "]");
         }
         if (alphabet.length() != TARGET_BASE) {
             throw new IllegalArgumentException("The length of charset must be " + TARGET_BASE);
         }
         this.alphabet = StringUtil.getBytes(alphabet);
+    }
+
+    public static Base62 getDefaultInstance() {
+        if (defaultInstance == null) {
+            synchronized (Base62.class) {
+                if (defaultInstance == null) {
+                    defaultInstance = new Base62();
+                }
+            }
+        }
+        return defaultInstance;
     }
 
     public byte[] encode(byte[] data) {

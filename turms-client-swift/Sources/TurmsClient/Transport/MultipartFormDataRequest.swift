@@ -23,19 +23,21 @@ struct MultipartFormDataRequest {
         return fieldString
     }
 
-    func addDataField(fieldName: String, fileName: String, data: Data, mediaType: String) {
+    func addDataField(fieldName: String, fileName: String, data: Data, mediaType: String? = nil) {
         httpBody.append(dataFormField(fieldName: fieldName, fileName: fileName, data: data, mediaType: mediaType))
     }
 
     private func dataFormField(fieldName: String,
                                fileName: String,
                                data: Data,
-                               mediaType: String) -> Data
+                               mediaType: String? = nil) -> Data
     {
         let fieldData = NSMutableData()
         fieldData.appendString("--\(boundary)\r\n")
         fieldData.appendString("Content-Disposition: form-data; name=\"\(fieldName)\"; filename=\"\(fileName)\"\r\n")
-        fieldData.appendString("Content-Type: \(mediaType)\r\n")
+        if let mediaType = mediaType {
+            fieldData.appendString("Content-Type: \(mediaType)\r\n")
+        }
         fieldData.appendString("\r\n")
         fieldData.append(data)
         fieldData.appendString("\r\n")

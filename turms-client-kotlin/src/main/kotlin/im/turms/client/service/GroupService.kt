@@ -72,18 +72,18 @@ class GroupService(private val turmsClient: TurmsClient) {
         name: String,
         intro: String? = null,
         announcement: String? = null,
-        minimumScore: Int? = null,
+        minScore: Int? = null,
         muteEndDate: Date? = null,
-        groupTypeId: Long? = null
+        typeId: Long? = null
     ): Response<Long> = turmsClient.driver
         .send(
             CreateGroupRequest.newBuilder().apply {
                 this.name = name
                 intro?.let { this.intro = it }
                 announcement?.let { this.announcement = it }
-                minimumScore?.let { this.minimumScore = it }
+                minScore?.let { this.minScore = it }
                 muteEndDate?.let { this.muteEndDate = it.time }
-                groupTypeId?.let { this.groupTypeId = it }
+                typeId?.let { this.typeId = it }
             }
         ).toResponse {
             it.getLongOrThrow()
@@ -100,20 +100,20 @@ class GroupService(private val turmsClient: TurmsClient) {
 
     suspend fun updateGroup(
         groupId: Long,
-        groupName: String? = null,
+        name: String? = null,
         intro: String? = null,
         announcement: String? = null,
-        minimumScore: Int? = null,
-        groupTypeId: Long? = null,
+        minScore: Int? = null,
+        typeId: Long? = null,
         muteEndDate: Date? = null,
         successorId: Long? = null,
         quitAfterTransfer: Boolean? = null
     ): Response<Unit> = if (Validator.areAllFalsy(
-            groupName,
+            name,
             intro,
             announcement,
-            minimumScore,
-            groupTypeId,
+            minScore,
+            typeId,
             muteEndDate,
             successorId
         )
@@ -124,12 +124,12 @@ class GroupService(private val turmsClient: TurmsClient) {
             .send(
                 UpdateGroupRequest.newBuilder().apply {
                     this.groupId = groupId
-                    groupName?.let { this.groupName = it }
+                    name?.let { this.name = it }
                     intro?.let { this.intro = it }
                     announcement?.let { this.announcement = it }
                     muteEndDate?.let { this.muteEndDate = it.time }
-                    minimumScore?.let { this.minimumScore = it }
-                    groupTypeId?.let { this.groupTypeId = it }
+                    minScore?.let { this.minScore = it }
+                    typeId?.let { this.typeId = it }
                     successorId?.let { this.successorId = it }
                     quitAfterTransfer?.let { this.quitAfterTransfer = it }
                 }

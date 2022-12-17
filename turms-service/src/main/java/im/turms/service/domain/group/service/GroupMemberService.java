@@ -502,6 +502,20 @@ public class GroupMemberService {
         return groupMemberRepository.existsById(key);
     }
 
+    public Mono<Boolean> isGroupMember(@NotEmpty Set<Long> groupIds, @NotNull Long userId) {
+        try {
+            Validator.notEmpty(groupIds, "groupIds");
+            Validator.notNull(userId, "userId");
+        } catch (ResponseException e) {
+            return Mono.error(e);
+        }
+        List<GroupMember.Key> keys = new ArrayList<>(groupIds.size());
+        for (Long groupId : groupIds) {
+            keys.add(new GroupMember.Key(groupId, userId));
+        }
+        return groupMemberRepository.existsByIds(keys);
+    }
+
     public Flux<Long> findExistentMemberGroupIds(@NotEmpty Set<Long> groupIds, @NotNull Long userId) {
         try {
             Validator.notEmpty(groupIds, "groupIds");

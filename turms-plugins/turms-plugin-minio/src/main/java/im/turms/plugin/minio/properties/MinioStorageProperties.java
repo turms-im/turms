@@ -15,8 +15,9 @@
  * limitations under the License.
  */
 
-package im.turms.plugin.minio;
+package im.turms.plugin.minio.properties;
 
+import im.turms.server.common.infra.property.env.service.env.database.TurmsMongoProperties;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
@@ -38,7 +39,10 @@ public class MinioStorageProperties {
     private Retry retry = new Retry();
 
     @NestedConfigurationProperty
-    private ResourceKey resourceKey = new ResourceKey();
+    private ResourceId resourceId = new ResourceId();
+
+    @NestedConfigurationProperty
+    private TurmsMongoProperties mongo = new TurmsMongoProperties();
 
     @Data
     public static class Retry {
@@ -49,22 +53,22 @@ public class MinioStorageProperties {
     }
 
     @Data
-    public static class ResourceKey {
+    public static class ResourceId {
         @NestedConfigurationProperty
-        private ResourceKeyBase62 base62 = new ResourceKeyBase62();
+        private ResourceIdBase62 base62 = new ResourceIdBase62();
 
         @NestedConfigurationProperty
-        private ResourceKeyMac mac = new ResourceKeyMac();
+        private ResourceIdMac mac = new ResourceIdMac();
     }
 
     @Data
-    public static class ResourceKeyBase62 {
+    public static class ResourceIdBase62 {
         private boolean enabled;
         private String charset = "s5EW4wypaOFg1AmcLxj9VDnJdozIhKYuCTPvk0MNqe8bBRlQ2SifXr63UHG7Zt";
     }
 
     @Data
-    public static class ResourceKeyMac {
+    public static class ResourceIdMac {
         private boolean enabled;
         /**
          * Default: base64("\u0000turms-im/turms\u0080")

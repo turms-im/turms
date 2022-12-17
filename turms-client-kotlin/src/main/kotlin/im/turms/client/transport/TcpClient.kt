@@ -25,6 +25,7 @@ import okhttp3.internal.tls.OkHostnameVerifier
 import java.io.EOFException
 import java.io.InputStream
 import java.io.OutputStream
+import java.lang.reflect.Method
 import java.net.InetAddress
 import java.net.Socket
 import java.nio.ByteBuffer
@@ -33,6 +34,7 @@ import java.security.SecureRandom
 import java.security.cert.X509Certificate
 import javax.net.ssl.SNIHostName
 import javax.net.ssl.SSLContext
+import javax.net.ssl.SSLParameters
 import javax.net.ssl.SSLPeerUnverifiedException
 import javax.net.ssl.SSLProtocolException
 import javax.net.ssl.SSLSocket
@@ -119,14 +121,15 @@ class TcpClient(override val coroutineContext: CoroutineContext) : CoroutineScop
             ?: getSslContext("TLSv1.2")
             ?: throw SSLProtocolException("TLSv1.2 and TLSv1.3 are not supported")
         sslContext.init(null, trustManager?.let { arrayOf(it) }, SecureRandom())
-        val ssl = sslContext.socketFactory.createSocket(socket, host, port, true) as SSLSocket
+        val socketFactory = sslContext.socketFactory
+        val ssl = socketFactory.createSocket(socket, host, port, true) as SSLSocket
         val sslParameters = sslContext.supportedSSLParameters
 
         // SNI
-        try {
-            sslParameters.serverNames = listOf(SNIHostName(serverName))
-        } catch (e: Exception) {
-            // ignored
+        if (setServerNames != null) {
+            setServerNames.invoke(sslParameters, listOf(SNIHostName(serverName)))
+        } else {
+            setHostname?.invoke(socket, hostname)
         }
 
         ssl.sslParameters = sslParameters
@@ -308,5 +311,15 @@ class TcpClient(override val coroutineContext: CoroutineContext) : CoroutineScop
     companion object {
         const val INITIAL_READ_BUFFER_CAPACITY: Int = 1024 * 1024
         const val MAX_READ_BUFFER_CAPACITY: Int = 8 * 1024 * 1024
+        val setServerNames: Method? = try {
+            SSLParameters::class.java.getMethod("setServerNames", List::class.java)
+        } catch (exception: NoSuchMethodException) {
+            null
+        }
+        val setHostname: Method? = try {
+            SSLSocket::class.java.getMethod("setHostname", String::class.java)
+        } catch (exception: NoSuchMethodException) {
+            null
+        }
     }
 }

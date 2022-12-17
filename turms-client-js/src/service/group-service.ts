@@ -22,16 +22,16 @@ export default class GroupService {
         name,
         intro,
         announcement,
-        minimumScore,
+        minScore,
         muteEndDate,
-        groupTypeId
+        typeId
     }: {
         name: string,
         intro?: string,
         announcement?: string,
-        minimumScore?: number,
+        minScore?: number,
         muteEndDate?: Date,
-        groupTypeId?: string
+        typeId?: string
     }): Promise<Response<string>> {
         if (Validator.isFalsy(name)) {
             return ResponseError.notFalsyPromise('name');
@@ -41,9 +41,9 @@ export default class GroupService {
                 name,
                 intro,
                 announcement,
-                minimumScore,
+                minScore,
                 muteEndDate: DataParser.getDateTimeStr(muteEndDate),
-                groupTypeId
+                typeId
             }
         }).then(n => Response.fromNotification(n, data => NotificationUtil.getLongOrThrow(data)));
     }
@@ -65,21 +65,21 @@ export default class GroupService {
 
     updateGroup({
         groupId,
-        groupName,
+        name,
         intro,
         announcement,
-        minimumScore,
-        groupTypeId,
+        minScore,
+        typeId,
         muteEndDate,
         successorId,
         quitAfterTransfer
     }: {
         groupId: string,
-        groupName?: string,
+        name?: string,
         intro?: string,
         announcement?: string,
-        minimumScore?: number,
-        groupTypeId?: string,
+        minScore?: number,
+        typeId?: string,
         muteEndDate?: Date,
         successorId?: string,
         quitAfterTransfer?: boolean
@@ -87,19 +87,19 @@ export default class GroupService {
         if (Validator.isFalsy(groupId)) {
             return ResponseError.notFalsyPromise('groupId');
         }
-        if (Validator.areAllFalsy(groupName, intro, announcement, minimumScore, groupTypeId,
+        if (Validator.areAllFalsy(name, intro, announcement, minScore, typeId,
             muteEndDate, successorId)) {
             return Promise.resolve(Response.nullValue());
         }
         return this._turmsClient.driver.send({
             updateGroupRequest: {
                 groupId,
-                groupName,
+                name,
                 intro,
                 announcement,
                 muteEndDate: DataParser.getDateTimeStr(muteEndDate),
-                minimumScore,
-                groupTypeId,
+                minScore,
+                typeId,
                 successorId,
                 quitAfterTransfer
             }

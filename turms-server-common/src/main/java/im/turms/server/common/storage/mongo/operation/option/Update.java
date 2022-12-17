@@ -24,6 +24,7 @@ import org.bson.BsonDocument;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
 
@@ -103,5 +104,19 @@ public final class Update extends BaseBson {
         unset.put(field, BsonPool.BSON_STRING_EMPTY);
         return this;
     }
+
+    //region array
+    public Update addToSet(String field, Object value) {
+        document.append("$addToSet",
+                new BsonDocument(field, BsonValueEncoder.encodeSingleValue(value)));
+        return this;
+    }
+
+    public Update pullAll(String field, List<Object> values) {
+        document.append("$pullAll",
+                new BsonDocument(field, BsonValueEncoder.encodeValue(values)));
+        return this;
+    }
+    //endregion
 
 }

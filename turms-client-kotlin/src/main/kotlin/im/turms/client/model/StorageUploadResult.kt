@@ -25,25 +25,7 @@ import java.net.URI
 data class StorageUploadResult(
     val uri: URI,
     val metadata: Map<String, String>,
-    val data: String
-) {
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as StorageUploadResult
-
-        if (uri != other.uri) return false
-        if (metadata != other.metadata) return false
-        if (data != other.data) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = uri.hashCode()
-        result = 31 * result + metadata.hashCode()
-        result = 31 * result + data.hashCode()
-        return result
-    }
-}
+    val data: String,
+    val resourceIdNum: Long?,
+    val resourceIdStr: String?
+)

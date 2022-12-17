@@ -11,16 +11,16 @@ class GroupService {
   Future<Response<Int64>> createGroup(String name,
       {String? intro,
       String? announcement,
-      int? minimumScore,
+      int? minScore,
       DateTime? muteEndDate,
-      Int64? groupTypeId}) async {
+      Int64? typeId}) async {
     final n = await _turmsClient.driver.send(CreateGroupRequest(
         name: name,
         intro: intro,
         announcement: announcement,
-        minimumScore: minimumScore,
+        minScore: minScore,
         muteEndDate: muteEndDate?.toInt64(),
-        groupTypeId: groupTypeId));
+        typeId: typeId));
     return n.toResponse((data) => data.getLongOrThrow());
   }
 
@@ -31,33 +31,26 @@ class GroupService {
   }
 
   Future<Response<void>> updateGroup(Int64 groupId,
-      {String? groupName,
+      {String? name,
       String? intro,
       String? announcement,
-      int? minimumScore,
-      Int64? groupTypeId,
+      int? minScore,
+      Int64? typeId,
       DateTime? muteEndDate,
       Int64? successorId,
       bool? quitAfterTransfer}) async {
-    if ([
-      groupName,
-      intro,
-      announcement,
-      minimumScore,
-      groupTypeId,
-      muteEndDate,
-      successorId
-    ].areAllNull) {
+    if ([name, intro, announcement, minScore, typeId, muteEndDate, successorId]
+        .areAllNull) {
       return Response.nullValue();
     }
     final n = await _turmsClient.driver.send(UpdateGroupRequest(
         groupId: groupId,
-        groupName: groupName,
+        name: name,
         intro: intro,
         announcement: announcement,
         muteEndDate: muteEndDate?.toInt64(),
-        minimumScore: minimumScore,
-        groupTypeId: groupTypeId,
+        minScore: minScore,
+        typeId: typeId,
         successorId: successorId,
         quitAfterTransfer: quitAfterTransfer));
     return n.toNullResponse();

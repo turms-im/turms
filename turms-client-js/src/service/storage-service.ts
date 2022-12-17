@@ -7,11 +7,15 @@ import TurmsClient from '../turms-client';
 import StorageResource from '../model/storage-resource';
 import NotificationUtil from '../util/notification-util';
 import StorageUpdateResult from '../model/storage-update-result';
+import CollectionUtil from '../util/collection-util';
+import DataParser from '../util/data-parser';
+import Validator from '../util/validator';
+import { ParsedModel } from '../model/parsed-model';
 
 const isResponseSuccessful = (res): boolean => res.statusText.startsWith('2');
 
 export default class StorageService {
-    private static readonly _RESOURCE_KEY_NAME = 'key';
+    private static readonly _RESOURCE_ID_KEY_NAME = 'id';
     private static readonly _DEFAULT_URL_KEY_NAME = 'url';
     private static readonly _RESOURCE_TYPE_TO_BUCKET_NAME = Object
         .keys(StorageResourceType)
@@ -38,12 +42,16 @@ export default class StorageService {
     // User profile picture
 
     public uploadUserProfilePicture({
-        mediaType,
         data,
+        name,
+        mediaType,
+        extra,
         urlKeyName
     }: {
-        mediaType: string,
         data: Uint8Array,
+        name?: string,
+        mediaType?: string,
+        extra?: Record<string, string>
         urlKeyName?: string
     }): Promise<Response<StorageUpdateResult>> {
         if (!data.length) {
@@ -52,42 +60,55 @@ export default class StorageService {
                 reason: 'The data of user profile picture must not be empty'
             }));
         }
-        const userId = this._turmsClient.userService.userInfo?.userId;
-        if (userId == null) {
-            return Promise.reject(ResponseError.from({
-                code: ResponseStatusCode.UPLOAD_USER_PROFILE_PICTURE_BEFORE_LOGIN
-            }));
-        }
-        return this.queryUserProfilePictureUploadInfo().then(uploadInfo => {
+        return this.queryUserProfilePictureUploadInfo({
+            name,
+            mediaType,
+            extra
+        }).then(uploadInfo => {
             const url = StorageService._getAndRemoveResourceUrl(uploadInfo.data, urlKeyName);
-            const resourceName = StorageService._getAndRemoveResourceKey(uploadInfo.data) ?? userId;
+            const id = StorageService._getAndRemoveResourceId(uploadInfo.data);
+            if (id == null) {
+                throw ResponseError.from({
+                    code: ResponseStatusCode.DATA_NOT_FOUND,
+                    reason: `Cannot get the resource ID because the key "${StorageService._RESOURCE_ID_KEY_NAME}" doesn't exist in the data: ${JSON.stringify(uploadInfo.data)}`
+                });
+            }
             return this._upload({
                 url,
                 formData: uploadInfo.data,
-                resourceName,
-                mediaType,
-                data
+                data,
+                id,
+                name,
+                mediaType
             });
         });
     }
 
-    public deleteUserProfilePicture(): Promise<Response<void>> {
+    public deleteUserProfilePicture({
+        extra
+    }: {
+        extra?: Record<string, string>
+    } = {}): Promise<Response<void>> {
         return this._deleteResource({
-            type: StorageResourceType.USER_PROFILE_PICTURE
+            type: StorageResourceType.USER_PROFILE_PICTURE,
+            extra
         });
     }
 
     public queryUserProfilePicture({
         userId,
+        extra,
         urlKeyName,
         fetchDownloadInfo
     }: {
         userId: string,
+        extra?: Record<string, string>
         urlKeyName?: string,
         fetchDownloadInfo?: boolean
     }): Promise<Response<StorageResource>> {
         return this.queryUserProfilePictureDownloadInfo({
             userId,
+            extra,
             fetch: fetchDownloadInfo,
             urlKeyName
         }).then(downloadInfo => {
@@ -96,31 +117,39 @@ export default class StorageService {
         });
     }
 
-    public queryUserProfilePictureUploadInfo(): Promise<Response<Record<string, string>>> {
-        const userId = this._turmsClient.userService.userInfo?.userId;
-        if (userId == null) {
-            return Promise.reject(ResponseError.from({
-                code: ResponseStatusCode.QUERY_USER_PROFILE_PICTURE_BEFORE_LOGIN
-            }));
-        }
+    public queryUserProfilePictureUploadInfo({
+        name,
+        mediaType,
+        extra
+    }: {
+        name?: string,
+        mediaType?: string,
+        extra?: Record<string, string>
+    } = {}): Promise<Response<Record<string, string>>> {
         return this._queryResourceUploadInfo({
-            type: StorageResourceType.USER_PROFILE_PICTURE
+            type: StorageResourceType.USER_PROFILE_PICTURE,
+            name,
+            mediaType,
+            extra
         });
     }
 
     public queryUserProfilePictureDownloadInfo({
         userId,
+        extra,
         fetch,
         urlKeyName
     }: {
         userId: string
+        extra?: Record<string, string>,
         fetch?: boolean,
         urlKeyName?: string
     }): Promise<Response<Record<string, string>>> {
         if (fetch) {
             return this._queryResourceDownloadInfo({
                 type: StorageResourceType.USER_PROFILE_PICTURE,
-                keyNum: userId
+                idNum: userId,
+                extra
             });
         }
         const url = `${this._serverUrl}/${StorageService._getBucketName(StorageResourceType.USER_PROFILE_PICTURE)}/${userId}`;
@@ -133,13 +162,17 @@ export default class StorageService {
 
     public uploadGroupProfilePicture({
         groupId,
-        mediaType,
         data,
+        name,
+        mediaType,
+        extra,
         urlKeyName
     }: {
         groupId: string
-        mediaType: string
         data: Uint8Array,
+        name?: string,
+        mediaType?: string,
+        extra?: Record<string, string>,
         urlKeyName?: string
     }): Promise<Response<StorageUpdateResult>> {
         if (!data.length) {
@@ -149,43 +182,59 @@ export default class StorageService {
             }));
         }
         return this.queryGroupProfilePictureUploadInfo({
-            groupId
+            groupId,
+            name,
+            mediaType,
+            extra
         })
             .then(uploadInfo => {
                 const url = StorageService._getAndRemoveResourceUrl(uploadInfo.data, urlKeyName);
-                const resourceName = StorageService._getAndRemoveResourceKey(uploadInfo.data) ?? groupId;
+                const id = StorageService._getAndRemoveResourceId(uploadInfo.data) ?? groupId;
+                if (id == null) {
+                    throw ResponseError.from({
+                        code: ResponseStatusCode.DATA_NOT_FOUND,
+                        reason: `Cannot get the resource ID because the key "${StorageService._RESOURCE_ID_KEY_NAME}" doesn't exist in the data: ${JSON.stringify(uploadInfo.data)}`
+                    });
+                }
                 return this._upload({
                     url,
                     formData: uploadInfo.data,
-                    resourceName,
-                    mediaType,
-                    data
+                    data,
+                    id,
+                    name,
+                    mediaType
                 });
             });
     }
 
     public deleteGroupProfilePicture({
-        groupId
+        groupId,
+        extra
     }: {
-        groupId: string
+        groupId: string,
+        extra?: Record<string, string>
     }): Promise<Response<void>> {
         return this._deleteResource({
             type: StorageResourceType.GROUP_PROFILE_PICTURE,
-            keyNum: groupId
+            idNum: groupId,
+            extra
         });
     }
 
     public queryGroupProfilePicture({
         groupId,
+        extra,
         fetchDownloadInfo,
         urlKeyName
     }: {
         groupId: string
+        extra?: Record<string, string>,
         fetchDownloadInfo?: boolean,
         urlKeyName?: string
     }): Promise<Response<StorageResource>> {
         return this.queryGroupProfilePictureDownloadInfo({
             groupId,
+            extra,
             fetch: fetchDownloadInfo,
             urlKeyName
         }).then(downloadInfo => {
@@ -195,29 +244,41 @@ export default class StorageService {
     }
 
     public queryGroupProfilePictureUploadInfo({
-        groupId
+        groupId,
+        name,
+        mediaType,
+        extra
     }: {
-        groupId: string
+        groupId: string,
+        name?: string,
+        mediaType?: string,
+        extra?: Record<string, string>
     }): Promise<Response<Record<string, string>>> {
         return this._queryResourceUploadInfo({
             type: StorageResourceType.GROUP_PROFILE_PICTURE,
-            keyNum: groupId
+            idNum: groupId,
+            name,
+            mediaType,
+            extra
         });
     }
 
     public queryGroupProfilePictureDownloadInfo({
         groupId,
+        extra,
         fetch,
         urlKeyName
     }: {
         groupId: string,
+        extra?: Record<string, string>,
         fetch?: boolean,
         urlKeyName?: string
     }): Promise<Response<Record<string, string>>> {
         if (fetch) {
             return this._queryResourceDownloadInfo({
                 type: StorageResourceType.GROUP_PROFILE_PICTURE,
-                keyNum: groupId
+                idNum: groupId,
+                extra
             });
         }
         const url = `${this._serverUrl}/${StorageService._getBucketName(StorageResourceType.GROUP_PROFILE_PICTURE)}/${groupId}`;
@@ -229,16 +290,92 @@ export default class StorageService {
     // Message attachment
 
     public uploadMessageAttachment({
-        messageId,
-        mediaType,
         data,
         name,
+        mediaType,
+        extra,
         urlKeyName
     }: {
-        messageId: string,
-        mediaType: string,
-        data: Uint8Array
+        data: Uint8Array,
         name?: string,
+        mediaType?: string,
+        extra?: Record<string, string>,
+        urlKeyName?: string
+    }): Promise<Response<StorageUpdateResult>> {
+        return this._uploadMessageAttachment({
+            data,
+            name: name,
+            mediaType,
+            extra,
+            urlKeyName
+        });
+    }
+
+    public uploadMessageAttachmentInPrivateConversation({
+        userId,
+        data,
+        name,
+        mediaType,
+        extra,
+        urlKeyName
+    }: {
+        userId: string,
+        data: Uint8Array,
+        name?: string,
+        mediaType?: string,
+        extra?: Record<string, string>,
+        urlKeyName?: string
+    }): Promise<Response<StorageUpdateResult>> {
+        return this._uploadMessageAttachment({
+            userId,
+            data,
+            name: name,
+            mediaType,
+            extra,
+            urlKeyName
+        });
+    }
+
+    public uploadMessageAttachmentInGroupConversation({
+        groupId,
+        data,
+        name,
+        mediaType,
+        extra,
+        urlKeyName
+    }: {
+        groupId: string,
+        data: Uint8Array,
+        name?: string,
+        mediaType?: string,
+        extra?: Record<string, string>,
+        urlKeyName?: string
+    }): Promise<Response<StorageUpdateResult>> {
+        return this._uploadMessageAttachment({
+            groupId,
+            data,
+            name: name,
+            mediaType,
+            extra,
+            urlKeyName
+        });
+    }
+
+    private _uploadMessageAttachment({
+        userId,
+        groupId,
+        data,
+        name,
+        mediaType,
+        extra,
+        urlKeyName
+    }: {
+        userId?: string,
+        groupId?: string,
+        data: Uint8Array,
+        name?: string,
+        mediaType?: string,
+        extra?: Record<string, string>,
         urlKeyName?: string
     }): Promise<Response<StorageUpdateResult>> {
         if (!data.length) {
@@ -247,51 +384,191 @@ export default class StorageService {
                 reason: 'The data of message attachment must not be empty'
             }));
         }
-        return this.queryMessageAttachmentUploadInfo({
-            messageId,
-            name
-        }).then(uploadInfo => {
+
+        let queryUploadInfo: Promise<Response<Record<string, string>>>;
+        if (userId == null && groupId == null) {
+            queryUploadInfo = this.queryMessageAttachmentUploadInfo({
+                name,
+                mediaType,
+                extra
+            });
+        } else if (userId != null) {
+            if (groupId != null) {
+                return Promise.reject(ResponseError.from({
+                    code: ResponseStatusCode.ILLEGAL_ARGUMENT,
+                    reason: 'The user ID and the group ID must not both be non-null'
+                }));
+            }
+            queryUploadInfo = this.queryMessageAttachmentUploadInfoInPrivateConversation({
+                userId,
+                name,
+                mediaType,
+                extra
+            });
+        } else {
+            queryUploadInfo = this.queryMessageAttachmentUploadInfoInGroupConversation({
+                groupId,
+                name,
+                mediaType,
+                extra
+            });
+        }
+        return queryUploadInfo.then(uploadInfo => {
             const url = StorageService._getAndRemoveResourceUrl(uploadInfo.data, urlKeyName);
-            const resourceName = StorageService._getAndRemoveResourceKey(uploadInfo.data)
-                ?? (name == null ? messageId : `${messageId}/${name}`);
+            const id = StorageService._getAndRemoveResourceId(uploadInfo.data);
+            if (id == null) {
+                throw ResponseError.from({
+                    code: ResponseStatusCode.DATA_NOT_FOUND,
+                    reason: `Cannot get the resource ID because the key "${StorageService._RESOURCE_ID_KEY_NAME}" doesn't exist in the data: ${JSON.stringify(uploadInfo.data)}`
+                });
+            }
             return this._upload({
                 url,
                 formData: uploadInfo.data,
-                resourceName,
-                mediaType,
-                data
+                data,
+                id,
+                name,
+                mediaType
             });
         });
     }
 
     public deleteMessageAttachment({
-        messageId,
-        name
+        attachmentIdNum,
+        attachmentIdStr,
+        extra
     }: {
-        messageId: string,
-        name?: string
+        attachmentIdNum?: string,
+        attachmentIdStr?: string,
+        extra?: Record<string, string>
     }): Promise<Response<void>> {
+        if (Validator.areAllNullOrNonNull([attachmentIdNum, attachmentIdStr])) {
+            return Promise.reject(ResponseError.from({
+                code: ResponseStatusCode.ILLEGAL_ARGUMENT,
+                reason: 'One and only one attachment ID must be specified'
+            }));
+        }
         return this._deleteResource({
             type: StorageResourceType.MESSAGE_ATTACHMENT,
-            keyNum: messageId,
-            keyStr: name
+            idNum: attachmentIdNum,
+            idStr: attachmentIdStr,
+            extra
         });
     }
 
+    public shareMessageAttachmentWithUser({
+        userId,
+        attachmentIdNum,
+        attachmentIdStr
+    }: {
+        userId: string,
+        attachmentIdNum?: string,
+        attachmentIdStr?: string
+    }): Promise<Response<void>> {
+        if (Validator.areAllNullOrNonNull([attachmentIdNum, attachmentIdStr])) {
+            return Promise.reject(ResponseError.from({
+                code: ResponseStatusCode.ILLEGAL_ARGUMENT,
+                reason: 'One and only one attachment ID must be specified'
+            }));
+        }
+        return this._turmsClient.driver.send({
+            updateMessageAttachmentInfoRequest: {
+                attachmentIdNum,
+                attachmentIdStr,
+                userIdToShareWith: userId
+            }
+        }).then(n => Response.fromNotification(n));
+    }
+
+    public shareMessageAttachmentWithGroup({
+        groupId,
+        attachmentIdNum,
+        attachmentIdStr
+    }: {
+        groupId: string,
+        attachmentIdNum?: string,
+        attachmentIdStr?: string
+    }): Promise<Response<void>> {
+        if (Validator.areAllNullOrNonNull([attachmentIdNum, attachmentIdStr])) {
+            return Promise.reject(ResponseError.from({
+                code: ResponseStatusCode.ILLEGAL_ARGUMENT,
+                reason: 'One and only one attachment ID must be specified'
+            }));
+        }
+        return this._turmsClient.driver.send({
+            updateMessageAttachmentInfoRequest: {
+                attachmentIdNum,
+                attachmentIdStr,
+                groupIdToShareWith: groupId
+            }
+        }).then(n => Response.fromNotification(n));
+    }
+
+    public unshareMessageAttachmentWithUser({
+        userId,
+        attachmentIdNum,
+        attachmentIdStr
+    }: {
+        userId: string,
+        attachmentIdNum?: string,
+        attachmentIdStr?: string
+    }): Promise<Response<void>> {
+        if (Validator.areAllNullOrNonNull([attachmentIdNum, attachmentIdStr])) {
+            return Promise.reject(ResponseError.from({
+                code: ResponseStatusCode.ILLEGAL_ARGUMENT,
+                reason: 'One and only one attachment ID must be specified'
+            }));
+        }
+        return this._turmsClient.driver.send({
+            updateMessageAttachmentInfoRequest: {
+                attachmentIdNum,
+                attachmentIdStr,
+                userIdToUnshareWith: userId
+            }
+        }).then(n => Response.fromNotification(n));
+    }
+
+    public unshareMessageAttachmentWithGroup({
+        groupId,
+        attachmentIdNum,
+        attachmentIdStr
+    }: {
+        groupId: string,
+        attachmentIdNum?: string,
+        attachmentIdStr?: string
+    }): Promise<Response<void>> {
+        if (Validator.areAllNullOrNonNull([attachmentIdNum, attachmentIdStr])) {
+            return Promise.reject(ResponseError.from({
+                code: ResponseStatusCode.ILLEGAL_ARGUMENT,
+                reason: 'One and only one attachment ID must be specified'
+            }));
+        }
+        return this._turmsClient.driver.send({
+            updateMessageAttachmentInfoRequest: {
+                attachmentIdNum,
+                attachmentIdStr,
+                groupIdToUnshareWith: groupId
+            }
+        }).then(n => Response.fromNotification(n));
+    }
+
     public queryMessageAttachment({
-        messageId,
-        name,
+        attachmentIdNum,
+        attachmentIdStr,
+        extra,
         fetchDownloadInfo,
         urlKeyName
     }: {
-        messageId: string,
-        name?: string,
+        attachmentIdNum?: string,
+        attachmentIdStr?: string,
+        extra?: Record<string, string>,
         fetchDownloadInfo?: boolean,
         urlKeyName?: string
     }): Promise<Response<StorageResource>> {
         return this.queryMessageAttachmentDownloadInfo({
-            messageId,
-            name,
+            attachmentIdNum,
+            attachmentIdStr,
+            extra,
             fetch: fetchDownloadInfo,
             urlKeyName
         }).then(downloadInfo => {
@@ -301,41 +578,153 @@ export default class StorageService {
     }
 
     public queryMessageAttachmentUploadInfo({
-        messageId,
-        name
+        name,
+        mediaType,
+        extra
     }: {
-        messageId: string,
         name?: string,
+        mediaType?: string,
+        extra?: Record<string, string>
+    } = {}): Promise<Response<Record<string, string>>> {
+        return this._queryResourceUploadInfo({
+            type: StorageResourceType.MESSAGE_ATTACHMENT,
+            name,
+            mediaType,
+            extra
+        });
+    }
+
+    public queryMessageAttachmentUploadInfoInPrivateConversation({
+        userId,
+        name,
+        mediaType,
+        extra
+    }: {
+        userId: string,
+        name?: string,
+        mediaType?: string,
+        extra?: Record<string, string>
     }): Promise<Response<Record<string, string>>> {
         return this._queryResourceUploadInfo({
             type: StorageResourceType.MESSAGE_ATTACHMENT,
-            keyStr: name,
-            keyNum: messageId
+            idNum: userId,
+            name,
+            mediaType,
+            extra
+        });
+    }
+
+    public queryMessageAttachmentUploadInfoInGroupConversation({
+        groupId,
+        name,
+        mediaType,
+        extra
+    }: {
+        groupId: string,
+        name?: string,
+        mediaType?: string,
+        extra?: Record<string, string>
+    }): Promise<Response<Record<string, string>>> {
+        return this._queryResourceUploadInfo({
+            type: StorageResourceType.MESSAGE_ATTACHMENT,
+            idNum: `-${groupId}`,
+            name,
+            mediaType,
+            extra
         });
     }
 
     public queryMessageAttachmentDownloadInfo({
-        messageId,
-        name,
+        attachmentIdNum,
+        attachmentIdStr,
+        extra,
         fetch,
         urlKeyName
     }: {
-        messageId: string,
-        name?: string,
+        attachmentIdNum?: string,
+        attachmentIdStr?: string,
+        extra?: Record<string, string>,
         fetch?: boolean,
         urlKeyName?: string
     }): Promise<Response<Record<string, string>>> {
+        if (Validator.areAllNullOrNonNull([attachmentIdNum, attachmentIdStr])) {
+            return Promise.reject(ResponseError.from({
+                code: ResponseStatusCode.ILLEGAL_ARGUMENT,
+                reason: 'One and only one attachment ID must be specified'
+            }));
+        }
         if (fetch) {
             return this._queryResourceDownloadInfo({
                 type: StorageResourceType.MESSAGE_ATTACHMENT,
-                keyStr: name,
-                keyNum: messageId
+                idNum: attachmentIdNum,
+                idStr: attachmentIdStr,
+                extra
             });
         }
-        const url = `${this._serverUrl}/${StorageService._getBucketName(StorageResourceType.MESSAGE_ATTACHMENT)}/${name == null ? messageId : `${messageId}/${name}`}`;
+        const url = `${this._serverUrl}/${StorageService._getBucketName(StorageResourceType.MESSAGE_ATTACHMENT)}/${attachmentIdNum || attachmentIdStr}`;
         const info = {};
         info[urlKeyName || StorageService._DEFAULT_URL_KEY_NAME] = url;
         return Promise.resolve(Response.value(info));
+    }
+
+    public queryMessageAttachmentInfosUploadedByMe({
+        creationDateStart = null,
+        creationDateEnd = null
+    }: {
+        creationDateStart?: Date,
+        creationDateEnd?: Date
+    } = {}): Promise<Response<ParsedModel.StorageResourceInfo[]>> {
+        return this._turmsClient.driver.send({
+            queryMessageAttachmentInfosRequest: {
+                userIds: [],
+                groupIds: [],
+                creationDateStart: DataParser.getDateTimeStr(creationDateStart),
+                creationDateEnd: DataParser.getDateTimeStr(creationDateEnd),
+            }
+        }).then(n => Response.fromNotification(n, data => NotificationUtil.transform(data.storageResourceInfos.infos)));
+    }
+
+    public queryMessageAttachmentInfosInPrivateConversations({
+        userIds,
+        areSharedByMe,
+        creationDateStart,
+        creationDateEnd
+    }: {
+        userIds: string[],
+        areSharedByMe?: boolean,
+        creationDateStart?: Date,
+        creationDateEnd?: Date
+    }): Promise<Response<ParsedModel.StorageResourceInfo[]>> {
+        return this._turmsClient.driver.send({
+            queryMessageAttachmentInfosRequest: {
+                userIds: CollectionUtil.uniqueArray(userIds),
+                groupIds: [],
+                areSharedByMe,
+                creationDateStart: DataParser.getDateTimeStr(creationDateStart),
+                creationDateEnd: DataParser.getDateTimeStr(creationDateEnd),
+            }
+        }).then(n => Response.fromNotification(n, data => NotificationUtil.transform(data.storageResourceInfos.infos)));
+    }
+
+    public queryMessageAttachmentInfosInGroupConversations({
+        groupIds,
+        userIds,
+        creationDateStart,
+        creationDateEnd
+    }: {
+        groupIds: string[],
+        userIds?: string[],
+        creationDateStart?: Date,
+        creationDateEnd?: Date
+    }): Promise<Response<ParsedModel.StorageResourceInfo[]>> {
+        return this._turmsClient.driver.send({
+            queryMessageAttachmentInfosRequest: {
+                groupIds: CollectionUtil.uniqueArray(groupIds),
+                userIds: userIds == null ? undefined:CollectionUtil.uniqueArray(userIds),
+                creationDateStart: DataParser.getDateTimeStr(creationDateStart),
+                creationDateEnd: DataParser.getDateTimeStr(creationDateEnd),
+            }
+        }).then(n => Response.fromNotification(n, data => NotificationUtil.transform(data.storageResourceInfos.infos)));
     }
 
     // Base
@@ -343,15 +732,17 @@ export default class StorageService {
     private _upload({
         url,
         formData,
-        resourceName,
-        mediaType,
-        data
+        data,
+        id,
+        name,
+        mediaType
     }: {
         url: string,
         formData: Record<string, string>,
-        resourceName: string,
-        mediaType: string,
         data: Uint8Array
+        id: string,
+        name?: string,
+        mediaType?: string,
     }): Promise<Response<StorageUpdateResult>> {
         if (!data.length) {
             return Promise.reject(ResponseError.from({
@@ -363,9 +754,13 @@ export default class StorageService {
         for (const [key, value] of Object.entries(formData)) {
             requestFormData.set(key, value);
         }
-        requestFormData.set('key', resourceName);
-        requestFormData.set('Content-Type', mediaType);
-        requestFormData.set('file', new Blob([data], { type: mediaType }));
+        requestFormData.set('key', id);
+        let options;
+        if (mediaType) {
+            requestFormData.set('Content-Type', mediaType);
+            options = { type: mediaType };
+        }
+        requestFormData.set('file', new Blob([data], options), name ?? id);
         return unfetch(url, {
             method: 'POST',
             body: requestFormData
@@ -385,23 +780,37 @@ export default class StorageService {
                         cause: e
                     });
                 })
-                .then(text => Response.value(new StorageUpdateResult(url, text))));
+                .then(text => {
+                    let idNum;
+                    let idStr;
+                    if (isNaN(parseInt(id))) {
+                        idStr = id;
+                        idNum = null;
+                    } else {
+                        idStr = null;
+                        idNum = id;
+                    }
+                    return Response.value(new StorageUpdateResult(url, text, idNum, idStr));
+                }));
     }
 
     private _deleteResource({
         type,
-        keyStr,
-        keyNum
+        idNum,
+        idStr,
+        extra
     }: {
         type: StorageResourceType,
-        keyStr?: string,
-        keyNum?: string
+        idNum?: string,
+        idStr?: string,
+        extra?: Record<string, string>
     }): Promise<Response<void>> {
         return this._turmsClient.driver.send({
             deleteResourceRequest: {
                 type,
-                keyStr,
-                keyNum
+                idNum,
+                idStr,
+                extra
             }
         }).then(n => Response.fromNotification(n));
     }
@@ -444,36 +853,48 @@ export default class StorageService {
 
     private _queryResourceUploadInfo({
         type,
-        keyStr,
-        keyNum
+        idNum,
+        idStr,
+        name,
+        mediaType,
+        extra
     }: {
         type: StorageResourceType,
-        keyStr?: string,
-        keyNum?: string
+        idNum?: string,
+        idStr?: string,
+        name?: string,
+        mediaType?: string,
+        extra?: Record<string, string>
     }): Promise<Response<Record<string, string>>> {
         return this._turmsClient.driver.send({
             queryResourceUploadInfoRequest: {
                 type,
-                keyStr,
-                keyNum
+                idNum,
+                idStr,
+                name,
+                mediaType,
+                extra
             }
         }).then(n => Response.fromNotification(n, data => NotificationUtil.toMap(data.stringsWithVersion.strings)));
     }
 
     private _queryResourceDownloadInfo({
         type,
-        keyStr,
-        keyNum
+        idNum,
+        idStr,
+        extra
     }: {
         type: StorageResourceType,
-        keyStr?: string,
-        keyNum?: string
+        idNum?: string,
+        idStr?: string,
+        extra?: Record<string, string>
     }): Promise<Response<Record<string, string>>> {
         return this._turmsClient.driver.send({
             queryResourceDownloadInfoRequest: {
                 type,
-                keyStr,
-                keyNum
+                idNum,
+                idStr,
+                extra
             }
         }).then(n => Response.fromNotification(n, data => NotificationUtil.toMap(data.stringsWithVersion.strings)));
     }
@@ -482,9 +903,9 @@ export default class StorageService {
         return StorageService._RESOURCE_TYPE_TO_BUCKET_NAME[resourceType];
     }
 
-    private static _getAndRemoveResourceKey(data: Record<string, string>): string | undefined {
-        const name = data[StorageService._RESOURCE_KEY_NAME];
-        delete data[StorageService._RESOURCE_KEY_NAME];
+    private static _getAndRemoveResourceId(data: Record<string, string>): string | undefined {
+        const name = data[StorageService._RESOURCE_ID_KEY_NAME];
+        delete data[StorageService._RESOURCE_ID_KEY_NAME];
         return name;
     }
 
@@ -495,8 +916,8 @@ export default class StorageService {
         const url = data[urlKeyName];
         if (url == null) {
             throw ResponseError.from({
-                code: ResponseStatusCode.INVALID_RESPONSE,
-                reason: `Cannot get the resource URL because the key "${urlKeyName}" doesn't exist`
+                code: ResponseStatusCode.DATA_NOT_FOUND,
+                reason: `Cannot get the resource URL because the key "${urlKeyName}" doesn't exist in the data: ${JSON.stringify(data)}`
             });
         }
         delete data[urlKeyName];

@@ -28,7 +28,7 @@ class GroupServiceTests: XCTestCase {
         let service = turmsClient.groupService!
 
         // Create
-        assertCompleted("createGroup_shouldReturnGroupId", service.createGroup(name: "name", intro: "intro", announcement: "announcement", minimumScore: 10).done {
+        assertCompleted("createGroup_shouldReturnGroupId", service.createGroup(name: "name", intro: "intro", announcement: "announcement", minScore: 10).done {
             groupId = $0.data
         })
         assertCompleted("addGroupJoinQuestions_shouldReturnQuestionIds", service.addGroupJoinQuestions(groupId: groupId!, questions: [NewGroupJoinQuestion(question: "question", answers: ["answer1", "answer2"], score: 10)]).done {
@@ -44,7 +44,7 @@ class GroupServiceTests: XCTestCase {
         })
 
         // Update
-        assertCompleted("updateGroup_shouldSucceed", service.updateGroup(groupId: groupId!, groupName: "name", intro: "intro", announcement: "announcement", minimumScore: 10))
+        assertCompleted("updateGroup_shouldSucceed", service.updateGroup(groupId: groupId!, name: "name", intro: "intro", announcement: "announcement", minScore: 10))
         assertCompleted("muteGroup_shouldSucceed", service.muteGroup(groupId: groupId!, muteEndDate: Date()))
         assertCompleted("unmuteGroup_shouldSucceed", service.unmuteGroup(groupId!))
         assertCompleted("updateGroupJoinQuestion_shouldSucceed", service.updateGroupJoinQuestion(questionId: groupQuestionId!, question: "new-question", answers: ["answer"]))

@@ -423,6 +423,8 @@
             "DELETE_RESOURCE_REQUEST",
             "QUERY_RESOURCE_DOWNLOAD_INFO_REQUEST",
             "QUERY_RESOURCE_UPLOAD_INFO_REQUEST",
+            "QUERY_MESSAGE_ATTACHMENT_INFOS_REQUEST",
+            "UPDATE_MESSAGE_ATTACHMENT_INFO_REQUEST",
             "KIND_NOT_SET"
           ],
           "sensitive": false,
@@ -517,6 +519,8 @@
             "DELETE_RESOURCE_REQUEST",
             "QUERY_RESOURCE_DOWNLOAD_INFO_REQUEST",
             "QUERY_RESOURCE_UPLOAD_INFO_REQUEST",
+            "QUERY_MESSAGE_ATTACHMENT_INFOS_REQUEST",
+            "UPDATE_MESSAGE_ATTACHMENT_INFO_REQUEST",
             "KIND_NOT_SET"
           ],
           "sensitive": false,
@@ -2529,6 +2533,8 @@
           "DELETE_RESOURCE_REQUEST",
           "QUERY_RESOURCE_DOWNLOAD_INFO_REQUEST",
           "QUERY_RESOURCE_UPLOAD_INFO_REQUEST",
+          "QUERY_MESSAGE_ATTACHMENT_INFOS_REQUEST",
+          "UPDATE_MESSAGE_ATTACHMENT_INFO_REQUEST",
           "KIND_NOT_SET"
         ],
         "sensitive": false,
@@ -2624,6 +2630,8 @@
             "DELETE_RESOURCE_REQUEST",
             "QUERY_RESOURCE_DOWNLOAD_INFO_REQUEST",
             "QUERY_RESOURCE_UPLOAD_INFO_REQUEST",
+            "QUERY_MESSAGE_ATTACHMENT_INFOS_REQUEST",
+            "UPDATE_MESSAGE_ATTACHMENT_INFO_REQUEST",
             "KIND_NOT_SET"
           ],
           "sensitive": false,
@@ -2718,6 +2726,8 @@
             "DELETE_RESOURCE_REQUEST",
             "QUERY_RESOURCE_DOWNLOAD_INFO_REQUEST",
             "QUERY_RESOURCE_UPLOAD_INFO_REQUEST",
+            "QUERY_MESSAGE_ATTACHMENT_INFOS_REQUEST",
+            "UPDATE_MESSAGE_ATTACHMENT_INFO_REQUEST",
             "KIND_NOT_SET"
           ],
           "sensitive": false,

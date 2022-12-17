@@ -15,25 +15,14 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.infra.cluster.service.idgen;
+package im.turms.plugin.minio.core;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * @author James Chen
  */
-public enum ServiceType {
-    GROUP,
-    GROUP_INVITATION,
-    GROUP_JOIN_REQUEST,
-    GROUP_JOIN_QUESTION,
-    GROUP_TYPE,
-
-    MESSAGE,
-
-    USER,
-    USER_RELATIONSHIP_GROUP,
-    USER_FRIEND_REQUEST,
-    USER_LOCATION,
-    USER_PERMISSION_GROUP,
-
-    STORAGE_MESSAGE_ATTACHMENT
+public enum BucketPolicyConditionKey {
+    @JsonProperty("aws:Referer")
+    REFERER
 }

@@ -15,16 +15,14 @@
  * limitations under the License.
  */
 
-package im.turms.plugin.minio;
+package im.turms.plugin.minio.core;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_elements_condition_operators.html
- *
  * @author James Chen
  */
-public enum BucketPolicyConditionOperator {
-    @JsonProperty("StringLike")
-    STRING_LIKE
+public enum BucketPolicyAction {
+    @JsonProperty("s3:GetObject")
+    GET_OBJECT
 }

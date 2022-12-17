@@ -4,8 +4,18 @@ import '../../turms_client.dart';
 
 extension IterableExtensions<T> on Iterable<T> {
   bool get areAllNull {
-    for (final item in this) {
-      if (item != null) {
+    for (final value in this) {
+      if (value != null) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  bool get areAllNullOrNonNull {
+    final isFirstValueNull = first == null;
+    for (final value in this) {
+      if ((value == null) != isFirstValueNull) {
         return false;
       }
     }

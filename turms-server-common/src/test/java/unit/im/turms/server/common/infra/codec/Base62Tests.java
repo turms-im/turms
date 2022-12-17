@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package unit.im.turms.server.common.infra.encoding;
+package unit.im.turms.server.common.infra.codec;
 
 import im.turms.server.common.infra.codec.Base62;
 import org.junit.jupiter.api.Test;
@@ -30,7 +30,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 class Base62Tests {
 
-    private static final Base62 ENCODER = new Base62();
+    private static final Base62 ENCODER = Base62.getDefaultInstance();
 
     @Test
     void testNumber() {
@@ -68,9 +68,17 @@ class Base62Tests {
 
     @Test
     void testAlphaNumericStrings() {
-        for (byte[] message : getRawInputs()) {
-            final byte[] encoded = ENCODER.encode(message);
-            final String encodedStr = new String(encoded);
+        byte[][] messages = {
+                createIncreasingByteArray(),
+                createZeroesByteArray(1),
+                createZeroesByteArray(512),
+                createPseudoRandomByteArray(0xAB, 40),
+                createPseudoRandomByteArray(0x1C, 40),
+                createPseudoRandomByteArray(0xF2, 40)
+        };
+        for (byte[] message : messages) {
+            byte[] encoded = ENCODER.encode(message);
+            String encodedStr = new String(encoded);
             assertThat(isAlphaNumeric(encodedStr)).isTrue();
         }
     }
@@ -94,23 +102,12 @@ class Base62Tests {
         }
     }
 
-    private static boolean isAlphaNumeric(final String str) {
+    private static boolean isAlphaNumeric(String str) {
         return str.matches("^[a-zA-Z0-9]+$");
     }
 
-    private static byte[][] getRawInputs() {
-        return new byte[][]{
-                createIncreasingByteArray(),
-                createZeroesByteArray(1),
-                createZeroesByteArray(512),
-                createPseudoRandomByteArray(0xAB, 40),
-                createPseudoRandomByteArray(0x1C, 40),
-                createPseudoRandomByteArray(0xF2, 40)
-        };
-    }
-
     private static byte[] createIncreasingByteArray() {
-        final byte[] arr = new byte[256];
+        byte[] arr = new byte[256];
         for (int i = 0; i < 256; i++) {
             arr[i] = (byte) (i & 0xFF);
         }
@@ -122,7 +119,7 @@ class Base62Tests {
     }
 
     private static byte[] createPseudoRandomByteArray(int seed, int size) {
-        final byte[] arr = new byte[size];
+        byte[] arr = new byte[size];
         int state = seed;
         for (int i = 0; i < size; i += 4) {
             state = xorshift(state);

@@ -45,4 +45,14 @@ export default class Validator {
         }
     }
 
+    static areAllNullOrNonNull(...values: any[]): boolean {
+        const isFirstValueNull = values[0] == null;
+        for (const value of values) {
+            if ((value == null) != isFirstValueNull) {
+                return false;
+            }
+        }
+        return true;
+    }
+
 }

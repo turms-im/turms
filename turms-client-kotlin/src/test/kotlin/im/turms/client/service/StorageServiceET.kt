@@ -58,7 +58,7 @@ internal class StorageServiceET {
     @Order(ORDER_HIGH_PRIORITY)
     @Timeout(5)
     fun uploadUserProfilePicture_shouldReturnUploadResult() = runBlocking {
-        val result = turmsClient.storageService.uploadUserProfilePicture(MEDIA_TYPE, PROFILE_PICTURE)
+        val result = turmsClient.storageService.uploadUserProfilePicture(PROFILE_PICTURE, MEDIA_TYPE)
             .data
         assertNotNull(result)
     }
@@ -67,7 +67,7 @@ internal class StorageServiceET {
     @Order(ORDER_HIGH_PRIORITY)
     @Timeout(5)
     fun uploadGroupProfilePicture_shouldReturnUploadResult() = runBlocking {
-        val result = turmsClient.storageService.uploadGroupProfilePicture(GROUP_ID, MEDIA_TYPE, PROFILE_PICTURE)
+        val result = turmsClient.storageService.uploadGroupProfilePicture(GROUP_ID, PROFILE_PICTURE, MEDIA_TYPE)
             .data
         assertNotNull(result)
     }
@@ -76,9 +76,7 @@ internal class StorageServiceET {
     @Order(ORDER_HIGH_PRIORITY)
     @Timeout(5)
     fun uploadMessageAttachment_shouldReturnUploadResult() = runBlocking {
-        messageId = turmsClient.messageService.sendMessage(false, targetId = 2L, text = "I've attached a picture")
-            .data
-        val result = turmsClient.storageService.uploadMessageAttachment(messageId, MEDIA_TYPE, ATTACHMENT)
+        val result = turmsClient.storageService.uploadMessageAttachment(ATTACHMENT, MEDIA_TYPE)
         assertNotNull(result)
     }
 

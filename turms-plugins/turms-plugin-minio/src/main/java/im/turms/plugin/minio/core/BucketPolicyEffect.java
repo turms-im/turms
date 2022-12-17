@@ -15,30 +15,16 @@
  * limitations under the License.
  */
 
-package im.turms.plugin.minio;
+package im.turms.plugin.minio.core;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Builder;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author James Chen
  */
-@Builder
-public record BucketPolicyStatement(
-        @JsonProperty("Sid")
-        String sid,
-        @JsonProperty("Effect")
-        BucketPolicyEffect effect,
-        @JsonProperty("Principal")
-        String principal,
-        @JsonProperty("Action")
-        List<BucketPolicyAction> action,
-        @JsonProperty("Resource")
-        List<String> resource,
-        @JsonProperty("Conditions")
-        Map<BucketPolicyConditionOperator, BucketPolicyConditionCriteria> conditions
-) {
+public enum BucketPolicyEffect {
+    @JsonProperty("Allow")
+    ALLOW,
+    @JsonProperty("Deny")
+    DENY
 }

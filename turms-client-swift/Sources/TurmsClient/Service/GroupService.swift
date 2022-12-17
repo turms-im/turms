@@ -12,9 +12,9 @@ public class GroupService {
         name: String,
         intro: String? = nil,
         announcement: String? = nil,
-        minimumScore: Int32? = nil,
+        minScore: Int32? = nil,
         muteEndDate: Date? = nil,
-        groupTypeId: Int64? = nil
+        typeId: Int64? = nil
     ) -> Promise<Response<Int64>> {
         return turmsClient.driver
             .send {
@@ -26,14 +26,14 @@ public class GroupService {
                     if let v = announcement {
                         $0.announcement = v
                     }
-                    if let v = minimumScore {
-                        $0.minimumScore = v
+                    if let v = minScore {
+                        $0.minScore = v
                     }
                     if let v = muteEndDate {
                         $0.muteEndDate = v.toMillis()
                     }
-                    if let v = groupTypeId {
-                        $0.groupTypeID = v
+                    if let v = typeId {
+                        $0.typeID = v
                     }
                 }
             }
@@ -58,21 +58,21 @@ public class GroupService {
 
     public func updateGroup(
         groupId: Int64,
-        groupName: String? = nil,
+        name: String? = nil,
         intro: String? = nil,
         announcement: String? = nil,
-        minimumScore: Int32? = nil,
-        groupTypeId: Int64? = nil,
+        minScore: Int32? = nil,
+        typeId: Int64? = nil,
         muteEndDate: Date? = nil,
         successorId: Int64? = nil,
         quitAfterTransfer: Bool? = nil
     ) -> Promise<Response<Void>> {
         if Validator.areAllNil(
-            groupName,
+            name,
             intro,
             announcement,
-            minimumScore,
-            groupTypeId,
+            minScore,
+            typeId,
             muteEndDate,
             successorId
         ) {
@@ -82,8 +82,8 @@ public class GroupService {
             .send {
                 $0.updateGroupRequest = .with {
                     $0.groupID = groupId
-                    if let v = groupName {
-                        $0.groupName = v
+                    if let v = name {
+                        $0.name = v
                     }
                     if let v = intro {
                         $0.intro = v
@@ -94,11 +94,11 @@ public class GroupService {
                     if let v = muteEndDate {
                         $0.muteEndDate = v.toMillis()
                     }
-                    if let v = minimumScore {
-                        $0.minimumScore = v
+                    if let v = minScore {
+                        $0.minScore = v
                     }
-                    if let v = groupTypeId {
-                        $0.groupTypeID = v
+                    if let v = typeId {
+                        $0.typeID = v
                     }
                     if let v = successorId {
                         $0.successorID = v
@@ -208,8 +208,8 @@ public class GroupService {
                         try .with { builder in
                             guard let answers = question.answers.array as? [String] else {
                                 throw ResponseError(
-                                        code: .illegalArgument,
-                                        reason: "The answer of group must be a string"
+                                    code: .illegalArgument,
+                                    reason: "The answer of group must be a string"
                                 )
                             }
                             if answers.isEmpty {

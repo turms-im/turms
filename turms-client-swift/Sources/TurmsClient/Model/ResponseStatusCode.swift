@@ -9,8 +9,9 @@ public enum ResponseStatusCode: Int {
 
     // Client - Common
     case connectTimeout = 1
+    case dataNotFound = 10
     case httpError = 90
-    case httpNotSuccessfulResponse = 91
+    case httpNotSuccessfulResponse
 
     // Client - Request
     case invalidRequest = 100
@@ -37,8 +38,6 @@ public enum ResponseStatusCode: Int {
     // Message
 
     // Storage
-    case uploadUserProfilePictureBeforeLogin = 700
-    case queryUserProfilePictureBeforeLogin = 701
 
     // **********************************************************
     // * Defined on the server side
@@ -208,10 +207,16 @@ public enum ResponseStatusCode: Int {
 
     // Storage
     case storageNotImplemented = 6000
-    case fileTooLarge
-
-    // Storage - Extension
-    case redundantRequestForPresignedProfileUrl = 6900
+    case notFriendToUploadMessageAttachmentInPrivateConversation = 6100
+    case notGroupMemberToUploadMessageAttachmentInGroupConversation
+    case notUploaderToShareMessageAttachment
+    case notUploaderOrGroupManagerToUnshareMessageAttachmentInGroupConversation
+    case notUploaderToUnshareMessageAttachmentInPrivateConversation
+    case notUploaderOrGroupManagerToDeleteMessageAttachmentInGroupConversation
+    case notUploaderToDeleteMessageAttachmentInPrivateConversation
+    case notUploaderOrSharedWithUserToDownloadMessageAttachment
+    case notFriendToQueryMessageAttachmentInfoInPrivateConversation = 6130
+    case notGroupMemberToQueryMessageAttachmentInfoInGroupConversation
 }
 
 public extension ResponseStatusCode {

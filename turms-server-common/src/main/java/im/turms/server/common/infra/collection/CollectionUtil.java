@@ -496,6 +496,13 @@ public final class CollectionUtil {
         result.addAll(list2);
         return result;
     }
+
+    public static <T> boolean contains(@Nullable List<T> list, T value) {
+        if (list == null) {
+            return false;
+        }
+        return list.contains(value);
+    }
     //endregion
 
 }

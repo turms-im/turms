@@ -42,7 +42,7 @@ public enum TextType {
     CREATE_GROUP_MEMBER_REQUEST_NAME("create_group_members_request", "name"),
     UPDATE_GROUP_MEMBER_REQUEST_NAME("update_group_member_request", "name"),
 
-    UPDATE_GROUP_REQUEST_GROUP_NAME("update_group_request", "group_name"),
+    UPDATE_GROUP_REQUEST_NAME("update_group_request", "name"),
     UPDATE_GROUP_REQUEST_INTRO("update_group_request", "intro"),
     UPDATE_GROUP_REQUEST_ANNOUNCEMENT("update_group_request", "announcement"),
 

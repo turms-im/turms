@@ -9,7 +9,7 @@ typedef MentionedUserIdsParser = Set<Int64> Function(Message message);
 typedef MessageListener = void Function(
     Message message, MessageAddition addition);
 
-class DriverMessageService {
+class MessageService {
   /// Format: "@{userId}"
   /// Example: "@{123}", "I need to talk with @{123} and @{321}"
   static final RegExp _defaultMentionedUserIdsParserRegex =
@@ -19,7 +19,7 @@ class DriverMessageService {
   MentionedUserIdsParser? _mentionedUserIdsParser;
   final List<MessageListener> _messageListeners = [];
 
-  DriverMessageService(this._turmsClient) {
+  MessageService(this._turmsClient) {
     _turmsClient.driver.addNotificationListener((notification) {
       if (_messageListeners.isNotEmpty &&
           notification.hasRelayedRequest() &&

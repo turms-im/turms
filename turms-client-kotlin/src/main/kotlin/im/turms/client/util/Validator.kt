@@ -56,4 +56,14 @@ object Validator {
         }
         return true
     }
+
+    fun areAllNullOrNonNull(vararg array: Any?): Boolean {
+        val isFirstValueNull = array.firstOrNull() == null
+        for (value in array) {
+            if ((value == null) != isFirstValueNull) {
+                return false
+            }
+        }
+        return true
+    }
 }

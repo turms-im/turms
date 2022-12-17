@@ -15,14 +15,19 @@
  * limitations under the License.
  */
 
-package im.turms.plugin.minio;
+package im.turms.plugin.minio.core;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
+import java.util.TreeMap;
 
 /**
  * @author James Chen
  */
-public enum BucketPolicyConditionKey {
-    @JsonProperty("aws:Referer")
-    REFERER
+public class BucketPolicyConditionCriteria extends TreeMap<BucketPolicyConditionKey, List<String>> {
+
+    public BucketPolicyConditionCriteria withCondition(BucketPolicyConditionKey key, List<String> values) {
+        put(key, values);
+        return this;
+    }
+
 }

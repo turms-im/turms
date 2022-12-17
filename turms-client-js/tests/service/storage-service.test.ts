@@ -8,7 +8,7 @@ const GROUP_ID = '1';
 const MEDIA_TYPE = 'image/png';
 const PROFILE_PICTURE: Buffer = new Buffer([0, 1, 2, 3]);
 const MESSAGE_ATTACHMENT: Buffer = PROFILE_PICTURE;
-let messageId;
+let attachmentId;
 
 beforeAll(async () => {
     turmsClient = new TurmsClient({
@@ -44,19 +44,12 @@ describe('Create', () => {
         expect(result).toBeTruthy();
     });
     it('uploadMessageAttachment_shouldReturnUploadResult', async () => {
-        const sendMessageResponse = await turmsClient.messageService.sendMessage({
-            isGroupMessage: false,
-            targetId: '2',
-            text: 'I\'ve attached a picture'
-        });
-        messageId = sendMessageResponse.data;
         const uploadAttachmentResponse = await turmsClient.storageService.uploadMessageAttachment({
-            messageId,
-            mediaType: MEDIA_TYPE,
-            data: MESSAGE_ATTACHMENT
+            data: MESSAGE_ATTACHMENT,
+            mediaType: MEDIA_TYPE
         });
-        const result = uploadAttachmentResponse.data;
-        expect(result).toBeTruthy();
+        attachmentId = uploadAttachmentResponse.data.resourceIdNum;
+        expect(attachmentId).toBeTruthy();
     });
 });
 
@@ -75,7 +68,7 @@ describe('Query', () => {
     });
     it('queryMessageAttachment_shouldEqualUploadedAttachment', async () => {
         const resource = await turmsClient.storageService.queryMessageAttachment({
-            messageId: messageId
+            attachmentIdNum: attachmentId
         });
         expect(resource.data.data).toEqual(MESSAGE_ATTACHMENT);
     });

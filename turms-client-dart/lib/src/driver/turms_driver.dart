@@ -16,7 +16,7 @@ class TurmsDriver {
 
   late final ConnectionService _connectionService;
   late final HeartbeatService _heartbeatService;
-  late final MessageService _messageService;
+  late final DriverMessageService _messageService;
 
   TurmsDriver(
       String? host,
@@ -30,7 +30,7 @@ class TurmsDriver {
           ..addOnDisconnectedListener(_onConnectionDisconnected)
           ..addMessageListener(_onMessage);
     _heartbeatService = HeartbeatService(_stateStore, heartbeatIntervalMillis);
-    _messageService = MessageService(
+    _messageService = DriverMessageService(
         _stateStore, requestTimeoutMillis, minRequestIntervalMillis);
   }
 

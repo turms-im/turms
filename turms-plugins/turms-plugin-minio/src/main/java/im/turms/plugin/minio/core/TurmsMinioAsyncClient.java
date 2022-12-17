@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package im.turms.plugin.minio;
+package im.turms.plugin.minio.core;
 
 import com.google.common.collect.Multimap;
 import io.minio.GetPresignedObjectUrlArgs;
@@ -41,7 +41,7 @@ import java.util.concurrent.CompletionException;
  */
 public class TurmsMinioAsyncClient extends MinioAsyncClient {
 
-    protected TurmsMinioAsyncClient(MinioAsyncClient client) {
+    public TurmsMinioAsyncClient(MinioAsyncClient client) {
         super(client);
     }
 
@@ -85,4 +85,5 @@ public class TurmsMinioAsyncClient extends MinioAsyncClient {
                     }
                 });
     }
+
 }

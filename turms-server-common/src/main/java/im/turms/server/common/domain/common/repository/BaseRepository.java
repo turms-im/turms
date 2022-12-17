@@ -102,9 +102,15 @@ public abstract class BaseRepository<T, K> {
         return mongoClient.countAll(entityClass);
     }
 
-    public Mono<Boolean> existsById(K key) {
+    public Mono<Boolean> existsById(K id) {
         Filter filter = Filter.newBuilder(1)
-                .eq(DomainFieldName.ID, key);
+                .eq(DomainFieldName.ID, id);
+        return mongoClient.exists(entityClass, filter);
+    }
+
+    public Mono<Boolean> existsByIds(Collection<K> ids) {
+        Filter filter = Filter.newBuilder(1)
+                .in(DomainFieldName.ID, ids);
         return mongoClient.exists(entityClass, filter);
     }
 

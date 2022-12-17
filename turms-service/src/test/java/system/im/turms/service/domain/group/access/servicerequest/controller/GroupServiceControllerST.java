@@ -200,7 +200,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
         TurmsRequest request = TurmsRequest.newBuilder()
                 .setUpdateGroupRequest(UpdateGroupRequest.newBuilder()
                         .setGroupId(groupId)
-                        .setGroupName("new name")
+                        .setName("new name")
                         .setIntro("new intro"))
                 .build();
         ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, USER_IP, REQUEST_ID, request);

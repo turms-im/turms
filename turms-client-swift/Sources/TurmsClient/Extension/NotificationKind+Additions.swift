@@ -48,6 +48,8 @@ public extension TurmsNotification.DataMessage.OneOf_Kind {
             message = v
         case let .groupsWithVersion(v):
             message = v
+        case let .storageResourceInfos(v):
+            message = v
         }
         return message as? T
     }

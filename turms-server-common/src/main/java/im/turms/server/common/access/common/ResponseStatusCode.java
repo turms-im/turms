@@ -21,6 +21,9 @@ import io.netty.util.collection.IntObjectHashMap;
 import lombok.Getter;
 
 /**
+ * Naming convention:
+ * *. All nouns must be singular.
+ *
  * @author James Chen
  */
 @Getter
@@ -222,7 +225,21 @@ public enum ResponseStatusCode {
     NOT_MEMBER_TO_QUERY_GROUP_MESSAGES(5300, "Only the group members can query its group messages", 403),
 
     // Storage
-    STORAGE_NOT_IMPLEMENTED(6000, "The storage feature is enabled but not implemented yet", 501);
+    STORAGE_NOT_IMPLEMENTED(6000, "The storage feature is enabled but not implemented yet", 501),
+    // Storage - Message attachment
+    NOT_FRIEND_TO_UPLOAD_MESSAGE_ATTACHMENT_IN_PRIVATE_CONVERSATION(6100, "Only friends are allowed to upload message attachments in private conversations", 403),
+    NOT_GROUP_MEMBER_TO_UPLOAD_MESSAGE_ATTACHMENT_IN_GROUP_CONVERSATION(6101, "Only group members are allowed to upload message attachments in group conversations", 403),
+    NOT_UPLOADER_TO_SHARE_MESSAGE_ATTACHMENT(6102, "Only uploaders are allowed to share message attachments", 403),
+    NOT_UPLOADER_OR_GROUP_MANAGER_TO_UNSHARE_MESSAGE_ATTACHMENT_IN_GROUP_CONVERSATION(6103,
+            "Only uploaders or group managers are allowed to unshare message attachments in group conversations", 403),
+    NOT_UPLOADER_TO_UNSHARE_MESSAGE_ATTACHMENT_IN_PRIVATE_CONVERSATION(6104, "Only uploaders are allowed to unshare message attachments in private conversations", 403),
+    NOT_UPLOADER_OR_GROUP_MANAGER_TO_DELETE_MESSAGE_ATTACHMENT_IN_GROUP_CONVERSATION(6105,
+            "Only uploaders or group managers are allowed to delete message attachments in group conversations", 403),
+    NOT_UPLOADER_TO_DELETE_MESSAGE_ATTACHMENT_IN_PRIVATE_CONVERSATION(6106, "Only uploaders are allowed to delete message attachments in private conversations", 403),
+    NOT_UPLOADER_OR_SHARED_WITH_USER_TO_DOWNLOAD_MESSAGE_ATTACHMENT(6107, "Only uploaders or the users who are shared with are allowed to download message attachments", 403),
+    // Storage - Message attachment info
+    NOT_FRIEND_TO_QUERY_MESSAGE_ATTACHMENT_INFO_IN_PRIVATE_CONVERSATION(6130, "Only friends are allowed to query message attachments in private conversations", 403),
+    NOT_GROUP_MEMBER_TO_QUERY_MESSAGE_ATTACHMENT_INFO_IN_GROUP_CONVERSATION(6131, "Only group members are allowed to query message attachments in group conversations", 403);
 
     public static final int STATUS_CODE_LENGTH = 4;
     public static final ResponseStatusCode[] VALUES = values();
@@ -233,7 +250,7 @@ public enum ResponseStatusCode {
         for (ResponseStatusCode value : VALUES) {
             ResponseStatusCode code = CODE_POOL.put(value.businessCode, value);
             if (code != null) {
-                throw new IllegalStateException("Found duplicate business code " + code.businessCode);
+                throw new IllegalArgumentException("Found duplicate business code [" + code.businessCode + "]");
             }
         }
     }
@@ -254,7 +271,7 @@ public enum ResponseStatusCode {
 
     public static boolean isCodeClientIllegalRequest(int businessCode) {
         return businessCode == INVALID_REQUEST.businessCode
-                || businessCode == ILLEGAL_ARGUMENT.businessCode;
+               || businessCode == ILLEGAL_ARGUMENT.businessCode;
     }
 
     public static boolean isSuccessCode(int businessCode) {

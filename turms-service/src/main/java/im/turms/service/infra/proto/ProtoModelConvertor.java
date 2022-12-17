@@ -42,6 +42,7 @@ import im.turms.server.common.domain.session.bo.UserSessionsStatus;
 import im.turms.server.common.domain.user.po.User;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.service.domain.message.po.Message;
+import im.turms.service.domain.storage.bo.StorageResourceInfo;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -596,6 +597,23 @@ public final class ProtoModelConvertor {
             builder.setBurnAfter(burnAfter);
         }
         return builder;
+    }
+
+    public static im.turms.server.common.access.client.dto.model.storage.StorageResourceInfo storageResourceInfo2proto(StorageResourceInfo info) {
+        var builder = ClientMessagePool.getStorageResourceInfoBuilder();
+        Long idNum = info.idNum();
+        String idStr = info.idStr();
+        if (idNum != null) {
+            builder.setIdNum(idNum);
+        }
+        if (idStr != null) {
+            builder.setIdStr(idStr);
+        }
+        return builder
+                .setMediaType(info.mediaType())
+                .setUploaderId(info.uploaderId())
+                .setCreationDate(info.creationDate().getTime())
+                .build();
     }
 
 }

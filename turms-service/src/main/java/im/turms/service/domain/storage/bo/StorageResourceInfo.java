@@ -15,14 +15,20 @@
  * limitations under the License.
  */
 
-package im.turms.plugin.minio;
+package im.turms.service.domain.storage.bo;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Date;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen
  */
-public enum BucketPolicyAction {
-    @JsonProperty("s3:GetObject")
-    GET_OBJECT
+public record StorageResourceInfo(
+        @Nullable Long idNum,
+        @Nullable String idStr,
+        String name,
+        String mediaType,
+        Long uploaderId,
+        Date creationDate
+) {
 }

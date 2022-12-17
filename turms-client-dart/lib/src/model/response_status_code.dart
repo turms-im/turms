@@ -9,6 +9,7 @@ class ResponseStatusCode {
 
   // Client - Common
   static const connectTimeout = 1;
+  static const dataNotFound = 10;
   static const httpError = 90;
   static const httpNotSuccessfulResponse = 91;
 
@@ -37,8 +38,6 @@ class ResponseStatusCode {
   // Message
 
   // Storage
-  static const uploadUserProfilePictureBeforeLogin = 700;
-  static const queryUserProfilePictureBeforeLogin = 701;
 
   //**********************************************************
   //* Defined on the server side
@@ -209,6 +208,22 @@ class ResponseStatusCode {
 
   // Storage
   static const storageNotImplemented = 6000;
+  static const notFriendToUploadMessageAttachmentInPrivateConversation = 6100;
+  static const notGroupMemberToUploadMessageAttachmentInGroupConversation =
+      6101;
+  static const notUploaderToShareMessageAttachment = 6102;
+  static const notUploaderOrGroupManagerToUnshareMessageAttachmentInGroupConversation =
+      6103;
+  static const notUploaderToUnshareMessageAttachmentInPrivateConversation =
+      6104;
+  static const notUploaderOrGroupManagerToDeleteMessageAttachmentInGroupConversation =
+      6105;
+  static const notUploaderToDeleteMessageAttachmentInPrivateConversation = 6106;
+  static const notUploaderOrSharedWithUserToDownloadMessageAttachment = 6107;
+  static const notFriendToQueryMessageAttachmentInfoInPrivateConversation =
+      6130;
+  static const notGroupMemberToQueryMessageAttachmentInfoInGroupConversation =
+      6131;
 
   static bool isSuccessCode(int code) => 1000 <= code && code < 1100;
 

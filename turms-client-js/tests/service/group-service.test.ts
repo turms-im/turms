@@ -38,7 +38,7 @@ describe('Create', () => {
             name: 'name',
             intro: 'intro',
             announcement: 'announcement',
-            minimumScore: 10
+            minScore: 10
         });
         groupId = response.data;
         expect(groupId).toBeTruthy();
@@ -94,10 +94,10 @@ describe('Update', () => {
     it('updateGroup_shouldSucceed', async () => {
         const response = await turmsClient.groupService.updateGroup({
             groupId,
-            groupName: 'name',
+            name: 'name',
             intro: 'intro',
             announcement: 'announcement',
-            minimumScore: 10
+            minScore: 10
         });
         expect(response.data).toBeFalsy();
     });

@@ -134,13 +134,15 @@ class TurmsDriver(
     suspend fun send(builder: MessageLite.Builder): TurmsNotification {
         val requestBuilder: TurmsRequest.Builder = TurmsRequest.newBuilder()
         val instanceClass = builder.defaultInstanceForType.javaClass
-        val method = REQUEST_CLASS_TO_SET_METHOD.computeIfAbsent(instanceClass) {
-            requestBuilder.javaClass.getDeclaredMethod(
-                "set${it.simpleName}",
+        var method = REQUEST_CLASS_TO_SET_METHOD[instanceClass]
+        if (method == null) {
+            method = requestBuilder.javaClass.getDeclaredMethod(
+                "set${instanceClass.simpleName}",
                 builder.javaClass
             )
+            REQUEST_CLASS_TO_SET_METHOD.putIfAbsent(instanceClass, method)
         }
-        method.invoke(requestBuilder, builder)
+        method!!.invoke(requestBuilder, builder)
         return send(requestBuilder)
     }
 

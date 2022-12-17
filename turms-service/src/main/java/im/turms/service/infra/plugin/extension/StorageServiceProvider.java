@@ -17,10 +17,15 @@
 
 package im.turms.service.infra.plugin.extension;
 
+import im.turms.server.common.access.admin.web.MediaType;
 import im.turms.server.common.infra.plugin.ExtensionPoint;
+import im.turms.server.common.infra.time.DateRange;
+import im.turms.service.domain.storage.bo.StorageResourceInfo;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
 
@@ -31,53 +36,150 @@ public interface StorageServiceProvider extends ExtensionPoint {
 
     // User profile picture
 
-    Mono<Void> deleteUserProfilePicture(
+    default Mono<Void> deleteUserProfilePicture(
             @NotNull Long requesterId,
-            @Nullable String resourceKeyStr,
-            @Nullable Long resourceKeyNum);
+            @NotNull Map<String, String> extra) {
+        return Mono.error(new UnsupportedOperationException());
+    }
 
-    Mono<Map<String, String>> queryUserProfilePictureUploadInfo(
+    default Mono<Map<String, String>> queryUserProfilePictureUploadInfo(
             @NotNull Long requesterId,
-            @Nullable String resourceKeyStr,
-            @Nullable Long resourceKeyNum);
+            @Nullable String resourceName,
+            @Nullable MediaType resourceMediaType,
+            @NotNull Map<String, String> extra) {
+        return Mono.error(new UnsupportedOperationException());
+    }
 
-    Mono<Map<String, String>> queryUserProfilePictureDownloadInfo(
+    default Mono<Map<String, String>> queryUserProfilePictureDownloadInfo(
             @NotNull Long requesterId,
-            @Nullable String resourceKeyStr,
-            @Nullable Long resourceKeyNum);
+            @NotNull Long userId,
+            @NotNull Map<String, String> extra) {
+        return Mono.error(new UnsupportedOperationException());
+    }
 
     // Group profile picture
 
-    Mono<Void> deleteGroupProfilePicture(
+    default Mono<Void> deleteGroupProfilePicture(
             @NotNull Long requesterId,
-            @Nullable String resourceKeyStr,
-            @Nullable Long resourceKeyNum);
+            @NotNull Long groupId,
+            @NotNull Map<String, String> extra) {
+        return Mono.error(new UnsupportedOperationException());
+    }
 
-    Mono<Map<String, String>> queryGroupProfilePictureUploadInfo(
+    default Mono<Map<String, String>> queryGroupProfilePictureUploadInfo(
             @NotNull Long requesterId,
-            @Nullable String resourceKeyStr,
-            @Nullable Long resourceKeyNum);
+            @NotNull Long groupId,
+            @Nullable String resourceName,
+            @Nullable MediaType resourceMediaType,
+            @NotNull Map<String, String> extra) {
+        return Mono.error(new UnsupportedOperationException());
+    }
 
-    Mono<Map<String, String>> queryGroupProfilePictureDownloadInfo(
+    default Mono<Map<String, String>> queryGroupProfilePictureDownloadInfo(
             @NotNull Long requesterId,
-            @Nullable String resourceKeyStr,
-            @Nullable Long resourceKeyNum);
+            @NotNull Long groupId,
+            @NotNull Map<String, String> extra) {
+        return Mono.error(new UnsupportedOperationException());
+    }
 
     // Message attachment
 
-    Mono<Void> deleteMessageAttachment(
+    default Mono<Void> deleteMessageAttachment(
             @NotNull Long requesterId,
-            @Nullable String resourceKeyStr,
-            @Nullable Long resourceKeyNum);
+            @Nullable Long messageAttachmentIdNum,
+            @Nullable String messageAttachmentIdStr,
+            @NotNull Map<String, String> extra) {
+        return Mono.error(new UnsupportedOperationException());
+    }
 
-    Mono<Map<String, String>> queryMessageAttachmentUploadInfo(
+    default Mono<Void> shareMessageAttachmentWithUser(
             @NotNull Long requesterId,
-            @Nullable String resourceKeyStr,
-            @Nullable Long resourceKeyNum);
+            @Nullable Long messageAttachmentIdNum,
+            @Nullable String messageAttachmentIdStr,
+            @NotNull Long userId) {
+        return Mono.error(new UnsupportedOperationException());
+    }
 
-    Mono<Map<String, String>> queryMessageAttachmentDownloadInfo(
+    default Mono<Void> shareMessageAttachmentWithGroup(
             @NotNull Long requesterId,
-            @Nullable String resourceKeyStr,
-            @Nullable Long resourceKeyNum);
+            @Nullable Long messageAttachmentIdNum,
+            @Nullable String messageAttachmentIdStr,
+            @NotNull Long groupId) {
+        return Mono.error(new UnsupportedOperationException());
+    }
+
+    default Mono<Void> unshareMessageAttachmentWithUser(
+            @NotNull Long requesterId,
+            @Nullable Long messageAttachmentIdNum,
+            @Nullable String messageAttachmentIdStr,
+            @NotNull Long userId) {
+        return Mono.error(new UnsupportedOperationException());
+    }
+
+    default Mono<Void> unshareMessageAttachmentWithGroup(
+            @NotNull Long requesterId,
+            @Nullable Long messageAttachmentIdNum,
+            @Nullable String messageAttachmentIdStr,
+            @NotNull Long groupId) {
+        return Mono.error(new UnsupportedOperationException());
+    }
+
+    default Mono<Map<String, String>> queryMessageAttachmentUploadInfo(
+            @NotNull Long requesterId,
+            @Nullable String resourceName,
+            @Nullable MediaType resourceMediaType,
+            @NotNull Map<String, String> extra) {
+        return Mono.error(new UnsupportedOperationException());
+    }
+
+    default Mono<Map<String, String>> queryMessageAttachmentUploadInfoInPrivateConversation(
+            @NotNull Long requesterId,
+            @NotNull Long userId,
+            @Nullable String resourceName,
+            @Nullable MediaType resourceMediaType,
+            @NotNull Map<String, String> extra) {
+        return Mono.error(new UnsupportedOperationException());
+    }
+
+    default Mono<Map<String, String>> queryMessageAttachmentUploadInfoInGroupConversation(
+            @NotNull Long requesterId,
+            @NotNull Long groupId,
+            @Nullable String resourceName,
+            @Nullable MediaType resourceMediaType,
+            @NotNull Map<String, String> extra) {
+        return Mono.error(new UnsupportedOperationException());
+    }
+
+    default Mono<Map<String, String>> queryMessageAttachmentDownloadInfo(
+            @NotNull Long requesterId,
+            @Nullable Long messageAttachmentIdNum,
+            @Nullable String messageAttachmentIdStr,
+            @NotNull Map<String, String> extra) {
+        return Mono.error(new UnsupportedOperationException());
+    }
+
+    // Message attachment - Info
+
+    default Mono<List<StorageResourceInfo>> queryMessageAttachmentInfosUploadedByRequester(
+            @NotNull Long requesterId,
+            @Nullable DateRange creationDateRange) {
+        return Mono.error(new UnsupportedOperationException());
+    }
+
+    default Mono<List<StorageResourceInfo>> queryMessageAttachmentInfosInPrivateConversations(
+            @NotNull Long requesterId,
+            @Nullable Set<Long> userIds,
+            @Nullable DateRange creationDateRange,
+            @Nullable Boolean areSharedByRequester) {
+        return Mono.error(new UnsupportedOperationException());
+    }
+
+    default Mono<List<StorageResourceInfo>> queryMessageAttachmentInfosInGroupConversations(
+            @NotNull Long requesterId,
+            @Nullable Set<Long> groupIds,
+            @Nullable Set<Long> userIds,
+            @Nullable DateRange creationDateRange) {
+        return Mono.error(new UnsupportedOperationException());
+    }
 
 }

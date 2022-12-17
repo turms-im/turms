@@ -195,4 +195,13 @@ export declare namespace ParsedModel {
         muteEndDate?: Date;
         active?: boolean;
     }
+
+    interface StorageResourceInfo {
+        idNum?: string;
+        idStr?: string;
+        name?: string;
+        mediaType?: string;
+        uploaderId: string;
+        creationDate: Data;
+    }
 }

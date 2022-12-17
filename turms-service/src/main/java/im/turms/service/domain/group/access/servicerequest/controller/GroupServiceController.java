@@ -169,8 +169,8 @@ public class GroupServiceController extends BaseServiceController {
             CreateGroupRequest request = clientRequest.turmsRequest().getCreateGroupRequest();
             String intro = request.hasIntro() ? request.getIntro() : null;
             String announcement = request.hasAnnouncement() ? request.getAnnouncement() : null;
-            Integer minimumScore = request.hasMinimumScore() ? request.getMinimumScore() : null;
-            Long groupTypeId = request.hasGroupTypeId() ? request.getGroupTypeId() : null;
+            Integer minScore = request.hasMinScore() ? request.getMinScore() : null;
+            Long typeId = request.hasTypeId() ? request.getTypeId() : null;
             Date muteEndDate = request.hasMuteEndDate() ? new Date(request.getMuteEndDate()) : null;
             Long creatorIdAndOwnerId = clientRequest.userId();
             return groupService.authAndCreateGroup(
@@ -179,8 +179,8 @@ public class GroupServiceController extends BaseServiceController {
                             request.getName(),
                             intro,
                             announcement,
-                            minimumScore,
-                            groupTypeId,
+                            minScore,
+                            typeId,
                             muteEndDate,
                             null,
                             null,
@@ -274,19 +274,19 @@ public class GroupServiceController extends BaseServiceController {
             Long successorId = request.hasSuccessorId() ? request.getSuccessorId() : null;
             Mono<Void> updateMono;
             if (successorId == null) {
-                Integer minimumScore = request.hasMinimumScore() ? request.getMinimumScore() : null;
-                Long groupTypeId = request.hasGroupTypeId() ? request.getGroupTypeId() : null;
-                String groupName = request.hasGroupName() ? request.getGroupName() : null;
+                Integer minimumScore = request.hasMinScore() ? request.getMinScore() : null;
+                Long typeId = request.hasTypeId() ? request.getTypeId() : null;
+                String name = request.hasName() ? request.getName() : null;
                 String intro = request.hasIntro() ? request.getIntro() : null;
                 String announcement = request.hasAnnouncement() ? request.getAnnouncement() : null;
                 Date muteEndDate = request.hasMuteEndDate() ? new Date(request.getMuteEndDate()) : null;
                 updateMono = groupService.authAndUpdateGroupInformation(
                         clientRequest.userId(),
                         request.getGroupId(),
-                        groupTypeId,
+                        typeId,
                         null,
                         null,
-                        groupName,
+                        name,
                         intro,
                         announcement,
                         minimumScore,

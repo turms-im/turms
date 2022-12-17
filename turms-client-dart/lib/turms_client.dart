@@ -3,11 +3,13 @@ library turms_client_dart;
 export 'src/driver/service/base_service.dart' show BaseService;
 export 'src/driver/service/connection_service.dart' show ConnectionService;
 export 'src/driver/service/heartbeat_service.dart' show HeartbeatService;
-export 'src/driver/service/message_service.dart' show MessageService;
+export 'src/driver/service/message_service.dart' show DriverMessageService;
 export 'src/driver/state_store.dart' show StateStore;
 export 'src/driver/turms_driver.dart' show TurmsDriver;
 export 'src/exception/response_exception.dart' show ResponseException;
 export 'src/extension/date_time_extensions.dart' show DateTimeExtensions;
+export 'src/extension/http_response_extensions.dart'
+    show HttpResponseExtensions;
 export 'src/extension/int_extensions.dart' show IntExtensions;
 export 'src/extension/iterable_extensions.dart' show IterableExtensions;
 export 'src/extension/notification_extensions.dart' show NotificationExtensions;
@@ -28,6 +30,8 @@ export 'src/model/proto/constant/storage_resource_type.pb.dart'
 export 'src/model/proto/constant/user_status.pb.dart' show UserStatus;
 export 'src/model/proto/model/common/longs_with_version.pb.dart'
     show LongsWithVersion;
+export 'src/model/proto/model/common/strings_with_version.pb.dart'
+    show StringsWithVersion;
 export 'src/model/proto/model/conversation/conversations.pb.dart'
     show Conversations;
 export 'src/model/proto/model/conversation/group_conversation.pb.dart'
@@ -67,6 +71,10 @@ export 'src/model/proto/model/message/messages_with_total.pb.dart'
     show MessagesWithTotal;
 export 'src/model/proto/model/message/messages_with_total_list.pb.dart'
     show MessagesWithTotalList;
+export 'src/model/proto/model/storage/storage_resource_info.pb.dart'
+    show StorageResourceInfo;
+export 'src/model/proto/model/storage/storage_resource_infos.pb.dart'
+    show StorageResourceInfos;
 export 'src/model/proto/model/user/nearby_user.pb.dart' show NearbyUser;
 export 'src/model/proto/model/user/nearby_users.pb.dart' show NearbyUsers;
 export 'src/model/proto/model/user/user_friend_request.pb.dart'
@@ -156,10 +164,14 @@ export 'src/model/proto/request/message/update_message_request.pb.dart'
     show UpdateMessageRequest;
 export 'src/model/proto/request/storage/delete_resource_request.pb.dart'
     show DeleteResourceRequest;
+export 'src/model/proto/request/storage/query_message_attachment_infos_request.pb.dart'
+    show QueryMessageAttachmentInfosRequest;
 export 'src/model/proto/request/storage/query_resource_download_info_request.pb.dart'
     show QueryResourceDownloadInfoRequest;
 export 'src/model/proto/request/storage/query_resource_upload_info_request.pb.dart'
     show QueryResourceUploadInfoRequest;
+export 'src/model/proto/request/storage/update_message_attachment_info_request.pb.dart'
+    show UpdateMessageAttachmentInfoRequest;
 export 'src/model/proto/request/turms_request.pb.dart' show TurmsRequest;
 export 'src/model/proto/request/user/create_session_request.pb.dart'
     show CreateSessionRequest;
@@ -207,9 +219,11 @@ export 'src/model/response.dart' show Response;
 export 'src/model/response_status_code.dart' show ResponseStatusCode;
 export 'src/model/session_close_info.dart' show SessionCloseInfo;
 export 'src/model/session_close_status.dart' show SessionCloseStatus;
+export 'src/model/storage_resource.dart' show StorageResource;
+export 'src/model/storage_upload_result.dart' show StorageUploadResult;
 export 'src/service/conversation_service.dart' show ConversationService;
 export 'src/service/group_service.dart' show GroupService;
-export 'src/service/message_service.dart' show DriverMessageService;
+export 'src/service/message_service.dart' show MessageService;
 export 'src/service/notification_service.dart' show NotificationService;
 export 'src/service/storage_service.dart' show StorageService;
 export 'src/service/user_service.dart' show UserService;
