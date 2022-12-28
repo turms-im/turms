@@ -19,6 +19,7 @@ package im.turms.server.common.infra.exception;
 
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.cluster.service.rpc.exception.RpcException;
+import im.turms.server.common.infra.plugin.ExtensionPointExecutionException;
 import im.turms.server.common.storage.mongo.exception.DuplicateKeyException;
 
 /**
@@ -40,6 +41,8 @@ public record ThrowableInfo(
             // passing down DuplicateKeyException
             return new ThrowableInfo(ResponseStatusCode.RECORD_CONTAINS_DUPLICATE_KEY,
                     e.getMessage());
+        } else if (throwable instanceof ExtensionPointExecutionException e) {
+            return get(e.getCause());
         }
         return new ThrowableInfo(ResponseStatusCode.SERVER_INTERNAL_ERROR, throwable.getMessage());
     }
