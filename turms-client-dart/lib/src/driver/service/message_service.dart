@@ -1,9 +1,8 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'package:fixnum/fixnum.dart' show Int64;
-
 import '../../exception/response_exception.dart';
+import '../../extension/int_extensions.dart';
 import '../../model/proto/notification/turms_notification.pb.dart';
 import '../../model/proto/request/turms_request.pb.dart';
 import '../../model/response_status_code.dart';
@@ -78,7 +77,7 @@ class DriverMessageService extends BaseService {
           code: ResponseStatusCode.clientRequestsTooFrequent);
     }
     final requestId = _generateRandomId();
-    request.requestId = Int64(requestId);
+    request.requestId = requestId.toInt64();
     final payload = request.writeToBuffer();
     stateStore.tcp!.writeVarIntLengthAndBytes(payload);
     final timeoutTimer = _requestTimeoutMillis > 0
@@ -99,7 +98,7 @@ class DriverMessageService extends BaseService {
     final isResponse =
         !notification.hasRelayedRequest() && notification.hasRequestId();
     if (isResponse) {
-      final requestId = notification.requestId;
+      final requestId = notification.requestId.toInt();
       final context = _idToRequest.remove(requestId);
       if (context != null) {
         context.timeoutTimer?.cancel();
