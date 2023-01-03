@@ -58,7 +58,7 @@ x-logging-turms: &logging-turms
 services:
   # MongoDB
   mongodb-config:
-    image: mongo:4.4.15-focal
+    image: mongo:6.0.3-focal
 #    depends_on:
 #      - loki
     entrypoint: [ "mongod", "--port", "27017", "--configsvr", "--replSet", "rs-config", "--bind_ip_all" ]
@@ -71,7 +71,7 @@ services:
 #    <<: *logging-mongo
 
   mongodb-shard:
-    image: mongo:4.4.15-focal
+    image: mongo:6.0.3-focal
 #    depends_on:
 #      - loki
     entrypoint: [ "mongod", "--port", "27017", "--shardsvr", "--replSet", "shard01", "--bind_ip_all" ]
@@ -84,7 +84,7 @@ services:
 #    <<: *logging-mongo
 
   mongodb-router:
-    image: mongo:4.4.15-focal
+    image: mongo:6.0.3-focal
 #    depends_on:
 #      - loki
     entrypoint: [ "mongos", "--port", "27017", "--configdb", "rs-config/mongodb-config:27017", "--bind_ip_all" ]
@@ -99,7 +99,7 @@ services:
 #    <<: *logging-mongo
 
   mongodb-setup:
-    image: mongo:4.4.15-focal
+    image: mongo:6.0.3-focal
     depends_on:
       mongodb-config:
         condition: service_healthy
@@ -120,7 +120,7 @@ services:
 
   # Redis
   redis:
-    image: redis:6.2.7-alpine
+    image: redis:7.0.7-alpine
 #    depends_on:
 #      - loki
     healthcheck:
@@ -293,7 +293,7 @@ services:
   # optional services for observability - metrics
 
   grafana:
-    image: grafana/grafana:9.1.2
+    image: grafana/grafana:9.3.2
     depends_on:
       - prometheus
     environment:
@@ -308,7 +308,7 @@ services:
       - ./ops/grafana/provisioning/:/etc/grafana/provisioning/
 
   prometheus:
-    image: prom/prometheus:v2.38.0
+    image: prom/prometheus:v2.41.0
     ports:
       - "9090:9090"
     profiles:
@@ -318,7 +318,7 @@ services:
       - ./ops/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
 
   node-exporter:
-    image: prom/node-exporter:v1.3.1
+    image: prom/node-exporter:v1.5.0
     ports:
       - "9100:9100"
     profiles:
@@ -326,9 +326,9 @@ services:
 
   cadvisor:
     # If your server is in China and suffers from the network problem,
-    # try "gcr.lank8s.cn/cadvisor/cadvisor:v0.45.0"
+    # try "gcr.lank8s.cn/cadvisor/cadvisor:v0.46.0"
     # or just comment out "cadvisor"
-    image: gcr.io/cadvisor/cadvisor:v0.45.0
+    image: gcr.io/cadvisor/cadvisor:v0.46.0
     ports:
       - "8080:8080"
     profiles:
@@ -341,7 +341,7 @@ services:
       - /dev/disk/:/dev/disk:ro
 
   mongo-exporter:
-    image: percona/mongodb_exporter:0.34.0
+    image: percona/mongodb_exporter:0.35.0
     command:
       - '--mongodb.uri=mongodb://mongodb-router:27017'
     ports:
@@ -350,7 +350,7 @@ services:
       - monitoring
 
   redis-exporter:
-    image: oliver006/redis_exporter:v1.44.0
+    image: oliver006/redis_exporter:v1.45.0
     depends_on:
       - redis
     environment:
@@ -363,7 +363,7 @@ services:
   # Services for observability - logging
 
 #  loki:
-#    image: grafana/loki:2.4.1
+#    image: grafana/loki:2.7.0
 #    ports:
 #      - "3100:3100"
 #    command: -config.file=/etc/loki/local-config.yaml
