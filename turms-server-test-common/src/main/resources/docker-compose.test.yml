@@ -12,7 +12,7 @@ services:
       - MONGODB_REPLICA_SET_KEY=replicasetkey123
       - MONGODB_ROOT_PASSWORD=turms
     healthcheck:
-      test: "mongo -u root -p turms --port 27017 --eval='sh.status()' | grep mongodb-shard | grep -q '\"state\" : 1'"
+      test: "mongosh -u root -p turms --port 27017 --eval='sh.status()' | grep mongodb-shard | grep -q '\"state\" : 1'"
       interval: 10s
       timeout: 5s
       retries: 5

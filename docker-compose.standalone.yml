@@ -63,7 +63,8 @@ services:
 #      - loki
     entrypoint: [ "mongod", "--port", "27017", "--configsvr", "--replSet", "rs-config", "--bind_ip_all" ]
     healthcheck:
-      test: [ "CMD", "mongo", "--quiet", "--eval", "db.runCommand(\"ping\").ok" ]
+      # Use "mongo" instead of "mongosh" before v5.0
+      test: [ "CMD", "mongosh", "--quiet", "--eval", "db.runCommand(\"ping\").ok" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -76,7 +77,8 @@ services:
 #      - loki
     entrypoint: [ "mongod", "--port", "27017", "--shardsvr", "--replSet", "shard01", "--bind_ip_all" ]
     healthcheck:
-      test: [ "CMD", "mongo", "--quiet", "--eval", "db.runCommand(\"ping\").ok" ]
+      # Use "mongo" instead of "mongosh" before v5.0
+      test: [ "CMD", "mongosh", "--quiet", "--eval", "db.runCommand(\"ping\").ok" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -89,7 +91,8 @@ services:
 #      - loki
     entrypoint: [ "mongos", "--port", "27017", "--configdb", "rs-config/mongodb-config:27017", "--bind_ip_all" ]
     healthcheck:
-      test: [ "CMD", "mongo", "--quiet", "--eval", "db.runCommand(\"ping\").ok" ]
+      # Use "mongo" instead of "mongosh" before v5.0
+      test: [ "CMD", "mongosh", "--quiet", "--eval", "db.runCommand(\"ping\").ok" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -108,14 +111,15 @@ services:
       mongodb-router:
         condition: service_started
     # Wait 10s for the replica set to elect their primary
+    # Use "mongo" instead of "mongosh" before v5.0
     entrypoint:
       - bash
       - -c
       - |
-        mongo --host mongodb-config:27017 --eval "rs.initiate({_id: 'rs-config', configsvr: true, version: 1, members: [ { _id: 0, host : 'mongodb-config:27017' } ] })"
-        mongo --host mongodb-shard:27017 --eval "rs.initiate({_id: 'shard01', version: 1, members: [ { _id: 0, host : 'mongodb-shard:27017' } ] })"
+        mongosh --host mongodb-config:27017 --eval "rs.initiate({_id: 'rs-config', configsvr: true, version: 1, members: [ { _id: 0, host : 'mongodb-config:27017' } ] })"
+        mongosh --host mongodb-shard:27017 --eval "rs.initiate({_id: 'shard01', version: 1, members: [ { _id: 0, host : 'mongodb-shard:27017' } ] })"
         sleep 10
-        mongo --host mongodb-router:27017 --eval "sh.addShard('shard01/mongodb-shard:27017')"
+        mongosh --host mongodb-router:27017 --eval "sh.addShard('shard01/mongodb-shard:27017')"
     restart: "no"
 
   # Redis
