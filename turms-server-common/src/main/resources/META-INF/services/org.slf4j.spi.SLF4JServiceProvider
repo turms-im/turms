@@ -1,1 +1,1 @@
-im.turms.server.common.infra.logging.slf4j.LoggingServiceProvider
+im.turms.server.common.infra.logging.slf4j.Slf4jServiceProvider
