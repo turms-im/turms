@@ -20,10 +20,11 @@ let package = Package(
         .package(url: "https://github.com/apple/swift-protobuf", from: "1.20.2"),
 
         // Dev deps
-        .package(url: "https://github.com/shibapm/PackageConfig", from: "1.1.3"),
-        .package(url: "https://github.com/nicklockwood/SwiftFormat", from: "0.49.18"),
-        .package(url: "https://github.com/Realm/SwiftLint", from: "0.49.1"),
-        .package(url: "https://github.com/orta/Komondor", from: "1.1.3"),
+        // Only uncomment the dependencies when developing so that users don't need to resolve them
+//        .package(url: "https://github.com/shibapm/PackageConfig", from: "1.1.3"),
+//        .package(url: "https://github.com/nicklockwood/SwiftFormat", from: "0.49.18"),
+//        .package(url: "https://github.com/Realm/SwiftLint", from: "0.49.1"),
+//        .package(url: "https://github.com/orta/Komondor", from: "1.1.3"),
     ],
     targets: [
         .target(
