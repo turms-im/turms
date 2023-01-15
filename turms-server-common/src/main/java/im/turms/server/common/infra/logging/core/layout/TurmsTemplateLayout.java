@@ -20,6 +20,7 @@ package im.turms.server.common.infra.logging.core.layout;
 import im.turms.server.common.infra.cluster.node.NodeType;
 import im.turms.server.common.infra.exception.ThrowableUtil;
 import im.turms.server.common.infra.lang.AsciiCode;
+import im.turms.server.common.infra.lang.ClassUtil;
 import im.turms.server.common.infra.lang.NumberFormatter;
 import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.logging.core.context.LogThreadContext;
@@ -60,13 +61,14 @@ public class TurmsTemplateLayout extends TemplateLayout {
     private static final int NODE_TYPE_UNKNOWN = 'U';
 
     static {
-        LogLevel[] levels = LogLevel.values();
-        LEVELS = new byte[levels.length][];
+        LogLevel[] levels = ClassUtil.getSharedEnumConstants(LogLevel.class);
+        int levelCount = levels.length;
+        LEVELS = new byte[levelCount][];
         int maxLength = 0;
         for (LogLevel level : levels) {
             maxLength = Math.max(level.name().length(), maxLength);
         }
-        for (int i = 0; i < levels.length; i++) {
+        for (int i = 0; i < levelCount; i++) {
             String level = StringUtil.padStartLatin1(levels[i].name(), maxLength, AsciiCode.SPACE)
                     .toUpperCase();
             LEVELS[i] = StringUtil.getBytes(level);

@@ -18,9 +18,9 @@
 package im.turms.server.common.access.admin.permission;
 
 import im.turms.server.common.infra.collection.CollectionUtil;
+import im.turms.server.common.infra.lang.ClassUtil;
 import im.turms.server.common.infra.lang.StringUtil;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -165,17 +165,9 @@ public enum AdminPermission {
     public static final String SUFFIX_UPDATE = "_UPDATE";
     public static final String SUFFIX_QUERY = "_QUERY";
 
-    public static final Set<AdminPermission> ALL = Set.of(AdminPermission.values());
+    public static final Set<AdminPermission> ALL = Set.of(ClassUtil.getSharedEnumConstants(AdminPermission.class));
 
-    private static final List<String> NAMES;
-
-    static {
-        AdminPermission[] permissions = AdminPermission.values();
-        NAMES = new ArrayList<>(permissions.length);
-        for (AdminPermission value : permissions) {
-            NAMES.add(value.name());
-        }
-    }
+    private static final List<String> NAMES = CollectionUtil.transformAsList(ALL, Enum::name);
 
     public static Set<AdminPermission> matchPermission(String pattern) {
         Set<AdminPermission> permissions = CollectionUtil.newSetWithExpectedSize(8);

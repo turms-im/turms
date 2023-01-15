@@ -17,6 +17,7 @@
 
 package im.turms.server.common.infra.cluster.node;
 
+import im.turms.server.common.infra.lang.ClassUtil;
 import im.turms.server.common.infra.lang.IntUtil;
 import im.turms.server.common.storage.mongo.entity.annotation.PersistenceConstructor;
 import lombok.Getter;
@@ -110,7 +111,7 @@ public class NodeVersion implements Comparable<NodeVersion> {
                 case 1 -> minor = Byte.parseByte(token);
                 case 2 -> patch = Byte.parseByte(token);
                 case 3 -> {
-                    for (Qualifier qualifierValue : Qualifier.values()) {
+                    for (Qualifier qualifierValue : ClassUtil.getSharedEnumConstants(Qualifier.class)) {
                         if (token.endsWith(qualifierValue.name())) {
                             qualifier = qualifierValue.getId();
                             break;

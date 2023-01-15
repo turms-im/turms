@@ -20,6 +20,7 @@ package im.turms.gateway.access.client.udp;
 import im.turms.gateway.access.client.udp.dto.UdpNotificationType;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.collection.FastEnumMap;
+import im.turms.server.common.infra.lang.ClassUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 
@@ -32,7 +33,7 @@ public final class UdpSignalResponseBufferPool {
     private static final FastEnumMap<UdpNotificationType, ByteBuf> NOTIFICATION_POOL = new FastEnumMap<>(UdpNotificationType.class);
 
     static {
-        for (UdpNotificationType type : UdpNotificationType.values()) {
+        for (UdpNotificationType type : ClassUtil.getSharedEnumConstants(UdpNotificationType.class)) {
             NOTIFICATION_POOL.put(type, Unpooled.unreleasableBuffer(Unpooled
                     .directBuffer(Byte.BYTES)
                     .writeByte(type.ordinal() + 1)));

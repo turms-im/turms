@@ -18,6 +18,7 @@
 package im.turms.server.common.access.client.dto.request;
 
 import im.turms.server.common.infra.collection.CollectionUtil;
+import im.turms.server.common.infra.lang.ClassUtil;
 import im.turms.server.common.infra.lang.StringUtil;
 
 import java.util.Set;
@@ -152,7 +153,7 @@ public final class TurmsRequestTypePool {
             UPDATE_GROUP_MEMBER_REQUEST);
 
     static {
-        TurmsRequest.KindCase[] values = TurmsRequest.KindCase.values();
+        TurmsRequest.KindCase[] values = ClassUtil.getSharedEnumConstants(TurmsRequest.KindCase.class);
         CREATE = CollectionUtil.toImmutableSet(StringUtil.findMatchesLatin1(values, "CREATE_*"));
         DELETE = CollectionUtil.toImmutableSet(StringUtil.findMatchesLatin1(values, "DELETE_*"));
         UPDATE = CollectionUtil.toImmutableSet(StringUtil.findMatchesLatin1(values, "UPDATE_*"));

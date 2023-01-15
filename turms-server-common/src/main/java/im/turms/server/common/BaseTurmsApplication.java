@@ -18,6 +18,7 @@
 package im.turms.server.common;
 
 import im.turms.server.common.infra.collection.CollectionUtil;
+import im.turms.server.common.infra.lang.ClassUtil;
 import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
@@ -26,7 +27,6 @@ import org.springframework.boot.SpringApplication;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
-import java.util.Set;
 import java.util.TimeZone;
 
 /**
@@ -73,8 +73,11 @@ public abstract class BaseTurmsApplication {
 
     private static void validateEnv() {
         try {
-            StringUtil.getBytes("testテスト");
-            CollectionUtil.add(Set.of(), 1);
+            // Load these classes to trigger their validation logic in the static initializer block.
+            // Call any method to avoid possible dead-code elimination.
+            CollectionUtil.class.getClassLoader();
+            ClassUtil.class.getClassLoader();
+            StringUtil.class.getClassLoader();
         } catch (Exception e) {
             RuntimeMXBean bean = ManagementFactory.getRuntimeMXBean();
             String message = "The current JVM [%s/%s/%s] cannot work with turms server"

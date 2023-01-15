@@ -20,6 +20,7 @@ package im.turms.server.common.infra.cluster.service.idgen;
 import im.turms.server.common.infra.cluster.service.ClusterService;
 import im.turms.server.common.infra.cluster.service.config.entity.discovery.Member;
 import im.turms.server.common.infra.cluster.service.discovery.DiscoveryService;
+import im.turms.server.common.infra.lang.ClassUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 
@@ -32,7 +33,7 @@ public class IdService implements ClusterService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(IdService.class);
 
-    private static final int FLAKE_ID_GENERATORS_LENGTH = ServiceType.values().length;
+    private static final int FLAKE_ID_GENERATORS_LENGTH = ClassUtil.getSharedEnumConstants(ServiceType.class).length;
 
     private final DiscoveryService discoveryService;
 

@@ -40,6 +40,7 @@ import im.turms.server.common.infra.collection.CollectorUtil;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.exception.ResponseExceptionPublisherPool;
 import im.turms.server.common.infra.json.JsonUtil;
+import im.turms.server.common.infra.lang.ClassUtil;
 import im.turms.server.common.infra.lang.LongUtil;
 import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
@@ -136,7 +137,7 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
     private boolean isServing;
 
     static {
-        StorageResourceType[] resourceTypes = StorageResourceType.values();
+        StorageResourceType[] resourceTypes = ClassUtil.getSharedEnumConstants(StorageResourceType.class);
         Map.Entry<StorageResourceType, String>[] resourceTypeToBucketName =
                 new Map.Entry[resourceTypes.length - 1];
         int writerIndex = 0;
@@ -265,7 +266,7 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
 
     //region bucket
     private Mono<Void> initBuckets() {
-        StorageResourceType[] resourceTypes = StorageResourceType.values();
+        StorageResourceType[] resourceTypes = ClassUtil.getSharedEnumConstants(StorageResourceType.class);
         List<Mono<Void>> initBuckets = new ArrayList<>(resourceTypes.length - 1);
         for (StorageResourceType resourceType : resourceTypes) {
             if (resourceType == StorageResourceType.UNRECOGNIZED) {

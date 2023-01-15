@@ -19,11 +19,11 @@ package im.turms.server.common.domain.common.util;
 
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.infra.lang.BitUtil;
+import im.turms.server.common.infra.lang.ClassUtil;
 import org.eclipse.collections.api.map.primitive.ByteObjectMap;
 import org.eclipse.collections.api.map.primitive.MutableByteObjectMap;
 import org.eclipse.collections.impl.factory.primitive.ByteObjectMaps;
 
-import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.Set;
 import jakarta.annotation.Nullable;
@@ -33,21 +33,29 @@ import jakarta.annotation.Nullable;
  */
 public final class DeviceTypeUtil {
 
-    public static final DeviceType[] ALL_DEVICE_TYPES = DeviceType.values();
-    public static final DeviceType[] ALL_AVAILABLE_DEVICE_TYPES = Arrays.stream(ALL_DEVICE_TYPES)
-            .filter(deviceType -> deviceType != DeviceType.UNRECOGNIZED)
-            .toArray(DeviceType[]::new);
-    public static final Set<DeviceType> ALL_AVAILABLE_DEVICE_TYPES_SET = Set.of(ALL_AVAILABLE_DEVICE_TYPES);
+    public static final DeviceType[] ALL_DEVICE_TYPES = ClassUtil.getSharedEnumConstants(DeviceType.class);
+    public static final DeviceType[] ALL_AVAILABLE_DEVICE_TYPES;
+    public static final Set<DeviceType> ALL_AVAILABLE_DEVICE_TYPES_SET;
 
-    private static final int DEVICE_TYPE_COUNT = ALL_DEVICE_TYPES.length;
+    private static final int DEVICE_TYPE_COUNT;
 
     // No need to use volatile or CAS
     private static ByteObjectMap<Set<DeviceType>> byteToDeviceTypes = ByteObjectMaps.immutable.empty();
 
     static {
+        DEVICE_TYPE_COUNT = ALL_DEVICE_TYPES.length - 1;
         if (DEVICE_TYPE_COUNT > Byte.SIZE) {
-            throw new IllegalStateException("Too many device types to support. Maximum supported device types: " + Byte.SIZE);
+            throw new RuntimeException("The device types to support must not exceed: " + Byte.SIZE + ", but got: " + DEVICE_TYPE_COUNT);
         }
+        DeviceType[] allAvailableDeviceTypes = new DeviceType[DEVICE_TYPE_COUNT];
+        int i = 0;
+        for (DeviceType deviceType : ALL_DEVICE_TYPES) {
+            if (deviceType != DeviceType.UNRECOGNIZED) {
+                allAvailableDeviceTypes[i++] = deviceType;
+            }
+        }
+        ALL_AVAILABLE_DEVICE_TYPES = allAvailableDeviceTypes;
+        ALL_AVAILABLE_DEVICE_TYPES_SET = Set.of(allAvailableDeviceTypes);
     }
 
     private DeviceTypeUtil() {
