@@ -39,7 +39,6 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.CALLS_REAL_METHODS;
 import static org.mockito.Mockito.mock;
@@ -89,14 +88,14 @@ class JsPluginManagerTests {
         Logger logger;
         try (MockedStatic<LoggerFactory> factory = mockStatic(LoggerFactory.class, CALLS_REAL_METHODS)) {
             logger = mock(Logger.class);
-            when(logger.isEnabled(any())).thenReturn(true);
+            when(logger.isInfoEnabled()).thenReturn(true);
             factory.when(() -> LoggerFactory.getLogger(anyString()))
                     .thenReturn(logger);
             MyExtensionPointForJs extensionPoint = createExtensionPoint();
             extensionPoint.testLog();
         }
 
-        verify(logger, times(0)).info("A log from plugin.js");
+        verify(logger, times(1)).info("A log from plugin.js");
     }
 
     @Test
@@ -104,7 +103,7 @@ class JsPluginManagerTests {
         MyExtensionPointForJs extensionPoint = createExtensionPoint();
         assertThatThrownBy(extensionPoint::testError)
                 .isInstanceOf(ScriptExecutionException.class)
-                .getCause()
+                .cause()
                 .hasMessageContaining("An error from plugin.js");
     }
 
