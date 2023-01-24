@@ -52,7 +52,7 @@ public class WebSocketConnection extends NetConnection {
     }
 
     /**
-     * It's acceptable that the method isn't thread-safe
+     * It is acceptable that the method isn't thread-safe
      */
     @Override
     public void close(CloseReason closeReason) {
@@ -71,8 +71,9 @@ public class WebSocketConnection extends NetConnection {
                 .doFinally(signal -> close())
                 .subscribe(null, t -> {
                     if (!ThrowableUtil.isDisconnectedClientError(t)) {
-                        LOGGER.error("Failed to send the close notification with retries exhausted: " +
-                                RETRY_SEND_CLOSE_NOTIFICATION.maxAttempts, t);
+                        LOGGER.error("Failed to send the close notification after (" +
+                                RETRY_SEND_CLOSE_NOTIFICATION.maxAttempts +
+                                ") attempts", t);
                     }
                 });
     }
@@ -82,7 +83,7 @@ public class WebSocketConnection extends NetConnection {
         out.sendClose(WebSocketCloseStatus.NORMAL_CLOSURE.code(), null)
                 .subscribe(null, t -> {
                     if (!ThrowableUtil.isDisconnectedClientError(t)) {
-                        LOGGER.error("Failed to close the connection", t);
+                        LOGGER.error("Failed to close the connection: " + getAddress().getAddress().getHostAddress(), t);
                     }
                 });
     }

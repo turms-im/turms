@@ -17,10 +17,8 @@
 
 package im.turms.server.common.infra.time;
 
-import im.turms.server.common.access.common.ResponseStatusCode;
-import im.turms.server.common.infra.exception.ResponseException;
-
 import java.util.Date;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen
@@ -31,7 +29,7 @@ public record DateRange(Date start, Date end) {
 
     public DateRange {
         if (start != null && end != null && end.before(start)) {
-            throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT, "The end date must not be before the start date");
+            throw new IllegalArgumentException("The end date must not be before the start date");
         }
     }
 

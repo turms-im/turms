@@ -47,7 +47,7 @@ public final class TurmsRequestParser {
     }
 
     public static SimpleTurmsRequest parseSimpleRequest(CodedInputStream turmsRequestInputStream) {
-        Assert.notNull(turmsRequestInputStream, "turmsRequestInputStream must not be null");
+        Assert.notNull(turmsRequestInputStream, "The input stream must not be null");
         try {
             long requestId = UNDEFINED_REQUEST_ID;
             TurmsRequest.KindCase type;
@@ -58,7 +58,7 @@ public final class TurmsRequestParser {
                         requestId = turmsRequestInputStream.readInt64();
                     } else {
                         throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
-                                "Not a valid TurmsRequest: Duplicate request ID");
+                                "Not a valid request: Duplicate request ID");
                     }
                 } else {
                     int kindFieldNumber = WireFormat.getTagFieldNumber(tag);
@@ -67,11 +67,12 @@ public final class TurmsRequestParser {
                 }
             }
             if (requestId == UNDEFINED_REQUEST_ID) {
-                throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT, "Not a valid TurmsRequest: No request ID");
+                throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
+                        "Not a valid request: No request ID");
             }
             if (type == null || type == KIND_NOT_SET) {
                 throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
-                        "Not a valid TurmsRequest: Unknown request type " + type);
+                        "Not a valid request: Unknown request type: " + type);
             }
             CreateSessionRequest createSessionRequest = null;
             if (type == CREATE_SESSION_REQUEST) {
@@ -79,7 +80,8 @@ public final class TurmsRequestParser {
             }
             return new SimpleTurmsRequest(requestId, type, createSessionRequest);
         } catch (IOException e) {
-            throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT, "Not a valid TurmsRequest: " + e.getMessage());
+            throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
+                    "Not a valid request: " + e.getMessage());
         }
     }
 

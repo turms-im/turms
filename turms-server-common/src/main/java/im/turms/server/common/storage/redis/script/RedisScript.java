@@ -17,6 +17,7 @@
 
 package im.turms.server.common.storage.redis.script;
 
+import im.turms.server.common.infra.io.InputOutputException;
 import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.netty.ByteBufUtil;
 import io.lettuce.core.ScriptOutputType;
@@ -66,8 +67,11 @@ public record RedisScript(
                 bytes = StringUtil.getBytes(s);
             }
             if (bytes.length > MAX_SCRIPT_SIZE) {
-                String error = "The script cannot be larger than " + MAX_SCRIPT_SIZE + ": " + resource.getPath();
-                throw new IllegalStateException(error);
+                String message = "The size of the script (" +
+                        resource.getPath() +
+                        ") must not be greater than " + MAX_SCRIPT_SIZE +
+                        " bytes, but got: " + bytes.length;
+                throw new InputOutputException(message);
             }
             return new RedisScript(ByteBufUtil.getUnreleasableDirectBuffer(bytes),
                     ByteBufUtil.getUnreleasableDirectBuffer(StringUtil.getBytes(Base16.digest(bytes))),

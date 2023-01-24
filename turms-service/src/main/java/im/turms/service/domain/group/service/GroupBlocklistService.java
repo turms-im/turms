@@ -116,7 +116,7 @@ public class GroupBlocklistService {
                                         false,
                                         false)
                                 .onErrorResume(t -> {
-                                    LOGGER.error("Caught an error while updating the members and blocklist version of the group {} after blocking a user",
+                                    LOGGER.error("Caught an error while updating the members and blocklist version of the group ({}) after blocking a user",
                                             groupId, t);
                                     return Mono.empty();
                                 })
@@ -136,7 +136,7 @@ public class GroupBlocklistService {
                     return groupBlocklistRepository.insert(blockedUser, session)
                             .then(groupVersionService.updateBlocklistVersion(groupId)
                                     .onErrorResume(t -> {
-                                        LOGGER.error("Caught an error while updating the blocklist version of the group {} after blocking a user",
+                                        LOGGER.error("Caught an error while updating the blocklist version of the group ({}) after blocking a user",
                                                 groupId, t);
                                         return Mono.empty();
                                     })
@@ -168,7 +168,7 @@ public class GroupBlocklistService {
                     if (updateBlocklistVersion) {
                         return removeMono.flatMap(result -> groupVersionService.updateBlocklistVersion(groupId)
                                 .onErrorResume(t -> {
-                                    LOGGER.error("Caught an error while updating the blocklist version of the group {} after unblocking a user",
+                                    LOGGER.error("Caught an error while updating the blocklist version of the group ({}) after unblocking a user",
                                             groupId, t);
                                     return Mono.empty();
                                 })

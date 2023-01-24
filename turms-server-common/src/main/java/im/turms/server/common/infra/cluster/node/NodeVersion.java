@@ -60,8 +60,8 @@ public class NodeVersion implements Comparable<NodeVersion> {
 
     public NodeVersion(byte major, byte minor, byte patch, byte qualifier) {
         this(major, minor, patch, qualifier, qualifier == 0
-                ? "%d.%d.%d".formatted(major, minor, patch)
-                : "%d.%d.%d-SNAPSHOT".formatted(major, minor, patch));
+                ? major + "." + minor + "." + patch
+                : major + "." + minor + "." + patch + "-SNAPSHOT");
     }
 
     @Override

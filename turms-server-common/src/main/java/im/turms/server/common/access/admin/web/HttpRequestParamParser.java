@@ -52,10 +52,10 @@ public class HttpRequestParamParser {
     private static final Mono<Object[]> BODY_IS_REQUIRED = Mono
             .error(new HttpResponseException(HttpHandlerResult.create(HttpResponseStatus.BAD_REQUEST,
                     new ResponseDTO<>(ResponseStatusCode.ILLEGAL_ARGUMENT,
-                            "Request body is required"))));
+                            "The request body is required"))));
     private static final HttpResponseException FORM_DATA_IS_REQUIRED = new HttpResponseException(HttpHandlerResult.create(HttpResponseStatus.BAD_REQUEST,
             new ResponseDTO<>(ResponseStatusCode.ILLEGAL_ARGUMENT,
-                    "Form data is required")));
+                    "The form data is required")));
     private final HttpResponseException bodyTooLargeException;
 
     private final int maxBodySize;
@@ -64,7 +64,7 @@ public class HttpRequestParamParser {
         this.maxBodySize = maxBodySize;
         bodyTooLargeException = new HttpResponseException(HttpHandlerResult.create(HttpResponseStatus.REQUEST_ENTITY_TOO_LARGE,
                 new ResponseDTO<>(ResponseStatusCode.ILLEGAL_ARGUMENT,
-                        "Request body size should not exceed " + maxBodySize + " bytes")));
+                        "The request body size must not exceed " + maxBodySize + " bytes")));
     }
 
     public <T> T parsePlainValue(Object value, Class<T> type, JavaType typeForJackson) {
@@ -72,7 +72,7 @@ public class HttpRequestParamParser {
             if (value instanceof String s) {
                 return (T) Enum.valueOf((Class<? extends Enum>) type, s);
             } else {
-                throw new IllegalArgumentException("The value of " + type.getName() + " should be string");
+                throw new IllegalArgumentException("The value of the type (" + type.getName() + ") must be string");
             }
         }
         try {
@@ -164,7 +164,10 @@ public class HttpRequestParamParser {
         } else {
             int count = paramValues.size();
             if (count > 1) {
-                throw new IllegalArgumentException("Parameter " + parameter.name() + " is not a collection. Actual: " + paramValues);
+                throw new IllegalArgumentException("Expected the parameter \"" +
+                        parameter.name() +
+                        "\" not to be a collection, but got: " +
+                        paramValues);
             } else {
                 return parseSingleValue(parameter, paramValues.get(0));
             }
@@ -175,7 +178,7 @@ public class HttpRequestParamParser {
                                    @Nullable List<Object> values) {
         if (values == null || values.isEmpty()) {
             if (parameter.isRequired()) {
-                throw new IllegalArgumentException("Missing required query parameter: " + parameter.name());
+                throw new IllegalArgumentException("Missing the required query parameter: \"" + parameter.name() + "\"");
             }
             return null;
         }
@@ -198,7 +201,7 @@ public class HttpRequestParamParser {
             }
             return items;
         }
-        throw new IllegalArgumentException("Invalid parameter type: " + type);
+        throw new IllegalArgumentException("Invalid parameter type: " + type.getName());
     }
 
     private Object parseSingleValue(MethodParameterInfo parameter,
@@ -214,7 +217,7 @@ public class HttpRequestParamParser {
             throw new HttpResponseException(HttpHandlerResult
                     .badRequest("Missing required "
                             + (parameter.isHeader() ? "header" : "query")
-                            + " parameter: " + parameter.name()));
+                            + " parameter: \"" + parameter.name() + "\""));
         }
         return null;
     }
@@ -266,7 +269,7 @@ public class HttpRequestParamParser {
                     } catch (IOException e) {
                         // Should never happen because the data should be a file
                         // (DiskAttribute or DiskFileUpload)
-                        throw new IllegalArgumentException("Failed to get the file from the HTTP data", e);
+                        throw new IllegalArgumentException("Failed to get the file from the HTTP data: " + data, e);
                     }
                     data.retain();
                     String name = data.getName();

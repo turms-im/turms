@@ -17,6 +17,7 @@
 
 package im.turms.server.common.storage.mongo.codec;
 
+import im.turms.server.common.infra.exception.NotImplementedException;
 import lombok.Setter;
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
@@ -61,11 +62,11 @@ public abstract class MongoCodec<T> implements Codec<T> {
     }
 
     public T decode(BsonReader reader) {
-        throw new UnsupportedOperationException("not implemented");
+        throw new NotImplementedException();
     }
 
     public void encode(BsonWriter writer, T value) {
-        throw new UnsupportedOperationException("not implemented");
+        throw new NotImplementedException();
     }
 
 }

@@ -51,7 +51,7 @@ public class UserFriendRequestRepository extends ExpirableEntityRepository<UserF
     public UserFriendRequestRepository(TurmsPropertiesManager propertiesManager,
                                        @Qualifier("userMongoClient") TurmsMongoClient mongoClient) {
         super(mongoClient, UserFriendRequest.class);
-        propertiesManager.triggerAndAddGlobalPropertiesChangeListener(this::updateProperties);
+        propertiesManager.notifyAndAddGlobalPropertiesChangeListener(this::updateProperties);
     }
 
     private void updateProperties(TurmsProperties properties) {

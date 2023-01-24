@@ -20,9 +20,9 @@ package im.turms.server.common.infra.plugin;
 /**
  * @author James Chen
  */
-public class MalformedPluginArchiveException extends RuntimeException {
+public class MalformedPluginArchiveException extends InvalidPluginSourceException {
 
-    public MalformedPluginArchiveException(String message, Exception cause) {
+    public MalformedPluginArchiveException(String message, Throwable cause) {
         super(message, cause);
     }
 

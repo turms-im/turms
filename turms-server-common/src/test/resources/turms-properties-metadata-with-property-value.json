@@ -152,7 +152,7 @@
       },
       "leaderEligible": {
         "deprecated": false,
-        "description": "Only works when it's a turms-service node",
+        "description": "Only works when it is a turms-service node",
         "global": false,
         "mutable": false,
         "sensitive": false,
@@ -315,7 +315,7 @@
         },
         "tokensPerPeriod": {
           "deprecated": false,
-          "description": "Refills the bucket with the specified number of tokens per period if the bucket isn't full",
+          "description": "Refills the bucket with the specified number of tokens per period if the bucket is not full",
           "global": true,
           "mutable": true,
           "sensitive": false,
@@ -620,7 +620,7 @@
         },
         "tokensPerPeriod": {
           "deprecated": false,
-          "description": "Refills the bucket with the specified number of tokens per period if the bucket isn't full",
+          "description": "Refills the bucket with the specified number of tokens per period if the bucket is not full",
           "global": true,
           "mutable": true,
           "sensitive": false,
@@ -756,7 +756,7 @@
       },
       "closeIdleSessionAfterSeconds": {
         "deprecated": false,
-        "description": "A session will be closed if turms server doesn't receive any request (including heartbeat request) from the client during closeIdleSessionAfterSeconds. References: https://mp.weixin.qq.com/s?__biz=MzAwNDY1ODY2OQ==&mid=207243549&idx=1&sn=4ebe4beb8123f1b5ab58810ac8bc5994&scene=0#rd",
+        "description": "A session will be closed if turms server does not receive any request (including heartbeat request) from the client during closeIdleSessionAfterSeconds. References: https://mp.weixin.qq.com/s?__biz=MzAwNDY1ODY2OQ==&mid=207243549&idx=1&sn=4ebe4beb8123f1b5ab58810ac8bc5994&scene=0#rd",
         "global": true,
         "mutable": true,
         "sensitive": false,
@@ -766,7 +766,7 @@
       "identityAccessManagement": {
         "enabled": {
           "deprecated": false,
-          "description": "Whether to authenticate and authorize users when logging in. Note that user ID is always required even if enabled is false. If false at startup, turms-gateway won't connect to the MongoDB server for user records",
+          "description": "Whether to authenticate and authorize users when logging in. Note that user ID is always required even if enabled is false. If false at startup, turms-gateway will not connect to the MongoDB server for user records",
           "global": true,
           "mutable": true,
           "sensitive": false,
@@ -1361,7 +1361,7 @@
       },
       "switchProtocolAfterSeconds": {
         "deprecated": false,
-        "description": "If the turms server only receives heartbeat requests from the client during switchProtocolAfterSeconds, the TCP/WebSocket connection will be closed with the close status \"SWITCH\" to indicate the client should keep sending heartbeat requests over UDP if they want to keep online. Note: 1. The property only works if UDP is enabled; 2. For browser clients, UDP isn't supported",
+        "description": "If the turms server only receives heartbeat requests from the client during switchProtocolAfterSeconds, the TCP/WebSocket connection will be closed with the close status \"SWITCH\" to indicate the client should keep sending heartbeat requests over UDP if they want to keep online. Note: 1. The property only works if UDP is enabled; 2. For browser clients, UDP is not supported",
         "global": true,
         "mutable": true,
         "sensitive": false,
@@ -1423,7 +1423,7 @@
     "tcp": {
       "backlog": {
         "deprecated": false,
-        "description": "The maximum number of connection requests waiting in the backlog queue. Large enough to handle bursts and GC pauses but don't set too large to prevent SYN-Flood attacks",
+        "description": "The maximum number of connection requests waiting in the backlog queue. Large enough to handle bursts and GC pauses but do not set too large to prevent SYN-Flood attacks",
         "global": false,
         "mutable": false,
         "sensitive": false,
@@ -1432,7 +1432,7 @@
       },
       "closeIdleConnectionAfterSeconds": {
         "deprecated": false,
-        "description": "A TCP connection will be closed on the server side if a client hasn't established a user session in a specified time. Note that the developers on the client side should take the responsibility to close the TCP connection according to their business requirements",
+        "description": "A TCP connection will be closed on the server side if a client has not established a user session in a specified time. Note that the developers on the client side should take the responsibility to close the TCP connection according to their business requirements",
         "global": false,
         "mutable": false,
         "sensitive": false,
@@ -1509,7 +1509,7 @@
     "websocket": {
       "backlog": {
         "deprecated": false,
-        "description": "The maximum number of connection requests waiting in the backlog queue. Large enough to handle bursts and GC pauses but don't set too large to prevent SYN-Flood attacks",
+        "description": "The maximum number of connection requests waiting in the backlog queue. Large enough to handle bursts and GC pauses but do not set too large to prevent SYN-Flood attacks",
         "global": false,
         "mutable": false,
         "sensitive": false,
@@ -1518,7 +1518,7 @@
       },
       "closeIdleConnectionAfterSeconds": {
         "deprecated": false,
-        "description": "A WebSocket connection will be closed on the server side if a client hasn't established a user session in a specified time. Note that the developers on the client side should take the responsibility to close the WebSocket connection according to their business requirements",
+        "description": "A WebSocket connection will be closed on the server side if a client has not established a user session in a specified time. Note that the developers on the client side should take the responsibility to close the WebSocket connection according to their business requirements",
         "global": false,
         "mutable": false,
         "sensitive": false,
@@ -1626,7 +1626,7 @@
       },
       "maxAvailableMemoryPercentage": {
         "deprecated": false,
-        "description": "The server will refuse to serve when the used memory (heap memory + JVM internal non-heap memory + direct buffer pool) exceeds the physical memory of the percentage. The server will try to reserve max(maxAvailableMemoryPercentage of the physical memory, minFreeSystemMemoryBytes) for kernel and other processes. Note that the max available memory percentage doesn't conflict with the usage of limiting memory in docker because docker limits the memory of the container, while this memory percentage only limits the available memory for JVM",
+        "description": "The server will refuse to serve when the used memory (heap memory + JVM internal non-heap memory + direct buffer pool) exceeds the physical memory of the percentage. The server will try to reserve max(maxAvailableMemoryPercentage of the physical memory, minFreeSystemMemoryBytes) for kernel and other processes. Note that the max available memory percentage does not conflict with the usage of limiting memory in docker because docker limits the memory of the container, while this memory percentage only limits the available memory for JVM",
         "global": false,
         "mutable": false,
         "sensitive": false,
@@ -2453,7 +2453,7 @@
         },
         "tokensPerPeriod": {
           "deprecated": false,
-          "description": "Refills the bucket with the specified number of tokens per period if the bucket isn't full",
+          "description": "Refills the bucket with the specified number of tokens per period if the bucket is not full",
           "global": true,
           "mutable": true,
           "sensitive": false,
@@ -4229,7 +4229,7 @@
   "shutdown": {
     "jobTimeoutMillis": {
       "deprecated": false,
-      "description": "Wait for a job 2 minutes at most for extreme cases by default. Though it's a long time, graceful shutdown is usually better than force shutdown.",
+      "description": "Wait for a job 2 minutes at most for extreme cases by default. Though it is a long time, graceful shutdown is usually better than force shutdown.",
       "global": false,
       "mutable": false,
       "sensitive": false,

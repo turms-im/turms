@@ -17,6 +17,7 @@
 
 package im.turms.server.common.infra.logging.core.compression;
 
+import im.turms.server.common.infra.io.InputOutputException;
 import im.turms.server.common.infra.memory.ByteBufferUtil;
 import im.turms.server.common.infra.thread.NotThreadSafe;
 
@@ -70,7 +71,7 @@ public class FastGzipOutputStream implements AutoCloseable {
         tempOut = ByteBuffer.allocateDirect(tempOutputLength);
     }
 
-    public void init(FileChannel channel) throws IOException {
+    public void init(FileChannel channel) {
         if (open) {
             throw new IllegalStateException("Can only initialize after closed");
         }
@@ -136,9 +137,11 @@ public class FastGzipOutputStream implements AutoCloseable {
         crc.update(input);
     }
 
-    private void writeHeader() throws IOException {
+    private void writeHeader() {
         try {
             channel.write(HEADER);
+        } catch (IOException e) {
+            throw new InputOutputException("Caught an error while writing the header", e);
         } finally {
             HEADER.clear();
         }

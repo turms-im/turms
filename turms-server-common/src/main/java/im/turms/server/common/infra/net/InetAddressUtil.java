@@ -46,7 +46,7 @@ public final class InetAddressUtil {
         try {
             return ipStringToBytes0(ip);
         } catch (Exception e) {
-            throw new IllegalArgumentException("The IP " + ip + " is invalid", e);
+            throw new IllegalArgumentException("Invalid IP address: " + ip, e);
         }
     }
 
@@ -54,7 +54,7 @@ public final class InetAddressUtil {
         byte[] addr = ipStringToBytes0(ipString);
         // The argument was malformed, i.e. not an IP string literal.
         if (addr == null) {
-            throw new IllegalArgumentException("The IP " + ipString + " is invalid");
+            throw new IllegalArgumentException("Invalid IP address: " + ipString);
         }
         return ipBytesToInetAddress(addr);
     }
@@ -63,7 +63,7 @@ public final class InetAddressUtil {
         try {
             return InetAddress.getByAddress(ip);
         } catch (UnknownHostException e) {
-            throw new IllegalArgumentException("The IP bytes " + Arrays.toString(ip) + " is invalid", e);
+            throw new IllegalArgumentException("Invalid IP bytes: " + Arrays.toString(ip), e);
         }
     }
 
@@ -71,7 +71,7 @@ public final class InetAddressUtil {
         try {
             return InetAddress.getByAddress(ip).getHostAddress();
         } catch (UnknownHostException e) {
-            throw new IllegalArgumentException("The IP bytes " + Arrays.toString(ip) + " is invalid", e);
+            throw new IllegalArgumentException("Invalid IP bytes: " + Arrays.toString(ip), e);
         }
     }
 

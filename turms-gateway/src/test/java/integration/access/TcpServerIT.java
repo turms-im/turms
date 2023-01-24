@@ -70,7 +70,7 @@ class TcpServerIT {
 
         int i = 0;
         for (Boolean isActive : isActiveReturnValues) {
-            System.out.printf("The client with index %d is connecting...", i);
+            System.out.printf("The client with index (%d) is connecting", i);
             Connection connection = TcpClient.create()
                     .host(server.host())
                     .port(server.port())
@@ -79,7 +79,7 @@ class TcpServerIT {
             // Must try to read data from the channel,
             // or the socket channel will reflect an outdated connection state.
             // It will throw "java.io.IOException: An existing connection was forcibly closed by the remote host"
-            // if the connection is closed
+            // if the connection is closed.
             connection.inbound().receive().subscribe();
             // Wait for the server to close the connection
             Thread.sleep(200);

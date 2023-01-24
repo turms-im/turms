@@ -204,10 +204,11 @@ public enum PolicyStatementResource {
         ALL_REQUEST_TYPES = CollectionUtil.toImmutableSet(CollectionUtil.newSet(requestTypes));
     }
 
-    PolicyStatementResource(Set<KindCase> requestTypesForCreating,
-                            Set<KindCase> requestTypesForDeleting,
-                            Set<KindCase> requestTypesForUpdating,
-                            Set<KindCase> requestTypesForQuerying) {
+    PolicyStatementResource(
+            Set<KindCase> requestTypesForCreating,
+            Set<KindCase> requestTypesForDeleting,
+            Set<KindCase> requestTypesForUpdating,
+            Set<KindCase> requestTypesForQuerying) {
         this.requestTypesForCreating = requestTypesForCreating;
         this.requestTypesForDeleting = requestTypesForDeleting;
         this.requestTypesForUpdating = requestTypesForUpdating;

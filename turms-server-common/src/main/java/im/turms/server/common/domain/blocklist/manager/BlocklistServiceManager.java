@@ -113,16 +113,16 @@ public class BlocklistServiceManager<T> {
     private final Consumer<T> onTargetBlocked;
 
     /**
-     * Used to check if a user is blocked or not quickly
+     * Used to check if a user is blocked or not quickly.
      */
     private final ConcurrentHashMap<T, Long> blockedClientIdToBlockEndTime;
     /**
-     * Used to remove the local expired blocked clients quickly
-     * so that we can run eviction more frequently without worrying
-     * about if there are a lot of blocked clients
+     * Used to remove the local expired blocked clients quickly,
+     * even if there are a lot of blocked clients
+     * so that we can run eviction more frequently.
      *
-     * @implNote It's acceptable to store the same IP/User ID with different
-     * block times in the skip list because it's how the skip list works
+     * @implNote It is acceptable to store the same IP or the user ID with different
+     * block times in the skip list because it is how the skip list works.
      */
     private final ConcurrentSkipListSet<BlockedClient> blockedClientSkipList;
 
@@ -173,16 +173,16 @@ public class BlocklistServiceManager<T> {
             resetAndSyncAllBlockedClients(false)
                     .block(Duration.ofSeconds(60));
         } catch (Exception e) {
-            throw new IllegalStateException("Failed to reset and sync blocked clients", e);
+            throw new RuntimeException("Failed to reset and sync blocked clients", e);
         }
 
         threadPoolExecutor
                 .scheduleAtFixedRate(() -> {
                     try {
                         syncLocalBlocklist()
-                                .subscribe(null, t -> LOGGER.error("Caught an error while synchronizing blocklist"));
+                                .subscribe(null, t -> LOGGER.error("Caught an error while synchronizing the client blocklist"));
                     } catch (Exception e) {
-                        LOGGER.error("Caught an error while synchronizing blocklist");
+                        LOGGER.error("Caught an error while synchronizing the client blocklist");
                     }
                 }, syncIntervalMillis, syncIntervalMillis, TimeUnit.MILLISECONDS);
     }
@@ -208,7 +208,7 @@ public class BlocklistServiceManager<T> {
             BlockedClient blockedClient = new BlockedClient(targetId, blockEndTimeMillis);
             blockedClientIdToBlockEndTime.put(targetId, blockEndTimeMillis);
             blockedClientSkipList.add(blockedClient);
-            triggerOnTargetBlocked(targetId);
+            notifyOnTargetBlockedListener(targetId);
             args[i++] = encodeId(targetId);
         }
         Mono<List<Object>> blockUsers = redisClient.eval(blockClientsScript, args);
@@ -226,7 +226,7 @@ public class BlocklistServiceManager<T> {
         T targetId = (T) blockedClient.id();
         blockedClientIdToBlockEndTime.put(targetId, blockEndTimeInMillis);
         blockedClientSkipList.add(blockedClient);
-        triggerOnTargetBlocked(targetId);
+        notifyOnTargetBlockedListener(targetId);
     }
 
     public Mono<Void> unblockTargets(Set<T> ids) {
@@ -477,8 +477,8 @@ public class BlocklistServiceManager<T> {
     private void handleBlockClientLogs(List<BlockClientLog> logs, int expectedSize) {
         int size = logs.size();
         if (expectedSize != size) {
-            throw new IllegalStateException("Failed to handle block logs. " +
-                    "The size of delta logs should be " + expectedSize + " but got " + size);
+            throw new IllegalArgumentException("Failed to handle block logs. " +
+                    "The size of delta logs must be: " + expectedSize + ", but got: " + size);
         }
         long now = System.currentTimeMillis();
         for (BlockClientLog log : logs) {
@@ -538,11 +538,13 @@ public class BlocklistServiceManager<T> {
 
     // Listener
 
-    private void triggerOnTargetBlocked(T id) {
+    private void notifyOnTargetBlockedListener(T id) {
         try {
             onTargetBlocked.accept(id);
         } catch (Exception e) {
-            LOGGER.error("onTargetBlocked failed to handle the blocked target: " + id);
+            LOGGER.error("Caught an error while notifying the onTargetBlocked listener (" +
+                    onTargetBlocked.getClass().getName() +
+                    ") to handle the blocked target: " + id);
         }
     }
 

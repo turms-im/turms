@@ -17,7 +17,6 @@
 
 package unit.im.turms.service.infra.time;
 
-import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.time.DateRange;
 import org.junit.jupiter.api.Test;
 
@@ -35,7 +34,7 @@ class DateRangeTests {
     void of_shouldThrowException_withInvalidParameters() {
         Date earlier = new Date(0);
         Date later = new Date(1);
-        assertThatExceptionOfType(ResponseException.class)
+        assertThatExceptionOfType(IllegalArgumentException.class)
                 .isThrownBy(() -> DateRange.of(later, earlier));
     }
 

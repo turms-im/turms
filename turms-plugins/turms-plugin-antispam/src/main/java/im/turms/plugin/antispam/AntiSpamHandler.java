@@ -213,7 +213,7 @@ public class AntiSpamHandler extends TurmsExtension implements ClientRequestTran
         }
         String textFilePath = dictParsing.getTextFilePath();
         if (textFilePath == null || textFilePath.isBlank()) {
-            throw new RuntimeException("The binary file path and the text file path cannot be both blank");
+            throw new IllegalArgumentException("The binary file path and the text file path must not be both blank");
         }
         DictionaryParser parser = new DictionaryParser(textPreprocessor);
         List<Word> words = parser.parse(Path.of(textFilePath),

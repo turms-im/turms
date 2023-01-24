@@ -57,11 +57,11 @@ public class PluginRepository {
                             .computeIfAbsent(extensionPointClass, key -> new CopyOnWriteArrayList<>());
                     if (singletonExtensionPointClasses.contains(extensionPointClass) &&
                             !extensionPoints.isEmpty()) {
-                        throw new DuplicateResourceException("The singleton extension point [" +
+                        throw new DuplicateResourceException("The singleton extension point (" +
                                 extensionPointClass.getName() +
-                                "] in the plugin [" +
+                                ") in the plugin (" +
                                 pluginId +
-                                "] cannot be registered because an extension point has been registered");
+                                ") cannot be registered because an extension point has been registered");
                     }
                     extensionPoints.add(extensionPoint);
                 }
@@ -69,11 +69,11 @@ public class PluginRepository {
             return plugin;
         });
         if (currentPlugin != plugin) {
-            throw new DuplicateResourceException("The plugin with the ID [" +
+            throw new DuplicateResourceException("The plugin with the ID (" +
                     id +
-                    "] has been registered");
+                    ") has been registered");
         }
-        LOGGER.info("A new plugin [{}] has been registered. The current number of plugins is [{}]",
+        LOGGER.info("A new plugin with the ID ({}) has been registered. The current number of plugins is: {}",
                 id, idToPlugin.size());
     }
 
@@ -138,7 +138,7 @@ public class PluginRepository {
         if (!removedPlugins.isEmpty()) {
             String removedPluginIds = CollectionUtil.toLatin1String(removedPlugins,
                     plugin -> plugin.descriptor().getId());
-            LOGGER.info("The plugins [{}] has been removed. The current number of plugins is [{}]",
+            LOGGER.info("The plugins {} has been removed. The current number of plugins is: {}",
                     removedPluginIds, idToPlugin.size());
         }
         return removedPlugins;

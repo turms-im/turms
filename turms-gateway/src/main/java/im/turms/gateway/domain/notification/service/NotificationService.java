@@ -30,6 +30,7 @@ import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.domain.notification.service.INotificationService;
 import im.turms.server.common.domain.session.bo.UserSessionId;
 import im.turms.server.common.infra.collection.CollectionUtil;
+import im.turms.server.common.infra.exception.IncompatibleInternalChangeException;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.plugin.PluginManager;
@@ -70,7 +71,7 @@ public class NotificationService implements INotificationService {
             HANDLE_METHOD = NotificationHandler.class
                     .getDeclaredMethod("handle", TurmsNotification.class, Set.class, Set.class);
         } catch (NoSuchMethodException e) {
-            throw new RuntimeException(e);
+            throw new IncompatibleInternalChangeException(e);
         }
     }
 
@@ -87,7 +88,7 @@ public class NotificationService implements INotificationService {
     }
 
     /**
-     * @param notificationData should be a buffer of TurmsNotification, and it's
+     * @param notificationData should be a buffer of TurmsNotification, and it is
      *                         always a "notification" instead of "response" in fact
      * @return true if the notification is ready to forward or has forwarded
      * to one recipient at least
@@ -106,8 +107,8 @@ public class NotificationService implements INotificationService {
         Validator.notNull(excludedUserSessionIds, "excludedUserSessionIds");
         // Prepare data
         boolean hasForwardedMessageToOneRecipient = false;
-        boolean triggerHandlers = pluginManager.hasRunningExtensions(NotificationHandler.class);
-        Set<Long> offlineRecipientIds = triggerHandlers
+        boolean invokeHandlers = pluginManager.hasRunningExtensions(NotificationHandler.class);
+        Set<Long> offlineRecipientIds = invokeHandlers
                 ? CollectionUtil.newSetWithExpectedSize(Math.max(1, recipientIds.size() / 2))
                 : Collections.emptySet();
 
@@ -123,7 +124,7 @@ public class NotificationService implements INotificationService {
         for (Long recipientId : recipientIds) {
             UserSessionsManager userSessionsManager = sessionService.getUserSessionsManager(recipientId);
             if (userSessionsManager == null) {
-                if (triggerHandlers) {
+                if (invokeHandlers) {
                     offlineRecipientIds.add(recipientId);
                 }
             } else {
@@ -134,31 +135,31 @@ public class NotificationService implements INotificationService {
                         continue;
                     }
                     notificationData.retain();
-                    // It's the responsibility of the downstream to decrease the reference count of the notification by 1
+                    // It is the responsibility of the downstream to decrease the reference count of the notification by 1
                     // when the notification is queued successfully and released by Netty, or fails to be queued.
-                    // Otherwise, there is a memory leak.
+                    // Otherwise, a memory leak will occur.
                     monos.add(userSession.sendNotification(notificationData, tracingContext)
                             .onErrorResume(t -> {
                                 if (userSession.isSessionOpen()) {
-                                    LOGGER.warn("Failed to send a notification to the session: {}", userSession);
+                                    LOGGER.warn("Failed to send a notification to the user session: {}", userSession);
                                 }
                                 return Mono.empty();
                             }));
-                    // Keep the logic simple, and we don't care about whether the notification is really flushed
+                    // Keep the logic simple, and we don't care about whether the notification is flushed
                     hasForwardedMessageToOneRecipient = true;
                     userSession.getConnection().tryNotifyClientToRecover();
                 }
             }
         }
 
-        // Trigger plugins
-        if (triggerHandlers) {
-            triggerPlugins(notificationData, recipientIds, offlineRecipientIds);
+        // Invoke handlers
+        if (invokeHandlers) {
+            invokeExtensionPointHandlers(notificationData, recipientIds, offlineRecipientIds);
         }
 
         Mono.whenDelayError(monos)
                 .doFinally(signalType -> notificationData.release())
-                .subscribe(null, t -> LOGGER.error("Caugh an unexpected error while sending a notification to user sessions", t));
+                .subscribe(null, t -> LOGGER.error("Caught an error while sending a notification to user sessions", t));
 
         if (isNotificationLoggingEnabled
                 && apiLoggingContext.shouldLogNotification(notification.relayedRequestType())) {
@@ -171,15 +172,17 @@ public class NotificationService implements INotificationService {
         return hasForwardedMessageToOneRecipient;
     }
 
-    private void triggerPlugins(@NotNull ByteBuf notificationData,
-                                @NotNull Set<Long> recipientIds,
-                                @NotNull Set<Long> offlineRecipientIds) {
+    private void invokeExtensionPointHandlers(
+            @NotNull ByteBuf notificationData,
+            @NotNull Set<Long> recipientIds,
+            @NotNull Set<Long> offlineRecipientIds) {
         TurmsNotification notification;
         try {
             // Note that "parseFrom" won't block because the buffer is fully read
             notification = TurmsNotification.parseFrom(ProtoDecoder.newInputStream(notificationData));
         } catch (Exception e) {
-            LOGGER.error("Failed to parse TurmsNotification", e);
+            LOGGER.error("Failed to parse TurmsNotification. All recipients' ID: {}. Offline recipients' ID: {}",
+                    recipientIds, offlineRecipientIds, e);
             return;
         }
         pluginManager.invokeExtensionPointsSimultaneously(NotificationHandler.class,

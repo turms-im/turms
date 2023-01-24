@@ -100,7 +100,7 @@ public class GroupQuestionService {
         this.groupVersionService = groupVersionService;
         this.groupService = groupService;
 
-        propertiesManager.triggerAndAddGlobalPropertiesChangeListener(this::updateProperties);
+        propertiesManager.notifyAndAddGlobalPropertiesChangeListener(this::updateProperties);
     }
 
     private void updateProperties(TurmsProperties properties) {
@@ -258,7 +258,7 @@ public class GroupQuestionService {
         return groupQuestionRepository.insertAllOfSameType(newQuestions)
                 .then(groupVersionService.updateJoinQuestionsVersion(groupId)
                         .onErrorResume(t -> {
-                            LOGGER.error("Caught an error while updating the join questions version of the group {} after creating a join question",
+                            LOGGER.error("Caught an error while updating the join questions version of the group ({}) after creating a join question",
                                     groupId, t);
                             return Mono.empty();
                         }))
@@ -302,7 +302,7 @@ public class GroupQuestionService {
                     }
                     return groupVersionService.updateJoinQuestionsVersion(groupId)
                             .onErrorResume(t -> {
-                                LOGGER.error("Caught an error while updating the join questions version of the group {} after deleting a join question",
+                                LOGGER.error("Caught an error while updating the join questions version of the group ({}) after deleting a join question",
                                         groupId, t);
                                 return Mono.empty();
                             })
@@ -394,7 +394,7 @@ public class GroupQuestionService {
                             return groupQuestionRepository.updateQuestion(questionId, question, answers, score)
                                     .flatMap(result -> groupVersionService.updateJoinQuestionsVersion(groupId)
                                             .onErrorResume(t -> {
-                                                LOGGER.error("Caught an error while updating the join questions version of the group {} after updating a join question",
+                                                LOGGER.error("Caught an error while updating the join questions version of the group ({}) after updating a join question",
                                                         groupId, t);
                                                 return Mono.empty();
                                             })

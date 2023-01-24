@@ -19,6 +19,7 @@ package unit.im.turms.server.common.infra.plugin;
 
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.infra.context.TurmsApplicationContext;
+import im.turms.server.common.infra.logging.core.logger.AsyncLogger;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.plugin.PluginManager;
@@ -87,7 +88,7 @@ class JsPluginManagerTests {
     void testLog() {
         Logger logger;
         try (MockedStatic<LoggerFactory> factory = mockStatic(LoggerFactory.class, CALLS_REAL_METHODS)) {
-            logger = mock(Logger.class);
+            logger = mock(AsyncLogger.class);
             when(logger.isInfoEnabled()).thenReturn(true);
             factory.when(() -> LoggerFactory.getLogger(anyString()))
                     .thenReturn(logger);

@@ -17,6 +17,7 @@
 
 package im.turms.server.common.infra.unsafe;
 
+import im.turms.server.common.infra.exception.IncompatibleJvmException;
 import sun.misc.Unsafe;
 
 import java.lang.reflect.Field;
@@ -33,12 +34,17 @@ public class UnsafeUtil {
     public static final Unsafe UNSAFE;
 
     static {
+        Field field;
         try {
-            Field field = Unsafe.class.getDeclaredField("theUnsafe");
-            field.setAccessible(true);
+            field = Unsafe.class.getDeclaredField("theUnsafe");
+        } catch (NoSuchFieldException e) {
+            throw new IncompatibleJvmException("Missing field: sun.misc.Unsafe#theUnsafe", e);
+        }
+        field.setAccessible(true);
+        try {
             UNSAFE = (Unsafe) field.get(null);
-        } catch (Exception e) {
-            throw new IllegalStateException(e);
+        } catch (IllegalAccessException e) {
+            throw new IncompatibleJvmException("The field (sun.misc.Unsafe#theUnsafe) should be accessible", e);
         }
     }
 

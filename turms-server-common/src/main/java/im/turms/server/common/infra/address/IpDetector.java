@@ -70,13 +70,15 @@ public class IpDetector {
             InetAddress inetAddress = localAddress.getAddress();
             String ip = inetAddress.getHostAddress();
             if (!inetAddress.isSiteLocalAddress()) {
-                throw new IllegalStateException("The IP address isn't a site local IP address: " + ip);
+                throw new NoAvailableAddressFoundException("The IP address (" +
+                        ip +
+                        ") is not a site local IP address");
             }
             privateIpLastUpdatedDate = System.currentTimeMillis();
             cachedPrivateIp = ip;
             return ip;
         } catch (Exception e) {
-            throw new IllegalStateException("Failed to detect the local IP", e);
+            throw new NoAvailableAddressFoundException("Failed to detect the local IP", e);
         } finally {
             try {
                 if (channel != null) {
@@ -98,7 +100,7 @@ public class IpDetector {
         }
         List<String> ipDetectorAddresses = ipProperties.getPublicIpDetectorAddresses();
         if (ipDetectorAddresses.isEmpty()) {
-            return Mono.error(new IllegalArgumentException("Failed to detect the public IP of the local node because cannot find an IP detector address"));
+            return Mono.error(new IllegalArgumentException("Failed to detect the public IP of the local node because no IP detector address is specified"));
         }
         List<Mono<String>> monos = new ArrayList<>(ipDetectorAddresses.size());
         HttpClient httpClient = HttpClient.newConnection();
@@ -121,7 +123,7 @@ public class IpDetector {
                     publicIpLastUpdatedDate = System.currentTimeMillis();
                     cachedPublicIp = ip;
                 })
-                .onErrorMap(t -> new IllegalStateException("Failed to detect the public IP of the local node because there isn't any available IP", t));
+                .onErrorMap(t -> new NoAvailableAddressFoundException("Failed to detect the public IP of the local node because there is no available IP", t));
     }
 
 }

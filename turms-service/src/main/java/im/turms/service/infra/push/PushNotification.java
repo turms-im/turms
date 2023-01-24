@@ -28,4 +28,13 @@ public record PushNotification(
         PushNotificationType notificationType,
         @Nullable String data
 ) {
+
+    public String toStringWithoutDate() {
+        return "PushNotification{" +
+                "deviceToken=\"" + deviceToken + '\"' +
+                ", deviceTokenType=" + deviceTokenType +
+                ", notificationType=" + notificationType +
+                '}';
+    }
+
 }

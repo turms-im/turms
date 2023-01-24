@@ -39,8 +39,12 @@ public final class BackoffIdleStrategy {
 
     public BackoffIdleStrategy(long maxSpins, long maxYields, long minParkPeriodNs, long maxParkPeriodNs) {
         if (minParkPeriodNs < 1 || maxParkPeriodNs < minParkPeriodNs) {
-            throw new IllegalArgumentException("Min park period %d < 1 or max park period %d < min"
-                    .formatted(minParkPeriodNs, maxParkPeriodNs));
+            throw new IllegalArgumentException("The minimum park period (" +
+                    minParkPeriodNs +
+                    ") must be less than 1, " +
+                    "and the maximum park (" +
+                    maxParkPeriodNs +
+                    ") period must less than the minimum park period");
         }
         this.maxSpins = maxSpins;
         this.maxYields = maxYields;

@@ -39,7 +39,7 @@ public final class NotificationFactory {
     }
 
     public static void init(TurmsPropertiesManager propertiesManager) {
-        propertiesManager.triggerAndAddLocalPropertiesChangeListener(properties ->
+        propertiesManager.notifyAndAddLocalPropertiesChangeListener(properties ->
                 returnReasonForServerError = properties.getGateway()
                         .getClientApi()
                         .isReturnReasonForServerError());

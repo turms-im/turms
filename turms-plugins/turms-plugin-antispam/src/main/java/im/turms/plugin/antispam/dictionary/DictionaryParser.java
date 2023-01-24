@@ -19,15 +19,18 @@ package im.turms.plugin.antispam.dictionary;
 
 import im.turms.plugin.antispam.TextPreprocessor;
 import im.turms.server.common.infra.collection.ChunkedArrayList;
+import im.turms.server.common.infra.exception.IncompatibleInternalChangeException;
+import im.turms.server.common.infra.io.InputOutputException;
 import im.turms.server.common.infra.lang.CharArrayBuffer;
-import lombok.SneakyThrows;
+import im.turms.server.common.infra.lang.ClassUtil;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.ZoneOffset;
 import java.util.List;
@@ -38,13 +41,23 @@ import java.util.TimeZone;
  */
 public class DictionaryParser {
 
+    private static final String VALID_CODE_POINT_RANGES_REF;
+
+    static {
+        try {
+            VALID_CODE_POINT_RANGES_REF = ClassUtil
+                    .getReference(TextPreprocessor.class.getDeclaredField("VALID_CODE_POINT_RANGES"));
+        } catch (NoSuchFieldException e) {
+            throw new IncompatibleInternalChangeException(e);
+        }
+    }
+
     private final TextPreprocessor textPreprocessor;
 
     public DictionaryParser(TextPreprocessor textPreprocessor) {
         this.textPreprocessor = textPreprocessor;
     }
 
-    @SneakyThrows
     public List<Word> parse(Path dictPath,
                             String charsetName,
                             boolean skipInvalidCharacter,
@@ -54,21 +67,26 @@ public class DictionaryParser {
             return enableExtendedWord
                     ? parseExtendedWords(reader, skipInvalidCharacter)
                     : parseSimpleWords(reader, skipInvalidCharacter);
+        } catch (IOException e) {
+            throw new InputOutputException("Failed to read the dictionary: " + dictPath, e);
         }
     }
 
-    @SneakyThrows
     private List<Word> parseSimpleWords(BufferedReader reader, boolean skipInvalidCharacter) {
         List<Word> words = new ChunkedArrayList<>();
         // use CharArrayBuffer to collect each line because
-        // it's far faster and more efficient than "reader.readLine()"
+        // it is far faster and more efficient than "reader.readLine()"
         CharArrayBuffer buffer = new CharArrayBuffer(64);
         int result;
         char character;
         boolean ignoreFollowingChars = false;
         boolean isFileEnd;
         while (true) {
-            result = reader.read();
+            try {
+                result = reader.read();
+            } catch (IOException e) {
+                throw new InputOutputException("Failed to read", e);
+            }
             isFileEnd = result == -1;
             character = (char) result;
             if (character == '\n' || character == '\r' || isFileEnd) {
@@ -92,7 +110,6 @@ public class DictionaryParser {
         return words;
     }
 
-    @SneakyThrows
     private List<Word> parseExtendedWords(BufferedReader reader, boolean skipInvalidCharacter) {
         List<Word> words = new ChunkedArrayList<>();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
@@ -106,7 +123,11 @@ public class DictionaryParser {
         char[] word;
         boolean isFileEnd;
         while (true) {
-            result = reader.read();
+            try {
+                result = reader.read();
+            } catch (IOException e) {
+                throw new InputOutputException("Failed to read", e);
+            }
             isFileEnd = result == -1;
             character = (char) result;
             // TODO: support quotes
@@ -142,28 +163,36 @@ public class DictionaryParser {
         return words;
     }
 
-    @SneakyThrows
     private void parseExtendedWord(ExtendedWord.Builder builder,
                                    int columnIndex,
                                    CharArrayBuffer buffer,
-                                   DateFormat dateFormat) {
+                                   SimpleDateFormat dateFormat) {
         if (buffer.isEmpty()) {
             return;
         }
         if (columnIndex == 0) {
             builder.setWord(buffer.toCharArray());
+            return;
         }
         String string = buffer.toString();
-        switch (columnIndex) {
-            case 1 -> builder.setId(string);
-            case 2 -> builder.setLevel(Integer.parseInt(string));
-            case 3 -> builder.setCategory(string);
-            case 4 -> builder.setSource(string);
-            case 5 -> builder.setCreateTime(dateFormat.parse(string));
-            case 6 -> builder.setDisableTime(dateFormat.parse(string));
-            case 7 -> builder.setEnableTime(dateFormat.parse(string));
-            case 8 -> builder.setUpdateTime(dateFormat.parse(string));
-            case 9 -> builder.setComment(string);
+        try {
+            switch (columnIndex) {
+                case 1 -> builder.setId(string);
+                case 2 -> builder.setLevel(Integer.parseInt(string));
+                case 3 -> builder.setCategory(string);
+                case 4 -> builder.setSource(string);
+                case 5 -> builder.setCreateTime(dateFormat.parse(string));
+                case 6 -> builder.setDisableTime(dateFormat.parse(string));
+                case 7 -> builder.setEnableTime(dateFormat.parse(string));
+                case 8 -> builder.setUpdateTime(dateFormat.parse(string));
+                case 9 -> builder.setComment(string);
+                default -> throw new IllegalArgumentException("Unexpected column index: " + columnIndex);
+            }
+        } catch (ParseException e) {
+            throw new IllegalArgumentException("The date string \"" +
+                    string +
+                    "\" must follow the date format pattern: " +
+                    dateFormat.toPattern());
         }
     }
 
@@ -187,10 +216,15 @@ public class DictionaryParser {
         Object newChars = textPreprocessor.process(character);
         if (newChars == null) {
             if (!skipInvalidCharacter) {
-                throw new IllegalArgumentException("The character '%c' of the block %s is invalid. "
-                        .formatted(character, Character.UnicodeBlock.of(character).toString()) +
-                        "Please remove the character in the dictionary, " +
-                        "or update \"im.turms.plugin.antispam.TextPreprocessor.VALID_CODE_POINT_RANGES\" to support the character.");
+                throw new IllegalArgumentException("The character \"" +
+                        character +
+                        "\" of the unicode block \"" +
+                        Character.UnicodeBlock.of(character) +
+                        "\" is invalid. " +
+                        "Please delete the character in the dictionary, " +
+                        "or update the field (" +
+                        VALID_CODE_POINT_RANGES_REF +
+                        ") to support the character");
             }
         } else if (newChars instanceof char[] chars) {
             newWord.append(chars);

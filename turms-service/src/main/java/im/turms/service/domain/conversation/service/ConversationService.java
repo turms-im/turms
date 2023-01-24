@@ -75,7 +75,7 @@ public class ConversationService {
         this.groupConversationRepository = groupConversationRepository;
         this.privateConversationRepository = privateConversationRepository;
 
-        propertiesManager.triggerAndAddGlobalPropertiesChangeListener(this::updateProperties);
+        propertiesManager.notifyAndAddGlobalPropertiesChangeListener(this::updateProperties);
     }
 
     private void updateProperties(TurmsProperties properties) {
@@ -297,7 +297,7 @@ public class ConversationService {
         for (Long userId : userIds) {
             delete = delete.then(groupMemberService.queryUserJoinedGroupIds(userId)
                             .collect(CollectorUtil.toChunkedList())
-                            // it's expected there are some cases that the user just joined a group,
+                            // it is expected there are some cases that the user just joined a group,
                             // and sent a message to the group after "queryUserJoinedGroupIds", meaning
                             // there may some deleted members' conversations that should be deleted
                             // but not deleted in the following "deleteGroupConversations".

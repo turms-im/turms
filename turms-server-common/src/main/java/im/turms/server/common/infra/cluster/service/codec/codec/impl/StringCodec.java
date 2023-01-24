@@ -39,7 +39,7 @@ public class StringCodec implements Codec<String> {
         byte coder = StringUtil.getCoder(data);
         int length = bytes.length;
         if (length > Short.MAX_VALUE) {
-            throw new IllegalArgumentException("The bytes length of the string cannot be greater than " + Short.MAX_VALUE);
+            throw new IllegalArgumentException("The byte length of the string must not be greater than " + Short.MAX_VALUE);
         }
         output.writeVarint32(length);
         if (length > 0) {

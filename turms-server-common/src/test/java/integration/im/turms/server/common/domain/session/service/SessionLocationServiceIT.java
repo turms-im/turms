@@ -98,7 +98,7 @@ class SessionLocationServiceIT extends BaseIntegrationTest {
                             .build())
                     .build());
             return null;
-        }).when(propertiesManager).triggerAndAddGlobalPropertiesChangeListener(any());
+        }).when(propertiesManager).notifyAndAddGlobalPropertiesChangeListener(any());
 
         RedisProperties redisProperties = new RedisProperties()
                 .toBuilder()

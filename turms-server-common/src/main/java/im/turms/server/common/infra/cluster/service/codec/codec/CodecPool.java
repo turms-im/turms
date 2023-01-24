@@ -122,20 +122,23 @@ public final class CodecPool {
         if (encodableClasses == null || encodableClasses.isEmpty()) {
             Class<?> clazz = GenericTypeResolver.resolveTypeArgument(codec.getClass(), Codec.class);
             if (clazz == null) {
-                throw new IllegalStateException("The codec %s cannot be resolved".formatted(codec));
+                throw new IllegalArgumentException("The codec with the ID (" +
+                        codec.getCodecId() +
+                        ") could not be resolved");
             }
             encodableClasses = List.of(clazz);
         }
         for (Class<?> encodableClass : encodableClasses) {
             if (CLASS_TO_CODEC.containsKey(encodableClass)) {
-                throw new IllegalStateException("The codec for the class %s has already existed"
-                        .formatted(encodableClass.getSimpleName()));
+                throw new IllegalArgumentException("The codec for the class (" +
+                        encodableClass.getName() +
+                        ") has already existed");
             }
             CLASS_TO_CODEC.put(encodableClass, codec);
         }
         int codecId = codec.getCodecId().getId();
         if (ID_TO_CODEC.containsKey(codecId)) {
-            throw new IllegalStateException("The codec ID %d has already existed".formatted(codecId));
+            throw new IllegalArgumentException("The codec ID (" + codecId + ") has already existed");
         }
         ID_TO_CODEC.put(codecId, codec);
     }

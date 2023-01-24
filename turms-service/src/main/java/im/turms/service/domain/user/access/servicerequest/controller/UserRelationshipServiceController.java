@@ -93,7 +93,7 @@ public class UserRelationshipServiceController extends BaseServiceController {
         this.userRelationshipService = userRelationshipService;
         this.userRelationshipGroupService = userRelationshipGroupService;
 
-        propertiesManager.triggerAndAddGlobalPropertiesChangeListener(this::updateProperties);
+        propertiesManager.notifyAndAddGlobalPropertiesChangeListener(this::updateProperties);
     }
 
     private void updateProperties(TurmsProperties properties) {

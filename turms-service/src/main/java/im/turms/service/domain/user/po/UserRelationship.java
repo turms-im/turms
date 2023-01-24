@@ -34,9 +34,9 @@ import java.util.Date;
 import static im.turms.server.common.storage.mongo.entity.annotation.IndexedReason.EXTENDED_FEATURE;
 
 /**
- * Don't consolidate the two sided relationships as one model to eliminate transactions
+ * Don't consolidate the two-sided relationships as one model to eliminate transactions
  * (unless MongoDB supports multiple shard keys though it seems impossible https://jira.mongodb.org/browse/SERVER-2949).
- * Otherwise, it's impossible to use targeted queries to query the data
+ * Otherwise, it is impossible to use targeted queries to query the data
  * according to either the owner ID or the related user ID because MongoDB can have only one shard key.
  * https://github.com/turms-im/turms/issues/343
  *

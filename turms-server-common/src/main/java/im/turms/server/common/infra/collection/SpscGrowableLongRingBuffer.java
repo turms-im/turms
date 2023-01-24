@@ -26,8 +26,8 @@ import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
 import java.util.function.LongConsumer;
 
 /**
- * The implementation has been highly optimized for the case of a single producer and a single consumer.
- * And it's far more efficient than {@link org.jctools.queues.SpscGrowableArrayQueue}
+ * The implementation has been highly optimized for the case of a single producer and a single consumer,
+ * and it is far more efficient than {@link org.jctools.queues.SpscGrowableArrayQueue}
  * for long primitive values.
  *
  * @author James Chen

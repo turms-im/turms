@@ -31,8 +31,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
-import java.util.List;
-
 import static im.turms.service.infra.metrics.MetricNameConst.PUSH_NOTIFICATION_REQUEST;
 
 /**
@@ -76,13 +74,12 @@ public class PushNotificationManager {
                                     "notification.type", pushNotification.notificationType().name(),
                                     "cause", throwable.getClass().getSimpleName())
                             .increment();
-                    LOGGER.error("Failed to deliver {} push notification to {} ({})",
-                            pushNotification.notificationType(), pushNotification.deviceToken(), pushNotification.deviceTokenType(), throwable);
+                    LOGGER.error("Failed to deliver the push notification: {}", pushNotification.toStringWithoutDate(), throwable);
                 });
     }
 
     private Mono<Void> close() {
-        return Mono.whenDelayError(List.of(apnSender.close(), fcmSender.close()));
+        return Mono.whenDelayError(apnSender.close(), fcmSender.close());
     }
 
 }

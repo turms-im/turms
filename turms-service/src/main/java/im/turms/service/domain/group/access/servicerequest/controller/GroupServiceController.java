@@ -144,7 +144,7 @@ public class GroupServiceController extends BaseServiceController {
         this.groupJoinRequestService = groupJoinRequestService;
         this.groupMemberService = groupMemberService;
 
-        propertiesManager.triggerAndAddGlobalPropertiesChangeListener(this::updateProperties);
+        propertiesManager.notifyAndAddGlobalPropertiesChangeListener(this::updateProperties);
     }
 
     private void updateProperties(TurmsProperties properties) {

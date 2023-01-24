@@ -17,6 +17,7 @@
 
 package im.turms.server.common.infra.logging.core.appender.file;
 
+import im.turms.server.common.infra.io.InputOutputException;
 import im.turms.server.common.infra.logging.core.appender.Appender;
 import im.turms.server.common.infra.logging.core.compression.FastGzipOutputStream;
 import im.turms.server.common.infra.logging.core.logger.InternalLogger;
@@ -24,7 +25,6 @@ import im.turms.server.common.infra.logging.core.model.LogLevel;
 import im.turms.server.common.infra.logging.core.model.LogRecord;
 import im.turms.server.common.infra.memory.ByteBufferUtil;
 import im.turms.server.common.infra.time.TimeZoneConst;
-import lombok.SneakyThrows;
 
 import java.io.File;
 import java.io.IOException;
@@ -91,7 +91,6 @@ public class RollingFileAppender extends Appender {
     private final boolean enableCompression;
     private final FastGzipOutputStream gzipOutputStream;
 
-    @SneakyThrows
     public RollingFileAppender(LogLevel level,
                                String file,
                                int maxFiles,
@@ -119,7 +118,11 @@ public class RollingFileAppender extends Appender {
                 ? new FastGzipOutputStream(COMPRESSION_LEVEL, (int) Math.min(MB, maxFileBytes / 10))
                 : null;
 
-        Files.createDirectories(fileDirectory);
+        try {
+            Files.createDirectories(fileDirectory);
+        } catch (IOException e) {
+            throw new InputOutputException("Failed to create the directory (" + fileDirectory + ") for log files", e);
+        }
         files = LogDirectoryVisitor.visit(fileDirectory, filePrefix, fileSuffix, FILE_MIDDLE, fileDateTimeFormatter, maxFiles);
 
         LogFile logFile = files.peekLast();
@@ -130,16 +133,34 @@ public class RollingFileAppender extends Appender {
         }
     }
 
-    private FileChannel openFileChannel(Path file) throws IOException {
+    private FileChannel openFileChannel(Path file) {
         Path directory = file.getParent();
         if (directory != null) {
-            Files.createDirectories(directory);
+            try {
+                Files.createDirectories(directory);
+            } catch (IOException e) {
+                throw new InputOutputException("Failed to create the directory (" + directory + ") for log files", e);
+            }
         }
-        return FileChannel.open(file, APPEND_OPTIONS);
+        try {
+            return FileChannel.open(file, APPEND_OPTIONS);
+        } catch (IOException e) {
+            throw new InputOutputException("Failed to open the file: " + file, e);
+        }
     }
 
     private boolean needRoll(LogRecord record) {
         return record.timestamp() >= nextDay || nextFileBytes >= maxFileBytes;
+    }
+
+    @Override
+    public void close() {
+        super.close();
+        try {
+            gzipOutputStream.destroy();
+        } catch (IOException e) {
+            throw new InputOutputException("Caught an error while destroying the GZIP output stream", e);
+        }
     }
 
     @Override
@@ -153,7 +174,7 @@ public class RollingFileAppender extends Appender {
     }
 
     /**
-     * Note that it's fine to close file channel and open a new one not atomically
+     * Note that it is fine to close file channel and open a new one not atomically
      * because there is always only one thread will call roll() and append()
      */
     private void roll() {
@@ -186,8 +207,11 @@ public class RollingFileAppender extends Appender {
             try {
                 Files.createDirectories(dir);
             } catch (FileAlreadyExistsException e) {
-                InternalLogger.INSTANCE.error("The directory \"" + dir + "\" is a file instead of a directory. " +
-                        "This may happen if the directory has been replaced with a file unexpectedly by users. Removing...");
+                InternalLogger.INSTANCE.error("The path (" +
+                        dir +
+                        ") is pointing to a file instead of a directory. " +
+                        "This may happen if the directory has been replaced with a file unexpectedly by users. " +
+                        "Start deleting the file to recover");
                 try {
                     Files.deleteIfExists(dir);
                 } catch (Exception ignored) {
@@ -195,7 +219,7 @@ public class RollingFileAppender extends Appender {
                 try {
                     Files.createDirectories(dir);
                 } catch (IOException exception) {
-                    throw new IllegalStateException(exception);
+                    throw new InputOutputException(exception);
                 }
             } catch (Exception e) {
                 InternalLogger.INSTANCE.error("Caught an error while creating the directory: " + dir, e);
@@ -204,7 +228,7 @@ public class RollingFileAppender extends Appender {
             try {
                 Files.createDirectories(dir);
             } catch (Exception e) {
-                throw new IllegalStateException("Caught an error while creating the directory: " + dir, e);
+                throw new InputOutputException("Caught an error while creating the directory: " + dir, e);
             }
         }
         String fileName;
@@ -228,10 +252,10 @@ public class RollingFileAppender extends Appender {
                     try {
                         Thread.sleep(1000L);
                     } catch (InterruptedException exc) {
-                        throw new IllegalStateException(message, e);
+                        throw new InputOutputException(message, e);
                     }
                 } else {
-                    throw new IllegalStateException(message, e);
+                    throw new InputOutputException(message, e);
                 }
             }
         }
@@ -250,14 +274,13 @@ public class RollingFileAppender extends Appender {
                 InternalLogger.INSTANCE.error(message, e);
                 nextFileBytes = 0;
             } else {
-                throw new IllegalStateException(message, e);
+                throw new InputOutputException(message, e);
             }
         }
         nextDay = TimeUnit.SECONDS.toNanos(next.toEpochSecond());
         nextIndex++;
     }
 
-    @SneakyThrows
     private void openExistingFile(LogFile existingFile) {
         ZonedDateTime now = existingFile.dateTime();
         ZonedDateTime next = now.plus(1, ChronoUnit.DAYS)
@@ -268,7 +291,11 @@ public class RollingFileAppender extends Appender {
         channel = openFileChannel(filePath);
         currentFile = existingFile;
 
-        nextFileBytes = channel.size();
+        try {
+            nextFileBytes = channel.size();
+        } catch (IOException e) {
+            throw new InputOutputException("Failed to read the size of the file: " + filePath, e);
+        }
         nextDay = TimeUnit.SECONDS.toNanos(next.toEpochSecond());
         nextIndex = existingFile.index() + 1;
     }
@@ -289,13 +316,13 @@ public class RollingFileAppender extends Appender {
         }
     }
 
-    private void compress() throws IOException {
+    private void compress() {
         MappedByteBuffer logFileBuffer;
         try (FileChannel fileChannel = FileChannel.open(currentFile.path(), READ_OPTIONS)) {
             logFileBuffer = fileChannel
                     .map(FileChannel.MapMode.READ_ONLY, 0, fileChannel.size());
         } catch (Exception e) {
-            throw new IOException("Failed to read the log file: " + currentFile.path(), e);
+            throw new InputOutputException("Failed to read the log file: " + currentFile.path(), e);
         }
         FileChannel archiveFileChannel = null;
         Exception exceptionFromCatch = null;
@@ -305,24 +332,24 @@ public class RollingFileAppender extends Appender {
             } catch (FileAlreadyExistsException ignored) {
                 return;
             } catch (Exception e) {
-                throw new IOException("Failed to open the archive path: " + currentFile.archivePath(), e);
+                throw new InputOutputException("Failed to open the archive path: " + currentFile.archivePath(), e);
             }
             try {
                 gzipOutputStream.init(archiveFileChannel);
             } catch (Exception e) {
-                throw new IOException("Failed to initialize the GZIP output stream", e);
+                throw new InputOutputException("Failed to initialize the GZIP output stream", e);
             }
-            IOException writeException = null;
+            InputOutputException writeException = null;
             try {
                 gzipOutputStream.write(logFileBuffer);
             } catch (Exception e) {
-                writeException = new IOException("Failed to write the log file to the GZIP output stream", e);
+                writeException = new InputOutputException("Failed to write the log file to the GZIP output stream", e);
                 throw writeException;
             } finally {
                 try {
                     gzipOutputStream.close();
                 } catch (IOException e) {
-                    IOException closeException = new IOException("Failed to close the GZIP output stream", e);
+                    InputOutputException closeException = new InputOutputException("Failed to close the GZIP output stream", e);
                     if (writeException != null) {
                         closeException.addSuppressed(writeException);
                     }
@@ -338,7 +365,7 @@ public class RollingFileAppender extends Appender {
                 try {
                     archiveFileChannel.close();
                 } catch (IOException e) {
-                    IOException closeException = new IOException("Failed to close the archive file channel", e);
+                    InputOutputException closeException = new InputOutputException("Failed to close the archive file channel", e);
                     if (exceptionFromCatch != null) {
                         closeException.addSuppressed(exceptionFromCatch);
                     }

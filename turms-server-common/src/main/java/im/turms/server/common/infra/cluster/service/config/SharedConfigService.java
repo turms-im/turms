@@ -25,6 +25,7 @@ import im.turms.server.common.infra.cluster.service.ClusterService;
 import im.turms.server.common.infra.cluster.service.config.entity.discovery.Leader;
 import im.turms.server.common.infra.cluster.service.config.entity.discovery.Member;
 import im.turms.server.common.infra.cluster.service.config.entity.property.SharedClusterProperties;
+import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.property.env.service.env.database.TurmsMongoProperties;
 import im.turms.server.common.infra.time.DurationConst;
 import im.turms.server.common.storage.mongo.TurmsMongoClient;
@@ -52,7 +53,7 @@ public class SharedConfigService implements ClusterService {
             mongoClient = TurmsMongoClient.of(properties, "shared-config")
                     .block(DurationConst.ONE_MINUTE);
         } catch (Exception e) {
-            throw new IllegalStateException("Failed to create the shared config service", e);
+            throw new RuntimeException("Failed to create the shared config service", e);
         }
         List<Class<?>> classes = List.of(SharedClusterProperties.class, Leader.class, Member.class);
         mongoClient.registerEntitiesByClasses(classes);
@@ -60,14 +61,16 @@ public class SharedConfigService implements ClusterService {
             try {
                 mongoClient.createCollectionIfNotExists(entityClass).block(DurationConst.ONE_MINUTE);
             } catch (Exception e) {
-                throw new IllegalStateException("Failed to create the collection for the class: " + entityClass.getName(), e);
+                throw new RuntimeException("Failed to create the collection for the class: " +
+                        entityClass.getName(), e);
             }
         }
         try {
-            mongoClient.ensureIndexesAndShard(classes).block(DurationConst.ONE_MINUTE);
+            mongoClient.ensureIndexesAndShards(classes).block(DurationConst.ONE_MINUTE);
         } catch (Exception e) {
-            throw new IllegalStateException("Failed to ensure the indexes are created for the classes: " + classes.stream()
-                    .map(Class::getName).toList(), e);
+            List<String> classNames = CollectionUtil.transformAsList(classes, Class::getName);
+            throw new RuntimeException("Failed to ensure the indexes are created for the classes: " +
+                    classNames, e);
         }
     }
 
@@ -77,7 +80,7 @@ public class SharedConfigService implements ClusterService {
     public <T> Flux<ChangeStreamDocument<T>> subscribe(Class<T> collectionClass, FullDocument fullDocument) {
         // Don't use the filter of watch because the code like
         // "filter(Criteria.where(clusterIdFieldName).is(clusterId))"
-        // cannot work if it's a delete operation
+        // cannot work if it is a delete operation
         return mongoClient.watch(collectionClass, fullDocument);
     }
 

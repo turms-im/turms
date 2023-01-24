@@ -89,7 +89,7 @@ public class ListCodec implements Codec<List<?>> {
         Object item = items.get(0);
         Codec<Object> codec = CodecPool.getCodec(item.getClass());
         if (codec == null) {
-            throw new IllegalArgumentException("Unknown codec for class: " + item.getClass());
+            throw new IllegalArgumentException("Unknown codec for the class: " + item.getClass().getName());
         }
         return Stream.computeVarint32Size(size) + codec.initialCapacity(item) * size;
     }

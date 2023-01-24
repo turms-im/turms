@@ -157,7 +157,7 @@ public final class DateUtil {
             case HOUR -> Calendar.HOUR_OF_DAY;
             case DAY -> Calendar.DAY_OF_YEAR;
             case MONTH -> Calendar.MONTH;
-            default -> throw new IllegalStateException("Unexpected value: " + divideBy);
+            default -> throw new IllegalArgumentException("Unexpected DivideBy value: " + divideBy);
         };
         List<Pair<Date, Date>> lists = new LinkedList<>();
         while (true) {

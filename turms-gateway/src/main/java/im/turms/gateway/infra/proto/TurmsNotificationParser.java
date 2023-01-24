@@ -46,7 +46,7 @@ public final class TurmsNotificationParser {
     }
 
     public static SimpleTurmsNotification parseSimpleNotification(CodedInputStream turmsRequestInputStream) {
-        Assert.notNull(turmsRequestInputStream, "turmsRequestInputStream must not be null");
+        Assert.notNull(turmsRequestInputStream, "The input stream must not be null");
         // The CodedInputStream.newInstance is efficient because it reuses the direct buffer
         try {
             long requesterId = UNSET_VALUE;
@@ -61,7 +61,7 @@ public final class TurmsNotificationParser {
                             requesterId = turmsRequestInputStream.readInt64();
                         } else {
                             throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
-                                    "Not a valid TurmsNotification: Duplicate requester ID");
+                                    "Not a valid notification: Duplicate requester ID");
                         }
                     }
                     case CLOSE_STATUS_TAG -> {
@@ -69,7 +69,7 @@ public final class TurmsNotificationParser {
                             closeStatus = turmsRequestInputStream.readInt32();
                         } else {
                             throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
-                                    "Not a valid TurmsNotification: Duplicate close status");
+                                    "Not a valid notification: Duplicate close status");
                         }
                     }
                     case RELAYED_REQUEST_TAG -> {
@@ -83,15 +83,17 @@ public final class TurmsNotificationParser {
                 }
             }
             if (requesterId == UNSET_VALUE) {
-                throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT, "Not a valid TurmsNotification: No requester ID");
+                throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
+                        "Not a valid notification: No requester ID");
             }
             if (type == null || type == KIND_NOT_SET) {
                 throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
-                        "Not a valid TurmsNotification: Unknown request type " + type);
+                        "Not a valid notification: Unknown request type: " + type);
             }
             return new SimpleTurmsNotification(requesterId, closeStatus, type);
         } catch (IOException e) {
-            throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT, "Not a valid TurmsNotification: " + e.getMessage());
+            throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
+                    "Not a valid notification: " + e.getMessage());
         }
     }
 

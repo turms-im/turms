@@ -18,11 +18,11 @@
 package im.turms.server.common.infra.security.jwt.algorithm;
 
 import im.turms.server.common.infra.security.MacPool;
-import lombok.SneakyThrows;
 
+import java.security.InvalidKeyException;
+import java.security.MessageDigest;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-import java.security.MessageDigest;
 
 /**
  * @author James Chen
@@ -34,7 +34,6 @@ public abstract non-sealed class SymmetricAlgorithm extends JwtAlgorithm {
         MacPool.ensureAvailability(definition.getJavaAlgorithmName());
     }
 
-    @SneakyThrows
     private byte[] createSignature(
             String algorithm,
             SecretKeySpec secretKeySpec,
@@ -42,7 +41,11 @@ public abstract non-sealed class SymmetricAlgorithm extends JwtAlgorithm {
             byte[] payloadBytes
     ) {
         Mac mac = MacPool.get(algorithm);
-        mac.init(secretKeySpec);
+        try {
+            mac.init(secretKeySpec);
+        } catch (InvalidKeyException e) {
+            throw new IllegalArgumentException("Invalid secret key spec: " + secretKeySpec, e);
+        }
         mac.update(headerBytes);
         mac.update(JWT_PART_SEPARATOR);
         return mac.doFinal(payloadBytes);

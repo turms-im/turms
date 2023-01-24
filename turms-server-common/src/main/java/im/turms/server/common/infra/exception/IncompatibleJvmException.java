@@ -30,4 +30,7 @@ public class IncompatibleJvmException extends RuntimeException {
         super(message, cause);
     }
 
+    public IncompatibleJvmException(Throwable cause) {
+        super(cause);
+    }
 }

@@ -29,12 +29,12 @@ import reactor.util.context.ContextView;
  */
 public class TracingContext {
 
-    public static final long UNDEFINED_TRACE_ID = -1;
+    public static final long UNSET_TRACE_ID = -1;
 
     public static final TracingContext DEFAULT = new TracingContext();
     public static final String CTX_KEY_NAME = "REQ";
     public static final String SCHEDULE_HOOK_NAME = "TRACING";
-    public static final TracingContext NOOP = new TracingContext(UNDEFINED_TRACE_ID) {
+    public static final TracingContext NOOP = new TracingContext(UNSET_TRACE_ID) {
         @Override
         public void updateThreadContext() {
         }
@@ -45,7 +45,7 @@ public class TracingContext {
 
         @Override
         public long getTraceId() {
-            return UNDEFINED_TRACE_ID;
+            return UNSET_TRACE_ID;
         }
 
         @Override
@@ -93,7 +93,7 @@ public class TracingContext {
     public static long readTraceIdFromContext(ContextView context) {
         TracingContext ctx = context.getOrDefault(CTX_KEY_NAME, null);
         if (ctx == null) {
-            return UNDEFINED_TRACE_ID;
+            return UNSET_TRACE_ID;
         }
         return ctx.traceId;
     }

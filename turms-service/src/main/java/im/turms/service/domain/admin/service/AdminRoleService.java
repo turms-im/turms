@@ -63,7 +63,7 @@ public class AdminRoleService extends BaseAdminRoleService {
 
     private static final String ERROR_UPDATE_ROLE_WITH_HIGHER_RANK =
             "Only a role with a lower rank compared to the one of the account can be created, updated, or deleted";
-    private static final String ERROR_NO_PERMISSION = "The account doesn't have the permissions";
+    private static final String ERROR_NO_PERMISSION = "The account does not have the permissions";
 
     private final Map<Long, AdminRole> idToRole = new ConcurrentHashMap<>(16);
     private final AdminRoleRepository adminRoleRepository;

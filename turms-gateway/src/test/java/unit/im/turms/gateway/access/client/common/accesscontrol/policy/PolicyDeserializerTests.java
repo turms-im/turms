@@ -25,7 +25,6 @@ import im.turms.gateway.access.client.common.authorization.policy.PolicyStatemen
 import im.turms.gateway.access.client.common.authorization.policy.PolicyStatementEffect;
 import im.turms.gateway.access.client.common.authorization.policy.PolicyStatementResource;
 import im.turms.server.common.infra.json.JsonUtil;
-import org.intellij.lang.annotations.Language;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
@@ -41,8 +40,9 @@ class PolicyDeserializerTests {
 
     @Test
     void test() {
-        @Language("JSON")
-        String json = """
+        // language=JSON
+        String json =
+                """
                 {
                     "authenticated": true,
                     "statements": [{

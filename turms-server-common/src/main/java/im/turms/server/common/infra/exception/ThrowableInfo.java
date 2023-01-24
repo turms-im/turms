@@ -19,6 +19,7 @@ package im.turms.server.common.infra.exception;
 
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.cluster.service.rpc.exception.RpcException;
+import im.turms.server.common.infra.io.ResourceNotFoundException;
 import im.turms.server.common.infra.plugin.ExtensionPointExecutionException;
 import im.turms.server.common.storage.mongo.exception.DuplicateKeyException;
 
@@ -36,10 +37,13 @@ public record ThrowableInfo(
             return new ThrowableInfo(e.getStatusCode(), e.getMessage());
         } else if (throwable instanceof DuplicateKeyException e) {
             // We consider DuplicateKeyException as a client error here,
-            // because if it's an exception caused by the illegal args provided
+            // because if it is an exception caused by the illegal args provided
             // by the server, it should recover in the upstream rather than
             // passing down DuplicateKeyException
             return new ThrowableInfo(ResponseStatusCode.RECORD_CONTAINS_DUPLICATE_KEY,
+                    e.getMessage());
+        } else if (throwable instanceof ResourceNotFoundException e) {
+            return new ThrowableInfo(ResponseStatusCode.RESOURCE_NOT_FOUND,
                     e.getMessage());
         } else if (throwable instanceof ExtensionPointExecutionException e) {
             return get(e.getCause());

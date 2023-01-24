@@ -18,9 +18,9 @@
 package im.turms.server.common.domain.observation.model;
 
 import im.turms.server.common.domain.observation.exception.DumpIllegalStateException;
+import im.turms.server.common.infra.io.InputOutputException;
 import jdk.jfr.Recording;
 import jdk.jfr.RecordingState;
-import lombok.SneakyThrows;
 
 import java.io.File;
 import java.io.IOException;
@@ -50,34 +50,45 @@ public record RecordingSession(
         return recording().getDestination();
     }
 
-    public Path getFilePath(File tempFile) throws IOException {
+    public Path getFilePath(File tempFile) {
         synchronized (recording) {
             RecordingState state = recording.getState();
             if (state == RecordingState.RUNNING) {
                 Path destination = tempFile.toPath();
-                recording.dump(destination);
+                try {
+                    recording.dump(destination);
+                } catch (IOException e) {
+                    throw new InputOutputException("Failed to dump the recording session to the destination: " +
+                            destination, e);
+                }
                 return destination;
             } else if (state == RecordingState.STOPPED || state == RecordingState.CLOSED) {
                 return recording.getDestination();
             } else {
-                throw new DumpIllegalStateException("Failed to dump the recording ["
-                        + id
-                        + "] because it is in the state of \""
-                        + state
-                        + "\"");
+                throw new DumpIllegalStateException("Failed to dump the recording (" +
+                        id + ") because it is in the state: " + state);
             }
         }
     }
 
-    public void deleteFile() throws IOException {
-        Files.deleteIfExists(recording.getDestination().toFile().toPath());
+    public void deleteFile() {
+        Path path;
+        try {
+            path = recording.getDestination().toFile().toPath();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to get the path of the recording destination file", e);
+        }
+        try {
+            Files.deleteIfExists(path);
+        } catch (IOException e) {
+            throw new InputOutputException("Failed to delete the recording destination file: " + path, e);
+        }
     }
 
     public boolean checkIfFileExists() {
         return Files.exists(recording.getDestination().toFile().toPath());
     }
 
-    @SneakyThrows
     public void close(boolean keepFile) {
         // 1. All states can be changed to closed
         // 2. close() will call stop() to flush data internally if it is running,

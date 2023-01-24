@@ -68,7 +68,7 @@ public class TurmsCommandEncoder extends ChannelOutboundHandlerAdapter {
                 encode(out, command, countArgs(command));
             }
         } else {
-            throw new IllegalArgumentException("Unknown message: " + msg.getClass().getName());
+            throw new IllegalArgumentException("Unknown message class: " + msg.getClass().getName());
         }
         ctx.write(out, promise);
     }

@@ -93,7 +93,7 @@ public abstract class TurmsExtension {
         initialized = true;
         started = true;
         running = true;
-        LOGGER.info("The extension [{}] of the plugin [{}] has been started",
+        LOGGER.info("The extension ({}) of the plugin ({}) has been started",
                 getClass().getName(),
                 plugin.descriptor().getId());
     }
@@ -107,7 +107,7 @@ public abstract class TurmsExtension {
         } finally {
             running = false;
             started = false;
-            LOGGER.info("The extension [{}] of the plugin [{}] has been stopped",
+            LOGGER.info("The extension ({}) of the plugin ({}) has been stopped",
                     getClass().getName(),
                     plugin.descriptor().getId());
         }
@@ -121,7 +121,7 @@ public abstract class TurmsExtension {
             onResumed();
         } finally {
             running = true;
-            LOGGER.info("The extension [{}] of the plugin [{}] has been resumed",
+            LOGGER.info("The extension ({}) of the plugin ({}) has been resumed",
                     getClass().getName(),
                     plugin.descriptor().getId());
         }
@@ -135,7 +135,7 @@ public abstract class TurmsExtension {
             onPaused();
         } finally {
             running = false;
-            LOGGER.info("The extension [{}] of the plugin [{}] has been paused",
+            LOGGER.info("The extension ({}) of the plugin ({}) has been paused",
                     getClass().getName(),
                     plugin.descriptor().getId());
         }

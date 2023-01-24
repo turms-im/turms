@@ -42,6 +42,7 @@ import im.turms.server.common.infra.cluster.service.rpc.exception.ConnectionNotF
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.context.JobShutdownOrder;
 import im.turms.server.common.infra.context.TurmsApplicationContext;
+import im.turms.server.common.infra.exception.IncompatibleInternalChangeException;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.lang.ByteArrayWrapper;
 import im.turms.server.common.infra.logging.core.logger.Logger;
@@ -127,7 +128,7 @@ public class SessionService implements ISessionService, SessionIdentityAccessMan
             GO_ONLINE_METHOD = UserOnlineStatusChangeHandler.class
                     .getDeclaredMethod("goOnline", UserSessionsManager.class, UserSession.class);
         } catch (NoSuchMethodException e) {
-            throw new RuntimeException(e);
+            throw new IncompatibleInternalChangeException(e);
         }
     }
 
@@ -193,7 +194,7 @@ public class SessionService implements ISessionService, SessionIdentityAccessMan
         heartbeatManager.destroy(timeoutMillis);
         CloseReason closeReason = CloseReason.get(SessionCloseStatus.SERVER_CLOSED);
         return clearAllLocalSessions(closeReason)
-                .onErrorMap(t -> new IllegalStateException("Caught an error while clearing local sessions", t));
+                .onErrorMap(t -> new RuntimeException("Caught an error while clearing local sessions", t));
     }
 
     public void handleHeartbeatUpdateRequest(UserSession session) {
@@ -211,7 +212,7 @@ public class SessionService implements ISessionService, SessionIdentityAccessMan
             @Nullable Location location,
             @Nullable String ipStr) {
         if (version != 1) {
-            return Mono.error(ResponseException.get(ResponseStatusCode.UNSUPPORTED_CLIENT_VERSION, "The supported versions are: 1"));
+            return Mono.error(ResponseException.get(ResponseStatusCode.UNSUPPORTED_CLIENT_VERSION, "Supported session versions are: [1], but got: " + version));
         }
         if (userSimultaneousLoginService.isForbiddenDeviceType(deviceType)) {
             return Mono.error(ResponseException.get(ResponseStatusCode.LOGIN_FROM_FORBIDDEN_DEVICE_TYPE));
@@ -229,7 +230,7 @@ public class SessionService implements ISessionService, SessionIdentityAccessMan
      * @return true if the user was online
      */
     @Override
-    public Mono<Boolean> setLocalSessionsOffline(
+    public Mono<Boolean> closeLocalSessions(
             @NotNull byte[] ip,
             @NotNull CloseReason closeReason) {
         try {
@@ -242,7 +243,7 @@ public class SessionService implements ISessionService, SessionIdentityAccessMan
         if (!iterator.hasNext()) {
             return PublisherPool.FALSE;
         }
-        Mono<Boolean> first = setLocalSessionOffline(iterator.next().getUserId(),
+        Mono<Boolean> first = closeLocalSession(iterator.next().getUserId(),
                 DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES_SET,
                 closeReason);
         // Fast path
@@ -250,14 +251,14 @@ public class SessionService implements ISessionService, SessionIdentityAccessMan
             return first;
         }
         // Slow path
-        // Use ArrayList instead of LinkedList because it's really heavy
+        // Use ArrayList instead of LinkedList because it is heavy
         List<Mono<Boolean>> list = new ArrayList<>(4);
         list.add(first);
-        list.add(setLocalSessionOffline(iterator.next().getUserId(),
+        list.add(closeLocalSession(iterator.next().getUserId(),
                 DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES_SET,
                 closeReason));
         while (iterator.hasNext()) {
-            list.add(setLocalSessionOffline(iterator.next().getUserId(),
+            list.add(closeLocalSession(iterator.next().getUserId(),
                     DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES_SET,
                     closeReason));
         }
@@ -267,7 +268,7 @@ public class SessionService implements ISessionService, SessionIdentityAccessMan
     /**
      * @return true if the user was online
      */
-    public Mono<Boolean> setLocalSessionOffline(
+    public Mono<Boolean> closeLocalSession(
             @NotNull Long userId,
             @NotNull @ValidDeviceType DeviceType deviceType,
             @NotNull SessionCloseStatus closeStatus) {
@@ -276,13 +277,13 @@ public class SessionService implements ISessionService, SessionIdentityAccessMan
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        return setLocalSessionOffline(userId, Collections.singleton(deviceType), CloseReason.get(closeStatus));
+        return closeLocalSession(userId, Collections.singleton(deviceType), CloseReason.get(closeStatus));
     }
 
     /**
      * @return true if the user was online
      */
-    public Mono<Boolean> setLocalSessionOffline(
+    public Mono<Boolean> closeLocalSession(
             @NotNull Long userId,
             @NotNull @ValidDeviceType DeviceType deviceType,
             @NotNull CloseReason closeReason) {
@@ -291,14 +292,14 @@ public class SessionService implements ISessionService, SessionIdentityAccessMan
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        return setLocalSessionOffline(userId, Collections.singleton(deviceType), closeReason);
+        return closeLocalSession(userId, Collections.singleton(deviceType), closeReason);
     }
 
     /**
      * @return true if the user was online
      */
     @Override
-    public Mono<Boolean> setLocalSessionOffline(
+    public Mono<Boolean> closeLocalSession(
             @NotNull Long userId,
             @NotEmpty Set<@ValidDeviceType DeviceType> deviceTypes,
             @NotNull CloseReason closeReason) {
@@ -314,10 +315,10 @@ public class SessionService implements ISessionService, SessionIdentityAccessMan
         return setLocalSessionOfflineByUserIdAndDeviceTypes0(userId, deviceTypes, closeReason, manager);
     }
 
-    public Mono<Boolean> authAndSetLocalSessionOffline(@NotNull Long userId,
-                                                       @NotNull DeviceType deviceType,
-                                                       @NotNull CloseReason closeReason,
-                                                       int sessionId) {
+    public Mono<Boolean> authAndCloseLocalSession(@NotNull Long userId,
+                                                  @NotNull DeviceType deviceType,
+                                                  @NotNull CloseReason closeReason,
+                                                  int sessionId) {
         try {
             Validator.notNull(userId, "userId");
             Validator.notNull(deviceType, "deviceType");
@@ -338,8 +339,8 @@ public class SessionService implements ISessionService, SessionIdentityAccessMan
 
     /**
      * @implNote The method will be called definitely when a session is closed
-     * no matter it's closed by the client or the server.
-     * And the method will clean up sessions in both local and Redis
+     * no matter it is closed by the client or the server,
+     * and the method will clean up sessions in both local and Redis.
      */
     private Mono<Boolean> setLocalSessionOfflineByUserIdAndDeviceTypes0(
             @NotNull Long userId,
@@ -368,10 +369,10 @@ public class SessionService implements ISessionService, SessionIdentityAccessMan
                                     ? (sessions.isEmpty() ? null : sessions)
                                     : sessions);
                         }
-                        triggerOnSessionClosedListeners(session);
+                        notifyOnSessionClosedListeners(session);
                         if (sessionLocationService.isLocationEnabled()) {
                             sessionLocationService.removeUserLocation(session.getUserId(), session.getDeviceType())
-                                    .subscribe(null, t -> LOGGER.error("Failed to remove the user [{}:{}] location",
+                                    .subscribe(null, t -> LOGGER.error("Failed to remove the location of the user session: {user={}, device={}}",
                                             session.getUserId(), session.getDeviceType(), t));
                         }
                     }
@@ -390,19 +391,19 @@ public class SessionService implements ISessionService, SessionIdentityAccessMan
         for (Map.Entry<Long, UserSessionsManager> entry : entries) {
             Long userId = entry.getKey();
             Set<DeviceType> loggedInDeviceTypes = entry.getValue().getLoggedInDeviceTypes();
-            Mono<Boolean> mono = setLocalSessionOffline(userId, loggedInDeviceTypes, closeReason);
+            Mono<Boolean> mono = closeLocalSession(userId, loggedInDeviceTypes, closeReason);
             monos.add(mono);
         }
         return Mono.whenDelayError(monos);
     }
 
     @Override
-    public Mono<Boolean> setLocalUserOffline(Long userId, CloseReason closeReason) {
-        return setLocalSessionOffline(userId, DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES_SET, closeReason);
+    public Mono<Boolean> closeLocalSession(Long userId, CloseReason closeReason) {
+        return closeLocalSession(userId, DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES_SET, closeReason);
     }
 
     @Override
-    public List<UserSessionsInfo> getUserSessions(Set<Long> userIds) {
+    public List<UserSessionsInfo> getSessions(Set<Long> userIds) {
         List<UserSessionsInfo> sessions = new ArrayList<>(userIds.size());
         for (Long userId : userIds) {
             sessions.add(getUserSessions(userId));
@@ -512,7 +513,7 @@ public class SessionService implements ISessionService, SessionIdentityAccessMan
                                     : userStatusService.updateOnlineUserStatusIfPresent(userId, userStatus)
                                     .then()
                                     .onErrorResume(t -> {
-                                        LOGGER.error("Failed to update the online status of the user " + userId, t);
+                                        LOGGER.error("Failed to update the online status of the user: " + userId, t);
                                         return Mono.empty();
                                     });
                             if (location != null) {
@@ -520,7 +521,8 @@ public class SessionService implements ISessionService, SessionIdentityAccessMan
                                         .flatMap(unused -> sessionLocationService
                                                 .upsertUserLocation(userId, deviceType, new Date(), location.longitude(), location.latitude())
                                                 .onErrorResume(t -> {
-                                                    LOGGER.error("Failed to upsert the location of the user " + userId, t);
+                                                    LOGGER.error("Failed to upsert the location of the user session: {user={}, device={}}",
+                                                            session.getUserId(), session.getDeviceType(), t);
                                                     return Mono.empty();
                                                 }));
                             }
@@ -592,17 +594,17 @@ public class SessionService implements ISessionService, SessionIdentityAccessMan
             SetUserOfflineRequest request = new SetUserOfflineRequest(userId, deviceTypes, SessionCloseStatus.DISCONNECTED_BY_CLIENT);
             disconnectionRequests.add(node.getRpcService().requestResponse(nodeId, request)
                     .onErrorResume(ConnectionNotFound.class, t -> {
-                        // The connection may not exist because there is a network problem between the local node
-                        // and the target node, or the target node is dead (if it's an unknown node)
+                        // The connection may not exist if a network error occurred between the local node
+                        // and the target node, or the target node is dead (if it is an unknown node)
                         // without clearing its user sessions in Redis.
 
-                        // For the first case (network problem) or we are not sure whether the target node is really dead,
-                        // we keep returning the expected INTERNAL_SERVER_ERROR to client until its TTL expires.
+                        // For the first case (network problem), or we are not sure whether the target node is dead,
+                        // we keep returning the expected INTERNAL_SERVER_ERROR to the client until its TTL expires.
                         if (node.getDiscoveryService().isKnownMember(nodeId)) {
                             return Mono.error(t);
                         }
                         // For the second case (dead target node), we consider the user sessions already offline,
-                        // so we return true for the logging in client to log in for better user experience.
+                        // so we return true for the client to log in for better user experience.
                         return PublisherPool.TRUE;
                     }));
         }
@@ -703,18 +705,19 @@ public class SessionService implements ISessionService, SessionIdentityAccessMan
         onSessionClosedListeners.add(onSessionClosed);
     }
 
-    private void triggerOnSessionClosedListeners(UserSession session) {
+    private void notifyOnSessionClosedListeners(UserSession session) {
         for (Consumer<UserSession> onSessionClosedListener : onSessionClosedListeners) {
             try {
                 onSessionClosedListener.accept(session);
             } catch (Exception e) {
-                LOGGER.error("Caught an error while triggering an onSessionClosed listener", e);
+                LOGGER.error("Caught an error while notifying the onSessionClosed listener: " +
+                        onSessionClosedListener.getClass().getName(), e);
             }
         }
     }
 
     // Plugin
-    public Mono<Void> triggerGoOnlinePlugins(@NotNull UserSessionsManager userSessionsManager, @NotNull UserSession userSession) {
+    public Mono<Void> invokeGoOnlineHandlers(@NotNull UserSessionsManager userSessionsManager, @NotNull UserSession userSession) {
         return pluginManager.invokeExtensionPointsSimultaneously(UserOnlineStatusChangeHandler.class,
                 GO_ONLINE_METHOD,
                 handler -> handler.goOnline(userSessionsManager, userSession));

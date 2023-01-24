@@ -97,32 +97,32 @@ public class LocalNodeStatusManager {
                 .doOnSuccess(unused -> isLocalNodeRegistered = true);
     }
 
-    public Mono<Void> registerLocalMember(boolean suppressDuplicateMemberError) {
-        LOGGER.info("Registering the local member");
+    public Mono<Void> registerLocalNodeAsMember(boolean suppressDuplicateMemberError) {
+        LOGGER.info("Registering the local node as a member");
         return discoveryService.registerMember(localMember)
                 .doOnSuccess(ignored -> {
                     isLocalNodeRegistered = true;
-                    LOGGER.info("Registered the local member");
+                    LOGGER.info("Registered the local node as a member");
                 })
                 .onErrorResume(t -> {
                     if (suppressDuplicateMemberError && t instanceof DuplicateKeyException) {
-                        LOGGER.info("Cancelled the local member registration because it has been registered");
+                        LOGGER.info("Cancelled the member registration because the local node has been registered");
                         return Mono.empty();
                     } else {
-                        LOGGER.error("Failed to register the local member", t);
+                        LOGGER.error("Failed to register the local node as a member", t);
                         return Mono.error(t);
                     }
                 });
     }
 
-    public Mono<Void> unregisterLocalMember() {
-        LOGGER.info("Unregistering the local member");
+    public Mono<Void> unregisterLocalNodeMembership() {
+        LOGGER.info("Unregistering the membership of the local node");
         return discoveryService.unregisterMembers(Set.of(localMember.getNodeId()))
                 .then(unregisterLocalMemberLeadership())
-                .doOnError(e -> LOGGER.error("Failed to unregister the local member", e))
+                .doOnError(e -> LOGGER.error("Failed to unregister the membership of the local node", e))
                 .doOnSuccess(ignored -> {
                     isLocalNodeRegistered = false;
-                    LOGGER.info("Unregistered the local member");
+                    LOGGER.info("Unregistered the membership of the local node");
                 });
     }
 
@@ -168,18 +168,23 @@ public class LocalNodeStatusManager {
                 Date now = new Date();
                 List<Mono<?>> monos = new ArrayList<>(2);
                 monos.add(upsertLocalNodeInfo(Update.newBuilder(1)
-                        .set(Member.STATUS_LAST_HEARTBEAT_DATE, now)));
+                        .set(Member.STATUS_LAST_HEARTBEAT_DATE, now))
+                        .onErrorMap(t -> new RuntimeException("Caught an error while upserting the local node information", t)));
                 if (isLocalNodeLeader()) {
-                    monos.add(renewLocalLeader(now)
-                            .flatMap(isLeader -> isLeader ? updateMembersStatus(now) : Mono.empty()));
+                    monos.add(renewLocalNodeAsLeader(now)
+                            .onErrorMap(t -> new RuntimeException("Caught an error while renewing the local node as the leader", t))
+                            .flatMap(isLeader -> isLeader
+                                    ? updateMembersStatus(now)
+                                    .onErrorMap(t -> new RuntimeException("Caught an error while updating the information \"lastHeartbeatDate\" of the local node", t))
+                                    : Mono.empty()));
                 }
                 Mono.whenDelayError(monos)
                         .timeout(heartbeatInterval)
                         .subscribe(null,
-                                t -> LOGGER.error("Failed to send heartbeat request", t),
+                                t -> LOGGER.error("Caught an error while sending the heartbeat request", t),
                                 () -> localMember.getStatus().setLastHeartbeatDate(now));
             } catch (Exception e) {
-                LOGGER.error("Failed to send heartbeat request", e);
+                LOGGER.error("Caught an error while sending the heartbeat request", e);
             }
         }, heartbeatIntervalMillis, heartbeatIntervalMillis, TimeUnit.MILLISECONDS);
     }
@@ -228,7 +233,7 @@ public class LocalNodeStatusManager {
                 .subscribe(null, t -> LOGGER.error("Caught an error while updating the health status of the local node", t));
     }
 
-    private Mono<Boolean> renewLocalLeader(Date renewDate) {
+    private Mono<Boolean> renewLocalNodeAsLeader(Date renewDate) {
         Leader leader = discoveryService.getLeader();
         if (leader == null) {
             return PublisherPool.FALSE;

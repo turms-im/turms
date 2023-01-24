@@ -64,7 +64,7 @@ public abstract class BaseMongoConfig {
                     return TurmsMongoClient.of(properties, name, requiredClusterTypes)
                             .block(DurationConst.ONE_MINUTE);
                 } catch (Exception e) {
-                    throw new IllegalStateException("Failed to create the mongo client", e);
+                    throw new RuntimeException("Failed to create the mongo client", e);
                 }
             }
             mongoClient.verifyClusterTypes(name, requiredClusterTypes);

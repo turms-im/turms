@@ -95,23 +95,25 @@ public class JsPluginFactory {
         try {
             exports = context.eval(source);
         } catch (Exception e) {
+            CorruptedScriptException exception = new CorruptedScriptException("Failed to eval the script", e);
             try {
                 context.close(true);
-            } catch (Exception ignored) {
+            } catch (Exception closeException) {
+                exception.addSuppressed(new RuntimeException("Caught an error while closing the JavaScript context", closeException));
             }
-            throw new CorruptedScriptException("Failed to eval the script", e);
+            throw exception;
         }
         Value pluginClass = exports.getMember("default");
         if (pluginClass == null
-                || !pluginClass.canInstantiate()
-                || ValueInspector.isFalse(pluginClass.getMember(MEMBER_IS_TURMS_PLUGIN))) {
-            throw new CorruptedScriptException("The script should define a default export to export a subclass of " + CLASS_TURMS_PLUGIN);
+            || !pluginClass.canInstantiate()
+            || ValueInspector.isFalse(pluginClass.getMember(MEMBER_IS_TURMS_PLUGIN))) {
+            throw new InvalidPluginException("The script should define a default export to export a subclass of " + CLASS_TURMS_PLUGIN);
         }
         Value plugin;
         try {
             plugin = pluginClass.newInstance();
         } catch (Exception e) {
-            throw new CorruptedScriptException("Failed to initialize the plugin: " + pluginClass.getMetaQualifiedName(), e);
+            throw new PluginExecutionException("Failed to initialize the plugin: " + pluginClass.getMetaQualifiedName(), e);
         }
         Value bindings = context.getBindings(JS_LANGUAGE_TYPE);
         JsPluginDescriptor descriptor = JsPluginDescriptorFactory.parsePluginDescriptor(plugin, path);
@@ -128,40 +130,44 @@ public class JsPluginFactory {
                                                          Value plugin) {
         Value getExtensions = plugin.getMember(MEMBER_GET_EXTENSIONS);
         if (getExtensions == null) {
-            String message = "The plugin should have a function called \"" + MEMBER_GET_EXTENSIONS + "\"";
-            throw new CorruptedScriptException(message);
+            String message = "The plugin must have a function named: \"" + MEMBER_GET_EXTENSIONS + "\"";
+            throw new InvalidPluginException(message);
         }
         if (!getExtensions.canExecute()) {
-            String message = "\"" + MEMBER_GET_EXTENSIONS + "\" should be a function. Actual: " + getExtensions;
-            throw new CorruptedScriptException(message);
+            String message = "The member \"" + MEMBER_GET_EXTENSIONS + "\" must be a function, but got: " + getExtensions;
+            throw new InvalidPluginException(message);
         }
         Value extensionClasses;
         try {
             extensionClasses = getExtensions.execute();
         } catch (Exception e) {
-            String message = "Failed to execute the function \"" + MEMBER_GET_EXTENSIONS + "\"";
-            throw new CorruptedScriptException(message, e);
+            String message = "Failed to execute the function: \"" + MEMBER_GET_EXTENSIONS + "\"";
+            throw new PluginExecutionException(message, e);
         }
         if (!extensionClasses.hasArrayElements()) {
             String message = "The function \"" +
-                    MEMBER_GET_EXTENSIONS +
-                    "\" should return the subclasses of " + CLASS_TURMS_EXTENSION +
-                    ". Actual: "
-                    + extensionClasses;
-            throw new CorruptedScriptException(message);
+                             MEMBER_GET_EXTENSIONS +
+                             "\" must return an array of the subclass of " + CLASS_TURMS_EXTENSION +
+                             ", but got: " +
+                             extensionClasses;
+            throw new InvalidPluginException(message);
+        }
+        long extensionClassCount = extensionClasses.getArraySize();
+        if (extensionClassCount <= 0) {
+            throw new InvalidPluginException("The method \"" + MEMBER_GET_EXTENSIONS + "\" must return non-empty extension classes");
         }
         Value iterator = extensionClasses.getIterator();
-        List<TurmsExtension> extensions = new ArrayList<>((int) extensionClasses.getArraySize());
+        List<TurmsExtension> extensions = new ArrayList<>((int) extensionClassCount);
         while (iterator.hasIteratorNextElement()) {
             Value extensionClass = iterator.getIteratorNextElement();
             if (!extensionClass.canInstantiate()
-                    || ValueInspector.isFalse(extensionClass.getMember(MEMBER_IS_TURMS_EXTENSION))) {
+                || ValueInspector.isFalse(extensionClass.getMember(MEMBER_IS_TURMS_EXTENSION))) {
                 String message = "The function \"" +
-                        MEMBER_GET_EXTENSIONS +
-                        "\" should return the subclasses of " + CLASS_TURMS_EXTENSION +
-                        ". Actual: "
-                        + extensionClasses;
-                throw new CorruptedScriptException(message);
+                                 MEMBER_GET_EXTENSIONS +
+                                 "\" must return an array of the subclass of " + CLASS_TURMS_EXTENSION +
+                                 ", but got: " +
+                                 extensionClasses;
+                throw new InvalidPluginException(message);
             }
             extensions.add(createExtension(applicationContext, extensionClass));
         }
@@ -174,7 +180,7 @@ public class JsPluginFactory {
             Value extension = extensionClass.newInstance();
             Value getExtensionPoints = extension.getMember(MEMBER_GET_EXTENSION_POINTS);
             if (getExtensionPoints == null || !getExtensionPoints.canExecute()) {
-                String message = "The method \"" + MEMBER_GET_EXTENSION_POINTS + "\" should return the name of extension points";
+                String message = "The method \"" + MEMBER_GET_EXTENSION_POINTS + "\" must return the name of extension points";
                 throw new CorruptedScriptException(message);
             }
             Value extensionPointStrings = getExtensionPoints.execute();
@@ -186,15 +192,16 @@ public class JsPluginFactory {
             adaptor.setContext(applicationContext);
             return adaptor;
         } catch (Exception e) {
-            throw new RuntimeException("Failed to create the extension " + extensionClass, e);
+            throw new RuntimeException("Failed to create the extension: " + extensionClass, e);
         }
     }
 
     private static ExtensionClassInfo parseExtensionClassInfo(Value extension,
                                                               Value extensionPointStrings) {
         if (!extensionPointStrings.hasArrayElements()) {
-            String message = "The method \"%s\" should return the name of extension points"
-                    .formatted(MEMBER_GET_EXTENSION_POINTS);
+            String message = "The method \"" +
+                             MEMBER_GET_EXTENSION_POINTS +
+                             "\" must return the name of extension points";
             throw new CorruptedScriptException(message);
         }
         int size = (int) extensionPointStrings.getArraySize();
@@ -225,16 +232,16 @@ public class JsPluginFactory {
 
     private static Class<? extends ExtensionPoint> parseExtensionPointClass(Value classString) {
         if (!classString.isString()) {
-            String message = "The name of extension points should be a string";
-            throw new CorruptedScriptException(message);
+            String message = "The name of extension points must be a string";
+            throw new InvalidPluginException(message);
         }
         String extensionPointClassName = classString.asString();
         try {
             return (Class<? extends ExtensionPoint>) Class
                     .forName(extensionPointClassName);
         } catch (Exception e) {
-            String message = "Cannot find the class of the extension point: " + extensionPointClassName;
-            throw new CorruptedScriptException(message, e);
+            String message = "Could not find the extension point class: " + extensionPointClassName;
+            throw new InvalidPluginException(message, e);
         }
     }
 

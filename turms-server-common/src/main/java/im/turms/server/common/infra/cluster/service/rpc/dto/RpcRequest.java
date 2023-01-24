@@ -20,6 +20,7 @@ package im.turms.server.common.infra.cluster.service.rpc.dto;
 import im.turms.server.common.infra.cluster.node.NodeType;
 import im.turms.server.common.infra.cluster.service.connection.TurmsConnection;
 import im.turms.server.common.infra.cluster.service.rpc.NodeTypeToHandleRpc;
+import im.turms.server.common.infra.exception.NotImplementedException;
 import im.turms.server.common.infra.exception.ThrowableUtil;
 import im.turms.server.common.infra.tracing.TracingContext;
 import io.micrometer.core.instrument.Tag;
@@ -108,9 +109,11 @@ public abstract class RpcRequest<T> implements ReferenceCounted {
             return applicationContext.getBean(clazz);
         } catch (NoSuchBeanDefinitionException e) {
             NodeType nodeType = ThrowableUtil.suppress(() -> applicationContext.getBean(NodeType.class));
-            String message = "Failed to get the bean. The request type %s may be sent to the wrong server %s"
-                    .formatted(name(), nodeType);
-            throw new IllegalStateException(message, e);
+            String message = "Failed to get the bean. The request type \"" +
+                    name() +
+                    "\" may be sent to the wrong server with the node type: " +
+                    nodeType;
+            throw new RuntimeException(message, e);
         }
     }
 
@@ -138,11 +141,11 @@ public abstract class RpcRequest<T> implements ReferenceCounted {
     }
 
     public T call() {
-        throw new UnsupportedOperationException();
+        throw new NotImplementedException();
     }
 
     public Mono<T> callAsync() {
-        throw new UnsupportedOperationException();
+        throw new NotImplementedException();
     }
 
     // Adaptor to ReferenceCounted

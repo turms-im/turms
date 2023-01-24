@@ -101,7 +101,7 @@ public class TurmsTcpClient extends TurmsClient {
                         .build()))
                 .flatMap(n -> {
                     if (n.getCode() != ResponseStatusCode.OK.getBusinessCode()) {
-                        return Mono.error(new IllegalStateException("Failed to log in: " + ProtoFormatter.toJSON5(n, 128)));
+                        return Mono.error(new RuntimeException("Failed to log in: " + ProtoFormatter.toJSON5(n, 128)));
                     }
                     return Mono.just(n);
                 });
@@ -133,10 +133,10 @@ public class TurmsTcpClient extends TurmsClient {
     @Override
     public Mono<TurmsNotification> sendRequest(TurmsRequest request) {
         if (connection == null) {
-            return Mono.error(new IllegalStateException("Connection is null"));
+            return Mono.error(new IllegalStateException("The connection has not established"));
         }
         if (connection.isDisposed()) {
-            return Mono.error(new IllegalStateException("Connection is closed"));
+            return Mono.error(new IllegalStateException("The connection has been closed"));
         }
         return connection
                 .sendObject(request)

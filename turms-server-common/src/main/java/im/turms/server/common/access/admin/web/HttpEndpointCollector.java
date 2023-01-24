@@ -96,7 +96,11 @@ public class HttpEndpointCollector {
                         method.getDeclaredAnnotation(RequiredPermission.class));
                 ApiEndpointKey key = new ApiEndpointKey(path, httpMethod);
                 if (keyToEndpoint.containsKey(key)) {
-                    throw new IllegalStateException("Duplicate endpoint: " + key + " in " + controllerClass.getName());
+                    throw new IllegalArgumentException("Found a duplicate endpoint (" +
+                            key +
+                            ")" +
+                            " in the controller: " +
+                            controllerClass.getName());
                 }
                 keyToEndpoint.put(key, endpoint);
             }
@@ -134,7 +138,7 @@ public class HttpEndpointCollector {
             if (info != null) {
                 parameterInfos[i] = info;
                 if (hasRequestFormData) {
-                    throw new IllegalArgumentException("The endpoint should not accept both request form data and request body");
+                    throw new IllegalArgumentException("The endpoint must not accept both request form data and request body");
                 }
                 hasRequestBody = true;
                 continue;
@@ -143,7 +147,7 @@ public class HttpEndpointCollector {
             if (info != null) {
                 parameterInfos[i] = info;
                 if (hasRequestBody) {
-                    throw new IllegalArgumentException("The endpoint should not accept both request form data and request body");
+                    throw new IllegalArgumentException("The endpoint must not accept both request form data and request body");
                 }
                 hasRequestFormData = true;
                 continue;

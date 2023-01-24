@@ -17,6 +17,8 @@
 
 package im.turms.server.common.infra.reflect;
 
+import im.turms.server.common.infra.exception.IncompatibleJvmException;
+import im.turms.server.common.infra.lang.ClassUtil;
 import im.turms.server.common.infra.unsafe.UnsafeUtil;
 import sun.misc.Unsafe;
 
@@ -54,17 +56,17 @@ public final class ReflectionUtil {
             }
             field = OverrideTest.class.getDeclaredField("firstField");
         } catch (NoSuchFieldException e) {
-            throw new RuntimeException(e);
+            throw new IncompatibleJvmException("Failed to find the first field of a class", e);
         }
         // "AccessibleObject#override" should be the first field,
         // so their object offset should be the same
         OVERRIDE_OFFSET = UNSAFE.objectFieldOffset(field);
         if (field.isAccessible()) {
-            throw new IllegalStateException("The private field should be inaccessible");
+            throw new IncompatibleJvmException("The private field should be inaccessible by default");
         }
         setAccessible(field);
         if (!field.isAccessible()) {
-            throw new IllegalStateException("The private field should be accessible after updating \"override\" to true");
+            throw new IncompatibleJvmException("The private field should be accessible after updating \"override\" to true");
         }
     }
 
@@ -76,17 +78,26 @@ public final class ReflectionUtil {
         try {
             return LOOKUP.unreflectConstructor(constructor);
         } catch (IllegalAccessException e) {
-            throw new IllegalStateException(e);
+            throw new RuntimeException("Failed to unreflect the constructor: " +
+                    constructor.getName(), e);
         }
     }
 
     public static MethodHandle getGetter(Class<?> clazz, String fieldName) {
+        Field field = null;
         try {
-            Field field = clazz.getDeclaredField(fieldName);
+            field = clazz.getDeclaredField(fieldName);
             setAccessible(field);
             return LOOKUP.unreflectGetter(field);
-        } catch (Exception e) {
-            throw new IllegalStateException(e);
+        } catch (NoSuchFieldException e) {
+            throw new IllegalArgumentException("The class (" +
+                    clazz.getName() +
+                    ") does not have the field: \"" +
+                    fieldName +
+                    "\"", e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException("Failed to reflect the getter for the field: " +
+                    ClassUtil.getReference(field), e);
         }
     }
 
@@ -94,8 +105,9 @@ public final class ReflectionUtil {
         try {
             setAccessible(method);
             return LOOKUP.unreflect(method);
-        } catch (Exception e) {
-            throw new IllegalStateException(e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException("Failed to reflect the method: " +
+                    ClassUtil.getReference(method), e);
         }
     }
 
@@ -105,6 +117,9 @@ public final class ReflectionUtil {
      * {@link benchmark.im.turms.server.common.infra.reflect.SetAccessible}
      */
     public static void setAccessible(AccessibleObject object) {
+        if (object == null) {
+            throw new IllegalArgumentException("The target object must not be null");
+        }
         UNSAFE.putBoolean(object, OVERRIDE_OFFSET, true);
     }
 

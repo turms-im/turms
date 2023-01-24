@@ -61,7 +61,7 @@ import io.netty.util.concurrent.FastThreadLocal;
 /**
  * Using cached builders is a tradeoff between code maintainability and efficiency.
  * For better efficiency, we can write our own code generator to make protobuf models mutable,
- * but it's really troublesome, so we just cache these builders for better efficiency
+ * but it is troublesome, so we just cache these builders for better efficiency
  * while don't need to modify the generated codes.
  *
  * @author James Chen

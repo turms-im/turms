@@ -59,7 +59,7 @@ public final class TurmsRedisCodecAdapter<K, V> implements RedisCodec<K, V> {
                 buffer.get(bytes);
                 return (K) Unpooled.wrappedBuffer(bytes);
             } catch (Exception e) {
-                throw new UnsupportedOperationException("No keyDecoder to decode key: " + buffer);
+                throw new UnsupportedOperationException("No key decoder to decode the key: " + buffer);
             }
         }
         return (K) keyDecoder.decode(buffer);
@@ -76,7 +76,7 @@ public final class TurmsRedisCodecAdapter<K, V> implements RedisCodec<K, V> {
                 buffer.get(bytes);
                 return (V) Unpooled.wrappedBuffer(bytes);
             } catch (Exception e) {
-                throw new UnsupportedOperationException("No valueDecoder to decode key: " + buffer);
+                throw new UnsupportedOperationException("No value decoder to decode the key buffer: " + buffer);
             }
         }
         return (V) valueDecoder.decode(buffer);

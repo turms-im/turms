@@ -36,7 +36,7 @@ import jakarta.validation.constraints.Min;
 public class ShutdownProperties {
 
     @Description("Wait for a job 2 minutes at most for extreme cases by default. " +
-            "Though it's a long time, graceful shutdown is usually better than force shutdown.")
+            "Though it is a long time, graceful shutdown is usually better than force shutdown.")
     @Min(0)
     private long jobTimeoutMillis = 120 * 1000;
 

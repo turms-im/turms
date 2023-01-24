@@ -17,6 +17,7 @@
 
 package im.turms.server.common.infra.property;
 
+import im.turms.server.common.infra.lang.ClassUtil;
 import im.turms.server.common.infra.validation.ValidCron;
 import org.springframework.scheduling.support.CronExpression;
 
@@ -98,7 +99,9 @@ public class TurmsPropertiesValidator {
 
     private static void validateMinMaxProperty(Min min, Max max, Object value, Field field, List<String> errorMessages) {
         if (!(value instanceof Number number)) {
-            throw new IllegalArgumentException("The field \"" + field + "\" must be a number for min and max validation");
+            throw new IllegalArgumentException("The value of the field (" +
+                    ClassUtil.getReference(field) +
+                    ") must be a number for min and max validation");
         }
         if (min != null && min.value() > number.longValue()) {
             String message = "The property \"" + field.getName() + "\" must be greater than or equal to " + min.value();
@@ -126,21 +129,25 @@ public class TurmsPropertiesValidator {
             propertyLengthName = "size";
         }
         if (count == -1) {
-            throw new IllegalArgumentException("The field \"" + field + "\" must be a string, collection, or map for size validation");
+            throw new IllegalArgumentException("The field \"" +
+                    field +
+                    "\" must be a string, collection, or map for size validation");
         }
         if (min > count) {
-            String message = "The " + propertyLengthName + " of property \"" + field.getName() + "\" must be greater than or equal to " + min;
+            String message = "The " + propertyLengthName + " of property \"" + field.getName()
+                    + "\" must be greater than or equal to " + min;
             errorMessages.add(message);
         }
         if (max < count) {
-            String message = "The" + propertyLengthName + " of property \"" + field.getName() + "\" must be less than or equal to " + max;
+            String message = "The " + propertyLengthName + " of property \"" + field.getName()
+                    + "\" must be less than or equal to " + max;
             errorMessages.add(message);
         }
     }
 
     private static void validateCronProperty(Object value, Field field, List<String> errorMessages) {
         if (!(value instanceof String str)) {
-            throw new IllegalArgumentException("The field \"" + field + "\" must be a string for cron validation");
+            throw new IllegalArgumentException("The value of the field (" + ClassUtil.getReference(field) + ") must be a string for cron validation");
         }
         if (!CronExpression.isValidExpression(str)) {
             String message = "The property \"" + field.getName() + "\" has an invalid cron \"" + str + "\"";

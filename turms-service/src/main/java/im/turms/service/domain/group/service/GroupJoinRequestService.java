@@ -103,7 +103,7 @@ public class GroupJoinRequestService extends ExpirableEntityService<GroupJoinReq
         this.groupService = groupService;
         this.userVersionService = userVersionService;
 
-        propertiesManager.triggerAndAddGlobalPropertiesChangeListener(this::updateProperties);
+        propertiesManager.notifyAndAddGlobalPropertiesChangeListener(this::updateProperties);
 
         // Set up a cron job to remove requests if deleting expired docs is enabled
         taskManager.reschedule(
@@ -161,13 +161,13 @@ public class GroupJoinRequestService extends ExpirableEntityService<GroupJoinReq
                             .then(Mono.whenDelayError(
                                     groupVersionService.updateJoinRequestsVersion(groupId)
                                             .onErrorResume(t -> {
-                                                LOGGER.error("Caught an error while updating the join requests version of the group {} after creating a join request",
+                                                LOGGER.error("Caught an error while updating the join requests version of the group ({}) after creating a join request",
                                                         groupId, t);
                                                 return Mono.empty();
                                             }),
                                     userVersionService.updateSentGroupJoinRequestsVersion(requesterId)
                                             .onErrorResume(t -> {
-                                                LOGGER.error("Caught an error while updating the sent group join requests version of the requester {} after creating a join request",
+                                                LOGGER.error("Caught an error while updating the sent group join requests version of the requester ({}) after creating a join request",
                                                         requesterId, t);
                                                 return Mono.empty();
                                             })
@@ -213,13 +213,13 @@ public class GroupJoinRequestService extends ExpirableEntityService<GroupJoinReq
                                     ? Mono.whenDelayError(
                                     groupVersionService.updateJoinRequestsVersion(request.getGroupId())
                                             .onErrorResume(t -> {
-                                                LOGGER.error("Caught an error while updating the join requests version of the group {} after recalling a pending join request",
+                                                LOGGER.error("Caught an error while updating the join requests version of the group ({}) after recalling a pending join request",
                                                         request.getGroupId(), t);
                                                 return Mono.empty();
                                             }),
                                     userVersionService.updateSentGroupJoinRequestsVersion(requesterId)
                                             .onErrorResume(t -> {
-                                                LOGGER.error("Caught an error while updating the sent join requests version of the requester {} after recalling a pending join request",
+                                                LOGGER.error("Caught an error while updating the sent join requests version of the requester ({}) after recalling a pending join request",
                                                         requesterId, t);
                                                 return Mono.empty();
                                             }))
@@ -415,13 +415,13 @@ public class GroupJoinRequestService extends ExpirableEntityService<GroupJoinReq
                 .then(Mono.whenDelayError(
                         groupVersionService.updateJoinRequestsVersion(groupId)
                                 .onErrorResume(t -> {
-                                    LOGGER.error("Caught an error while updating the join requests version of the group {} after creating a join request",
+                                    LOGGER.error("Caught an error while updating the join requests version of the group ({}) after creating a join request",
                                             groupId, t);
                                     return Mono.empty();
                                 }),
                         userVersionService.updateSentGroupJoinRequestsVersion(requesterId)
                                 .onErrorResume(t -> {
-                                    LOGGER.error("Caught an error while updating the sent join requests version of the requester {} after creating a join request",
+                                    LOGGER.error("Caught an error while updating the sent join requests version of the requester ({}) after creating a join request",
                                             requesterId, t);
                                     return Mono.empty();
                                 })

@@ -48,13 +48,13 @@ public abstract class PluginDescriptorFactory {
         try {
             value = properties.get(key);
         } catch (Exception e) {
-            throw new IllegalArgumentException("Field \"%s\" should be a string".formatted(key), e);
+            throw new IllegalArgumentException("The value of the field \"" + key + "\" must be a string", e);
         }
         if (StringUtils.hasText(value)) {
             return value;
         }
         if (required) {
-            throw new IllegalArgumentException("Field \"%s\" cannot be blank".formatted(key));
+            throw new IllegalArgumentException("The value of the field \"" + key + "\" must not be blank");
         }
         return null;
     }

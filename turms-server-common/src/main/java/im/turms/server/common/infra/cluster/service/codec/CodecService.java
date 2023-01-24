@@ -48,11 +48,15 @@ public class CodecService implements ClusterService {
         Class<T> clazz = (Class<T>) data.getClass();
         Codec<T> codec = CodecPool.getCodec(clazz);
         if (codec == null) {
-            throw new CodecNotFoundException("Cannot find a codec for class: " + clazz.getName());
+            throw new CodecNotFoundException("Could not find a codec for the class: " + clazz.getName());
         }
         ByteBuf byteBufToComposite = codec.byteBufToComposite(data);
         if (byteBufToComposite != null && byteBufToComposite.refCnt() == 0) {
-            throw new IllegalReferenceCountException("byteBufToComposite of the data has been released: " + data);
+            throw new IllegalReferenceCountException("The buffer (" +
+                    byteBufToComposite +
+                    ") to composite for the data (" +
+                    data +
+                    ") has been released");
         }
         int initialCapacity = codec.initialCapacity(data);
         ByteBuf output = PooledByteBufAllocator.DEFAULT

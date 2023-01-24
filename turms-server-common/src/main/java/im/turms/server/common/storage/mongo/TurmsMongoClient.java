@@ -28,6 +28,7 @@ import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.property.env.service.env.database.TurmsMongoProperties;
 import im.turms.server.common.storage.mongo.entity.MongoEntity;
+import im.turms.server.common.storage.mongo.exception.IncompatibleMongoException;
 import im.turms.server.common.storage.mongo.operation.MongoCollectionOptions;
 import im.turms.server.common.storage.mongo.operation.MongoOperationsSupport;
 import im.turms.server.common.storage.mongo.operation.TurmsMongoOperations;
@@ -136,9 +137,9 @@ public final class TurmsMongoClient implements MongoOperationsSupport {
         }
         for (ServerDescription description : descriptions) {
             if (!requiredClusterTypes.contains(description.getClusterType())) {
-                throw new IllegalStateException("The cluster types for \"" +
+                throw new IncompatibleMongoException("The cluster types for the mongo clients " +
                         names +
-                        "\" mongo clients must be one of the type: " +
+                        " must be one of the types: " +
                         requiredClusterTypes);
             }
         }
@@ -149,14 +150,14 @@ public final class TurmsMongoClient implements MongoOperationsSupport {
                                Set<ClusterType> requiredClusterTypes) {
         for (ServerDescription description : descriptions) {
             if (description.getMaxWireVersion() < ServerVersionHelper.FOUR_DOT_ZERO_WIRE_VERSION) {
-                throw new IllegalStateException("The version of MongoDB server should be at least 4.0. " +
+                throw new IncompatibleMongoException("The version of MongoDB server should be at least 4.0. " +
                         "Note that Turms cannot work with Amazon DocumentDB. " +
                         "The description of the unsupported server: " + description.getShortDescription());
             }
             if (!requiredClusterTypes.isEmpty() && !requiredClusterTypes.contains(description.getClusterType())) {
-                throw new IllegalStateException("The cluster types for \"" +
+                throw new IncompatibleMongoException("The cluster types for the mongo client \"" +
                         name +
-                        "\" mongo client must be one of the type: " +
+                        "\" must be one of the types: " +
                         requiredClusterTypes);
             }
         }

@@ -37,12 +37,12 @@ import java.util.Map;
 import static im.turms.server.common.access.admin.permission.AdminPermission.CLUSTER_SETTING_QUERY;
 import static im.turms.server.common.access.admin.permission.AdminPermission.CLUSTER_SETTING_UPDATE;
 import static im.turms.server.common.infra.property.TurmsPropertiesConvertor.mergeMetadataWithPropertyValue;
-import static im.turms.server.common.infra.property.TurmsPropertiesInspector.getPropertyToValueMap;
+import static im.turms.server.common.infra.property.TurmsPropertiesInspector.convertPropertiesToValueMap;
 
 /**
  * @author James Chen
  * @implNote These APIs should be designed to work for the cluster settings
- * instead of the local node settings by default consistently because it's "cluster/settings"
+ * instead of the local node settings by default consistently because it is "cluster/settings".
  */
 @RestController("cluster/settings")
 public class SettingController extends BaseController {
@@ -61,7 +61,7 @@ public class SettingController extends BaseController {
                 : propertiesManager.getGlobalProperties();
         return HttpHandlerResult.okIfTruthy(new SettingsDTO(
                 TurmsProperties.SCHEMA_VERSION,
-                getPropertyToValueMap(properties, onlyMutable)
+                convertPropertiesToValueMap(properties, onlyMutable)
         ));
     }
 

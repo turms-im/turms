@@ -20,7 +20,7 @@ package im.turms.server.common.infra.plugin;
 /**
  * @author James Chen
  */
-public class ExtensionPointExecutionException extends RuntimeException {
+public class ExtensionPointExecutionException extends PluginExecutionException {
 
     public ExtensionPointExecutionException(String message, Throwable cause) {
         super(message, cause);

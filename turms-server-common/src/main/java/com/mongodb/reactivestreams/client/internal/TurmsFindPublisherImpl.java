@@ -30,6 +30,7 @@ import com.mongodb.internal.operation.TurmsFindOperation;
 import com.mongodb.lang.Nullable;
 import com.mongodb.reactivestreams.client.ClientSession;
 import com.mongodb.reactivestreams.client.FindPublisher;
+import im.turms.server.common.infra.exception.NotImplementedException;
 import im.turms.server.common.storage.mongo.operation.option.QueryOptions;
 import org.bson.BsonDocument;
 import org.bson.BsonValue;
@@ -69,118 +70,118 @@ public class TurmsFindPublisherImpl<T> extends BatchCursorPublisher<T> implement
 
     @Override
     public FindPublisher<T> filter(@Nullable final Bson filter) {
-        throw new UnsupportedOperationException();
+        throw new NotImplementedException();
     }
 
     @Override
     public FindPublisher<T> limit(final int limit) {
-        throw new UnsupportedOperationException();
+        throw new NotImplementedException();
     }
 
     @Override
     public FindPublisher<T> skip(final int skip) {
-        throw new UnsupportedOperationException();
+        throw new NotImplementedException();
     }
 
     @Override
     public FindPublisher<T> maxTime(final long maxTime, final TimeUnit timeUnit) {
-        throw new UnsupportedOperationException();
+        throw new NotImplementedException();
     }
 
     @Override
     public FindPublisher<T> maxAwaitTime(final long maxAwaitTime, final TimeUnit timeUnit) {
-        throw new UnsupportedOperationException();
+        throw new NotImplementedException();
     }
 
     @Override
     public FindPublisher<T> batchSize(final int batchSize) {
-        throw new UnsupportedOperationException();
+        throw new NotImplementedException();
     }
 
     @Override
     public FindPublisher<T> collation(@Nullable final Collation collation) {
-        throw new UnsupportedOperationException();
+        throw new NotImplementedException();
     }
 
     @Override
     public FindPublisher<T> projection(@Nullable final Bson projection) {
-        throw new UnsupportedOperationException();
+        throw new NotImplementedException();
     }
 
     @Override
     public FindPublisher<T> sort(@Nullable final Bson sort) {
-        throw new UnsupportedOperationException();
+        throw new NotImplementedException();
     }
 
     @Override
     public FindPublisher<T> noCursorTimeout(final boolean noCursorTimeout) {
-        throw new UnsupportedOperationException();
+        throw new NotImplementedException();
     }
 
     @Override
     @Deprecated
     public FindPublisher<T> oplogReplay(final boolean oplogReplay) {
-        throw new UnsupportedOperationException();
+        throw new NotImplementedException();
     }
 
     @Override
     public FindPublisher<T> partial(final boolean partial) {
-        throw new UnsupportedOperationException();
+        throw new NotImplementedException();
     }
 
     @Override
     public FindPublisher<T> cursorType(final CursorType cursorType) {
-        throw new UnsupportedOperationException();
+        throw new NotImplementedException();
     }
 
     @Override
     public FindPublisher<T> comment(@Nullable final String comment) {
-        throw new UnsupportedOperationException();
+        throw new NotImplementedException();
     }
 
     @Override
     public FindPublisher<T> comment(BsonValue comment) {
-        throw new UnsupportedOperationException();
+        throw new NotImplementedException();
     }
 
     @Override
     public FindPublisher<T> hint(@Nullable final Bson hint) {
-        throw new UnsupportedOperationException();
+        throw new NotImplementedException();
     }
 
     @Override
     public FindPublisher<T> hintString(@Nullable final String hint) {
-        throw new UnsupportedOperationException();
+        throw new NotImplementedException();
     }
 
     @Override
     public FindPublisher<T> let(Bson variables) {
-        throw new UnsupportedOperationException();
+        throw new NotImplementedException();
     }
 
     @Override
     public FindPublisher<T> max(@Nullable final Bson max) {
-        throw new UnsupportedOperationException();
+        throw new NotImplementedException();
     }
 
     @Override
     public FindPublisher<T> min(@Nullable final Bson min) {
-        throw new UnsupportedOperationException();
+        throw new NotImplementedException();
     }
 
     @Override
     public FindPublisher<T> returnKey(final boolean returnKey) {
-        throw new UnsupportedOperationException();
+        throw new NotImplementedException();
     }
 
     @Override
     public FindPublisher<T> showRecordId(final boolean showRecordId) {
-        throw new UnsupportedOperationException();
+        throw new NotImplementedException();
     }
 
     @Override
     public FindPublisher<T> allowDiskUse(@Nullable final Boolean allowDiskUse) {
-        throw new UnsupportedOperationException();
+        throw new NotImplementedException();
     }
 
     @Override

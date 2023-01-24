@@ -18,7 +18,6 @@
 package im.turms.server.common.infra.reflect;
 
 import lombok.Data;
-import lombok.SneakyThrows;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.reflect.Field;
@@ -38,16 +37,22 @@ public class FieldAndMethodHandledBasedVarAccessor<T, V> implements VarAccessor<
         this.setter = setter;
     }
 
-    @SneakyThrows
     @Override
     public V get(T object) {
-        return (V) fieldForGetter.get(object);
+        try {
+            return (V) fieldForGetter.get(object);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to get the value from the object: " + object, e);
+        }
     }
 
-    @SneakyThrows
     @Override
     public void set(T object, V value) {
-        setter.invoke(object, value);
+        try {
+            setter.invoke(object, value);
+        } catch (Throwable e) {
+            throw new RuntimeException("Failed to set the value to (" + value + ") on the object: " + object, e);
+        }
     }
 
 }

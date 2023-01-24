@@ -53,7 +53,7 @@ public class HttpRequestAuthenticator {
         Credentials credentials = parseCredentials(headers);
         if (credentials == null) {
             return Mono.error(new HttpResponseException(HttpHandlerResult
-                    .unauthorized("Cannot find valid credentials from the header \"" + HttpHeaderNames.AUTHORIZATION + "\"")));
+                    .unauthorized("Could not find valid credentials from the header: \"" + HttpHeaderNames.AUTHORIZATION + "\"")));
         }
         return adminService.authenticate(credentials.account(), credentials.password())
                 .flatMap(authenticated -> {
@@ -64,11 +64,11 @@ public class HttpRequestAuthenticator {
                                         return Mono.just(credentials);
                                     }
                                     return Mono.error(new HttpResponseException(HttpHandlerResult
-                                            .unauthorized("Unauthorized to access the resource")));
+                                            .unauthorized("Unauthorized to access the resource: " + permission.value())));
                                 });
                     }
                     return Mono.error(new HttpResponseException(HttpHandlerResult
-                            .unauthorized("Unauthenticated to access the resource")));
+                            .unauthorized("Unauthenticated")));
                 });
     }
 

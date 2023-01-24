@@ -83,7 +83,7 @@ public class MessageServiceController extends BaseServiceController {
         this.messageService = messageService;
         this.conversationService = conversationService;
 
-        propertiesManager.triggerAndAddGlobalPropertiesChangeListener(this::updateProperties);
+        propertiesManager.notifyAndAddGlobalPropertiesChangeListener(this::updateProperties);
     }
 
     private void updateProperties(TurmsProperties properties) {
@@ -293,10 +293,16 @@ public class MessageServiceController extends BaseServiceController {
                                         ? conversationService.upsertGroupConversationReadDate(messages.get(0).groupId(), userId, new Date())
                                         : conversationService
                                         .upsertPrivateConversationReadDate(userId, messages.get(0).getTargetId(), new Date());
-                                mono.subscribe(null, t -> LOGGER.error("Caught an error while upserting the {} conversation read date: {}",
-                                        areGroupMessages ? "group" : "private",
-                                        areGroupMessages ? messages.get(0).groupId() : messages.get(0).getTargetId(),
-                                        t));
+                                mono.subscribe(null, t -> {
+                                    Message message = messages.get(0);
+                                    if (areGroupMessages)
+                                        LOGGER.error("Caught an error while upserting the group conversation read date: {}",
+                                                message.groupId(), t);
+                                    else {
+                                        LOGGER.error("Caught an error while upserting the private conversation read date: {sender={}, recipient={}}",
+                                                message.getSenderId(), message.getTargetId(), t);
+                                    }
+                                });
                             });
                         }
                         return resultMono;

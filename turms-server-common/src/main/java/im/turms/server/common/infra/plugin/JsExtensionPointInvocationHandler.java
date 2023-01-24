@@ -66,7 +66,7 @@ public class JsExtensionPointInvocationHandler implements InvocationHandler {
             } else if (void.class == returnType) {
                 return null;
             } else {
-                String message = "Cannot find a default return value for the return type: " + returnType.getName();
+                String message = "Could not find a default return value for the return type: " + returnType.getName();
                 throw new ScriptExecutionException(message, ScriptExceptionSource.HOST);
             }
         }
@@ -76,8 +76,10 @@ public class JsExtensionPointInvocationHandler implements InvocationHandler {
                     ? function.execute()
                     : function.execute(args);
         } catch (Exception e) {
-            String message = "Failed to execute the function \"%s\" in the class %s"
-                    .formatted(method.getName(), method.getDeclaringClass().getName());
+            String message = "Failed to execute the function \"" +
+                    method.getName() +
+                    "\" in the class: " +
+                    method.getDeclaringClass().getName();
             ScriptExecutionException exception = new ScriptExecutionException(message, e, ScriptExceptionSource.SCRIPT);
             if (isAsync) {
                 return Mono.error(exception);

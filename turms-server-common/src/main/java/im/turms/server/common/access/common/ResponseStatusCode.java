@@ -40,11 +40,11 @@ public enum ResponseStatusCode {
 
     // Client
     INVALID_REQUEST(1100, "The client request is invalid", 400),
-    CLIENT_REQUESTS_TOO_FREQUENT(1101, "The client requests are too frequent", 429),
+    CLIENT_REQUESTS_TOO_FREQUENT(1101, "Client requests are too frequent", 429),
     ILLEGAL_ARGUMENT(1102, "Illegal argument", 400),
     RECORD_CONTAINS_DUPLICATE_KEY(1103, "The record to add contains a duplicate key", 409),
     REQUESTED_RECORDS_TOO_MANY(1104, "Too many records are requested", 429),
-    SEND_REQUEST_FROM_NON_EXISTING_SESSION(1105, "The session should be established before sending requests", 403),
+    SEND_REQUEST_FROM_NON_EXISTING_SESSION(1105, "The session must be established before sending requests", 403),
     UNAUTHORIZED_REQUEST(1106, "The request is unauthorized", 401),
 
     // Server
@@ -58,13 +58,13 @@ public enum ResponseStatusCode {
     // Admin
     // Admin - Common
     UNAUTHORIZED(1300, "Unauthorized", 401),
-    NO_FILTER_FOR_DELETE_OPERATION(1301, "Delete operation should have at least one filter", 400),
-    RESOURCE_NOT_FOUND(1302, "Resource not found", 404),
+    NO_FILTER_FOR_DELETE_OPERATION(1301, "The delete operation must have at least one filter", 400),
+    RESOURCE_NOT_FOUND(1302, "The resource is not found", 404),
     DUPLICATE_RESOURCE(1303, "Duplicate resource", 409),
-    ADMIN_REQUESTS_TOO_FREQUENT(1304, "The admin requests are too frequent", 429),
+    ADMIN_REQUESTS_TOO_FREQUENT(1304, "Admin requests are too frequent", 429),
 
     // Admin - JFR
-    DUMP_JFR_IN_ILLEGAL_STATUS(1310, "Dumping JFR should be executed in a legal status", 406),
+    DUMP_JFR_IN_ILLEGAL_STATUS(1310, "Dump JFR in a legal status", 406),
 
     // Admin - plugin
     JAVASCRIPT_PLUGIN_IS_DISABLED(1320, "JavaScript plugin is disabled", 403),
@@ -76,9 +76,9 @@ public enum ResponseStatusCode {
     USER_ID_BLOCKLIST_IS_DISABLED(1401, "Blocking a user ID is disabled", 403),
 
     // Admin - Cluster - Leader
-    NON_EXISTING_MEMBER_TO_BE_LEADER(1800, "Cannot find the node", 404),
+    NON_EXISTING_MEMBER_TO_BE_LEADER(1800, "Could not find the node", 404),
     NO_QUALIFIED_MEMBER_TO_BE_LEADER(1801, "No qualified node to be a leader", 503),
-    NOT_QUALIFIED_MEMBER_TO_BE_LEADER(1802, "Only qualified node (isLeaderEligible=true, nodeType=SERVICE) can be a leader", 403),
+    NOT_QUALIFIED_MEMBER_TO_BE_LEADER(1802, "Only the qualified node {isLeaderEligible=true, nodeType=SERVICE} can be a leader", 403),
 
     //**********************************************************
     //* For business error
@@ -87,12 +87,12 @@ public enum ResponseStatusCode {
     // User
 
     // User - Login
-    UNSUPPORTED_CLIENT_VERSION(2000, "The version of the client isn't supported", 403),
+    UNSUPPORTED_CLIENT_VERSION(2000, "The client version is not supported", 403),
 
     LOGIN_TIMEOUT(2010, "Login timeout", 408),
-    LOGIN_AUTHENTICATION_FAILED(2011, "The user's login details are incorrect", 401),
+    LOGIN_AUTHENTICATION_FAILED(2011, "The user's login information does not match", 401),
     LOGGING_IN_USER_NOT_ACTIVE(2012, "The logging in user is inactive", 401),
-    LOGIN_FROM_FORBIDDEN_DEVICE_TYPE(2013, "The device type is forbidden to login", 401),
+    LOGIN_FROM_FORBIDDEN_DEVICE_TYPE(2013, "The device type is forbidden to log in", 401),
 
     // User - Session
     SESSION_SIMULTANEOUS_CONFLICTS_DECLINE(2100, "A different device has logged into your account", 409),
@@ -102,20 +102,21 @@ public enum ResponseStatusCode {
     UPDATE_NON_EXISTING_SESSION_HEARTBEAT(2104, "Cannot update the heartbeat of a non-existing session", 403),
 
     // User - Location
-    USER_LOCATION_RELATED_FEATURES_ARE_DISABLED(2200, "The features related to user location are disabled", 510),
-    QUERYING_NEAREST_USERS_BY_SESSION_ID_IS_DISABLED(2201, "The feature to query nearest users by session IDs is disabled", 510),
+    USER_LOCATION_RELATED_FEATURES_ARE_DISABLED(2200, "The user-location-related features are disabled", 510),
+    QUERYING_NEAREST_USERS_BY_SESSION_ID_IS_DISABLED(2201, "The feature to query the nearest users by session IDs is disabled", 510),
 
     // User - Info
     UPDATE_INFO_OF_NON_EXISTING_USER(2300, "Cannot update a non-existing user's information", 403),
     USER_PROFILE_NOT_FOUND(2301, "User profile not found", 404),
-    PROFILE_REQUESTER_NOT_IN_CONTACTS_OR_BLOCKED(2302, "The profile requester isn't in contacts or is blocked", 403),
+    // TODO: rename "CONTACTS"
+    PROFILE_REQUESTER_NOT_IN_CONTACTS_OR_BLOCKED(2302, "The profile requester is not in contacts or is blocked", 403),
     PROFILE_REQUESTER_HAS_BEEN_BLOCKED(2303, "The profile requester has been blocked", 403),
 
     // User - Permission
     QUERY_PERMISSION_OF_NON_EXISTING_USER(2400, "Cannot query a non-existing user's permission", 404),
 
     // User - Relationship
-    ADD_NOT_RELATED_USER_TO_GROUP(2500, "Cannot add a not related user to a relationship group", 403),
+    ADD_NOT_RELATED_USER_TO_GROUP(2500, "Cannot add a non-related user to a relationship group", 403),
     CREATE_EXISTING_RELATIONSHIP(2501, "Cannot create an existing relationship", 409),
 
     // User - Friend Request
@@ -174,7 +175,7 @@ public enum ResponseStatusCode {
     GROUP_JOIN_REQUEST_SENDER_HAS_BEEN_BLOCKED(3600, "The group join request sender has been blocked", 403),
     NOT_JOIN_REQUEST_SENDER_TO_RECALL_REQUEST(3601, "Only the join request sender can recall the request", 403),
     NOT_OWNER_OR_MANAGER_TO_ACCESS_GROUP_REQUEST(3602, "Only the owner and managers of the group can access group requests", 403),
-    RECALL_NOT_PENDING_GROUP_JOIN_REQUEST(3603, "Cannot recall not pending group join requests", 403),
+    RECALL_NOT_PENDING_GROUP_JOIN_REQUEST(3603, "Cannot recall non-pending group join requests", 403),
     SEND_JOIN_REQUEST_TO_INACTIVE_GROUP(3604, "Cannot send a join request to an inactive group", 403),
     RECALLING_GROUP_JOIN_REQUEST_IS_DISABLED(3605, "The feature to recall group join requests is disabled", 510),
 
@@ -189,7 +190,7 @@ public enum ResponseStatusCode {
     INVITEE_HAS_BEEN_BLOCKED(3707, "The invitee has been blocked by the group", 403),
     RECALLING_GROUP_INVITATION_IS_DISABLED(3708, "The feature to recall group invitations is disabled", 510),
     REDUNDANT_GROUP_INVITATION(3709, "The group invitation is redundant", 406),
-    RECALL_NOT_PENDING_GROUP_INVITATION(3710, "Cannot recall not pending group invitations", 403),
+    RECALL_NOT_PENDING_GROUP_INVITATION(3710, "Cannot recall non-pending group invitations", 403),
 
     // Conversation
     UPDATING_TYPING_STATUS_IS_DISABLED(4000, "The feature to update the typing status is disabled", 510),
@@ -200,7 +201,8 @@ public enum ResponseStatusCode {
 
     // Message - Send
     MESSAGE_RECIPIENT_NOT_ACTIVE(5000, "The message recipient is inactive", 403),
-    MESSAGE_SENDER_NOT_IN_CONTACTS_OR_BLOCKED(5001, "The message sender isn't in contacts or is blocked by the recipient", 403),
+    // TODO: rename "CONTACTS"
+    MESSAGE_SENDER_NOT_IN_CONTACTS_OR_BLOCKED(5001, "The message sender is not in contacts or is blocked by the recipient", 403),
     PRIVATE_MESSAGE_SENDER_HAS_BEEN_BLOCKED(5002, "The private message sender has been blocked", 403),
     GROUP_MESSAGE_SENDER_HAS_BEEN_BLOCKED(5003, "The group message sender has been blocked", 403),
     SEND_MESSAGE_TO_INACTIVE_GROUP(5004, "Cannot send a message to an inactive group", 403),
@@ -227,19 +229,19 @@ public enum ResponseStatusCode {
     // Storage
     STORAGE_NOT_IMPLEMENTED(6000, "The storage feature is enabled but not implemented yet", 501),
     // Storage - Message attachment
-    NOT_FRIEND_TO_UPLOAD_MESSAGE_ATTACHMENT_IN_PRIVATE_CONVERSATION(6100, "Only friends are allowed to upload message attachments in private conversations", 403),
-    NOT_GROUP_MEMBER_TO_UPLOAD_MESSAGE_ATTACHMENT_IN_GROUP_CONVERSATION(6101, "Only group members are allowed to upload message attachments in group conversations", 403),
-    NOT_UPLOADER_TO_SHARE_MESSAGE_ATTACHMENT(6102, "Only uploaders are allowed to share message attachments", 403),
+    NOT_FRIEND_TO_UPLOAD_MESSAGE_ATTACHMENT_IN_PRIVATE_CONVERSATION(6100, "Only friends can upload message attachments in private conversations", 403),
+    NOT_GROUP_MEMBER_TO_UPLOAD_MESSAGE_ATTACHMENT_IN_GROUP_CONVERSATION(6101, "Only group members can upload message attachments in group conversations", 403),
+    NOT_UPLOADER_TO_SHARE_MESSAGE_ATTACHMENT(6102, "Only the uploader can share message attachments", 403),
     NOT_UPLOADER_OR_GROUP_MANAGER_TO_UNSHARE_MESSAGE_ATTACHMENT_IN_GROUP_CONVERSATION(6103,
-            "Only uploaders or group managers are allowed to unshare message attachments in group conversations", 403),
-    NOT_UPLOADER_TO_UNSHARE_MESSAGE_ATTACHMENT_IN_PRIVATE_CONVERSATION(6104, "Only uploaders are allowed to unshare message attachments in private conversations", 403),
+            "Only the uploader or group managers can unshare message attachments in group conversations", 403),
+    NOT_UPLOADER_TO_UNSHARE_MESSAGE_ATTACHMENT_IN_PRIVATE_CONVERSATION(6104, "Only the uploader can unshare message attachments in private conversations", 403),
     NOT_UPLOADER_OR_GROUP_MANAGER_TO_DELETE_MESSAGE_ATTACHMENT_IN_GROUP_CONVERSATION(6105,
-            "Only uploaders or group managers are allowed to delete message attachments in group conversations", 403),
-    NOT_UPLOADER_TO_DELETE_MESSAGE_ATTACHMENT_IN_PRIVATE_CONVERSATION(6106, "Only uploaders are allowed to delete message attachments in private conversations", 403),
-    NOT_UPLOADER_OR_SHARED_WITH_USER_TO_DOWNLOAD_MESSAGE_ATTACHMENT(6107, "Only uploaders or the users who are shared with are allowed to download message attachments", 403),
+            "Only the uploader or group managers can delete message attachments in group conversations", 403),
+    NOT_UPLOADER_TO_DELETE_MESSAGE_ATTACHMENT_IN_PRIVATE_CONVERSATION(6106, "Only the uploader can delete message attachments in private conversations", 403),
+    NOT_UPLOADER_OR_SHARED_WITH_USER_TO_DOWNLOAD_MESSAGE_ATTACHMENT(6107, "Only the uploader or the users who are shared with can download message attachments", 403),
     // Storage - Message attachment info
-    NOT_FRIEND_TO_QUERY_MESSAGE_ATTACHMENT_INFO_IN_PRIVATE_CONVERSATION(6130, "Only friends are allowed to query message attachments in private conversations", 403),
-    NOT_GROUP_MEMBER_TO_QUERY_MESSAGE_ATTACHMENT_INFO_IN_GROUP_CONVERSATION(6131, "Only group members are allowed to query message attachments in group conversations", 403);
+    NOT_FRIEND_TO_QUERY_MESSAGE_ATTACHMENT_INFO_IN_PRIVATE_CONVERSATION(6130, "Only friends can query message attachments in private conversations", 403),
+    NOT_GROUP_MEMBER_TO_QUERY_MESSAGE_ATTACHMENT_INFO_IN_GROUP_CONVERSATION(6131, "Only group members can query message attachments in group conversations", 403);
 
     public static final int STATUS_CODE_LENGTH = 4;
     public static final ResponseStatusCode[] VALUES = values();
@@ -250,7 +252,7 @@ public enum ResponseStatusCode {
         for (ResponseStatusCode value : VALUES) {
             ResponseStatusCode code = CODE_POOL.put(value.businessCode, value);
             if (code != null) {
-                throw new IllegalArgumentException("Found duplicate business code [" + code.businessCode + "]");
+                throw new IllegalArgumentException("Found a duplicate business code: " + code.businessCode);
             }
         }
     }

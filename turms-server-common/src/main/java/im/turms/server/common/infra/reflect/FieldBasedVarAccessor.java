@@ -17,8 +17,6 @@
 
 package im.turms.server.common.infra.reflect;
 
-import lombok.SneakyThrows;
-
 import java.lang.reflect.Field;
 
 /**
@@ -33,16 +31,22 @@ public class FieldBasedVarAccessor<T, V> implements VarAccessor<T, V> {
         this.field = field;
     }
 
-    @SneakyThrows
     @Override
     public V get(T object) {
-        return (V) field.get(object);
+        try {
+            return (V) field.get(object);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to get the value from the object: " + object, e);
+        }
     }
 
-    @SneakyThrows
     @Override
     public void set(T object, V value) {
-        field.set(object, value);
+        try {
+            field.set(object, value);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to set the value to (" + value + ") on the object: " + object, e);
+        }
     }
 
 }

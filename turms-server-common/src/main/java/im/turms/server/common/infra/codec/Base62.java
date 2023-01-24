@@ -60,9 +60,9 @@ public class Base62 {
 
     public Base62(String alphabet) {
         if (!StringUtil.isLatin1(alphabet)) {
-            throw new IllegalArgumentException("The charset must only contain Latin-1 bytes, but got [" +
+            throw new IllegalArgumentException("The charset must only contain Latin-1 bytes, but got: \"" +
                                                alphabet +
-                                               "]");
+                                               "\"");
         }
         if (alphabet.length() != TARGET_BASE) {
             throw new IllegalArgumentException("The length of charset must be " + TARGET_BASE);

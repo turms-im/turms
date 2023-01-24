@@ -18,7 +18,6 @@
 package im.turms.service.domain.user.access.servicerequest.controller;
 
 import im.turms.server.common.access.client.dto.ClientMessagePool;
-import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.constant.ProfileAccessStrategy;
 import im.turms.server.common.access.client.dto.constant.UserStatus;
 import im.turms.server.common.access.client.dto.model.user.NearbyUsers;
@@ -108,7 +107,7 @@ public class UserServiceController extends BaseServiceController {
         this.userStatusService = userStatusService;
         this.sessionService = sessionService;
 
-        propertiesManager.triggerAndAddGlobalPropertiesChangeListener(this::updateProperties);
+        propertiesManager.notifyAndAddGlobalPropertiesChangeListener(this::updateProperties);
     }
 
     private void updateProperties(TurmsProperties properties) {
@@ -238,14 +237,13 @@ public class UserServiceController extends BaseServiceController {
                 return Mono.just(RequestHandlerResultFactory
                         .get(ResponseStatusCode.ILLEGAL_ARGUMENT, "The user status must not be UNRECOGNIZED"));
             }
-            Set<DeviceType> deviceTypes = request.getDeviceTypesCount() > 0
-                    ? CollectionUtil.newSet(request.getDeviceTypesList())
-                    : null;
             Mono<Boolean> updateMono;
             if (userStatus == UserStatus.OFFLINE) {
-                updateMono = deviceTypes == null
-                        ? sessionService.disconnect(clientRequest.userId(), SessionCloseStatus.DISCONNECTED_BY_OTHER_DEVICE)
-                        : sessionService.disconnect(clientRequest.userId(), deviceTypes, SessionCloseStatus.DISCONNECTED_BY_OTHER_DEVICE);
+                updateMono = request.getDeviceTypesCount() > 0
+                        ? sessionService.disconnect(clientRequest.userId(),
+                        CollectionUtil.newSet(request.getDeviceTypesList()),
+                        SessionCloseStatus.DISCONNECTED_BY_OTHER_DEVICE)
+                        : sessionService.disconnect(clientRequest.userId(), SessionCloseStatus.DISCONNECTED_BY_OTHER_DEVICE);
             } else {
                 updateMono = userStatusService.updateOnlineUserStatusIfPresent(clientRequest.userId(), userStatus);
             }

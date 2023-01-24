@@ -17,6 +17,7 @@
 
 package im.turms.server.common.infra.collection;
 
+import im.turms.server.common.infra.exception.NotImplementedException;
 import im.turms.server.common.infra.thread.ThreadSafe;
 
 import java.lang.invoke.MethodHandles;
@@ -94,7 +95,7 @@ public final class ConcurrentEnumMap<K extends Enum<K>, V> implements Map<K, V> 
 
     @Override
     public void putAll(Map<? extends K, ? extends V> m) {
-        throw new UnsupportedOperationException();
+        throw new NotImplementedException();
     }
 
     @Override
@@ -113,7 +114,7 @@ public final class ConcurrentEnumMap<K extends Enum<K>, V> implements Map<K, V> 
 
     @Override
     public void clear() {
-        throw new UnsupportedOperationException();
+        throw new NotImplementedException();
     }
 
     @Override

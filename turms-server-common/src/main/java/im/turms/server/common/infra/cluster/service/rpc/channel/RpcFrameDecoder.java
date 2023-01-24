@@ -68,7 +68,10 @@ public class RpcFrameDecoder extends ProtobufVarint32FrameDecoder {
             int length = frame.readableBytes();
             if (length < HEADER_LENGTH) {
                 String reason = ReactorNetty.format(ctx.channel(),
-                        "The buffer is too small to parse header. Actual: %d; Expected: %d".formatted(length, HEADER_LENGTH));
+                        "The buffer is too small to parse the header. " +
+                                "Expecting the buffer length (" +
+                                length +
+                                ") to be greater than or equal to " + HEADER_LENGTH);
                 throw new CorruptedFrameException(reason);
             }
             return decodePayload(ctx, frame);
@@ -88,13 +91,13 @@ public class RpcFrameDecoder extends ProtobufVarint32FrameDecoder {
             Codec<?> codec = CodecPool.getCodec(codecId);
             if (codec == null) {
                 String reason = ReactorNetty.format(ctx.channel(),
-                        "The codec with the ID %s doesn't exist".formatted(codecId));
+                        "The codec with the ID (" + codecId + ") does not exist");
                 throw new CodecNotFoundException(reason);
             }
             int requestId = frame.readInt();
             if (requestId < 0) {
                 String reason = ReactorNetty.format(ctx.channel(),
-                        "requestId must be larger than 0. Actual: " + requestId);
+                        "Expected the request ID to be greater than 0, but got: " + requestId);
                 throw new CorruptedFrameException(reason);
             }
             if (codec instanceof RpcRequestCodec<?> requestCodec) {
@@ -107,10 +110,9 @@ public class RpcFrameDecoder extends ProtobufVarint32FrameDecoder {
                     ? new RpcResponse(requestId, null, exception)
                     : new RpcResponse(requestId, responseValue, null);
         } catch (Exception e) {
-            String msg = "Failed to parse the buffer by the codec";
-            if (codecId != UNSET_CODEC_ID) {
-                msg += " with the ID " + codecId;
-            }
+            String msg = codecId == UNSET_CODEC_ID
+                    ? "Failed to parse the buffer: " + frame
+                    : "Failed to parse the buffer (" + frame + ") by the codec with the ID: " + codecId;
             String reason = ReactorNetty.format(ctx.channel(), msg);
             throw new CorruptedFrameException(reason, e);
         }

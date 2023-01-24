@@ -24,8 +24,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import lombok.SneakyThrows;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -46,12 +46,17 @@ public final class JsonUtil {
     private JsonUtil() {
     }
 
-    @SneakyThrows
     public static void assertEqual(Object actual, InputStream expected) {
         // We use String instead of byte[] for test debugging
-        String json = MAPPER.writeValueAsString(actual);
-        JsonNode actualJson = MAPPER.readTree(json);
-        JsonNode expectedJson = MAPPER.readTree(expected);
+        JsonNode expectedJson;
+        JsonNode actualJson;
+        try {
+            String json = MAPPER.writeValueAsString(actual);
+            actualJson = MAPPER.readTree(json);
+            expectedJson = MAPPER.readTree(expected);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         assertThat(actualJson).isEqualTo(expectedJson);
     }
 

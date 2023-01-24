@@ -31,6 +31,7 @@ import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.cluster.service.idgen.ServiceType;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.collection.CollectorUtil;
+import im.turms.server.common.infra.exception.IncompatibleInternalChangeException;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.lang.LongUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
@@ -42,6 +43,7 @@ import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.constant.TimeType;
 import im.turms.server.common.infra.property.env.service.business.message.MessageProperties;
 import im.turms.server.common.infra.property.env.service.business.message.SequenceIdProperties;
+import im.turms.server.common.infra.reactor.PublisherPool;
 import im.turms.server.common.infra.recycler.Recyclable;
 import im.turms.server.common.infra.recycler.SetRecycler;
 import im.turms.server.common.infra.task.TaskManager;
@@ -154,7 +156,7 @@ public class MessageService {
             GET_MESSAGES_TO_DELETE_METHOD = ExpiredMessageDeletionNotifier.class
                     .getDeclaredMethod("getMessagesToDelete", List.class);
         } catch (NoSuchMethodException e) {
-            throw new RuntimeException(e);
+            throw new IncompatibleInternalChangeException(e);
         }
     }
 
@@ -202,7 +204,7 @@ public class MessageService {
             sentMessageCache = null;
         }
         sentMessageCounter = metricsService.getRegistry().counter(SENT_MESSAGES_COUNTER);
-        propertiesManager.triggerAndAddGlobalPropertiesChangeListener(this::updateProperties);
+        propertiesManager.notifyAndAddGlobalPropertiesChangeListener(this::updateProperties);
         // Set up the checker for expired messages join requests
         taskManager.reschedule(
                 "expiredMessagesCleanup",
@@ -352,7 +354,10 @@ public class MessageService {
                                 }
                             });
                             return Flux.error(ResponseException.get(ResponseStatusCode.NOT_MEMBER_TO_QUERY_GROUP_MESSAGES,
-                                    "User isn't the member of the groups: " + nonGroupMemberGroupIds));
+                                    "The user (" +
+                                            requesterId +
+                                            ") is not the member of the groups: " +
+                                            nonGroupMemberGroupIds));
                         }
                         return queryMessages(
                                 true,
@@ -895,6 +900,11 @@ public class MessageService {
                         : Mono.just(Set.of(message.getTargetId())));
     }
 
+    /**
+     * @return {@link reactor.core.publisher.MonoEmpty} if {@link MessageProperties#persistMessage} is false
+     * and no recipient.
+     * {@link MessageAndRecipientIds#message} is null if {@link MessageProperties#persistMessage} is false.
+     */
     public Mono<MessageAndRecipientIds> authAndSaveMessage(
             @Nullable Long messageId,
             @NotNull Long senderId,
@@ -1007,24 +1017,30 @@ public class MessageService {
                 .doOnNext(pair -> {
                     Message message = pair.message();
                     sentMessageCounter.increment();
-                    if (message != null && message.getId() != null && sentMessageCache != null) {
+                    Long msgId = message == null ? null : message.getId();
+                    if (msgId != null && sentMessageCache != null) {
                         cacheSentMessage(message);
                     }
                     if (send) {
                         // No need to let the client wait to send notifications to recipients
-                        sendMessage(message, pair.recipientIds(), senderDeviceType)
-                                .subscribe(null, t -> LOGGER.error("Failed to send message", t));
+                        Set<Long> recipientIds = pair.recipientIds();
+                        sendMessage(message, recipientIds, senderDeviceType)
+                                .subscribe(null, t -> LOGGER.error("Failed to send the message ({}) to the recipients: {}",
+                                        msgId, recipientIds, t));
                     }
                 })
                 .then();
     }
 
     /**
-     * @param senderDeviceType can be null when it's a system message
+     * @param senderDeviceType can be null when it is a system message
      */
     private Mono<Boolean> sendMessage(@NotNull Message message,
                                       @NotNull Set<Long> recipientIds,
                                       @Nullable DeviceType senderDeviceType) {
+        if (recipientIds.isEmpty()) {
+            return PublisherPool.TRUE;
+        }
         Long senderId = message.getSenderId();
         TurmsNotification notification = ClientMessagePool
                 .getTurmsNotificationBuilder()

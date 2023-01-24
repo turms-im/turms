@@ -66,18 +66,22 @@ public abstract class BaseAdminRoleService {
                             idToRole.remove(roleId);
                         }
                         case INVALIDATE -> resetRoles();
-                        default -> LOGGER.fatal("Detected an illegal operation on AdminRole collection: " + event);
+                        default -> LOGGER.fatal("Detected an illegal operation on the collection \"" +
+                                AdminRole.COLLECTION_NAME +
+                                "\" in the event: {}", event);
                     }
                 })
                 .onErrorContinue((throwable, o) -> LOGGER
-                        .error("Caught an error while processing the change stream event of AdminRole: {}", o, throwable))
+                        .error("Caught an error while processing the change stream event ({}) of the collection: \"" +
+                                AdminRole.COLLECTION_NAME +
+                                "\"", o, throwable))
                 .subscribe();
 
         // Load
         resetRoles();
         adminRoleRepository.findAll()
                 .doOnNext(role -> idToRole.put(role.getId(), role))
-                .subscribe(null, t -> LOGGER.error("Caught an error while find all admin roles", t));
+                .subscribe(null, t -> LOGGER.error("Caught an error while finding all admin roles", t));
     }
 
     public AdminRole getRootRole() {

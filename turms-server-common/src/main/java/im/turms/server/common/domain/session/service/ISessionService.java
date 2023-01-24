@@ -33,19 +33,19 @@ import jakarta.validation.constraints.NotNull;
  */
 public interface ISessionService {
 
-    Mono<Boolean> setLocalSessionsOffline(
+    Mono<Boolean> closeLocalSessions(
             @NotNull byte[] ip,
             @NotNull CloseReason closeReason);
 
-    Mono<Boolean> setLocalSessionOffline(
+    Mono<Boolean> closeLocalSession(
             @NotNull Long userId,
             @NotEmpty Set<@ValidDeviceType DeviceType> deviceTypes,
             @NotNull CloseReason closeReason);
 
-    Mono<Boolean> setLocalUserOffline(
+    Mono<Boolean> closeLocalSession(
             @NotNull Long userId,
             @NotNull CloseReason closeReason);
 
-    List<UserSessionsInfo> getUserSessions(@NotEmpty Set<Long> userIds);
+    List<UserSessionsInfo> getSessions(@NotEmpty Set<Long> userIds);
 
 }

@@ -45,10 +45,16 @@ public class ExtendedProtobufVarint32FrameDecoder extends ByteToMessageDecoder {
             return;
         }
         if (length < 0) {
-            throw new StacklessCorruptedFrameException("negative length: " + length);
+            throw new StacklessCorruptedFrameException("Failed to decode the Protobuf message because " +
+                    "it declares a negative length: " +
+                    length);
         }
         if (length > maxFrameLength) {
-            throw new StacklessCorruptedFrameException("too large: " + length);
+            throw new StacklessCorruptedFrameException("Failed to decode the Protobuf message because " +
+                    "it declares a message length (" +
+                    length +
+                    ") greater than " +
+                    maxFrameLength);
         }
 
         if (in.readableBytes() < length) {
@@ -98,7 +104,7 @@ public class ExtendedProtobufVarint32FrameDecoder extends ByteToMessageDecoder {
                         }
                         result |= (tmp = buffer.readByte()) << 28;
                         if (tmp < 0) {
-                            throw new StacklessCorruptedFrameException("malformed varint.");
+                            throw new StacklessCorruptedFrameException("Failed to read a 32-bit varint because it is too large");
                         }
                     }
                 }

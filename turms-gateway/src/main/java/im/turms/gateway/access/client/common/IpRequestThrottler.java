@@ -63,7 +63,7 @@ public class IpRequestThrottler {
         sessionService.addOnSessionClosedListeners(session ->
                 // Try to remove the buckets with enough tokens
                 // because most clients won't log in again once they have gone offline,
-                // so it's a good time to remove unused buckets
+                // so it is a good time to remove unused buckets
                 ipToRequestTokenBucket.computeIfPresent(session.getIp(), (key, bucket) ->
                         bucket.isTokensMoreThanOrEqualsToInitialTokens() ? null : bucket));
 

@@ -25,8 +25,6 @@ import im.turms.server.common.infra.cluster.service.codec.io.CodecStreamOutput;
 import im.turms.server.common.infra.cluster.service.rpc.codec.RpcRequestCodec;
 import io.netty.buffer.ByteBuf;
 
-import java.util.Arrays;
-
 import static im.turms.server.common.infra.net.InetAddressUtil.IPV4_BYTE_LENGTH;
 import static im.turms.server.common.infra.net.InetAddressUtil.IPV6_BYTE_LENGTH;
 
@@ -51,7 +49,7 @@ public class HandleServiceRequestCodec extends RpcRequestCodec<HandleServiceRequ
         int ipFormatFlag = switch (ip.length) {
             case IPV4_BYTE_LENGTH -> IS_IPV4_FLAG;
             case IPV6_BYTE_LENGTH -> IS_IPV6_FLAG;
-            default -> throw new IllegalArgumentException("Unknown IP format: " + Arrays.toString(ip));
+            default -> throw new IllegalArgumentException("Illegal IP length: " + ip.length);
         };
         output.writeByte(ipFormatFlag);
         output.writeBytes(request.getIp());

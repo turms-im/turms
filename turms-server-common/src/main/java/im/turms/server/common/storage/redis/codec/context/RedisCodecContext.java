@@ -18,11 +18,14 @@
 package im.turms.server.common.storage.redis.codec.context;
 
 import im.turms.server.common.infra.netty.ByteBufUtil;
+import im.turms.server.common.infra.serialization.SerializationException;
 import im.turms.server.common.storage.redis.codec.TurmsRedisCodec;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.RefCntCorrectorByteBuf;
 import lombok.Builder;
 import lombok.Data;
+
+import java.util.Arrays;
 
 /**
  * @author James Chen
@@ -57,7 +60,7 @@ public class RedisCodecContext {
                 for (int j = 0; j < i; j++) {
                     buffers[j].release();
                 }
-                throw new RuntimeException(e);
+                throw new SerializationException("Failed to encode the fields: " + Arrays.toString(fields), e);
             }
         }
         return buffers;
@@ -78,7 +81,7 @@ public class RedisCodecContext {
                 for (int j = 0; j < i; j++) {
                     buffers[j].release();
                 }
-                throw new RuntimeException(e);
+                throw new SerializationException("Failed to encode the geo members: " + Arrays.toString(members), e);
             }
         }
         return buffers;
@@ -94,7 +97,7 @@ public class RedisCodecContext {
         if (codec == null) {
             ByteBuf byteBuf = ByteBufUtil.obj2Buffer(value);
             if (byteBuf == null) {
-                throw new UnsupportedOperationException("Cannot encode value: " + value);
+                throw new UnsupportedOperationException("Could not encode the value: " + value);
             }
             return ByteBufUtil.ensureByteBufRefCnfCorrect(byteBuf);
         }

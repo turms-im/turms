@@ -116,7 +116,7 @@ class WebSocketAccessST extends BasePerformanceTest {
 
         AtomicReference<Throwable> unexpectedError = new AtomicReference<>();
 
-        log.info("starting logging in...");
+        log.info("starting logging in");
 
         // Note that we do not close the clients on the client side
         // until the test succeeds or fails
@@ -173,17 +173,17 @@ class WebSocketAccessST extends BasePerformanceTest {
                                 .subscribe(null, t -> log.error("An connection error occurs", t));
                     }, t -> {
                         tryHandleCurrentClient(pendingClientLatch, isCurrentClientHandled, notConnectedClient);
-                        // It's a WebSocketClientHandshakeException when turms-gateway is unavailable
+                        // It is a WebSocketClientHandshakeException when turms-gateway is unavailable
                         if (t instanceof WebSocketClientHandshakeException) {
                             return;
                         }
                         unexpectedError.set(t);
-                        // It's a TCP exception no matter turms-gateway is available or not
-                        // when the client or server has reach the maximum TCP connections that the system supports
+                        // It is a TCP exception no matter turms-gateway is available or not
+                        // when the client or server has reached the maximum TCP connections that the system supports
                         if (t instanceof IOException) {
-                            // It's an unexpected error and the client or the server should
+                            // It is an unexpected error and the client or the server should
                             // increase the maximum allowed TCP connections
-                            log.error("Failed to connect. This may be a TCP related error", t);
+                            log.error("Failed to connect. This may be a TCP-related error", t);
                         } else {
                             log.error("Failed to connect. Unknown error", t);
                         }

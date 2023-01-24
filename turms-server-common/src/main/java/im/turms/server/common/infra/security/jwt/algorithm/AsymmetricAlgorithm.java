@@ -18,10 +18,12 @@
 package im.turms.server.common.infra.security.jwt.algorithm;
 
 import im.turms.server.common.infra.security.SignaturePool;
-import lombok.SneakyThrows;
 
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
 import java.security.PublicKey;
 import java.security.Signature;
+import java.security.SignatureException;
 import java.security.spec.AlgorithmParameterSpec;
 
 /**
@@ -34,7 +36,6 @@ public abstract non-sealed class AsymmetricAlgorithm extends JwtAlgorithm {
         SignaturePool.ensureAvailability(definition.getJavaAlgorithmName());
     }
 
-    @SneakyThrows
     public boolean verifySignature(
             String algorithm,
             PublicKey publicKey,
@@ -43,14 +44,33 @@ public abstract non-sealed class AsymmetricAlgorithm extends JwtAlgorithm {
             byte[] signatureBytes
     ) {
         Signature signature = SignaturePool.get(algorithm);
-        signature.initVerify(publicKey);
-        signature.update(headerBytes);
-        signature.update(JWT_PART_SEPARATOR);
-        signature.update(payloadBytes);
-        return signature.verify(signatureBytes);
+        try {
+            signature.initVerify(publicKey);
+        } catch (InvalidKeyException e) {
+            throw new IllegalArgumentException("Invalid public key: " + publicKey, e);
+        }
+        try {
+            signature.update(headerBytes);
+        } catch (SignatureException e) {
+            throw new IllegalStateException("Failed to update the header bytes to be verified", e);
+        }
+        try {
+            signature.update(JWT_PART_SEPARATOR);
+        } catch (SignatureException e) {
+            throw new IllegalStateException("Failed to update the JWT part separator to be verified", e);
+        }
+        try {
+            signature.update(payloadBytes);
+        } catch (SignatureException e) {
+            throw new IllegalStateException("Failed to update the payload bytes to be verified", e);
+        }
+        try {
+            return signature.verify(signatureBytes);
+        } catch (SignatureException e) {
+            throw new IllegalStateException("Failed to verify", e);
+        }
     }
 
-    @SneakyThrows
     public boolean verifySignature(
             String algorithm,
             AlgorithmParameterSpec parameterSpec,
@@ -60,12 +80,36 @@ public abstract non-sealed class AsymmetricAlgorithm extends JwtAlgorithm {
             byte[] signatureBytes
     ) {
         Signature signature = SignaturePool.get(algorithm);
-        signature.setParameter(parameterSpec);
-        signature.initVerify(publicKey);
-        signature.update(headerBytes);
-        signature.update(JWT_PART_SEPARATOR);
-        signature.update(payloadBytes);
-        return signature.verify(signatureBytes);
+        try {
+            signature.setParameter(parameterSpec);
+        } catch (InvalidAlgorithmParameterException e) {
+            throw new IllegalArgumentException("Invalid algorithm parameter: " + parameterSpec, e);
+        }
+        try {
+            signature.initVerify(publicKey);
+        } catch (InvalidKeyException e) {
+            throw new IllegalArgumentException("Invalid public key: " + publicKey, e);
+        }
+        try {
+            signature.update(headerBytes);
+        } catch (SignatureException e) {
+            throw new IllegalStateException("Failed to update the header bytes to be verified", e);
+        }
+        try {
+            signature.update(JWT_PART_SEPARATOR);
+        } catch (SignatureException e) {
+            throw new IllegalStateException("Failed to update the JWT part separator to be verified", e);
+        }
+        try {
+            signature.update(payloadBytes);
+        } catch (SignatureException e) {
+            throw new IllegalStateException("Failed to update the payload bytes to be verified", e);
+        }
+        try {
+            return signature.verify(signatureBytes);
+        } catch (SignatureException e) {
+            throw new IllegalStateException("Failed to verify", e);
+        }
     }
 
 }

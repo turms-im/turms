@@ -27,6 +27,8 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.MessagingErrorCode;
+import im.turms.server.common.infra.exception.FeatureDisabledException;
+import im.turms.server.common.infra.io.InputOutputException;
 import im.turms.server.common.infra.property.env.service.env.push.FcmProperties;
 import im.turms.service.infra.push.PushNotification;
 import im.turms.service.infra.push.PushNotificationSender;
@@ -56,14 +58,39 @@ public class FcmSender implements PushNotificationSender {
             firebaseMessagingClient = null;
             return;
         }
-        try (ByteArrayInputStream credentialInputStream = new ByteArrayInputStream(fcmProperties
-                .getCredentials()
-                .getBytes(StandardCharsets.UTF_8))) {
-            FirebaseApp.initializeApp(FirebaseOptions.builder()
-                    .setCredentials(GoogleCredentials.fromStream(credentialInputStream))
-                    .build());
+        byte[] credentialsBytes = fcmProperties.getCredentials().getBytes(StandardCharsets.UTF_8);
+        ByteArrayInputStream credentialInputStream = new ByteArrayInputStream(credentialsBytes);
+        GoogleCredentials credentials;
+        try {
+            credentials = GoogleCredentials.fromStream(credentialInputStream);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            InputOutputException exception = new InputOutputException("Failed to read credentials", e);
+            try {
+                credentialInputStream.close();
+            } catch (IOException ex) {
+                IOException suppressed = new IOException("Caught an error while closing the credentials input stream", ex);
+                exception.addSuppressed(suppressed);
+            }
+            throw exception;
+        }
+        try {
+            FirebaseApp.initializeApp(FirebaseOptions.builder()
+                    .setCredentials(credentials)
+                    .build());
+        } catch (Exception e) {
+            RuntimeException exception = new RuntimeException("Failed to initialize the Firebase application", e);
+            try {
+                credentialInputStream.close();
+            } catch (IOException ex) {
+                IOException suppressed = new IOException("Caught an error while closing the credentials input stream", ex);
+                exception.addSuppressed(suppressed);
+            }
+            throw exception;
+        }
+        try {
+            credentialInputStream.close();
+        } catch (IOException e) {
+            throw new InputOutputException("Caught an error while closing the credentials input stream", e);
         }
         firebaseMessagingClient = FirebaseMessaging.getInstance();
     }
@@ -71,34 +98,38 @@ public class FcmSender implements PushNotificationSender {
     @Override
     public Mono<SendPushNotificationResult> sendNotification(PushNotification notification) {
         if (!isEnabled) {
-            return Mono.error(new UnsupportedOperationException("FCM is disabled"));
+            return Mono.error(new FeatureDisabledException("FCM is disabled"));
         }
         Message message = Message.builder()
                 .setToken(notification.deviceToken())
                 .setAndroidConfig(ANDROID_CONFIG)
-                .putData(notification.notificationType().getType(), notification.data() == null ? "" : notification.data())
+                .putData(
+                        notification.notificationType().getType(),
+                        notification.data() == null ? "" : notification.data())
                 .build();
         ApiFuture<String> sendFuture = firebaseMessagingClient.sendAsync(message);
-        return Mono.create(sink -> sendFuture.addListener(() -> {
-            try {
-                // `get()` should return immediately in the listener
-                sendFuture.get();
-                sink.success(new SendPushNotificationResult(true, null, false));
-            } catch (ExecutionException e) {
-                if (e.getCause() instanceof FirebaseMessagingException messagingException) {
-                    MessagingErrorCode messagingErrorCode = messagingException.getMessagingErrorCode();
-                    String errorCode = messagingErrorCode == null ? null : messagingErrorCode.name();
-                    sink.success(new SendPushNotificationResult(false,
-                            errorCode,
-                            messagingErrorCode == MessagingErrorCode.UNREGISTERED));
-                } else {
-                    sink.error(e.getCause());
+        return Mono.create(sink -> {
+            Runnable listener = () -> {
+                try {
+                    // `get()` should return immediately in the listener
+                    sendFuture.get();
+                    sink.success(new SendPushNotificationResult(true, null, false));
+                } catch (ExecutionException e) {
+                    if (e.getCause() instanceof FirebaseMessagingException messagingException) {
+                        MessagingErrorCode messagingErrorCode = messagingException.getMessagingErrorCode();
+                        String errorCode = messagingErrorCode == null ? null : messagingErrorCode.name();
+                        sink.success(new SendPushNotificationResult(
+                                false, errorCode, messagingErrorCode == MessagingErrorCode.UNREGISTERED));
+                    } else {
+                        sink.error(e.getCause());
+                    }
+                } catch (InterruptedException e) {
+                    // This should never happen
+                    sink.error(e);
                 }
-            } catch (InterruptedException e) {
-                // This should never happen
-                sink.error(e);
-            }
-        }, MoreExecutors.directExecutor()));
+            };
+            sendFuture.addListener(listener, MoreExecutors.directExecutor());
+        });
     }
 
     @Override

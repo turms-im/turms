@@ -31,6 +31,7 @@ import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.domain.admin.constant.AdminConst;
 import im.turms.server.common.domain.location.bo.Location;
 import im.turms.server.common.infra.collection.CollectionUtil;
+import im.turms.server.common.infra.exception.IncompatibleInternalChangeException;
 import im.turms.server.common.infra.json.JsonUtil;
 import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
@@ -50,14 +51,15 @@ import im.turms.server.common.infra.property.env.gateway.identityaccessmanagemen
 import im.turms.server.common.infra.security.jwt.Jwt;
 import im.turms.server.common.infra.security.jwt.JwtManager;
 import im.turms.server.common.infra.security.jwt.JwtPayload;
+import im.turms.server.common.infra.security.jwt.exception.InvalidJwtException;
+import im.turms.server.common.infra.security.jwt.exception.JwtSignatureVerificationException;
+import im.turms.server.common.infra.validation.Validator;
 import io.netty.handler.codec.http.HttpMethod;
 import reactor.core.publisher.Mono;
 import reactor.netty.http.client.HttpClient;
 
 import java.lang.reflect.Method;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
-import java.net.URL;
+import java.security.NoSuchAlgorithmException;
 import java.time.Duration;
 import java.util.Date;
 import java.util.Map;
@@ -86,7 +88,7 @@ public class SessionIdentityAccessManager implements SessionIdentityAccessManage
             AUTHENTICATE_METHOD = UserAuthenticator.class
                     .getDeclaredMethod("authenticate", UserLoginInfo.class);
         } catch (NoSuchMethodException e) {
-            throw new RuntimeException(e);
+            throw new IncompatibleInternalChangeException(e);
         }
     }
 
@@ -141,16 +143,15 @@ public class SessionIdentityAccessManager implements SessionIdentityAccessManage
                     jwtAlgorithmProperties.getHmac256(),
                     jwtAlgorithmProperties.getHmac384(),
                     jwtAlgorithmProperties.getHmac512());
-            LOGGER.info("The supported algorithms for JWT identity and access management are: " + jwtManager.getSupportedAlgorithmNames());
+            LOGGER.info("Supported algorithms for JWT: {}", jwtManager.getSupportedAlgorithmNames());
         } else if (identityAccessManagementType == IdentityAccessManagementType.HTTP) {
             HttpIdentityAccessManagementProperties httpProperties = identityAccessManagementProperties.getHttp();
             HttpIdentityAccessManagementRequestProperties requestProperties = httpProperties.getRequest();
             HttpAuthenticationResponseExpectationProperties responseExpectationProperties = httpProperties.getAuthentication().getResponseExpectation();
             String url = requestProperties.getUrl();
-            try {
-                new URL(url).toURI();
-            } catch (MalformedURLException | URISyntaxException e) {
-                throw new IllegalArgumentException("The HTTP URL for identity and access management is illegal", e);
+            Exception exception = Validator.url(url);
+            if (exception != null) {
+                throw new IllegalArgumentException("Illegal HTTP URL: " + url, exception);
             }
             httpIdentityAccessManagementClient = HttpClient.create()
                     .baseUrl(url)
@@ -261,7 +262,7 @@ public class SessionIdentityAccessManager implements SessionIdentityAccessManage
         Jwt jwt;
         try {
             jwt = jwtManager.decode(jwtToken);
-        } catch (Exception e) {
+        } catch (InvalidJwtException | NoSuchAlgorithmException | JwtSignatureVerificationException e) {
             return Mono.error(new IllegalArgumentException("Invalid JWT token", e));
         }
         JwtPayload payload = jwt.payload();

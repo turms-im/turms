@@ -17,9 +17,9 @@
 
 package im.turms.server.common.infra.memory;
 
+import im.turms.server.common.infra.exception.IncompatibleJvmException;
 import im.turms.server.common.infra.reflect.ReflectionUtil;
 import im.turms.server.common.infra.unsafe.UnsafeUtil;
-import lombok.SneakyThrows;
 import sun.misc.Unsafe;
 
 import java.lang.invoke.MethodHandle;
@@ -35,15 +35,16 @@ public final class ByteBufferUtil {
     private static final MethodHandle INVOKE_CLEANER;
 
     static {
+        Method method;
         try {
-            Method method = UNSAFE.getClass()
+            method = UNSAFE.getClass()
                     .getDeclaredMethod("invokeCleaner", ByteBuffer.class);
-            INVOKE_CLEANER = ReflectionUtil.method2Handle(method);
-            ByteBuffer buffer = ByteBuffer.allocateDirect(1);
-            freeDirectBuffer(buffer);
         } catch (NoSuchMethodException e) {
-            throw new RuntimeException(e);
+            throw new IncompatibleJvmException("Failed to find the method: sun.misc.Unsafe#invokeCleaner", e);
         }
+        INVOKE_CLEANER = ReflectionUtil.method2Handle(method);
+        ByteBuffer buffer = ByteBuffer.allocateDirect(1);
+        freeDirectBuffer(buffer);
     }
 
     private ByteBufferUtil() {
@@ -56,9 +57,12 @@ public final class ByteBufferUtil {
                 .flip();
     }
 
-    @SneakyThrows
     public static void freeDirectBuffer(ByteBuffer buffer) {
-        INVOKE_CLEANER.invokeExact(UNSAFE, buffer);
+        try {
+            INVOKE_CLEANER.invokeExact(UNSAFE, buffer);
+        } catch (Throwable e) {
+            throw new RuntimeException("Failed to free the direct buffer: " + buffer, e);
+        }
     }
 
 }

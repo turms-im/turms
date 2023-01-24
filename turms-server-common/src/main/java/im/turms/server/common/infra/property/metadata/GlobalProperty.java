@@ -24,7 +24,7 @@ import java.lang.annotation.Target;
 
 /**
  * The field marked with @GlobalProperty is considered a global property.
- * Otherwise, it's a local property (turms doesn't support mixed properties currently).
+ * Otherwise, it is a local property (turms doesn't support mixed properties currently).
  * <p>
  * Both local properties and global properties can be immutable or mutable.
  * 1. For immutable local/global properties, they can only be applied on startup;

@@ -38,9 +38,9 @@ import static im.turms.server.common.storage.mongo.entity.annotation.IndexedReas
 /**
  * @author James Chen
  * @implNote Don't use the "groupId" and "requesterId" as the key because
- * a requester can send multiple requests (no matter it's pending, handled or etc) to the same group.
+ * a requester can send multiple requests (no matter it is pending, handled or etc) to the same group.
  * <p>
- * Sharded by requesterId and createDate because it's common for users to
+ * Sharded by requesterId and createDate because it is common for users to
  * query the status of member requests sent by them at application startup.
  * <p>
  * Note that the query for the member requests of a group sent by a group admin

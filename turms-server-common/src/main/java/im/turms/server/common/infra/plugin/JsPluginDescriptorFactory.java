@@ -42,13 +42,13 @@ public class JsPluginDescriptorFactory extends PluginDescriptorFactory {
     public static Map<String, String> executeGetPluginDescriptor(Value plugin) {
         Value getDescriptor = plugin.getMember(GET_DESCRIPTOR);
         if (getDescriptor == null) {
-            String message = "The plugin should have a function called \"" + GET_DESCRIPTOR + "\"";
+            String message = "The plugin must have a function named: \"" + GET_DESCRIPTOR + "\"";
             throw new CorruptedScriptException(message);
         }
         if (!getDescriptor.canExecute()) {
-            String message = "\"" +
+            String message = "The member \"" +
                     GET_DESCRIPTOR +
-                    "\" should be a function. Actual: " +
+                    "\" must be a function, but got: " +
                     getDescriptor;
             throw new CorruptedScriptException(message);
         }
@@ -56,7 +56,7 @@ public class JsPluginDescriptorFactory extends PluginDescriptorFactory {
         try {
             descriptor = getDescriptor.execute();
         } catch (Exception e) {
-            String message = "Failed to run the function \"" + GET_DESCRIPTOR + "\"";
+            String message = "Failed to run the function: \"" + GET_DESCRIPTOR + "\"";
             throw new CorruptedScriptException(message, e);
         }
         Map<String, String> map;
@@ -65,14 +65,14 @@ public class JsPluginDescriptorFactory extends PluginDescriptorFactory {
         } catch (Exception e) {
             String message = "The function \"" +
                     GET_DESCRIPTOR +
-                    "\" should return a plugin descriptor object. Actual: " +
+                    "\" must return a plugin descriptor object, but got: " +
                     descriptor;
             throw new CorruptedScriptException(message, e);
         }
         if (map == null) {
             String message = "The function \"" +
                     GET_DESCRIPTOR +
-                    "\" should return a plugin descriptor object. Actual: " +
+                    "\" must return a plugin descriptor object, but got: " +
                     descriptor;
             throw new CorruptedScriptException(message);
         }

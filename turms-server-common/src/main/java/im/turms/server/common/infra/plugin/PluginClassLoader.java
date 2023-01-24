@@ -51,9 +51,9 @@ public class PluginClassLoader extends URLClassLoader {
             return super.loadClass(name);
         } catch (ClassNotFoundException | NoClassDefFoundError e) {
             if (name.startsWith(PackageConst.PREFIX_TURMS_BASE)) {
-                throw new ClassNotFoundException("Cannot find the class [" +
+                throw new ClassNotFoundException("Could not find the class (" +
                         name
-                        + "] of Turms. This may happen if the plugin is loaded by a wrong Turms server", e);
+                        + ") of Turms. This may happen if the plugin is loaded by a wrong Turms server", e);
             }
             throw e;
         }

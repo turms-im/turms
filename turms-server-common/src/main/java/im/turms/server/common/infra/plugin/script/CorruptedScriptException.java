@@ -17,10 +17,13 @@
 
 package im.turms.server.common.infra.plugin.script;
 
+import im.turms.server.common.infra.plugin.InvalidPluginSourceException;
+
 /**
  * @author James Chen
  */
-public class CorruptedScriptException extends RuntimeException {
+public class CorruptedScriptException extends InvalidPluginSourceException {
+
     public CorruptedScriptException(String message) {
         super(message);
     }

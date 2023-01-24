@@ -105,13 +105,16 @@ public class TurmsPropertiesManager {
         try {
             constructor = propertiesClass.getDeclaredConstructor();
         } catch (Exception e) {
-            throw new IllegalArgumentException("The properties class must have a public no-arg constructor", e);
+            throw new IllegalArgumentException("The properties class (" +
+                    propertiesClass.getName() +
+                    ") must have a public no-arg constructor", e);
         }
         T properties;
         try {
             properties = constructor.newInstance();
         } catch (Exception e) {
-            throw new RuntimeException("Failed to initialize the properties class", e);
+            throw new RuntimeException("Failed to initialize the properties class: " +
+                    propertiesClass.getName(), e);
         }
         String s = propertiesClass.getName() + UUID.randomUUID();
         return (T) context.getBean(ConfigurationPropertiesBindingPostProcessor.class)
@@ -180,7 +183,7 @@ public class TurmsPropertiesManager {
         node.addPropertiesChangeListener(listener);
     }
 
-    public void triggerAndAddGlobalPropertiesChangeListener(Consumer<TurmsProperties> listener) {
+    public void notifyAndAddGlobalPropertiesChangeListener(Consumer<TurmsProperties> listener) {
         listener.accept(getGlobalProperties());
         addGlobalPropertiesChangeListener(listener);
     }
@@ -189,7 +192,7 @@ public class TurmsPropertiesManager {
         localPropertiesChangeListeners.add(listener);
     }
 
-    public void triggerAndAddLocalPropertiesChangeListener(Consumer<TurmsProperties> listener) {
+    public void notifyAndAddLocalPropertiesChangeListener(Consumer<TurmsProperties> listener) {
         listener.accept(getLocalProperties());
         localPropertiesChangeListeners.add(listener);
     }
@@ -199,7 +202,7 @@ public class TurmsPropertiesManager {
             try {
                 listener.accept(properties);
             } catch (Exception e) {
-                LOGGER.error("The local properties listener {} failed to handle the new properties",
+                LOGGER.error("Caught an error while notifying the local properties listener ({}) to handle new properties",
                         listener.getClass().getName(), e);
             }
         }

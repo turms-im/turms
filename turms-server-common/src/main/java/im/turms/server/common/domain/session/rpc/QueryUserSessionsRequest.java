@@ -71,7 +71,7 @@ public class QueryUserSessionsRequest extends RpcRequest<List<UserSessionsInfo>>
 
     @Override
     public List<UserSessionsInfo> call() {
-        return sessionService.getUserSessions(userIds);
+        return sessionService.getSessions(userIds);
     }
 
 }

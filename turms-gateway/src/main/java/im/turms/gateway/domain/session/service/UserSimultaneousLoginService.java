@@ -20,6 +20,7 @@ package im.turms.gateway.domain.session.service;
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.domain.common.util.DeviceTypeUtil;
 import im.turms.server.common.infra.collection.CollectionUtil;
+import im.turms.server.common.infra.exception.IncompatibleInternalChangeException;
 import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.constant.LoginConflictStrategy;
@@ -51,7 +52,7 @@ public class UserSimultaneousLoginService {
     private LoginConflictStrategy loginConflictStrategy;
 
     public UserSimultaneousLoginService(TurmsPropertiesManager propertiesManager) {
-        propertiesManager.triggerAndAddGlobalPropertiesChangeListener(this::updateProperties);
+        propertiesManager.notifyAndAddGlobalPropertiesChangeListener(this::updateProperties);
     }
 
     private void updateProperties(TurmsProperties properties) {
@@ -115,7 +116,7 @@ public class UserSimultaneousLoginService {
                 addConflictedDeviceTypes(newDeviceTypeToExclusiveDeviceTypes, DeviceType.BROWSER, DeviceType.IOS);
                 addConflictedDeviceTypes(newDeviceTypeToExclusiveDeviceTypes, DeviceType.ANDROID, DeviceType.IOS);
             }
-            default -> throw new IllegalStateException("Unexpected value: " + strategy);
+            default -> throw new IncompatibleInternalChangeException("Unexpected simultaneous login strategy: " + strategy);
         }
         return Map.copyOf(CollectionUtil.transformValues(newDeviceTypeToExclusiveDeviceTypes, Set::copyOf));
     }
@@ -131,7 +132,7 @@ public class UserSimultaneousLoginService {
                     ALLOW_ONE_DEVICE_OF_DESKTOP_AND_ONE_DEVICE_OF_BROWSER_AND_ONE_DEVICE_OF_MOBILE_ONLINE,
                     ALLOW_ONE_DEVICE_OF_DESKTOP_OR_BROWSER_OR_MOBILE_ONLINE -> {
             }
-            default -> throw new IllegalStateException("Unexpected value: " + strategy);
+            default -> throw new IncompatibleInternalChangeException("Unexpected simultaneous login strategy: " + strategy);
         }
         if (!allowDeviceTypeUnknownLogin) {
             newForbiddenDeviceTypes.add(DeviceType.UNKNOWN);

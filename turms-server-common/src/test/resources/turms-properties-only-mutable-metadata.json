@@ -123,7 +123,7 @@
         },
         "tokensPerPeriod": {
           "deprecated": false,
-          "description": "Refills the bucket with the specified number of tokens per period if the bucket isn't full",
+          "description": "Refills the bucket with the specified number of tokens per period if the bucket is not full",
           "global": true,
           "mutable": true,
           "sensitive": false,
@@ -160,7 +160,7 @@
         },
         "tokensPerPeriod": {
           "deprecated": false,
-          "description": "Refills the bucket with the specified number of tokens per period if the bucket isn't full",
+          "description": "Refills the bucket with the specified number of tokens per period if the bucket is not full",
           "global": true,
           "mutable": true,
           "sensitive": false,
@@ -226,7 +226,7 @@
       },
       "closeIdleSessionAfterSeconds": {
         "deprecated": false,
-        "description": "A session will be closed if turms server doesn't receive any request (including heartbeat request) from the client during closeIdleSessionAfterSeconds. References: https://mp.weixin.qq.com/s?__biz=MzAwNDY1ODY2OQ==&mid=207243549&idx=1&sn=4ebe4beb8123f1b5ab58810ac8bc5994&scene=0#rd",
+        "description": "A session will be closed if turms server does not receive any request (including heartbeat request) from the client during closeIdleSessionAfterSeconds. References: https://mp.weixin.qq.com/s?__biz=MzAwNDY1ODY2OQ==&mid=207243549&idx=1&sn=4ebe4beb8123f1b5ab58810ac8bc5994&scene=0#rd",
         "global": true,
         "mutable": true,
         "sensitive": false,
@@ -235,7 +235,7 @@
       "identityAccessManagement": {
         "enabled": {
           "deprecated": false,
-          "description": "Whether to authenticate and authorize users when logging in. Note that user ID is always required even if enabled is false. If false at startup, turms-gateway won't connect to the MongoDB server for user records",
+          "description": "Whether to authenticate and authorize users when logging in. Note that user ID is always required even if enabled is false. If false at startup, turms-gateway will not connect to the MongoDB server for user records",
           "global": true,
           "mutable": true,
           "sensitive": false,
@@ -310,7 +310,7 @@
       },
       "switchProtocolAfterSeconds": {
         "deprecated": false,
-        "description": "If the turms server only receives heartbeat requests from the client during switchProtocolAfterSeconds, the TCP/WebSocket connection will be closed with the close status \"SWITCH\" to indicate the client should keep sending heartbeat requests over UDP if they want to keep online. Note: 1. The property only works if UDP is enabled; 2. For browser clients, UDP isn't supported",
+        "description": "If the turms server only receives heartbeat requests from the client during switchProtocolAfterSeconds, the TCP/WebSocket connection will be closed with the close status \"SWITCH\" to indicate the client should keep sending heartbeat requests over UDP if they want to keep online. Note: 1. The property only works if UDP is enabled; 2. For browser clients, UDP is not supported",
         "global": true,
         "mutable": true,
         "sensitive": false,
@@ -610,7 +610,7 @@
         },
         "tokensPerPeriod": {
           "deprecated": false,
-          "description": "Refills the bucket with the specified number of tokens per period if the bucket isn't full",
+          "description": "Refills the bucket with the specified number of tokens per period if the bucket is not full",
           "global": true,
           "mutable": true,
           "sensitive": false,

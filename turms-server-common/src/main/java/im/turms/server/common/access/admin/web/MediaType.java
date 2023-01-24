@@ -34,27 +34,27 @@ public record MediaType(
 
     public static MediaType create(String mediaType) {
         if (StringUtil.isBlank(mediaType)) {
-            throw new IllegalArgumentException("\"mediaType\" must not be blank");
+            throw new IllegalArgumentException("The media type must not be blank");
         }
         int index = mediaType.indexOf(';');
         String fullType = (index >= 0 ? mediaType.substring(0, index) : mediaType).trim();
         if (fullType.isBlank()) {
-            throw new IllegalArgumentException("\"mediaType\" must not be blank");
+            throw new IllegalArgumentException("The media type must not be blank");
         }
         if (WILDCARD_TYPE.equals(fullType)) {
             fullType = "*/*";
         }
         int subIndex = fullType.indexOf('/');
         if (subIndex == -1) {
-            throw new IllegalArgumentException("The media type [" + mediaType + "] does not contain \"/\"");
+            throw new IllegalArgumentException("The media type \"" + mediaType + "\" must not contain \"/\"");
         }
         if (subIndex == fullType.length() - 1) {
-            throw new IllegalArgumentException("The media type [" + mediaType + "] does not contain subtype after \"/\"");
+            throw new IllegalArgumentException("The media type \"" + mediaType + "\" must not contain subtype after \"/\"");
         }
         String type = fullType.substring(0, subIndex);
         String subtype = fullType.substring(subIndex + 1);
         if (WILDCARD_TYPE.equals(type) && !WILDCARD_TYPE.equals(subtype)) {
-            throw new IllegalArgumentException("wildcard type is legal only in \"*/*\". Actual: " + mediaType);
+            throw new IllegalArgumentException("The wildcard type is legal only in \"*/*\", but got: \"" + mediaType + "\"");
         }
         return new MediaType(type, subtype);
     }

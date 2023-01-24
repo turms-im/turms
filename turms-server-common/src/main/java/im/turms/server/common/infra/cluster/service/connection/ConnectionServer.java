@@ -20,9 +20,11 @@ package im.turms.server.common.infra.cluster.service.connection;
 import im.turms.server.common.access.common.LoopResourcesFactory;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
+import im.turms.server.common.infra.net.BindException;
 import im.turms.server.common.infra.net.SslUtil;
 import im.turms.server.common.infra.property.env.common.SslProperties;
 import im.turms.server.common.infra.thread.ThreadNameConst;
+import im.turms.server.common.infra.time.DurationConst;
 import lombok.Getter;
 import reactor.core.publisher.Mono;
 import reactor.netty.ChannelBindException;
@@ -32,7 +34,6 @@ import reactor.netty.channel.MicrometerChannelMetricsRecorder;
 import reactor.netty.resources.LoopResources;
 import reactor.netty.tcp.TcpServer;
 
-import java.time.Duration;
 import java.util.function.Consumer;
 
 import static im.turms.server.common.infra.metrics.CommonMetricNameConst.NODE_TCP_SERVER;
@@ -88,16 +89,16 @@ public class ConnectionServer {
                 if (ssl.isEnabled()) {
                     tcpServer.secure(spec -> SslUtil.configureSslContextSpec(spec, ssl, true));
                 }
-                server = tcpServer.bindNow(Duration.ofSeconds(60));
-                LOGGER.info("The local server {}:{} has been set up", host, currentPort);
+                server = tcpServer.bindNow(DurationConst.ONE_MINUTE);
+                LOGGER.info("The local node server started on: {}:{}", host, currentPort);
                 break;
             } catch (Exception e) { // e.g. port in use
                 if (e instanceof ChannelBindException &&
                         portAutoIncrement && currentPort <= proposedPort + portCount) {
-                    LOGGER.warn("Failed to bind on the port {} because [{}]. Trying to bind on the next port {}",
-                            currentPort++, e.toString(), currentPort);
+                    LOGGER.warn("Failed to bind on the port: {}. Trying to bind on the next port: {}",
+                            currentPort++, currentPort, e);
                 } else {
-                    throw new IllegalStateException("Failed to set up the local discovery server", e);
+                    throw new BindException("Failed to set up the local discovery server", e);
                 }
             }
         }

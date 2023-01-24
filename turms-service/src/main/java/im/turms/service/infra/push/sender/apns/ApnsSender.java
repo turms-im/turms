@@ -19,9 +19,11 @@ package im.turms.service.infra.push.sender.apns;
 import com.eatthepath.pushy.apns.ApnsClient;
 import com.eatthepath.pushy.apns.ApnsClientBuilder;
 import com.eatthepath.pushy.apns.DeliveryPriority;
+import com.eatthepath.pushy.apns.PushNotificationResponse;
 import com.eatthepath.pushy.apns.PushType;
 import com.eatthepath.pushy.apns.auth.ApnsSigningKey;
 import com.eatthepath.pushy.apns.util.SimpleApnsPushNotification;
+import im.turms.server.common.infra.exception.FeatureDisabledException;
 import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.property.env.service.env.push.ApnsProperties;
 import im.turms.service.infra.push.DeviceTokenType;
@@ -32,20 +34,22 @@ import im.turms.service.infra.push.SendPushNotificationResult;
 import reactor.core.publisher.Mono;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
+import java.util.function.BiConsumer;
 
 /**
  * @author James Chen
  */
 public class ApnsSender implements PushNotificationSender {
 
-    private static final String APN_CHALLENGE_PAYLOAD = "{\"aps\":{\"sound\":\"default\",\"alert\":{\"loc-key\":\"APN_Message\"}},\"challenge\":\"{}\"}";
-    private static final String APN_NSE_NOTIFICATION_PAYLOAD = "{\"aps\":{\"mutable-content\":1,\"alert\":{\"loc-key\":\"APN_Message\"}}}";
-    private static final String APN_RATE_LIMIT_CHALLENGE_PAYLOAD = "{\"aps\":{\"sound\":\"default\",\"alert\":{\"loc-key\":\"APN_Message\"}},\"rateLimitChallenge\":\"{}\"}";
-    private static final String APN_VOIP_NOTIFICATION_PAYLOAD = "{\"aps\":{\"sound\":\"default\",\"alert\":{\"loc-key\":\"APN_Message\"}}}";
+    private static final String APN_CHALLENGE_PAYLOAD =
+            "{\"aps\":{\"sound\":\"default\",\"alert\":{\"loc-key\":\"APN_Message\"}},\"challenge\":\"{}\"}";
+    private static final String APN_NSE_NOTIFICATION_PAYLOAD =
+            "{\"aps\":{\"mutable-content\":1,\"alert\":{\"loc-key\":\"APN_Message\"}}}";
+    private static final String APN_RATE_LIMIT_CHALLENGE_PAYLOAD =
+            "{\"aps\":{\"sound\":\"default\",\"alert\":{\"loc-key\":\"APN_Message\"}},\"rateLimitChallenge\":\"{}\"}";
+    private static final String APN_VOIP_NOTIFICATION_PAYLOAD =
+            "{\"aps\":{\"sound\":\"default\",\"alert\":{\"loc-key\":\"APN_Message\"}}}";
 
     private static final String APNS_CA_FILENAME = "apns-certificates.pem";
 
@@ -67,24 +71,34 @@ public class ApnsSender implements PushNotificationSender {
         }
         bundleId = apnsProperties.getBundleId();
         bundleIdForVoip = bundleId + ".voip";
-        ByteArrayInputStream inputStream = new ByteArrayInputStream(apnsProperties.getSigningKey().getBytes());
+        byte[] signingKeyBytes = apnsProperties.getSigningKey().getBytes();
+        ApnsSigningKey signingKey;
         try {
+            ByteArrayInputStream inputStream = new ByteArrayInputStream(signingKeyBytes);
+            signingKey = ApnsSigningKey.loadFromInputStream(inputStream,
+                    apnsProperties.getTeamId(),
+                    apnsProperties.getKeyId());
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to read the signing key", e);
+        }
+        try {
+            String hostname = apnsProperties.isSandboxEnabled()
+                    ? ApnsClientBuilder.DEVELOPMENT_APNS_HOST
+                    : ApnsClientBuilder.PRODUCTION_APNS_HOST;
             apnsClient = new ApnsClientBuilder()
-                    .setSigningKey(ApnsSigningKey.loadFromInputStream(inputStream, apnsProperties.getTeamId(), apnsProperties.getKeyId()))
+                    .setSigningKey(signingKey)
                     .setTrustedServerCertificateChain(getClass().getResourceAsStream(APNS_CA_FILENAME))
-                    .setApnsServer(apnsProperties.isSandboxEnabled()
-                            ? ApnsClientBuilder.DEVELOPMENT_APNS_HOST
-                            : ApnsClientBuilder.PRODUCTION_APNS_HOST)
+                    .setApnsServer(hostname)
                     .build();
-        } catch (IOException | NoSuchAlgorithmException | InvalidKeyException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to initialize the APNs client", e);
         }
     }
 
     @Override
     public Mono<SendPushNotificationResult> sendNotification(PushNotification notification) {
         if (!isEnabled) {
-            return Mono.error(new UnsupportedOperationException("APNs is disabled"));
+            return Mono.error(new FeatureDisabledException("APNs is disabled"));
         }
         DeviceTokenType deviceTokenType = notification.deviceTokenType();
         String topic = switch (deviceTokenType) {
@@ -110,24 +124,27 @@ public class ApnsSender implements PushNotificationSender {
                 DeliveryPriority.IMMEDIATE,
                 isVoip ? PushType.VOIP : PushType.ALERT,
                 collapseId);
-        return Mono.create(sink -> apnsClient.sendNotification(pushNotification)
-                .whenComplete((response, throwable) -> {
-                    if (throwable != null) {
-                        sink.error(throwable);
-                        return;
-                    }
-                    if (response == null) {
-                        sink.error(new NullPointerException("response is null"));
-                        return;
-                    }
-                    if (response.isAccepted()) {
-                        sink.success(new SendPushNotificationResult(true, null, false));
-                    } else {
-                        String rejectionReason = response.getRejectionReason().orElse(null);
-                        sink.success(new SendPushNotificationResult(false, rejectionReason,
-                                "Unregistered".equals(rejectionReason) || "BadDeviceToken".equals(rejectionReason)));
-                    }
-                }));
+        return Mono.create(sink -> {
+            BiConsumer<PushNotificationResponse<SimpleApnsPushNotification>, Throwable> consumer = (response, throwable) -> {
+                if (throwable != null) {
+                    sink.error(throwable);
+                    return;
+                }
+                if (response == null) {
+                    sink.error(new NullPointerException("The send notification response is null"));
+                    return;
+                }
+                if (response.isAccepted()) {
+                    sink.success(new SendPushNotificationResult(true, null, false));
+                } else {
+                    String rejectionReason = response.getRejectionReason().orElse(null);
+                    boolean unregistered = "Unregistered".equals(rejectionReason) || "BadDeviceToken".equals(rejectionReason);
+                    sink.success(new SendPushNotificationResult(false, rejectionReason, unregistered));
+                }
+            };
+            apnsClient.sendNotification(pushNotification)
+                    .whenComplete(consumer);
+        });
     }
 
     @Override

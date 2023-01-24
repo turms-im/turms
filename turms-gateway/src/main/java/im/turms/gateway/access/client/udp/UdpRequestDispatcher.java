@@ -36,6 +36,7 @@ import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.metrics.TurmsMicrometerChannelMetricsRecorder;
+import im.turms.server.common.infra.net.BindException;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.gateway.UdpProperties;
 import io.netty.buffer.ByteBuf;
@@ -97,16 +98,16 @@ public class UdpRequestDispatcher {
                         Flux<DatagramPacket> outputFlux = responseFlux.mergeWith(notificationFlux);
                         outbound.sendObject(outputFlux, o -> true)
                                 .then()
-                                .subscribe(null, t -> LOGGER.error("Caught an error while sending object", t));
+                                .subscribe(null, t -> LOGGER.error("Caught an error while sending a packet", t));
                         return Flux.never();
                     });
             try {
                 connection = udpServer.bind().block();
             } catch (Exception e) {
-                String message = "Failed to bind the UDP server on " + host + ":" + port;
-                throw new IllegalStateException(message, e);
+                String message = "Failed to bind the UDP server on: " + host + ":" + port;
+                throw new BindException(message, e);
             }
-            LOGGER.info("UDP server started on {}:{}", host, port);
+            LOGGER.info("UDP server started on: {}:{}", host, port);
             applicationContext.addShutdownHook(JobShutdownOrder.CLOSE_GATEWAY_UDP_SERVER, timeoutMillis -> {
                 connection.dispose();
                 return connection.onDispose();
@@ -146,7 +147,7 @@ public class UdpRequestDispatcher {
             }
             case GO_OFFLINE -> {
                 CloseReason reason = CloseReason.get(SessionCloseStatus.DISCONNECTED_BY_CLIENT);
-                yield sessionService.authAndSetLocalSessionOffline(userId, deviceType, reason, sessionId)
+                yield sessionService.authAndCloseLocalSession(userId, deviceType, reason, sessionId)
                         .thenReturn(ResponseStatusCode.OK);
             }
         };
@@ -156,11 +157,11 @@ public class UdpRequestDispatcher {
         if (throwable instanceof ResponseException exception) {
             ResponseStatusCode code = exception.getCode();
             if (code.isServerError()) {
-                LOGGER.error("Failed to handle incoming package", throwable);
+                LOGGER.error("Failed to handle an incoming package", throwable);
             }
             return code;
         } else {
-            LOGGER.error("Failed to handle incoming package", throwable);
+            LOGGER.error("Failed to handle an incoming package", throwable);
             return ResponseStatusCode.SERVER_INTERNAL_ERROR;
         }
     }

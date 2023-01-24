@@ -45,7 +45,7 @@ public final class ProtoDecoder {
         } else if (count > 1) {
             return CodedInputStreamUtil.newInstance(Arrays.asList(byteBuf.nioBuffers()));
         }
-        throw new IllegalArgumentException("byteBuf must have at least one nioBuffer");
+        throw new IllegalArgumentException("The buffer must have at least one NIO buffer");
     }
 
 }

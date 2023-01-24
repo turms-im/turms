@@ -28,7 +28,7 @@ public abstract class BaseIntegrationTest {
     protected String readText(String path) {
         InputStream resource = BaseIntegrationTest.class.getClassLoader().getResourceAsStream(path);
         if (resource == null) {
-            throw new IllegalStateException("Cannot find resource " + path);
+            throw new RuntimeException("Could not find the resource: " + path);
         }
         try {
             return new String(resource.readAllBytes(), StandardCharsets.UTF_8);

@@ -21,6 +21,8 @@ import im.turms.server.common.infra.collection.CloseableCollection;
 import im.turms.server.common.infra.collection.CollectionPool;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.collection.Pool;
+import im.turms.server.common.infra.lang.StrJoiner;
+import im.turms.server.common.infra.lang.StringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,35 +38,35 @@ public class PolicyDeserializer {
 
     private static final String ILLEGAL_STATEMENT;
     private static final String ILLEGAL_RESOURCES;
-    private static final String ILLEGAL_EFFECT = "Illegal policy format: " +
-            PolicyStatement.Fields.effect +
-            " must be one string of [\"ALLOW\", \"DENY\"]";
-    private static final String ILLEGAL_ACTIONS = "Illegal policy format: " +
-            PolicyStatement.Fields.actions +
-            " must be one string of " +
-            "[\"*\", \"CREATE\", \"DELETE\", \"UPDATE\", \"QUERY\"], or an array that contains these strings";
+    private static final String ILLEGAL_EFFECT =
+            "The JWT " + PolicyStatement.Fields.effect + " must be one of the strings: [\"ALLOW\", \"DENY\"]";
+    private static final String ILLEGAL_ACTIONS =
+            "The JWT " + PolicyStatement.Fields.actions + " must be one of the strings: " +
+                    "[\"*\", \"CREATE\", \"DELETE\", \"UPDATE\", \"QUERY\"], " +
+                    "or an array that contains these strings";
 
     static {
-        ILLEGAL_STATEMENT = "Illegal policy format: statement must be an object consisting of the fields: "
-                + List.of(PolicyStatement.Fields.effect, PolicyStatement.Fields.actions, PolicyStatement.Fields.resources);
-        Set<PolicyStatementResource> all = PolicyStatementResource.ALL;
+        String fields = StringUtil.toQuotedStringLatin1(
+                PolicyStatement.Fields.effect,
+                PolicyStatement.Fields.actions,
+                PolicyStatement.Fields.resources);
+        ILLEGAL_STATEMENT = "The JWT statement must be an object consisting of the fields: " + fields;
+        Set<PolicyStatementResource> allResources = PolicyStatementResource.ALL;
         int i = 0;
-        int count = all.size();
-        StringBuilder builder = new StringBuilder(count * 20);
-        for (PolicyStatementResource resource : all) {
-            builder.append('"')
-                    .append(resource.name())
-                    .append('"');
+        int count = allResources.size();
+        StrJoiner joiner = new StrJoiner(count * 4 - 1);
+        for (PolicyStatementResource resource : allResources) {
+            joiner.add("\"")
+                    .add(resource.name())
+                    .add("\"");
             if (i++ != count - 1) {
-                builder.append(", ");
+                joiner.add(", ");
             }
         }
-        ILLEGAL_RESOURCES = "Illegal policy format: " +
-                PolicyStatement.Fields.resources +
-                " must be one string of " +
-                "[\"*\", " +
-                builder +
-                "], or an array that contains these strings";
+        ILLEGAL_RESOURCES = "The JWT " + PolicyStatement.Fields.resources +
+                " must be one of the strings: [\"*\", "
+                + joiner
+                + "], or an array that contains these strings";
     }
 
     private PolicyDeserializer() {
@@ -73,7 +75,7 @@ public class PolicyDeserializer {
     public static Policy parse(Map<String, Object> map) {
         Object statementsObj = map.get(Policy.Fields.statements);
         if (!(statementsObj instanceof List<?> statementObjs)) {
-            throw new IllegalPolicyException("Illegal policy format: " + Policy.Fields.statements + " must be an array");
+            throw new IllegalPolicyException("The JWT " + Policy.Fields.statements + " must be an array");
         }
         List<PolicyStatement> statements = null;
         for (Object statementObj : statementObjs) {

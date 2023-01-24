@@ -100,7 +100,7 @@ class MongoCollectionInitializerIT extends SpringAwareIntegrationTest {
             String jsonSchema = readText("schema/" + schemaFileName + ".json");
             StepVerifier.create(MONGO_CLIENT.validate(modelClass, jsonSchema))
                     .expectNext(true)
-                    .as("Entity " + modelClass.getSimpleName() + " should have a valid schema")
+                    .as("Entity (" + modelClass.getName() + ") must have a valid schema")
                     .expectComplete()
                     .verify(DEFAULT_IO_TIMEOUT);
         }
@@ -115,7 +115,7 @@ class MongoCollectionInitializerIT extends SpringAwareIntegrationTest {
                         String json = readText("index/" + schemaFileName + ".json");
                         List<Document> expectedIndexes = (List<Document>) Document.parse("{\"json\":" + json + "}").get("json");
                         assertThat(indexes)
-                                .as("Entity " + modelClass.getSimpleName() + " should have the expected size")
+                                .as("Entity (" + modelClass.getName() + ") must have the expected size")
                                 .hasSize(expectedIndexes.size());
                         expectedIndexes.forEach(expectedIndex -> {
                             Object expectedIndexName = expectedIndex.get("name");
@@ -123,15 +123,15 @@ class MongoCollectionInitializerIT extends SpringAwareIntegrationTest {
                                     .filter(document -> document.get("name").equals(expectedIndexName))
                                     .findFirst();
                             assertThat(found)
-                                    .as("Cannot find the index " + expectedIndexName)
+                                    .as("Must contain the index: \"" + expectedIndexName + "\"")
                                     .isPresent();
                             Document index = found.get();
                             for (Map.Entry<String, Object> entry : expectedIndex.entrySet()) {
-                                assertThat(index.get(entry.getKey())).isEqualTo(entry.getValue());
+                                assertThat(index).containsEntry(entry.getKey(), entry.getValue());
                             }
                         });
                     })
-                    .as("Entity " + modelClass.getSimpleName() + " should have valid index models")
+                    .as("Entity (" + modelClass.getName() + ") must have valid index models")
                     .expectComplete()
                     .verify(DEFAULT_IO_TIMEOUT);
         }

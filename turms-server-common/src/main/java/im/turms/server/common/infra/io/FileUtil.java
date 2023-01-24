@@ -19,7 +19,6 @@ package im.turms.server.common.infra.io;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-import lombok.SneakyThrows;
 import org.springframework.util.AntPathMatcher;
 import org.webjars.WebJarAssetLocator;
 
@@ -41,10 +40,14 @@ public class FileUtil {
     private FileUtil() {
     }
 
-    @SneakyThrows
     public static File createTempFile(String prefix, String suffix, File directory) {
         directory.mkdirs();
-        File tempFile = File.createTempFile(prefix, suffix, directory);
+        File tempFile;
+        try {
+            tempFile = File.createTempFile(prefix, suffix, directory);
+        } catch (IOException e) {
+            throw new InputOutputException(e);
+        }
         tempFile.deleteOnExit();
         return tempFile;
     }
@@ -55,10 +58,13 @@ public class FileUtil {
                 .directBuffer(bytes.length).writeBytes(bytes));
     }
 
-    @SneakyThrows
     public static byte[] getWebJarAssetAsBytes(String resourceNamePattern) {
-        return getWebJarAsset(resourceNamePattern)
-                .readAllBytes();
+        try {
+            return getWebJarAsset(resourceNamePattern)
+                    .readAllBytes();
+        } catch (IOException e) {
+            throw new InputOutputException(e);
+        }
     }
 
     public static InputStream getWebJarAsset(String resourceNamePattern) {
@@ -70,11 +76,11 @@ public class FileUtil {
             }
         }
         if (resourcePath == null) {
-            throw new IllegalArgumentException("Resource not found: " + resourceNamePattern);
+            throw new ResourceNotFoundException("No resource found: " + resourceNamePattern);
         }
         InputStream inputStream = FileUtil.class.getClassLoader().getResourceAsStream(resourcePath);
         if (inputStream == null) {
-            throw new IllegalStateException("Cannot find the resource from the path: " + resourcePath);
+            throw new ResourceNotFoundException("Could not find the resource: " + resourcePath);
         }
         return inputStream;
     }
@@ -83,7 +89,7 @@ public class FileUtil {
         try {
             return Files.size(path);
         } catch (IOException e) {
-            throw new IllegalStateException("Failed to get the size of the file: " + path, e);
+            throw new InputOutputException("Failed to get the size of the file: " + path, e);
         }
     }
 

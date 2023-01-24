@@ -23,6 +23,7 @@ import im.turms.server.common.access.client.dto.model.user.UserSession;
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.domain.session.bo.SessionCloseStatus;
+import im.turms.server.common.infra.serialization.SerializationException;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
 
@@ -67,7 +68,7 @@ public class ClientMessageEncoder {
             output.writerIndex(capacity);
         } catch (Exception e) {
             output.release();
-            throw new RuntimeException(e);
+            throw new SerializationException("Failed to encode", e);
         }
         return output;
     }
@@ -101,7 +102,7 @@ public class ClientMessageEncoder {
             output.writerIndex(capacity);
         } catch (Exception e) {
             output.release();
-            throw new RuntimeException(e);
+            throw new SerializationException("Failed to encode", e);
         }
         return output;
     }
@@ -132,7 +133,7 @@ public class ClientMessageEncoder {
             output.writerIndex(capacity);
         } catch (Exception e) {
             output.release();
-            throw new RuntimeException(e);
+            throw new SerializationException("Failed to encode", e);
         }
         return output;
     }

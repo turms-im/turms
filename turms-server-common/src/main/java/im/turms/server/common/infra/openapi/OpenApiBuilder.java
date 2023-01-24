@@ -24,6 +24,7 @@ import im.turms.server.common.access.admin.web.ApiEndpointKey;
 import im.turms.server.common.access.admin.web.MediaTypeConst;
 import im.turms.server.common.access.admin.web.MethodParameterInfo;
 import im.turms.server.common.infra.lang.StringUtil;
+import im.turms.server.common.infra.serialization.SerializationException;
 import io.netty.buffer.ByteBuf;
 import io.netty.handler.codec.http.HttpMethod;
 import io.swagger.v3.core.converter.AnnotatedType;
@@ -54,7 +55,6 @@ import io.swagger.v3.oas.models.responses.ApiResponses;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.servers.Server;
-import lombok.SneakyThrows;
 import reactor.core.publisher.Mono;
 
 import java.lang.reflect.Method;
@@ -87,7 +87,6 @@ public class OpenApiBuilder {
     private OpenApiBuilder() {
     }
 
-    @SneakyThrows
     public static byte[] build(String version,
                                String nodeType,
                                String serverUrl,
@@ -130,7 +129,11 @@ public class OpenApiBuilder {
         ObjectWriter writer = ObjectMapperFactory
                 .buildStrictGenericObjectMapper()
                 .writerWithDefaultPrettyPrinter();
-        return writer.writeValueAsBytes(api);
+        try {
+            return writer.writeValueAsBytes(api);
+        } catch (Exception e) {
+            throw new SerializationException("Failed to write the OpenAPI as a JSON string", e);
+        }
     }
 
     @Nullable

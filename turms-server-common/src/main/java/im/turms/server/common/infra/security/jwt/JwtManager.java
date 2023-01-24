@@ -34,8 +34,7 @@ import im.turms.server.common.infra.security.jwt.algorithm.JwtAlgorithmDefinitio
 import im.turms.server.common.infra.security.jwt.algorithm.RsaAlgorithm;
 import im.turms.server.common.infra.security.jwt.algorithm.RsaPssAlgorithm;
 import im.turms.server.common.infra.security.jwt.exception.InvalidJwtException;
-import im.turms.server.common.infra.security.jwt.exception.SignatureVerificationException;
-import lombok.SneakyThrows;
+import im.turms.server.common.infra.security.jwt.exception.JwtSignatureVerificationException;
 
 import java.io.File;
 import java.io.IOException;
@@ -72,7 +71,6 @@ public class JwtManager {
         HEADER_READER = JsonCodecPool.MAPPER.readerFor(JwtHeader.class);
     }
 
-    @SneakyThrows
     public JwtManager(JwtIdentityAccessManagementVerificationProperties verificationProperties,
                       JwtKeyAlgorithmProperties rsa256,
                       JwtKeyAlgorithmProperties rsa384,
@@ -197,19 +195,21 @@ public class JwtManager {
     }
 
     @Nullable
-    private byte[] getSecretKey(String name, JwtSecretKeyAlgorithmProperties properties) {
+    private byte[] getSecretKey(String algorithmName, JwtSecretKeyAlgorithmProperties properties) {
         if (StringUtil.isNotBlank(properties.getFilePath())) {
             try {
                 return Files.readAllBytes(Path.of(properties.getFilePath()));
             } catch (IOException e) {
-                throw new RuntimeException("Failed to read the secret key from the path \"%s\" for %s"
-                        .formatted(properties.getFilePath(), name), e);
+                throw new RuntimeException("Failed to read the secret key from the file path (" +
+                        properties.getFilePath() +
+                        ") for the algorithm: " +
+                        algorithmName, e);
             }
         }
         JwtP12KeyStoreProperties p12 = properties.getP12();
         String filePath = p12.getFilePath();
         if (StringUtil.isNotBlank(filePath)) {
-            return CertificateUtil.getSecretKeyFromP12(new File(filePath), p12.getPassword(), p12.getKeyAlias());
+            return CertificateUtil.getSecretKeyFromP12File(new File(filePath), p12.getPassword(), p12.getKeyAlias());
         }
         return null;
     }
@@ -223,7 +223,7 @@ public class JwtManager {
         JwtP12KeyStoreProperties p12 = properties.getP12();
         String filePath = p12.getFilePath();
         if (StringUtil.isNotBlank(filePath)) {
-            return (T) CertificateUtil.getPublicKeyFromP12(new File(filePath), p12.getPassword(), p12.getKeyAlias());
+            return (T) CertificateUtil.getPublicKeyFromP12File(new File(filePath), p12.getPassword(), p12.getKeyAlias());
         }
         return null;
     }
@@ -232,10 +232,11 @@ public class JwtManager {
         return nameToAlgorithm.keySet();
     }
 
-    public Jwt decode(String jwt) throws InvalidJwtException, NoSuchAlgorithmException, SignatureVerificationException {
+    public Jwt decode(String jwt)
+            throws InvalidJwtException, NoSuchAlgorithmException, JwtSignatureVerificationException {
         List<String> parts = StringUtil.splitMultipleLatin1(jwt, AsciiCode.PERIOD);
         if (parts == null || parts.size() != 3) {
-            throw new InvalidJwtException("The JWT must have three parts");
+            throw new InvalidJwtException("The input JWT must have three parts");
         }
         byte[] encodedHeaderBytes = StringUtil.getBytes(parts.get(0));
         byte[] encodedPayloadBytes = StringUtil.getBytes(parts.get(1));
@@ -244,11 +245,11 @@ public class JwtManager {
         String algorithmName = header.algorithm();
         JwtAlgorithm algorithm = nameToAlgorithm.get(algorithmName);
         if (algorithm == null) {
-            throw new NoSuchAlgorithmException("The " + algorithmName + " algorithm isn't supported");
+            throw new NoSuchAlgorithmException("Unknown algorithm: \"" + algorithmName + "\"");
         }
         for (Predicate<JwtPayload> verification : verifications) {
             if (!verification.test(payload)) {
-                throw new SignatureVerificationException("The JWT signature is invalid");
+                throw new JwtSignatureVerificationException("The input JWT signature is invalid");
             }
         }
         Jwt jwtEntity = new Jwt(header,
@@ -259,7 +260,7 @@ public class JwtManager {
         if (algorithm.verify(jwtEntity)) {
             return jwtEntity;
         }
-        throw new SignatureVerificationException("The JWT signature is invalid");
+        throw new JwtSignatureVerificationException("The input JWT signature is invalid");
     }
 
     private JwtHeader decodeHeader(byte[] encodedHeaderBytes) {
@@ -267,7 +268,7 @@ public class JwtManager {
         try {
             decodedHeaderBytes = URL_DECODER.decode(encodedHeaderBytes);
         } catch (Exception e) {
-            throw new InvalidJwtException("The JWT header isn't a valid Base64-encoded string", e);
+            throw new InvalidJwtException("The input JWT header is not a valid Base64-encoded string", e);
         }
         try {
             return HEADER_READER.readValue(decodedHeaderBytes);
@@ -281,7 +282,7 @@ public class JwtManager {
         try {
             decodedPayloadBytes = URL_DECODER.decode(encodedPayloadBytes);
         } catch (Exception e) {
-            throw new InvalidJwtException("The JWT payload isn't a valid Base64-encoded string", e);
+            throw new InvalidJwtException("The input JWT payload is not a valid Base64-encoded string", e);
         }
         try {
             return PAYLOAD_READER.readValue(decodedPayloadBytes);

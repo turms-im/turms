@@ -92,11 +92,15 @@ public class UserPermissionGroupService {
                             idToPermissionGroup.remove(groupTypeId);
                         }
                         case INVALIDATE -> idToPermissionGroup.clear();
-                        default -> LOGGER.fatal("Detected an illegal operation on UserPermissionGroup collection: " + event);
+                        default -> LOGGER.fatal("Detected an illegal operation on the collection \"" +
+                                UserPermissionGroup.COLLECTION_NAME +
+                                "\" in the change stream event: {}", event);
                     }
                 })
                 .onErrorContinue((throwable, o) -> LOGGER
-                        .error("Caught an error while processing the change stream event of UserPermissionGroup: {}", o, throwable))
+                        .error("Caught an error while processing the change stream event ({}) of the collection: \"" +
+                                UserPermissionGroup.COLLECTION_NAME +
+                                "\"", o, throwable))
                 .subscribe();
     }
 
@@ -200,7 +204,7 @@ public class UserPermissionGroupService {
         return userService.queryUserPermissionGroupId(userId)
                 .flatMap(groupId -> queryUserPermissionGroup(groupId)
                         .switchIfEmpty(Mono.error(ResponseException
-                                .get(ResponseStatusCode.SERVER_INTERNAL_ERROR, "The user is in a nonexistent permission group " + groupId))))
+                                .get(ResponseStatusCode.SERVER_INTERNAL_ERROR, "The user (" + userId + ") is in the nonexistent permission group (" + groupId + ")"))))
                 .switchIfEmpty(Mono.error(ResponseException.get(ResponseStatusCode.QUERY_PERMISSION_OF_NON_EXISTING_USER)));
     }
 

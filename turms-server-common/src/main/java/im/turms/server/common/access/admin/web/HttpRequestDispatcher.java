@@ -30,10 +30,12 @@ import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.context.JobShutdownOrder;
 import im.turms.server.common.infra.context.TurmsApplicationContext;
 import im.turms.server.common.infra.exception.DuplicateResourceException;
+import im.turms.server.common.infra.exception.IncompatibleInternalChangeException;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.io.BaseFileResource;
 import im.turms.server.common.infra.io.ByteBufFileResource;
 import im.turms.server.common.infra.io.FileResource;
+import im.turms.server.common.infra.io.ResourceNotFoundException;
 import im.turms.server.common.infra.json.JsonUtil;
 import im.turms.server.common.infra.lang.Pair;
 import im.turms.server.common.infra.lang.StringUtil;
@@ -113,7 +115,7 @@ public class HttpRequestDispatcher {
             HANDLE_ADMIN_ACTION_METHOD = AdminActionHandler.class
                     .getDeclaredMethod("handleAdminAction", AdminAction.class);
         } catch (NoSuchMethodException e) {
-            throw new RuntimeException(e);
+            throw new IncompatibleInternalChangeException(e);
         }
     }
 
@@ -134,7 +136,7 @@ public class HttpRequestDispatcher {
                 : propertiesManager.getLocalProperties().getService().getAdminApi();
         useAuthentication = apiProperties.isUseAuthentication();
         if (apiProperties.isEnabled()) {
-            propertiesManager.triggerAndAddGlobalPropertiesChangeListener(this::updateGlobalProperties);
+            propertiesManager.notifyAndAddGlobalPropertiesChangeListener(this::updateGlobalProperties);
             AdminHttpProperties httpProperties = apiProperties.getHttp();
             this.requestParamParser = new HttpRequestParamParser(httpProperties.getMaxRequestBodySizeBytes());
             keyToEndpoint = new HttpEndpointCollector(requestParamParser)
@@ -143,7 +145,7 @@ public class HttpRequestDispatcher {
                     .handle((request, response) -> {
                         handle(request, response)
                                 .subscribe(null, t ->
-                                        LOGGER.error("Caught an error while handling the HTTP request: " + request, t));
+                                        LOGGER.error("Caught an error while handling the HTTP request: {}", request, t));
                         return Mono.never();
                     })
                     .bindNow(DurationConst.ONE_MINUTE);
@@ -172,7 +174,7 @@ public class HttpRequestDispatcher {
     //region Dispatch
     private Mono<Void> handle(HttpServerRequest request, HttpServerResponse response) {
         // 1. We don't expose configs for developers to customize the CORS config
-        // because it's better to be done by firewall/ECS/EC2
+        // because it is better for the firewall to manage access.
         // 2. Note that both CORS requests and some other requests need these headers
         HttpUtil.allowAnyRequest(response.responseHeaders()
                 .set(X_REQUEST_ID, request.requestId()));
@@ -199,7 +201,7 @@ public class HttpRequestDispatcher {
                     if (!isLogEnabled && !pluginManager.hasRunningExtensions(AdminActionHandler.class)) {
                         return;
                     }
-                    tryLogAndTriggerHandlers(requestContext.getParams(),
+                    tryLogAndInvokeHandlers(requestContext.getParams(),
                             tracingContext,
                             requestContext.getAccount(),
                             ip,
@@ -214,7 +216,7 @@ public class HttpRequestDispatcher {
                     HttpHandlerResult<ResponseDTO<?>> httpResponse = translateThrowable(t);
                     if (HttpUtil.isServerError(httpResponse.status())) {
                         try (TracingCloseableContext ignored = tracingContext.asCloseable()) {
-                            LOGGER.error("Caught an error while handling the HTTP request: " + request, t);
+                            LOGGER.error("Caught an error while handling the HTTP request: {}", request, t);
                         }
                     }
                     return Mono.just(httpResponse);
@@ -222,7 +224,7 @@ public class HttpRequestDispatcher {
                 .flatMap(result -> sendResponse(requestContext.getEndpoint(), result, response))
                 .onErrorResume(t -> {
                     try (TracingCloseableContext ignored = tracingContext.asCloseable()) {
-                        LOGGER.error("Caught an error while responding to the HTTP request: " + request, t);
+                        LOGGER.error("Caught an error while responding to the HTTP request: {}", request, t);
                     }
                     return Mono.empty();
                 })
@@ -281,7 +283,7 @@ public class HttpRequestDispatcher {
                                 try {
                                     file.release();
                                 } catch (Exception e) {
-                                    LOGGER.error("Caught an error while releasing the multipart file: " + file.name(), e);
+                                    LOGGER.error("Caught an error while releasing the multipart file: {}", file.name(), e);
                                 }
                             }
                         }));
@@ -305,10 +307,10 @@ public class HttpRequestDispatcher {
         Object returnValue;
         try {
             returnValue = endpoint.method().invoke(endpoint.controller(), params);
-        } catch (IllegalAccessException e) {
-            return Mono.error(e);
         } catch (InvocationTargetException e) {
             return Mono.error(e.getCause());
+        } catch (Exception e) {
+            return Mono.error(e);
         }
         if (returnValue instanceof Flux<?>) {
             return Mono.just(HttpHandlerResult.create(HttpResponseStatus.INTERNAL_SERVER_ERROR,
@@ -363,7 +365,7 @@ public class HttpRequestDispatcher {
         return response
                 // Duplicate the buffer to use an independent reader index
                 // because we don't want to modify the reader index of the original buffer
-                // if it's an unreleasable buffer internally, or it may be sent to multiple endpoints.
+                // if it is an unreleasable buffer internally, or it may be sent to multiple endpoints.
                 // Note that the content of the buffer is not copied, so "duplicate()" is efficient.
                 .sendObject(mediaTypeAndBuffer.second().duplicate())
                 .then();
@@ -373,7 +375,7 @@ public class HttpRequestDispatcher {
         if (body instanceof ByteBuf buffer) {
             return Pair.of(APPLICATION_OCTET_STREAM, buffer);
         } else if (body instanceof CharSequence sequence) {
-            byte[] bytes = StringUtil.getUTF8Bytes(sequence.toString());
+            byte[] bytes = StringUtil.getUtf8Bytes(sequence.toString());
             return Pair.of(TEXT_PLAIN_UTF_8,
                     PooledByteBufAllocator.DEFAULT.buffer(bytes.length).writeBytes(bytes));
         }
@@ -398,6 +400,8 @@ public class HttpRequestDispatcher {
                 statusCode = ResponseStatusCode.RECORD_CONTAINS_DUPLICATE_KEY;
             } else if (throwable instanceof DuplicateResourceException) {
                 statusCode = ResponseStatusCode.DUPLICATE_RESOURCE;
+            } else if (throwable instanceof ResourceNotFoundException) {
+                statusCode = ResponseStatusCode.RESOURCE_NOT_FOUND;
             } else {
                 statusCode = ResponseStatusCode.SERVER_INTERNAL_ERROR;
             }
@@ -408,7 +412,7 @@ public class HttpRequestDispatcher {
     //endregion
 
     //region Logging
-    private void tryLogAndTriggerHandlers(
+    private void tryLogAndInvokeHandlers(
             @Nullable MethodParameterInfo[] parameters,
             TracingContext context,
             @Nullable String account,

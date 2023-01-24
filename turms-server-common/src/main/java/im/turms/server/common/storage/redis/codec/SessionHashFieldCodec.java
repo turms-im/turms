@@ -47,7 +47,7 @@ public class SessionHashFieldCodec implements TurmsRedisCodec<Object> {
         }
         DeviceType deviceType = DeviceType.forNumber(data);
         if (deviceType == null) {
-            throw new IllegalArgumentException("Cannot parse " + data + "to DeviceType");
+            throw new IllegalArgumentException("Could not find the device type for the number: " + data);
         }
         return deviceType;
     }

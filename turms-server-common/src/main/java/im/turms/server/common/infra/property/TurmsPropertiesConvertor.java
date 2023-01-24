@@ -58,10 +58,10 @@ public class TurmsPropertiesConvertor {
             String fieldPath = parentFieldPath == null ? fieldName : parentFieldPath + "." + fieldName;
             PropertyFieldInfo fieldInfo = getFieldInfo(properties.getClass(), fieldName);
             if (fieldInfo == null) {
-                return new InvalidPropertyException("The property doesn't exist: \"" + fieldPath + "\"");
+                return new InvalidPropertyException("Nonexistent property: " + fieldPath);
             }
             if (!fieldInfo.isMutableProperty() && !fieldInfo.isNestedProperty()) {
-                return new InvalidPropertyException("Cannot update an immutable property: \"" + fieldPath + "\"");
+                return new InvalidPropertyException("Immutable property: " + fieldPath);
             }
             Object value = entry.getValue();
             if (value instanceof Map nestedPropertiesForUpdating) {
@@ -72,8 +72,8 @@ public class TurmsPropertiesConvertor {
                     if (exception != null) {
                         return exception;
                     }
-                } catch (Throwable t) {
-                    throw new RuntimeException("Failed to validate properties", t);
+                } catch (Exception e) {
+                    throw new RuntimeException("Failed to validate properties", e);
                 }
             }
         }
@@ -119,8 +119,11 @@ public class TurmsPropertiesConvertor {
             PropertyFieldInfo propertyFieldInfo = getFieldInfo(propertiesClass, key);
             Object value;
             if (propertyFieldInfo == null || (value = propertyFieldInfo.get(properties)) == null) {
-                LOGGER.warn("Skip the unknown property \"" + key + "\" in the properties class \"" + propertiesClass.getName() + "\". "
-                        + "This may happen if the property schema have changed");
+                LOGGER.warn("Skip the unknown property \"" +
+                        key +
+                        "\" in the properties class: " +
+                        propertiesClass.getName() +
+                        ". This may happen if the property schema have changed");
                 continue;
             }
             if (propertyFieldInfo.isNestedProperty()) {

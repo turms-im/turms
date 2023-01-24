@@ -75,11 +75,15 @@ public abstract class BaseAdminService {
                             accountToAdmin.remove(account);
                         }
                         case INVALIDATE -> accountToAdmin.clear();
-                        default -> LOGGER.fatal("Detected an illegal operation on Admin collection: " + event);
+                        default -> LOGGER.fatal("Detected an illegal operation on the collection \"" +
+                                Admin.COLLECTION_NAME +
+                                "\" in the change stream event: {}", event);
                     }
                 })
                 .onErrorContinue((throwable, o) -> LOGGER
-                        .error("Caught an error while processing the change stream event of Admin: {}", o, throwable))
+                        .error("Caught an error while processing the change stream event ({}) of the collection: \"" +
+                                Admin.COLLECTION_NAME +
+                                "\"", o, throwable))
                 .subscribe();
 
         // Load

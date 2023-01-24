@@ -17,6 +17,8 @@
 
 package im.turms.server.common.infra.collection;
 
+import im.turms.server.common.infra.exception.NotImplementedException;
+import im.turms.server.common.infra.lang.ClassUtil;
 import im.turms.server.common.infra.thread.NotThreadSafe;
 
 import java.util.AbstractMap;
@@ -36,7 +38,7 @@ public final class FastEnumMap<K extends Enum<K>, V> implements Map<K, V> {
     private int size = 0;
 
     public FastEnumMap(Class<K> keyClass) {
-        keys = keyClass.getEnumConstants();
+        keys = ClassUtil.getSharedEnumConstants(keyClass);
         values = (V[]) new Object[keys.length];
     }
 
@@ -80,7 +82,7 @@ public final class FastEnumMap<K extends Enum<K>, V> implements Map<K, V> {
 
     @Override
     public void putAll(Map<? extends K, ? extends V> m) {
-        throw new UnsupportedOperationException();
+        throw new NotImplementedException();
     }
 
     @Override

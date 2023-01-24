@@ -17,6 +17,7 @@
 
 package im.turms.server.common.infra.collection;
 
+import im.turms.server.common.infra.exception.IncompatibleJvmException;
 import im.turms.server.common.infra.lang.PrimitiveUtil;
 import im.turms.server.common.infra.lang.StrJoiner;
 import org.eclipse.collections.api.collection.ImmutableCollection;
@@ -50,15 +51,15 @@ public final class CollectionUtil {
     static {
         IMMUTABLE_SET_CLASS = Set.of().getClass().getSuperclass();
         if (!IMMUTABLE_SET_CLASS.getName().equals("java.util.ImmutableCollections$AbstractImmutableSet")) {
-            throw new IllegalStateException("Cannot find the class AbstractImmutableSet");
+            throw new IncompatibleJvmException("Could not find the class: java.util.ImmutableCollections$AbstractImmutableSet");
         }
         IMMUTABLE_COLLECTION_CLASS = IMMUTABLE_SET_CLASS.getSuperclass();
         if (!IMMUTABLE_COLLECTION_CLASS.getName().equals("java.util.ImmutableCollections$AbstractImmutableCollection")) {
-            throw new IllegalStateException("Cannot find the class AbstractImmutableCollection");
+            throw new IncompatibleJvmException("Could not find the class: java.util.ImmutableCollections$AbstractImmutableCollection");
         }
         IMMUTABLE_MAP_CLASS = Map.of().getClass().getSuperclass();
         if (!IMMUTABLE_MAP_CLASS.getName().equals("java.util.ImmutableCollections$AbstractImmutableMap")) {
-            throw new IllegalStateException("Cannot find the class AbstractImmutableMap");
+            throw new IncompatibleJvmException("Could not find the class: java.util.ImmutableCollections$AbstractImmutableMap");
         }
     }
 
@@ -241,7 +242,7 @@ public final class CollectionUtil {
             return actualValue instanceof Map<?, ?> actualValueMap
                     && containsAllLooseComparison(actualValueMap, expectedValueMap);
         }
-        throw new UnsupportedOperationException("The expected value is unsupported: " + expectedValue);
+        throw new UnsupportedOperationException("Unsupported expected value: " + expectedValue);
     }
 
     private static boolean areCollectionsLooselyEqual(Object[] value1, Object value2) {

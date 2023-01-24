@@ -17,6 +17,7 @@
 
 package im.turms.server.common.infra.plugin;
 
+import im.turms.server.common.infra.io.InputOutputException;
 import im.turms.server.common.infra.yaml.YamlUtil;
 
 import java.io.IOException;
@@ -64,10 +65,10 @@ public class JavaPluginDescriptorFactory extends PluginDescriptorFactory {
             try {
                 return tryCreatePluginDescriptor(file, name);
             } catch (Exception e) {
-                throw new MalformedPluginArchiveException("Failed to create plugin descriptor for the jar file: " + name, e);
+                throw new MalformedPluginArchiveException("Failed to create plugin descriptor for the JAR file: " + name, e);
             }
         } catch (IOException e) {
-            throw new IllegalStateException("Caught an error while closing the jar file: " + name, e);
+            throw new InputOutputException("Caught an error while closing the JAR file: " + name, e);
         }
     }
 
@@ -76,21 +77,26 @@ public class JavaPluginDescriptorFactory extends PluginDescriptorFactory {
         Enumeration<? extends ZipEntry> entries = file.entries();
         while (entries.hasMoreElements()) {
             ZipEntry zipEntry = entries.nextElement();
-            String name = zipEntry.getName();
-            if (!name.startsWith(PROPERTIES_FILE_PREFIX) || (!name.endsWith("yaml") && !name.endsWith("yml"))) {
+            String descriptorFileName = zipEntry.getName();
+            if (!descriptorFileName.startsWith(PROPERTIES_FILE_PREFIX)
+                    || (!descriptorFileName.endsWith(".yaml") && !descriptorFileName.endsWith(".yml"))) {
                 continue;
             }
             Map<String, String> properties;
             try (InputStream stream = file.getInputStream(zipEntry)) {
                 properties = YamlUtil.readValue(stream, HashMap.class);
             } catch (IOException e) {
-                throw new MalformedPluginArchiveException("Failed to read the plugin properties file \"%s\" for the jar %s"
-                        .formatted(name, filePath), e);
+                String message = "Failed to read the plugin descriptor file (" +
+                        descriptorFileName +
+                        ") from the JAR file: " +
+                        filePath;
+                throw new MalformedPluginArchiveException(message, e);
             }
             try {
                 String entryClass = readPropertiesString(properties, PLUGIN_CLASS, true);
                 PluginDescriptor pluginDescriptor = createPluginDescriptor(properties);
-                return new JavaPluginDescriptor(pluginDescriptor.getId(),
+                return new JavaPluginDescriptor(
+                        pluginDescriptor.getId(),
                         pluginDescriptor.getVersion(),
                         pluginDescriptor.getProvider(),
                         pluginDescriptor.getLicense(),
@@ -98,7 +104,7 @@ public class JavaPluginDescriptorFactory extends PluginDescriptorFactory {
                         entryClass,
                         filePath);
             } catch (Exception e) {
-                throw new MalformedPluginArchiveException("Cannot parse the jar " + filePath, e);
+                throw new MalformedPluginArchiveException("Failed to parse the JAR file: " + filePath, e);
             }
         }
         return null;

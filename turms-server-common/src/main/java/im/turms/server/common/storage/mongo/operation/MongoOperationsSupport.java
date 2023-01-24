@@ -119,11 +119,11 @@ public interface MongoOperationsSupport {
 
     Mono<Void> shard(MongoEntity<?> entity);
 
-    Mono<Void> ensureIndexesAndShard(Collection<Class<?>> classes);
+    Mono<Void> ensureIndexesAndShards(Collection<Class<?>> classes);
 
-    Mono<Void> ensureIndexesAndShard(Collection<Class<?>> classes,
-                                     @Nullable BiPredicate<Class<?>, CompoundIndex> customCompoundIndexFilter,
-                                     @Nullable BiPredicate<Class<?>, Field> customIndexFilter);
+    Mono<Void> ensureIndexesAndShards(Collection<Class<?>> classes,
+                                      @Nullable BiPredicate<Class<?>, CompoundIndex> customCompoundIndexFilter,
+                                      @Nullable BiPredicate<Class<?>, Field> customIndexFilter);
 
     Mono<Void> addShardToZone(String shardName, String zoneName);
 

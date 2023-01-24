@@ -260,7 +260,7 @@ public final class Member {
         /**
          * True if the last heartbeat has not timed out.
          * hasJoinedCluster only works as an indicator for node status,
-         * and it can still handle client requests even if it's false.
+         * and it can still handle client requests even if it is false.
          */
         private boolean hasJoinedCluster;
 

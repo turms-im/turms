@@ -65,7 +65,7 @@ public class WebSocketUserSessionAssembler extends UserSessionAssembler {
                     sessionService,
                     bindConnectionWithSessionWrapper(),
                     gatewayProperties.getClientApi().getMaxRequestSizeBytes());
-            LOGGER.info("WebSocket server started on {}:{}", server.host(), server.port());
+            LOGGER.info("WebSocket server started on: {}:{}", server.host(), server.port());
             applicationContext.addShutdownHook(JobShutdownOrder.CLOSE_GATEWAY_WEBSOCKET_SERVER, timeoutMillis -> {
                 server.dispose();
                 return server.onDispose();

@@ -18,6 +18,7 @@
 package im.turms.server.common.infra.property;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -35,8 +36,8 @@ import im.turms.server.common.infra.property.metadata.MutableProperty;
 import im.turms.server.common.infra.reflect.ReflectionUtil;
 import im.turms.server.common.infra.reflect.VarAccessorFactory;
 import im.turms.server.common.infra.security.SensitiveProperty;
+import im.turms.server.common.infra.serialization.SerializationException;
 import im.turms.server.common.infra.validation.ValidCron;
-import lombok.SneakyThrows;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 import java.lang.reflect.Field;
@@ -112,12 +113,15 @@ public class TurmsPropertiesInspector {
     private TurmsPropertiesInspector() {
     }
 
-    @SneakyThrows
-    public static Map<String, Object> getPropertyToValueMap(TurmsProperties turmsProperties,
-                                                            boolean returnOnlyMutableProperties) {
-        return returnOnlyMutableProperties
-                ? JsonUtil.readStringObjectMapValue(MUTABLE_PROPERTIES_WRITER.writeValueAsBytes(turmsProperties))
-                : JsonUtil.readStringObjectMapValue(MAPPER.writeValueAsBytes(turmsProperties));
+    public static Map<String, Object> convertPropertiesToValueMap(
+            TurmsProperties turmsProperties, boolean returnOnlyMutableProperties) {
+        try {
+            return returnOnlyMutableProperties
+                    ? JsonUtil.readStringObjectMapValue(MUTABLE_PROPERTIES_WRITER.writeValueAsBytes(turmsProperties))
+                    : JsonUtil.readStringObjectMapValue(MAPPER.writeValueAsBytes(turmsProperties));
+        } catch (JsonProcessingException e) {
+            throw new SerializationException("Failed to write turms properties as bytes", e);
+        }
     }
 
     @Nullable

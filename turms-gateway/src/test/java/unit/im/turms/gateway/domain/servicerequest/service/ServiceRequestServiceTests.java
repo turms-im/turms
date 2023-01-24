@@ -19,7 +19,6 @@ package unit.im.turms.gateway.domain.servicerequest.service;
 
 import im.turms.gateway.access.client.common.UserSession;
 import im.turms.gateway.domain.servicerequest.service.ServiceRequestService;
-import im.turms.gateway.domain.session.service.SessionService;
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.access.client.dto.request.TurmsRequest;
@@ -49,7 +48,7 @@ class ServiceRequestServiceTests {
 
     private static final byte[] IP_ADDRESS = InetAddressUtil.ipStringToAddress("127.0.0.1").getAddress();
     private static final Throwable HANDLE_REQUEST_FAILURE_EXCEPTION =
-            new IllegalStateException("Mocked error for failing to handle request");
+            new RuntimeException("Mocked error for failing to handle request");
 
     private final ServiceResponse responseForSuccess = new ServiceResponse(
             TurmsNotification.Data.newBuilder().buildPartial(),
@@ -59,15 +58,16 @@ class ServiceRequestServiceTests {
     @Test
     void constructor_shouldReturnInstance() {
         Node node = mockNode(false);
-        ServiceRequestService serviceRequestService = new ServiceRequestService(node, null);
+        ServiceRequestService serviceRequestService = new ServiceRequestService(node);
 
         assertThat(serviceRequestService).isNotNull();
     }
 
     @Test
     void handleServiceRequest_shouldReturnError_ifFailedToHandleRequest() {
-        ServiceRequestService serviceRequestService = newInboundRequestService(true, false);
-        Mono<TurmsNotification> result = serviceRequestService.handleServiceRequest(newUserSession(), newServiceRequest());
+        ServiceRequestService serviceRequestService = newInboundRequestService(false);
+        Mono<TurmsNotification> result = serviceRequestService
+                .handleServiceRequest(newUserSession(), newServiceRequest());
 
         StepVerifier.create(result)
                 .verifyErrorMatches(t -> t == HANDLE_REQUEST_FAILURE_EXCEPTION);
@@ -75,31 +75,20 @@ class ServiceRequestServiceTests {
 
     @Test
     void handleServiceRequest_shouldReturnOk_ifHandleRequestSuccessfully() {
-        ServiceRequestService serviceRequestService = newInboundRequestService(true, true);
-        Mono<TurmsNotification> result = serviceRequestService.handleServiceRequest(newUserSession(), newServiceRequest());
+        ServiceRequestService serviceRequestService = newInboundRequestService(true);
+        Mono<TurmsNotification> result = serviceRequestService
+                .handleServiceRequest(newUserSession(), newServiceRequest());
 
         StepVerifier.create(result)
-                .expectNextMatches(notification -> notification.getCode() == responseForSuccess.code().getBusinessCode())
+                .expectNextMatches(notification ->
+                        notification.getCode() == responseForSuccess.code().getBusinessCode())
                 .verifyComplete();
     }
 
-    private ServiceRequestService newInboundRequestService(
-            boolean sessionExists,
-            boolean handleRequestSuccessfully) {
+    private ServiceRequestService newInboundRequestService(boolean handleRequestSuccessfully) {
         // Node
         Node node = mockNode(handleRequestSuccessfully);
-
-        // SessionService
-        UserSession session = null;
-        if (sessionExists) {
-            session = mock(UserSession.class);
-        }
-
-        SessionService sessionService = mock(SessionService.class);
-        when(sessionService.getLocalUserSession(any(), any()))
-                .thenReturn(session);
-
-        return new ServiceRequestService(node, sessionService);
+        return new ServiceRequestService(node);
     }
 
     private UserSession newUserSession() {

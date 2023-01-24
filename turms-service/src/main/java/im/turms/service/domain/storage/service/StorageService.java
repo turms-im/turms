@@ -20,6 +20,7 @@ package im.turms.service.domain.storage.service;
 import im.turms.server.common.access.admin.web.MediaType;
 import im.turms.server.common.access.client.dto.constant.StorageResourceType;
 import im.turms.server.common.access.common.ResponseStatusCode;
+import im.turms.server.common.infra.exception.IncompatibleInternalChangeException;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.plugin.PluginManager;
 import im.turms.server.common.infra.time.DateRange;
@@ -122,7 +123,7 @@ public class StorageService {
             QUERY_MESSAGE_ATTACHMENT_INFOS_IN_GROUP_CONVERSATIONS_METHOD = StorageServiceProvider.class
                     .getDeclaredMethod("queryMessageAttachmentInfosInGroupConversations", Long.class, Set.class, Set.class, DateRange.class);
         } catch (NoSuchMethodException e) {
-            throw new RuntimeException(e);
+            throw new IncompatibleInternalChangeException(e);
         }
     }
 

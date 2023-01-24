@@ -18,6 +18,7 @@
 package im.turms.service.infra.plugin.extension;
 
 import im.turms.server.common.access.admin.web.MediaType;
+import im.turms.server.common.infra.exception.NotImplementedException;
 import im.turms.server.common.infra.plugin.ExtensionPoint;
 import im.turms.server.common.infra.time.DateRange;
 import im.turms.service.domain.storage.bo.StorageResourceInfo;
@@ -39,7 +40,7 @@ public interface StorageServiceProvider extends ExtensionPoint {
     default Mono<Void> deleteUserProfilePicture(
             @NotNull Long requesterId,
             @NotNull Map<String, String> extra) {
-        return Mono.error(new UnsupportedOperationException());
+        return Mono.error(new NotImplementedException());
     }
 
     default Mono<Map<String, String>> queryUserProfilePictureUploadInfo(
@@ -47,14 +48,14 @@ public interface StorageServiceProvider extends ExtensionPoint {
             @Nullable String resourceName,
             @Nullable MediaType resourceMediaType,
             @NotNull Map<String, String> extra) {
-        return Mono.error(new UnsupportedOperationException());
+        return Mono.error(new NotImplementedException());
     }
 
     default Mono<Map<String, String>> queryUserProfilePictureDownloadInfo(
             @NotNull Long requesterId,
             @NotNull Long userId,
             @NotNull Map<String, String> extra) {
-        return Mono.error(new UnsupportedOperationException());
+        return Mono.error(new NotImplementedException());
     }
 
     // Group profile picture
@@ -63,7 +64,7 @@ public interface StorageServiceProvider extends ExtensionPoint {
             @NotNull Long requesterId,
             @NotNull Long groupId,
             @NotNull Map<String, String> extra) {
-        return Mono.error(new UnsupportedOperationException());
+        return Mono.error(new NotImplementedException());
     }
 
     default Mono<Map<String, String>> queryGroupProfilePictureUploadInfo(
@@ -72,14 +73,14 @@ public interface StorageServiceProvider extends ExtensionPoint {
             @Nullable String resourceName,
             @Nullable MediaType resourceMediaType,
             @NotNull Map<String, String> extra) {
-        return Mono.error(new UnsupportedOperationException());
+        return Mono.error(new NotImplementedException());
     }
 
     default Mono<Map<String, String>> queryGroupProfilePictureDownloadInfo(
             @NotNull Long requesterId,
             @NotNull Long groupId,
             @NotNull Map<String, String> extra) {
-        return Mono.error(new UnsupportedOperationException());
+        return Mono.error(new NotImplementedException());
     }
 
     // Message attachment
@@ -89,7 +90,7 @@ public interface StorageServiceProvider extends ExtensionPoint {
             @Nullable Long messageAttachmentIdNum,
             @Nullable String messageAttachmentIdStr,
             @NotNull Map<String, String> extra) {
-        return Mono.error(new UnsupportedOperationException());
+        return Mono.error(new NotImplementedException());
     }
 
     default Mono<Void> shareMessageAttachmentWithUser(
@@ -97,7 +98,7 @@ public interface StorageServiceProvider extends ExtensionPoint {
             @Nullable Long messageAttachmentIdNum,
             @Nullable String messageAttachmentIdStr,
             @NotNull Long userId) {
-        return Mono.error(new UnsupportedOperationException());
+        return Mono.error(new NotImplementedException());
     }
 
     default Mono<Void> shareMessageAttachmentWithGroup(
@@ -105,7 +106,7 @@ public interface StorageServiceProvider extends ExtensionPoint {
             @Nullable Long messageAttachmentIdNum,
             @Nullable String messageAttachmentIdStr,
             @NotNull Long groupId) {
-        return Mono.error(new UnsupportedOperationException());
+        return Mono.error(new NotImplementedException());
     }
 
     default Mono<Void> unshareMessageAttachmentWithUser(
@@ -113,7 +114,7 @@ public interface StorageServiceProvider extends ExtensionPoint {
             @Nullable Long messageAttachmentIdNum,
             @Nullable String messageAttachmentIdStr,
             @NotNull Long userId) {
-        return Mono.error(new UnsupportedOperationException());
+        return Mono.error(new NotImplementedException());
     }
 
     default Mono<Void> unshareMessageAttachmentWithGroup(
@@ -121,7 +122,7 @@ public interface StorageServiceProvider extends ExtensionPoint {
             @Nullable Long messageAttachmentIdNum,
             @Nullable String messageAttachmentIdStr,
             @NotNull Long groupId) {
-        return Mono.error(new UnsupportedOperationException());
+        return Mono.error(new NotImplementedException());
     }
 
     default Mono<Map<String, String>> queryMessageAttachmentUploadInfo(
@@ -129,7 +130,7 @@ public interface StorageServiceProvider extends ExtensionPoint {
             @Nullable String resourceName,
             @Nullable MediaType resourceMediaType,
             @NotNull Map<String, String> extra) {
-        return Mono.error(new UnsupportedOperationException());
+        return Mono.error(new NotImplementedException());
     }
 
     default Mono<Map<String, String>> queryMessageAttachmentUploadInfoInPrivateConversation(
@@ -138,7 +139,7 @@ public interface StorageServiceProvider extends ExtensionPoint {
             @Nullable String resourceName,
             @Nullable MediaType resourceMediaType,
             @NotNull Map<String, String> extra) {
-        return Mono.error(new UnsupportedOperationException());
+        return Mono.error(new NotImplementedException());
     }
 
     default Mono<Map<String, String>> queryMessageAttachmentUploadInfoInGroupConversation(
@@ -147,7 +148,7 @@ public interface StorageServiceProvider extends ExtensionPoint {
             @Nullable String resourceName,
             @Nullable MediaType resourceMediaType,
             @NotNull Map<String, String> extra) {
-        return Mono.error(new UnsupportedOperationException());
+        return Mono.error(new NotImplementedException());
     }
 
     default Mono<Map<String, String>> queryMessageAttachmentDownloadInfo(
@@ -155,7 +156,7 @@ public interface StorageServiceProvider extends ExtensionPoint {
             @Nullable Long messageAttachmentIdNum,
             @Nullable String messageAttachmentIdStr,
             @NotNull Map<String, String> extra) {
-        return Mono.error(new UnsupportedOperationException());
+        return Mono.error(new NotImplementedException());
     }
 
     // Message attachment - Info
@@ -163,7 +164,7 @@ public interface StorageServiceProvider extends ExtensionPoint {
     default Mono<List<StorageResourceInfo>> queryMessageAttachmentInfosUploadedByRequester(
             @NotNull Long requesterId,
             @Nullable DateRange creationDateRange) {
-        return Mono.error(new UnsupportedOperationException());
+        return Mono.error(new NotImplementedException());
     }
 
     default Mono<List<StorageResourceInfo>> queryMessageAttachmentInfosInPrivateConversations(
@@ -171,7 +172,7 @@ public interface StorageServiceProvider extends ExtensionPoint {
             @Nullable Set<Long> userIds,
             @Nullable DateRange creationDateRange,
             @Nullable Boolean areSharedByRequester) {
-        return Mono.error(new UnsupportedOperationException());
+        return Mono.error(new NotImplementedException());
     }
 
     default Mono<List<StorageResourceInfo>> queryMessageAttachmentInfosInGroupConversations(
@@ -179,7 +180,7 @@ public interface StorageServiceProvider extends ExtensionPoint {
             @Nullable Set<Long> groupIds,
             @Nullable Set<Long> userIds,
             @Nullable DateRange creationDateRange) {
-        return Mono.error(new UnsupportedOperationException());
+        return Mono.error(new NotImplementedException());
     }
 
 }

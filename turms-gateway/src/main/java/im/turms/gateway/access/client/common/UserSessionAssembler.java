@@ -76,7 +76,7 @@ public abstract class UserSessionAssembler {
                         turmsNotificationBuffer.touch(turmsNotificationBuffer);
                         // Duplicate the buffer to use an independent reader index
                         // because we don't want to modify the reader index of the original buffer
-                        // if it's an unreleasable buffer internally, or it may be sent to multiple endpoints.
+                        // if it is an unreleasable buffer internally, or it may be sent to multiple endpoints.
                         // Note that the content of the buffer is not copied, so "duplicate()" is efficient.
                         turmsNotificationBuffer = turmsNotificationBuffer.duplicate();
                         // sendObject() will release the buffer no matter it succeeds or fails
@@ -118,7 +118,7 @@ public abstract class UserSessionAssembler {
                                 turmsNotificationBuffer.touch(turmsNotificationBuffer);
                                 // Duplicate the buffer to use an independent reader index
                                 // because we don't want to modify the reader index of the original buffer
-                                // if it's an unreleasable buffer internally, or it may be sent to multiple endpoints.
+                                // if it is an unreleasable buffer internally, or it may be sent to multiple endpoints.
                                 // Note that the content of the buffer is not copied, so "duplicate()" is efficient.
                                 turmsNotificationBuffer = turmsNotificationBuffer.duplicate();
                                 NettyOutbound outbound = isWebSocketConnection
@@ -155,8 +155,8 @@ public abstract class UserSessionAssembler {
                         // and should never be sent to the client because
                         // the connection has been closed
                         sessionService
-                                .setLocalSessionOffline(userId, deviceType, SessionCloseStatus.UNKNOWN_ERROR)
-                                .subscribe(null, t -> LOGGER.error("Caught an error while closing the session of the user ID: " + userId, t));
+                                .closeLocalSession(userId, deviceType, SessionCloseStatus.UNKNOWN_ERROR)
+                                .subscribe(null, t -> LOGGER.error("Caught an error while closing the user session with the user ID: " + userId, t));
                     }
                     if (userSession.acquireDeleteSessionRequestLoggingLock()
                             && apiLoggingContext.shouldLogRequest(DELETE_SESSION_REQUEST)) {
@@ -184,8 +184,8 @@ public abstract class UserSessionAssembler {
                                        TracingContext tracingContext) {
         if (!ThrowableUtil.isDisconnectedClientError(throwable)) {
             try (TracingCloseableContext ignored = tracingContext.asCloseable()) {
-                LOGGER.error("Caught an exception from a connection bound with the session: {}",
-                        userSession,
+                LOGGER.error("Caught an exception from a connection bound with the user session: " +
+                                userSession,
                         throwable);
             }
         }
@@ -196,10 +196,10 @@ public abstract class UserSessionAssembler {
         Long userId = userSession.getUserId();
         DeviceType deviceType = userSession.getDeviceType();
         CloseReason closeReason = CloseReason.get(throwable);
-        sessionService.setLocalSessionOffline(userId, deviceType, closeReason)
+        sessionService.closeLocalSession(userId, deviceType, closeReason)
                 .subscribe(null, t -> {
                     try (TracingCloseableContext ignored = tracingContext.asCloseable()) {
-                        LOGGER.error("Caught an error while setting the local session [{}:{}] offline due to connection error",
+                        LOGGER.error("Caught an error while closing the local user session {user={}, device={}} due to a connection error",
                                 userId, deviceType, t);
                     }
                 });
@@ -211,12 +211,12 @@ public abstract class UserSessionAssembler {
         }
         CloseReason closeReason = CloseReason.get(throwable);
         if (closeReason.isServerError()) {
-            LOGGER.error("Failed to send outbound notification to the session: " + userSession, throwable);
+            LOGGER.error("Failed to send outbound notification to the user session: " + userSession, throwable);
         }
         Long userId = userSession.getUserId();
         DeviceType deviceType = userSession.getDeviceType();
-        sessionService.setLocalSessionOffline(userId, deviceType, closeReason)
-                .subscribe(null, t -> LOGGER.error("Caught an error while closing the session of the user ID: " + userId, t));
+        sessionService.closeLocalSession(userId, deviceType, closeReason)
+                .subscribe(null, t -> LOGGER.error("Caught an error while closing the user session of the user ID: {}", userId, t));
     }
 
 }

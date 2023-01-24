@@ -20,6 +20,7 @@ package im.turms.server.common.storage.mongo.entity;
 import com.mongodb.client.model.IndexModel;
 import com.mongodb.client.model.IndexOptions;
 import im.turms.server.common.infra.collection.CollectionUtil;
+import im.turms.server.common.infra.io.InputOutputException;
 import im.turms.server.common.infra.lang.AsciiCode;
 import im.turms.server.common.infra.lang.ClassUtil;
 import im.turms.server.common.infra.lang.Pair;
@@ -38,11 +39,11 @@ import im.turms.server.common.storage.mongo.entity.annotation.PersistenceConstru
 import im.turms.server.common.storage.mongo.entity.annotation.PropertySetter;
 import im.turms.server.common.storage.mongo.entity.annotation.Sharded;
 import im.turms.server.common.storage.mongo.entity.annotation.TieredStorage;
-import lombok.SneakyThrows;
 import org.bson.BsonDocument;
 import org.bson.BsonValue;
 import org.springframework.util.StringUtils;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.lang.invoke.MethodHandle;
 import java.lang.reflect.Constructor;
@@ -51,6 +52,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -105,7 +107,9 @@ public final class MongoEntityFactory {
             }
         }
         if (constructor == null) {
-            throw new IllegalArgumentException("Cannot find a constructor for the entity class: " + entityClass.getName());
+            String message = "Could not find a constructor for the entity class: " +
+                    entityClass.getName();
+            throw new IllegalArgumentException(message);
         }
         ReflectionUtil.setAccessible(constructor);
         return constructor;
@@ -119,12 +123,16 @@ public final class MongoEntityFactory {
         }
         String creationDateFieldName = storage.creationDateFieldName();
         if (!StringUtils.hasText(creationDateFieldName)) {
-            throw new IllegalArgumentException(
-                    "The creationDateFieldName of @" + TieredStorage.class.getSimpleName() + " must not be blank for the class " + clazz.getName());
+            throw new IllegalArgumentException("The value of the element \"creationDateFieldName\" of @" +
+                    TieredStorage.class.getSimpleName() +
+                    " must not be blank for the entity class: " +
+                    clazz.getName());
         }
         if (!shardKey.document().containsKey(creationDateFieldName)) {
-            throw new IllegalArgumentException(
-                    "The creationDateFieldName of @" + TieredStorage.class.getSimpleName() + " must be a part of the shard key of the class " + clazz.getName());
+            throw new IllegalArgumentException("The value of the element \"creationDateFieldName\" of @" +
+                    TieredStorage.class.getSimpleName() +
+                    " must be a part of the shard key of the entity class: " +
+                    clazz.getName());
         }
         return new Zone(creationDateFieldName);
     }
@@ -135,12 +143,12 @@ public final class MongoEntityFactory {
                 ? document.value()
                 : StringUtil.upperCamelToLowerCamelLatin1(clazz.getSimpleName()).intern();
         if (!StringUtils.hasText(name)) {
-            throw new IllegalStateException("The collection name must not be blank for the class " + clazz.getName());
+            throw new IllegalArgumentException("The collection name must not be blank for the entity class: " +
+                    clazz.getName());
         }
         return name;
     }
 
-    @SneakyThrows
     @Nullable
     private static BsonDocument findCollectionSchema(String name) {
         String resourceName = "schema/" + StringUtil.lowerCamelToLowerHyphenLatin1(name) + ".json";
@@ -148,7 +156,12 @@ public final class MongoEntityFactory {
         if (stream == null) {
             return null;
         }
-        byte[] bytes = stream.readAllBytes();
+        byte[] bytes;
+        try {
+            bytes = stream.readAllBytes();
+        } catch (IOException e) {
+            throw new InputOutputException("Failed to read bytes from the resource: " + resourceName, e);
+        }
         return BsonDocument.parse(StringUtil.newLatin1String(bytes));
     }
 
@@ -164,7 +177,9 @@ public final class MongoEntityFactory {
         for (CompoundIndex index : indexes) {
             String[] fields = index.value();
             if (fields.length == 0) {
-                throw new IllegalStateException("CompoundIndex doesn't specify which fields to index for the class " + clazz.getName());
+                throw new IllegalArgumentException("The compound index of the entity class (" +
+                        clazz.getName() +
+                        ") must specify which fields to index");
             }
             BsonDocument document = new BsonDocument();
             for (String key : fields) {
@@ -192,10 +207,17 @@ public final class MongoEntityFactory {
         BsonDocument document;
         if (sharded.shardingStrategy().equals(ShardingStrategy.HASH)) {
             if (keys.length > 1) {
-                throw new IllegalStateException("The hash sharding strategy can have only one shard key: " + clazz.getName());
+                throw new IllegalArgumentException("The hash sharding strategy can have only one shard key, " +
+                        "but the entity class (" +
+                        clazz.getName() +
+                        ") has multiple shard keys: " +
+                        Arrays.toString(keys));
             } else if (keys[0].equals(DomainFieldName.ID)) {
-                throw new IllegalStateException("Should not create a hashed index on the key. " +
-                        "If so, MongoDB will create a default range index on the key: " + clazz.getName());
+                throw new IllegalArgumentException("The entity class (" +
+                        clazz.getName() +
+                        ") must not create a hashed index on the collection key: \"" +
+                        DomainFieldName.ID +
+                        "\". If so, MongoDB will create a default range index on the key");
             } else {
                 document = new BsonDocument(keys[0], BsonPool.BSON_STRING_HASHED);
             }
@@ -247,7 +269,8 @@ public final class MongoEntityFactory {
                 if (idField == null) {
                     idField = fieldName;
                 } else {
-                    throw new IllegalStateException("The class " + clazz.getName() + " should not have multiple fields marked with @" + Id.class.getSimpleName());
+                    throw new IllegalArgumentException("The entity class (" + clazz.getName()
+                            + ") must not have multiple fields marked with @" + Id.class.getSimpleName());
                 }
             }
             // Indexes
@@ -312,7 +335,10 @@ public final class MongoEntityFactory {
                 return i;
             }
         }
-        throw new IllegalStateException("Cannot find the index of the parameter %s in constructor".formatted(fieldName));
+        throw new IllegalArgumentException("Could not find the index of the parameter \"" +
+                fieldName +
+                "\" in the constructor: " +
+                constructor.getName());
     }
 
     /**

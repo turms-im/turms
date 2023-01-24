@@ -145,7 +145,7 @@ public final class MongoFakingManager {
     }
 
     public Mono<Void> fakeData() {
-        LOGGER.info("Start faking...");
+        LOGGER.info("Start faking");
 
         final int adminCount = 10;
 

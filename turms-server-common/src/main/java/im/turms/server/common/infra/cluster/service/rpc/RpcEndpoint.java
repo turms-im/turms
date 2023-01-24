@@ -23,8 +23,8 @@ import im.turms.server.common.infra.cluster.service.rpc.dto.RpcRequest;
 import im.turms.server.common.infra.cluster.service.rpc.dto.RpcResponse;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
+import im.turms.server.common.infra.serialization.SerializationException;
 import io.netty.buffer.ByteBuf;
-import io.netty.util.IllegalReferenceCountException;
 import lombok.Getter;
 import org.jctools.maps.NonBlockingHashMapLong;
 import reactor.core.publisher.Mono;
@@ -67,7 +67,7 @@ public final class RpcEndpoint {
     public <T> Mono<T> sendRequest(RpcRequest<T> request, ByteBuf requestBody) {
         ChannelOperations<?, ?> conn = connection.getConnection();
         if (requestBody.refCnt() == 0) {
-            return Mono.error(new IllegalReferenceCountException("The request body has been released"));
+            return Mono.error(new IllegalArgumentException("The request body has been released"));
         }
         if (conn.isDisposed()) {
             requestBody.release();
@@ -86,14 +86,14 @@ public final class RpcEndpoint {
                 buffer = RpcFrameEncoder.INSTANCE.encodeRequest(request, requestBody);
             } catch (Exception e) {
                 requestBody.release();
-                resolveRequest(requestId, null, new IllegalStateException("Failed to encode request", e));
+                resolveRequest(requestId, null, new SerializationException("Failed to encode the request: " + request, e));
                 break;
             }
             // sendObject() will release the buffer no matter it succeeds or fails
 
             // Duplicate the buffer to use an independent reader index
             // because we don't want to modify the reader index of the original buffer
-            // if it's an unreleasable buffer internally, or it may be sent to multiple endpoints.
+            // if it is an unreleasable buffer internally, or it may be sent to multiple endpoints.
             // Note that the content of the buffer is not copied, so "duplicate()" is efficient.
             conn.sendObject(buffer.duplicate())
                     .then()
@@ -120,7 +120,7 @@ public final class RpcEndpoint {
     private <T> void resolveRequest(int requestId, T response, Throwable error) {
         Sinks.One<T> sink = (Sinks.One<T>) pendingRequestMap.remove(requestId);
         if (sink == null) {
-            LOGGER.warn("No sink of the request with ID {} is found for the response: " + response, requestId);
+            LOGGER.warn("Could not find a pending request with the ID ({}) for the response: {}", requestId, response);
             return;
         }
         if (error == null) {

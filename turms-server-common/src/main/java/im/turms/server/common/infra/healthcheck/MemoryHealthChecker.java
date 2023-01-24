@@ -20,6 +20,7 @@ package im.turms.server.common.infra.healthcheck;
 import com.sun.management.HotSpotDiagnosticMXBean;
 import com.sun.management.OperatingSystemMXBean;
 import com.sun.management.VMOption;
+import im.turms.server.common.infra.exception.IncompatibleJvmException;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.logging.core.model.LogLevel;
@@ -87,7 +88,7 @@ public final class MemoryHealthChecker extends HealthChecker {
         HotSpotDiagnosticMXBean diagnosticBean = ManagementFactory.getPlatformMXBean(HotSpotDiagnosticMXBean.class);
         VMOption disableExplicitGC = diagnosticBean.getVMOption("DisableExplicitGC");
         if (!"false".equals(disableExplicitGC.getValue())) {
-            throw new IllegalStateException("\"DisableExplicitGC\" is enabled while it should be disabled");
+            throw new IncompatibleJvmException("\"DisableExplicitGC\" is enabled while it should be disabled");
         }
         // update memory properties
         List<BufferPoolMXBean> poolBeans = ManagementFactory.getPlatformMXBeans(BufferPoolMXBean.class);
@@ -100,9 +101,8 @@ public final class MemoryHealthChecker extends HealthChecker {
                     .stream()
                     .map(BufferPoolMXBean::getName)
                     .toList();
-            String s = "Cannot find the direct buffer pool management bean from the pool beans: "
-                    + String.join(", ", names);
-            throw new IllegalStateException(s);
+            String s = "Could not find the direct buffer pool management bean from the pool beans: " + names;
+            throw new IncompatibleJvmException(s);
         }
         directBufferPoolBean = pool.get();
         memoryMXBean = ManagementFactory.getMemoryMXBean();
@@ -110,37 +110,45 @@ public final class MemoryHealthChecker extends HealthChecker {
         // "-XX:MaxDirectMemorySize" or "Runtime.getRuntime().maxMemory()"
         maxDirectMemory = PlatformDependent.maxDirectMemory();
         if (maxDirectMemory < 0) {
-            throw new IllegalStateException("Cannot detect the max direct memory: " + maxDirectMemory);
+            throw new IncompatibleJvmException("Could not detect the max direct memory: " + maxDirectMemory);
         }
         maxAvailableDirectMemory = (long) (maxDirectMemory * (properties.getMaxAvailableDirectMemoryPercentage() / 100F));
         maxHeapMemory = memoryMXBean.getHeapMemoryUsage().getMax();
         if (maxHeapMemory < 0) {
-            throw new IllegalStateException("Cannot detect the max heap memory: " + maxHeapMemory);
+            throw new IncompatibleJvmException("Could not detect the max heap memory: " + maxHeapMemory);
         }
         totalPhysicalMemorySize = operatingSystemBean.getTotalMemorySize();
         maxAvailableMemory = (long) (totalPhysicalMemorySize * (properties.getMaxAvailableMemoryPercentage() / 100F));
         int minAvailableMemory = 1000 * MB;
         if (maxAvailableMemory < minAvailableMemory) {
-            throw new IllegalStateException("The max available memory is too small to run. Actual: %s. Expected: >= %s"
-                    .formatted(asMbString(maxAvailableMemory), asMbString(minAvailableMemory)));
+            throw new IncompatibleJvmException("The max available memory is too small to run. Expected: >= " +
+                    asMbString(minAvailableMemory) +
+                    ". Actual: " +
+                    asMbString(maxAvailableMemory));
         }
         if (maxAvailableMemory < maxHeapMemory) {
-            throw new IllegalStateException("The max available memory %s should not be less than the max heap memory %s"
-                    .formatted(asMbString(maxAvailableMemory), asMbString(maxHeapMemory)));
+            throw new IllegalArgumentException("The max available memory (" +
+                    asMbString(maxAvailableMemory) +
+                    ") should not be less than the max heap memory: " +
+                    asMbString(maxHeapMemory));
         }
         int estimatedMaxNonHeapMemory = 256 * MB;
         if (maxAvailableMemory > maxAvailableDirectMemory + maxHeapMemory + estimatedMaxNonHeapMemory) {
-            LOGGER.warn("The max available memory %s is larger than the total of the available direct memory %s, the max heap memory %s, and the estimated max non-heap memory %s, "
-                    .formatted(asMbString(maxAvailableMemory), asMbString(maxAvailableDirectMemory), asMbString(maxHeapMemory), asMbString(estimatedMaxNonHeapMemory))
-                    + "which indicates that some memory will never be used by the server");
+            LOGGER.warn("The max available memory ({}) is larger than the total of the available direct memory ({}), " +
+                            "the max heap memory ({}), and the estimated max non-heap memory ({}), " +
+                            "which indicates that some memory will never be used by the server",
+                    asMbString(maxAvailableMemory),
+                    asMbString(maxAvailableDirectMemory),
+                    asMbString(maxHeapMemory),
+                    asMbString(estimatedMaxNonHeapMemory));
         }
 
-        this.directMemoryWarningThresholdPercentage = properties.getDirectMemoryWarningThresholdPercentage();
-        this.heapMemoryWarningThresholdPercentage = properties.getHeapMemoryWarningThresholdPercentage();
-        this.minMemoryWarningIntervalMillis = properties.getMinMemoryWarningIntervalSeconds() * 1000;
-        this.minFreeSystemMemory = properties.getMinFreeSystemMemoryBytes();
-        this.heapMemoryGcThresholdPercentage = properties.getHeapMemoryGcThresholdPercentage();
-        this.minHeapMemoryGcIntervalMillis = properties.getMinHeapMemoryGcIntervalSeconds() * 1000;
+        directMemoryWarningThresholdPercentage = properties.getDirectMemoryWarningThresholdPercentage();
+        heapMemoryWarningThresholdPercentage = properties.getHeapMemoryWarningThresholdPercentage();
+        minMemoryWarningIntervalMillis = properties.getMinMemoryWarningIntervalSeconds() * 1000;
+        minFreeSystemMemory = properties.getMinFreeSystemMemoryBytes();
+        heapMemoryGcThresholdPercentage = properties.getHeapMemoryGcThresholdPercentage();
+        minHeapMemoryGcIntervalMillis = properties.getMinHeapMemoryGcIntervalSeconds() * 1000;
     }
 
     @Override

@@ -17,12 +17,13 @@
 
 package im.turms.server.common.infra.logging.core.appender;
 
+import im.turms.server.common.infra.io.InputOutputException;
 import im.turms.server.common.infra.logging.core.model.LogLevel;
 import im.turms.server.common.infra.logging.core.model.LogRecord;
 import io.netty.buffer.ByteBuf;
 import lombok.Data;
-import lombok.SneakyThrows;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 
@@ -36,30 +37,43 @@ public abstract class Appender implements AutoCloseable {
 
     protected FileChannel channel;
 
-    @SneakyThrows
     protected Appender(LogLevel level) {
         this.level = level;
     }
 
-    @SneakyThrows
     @Override
     public void close() {
-        channel.force(true);
-        channel.close();
+        try {
+            channel.force(true);
+        } catch (IOException e) {
+            throw new InputOutputException("Caught an error while forcing updates to the channel's file to be written", e);
+        }
+        try {
+            channel.close();
+        } catch (IOException e) {
+            throw new InputOutputException("Caught an error while closing the channel", e);
+        }
     }
 
-    @SneakyThrows
     public int append(LogRecord record) {
         if (!record.level().isLoggable(level)) {
             return 0;
         }
         ByteBuf buffer = record.data();
         if (buffer.nioBufferCount() == 1) {
-            return channel.write(buffer.nioBuffer());
+            try {
+                return channel.write(buffer.nioBuffer());
+            } catch (IOException e) {
+                throw new InputOutputException("Failed to write the buffer: " + buffer, e);
+            }
         }
         int written = 0;
         for (ByteBuffer buf : buffer.nioBuffers()) {
-            written += channel.write(buf);
+            try {
+                written += channel.write(buf);
+            } catch (IOException e) {
+                throw new InputOutputException("Failed to write the buffer: " + buffer, e);
+            }
         }
         return written;
     }

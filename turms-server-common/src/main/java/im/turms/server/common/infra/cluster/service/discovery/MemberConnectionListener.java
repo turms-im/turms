@@ -25,7 +25,7 @@ import im.turms.server.common.infra.cluster.service.connection.TurmsConnection;
  */
 public abstract class MemberConnectionListener {
 
-    public void onConnectionOpen(TurmsConnection connection) {
+    public void onConnectionOpened(TurmsConnection connection) {
     }
 
     public void onConnectionClosed() {

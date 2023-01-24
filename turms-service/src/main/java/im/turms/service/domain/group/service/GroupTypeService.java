@@ -100,11 +100,15 @@ public class GroupTypeService {
                             idToGroupType.remove(groupTypeId);
                         }
                         case INVALIDATE -> idToGroupType.keySet().removeIf(id -> !id.equals(DEFAULT_GROUP_TYPE_ID));
-                        default -> LOGGER.fatal("Detected an illegal operation on GroupType collection: " + event);
+                        default -> LOGGER.fatal("Detected an illegal operation on the collection \"" +
+                                GroupType.COLLECTION_NAME +
+                                "\" in the change stream event: {}", event);
                     }
                 })
                 .onErrorContinue((throwable, o) -> LOGGER
-                        .error("Caught an error while processing the change stream event of GroupType: {}", o, throwable))
+                        .error("Caught an error while processing the change stream event ({}) of the collection: \"" +
+                                GroupType.COLLECTION_NAME +
+                                "\"", o, throwable))
                 .subscribe();
         groupTypeRepository.findAll()
                 .doOnNext(groupType -> idToGroupType.put(groupType.getId(), groupType))

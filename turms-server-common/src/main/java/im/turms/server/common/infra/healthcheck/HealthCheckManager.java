@@ -70,7 +70,7 @@ public class HealthCheckManager {
                     if (previousUpdateTimestamp > now) {
                         // There are a lof of modules heavily depending on the system time, e.g. logging, snowflake ID.
                         // So we log a warning message for troubleshooting if the time goes backwards.
-                        LOGGER.warn("The system time goes backwards. The time drift is {} millis",
+                        LOGGER.warn("The system time goes backwards. The time drift is ({}) millis",
                                 previousUpdateTimestamp - now);
                     }
                 }, 0, intervalSeconds, TimeUnit.SECONDS);

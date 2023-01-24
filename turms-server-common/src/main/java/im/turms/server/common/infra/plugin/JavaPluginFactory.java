@@ -17,8 +17,10 @@
 
 package im.turms.server.common.infra.plugin;
 
+import im.turms.server.common.infra.collection.CollectionUtil;
 import org.springframework.context.ApplicationContext;
 
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -39,18 +41,31 @@ public class JavaPluginFactory {
             Class<? extends TurmsPlugin> pluginClass;
             try {
                 pluginClass = (Class<? extends TurmsPlugin>) classLoader.loadClass(descriptor.getEntryClass());
-            } catch (Exception e) {
-                throw new IllegalStateException("Failed to load the plugin class: " + descriptor.getEntryClass(), e);
+            } catch (Exception | LinkageError e) {
+                throw new InvalidPluginException("Failed to load the plugin class: " +
+                        descriptor.getEntryClass(), e);
+            }
+            Constructor<? extends TurmsPlugin> constructor;
+            try {
+                constructor = pluginClass.getDeclaredConstructor();
+            } catch (NoSuchMethodException e) {
+                throw new InvalidPluginException("The plugin class (" +
+                        pluginClass.getName() +
+                        ") must have a public no-arg constructor", e);
             }
             TurmsPlugin plugin;
             try {
-                plugin = pluginClass.getDeclaredConstructor().newInstance();
-            } catch (Exception e) {
-                throw new IllegalStateException("Failed to create the plugin " +
+                plugin = constructor.newInstance();
+            } catch (Exception | LinkageError e) {
+                throw new InvalidPluginException("Failed to create the plugin (" +
                         pluginClass.getName() +
-                        " via the no-arg constructor", e);
+                        ") via the no-arg constructor", e);
             }
-            List<TurmsExtension> extensions = createExtensions(plugin.getExtensions(), context);
+            Set<Class<? extends TurmsExtension>> extensionClasses = plugin.getExtensions();
+            if (CollectionUtil.isEmpty(extensionClasses)) {
+                throw new InvalidPluginException("The plugin method \"getExtensions\" must return non-empty extension classes");
+            }
+            List<TurmsExtension> extensions = createExtensions(extensionClasses, context);
             JavaPlugin javaPlugin = new JavaPlugin(descriptor, extensions, classLoader);
             for (TurmsExtension extension : extensions) {
                 extension.setPlugin(javaPlugin);
@@ -60,7 +75,7 @@ public class JavaPluginFactory {
             try {
                 classLoader.close();
             } catch (Exception ex) {
-                e.addSuppressed(new RuntimeException("Caught an error while closing the plugin class loader for the jar file: "
+                e.addSuppressed(new RuntimeException("Caught an error while closing the plugin class loader for the JAR file: "
                         + descriptor.getJarUrl(), ex));
             }
             throw e;
@@ -80,10 +95,10 @@ public class JavaPluginFactory {
                 }
             }
             if (!foundExtensionPoint) {
-                throw new IllegalStateException("Extension " +
+                throw new InvalidPluginException("The extension (" +
                         extensionClass.getName() +
-                        " should implement at least one subclass of " +
-                        ExtensionPoint.class.getSimpleName());
+                        ") must implement at least one subclass of: " +
+                        ExtensionPoint.class.getName());
             }
             TurmsExtension extension = createExtension(extensionClass, context);
             extensions.add(extension);
@@ -93,12 +108,20 @@ public class JavaPluginFactory {
 
     private static TurmsExtension createExtension(Class<? extends TurmsExtension> extensionClass,
                                                   ApplicationContext context) {
+        Constructor<? extends TurmsExtension> constructor;
         try {
-            TurmsExtension extension = extensionClass.getDeclaredConstructor().newInstance();
+            constructor = extensionClass.getDeclaredConstructor();
+        } catch (NoSuchMethodException e) {
+            throw new InvalidPluginException("The extension class (" +
+                    extensionClass.getName() +
+                    ") must have a public no-arg constructor", e);
+        }
+        try {
+            TurmsExtension extension = constructor.newInstance();
             extension.setContext(context);
             return extension;
-        } catch (Exception e) {
-            throw new IllegalStateException("Failed to create the extension " + extensionClass.getName(), e);
+        } catch (Exception | LinkageError e) {
+            throw new PluginExecutionException("Failed to create the extension: " + extensionClass.getName(), e);
         }
     }
 

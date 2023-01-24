@@ -24,10 +24,10 @@ import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.context.TurmsApplicationContext;
 import im.turms.server.common.infra.io.FileResource;
 import im.turms.server.common.infra.io.FileUtil;
+import im.turms.server.common.infra.io.InputOutputException;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.random.RandomUtil;
-import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -68,18 +68,21 @@ public class HeapDumpService {
         return heap;
     }
 
-    @SneakyThrows
     private FileResource dumpHeap(boolean live) {
         File tempFile = FileUtil.createTempFile("temp-" + RandomUtil.nextPositiveInt(), ".hprof", dir.toFile());
         tempFile.delete();
         String filePathStr = tempFile.getAbsolutePath();
         Path filePath = tempFile.toPath();
-        bean.dumpHeap(filePathStr, live);
+        try {
+            bean.dumpHeap(filePathStr, live);
+        } catch (IOException e) {
+            throw new InputOutputException("Failed to dump the heap from the HotSpotDiagnosticMXBean bean", e);
+        }
         return new FileResource(System.currentTimeMillis() + ".hprof", filePath, throwable -> {
             try {
                 Files.deleteIfExists(filePath);
             } catch (IOException e) {
-                LOGGER.warn("Failed to delete temporary heap dump file \"" + filePathStr + "\"", e);
+                LOGGER.warn("Failed to delete the temporary heap dump file: " + filePathStr, e);
             }
             exportingFile = null;
         });

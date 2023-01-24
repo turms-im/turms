@@ -20,6 +20,7 @@ package im.turms.server.common.infra.logging.core.logger;
 import im.turms.server.common.infra.cluster.node.NodeType;
 import im.turms.server.common.infra.context.JobShutdownOrder;
 import im.turms.server.common.infra.context.TurmsApplicationContext;
+import im.turms.server.common.infra.exception.IncompatibleInternalChangeException;
 import im.turms.server.common.infra.lang.ClassUtil;
 import im.turms.server.common.infra.lang.Pair;
 import im.turms.server.common.infra.logging.core.appender.Appender;
@@ -82,7 +83,7 @@ public class LoggerFactory {
             homeDir = switch (nodeType) {
                 case GATEWAY -> System.getenv(PROPERTY_NAME_TURMS_GATEWAY_HOME);
                 case SERVICE -> System.getenv(PROPERTY_NAME_TURMS_SERVICE_HOME);
-                default -> throw new IllegalArgumentException("Unknown node type: " + nodeType);
+                default -> throw new IncompatibleInternalChangeException("Unknown node type: " + nodeType);
             };
         }
         if (homeDir == null) {

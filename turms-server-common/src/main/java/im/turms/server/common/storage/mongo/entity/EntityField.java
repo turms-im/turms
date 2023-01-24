@@ -43,9 +43,9 @@ public class EntityField<T> {
     private final String name;
     private final boolean isIdField;
     /**
-     * Don't use map to find the parameter index in constructor dynamically
-     * to avoid unnecessary overhead when decoding (instantiate) entity from BSON.
-     * It's -1 if the field isn't a field in constructor.
+     * Don't use a map to find the parameter index in the constructor dynamically
+     * to avoid unnecessary overhead when decoding (instantiate) entity from a BSON.
+     * It is -1 if the field isn't a field in the constructor.
      */
     private final int ctorParamIndex;
 

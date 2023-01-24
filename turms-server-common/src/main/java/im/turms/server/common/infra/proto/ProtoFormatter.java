@@ -22,7 +22,6 @@ import com.google.protobuf.Message;
 import com.google.protobuf.MessageOrBuilder;
 import com.google.protobuf.TextFormat;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -42,15 +41,11 @@ public class ProtoFormatter {
             = new ConcurrentHashMap<>();
 
     public static String toJSON5(MessageOrBuilder message, int initialCapacity) {
-        try {
-            StringBuilder builder = new StringBuilder(initialCapacity);
-            builder.append('{');
-            print(message, builder);
-            builder.append('}');
-            return builder.toString();
-        } catch (IOException e) {
-            throw new IllegalStateException(e);
-        }
+        StringBuilder builder = new StringBuilder(initialCapacity);
+        builder.append('{');
+        print(message, builder);
+        builder.append('}');
+        return builder.toString();
     }
 
     @Nullable
@@ -61,8 +56,7 @@ public class ProtoFormatter {
         return ProtoFormatter.toJSON5(message, 128);
     }
 
-    private static void print(MessageOrBuilder message, StringBuilder builder)
-            throws IOException {
+    private static void print(MessageOrBuilder message, StringBuilder builder) {
         if (message.getDescriptorForType().getFullName().equals("google.protobuf.Any")) {
             return;
         }
@@ -70,8 +64,7 @@ public class ProtoFormatter {
     }
 
     private static void printField(
-            Descriptors.FieldDescriptor field, Object value, StringBuilder builder)
-            throws IOException {
+            Descriptors.FieldDescriptor field, Object value, StringBuilder builder) {
         if (field.isMapField() || field.isRepeated()) {
             builder.append(field.getName());
             builder.append(':');
@@ -82,8 +75,7 @@ public class ProtoFormatter {
     }
 
     private static void printFieldValue(
-            Descriptors.FieldDescriptor field, Object value, StringBuilder builder)
-            throws IOException {
+            Descriptors.FieldDescriptor field, Object value, StringBuilder builder) {
         switch (field.getType()) {
             case INT32, SINT32, SFIXED32 -> builder.append((int) value);
             case INT64, SINT64, SFIXED64 -> builder.append((long) value);
@@ -94,11 +86,11 @@ public class ProtoFormatter {
             case STRING, BYTES -> builder.append(SENSITIVE_VALUE);
             case ENUM -> builder.append(((Descriptors.EnumValueDescriptor) value).getName());
             case MESSAGE, GROUP -> print((Message) value, builder);
+            default -> throw new IllegalArgumentException("Unexpected field type: " + field.getType());
         }
     }
 
-    private static void printMessage(MessageOrBuilder message, StringBuilder builder)
-            throws IOException {
+    private static void printMessage(MessageOrBuilder message, StringBuilder builder) {
         Descriptors.Descriptor descriptor = message.getDescriptorForType();
         List<Map.Entry<Descriptors.FieldDescriptor, Object>> fields = FIELD_CACHE.get(descriptor);
         if (fields == null) {
@@ -116,8 +108,7 @@ public class ProtoFormatter {
     }
 
     private static void printSingleField(
-            Descriptors.FieldDescriptor field, Object value, StringBuilder builder)
-            throws IOException {
+            Descriptors.FieldDescriptor field, Object value, StringBuilder builder) {
         if (field.isExtension()) {
             builder
                     .append("\"")

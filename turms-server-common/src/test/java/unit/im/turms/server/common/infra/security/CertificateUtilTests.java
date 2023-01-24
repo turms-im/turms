@@ -49,7 +49,7 @@ class CertificateUtilTests {
     void getPublicKeyFromP12() {
         // keytool -genkeypair -alias turms -keyalg EC -keysize 256 -sigalg SHA256withECDSA -validity 3650 -storetype pkcs12 -keystore ectest.p12 -storepass 123456
         String path = CertificateUtilTests.class.getClassLoader().getResource("ectest.p12").getPath();
-        ECPublicKey publicKey = (ECPublicKey) CertificateUtil.getPublicKeyFromP12(new File(path), "123456", "turms");
+        ECPublicKey publicKey = (ECPublicKey) CertificateUtil.getPublicKeyFromP12File(new File(path), "123456", "turms");
         assertThat(publicKey).isNotNull();
     }
 }

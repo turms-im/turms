@@ -151,7 +151,7 @@ class FastUriParserTests {
 
         assertThatThrownBy(() -> parsePathAndQueryParams("/hello/world?values%5B%5D=1&values%5B1%5D=2"))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("The array items should be all indexed or not indexed");
+                .hasMessageContaining("The array item must be all indexed or not indexed");
 
         testUrl("/metrics?names=system.cpu.usage%2Csystem.memory.total%2Csystem.memory.free%2Cdisk.total%2Cdisk.free",
                 Pair.of("/metrics", Map.of(

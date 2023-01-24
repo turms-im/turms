@@ -51,7 +51,7 @@ public class GroupJoinRequestRepository extends ExpirableEntityRepository<GroupJ
     public GroupJoinRequestRepository(TurmsPropertiesManager propertiesManager,
                                       @Qualifier("groupMongoClient") TurmsMongoClient mongoClient) {
         super(mongoClient, GroupJoinRequest.class);
-        propertiesManager.triggerAndAddGlobalPropertiesChangeListener(this::updateProperties);
+        propertiesManager.notifyAndAddGlobalPropertiesChangeListener(this::updateProperties);
     }
 
     private void updateProperties(TurmsProperties properties) {

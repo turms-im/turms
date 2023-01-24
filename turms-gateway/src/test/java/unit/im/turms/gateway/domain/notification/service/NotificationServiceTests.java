@@ -93,7 +93,7 @@ class NotificationServiceTests {
                 null);
 
         assertThat(byteBuf.refCnt())
-                .as("Buffer should not be released if the notification hasn't been sent")
+                .as("Buffer should not be released if the notification has not been sent")
                 .isPositive();
         StepVerifier.create(result)
                 .expectNextMatches(buf -> buf.refCnt() == 0)
@@ -120,7 +120,7 @@ class NotificationServiceTests {
                 .as("Buffer should be released if recipients are offline")
                 .isZero();
         assertThat(sent)
-                .as("Notification isn't sent or queued")
+                .as("Notification is not sent or queued")
                 .isFalse();
     }
 

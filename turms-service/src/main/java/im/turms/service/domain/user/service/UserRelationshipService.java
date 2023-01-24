@@ -168,7 +168,7 @@ public class UserRelationshipService {
                                 UserVersion.Fields.RELATIONSHIP_GROUP_MEMBERS,
                                 UserVersion.Fields.RELATIONSHIPS)
                         .onErrorResume(t -> {
-                            LOGGER.error("Caught an error while updating the relationships version and relationships group members version of the owner {} after deleting a relationship",
+                            LOGGER.error("Caught an error while updating the relationships version and relationships group members version of the owner ({}) after deleting a relationship",
                                     ownerId, t);
                             return Mono.empty();
                         }))

@@ -33,7 +33,7 @@ public class TurmsConnection {
     /**
      * Is null when the connection is accepted on the server side
      * but no handshake request is accepted.
-     * For the connection client, it's never null
+     * For the connection client, it is never null.
      */
     @Nullable
     private String nodeId;

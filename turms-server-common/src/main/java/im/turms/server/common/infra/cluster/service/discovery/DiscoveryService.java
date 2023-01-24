@@ -206,15 +206,15 @@ public class DiscoveryService implements ClusterService {
                     .collect(CollectorUtil.toList())
                     .block(CRUD_TIMEOUT_DURATION);
         } catch (Exception e) {
-            throw new IllegalStateException("Failed to find members", e);
+            throw new RuntimeException("Failed to find members", e);
         }
         Member localMember = localNodeStatusManager.getLocalMember();
         for (Member member : memberList) {
             if (localMember.isSameNode(member)) {
                 String message = "Failed to bootstrap the local node because the local node has been registered. "
-                        + "Local Node: " + localMember + ", "
+                        + "Local Node: " + localMember + ". "
                         + "Registered Node: " + member;
-                throw new IllegalStateException(message);
+                throw new RuntimeException(message);
             }
             onMemberAddedOrReplaced(member);
         }
@@ -222,14 +222,14 @@ public class DiscoveryService implements ClusterService {
         updateActiveMembers(allKnownMembers.values());
 
         try {
-            localNodeStatusManager.registerLocalMember(false).block(CRUD_TIMEOUT_DURATION);
+            localNodeStatusManager.registerLocalNodeAsMember(false).block(CRUD_TIMEOUT_DURATION);
         } catch (Exception e) {
-            throw new IllegalStateException("Caught an error while registering the local node", e);
+            throw new RuntimeException("Caught an error while registering the local node as a member", e);
         }
         try {
             localNodeStatusManager.tryBecomeFirstLeader().block();
         } catch (Exception e) {
-            throw new IllegalStateException("Caught an error while trying to become the first leader", e);
+            throw new RuntimeException("Caught an error while trying to become the first leader", e);
         }
         localNodeStatusManager.startHeartbeat();
     }
@@ -330,8 +330,8 @@ public class DiscoveryService implements ClusterService {
                                 localNodeStatusManager.setLocalNodeRegistered(false);
                                 if (!localNodeStatusManager.isClosing()) {
                                     // Ignore the error because the node may have been registered by its heartbeat timer
-                                    localNodeStatusManager.registerLocalMember(true)
-                                            .subscribe(null, t -> LOGGER.error("Caught an error while registering the local member", t));
+                                    localNodeStatusManager.registerLocalNodeAsMember(true)
+                                            .subscribe();
                                 }
                             }
                         }
@@ -347,7 +347,7 @@ public class DiscoveryService implements ClusterService {
     private void onMemberUpdated(String nodeId, UpdateDescription updateDescription) {
         Member memberToUpdate = allKnownMembers.get(nodeId);
         if (memberToUpdate == null) {
-            LOGGER.error("Cannot update the information of the member {} because its information is missing unexpectedly", nodeId);
+            LOGGER.error("Could not update the information of the unknown member: " + nodeId);
             return;
         }
         // Info
@@ -388,7 +388,7 @@ public class DiscoveryService implements ClusterService {
             } else if (fieldName.equals(Member.Fields.udpAddress)) {
                 memberToUpdate.setUdpAddress(value.asString().getValue());
             } else {
-                LOGGER.warn("Cannot update an unknown field [{}:{}] on member", fieldName, value);
+                LOGGER.warn("Could not update the unknown field \"{}\" with the value ({}) for the member: {}", fieldName, value, memberToUpdate);
             }
         }
     }
@@ -491,8 +491,8 @@ public class DiscoveryService implements ClusterService {
             // ignored
         }
         if (localNodeStatusManager.isLocalNodeRegistered()) {
-            return localNodeStatusManager.unregisterLocalMember()
-                    .onErrorMap(t -> new IllegalStateException("Caught an error while unregistering the local node", t));
+            return localNodeStatusManager.unregisterLocalNodeMembership()
+                    .onErrorMap(t -> new RuntimeException("Caught an error while unregistering the membership of the local node", t));
         }
         return Mono.empty();
     }
@@ -500,9 +500,26 @@ public class DiscoveryService implements ClusterService {
     // Registration
 
     public Mono<Void> registerMember(Member member) {
-        if (member.getClusterId() == null
-                || member.getNodeId() == null) {
-            throw new IllegalArgumentException("Failed to register member because required fields are missing");
+        boolean noClusterId = member.getClusterId() == null;
+        boolean noNodeId = member.getNodeId() == null;
+        if (noClusterId || noNodeId) {
+            String message;
+            if (noClusterId) {
+                if (noNodeId) {
+                    message = "Failed to register the member (" +
+                            member +
+                            ") because both the cluster ID and the node ID are missing";
+                } else {
+                    message = "Failed to register the member (" +
+                            member +
+                            ") because the cluster ID is missing";
+                }
+            } else {
+                message = "Failed to register the member (" +
+                        member +
+                        ") because the node ID is missing";
+            }
+            throw new IllegalArgumentException(message);
         }
         return sharedConfigService.insert(member).then();
     }

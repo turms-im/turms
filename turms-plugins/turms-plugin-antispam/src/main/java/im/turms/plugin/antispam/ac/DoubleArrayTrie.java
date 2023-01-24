@@ -89,8 +89,10 @@ public class DoubleArrayTrie {
             return;
         }
         if (minSize > MAX_CAPACITY) {
-            throw new RuntimeException("The capacity of double array trie cannot be greater than %d. Requested: %d"
-                    .formatted(MAX_CAPACITY, minSize));
+            throw new IllegalArgumentException("The requested minimum size (" +
+                    minSize +
+                    ") must not exceed the maximum capacity " +
+                    MAX_CAPACITY);
         }
         int newSize = Math.max(minSize, Math.min((int) (capacity * GROW_FACTOR), MAX_CAPACITY));
         int[] newBase = new int[newSize];
@@ -162,7 +164,7 @@ public class DoubleArrayTrie {
         currentMaxPos = Math.max(currentMaxPos, begin + lastSiblingPos);
         // if 95% positions of check between "nextCheckPos" and "pos"
         // is taken, set "checkPosForNextRun" to "pos" to find the next check position next time
-        if (((float) usedPositionCount) / (checkPos - checkPosForNextRun + 1) >= 0.95f) {
+        if (((float) usedPositionCount) / (checkPos - checkPosForNextRun + 1) >= 0.95F) {
             checkPosForNextRun = checkPos;
         }
         for (NodeEntry sibling : siblings) {

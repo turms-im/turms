@@ -17,9 +17,9 @@
 
 package im.turms.server.common.infra.lang;
 
+import im.turms.server.common.infra.exception.IncompatibleJvmException;
 import im.turms.server.common.infra.reflect.ReflectionUtil;
 import im.turms.server.common.infra.unsafe.UnsafeUtil;
-import lombok.SneakyThrows;
 import sun.misc.Unsafe;
 
 import java.lang.invoke.MethodHandle;
@@ -53,16 +53,28 @@ public final class StringUtil {
         try {
             Constructor<String> constructor = String.class.getDeclaredConstructor(byte[].class, byte.class);
             NEW_STRING = ReflectionUtil.getConstructor(constructor);
+        } catch (Exception e) {
+            throw new IncompatibleJvmException("Failed to get the constructor of the class: java.lang.String", e);
+        }
+        try {
             STRING_VALUE_OFFSET = UNSAFE.objectFieldOffset(String.class.getDeclaredField("value"));
+        } catch (Exception e) {
+            throw new IncompatibleJvmException("Failed to get the offset of the field: java.lang.String#value", e);
+        }
+        try {
             STRING_CODER_OFFSET = UNSAFE.objectFieldOffset(String.class.getDeclaredField("coder"));
-        } catch (Throwable e) {
-            throw new IllegalStateException(e);
+        } catch (Exception e) {
+            throw new IncompatibleJvmException("Failed to get the offset of the field: java.lang.String#coder", e);
         }
         // Validate
-        String text = "abc";
-        byte[] actual = getBytes(newString(getBytes(text), getCoder(text)));
-        if (!Arrays.equals(actual, text.getBytes())) {
-            throw new IllegalStateException("Validation failed");
+        String expectedText = "abc";
+        String actualText = newString(getBytes(expectedText), getCoder(expectedText));
+        if (!Arrays.equals(getBytes(actualText), expectedText.getBytes())) {
+            throw new IncompatibleJvmException("Expecting the string \"" +
+                    actualText +
+                    "\" to be \"" +
+                    expectedText +
+                    "\"");
         }
     }
 
@@ -85,31 +97,37 @@ public final class StringUtil {
      * and the caller needs to ensure it won't modify the byte array
      */
     public static byte[] getBytes(String s) {
+        if (s == null) {
+            throw new IllegalArgumentException("The input string must not be null");
+        }
         try {
             return (byte[]) UNSAFE.getObject(s, STRING_VALUE_OFFSET);
-        } catch (Throwable e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new IncompatibleJvmException("Failed to get the bytes of the input string", e);
         }
     }
 
     /**
      * @implNote The method assumes the string does NOT contain any extended control character
-     * if it's encoded in LATIN1
+     * if it is encoded in LATIN1
      * @see <a href="https://cs.stanford.edu/people/miles/iso8859.html">iso8859</a>
      */
-    public static byte[] getUTF8Bytes(String s) {
+    public static byte[] getUtf8Bytes(String s) {
         try {
-            return getCoder(s) == LATIN1 ? getBytes(s) : s.getBytes(StandardCharsets.UTF_8);
-        } catch (Throwable e) {
-            throw new RuntimeException(e);
+            return isLatin1(s) ? getBytes(s) : s.getBytes(StandardCharsets.UTF_8);
+        } catch (Exception e) {
+            throw new IncompatibleJvmException("Failed to get the UTF-8 bytes of the input string", e);
         }
     }
 
     public static byte getCoder(String s) {
+        if (s == null) {
+            throw new IllegalArgumentException("The input string must not be null");
+        }
         try {
             return UNSAFE.getByte(s, STRING_CODER_OFFSET);
-        } catch (Throwable e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new IncompatibleJvmException("Failed to get the coder of the input string", e);
         }
     }
 
@@ -227,10 +245,11 @@ public final class StringUtil {
     public static String replaceLatin1(String message, byte oldByte, byte newByte) {
         byte[] bytes = getBytes(message);
         byte[] newBytes = null;
-        for (int i = 0; i < bytes.length; i++) {
+        int length = bytes.length;
+        for (int i = 0; i < length; i++) {
             if (bytes[i] == oldByte) {
                 if (newBytes == null) {
-                    newBytes = Arrays.copyOf(bytes, bytes.length);
+                    newBytes = Arrays.copyOf(bytes, length);
                 }
                 newBytes[i] = newByte;
             }
@@ -242,16 +261,30 @@ public final class StringUtil {
     }
 
     @Nullable
+    public static Pair<String, String> split(String toSplit, char delimiter) {
+        int length = toSplit.length();
+        for (int i = 0; i < length; i++) {
+            if (toSplit.charAt(i) == delimiter) {
+                String first = toSplit.substring(0, i);
+                String second = toSplit.substring(i + 1);
+                return Pair.of(first, second);
+            }
+        }
+        return null;
+    }
+
+    @Nullable
     public static Pair<String, String> splitLatin1(String toSplit, byte delimiter) {
         return splitLatin1(getBytes(toSplit), delimiter);
     }
 
     @Nullable
     public static Pair<String, String> splitLatin1(byte[] bytes, byte delimiter) {
-        for (int i = 0; i < bytes.length; i++) {
+        int length = bytes.length;
+        for (int i = 0; i < length; i++) {
             if (bytes[i] == delimiter) {
                 byte[] first = new byte[i];
-                byte[] second = new byte[bytes.length - i - 1];
+                byte[] second = new byte[length - i - 1];
                 System.arraycopy(bytes, 0, first, 0, first.length);
                 System.arraycopy(bytes, first.length + 1, second, 0, second.length);
                 return Pair.of(newLatin1String(first), newLatin1String(second));
@@ -270,7 +303,8 @@ public final class StringUtil {
         List<String> results = null;
         int begin = 0;
         byte[] stringBytes;
-        for (int i = 0; i < bytes.length; i++) {
+        int length = bytes.length;
+        for (int i = 0; i < length; i++) {
             if (bytes[i] == delimiter) {
                 stringBytes = new byte[i - begin];
                 System.arraycopy(bytes, begin, stringBytes, 0, stringBytes.length);
@@ -282,7 +316,7 @@ public final class StringUtil {
             }
         }
         if (begin != 0) {
-            stringBytes = new byte[bytes.length - begin];
+            stringBytes = new byte[length - begin];
             System.arraycopy(bytes, begin, stringBytes, 0, stringBytes.length);
             results.add(newLatin1String(stringBytes));
         }
@@ -358,6 +392,64 @@ public final class StringUtil {
         return val == null ? "" : val.toString();
     }
 
+    public static String toQuotedStringLatin1(String... strings) {
+        int count = strings.length;
+        if (count == 0) {
+            return "";
+        }
+        int length = 0;
+        for (String string : strings) {
+            length += string.length() + 4;
+        }
+        byte[] bytes = new byte[length];
+        bytes[0] = '[';
+        bytes[length - 1] = ']';
+        int writerIndex = 1;
+        int index = 1;
+        int itemLength;
+        for (String string : strings) {
+            itemLength = string.length();
+            bytes[writerIndex++] = '"';
+            System.arraycopy(StringUtil.getBytes(string), 0, bytes, writerIndex, itemLength);
+            writerIndex += itemLength;
+            bytes[writerIndex++] = '"';
+            if (index++ != count) {
+                bytes[writerIndex++] = ',';
+                bytes[writerIndex++] = ' ';
+            }
+        }
+        return newLatin1String(bytes);
+    }
+
+    public static String toQuotedStringLatin1(List<String> strings) {
+        int count = strings.size();
+        if (count == 0) {
+            return "";
+        }
+        int length = 0;
+        for (String string : strings) {
+            length += string.length() + 4;
+        }
+        byte[] bytes = new byte[length];
+        bytes[0] = '[';
+        bytes[length - 1] = ']';
+        int writerIndex = 1;
+        int index = 1;
+        int itemLength;
+        for (String string : strings) {
+            itemLength = string.length();
+            bytes[writerIndex++] = '"';
+            System.arraycopy(StringUtil.getBytes(string), 0, bytes, writerIndex, itemLength);
+            writerIndex += itemLength;
+            bytes[writerIndex++] = '"';
+            if (index++ != count) {
+                bytes[writerIndex++] = ',';
+                bytes[writerIndex++] = ' ';
+            }
+        }
+        return newLatin1String(bytes);
+    }
+
     public static boolean isBlank(String string) {
         return string == null || string.isBlank();
     }
@@ -371,10 +463,13 @@ public final class StringUtil {
     }
 
     public static boolean isLatin1(String s) {
+        if (s == null) {
+            throw new IllegalArgumentException("The input string must not be null");
+        }
         try {
             return UNSAFE.getByte(s, STRING_CODER_OFFSET) == LATIN1;
-        } catch (Throwable e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new IncompatibleJvmException("Failed to get the coder of the input string", e);
         }
     }
 
@@ -382,9 +477,12 @@ public final class StringUtil {
         return coder == LATIN1;
     }
 
-    @SneakyThrows
     public static String newString(byte[] bytes, byte coder) {
-        return (String) NEW_STRING.invokeExact(bytes, coder);
+        try {
+            return (String) NEW_STRING.invokeExact(bytes, coder);
+        } catch (Throwable e) {
+            throw new IncompatibleJvmException("Failed to new a string", e);
+        }
     }
 
     public static String newLatin1String(byte[] srcBytes, int srcPos, int length) {
@@ -393,9 +491,12 @@ public final class StringUtil {
         return newLatin1String(bytes);
     }
 
-    @SneakyThrows
     public static String newLatin1String(byte[] bytes) {
-        return (String) NEW_STRING.invokeExact(bytes, LATIN1);
+        try {
+            return (String) NEW_STRING.invokeExact(bytes, LATIN1);
+        } catch (Throwable e) {
+            throw new IncompatibleJvmException("Failed to new a string", e);
+        }
     }
 
     // Case format conversion

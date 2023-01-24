@@ -57,10 +57,10 @@ public final class Message extends BaseEntity {
     public static final String COLLECTION_NAME = "message";
 
     /**
-     * Note that because it's not common for most instant messaging scenarios to
+     * Note that because it is uncommon for most instant messaging scenarios to
      * query messages by ID only. Currently, the only scenario that needs to query
      * a message by ID is that a user forwards (copies) a message to another recipient/group.
-     * Because it's not frequently used feature, we don't use ID as a part of the shard key.
+     * Because it is not frequently used feature, we don't use ID as a part of the shard key.
      */
     @Id
     private final Long id;

@@ -53,7 +53,7 @@ public class RpcRequestExecutor {
             tracingContext.updateThreadContext();
             rpcRequest.init(context, connection, fromNodeId);
             Mono<T> result;
-            // It's the responsibility of the implementation of call() or callAsync()
+            // It is the responsibility of the implementation of call() or callAsync()
             // to release the request once if the request has a bound buffer
             if (rpcRequest.isAsync()) {
                 result = rpcRequest.callAsync();

@@ -18,6 +18,8 @@
 package im.turms.server.common.infra.context;
 
 import im.turms.server.common.infra.cluster.node.NodeType;
+import im.turms.server.common.infra.io.InputOutputException;
+import im.turms.server.common.infra.io.ResourceNotFoundException;
 import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
@@ -75,7 +77,7 @@ public class TurmsApplicationContext {
     private final String activeEnvProfile;
     private final BuildProperties buildProperties;
 
-    private long shutdownJobTimeoutMillis = 0;
+    private long shutdownJobTimeoutMillis;
     private final TreeMap<JobShutdownOrder, ShutdownHook> shutdownHooks = new TreeMap<>();
 
     public TurmsApplicationContext(Environment environment,
@@ -113,18 +115,18 @@ public class TurmsApplicationContext {
         BuildProperties tempBuildProperties = getGitBuildProperties();
         if (tempBuildProperties == null) {
             if (isProduction) {
-                throw new IllegalStateException(BUILD_INFO_PROPS_PATH + " must exist in production");
+                throw new ResourceNotFoundException("The file (" + BUILD_INFO_PROPS_PATH + ") must exist in production");
             }
             // We allow "git.properties" not exist in non-production
             // environments for a better development experience
-            LOGGER.warn("Cannot find " + BUILD_INFO_PROPS_PATH +
-                    ", fall back to the default version " + DEFAULT_VERSION +
+            LOGGER.warn("Could not find the file (" + BUILD_INFO_PROPS_PATH +
+                    "), fall back to the default version " + DEFAULT_VERSION +
                     " in non-production environments. Fix it by running \"mvn compile\"");
             tempBuildProperties = new BuildProperties(DEFAULT_VERSION, "", "");
         }
         buildProperties = tempBuildProperties;
 
-        LOGGER.info("The local node with the build properties [version={}, commitId={}, buildTime={}] is running in a {} environment",
+        LOGGER.info("The local node with the build properties {version={}, commitId={}, buildTime={}} is running in a {} environment",
                 buildProperties.version(),
                 buildProperties.commitId(),
                 buildProperties.buildTime(),
@@ -155,7 +157,9 @@ public class TurmsApplicationContext {
                 long time = System.currentTimeMillis();
                 Mono<Void> mono = shutdownFuture.get(shutdownJobTimeoutMillis, TimeUnit.MILLISECONDS);
                 if (mono == null) {
-                    throw new IllegalArgumentException("The job result should not be null: " + jobName);
+                    throw new IllegalArgumentException("The result of the job \"" +
+                            jobName +
+                            "\" must not be null");
                 }
                 time = shutdownJobTimeoutMillis - (System.currentTimeMillis() - time);
                 if (time <= 0) {
@@ -165,11 +169,15 @@ public class TurmsApplicationContext {
             } catch (TimeoutException e) {
                 shutdownFuture.cancel(true);
                 if (!isClosingLogProcessor) {
-                    LOGGER.error("Failed to run the shutdown job in time: " + jobName);
+                    LOGGER.error("Failed to run the shutdown job \"" +
+                            jobName +
+                            "\" in time");
                 }
             } catch (Exception e) {
                 if (!isClosingLogProcessor) {
-                    LOGGER.error("Caught an error while running the shutdown job: " + jobName, e);
+                    LOGGER.error("Caught an error while running the shutdown job: \"" +
+                            jobName +
+                            "\"", e);
                 }
             }
         }
@@ -178,8 +186,9 @@ public class TurmsApplicationContext {
 
     public synchronized void addShutdownHook(JobShutdownOrder order, ShutdownHook job) {
         if (shutdownHooks.containsKey(order)) {
-            String formatted = "Failed to add a shutdown hook for \"%s\" because it has been registered"
-                    .formatted(order.name());
+            String formatted = "Failed to add a shutdown hook for the job \"" +
+                    order.name() +
+                    "\" because it has been registered";
             throw new IllegalStateException(formatted);
         }
         shutdownHooks.put(order, job);
@@ -222,19 +231,19 @@ public class TurmsApplicationContext {
         try {
             properties.load(resourceAsStream);
         } catch (IOException e) {
-            throw new IllegalStateException(e);
+            throw new InputOutputException("Failed to load properties: " + BUILD_INFO_PROPS_PATH, e);
         }
         String version = properties.getProperty(PROPERTY_BUILD_VERSION);
         String buildTime = properties.getProperty(PROPERTY_BUILD_TIME);
         String commitId = properties.getProperty(PROPERTY_COMMIT_ID);
         if (StringUtil.isBlank(version)) {
-            throw new IllegalArgumentException("The property \"" + PROPERTY_BUILD_VERSION + "\" must exist and be not blank");
+            throw new IllegalArgumentException("The property \"" + PROPERTY_BUILD_VERSION + "\" must exist and not be blank");
         }
         if (StringUtil.isBlank(buildTime)) {
-            throw new IllegalArgumentException("The property \"" + PROPERTY_BUILD_TIME + "\" must exist and be not blank");
+            throw new IllegalArgumentException("The property \"" + PROPERTY_BUILD_TIME + "\" must exist and not be blank");
         }
         if (StringUtil.isBlank(commitId)) {
-            throw new IllegalArgumentException("The property \"" + PROPERTY_COMMIT_ID + "\" must exist and be not blank");
+            throw new IllegalArgumentException("The property \"" + PROPERTY_COMMIT_ID + "\" must exist and not be blank");
         }
         return new BuildProperties(version, commitId, buildTime);
     }

@@ -41,7 +41,7 @@ public class IdentityAccessManagementProperties {
 
     @Description("Whether to authenticate and authorize users when logging in. " +
             "Note that user ID is always required even if enabled is false. " +
-            "If false at startup, turms-gateway won't connect to the MongoDB server for user records")
+            "If false at startup, turms-gateway will not connect to the MongoDB server for user records")
     @GlobalProperty
     @MutableProperty
     private boolean enabled = true;

@@ -17,30 +17,38 @@
 
 package im.turms.server.common.infra.plugin;
 
-import lombok.Data;
-import lombok.SneakyThrows;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 
+import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.nio.file.Path;
 
 /**
  * @author James Chen
  */
-@Data
+@EqualsAndHashCode(callSuper = true)
+@Value
 public class JavaPluginDescriptor extends PluginDescriptor {
-    private final String entryClass;
-    private final URL jarUrl;
+    String entryClass;
+    URL jarUrl;
 
-    @SneakyThrows
-    public JavaPluginDescriptor(String id,
-                                String version,
-                                String provider,
-                                String license,
-                                String description,
-                                String entryClass,
-                                String jarPath) {
+    public JavaPluginDescriptor(
+            String id,
+            String version,
+            String provider,
+            String license,
+            String description,
+            String entryClass,
+            String jarPath) {
         super(id, version, provider, license, description, Path.of(jarPath));
         this.entryClass = entryClass;
-        this.jarUrl = getPath().toUri().toURL();
+        URI uri = getPath().toUri();
+        try {
+            jarUrl = uri.toURL();
+        } catch (MalformedURLException e) {
+            throw new RuntimeException("Malformed URL: " + uri, e);
+        }
     }
 }

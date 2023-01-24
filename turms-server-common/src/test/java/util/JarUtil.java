@@ -17,6 +17,7 @@
 
 package util;
 
+import im.turms.server.common.infra.io.ResourceNotFoundException;
 import lombok.SneakyThrows;
 
 import java.io.File;
@@ -63,7 +64,7 @@ public final class JarUtil {
     private static void addZipEntry(ClassLoader loader, String resource, JarOutputStream output) throws IOException {
         InputStream source = loader.getResourceAsStream(resource);
         if (source == null) {
-            throw new IllegalStateException("Resource %s doesn't exist".formatted(resource));
+            throw new ResourceNotFoundException("Could not find the resource: " + resource);
         }
         ZipEntry entry = new ZipEntry(resource);
         output.putNextEntry(entry);

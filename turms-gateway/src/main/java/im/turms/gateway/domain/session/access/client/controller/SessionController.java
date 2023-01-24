@@ -22,6 +22,7 @@ import im.turms.gateway.access.client.common.UserSession;
 import im.turms.gateway.access.client.common.UserSessionWrapper;
 import im.turms.gateway.domain.session.manager.UserSessionsManager;
 import im.turms.gateway.domain.session.service.SessionService;
+import im.turms.gateway.infra.plugin.extension.UserOnlineStatusChangeHandler;
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.constant.UserStatus;
 import im.turms.server.common.access.client.dto.model.user.UserLocation;
@@ -30,12 +31,15 @@ import im.turms.server.common.access.client.dto.request.user.CreateSessionReques
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.domain.location.bo.Location;
 import im.turms.server.common.domain.session.bo.SessionCloseStatus;
+import im.turms.server.common.infra.exception.IncompatibleInternalChangeException;
+import im.turms.server.common.infra.lang.ClassUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import io.netty.util.Timeout;
 import org.springframework.stereotype.Controller;
 import reactor.core.publisher.Mono;
 
+import java.lang.reflect.Method;
 import java.util.Date;
 import java.util.Map;
 
@@ -46,6 +50,18 @@ import java.util.Map;
 public class SessionController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SessionController.class);
+    private static final String ERROR_INVOKE_GO_ONLINE;
+
+    static {
+        try {
+            Method method = UserOnlineStatusChangeHandler.class
+                    .getDeclaredMethod("goOnline", UserSessionsManager.class, UserSession.class);
+            ERROR_INVOKE_GO_ONLINE = "Caught an error while invoking the extension point handlers for: " +
+                    ClassUtil.getReference(method);
+        } catch (NoSuchMethodException e) {
+            throw new IncompatibleInternalChangeException(e);
+        }
+    }
 
     private final SessionService sessionService;
 
@@ -60,8 +76,8 @@ public class SessionController {
         }
         Long userId = session.getUserId();
         sessionService
-                .setLocalSessionOffline(userId, session.getDeviceType(), SessionCloseStatus.DISCONNECTED_BY_CLIENT)
-                .subscribe(null, t -> LOGGER.error("Caught an error while closing the session of the user ID: " + userId, t));
+                .closeLocalSession(userId, session.getDeviceType(), SessionCloseStatus.DISCONNECTED_BY_CLIENT)
+                .subscribe(null, t -> LOGGER.error("Caught an error while closing the session with the user ID: " + userId, t));
         return Mono.empty();
     }
 
@@ -109,15 +125,15 @@ public class SessionController {
                     sessionWrapper.setUserSession(session);
                     UserSessionsManager userSessionsManager = sessionService.getUserSessionsManager(userId);
                     sessionService.onSessionEstablished(userSessionsManager, session.getDeviceType());
-                    sessionService.triggerGoOnlinePlugins(userSessionsManager, session)
-                            .subscribe(null, t -> LOGGER.error("Caught an error while triggering the plugins of goOnline()", t));
+                    sessionService.invokeGoOnlineHandlers(userSessionsManager, session)
+                            .subscribe(null, t -> LOGGER.error(ERROR_INVOKE_GO_ONLINE, t));
                     return Mono.just(new RequestHandlerResult(ResponseStatusCode.OK));
                 } else {
-                    return sessionService.setLocalSessionOffline(userId, finalDeviceType, SessionCloseStatus.LOGIN_TIMEOUT)
+                    return sessionService.closeLocalSession(userId, finalDeviceType, SessionCloseStatus.LOGIN_TIMEOUT)
                             .then(Mono.empty());
                 }
             } else {
-                return sessionService.setLocalSessionOffline(userId, finalDeviceType, SessionCloseStatus.LOGIN_TIMEOUT)
+                return sessionService.closeLocalSession(userId, finalDeviceType, SessionCloseStatus.LOGIN_TIMEOUT)
                         .map(ignored -> new RequestHandlerResult(ResponseStatusCode.LOGIN_TIMEOUT));
             }
         });

@@ -25,6 +25,7 @@ import im.turms.gateway.infra.logging.ApiLoggingContext;
 import im.turms.server.common.domain.blocklist.service.BlocklistService;
 import im.turms.server.common.infra.context.JobShutdownOrder;
 import im.turms.server.common.infra.context.TurmsApplicationContext;
+import im.turms.server.common.infra.exception.FeatureDisabledException;
 import im.turms.server.common.infra.healthcheck.ServerStatusManager;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
@@ -74,7 +75,7 @@ public class TcpUserSessionAssembler extends UserSessionAssembler {
                     maxRequestSizeBytes);
             host = server.host();
             port = server.port();
-            LOGGER.info("TCP server started on {}:{}", host, port);
+            LOGGER.info("TCP server started on: {}:{}", host, port);
             applicationContext.addShutdownHook(JobShutdownOrder.CLOSE_GATEWAY_TCP_SERVER, timeoutMillis -> {
                 server.dispose();
                 return server.onDispose();
@@ -93,14 +94,14 @@ public class TcpUserSessionAssembler extends UserSessionAssembler {
 
     public String getHost() {
         if (server == null) {
-            throw new IllegalStateException("TCP server is disabled");
+            throw new FeatureDisabledException("TCP server is disabled");
         }
         return host;
     }
 
     public int getPort() {
         if (server == null) {
-            throw new IllegalStateException("TCP server is disabled");
+            throw new FeatureDisabledException("TCP server is disabled");
         }
         return port;
     }

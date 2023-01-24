@@ -100,6 +100,18 @@ class StringUtilTests {
     }
 
     @Test
+    void replaceLatin1() {
+        assertThat(StringUtil.replaceLatin1("Hello, world!", (byte) 'o', (byte) 'a'))
+                .isEqualTo("Hella, warld!");
+        assertThat(StringUtil.replaceLatin1("", (byte) 'o', (byte) 'a'))
+                .isEmpty();
+        assertThatThrownBy(() -> StringUtil.replaceLatin1(null, (byte) 'o', (byte) 'a'))
+                .isExactlyInstanceOf(IllegalArgumentException.class);
+        assertThat(StringUtil.replaceLatin1("Hello, world!", (byte) 'x', (byte) 'y'))
+                .isEqualTo("Hello, world!");
+    }
+
+    @Test
     void caseFormatConversations() {
         assertThat(StringUtil.lowerCamelToLowerHyphenLatin1("helloWorld"))
                 .isEqualTo("hello-world");
@@ -180,6 +192,18 @@ class StringUtilTests {
                 .isEqualTo("abcde");
         assertThat(StringUtil.substringToFirstDelimiter("abcde.abc", delimiter))
                 .isEqualTo("abcde");
+    }
+
+    @Test
+    void toQuotedStringLatin1() {
+        assertThat(StringUtil.toQuotedStringLatin1(Collections.emptyList()))
+                .isEmpty();
+        assertThat(StringUtil.toQuotedStringLatin1(List.of("a")))
+                .isEqualTo("[\"a\"]");
+        assertThat(StringUtil.toQuotedStringLatin1(List.of("a", "b")))
+                .isEqualTo("[\"a\", \"b\"]");
+        assertThat(StringUtil.toQuotedStringLatin1(List.of("a", "b", "1")))
+                .isEqualTo("[\"a\", \"b\", \"1\"]");
     }
 
 }

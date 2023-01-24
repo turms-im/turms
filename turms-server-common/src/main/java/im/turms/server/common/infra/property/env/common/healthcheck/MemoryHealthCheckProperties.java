@@ -43,7 +43,7 @@ public class MemoryHealthCheckProperties {
             "exceeds the physical memory of the percentage. " +
             "The server will try to reserve max(maxAvailableMemoryPercentage of the physical memory, minFreeSystemMemoryBytes) " +
             "for kernel and other processes. " +
-            "Note that the max available memory percentage doesn't conflict with " +
+            "Note that the max available memory percentage does not conflict with " +
             "the usage of limiting memory in docker because docker limits the " +
             "memory of the container, while this memory percentage only limits " +
             "the available memory for JVM")

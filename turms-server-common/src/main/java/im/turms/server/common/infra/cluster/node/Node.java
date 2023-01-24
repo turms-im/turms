@@ -53,7 +53,7 @@ import java.util.function.Function;
 
 /**
  * The lifecycle of the local node is roughly the same with
- * the local Spring (TCP/UDP/HTTP/WebSocket) server that communicates with clients/admins
+ * the local TCP/UDP/HTTP/WebSocket server that communicates with clients/admins
  *
  * @author James Chen
  */
@@ -111,14 +111,9 @@ public class Node {
         DiscoveryProperties discoveryProperties = clusterProperties.getDiscovery();
         RpcProperties rpcProperties = clusterProperties.getRpc();
 
-        NodeVersion nodeVersion;
-        try {
-            String version = turmsContext.getBuildProperties().version();
-            nodeVersion = NodeVersion.parse(version);
-            LOGGER.info("The local node version is {}", version);
-        } catch (Exception e) {
-            throw new IllegalStateException("Failed to get the version of the local node", e);
-        }
+        String version = turmsContext.getBuildProperties().version();
+        NodeVersion nodeVersion = NodeVersion.parse(version);
+        LOGGER.info("The local node version is: {}", version);
 
         String clusterId = clusterProperties.getId();
         nodeId = initNodeId(nodeProperties.getId());
@@ -173,7 +168,7 @@ public class Node {
         }
         if (StringUtils.isBlank(id)) {
             id = RandomStringUtils.randomAlphabetic(8).toLowerCase();
-            LOGGER.warn("A random node ID {} has been used. You should better set a node ID manually in production",
+            LOGGER.warn("A random node ID ({}) has been used. You should better set a node ID manually in production",
                     id);
         } else {
             if (id.length() > NodeProperties.NODE_ID_MAX_LENGTH) {
@@ -216,7 +211,7 @@ public class Node {
                 Mono<Void> stop = service.stop(timeoutMillis);
                 monos.add(stop);
             } catch (Exception e) {
-                monos.add(Mono.error(new RuntimeException("Caught an error while stopping service " + service.getClass().getName(), e)));
+                monos.add(Mono.error(new RuntimeException("Caught an error while stopping the service: " + service.getClass().getName(), e)));
             }
         }
         return Mono

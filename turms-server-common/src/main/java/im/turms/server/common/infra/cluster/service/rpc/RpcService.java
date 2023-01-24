@@ -42,6 +42,7 @@ import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.property.env.common.cluster.RpcProperties;
 import im.turms.server.common.infra.random.RandomUtil;
+import im.turms.server.common.infra.serialization.SerializationException;
 import im.turms.server.common.infra.tracing.TracingCloseableContext;
 import im.turms.server.common.infra.tracing.TracingContext;
 import io.micrometer.core.instrument.Tag;
@@ -107,7 +108,7 @@ public class RpcService implements ClusterService {
             private RpcEndpoint endpoint;
 
             @Override
-            public void onConnectionOpen(TurmsConnection connection) {
+            public void onConnectionOpened(TurmsConnection connection) {
                 this.connection = connection;
                 ChannelOperations<?, ?> conn = connection.getConnection();
                 conn.addHandlerLast("rpcRequestFrameDecoder", new RpcFrameDecoder());
@@ -134,7 +135,7 @@ public class RpcService implements ClusterService {
                 } else if (data instanceof RpcResponse response) {
                     onResponseReceived(response);
                 } else {
-                    LOGGER.error("Received an unknown data: " + data);
+                    LOGGER.error("Received unknown data: " + data);
                 }
             }
 
@@ -143,14 +144,15 @@ public class RpcService implements ClusterService {
                 request.retain();
                 ChannelOperations<?, ?> conn = connection.getConnection();
                 TracingContext ctx = request.getTracingContext();
-                requestExecutor.runRpcRequest(ctx, request, connection, connection.getNodeId())
+                String nodeId = connection.getNodeId();
+                requestExecutor.runRpcRequest(ctx, request, connection, nodeId)
                         .cast(Object.class)
                         .onErrorResume(RpcException.class, Mono::just)
                         .defaultIfEmpty(Null.INSTANCE)
                         .doOnNext(response -> {
                             if (conn.isDisposed()) {
                                 try (TracingCloseableContext ignored = ctx.asCloseable()) {
-                                    LOGGER.error("Cannot send response to disposed connection: " + response);
+                                    LOGGER.error("Could not send the response ({}) to the disposed connection of the node: {}", response, nodeId);
                                 }
                                 return;
                             }
@@ -160,7 +162,7 @@ public class RpcService implements ClusterService {
                                 buf.touch(response);
                             } catch (Exception e) {
                                 try (TracingCloseableContext ignored = ctx.asCloseable()) {
-                                    LOGGER.error("Failed to encode response: {}", response, e);
+                                    LOGGER.error("Failed to encode the response: {}", response, e);
                                 }
                                 if (response instanceof RpcException) {
                                     return;
@@ -169,11 +171,11 @@ public class RpcService implements ClusterService {
                                 try {
                                     response = RpcException.get(RpcErrorCode.CODEC_FAILED_TO_ENCODE,
                                             ResponseStatusCode.SERVER_INTERNAL_ERROR,
-                                            "Failed to encode response: " + response);
+                                            "Failed to encode the response: " + response);
                                     buf = RpcFrameEncoder.INSTANCE.encode(request.getRequestId(), response);
                                 } catch (Exception exception) {
                                     try (TracingCloseableContext ignored = ctx.asCloseable()) {
-                                        LOGGER.error("Failed to fall back to the RpcException since failing to encode: {}",
+                                        LOGGER.error("Failed to fall back to the RpcException since failing to encode the response: {}",
                                                 response, exception);
                                     }
                                     return;
@@ -181,19 +183,20 @@ public class RpcService implements ClusterService {
                             }
                             if (buf.refCnt() == 0) {
                                 try (TracingCloseableContext ignored = ctx.asCloseable()) {
-                                    LOGGER.error("The buffer of response is released unexpectedly: " + response);
+                                    LOGGER.error("The buffer of response ({}) is released unexpectedly", response);
                                 }
                                 return;
                             }
                             // Duplicate the buffer to use an independent reader index
                             // because we don't want to modify the reader index of the original buffer
-                            // if it's an unreleasable buffer internally, or it may be sent to multiple endpoints.
+                            // if it is an unreleasable buffer internally, or it may be sent to multiple endpoints.
                             // Note that the content of the buffer is not copied, so "duplicate()" is efficient.
-                            conn.sendObject(buf.duplicate())
+                            ByteBuf buffer = buf.duplicate();
+                            conn.sendObject(buffer)
                                     .then()
                                     .subscribe(null, t -> {
                                         try (TracingCloseableContext ignored = ctx.asCloseable()) {
-                                            LOGGER.error("Failed to send response", t);
+                                            LOGGER.error("Failed to send the response buffer: " + buffer, t);
                                         }
                                     });
                         })
@@ -230,7 +233,7 @@ public class RpcService implements ClusterService {
             connection = connectionService.getMemberConnection(nodeId);
             if (connection == null) {
                 throw new ConnectionNotFound("The connection to the member " + nodeId
-                        + " doesn't exist");
+                        + " does not exist");
             }
         }
         return new RpcEndpoint(nodeId, connection);
@@ -413,7 +416,7 @@ public class RpcService implements ClusterService {
                         requestBody = codecService.serializeWithoutCodecId(request);
                     } catch (Exception e) {
                         request.release();
-                        return Mono.error(new IllegalStateException("Failed to encode the request: " + request, e));
+                        return Mono.error(new SerializationException("Failed to encode the request: " + request, e));
                     }
                     return endpoint.sendRequest(request, requestBody);
                 })
@@ -493,7 +496,7 @@ public class RpcService implements ClusterService {
         }
         if (rejectIfMissingAnyConnection && !discoveryService.getLocalNodeStatusManager().getLocalMember().getStatus().isActive()) {
             return Mono.error(RpcException
-                    .get(RpcErrorCode.CONNECTION_NOT_FOUND, ResponseStatusCode.SERVER_UNAVAILABLE, "Not all connections are established"));
+                    .get(RpcErrorCode.CONNECTION_NOT_FOUND, ResponseStatusCode.SERVER_UNAVAILABLE, "Some connections have not established"));
         }
         return Mono.deferContextual(context -> {
             addTraceIdToRequestFromContext(context, request);
@@ -533,19 +536,19 @@ public class RpcService implements ClusterService {
 
     private void addTraceIdToRequestFromContext(ContextView contextView, RpcRequest<?> request) {
         long traceId = request.getTracingContext().getTraceId();
-        if (traceId != TracingContext.UNDEFINED_TRACE_ID) {
+        if (traceId != TracingContext.UNSET_TRACE_ID) {
             return;
         }
         traceId = TracingContext.readTraceIdFromContext(contextView);
-        if (traceId == TracingContext.UNDEFINED_TRACE_ID) {
+        if (traceId == TracingContext.UNSET_TRACE_ID) {
             traceId = RandomUtil.nextPositiveLong();
         }
         request.setTracingContext(new TracingContext(traceId));
     }
 
-    private Throwable mapThrowable(Throwable throwable, RpcRequest<?> callable) {
+    private Throwable mapThrowable(Throwable throwable, RpcRequest<?> request) {
         // e.g. ClosedChannelException
-        return new IllegalStateException("Failed to request a response for the request: " + callable, throwable);
+        return new RuntimeException("Failed to request a response for the request: " + request, throwable);
     }
 
     // Validate node type
@@ -566,8 +569,11 @@ public class RpcService implements ClusterService {
             case SERVICE -> nodeType == NodeType.SERVICE;
         };
         if (!allowed) {
-            throw new IllegalStateException("The current server " + nodeType + " cannot send the request "
-                    + request.name() + " that requires the node type " + type);
+            throw new IllegalArgumentException("The node type of the current server is: " +
+                    nodeType +
+                    ", which cannot send the request \"" +
+                    request.name() +
+                    "\" that requires the node type: " + type);
         }
     }
 

@@ -106,7 +106,7 @@ public class ClientRequestDispatcher {
      * 2. The method ensures {@param serviceRequestBuffer} will be released by 1
      */
     public Mono<ByteBuf> handleRequest(UserSessionWrapper sessionWrapper, ByteBuf serviceRequestBuffer) {
-        // Check if it's a heartbeat request
+        // Check if it is a heartbeat request
         if (!serviceRequestBuffer.isReadable()) {
             serviceRequestBuffer.release();
             if (!serverStatusManager.isActive()) {

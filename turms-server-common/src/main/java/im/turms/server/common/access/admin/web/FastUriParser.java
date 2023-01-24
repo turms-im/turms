@@ -85,7 +85,7 @@ public class FastUriParser {
                         } else {
                             // %5B => [
                             // %5D => ]
-                            throw new IllegalArgumentException("The query parameter keys can only contain escape codes of \"%5B\" and \"%5D\"");
+                            throw new IllegalArgumentException("The query parameter key must only contain escape codes of \"%5B\" and \"%5D\"");
                         }
                     } else {
                         isEncodedLeftBracket = false;
@@ -125,7 +125,7 @@ public class FastUriParser {
                         if (i + 2 < srcBytesLength && srcBytes[i + 1] == '5' && srcBytes[i + 2] == 'D') {
                             isEncodedRightBracket = true;
                         } else {
-                            throw new IllegalArgumentException("The query parameter keys can only contain escape codes of \"%5B\" and \"%5D\"");
+                            throw new IllegalArgumentException("The query parameter key must only contain escape codes of \"%5B\" and \"%5D\"");
                         }
                     } else {
                         isEncodedRightBracket = false;
@@ -138,7 +138,7 @@ public class FastUriParser {
                         if (currentItemCharCount == 0) {
                             hasArrayWithoutIndexes = true;
                             if (hasArrayWithIndexes) {
-                                throw new IllegalArgumentException("The array items should be all indexed or not indexed. " +
+                                throw new IllegalArgumentException("The array item must be all indexed or not indexed. " +
                                         "e.g. \"keys[]=1&keys[]=2&keys[]=3\" or " +
                                         "e.g. \"keys[0]=1&keys[1]=2&keys[2]=3\"");
                             }
@@ -150,15 +150,15 @@ public class FastUriParser {
                                 } else if (tempByte == '.') {
                                     currentState = ParseState.PARSING_QUERY_PARAM_KEY_NESTED_KEY;
                                 } else {
-                                    throw new IllegalArgumentException("\"[]\" should comes with a \"=\" or a \".\"");
+                                    throw new IllegalArgumentException("\"[]\" must come with a \"=\" or a \".\"");
                                 }
                             } else {
-                                throw new IllegalArgumentException("\"[]\" should comes with a \"=\" or a \".\"");
+                                throw new IllegalArgumentException("\"[]\" must come with a \"=\" or a \".\"");
                             }
                         } else {
                             hasArrayWithIndexes = true;
                             if (hasArrayWithoutIndexes) {
-                                throw new IllegalArgumentException("The array items should be all indexed or not indexed. " +
+                                throw new IllegalArgumentException("The array item must be all indexed or not indexed. " +
                                         "e.g. \"keys[]=1&keys[]=2&keys[]=3\" or " +
                                         "e.g. \"keys[0]=1&keys[1]=2&keys[2]=3\"");
                             }
@@ -169,7 +169,7 @@ public class FastUriParser {
                                 throw new IllegalArgumentException("\"[indexed]\" should contain an integer greater than or equal to 0");
                             }
                             if (currentArrayIndex < previousArrayIndex) {
-                                throw new IllegalArgumentException("The array index should come from 0 increasingly");
+                                throw new IllegalArgumentException("The array index should start from 0 incrementally");
                             }
                             previousArrayIndex = currentArrayIndex;
                             if (i + 1 < srcBytesLength) {
@@ -217,7 +217,7 @@ public class FastUriParser {
                             length = i - currentItemCharBeginIndex;
                             i += 2;
                         } else {
-                            throw new IllegalArgumentException("The query parameters can only contain escape codes of \"%2C\"");
+                            throw new IllegalArgumentException("The query parameter can only contain escape codes of \"%2C\"");
                         }
                     } else if (b == ',') {
                         if (currentParamNestedKey != null) {

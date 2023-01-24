@@ -44,7 +44,7 @@ public class NodeProperties {
 
     private boolean activeByDefault = true;
 
-    @Description("Only works when it's a turms-service node")
+    @Description("Only works when it is a turms-service node")
     private boolean leaderEligible = true;
 
 }

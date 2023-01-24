@@ -49,7 +49,7 @@ public class GroupInvitationRepository extends ExpirableEntityRepository<GroupIn
     public GroupInvitationRepository(TurmsPropertiesManager propertiesManager,
                                      @Qualifier("groupMongoClient") TurmsMongoClient mongoClient) {
         super(mongoClient, GroupInvitation.class);
-        propertiesManager.triggerAndAddGlobalPropertiesChangeListener(this::updateProperties);
+        propertiesManager.notifyAndAddGlobalPropertiesChangeListener(this::updateProperties);
     }
 
     private void updateProperties(TurmsProperties properties) {

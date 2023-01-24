@@ -22,6 +22,8 @@ import java.util.Optional;
 @Slf4j
 public class TestingEnvContainer extends DockerComposeContainer<TestingEnvContainer> implements Closeable {
 
+    private static final String DOCKER_COMPOSE_TEST_FILE = "docker-compose.test.yml";
+
     private static final String MONGO_SERVICE_NAME = "mongodb-router_1";
     private static final int MONGO_SERVICE_PORT = 27017;
     private static final String PASSWORD = "turms";
@@ -80,10 +82,10 @@ public class TestingEnvContainer extends DockerComposeContainer<TestingEnvContai
      * (https://github.com/testcontainers/testcontainers-java/issues/3431)
      */
     private static File getComposeFile(TestingEnvContainerOptions options) {
-        String name = "docker-compose.test.yml";
-        InputStream resource = TestingEnvContainer.class.getClassLoader().getResourceAsStream(name);
+        InputStream resource = TestingEnvContainer.class.getClassLoader()
+                .getResourceAsStream(DOCKER_COMPOSE_TEST_FILE);
         if (resource == null) {
-            throw new IllegalStateException("Cannot find the resource " + name);
+            throw new RuntimeException("Could not find the resource: " + DOCKER_COMPOSE_TEST_FILE);
         }
         try {
             File tempFile = File.createTempFile("docker-compose", "yml");
@@ -158,7 +160,7 @@ public class TestingEnvContainer extends DockerComposeContainer<TestingEnvContai
         if (container.isPresent()) {
             return container.get();
         }
-        throw new IllegalStateException("Cannot find the mongo container by the service name " + MONGO_SERVICE_NAME);
+        throw new RuntimeException("Could not find the mongo container with the service name: \"" + MONGO_SERVICE_NAME + "\"");
     }
 
     public String getMongoHost() {
@@ -174,11 +176,15 @@ public class TestingEnvContainer extends DockerComposeContainer<TestingEnvContai
     }
 
     public String getMongoUri(String dbName) {
-        return "mongodb://root:%s@%s:%d/%s?authSource=admin".formatted(
-                getMongoPassword(),
-                getMongoHost(),
-                getMongoPort(),
-                dbName);
+        return "mongodb://root:" +
+                getMongoPassword() +
+                "@" +
+                getMongoHost() +
+                ":" +
+                getMongoPort() +
+                "/" +
+                dbName +
+                "?authSource=admin";
     }
 
     // Redis
@@ -188,7 +194,7 @@ public class TestingEnvContainer extends DockerComposeContainer<TestingEnvContai
         if (container.isPresent()) {
             return container.get();
         }
-        throw new IllegalStateException("Cannot find the redis container by the service name " + REDIS_SERVICE_NAME);
+        throw new RuntimeException("Could not find the redis container with the service name: \"" + REDIS_SERVICE_NAME + "\"");
     }
 
     public String getRedisHost() {
@@ -200,7 +206,10 @@ public class TestingEnvContainer extends DockerComposeContainer<TestingEnvContai
     }
 
     public String getRedisUri() {
-        return "redis://%s:%d".formatted(getRedisHost(), getRedisPort());
+        return "redis://" +
+                getRedisHost() +
+                ":" +
+                getRedisPort();
     }
 
     // turms-service

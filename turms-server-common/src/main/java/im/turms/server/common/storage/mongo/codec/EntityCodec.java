@@ -23,6 +23,8 @@ import im.turms.server.common.infra.lang.Quadruple;
 import im.turms.server.common.infra.lang.Triple;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
+import im.turms.server.common.infra.serialization.DeserializationException;
+import im.turms.server.common.infra.serialization.SerializationException;
 import im.turms.server.common.storage.mongo.DomainFieldName;
 import im.turms.server.common.storage.mongo.entity.EntityField;
 import im.turms.server.common.storage.mongo.entity.MongoEntity;
@@ -78,7 +80,8 @@ public class EntityCodec<T> extends MongoCodec<T> {
                 return constructor.newInstance(ctorValues);
             }
         } catch (Exception e) {
-            throw new RuntimeException("Failed to decode Bson to " + entity.entityClass().getName(), e);
+            throw new DeserializationException("Failed to decode the current Bson into the entity of the class: " +
+                    entity.entityClass().getName(), e);
         }
     }
 
@@ -100,7 +103,8 @@ public class EntityCodec<T> extends MongoCodec<T> {
                 encoderContext.encodeWithChildContext(codec, writer, fieldValue);
             }
         } catch (Exception e) {
-            throw new RuntimeException("Failed to encode " + entity.entityClass().getName(), e);
+            throw new SerializationException("Failed to encode the entity of the class: " +
+                    entity.entityClass().getName(), e);
         }
         writer.writeEndDocument();
     }
@@ -118,7 +122,8 @@ public class EntityCodec<T> extends MongoCodec<T> {
                     ? entity.getField(entity.idFieldName())
                     : entity.getField(fieldName);
             if (field == null) {
-                LOGGER.warn("Found a property {} not present in the entity {}", fieldName, entity.collectionName());
+                LOGGER.warn("The field \"{}\" does not exist in the entity class: {}",
+                        fieldName, entity.entityClass().getName());
                 reader.skipValue();
             } else {
                 Object value = null;
@@ -128,17 +133,19 @@ public class EntityCodec<T> extends MongoCodec<T> {
                     try {
                         value = decode(field, reader, decoderContext);
                     } catch (Exception e) {
-                        String message = "Failed to decode the field \"%s\" of the class: %s"
-                                .formatted(fieldName, entity.entityClass().getName());
-                        throw new IllegalStateException(message, e);
+                        throw new DeserializationException("Failed to decode the field \"" +
+                                fieldName +
+                                "\" of the entity class: " +
+                                entity.entityClass().getName(), e);
                     }
                 }
                 try {
                     field.set(instance, value);
                 } catch (Exception e) {
-                    String message = "Failed to set the field \"%s\" of the class: %s"
-                            .formatted(fieldName, entity.entityClass().getName());
-                    throw new IllegalStateException(message, e);
+                    throw new DeserializationException("Failed to set the field \"" +
+                            fieldName +
+                            "\" of the entity class: " +
+                            entity.entityClass().getName(), e);
                 }
             }
         }
@@ -154,7 +161,8 @@ public class EntityCodec<T> extends MongoCodec<T> {
                     ? entity.getField(entity.idFieldName())
                     : entity.getField(fieldName);
             if (field == null) {
-                LOGGER.warn("Found properties not present in the entity: " + fieldName);
+                LOGGER.warn("The field \"{}\" does not exist in the entity class: {}",
+                        fieldName, entity.entityClass().getName());
                 reader.skipValue();
             } else {
                 Object value = null;
@@ -164,9 +172,10 @@ public class EntityCodec<T> extends MongoCodec<T> {
                     try {
                         value = decode(field, reader, decoderContext);
                     } catch (Exception e) {
-                        String message = "Failed to decode the field \"%s\" of the class: %s"
-                                .formatted(fieldName, entity.entityClass().getName());
-                        throw new IllegalStateException(message, e);
+                        throw new DeserializationException("Failed to decode the field \"" +
+                                fieldName +
+                                "\" of the class: " +
+                                entity.entityClass().getName(), e);
                     }
                 }
                 values[field.getCtorParamIndex()] = value;

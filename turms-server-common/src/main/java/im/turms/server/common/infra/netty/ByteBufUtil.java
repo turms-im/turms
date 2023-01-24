@@ -118,7 +118,7 @@ public final class ByteBufUtil {
             return PooledByteBufAllocator.DEFAULT.directBuffer(Long.BYTES).writeLong(element);
         }
         if (obj instanceof String element) {
-            byte[] bytes = StringUtil.getUTF8Bytes(element);
+            byte[] bytes = StringUtil.getUtf8Bytes(element);
             return PooledByteBufAllocator.DEFAULT.directBuffer(bytes.length).writeBytes(bytes);
         }
         if (obj instanceof Float element) {
@@ -133,12 +133,13 @@ public final class ByteBufUtil {
         if (obj instanceof Boolean element) {
             return getPooledPreferredByteBuffer(element ? 1 : 0);
         }
-        throw new IllegalArgumentException("Cannot serialize the unknown value: " + obj);
+        throw new IllegalArgumentException("Could not serialize the unknown value: " + obj);
     }
 
     public static ByteBuf[] objs2Buffers(Object... objs) {
-        ByteBuf[] buffers = new ByteBuf[objs.length];
-        for (int i = 0; i < objs.length; i++) {
+        int length = objs.length;
+        ByteBuf[] buffers = new ByteBuf[length];
+        for (int i = 0; i < length; i++) {
             try {
                 buffers[i] = ByteBufUtil.obj2Buffer(objs[i]);
             } catch (Exception e) {
@@ -174,7 +175,7 @@ public final class ByteBufUtil {
                 buffer.writeChar(c);
             } else if (element != null) {
                 buffer.release();
-                throw new IllegalArgumentException("Unsupported type: " + element.getClass().getName());
+                throw new IllegalArgumentException("Unsupported class: " + element.getClass().getName());
             }
             if (i != last) {
                 buffer.writeByte(delimiter);

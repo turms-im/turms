@@ -18,8 +18,8 @@
 package im.turms.server.common.infra.security;
 
 import io.netty.util.concurrent.FastThreadLocal;
-import lombok.SneakyThrows;
 
+import java.security.NoSuchAlgorithmException;
 import java.security.Signature;
 import java.util.Map;
 
@@ -82,15 +82,18 @@ public final class SignaturePool {
             "SHA512withECDSA", SHA_512_WITH_ECDSA
     );
 
-    @SneakyThrows
     public static void ensureAvailability(String algorithm) {
-        Signature.getInstance(algorithm);
+        try {
+            Signature.getInstance(algorithm);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("Unavailable algorithm: \"" + algorithm + "\"", e);
+        }
     }
 
     public static Signature get(String algorithm) {
         FastThreadLocal<Signature> threadLocal = NAME_TO_ALGORITHM.get(algorithm);
         if (threadLocal == null) {
-            throw new IllegalArgumentException("Unknown algorithm: " + algorithm);
+            throw new IllegalArgumentException("Unknown algorithm: \"" + algorithm + "\"");
         }
         return threadLocal.get();
     }

@@ -104,7 +104,7 @@ public class GroupInvitationService extends ExpirableEntityService<GroupInvitati
         this.userVersionService = userVersionService;
         this.groupVersionService = groupVersionService;
 
-        propertiesManager.triggerAndAddGlobalPropertiesChangeListener(this::updateProperties);
+        propertiesManager.notifyAndAddGlobalPropertiesChangeListener(this::updateProperties);
         // Set up a cron job to remove invitations if deleting expired docs is enabled
         taskManager.reschedule(
                 "expiredGroupInvitationsCleanup",
@@ -202,19 +202,19 @@ public class GroupInvitationService extends ExpirableEntityService<GroupInvitati
                 .then(Mono.whenDelayError(
                         groupVersionService.updateGroupInvitationsVersion(groupId)
                                 .onErrorResume(t -> {
-                                    LOGGER.error("Caught an error while updating the group invitations version of the group {} after creating a group invitation",
+                                    LOGGER.error("Caught an error while updating the group invitations version of the group ({}) after creating a group invitation",
                                             groupId, t);
                                     return Mono.empty();
                                 }),
                         userVersionService.updateSentGroupInvitationsVersion(inviterId)
                                 .onErrorResume(t -> {
-                                    LOGGER.error("Caught an error while updating the sent group invitations version of the inviter {} after creating a group invitation",
+                                    LOGGER.error("Caught an error while updating the sent group invitations version of the inviter ({}) after creating a group invitation",
                                             inviterId, t);
                                     return Mono.empty();
                                 }),
                         userVersionService.updateReceivedGroupInvitationsVersion(inviteeId)
                                 .onErrorResume(t -> {
-                                    LOGGER.error("Caught an error while updating the received group invitations version of the invitee {} after creating a group invitation",
+                                    LOGGER.error("Caught an error while updating the received group invitations version of the invitee ({}) after creating a group invitation",
                                             inviteeId, t);
                                     return Mono.empty();
                                 })
@@ -266,7 +266,7 @@ public class GroupInvitationService extends ExpirableEntityService<GroupInvitati
                                             }
                                             return groupVersionService.updateGroupInvitationsVersion(invitation.getGroupId())
                                                     .onErrorResume(t -> {
-                                                        LOGGER.error("Caught an error while updating the group invitations version of the group {} after recalling a pending invitation",
+                                                        LOGGER.error("Caught an error while updating the group invitations version of the group ({}) after recalling a pending invitation",
                                                                 invitation.getGroupId(), t);
                                                         return Mono.empty();
                                                     })

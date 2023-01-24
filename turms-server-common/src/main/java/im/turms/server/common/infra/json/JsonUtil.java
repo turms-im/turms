@@ -17,6 +17,7 @@
 
 package im.turms.server.common.infra.json;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,7 +29,6 @@ import im.turms.server.common.infra.time.DateUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufOutputStream;
 import io.netty.buffer.PooledByteBufAllocator;
-import lombok.SneakyThrows;
 import org.jctools.maps.NonBlockingIdentityHashMap;
 
 import java.io.InputStream;
@@ -69,24 +69,36 @@ public final class JsonUtil {
         return MAPPER.constructType(type);
     }
 
-    @SneakyThrows
     public static Map<String, Object> readStringObjectMapValue(byte[] src) {
-        return MAPPER.readValue(src, JAVA_TYPE_STRING_OBJECT_MAP);
+        try {
+            return MAPPER.readValue(src, JAVA_TYPE_STRING_OBJECT_MAP);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Failed to read a map from the input byte array", e);
+        }
     }
 
-    @SneakyThrows
     public static Map<String, Object> readStringObjectMapValue(InputStream src) {
-        return MAPPER.readValue(src, JAVA_TYPE_STRING_OBJECT_MAP);
+        try {
+            return MAPPER.readValue(src, JAVA_TYPE_STRING_OBJECT_MAP);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Failed to read a map from the input stream", e);
+        }
     }
 
-    @SneakyThrows
     public static Map<String, String> readStringStringMapValue(byte[] src) {
-        return MAPPER.readValue(src, JAVA_TYPE_STRING_STRING_MAP);
+        try {
+            return MAPPER.readValue(src, JAVA_TYPE_STRING_STRING_MAP);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Failed to read a map from the input byte array", e);
+        }
     }
 
-    @SneakyThrows
     public static Map<String, String> readStringStringMapValue(InputStream src) {
-        return MAPPER.readValue(src, JAVA_TYPE_STRING_STRING_MAP);
+        try {
+            return MAPPER.readValue(src, JAVA_TYPE_STRING_STRING_MAP);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Failed to read a map from the input stream", e);
+        }
     }
 
     public static ByteBuf write(Object value) {
@@ -97,13 +109,16 @@ public final class JsonUtil {
             return buffer;
         } catch (Exception e) {
             ReferenceCountUtil.ensureReleased(buffer);
-            throw new RuntimeException(e);
+            throw new IllegalArgumentException("Failed to write the input object as a byte buffer", e);
         }
     }
 
-    @SneakyThrows
     public static String writeAsString(Object value) {
-        return MAPPER.writeValueAsString(value);
+        try {
+            return MAPPER.writeValueAsString(value);
+        } catch (JsonProcessingException e) {
+            throw new IllegalArgumentException("Failed to write the input object as a string", e);
+        }
     }
 
     public static int estimateSize(@Nullable Object value) {
@@ -147,7 +162,7 @@ public final class JsonUtil {
                 }
             } else {
                 // We don't support other array types now because we don't use them
-                LOGGER.warn("Unknown array type: " + value.getClass());
+                LOGGER.warn("Unknown array type: " + value.getClass().getName());
             }
         } else if (value instanceof Map<?, ?> map) {
             for (Map.Entry<?, ?> entry : map.entrySet()) {

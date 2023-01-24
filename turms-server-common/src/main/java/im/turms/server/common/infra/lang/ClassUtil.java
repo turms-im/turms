@@ -22,12 +22,14 @@ import im.turms.server.common.infra.reflect.ReflectionUtil;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.StringJoiner;
 import jakarta.annotation.Nullable;
 
 /**
@@ -111,7 +113,7 @@ public final class ClassUtil {
         try {
             return (T[]) (Object[]) GET_ENUM_CONSTANTS.invokeExact(clazz);
         } catch (Throwable e) {
-            throw new IllegalArgumentException("Failed to get the enum constants of the class: " + clazz, e);
+            throw new IllegalArgumentException("Failed to get the enum constants of the class: " + clazz.getName(), e);
         }
     }
 
@@ -128,7 +130,15 @@ public final class ClassUtil {
     }
 
     public static String getReference(Field field) {
-        return field.getDeclaringClass().getTypeName() + "." + field.getName();
+        return field.getDeclaringClass().getTypeName() + '#' + field.getName();
+    }
+
+    public static String getReference(Method method) {
+        StringJoiner signature = new StringJoiner(",", method.getName() + "(", ")");
+        for (Class<?> parameterType : method.getParameterTypes()) {
+            signature.add(parameterType.getTypeName());
+        }
+        return method.getDeclaringClass().getTypeName() + '#' + signature;
     }
 
 }

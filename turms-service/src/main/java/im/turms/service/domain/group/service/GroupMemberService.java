@@ -120,7 +120,7 @@ public class GroupMemberService {
         this.groupVersionService = groupVersionService;
         this.userStatusService = userStatusService;
 
-        propertiesManager.triggerAndAddGlobalPropertiesChangeListener(this::updateProperties);
+        propertiesManager.notifyAndAddGlobalPropertiesChangeListener(this::updateProperties);
 
         GroupProperties groupProperties = propertiesManager.getGlobalProperties().getService().getGroup();
         int memberCacheExpireAfterSeconds = groupProperties.getMemberCacheExpireAfterSeconds();
@@ -169,7 +169,7 @@ public class GroupMemberService {
         return groupMemberRepository.insert(groupMember, session)
                 .then(groupVersionService.updateMembersVersion(groupId)
                         .onErrorResume(t -> {
-                            LOGGER.error("Caught an error while updating the members version of the group {} after adding a group member",
+                            LOGGER.error("Caught an error while updating the members version of the group ({}) after adding a group member",
                                     groupId, t);
                             return Mono.empty();
                         }))
@@ -217,7 +217,7 @@ public class GroupMemberService {
         return groupMemberRepository.insertAllOfSameType(groupMembers, session)
                 .then(groupVersionService.updateMembersVersion(groupId)
                         .onErrorResume(t -> {
-                            LOGGER.error("Caught an error while updating the members version of the group {} after adding a group member",
+                            LOGGER.error("Caught an error while updating the members version of the group ({}) after adding a group member",
                                     groupId, t);
                             return Mono.empty();
                         }))
@@ -549,8 +549,10 @@ public class GroupMemberService {
                             if (code == ResponseStatusCode.OK) {
                                 return Mono.just(Pair.of(ServicePermission.OK, strategy));
                             }
-                            String reason = "The inviter with the role %s isn't allowed to send an invitation under the strategy %s"
-                                    .formatted(inviterRole, strategy);
+                            String reason = "The inviter with the role (" +
+                                    inviterRole +
+                                    ") cannot send an invitation under the strategy: " +
+                                    strategy;
                             return Mono.just(Pair.of(ServicePermission.get(code, reason), strategy));
                         })
                         .defaultIfEmpty(ADD_USER_TO_INACTIVE_GROUP))

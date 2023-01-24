@@ -27,7 +27,6 @@ import io.micrometer.core.instrument.Meter;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Tag;
 import io.micrometer.core.instrument.composite.CompositeMeterRegistry;
-import lombok.SneakyThrows;
 import org.eclipse.collections.impl.factory.Sets;
 
 import java.lang.invoke.MethodHandle;
@@ -49,7 +48,7 @@ import jakarta.annotation.Nullable;
  */
 public class MetricsPool {
 
-    private static final MethodHandle METER_MAP = ReflectionUtil.getGetter(MeterRegistry.class, "meterMap");
+    private static final MethodHandle ID_TO_METER = ReflectionUtil.getGetter(MeterRegistry.class, "meterMap");
     private final MeterRegistry registry;
 
     public MetricsPool(MeterRegistry registry) {
@@ -61,7 +60,7 @@ public class MetricsPool {
     }
 
     public Collection<Meter> findAllMeters() {
-        return getMeterMap().values();
+        return getIdToMeterMap().values();
     }
 
     public List<Meter> findFirstMatchingMeters(String name, List<String> tags) {
@@ -103,7 +102,7 @@ public class MetricsPool {
                 names.addAll(collectNames(meterRegistry));
             }
         } else {
-            Map<Meter.Id, Meter> idToMeter = getMeterMap();
+            Map<Meter.Id, Meter> idToMeter = getIdToMeterMap();
             for (Meter meter : idToMeter.values()) {
                 names.add(meter.getId().getName());
             }
@@ -111,9 +110,12 @@ public class MetricsPool {
         return names;
     }
 
-    @SneakyThrows
-    private Map<Meter.Id, Meter> getMeterMap() {
-        return (Map<Meter.Id, Meter>) METER_MAP.invokeExact(registry);
+    private Map<Meter.Id, Meter> getIdToMeterMap() {
+        try {
+            return (Map<Meter.Id, Meter>) ID_TO_METER.invokeExact(registry);
+        } catch (Throwable e) {
+            throw new RuntimeException("Failed to get the meter map", e);
+        }
     }
 
     private List<Tag> parseTags(List<String> tags) {
@@ -124,7 +126,7 @@ public class MetricsPool {
         for (String tag : tags) {
             Pair<String, String> keyAndValue = StringUtil.splitLatin1(tag, AsciiCode.COLON);
             if (keyAndValue == null) {
-                throw new IllegalArgumentException("Each tag parameter must be in the form 'key:value' but was: " + tag);
+                throw new IllegalArgumentException("The tag parameter must be in the form \"key:value\", but got: " + tag);
             }
             tagList.add(Tag.of(keyAndValue.first(), keyAndValue.second()));
         }
@@ -138,7 +140,7 @@ public class MetricsPool {
         List<Meter> list = null;
         Map<Meter.Id, Meter> meterMap;
         try {
-            meterMap = (Map<Meter.Id, Meter>) METER_MAP.invokeExact(registry);
+            meterMap = (Map<Meter.Id, Meter>) ID_TO_METER.invokeExact(registry);
         } catch (Throwable t) {
             throw new RuntimeException(t);
         }

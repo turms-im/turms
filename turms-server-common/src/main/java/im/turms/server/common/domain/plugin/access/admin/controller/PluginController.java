@@ -40,14 +40,14 @@ import im.turms.server.common.domain.plugin.access.admin.dto.response.ExtensionD
 import im.turms.server.common.domain.plugin.access.admin.dto.response.PluginDTO;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.plugin.ExtensionPoint;
+import im.turms.server.common.infra.plugin.InvalidPluginException;
+import im.turms.server.common.infra.plugin.InvalidPluginSourceException;
 import im.turms.server.common.infra.plugin.JsPluginScript;
-import im.turms.server.common.infra.plugin.MalformedPluginArchiveException;
 import im.turms.server.common.infra.plugin.Plugin;
 import im.turms.server.common.infra.plugin.PluginDescriptor;
 import im.turms.server.common.infra.plugin.PluginManager;
 import im.turms.server.common.infra.plugin.TurmsExtension;
 import im.turms.server.common.infra.plugin.UnsupportedSaveOperationException;
-import im.turms.server.common.infra.plugin.script.CorruptedScriptException;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -124,7 +124,7 @@ public class PluginController {
             @FormData(contentType = MediaTypeConst.APPLICATION_JAVA_ARCHIVE) List<MultipartFile> files) {
         try {
             pluginManager.loadJavaPlugins(files, save);
-        } catch (MalformedPluginArchiveException e) {
+        } catch (InvalidPluginSourceException | InvalidPluginException e) {
             throw new HttpResponseException(ResponseStatusCode.ILLEGAL_ARGUMENT, e);
         } catch (UnsupportedSaveOperationException e) {
             throw new HttpResponseException(ResponseStatusCode.SAVING_JAVA_PLUGIN_IS_DISABLED, e);
@@ -140,8 +140,8 @@ public class PluginController {
         List<JsPluginScript> scripts = addJsPluginDTO.scripts();
         try {
             pluginManager.loadJsPlugins(scripts, save);
-        } catch (CorruptedScriptException e) {
-            throw new HttpResponseException(ResponseStatusCode.INVALID_REQUEST, e);
+        } catch (InvalidPluginSourceException | InvalidPluginException e) {
+            throw new HttpResponseException(ResponseStatusCode.ILLEGAL_ARGUMENT, e);
         } catch (UnsupportedSaveOperationException e) {
             throw new HttpResponseException(ResponseStatusCode.SAVING_JAVASCRIPT_PLUGIN_IS_DISABLED, e);
         } catch (UnsupportedOperationException e) {

@@ -30,8 +30,8 @@ public class TimeZoneConst {
     }
 
     /**
-     * turms servers always use the UTC time zone.
-     * And it's a bad practice to use other time zones especially servers may be deployed in different countries,
+     * turms servers always use the UTC time zone,
+     * and it is a bad practice to use other time zones especially servers may be deployed in different countries,
      * so we don't allow users to set their own time zone.
      */
     public static final ZoneId ZONE_ID = ZoneOffset.UTC;

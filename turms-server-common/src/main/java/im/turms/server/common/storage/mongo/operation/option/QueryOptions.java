@@ -30,7 +30,7 @@ import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen
- * @implNote We don't use {@link FindOptions} because it's really heavy
+ * @implNote We don't use {@link FindOptions} because it is heavy
  */
 @Getter
 public final class QueryOptions extends BaseBson {

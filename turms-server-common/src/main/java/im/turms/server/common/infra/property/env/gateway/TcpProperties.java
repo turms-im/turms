@@ -37,7 +37,7 @@ public class TcpProperties extends BaseServerProperties {
 
     @Description("The maximum number of connection requests waiting in the backlog queue. " +
             "Large enough to handle bursts and GC pauses " +
-            "but don't set too large to prevent SYN-Flood attacks")
+            "but do not set too large to prevent SYN-Flood attacks")
     private int backlog = 4096;
 
     /**
@@ -45,7 +45,7 @@ public class TcpProperties extends BaseServerProperties {
      */
     private int connectionTimeout = 30;
 
-    @Description("A TCP connection will be closed on the server side if a client hasn't established a user session in a specified time. " +
+    @Description("A TCP connection will be closed on the server side if a client has not established a user session in a specified time. " +
             "Note that the developers on the client side should take the responsibility " +
             "to close the TCP connection according to their business requirements")
     private int closeIdleConnectionAfterSeconds = 60 * 5;

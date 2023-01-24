@@ -98,7 +98,7 @@ public final class CsvReporter {
             if (buffer != null) {
                 ReferenceCountUtil.safeEnsureReleased(buffer);
             }
-            throw new IllegalStateException("Failed to scrape", e);
+            throw new RuntimeException("Failed to scrape", e);
         }
         return buffer;
     }

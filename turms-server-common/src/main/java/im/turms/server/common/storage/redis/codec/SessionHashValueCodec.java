@@ -44,11 +44,10 @@ public class SessionHashValueCodec implements TurmsRedisCodec<Object> {
             byte[] nodeIdBytes = StringUtil.getBytes(nodeId);
             int length = nodeIdBytes.length;
             if (length == 0 || length > NodeProperties.NODE_ID_MAX_LENGTH) {
-                throw new IllegalArgumentException(
-                        "The length of node ID must be greater than 0 and less than or equals to " + NodeProperties.NODE_ID_MAX_LENGTH);
+                throw new IllegalArgumentException("The length of the node ID must be greater than 0 " +
+                        "and less than or equal to " + NodeProperties.NODE_ID_MAX_LENGTH);
             }
-            buffer = BUFFER_ALLOCATOR.directBuffer(length)
-                    .writeBytes(nodeIdBytes);
+            buffer = BUFFER_ALLOCATOR.directBuffer(length).writeBytes(nodeIdBytes);
         } else {
             throw new IllegalArgumentException("The data must be an instance of UserStatus or String");
         }
@@ -59,7 +58,7 @@ public class SessionHashValueCodec implements TurmsRedisCodec<Object> {
     public Object decode(ByteBuffer in) {
         int remaining = in.remaining();
         if (remaining == 0) {
-            throw new IllegalStateException("The buffer should not be empty");
+            throw new IllegalArgumentException("The buffer must not be empty");
         } else if (remaining == 1) {
             byte value = in.get();
             UserStatus userStatus = UserStatus.forNumber(value);

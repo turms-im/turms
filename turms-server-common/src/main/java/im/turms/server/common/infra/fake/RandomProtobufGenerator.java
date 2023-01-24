@@ -80,9 +80,9 @@ public class RandomProtobufGenerator<T extends AbstractMessage> {
             try {
                 builder.setField(field, value);
             } catch (Exception e) {
-                throw new RuntimeException("Failed to set the field " +
+                throw new RuntimeException("Failed to set the field (" +
                         field.getFullName() +
-                        " to the value " +
+                        ") to the value: " +
                         value);
             }
         }

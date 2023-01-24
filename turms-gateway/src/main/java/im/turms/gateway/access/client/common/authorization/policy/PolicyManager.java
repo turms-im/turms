@@ -46,7 +46,7 @@ public class PolicyManager {
         }
         int statementCount = statements.size();
         if (statementCount > MAX_ALLOWED_STATEMENTS) {
-            throw new IllegalStateException("The policy must not have statements more than " + MAX_ALLOWED_STATEMENTS);
+            throw new IllegalArgumentException("The policy must not have statements more than " + MAX_ALLOWED_STATEMENTS);
         }
         if (statementCount == 1) {
             PolicyStatement statement = statements.get(0);
@@ -124,17 +124,19 @@ public class PolicyManager {
         return requestTypesPool.poolIfAbsent(requestTypesBuilder, CollectionUtil::toImmutableSet);
     }
 
-    private Set<TurmsRequest.KindCase> findMatchedRequestTypes(Set<TurmsRequest.KindCase> matchedRequestTypesBuilder,
-                                                               Set<PolicyStatementAction> actions,
-                                                               PolicyStatementResource resource) {
+    private Set<TurmsRequest.KindCase> findMatchedRequestTypes(
+            Set<TurmsRequest.KindCase> matchedRequestTypesBuilder,
+            Set<PolicyStatementAction> actions,
+            PolicyStatementResource resource) {
         for (PolicyStatementAction action : actions) {
             matchedRequestTypesBuilder.addAll(findMatchedRequestTypes(action, resource));
         }
         return matchedRequestTypesBuilder;
     }
 
-    private Set<TurmsRequest.KindCase> findMatchedRequestTypes(PolicyStatementAction action,
-                                                               PolicyStatementResource resource) {
+    private Set<TurmsRequest.KindCase> findMatchedRequestTypes(
+            PolicyStatementAction action,
+            PolicyStatementResource resource) {
         return switch (action) {
             case ALL -> resource.getAllRequestTypes();
             case CREATE -> resource.getRequestTypesForCreating();

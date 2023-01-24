@@ -19,6 +19,7 @@ package unit.im.turms.gateway.access.client.common.accesscontrol.policy;
 
 import im.turms.gateway.access.client.common.authorization.policy.PolicyStatementResource;
 import im.turms.server.common.access.client.dto.request.TurmsRequest;
+import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.lang.Triple;
 import org.junit.jupiter.api.Test;
 
@@ -44,7 +45,7 @@ class PolicyStatementResourceTests {
                 Set<TurmsRequest.KindCase> requestTypes = triple.second();
                 actualTypes.addAll(requestTypes);
                 if (!requestTypes.isEmpty() && !allTypes.add(requestTypes)) {
-                    throw new IllegalArgumentException("The request types have been registered: " + requestTypes);
+                    throw new IllegalArgumentException("The request types " + requestTypes + " have been registered");
                 }
                 List<String> prefixes = triple.third();
                 for (TurmsRequest.KindCase requestType : requestTypes) {
@@ -56,20 +57,26 @@ class PolicyStatementResourceTests {
                         }
                     }
                     if (!startsWith) {
-                        throw new IllegalArgumentException("The request types %s for %s should start with: %s"
-                                .formatted(requestTypes, triple.first(), prefixes));
+                        String message = "The request types " +
+                                requestTypes +
+                                " for " +
+                                triple.first() +
+                                " must start with " +
+                                StringUtil.toQuotedStringLatin1(prefixes);
+                        throw new IllegalArgumentException(message);
                     }
                 }
             }
         }
-        Set<TurmsRequest.KindCase> excludedRequestTypes = Set.of(TurmsRequest.KindCase.KIND_NOT_SET,
+        Set<TurmsRequest.KindCase> excludedRequestTypes = Set.of(
+                TurmsRequest.KindCase.KIND_NOT_SET,
                 TurmsRequest.KindCase.CREATE_SESSION_REQUEST,
                 TurmsRequest.KindCase.DELETE_SESSION_REQUEST);
         for (TurmsRequest.KindCase requestType : TurmsRequest.KindCase.values()) {
-            if (!excludedRequestTypes.contains(requestType)) {
-                if (!actualTypes.contains(requestType)) {
-                    throw new IllegalArgumentException("The request type is missing: " + requestType);
-                }
+            if (!excludedRequestTypes.contains(requestType) && !actualTypes.contains(requestType)) {
+                throw new IllegalArgumentException("The request type (" +
+                        requestType +
+                        ") is missing");
             }
         }
     }

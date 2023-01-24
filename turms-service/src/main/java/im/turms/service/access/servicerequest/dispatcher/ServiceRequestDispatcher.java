@@ -30,6 +30,7 @@ import im.turms.server.common.access.servicerequest.dto.ServiceRequest;
 import im.turms.server.common.access.servicerequest.dto.ServiceResponse;
 import im.turms.server.common.domain.blocklist.service.BlocklistService;
 import im.turms.server.common.infra.collection.FastEnumMap;
+import im.turms.server.common.infra.exception.IncompatibleInternalChangeException;
 import im.turms.server.common.infra.exception.ThrowableInfo;
 import im.turms.server.common.infra.healthcheck.HealthCheckManager;
 import im.turms.server.common.infra.healthcheck.ServerStatusManager;
@@ -95,7 +96,7 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
             HANDLE_METHOD = ClientRequestHandler.class
                     .getDeclaredMethod("handle", ClientRequest.class);
         } catch (NoSuchMethodException e) {
-            throw new RuntimeException(e);
+            throw new IncompatibleInternalChangeException(e);
         }
     }
 
@@ -116,7 +117,7 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
         requestTypeToHandler = getMappings((ConfigurableApplicationContext) context, disabledEndpoints);
         for (TurmsRequest.KindCase requestType : TurmsRequestTypePool.ALL) {
             if (!requestTypeToHandler.containsKey(requestType) && !isRequestForGateway(requestType)) {
-                throw new IllegalStateException("No client request handler for the request type: " + requestType.name());
+                throw new RuntimeException("No client request handler for the request type: " + requestType);
             }
         }
     }
@@ -280,7 +281,7 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                             context.updateThreadContext();
                             // Note we log the whole request instead of the request ID for troubleshooting
                             // because CommonClientApiLogging only logs a brief description,
-                            // which isn't enough for debugging, but it's enough for statistics
+                            // which isn't enough for debugging, but it is enough for statistics
                             // and user behavior analysis, so we don't plan to change it
                             LOGGER.error("Caught an internal server error while handling the request: " + lastClientRequest, t);
                         }

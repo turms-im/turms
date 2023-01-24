@@ -261,7 +261,9 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
             // fast path
             int pathLength = path.length;
             if (pathLength == 0) {
-                throw new IllegalArgumentException("The path must not be empty: " + shardKeyPath);
+                throw new IllegalArgumentException("The path (" +
+                        shardKeyPath +
+                        ") must have one part at least");
             }
             if (pathLength == 1) {
                 BsonValue shardKeyValue = document.get(path[0]);
@@ -478,14 +480,14 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
         String collectionName = context.getEntity(clazz).collectionName();
         return Flux.from(source)
                 .then()
-                .onErrorMap(t -> new IllegalStateException("Failed to index the collection " + collectionName, t))
+                .onErrorMap(t -> new RuntimeException("Failed to index the collection: \"" + collectionName + "\"", t))
                 .doOnSuccess(ignored -> {
                     List<BsonDocument> indexDocs = indexModels
                             .stream()
                             .map(indexModel -> indexModel.getKeys().toBsonDocument())
                             .collect(CollectorUtil.toList(indexModels.size()));
                     String indexes = StringUtils.join(indexDocs, ", ");
-                    LOGGER.info("Indexed the collection {}: [{}]", collectionName, indexes);
+                    LOGGER.info("Indexed the collection \"{}\": {}", collectionName, indexes);
                 });
     }
 
@@ -531,8 +533,8 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
         String dbName = context.getDatabase().getName();
         Publisher<Document> source = context.getAdminDatabase().runCommand(new Document("enableSharding", dbName));
         return Mono.from(source)
-                .onErrorMap(t -> new IllegalStateException("Failed to enable sharding the database " + dbName, t))
-                .doOnSuccess(ignored -> LOGGER.info("Enabled sharding the database {}", dbName))
+                .onErrorMap(t -> new RuntimeException("Failed to enable sharding the database: \"" + dbName + "\"", t))
+                .doOnSuccess(ignored -> LOGGER.info("Enabled sharding the database: \"{}\"", dbName))
                 .then();
     }
 
@@ -545,16 +547,18 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
         String namespace = getNamespace(entity.collectionName());
         Document command = new Document("shardCollection", namespace).append("key", shardKey);
         Mono<Document> shardCollection = Mono.from(context.getAdminDatabase().runCommand(command))
-                .onErrorMap(t -> new IllegalStateException(
-                        "Failed to shard the collection %s with the shard key %s".formatted(namespace, shardKey.toJson()), t))
+                .onErrorMap(t -> new RuntimeException("Failed to shard the collection \"" +
+                        namespace +
+                        "\" with the shard key: " +
+                        shardKey.toJson(), t))
                 .doOnSuccess(ignored ->
-                        LOGGER.info("Sharded the collection {} with the shard key {}", namespace, shardKey.toJson()));
+                        LOGGER.info("Sharded the collection \"{}\" with the shard key: {}", namespace, shardKey.toJson()));
         return shardCollection.then();
     }
 
     @Override
-    public Mono<Void> ensureIndexesAndShard(Collection<Class<?>> classes) {
-        return ensureIndexesAndShard(classes, null, null);
+    public Mono<Void> ensureIndexesAndShards(Collection<Class<?>> classes) {
+        return ensureIndexesAndShards(classes, null, null);
     }
 
     /**
@@ -562,9 +566,9 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
      * to avoid mongo servers throwing "LockBusy" error (error code 46)
      */
     @Override
-    public Mono<Void> ensureIndexesAndShard(Collection<Class<?>> classes,
-                                            @Nullable BiPredicate<Class<?>, CompoundIndex> customCompoundIndexFilter,
-                                            @Nullable BiPredicate<Class<?>, Field> customIndexFilter) {
+    public Mono<Void> ensureIndexesAndShards(Collection<Class<?>> classes,
+                                             @Nullable BiPredicate<Class<?>, CompoundIndex> customCompoundIndexFilter,
+                                             @Nullable BiPredicate<Class<?>, Field> customIndexFilter) {
         Mono<Void> ensureIndexes = Mono.empty();
         for (Class<?> clazz : classes) {
             MongoEntity<?> entity = context.getEntity(clazz);
@@ -642,9 +646,9 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
         MongoEntity<?> entity = context.getEntity(clazz);
         BsonDocument jsonSchema = entity.jsonSchema();
         if (jsonSchema == null) {
-            String message = "Failed to create the collection [%s] because no JSON schema specified"
-                    .formatted(entity.collectionName());
-            return Mono.error(new RuntimeException(message));
+            return Mono.error(new RuntimeException("Failed to create the collection \"" +
+                    entity.collectionName() +
+                    "\" because no JSON schema is specified"));
         }
         return collectionExists(clazz)
                 .flatMap(exists -> {

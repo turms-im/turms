@@ -27,6 +27,7 @@ import im.turms.server.common.access.common.LoopResourcesFactory;
 import im.turms.server.common.domain.blocklist.service.BlocklistService;
 import im.turms.server.common.infra.healthcheck.ServerStatusManager;
 import im.turms.server.common.infra.metrics.TurmsMicrometerChannelMetricsRecorder;
+import im.turms.server.common.infra.net.BindException;
 import im.turms.server.common.infra.net.SslUtil;
 import im.turms.server.common.infra.property.env.common.SslProperties;
 import im.turms.server.common.infra.property.env.gateway.TcpProperties;
@@ -99,8 +100,8 @@ public final class TcpServerFactory {
                     .bind()
                     .block();
         } catch (Exception e) {
-            String message = "Failed to bind the TCP server on " + host + ":" + port;
-            throw new IllegalStateException(message, e);
+            String message = "Failed to bind the TCP server on: " + host + ":" + port;
+            throw new BindException(message, e);
         }
     }
 

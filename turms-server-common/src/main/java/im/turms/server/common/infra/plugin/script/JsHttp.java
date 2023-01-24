@@ -73,7 +73,7 @@ public class JsHttp {
 
     private void fetch0(Value resolve, Value reject, String uri, FetchOptions options) {
         if (uri == null) {
-            reject.execute(new IllegalArgumentException("uri should not be null"));
+            reject.execute(new IllegalArgumentException("The URI must not be null"));
             return;
         }
         if (options == null) {

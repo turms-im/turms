@@ -41,7 +41,7 @@ import java.util.concurrent.ScheduledFuture;
 public class TaskManager {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TaskManager.class);
-    private static final int SLOW_SLOG_THRESHOLD_MILLIS = 1000;
+    private static final int SLOW_LOG_THRESHOLD_MILLIS = 1000;
 
     private final Map<String, ScheduledFuture<?>> scheduledTaskMap;
 
@@ -56,7 +56,7 @@ public class TaskManager {
 
     public void reschedule(String taskName, String cronExpression, Runnable runnable) {
         CronTrigger trigger = new CronTrigger(cronExpression);
-        ScheduledFuture<?> task = taskScheduler.schedule(new Task(runnable), trigger);
+        ScheduledFuture<?> task = taskScheduler.schedule(new Task(taskName, runnable), trigger);
         ScheduledFuture<?> previousTask = scheduledTaskMap.put(taskName, task);
         if (previousTask != null) {
             previousTask.cancel(false);
@@ -65,9 +65,11 @@ public class TaskManager {
 
     private static class Task implements Runnable {
 
+        private final String taskName;
         private final Runnable runnable;
 
-        public Task(Runnable runnable) {
+        public Task(String taskName, Runnable runnable) {
+            this.taskName = taskName;
             this.runnable = runnable;
         }
 
@@ -77,13 +79,21 @@ public class TaskManager {
             try {
                 runnable.run();
             } catch (Exception e) {
-                LOGGER.error("Caught an error while running the task: " + runnable.getClass().getName(), e);
+                LOGGER.error("Caught an error while running the task \"" +
+                        taskName +
+                        "\" defined in the class: " +
+                        runnable.getClass().getName(), e);
             }
             long endTime = System.currentTimeMillis();
             long diff = endTime - startTime;
-            if (diff > SLOW_SLOG_THRESHOLD_MILLIS) {
-                String name = runnable.getClass().getName();
-                LOGGER.warn("A slow task [" + name + "] took " + diff + " milliseconds to execute");
+            if (diff > SLOW_LOG_THRESHOLD_MILLIS) {
+                LOGGER.warn("The task \"" +
+                        taskName +
+                        "\" defined in the class (" +
+                        runnable.getClass().getName() +
+                        ") was slow and took (" +
+                        diff +
+                        ") millis to execute");
             }
         }
     }

@@ -135,7 +135,7 @@ public class GroupService {
         createdGroupsCounter = metricsService.getRegistry().counter(CREATED_GROUPS_COUNTER);
         deletedGroupsCounter = metricsService.getRegistry().counter(DELETED_GROUPS_COUNTER);
 
-        propertiesManager.triggerAndAddGlobalPropertiesChangeListener(this::updateProperties);
+        propertiesManager.notifyAndAddGlobalPropertiesChangeListener(this::updateProperties);
     }
 
     private void updateProperties(TurmsProperties properties) {
@@ -199,7 +199,7 @@ public class GroupService {
                             createdGroupsCounter.increment();
                             return groupVersionService.upsert(groupId, now)
                                     .onErrorResume(t -> {
-                                        LOGGER.error("Caught an error while upserting a version for the group {} after creating the group",
+                                        LOGGER.error("Caught an error while upserting a version for the group ({}) after creating the group",
                                                 groupId, t);
                                         return Mono.empty();
                                     });
@@ -606,7 +606,7 @@ public class GroupService {
                         case OWNER_MANAGER_MEMBER -> groupMemberService.isOwnerOrManagerOrMember(requesterId, groupId, false)
                                 .map(isMember -> isMember ? ResponseStatusCode.OK : ResponseStatusCode.NOT_MEMBER_TO_UPDATE_GROUP_INFO);
                         case ALL -> Mono.just(ResponseStatusCode.OK);
-                        default -> Mono.error(new IllegalStateException("Unexpected value: " + groupUpdateStrategy));
+                        default -> Mono.error(new RuntimeException("Unexpected group update strategy: " + groupUpdateStrategy));
                     };
                 })
                 .flatMap(code -> code == ResponseStatusCode.OK

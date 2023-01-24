@@ -172,25 +172,25 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
 
     private void initCollections() {
         if (!context.isProduction() && fakingManager.isClearAllCollectionsBeforeFaking()) {
-            LOGGER.info("Start dropping databases...");
+            LOGGER.info("Start dropping databases");
             try {
                 dropAllDatabases().block(DurationConst.ONE_MINUTE);
             } catch (Exception e) {
-                throw new IllegalStateException("Caught an error while dropping databases", e);
+                throw new MongoInitializationException("Caught an error while dropping databases", e);
             }
             LOGGER.info("All collections are cleared");
         }
-        LOGGER.info("Start creating collections...");
+        LOGGER.info("Start creating collections");
         Mono<Void> createCollections = createCollectionsIfNotExist()
-                .onErrorMap(t -> new IllegalStateException("Failed to create collections", t))
+                .onErrorMap(t -> new MongoInitializationException("Failed to create collections", t))
                 .doOnSuccess(ignored -> LOGGER.info("All collections are created"))
                 .flatMap(exists -> {
                     if (exists && !fakingManager.isFakeIfCollectionExists()) {
                         return Mono.empty();
                     }
                     return Mono.defer(() -> ensureZones()
-                            .then(Mono.defer(this::ensureIndexesAndShard)
-                                    .onErrorMap(t -> new IllegalStateException("Failed to ensure indexes and shard", t)))
+                            .then(Mono.defer(this::ensureIndexesAndShards)
+                                    .onErrorMap(t -> new MongoInitializationException("Failed to ensure indexes and shards", t)))
                             .then(Mono.defer(() -> !context.isProduction() && fakingManager.isFakingEnabled()
                                     ? fakingManager.fakeData()
                                     : Mono.empty())));
@@ -198,7 +198,7 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
         try {
             createCollections.block(DurationConst.ONE_MINUTE);
         } catch (Exception e) {
-            throw new IllegalStateException("Caught an error while creating collections", e);
+            throw new MongoInitializationException("Caught an error while creating collections", e);
         }
     }
 
@@ -241,7 +241,7 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
         return dropDatabase;
     }
 
-    private Mono<Void> ensureIndexesAndShard() {
+    private Mono<Void> ensureIndexesAndShards() {
         Map<TurmsMongoClient, List<MongoEntity<?>>> clientToEntities = CollectionUtil
                 .newMapWithExpectedSize(clients.size());
         for (TurmsMongoClient client : clients) {
@@ -260,10 +260,15 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
                 Field field = optionalIndex.getClass().getDeclaredField(fieldName);
                 ReflectionUtil.setAccessible(field);
                 return (boolean) field.get(optionalIndex);
-            } catch (NoSuchFieldException | IllegalAccessException e) {
-                String message = "Cannot find the field %s in the optional index properties %s"
-                        .formatted(fieldName, optionalIndex.getClass().getName());
-                throw new IllegalStateException(message, e);
+            } catch (NoSuchFieldException e) {
+                String message = "Could not find the field \"" +
+                        fieldName +
+                        "\" in the optional index properties class: " +
+                        optionalIndex.getClass().getName();
+                throw new IllegalArgumentException(message, e);
+            } catch (IllegalAccessException e) {
+                // Should not happen
+                throw new RuntimeException(e);
             }
         };
         BiPredicate<Class<?>, Field> customIndexFilter = (entityClass, field) -> {
@@ -290,13 +295,13 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
             } else if (entityClass == UserRelationshipGroupMember.class) {
                 return isCustomIndexEnabled.test(fieldName, mongoProperties.getUser().getOptionalIndex().getUserRelationshipGroupMember());
             } else {
-                String message = "Cannot check if the custom index is enabled because the class %s is unknown"
-                        .formatted(entityClass.getName());
-                throw new IllegalStateException(message);
+                String message = "Could not check if the custom index is enabled for the unknown class: " +
+                        entityClass.getName();
+                throw new IllegalArgumentException(message);
             }
         };
         return Mono.whenDelayError(clientToEntities.entrySet().stream()
-                .map(entry -> entry.getKey().ensureIndexesAndShard(entry.getValue().stream()
+                .map(entry -> entry.getKey().ensureIndexesAndShards(entry.getValue().stream()
                                 .map(MongoEntity::entityClass)
                                 .collect(Collectors.toList()),
                         customCompoundIndexFilter,
@@ -326,7 +331,7 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
                         continue;
                     }
                 } catch (Exception e) {
-                    return Mono.error(e);
+                    return Mono.error(new RuntimeException("Failed to get enabled tiers", e));
                 }
                 ensureZones = ensureZones
                         .then(client.findTags(entity.collectionName()))
@@ -339,14 +344,14 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
                             }
                             return client.disableBalancing(collectionName)
                                     .then(Mono.defer(() -> {
-                                        LOGGER.info("Deleting the existing tags for the collection " + collectionName);
+                                        LOGGER.info("Deleting the existing tags of the collection: \"{}\"", collectionName);
                                         return client.deleteTags(collectionName)
-                                                .onErrorMap(t -> new IllegalStateException("Failed to the existing tags for the collection " + collectionName))
+                                                .onErrorMap(t -> new RuntimeException("Failed to delete the existing tags of the collection: \"" + collectionName + "\""))
                                                 .then(Mono.defer(() -> {
-                                                    LOGGER.info("Deleted the existing tags for the collection " + collectionName);
-                                                    LOGGER.info("Adding the shards of the collection {} to zones...", collectionName);
+                                                    LOGGER.info("Deleted the existing tags of the collection: \"{}\"", collectionName);
+                                                    LOGGER.info("Adding shards to zones for the collection: \"{}\"", collectionName);
                                                     return ensureZones(client, tiers, collectionName, entity.zone())
-                                                            .doOnSuccess(unused -> LOGGER.info("Added the shards of the collection {} to zones",
+                                                            .doOnSuccess(unused -> LOGGER.info("Added shards to zones for the collection: \"{}\"",
                                                                     collectionName));
                                                 }));
                                     }))
@@ -386,9 +391,12 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
                 }
                 ensureZones = ensureZones
                         .then(Mono.defer(() -> mongoClient.addShardToZone(shard, zoneName)
-                                        .onErrorMap(t -> new IllegalStateException("Failed to add a shard %s to the zone %s"
-                                                .formatted(shard, zoneName), t)))
-                                .doOnSuccess(unused -> LOGGER.info("Added a shard {} to the zone {}", shard, zoneName)))
+                                        .onErrorMap(t -> new RuntimeException("Failed to add the shard \"" +
+                                                shard +
+                                                "\" to the zone \"" +
+                                                zoneName +
+                                                "\"", t)))
+                                .doOnSuccess(unused -> LOGGER.info("Added the shard \"{}\" to the zone \"{}\"", shard, zoneName)))
                         .then(Mono.defer(() -> {
                             // TODO: support the shard key consisting of multiple fields
                             Document minimum = new Document(creationDateFieldName, min);
@@ -397,12 +405,15 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
                                             zoneName,
                                             minimum,
                                             maximum)
-                                    .onErrorMap(t -> new IllegalStateException("Failed to update the zone %s with the key ranges: %s -->> %s".formatted(
-                                            zoneName,
-                                            minimum.toJson(),
-                                            maximum.toJson()),
+                                    .onErrorMap(t -> new RuntimeException("Failed to update the zone \"" +
+                                            zoneName +
+                                            "\" with the key range: [" +
+                                            minimum.toJson() +
+                                            ".." +
+                                            maximum.toJson() +
+                                            ")",
                                             t))
-                                    .doOnSuccess(unused -> LOGGER.info("Updated the zone {} with the key ranges: {} -->> {}",
+                                    .doOnSuccess(unused -> LOGGER.info("Updated the zone \"{}\" with the key range: [{}..{})",
                                             zoneName,
                                             minimum.toJson(),
                                             maximum.toJson()));

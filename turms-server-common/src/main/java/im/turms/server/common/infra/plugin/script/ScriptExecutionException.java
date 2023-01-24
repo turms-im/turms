@@ -17,14 +17,14 @@
 
 package im.turms.server.common.infra.plugin.script;
 
-import im.turms.server.common.infra.plugin.ExtensionPointExecutionException;
+import im.turms.server.common.infra.plugin.PluginExecutionException;
 import lombok.Getter;
 
 /**
  * @author James Chen
  */
 @Getter
-public class ScriptExecutionException extends ExtensionPointExecutionException {
+public class ScriptExecutionException extends PluginExecutionException {
 
     private final ScriptExceptionSource source;
 

@@ -98,7 +98,7 @@ public class UserFriendRequestService extends ExpirableEntityService<UserFriendR
         this.userVersionService = userVersionService;
         this.userRelationshipService = userRelationshipService;
 
-        propertiesManager.triggerAndAddGlobalPropertiesChangeListener(this::updateProperties);
+        propertiesManager.notifyAndAddGlobalPropertiesChangeListener(this::updateProperties);
         // Set up a cron job to remove requests if deleting expired docs is enabled
         taskManager.reschedule(
                 "expiredUserFriendRequestsCleanup",
@@ -191,13 +191,13 @@ public class UserFriendRequestService extends ExpirableEntityService<UserFriendR
                 .then(Mono.whenDelayError(
                         userVersionService.updateReceivedFriendRequestsVersion(recipientId)
                                 .onErrorResume(t -> {
-                                    LOGGER.error("Caught an error while updating the received friend requests version of the recipient {} after creating a friend request",
+                                    LOGGER.error("Caught an error while updating the received friend requests version of the recipient ({}) after creating a friend request",
                                             recipientId, t);
                                     return Mono.empty();
                                 }),
                         userVersionService.updateSentFriendRequestsVersion(requesterId)
                                 .onErrorResume(t -> {
-                                    LOGGER.error("Caught an error while updating the sent friend requests version of the requester {} after creating a friend request",
+                                    LOGGER.error("Caught an error while updating the sent friend requests version of the requester ({}) after creating a friend request",
                                             requesterId, t);
                                     return Mono.empty();
                                 })
@@ -261,7 +261,7 @@ public class UserFriendRequestService extends ExpirableEntityService<UserFriendR
                         ? queryRecipientId(requestId)
                         .flatMap(recipientId -> userVersionService.updateReceivedFriendRequestsVersion(recipientId)
                                 .onErrorResume(t -> {
-                                    LOGGER.error("Caught an error while updating the received friend requests version of the recipient {} after updating a pending friend request",
+                                    LOGGER.error("Caught an error while updating the received friend requests version of the recipient ({}) after updating a pending friend request",
                                             recipientId, t);
                                     return Mono.empty();
                                 })

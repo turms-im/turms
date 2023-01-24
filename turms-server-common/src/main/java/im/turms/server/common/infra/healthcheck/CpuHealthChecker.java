@@ -48,7 +48,7 @@ public final class CpuHealthChecker extends HealthChecker {
 
         boolean isCpuHealthCheckAvailable = true;
         if (cpuLoad < 0) {
-            LOGGER.warn("CPU health checker cannot work because the \"recent cpu usage\" for the whole operating environment is unavailable");
+            LOGGER.warn("The CPU health checker cannot work because the recent cpu usage for the whole operating environment is unavailable");
             isCpuHealthCheckAvailable = false;
             isCpuHealthy = true;
         }
@@ -79,12 +79,12 @@ public final class CpuHealthChecker extends HealthChecker {
         }
 
         // Log
-        LOGGER.debug("CPU load: {}", cpuLoad);
+        LOGGER.debug("CPU load is: {}", cpuLoad);
         if (wasCpuHealthy != isCpuHealthy) {
             if (isCpuHealthy) {
-                LOGGER.info("The CPU has become healthy. The current CPU load: {}", cpuLoad);
+                LOGGER.info("The CPU has become healthy. The current CPU load is: {}", cpuLoad);
             } else {
-                LOGGER.info("The CPU has become unhealthy. The current CPU load: {}", cpuLoad);
+                LOGGER.info("The CPU has become unhealthy. The current CPU load is: {}", cpuLoad);
             }
         }
     }

@@ -39,7 +39,7 @@ import jakarta.annotation.Nullable;
  * @author James Chen
  * @implNote Strategy Candidates:
  * 1. Refresh the heartbeat info in Redis when a user sends a heartbeat request:
- * It's a disaster for performance when there are many online users
+ * It is a disaster for performance when there are many online users
  * <p>
  * 2. Store heartbeat requests in a MPSC queue, and merge them into one Redis command
  * and send them to Redis periodically:
@@ -91,7 +91,7 @@ public class HeartbeatManager {
                 try {
                     updateOnlineUsersTtl();
                 } catch (Exception e) {
-                    LOGGER.error("Failed to update the TTL of users on Redis", e);
+                    LOGGER.error("Failed to update the TTL of users in Redis", e);
                 }
                 try {
                     Thread.sleep(UPDATE_HEARTBEAT_INTERVAL_MILLIS);
@@ -127,7 +127,7 @@ public class HeartbeatManager {
         Collection<UserSessionsManager> managers = userIdToSessionsManager.values();
         LongKeyGenerator userIds = collectOnlineUsersAndUpdateStatus(managers);
         userStatusService.updateOnlineUsersTtl(userIds, closeIdleSessionAfterSeconds)
-                .subscribe(null, t -> LOGGER.error("Failed to update online users", t));
+                .subscribe(null, t -> LOGGER.error("Caught an error while refreshing online users' TTL in Redis", t));
     }
 
     private LongKeyGenerator collectOnlineUsersAndUpdateStatus(Collection<UserSessionsManager> managers) {
@@ -190,11 +190,11 @@ public class HeartbeatManager {
         }
         int localCloseIdleSessionAfterMillis = closeIdleSessionAfterMillis;
         if (localCloseIdleSessionAfterMillis > 0 && (int) (now - lastHeartbeatRequestTimestamp) > localCloseIdleSessionAfterMillis) {
-            sessionService.setLocalSessionOffline(
+            sessionService.closeLocalSession(
                             session.getUserId(),
                             session.getDeviceType(),
                             HEARTBEAT_TIMEOUT)
-                    .subscribe(null, t -> LOGGER.error("Caught an error while disconnecting the local session: {} with the close reason: {}",
+                    .subscribe(null, t -> LOGGER.error("Caught an error while closing the local user session ({}) with the close reason: {}",
                             session, HEARTBEAT_TIMEOUT));
             return null;
         }

@@ -30,7 +30,7 @@ public final class CodedInputStreamUtil {
     public static CodedInputStream newInstance(ByteBuffer buffer) {
         CodedInputStream stream = CodedInputStream.newInstance(buffer, true);
         // we don't need to set a size limit because
-        // it should be rejected earlier if it's too large
+        // it should be rejected earlier if it is too large
         stream.discardUnknownFields();
         stream.enableAliasing(true);
         return stream;
@@ -39,7 +39,7 @@ public final class CodedInputStreamUtil {
     public static CodedInputStream newInstance(Iterable<ByteBuffer> buffers) {
         CodedInputStream stream = CodedInputStream.newInstance(buffers, true);
         // we don't need to set a size limit because
-        // it should be rejected earlier if it's too large
+        // it should be rejected earlier if it is too large
         stream.discardUnknownFields();
         stream.enableAliasing(true);
         return stream;

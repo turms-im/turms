@@ -41,7 +41,7 @@ public class GeoUserSessionIdCodec implements TurmsRedisCodec<UserSessionId> {
         byte value = in.get();
         DeviceType deviceType = DeviceType.forNumber(value);
         if (deviceType == null) {
-            throw new IllegalArgumentException("Cannot parse " + value + "to DeviceType");
+            throw new IllegalArgumentException("Could not find the device type for the number: " + value);
         }
         return new UserSessionId(userId, deviceType);
     }

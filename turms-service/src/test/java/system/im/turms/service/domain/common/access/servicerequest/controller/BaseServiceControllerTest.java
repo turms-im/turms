@@ -46,7 +46,7 @@ public class BaseServiceControllerTest<T> extends SpringAwareIntegrationTest {
                                 @Nullable Consumer<RequestHandlerResult> resultConsumer,
                                 @Nullable ResponseStatusCode... expectedCodes) {
         Mono<?> mono = resultMono
-                .switchIfEmpty(Mono.error(new IllegalStateException("No result")))
+                .switchIfEmpty(Mono.error(new RuntimeException("No result")))
                 .onErrorResume(ResponseException.class, e -> {
                     assertThat(e.getCode()).isIn((Object[]) expectedCodes);
                     return Mono.empty();

@@ -52,7 +52,7 @@ public abstract class BaseController {
 
     protected BaseController(TurmsPropertiesManager propertiesManager) {
         this.propertiesManager = propertiesManager;
-        propertiesManager.triggerAndAddGlobalPropertiesChangeListener(this::updateProperties);
+        propertiesManager.notifyAndAddGlobalPropertiesChangeListener(this::updateProperties);
     }
 
     private void updateProperties(TurmsProperties properties) {

@@ -73,7 +73,7 @@ public class MongoContext {
     public MongoContext(String connectionString,
                         Consumer<List<ServerDescription>> onServerDescriptionChange) {
         if (connectionString == null) {
-            throw new IllegalArgumentException("The connection string cannot not be null");
+            throw new IllegalArgumentException("The connection string must not be null");
         }
         ConnectionString connectionSettings = new ConnectionString(connectionString);
         eventLoopGroup = new NioEventLoopGroup(Runtime.getRuntime().availableProcessors(),

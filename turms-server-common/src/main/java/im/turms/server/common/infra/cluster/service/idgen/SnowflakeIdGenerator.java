@@ -17,7 +17,6 @@
 
 package im.turms.server.common.infra.cluster.service.idgen;
 
-
 import im.turms.server.common.infra.random.RandomUtil;
 
 import java.util.concurrent.atomic.AtomicLong;
@@ -70,8 +69,8 @@ public class SnowflakeIdGenerator {
     // Used to ensure clock moves forward.
     private final AtomicLong lastTimestamp = new AtomicLong();
 
-    // Because it's vulnerable if turms restarts after the clock goes backwards,
-    // we randomize the sequenceNumber on init to decrease chance of collision
+    // Because it is vulnerable if turms restarts after the clock goes backwards,
+    // we randomize the sequenceNumber on init to decrease the chance of collision
     private final AtomicLong sequenceNumber = new AtomicLong(RandomUtil.nextPositiveInt());
 
     private long dataCenterId;
@@ -83,13 +82,17 @@ public class SnowflakeIdGenerator {
 
     public void updateNodeInfo(int dataCenterId, int workerId) {
         if (dataCenterId >= MAX_DATA_CENTER_ID) {
-            String reason = "Illegal dataCenterId %d. The dataCenterId must be in the range [0, %d)"
-                    .formatted(dataCenterId, MAX_DATA_CENTER_ID);
+            String reason = "The data center ID must be in the range: [0, " +
+                    MAX_DATA_CENTER_ID +
+                    "), but got: " +
+                    dataCenterId;
             throw new IllegalArgumentException(reason);
         }
         if (workerId >= (1 << WORKER_ID_BITS)) {
-            String reason = "Illegal workerId %d. The workerId must be in the range [0, %d)"
-                    .formatted(workerId, 1 << WORKER_ID_BITS);
+            String reason = "The worker ID must be in the range: [0, " +
+                    (1 << WORKER_ID_BITS) +
+                    "), but got: " +
+                    workerId;
             throw new IllegalArgumentException(reason);
         }
         this.dataCenterId = dataCenterId;
@@ -104,7 +107,7 @@ public class SnowflakeIdGenerator {
             long nonBackwardsTimestamp = Math.max(lastTs, System.currentTimeMillis());
             if (sequenceNum == 0) {
                 // Always force the clock to increment whenever sequence number is 0,
-                // in case we have a long time-slip backwards
+                // if we have a long time-slip backwards
                 nonBackwardsTimestamp++;
             }
             return nonBackwardsTimestamp;

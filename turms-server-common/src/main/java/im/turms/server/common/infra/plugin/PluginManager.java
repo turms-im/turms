@@ -22,7 +22,9 @@ import im.turms.server.common.infra.codec.Base16Util;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.context.JobShutdownOrder;
 import im.turms.server.common.infra.context.TurmsApplicationContext;
+import im.turms.server.common.infra.exception.FeatureDisabledException;
 import im.turms.server.common.infra.exception.ThrowableUtil;
+import im.turms.server.common.infra.io.InputOutputException;
 import im.turms.server.common.infra.lang.ClassUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
@@ -35,7 +37,6 @@ import im.turms.server.common.infra.property.env.common.plugin.JsPluginPropertie
 import im.turms.server.common.infra.property.env.common.plugin.PluginProperties;
 import im.turms.server.common.infra.security.MessageDigestPool;
 import lombok.Getter;
-import lombok.SneakyThrows;
 import org.graalvm.polyglot.Engine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -85,13 +86,12 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
     private final ApplicationContext context;
     /**
      * The object is {@link Engine} in fact,
-     * but we don't declare it as {@link Engine} because it's an optional class
+     * but we don't declare it as {@link Engine} because it is an optional class
      * and Spring will throw when creating the bean when it cannot find the class
      */
     @Nullable
     private Object engine;
 
-    @SneakyThrows
     public PluginManager(ApplicationContext context,
                          TurmsApplicationContext applicationContext,
                          TurmsPropertiesManager propertiesManager,
@@ -170,10 +170,9 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
         return Mono.empty();
     }
 
-    @SneakyThrows
     public void loadJavaPlugins(List<MultipartFile> files, boolean save) {
         if (!allowSaveJavaPlugins && save) {
-            throw new UnsupportedSaveOperationException("Cannot save Java plugins since it has been disabled");
+            throw new FeatureDisabledException("Cannot save Java plugins since it has been disabled");
         }
         for (MultipartFile file : files) {
             String fileName = file.name();
@@ -183,12 +182,28 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
                 fileName = file.basename() + ".jar";
                 Path target = pluginDir.resolve(EXTERNAL_PLUGIN_ARCHIVE_NAME_PREFIX + fileName);
                 if (Files.exists(target)) {
-                    throw new IllegalArgumentException("The plugin jar file \"%s\" already exists".formatted(fileName));
+                    throw new IllegalArgumentException("The plugin jar file (" +
+                            fileName +
+                            ") already exists");
                 }
                 // Ensure the plugin directory exists every time
                 // because it may be removed by users unexpectedly
-                Files.createDirectories(pluginDir);
-                Files.move(file.file().toPath(), target);
+                try {
+                    Files.createDirectories(pluginDir);
+                } catch (IOException e) {
+                    throw new InputOutputException("Failed to create the plugin directory: " +
+                            pluginDir, e);
+                }
+                Path source = file.file().toPath();
+                try {
+                    Files.move(source, target);
+                } catch (IOException e) {
+                    throw new InputOutputException("Failed to move the plugin JAR file from (" +
+                            source +
+                            ") to (" +
+                            target +
+                            ")", e);
+                }
                 jarFile = target.toFile();
             } else {
                 jarFile = file.file();
@@ -204,8 +219,8 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
             }
             JavaPluginDescriptor descriptor = JavaPluginDescriptorFactory.load(zipFile);
             if (descriptor == null) {
-                throw new MalformedPluginArchiveException("Cannot load a Java plugin from the file \"%s\" because it isn't a Java plugin jar file"
-                        .formatted(fileName));
+                throw new MalformedPluginArchiveException("Could not load a Java plugin from the file (" +
+                        fileName + ") because it is not a Java plugin JAR file");
             }
             Plugin plugin = JavaPluginFactory.create(descriptor, context);
             pluginRepository.register(plugin);
@@ -231,10 +246,10 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
 
     public void loadJsPlugins(Collection<JsPluginScript> scripts, boolean save) {
         if (!isJsScriptEnabled) {
-            throw new UnsupportedOperationException("JavaScript plugins are disabled because the classes of GraalJS aren't loaded");
+            throw new UnsupportedOperationException("JavaScript plugins are disabled because the classes of GraalJS are not loaded");
         }
         if (!allowSaveJsPlugins && save) {
-            throw new UnsupportedSaveOperationException("Cannot save JavaScript plugins since it has been disabled");
+            throw new FeatureDisabledException("Cannot not save JavaScript plugins since it has been disabled");
         }
         if (CollectionUtil.isEmpty(scripts)) {
             return;
@@ -251,7 +266,7 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
 
     public JsPlugin loadJsPlugin(String script, @Nullable Path path) {
         if (!isJsScriptEnabled) {
-            throw new UnsupportedOperationException("JavaScript plugins are disabled because the classes of GraalJS aren't loaded");
+            throw new UnsupportedOperationException("JavaScript plugins are disabled because the classes of GraalJS are not loaded");
         }
         if (script.isBlank()) {
             throw new IllegalArgumentException("The JavaScript plugin script must not be blank");
@@ -267,7 +282,6 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
         return jsPlugin;
     }
 
-    @SneakyThrows
     private Path saveJsPlugin(@Nullable String fileName, String code) {
         byte[] bytes = code.getBytes(StandardCharsets.UTF_8);
         boolean isCustomFileName = fileName != null;
@@ -278,12 +292,16 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
         Path path = pluginDir.resolve(EXTERNAL_PLUGIN_ARCHIVE_NAME_PREFIX + fileName + ".js");
         if (Files.exists(path)) {
             if (isCustomFileName) {
-                throw new IllegalArgumentException("The JavaScript plugin file \"%s\" already exists".formatted(fileName));
+                throw new IllegalArgumentException("The JavaScript plugin file (" + fileName + ") already exists");
             } else {
                 return path;
             }
         }
-        Files.write(path, bytes, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+        try {
+            Files.write(path, bytes, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+        } catch (Exception e) {
+            throw new InputOutputException("Failed to write the JavaScript plugin to the path: " + path, e);
+        }
         return path;
     }
 
@@ -371,7 +389,7 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
                     if (path != null) {
                         Files.deleteIfExists(path);
                     }
-                } catch (IOException e) {
+                } catch (Exception e) {
                     // ignored
                 }
             }
@@ -464,13 +482,12 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
     }
 
     private Exception translateException(Throwable t, Method method, TurmsExtension extension) {
-        String message = "Failed to invoke the method [" +
+        String message = "Failed to invoke the method \"" +
                 method.getName() +
-                "] of the extension [" +
+                "\" of the extension (" +
                 extension.getClass().getName() +
-                "] of the plugin [" +
-                extension.getPlugin().descriptor().getId() +
-                "]";
+                ") of the plugin: " +
+                extension.getPlugin().descriptor().getId();
         return new ExtensionPointExecutionException(message, t);
     }
 

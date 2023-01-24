@@ -37,7 +37,7 @@ class PoolTests {
         Pool<Collection<String>> pool = new Pool<>(Integer.MAX_VALUE, 64);
         Set<String> emptySet = Collections.emptySet();
         if (emptySet.hashCode() != Pool.RESERVED_KEY) {
-            throw new IllegalStateException("The hashcode of an empty set should be " + Pool.RESERVED_KEY);
+            throw new IllegalArgumentException("The hashcode of an empty set must be " + Pool.RESERVED_KEY);
         }
         pool.poolIfAbsent(emptySet);
 

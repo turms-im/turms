@@ -128,9 +128,9 @@ class SessionServiceTests {
 
     @Disabled
     @Test
-    void setLocalUserDeviceOffline_shouldSucceed() {
+    void closeLocalSession_shouldSucceed() {
         SessionService service = newSessionService();
-        Mono<Boolean> result = service.setLocalSessionOffline(userId, deviceType, SessionCloseStatus.SERVER_ERROR);
+        Mono<Boolean> result = service.closeLocalSession(userId, deviceType, SessionCloseStatus.SERVER_ERROR);
 
         StepVerifier.create(result)
                 .expectNext(true)
@@ -159,11 +159,11 @@ class SessionServiceTests {
     }
 
     @Test
-    void triggerGoOnlinePlugins_shouldSucceed() {
+    void invokeGoOnlineHandlers_shouldSucceed() {
         SessionService service = newSessionService();
         UserSessionsManager manager = mock(UserSessionsManager.class);
         UserSession session = mock(UserSession.class);
-        Mono<Void> result = service.triggerGoOnlinePlugins(manager, session);
+        Mono<Void> result = service.invokeGoOnlineHandlers(manager, session);
 
         StepVerifier.create(result)
                 .verifyComplete();

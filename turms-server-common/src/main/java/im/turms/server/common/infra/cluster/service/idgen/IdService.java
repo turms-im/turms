@@ -63,7 +63,7 @@ public class IdService implements ClusterService {
     }
 
     /**
-     * Note: It's unnecessary to check if the ID is 0L because it should never happen due to its implementation
+     * Note: It is unnecessary to check if the ID is 0L because it should never happen due to its implementation
      */
     public long nextIncreasingId(ServiceType serviceType) {
         return idGenerators[serviceType.ordinal()].nextIncreasingId();
@@ -83,7 +83,7 @@ public class IdService implements ClusterService {
                 .size();
         if (dataCenterId >= SnowflakeIdGenerator.MAX_DATA_CENTER_ID) {
             int fallbackDataCenterId = dataCenterId % SnowflakeIdGenerator.MAX_DATA_CENTER_ID;
-            LOGGER.warn("The data center ID {} is larger than {}, so the ID falls back to {}." +
+            LOGGER.warn("The data center ID ({}) is larger than {}, so the ID falls back to ({})." +
                             " It runs the risk of generating same IDs in the cluster",
                     dataCenterId, SnowflakeIdGenerator.MAX_DATA_CENTER_ID - 1, fallbackDataCenterId);
             dataCenterId = fallbackDataCenterId;
@@ -100,7 +100,7 @@ public class IdService implements ClusterService {
         }
         if (localWorkerId >= SnowflakeIdGenerator.MAX_WORKER_ID) {
             int fallbackWorkerId = localWorkerId % SnowflakeIdGenerator.MAX_WORKER_ID;
-            LOGGER.warn("The node ID {} is larger than {}, so the ID falls back to {}." +
+            LOGGER.warn("The node ID ({}) is larger than {}, so the ID falls back to ({})." +
                             " It runs the risk of generating same IDs in the cluster",
                     localWorkerId, SnowflakeIdGenerator.MAX_WORKER_ID - 1, fallbackWorkerId);
             return fallbackWorkerId;

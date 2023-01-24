@@ -121,7 +121,7 @@ public class UserRelationshipGroupService {
         Mono<UserRelationshipGroup> result = userRelationshipGroupRepository.insert(group, session)
                 .thenReturn(group);
         // If groupIndex is null but session isn't null and DuplicateKeyException occurs,
-        // it's a bug of server because we cannot "resume" the session.
+        // it is a bug of server because we cannot resume the session.
         // Luckily, we don't have the case now.
         if (groupIndex == null && session == null) {
             Date finalCreationDate = creationDate;
@@ -217,7 +217,7 @@ public class UserRelationshipGroupService {
         return userRelationshipGroupRepository.updateRelationshipGroupName(ownerId, groupIndex, newGroupName)
                 .flatMap(result -> userVersionService.updateRelationshipGroupsVersion(ownerId)
                         .onErrorResume(t -> {
-                            LOGGER.error("Caught an error while updating the relationship groups version of the owner {} after updating a relationship group name",
+                            LOGGER.error("Caught an error while updating the relationship groups version of the owner ({}) after updating a relationship group name",
                                     ownerId, t);
                             return Mono.empty();
                         })
@@ -290,7 +290,7 @@ public class UserRelationshipGroupService {
                     return userRelationshipGroupMemberRepository.upsert(member, session)
                             .flatMap(groupMember -> userVersionService.updateRelationshipGroupsVersion(ownerId)
                                     .onErrorResume(t -> {
-                                        LOGGER.error("Caught an error while updating the relationship groups version of the owner {} after adding a user to the groups",
+                                        LOGGER.error("Caught an error while updating the relationship groups version of the owner ({}) after adding a user to the groups",
                                                 ownerId, t);
                                         return Mono.empty();
                                     }))
@@ -337,7 +337,7 @@ public class UserRelationshipGroupService {
                 .then(userRelationshipGroupRepository.deleteById(new UserRelationshipGroup.Key(ownerId, deleteGroupIndex)))
                 .then(userVersionService.updateRelationshipGroupsVersion(ownerId)
                         .onErrorResume(t -> {
-                            LOGGER.error("Caught an error while updating the relationship groups version of the owner {} after deleting relationships",
+                            LOGGER.error("Caught an error while updating the relationship groups version of the owner ({}) after deleting relationships",
                                     ownerId, t);
                             return Mono.empty();
                         }))
@@ -471,7 +471,7 @@ public class UserRelationshipGroupService {
                 .then(userRelationshipGroupMemberRepository.deleteById(key, session))
                 .then(userVersionService.updateRelationshipGroupsVersion(ownerId)
                         .onErrorResume(t -> {
-                            LOGGER.error("Caught an error while updating the relationship groups version of the owner {} after moving a user to a new group",
+                            LOGGER.error("Caught an error while updating the relationship groups version of the owner ({}) after moving a user to a new group",
                                     ownerId, t);
                             return Mono.empty();
                         }))

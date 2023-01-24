@@ -39,7 +39,7 @@ public final class RpcFrameEncoder extends ProtobufVarint32LengthFieldPrepender 
 
     public <T> ByteBuf encode(int requestId, T value) {
         if (requestId < 0) {
-            throw new IllegalArgumentException("requestId must be larger than 0. Actual: " + requestId);
+            throw new IllegalArgumentException("The request ID must be greater than 0, but got: " + requestId);
         }
         Class<?> valueClass = value.getClass();
         Codec<T> valueCodec = CodecPool.getCodec(valueClass);
@@ -48,7 +48,11 @@ public final class RpcFrameEncoder extends ProtobufVarint32LengthFieldPrepender 
         }
         ByteBuf byteBufToComposite = valueCodec.byteBufToComposite(value);
         if (byteBufToComposite != null && byteBufToComposite.refCnt() == 0) {
-            throw new IllegalReferenceCountException("byteBufToComposite of the data has been released: " + value);
+            throw new IllegalReferenceCountException("The buffer (" +
+                    byteBufToComposite +
+                    ") to composite of the data (" +
+                    value +
+                    ") has been released");
         }
         int codecId = valueCodec.getCodecId().getId();
         int initialCapacity = valueCodec.initialCapacity(value);

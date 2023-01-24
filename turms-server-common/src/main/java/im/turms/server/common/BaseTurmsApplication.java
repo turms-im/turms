@@ -18,6 +18,7 @@
 package im.turms.server.common;
 
 import im.turms.server.common.infra.collection.CollectionUtil;
+import im.turms.server.common.infra.exception.IncompatibleJvmException;
 import im.turms.server.common.infra.lang.ClassUtil;
 import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
@@ -80,11 +81,14 @@ public abstract class BaseTurmsApplication {
             StringUtil.class.getClassLoader();
         } catch (Exception e) {
             RuntimeMXBean bean = ManagementFactory.getRuntimeMXBean();
-            String message = "The current JVM [%s/%s/%s] cannot work with turms server"
-                    .formatted(bean.getVmName(),
-                            bean.getVmVersion(),
-                            bean.getVmVendor());
-            throw new IllegalStateException(message, e);
+            String message = "The current JVM {name=" +
+                    bean.getVmName() +
+                    ", version=" +
+                    bean.getVmVersion() +
+                    ", vendor=" +
+                    bean.getVmVendor() +
+                    "} cannot work with turms server";
+            throw new IncompatibleJvmException(message, e);
         }
     }
 

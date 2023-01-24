@@ -135,7 +135,7 @@ public class UserService {
         registeredUsersCounter = metricsService.getRegistry().counter(MetricNameConst.REGISTERED_USERS_COUNTER);
         deletedUsersCounter = metricsService.getRegistry().counter(MetricNameConst.DELETED_USERS_COUNTER);
 
-        propertiesManager.triggerAndAddGlobalPropertiesChangeListener(this::updateProperties);
+        propertiesManager.notifyAndAddGlobalPropertiesChangeListener(this::updateProperties);
     }
 
     private void updateProperties(TurmsProperties properties) {
@@ -252,7 +252,7 @@ public class UserService {
                         .then(userRelationshipGroupService.createRelationshipGroup(finalId, 0, "", now, session))
                         .then(userVersionService.upsertEmptyUserVersion(user.getId(), date, session)
                                 .onErrorResume(t -> {
-                                    LOGGER.error("Caught an error while upserting a version for the user {} after creating the user",
+                                    LOGGER.error("Caught an error while upserting a version for the user ({}) after creating the user",
                                             user.getId(), t);
                                     return Mono.empty();
                                 }))
@@ -290,7 +290,7 @@ public class UserService {
                                     ? ServicePermission.OK
                                     : ServicePermission.get(ResponseStatusCode.PROFILE_REQUESTER_HAS_BEEN_BLOCKED));
                     default -> Mono.error(ResponseException
-                            .get(ResponseStatusCode.SERVER_INTERNAL_ERROR, "Unexpected value " + strategy));
+                            .get(ResponseStatusCode.SERVER_INTERNAL_ERROR, "Unexpected profile access strategy: " + strategy));
                 })
                 .defaultIfEmpty(ServicePermission.get(ResponseStatusCode.USER_PROFILE_NOT_FOUND));
     }
@@ -365,14 +365,14 @@ public class UserService {
                                                     return Mono.empty();
                                                 }))
                                         .then(messageService.deleteSequenceIds(false, userIds)
-                                                .doOnError(t -> LOGGER.error("Failed to remove the message sequence IDs for the user IDs: {}", userIds, t)))
+                                                .doOnError(t -> LOGGER.error("Failed to remove the message sequence IDs of the users: " + userIds, t)))
                                         .thenReturn(result);
                             }))
                     .retryWhen(TRANSACTION_RETRY);
         }
         return deleteOrUpdateMono
                 .doOnNext(ignored -> sessionService.disconnect(userIds, SessionCloseStatus.USER_IS_DELETED_OR_INACTIVATED)
-                        .subscribe(null, t -> LOGGER.error("Caught an error while closing the session of the user IDs: " + userIds, t)));
+                        .subscribe(null, t -> LOGGER.error("Caught an error while closing the user session of the users: " + userIds, t)));
     }
 
     public Mono<Boolean> checkIfUserExists(@NotNull Long userId, boolean queryDeletedRecords) {
@@ -494,7 +494,7 @@ public class UserService {
                 .flatMap(result -> Boolean.FALSE.equals(isActive) && result.getModifiedCount() > 0
                         ? sessionService.disconnect(userIds, SessionCloseStatus.USER_IS_DELETED_OR_INACTIVATED)
                         .onErrorResume(t -> {
-                            LOGGER.error("Caught an error while disconnecting the session of the users {} after inactivating the users", userIds, t);
+                            LOGGER.error("Caught an error while closing the sessions of the users {} after inactivating the users", userIds, t);
                             return Mono.empty();
                         }).thenReturn(result)
                         : Mono.just(result));

@@ -63,7 +63,7 @@ public class ConversationServiceController extends BaseServiceController {
         this.conversationService = conversationService;
         this.groupMemberService = groupMemberService;
 
-        propertiesManager.triggerAndAddGlobalPropertiesChangeListener(this::updateProperties);
+        propertiesManager.notifyAndAddGlobalPropertiesChangeListener(this::updateProperties);
     }
 
     private void updateProperties(TurmsProperties properties) {
@@ -116,8 +116,8 @@ public class ConversationServiceController extends BaseServiceController {
      *
      * @implNote No need to authenticate because:
      * 1. Most requests are authenticated indeed, so avoid frequent authentication to improve the performance greatly;
-     * 2. For unauthenticated requests, it's very easy for client to ignore it according to its local data.
-     * And the user won't be aware of these requests
+     * 2. For unauthenticated requests, it is easy for the client to ignore it according to its local data,
+     * and the user won't be aware of these requests.
      */
     @ServiceRequestMapping(UPDATE_TYPING_STATUS_REQUEST)
     public ClientRequestHandler handleUpdateTypingStatusRequest() {

@@ -46,7 +46,7 @@ public abstract class CommonRateLimitingProperties {
     @Min(0)
     private int initialTokens = 50;
 
-    @Description("Refills the bucket with the specified number of tokens per period if the bucket isn't full")
+    @Description("Refills the bucket with the specified number of tokens per period if the bucket is not full")
     @GlobalProperty
     @MutableProperty
     @Min(1)

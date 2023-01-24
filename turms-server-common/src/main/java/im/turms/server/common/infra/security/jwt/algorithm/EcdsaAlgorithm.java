@@ -46,7 +46,7 @@ public class EcdsaAlgorithm extends AsymmetricAlgorithm {
             signature.initVerify(keys.getPublic());
             signature.update("CVE-2022-21449".getBytes());
             if (signature.verify(new byte[64])) {
-                throw new IncompatibleJvmException("The Java runtime is vulnerable to CVE-2022-21449. Please upgrade to a patched Java version");
+                throw new IncompatibleJvmException("The current JVM is vulnerable to CVE-2022-21449. Please upgrade to a patched Java version");
             }
         } catch (Exception e) {
             throw new RuntimeException("Failed to validate the availability of EC algorithm", e);

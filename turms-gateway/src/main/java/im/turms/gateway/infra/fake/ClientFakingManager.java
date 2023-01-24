@@ -27,6 +27,7 @@ import im.turms.server.common.infra.client.TurmsClient;
 import im.turms.server.common.infra.collection.CyclicIterator;
 import im.turms.server.common.infra.context.JobShutdownOrder;
 import im.turms.server.common.infra.context.TurmsApplicationContext;
+import im.turms.server.common.infra.exception.FeatureDisabledException;
 import im.turms.server.common.infra.exception.ThrowableUtil;
 import im.turms.server.common.infra.fake.RandomProtobufGenerator.GeneratorOptions;
 import im.turms.server.common.infra.fake.RandomRequestFactory;
@@ -78,7 +79,7 @@ public class ClientFakingManager {
                 && fakeProperties.getUserCount() > 0
                 && fakeProperties.getRequestCountPerInterval() > 0;
         if (!tcpUserSessionDispatcher.isEnabled()) {
-            throw new IllegalStateException("Cannot run clients because the TCP server is disabled");
+            throw new FeatureDisabledException("Cannot run clients because the TCP server is disabled");
         }
         context.addShutdownHook(JobShutdownOrder.CLOSE_FAKE_CLIENTS, timeoutMillis -> {
             shutdown(timeoutMillis);
@@ -132,12 +133,13 @@ public class ClientFakingManager {
                         if (ResponseStatusCode.isSuccessCode(notification.getCode())) {
                             clients.add(client);
                         } else {
-                            LOGGER.error("The session {} failed to log in: {}", client.getSessionId(),
+                            LOGGER.error("Failed to establish the session: {}. The login response is: {}",
+                                    client.getSessionIdDesc(),
                                     ProtoFormatter.toJSON5(notification, 128));
                         }
                     })
                     .onErrorResume(t -> {
-                        LOGGER.error("The session {} failed to log in", client.getSessionId(), t);
+                        LOGGER.error("Failed to establish the session: " + client.getSessionIdDesc(), t);
                         return Mono.empty();
                     });
             results.add(loginResult);
@@ -156,7 +158,7 @@ public class ClientFakingManager {
                                             int requestIntervalMillis,
                                             int requestCountPerInterval) {
         if (clients.isEmpty()) {
-            LOGGER.info("No available clients to send random requests");
+            LOGGER.info("No available client to send random requests");
             return;
         }
         LOGGER.info("Start sending random requests from clients");
@@ -183,14 +185,14 @@ public class ClientFakingManager {
                         TurmsRequest request = RandomRequestFactory.create(excludedRequestNames, generatorOptions);
                         client.sendRequest(request)
                                 .subscribe(null, t -> {
-                                    LOGGER.error("Caught an internal error while sending request: {}",
+                                    LOGGER.error("Caught an error while sending the request: {}",
                                             ProtoFormatter.toLogString(request), t);
                                     if (ThrowableUtil.isDisconnectedClientError(t)) {
                                         removeCurrentClient(clientIterator, client);
                                     }
                                 });
                     } catch (Exception e) {
-                        LOGGER.error("Caught an internal error while sending request", e);
+                        LOGGER.error("Caught an error while sending a request", e);
                     }
                     sentRequestCount++;
                 }
@@ -199,8 +201,8 @@ public class ClientFakingManager {
                 } catch (InterruptedException e) {
                     for (TurmsClient client : clients) {
                         client.logout()
-                                .subscribe(null, t -> LOGGER.error("Caught an error while the client with the user ID [{}] logging out",
-                                        client.getUserId(), t));
+                                .subscribe(null, t -> LOGGER.error("Caught an error while closing the session: {}",
+                                        client.getSessionIdDesc(), t));
                     }
                     break;
                 }
@@ -212,7 +214,7 @@ public class ClientFakingManager {
 
     private void removeCurrentClient(Iterator<TurmsClient> clients, TurmsClient client) {
         clients.remove();
-        LOGGER.warn("The session {} has been closed and removed", client.getSessionId());
+        LOGGER.warn("The session {} has been closed and removed", client.getSessionIdDesc());
     }
 
 }

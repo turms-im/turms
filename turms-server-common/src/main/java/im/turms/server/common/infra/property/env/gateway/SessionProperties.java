@@ -38,7 +38,7 @@ import jakarta.validation.constraints.Min;
 @NoArgsConstructor
 public class SessionProperties {
 
-    @Description("A session will be closed if turms server doesn't receive any request " +
+    @Description("A session will be closed if turms server does not receive any request " +
             "(including heartbeat request) from the client during closeIdleSessionAfterSeconds. References: " +
             "https://mp.weixin.qq.com/s?__biz=MzAwNDY1ODY2OQ==&mid=207243549&idx=1&sn=4ebe4beb8123f1b5ab58810ac8bc5994&scene=0#rd")
     @GlobalProperty
@@ -49,7 +49,7 @@ public class SessionProperties {
     @Description("If the turms server only receives heartbeat requests from the client during switchProtocolAfterSeconds, " +
             "the TCP/WebSocket connection will be closed with the close status \"SWITCH\" to indicate the client " +
             "should keep sending heartbeat requests over UDP if they want to keep online. " +
-            "Note: 1. The property only works if UDP is enabled; 2. For browser clients, UDP isn't supported")
+            "Note: 1. The property only works if UDP is enabled; 2. For browser clients, UDP is not supported")
     @GlobalProperty
     @MutableProperty
     @Min(0)

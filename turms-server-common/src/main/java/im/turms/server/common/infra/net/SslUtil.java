@@ -21,7 +21,6 @@ import im.turms.server.common.infra.property.env.common.SslProperties;
 import lombok.SneakyThrows;
 import org.springframework.boot.web.server.SslConfigurationValidator;
 import org.springframework.boot.web.server.SslStoreProvider;
-import org.springframework.boot.web.server.WebServerException;
 import org.springframework.util.ResourceUtils;
 import reactor.netty.http.Http11SslContextSpec;
 import reactor.netty.http.server.HttpServer;
@@ -111,8 +110,8 @@ public final class SslUtil {
             }
             keyManagerFactory.init(keyStore, keyPassword);
             return keyManagerFactory;
-        } catch (Exception ex) {
-            throw new IllegalStateException(ex);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to get the key manager factory", e);
         }
     }
 
@@ -121,7 +120,7 @@ public final class SslUtil {
         if (sslStoreProvider != null) {
             return sslStoreProvider.getKeyStore();
         }
-        return loadKeyStore(ssl.getKeyStoreType(), ssl.getKeyStoreProvider(), ssl.getKeyStore(),
+        return loadStore(ssl.getKeyStoreType(), ssl.getKeyStoreProvider(), ssl.getKeyStore(),
                 ssl.getKeyStorePassword());
     }
 
@@ -133,34 +132,31 @@ public final class SslUtil {
             trustManagerFactory.init(store);
             return trustManagerFactory;
         } catch (Exception ex) {
-            throw new IllegalStateException(ex);
+            throw new RuntimeException(ex);
         }
     }
 
-    @SneakyThrows
     private static KeyStore getTrustStore(SslProperties ssl, @Nullable SslStoreProvider sslStoreProvider) {
         if (sslStoreProvider != null) {
-            return sslStoreProvider.getTrustStore();
+            try {
+                return sslStoreProvider.getTrustStore();
+            } catch (Exception e) {
+                throw new RuntimeException("Failed to get the instance of the trust store", e);
+            }
         }
-        return loadTrustStore(ssl.getTrustStoreType(), ssl.getTrustStoreProvider(), ssl.getTrustStore(),
+        String trustStore = ssl.getTrustStore();
+        if (trustStore == null) {
+            return null;
+        }
+        return loadStore(ssl.getTrustStoreType(), ssl.getTrustStoreProvider(), trustStore,
                 ssl.getTrustStorePassword());
     }
 
-    private static KeyStore loadKeyStore(String type, String provider, String resource, String password) {
-
-        return loadStore(type, provider, resource, password);
-    }
-
-    private static KeyStore loadTrustStore(String type, String provider, String resource, String password) {
-        if (resource == null) {
-            return null;
-        }
-        return loadStore(type, provider, resource, password);
-    }
-
     @SneakyThrows
-    private static KeyStore loadStore(String type, String provider, String resource, String password) {
-        type = type == null ? "JKS" : type;
+    private static KeyStore loadStore(String type,
+                                      @Nullable String provider,
+                                      String resource,
+                                      @Nullable String password) {
         KeyStore store = provider == null
                 ? KeyStore.getInstance(type)
                 : KeyStore.getInstance(type, provider);
@@ -171,7 +167,7 @@ public final class SslUtil {
             }
             return store;
         } catch (Exception ex) {
-            throw new WebServerException("Could not load key store '" + resource + "'", ex);
+            throw new RuntimeException("Failed to load key store from the resource: " + resource, ex);
         }
     }
 

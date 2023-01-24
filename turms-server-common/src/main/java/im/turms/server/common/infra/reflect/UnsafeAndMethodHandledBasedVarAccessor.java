@@ -19,7 +19,6 @@ package im.turms.server.common.infra.reflect;
 
 import im.turms.server.common.infra.unsafe.UnsafeUtil;
 import lombok.Data;
-import lombok.SneakyThrows;
 import sun.misc.Unsafe;
 
 import java.lang.invoke.MethodHandle;
@@ -52,18 +51,21 @@ public class UnsafeAndMethodHandledBasedVarAccessor<T, V> implements VarAccessor
     @Override
     public V get(T object) {
         if (!declaringClass.isAssignableFrom(object.getClass())) {
-            throw new IllegalArgumentException("The object class should be the class or the subclass of: "
-                    + declaringClass.getName()
-                    + ". But actually it is: "
-                    + object.getClass().getName());
+            throw new IllegalArgumentException("Expecting the object class (" +
+                    declaringClass.getName() +
+                    ") to be the class or the subclass of: " +
+                    object.getClass().getName());
         }
         return (V) UNSAFE.getObject(object, fieldOffset);
     }
 
-    @SneakyThrows
     @Override
     public void set(T object, V value) {
-        setter.invoke(object, value);
+        try {
+            setter.invoke(object, value);
+        } catch (Throwable t) {
+            throw new RuntimeException("Failed to set the value: " + value, t);
+        }
     }
 
 }

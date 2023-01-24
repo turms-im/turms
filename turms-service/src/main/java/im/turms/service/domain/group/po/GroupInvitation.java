@@ -37,11 +37,11 @@ import static im.turms.server.common.storage.mongo.entity.annotation.IndexedReas
 
 /**
  * @author James Chen
- * @implNote Sharded by inviteeId and createDate because it's common for users to
+ * @implNote Sharded by inviteeId and createDate because it is common for users to
  * query whether they have received any group invitation at application startup.
  * <p>
  * Note that the query for the invitations of a group sent by a group admin
- * isn't targeted query but scatter query with indexes supported.
+ * isn't a targeted query, but a scatter query with indexes supported.
  */
 @Data
 @AllArgsConstructor

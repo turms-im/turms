@@ -54,9 +54,14 @@ public abstract class TurmsClient {
 
     public abstract Mono<TurmsNotification> sendRequest(TurmsRequest request);
 
-    public String getSessionId() {
+    public String getSessionIdDesc() {
         DeviceType deviceType = getDeviceType();
-        return getUserId() + ":" + (deviceType == null ? "null" : deviceType.name());
+        String desc = "{user=" + getUserId();
+        if (deviceType == null) {
+            return desc + "}";
+        }
+        desc += ", device=" + deviceType.name() + "}";
+        return desc;
     }
 
     Mono<TurmsNotification> waitForResponse(TurmsRequest request) {

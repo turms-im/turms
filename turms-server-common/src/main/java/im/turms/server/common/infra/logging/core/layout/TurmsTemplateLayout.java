@@ -18,6 +18,7 @@
 package im.turms.server.common.infra.logging.core.layout;
 
 import im.turms.server.common.infra.cluster.node.NodeType;
+import im.turms.server.common.infra.exception.IncompatibleInternalChangeException;
 import im.turms.server.common.infra.exception.ThrowableUtil;
 import im.turms.server.common.infra.lang.AsciiCode;
 import im.turms.server.common.infra.lang.ClassUtil;
@@ -86,11 +87,11 @@ public class TurmsTemplateLayout extends TemplateLayout {
             type = switch (nodeType) {
                 case GATEWAY -> NODE_TYPE_GATEWAY;
                 case SERVICE -> NODE_TYPE_SERVICE;
-                default -> throw new IllegalArgumentException("Unknown node type: " + nodeType);
+                default -> throw new IncompatibleInternalChangeException("Unknown node type: " + nodeType);
             };
         }
         this.nodeType = type;
-        this.nodeId = StringUtil.getUTF8Bytes(nodeId);
+        this.nodeId = StringUtil.getUtf8Bytes(nodeId);
     }
 
     public ByteBuf format(@Nullable byte[] className, LogLevel level, ByteBuf msg) {
@@ -158,7 +159,7 @@ public class TurmsTemplateLayout extends TemplateLayout {
             pad(buffer, TRACE_ID_LENGTH);
         } else {
             long traceId = context.getTraceId();
-            if (traceId != TracingContext.UNDEFINED_TRACE_ID) {
+            if (traceId != TracingContext.UNSET_TRACE_ID) {
                 padStart(buffer, NumberFormatter.toCharBytes(traceId), TRACE_ID_LENGTH);
             }
         }
@@ -206,7 +207,7 @@ public class TurmsTemplateLayout extends TemplateLayout {
             pad(buffer, TRACE_ID_LENGTH);
         } else {
             long traceId = context.getTraceId();
-            if (traceId != TracingContext.UNDEFINED_TRACE_ID) {
+            if (traceId != TracingContext.UNSET_TRACE_ID) {
                 padStart(buffer, NumberFormatter.toCharBytes(traceId), TRACE_ID_LENGTH);
             }
         }
@@ -246,7 +247,7 @@ public class TurmsTemplateLayout extends TemplateLayout {
             if (b == '{' && i < length - 1 && bytes[i + 1] == '}') {
                 if (argIndex < argCount) {
                     Object arg = args[argIndex++];
-                    buffer.writeBytes(StringUtil.getUTF8Bytes(String.valueOf(arg)));
+                    buffer.writeBytes(StringUtil.getUtf8Bytes(String.valueOf(arg)));
                 } else {
                     buffer.writeBytes(NULL);
                 }

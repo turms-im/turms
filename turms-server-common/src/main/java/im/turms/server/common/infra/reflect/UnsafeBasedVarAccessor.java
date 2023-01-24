@@ -41,10 +41,14 @@ public class UnsafeBasedVarAccessor<T, V> implements VarAccessor<T, V> {
         declaringClass = field.getDeclaringClass();
         fieldClass = field.getType();
         if (fieldClass.isPrimitive()) {
-            throw new IllegalArgumentException("The field type cannot be primitive");
+            throw new IllegalArgumentException("The field type (" +
+                    fieldClass.getName() +
+                    ") cannot be primitive");
         }
         if (declaringClass.isRecord()) {
-            throw new IllegalArgumentException("The declaring class cannot be record");
+            throw new IllegalArgumentException("The declaring class (" +
+                    declaringClass.getName() +
+                    ") cannot be record");
         }
         fieldOffset = UNSAFE.objectFieldOffset(field);
     }
@@ -52,9 +56,9 @@ public class UnsafeBasedVarAccessor<T, V> implements VarAccessor<T, V> {
     @Override
     public V get(T object) {
         if (!declaringClass.isAssignableFrom(object.getClass())) {
-            throw new IllegalArgumentException("The object class should be the class or the subclass of: "
+            throw new IllegalArgumentException("The object class must be the class or the subclass of: "
                     + declaringClass.getName()
-                    + ". But actually it is: "
+                    + ", but got: "
                     + object.getClass().getName());
         }
         return (V) UNSAFE.getObject(object, fieldOffset);
@@ -63,15 +67,15 @@ public class UnsafeBasedVarAccessor<T, V> implements VarAccessor<T, V> {
     @Override
     public void set(T object, V value) {
         if (!declaringClass.isAssignableFrom(object.getClass())) {
-            throw new IllegalArgumentException("The object class should be the class or the subclass of: "
+            throw new IllegalArgumentException("The object class must be the class or the subclass of: "
                     + declaringClass.getName()
-                    + ". But actually it is: "
+                    + ", but got: "
                     + object.getClass().getName());
         }
         if (!fieldClass.isAssignableFrom(value.getClass())) {
-            throw new IllegalArgumentException("The value class should be the class or the subclass of: "
+            throw new IllegalArgumentException("The value class must be the class or the subclass of: "
                     + fieldClass.getName()
-                    + ". But actually it is: "
+                    + ", but got: "
                     + value.getClass().getName()
             );
         }

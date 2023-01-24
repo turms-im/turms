@@ -21,7 +21,8 @@ import im.turms.plugin.antispam.TextPreprocessor;
 import im.turms.plugin.antispam.dictionary.DictionaryParser;
 import im.turms.plugin.antispam.dictionary.Word;
 import im.turms.plugin.antispam.property.TextParsingStrategy;
-import lombok.SneakyThrows;
+import im.turms.server.common.infra.serialization.DeserializationException;
+import im.turms.server.common.infra.serialization.SerializationException;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -52,7 +53,7 @@ public final class AhoCorasickCodec {
             throw new RuntimeException("The dictionary path must be specified");
         }
         if (charsetName == null) {
-            System.out.println("The charset isn't specified, and falls back to UTF-8");
+            System.out.println("The charset is not specified, and falls back to UTF-8");
             charsetName = "UTF-8";
         }
         if (skipInvalidCharacterStr != null) {
@@ -71,7 +72,6 @@ public final class AhoCorasickCodec {
         serialize(trie, path.getParent().resolve("words.bin").toString());
     }
 
-    @SneakyThrows
     public static void serialize(AhoCorasickDoubleArrayTrie trie, String outputFile) {
         try (FileOutputStream stream = new FileOutputStream(outputFile, false)) {
             try (ObjectOutputStream outputStream = new ObjectOutputStream(stream)) {
@@ -86,17 +86,18 @@ public final class AhoCorasickCodec {
                 outputStream.writeObject(trie.dat.check);
                 outputStream.writeInt(trie.dat.capacity);
             }
+        } catch (Exception e) {
+            throw new SerializationException("Failed to serialize the trie", e);
         }
     }
 
-    @SneakyThrows
     public static AhoCorasickDoubleArrayTrie deserialize(String file) {
         try (FileInputStream stream = new FileInputStream(file);
              ObjectInputStream inputStream = new ObjectInputStream(stream)) {
             // version
             int version = inputStream.readInt();
             if (version != 1) {
-                throw new RuntimeException("Unknown version: " + version);
+                throw new DeserializationException("Unknown version: " + version);
             }
             int[] fail = (int[]) inputStream.readObject();
             int[][] output = (int[][]) inputStream.readObject();
@@ -107,6 +108,8 @@ public final class AhoCorasickCodec {
             int capacity = inputStream.readInt();
             DoubleArrayTrie trie = new DoubleArrayTrie(base, check, capacity);
             return new AhoCorasickDoubleArrayTrie(fail, output, trie, words);
+        } catch (Exception e) {
+            throw new DeserializationException("Failed to deserialize the trie", e);
         }
     }
 
@@ -116,5 +119,4 @@ public final class AhoCorasickCodec {
         }
         return args[index];
     }
-
 }

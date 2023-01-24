@@ -31,7 +31,6 @@ import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 import reactor.util.function.Tuple3;
 
-import java.net.UnknownHostException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -96,7 +95,7 @@ public abstract class BaseServiceAddressManager {
                                     getWsAddress(),
                                     getTcpAddress(),
                                     getUdpAddress());
-                            triggerOnNodeAddressInfoChangedListeners(addressInfo);
+                            notifyOnNodeAddressInfoChangedListeners(addressInfo);
                         }
                     });
         });
@@ -132,12 +131,13 @@ public abstract class BaseServiceAddressManager {
         onNodeAddressInfoChangedListeners.add(listener);
     }
 
-    private void triggerOnNodeAddressInfoChangedListeners(NodeAddressInfo addresses) {
+    private void notifyOnNodeAddressInfoChangedListeners(NodeAddressInfo addresses) {
         for (Consumer<NodeAddressInfo> listener : onNodeAddressInfoChangedListeners) {
             try {
                 listener.accept(addresses);
             } catch (Exception e) {
-                LOGGER.error("Caught an error while triggering an onNodeAddressInfoChanged listener", e);
+                LOGGER.error("Caught an error while notifying the onNodeAddressInfoChanged listener: " +
+                        listener.getClass().getName(), e);
             }
         }
     }
@@ -156,10 +156,10 @@ public abstract class BaseServiceAddressManager {
         String bindHost = adminHttpProperties.getHost();
         int port = adminHttpProperties.getPort();
         if (bindHost == null) {
-            return Mono.error(new IllegalStateException("The bind host isn't specified"));
+            return Mono.error(new IllegalArgumentException("The bind host is not specified"));
         }
         if (port <= 0) {
-            return Mono.error(new UnknownHostException("Invalid service port: " + port));
+            return Mono.error(new IllegalArgumentException("Invalid service port: " + port));
         }
         return queryHost(newAdminApiAddressProperties.getAdvertiseStrategy(), bindHost, newAdminApiAddressProperties.getAdvertiseHost())
                 .doOnError(t -> LOGGER.error("Failed to update the admin API address", t))
@@ -190,10 +190,10 @@ public abstract class BaseServiceAddressManager {
     protected Mono<String> queryHost(AdvertiseStrategy advertiseStrategy, String bindHost, String advertiseHost) {
         return switch (advertiseStrategy) {
             case ADVERTISE_ADDRESS -> StringUtil.isBlank(advertiseHost)
-                    ? Mono.error(new IllegalStateException("The advertise host isn't specified"))
+                    ? Mono.error(new IllegalArgumentException("The advertise host is not specified"))
                     : Mono.just(advertiseHost);
             case BIND_ADDRESS -> StringUtil.isBlank(bindHost)
-                    ? Mono.error(new IllegalStateException("The bind host isn't specified"))
+                    ? Mono.error(new IllegalArgumentException("The bind host is not specified"))
                     : Mono.just(bindHost);
             case PRIVATE_ADDRESS -> {
                 try {

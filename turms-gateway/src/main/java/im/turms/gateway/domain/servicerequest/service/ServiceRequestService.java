@@ -18,7 +18,6 @@
 package im.turms.gateway.domain.servicerequest.service;
 
 import im.turms.gateway.access.client.common.UserSession;
-import im.turms.gateway.domain.session.service.SessionService;
 import im.turms.server.common.access.client.dto.ClientMessagePool;
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.access.common.ResponseStatusCode;
@@ -40,12 +39,9 @@ public class ServiceRequestService {
     private static final ServiceResponse REQUEST_RESPONSE_NO_CONTENT = new ServiceResponse(null, ResponseStatusCode.NO_CONTENT, null);
 
     private final Node node;
-    private final SessionService sessionService;
 
-    public ServiceRequestService(Node node,
-                                 SessionService sessionService) {
+    public ServiceRequestService(Node node) {
         this.node = node;
-        this.sessionService = sessionService;
     }
 
     /**

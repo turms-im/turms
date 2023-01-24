@@ -96,10 +96,10 @@ public final class UserSession {
     private long lastHeartbeatUpdateTimestampMillis;
 
     /**
-     * Note that it's acceptable that the session is still open even if the connection is closed
+     * Note that it is acceptable that the session is still open even if the connection is closed
      * because the client can send heartbeats over UDP to keep the session open
      *
-     * @implNote For better performance, it's acceptable for our scenarios to not update isSessionOpen atomically.
+     * @implNote For better performance, it is acceptable for our scenarios to not update isSessionOpen atomically.
      */
     private volatile boolean isSessionOpen = true;
     /**
@@ -135,13 +135,13 @@ public final class UserSession {
     }
 
     /**
-     * A session cannot reopen once closed, unlike the connection which is allowed to close and reconnect.
+     * A session cannot reopen once closed, but the connection can close and reconnect.
      */
     public void close(@NotNull CloseReason closeReason) {
         if (isSessionOpen) {
             isSessionOpen = false;
             // Note that it is acceptable to complete/close the connection multiple times
-            // so that it's unnecessary to update isSessionOpen atomically
+            // so that it is unnecessary to update isSessionOpen atomically
             if (connection == null) {
                 LOGGER.warn("The connection is missing for the user session: {}", this);
             } else {

@@ -22,7 +22,7 @@ import org.jctools.queues.MpmcArrayQueue;
 
 /**
  * Note that if the user forgets to recycle a value,
- * though it's a bug, it's okay because JVM GC will release it finally
+ * though it is a bug, it is okay because JVM GC will release it finally
  *
  * @author James Chen
  */
