@@ -72,19 +72,17 @@ public enum TextType {
     TextType(String requestFieldName, String fieldName, String subfieldName) {
         requestFieldDescriptor = TurmsRequest.getDescriptor().findFieldByName(requestFieldName);
         if (requestFieldDescriptor == null) {
-            throw new IllegalArgumentException("Cannot find the request \"" +
+            throw new IllegalArgumentException("Could not find the request \"" +
                     requestFieldName +
-                    "\" in the request \"" +
-                    TurmsRequest.getDescriptor().getFullName()
-                    + "\"");
+                    "\" in the request: " +
+                    TurmsRequest.getDescriptor().getFullName());
         }
         fieldDescriptor = requestFieldDescriptor.getMessageType().findFieldByName(fieldName);
         if (fieldDescriptor == null) {
-            throw new IllegalArgumentException("Cannot find the field \"" +
+            throw new IllegalArgumentException("Could not find the field \"" +
                     fieldName +
-                    "\" in the request \"" +
-                    requestFieldDescriptor.getFullName() +
-                    "\"");
+                    "\" in the request: " +
+                    requestFieldDescriptor.getFullName());
         }
         Descriptors.FieldDescriptor.JavaType javaType = fieldDescriptor.getJavaType();
         Descriptors.FieldDescriptor subfieldDescriptor = null;
@@ -92,40 +90,39 @@ public enum TextType {
             if (javaType != Descriptors.FieldDescriptor.JavaType.STRING) {
                 throw new IllegalArgumentException("Expecting the field \"" +
                         fieldName +
-                        "\" to be a string in the request \"" +
+                        "\" to be a string in the request: " +
                         requestFieldDescriptor.getFullName() +
-                        "\", but got: " +
+                        ", but got: " +
                         javaType);
             }
         } else {
             if (fieldDescriptor.isRepeated()) {
                 subfieldDescriptor = fieldDescriptor.getMessageType().findFieldByName(subfieldName);
                 if (subfieldDescriptor == null) {
-                    throw new IllegalArgumentException("Cannot find the subfield \"" +
+                    throw new IllegalArgumentException("Could not find the subfield \"" +
                             subfieldName +
-                            "\" in the field \"" +
+                            "\" in the field (" +
                             fieldDescriptor.getMessageType().getFullName() +
-                            "\" in the request \"" +
-                            requestFieldDescriptor.getFullName() +
-                            "\"");
+                            ") in the request: " +
+                            requestFieldDescriptor.getFullName());
                 } else if (subfieldDescriptor.getJavaType() != Descriptors.FieldDescriptor.JavaType.STRING) {
                     throw new IllegalArgumentException("Expecting the field \"" +
                             fieldName +
-                            "\" in the field \"" +
+                            "\" in the field (" +
                             fieldDescriptor.getMessageType().getFullName() +
-                            "\" in the request \"" +
+                            ") in the request (" +
                             requestFieldDescriptor.getFullName() +
-                            "\" to be a List<String>, but got: " +
+                            ") to be a List<String>, but got: " +
                             javaType);
                 }
             } else {
                 throw new IllegalArgumentException("Expecting the field \"" +
                         fieldName +
-                        "\" in the field \"" +
+                        "\" in the field (" +
                         fieldDescriptor.getMessageType().getFullName() +
-                        "\" in the request \"" +
+                        ") in the request (" +
                         requestFieldDescriptor.getFullName() +
-                        "\" to be a List<String>, but got: " +
+                        ") to be a List<String>, but got: " +
                         javaType);
             }
         }

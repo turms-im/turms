@@ -120,7 +120,7 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
      * @implNote 1. We use HMAC(key, message) instead of a HASH(key + message) to avoid the length extension attack.
      * To put simply, if a hacker knows the signature of the resource "1", and he can also know the signature of
      * resource "12", "13", "123", and so on without knowledge of the key.
-     * 2. Use MD5 because its output size (128 bits) is small, and it's a 22-character Base62-encoded string.
+     * 2. Use MD5 because its output size (128 bits) is small, and it is a 22-character Base62-encoded string.
      */
     private boolean isMacEnabled;
     @Nullable
@@ -166,14 +166,12 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
         try {
             uri = new URI(endpoint);
         } catch (URISyntaxException e) {
-            throw new IllegalArgumentException("The endpoint URL [" +
-                                               endpoint +
-                                               "] is illegal", e);
+            throw new IllegalArgumentException("Illegal endpoint URL: " + endpoint, e);
         }
         if (!uri.isAbsolute()) {
-            throw new IllegalArgumentException("The endpoint URL [" +
-                                               endpoint +
-                                               "] must be absolute");
+            throw new IllegalArgumentException("The endpoint URL (" +
+                    endpoint +
+                    ") must be absolute");
         }
         ApplicationContext context = getContext();
         node = context.getBean(Node.class);
@@ -276,7 +274,7 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
             Mono<Void> initBucket = bucketExists(bucket)
                     .flatMap(exists -> {
                         if (exists) {
-                            LOGGER.info("Bucket {} has already existed", bucket);
+                            LOGGER.info("The bucket \"{}\" has already existed", bucket);
                             return Mono.empty();
                         }
                         StorageItemProperties itemProperties = switch (resourceType) {
@@ -284,19 +282,19 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
                             case GROUP_PROFILE_PICTURE -> storageProperties.getGroupProfilePicture();
                             case MESSAGE_ATTACHMENT -> storageProperties.getMessageAttachment();
                             default -> throw ResponseException
-                                    .get(ResponseStatusCode.ILLEGAL_ARGUMENT, "The resource type is unknown: " + resourceType);
+                                    .get(ResponseStatusCode.ILLEGAL_ARGUMENT, "Unknown storage resource type: " + resourceType);
                         };
                         Mono<Void> createBucket = createBucket(resourceType)
                                 .then(Mono.defer(() ->
                                         setBucketLifecycle(bucket, itemProperties.getExpireAfterDays())));
                         if (resourceType == StorageResourceType.USER_PROFILE_PICTURE ||
-                            resourceType == GROUP_PROFILE_PICTURE) {
+                                resourceType == GROUP_PROFILE_PICTURE) {
                             createBucket = createBucket
                                     .then(Mono.defer(() ->
                                             setBucketPolicy(bucket, itemProperties.getAllowedReferrers())));
                         }
                         return createBucket
-                                .doOnSuccess(unused -> LOGGER.info("Bucket {} is created", bucket));
+                                .doOnSuccess(unused -> LOGGER.info("The bucket \"{}\" has been created", bucket));
                     })
                     .onErrorMap(t -> new RuntimeException("Caught an error while creating buckets", t));
             initBuckets.add(initBucket);
@@ -309,7 +307,7 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
         return PublisherUtil.fromFuture(() -> client.makeBucket(MakeBucketArgs.builder()
                         .bucket(bucketName)
                         .build()))
-                .onErrorMap(t -> new RuntimeException("Failed to create the bucket [" + bucketName + "]", t));
+                .onErrorMap(t -> new RuntimeException("Failed to create the bucket: \"" + bucketName + "\"", t));
     }
 
     private Mono<Void> setBucketPolicy(String bucket, List<String> allowedReferrers) {
@@ -336,11 +334,11 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
                         .bucket(bucket)
                         .config(config)
                         .build()))
-                .onErrorMap(t -> new RuntimeException("Failed to set the bucket policy [" +
-                                                      StringUtil.sanitizeLatin1(config) +
-                                                      "] to the bucket [" +
-                                                      bucket
-                                                      + "]", t))
+                .onErrorMap(t -> new RuntimeException("Failed to set the bucket policy (" +
+                        StringUtil.sanitizeLatin1(config) +
+                        ") to the bucket: \"" +
+                        bucket
+                        + "\"", t))
                 .then();
     }
 
@@ -362,9 +360,9 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
                                         null)
                         )))
                         .build()))
-                .onErrorMap(t -> new RuntimeException("Failed to set a lifecycle configuration to the bucket [" +
-                                                      bucket
-                                                      + "]", t))
+                .onErrorMap(t -> new RuntimeException("Failed to set a lifecycle configuration to the bucket: \"" +
+                        bucket
+                        + "\"", t))
                 .then();
     }
 
@@ -372,7 +370,7 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
         return PublisherUtil.fromFuture(() -> client.bucketExists(BucketExistsArgs.builder()
                         .bucket(bucket)
                         .build()))
-                .onErrorMap(t -> new RuntimeException("Failed to check if the bucket [" + bucket + "] exists", t));
+                .onErrorMap(t -> new RuntimeException("Failed to check if the bucket \"" + bucket + "\" exists", t));
     }
 
     private String getBucketName(StorageResourceType resourceType) {
@@ -392,11 +390,11 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
             builder.expiry(expireAfterSeconds);
         }
         return PublisherUtil.fromFuture(() -> client.getPresignedObjectUrlAsync(builder.build()))
-                .onErrorMap(t -> new RuntimeException("Failed to get the presigned URL to download the resource object [" +
-                                                      key +
-                                                      "] in the bucket [" +
-                                                      bucket +
-                                                      "]", t));
+                .onErrorMap(t -> new RuntimeException("Failed to get the presigned URL to download the resource object \"" +
+                        key +
+                        "\" in the bucket: \"" +
+                        bucket +
+                        "\"", t));
     }
 
     private Map<String, String> getResourceUploadInfo(@NotNull String bucket,
@@ -428,11 +426,11 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
             map.put(RESOURCE_URL, baseUrl + "/" + bucket);
             return map;
         } catch (Exception e) {
-            throw new RuntimeException("Failed to get the presigned post form data for the resource object [" +
-                                       objectKey +
-                                       "] in the bucket [" +
-                                       bucket +
-                                       "]"
+            throw new RuntimeException("Failed to get the presigned post form data for the resource object \"" +
+                    objectKey +
+                    "\" in the bucket \"" +
+                    bucket +
+                    "\""
                     , e);
         }
     }
@@ -484,11 +482,11 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
                         .bucket(bucketName)
                         .object(objectKey)
                         .build()))
-                .onErrorMap(t -> new RuntimeException("Failed to remove the user profile picture [" +
-                                                      objectKey +
-                                                      "] in the bucket [" +
-                                                      bucketName +
-                                                      "]"
+                .onErrorMap(t -> new RuntimeException("Failed to remove the user profile picture with the object key \"" +
+                        objectKey +
+                        "\" in the bucket \"" +
+                        bucketName +
+                        "\""
                         , t));
     }
 
@@ -541,11 +539,11 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
                                     .bucket(bucketName)
                                     .object(objectKey)
                                     .build()))
-                            .onErrorMap(t -> new RuntimeException("Failed to remove the group profile picture [" +
-                                                                  objectKey +
-                                                                  "] in the bucket [" +
-                                                                  bucketName +
-                                                                  "]"
+                            .onErrorMap(t -> new RuntimeException("Failed to remove the group profile picture with the object key \"" +
+                                    objectKey +
+                                    "\" in the bucket \"" +
+                                    bucketName +
+                                    "\""
                                     , t));
                 });
     }

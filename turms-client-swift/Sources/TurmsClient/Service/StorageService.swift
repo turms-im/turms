@@ -33,7 +33,7 @@ public class StorageService {
                 guard let id = id else {
                     throw ResponseError(
                         code: ResponseStatusCode.dataNotFound,
-                        reason: "Cannot get the resource ID because the key \"\(StorageService.RESOURCE_ID_KEY_NAME)\" doesn\'t exist in the data: \(uploadInfo.data)"
+                        reason: "Could not get the resource ID because the key \"\(StorageService.RESOURCE_ID_KEY_NAME)\" does not exist in the data: \(uploadInfo.data)"
                     )
                 }
                 return self.upload(url: url, formData: infoData, data: data, id: id, name: name, mediaType: mediaType)
@@ -83,7 +83,7 @@ public class StorageService {
                 guard let id = id else {
                     throw ResponseError(
                         code: ResponseStatusCode.dataNotFound,
-                        reason: "Cannot get the resource ID because the key \"\(StorageService.RESOURCE_ID_KEY_NAME)\" doesn\'t exist in the data: \(uploadInfo.data)"
+                        reason: "Could not get the resource ID because the key \"\(StorageService.RESOURCE_ID_KEY_NAME)\" does not exist in the data: \(uploadInfo.data)"
                     )
                 }
                 return self.upload(url: url, formData: infoData, data: data, id: id, name: name, mediaType: mediaType)
@@ -185,7 +185,7 @@ public class StorageService {
                 guard let id = id else {
                     throw ResponseError(
                         code: .dataNotFound,
-                        reason: "Cannot get the resource ID because the key \"\(StorageService.RESOURCE_ID_KEY_NAME)\" doesn\'t exist in the data: \(uploadInfo.data)"
+                        reason: "Could not get the resource ID because the key \"\(StorageService.RESOURCE_ID_KEY_NAME)\" does not exist in the data: \(uploadInfo.data)"
                     )
                 }
                 return self.upload(url: url, formData: infoData, data: data, id: id, name: name, mediaType: mediaType)
@@ -590,7 +590,7 @@ public class StorageService {
         }
         throw ResponseError(
             code: ResponseStatusCode.dataNotFound,
-            reason: "Cannot get the resource URL because the key \"\(urlKeyName)\" doesn\'t exist in the data: \(data)"
+            reason: "Could not get the resource URL because the key \"\(urlKeyName)\" does not exist in the data: \(data)"
         )
     }
 
@@ -601,7 +601,7 @@ public class StorageService {
         }
         throw ResponseError(
             code: ResponseStatusCode.dataNotFound,
-            reason: "Cannot get the resource URL because the key \"\(urlKeyName)\" doesn\'t exist in the data: \(data)"
+            reason: "Could not get the resource URL because the key \"\(urlKeyName)\" does not exist in the data: \(data)"
         )
     }
 }

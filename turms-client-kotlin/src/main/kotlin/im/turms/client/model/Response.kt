@@ -53,13 +53,13 @@ data class Response<T>(
             if (!notification.hasCode()) {
                 throw ResponseException.from(
                     ResponseStatusCode.INVALID_NOTIFICATION,
-                    "Cannot parse a success response from a notification without code"
+                    "Could not parse a success response from a notification without code"
                 )
             }
             if (notification.isError) {
                 throw ResponseException.from(
                     ResponseStatusCode.INVALID_NOTIFICATION,
-                    "Cannot parse a success response from non-success notification"
+                    "Could not parse a success response from non-success notification"
                 )
             }
             val data = if (dataTransformer == null) {

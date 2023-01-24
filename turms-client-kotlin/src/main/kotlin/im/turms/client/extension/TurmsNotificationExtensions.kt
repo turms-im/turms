@@ -39,7 +39,7 @@ fun TurmsNotification.Data.getLongOrThrow(): Long {
     if (!hasLong()) {
         throw ResponseException.from(
             ResponseStatusCode.INVALID_RESPONSE,
-            "Cannot get a long value from the invalid response: $this"
+            "Could not get a long value from the invalid response: $this"
         )
     }
     return long

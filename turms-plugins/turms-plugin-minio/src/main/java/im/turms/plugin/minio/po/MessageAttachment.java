@@ -40,7 +40,7 @@ public class MessageAttachment extends BaseEntity {
     public static final String COLLECTION_NAME = "minioMessageAttachment";
 
     /**
-     * It's secure to use int64 ID because even if crawlers can
+     * It is secure to use int64 ID because even if crawlers can
      * predict resource IDs, they don't have permission to download them
      * (We use signed URLs)
      */

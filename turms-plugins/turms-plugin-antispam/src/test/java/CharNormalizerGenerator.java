@@ -17,6 +17,7 @@
 
 import com.ibm.icu.lang.UCharacter;
 import com.ibm.icu.text.Transliterator;
+import im.turms.server.common.infra.io.InputOutputException;
 import lombok.SneakyThrows;
 
 import java.io.IOException;
@@ -187,7 +188,11 @@ public class CharNormalizerGenerator {
         try {
             Files.writeString(path, str, StandardCharsets.UTF_8);
         } catch (IOException e) {
-            throw new RuntimeException("Failed to write the file %s.\n%s".formatted(path.toAbsolutePath(), str), e);
+            throw new InputOutputException("Failed to write to the file: " +
+                    path.toAbsolutePath() +
+                    ".\n\"" +
+                    str +
+                    "\"", e);
         }
     }
 

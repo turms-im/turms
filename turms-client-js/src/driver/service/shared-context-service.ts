@@ -104,7 +104,7 @@ export default class SharedContextService extends BaseService {
             register = Promise.resolve();
         } else {
             if (!this._registerRequest) {
-                const error = new Error('Cannot send request to the shared worker because the local service hasn\'t registered');
+                const error = new Error('Could not send the request to the shared worker because the local service has not registered');
                 return Promise.reject(error);
             }
             register = this._registerRequest;

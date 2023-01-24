@@ -32,7 +32,7 @@ class TcpClient {
     final addresses = await InternetAddress.lookup(host);
     metrics.addressResolverTime = stopwatch.elapsedMilliseconds;
     if (addresses.isEmpty) {
-      throw SocketException('Cannot find the addresses of the host: $host');
+      throw SocketException('Could not find the addresses of the host: $host');
     }
     final address = addresses[0];
     stopwatch.reset();

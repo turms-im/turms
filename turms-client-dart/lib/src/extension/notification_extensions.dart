@@ -23,7 +23,8 @@ extension NotificationDataExtensions on TurmsNotification_Data {
     if (!hasLong()) {
       throw ResponseException(
           code: ResponseStatusCode.invalidResponse,
-          reason: 'Cannot get a long value from the invalid response: $this');
+          reason:
+              'Could not get a long value from the invalid response: $this');
     }
     return long;
   }

@@ -48,7 +48,7 @@ class StorageService {
       throw ResponseException(
           code: ResponseStatusCode.dataNotFound,
           reason:
-              'Cannot get the resource ID because the key "$_resourceIdKeyName" doesn\'t exist in the data: ${uploadInfo.data}');
+              'Could not get the resource ID because the key "$_resourceIdKeyName" does not exist in the data: ${uploadInfo.data}');
     }
     return _upload(url, uploadInfo.data, data, id, name: name, mediaType: type);
   }
@@ -112,7 +112,7 @@ class StorageService {
       throw ResponseException(
           code: ResponseStatusCode.dataNotFound,
           reason:
-              'Cannot get the resource ID because the key "$_resourceIdKeyName" doesn\'t exist in the data: ${uploadInfo.data}');
+              'Could not get the resource ID because the key "$_resourceIdKeyName" does not exist in the data: ${uploadInfo.data}');
     }
     return _upload(url, uploadInfo.data, data, id, name: name, mediaType: type);
   }
@@ -237,7 +237,7 @@ class StorageService {
       throw ResponseException(
           code: ResponseStatusCode.dataNotFound,
           reason:
-              'Cannot get the resource ID because the key "$_resourceIdKeyName" doesn\'t exist in the data: ${uploadInfo.data}');
+              'Could not get the resource ID because the key "$_resourceIdKeyName" does not exist in the data: ${uploadInfo.data}');
     }
     return _upload(url, uploadInfo.data, data, id, name: name, mediaType: type);
   }
@@ -546,7 +546,7 @@ class StorageService {
       throw ResponseException(
           code: ResponseStatusCode.dataNotFound,
           reason:
-              'Cannot get the resource URL because the key "$urlKeyName" doesn\'t exist in the data: ${data}');
+              'Could not get the resource URL because the key "$urlKeyName" does not exist in the data: ${data}');
     }
     return url;
   }

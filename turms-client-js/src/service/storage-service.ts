@@ -70,7 +70,7 @@ export default class StorageService {
             if (id == null) {
                 throw ResponseError.from({
                     code: ResponseStatusCode.DATA_NOT_FOUND,
-                    reason: `Cannot get the resource ID because the key "${StorageService._RESOURCE_ID_KEY_NAME}" doesn't exist in the data: ${JSON.stringify(uploadInfo.data)}`
+                    reason: `Could not get the resource ID because the key "${StorageService._RESOURCE_ID_KEY_NAME}" does not exist in the data: ${JSON.stringify(uploadInfo.data)}`
                 });
             }
             return this._upload({
@@ -193,7 +193,7 @@ export default class StorageService {
                 if (id == null) {
                     throw ResponseError.from({
                         code: ResponseStatusCode.DATA_NOT_FOUND,
-                        reason: `Cannot get the resource ID because the key "${StorageService._RESOURCE_ID_KEY_NAME}" doesn't exist in the data: ${JSON.stringify(uploadInfo.data)}`
+                        reason: `Could not get the resource ID because the key "${StorageService._RESOURCE_ID_KEY_NAME}" does not exist in the data: ${JSON.stringify(uploadInfo.data)}`
                     });
                 }
                 return this._upload({
@@ -419,7 +419,7 @@ export default class StorageService {
             if (id == null) {
                 throw ResponseError.from({
                     code: ResponseStatusCode.DATA_NOT_FOUND,
-                    reason: `Cannot get the resource ID because the key "${StorageService._RESOURCE_ID_KEY_NAME}" doesn't exist in the data: ${JSON.stringify(uploadInfo.data)}`
+                    reason: `Could not get the resource ID because the key "${StorageService._RESOURCE_ID_KEY_NAME}" does not exist in the data: ${JSON.stringify(uploadInfo.data)}`
                 });
             }
             return this._upload({
@@ -917,7 +917,7 @@ export default class StorageService {
         if (url == null) {
             throw ResponseError.from({
                 code: ResponseStatusCode.DATA_NOT_FOUND,
-                reason: `Cannot get the resource URL because the key "${urlKeyName}" doesn't exist in the data: ${JSON.stringify(data)}`
+                reason: `Could not get the resource URL because the key "${urlKeyName}" does not exist in the data: ${JSON.stringify(data)}`
             });
         }
         delete data[urlKeyName];

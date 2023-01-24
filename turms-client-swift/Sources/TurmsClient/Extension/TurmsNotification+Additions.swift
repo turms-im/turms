@@ -19,7 +19,7 @@ public extension TurmsNotification.DataMessage {
         }
         throw ResponseError(
             code: .invalidResponse,
-            reason: "Cannot get a long value from the invalid response: \(self)"
+            reason: "Could not get a long value from the invalid response: \(self)"
         )
     }
 }

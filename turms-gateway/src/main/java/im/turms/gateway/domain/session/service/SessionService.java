@@ -212,7 +212,7 @@ public class SessionService implements ISessionService, SessionIdentityAccessMan
             @Nullable Location location,
             @Nullable String ipStr) {
         if (version != 1) {
-            return Mono.error(ResponseException.get(ResponseStatusCode.UNSUPPORTED_CLIENT_VERSION, "Supported session versions are: [1], but got: " + version));
+            return Mono.error(ResponseException.get(ResponseStatusCode.UNSUPPORTED_CLIENT_VERSION, "Supported client versions are: [1], but got: " + version));
         }
         if (userSimultaneousLoginService.isForbiddenDeviceType(deviceType)) {
             return Mono.error(ResponseException.get(ResponseStatusCode.LOGIN_FROM_FORBIDDEN_DEVICE_TYPE));

@@ -33,13 +33,13 @@ public struct Response<T> {
         if !notification.hasCode {
             throw ResponseError(
                 code: .invalidNotification,
-                reason: "Cannot parse a success response from a notification without code"
+                reason: "Could not parse a success response from a notification without code"
             )
         }
         if notification.isError {
             throw ResponseError(
                 code: .invalidNotification,
-                reason: "Cannot parse a success response from non-success notification"
+                reason: "Could not parse a success response from non-success notification"
             )
         }
         var data: T

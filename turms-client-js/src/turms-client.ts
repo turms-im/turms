@@ -48,7 +48,7 @@ class TurmsClient {
             wsUrlOrOptions = wsUrlOrOptions.wsUrl;
         }
         if (useSharedContext && !TurmsClient.isSharedContextSupported()) {
-            throw new Error('Cannot use the shared context because the browser doesn\'t support SharedWorker');
+            throw new Error('Cannot use the shared context because the browser does not support SharedWorker');
         }
         this._driver = new TurmsDriver(
             wsUrlOrOptions,

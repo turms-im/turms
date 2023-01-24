@@ -80,7 +80,7 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
         val id = responseData.remove(RESOURCE_ID_KEY_NAME)
             ?: throw ResponseException.from(
                 code = ResponseStatusCode.DATA_NOT_FOUND,
-                reason = "Cannot get the resource ID because the key \"$RESOURCE_ID_KEY_NAME\" doesn\'t exist in the data: ${uploadInfo.data}"
+                reason = "Could not get the resource ID because the key \"$RESOURCE_ID_KEY_NAME\" does not exist in the data: ${uploadInfo.data}"
             )
         return upload(url, responseData, data, id, name, type)
     }
@@ -158,7 +158,7 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
         val id = responseData.remove(RESOURCE_ID_KEY_NAME)
             ?: throw ResponseException.from(
                 code = ResponseStatusCode.DATA_NOT_FOUND,
-                reason = "Cannot get the resource ID because the key \"$RESOURCE_ID_KEY_NAME\" doesn\'t exist in the data: ${uploadInfo.data}"
+                reason = "Could not get the resource ID because the key \"$RESOURCE_ID_KEY_NAME\" does not exist in the data: ${uploadInfo.data}"
             )
         return upload(url, responseData, data, id, name, type)
     }
@@ -314,7 +314,7 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
         val id = responseData.remove(RESOURCE_ID_KEY_NAME)
             ?: throw ResponseException.from(
                 code = ResponseStatusCode.DATA_NOT_FOUND,
-                reason = "Cannot get the resource ID because the key \"$RESOURCE_ID_KEY_NAME\" doesn\'t exist in the data: ${uploadInfo.data}"
+                reason = "Could not get the resource ID because the key \"$RESOURCE_ID_KEY_NAME\" does not exist in the data: ${uploadInfo.data}"
             )
         return upload(url, responseData, data, id, name, type)
     }
@@ -755,7 +755,7 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
         return data[urlKeyName]
             ?: throw ResponseException.from(
                 ResponseStatusCode.DATA_NOT_FOUND,
-                "Cannot get the resource URL because the key \"$urlKeyName\" doesn\'t exist in the data: $data"
+                "Could not get the resource URL because the key \"$urlKeyName\" does not exist in the data: $data"
             )
     }
 
@@ -763,7 +763,7 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
         return data.remove(urlKeyName)
             ?: throw ResponseException.from(
                 ResponseStatusCode.DATA_NOT_FOUND,
-                "Cannot get the resource URL because the key \"$urlKeyName\" doesn\'t exist in the data: $data"
+                "Could not get the resource URL because the key \"$urlKeyName\" does not exist in the data: $data"
             )
     }
 

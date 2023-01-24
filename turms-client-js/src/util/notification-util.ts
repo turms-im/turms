@@ -59,7 +59,7 @@ export default class NotificationUtil {
         if (long == null) {
             throw ResponseError.from({
                 code: ResponseStatusCode.INVALID_RESPONSE,
-                reason: `Cannot get a long value from the invalid response: ${JSON.stringify(data)}`
+                reason: `Could not get a long value from the invalid response: ${JSON.stringify(data)}`
             });
         }
         return long;
