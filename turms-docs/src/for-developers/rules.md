@@ -143,3 +143,31 @@ return result
 ```
 
 如上文所述，该段代码通过`notifyRelatedUsersOfAction`函数进行通知下发操作，其内部实现我们并不关心，我们只要在最上游通过`subscribe(...)`保证能捕获其可能抛出的异常并打印即可。
+
+### 有且仅自定义继承自`RuntimeException`的异常类
+
+在Turms服务端项目中，有且仅自定义继承自`RuntimeException`的异常类，禁止自定义继承自`Exception`（`Checked Exception`）的异常类。
+
+关于使用`Checked Exception`，还是`Unchecked Exception`的讨论至今都是众说纷纭，但如今不少文章直接批评`Checked Exception`是Java的设计败笔，像是Kotlin/Scala/C#这些后来的语言甚至压根没有`Checked Exception`这一概念，而如今大部分大中知名开源项目一般也只自定义`RuntimeException`的子类，而不自定义`Checked Exception`的子类。
+
+常见的认为`Checked Exception`是糟糕设计的原因比如有：
+
+* 作为第三方库/下游代码，`Checked Exception`存在接口签名版本化兼容问题。
+
+* 作为大中项目，当子模块都使用`Checked Exception`，则上游代码的接口可以最终会声明数十个异常，当接口的异常声明做增删改后，牵一发动全身。
+
+* Java代码内部，自己都存在异常设计冲突。比如Java Streams设计中的Lamba自己都不支持抛`Checked Exception`，对于在Stream里的Lambda，其实现必须当成处理（通常是错误实践）或将其转换成`Unchecked Exception`（丢失了使用`Checked Exception`的意义），Java内部甚至因此还引入了`UncheckedIOException`。
+
+* 在实践中，人们经常会回避`Checked Exception`被设计出来的目的，导致不如不用`Checked Exception`，比如：
+
+  * 直接捕获所有`Exception`
+  * 将`Checked Exception`翻译成`RuntimeException`。如`try { ... } catch (Exception e) { throw new RuntimeException(e); }`
+  * 由于栈太深，为了避免污染上游代码，直接在下游进行无意义的捕获，甚至有可能错误地直接`catch (Exception e) { do nothing }`
+
+* 不少开发者会错误地理解异常设计，然后错误地去自定义异常。比如说不少开发者认为`如果是上游代码可以避免的异常，则用RuntimeException的子类。如果是上游代码不可避免的异常，则用Checked Exception`，类似的观点就非常盲目乐观与缺乏实际项目经验与编码经验了，因为下游抛出的异常到底可不可以处理取决于上游代码逻辑，而不是下游代码的臆想。
+
+  举例来说Turms服务端的插件模块在加载插件时，可能插件的类加载器会抛出`NoClassDefFoundError`，如果按Java早期团队的说法`An Error is a subclass of Throwable that indicates serious problems that a reasonable application should not try to catch`，那插件模块的上游代码就不应该捕获`Error`，但Turms作为一个服务端不可能因为加载了一个有问题的类插件，就让服务端异常，因此上游代码真正合理的做法是捕获这些`Error`，而不是让服务端直接奔溃，陷入异常状态。
+
+而对于Turms服务端项目来说，考虑到`Checked Exception`唯一能真正发挥作用的场景是：在个别场景中，在设计下游功能模块时，已知上游调用方代码需要根据下游抛出的各种异常做异常区分，为了保证上游没有遗漏处理一些下游抛出的异常，因此可以考虑使用`Checked Exception`。但由于这种场景非常地少，而且根据上游调用方代码逻辑来设计下游代码也是非常糟糕的实践。
+
+因此为了规避`Checked Exception`带来了各种问题、统一异常设计风格，与避免把时间浪费在“为什么同样都是某类的模块，A模块用了某类异常，B模块用了某类异常”这类无关紧要的争论上，在Turms服务端项目中，有且仅自定义继承自`RuntimeException`的异常类，禁止自定义继承自`Exception`（`Checked Exception`）的异常类。
