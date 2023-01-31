@@ -33,7 +33,94 @@ Turms服务端具有本地配置与全局配置两大类配置，其中：
 
 ## 配置分类
 
-Turms属性分为三大类配置：Turms Service配置、Turms Gateway配置，以及Common通用配置。Turms Service配置对应turms服务端独有的配置，Turms Gateway配置对应turms-gateway服务端独有的配置，而Common通用配置可以被turms和turms-gateway服务端共用。
+配置分为两大类，一类是JVM的配置，一类是Turms服务端的配置。
+
+### JVM配置
+
+turms-gateway的JVM默认配置文件为：`turms-gateway/dist/config/jvm.options`
+
+turms-service的JVM默认配置文件为：`turms-service/dist/config/jvm.options`。
+
+用户一般使用默认的JVM配置即可，不需要自行修改JVM配置。
+
+如果用户想修改JVM配置，可以通过以下两种方式：
+
+1. 修改环境变量`TURMS_GATEWAY_JVM_CONF`（对于turms-gateway）或`TURMS_SERVICE_JVM_CONF`（对于turms-service），并指向自定义的JVM配置文件，以使用完全自定义的JVM配置。下文以修改turms-gateway的JVM配置为例，具体修改方法：
+
+   1. 如果通过`run.sh`脚本启动，则可以使用类似`export TURMS_GATEWAY_JVM_CONF=<your-jvm-options-file-path> && sh run.sh -f`来设置环境变量并启动。
+
+   2. 如果通过Docker镜像启动，则可以使用类似：
+
+      ```shell
+      docker run -d --name turms-gateway --ulimit nofile=1048576 \
+        --memory-swappiness=0 \
+        -p 7510:7510 -p 9510:9510 -p 10510:10510 -p 11510:11510 -p 12510:12510 \
+        --health-cmd="curl -I --silent $${HOST}:9510/health || exit 1" \
+        --health-interval=5s \
+        --health-timeout=5s \
+        --health-retries=3 \
+        --health-start-period=60s \
+        -e TURMS_GATEWAY_JVM_CONF=<your-jvm-options-file-path> \
+        ghcr.io/turms-im/turms-gateway
+      ```
+
+      注意：上述的`TURMS_GATEWAY_JVM_CONF`路径指向的是镜像内部的路径，而非宿主机的路径。如果想使用宿主机里的配置文件，则需要使用Docker的挂载机制，如：
+
+      ```shell
+      docker run -d --name turms-gateway --ulimit nofile=1048576 \
+        --memory-swappiness=0 \
+        -p 7510:7510 -p 9510:9510 -p 10510:10510 -p 11510:11510 -p 12510:12510 \
+        --health-cmd="curl -I --silent $${HOST}:9510/health || exit 1" \
+        --health-interval=5s \
+        --health-timeout=5s \
+        --health-retries=3 \
+        --health-start-period=60s \
+        -v <your-jvm-options-file-path>:/opt/turms/turms-gateway/config/jvm.options:ro \
+        ghcr.io/turms-im/turms-gateway
+      ```
+
+   3. 如果通过Docker Compose，则可以使用类似：
+
+      ::: code-tabs#example
+
+      @tab Unix:
+
+      ```shell
+      TURMS_GATEWAY_JVM_CONF=<your-jvm-options-file-path> docker compose -f docker-compose.standalone.yml up --force-recreate
+      ```
+
+      @tab PowerShell
+
+      ```powershell
+      $env:TURMS_GATEWAY_JVM_CONF=<your-jvm-options-file-path>;docker compose -f docker-compose.standalone.yml up --force-recreate
+      ```
+
+      :::
+
+      注意：上述的`TURMS_GATEWAY_JVM_CONF`路径指向的是镜像内部的路径，而非宿主机的路径。如果想使用宿主机里的配置文件，则需要修改`docker-compose.standalone.yml`配置文件，以使用Docker的挂载机制，如：
+
+      ```yaml
+      turms-gateway:
+        volumes:
+          - <your-jvm-options-file-path>:/opt/turms/turms-gateway/config/jvm.options:ro
+      ```
+
+2. 修改环境变量`TURMS_GATEWAY_JVM_OPTS`（对于turms-gateway）或`TURMS_SERVICE_JVM_OPTS`（对于turms-service），以在JVM配置文件的基础上，附加自定义的JVM配置，并覆盖已声明的JVM配置。具体修改方法同上，故不赘述。
+
+   注意：该变量的格式为：`-D<name>=<value> -D<name>=<value>`，如：`-Dspring.profiles.active=DEV -Dturms.cluster.discovery.address.advertise-host=myturms`。
+
+### Turms服务端配置
+
+Turms配置分为三大类：Turms Service配置、Turms Gateway配置，以及Common通用配置。Turms Service配置对应turms服务端独有的配置，Turms Gateway配置对应turms-gateway服务端独有的配置，而Common通用配置可以被turms和turms-gateway服务端共用。
+
+#### 配置方法
+
+1. 前文提到的`TURMS_GATEWAY_JVM_CONF`或`TURMS_SERVICE_JVM_CONF`，与`TURMS_GATEWAY_JVM_OPTS`或`TURMS_SERVICE_JVM_OPTS`也都可以被用来配置Turms服务端的参数。
+2. 修改`application.yaml`下的配置文件。具体方法：
+   1. 直接修改仓库内服务端下的`application.yaml`文件。因为如果修改了配置源文件，那用户就不能使用Turms官方提供的Docker镜像了，并且还需要自行打包成JAR包并制作镜像，因此这种方式一般只用于本地开发测试用，不用于线上环境。
+   2. 使用前文提到的Docker挂载的方式，将自定义的服务端配置文件挂载到`/opt/turms/turms-gateway/config/application.yaml`路径上。
+
+#### 配置参数介绍
 
 由于所有的配置项高达上百个，直接看代码比看文档更加直观，因此推荐您直接查阅`im.turms.server.common.infra.property`目录下各配置类，下文仅对大的分类做简要介绍。
 
@@ -41,7 +128,7 @@ Turms属性分为三大类配置：Turms Service配置、Turms Gateway配置，�
 
 ![](https://raw.githubusercontent.com/turms-im/assets/master/turms/configuration-code-completion.png)
 
-### Tumrs Service配置
+##### Tumrs Service配置
 
 | 类别      | 类                     | 字段名       | 描述                  | 补充                                                         |
 | --------- | ---------------------- | ------------ | --------------------- | ------------------------------------------------------------ |
@@ -58,7 +145,7 @@ Turms属性分为三大类配置：Turms Service配置、Turms Gateway配置，�
 |           | ConversationProperties | conversation | 消息会话服务相关配置  |                                                              |
 |           | MessageProperties      | message      | 消息服务相关配置      |                                                              |
 
-### Turms Gateway配置
+##### Turms Gateway配置
 
 | 类别      | 类                            | 字段名              | 描述                                                         |
 | --------- | ----------------------------- | ------------------- | ------------------------------------------------------------ |
@@ -75,7 +162,7 @@ Turms属性分为三大类配置：Turms Service配置、Turms Gateway配置，�
 | 业务行为  | SimultaneousLoginProperties   | simultaneousLogin   | 多端登录相关配置                                             |
 |           | SessionProperties             | session             | 会话相关配置                                                 |
 
-### Common通用配置
+##### Common通用配置
 
 | 类                    | 字段名      | 描述                                                         |
 | --------------------- | ----------- | ------------------------------------------------------------ |
