@@ -67,8 +67,8 @@
 </template>
 
 <script>
-import CustomInput from '../common/custom-input';
-import Icon from '../common/icon';
+import CustomInput from '../common/custom-input.vue';
+import Icon from '../common/icon.vue';
 
 export default {
     name: 'layout-header',
@@ -145,6 +145,12 @@ export default {
 </script>
 
 <style lang="scss">
+.layout-header {
+    &__current-server-url {
+        margin-bottom: 16px;
+    }
+}
+
 #app .layout-header {
     display: flex;
     align-items: center;
@@ -173,12 +179,6 @@ export default {
         margin-left: 36px;
         font-size: 24px;
         cursor: pointer;
-    }
-}
-
-.layout-header {
-    &__current-server-url {
-        margin-bottom: 16px;
     }
 }
 

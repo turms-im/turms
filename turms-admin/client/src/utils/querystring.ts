@@ -1,6 +1,6 @@
 export default class Querystring {
 
-    static encode(params) {
+    static encode(params: Record<any, any> | null): string {
         if (!params) {
             return '';
         }
@@ -14,5 +14,5 @@ export default class Querystring {
             });
         return searchParams.toString();
     }
-    
+
 }

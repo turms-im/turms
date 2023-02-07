@@ -1,7 +1,8 @@
 import JSONBig from 'json-bigint';
 
+type CompositeQueryKey = { isCompositeKey: boolean, name: string };
 export default class RequestUtil {
-    static generateDateRangeParams(dateNames, start, end) {
+    static generateDateRangeParams(dateNames: Array<string>, start: number, end: number): Record<string, number> {
         const params = {};
         dateNames.forEach(name => {
             if (name.endsWith('Date')) {
@@ -19,15 +20,15 @@ export default class RequestUtil {
         return params;
     }
 
-    static getQueryParams(queryKey, targetKeys) {
+    static getQueryParams(queryKey: string | CompositeQueryKey, targetKeys: string[] | Record<string, any>[]): string {
         targetKeys = targetKeys.map(key => {
             key = JSONBig.parse(key);
             return key.key || key;
         });
         let params = '?';
-        const isCompositeKey = queryKey.isCompositeKey || queryKey === 'keys';
+        const isCompositeKey = (queryKey as CompositeQueryKey).isCompositeKey || queryKey === 'keys';
         if (isCompositeKey) {
-            const keyName = queryKey.name || queryKey;
+            const keyName = (queryKey as CompositeQueryKey).name || queryKey;
             targetKeys.forEach((key, index) => {
                 Object.entries(key).forEach(([itemKey, value]) => {
                     if (params !== '?') {

@@ -37,11 +37,11 @@
 </template>
 
 <script>
-import ContentUserInfoPane from './content-user-info-pane';
-import ContentOnlineUserPane from './content-online-user-info-pane';
-import ContentUserRelationshipPane from './relationship/index';
-import ContentUserFriendRequestPane from './content-user-friend-request-pane';
-import ContentUserPermissionGroupPane from './content-user-permission-group-pane';
+import ContentUserInfoPane from './content-user-info-pane.vue';
+import ContentOnlineUserPane from './content-online-user-info-pane.vue';
+import ContentUserRelationshipPane from './relationship/index.vue';
+import ContentUserFriendRequestPane from './content-user-friend-request-pane.vue';
+import ContentUserPermissionGroupPane from './content-user-permission-group-pane.vue';
 
 export default {
     name: 'content-user-tabs',

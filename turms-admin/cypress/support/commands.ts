@@ -1,3 +1,11 @@
+declare global {
+    namespace Cypress {
+        interface Chainable {
+            login(url: string): void
+        }
+    }
+}
+
 Cypress.Commands.add('login', (url = '/') => {
     cy.intercept(Cypress.env('baseUrl') + Cypress.env('turms').apis.admin + '*', {
         statusCode: 200,
@@ -11,3 +19,5 @@ Cypress.Commands.add('login', (url = '/') => {
         .type(pwd)
         .type('{enter}');
 });
+
+export {};

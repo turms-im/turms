@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import ClusterConfigPanel from './config';
+import ClusterConfigPanel from './config.vue';
 
 export default {
     name: 'cluster-management-tabs',

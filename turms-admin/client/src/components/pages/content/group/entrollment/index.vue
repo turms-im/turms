@@ -19,8 +19,8 @@
 </template>
 
 <script>
-import ContentGroupInvitationPane from './content-group-invitation-pane';
-import ContentGroupJoinRequestPane from './content-group-join-request-pane';
+import ContentGroupInvitationPane from './content-group-invitation-pane.vue';
+import ContentGroupJoinRequestPane from './content-group-join-request-pane.vue';
 
 export default {
     name: 'content-group-enrollment-tabs',

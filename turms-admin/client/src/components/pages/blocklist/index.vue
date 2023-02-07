@@ -19,8 +19,8 @@
 </template>
 
 <script>
-import BlocklistIpPane from './blocklist-ip-pane';
-import BlocklistUserPane from './blocklist-user-pane';
+import BlocklistIpPane from './blocklist-ip-pane.vue';
+import BlocklistUserPane from './blocklist-user-pane.vue';
 
 export default {
     name: 'blocklist-tabs',

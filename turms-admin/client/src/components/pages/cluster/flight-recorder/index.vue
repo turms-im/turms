@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import ContentTemplate from '../../content/template/content-template';
+import ContentTemplate from '../../content/template/content-template.vue';
 
 export default {
     name: 'flight-recorder',

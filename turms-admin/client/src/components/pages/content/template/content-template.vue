@@ -43,11 +43,11 @@
 
 <script>
 import JSONBig from 'json-bigint';
-import Skeleton from '../../../common/skeleton';
-import ActionGroup from './action-group';
-import ContentTable from './table';
+import Skeleton from '../../../common/skeleton.vue';
+import ActionGroup from './action-group.vue';
+import ContentTable from './table.vue';
 import UiMixin from './ui-mixin';
-import FilterGroup from './filter-group';
+import FilterGroup from './filter-group.vue';
 
 const BUILTIN_NODE_ID_FILTER_NAME = '__nodeId__';
 

@@ -65,7 +65,7 @@
 
 <script>
 import formatCoords from 'formatcoords';
-import CustomInput from '../../../common/custom-input';
+import CustomInput from '../../../common/custom-input.vue';
 import UiMixin from '../template/ui-mixin';
 
 const isOnlineStatus = (status) => status && !['OFFLINE', 'NONEXISTENT'].includes(status);

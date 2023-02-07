@@ -19,8 +19,8 @@
 </template>
 
 <script>
-import StatisticsMessagePrivateChatPane from './statistics-message-private-chat-pane';
-import StatisticsMessageGroupChatPane from './statistics-message-group-chat-pane';
+import StatisticsMessagePrivateChatPane from './statistics-message-private-chat-pane.vue';
+import StatisticsMessageGroupChatPane from './statistics-message-group-chat-pane.vue';
 
 export default {
     name: 'statistics-message-tabs',

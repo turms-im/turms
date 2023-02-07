@@ -37,11 +37,11 @@
 </template>
 
 <script>
-import ContentGroupInfoPane from './info/index';
-import ContentGroupMemberPane from './content-group-member-pane';
-import ContentGroupBlocklistPane from './content-group-blocklist-pane';
-import ContentGroupEnrollmentPane from './entrollment/index';
-import ContentGroupTypePane from './content-group-type-pane';
+import ContentGroupInfoPane from './info/index.vue';
+import ContentGroupMemberPane from './content-group-member-pane.vue';
+import ContentGroupBlocklistPane from './content-group-blocklist-pane.vue';
+import ContentGroupEnrollmentPane from './entrollment/index.vue';
+import ContentGroupTypePane from './content-group-type-pane.vue';
 
 export default {
     name: 'content-group-tabs',

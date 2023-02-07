@@ -6,7 +6,7 @@
 
 <script>
 import dayjs from 'dayjs';
-import Layout from './components/layout/index';
+import Layout from './components/layout/index.vue';
 import 'dayjs/locale/es-us';
 import 'dayjs/locale/ja';
 import 'dayjs/locale/zh-cn';

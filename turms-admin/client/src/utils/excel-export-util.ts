@@ -1,7 +1,7 @@
-const fileSaver = require('file-saver');
-const Excel = require('exceljs/lib/exceljs.bare');
+import { saveAs } from 'file-saver';
+import Excel from 'exceljs';
 
-export default function exportExcel(fileName, worksheetName, headers, rows) {
+export default function exportExcel(fileName: string, worksheetName: string, headers: Partial<Excel.Column>[], rows: any[]): Promise<void> {
     const workbook = new Excel.Workbook();
     workbook.creator = 'Turms';
     workbook.created = new Date();
@@ -13,7 +13,6 @@ export default function exportExcel(fileName, worksheetName, headers, rows) {
             const blob = new Blob([buffer], {
                 type: 'application/vnd.ms-excel;charset=utf-8'
             });
-            fileSaver.saveAs(blob, `${fileName}.xlsx`);
-            return buffer;
+            saveAs(blob, `${fileName}.xlsx`);
         });
 }

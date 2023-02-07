@@ -19,8 +19,8 @@
 </template>
 
 <script>
-import ContentUserRelationshipPane from './content-user-relationship-pane';
-import ContentUserRelationshipGroupPane from './content-user-relationship-group-pane';
+import ContentUserRelationshipPane from './content-user-relationship-pane.vue';
+import ContentUserRelationshipGroupPane from './content-user-relationship-group-pane.vue';
 
 export default {
     name: 'content-user-relationship-tabs',

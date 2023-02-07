@@ -1,4 +1,5 @@
 const updateScrollMaxHeight = function () {
+    // @ts-ignore
     const table = this.$refs.table?.$el;
     if (!table) {
         return;
@@ -11,12 +12,13 @@ const updateScrollMaxHeight = function () {
     }
     const {height: bodyHeight} = tableBody.getBoundingClientRect();
 
-    this.scrollMaxHeight = window.pageYOffset + window.innerHeight - top - height + bodyHeight - 30;
+    // @ts-ignore
+    this.scrollMaxHeight = window.scrollY + window.innerHeight - top - height + bodyHeight - 30;
 };
 
 export default {
     methods: {
-        refreshTableUi() {
+        refreshTableUi(): void {
             // We update the maxHeight of table by JS instead of CSS because:
             // To make a child div not overflow its parent while parent should not use "overflow"
             // (we don't want the parent displays the scrollbar),

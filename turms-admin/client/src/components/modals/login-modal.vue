@@ -75,8 +75,8 @@
 </template>
 
 <script>
-import Logo from '../common/logo';
-import Icon from '../common/icon';
+import Logo from '../common/logo.vue';
+import Icon from '../common/icon.vue';
 
 const DEFAULT_URL = `${window.location.protocol}//${window.location.hostname}:8510`;
 

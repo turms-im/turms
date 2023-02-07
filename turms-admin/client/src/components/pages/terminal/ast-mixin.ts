@@ -2,7 +2,7 @@ import TrieSearch from 'trie-search';
 
 export default {
     methods: {
-        addDeclaration(trie, nodes) {
+        addDeclaration(trie, nodes): void {
             const registered = {};
             (nodes || []).forEach(node => {
                 const name = node.name.toLowerCase();
@@ -13,7 +13,7 @@ export default {
                 trie.map(name, node);
             });
         },
-        parseTrie(declaration) {
+        parseTrie(declaration: Record<string, string>) {
             const isSupported = declaration.syntax === 'class' || declaration.syntax === 'interface';
             if (!isSupported) {
                 return;

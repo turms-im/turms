@@ -1,6 +1,7 @@
+import { defineComponent } from 'vue';
 import exportExcel from '../../../../utils/excel-export-util';
 
-export default {
+export default defineComponent({
     props: {
         queryParams: {
             type: Object,
@@ -64,6 +65,7 @@ export default {
                 page: 0,
                 size: 1000
             };
+            // @ts-ignore
             return this.$http.get(this.resourceUrl, {params: queryParams})
                 .then(response => {
                     this.records = this.parseResponseRecords(response.data?.data?.records);
@@ -88,7 +90,7 @@ export default {
             return records.map(record => {
                 Object.entries(record).forEach(([key, val]) => {
                     if (this.$util.isBigNumber(val)) {
-                        record[key] = val.toFixed();
+                        record[key] = (val as any).toFixed();
                     } else if (val instanceof Array) {
                         record[key] = val.join(',');
                     }
@@ -97,4 +99,4 @@ export default {
             });
         }
     }
-};
+});

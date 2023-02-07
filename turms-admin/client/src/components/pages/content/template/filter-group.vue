@@ -67,8 +67,8 @@
 </template>
 
 <script>
-import CustomInput from '../../../common/custom-input';
-import DateRangePicker from '../../../common/date-range-picker';
+import CustomInput from '../../../common/custom-input.vue';
+import DateRangePicker from '../../../common/date-range-picker.vue';
 
 export default {
     name: 'content-filter-group',

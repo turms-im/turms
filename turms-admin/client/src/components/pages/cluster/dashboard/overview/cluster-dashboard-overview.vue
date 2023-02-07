@@ -92,8 +92,8 @@
 </template>
 
 <script>
-import icon from '../../../../common/icon';
-import ProgressBar from '../progress-bar';
+import icon from '../../../../common/icon.vue';
+import ProgressBar from '../progress-bar.vue';
 import COLUMNS from './default-overview-table-columns';
 
 export default {

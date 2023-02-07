@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-undef
 module.exports = {
     root: true,
     env: {
@@ -5,13 +6,24 @@ module.exports = {
         node: true
     },
     parserOptions: {
-        parser: '@babel/eslint-parser'
+        ecmaVersion: 2020
     },
     extends: [
         'eslint:recommended',
         'plugin:cypress/recommended',
         'plugin:import/recommended',
-        'plugin:vue/recommended'
+        'plugin:vue/recommended',
+        '@vue/eslint-config-typescript'
+    ],
+    overrides: [
+        {
+            files: [
+                'cypress/e2e/**/*.{cy,spec}.{js,ts,jsx,tsx}'
+            ],
+            extends: [
+                'plugin:cypress/recommended'
+            ]
+        }
     ],
     rules: {
         'array-element-newline': ['error', 'consistent'],

@@ -19,8 +19,8 @@
 </template>
 
 <script>
-import ContentGroupBaseInfoPane from './content-group-info-pane';
-import ContentGroupQuestionPane from './content-group-question-pane';
+import ContentGroupBaseInfoPane from './content-group-info-pane.vue';
+import ContentGroupQuestionPane from './content-group-question-pane.vue';
 
 export default {
     name: 'content-group-info-tabs',

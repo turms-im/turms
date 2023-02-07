@@ -2,18 +2,24 @@ import IpRegex from 'ip-regex';
 
 const WEBSOCKET_URL_REGEX = new RegExp('^(?:(?:ws|wss)://|//)(?:\\S+(?::\\S*)?@)?(?:(?:(?:[1-9]\\d?|1\\d\\d|2[01]\\d|22[0-3])(?:\\.(?:1?\\d{1,2}|2[0-4]\\d|25[0-5])){2}(?:\\.(?:[0-9]\\d?|1\\d\\d|2[0-4]\\d|25[0-4]))|(?:(?:[a-z\\u00a1-\\uffff0-9]+-*)*[a-z\\u00a1-\\uffff0-9]+)(?:\\.(?:[a-z\\u00a1-\\uffff0-9]+-*)*[a-z\\u00a1-\\uffff0-9]+)*(?:\\.(?:[a-z\\u00a1-\\uffff]{2,})))|localhost)(?::\\d{2,5})?(?:(/|\\?|#)[^\\s]*)?$', 'i');
 
+interface Rule {
+    messageId?: string,
+    message?: string,
+    value: any
+}
+
 export default class Validator {
 
-    static getMessage;
+    static getMessage: (id: string, args?: Record<string, string>) => string;
 
-    static parseRuleList(rules) {
+    static parseRuleList(rules: Array<Rule>) {
         return rules.map(rule => ({
             ...rule,
             message: rule.messageId ? Validator.getMessage(rule.messageId, rule.value) : rule.message
         }));
     }
 
-    static parseRules(rules) {
+    static parseRules(rules: Array<Rule> | Record<string, Array<Rule>>): Array<Rule> {
         if (rules instanceof Array) {
             return Validator.parseRuleList(rules);
         }
@@ -25,31 +31,33 @@ export default class Validator {
         }
     }
 
-    static required(messageId) {
+    static required(messageId: string) {
         return {
-            validator: (rule, value) => value != null ? Promise.resolve() : Promise.reject(Validator.getMessage(messageId))
+            validator: (rule, value) => {
+                return value == null ? Promise.reject(Validator.getMessage(messageId)) : Promise.resolve();
+            }
         };
     }
 
-    static onlyNumber(messageId) {
+    static onlyNumber(messageId: string) {
         return {
             validator: (rule, value) => (!value || /^\d*$/.test(value) ? Promise.resolve() : Promise.reject(Validator.getMessage(messageId)))
         };
     }
 
-    static onlyNumberAndComma(messageId) {
+    static onlyNumberAndComma(messageId: string) {
         return {
             validator: (rule, value) => (!value || /^(\d|,)*$/.test(value) ? Promise.resolve() : Promise.reject(Validator.getMessage(messageId)))
         };
     }
 
-    static noBlank(messageId) {
+    static noBlank(messageId: string) {
         return {
             validator: (rule, value) => (/^\S*$/.test(value) ? Promise.resolve() : Promise.reject(Validator.getMessage(messageId)))
         };
     }
 
-    static maxNumber(messageId, value, max) {
+    static maxNumber(messageId: string, value, max) {
         return {
             messageId,
             value,
@@ -57,7 +65,7 @@ export default class Validator {
         };
     }
 
-    static isIp(messageId) {
+    static isIp(messageId: string) {
         return {
             validator: (rule, value) => IpRegex({exact: true}).test(value)
                 ? Promise.resolve()
@@ -65,14 +73,14 @@ export default class Validator {
         };
     }
 
-    static isUrl(messageId) {
+    static isUrl(messageId: string) {
         return {
             type: 'url',
             messageId
         };
     }
 
-    static isWsUrl(messageId) {
+    static isWsUrl(messageId: string) {
         return {
             validator: (rule, value) => WEBSOCKET_URL_REGEX.test(value)
                 ? Promise.resolve()
@@ -80,7 +88,7 @@ export default class Validator {
         };
     }
 
-    static create(options, baseRules) {
+    static create(options: Record<string, any>, baseRules) {
         const rules = [];
         for (const [type, value] of Object.entries(options)) {
             switch (type) {

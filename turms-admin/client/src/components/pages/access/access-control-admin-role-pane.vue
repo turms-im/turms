@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import ContentTemplate from '../content/template/content-template';
+import ContentTemplate from '../content/template/content-template.vue';
 
 let ALL_PERMISSIONS_TREE;
 let ALL_PERMISSIONS_ARRAY;

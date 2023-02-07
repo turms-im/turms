@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import ContentTemplate from '../template/content-template';
+import ContentTemplate from '../template/content-template.vue';
 
 export default {
     name: 'content-user-permission-group-pane',

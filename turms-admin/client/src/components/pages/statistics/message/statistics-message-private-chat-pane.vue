@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import StatisticsTemplate from '../common/statistics-template';
+import StatisticsTemplate from '../common/statistics-template.vue';
 
 export default {
     name: 'statistics-message-private-chat-pane',

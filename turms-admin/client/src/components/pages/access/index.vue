@@ -19,8 +19,8 @@
 </template>
 
 <script>
-import AccessControlAdminPane from './access-control-admin-pane';
-import AccessControlRolePane from './access-control-admin-role-pane';
+import AccessControlAdminPane from './access-control-admin-pane.vue';
+import AccessControlRolePane from './access-control-admin-role-pane.vue';
 
 export default {
     name: 'access-control-tabs',

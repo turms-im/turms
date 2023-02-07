@@ -63,8 +63,8 @@
 
 <script>
 import JSONBig from 'json-bigint';
-import ModalFormDynamicInput from './modal-form-dynamic-input';
-import ModalFormItem from './modal-form-item';
+import ModalFormDynamicInput from './modal-form-dynamic-input.vue';
+import ModalFormItem from './modal-form-item.vue';
 
 const BUILTIN_NODE_ID_SELECT = '__nodeId__';
 

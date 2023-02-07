@@ -1,5 +1,5 @@
 export default class UiUtil {
-    static fillSelectsWithValues(selectIds, values, actions, filters) {
+    static fillSelectsWithValues(selectIds: string[], values: any[], actions: {fields: any[]}[], filters) {
         // Update action groups
         for (const action of actions) {
             if (action.fields) {

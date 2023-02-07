@@ -66,7 +66,7 @@
 </template>
 
 <script>
-import Icon from '../../../common/icon';
+import Icon from '../../../common/icon.vue';
 import UiMixin from './ui-mixin';
 
 export default {

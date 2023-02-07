@@ -28,7 +28,7 @@ const FAVORITE_FONTS = [
     'Monaco' // MacOS
 ];
 
-function findFavoriteFont() {
+function findFavoriteFont(): string | null {
     const isSupportedFont = (family) => document.fonts?.check('12px ' + family);
     for (const font of FAVORITE_FONTS) {
         if (isSupportedFont(font)) {
@@ -38,7 +38,28 @@ function findFavoriteFont() {
 }
 
 export default class Terminal extends XTerm {
-    constructor(container, options = {}) {
+    private cursor: number;
+    private currentLine: string;
+    private readonly history: Array<string>;
+    private historyIndex: number;
+    private readonly onCursorChanged?: Function;
+    private readonly onInputChanged?: Function;
+    private readonly onLine?: Function;
+    private readonly handleInputEvent?: Function;
+
+    private readonly fitAddon: FitAddon;
+    private waitForResponse: boolean;
+    private readonly _onWinResize: () => void;
+
+    constructor(container: HTMLElement, options: {
+        fontFamily?: string,
+        history?: Array<string>,
+        onCursorChanged?: Function
+        onInputChanged?: Function,
+        onLine?: Function,
+        handleInputEvent?: Function
+        disableStdin?: boolean
+    } = {}) {
         if (!options.fontFamily) {
             options.fontFamily = findFavoriteFont();
         }
@@ -58,6 +79,7 @@ export default class Terminal extends XTerm {
         this.historyIndex = this.history.length > 0 ? this.history.length - 1 : 0;
         this.onCursorChanged = options.onCursorChanged;
         this.onInputChanged = options.onInputChanged;
+        this.onLine = options.onLine;
         this.handleInputEvent = options.handleInputEvent;
 
         this.fitAddon = new FitAddon();
@@ -94,57 +116,57 @@ export default class Terminal extends XTerm {
 
     // Lifecycle
 
-    dispose() {
+    override dispose(): void {
         window.removeEventListener('resize', this._onWinResize);
         super.dispose();
     }
 
     // Style
 
-    fit() {
+    fit(): void {
         this.fitAddon.fit();
         this._triggerOnCursorChangedListeners();
     }
 
     // Cursor
 
-    cursorTo(pos) {
+    cursorTo(pos: number): void {
         this.cursor = pos;
         this.write(escapes.cursorTo(PREFIX.length + pos));
         this._triggerOnCursorChangedListeners();
     }
 
-    hideCursor() {
+    hideCursor(): void {
         this.write(escapes.cursorHide);
     }
 
     // Line
 
-    eraseLine() {
+    eraseLine(): void {
         this.write(escapes.eraseLine);
         this.write(escapes.cursorLeft);
         this.startNewLine();
     }
 
-    startNewLine() {
+    startNewLine(): void {
         this.write(PREFIX);
     }
 
-    clear() {
+    override clear(): void {
         this.currentLine = '';
         this.cursorTo(0);
         this.write(escapes.clearScreen);
         this.startNewLine();
-        this.onInputChanged?.(this.currentLine);
+        this.onInputChanged?.(this.currentLine, this.cursor);
     }
 
     // Text
 
-    getNextChar() {
+    getNextChar(): string {
         return this.currentLine[this.cursor];
     }
 
-    insertText(text) {
+    insertText(text?: string): void {
         if (!text) {
             return;
         }
@@ -160,7 +182,7 @@ export default class Terminal extends XTerm {
         this.currentLine = this.currentLine.slice(0, this.cursor) + output + this.currentLine.slice(this.cursor);
         if (isCursorAtEnd) {
             this.write(output);
-            this.onInputChanged?.(this.currentLine);
+            this.onInputChanged?.(this.currentLine, this.cursor);
         } else {
             this.writeLine(this.currentLine);
         }
@@ -172,7 +194,11 @@ export default class Terminal extends XTerm {
         this.cursorTo(this.cursor);
     }
 
-    writeMsg({type, msg, newLine}) {
+    writeMsg({type, msg, newLine = false}: {
+        type?: string,
+        msg?: string,
+        newLine?: boolean
+    } = {}): void {
         if (msg == null) {
             return;
         }
@@ -185,11 +211,11 @@ export default class Terminal extends XTerm {
         }
     }
 
-    writeLine(line, updateCursor) {
+    writeLine(line: string, updateCursor: boolean = false): void {
         this.currentLine = line;
         this.eraseLine();
         this.write(line);
-        this.onInputChanged?.(this.currentLine);
+        this.onInputChanged?.(this.currentLine, this.cursor);
         if (updateCursor) {
             this.cursorTo(this.currentLine.length);
         }
@@ -197,14 +223,14 @@ export default class Terminal extends XTerm {
 
     // Event
 
-    _triggerOnCursorChangedListeners() {
+    _triggerOnCursorChangedListeners(): void {
         setTimeout(() => {
             const rect = this.textarea.getBoundingClientRect();
             this.onCursorChanged?.(rect.right, rect.bottom, rect.height);
         });
     }
 
-    async handleControlKey(event) {
+    async handleControlKey(event: KeyboardEvent): Promise<boolean> {
         if (this.handleInputEvent?.(event)) {
             return true;
         }

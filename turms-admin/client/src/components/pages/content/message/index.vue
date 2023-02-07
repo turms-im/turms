@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import ContentMessagePane from './content-message-pane';
+import ContentMessagePane from './content-message-pane.vue';
 
 export default {
     name: 'content-message-tabs',

@@ -23,8 +23,8 @@
 </template>
 
 <script>
-import ClusterConfigWrapper from './cluster-config-wrapper';
-import ClusterConfigItem from './cluster-config-item';
+import ClusterConfigWrapper from './cluster-config-wrapper.vue';
+import ClusterConfigItem from './cluster-config-item.vue';
 
 export default {
     name: 'cluster-config-pane',

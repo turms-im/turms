@@ -19,8 +19,8 @@
 </template>
 
 <script>
-import ContentPrivateConversationPane from './content-private-conversation-pane';
-import ContentGroupConversationPane from './content-group-conversation-pane';
+import ContentPrivateConversationPane from './content-private-conversation-pane.vue';
+import ContentGroupConversationPane from './content-group-conversation-pane.vue';
 
 export default {
     name: 'content-conversation-tabs',

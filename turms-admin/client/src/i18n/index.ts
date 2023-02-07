@@ -5,6 +5,7 @@ import zh_CN from './langs/zh_CN';
 
 const i18n = createI18n({
     locale: 'en',
+    legacy: false,
     messages: {
         en: en_US,
         ja: ja_JP,

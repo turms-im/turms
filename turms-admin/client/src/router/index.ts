@@ -1,18 +1,18 @@
-import {createRouter, createWebHistory} from 'vue-router';
-import About from '../components/pages/about/index';
-import AccessControl from '../components/pages/access/index';
-import Blocklist from '../components/pages/blocklist/index';
-import ClientTerminal from '../components/pages/terminal';
-import ClusterConfig from '../components/pages/cluster/config';
-import ClusterDashboard from '../components/pages/cluster/dashboard';
-import ClusterFlightRecorder from '../components/pages/cluster/flight-recorder';
-import ClusterPlugin from '../components/pages/cluster/plugin';
-import ContentConversation from '../components/pages/content/conversation/index';
-import ContentGroup from '../components/pages/content/group/index';
-import ContentMessage from '../components/pages/content/message/index';
-import ContentUser from '../components/pages/content/user/index';
+import {createRouter, createWebHistory, type RouteRecordRaw} from 'vue-router';
+import About from '../components/pages/about/index.vue';
+import AccessControl from '../components/pages/access/index.vue';
+import Blocklist from '../components/pages/blocklist/index.vue';
+import ClientTerminal from '../components/pages/terminal/index.vue';
+import ClusterConfig from '../components/pages/cluster/config/index.vue';
+import ClusterDashboard from '../components/pages/cluster/dashboard/index.vue';
+import ClusterFlightRecorder from '../components/pages/cluster/flight-recorder/index.vue';
+import ClusterPlugin from '../components/pages/cluster/plugin/index.vue';
+import ContentConversation from '../components/pages/content/conversation/index.vue';
+import ContentGroup from '../components/pages/content/group/index.vue';
+import ContentMessage from '../components/pages/content/message/index.vue';
+import ContentUser from '../components/pages/content/user/index.vue';
 
-const routes = [
+const routes: RouteRecordRaw[] = [
     {
         path: '/',
         redirect: '/cluster/dashboard'

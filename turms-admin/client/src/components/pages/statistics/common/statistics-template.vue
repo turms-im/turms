@@ -23,8 +23,8 @@
 </template>
 
 <script>
-import DailyStatisticsCollapse from './daily-statistics-collapse';
-import StatisticsNumberCollapse from './statistics-number-collapse';
+import DailyStatisticsCollapse from './daily-statistics-collapse.vue';
+import StatisticsNumberCollapse from './statistics-number-collapse.vue';
 
 export default {
     name: 'statistics-template',

@@ -64,8 +64,8 @@
 </template>
 
 <script>
-import AreaChart from '../../../../common/chart-area';
-import Skeleton from '../../../../common/skeleton';
+import AreaChart from '../../../../common/chart-area.vue';
+import Skeleton from '../../../../common/skeleton.vue';
 import METRICS from '../metrics';
 import SERVER_DETAILS_ITEMS from './server-details-items';
 

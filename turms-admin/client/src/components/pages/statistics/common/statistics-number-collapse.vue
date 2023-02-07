@@ -76,9 +76,9 @@
 
 <script>
 import {saveSvg, saveSvgAsPng} from 'save-svg-as-png';
-import DateRangePicker from '../../../common/date-range-picker';
-import ExportButton from '../../../common/export-button';
-import StatisticsChartLine from './statistics-chart-line';
+import DateRangePicker from '../../../common/date-range-picker.vue';
+import ExportButton from '../../../common/export-button.vue';
+import StatisticsChartLine from './statistics-chart-line.vue';
 
 export default {
     name: 'statistics-number-collapse',

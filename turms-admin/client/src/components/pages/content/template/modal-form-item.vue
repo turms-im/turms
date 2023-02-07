@@ -98,7 +98,7 @@
 </template>
 
 <script>
-import Icon from '../../../common/icon';
+import Icon from '../../../common/icon.vue';
 
 export default {
     name: 'modal-form-item',
@@ -164,6 +164,3 @@ export default {
     }
 };
 </script>
-
-<style>
-</style>

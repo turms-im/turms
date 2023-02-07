@@ -43,8 +43,8 @@
 </template>
 
 <script>
-import Logo from '../common/logo';
-import Icon from '../common/icon';
+import Logo from '../common/logo.vue';
+import Icon from '../common/icon.vue';
 
 export default {
     name: 'layout-sider',

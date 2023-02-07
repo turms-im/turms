@@ -1,3 +1,5 @@
+import type {ComponentCustomProperties} from '@vue/runtime-core';
+
 const RESOURCE_UTILIZATION_METRICS_NAMES = {
     SYSTEM_CPU_USAGE: 'system.cpu.usage',
     SYSTEM_MEMORY_TOTAL: 'system.memory.total',
@@ -10,8 +12,20 @@ const formatBytesToGiB = bytes => bytes / 1024 / 1024 / 1024;
 
 const getMemberAdminBaseUrl = member => new URL(member.adminApiAddress).origin;
 
+interface Api {
+    fetchMembersInfo(fetchMetrics?: Array<string>): Promise<any>;
+
+    fetchMemberMetrics(member, metrics): Promise<any>;
+
+    fetchResourceUtilization(member): Promise<void>;
+
+    fetchHeapDump(member): Promise<any>;
+
+    fetchThreadDump(member): Promise<any>;
+}
+
 export default {
-    fetchMembersInfo(fetchMetrics) {
+    fetchMembersInfo(fetchMetrics?: Array<string>): Promise<any> {
         return this.$http.get(this.$rs.apis.clusterMember)
             .then(async response => {
                 const members = JSON.parse(JSON.stringify(response.data.data))
@@ -115,4 +129,4 @@ export default {
             responseType: 'blob'
         }).then(response => response.data);
     }
-};
+} as ThisType<ComponentCustomProperties & Api>;

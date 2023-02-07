@@ -33,11 +33,11 @@
 
 <script>
 import exportExcel from '../../../../utils/excel-export-util';
-import Skeleton from '../../../common/skeleton';
-import DashboardHeader from './cluster-dashboard-header';
-import DashboardActions from './cluster-dashboard-actions';
-import DashboardOverview from './overview/cluster-dashboard-overview';
-import DashboardServerDetails from './server-details/cluster-dashboard-server-details';
+import Skeleton from '../../../common/skeleton.vue';
+import DashboardHeader from './cluster-dashboard-header.vue';
+import DashboardActions from './cluster-dashboard-actions.vue';
+import DashboardOverview from './overview/cluster-dashboard-overview.vue';
+import DashboardServerDetails from './server-details/cluster-dashboard-server-details.vue';
 import SERVER_DETAILS_ITEMS from './server-details/server-details-items';
 import METRICS from './metrics';
 

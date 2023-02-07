@@ -59,7 +59,7 @@
 
 <script>
 import ExportMixin from './export-mixin';
-import ModalForm from './modal-form';
+import ModalForm from './modal-form.vue';
 
 export default {
     name: 'action-group',

@@ -46,9 +46,9 @@
 </template>
 
 <script>
-import RefreshButton from '../../../common/refresh-button';
-import ExportButton from '../../../common/export-button';
-import StatisticsCard from './statistics-card';
+import RefreshButton from '../../../common/refresh-button.vue';
+import ExportButton from '../../../common/export-button.vue';
+import StatisticsCard from './statistics-card.vue';
 
 export default {
     name: 'daily-statistics-collapse',

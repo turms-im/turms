@@ -1,0 +1,46 @@
+// https://www.typescriptlang.org/tsconfig
+{
+  "compilerOptions": {
+    // type checking
+    "noImplicitAny": false,
+    "noImplicitOverride": true,
+    "strict": true,
+    "strictNullChecks": false,
+    // modules,
+    "module": "ES2020",
+    "moduleResolution": "Node",
+    "resolveJsonModule": true,
+    // emit
+    "declaration": true,
+    "declarationMap": true,
+    // Enforce using `import type` instead of `import` for types
+    "importsNotUsedAsValues": "error",
+    "removeComments": true,
+    "sourceMap": true,
+    // interop constraints
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    // Required in Vite
+    "isolatedModules": true,
+    // completeness
+    "skipLibCheck": true,
+    // language and environment
+    "lib": [
+      "ES2020",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "target": "ES2020"
+  },
+  "include": [
+    ".eslintrc.js",
+    "vite.config.ts",
+    "cypress.config.ts",
+    "client/**/*",
+    "client/src/**/*.json",
+    "client/src/**/*.ts",
+    "client/src/**/*.vue",
+    "server/src/**/*"
+  ]
+}

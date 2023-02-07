@@ -54,7 +54,7 @@
 <script>
 import TurmsClient from 'turms-client-js';
 import Ast from '../../../assets/turms-client-ast.json';
-import ClientTerminal from './client-terminal';
+import ClientTerminal from './client-terminal.vue';
 
 const ONBOARD_MESSAGES = [
     `Current version of turms-client-js: ${TurmsClient.version}`,

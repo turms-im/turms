@@ -85,8 +85,8 @@
 
 <script>
 import diff from 'deep-diff';
-import Skeleton from '../../../common/skeleton';
-import ClusterConfigPane from './cluster-config-pane';
+import Skeleton from '../../../common/skeleton.vue';
+import ClusterConfigPane from './cluster-config-pane.vue';
 
 const WORDS_TO_UPPERCASE = ['ip'];
 

@@ -35,9 +35,9 @@
 </template>
 <script>
 import TrieSearch from 'trie-search';
-import Icon from '../../common/icon';
+import Icon from '../../common/icon.vue';
 import AstMixin from './ast-mixin';
-import Autocomplete from './autocomplete';
+import Autocomplete from './autocomplete.vue';
 import Terminal from './terminal';
 
 export default {
