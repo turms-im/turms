@@ -142,7 +142,7 @@ export default {
             url: `ws://${window.location.hostname}:10510`,
             useSharedContext: false,
             commandsHistorySize: 0,
-            ...localStorage.getItem(this.$rs.storage.terminalSettings) || {}
+            ...this.$storage.get(this.$rs.storage.terminalSettings)
         };
         return {
             modalVisible: false,
@@ -172,19 +172,20 @@ export default {
             this.modalVisible = false;
         },
         async handleOk() {
-            let values;
+            let newSettings;
             try {
-                values = await this.$refs.form.validateFields();
+                newSettings = await this.$refs.form.validateFields();
             } catch (errorInfo) {
                 return;
             }
-            const isClientSettingsChanged = this.settings.useSharedContext !== values.useSharedContext
-                || this.settings.url !== values.url;
-            this.settings = {
+            const isClientSettingsChanged = !this.$_.isEqual(this.settings, newSettings);
+            const mergedSettings = {
                 ...this.settings,
-                ...values
+                ...newSettings
             };
+            this.settings = mergedSettings;
             if (isClientSettingsChanged) {
+                this.$storage.set(this.$rs.storage.terminalSettings, mergedSettings);
                 await this.client.close();
                 this.client = this.initClient();
                 this.notificationTerminal.writeMsg({

@@ -37,10 +37,10 @@ const $locales = {
 
 const $sleep = (millis) => new Promise(resolve => setTimeout(resolve, millis));
 
-// Don't use "_" because of https://github.com/vuejs/vue-next/issues/2546
 const $_ = {
     get: _.get,
     set: _.set,
+    isEqual: _.isEqual,
     uniq: _.uniq
 };
 
@@ -68,6 +68,8 @@ createApp(App)
             globalProperties.$locales = $locales;
             globalProperties.$date = dayjs;
             globalProperties.$rs = resources;
+            // Don't use "_" because of https://github.com/vuejs/vue-next/issues/2546
+            // TODO: merge into $util
             globalProperties.$_ = $_;
             globalProperties.$sleep = $sleep;
             globalProperties.$apis = createApis(globalProperties);
