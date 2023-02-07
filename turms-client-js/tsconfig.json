@@ -8,15 +8,16 @@
     "strictNullChecks": false,
 
     // modules
+    // Do not set to "CommonJS", or rollup won't be able to tree-shake
     "module": "ES2015",
     "moduleResolution": "Node",
     "resolveJsonModule": true,
 
     // emit
-    "declaration": true,
-    "declarationDir": "dist",
-    "declarationMap": true,
-    // Do not set to "CommonJS", or rollup won't be able to tree-shake
+    // We have used rollup to generate a bundled definition file,
+    // and publish the TypeScript files under the "src" folder,
+    // so we don't need these separate definition files for users anymore.
+    "declaration": false,
     "outDir": "dist",
     "removeComments": true,
     "sourceMap": true,

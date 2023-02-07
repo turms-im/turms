@@ -29,7 +29,9 @@ function getConfig({
     useBabel?: boolean,
     useTerser?: boolean
 }): RollupOptions {
-    const ts = typescript();
+    const ts = typescript({
+        sourceMap: false
+    });
     const babelPlugin = useBabel
         ? babel({
             exclude: 'node_modules/**',
@@ -73,14 +75,16 @@ const config: RollupOptions[] = [
     getConfig({
         output: {
             file: pkg.main,
-            format: 'cjs'
+            format: 'cjs',
+            sourcemap: true
         }
     }),
     // ES module for bundlers
     getConfig({
         output: {
             file: pkg.module,
-            format: 'esm'
+            format: 'esm',
+            sourcemap: true
         }
     }),
     // IIFE for browsers
@@ -88,7 +92,8 @@ const config: RollupOptions[] = [
         output: {
             file: 'dist/turms-client.iife.js',
             format: 'iife',
-            name: 'TurmsClient'
+            name: 'TurmsClient',
+            sourcemap: true
         },
         useBabel: true
     }),
@@ -96,7 +101,8 @@ const config: RollupOptions[] = [
         output: {
             file: 'dist/turms-client.iife.min.js',
             format: 'iife',
-            name: 'TurmsClient'
+            name: 'TurmsClient',
+            sourcemap: true
         },
         useBabel: true,
         useTerser: true
