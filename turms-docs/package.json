@@ -11,7 +11,7 @@
     "@vuepress/client": "^2.0.0-beta.51",
     "@vuepress/plugin-search": "^2.0.0-beta.51",
     "@vuepress/utils": "2.0.0-beta.51",
-    "mermaid": "9.1.7",
+    "mermaid": "9.3.0",
     "vuepress": "^2.0.0-beta.51",
     "vuepress-plugin-md-enhance": "^2.0.0-beta.103"
   },
