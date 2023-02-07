@@ -4,8 +4,8 @@
 # Do NOT use alpine because if we use alpine:
 # 1. We need to try which phython packages we use and install them one by one
 # 2. We need to install python packages in every build
-# 3. "node:18-slim" is small and can make life easier
-FROM node:18-slim as builder
+# 3. "node:18.13-slim" is small and can make life easier
+FROM node:18.13-slim as builder
 COPY . .
 
 # build in China
