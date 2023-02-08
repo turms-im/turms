@@ -183,10 +183,8 @@ export default {
         height: 100%;
     }
 
-    .xterm-screen {
-        canvas {
-            padding: 8px;
-        }
+    .xterm {
+        padding: 8px;
     }
 
     .xterm-viewport {
