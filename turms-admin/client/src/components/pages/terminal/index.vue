@@ -201,8 +201,9 @@ export default {
                     msg: HELP
                 };
             } else if (cmd === 'clear') {
-                this.$refs.cliTerminal.clear();
-                return;
+                return {
+                    clear: true
+                };
             }
             try {
                 const func = new Function(CONTEXT + cmd);
@@ -271,7 +272,7 @@ export default {
                     newLine: i === ONBOARD_MESSAGES.length - 1
                 });
             }
-            cliTerminal.startNewLine();
+            cliTerminal.writeNewLinePrefix();
             cliTerminal.focus();
         },
 

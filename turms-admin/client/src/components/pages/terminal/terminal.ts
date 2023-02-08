@@ -145,10 +145,10 @@ export default class Terminal extends XTerm {
     eraseLine(): void {
         this.write(escapes.eraseLine);
         this.write(escapes.cursorLeft);
-        this.startNewLine();
+        this.writeNewLinePrefix();
     }
 
-    startNewLine(): void {
+    writeNewLinePrefix(): void {
         this.write(PREFIX);
     }
 
@@ -156,7 +156,7 @@ export default class Terminal extends XTerm {
         this.currentLine = '';
         this.cursorTo(0);
         this.write(escapes.clearScreen);
-        this.startNewLine();
+        this.writeNewLinePrefix();
         this.onInputChanged?.(this.currentLine, this.cursor);
     }
 
@@ -236,21 +236,27 @@ export default class Terminal extends XTerm {
         }
         const key = event.key;
         switch (key) {
-            case 'Enter':
+            case 'Enter': {
                 this.writeln('');
+                let result;
                 if (this.currentLine) {
                     this.history.push(this.currentLine);
                     this.historyIndex = this.history.length - 1;
                     if (this.onLine) {
                         this.waitForResponse = true;
-                        const result = await this.onLine(this.currentLine);
+                        result = await this.onLine(this.currentLine);
                         this.waitForResponse = false;
                         this.writeMsg(result);
                     }
                 }
-                this.startNewLine();
-                this.currentLine = '';
-                this.cursorTo(0);
+                if (result?.clear) {
+                    this.clear();
+                } else {
+                    this.writeNewLinePrefix();
+                    this.currentLine = '';
+                    this.cursorTo(0);
+                }
+            }
                 break;
             case 'ArrowUp':
                 if (this.history.length) {
@@ -311,7 +317,7 @@ export default class Terminal extends XTerm {
                         this.currentLine = '';
                         this.cursorTo(0);
                         this.writeln('');
-                        this.startNewLine();
+                        this.writeNewLinePrefix();
                     }
                 } else {
                     return false;

@@ -53,7 +53,7 @@ const $loading = function (this: ComponentCustomProperties, {promise, loading, s
     success?: string,
     error:string,
     successCb: (data: any) => void,
-    finallyCb?: () => {}
+    finallyCb?: () => void
 })  {
     if (!promise) {
         return;
