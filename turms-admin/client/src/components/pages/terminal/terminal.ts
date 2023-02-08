@@ -5,7 +5,8 @@ import { FitAddon } from 'xterm-addon-fit';
 import 'xterm/css/xterm.css';
 
 const styles = colors.styles;
-const PREFIX = '$ ';
+const NEW_LINE_PREFIX = '$ ';
+const LINE_BREAK = '\r\n';
 const DUPLICATE_MAP = {
     "'": "'",
     '"': '"',
@@ -132,7 +133,7 @@ export default class Terminal extends XTerm {
 
     cursorTo(pos: number): void {
         this.cursor = pos;
-        this.write(escapes.cursorTo(PREFIX.length + pos));
+        this.write(escapes.cursorTo(NEW_LINE_PREFIX.length + pos));
         this._triggerOnCursorChangedListeners();
     }
 
@@ -142,6 +143,15 @@ export default class Terminal extends XTerm {
 
     // Line
 
+    resetLine(data?: string): void {
+        this.currentLine = '';
+        if (data) {
+            this.write(data);
+        }
+        this.writeNewLinePrefix();
+        this.cursorTo(0);
+    }
+
     eraseLine(): void {
         this.write(escapes.eraseLine);
         this.write(escapes.cursorLeft);
@@ -149,14 +159,15 @@ export default class Terminal extends XTerm {
     }
 
     writeNewLinePrefix(): void {
-        this.write(PREFIX);
+        this.write(NEW_LINE_PREFIX);
+    }
+
+    startNewLine(): void {
+        this.resetLine(LINE_BREAK);
     }
 
     override clear(): void {
-        this.currentLine = '';
-        this.cursorTo(0);
-        this.write(escapes.clearScreen);
-        this.writeNewLinePrefix();
+        this.resetLine(escapes.clearScreen);
         this.onInputChanged?.(this.currentLine, this.cursor);
     }
 
@@ -194,10 +205,9 @@ export default class Terminal extends XTerm {
         this.cursorTo(this.cursor);
     }
 
-    writeMsg({type, msg, newLine = false}: {
+    writeMsg({type, msg}: {
         type?: string,
-        msg?: string,
-        newLine?: boolean
+        msg?: string
     } = {}): void {
         if (msg == null) {
             return;
@@ -206,9 +216,6 @@ export default class Terminal extends XTerm {
         const style = styles[color];
         const data = style.open + msg + style.close;
         this.writeln(data);
-        if (newLine) {
-            this.writeln('');
-        }
     }
 
     writeLine(line: string, updateCursor: boolean = false): void {
@@ -234,6 +241,8 @@ export default class Terminal extends XTerm {
         if (this.handleInputEvent?.(event)) {
             return true;
         }
+        // Reference: https://developer.mozilla.org/en-US/docs/Web/API/UI_Events/Keyboard_event_code_values
+        // Use "key" instead of "code", taking into consideration the state of modifier keys and the keyboard locale and layout
         const key = event.key;
         switch (key) {
             case 'Enter': {
@@ -246,15 +255,15 @@ export default class Terminal extends XTerm {
                         this.waitForResponse = true;
                         result = await this.onLine(this.currentLine);
                         this.waitForResponse = false;
-                        this.writeMsg(result);
+                        this.writeMsg(result?.message);
                     }
                 }
                 if (result?.clear) {
                     this.clear();
+                } else if (result?.newLine) {
+                    this.startNewLine();
                 } else {
-                    this.writeNewLinePrefix();
-                    this.currentLine = '';
-                    this.cursorTo(0);
+                    this.resetLine();
                 }
             }
                 break;
@@ -315,10 +324,7 @@ export default class Terminal extends XTerm {
                     if (selection) {
                         await navigator.clipboard.writeText(selection);
                     } else {
-                        this.currentLine = '';
-                        this.cursorTo(0);
-                        this.writeln('');
-                        this.writeNewLinePrefix();
+                        this.resetLine(LINE_BREAK);
                     }
                 } else {
                     return false;

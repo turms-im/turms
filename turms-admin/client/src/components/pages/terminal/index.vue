@@ -197,8 +197,10 @@ export default {
         async executeCmd(cmd) {
             if (cmd === 'help') {
                 return {
-                    type: 'info',
-                    msg: HELP
+                    message: {
+                        type: 'info',
+                        msg: HELP
+                    }
                 };
             } else if (cmd === 'clear') {
                 return {
@@ -216,15 +218,17 @@ export default {
                     ? MESSAGE_FOR_VOID_FUNCTION
                     : this.stringify(result.isTurmsResponse ? result.data : result);
                 return {
-                    type: isFunction ? 'success' : 'info',
-                    msg: result,
-                    newLine: true
+                    message: {
+                        type: isFunction ? 'success' : 'info',
+                        msg: result
+                    }
                 };
             } catch (e) {
                 return {
-                    type: 'error',
-                    msg: this.stringify(e),
-                    newLine: true
+                    message: {
+                        type: 'error',
+                        msg: this.stringify(e)
+                    }
                 };
             }
         },
@@ -265,14 +269,13 @@ export default {
                     this.settings.commandsHistorySize);
                 return this.executeCmd(cmd);
             };
-            for (let i = 0; i < ONBOARD_MESSAGES.length; i++) {
+            for (const element of ONBOARD_MESSAGES) {
                 cliTerminal.writeMsg({
                     type: 'info',
-                    msg: ONBOARD_MESSAGES[i],
-                    newLine: i === ONBOARD_MESSAGES.length - 1
+                    msg: element
                 });
             }
-            cliTerminal.writeNewLinePrefix();
+            cliTerminal.startNewLine();
             cliTerminal.focus();
         },
 
