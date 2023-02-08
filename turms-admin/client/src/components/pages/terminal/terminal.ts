@@ -308,6 +308,7 @@ export default class Terminal extends XTerm {
             case 'End':
                 this.cursorTo(this.currentLine.length);
                 break;
+            case 'C':
             case 'c':
                 if (event.ctrlKey) {
                     const selection = this.getSelection();
@@ -323,6 +324,7 @@ export default class Terminal extends XTerm {
                     return false;
                 }
                 break;
+            case 'V':
             case 'v':
                 if (event.ctrlKey) {
                     const text = await navigator.clipboard.readText();
