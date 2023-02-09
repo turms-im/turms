@@ -96,6 +96,7 @@ public class SessionIdentityAccessManager implements SessionIdentityAccessManage
     private final PluginManager pluginManager;
     private final PolicyManager policyManager;
 
+    @Nullable
     private final UserService userService;
 
     private final HttpClient httpIdentityAccessManagementClient;
@@ -111,7 +112,7 @@ public class SessionIdentityAccessManager implements SessionIdentityAccessManage
 
     public SessionIdentityAccessManager(TurmsPropertiesManager propertiesManager,
                                         PluginManager pluginManager,
-                                        UserService userService) {
+                                        @Nullable UserService userService) {
         this.pluginManager = pluginManager;
         this.userService = userService;
         this.policyManager = new PolicyManager();
@@ -178,7 +179,20 @@ public class SessionIdentityAccessManager implements SessionIdentityAccessManage
 
     private void updateGlobalProperties(TurmsProperties properties) {
         SessionProperties sessionProperties = properties.getGateway().getSession();
-        enableIdentityAccessManagement = sessionProperties.getIdentityAccessManagement().isEnabled();
+        boolean localEnableIdentityAccessManagement = sessionProperties.getIdentityAccessManagement().isEnabled();
+        if (localEnableIdentityAccessManagement
+                && userService == null
+                && identityAccessManagementType == IdentityAccessManagementType.PASSWORD) {
+            // We refuse to update the wrong setting, otherwise users cannot log in
+            // until developers correct it, and it will be a big problem.
+            LOGGER.error("Refused an illegal operation that tried to enable the disabled password-based identity and access management, " +
+                    "because " +
+                    "\"turms.gateway.session.identity-access-management.enabled\" is false, or " +
+                    "\"turms.gateway.session.identity-access-management.type\" is not PASSWORD at startup. " +
+                    "To enable it, you need to update the \"turms.gateway.session.identity-access-management.enabled\" setting to true and restart the server");
+        } else {
+            enableIdentityAccessManagement = localEnableIdentityAccessManagement;
+        }
     }
 
     @Override

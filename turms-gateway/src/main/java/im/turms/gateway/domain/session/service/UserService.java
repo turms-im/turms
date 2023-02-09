@@ -21,6 +21,7 @@ import im.turms.gateway.domain.session.repository.UserRepository;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.security.password.PasswordManager;
 import im.turms.server.common.infra.validation.Validator;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -30,6 +31,7 @@ import jakarta.validation.constraints.NotNull;
 /**
  * @author James Chen
  */
+@ConditionalOnBean(name = "userMongoClient")
 @Service
 public class UserService {
 

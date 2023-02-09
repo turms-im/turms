@@ -35,6 +35,7 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.Collections;
 import java.util.Set;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen
@@ -55,6 +56,11 @@ public class MongoConfig extends BaseMongoConfig {
         return mongoClient;
     }
 
+    /**
+     * @return null if {@link IdentityAccessManagementProperties#enabled} is false
+     * or {@link IdentityAccessManagementProperties#type} is not {@link IdentityAccessManagementType#PASSWORD}
+     */
+    @Nullable
     @Bean
     public TurmsMongoClient userMongoClient(TurmsPropertiesManager propertiesManager) {
         TurmsProperties localProperties = propertiesManager.getLocalProperties();

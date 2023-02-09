@@ -46,6 +46,8 @@ public class IdentityAccessManagementProperties {
     @MutableProperty
     private boolean enabled = true;
 
+    @Description("Note that if the type is not PASSWORD, " +
+            "turms-gateway will not connect to the MongoDB server for user records")
     private IdentityAccessManagementType type = IdentityAccessManagementType.PASSWORD;
 
     @NestedConfigurationProperty

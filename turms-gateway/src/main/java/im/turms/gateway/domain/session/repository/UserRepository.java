@@ -19,27 +19,23 @@ package im.turms.gateway.domain.session.repository;
 
 import im.turms.server.common.domain.common.repository.BaseRepository;
 import im.turms.server.common.domain.user.po.User;
-import im.turms.server.common.infra.property.env.gateway.identityaccessmanagement.IdentityAccessManagementProperties;
 import im.turms.server.common.storage.mongo.DomainFieldName;
 import im.turms.server.common.storage.mongo.TurmsMongoClient;
 import im.turms.server.common.storage.mongo.operation.option.Filter;
 import im.turms.server.common.storage.mongo.operation.option.QueryOptions;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 
 /**
  * @author James Chen
  */
+@ConditionalOnBean(name = "userMongoClient")
 @Repository
 public class UserRepository extends BaseRepository<User, Long> {
 
-    /**
-     * @param mongoClient can be null if {@link IdentityAccessManagementProperties#enabled} is false
-     */
-    public UserRepository(
-            @Autowired(required = false) @Qualifier("userMongoClient") TurmsMongoClient mongoClient) {
+    public UserRepository(@Qualifier("userMongoClient") TurmsMongoClient mongoClient) {
         super(mongoClient, User.class);
     }
 

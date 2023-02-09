@@ -1328,6 +1328,7 @@
         },
         "type": {
           "deprecated": false,
+          "description": "Note that if the type is not PASSWORD, turms-gateway will not connect to the MongoDB server for user records",
           "global": false,
           "mutable": false,
           "options": [
