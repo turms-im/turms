@@ -120,6 +120,14 @@ Turms配置分为三大类：Turms Service配置、Turms Gateway配置，以及C
    1. 直接修改仓库内服务端下的`application.yaml`文件。因为如果修改了配置源文件，那用户就不能使用Turms官方提供的Docker镜像了，并且还需要自行打包成JAR包并制作镜像，因此这种方式一般只用于本地开发测试用，不用于线上环境。
    2. 使用前文提到的Docker挂载的方式，将自定义的服务端配置文件挂载到`/opt/turms/turms-gateway/config/application.yaml`路径上。
 
+#### 配置集（Profiles）
+
+如果开发者需要对同一个Turms服务端配置与切换使用不同的配置，则可以使用配置集。
+
+默认情况下，Turms服务端源码中硬编码的配置与`application.yaml`文件中指定的配置就是默认生产环境的配置。如果开发者想要切换使用其他配置集，则可以通过修改`application.yaml`文件中的`spring.profiles.active`配置来使用其他配置集。
+
+比如常见的用例：在本地开发调试时，想将生产环境配置，切换成默认的开发环境配置，则开发者可以将`application.yaml`文件中的`spring.profiles.active`值修改为`dev`，这样Turms服务端就会采用`application.yaml`与`application-dev.yaml`（默认开发环境配置）两个文件中指定的配置，且`application-dev.yaml`文件中的配置优先级更高，将覆盖默认配置。
+
 #### 配置参数介绍
 
 由于所有的配置项高达上百个，直接看代码比看文档更加直观，因此推荐您直接查阅`im.turms.server.common.infra.property`目录下各配置类，下文仅对大的分类做简要介绍。
