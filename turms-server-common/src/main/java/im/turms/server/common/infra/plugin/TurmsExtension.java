@@ -17,6 +17,7 @@
 
 package im.turms.server.common.infra.plugin;
 
+import im.turms.server.common.infra.lang.ClassUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
@@ -27,6 +28,7 @@ import org.springframework.context.ApplicationContext;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author James Chen
@@ -72,15 +74,9 @@ public abstract class TurmsExtension {
 
     List<Class<? extends ExtensionPoint>> getExtensionPointClasses() {
         if (extensionPointClasses == null) {
-            Class<?>[] interfaces = getClass().getInterfaces();
-            List<Class<? extends ExtensionPoint>> classes = new ArrayList<>(interfaces.length);
-            for (Class<?> interfaceClass : interfaces) {
-                if (ExtensionPoint.class.isAssignableFrom(interfaceClass)
-                        && interfaceClass != ExtensionPoint.class) {
-                    classes.add((Class<? extends ExtensionPoint>) interfaceClass);
-                }
-            }
-            extensionPointClasses = classes;
+            Set<Class<? extends ExtensionPoint>> classes = (Set) ClassUtil.getInterfaces(getClass(),
+                    interfaceClass -> ClassUtil.isSuperClass(interfaceClass, ExtensionPoint.class));
+            extensionPointClasses = new ArrayList<>(classes);
         }
         return extensionPointClasses;
     }

@@ -17,6 +17,7 @@
 
 package im.turms.server.common.infra.lang;
 
+import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.exception.IncompatibleJvmException;
 import im.turms.server.common.infra.reflect.ReflectionUtil;
 
@@ -29,7 +30,9 @@ import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.StringJoiner;
+import java.util.function.Predicate;
 import jakarta.annotation.Nullable;
 
 /**
@@ -92,6 +95,36 @@ public final class ClassUtil {
         return fields;
     }
 
+    public static Set<Class<?>> getInterfaces(Class<?> clazz, Predicate<Class<?>> predicate) {
+        Set<Class<?>> allInterfaces = CollectionUtil.newSetWithExpectedSize(4);
+        Class<?> currentClass = clazz;
+        while (currentClass != null) {
+            Class<?>[] interfaces = currentClass.getInterfaces();
+            for (Class<?> interfaceClass : interfaces) {
+                if (predicate.test(interfaceClass)) {
+                    allInterfaces.add(interfaceClass);
+                }
+            }
+            currentClass = currentClass.getSuperclass();
+        }
+        return allInterfaces;
+    }
+
+    @Nullable
+    public static Class<?> getFirstInterface(Class<?> clazz, Predicate<Class<?>> predicate) {
+        Class<?> currentClass = clazz;
+        while (currentClass != null) {
+            Class<?>[] interfaces = currentClass.getInterfaces();
+            for (Class<?> interfaceClass : interfaces) {
+                if (predicate.test(interfaceClass)) {
+                    return interfaceClass;
+                }
+            }
+            currentClass = currentClass.getSuperclass();
+        }
+        return null;
+    }
+
     @Nullable
     public static Class<?> getElementClass(Type type) {
         return type instanceof ParameterizedType parameterizedType
@@ -115,6 +148,10 @@ public final class ClassUtil {
         } catch (Throwable e) {
             throw new IllegalArgumentException("Failed to get the enum constants of the class: " + clazz.getName(), e);
         }
+    }
+
+    public static boolean isSuperClass(Class<?> clazz, Class<?> possibleSuperClass) {
+        return clazz != possibleSuperClass && possibleSuperClass.isAssignableFrom(clazz);
     }
 
     public static boolean isListOf(Type type, Class<?> elementClass) {

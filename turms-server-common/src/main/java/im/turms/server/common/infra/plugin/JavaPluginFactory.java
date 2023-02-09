@@ -18,6 +18,7 @@
 package im.turms.server.common.infra.plugin;
 
 import im.turms.server.common.infra.collection.CollectionUtil;
+import im.turms.server.common.infra.lang.ClassUtil;
 import org.springframework.context.ApplicationContext;
 
 import java.lang.reflect.Constructor;
@@ -86,15 +87,9 @@ public class JavaPluginFactory {
                                                          ApplicationContext context) {
         List<TurmsExtension> extensions = new ArrayList<>(extensionClasses.size());
         for (Class<? extends TurmsExtension> extensionClass : extensionClasses) {
-            Class<?>[] interfaces = extensionClass.getInterfaces();
-            boolean foundExtensionPoint = false;
-            for (Class<?> extensionInterface : interfaces) {
-                if (extensionInterface != ExtensionPoint.class || ExtensionPoint.class.isAssignableFrom(extensionClass)) {
-                    foundExtensionPoint = true;
-                    break;
-                }
-            }
-            if (!foundExtensionPoint) {
+            Class<?> qualifiedInterface = ClassUtil.getFirstInterface(extensionClass,
+                    extensionInterface -> ClassUtil.isSuperClass(extensionInterface, ExtensionPoint.class));
+            if (qualifiedInterface == null) {
                 throw new InvalidPluginException("The extension (" +
                         extensionClass.getName() +
                         ") must implement at least one subclass of: " +
