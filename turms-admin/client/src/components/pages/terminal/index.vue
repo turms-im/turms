@@ -178,7 +178,7 @@ export default {
             } catch (errorInfo) {
                 return;
             }
-            const isClientSettingsChanged = !this.$_.isEqual(this.settings, newSettings);
+            const isClientSettingsChanged = !this.$util.isEqual(this.settings, newSettings);
             const mergedSettings = {
                 ...this.settings,
                 ...newSettings

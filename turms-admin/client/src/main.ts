@@ -1,5 +1,4 @@
 import JSONbig from 'json-bigint';
-import * as _ from 'lodash-es';
 import axios from 'axios';
 import {createApp} from 'vue';
 import dayjs from 'dayjs';
@@ -37,20 +36,12 @@ const $locales = {
 
 const $sleep = (millis) => new Promise(resolve => setTimeout(resolve, millis));
 
-const $_ = {
-    get: _.get,
-    set: _.set,
-    isEqual: _.isEqual,
-    uniq: _.uniq
-};
-
 declare module '@vue/runtime-core' {
     interface ComponentCustomProperties {
         $http: typeof $http
         $locales: typeof $locales
         $date: typeof dayjs
         $rs: typeof resources
-        $_: typeof $_
         $sleep: typeof $sleep
     }
 }
@@ -68,9 +59,6 @@ createApp(App)
             globalProperties.$locales = $locales;
             globalProperties.$date = dayjs;
             globalProperties.$rs = resources;
-            // Don't use "_" because of https://github.com/vuejs/vue-next/issues/2546
-            // TODO: merge into $util
-            globalProperties.$_ = $_;
             globalProperties.$sleep = $sleep;
             globalProperties.$apis = createApis(globalProperties);
         }

@@ -154,7 +154,7 @@ export default {
             for (const difference of diffs) {
                 const paths = difference.path;
                 const targetPaths = paths.slice(0, paths.length - 1).concat('defaultValue');
-                this.$_.set(this.currentConfig, targetPaths, difference.rhs);
+                this.$util.set(this.currentConfig, targetPaths, difference.rhs);
             }
             this.changedNumber = diffs?.length || 0;
         },
@@ -213,8 +213,8 @@ export default {
             const config = {};
             for (const difference of diffs) {
                 const paths = difference.path;
-                const value = this.$_.get(this.currentConfig, paths);
-                this.$_.set(config, paths.slice(0, paths.length - 1), value);
+                const value = this.$util.get(this.currentConfig, paths);
+                this.$util.set(config, paths.slice(0, paths.length - 1), value);
             }
             return this.$http.put('/cluster/settings', config)
                 .then(() => {

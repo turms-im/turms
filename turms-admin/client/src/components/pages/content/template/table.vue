@@ -129,7 +129,7 @@ export default {
     },
     methods: {
         getColumnValue(column, record) {
-            let value = this.$_.get(record, column.dataIndex, column.default);
+            let value = this.$util.get(record, column.dataIndex, column.default);
             if (value instanceof Array) {
                 value = value.join(',');
             } else if (column.dataIndex.endsWith('Date') && value) {

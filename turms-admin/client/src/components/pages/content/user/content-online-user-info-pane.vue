@@ -310,7 +310,7 @@ export default {
                         }
                         return record;
                     });
-                    this.records = this.$_.uniq(records, v => v.key);
+                    this.records = this.$util.unique(records, v => v.key);
                 });
         },
         updateSelectedRecordKeys(keys) {

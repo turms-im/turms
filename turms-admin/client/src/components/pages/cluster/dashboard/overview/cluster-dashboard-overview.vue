@@ -134,7 +134,7 @@ export default {
                                 value
                             };
                         });
-                    filters = this.$_.uniq(filters, v => v.value);
+                    filters = this.$util.unique(filters, v => v.value);
                     if (filters.length > 1) {
                         column.filters = filters;
                     }

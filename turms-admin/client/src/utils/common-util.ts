@@ -1,6 +1,7 @@
 import JSONBig from 'json-bigint';
+import * as _ from 'lodash-es';
 
-export default class CommonUtil {
+class CommonUtil {
 
     static copy(val: any): any {
         return JSONBig.parse(JSONBig.stringify(val));
@@ -26,7 +27,7 @@ export default class CommonUtil {
 
     static sort(a: string | number, b: string | number, isAscend = true): number {
         let result;
-        if (typeof a ==='string' && typeof b === 'string') {
+        if (typeof a === 'string' && typeof b === 'string') {
             const t1 = new Date(parseInt(a));
             const t2 = new Date(parseInt(b));
             result = isNaN(t1.getTime()) || isNaN(t2.getTime())
@@ -57,3 +58,19 @@ export default class CommonUtil {
     }
 
 }
+
+declare namespace CommonUtil {
+    const get: typeof _.get;
+    const set: typeof _.set;
+    const isEqual: typeof _.isEqual;
+    const unique: typeof _.uniq;
+}
+
+Object.assign(CommonUtil, {
+    get: _.get,
+    set: _.set,
+    isEqual: _.isEqual,
+    unique: _.uniq
+});
+
+export default CommonUtil;
