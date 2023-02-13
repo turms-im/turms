@@ -106,22 +106,24 @@ terraform apply
 
 1. MongoDB集群搭建（用于业务数据存储、服务发现、配置管理）
 
-   - 下载并安装[MongoDB](https://www.mongodb.com/download-center/community)（要求最低版本号为：4.0。推荐版本为最新稳定版）。以RHEL/CentOS为例（具体可参考：https://docs.mongodb.com/manual/tutorial/install-mongodb-on-red-hat）：
+   - 下载并安装[MongoDB](https://www.mongodb.com/download-center/community)（因为Turms服务端需要使用支持分布式事务的分片集群，所以要求MongoDB的最低版本为4.2。推荐用户使用最新稳定版）。以RHEL/CentOS为例（具体可参考：https://docs.mongodb.com/manual/tutorial/install-mongodb-on-red-hat）：
 
      ```bash
-     cat <<EOF > /etc/yum.repos.d/mongodb-org-4.4.repo
-     [mongodb-org-4.4]
+     cat <<EOF > /etc/yum.repos.d/mongodb-org-6.0.repo
+     [mongodb-org-6.0]
      name=MongoDB Repository
-     baseurl=https://repo.mongodb.org/yum/redhat/$releasever/mongodb-org/4.4/x86_64/
+     baseurl=https://repo.mongodb.org/yum/redhat/$releasever/mongodb-org/6.0/x86_64/
      gpgcheck=1
      enabled=1
-     gpgkey=https://www.mongodb.org/static/pgp/server-4.4.asc
+     gpgkey=https://www.mongodb.org/static/pgp/server-6.0.asc
      EOF
      yum install -y mongodb-org
      ```
-   
-   - 搭建MongoDB服务端集群（以mlaunch为例。关于mlaunch提供的更多指令，请查阅：http://blog.rueckstiess.com/mtools/mlaunch.html）。
-   
+
+   - 搭建MongoDB服务端分片集群。以基于工具[mtools/mlaunch](https://github.com/rueckstiess/mtools)搭建为例：
+
+     （关于mlaunch提供的更多指令，读者可查阅：[mlaunch文档](https://rueckstiess.github.io/mtools/mlaunch.html))
+
      ```bash
      pip3 install mtools[mlaunch]
      mlaunch init --replicaset --sharded 1 --nodes 1 --config 1 --hostname localhost --port 27017 --mongos 1
@@ -130,7 +132,7 @@ terraform apply
      注意：
 
      * 如果在Windows环境执行`pip3 install mtools[mlaunch]`命令时，遇到类似`error: Microsoft Visual C++ 14.0 or greater is required. Get it with "Microsoft C++ Build Tools"`的错误，则您需要先在https://visualstudio.microsoft.com/downloads页面下，下载`Visual Studio Installer`，并通过它安装`MSVC build tools`，然后再执行`pip3 install mtools[mlaunch]`指令。
-     * 请确保MongoDB服务端运行正常，否则Turms服务端启动时会抛出`MongoSocketOpenException`异常。
+     * 请确保MongoDB服务端运行正常，否则Turms服务端在启动时会抛出`MongoSocketOpenException`异常。
 
   2. 下载、安装并启动Redis服务端（用于实现用户状态管理以及“附近的用户”）。以RHEL/CentOS为例：
 

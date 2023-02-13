@@ -149,8 +149,8 @@ public final class TurmsMongoClient implements MongoOperationsSupport {
                                String name,
                                Set<ClusterType> requiredClusterTypes) {
         for (ServerDescription description : descriptions) {
-            if (description.getMaxWireVersion() < ServerVersionHelper.FOUR_DOT_ZERO_WIRE_VERSION) {
-                throw new IncompatibleMongoException("The version of MongoDB server should be at least 4.0. " +
+            if (description.getMaxWireVersion() < ServerVersionHelper.FOUR_DOT_TWO_WIRE_VERSION) {
+                throw new IncompatibleMongoException("The version of MongoDB server should be at least 4.2. " +
                         "Note that Turms cannot work with Amazon DocumentDB. " +
                         "The description of the unsupported server: " + description.getShortDescription());
             }
