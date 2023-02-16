@@ -329,7 +329,7 @@ public final class MongoEntityFactory {
         String fieldName = parseFieldName(field);
         String propertyName = field.getName();
         Parameter[] params = constructor.getParameters();
-        for (int i = 0; i < params.length; i++) {
+        for (int i = 0, length = params.length; i < length; i++) {
             String paramName = params[i].getName();
             if (paramName.equals(fieldName) || paramName.equals(propertyName)) {
                 return i;

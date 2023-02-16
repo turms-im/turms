@@ -288,10 +288,11 @@ public final class CollectionUtil {
     }
 
     private static boolean areArraysLooselyEqual(Object[] values1, Object[] values2) {
-        if (values1.length != values2.length) {
+        int values1Length = values1.length;
+        if (values1Length != values2.length) {
             return false;
         }
-        for (int i = 0; i < values1.length; i++) {
+        for (int i = 0; i < values1Length; i++) {
             if (!areTwoObjectsLooselyEqual(values1[i], values2[i])) {
                 return false;
             }
@@ -407,7 +408,7 @@ public final class CollectionUtil {
 
     public static <T> Set<T> add(Set<T> set, Collection<T> values) {
         if (isImmutable(set)) {
-            Set<T> newSet = UnifiedSet.newSet(set.size() + values.size());
+            Set<T> newSet = newSetWithExpectedSize(set.size() + values.size());
             newSet.addAll(set);
             set = newSet;
         }

@@ -21,7 +21,6 @@ import im.turms.server.common.infra.exception.NotImplementedException;
 import im.turms.server.common.infra.lang.ClassUtil;
 import im.turms.server.common.infra.thread.NotThreadSafe;
 
-import java.util.AbstractMap;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
@@ -29,6 +28,7 @@ import java.util.Set;
 
 /**
  * @author James Chen
+ * @see java.util.EnumMap
  */
 @NotThreadSafe
 public final class FastEnumMap<K extends Enum<K>, V> implements Map<K, V> {
@@ -145,7 +145,7 @@ public final class FastEnumMap<K extends Enum<K>, V> implements Map<K, V> {
         for (int i = 0, length = values.length; i < length; i++) {
             V element = values[i];
             if (element != null) {
-                set.add(new AbstractMap.SimpleEntry<>(keys[i], element));
+                set.add(Map.entry(keys[i], element));
             }
         }
         return set;

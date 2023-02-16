@@ -22,7 +22,6 @@ import im.turms.server.common.infra.thread.ThreadSafe;
 
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.VarHandle;
-import java.util.AbstractMap;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
@@ -160,7 +159,7 @@ public final class ConcurrentEnumMap<K extends Enum<K>, V> implements Map<K, V> 
         for (int i = 0, length = values.length; i < length; i++) {
             value = (V) VALUES_HANDLE.getVolatile(values, i);
             if (value != null) {
-                set.add(new AbstractMap.SimpleEntry<>(keys[i], value));
+                set.add(Map.entry(keys[i], value));
             }
         }
         return set;

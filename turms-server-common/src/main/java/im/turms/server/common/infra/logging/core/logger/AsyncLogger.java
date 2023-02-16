@@ -208,7 +208,9 @@ public final class AsyncLogger implements Logger {
                 buffer.release();
             }
         } catch (Exception e) {
-            ReferenceCountUtil.safeEnsureReleased(buffer);
+            if (buffer != null) {
+                ReferenceCountUtil.safeEnsureReleased(buffer);
+            }
             InternalLogger.printException(e);
         }
     }

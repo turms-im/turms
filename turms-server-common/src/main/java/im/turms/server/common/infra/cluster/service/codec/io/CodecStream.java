@@ -52,7 +52,7 @@ public class CodecStream extends Stream implements CodecStreamInput, CodecStream
     public void writeObject(Object obj) {
         Codec<Object> codec = CodecPool.getCodec(obj.getClass());
         if (codec == null) {
-            throw new CodecNotFoundException("Could not find the codec for the class: " + obj.getClass());
+            throw new CodecNotFoundException("Could not find the codec for the class: " + obj.getClass().getName());
         }
         codec.write(this, obj);
     }

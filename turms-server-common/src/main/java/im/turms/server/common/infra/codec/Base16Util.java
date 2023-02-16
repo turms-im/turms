@@ -40,7 +40,7 @@ public final class Base16Util {
     public static byte[] encode(byte[] bytes, boolean upper) {
         byte[] table = upper ? UPPER : LOWER;
         int length = bytes.length;
-        byte[] dst = new byte[length * 2];
+        byte[] dst = new byte[length << 1];
         byte b;
         for (int i = 0, j = 0; i < length; i++) {
             b = bytes[i];

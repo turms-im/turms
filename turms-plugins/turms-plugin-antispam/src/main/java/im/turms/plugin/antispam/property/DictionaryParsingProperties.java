@@ -37,7 +37,7 @@ public class DictionaryParsingProperties {
     private boolean skipInvalidCharacter = true;
 
     @Description("Path to the binary dictionary file. "
-            + "Used to build a trie from binary to avoiding building a trie from scratch")
+            + "Used to build a trie from binary to avoid building a trie from scratch")
     private String binFilePath;
 
     @NestedConfigurationProperty

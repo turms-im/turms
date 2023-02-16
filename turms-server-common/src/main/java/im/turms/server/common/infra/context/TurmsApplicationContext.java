@@ -185,13 +185,12 @@ public class TurmsApplicationContext {
     }
 
     public synchronized void addShutdownHook(JobShutdownOrder order, ShutdownHook job) {
-        if (shutdownHooks.containsKey(order)) {
+        if (shutdownHooks.putIfAbsent(order, job) != null) {
             String formatted = "Failed to add a shutdown hook for the job \"" +
                     order.name() +
                     "\" because it has been registered";
             throw new IllegalStateException(formatted);
         }
-        shutdownHooks.put(order, job);
     }
 
     private String getActiveEnvProfile(String[] activeProfiles, List<String>... knownEnvProfiles) {

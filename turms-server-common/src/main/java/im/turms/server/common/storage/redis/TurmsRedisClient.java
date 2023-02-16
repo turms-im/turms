@@ -49,7 +49,6 @@ import lombok.Data;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.AbstractMap;
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -168,7 +167,7 @@ public class TurmsRedisClient {
                         if (entry.isEmpty()) {
                             return Mono.empty();
                         }
-                        return Mono.just(new AbstractMap.SimpleEntry<>(entry.getKey(), entry.getValue()));
+                        return Mono.just(Map.entry(entry.getKey(), entry.getValue()));
                     });
             return entryFlux
                     .doFinally(signal -> ReferenceCountUtil.ensureReleased(keyBuffer));
@@ -246,7 +245,7 @@ public class TurmsRedisClient {
      */
     public <T> Mono<T> eval(RedisScript script, int keyLength, ByteBuf... keys) {
         return Mono.defer(() -> {
-            for (int i = 0; i < keys.length; i++) {
+            for (int i = 0, length = keys.length; i < length; i++) {
                 keys[i] = ByteBufUtil.ensureByteBufRefCnfCorrect(keys[i])
                         .retain();
             }

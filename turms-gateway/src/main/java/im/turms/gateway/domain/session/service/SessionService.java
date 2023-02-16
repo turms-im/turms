@@ -109,7 +109,7 @@ public class SessionService implements ISessionService, SessionIdentityAccessMan
     private final ConcurrentHashMap<Long, UserSessionsManager> userIdToSessionsManager;
     /**
      * We don't use "NonBlockingHashMapLong" because
-     * we need to support IPv6 addresses which takes 16 bytes per address.
+     * we need to support IPv6 addresses, which takes 16 bytes per address.
      * So we can only eliminate unnecessary objects after Valhalla publish value objects.
      */
     private final ConcurrentHashMap<ByteArrayWrapper, ConcurrentLinkedQueue<UserSession>> ipToSessions;

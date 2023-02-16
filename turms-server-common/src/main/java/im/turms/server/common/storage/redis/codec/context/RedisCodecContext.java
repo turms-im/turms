@@ -52,8 +52,9 @@ public class RedisCodecContext {
     }
 
     public ByteBuf[] encodeHashFields(Object[] fields) {
-        ByteBuf[] buffers = new ByteBuf[fields.length];
-        for (int i = 0; i < fields.length; i++) {
+        int length = fields.length;
+        ByteBuf[] buffers = new ByteBuf[length];
+        for (int i = 0; i < length; i++) {
             try {
                 buffers[i] = encodeHashField(fields[i]);
             } catch (Exception e) {
@@ -73,8 +74,9 @@ public class RedisCodecContext {
     }
 
     public ByteBuf[] encodeGeoMembers(Object[] members) {
-        ByteBuf[] buffers = new ByteBuf[members.length];
-        for (int i = 0; i < members.length; i++) {
+        int length = members.length;
+        ByteBuf[] buffers = new ByteBuf[length];
+        for (int i = 0; i < length; i++) {
             try {
                 buffers[i] = encodeGeoMember(members[i]);
             } catch (Exception e) {

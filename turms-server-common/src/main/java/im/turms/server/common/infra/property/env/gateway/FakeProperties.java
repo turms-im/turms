@@ -42,7 +42,7 @@ public class FakeProperties {
 
     @Description("Run the number of real clients as faked users with an ID from [firstUserId, firstUserId + userCount) " +
             "to connect to turms-gateway. " +
-            "So please ensure you have set turms.service.fake.userCount to a number larger than or equals to (firstUserId + userCount)")
+            "So please ensure you have set \"turms.service.fake.userCount\" to a number larger than or equal to (firstUserId + userCount)")
     @Min(0)
     private int userCount = 10;
 

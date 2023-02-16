@@ -111,14 +111,13 @@ public class HttpEndpointCollector {
                     encoding,
                     method.getDeclaredAnnotation(RequiredPermission.class));
             ApiEndpointKey key = new ApiEndpointKey(path, httpMethod);
-            if (keyToEndpoint.containsKey(key)) {
+            if (keyToEndpoint.putIfAbsent(key, endpoint) != null) {
                 throw new IllegalArgumentException("Found a duplicate endpoint (" +
                         key +
                         ")" +
                         " in the controller: " +
                         controllerClass.getName());
             }
-            keyToEndpoint.put(key, endpoint);
         }
     }
 

@@ -106,9 +106,10 @@ public class HttpRequestDispatcher {
     private final HttpRequestParamParser requestParamParser;
 
     private final DisposableServer server;
+    private final boolean isApiEnabled;
     @Getter
     private Map<ApiEndpointKey, ApiEndpoint> keyToEndpoint;
-    private final List<Consumer<Map<ApiEndpointKey, ApiEndpoint>>> endpointChangeListeners = new CopyOnWriteArrayList<>();
+    private final List<Consumer<Map<ApiEndpointKey, ApiEndpoint>>> endpointChangeListeners;
 
     private final boolean useAuthentication;
     private boolean allowDeleteWithoutFilter;
@@ -139,13 +140,15 @@ public class HttpRequestDispatcher {
                 ? propertiesManager.getLocalProperties().getGateway().getAdminApi()
                 : propertiesManager.getLocalProperties().getService().getAdminApi();
         useAuthentication = apiProperties.isUseAuthentication();
-        if (apiProperties.isEnabled()) {
+        isApiEnabled = apiProperties.isEnabled();
+        if (isApiEnabled) {
             propertiesManager.notifyAndAddGlobalPropertiesChangeListener(this::updateGlobalProperties);
             AdminHttpProperties httpProperties = apiProperties.getHttp();
             this.requestParamParser = new HttpRequestParamParser(httpProperties.getMaxRequestBodySizeBytes());
             endpointCollector = new HttpEndpointCollector(requestParamParser);
             keyToEndpoint = endpointCollector
                     .collectEndpoints((ConfigurableApplicationContext) context);
+            endpointChangeListeners = new CopyOnWriteArrayList<>();
             server = HttpServerFactory.createHttpServer(httpProperties)
                     .handle((request, response) -> {
                         handle(request, response)
@@ -162,6 +165,7 @@ public class HttpRequestDispatcher {
             requestParamParser = null;
             endpointCollector = null;
             keyToEndpoint = null;
+            endpointChangeListeners = null;
             server = null;
         }
     }
@@ -179,7 +183,7 @@ public class HttpRequestDispatcher {
 
     //region Endpoint
     public void registerControllers(List<Object> controllers) {
-        if (controllers.isEmpty()) {
+        if (controllers.isEmpty() || !isApiEnabled) {
             return;
         }
         synchronized (this) {
@@ -194,10 +198,15 @@ public class HttpRequestDispatcher {
     }
 
     public void addEndpointChangeListener(Consumer<Map<ApiEndpointKey, ApiEndpoint>> listener) {
-        endpointChangeListeners.add(listener);
+        if (isApiEnabled) {
+            endpointChangeListeners.add(listener);
+        }
     }
 
-    public void notifyEndpointChangeListeners(Map<ApiEndpointKey, ApiEndpoint> keyToEndpoint) {
+    private void notifyEndpointChangeListeners(Map<ApiEndpointKey, ApiEndpoint> keyToEndpoint) {
+        if (!isApiEnabled) {
+            return;
+        }
         for (Consumer<Map<ApiEndpointKey, ApiEndpoint>> listener : endpointChangeListeners) {
             try {
                 listener.accept(keyToEndpoint);
@@ -465,8 +474,9 @@ public class HttpRequestDispatcher {
         if (args == null) {
             params = Collections.emptyMap();
         } else {
-            params = CollectionUtil.newMapWithExpectedSize(args.length);
-            for (int i = 0; i < args.length; i++) {
+            int length = args.length;
+            params = CollectionUtil.newMapWithExpectedSize(length);
+            for (int i = 0; i < length; i++) {
                 Object arg = args[i];
                 if (arg == null || arg instanceof RequestContext) {
                     continue;

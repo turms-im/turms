@@ -31,7 +31,7 @@ public class Base62 {
     private static final int STANDARD_BASE = 256;
     private static final int TARGET_BASE = 62;
     /**
-     * log62(256) = 1.34359.
+     * log62(256) ≈ 1.34359.
      * Each byte represents 1.34359 of Base62 characters.
      *
      * @implNote Use a constant value for constant folding for better performance.
@@ -105,10 +105,9 @@ public class Base62 {
             data = quotient;
             dataLength = quotientWriterIndex;
         }
-        if (outWriterIndex >= 0) {
-            out = Arrays.copyOfRange(out, outWriterIndex + 1, estimatedLength);
-        }
-        return out;
+        return outWriterIndex >= 0
+                ? Arrays.copyOfRange(out, outWriterIndex + 1, estimatedLength)
+                : out;
     }
 
     public byte[] encode(long base10) {
@@ -120,10 +119,9 @@ public class Base62 {
             out[writerIndex--] = localAlphabet[remainder];
             base10 /= TARGET_BASE;
         } while (base10 > 0);
-        if (writerIndex >= 0) {
-            out = Arrays.copyOfRange(out, writerIndex + 1, ESTIMATED_BASE62_LONG_LENGTH);
-        }
-        return out;
+        return writerIndex >= 0
+                ? Arrays.copyOfRange(out, writerIndex + 1, ESTIMATED_BASE62_LONG_LENGTH)
+                : out;
     }
 
 }

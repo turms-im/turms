@@ -173,7 +173,7 @@ public class Node {
         } else {
             if (id.length() > NodeProperties.NODE_ID_MAX_LENGTH) {
                 throw new IllegalArgumentException(
-                        "The length of node ID must be less than or equals to " + NodeProperties.NODE_ID_MAX_LENGTH);
+                        "The length of node ID must be less than or equal to " + NodeProperties.NODE_ID_MAX_LENGTH);
             }
             if (!id.matches("^[a-zA-Z_]\\w*$")) {
                 throw new IllegalArgumentException("The node ID must start with a letter or underscore, " +

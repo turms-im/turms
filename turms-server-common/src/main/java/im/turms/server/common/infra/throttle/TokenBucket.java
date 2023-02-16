@@ -65,7 +65,7 @@ public class TokenBucket {
         }
         // Try to refill.
         // We expect tokensPerPeriod is always greater than 0,
-        // so tokenCount can be always greater than or equals to 0.
+        // so tokenCount can always be greater than or equal 0.
         int capacity = context.capacity;
         tokenCount = MathUtil.multiply(periods, context.tokensPerPeriod, capacity) - 1;
         if (tokenCount > capacity) {

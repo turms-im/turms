@@ -129,18 +129,16 @@ public final class CodecPool {
             encodableClasses = List.of(clazz);
         }
         for (Class<?> encodableClass : encodableClasses) {
-            if (CLASS_TO_CODEC.containsKey(encodableClass)) {
+            if (CLASS_TO_CODEC.putIfAbsent(encodableClass, codec) != null) {
                 throw new IllegalArgumentException("The codec for the class (" +
                         encodableClass.getName() +
                         ") has already existed");
             }
-            CLASS_TO_CODEC.put(encodableClass, codec);
         }
         int codecId = codec.getCodecId().getId();
-        if (ID_TO_CODEC.containsKey(codecId)) {
+        if (ID_TO_CODEC.putIfAbsent(codecId, codec) != null) {
             throw new IllegalArgumentException("The codec ID (" + codecId + ") has already existed");
         }
-        ID_TO_CODEC.put(codecId, codec);
     }
 
 }
