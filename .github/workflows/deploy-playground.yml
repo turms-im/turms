@@ -34,6 +34,6 @@ jobs:
             sudo docker system prune -a -f
             sudo docker system prune --volumes -f
             sudo rm -rf /var/log/journal
-            sudo git pull
             sudo git reset --hard
+            sudo git pull
             sudo ENV=dev,demo INITIAL_ROOT_PASSWORD='${{ secrets.PLAYGROUND_ROOT_PASSWORD }}' docker compose -f docker-compose.standalone.yml --profile monitoring up --force-recreate -d
