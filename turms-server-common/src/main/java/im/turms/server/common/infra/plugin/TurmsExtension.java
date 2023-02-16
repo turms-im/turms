@@ -17,6 +17,7 @@
 
 package im.turms.server.common.infra.plugin;
 
+import im.turms.server.common.access.admin.web.HttpRequestDispatcher;
 import im.turms.server.common.infra.lang.ClassUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
@@ -66,6 +67,14 @@ public abstract class TurmsExtension {
 
     protected <T> T loadProperties(Class<T> propertiesClass) {
         return context.getBean(TurmsPropertiesManager.class).loadProperties(propertiesClass);
+    }
+
+    protected void registerController(Object controller) {
+        registerControllers(List.of(controller));
+    }
+
+    protected void registerControllers(List<Object> controllers) {
+        context.getBean(HttpRequestDispatcher.class).registerControllers(controllers);
     }
 
     ExtensionPoint getExtensionPoint() {

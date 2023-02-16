@@ -63,49 +63,63 @@ public class HttpEndpointCollector {
         this.requestParamParser = requestParamParser;
     }
 
-    public Map<ApiEndpointKey, ApiEndpoint> collectionEndpoints(ConfigurableApplicationContext context) {
+    public Map<ApiEndpointKey, ApiEndpoint> collectEndpoints(ConfigurableApplicationContext context) {
         Map<ApiEndpointKey, ApiEndpoint> keyToEndpoint = new HashMap<>(64);
         Map<String, Object> beans = context.getBeansWithAnnotation(RestController.class);
         for (Object controller : beans.values()) {
-            Class<?> controllerClass = controller.getClass();
-            RestController annotation = controllerClass.getDeclaredAnnotation(RestController.class);
-            String basePath = annotation.value();
-            Method[] methods = controllerClass.getDeclaredMethods();
-            for (Method method : methods) {
-                ReflectionUtil.setAccessible(method);
-                Pair<HttpMethod, String> methodAndPath = parseMethod(method);
-                if (methodAndPath == null) {
-                    continue;
-                }
-                String path = "/" + basePath;
-                if (!methodAndPath.second().isBlank()) {
-                    path += "/" + methodAndPath.second();
-                }
-                HttpMethod httpMethod = methodAndPath.first();
-                String encoding = null;
-                if (httpMethod == HttpMethod.GET) {
-                    GetMapping mapping = method.getDeclaredAnnotation(GetMapping.class);
-                    encoding = mapping.encoding().isBlank() ? null : mapping.encoding();
-                }
-                ApiEndpoint endpoint = new ApiEndpoint(controller,
-                        method,
-                        httpMethod,
-                        parseParameters(method),
-                        findMediaType(method),
-                        encoding,
-                        method.getDeclaredAnnotation(RequiredPermission.class));
-                ApiEndpointKey key = new ApiEndpointKey(path, httpMethod);
-                if (keyToEndpoint.containsKey(key)) {
-                    throw new IllegalArgumentException("Found a duplicate endpoint (" +
-                            key +
-                            ")" +
-                            " in the controller: " +
-                            controllerClass.getName());
-                }
-                keyToEndpoint.put(key, endpoint);
-            }
+            collectEndpoints(keyToEndpoint, controller);
         }
         return Map.copyOf(keyToEndpoint);
+    }
+
+    public void collectEndpoints(Map<ApiEndpointKey, ApiEndpoint> keyToEndpoint, List<Object> controllers) {
+        for (Object controller : controllers) {
+            collectEndpoints(keyToEndpoint, controller);
+        }
+    }
+
+    private void collectEndpoints(Map<ApiEndpointKey, ApiEndpoint> keyToEndpoint, Object controller) {
+        Class<?> controllerClass = controller.getClass();
+        RestController annotation = controllerClass.getDeclaredAnnotation(RestController.class);
+        if (annotation == null) {
+            throw new IllegalArgumentException("@RestController must be present in the controller class: "
+                    + controllerClass.getName());
+        }
+        String basePath = annotation.value();
+        Method[] methods = controllerClass.getDeclaredMethods();
+        for (Method method : methods) {
+            ReflectionUtil.setAccessible(method);
+            Pair<HttpMethod, String> methodAndPath = parseMethod(method);
+            if (methodAndPath == null) {
+                continue;
+            }
+            String path = "/" + basePath;
+            if (!methodAndPath.second().isBlank()) {
+                path += "/" + methodAndPath.second();
+            }
+            HttpMethod httpMethod = methodAndPath.first();
+            String encoding = null;
+            if (httpMethod == HttpMethod.GET) {
+                GetMapping mapping = method.getDeclaredAnnotation(GetMapping.class);
+                encoding = mapping.encoding().isBlank() ? null : mapping.encoding();
+            }
+            ApiEndpoint endpoint = new ApiEndpoint(controller,
+                    method,
+                    httpMethod,
+                    parseParameters(method),
+                    findMediaType(method),
+                    encoding,
+                    method.getDeclaredAnnotation(RequiredPermission.class));
+            ApiEndpointKey key = new ApiEndpointKey(path, httpMethod);
+            if (keyToEndpoint.containsKey(key)) {
+                throw new IllegalArgumentException("Found a duplicate endpoint (" +
+                        key +
+                        ")" +
+                        " in the controller: " +
+                        controllerClass.getName());
+            }
+            keyToEndpoint.put(key, endpoint);
+        }
     }
 
     private String findMediaType(Method method) {

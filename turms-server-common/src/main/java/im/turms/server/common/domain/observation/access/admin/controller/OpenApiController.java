@@ -17,6 +17,8 @@
 
 package im.turms.server.common.domain.observation.access.admin.controller;
 
+import im.turms.server.common.access.admin.web.ApiEndpoint;
+import im.turms.server.common.access.admin.web.ApiEndpointKey;
 import im.turms.server.common.access.admin.web.HttpRequestDispatcher;
 import im.turms.server.common.access.admin.web.annotation.GetMapping;
 import im.turms.server.common.access.admin.web.annotation.RestController;
@@ -28,6 +30,9 @@ import im.turms.server.common.infra.netty.ByteBufUtil;
 import im.turms.server.common.infra.openapi.OpenApiBuilder;
 import io.netty.buffer.ByteBuf;
 import org.springframework.context.ApplicationContext;
+
+import java.util.Map;
+import java.util.function.Consumer;
 
 import static im.turms.server.common.access.admin.web.ContentEncodingConst.GZIP;
 import static im.turms.server.common.access.admin.web.MediaTypeConst.APPLICATION_JAVASCRIPT;
@@ -79,7 +84,8 @@ public class OpenApiController {
     private volatile ByteBuf apiBuffer;
     private final ByteBuf swaggerInitializer;
 
-    public OpenApiController(ApplicationContext context, BaseServiceAddressManager serviceAddressManager) {
+    public OpenApiController(ApplicationContext context,
+                             BaseServiceAddressManager serviceAddressManager) {
         this.context = context;
         swaggerInitializer = ByteBufUtil.getUnreleasableDirectBuffer("""
                 window.onload = function() {
@@ -103,15 +109,7 @@ public class OpenApiController {
     @GetMapping(value = "docs", produces = APPLICATION_JSON)
     public ByteBuf getApiDocs() {
         if (apiBuffer == null) {
-            synchronized (this) {
-                if (apiBuffer == null) {
-                    byte[] bytes = OpenApiBuilder.build(context.getBean(TurmsApplicationContext.class).getBuildProperties().version(),
-                            context.getBean(Node.class).getNodeType().getDisplayName(),
-                            context.getBean(BaseServiceAddressManager.class).getAdminApiAddress(),
-                            context.getBean(HttpRequestDispatcher.class).getKeyToEndpoint());
-                    apiBuffer = ByteBufUtil.getUnreleasableDirectBuffer(bytes);
-                }
-            }
+            updateApiBuffer();
         }
         return apiBuffer;
     }
@@ -149,6 +147,25 @@ public class OpenApiController {
     @GetMapping(value = "ui/swagger-initializer.js", produces = APPLICATION_JAVASCRIPT)
     public ByteBuf getSwaggerInitializer() {
         return swaggerInitializer;
+    }
+
+    private synchronized ByteBuf updateApiBuffer() {
+        if (apiBuffer == null) {
+            Consumer<Map<ApiEndpointKey, ApiEndpoint>> listener = keyToEndpoint -> {
+                if (apiBuffer != null) {
+                    apiBuffer.unwrap().release();
+                }
+                byte[] bytes = OpenApiBuilder.build(context.getBean(TurmsApplicationContext.class).getBuildProperties().version(),
+                        context.getBean(Node.class).getNodeType().getDisplayName(),
+                        context.getBean(BaseServiceAddressManager.class).getAdminApiAddress(),
+                        keyToEndpoint);
+                apiBuffer = ByteBufUtil.getUnreleasableDirectBuffer(bytes);
+            };
+            HttpRequestDispatcher dispatcher = context.getBean(HttpRequestDispatcher.class);
+            dispatcher.addEndpointChangeListener(listener);
+            listener.accept(dispatcher.getKeyToEndpoint());
+        }
+        return apiBuffer;
     }
 
 }

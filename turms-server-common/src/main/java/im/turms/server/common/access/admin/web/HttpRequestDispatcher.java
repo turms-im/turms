@@ -75,6 +75,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.Consumer;
 import jakarta.annotation.Nullable;
 import jakarta.validation.ConstraintViolationException;
 
@@ -100,11 +102,13 @@ public class HttpRequestDispatcher {
     private final PluginManager pluginManager;
     private final BaseAdminApiRateLimitingManager adminApiRateLimitingManager;
     private final HttpRequestAuthenticator authenticator;
+    private final HttpEndpointCollector endpointCollector;
     private final HttpRequestParamParser requestParamParser;
 
     private final DisposableServer server;
     @Getter
-    private final Map<ApiEndpointKey, ApiEndpoint> keyToEndpoint;
+    private Map<ApiEndpointKey, ApiEndpoint> keyToEndpoint;
+    private final List<Consumer<Map<ApiEndpointKey, ApiEndpoint>>> endpointChangeListeners = new CopyOnWriteArrayList<>();
 
     private final boolean useAuthentication;
     private boolean allowDeleteWithoutFilter;
@@ -139,8 +143,9 @@ public class HttpRequestDispatcher {
             propertiesManager.notifyAndAddGlobalPropertiesChangeListener(this::updateGlobalProperties);
             AdminHttpProperties httpProperties = apiProperties.getHttp();
             this.requestParamParser = new HttpRequestParamParser(httpProperties.getMaxRequestBodySizeBytes());
-            keyToEndpoint = new HttpEndpointCollector(requestParamParser)
-                    .collectionEndpoints((ConfigurableApplicationContext) context);
+            endpointCollector = new HttpEndpointCollector(requestParamParser);
+            keyToEndpoint = endpointCollector
+                    .collectEndpoints((ConfigurableApplicationContext) context);
             server = HttpServerFactory.createHttpServer(httpProperties)
                     .handle((request, response) -> {
                         handle(request, response)
@@ -155,6 +160,7 @@ public class HttpRequestDispatcher {
             });
         } else {
             requestParamParser = null;
+            endpointCollector = null;
             keyToEndpoint = null;
             server = null;
         }
@@ -168,6 +174,38 @@ public class HttpRequestDispatcher {
                 : properties.getService().getAdminApi();
         allowDeleteWithoutFilter = !isGateway && properties.getService().getAdminApi().isAllowDeleteWithoutFilter();
         isLogEnabled = apiProperties.getLog().isEnabled();
+    }
+    //endregion
+
+    //region Endpoint
+    public void registerControllers(List<Object> controllers) {
+        if (controllers.isEmpty()) {
+            return;
+        }
+        synchronized (this) {
+            Map<ApiEndpointKey, ApiEndpoint> keyToEndpoint = this.keyToEndpoint;
+            Map<ApiEndpointKey, ApiEndpoint> newKeyToEndpoint = CollectionUtil
+                    .newMapWithExpectedSize(keyToEndpoint.size() + (controllers.size() << 3));
+            newKeyToEndpoint.putAll(keyToEndpoint);
+            endpointCollector.collectEndpoints(newKeyToEndpoint, controllers);
+            this.keyToEndpoint = newKeyToEndpoint;
+            notifyEndpointChangeListeners(newKeyToEndpoint);
+        }
+    }
+
+    public void addEndpointChangeListener(Consumer<Map<ApiEndpointKey, ApiEndpoint>> listener) {
+        endpointChangeListeners.add(listener);
+    }
+
+    public void notifyEndpointChangeListeners(Map<ApiEndpointKey, ApiEndpoint> keyToEndpoint) {
+        for (Consumer<Map<ApiEndpointKey, ApiEndpoint>> listener : endpointChangeListeners) {
+            try {
+                listener.accept(keyToEndpoint);
+            } catch (Exception e) {
+                LOGGER.error("Caught an error while notifying the endpoint change listener: "
+                        + listener.getClass().getName());
+            }
+        }
     }
     //endregion
 
