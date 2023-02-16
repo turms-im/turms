@@ -32,7 +32,7 @@ import io.netty.buffer.ByteBuf;
 import org.springframework.context.ApplicationContext;
 
 import java.util.Map;
-import java.util.function.Consumer;
+import jakarta.annotation.Nullable;
 
 import static im.turms.server.common.access.admin.web.ContentEncodingConst.GZIP;
 import static im.turms.server.common.access.admin.web.MediaTypeConst.APPLICATION_JAVASCRIPT;
@@ -109,7 +109,11 @@ public class OpenApiController {
     @GetMapping(value = "docs", produces = APPLICATION_JSON)
     public ByteBuf getApiDocs() {
         if (apiBuffer == null) {
-            updateApiBuffer();
+            synchronized (this) {
+                if (apiBuffer == null) {
+                    updateApiBuffer(null);
+                }
+            }
         }
         return apiBuffer;
     }
@@ -149,23 +153,21 @@ public class OpenApiController {
         return swaggerInitializer;
     }
 
-    private synchronized ByteBuf updateApiBuffer() {
+    private synchronized void updateApiBuffer(@Nullable Map<ApiEndpointKey, ApiEndpoint> keyToEndpoint) {
+        HttpRequestDispatcher dispatcher = context.getBean(HttpRequestDispatcher.class);
         if (apiBuffer == null) {
-            Consumer<Map<ApiEndpointKey, ApiEndpoint>> listener = keyToEndpoint -> {
-                if (apiBuffer != null) {
-                    apiBuffer.unwrap().release();
-                }
-                byte[] bytes = OpenApiBuilder.build(context.getBean(TurmsApplicationContext.class).getBuildProperties().version(),
-                        context.getBean(Node.class).getNodeType().getDisplayName(),
-                        context.getBean(BaseServiceAddressManager.class).getAdminApiAddress(),
-                        keyToEndpoint);
-                apiBuffer = ByteBufUtil.getUnreleasableDirectBuffer(bytes);
-            };
-            HttpRequestDispatcher dispatcher = context.getBean(HttpRequestDispatcher.class);
-            dispatcher.addEndpointChangeListener(listener);
-            listener.accept(dispatcher.getKeyToEndpoint());
+            dispatcher.addEndpointChangeListener(this::updateApiBuffer);
+        } else {
+            apiBuffer.unwrap().release();
         }
-        return apiBuffer;
+        if (keyToEndpoint == null) {
+            keyToEndpoint = dispatcher.getKeyToEndpoint();
+        }
+        byte[] bytes = OpenApiBuilder.build(context.getBean(TurmsApplicationContext.class).getBuildProperties().version(),
+                context.getBean(Node.class).getNodeType().getDisplayName(),
+                context.getBean(BaseServiceAddressManager.class).getAdminApiAddress(),
+                keyToEndpoint);
+        apiBuffer = ByteBufUtil.getUnreleasableDirectBuffer(bytes);
     }
 
 }
