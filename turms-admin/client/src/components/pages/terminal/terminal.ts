@@ -1,10 +1,9 @@
-import { Terminal as XTerm } from 'xterm';
-import escapes from 'ansi-escapes';
-import colors from 'ansi-colors';
-import { FitAddon } from 'xterm-addon-fit';
+import {Terminal as XTerm} from 'xterm';
+import {FitAddon} from 'xterm-addon-fit';
+import codes from './ansi-escape-codes';
+import colors from './ansi-colors';
 import 'xterm/css/xterm.css';
 
-const styles = colors.styles;
 const NEW_LINE_PREFIX = '$ ';
 const LINE_BREAK = '\r\n';
 const DUPLICATE_MAP = {
@@ -133,12 +132,12 @@ export default class Terminal extends XTerm {
 
     cursorTo(pos: number): void {
         this.cursor = pos;
-        this.write(escapes.cursorTo(NEW_LINE_PREFIX.length + pos));
+        this.write(codes.cursorTo(NEW_LINE_PREFIX.length + pos));
         this._triggerOnCursorChangedListeners();
     }
 
     hideCursor(): void {
-        this.write(escapes.cursorHide);
+        this.write(codes.cursorHide);
     }
 
     // Line
@@ -153,8 +152,8 @@ export default class Terminal extends XTerm {
     }
 
     eraseLine(): void {
-        this.write(escapes.eraseLine);
-        this.write(escapes.cursorLeft);
+        this.write(codes.eraseLine);
+        this.write(codes.cursorLeft);
         this.writeNewLinePrefix();
     }
 
@@ -167,7 +166,7 @@ export default class Terminal extends XTerm {
     }
 
     override clear(): void {
-        this.resetLine(escapes.clearScreen);
+        this.resetLine(codes.clearScreen);
         this.onInputChanged?.(this.currentLine, this.cursor);
     }
 
@@ -213,8 +212,7 @@ export default class Terminal extends XTerm {
             return;
         }
         const color = MESSAGE_TYPE_COLORS[type || 'info'];
-        const style = styles[color];
-        const data = style.open + msg + style.close;
+        const data = colors[color](msg);
         this.writeln(data);
     }
 
