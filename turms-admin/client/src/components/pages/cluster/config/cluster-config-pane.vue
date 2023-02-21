@@ -58,7 +58,7 @@ export default {
         groups() {
             return Object.entries(this.propertyGroups)
                 .map(([name, value]) => {
-                    const isPropertyGroup = value.type == null;
+                    const isPropertyGroup = this.isPropertyGroup(value);
                     if (isPropertyGroup) {
                         return {
                             isPropertyGroup,
@@ -86,6 +86,9 @@ export default {
         }
     },
     methods: {
+        isPropertyGroup(value) {
+            return value.type == null || value.global == null || value.mutable == null;
+        },
         isValueChanged(item) {
             return item.defaultValue != null && item.defaultValue !== item.value;
         },
