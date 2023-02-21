@@ -54,7 +54,8 @@ public class UserService {
             return Mono.error(e);
         }
         return userRepository.findPassword(userId)
-                .map(password -> passwordManager.matchesUserPassword(rawPassword, password))
+                .map(user -> passwordManager.matchesUserPassword(rawPassword, user.getPassword()))
+                // empty if the user doesn't exist
                 .defaultIfEmpty(false);
     }
 

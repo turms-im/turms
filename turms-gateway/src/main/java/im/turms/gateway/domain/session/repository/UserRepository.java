@@ -39,13 +39,12 @@ public class UserRepository extends BaseRepository<User, Long> {
         super(mongoClient, User.class);
     }
 
-    public Mono<byte[]> findPassword(Long userId) {
+    public Mono<User> findPassword(Long userId) {
         Filter filter = Filter.newBuilder(1)
                 .eq(DomainFieldName.ID, userId);
         QueryOptions options = QueryOptions.newBuilder(1)
                 .include(User.Fields.PASSWORD);
-        return mongoClient.findOne(User.class, filter, options)
-                .map(User::getPassword);
+        return mongoClient.findOne(User.class, filter, options);
     }
 
     public Mono<Boolean> isActiveAndNotDeleted(Long userId) {
