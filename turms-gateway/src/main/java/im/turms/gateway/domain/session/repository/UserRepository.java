@@ -23,19 +23,18 @@ import im.turms.server.common.storage.mongo.DomainFieldName;
 import im.turms.server.common.storage.mongo.TurmsMongoClient;
 import im.turms.server.common.storage.mongo.operation.option.Filter;
 import im.turms.server.common.storage.mongo.operation.option.QueryOptions;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 
 /**
  * @author James Chen
  */
-@ConditionalOnBean(name = "userMongoClient")
 @Repository
 public class UserRepository extends BaseRepository<User, Long> {
 
-    public UserRepository(@Qualifier("userMongoClient") TurmsMongoClient mongoClient) {
+    public UserRepository(@Autowired(required = false) @Qualifier("userMongoClient") TurmsMongoClient mongoClient) {
         super(mongoClient, User.class);
     }
 

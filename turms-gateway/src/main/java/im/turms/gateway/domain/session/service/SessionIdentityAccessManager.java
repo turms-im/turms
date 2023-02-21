@@ -96,7 +96,6 @@ public class SessionIdentityAccessManager implements SessionIdentityAccessManage
     private final PluginManager pluginManager;
     private final PolicyManager policyManager;
 
-    @Nullable
     private final UserService userService;
 
     private final HttpClient httpIdentityAccessManagementClient;
@@ -112,7 +111,7 @@ public class SessionIdentityAccessManager implements SessionIdentityAccessManage
 
     public SessionIdentityAccessManager(TurmsPropertiesManager propertiesManager,
                                         PluginManager pluginManager,
-                                        @Nullable UserService userService) {
+                                        UserService userService) {
         this.pluginManager = pluginManager;
         this.userService = userService;
         this.policyManager = new PolicyManager();

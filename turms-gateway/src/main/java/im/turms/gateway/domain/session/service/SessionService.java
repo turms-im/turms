@@ -59,7 +59,6 @@ import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Tags;
 import lombok.experimental.Delegate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -139,7 +138,7 @@ public class SessionService implements ISessionService, SessionIdentityAccessMan
             TurmsPropertiesManager propertiesManager,
             PluginManager pluginManager,
             SessionLocationService sessionLocationService,
-            @Autowired(required = false) UserService userService,
+            UserService userService,
             UserStatusService userStatusService,
             UserSimultaneousLoginService userSimultaneousLoginService,
             MetricsService metricsService) {

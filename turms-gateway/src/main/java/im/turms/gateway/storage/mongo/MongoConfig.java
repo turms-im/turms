@@ -65,6 +65,7 @@ public class MongoConfig extends BaseMongoConfig {
     public TurmsMongoClient userMongoClient(TurmsPropertiesManager propertiesManager) {
         TurmsProperties localProperties = propertiesManager.getLocalProperties();
         IdentityAccessManagementProperties authenticationProperties = localProperties.getGateway().getSession().getIdentityAccessManagement();
+        // TODO: use global "enabled"
         if (!authenticationProperties.isEnabled() || authenticationProperties.getType() != IdentityAccessManagementType.PASSWORD) {
             return null;
         }
