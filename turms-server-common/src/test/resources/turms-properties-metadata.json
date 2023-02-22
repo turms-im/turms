@@ -3684,6 +3684,14 @@
         "sensitive": false,
         "type": "int"
       },
+      "minPasswordLength": {
+        "deprecated": false,
+        "description": "The minimum allowed length for a user's password. If 0, it means the password can be an empty string \"\". If -1, it means the password can be null",
+        "global": true,
+        "mutable": true,
+        "sensitive": false,
+        "type": "int"
+      },
       "respondOfflineIfInvisible": {
         "deprecated": false,
         "description": "Whether to respond to client with the OFFLINE status if a user is in INVISIBLE status",

@@ -27,10 +27,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
 
+import static im.turms.server.common.infra.property.TurmsPropertiesInspector.getFieldInfo;
 import static im.turms.server.common.infra.property.TurmsPropertiesInspector.getFieldInfos;
 
 /**
@@ -77,17 +76,21 @@ public class TurmsPropertiesValidator {
 
     private static void validateProperty(Object properties, PropertyFieldInfo fieldInfo, List<String> errorMessages) {
         PropertyConstraints constraints = fieldInfo.constraints();
-        Min min = constraints.min();
-        Max max = constraints.max();
+        long min = constraints.min();
+        long max = constraints.max();
+        String lessThanOrEqualTo = constraints.lessThanOrEqualTo();
         Size size = constraints.size();
         ValidCron cron = constraints.validCron();
-        if (min == null && max == null && size == null && cron == null) {
+        if (min == Long.MIN_VALUE && max == Long.MAX_VALUE && lessThanOrEqualTo == null && size == null && cron == null) {
             return;
         }
         Object value = fieldInfo.get(properties);
         Field field = fieldInfo.field();
-        if (min != null || max != null) {
+        if (min != Long.MIN_VALUE || max != Long.MAX_VALUE) {
             validateMinMaxProperty(min, max, value, field, errorMessages);
+        }
+        if (lessThanOrEqualTo != null) {
+            validateLessThanOrEqualTo(lessThanOrEqualTo, properties, value, field, errorMessages);
         }
         if (size != null) {
             validateSizeProperty(size, value, field, errorMessages);
@@ -97,18 +100,54 @@ public class TurmsPropertiesValidator {
         }
     }
 
-    private static void validateMinMaxProperty(Min min, Max max, Object value, Field field, List<String> errorMessages) {
+    private static void validateMinMaxProperty(long min, long max, Object value, Field field, List<String> errorMessages) {
         if (!(value instanceof Number number)) {
             throw new IllegalArgumentException("The value of the field (" +
                     ClassUtil.getReference(field) +
                     ") must be a number for min and max validation");
         }
-        if (min != null && min.value() > number.longValue()) {
-            String message = "The property \"" + field.getName() + "\" must be greater than or equal to " + min.value();
+        long val = number.longValue();
+        if (min > val) {
+            String message = "The property \"" + field.getName() + "\" must be greater than or equal to " + min;
             errorMessages.add(message);
         }
-        if (max != null && max.value() < number.longValue()) {
-            String message = "The property \"" + field.getName() + "\" must be less than or equal to " + max.value();
+        if (max < val) {
+            String message = "The property \"" + field.getName() + "\" must be less than or equal to " + max;
+            errorMessages.add(message);
+        }
+    }
+
+    private static void validateLessThanOrEqualTo(String lessThanOrEqualTo,
+                                                  Object properties,
+                                                  Object value,
+                                                  Field field,
+                                                  List<String> errorMessages) {
+        PropertyFieldInfo info = getFieldInfo(field.getDeclaringClass(), lessThanOrEqualTo);
+        if (info == null) {
+            throw new IllegalArgumentException("The field (" +
+                    field.getDeclaringClass().getName() +
+                    "#" +
+                    lessThanOrEqualTo +
+                    ") does not exist");
+        }
+        if (!(value instanceof Number number)) {
+            throw new IllegalArgumentException("The value of the field (" +
+                    ClassUtil.getReference(field) +
+                    ") must be a number for min and max validation");
+        }
+        Object valueToCompare = info.get(properties);
+        Field fieldToCompare = info.field();
+        if (!(valueToCompare instanceof Number numberToCompare)) {
+            throw new IllegalArgumentException("The value of the field (" +
+                    ClassUtil.getReference(fieldToCompare) +
+                    ") must be a number for min and max validation");
+        }
+        if (number.longValue() > numberToCompare.longValue()) {
+            String message = "The property \"" +
+                    field.getName() +
+                    "\" must be less than or equal to the value of the property \"" +
+                    fieldToCompare.getName() +
+                    "\"";
             errorMessages.add(message);
         }
     }

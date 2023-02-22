@@ -37,6 +37,7 @@ import im.turms.server.common.infra.reflect.ReflectionUtil;
 import im.turms.server.common.infra.reflect.VarAccessorFactory;
 import im.turms.server.common.infra.security.SensitiveProperty;
 import im.turms.server.common.infra.serialization.SerializationException;
+import im.turms.server.common.infra.validation.LessThanOrEqualTo;
 import im.turms.server.common.infra.validation.ValidCron;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
@@ -151,6 +152,7 @@ public class TurmsPropertiesInspector {
             PropertyConstraints constraints = PropertyConstraints.of(
                     field.getDeclaredAnnotation(Min.class),
                     field.getDeclaredAnnotation(Max.class),
+                    field.getDeclaredAnnotation(LessThanOrEqualTo.class),
                     field.getDeclaredAnnotation(Size.class),
                     field.getDeclaredAnnotation(ValidCron.class)
             );

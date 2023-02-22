@@ -98,6 +98,8 @@ public class UserService {
     private boolean activateUserWhenAdded;
     private boolean deleteUserLogically;
 
+    private int minPasswordLengthForCreate;
+    private int minPasswordLengthForUpdate;
     private int maxPasswordLength;
     private int maxNameLength;
     private int maxIntroLength;
@@ -143,10 +145,13 @@ public class UserService {
         activateUserWhenAdded = userProperties.isActivateUserWhenAdded();
         deleteUserLogically = userProperties.isDeleteUserLogically();
 
+        int localMinPasswordLength = userProperties.getMinPasswordLength();
         int localMaxPasswordLength = userProperties.getMaxPasswordLength();
         int localMaxIntroLength = userProperties.getMaxIntroLength();
         int localMaxNameLength = userProperties.getMaxNameLength();
         int localMaxProfilePictureLength = userProperties.getMaxProfilePictureLength();
+        minPasswordLengthForCreate = localMinPasswordLength;
+        minPasswordLengthForUpdate = Math.max(0, localMinPasswordLength);
         maxPasswordLength = localMaxPasswordLength > 0 ? localMaxPasswordLength : Integer.MAX_VALUE;
         maxIntroLength = localMaxIntroLength > 0 ? localMaxIntroLength : Integer.MAX_VALUE;
         maxNameLength = localMaxNameLength > 0 ? localMaxNameLength : Integer.MAX_VALUE;
@@ -217,7 +222,7 @@ public class UserService {
             @Nullable @PastOrPresent Date registrationDate,
             @Nullable Boolean isActive) {
         try {
-            Validator.maxLength(rawPassword, "rawPassword", maxPasswordLength);
+            Validator.length(rawPassword, "rawPassword", minPasswordLengthForCreate, maxPasswordLength);
             Validator.maxLength(name, "name", maxNameLength);
             Validator.maxLength(intro, "intro", maxIntroLength);
             Validator.maxLength(profilePicture, "profilePicture", maxProfilePictureLength);
@@ -285,10 +290,11 @@ public class UserService {
                             .map(isRelatedAndAllowed -> isRelatedAndAllowed
                                     ? ServicePermission.OK
                                     : ServicePermission.get(ResponseStatusCode.PROFILE_REQUESTER_NOT_IN_CONTACTS_OR_BLOCKED));
-                    case ALL_EXCEPT_BLOCKED_USERS -> userRelationshipService.hasNoRelationshipOrNotBlocked(targetUserId, requesterId)
-                            .map(isNotBlocked -> isNotBlocked
-                                    ? ServicePermission.OK
-                                    : ServicePermission.get(ResponseStatusCode.PROFILE_REQUESTER_HAS_BEEN_BLOCKED));
+                    case ALL_EXCEPT_BLOCKED_USERS ->
+                            userRelationshipService.hasNoRelationshipOrNotBlocked(targetUserId, requesterId)
+                                    .map(isNotBlocked -> isNotBlocked
+                                            ? ServicePermission.OK
+                                            : ServicePermission.get(ResponseStatusCode.PROFILE_REQUESTER_HAS_BEEN_BLOCKED));
                     default -> Mono.error(ResponseException
                             .get(ResponseStatusCode.SERVER_INTERNAL_ERROR, "Unexpected profile access strategy: " + strategy));
                 })
@@ -462,7 +468,7 @@ public class UserService {
             @Nullable Boolean isActive) {
         try {
             Validator.notEmpty(userIds, "userIds");
-            Validator.maxLength(rawPassword, "rawPassword", maxPasswordLength);
+            Validator.length(rawPassword, "rawPassword", minPasswordLengthForUpdate, maxPasswordLength);
             Validator.maxLength(name, "name", maxNameLength);
             Validator.maxLength(intro, "intro", maxIntroLength);
             Validator.maxLength(profilePicture, "profilePicture", maxProfilePictureLength);
@@ -479,7 +485,8 @@ public class UserService {
                 isActive)) {
             return OperationResultPublisherPool.ACKNOWLEDGED_UPDATE_RESULT;
         }
-        byte[] password = StringUtil.isEmpty(rawPassword)
+        // Save an empty string "" is supported if it passes validation
+        byte[] password = rawPassword == null
                 ? null
                 : passwordManager.encodeUserPassword(rawPassword);
         return userRepository.updateUsers(userIds,

@@ -17,6 +17,7 @@
 
 package im.turms.server.common.infra.property;
 
+import im.turms.server.common.infra.validation.LessThanOrEqualTo;
 import im.turms.server.common.infra.validation.ValidCron;
 
 import jakarta.annotation.Nullable;
@@ -28,22 +29,32 @@ import jakarta.validation.constraints.Size;
  * @author James Chen
  */
 public record PropertyConstraints(
-        Min min,
-        Max max,
-        Size size,
-        ValidCron validCron
+        long min,
+        long max,
+        @Nullable String lessThanOrEqualTo,
+        @Nullable Size size,
+        @Nullable ValidCron validCron
 ) {
 
-    public static final PropertyConstraints NULL = new PropertyConstraints(null, null, null, null);
+    public static final PropertyConstraints NULL = new PropertyConstraints(Long.MIN_VALUE,
+            Long.MAX_VALUE,
+            null,
+            null,
+            null);
 
     public static PropertyConstraints of(@Nullable Min min,
                                          @Nullable Max max,
+                                         @Nullable LessThanOrEqualTo lessThanOrEqualTo,
                                          @Nullable Size size,
                                          @Nullable ValidCron validCron) {
-        if (min == null && max == null && size == null && validCron == null) {
+        if (min == null && max == null && lessThanOrEqualTo == null && size == null && validCron == null) {
             return NULL;
         }
-        return new PropertyConstraints(min, max, size, validCron);
+        return new PropertyConstraints(min == null ? Long.MIN_VALUE : min.value(),
+                max == null ? Long.MAX_VALUE : max.value(),
+                lessThanOrEqualTo == null ? null : lessThanOrEqualTo.value(),
+                size,
+                validCron);
     }
 
 }

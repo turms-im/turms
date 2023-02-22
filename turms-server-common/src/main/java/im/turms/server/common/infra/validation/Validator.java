@@ -225,8 +225,17 @@ public final class Validator {
         }
     }
 
+    /**
+     * @param min if -1, it means the string cannot be null
+     */
     public static void length(@Nullable String s, String name, int min, int max) {
         if (s == null) {
+            if (min == -1) {
+                throw ResponseException.get(
+                        ResponseStatusCode.ILLEGAL_ARGUMENT,
+                        ("\"" + name + "\" must not be null, and have a length greater than or equal to 0, and less than or equal to " + max)
+                                .intern());
+            }
             return;
         }
         int length = s.length();

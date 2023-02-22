@@ -20,6 +20,7 @@ package im.turms.server.common.infra.property.env.service.business.user;
 import im.turms.server.common.infra.property.metadata.Description;
 import im.turms.server.common.infra.property.metadata.GlobalProperty;
 import im.turms.server.common.infra.property.metadata.MutableProperty;
+import im.turms.server.common.infra.validation.LessThanOrEqualTo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -59,6 +60,15 @@ public class UserProperties {
     @GlobalProperty
     @MutableProperty
     private boolean activateUserWhenAdded = true;
+
+    @Description("The minimum allowed length for a user's password. " +
+            "If 0, it means the password can be an empty string \"\". " +
+            "If -1, it means the password can be null")
+    @GlobalProperty
+    @MutableProperty
+    @Min(-1)
+    @LessThanOrEqualTo("maxPasswordLength")
+    private int minPasswordLength = -1;
 
     @Description("The maximum allowed length for a user's password")
     @GlobalProperty
