@@ -42,6 +42,7 @@ export default class Terminal extends XTerm {
     private currentLine: string;
     private readonly history: Array<string>;
     private historyIndex: number;
+    private clipboard: string;
     private readonly onCursorChanged?: Function;
     private readonly onInputChanged?: Function;
     private readonly onLine?: Function;
@@ -77,6 +78,7 @@ export default class Terminal extends XTerm {
         this.currentLine = '';
         this.history = options.history || [];
         this.historyIndex = this.history.length > 0 ? this.history.length - 1 : 0;
+        this.clipboard = '';
         this.onCursorChanged = options.onCursorChanged;
         this.onInputChanged = options.onInputChanged;
         this.onLine = options.onLine;
@@ -226,6 +228,43 @@ export default class Terminal extends XTerm {
         }
     }
 
+    // Clipboard
+    _writeToClipboard(text: string): Promise<void> {
+        this.clipboard = text;
+        const clipboard = navigator.clipboard;
+        if (clipboard?.writeText) {
+            return clipboard.writeText(text);
+        }
+        return new Promise((resolve, reject) => {
+            const textarea = document.createElement('textarea');
+            textarea.style.display = 'none';
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+            } catch (e: any) {
+                reject(`Failed to copy: ${e?.message ?? e}`);
+                document.body.removeChild(textarea);
+                return;
+            }
+            document.body.removeChild(textarea);
+            resolve();
+        });
+    }
+
+    _readFromClipboard(): Promise<string> {
+        const clipboard = navigator.clipboard;
+        // e.g. Firefox doesn't support readText()
+        if (clipboard?.readText) {
+            return clipboard.readText();
+        }
+        // No need to use "document.execCommand('paste')" because
+        // modern browsers don't support for security reasons.
+        // Fallback to the clipboard in the page scope
+        return Promise.resolve(this.clipboard);
+    }
+
     // Event
 
     _triggerOnCursorChangedListeners(): void {
@@ -320,7 +359,7 @@ export default class Terminal extends XTerm {
                 if (event.ctrlKey) {
                     const selection = this.getSelection();
                     if (selection) {
-                        await navigator.clipboard.writeText(selection);
+                        await this._writeToClipboard(selection);
                     } else {
                         this.resetLine(LINE_BREAK);
                     }
@@ -331,7 +370,7 @@ export default class Terminal extends XTerm {
             case 'V':
             case 'v':
                 if (event.ctrlKey) {
-                    const text = await navigator.clipboard.readText();
+                    const text = await this._readFromClipboard();
                     this.insertText(text);
                 } else {
                     return false;
