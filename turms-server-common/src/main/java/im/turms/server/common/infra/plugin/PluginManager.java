@@ -435,7 +435,7 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
         List<T> extensionPoints = pluginRepository.getExtensionPoints(extensionPointClass);
         int size = extensionPoints.size();
         if (size == 0) {
-            return Mono.empty();
+            return initialValue == null ? Mono.empty() : Mono.just(initialValue);
         }
         Mono<R> result = initialValue == null ? Mono.empty() : Mono.just(initialValue);
         for (ExtensionPoint extensionPoint : extensionPoints) {
