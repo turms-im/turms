@@ -1,0 +1,6 @@
+id: im.turms.plugin.rasa.RasaChatbotPlugin
+class: im.turms.plugin.rasa.RasaChatbotPlugin
+version: 0.10.0
+provider: im.turms
+license: MIT
+description: ''

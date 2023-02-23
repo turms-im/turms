@@ -21,12 +21,14 @@ import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.access.client.dto.request.TurmsRequest;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.proto.ProtoFormatter;
+import lombok.With;
 
 import java.util.Set;
 
 /**
  * @author James Chen
  */
+@With
 public record RequestHandlerResult(
         TurmsNotification.Data dataForRequester,
         boolean forwardDataForRecipientsToOtherSenderOnlineDevices,

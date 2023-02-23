@@ -436,6 +436,16 @@ public final class CollectionUtil {
         return set;
     }
 
+    public static <T> Set<T> remove(Set<T> set, Collection<T> values) {
+        if (isImmutable(set)) {
+            Set<T> newSet = newSetWithExpectedSize(set.size());
+            newSet.addAll(set);
+            set = newSet;
+        }
+        set.removeAll(values);
+        return set;
+    }
+
     public static <K, V> Map<K, V> add(Map<K, V> map, K key, V value) {
         if (isImmutable(map)) {
             Map<K, V> newMap = newMapWithExpectedSize(map.size() + 1);
