@@ -120,6 +120,7 @@ Turms基于读扩散消息模型进行架构设计，对业务数据变化感知
 | <span style="white-space:nowrap;">turms-plugin</span>        | 当指定事件（如用户上下线、消息接收与转发等）被触发时，turms-gateway和turms-service会调用对应的自定义插件以方便开发者实现各种各样定制化功能 |
 | <span style="white-space:nowrap;">turms-plugin-antispam</span> | 基于双数组Trie的AC自动机算法实现的反垃圾机制（检测的时间复杂度为O(n)，n为目标字符串code points的长度） |
 | <span style="white-space:nowrap;">turms-plugin-minio</span>  | 基于turms-plugin实现的存储服务插件。用于与MinIO服务端进行交互 |
+| <span style="white-space:nowrap;">turms-plugin-rasa</span>   | 基于turms-plugin实现的聊天机器人插件。用于与Rasa服务端进行交互 |
 | <span style="white-space:nowrap;">turms-data（TODO）</span>  | 尚未发布。基于Flink生态的独立数据分析系统，负责业务数据统计与分析，为turms的管理员统计API与turms-admin运营报表提供底层数据支持 |
 
 ## 参考架构

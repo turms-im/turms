@@ -114,6 +114,7 @@ Note: The main disadvantage of the current Turms project is that it does not pro
 | <span style="white-space:nowrap;"> turms-plugin </span> | When events (such as user going online/offline, message receiving and forwarding, etc) are fired, turms-gateway and turms-service will trigger corresponding custom plugins to facilitate developers to implement custom features |
 | <span style="white-space:nowrap;">turms-plugin-antispam</span> | A plugin based on turms-plugin for the anti-spam protection using Aho-Corasick automaton with double array trie (The time complexity of detection is O(n), and n is the length of target string code points) |
 | <span style="white-space:nowrap;"> turms-plugin-minio</span> |A plugin based on turms-plugin for the storage service, and is used to interact with MinIO server|
+| <span style="white-space:nowrap;">turms-plugin-rasa</span> |A plugin based on turms-plugin for the chatbot, and is used to interact with Rasa server|
 | <span style="white-space:nowrap;"> turms-data (TODO)</span> | Not yet published. An independent data analysis system based on Flink ecosystem is responsible for business data analysis, and provides underlying data support for the statistics APIs of turms for admins and operational reports of turms-admin |
 
 ## Reference Architecture

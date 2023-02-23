@@ -84,6 +84,7 @@ export default defineUserConfig({
                             '/for-developers/observability.md',
                             '/for-developers/security.md',
                             '/for-developers/storage.md',
+                            '/for-developers/chatbot.md',
                             '/for-developers/anti-spam.md',
                             '/for-developers/data-analytics.md'
                         ]
