@@ -31,7 +31,6 @@ public class TracingContext {
 
     public static final long UNSET_TRACE_ID = -1;
 
-    public static final TracingContext DEFAULT = new TracingContext();
     public static final String CTX_KEY_NAME = "REQ";
     public static final String SCHEDULE_HOOK_NAME = "TRACING";
     public static final TracingContext NOOP = new TracingContext(UNSET_TRACE_ID) {
@@ -88,6 +87,11 @@ public class TracingContext {
     public TracingContext() {
         // TODO: use a global unique trace ID
         this.traceId = RandomUtil.nextPositiveLong();
+    }
+
+    public static TracingContext getTraceIdFromContext(ContextView context) {
+        TracingContext ctx = context.getOrDefault(CTX_KEY_NAME, null);
+        return ctx == null ? NOOP : ctx;
     }
 
     public static long readTraceIdFromContext(ContextView context) {

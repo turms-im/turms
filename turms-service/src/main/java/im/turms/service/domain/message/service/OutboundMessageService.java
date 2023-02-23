@@ -324,8 +324,7 @@ public class OutboundMessageService {
                         return;
                     }
                     boolean sent = Boolean.TRUE.equals(signal.get());
-                    TracingContext context = signal.getContextView()
-                            .getOrDefault(TracingContext.CTX_KEY_NAME, TracingContext.DEFAULT);
+                    TracingContext context = TracingContext.getTraceIdFromContext(signal.getContextView());
                     try (TracingCloseableContext ignored = context.asCloseable()) {
                         NotificationLogging.log(sent, notification, recipientCount);
                     }
