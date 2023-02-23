@@ -6,7 +6,7 @@ function toColor(msg: string, open: number) {
 
 export default {
     redBright: (msg: string) => toColor(msg, 91),
+    greenBright: (msg: string) => toColor(msg, 92),
     yellowBright: (msg: string) => toColor(msg, 93),
-    blueBright: (msg: string) => toColor(msg, 94),
-    greenBright: (msg: string) => toColor(msg, 92)
+    blueBright: (msg: string) => toColor(msg, 94)
 };

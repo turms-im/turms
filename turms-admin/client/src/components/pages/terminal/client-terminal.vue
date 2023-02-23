@@ -80,12 +80,18 @@ export default {
                 this.rootTrie.map(declaration.name.toLowerCase(), declaration);
             }
         }
-        this.terminal = new Terminal(this.$refs.terminal, {
-            ...this.options,
-            onCursorChanged: this.onCursorChanged,
-            onInputChanged: this.onInputChanged,
-            handleInputEvent: this.handleInputEvent
-        });
+        let options;
+        if (this.options.disableStdin) {
+            options = this.options;
+        } else {
+            options = {
+                ...this.options,
+                onCursorChanged: this.onCursorChanged,
+                onInputChanged: this.onInputChanged,
+                handleInputEvent: this.handleInputEvent
+            };
+        }
+        this.terminal = new Terminal(this.$refs.terminal, options);
     },
     beforeUnmount() {
         this.terminal.dispose();

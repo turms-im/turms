@@ -43,6 +43,7 @@ export default class Terminal extends XTerm {
     private readonly history: Array<string>;
     private historyIndex: number;
     private clipboard: string;
+    private readonly disableStdin: boolean;
     private readonly onCursorChanged?: Function;
     private readonly onInputChanged?: Function;
     private readonly onLine?: Function;
@@ -79,6 +80,7 @@ export default class Terminal extends XTerm {
         this.history = options.history || [];
         this.historyIndex = this.history.length > 0 ? this.history.length - 1 : 0;
         this.clipboard = '';
+        this.disableStdin = options.disableStdin;
         this.onCursorChanged = options.onCursorChanged;
         this.onInputChanged = options.onInputChanged;
         this.onLine = options.onLine;
@@ -149,7 +151,9 @@ export default class Terminal extends XTerm {
         if (data) {
             this.write(data);
         }
-        this.writeNewLinePrefix();
+        if (!this.disableStdin) {
+            this.writeNewLinePrefix();
+        }
         this.cursorTo(0);
     }
 

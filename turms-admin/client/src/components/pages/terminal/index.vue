@@ -250,12 +250,12 @@ export default {
             });
             client.messageService.addMessageListener(m => {
                 terminal.writeMsg({
-                    msg: 'Received message: ' + this.stringify(m)
+                    msg: `Received message: ${this.stringify(m)}`
                 });
             });
             client.notificationService.addNotificationListener(n => {
                 terminal.writeMsg({
-                    msg: 'Received notification: ' + this.stringify(n)
+                    msg: `Received notification: ${this.stringify(n)}`
                 });
             });
             return client;
