@@ -51,6 +51,7 @@ import im.turms.service.domain.message.service.OutboundMessageService;
 import im.turms.service.infra.logging.ApiLoggingContext;
 import im.turms.service.infra.logging.ClientApiLogging;
 import im.turms.service.infra.plugin.extension.ClientRequestTransformer;
+import im.turms.service.infra.plugin.extension.RequestHandlerResultNotifier;
 import io.netty.buffer.ByteBuf;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -78,8 +79,9 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ServiceRequestDispatcher.class);
 
-    private static final Method TRANSFORM_METHOD;
-    private static final Method HANDLE_METHOD;
+    private static final Method REQUEST_TRANSFORM_METHOD;
+    private static final Method REQUEST_HANDLE_METHOD;
+    private static final Method RESULT_NOTIFY_METHOD;
 
     private final ApiLoggingContext apiLoggingContext;
     private final BlocklistService blocklistService;
@@ -91,10 +93,12 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
 
     static {
         try {
-            TRANSFORM_METHOD = ClientRequestTransformer.class
+            REQUEST_TRANSFORM_METHOD = ClientRequestTransformer.class
                     .getDeclaredMethod("transform", ClientRequest.class);
-            HANDLE_METHOD = ClientRequestHandler.class
+            REQUEST_HANDLE_METHOD = ClientRequestHandler.class
                     .getDeclaredMethod("handle", ClientRequest.class);
+            RESULT_NOTIFY_METHOD = RequestHandlerResultNotifier.class
+                    .getDeclaredMethod("notify", RequestHandlerResult.class, Long.class, DeviceType.class);
         } catch (NoSuchMethodException e) {
             throw new IncompatibleInternalChangeException(e);
         }
@@ -218,7 +222,7 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                     null);
             clientRequestMono = pluginManager.invokeExtensionPointsSequentially(
                             ClientRequestTransformer.class,
-                            TRANSFORM_METHOD,
+                            REQUEST_TRANSFORM_METHOD,
                             clientRequest,
                             (transformer, req) -> req.flatMap(transformer::transform))
                     .defaultIfEmpty(clientRequest);
@@ -249,7 +253,7 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
             // 4. Pass the request to the controller and get a response
             Mono<RequestHandlerResult> result =
                     pluginManager.invokeExtensionPointsSequentially(im.turms.service.infra.plugin.extension.ClientRequestHandler.class,
-                            HANDLE_METHOD,
+                            REQUEST_HANDLE_METHOD,
                             (requestHandler, pre) -> pre.switchIfEmpty(Mono.defer(() -> requestHandler.handle(lastClientRequest))));
             result = result.switchIfEmpty(Mono.defer(() -> handler.handle(lastClientRequest)));
             // 5. Metrics and transform to ServiceResponse
@@ -309,6 +313,19 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
     }
 
     private Mono<Void> notifyRelatedUsersOfAction(
+            @NotNull RequestHandlerResult result,
+            @NotNull Long requesterId,
+            @NotNull DeviceType requesterDevice) {
+        Mono<RequestHandlerResult> notify = pluginManager.invokeExtensionPointsSequentially(RequestHandlerResultNotifier.class,
+                RESULT_NOTIFY_METHOD,
+                result,
+                (resultNotifier, pre) -> pre.flatMap(handlerResult -> resultNotifier.notify(handlerResult, requesterId, requesterDevice)));
+        return notify
+                .flatMap(handlerResult -> notifyRelatedUsersOfAction0(handlerResult, requesterId, requesterDevice))
+                .then();
+    }
+
+    private Mono<Void> notifyRelatedUsersOfAction0(
             @NotNull RequestHandlerResult result,
             @NotNull Long requesterId,
             @NotNull DeviceType requesterDevice) {
