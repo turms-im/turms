@@ -51,6 +51,7 @@ public class TracingContext {
         public void setTraceId(long traceId) {
         }
     };
+    private static final TracingCloseableContext CLOSEABLE_CONTEXT_NOOP = NOOP.asCloseable();
 
     static {
         Schedulers.onScheduleHook(SCHEDULE_HOOK_NAME, task -> {
@@ -89,12 +90,17 @@ public class TracingContext {
         this.traceId = RandomUtil.nextPositiveLong();
     }
 
-    public static TracingContext getTraceIdFromContext(ContextView context) {
+    public static TracingContext getContext(ContextView context) {
         TracingContext ctx = context.getOrDefault(CTX_KEY_NAME, null);
         return ctx == null ? NOOP : ctx;
     }
 
-    public static long readTraceIdFromContext(ContextView context) {
+    public static TracingCloseableContext getCloseableContext(ContextView context) {
+        TracingContext ctx = context.getOrDefault(CTX_KEY_NAME, null);
+        return ctx == null ? CLOSEABLE_CONTEXT_NOOP : ctx.asCloseable();
+    }
+
+    public static long getTraceId(ContextView context) {
         TracingContext ctx = context.getOrDefault(CTX_KEY_NAME, null);
         if (ctx == null) {
             return UNSET_TRACE_ID;

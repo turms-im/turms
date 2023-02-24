@@ -36,6 +36,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
+import java.time.Duration;
 import java.util.List;
 
 /**
@@ -59,27 +60,30 @@ public class RasaClient {
             .readerForListOf(RasaResponse.class);
 
     private final URI url;
+    private final Duration requestTimeout;
 
-    public RasaClient(URI url) {
+    public RasaClient(URI url, int requestTimeoutMillis) {
         this.url = url;
+        this.requestTimeout = Duration.ofMillis(requestTimeoutMillis);
     }
 
     public Mono<List<RasaResponse>> sendRequest(RasaRequest request) {
         return HTTP_CLIENT_POOL.get()
                 .post()
                 .uri(url)
-                .send(Mono.fromCallable(() -> {
+                .send((httpRequest, out) -> {
+                    httpRequest.responseTimeout(requestTimeout);
                     int size = 48 + StringUtil.getLength(request.message());
-                    ByteBuf output = PooledByteBufAllocator.DEFAULT.directBuffer(size);
-                    ByteBufOutputStream outputStream = new ByteBufOutputStream(output);
+                    ByteBuf requestBuffer = PooledByteBufAllocator.DEFAULT.directBuffer(size);
                     try {
+                        ByteBufOutputStream outputStream = new ByteBufOutputStream(requestBuffer);
                         REQUEST_WRITER.writeValue((OutputStream) outputStream, request);
                     } catch (Exception e) {
-                        ReferenceCountUtil.ensureReleased(output);
+                        ReferenceCountUtil.ensureReleased(requestBuffer);
                         throw new InputOutputException("Failed to write the request", e);
                     }
-                    return output;
-                }))
+                    return out.sendObject(requestBuffer);
+                })
                 .responseContent()
                 .aggregate()
                 .map(response -> {

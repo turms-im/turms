@@ -15,16 +15,12 @@
  * limitations under the License.
  */
 
-package im.turms.plugin.rasa.core;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
+package im.turms.plugin.rasa.property;
 
 /**
  * @author James Chen
  */
-public record RasaResponse(
-        @JsonProperty(value = "recipient_id", access = JsonProperty.Access.WRITE_ONLY) String recipientId,
-        String text,
-        String image
-) {
+public enum RasaResponseFormat {
+    PLAIN,
+    JSON
 }

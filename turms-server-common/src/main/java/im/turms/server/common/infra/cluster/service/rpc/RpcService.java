@@ -539,7 +539,7 @@ public class RpcService implements ClusterService {
         if (traceId != TracingContext.UNSET_TRACE_ID) {
             return;
         }
-        traceId = TracingContext.readTraceIdFromContext(contextView);
+        traceId = TracingContext.getTraceId(contextView);
         if (traceId == TracingContext.UNSET_TRACE_ID) {
             traceId = RandomUtil.nextPositiveLong();
         }

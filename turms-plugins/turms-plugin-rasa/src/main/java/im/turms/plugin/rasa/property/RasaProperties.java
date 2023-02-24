@@ -21,6 +21,7 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.util.List;
+import jakarta.validation.constraints.Min;
 
 /**
  * @author James Chen
@@ -29,8 +30,6 @@ import java.util.List;
 @Data
 public class RasaProperties {
     private boolean enabled = true;
-
-    private String responseDelimiter = "\n";
 
     private InstanceFindStrategy instanceFindStrategy = InstanceFindStrategy.PROPERTY;
 
@@ -43,5 +42,22 @@ public class RasaProperties {
         private Long chatbotUserId = 0L;
 
         private String url = "http://localhost:5005/webhooks/rest/webhook";
+
+        private RequestProperties request = new RequestProperties();
+
+        private ResponseProperties response = new ResponseProperties();
+    }
+
+    @Data
+    public static class RequestProperties {
+        @Min(1)
+        private int timeoutMillis = 60 * 1000;
+    }
+
+    @Data
+    public static class ResponseProperties {
+        private RasaResponseFormat format = RasaResponseFormat.PLAIN;
+
+        private String delimiter = "\n";
     }
 }
