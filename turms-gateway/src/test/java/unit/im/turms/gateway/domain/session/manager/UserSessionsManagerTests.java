@@ -67,7 +67,7 @@ class UserSessionsManagerTests {
         manager.getSession(deviceType).setConnection(connection, new ByteArrayWrapper(new byte[]{}));
 
         assertThat(manager.getDeviceTypeToSession()).hasSize(1);
-        manager.setDeviceOffline(deviceType, CloseReason.get(SessionCloseStatus.SERVER_CLOSED));
+        manager.closeSession(deviceType, CloseReason.get(SessionCloseStatus.SERVER_CLOSED));
         assertThat(manager.getDeviceTypeToSession()).isEmpty();
     }
 

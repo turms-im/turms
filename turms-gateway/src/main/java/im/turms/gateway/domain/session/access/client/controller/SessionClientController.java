@@ -47,9 +47,9 @@ import java.util.Map;
  * @author James Chen
  */
 @Controller
-public class SessionController {
+public class SessionClientController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(SessionController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SessionClientController.class);
     private static final String ERROR_INVOKE_GO_ONLINE;
 
     static {
@@ -65,7 +65,7 @@ public class SessionController {
 
     private final SessionService sessionService;
 
-    public SessionController(SessionService sessionService) {
+    public SessionClientController(SessionService sessionService) {
         this.sessionService = sessionService;
     }
 

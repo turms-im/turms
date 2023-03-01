@@ -18,7 +18,7 @@
 package im.turms.gateway.access.client.common;
 
 import im.turms.gateway.domain.servicerequest.service.ServiceRequestService;
-import im.turms.gateway.domain.session.access.client.controller.SessionController;
+import im.turms.gateway.domain.session.access.client.controller.SessionClientController;
 import im.turms.gateway.domain.session.service.SessionService;
 import im.turms.gateway.infra.logging.ApiLoggingContext;
 import im.turms.gateway.infra.logging.ClientApiLogging;
@@ -76,7 +76,7 @@ public class ClientRequestDispatcher {
 
     private final IpRequestThrottler ipRequestThrottler;
 
-    private final SessionController sessionController;
+    private final SessionClientController sessionController;
     private final SessionService sessionService;
     private final ServiceRequestService serviceRequestService;
     private final ServerStatusManager serverStatusManager;
@@ -84,7 +84,7 @@ public class ClientRequestDispatcher {
     public ClientRequestDispatcher(ApiLoggingContext apiLoggingContext,
                                    BlocklistService blocklistService,
                                    IpRequestThrottler ipRequestThrottler,
-                                   SessionController sessionController,
+                                   SessionClientController sessionController,
                                    SessionService sessionService,
                                    ServiceRequestService serviceRequestService,
                                    ServerStatusManager serverStatusManager,

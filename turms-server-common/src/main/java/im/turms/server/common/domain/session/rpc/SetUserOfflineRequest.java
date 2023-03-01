@@ -77,14 +77,16 @@ public class SetUserOfflineRequest extends RpcRequest<Boolean> {
     }
 
     /**
-     * @return true if all the specified devices of the user were online
+     * @return true if the user had one online session at least.
      */
     @Override
     public Mono<Boolean> callAsync() {
         CloseReason reason = CloseReason.get(closeStatus);
-        return deviceTypes == null || deviceTypes.isEmpty()
+        Mono<Integer> mono = deviceTypes == null || deviceTypes.isEmpty()
                 ? sessionService.closeLocalSession(userId, reason)
                 : sessionService.closeLocalSession(userId, deviceTypes, reason);
+        return mono
+                .map(count -> count > 0);
     }
 
 }

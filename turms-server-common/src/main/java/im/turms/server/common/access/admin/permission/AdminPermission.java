@@ -108,6 +108,10 @@ public enum AdminPermission {
     MESSAGE_QUERY,
     //endregion
 
+    //region session
+    SESSION_DELETE,
+    //endregion
+
     //region business - statistics
     STATISTICS_USER_QUERY,
     STATISTICS_GROUP_QUERY,

@@ -121,6 +121,9 @@
             "MESSAGE_UPDATE",
             "MESSAGE_QUERY"
         ],
+        "SESSION": [
+            "SESSION_DELETE"
+        ],
         "ADMIN": {
             "ADMIN_INFO": [
                 "ADMIN_CREATE",

@@ -78,13 +78,17 @@ public final class UserSessionsManager {
         return added ? userSession : null;
     }
 
-    public void setDeviceOffline(
+    /**
+     * @return true if the session was online
+     */
+    public boolean closeSession(
             @NotNull DeviceType deviceType,
             @NotNull CloseReason closeReason) {
         UserSession session = deviceTypeToSession.remove(deviceType);
         if (session != null) {
-            session.close(closeReason);
+            return session.close(closeReason);
         }
+        return false;
     }
 
     /**

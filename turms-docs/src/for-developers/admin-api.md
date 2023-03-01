@@ -32,20 +32,18 @@ Turms服务端的接口文档采用[OpenAPI 3.0](https://swagger.io/specificatio
 
 ### 非业务相关类
 
-在`通用`列中，带✅的行表示这些API端口同时存在于turms-gateway与turms-serivce服务端中，而不带✅则表明这些API端口仅存在于turms-service服务端中，turms-gateway服务端没有这些API端口。
-
 #### 监控类
 
-| **种类**     | **Controller**            | 路径               | 通用 |
-| :----------- | :------------------------ | ------------------ | ---- |
-| 度量信息管理 | MetricsController         | /metrics           | ✅    |
-| 飞行记录管理 | FlightRecordingController | /flight-recordings | ✅    |
+| **种类**     | **Controller**            | 路径               | 支持该接口的服务 |
+| :----------- | :------------------------ | ------------------ | ---------------- |
+| 度量信息管理 | MetricsController         | /metrics           | 均支持           |
+| 飞行记录管理 | FlightRecordingController | /flight-recordings | 均支持           |
 
 #### 插件类
 
-| **种类** | **Controller**   | 路径     | 通用 |
-| :------- | :--------------- | -------- | ---- |
-| 插件管理 | PluginController | /plugins | ✅    |
+| **种类** | **Controller**   | 路径     | 支持该接口的服务 |
+| :------- | :--------------- | -------- | ---------------- |
+| 插件管理 | PluginController | /plugins | 均支持           |
 
 #### 管理员类
 
@@ -56,17 +54,23 @@ Turms服务端的接口文档采用[OpenAPI 3.0](https://swagger.io/specificatio
 
 #### 集群类
 
-| **种类**     | **Controller**   | 路径             | 通用           |
+| **种类**     | **Controller**   | 路径             | 支持该接口的服务 |
 | :----------- | :--------------- | ---------------- | ---------------- |
-| 集群节点管理 | MemberController | /cluster/members |  |
-| 集群配置管理 | SettingController | /cluster/settings  |   |
+| 集群节点管理 | MemberController | /cluster/members | turms-service |
+| 集群配置管理 | SettingController | /cluster/settings  | turms-service |
 
 #### 黑名单类
 
-| **种类**       | **Controller**          | 路径                   | 通用 |
-| :------------- | :---------------------- | ---------------------- | ---- |
-| IP黑名单管理   | IpBlocklistController   | /blocked-clients/ips   |      |
-| 用户黑名单管理 | UserBlocklistController | /blocked-clients/users |      |
+| **种类**       | **Controller**          | 路径                   | 支持该接口的服务 |
+| :------------- | :---------------------- | ---------------------- | ---------------- |
+| IP黑名单管理   | IpBlocklistController   | /blocked-clients/ips   | turms-service    |
+| 用户黑名单管理 | UserBlocklistController | /blocked-clients/users | turms-service    |
+
+#### 用户会话类
+
+| **种类**     | **Controller**    | 路径      | 支持该接口的服务 |
+| :----------- | :---------------- | --------- | ---------------- |
+| 用户会话管理 | SessionController | /sessions | turms-gateway    |
 
 ### 业务相关类
 
@@ -95,11 +99,11 @@ Turms服务端的接口文档采用[OpenAPI 3.0](https://swagger.io/specificatio
 | 群组邀请管理     | GroupInvitationController  | /groups/invitations   |
 | 群组入群请求管理 | GroupJoinRequestController | /groups/join-requests |
 
-#### 会话类
+#### 聊天会话类
 
-| 职责     | Controller             | 路径           |
-| -------- | ---------------------- | -------------- |
-| 会话管理 | ConversationController | /conversations |
+| 职责         | Controller             | 路径           |
+| ------------ | ---------------------- | -------------- |
+| 聊天会话管理 | ConversationController | /conversations |
 
 #### 消息类
 

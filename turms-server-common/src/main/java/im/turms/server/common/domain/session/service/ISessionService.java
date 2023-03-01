@@ -33,16 +33,16 @@ import jakarta.validation.constraints.NotNull;
  */
 public interface ISessionService {
 
-    Mono<Boolean> closeLocalSessions(
+    Mono<Integer> closeLocalSessions(
             @NotNull byte[] ip,
             @NotNull CloseReason closeReason);
 
-    Mono<Boolean> closeLocalSession(
+    Mono<Integer> closeLocalSession(
             @NotNull Long userId,
             @NotEmpty Set<@ValidDeviceType DeviceType> deviceTypes,
             @NotNull CloseReason closeReason);
 
-    Mono<Boolean> closeLocalSession(
+    Mono<Integer> closeLocalSession(
             @NotNull Long userId,
             @NotNull CloseReason closeReason);
 

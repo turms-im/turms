@@ -75,6 +75,7 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotEmpty;
@@ -193,8 +194,9 @@ public class SessionService implements ISessionService, SessionIdentityAccessMan
     public Mono<Void> destroy(long timeoutMillis) {
         heartbeatManager.destroy(timeoutMillis);
         CloseReason closeReason = CloseReason.get(SessionCloseStatus.SERVER_CLOSED);
-        return clearAllLocalSessions(closeReason)
-                .onErrorMap(t -> new RuntimeException("Caught an error while clearing local sessions", t));
+        return closeAllLocalSessions(closeReason)
+                .onErrorMap(t -> new RuntimeException("Caught an error while closing local sessions", t))
+                .then();
     }
 
     public void handleHeartbeatUpdateRequest(UserSession session) {
@@ -227,10 +229,35 @@ public class SessionService implements ISessionService, SessionIdentityAccessMan
     }
 
     /**
-     * @return true if the user was online
+     * @return closed session count
      */
-    @Override
-    public Mono<Boolean> closeLocalSessions(
+    public Mono<Integer> closeLocalSessions(
+            @NotNull List<byte[]> ips,
+            @NotNull CloseReason closeReason) {
+        try {
+            Validator.notNull(ips, "ips");
+            Validator.notNull(closeReason, "closeReason");
+        } catch (ResponseException e) {
+            return Mono.error(e);
+        }
+        if (ips.isEmpty()) {
+            return PublisherPool.INT_ZERO;
+        }
+        AtomicInteger sessionCount = new AtomicInteger();
+        List<Mono<Integer>> monos = new ArrayList<>(ips.size());
+        for (byte[] ip : ips) {
+            Mono<Integer> mono = closeLocalSessions(ip, closeReason)
+                    .doOnNext(sessionCount::addAndGet);
+            monos.add(mono);
+        }
+        return Mono.whenDelayError(monos)
+                .then(Mono.fromCallable(sessionCount::get));
+    }
+
+    /**
+     * @return closed session count
+     */
+    public Mono<Integer> closeLocalSessions(
             @NotNull byte[] ip,
             @NotNull CloseReason closeReason) {
         try {
@@ -241,9 +268,9 @@ public class SessionService implements ISessionService, SessionIdentityAccessMan
         Queue<UserSession> sessions = ipToSessions.get(new ByteArrayWrapper(ip));
         Iterator<UserSession> iterator = sessions.iterator();
         if (!iterator.hasNext()) {
-            return PublisherPool.FALSE;
+            return PublisherPool.INT_ZERO;
         }
-        Mono<Boolean> first = closeLocalSession(iterator.next().getUserId(),
+        Mono<Integer> first = closeLocalSession(iterator.next().getUserId(),
                 DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES_SET,
                 closeReason);
         // Fast path
@@ -251,24 +278,25 @@ public class SessionService implements ISessionService, SessionIdentityAccessMan
             return first;
         }
         // Slow path
+        AtomicInteger sessionCount = new AtomicInteger();
         // Use ArrayList instead of LinkedList because it is heavy
-        List<Mono<Boolean>> list = new ArrayList<>(4);
-        list.add(first);
+        List<Mono<Integer>> list = new ArrayList<>(4);
+        list.add(first.doOnNext(sessionCount::addAndGet));
         list.add(closeLocalSession(iterator.next().getUserId(),
                 DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES_SET,
-                closeReason));
+                closeReason).doOnNext(sessionCount::addAndGet));
         while (iterator.hasNext()) {
             list.add(closeLocalSession(iterator.next().getUserId(),
                     DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES_SET,
-                    closeReason));
+                    closeReason).doOnNext(sessionCount::addAndGet));
         }
-        return PublisherUtil.atLeastOneTrue(list);
+        return Mono.defer(() -> Mono.fromCallable(sessionCount::get));
     }
 
     /**
-     * @return true if the user was online
+     * @return closed session count
      */
-    public Mono<Boolean> closeLocalSession(
+    public Mono<Integer> closeLocalSession(
             @NotNull Long userId,
             @NotNull @ValidDeviceType DeviceType deviceType,
             @NotNull SessionCloseStatus closeStatus) {
@@ -281,9 +309,9 @@ public class SessionService implements ISessionService, SessionIdentityAccessMan
     }
 
     /**
-     * @return true if the user was online
+     * @return closed session count
      */
-    public Mono<Boolean> closeLocalSession(
+    public Mono<Integer> closeLocalSession(
             @NotNull Long userId,
             @NotNull @ValidDeviceType DeviceType deviceType,
             @NotNull CloseReason closeReason) {
@@ -296,10 +324,10 @@ public class SessionService implements ISessionService, SessionIdentityAccessMan
     }
 
     /**
-     * @return true if the user was online
+     * @return closed session count
      */
     @Override
-    public Mono<Boolean> closeLocalSession(
+    public Mono<Integer> closeLocalSession(
             @NotNull Long userId,
             @NotEmpty Set<@ValidDeviceType DeviceType> deviceTypes,
             @NotNull CloseReason closeReason) {
@@ -310,12 +338,41 @@ public class SessionService implements ISessionService, SessionIdentityAccessMan
         }
         UserSessionsManager manager = getUserSessionsManager(userId);
         if (manager == null) {
-            return PublisherPool.FALSE;
+            return PublisherPool.INT_ZERO;
         }
-        return setLocalSessionOfflineByUserIdAndDeviceTypes0(userId, deviceTypes, closeReason, manager);
+        return closeLocalSessions(userId, deviceTypes, closeReason, manager);
     }
 
-    public Mono<Boolean> authAndCloseLocalSession(@NotNull Long userId,
+    /**
+     * @return closed session count
+     */
+    public Mono<Integer> closeLocalSessions(
+            @NotNull Set<Long> userIds,
+            @NotNull CloseReason closeReason) {
+        try {
+            Validator.notNull(userIds, "userIds");
+            Validator.notNull(closeReason, "closeReason");
+        } catch (ResponseException e) {
+            return Mono.error(e);
+        }
+        if (userIds.isEmpty()) {
+            return PublisherPool.INT_ZERO;
+        }
+        AtomicInteger sessionCount = new AtomicInteger();
+        List<Mono<Integer>> monos = new ArrayList<>(userIds.size());
+        for (Long userId : userIds) {
+            Mono<Integer> mono = closeLocalSession(userId, closeReason)
+                    .doOnNext(sessionCount::addAndGet);
+            monos.add(mono);
+        }
+        return Mono.whenDelayError(monos)
+                .then(Mono.fromCallable(sessionCount::get));
+    }
+
+    /**
+     * @return closed session count
+     */
+    public Mono<Integer> authAndCloseLocalSession(@NotNull Long userId,
                                                   @NotNull DeviceType deviceType,
                                                   @NotNull CloseReason closeReason,
                                                   int sessionId) {
@@ -328,21 +385,53 @@ public class SessionService implements ISessionService, SessionIdentityAccessMan
         }
         UserSessionsManager manager = getUserSessionsManager(userId);
         if (manager == null) {
-            return PublisherPool.FALSE;
+            return PublisherPool.INT_ZERO;
         }
         UserSession session = manager.getSession(deviceType);
         if (session != null && session.getId() == sessionId) {
-            return setLocalSessionOfflineByUserIdAndDeviceTypes0(userId, Collections.singleton(deviceType), closeReason, manager);
+            return closeLocalSessions(userId, Collections.singleton(deviceType), closeReason, manager);
         }
-        return PublisherPool.FALSE;
+        return PublisherPool.INT_ZERO;
     }
 
     /**
+     * @return closed session count
+     */
+    public Mono<Integer> closeAllLocalSessions(@NotNull CloseReason closeReason) {
+        try {
+            Validator.notNull(closeReason, "closeReason");
+        } catch (ResponseException e) {
+            return Mono.error(e);
+        }
+        Set<Map.Entry<Long, UserSessionsManager>> entries = userIdToSessionsManager.entrySet();
+        List<Mono<Integer>> monos = new ArrayList<>(entries.size());
+        AtomicInteger sessionCount = new AtomicInteger(0);
+        for (Map.Entry<Long, UserSessionsManager> entry : entries) {
+            Long userId = entry.getKey();
+            Set<DeviceType> loggedInDeviceTypes = entry.getValue().getLoggedInDeviceTypes();
+            Mono<Integer> mono = closeLocalSession(userId, loggedInDeviceTypes, closeReason)
+                    .doOnNext(sessionCount::addAndGet);
+            monos.add(mono);
+        }
+        return Mono.whenDelayError(monos)
+                .then(Mono.fromCallable(sessionCount::get));
+    }
+
+    /**
+     * @return closed session count
+     */
+    @Override
+    public Mono<Integer> closeLocalSession(Long userId, CloseReason closeReason) {
+        return closeLocalSession(userId, DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES_SET, closeReason);
+    }
+
+    /**
+     * @return closed session count
      * @implNote The method will be called definitely when a session is closed
      * no matter it is closed by the client or the server,
      * and the method will clean up sessions in both local and Redis.
      */
-    private Mono<Boolean> setLocalSessionOfflineByUserIdAndDeviceTypes0(
+    private Mono<Integer> closeLocalSessions(
             @NotNull Long userId,
             @NotEmpty Set<@ValidDeviceType DeviceType> deviceTypes,
             @NotNull CloseReason closeReason,
@@ -356,50 +445,33 @@ public class SessionService implements ISessionService, SessionIdentityAccessMan
         // Don't close the session (connection) first and then remove the session status in Redis
         // because it will make trouble if a client logins again while the session status in Redis hasn't been removed
         return userStatusService.removeStatusByUserIdAndDeviceTypes(userId, deviceTypes)
-                .doOnSuccess(ignored -> {
+                .map(ignored -> {
+                    int sessionCount = 0;
                     for (DeviceType deviceType : deviceTypes) {
                         UserSession session = manager.getSession(deviceType);
                         if (session == null) {
                             continue;
                         }
-                        manager.setDeviceOffline(session.getDeviceType(), closeReason);
+                        boolean wasSessionOpen = manager.closeSession(session.getDeviceType(), closeReason);
                         ByteArrayWrapper ip = session.getIp();
                         if (ip != null) {
                             ipToSessions.computeIfPresent(ip, (key, sessions) -> sessions.remove(session)
                                     ? (sessions.isEmpty() ? null : sessions)
                                     : sessions);
                         }
-                        notifyOnSessionClosedListeners(session);
                         if (sessionLocationService.isLocationEnabled()) {
                             sessionLocationService.removeUserLocation(session.getUserId(), session.getDeviceType())
                                     .subscribe(null, t -> LOGGER.error("Failed to remove the location of the user session: {user={}, device={}}",
                                             session.getUserId(), session.getDeviceType(), t));
                         }
+                        if (wasSessionOpen) {
+                            sessionCount++;
+                            notifyOnSessionClosedListeners(session);
+                        }
                     }
                     removeSessionsManagerIfEmpty(closeReason, manager, userId);
+                    return sessionCount;
                 });
-    }
-
-    public Mono<Void> clearAllLocalSessions(@NotNull CloseReason closeReason) {
-        try {
-            Validator.notNull(closeReason, "closeReason");
-        } catch (ResponseException e) {
-            return Mono.error(e);
-        }
-        Set<Map.Entry<Long, UserSessionsManager>> entries = userIdToSessionsManager.entrySet();
-        List<Mono<Boolean>> monos = new ArrayList<>(entries.size());
-        for (Map.Entry<Long, UserSessionsManager> entry : entries) {
-            Long userId = entry.getKey();
-            Set<DeviceType> loggedInDeviceTypes = entry.getValue().getLoggedInDeviceTypes();
-            Mono<Boolean> mono = closeLocalSession(userId, loggedInDeviceTypes, closeReason);
-            monos.add(mono);
-        }
-        return Mono.whenDelayError(monos);
-    }
-
-    @Override
-    public Mono<Boolean> closeLocalSession(Long userId, CloseReason closeReason) {
-        return closeLocalSession(userId, DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES_SET, closeReason);
     }
 
     @Override
@@ -502,10 +574,10 @@ public class SessionService implements ISessionService, SessionIdentityAccessMan
                     boolean conflicts = sessionsStatus.getLoggedInDeviceTypes().contains(deviceType);
                     if (conflicts) {
                         UserSession session = getLocalUserSession(userId, deviceType);
-                        boolean isDisconnectedSessionOnLocal = session != null
+                        boolean isClosedSessionOnLocal = session != null
                                 && session.getConnection() != null
                                 && !session.getConnection().isConnected();
-                        if (isDisconnectedSessionOnLocal) {
+                        if (isClosedSessionOnLocal) {
                             // Note that the downstream should replace the disconnected connection
                             // with the connected TCP/WebSocket connection
                             Mono<Void> updateSessionInfoMono = userStatus == null || existingUserStatus == userStatus
@@ -531,7 +603,7 @@ public class SessionService implements ISessionService, SessionIdentityAccessMan
                             return Mono.error(ResponseException.get(ResponseStatusCode.SESSION_SIMULTANEOUS_CONFLICTS_DECLINE));
                         }
                     }
-                    return disconnectConflictedDeviceTypes(userId, deviceType, sessionsStatus)
+                    return closeSessionsWithConflictedDeviceTypes(userId, deviceType, sessionsStatus)
                             .flatMap(wasSuccessful -> wasSuccessful
                                     ? addOnlineDeviceIfAbsent(version, permissions, ip, userId, deviceType, deviceDetails, userStatus, location)
                                     : Mono.error(ResponseException.get(ResponseStatusCode.SESSION_SIMULTANEOUS_CONFLICTS_DECLINE)));
@@ -561,9 +633,9 @@ public class SessionService implements ISessionService, SessionIdentityAccessMan
         return userIdToSessionsManager.size();
     }
 
-    private Mono<Boolean> disconnectConflictedDeviceTypes(@NotNull Long userId,
-                                                          @NotNull @ValidDeviceType DeviceType deviceType,
-                                                          @NotNull UserSessionsStatus sessionsStatus) {
+    private Mono<Boolean> closeSessionsWithConflictedDeviceTypes(@NotNull Long userId,
+                                                                 @NotNull @ValidDeviceType DeviceType deviceType,
+                                                                 @NotNull UserSessionsStatus sessionsStatus) {
         try {
             Validator.notNull(userId, "userId");
             Validator.notNull(deviceType, "deviceType");
@@ -588,11 +660,11 @@ public class SessionService implements ISessionService, SessionIdentityAccessMan
             return PublisherPool.TRUE;
         }
         Set<String> nodeIds = nodeIdToDeviceTypes.keySet();
-        List<Mono<Boolean>> disconnectionRequests = new ArrayList<>(nodeIds.size());
+        List<Mono<Boolean>> requests = new ArrayList<>(nodeIds.size());
         for (String nodeId : nodeIds) {
             Set<DeviceType> deviceTypes = nodeIdToDeviceTypes.get(nodeId);
             SetUserOfflineRequest request = new SetUserOfflineRequest(userId, deviceTypes, SessionCloseStatus.DISCONNECTED_BY_CLIENT);
-            disconnectionRequests.add(node.getRpcService().requestResponse(nodeId, request)
+            requests.add(node.getRpcService().requestResponse(nodeId, request)
                     .onErrorResume(ConnectionNotFound.class, t -> {
                         // The connection may not exist if a network error occurred between the local node
                         // and the target node, or the target node is dead (if it is an unknown node)
@@ -608,7 +680,7 @@ public class SessionService implements ISessionService, SessionIdentityAccessMan
                         return PublisherPool.TRUE;
                     }));
         }
-        return PublisherUtil.areAllTrue(disconnectionRequests);
+        return PublisherUtil.areAllTrue(requests);
     }
 
     public void onSessionEstablished(@NotNull UserSessionsManager userSessionsManager,
@@ -640,7 +712,7 @@ public class SessionService implements ISessionService, SessionIdentityAccessMan
                     UserSession session = manager.addSessionIfAbsent(version, permissions, deviceType, deviceDetails, location);
                     // This should never happen
                     if (null == session) {
-                        manager.setDeviceOffline(deviceType, CloseReason.get(SessionCloseStatus.DISCONNECTED_BY_OTHER_DEVICE));
+                        manager.closeSession(deviceType, CloseReason.get(SessionCloseStatus.DISCONNECTED_BY_OTHER_DEVICE));
                         ipToSessions.computeIfPresent(ip, (key, sessions) -> {
                             boolean removed = sessions.removeIf(userSession ->
                                     userSession.getUserId().equals(userId)

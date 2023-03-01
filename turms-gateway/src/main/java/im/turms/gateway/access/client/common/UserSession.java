@@ -136,18 +136,22 @@ public final class UserSession {
 
     /**
      * A session cannot reopen once closed, but the connection can close and reconnect.
+     *
+     * @return true if the session was online
      */
-    public void close(@NotNull CloseReason closeReason) {
+    public boolean close(@NotNull CloseReason closeReason) {
         if (isSessionOpen) {
-            isSessionOpen = false;
             // Note that it is acceptable to complete/close the connection multiple times
             // so that it is unnecessary to update isSessionOpen atomically
+            isSessionOpen = false;
             if (connection == null) {
                 LOGGER.warn("The connection is missing for the user session: {}", this);
             } else {
                 connection.close(closeReason);
             }
+            return true;
         }
+        return false;
     }
 
     public boolean isOpen() {

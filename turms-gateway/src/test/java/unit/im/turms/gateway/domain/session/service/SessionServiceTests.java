@@ -130,10 +130,10 @@ class SessionServiceTests {
     @Test
     void closeLocalSession_shouldSucceed() {
         SessionService service = newSessionService();
-        Mono<Boolean> result = service.closeLocalSession(userId, deviceType, SessionCloseStatus.SERVER_ERROR);
+        Mono<Integer> result = service.closeLocalSession(userId, deviceType, SessionCloseStatus.SERVER_ERROR);
 
         StepVerifier.create(result)
-                .expectNext(true)
+                .expectNext(1)
                 .verifyComplete();
     }
 
