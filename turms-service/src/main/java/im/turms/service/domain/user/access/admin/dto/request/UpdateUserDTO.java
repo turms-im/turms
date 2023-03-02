@@ -28,7 +28,7 @@ import java.util.Date;
  * @author James Chen
  */
 public record UpdateUserDTO(
-        @SensitiveProperty
+        @SensitiveProperty(SensitiveProperty.Access.ALLOW_DESERIALIZATION)
         String password,
         String name,
         String intro,

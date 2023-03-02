@@ -19,11 +19,12 @@ package im.turms.server.common.infra.json;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.AnnotationIntrospector;
+import com.fasterxml.jackson.databind.DeserializationConfig;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationConfig;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.introspect.AnnotatedField;
 import com.fasterxml.jackson.databind.introspect.AnnotatedMember;
 import com.fasterxml.jackson.databind.introspect.NopAnnotationIntrospector;
 import com.fasterxml.jackson.databind.json.JsonMapper;
@@ -66,17 +67,32 @@ public class JsonCodecPool {
             .build();
 
     static {
-        AnnotationIntrospector introspector = MAPPER
-                .getSerializationConfig().getAnnotationIntrospector();
-        MAPPER.setAnnotationIntrospector(AnnotationIntrospector.pair(introspector,
+        SerializationConfig serializationConfig = MAPPER.getSerializationConfig();
+        DeserializationConfig deserializationConfig = MAPPER.getDeserializationConfig();
+        AnnotationIntrospector introspector = serializationConfig.getAnnotationIntrospector();
+
+        serializationConfig.with(AnnotationIntrospector.pair(introspector,
                 new NopAnnotationIntrospector() {
                     @Override
                     public boolean hasIgnoreMarker(AnnotatedMember m) {
                         if (super.hasIgnoreMarker(m)) {
                             return true;
                         }
-                        return m instanceof AnnotatedField
-                                && _hasAnnotation(m, SensitiveProperty.class);
+                        SensitiveProperty property = _findAnnotation(m, SensitiveProperty.class);
+                        return property != null
+                                && property.value() != SensitiveProperty.Access.ALLOW_SERIALIZATION;
+                    }
+                }));
+        deserializationConfig.with(AnnotationIntrospector.pair(introspector,
+                new NopAnnotationIntrospector() {
+                    @Override
+                    public boolean hasIgnoreMarker(AnnotatedMember m) {
+                        if (super.hasIgnoreMarker(m)) {
+                            return true;
+                        }
+                        SensitiveProperty property = _findAnnotation(m, SensitiveProperty.class);
+                        return property != null
+                                && property.value() != SensitiveProperty.Access.ALLOW_DESERIALIZATION;
                     }
                 }));
     }

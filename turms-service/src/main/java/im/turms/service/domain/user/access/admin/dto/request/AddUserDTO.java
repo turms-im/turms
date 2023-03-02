@@ -29,7 +29,7 @@ import java.util.Date;
  */
 public record AddUserDTO(
         Long id,
-        @SensitiveProperty
+        @SensitiveProperty(SensitiveProperty.Access.ALLOW_DESERIALIZATION)
         String password,
         String name,
         String intro,

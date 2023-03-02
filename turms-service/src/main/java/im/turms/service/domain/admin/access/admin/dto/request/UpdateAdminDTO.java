@@ -26,7 +26,7 @@ import im.turms.server.common.infra.security.SensitiveProperty;
  * @author James Chen
  */
 public record UpdateAdminDTO(
-        @SensitiveProperty
+        @SensitiveProperty(SensitiveProperty.Access.ALLOW_DESERIALIZATION)
         String password,
         String name,
         Long roleId

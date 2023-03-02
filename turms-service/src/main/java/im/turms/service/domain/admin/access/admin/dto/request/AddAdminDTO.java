@@ -26,7 +26,7 @@ import im.turms.server.common.infra.security.SensitiveProperty;
  */
 public record AddAdminDTO(
         String account,
-        @SensitiveProperty
+        @SensitiveProperty(SensitiveProperty.Access.ALLOW_DESERIALIZATION)
         String password,
         String name,
         Long roleId
