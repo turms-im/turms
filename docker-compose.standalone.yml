@@ -157,8 +157,19 @@ services:
 #    volumes:
 #      - ./minio_storage:/data
 
-  # turms servers
+  # Rasa
+  rasa:
+    image: rasa/rasa:3.3.5-full
+    ports:
+      - 5005:5005
+    profiles:
+      - chatbot
+    volumes:
+#      - "./rasa/models:/app/models"
+#      - "./rasa/logs:/app/logs"
+    command: ["run", "--enable-api", "--cors", "*"]
 
+  # turms servers
   turms-admin:
     image: "ghcr.io/turms-im/turms-admin"
     pull_policy: always
