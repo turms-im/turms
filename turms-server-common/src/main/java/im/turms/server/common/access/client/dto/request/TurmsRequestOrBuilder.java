@@ -1232,5 +1232,5 @@ public interface TurmsRequestOrBuilder extends
      */
     im.turms.server.common.access.client.dto.request.storage.UpdateMessageAttachmentInfoRequestOrBuilder getUpdateMessageAttachmentInfoRequestOrBuilder();
 
-    public im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase getKindCase();
+    im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase getKindCase();
 }

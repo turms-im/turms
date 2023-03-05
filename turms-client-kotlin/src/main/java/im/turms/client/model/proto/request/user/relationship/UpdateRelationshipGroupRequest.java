@@ -417,7 +417,7 @@ public final class UpdateRelationshipGroupRequest extends
                         parser = PARSER;
                         if (parser == null) {
                             parser =
-                                    new DefaultInstanceBasedParser<im.turms.client.model.proto.request.user.relationship.UpdateRelationshipGroupRequest>(
+                                    new DefaultInstanceBasedParser<>(
                                             DEFAULT_INSTANCE);
                             PARSER = parser;
                         }

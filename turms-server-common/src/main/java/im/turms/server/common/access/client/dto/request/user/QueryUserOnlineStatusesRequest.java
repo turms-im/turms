@@ -45,12 +45,6 @@ public final class QueryUserOnlineStatusesRequest extends
         return new QueryUserOnlineStatusesRequest();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-        return this.unknownFields;
-    }
-
     public static final com.google.protobuf.Descriptors.Descriptor
     getDescriptor() {
         return im.turms.server.common.access.client.dto.request.user.QueryUserOnlineStatusesRequestOuterClass.internal_static_im_turms_proto_QueryUserOnlineStatusesRequest_descriptor;
@@ -61,11 +55,11 @@ public final class QueryUserOnlineStatusesRequest extends
     internalGetFieldAccessorTable() {
         return im.turms.server.common.access.client.dto.request.user.QueryUserOnlineStatusesRequestOuterClass.internal_static_im_turms_proto_QueryUserOnlineStatusesRequest_fieldAccessorTable
                 .ensureFieldAccessorsInitialized(
-                        im.turms.server.common.access.client.dto.request.user.QueryUserOnlineStatusesRequest.class,
-                        im.turms.server.common.access.client.dto.request.user.QueryUserOnlineStatusesRequest.Builder.class);
+                        im.turms.server.common.access.client.dto.request.user.QueryUserOnlineStatusesRequest.class, im.turms.server.common.access.client.dto.request.user.QueryUserOnlineStatusesRequest.Builder.class);
     }
 
     public static final int USER_IDS_FIELD_NUMBER = 1;
+    @SuppressWarnings("serial")
     private com.google.protobuf.Internal.LongList userIds_;
 
     /**
@@ -162,19 +156,15 @@ public final class QueryUserOnlineStatusesRequest extends
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof im.turms.server.common.access.client.dto.request.user.QueryUserOnlineStatusesRequest)) {
+        if (!(obj instanceof QueryUserOnlineStatusesRequest other)) {
             return super.equals(obj);
         }
-        im.turms.server.common.access.client.dto.request.user.QueryUserOnlineStatusesRequest other = (im.turms.server.common.access.client.dto.request.user.QueryUserOnlineStatusesRequest) obj;
 
         if (!getUserIdsList()
                 .equals(other.getUserIdsList())) {
             return false;
         }
-        if (!getUnknownFields().equals(other.getUnknownFields())) {
-            return false;
-        }
-        return true;
+        return getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -296,8 +286,7 @@ public final class QueryUserOnlineStatusesRequest extends
     @java.lang.Override
     protected Builder newBuilderForType(
             com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
+        return new Builder(parent);
     }
 
     /**
@@ -317,8 +306,7 @@ public final class QueryUserOnlineStatusesRequest extends
         internalGetFieldAccessorTable() {
             return im.turms.server.common.access.client.dto.request.user.QueryUserOnlineStatusesRequestOuterClass.internal_static_im_turms_proto_QueryUserOnlineStatusesRequest_fieldAccessorTable
                     .ensureFieldAccessorsInitialized(
-                            im.turms.server.common.access.client.dto.request.user.QueryUserOnlineStatusesRequest.class,
-                            im.turms.server.common.access.client.dto.request.user.QueryUserOnlineStatusesRequest.Builder.class);
+                            im.turms.server.common.access.client.dto.request.user.QueryUserOnlineStatusesRequest.class, im.turms.server.common.access.client.dto.request.user.QueryUserOnlineStatusesRequest.Builder.class);
         }
 
         // Construct using im.turms.server.common.access.client.dto.request.user.QueryUserOnlineStatusesRequest.newBuilder()
@@ -335,8 +323,8 @@ public final class QueryUserOnlineStatusesRequest extends
         @java.lang.Override
         public Builder clear() {
             super.clear();
+            bitField0_ = 0;
             userIds_ = emptyLongList();
-            bitField0_ = (bitField0_ & ~0x00000001);
             return this;
         }
 
@@ -362,54 +350,25 @@ public final class QueryUserOnlineStatusesRequest extends
 
         @java.lang.Override
         public im.turms.server.common.access.client.dto.request.user.QueryUserOnlineStatusesRequest buildPartial() {
-            im.turms.server.common.access.client.dto.request.user.QueryUserOnlineStatusesRequest result =
-                    new im.turms.server.common.access.client.dto.request.user.QueryUserOnlineStatusesRequest(this);
-            int from_bitField0_ = bitField0_;
-            if (((bitField0_ & 0x00000001) != 0)) {
-                userIds_.makeImmutable();
-                bitField0_ = (bitField0_ & ~0x00000001);
+            im.turms.server.common.access.client.dto.request.user.QueryUserOnlineStatusesRequest result = new im.turms.server.common.access.client.dto.request.user.QueryUserOnlineStatusesRequest(this);
+            buildPartialRepeatedFields(result);
+            if (bitField0_ != 0) {
+                buildPartial0(result);
             }
-            result.userIds_ = userIds_;
             onBuilt();
             return result;
         }
 
-        @java.lang.Override
-        public Builder clone() {
-            return super.clone();
+        private void buildPartialRepeatedFields(im.turms.server.common.access.client.dto.request.user.QueryUserOnlineStatusesRequest result) {
+            if (((bitField0_ & 0x00000001) != 0)) {
+                userIds_.makeImmutable();
+                bitField0_ &= ~0x00000001;
+            }
+            result.userIds_ = userIds_;
         }
 
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(
-                com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(
-                com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index, java.lang.Object value) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.addRepeatedField(field, value);
+        private void buildPartial0(im.turms.server.common.access.client.dto.request.user.QueryUserOnlineStatusesRequest result) {
+            int from_bitField0_ = bitField0_;
         }
 
         @java.lang.Override
@@ -429,7 +388,7 @@ public final class QueryUserOnlineStatusesRequest extends
             if (!other.userIds_.isEmpty()) {
                 if (userIds_.isEmpty()) {
                     userIds_ = other.userIds_;
-                    bitField0_ = (bitField0_ & ~0x00000001);
+                    bitField0_ &= ~0x00000001;
                 } else {
                     ensureUserIdsIsMutable();
                     userIds_.addAll(other.userIds_);
@@ -459,16 +418,13 @@ public final class QueryUserOnlineStatusesRequest extends
                 while (!done) {
                     int tag = input.readTag();
                     switch (tag) {
-                        case 0:
-                            done = true;
-                            break;
-                        case 8: {
+                        case 0 -> done = true;
+                        case 8 -> {
                             long v = input.readInt64();
                             ensureUserIdsIsMutable();
                             userIds_.addLong(v);
-                            break;
                         } // case 8
-                        case 10: {
+                        case 10 -> {
                             int length = input.readRawVarint32();
                             int limit = input.pushLimit(length);
                             ensureUserIdsIsMutable();
@@ -476,13 +432,11 @@ public final class QueryUserOnlineStatusesRequest extends
                                 userIds_.addLong(input.readInt64());
                             }
                             input.popLimit(limit);
-                            break;
                         } // case 10
-                        default: {
+                        default -> {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
                             }
-                            break;
                         } // default:
                     } // switch (tag)
                 } // while (!done)
@@ -499,7 +453,7 @@ public final class QueryUserOnlineStatusesRequest extends
         private com.google.protobuf.Internal.LongList userIds_ = emptyLongList();
 
         private void ensureUserIdsIsMutable() {
-            if (!((bitField0_ & 0x00000001) != 0)) {
+            if ((bitField0_ & 0x00000001) == 0) {
                 userIds_ = mutableCopy(userIds_);
                 bitField0_ |= 0x00000001;
             }
@@ -544,6 +498,7 @@ public final class QueryUserOnlineStatusesRequest extends
          */
         public Builder setUserIds(
                 int index, long value) {
+
             ensureUserIdsIsMutable();
             userIds_.setLong(index, value);
             onChanged();
@@ -557,6 +512,7 @@ public final class QueryUserOnlineStatusesRequest extends
          * @return This builder for chaining.
          */
         public Builder addUserIds(long value) {
+
             ensureUserIdsIsMutable();
             userIds_.addLong(value);
             onChanged();
@@ -585,7 +541,7 @@ public final class QueryUserOnlineStatusesRequest extends
          */
         public Builder clearUserIds() {
             userIds_ = emptyLongList();
-            bitField0_ = (bitField0_ & ~0x00000001);
+            bitField0_ &= ~0x00000001;
             onChanged();
             return this;
         }
@@ -618,7 +574,7 @@ public final class QueryUserOnlineStatusesRequest extends
     }
 
     private static final com.google.protobuf.Parser<QueryUserOnlineStatusesRequest>
-            PARSER = new com.google.protobuf.AbstractParser<QueryUserOnlineStatusesRequest>() {
+            PARSER = new com.google.protobuf.AbstractParser<>() {
         @java.lang.Override
         public QueryUserOnlineStatusesRequest parsePartialFrom(
                 com.google.protobuf.CodedInputStream input,

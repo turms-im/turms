@@ -44,12 +44,6 @@ public final class UpdateTypingStatusRequest extends
         return new UpdateTypingStatusRequest();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-        return this.unknownFields;
-    }
-
     public static final com.google.protobuf.Descriptors.Descriptor
     getDescriptor() {
         return im.turms.server.common.access.client.dto.request.conversation.UpdateTypingStatusRequestOuterClass.internal_static_im_turms_proto_UpdateTypingStatusRequest_descriptor;
@@ -60,12 +54,11 @@ public final class UpdateTypingStatusRequest extends
     internalGetFieldAccessorTable() {
         return im.turms.server.common.access.client.dto.request.conversation.UpdateTypingStatusRequestOuterClass.internal_static_im_turms_proto_UpdateTypingStatusRequest_fieldAccessorTable
                 .ensureFieldAccessorsInitialized(
-                        im.turms.server.common.access.client.dto.request.conversation.UpdateTypingStatusRequest.class,
-                        im.turms.server.common.access.client.dto.request.conversation.UpdateTypingStatusRequest.Builder.class);
+                        im.turms.server.common.access.client.dto.request.conversation.UpdateTypingStatusRequest.class, im.turms.server.common.access.client.dto.request.conversation.UpdateTypingStatusRequest.Builder.class);
     }
 
     public static final int IS_GROUP_MESSAGE_FIELD_NUMBER = 1;
-    private boolean isGroupMessage_;
+    private boolean isGroupMessage_ = false;
 
     /**
      * <pre>
@@ -82,7 +75,7 @@ public final class UpdateTypingStatusRequest extends
     }
 
     public static final int TO_ID_FIELD_NUMBER = 2;
-    private long toId_;
+    private long toId_ = 0L;
 
     /**
      * <code>int64 to_id = 2;</code>
@@ -113,7 +106,7 @@ public final class UpdateTypingStatusRequest extends
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
             throws java.io.IOException {
-        if (isGroupMessage_ != false) {
+        if (isGroupMessage_) {
             output.writeBool(1, isGroupMessage_);
         }
         if (toId_ != 0L) {
@@ -130,7 +123,7 @@ public final class UpdateTypingStatusRequest extends
         }
 
         size = 0;
-        if (isGroupMessage_ != false) {
+        if (isGroupMessage_) {
             size += com.google.protobuf.CodedOutputStream
                     .computeBoolSize(1, isGroupMessage_);
         }
@@ -148,10 +141,9 @@ public final class UpdateTypingStatusRequest extends
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof im.turms.server.common.access.client.dto.request.conversation.UpdateTypingStatusRequest)) {
+        if (!(obj instanceof UpdateTypingStatusRequest other)) {
             return super.equals(obj);
         }
-        im.turms.server.common.access.client.dto.request.conversation.UpdateTypingStatusRequest other = (im.turms.server.common.access.client.dto.request.conversation.UpdateTypingStatusRequest) obj;
 
         if (getIsGroupMessage()
             != other.getIsGroupMessage()) {
@@ -161,10 +153,7 @@ public final class UpdateTypingStatusRequest extends
             != other.getToId()) {
             return false;
         }
-        if (!getUnknownFields().equals(other.getUnknownFields())) {
-            return false;
-        }
-        return true;
+        return getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -288,8 +277,7 @@ public final class UpdateTypingStatusRequest extends
     @java.lang.Override
     protected Builder newBuilderForType(
             com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
+        return new Builder(parent);
     }
 
     /**
@@ -309,8 +297,7 @@ public final class UpdateTypingStatusRequest extends
         internalGetFieldAccessorTable() {
             return im.turms.server.common.access.client.dto.request.conversation.UpdateTypingStatusRequestOuterClass.internal_static_im_turms_proto_UpdateTypingStatusRequest_fieldAccessorTable
                     .ensureFieldAccessorsInitialized(
-                            im.turms.server.common.access.client.dto.request.conversation.UpdateTypingStatusRequest.class,
-                            im.turms.server.common.access.client.dto.request.conversation.UpdateTypingStatusRequest.Builder.class);
+                            im.turms.server.common.access.client.dto.request.conversation.UpdateTypingStatusRequest.class, im.turms.server.common.access.client.dto.request.conversation.UpdateTypingStatusRequest.Builder.class);
         }
 
         // Construct using im.turms.server.common.access.client.dto.request.conversation.UpdateTypingStatusRequest.newBuilder()
@@ -327,10 +314,9 @@ public final class UpdateTypingStatusRequest extends
         @java.lang.Override
         public Builder clear() {
             super.clear();
+            bitField0_ = 0;
             isGroupMessage_ = false;
-
             toId_ = 0L;
-
             return this;
         }
 
@@ -356,50 +342,22 @@ public final class UpdateTypingStatusRequest extends
 
         @java.lang.Override
         public im.turms.server.common.access.client.dto.request.conversation.UpdateTypingStatusRequest buildPartial() {
-            im.turms.server.common.access.client.dto.request.conversation.UpdateTypingStatusRequest result =
-                    new im.turms.server.common.access.client.dto.request.conversation.UpdateTypingStatusRequest(this);
-            result.isGroupMessage_ = isGroupMessage_;
-            result.toId_ = toId_;
+            im.turms.server.common.access.client.dto.request.conversation.UpdateTypingStatusRequest result = new im.turms.server.common.access.client.dto.request.conversation.UpdateTypingStatusRequest(this);
+            if (bitField0_ != 0) {
+                buildPartial0(result);
+            }
             onBuilt();
             return result;
         }
 
-        @java.lang.Override
-        public Builder clone() {
-            return super.clone();
-        }
-
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(
-                com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(
-                com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index, java.lang.Object value) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.addRepeatedField(field, value);
+        private void buildPartial0(im.turms.server.common.access.client.dto.request.conversation.UpdateTypingStatusRequest result) {
+            int from_bitField0_ = bitField0_;
+            if (((from_bitField0_ & 0x00000001) != 0)) {
+                result.isGroupMessage_ = isGroupMessage_;
+            }
+            if (((from_bitField0_ & 0x00000002) != 0)) {
+                result.toId_ = toId_;
+            }
         }
 
         @java.lang.Override
@@ -416,7 +374,7 @@ public final class UpdateTypingStatusRequest extends
             if (other == im.turms.server.common.access.client.dto.request.conversation.UpdateTypingStatusRequest.getDefaultInstance()) {
                 return this;
             }
-            if (other.getIsGroupMessage() != false) {
+            if (other.getIsGroupMessage()) {
                 setIsGroupMessage(other.getIsGroupMessage());
             }
             if (other.getToId() != 0L) {
@@ -445,24 +403,19 @@ public final class UpdateTypingStatusRequest extends
                 while (!done) {
                     int tag = input.readTag();
                     switch (tag) {
-                        case 0:
-                            done = true;
-                            break;
-                        case 8: {
+                        case 0 -> done = true;
+                        case 8 -> {
                             isGroupMessage_ = input.readBool();
-
-                            break;
+                            bitField0_ |= 0x00000001;
                         } // case 8
-                        case 16: {
+                        case 16 -> {
                             toId_ = input.readInt64();
-
-                            break;
+                            bitField0_ |= 0x00000002;
                         } // case 16
-                        default: {
+                        default -> {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
                             }
-                            break;
                         } // default:
                     } // switch (tag)
                 } // while (!done)
@@ -473,6 +426,8 @@ public final class UpdateTypingStatusRequest extends
             } // finally
             return this;
         }
+
+        private int bitField0_;
 
         private boolean isGroupMessage_;
 
@@ -503,6 +458,7 @@ public final class UpdateTypingStatusRequest extends
         public Builder setIsGroupMessage(boolean value) {
 
             isGroupMessage_ = value;
+            bitField0_ |= 0x00000001;
             onChanged();
             return this;
         }
@@ -517,7 +473,7 @@ public final class UpdateTypingStatusRequest extends
          * @return This builder for chaining.
          */
         public Builder clearIsGroupMessage() {
-
+            bitField0_ &= ~0x00000001;
             isGroupMessage_ = false;
             onChanged();
             return this;
@@ -544,6 +500,7 @@ public final class UpdateTypingStatusRequest extends
         public Builder setToId(long value) {
 
             toId_ = value;
+            bitField0_ |= 0x00000002;
             onChanged();
             return this;
         }
@@ -554,7 +511,7 @@ public final class UpdateTypingStatusRequest extends
          * @return This builder for chaining.
          */
         public Builder clearToId() {
-
+            bitField0_ &= ~0x00000002;
             toId_ = 0L;
             onChanged();
             return this;
@@ -588,7 +545,7 @@ public final class UpdateTypingStatusRequest extends
     }
 
     private static final com.google.protobuf.Parser<UpdateTypingStatusRequest>
-            PARSER = new com.google.protobuf.AbstractParser<UpdateTypingStatusRequest>() {
+            PARSER = new com.google.protobuf.AbstractParser<>() {
         @java.lang.Override
         public UpdateTypingStatusRequest parsePartialFrom(
                 com.google.protobuf.CodedInputStream input,

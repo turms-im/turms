@@ -25,6 +25,7 @@ public struct QueryMessagesRequest {
     // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
     // methods supported on all messages.
 
+    /// Filter
     public var ids: [Int64] = []
 
     public var areGroupMessages: Bool {
@@ -49,26 +50,27 @@ public struct QueryMessagesRequest {
 
     public var fromIds: [Int64] = []
 
-    public var deliveryDateAfter: Int64 {
-        get { return _deliveryDateAfter ?? 0 }
-        set { _deliveryDateAfter = newValue }
+    public var deliveryDateStart: Int64 {
+        get { return _deliveryDateStart ?? 0 }
+        set { _deliveryDateStart = newValue }
     }
 
-    /// Returns true if `deliveryDateAfter` has been explicitly set.
-    public var hasDeliveryDateAfter: Bool { return _deliveryDateAfter != nil }
-    /// Clears the value of `deliveryDateAfter`. Subsequent reads from it will return its default value.
-    public mutating func clearDeliveryDateAfter() { _deliveryDateAfter = nil }
+    /// Returns true if `deliveryDateStart` has been explicitly set.
+    public var hasDeliveryDateStart: Bool { return _deliveryDateStart != nil }
+    /// Clears the value of `deliveryDateStart`. Subsequent reads from it will return its default value.
+    public mutating func clearDeliveryDateStart() { _deliveryDateStart = nil }
 
-    public var deliveryDateBefore: Int64 {
-        get { return _deliveryDateBefore ?? 0 }
-        set { _deliveryDateBefore = newValue }
+    public var deliveryDateEnd: Int64 {
+        get { return _deliveryDateEnd ?? 0 }
+        set { _deliveryDateEnd = newValue }
     }
 
-    /// Returns true if `deliveryDateBefore` has been explicitly set.
-    public var hasDeliveryDateBefore: Bool { return _deliveryDateBefore != nil }
-    /// Clears the value of `deliveryDateBefore`. Subsequent reads from it will return its default value.
-    public mutating func clearDeliveryDateBefore() { _deliveryDateBefore = nil }
+    /// Returns true if `deliveryDateEnd` has been explicitly set.
+    public var hasDeliveryDateEnd: Bool { return _deliveryDateEnd != nil }
+    /// Clears the value of `deliveryDateEnd`. Subsequent reads from it will return its default value.
+    public mutating func clearDeliveryDateEnd() { _deliveryDateEnd = nil }
 
+    /// Option
     public var maxCount: Int32 {
         get { return _maxCount ?? 0 }
         set { _maxCount = newValue }
@@ -79,7 +81,20 @@ public struct QueryMessagesRequest {
     /// Clears the value of `maxCount`. Subsequent reads from it will return its default value.
     public mutating func clearMaxCount() { _maxCount = nil }
 
+    /// Command
     public var withTotal: Bool = false
+
+    /// Option
+    /// TODO: reorder
+    public var descending: Bool {
+        get { return _descending ?? false }
+        set { _descending = newValue }
+    }
+
+    /// Returns true if `descending` has been explicitly set.
+    public var hasDescending: Bool { return _descending != nil }
+    /// Clears the value of `descending`. Subsequent reads from it will return its default value.
+    public mutating func clearDescending() { _descending = nil }
 
     public var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -87,9 +102,10 @@ public struct QueryMessagesRequest {
 
     fileprivate var _areGroupMessages: Bool?
     fileprivate var _areSystemMessages: Bool?
-    fileprivate var _deliveryDateAfter: Int64?
-    fileprivate var _deliveryDateBefore: Int64?
+    fileprivate var _deliveryDateStart: Int64?
+    fileprivate var _deliveryDateEnd: Int64?
     fileprivate var _maxCount: Int32?
+    fileprivate var _descending: Bool?
 }
 
 #if swift(>=5.5) && canImport(_Concurrency)
@@ -107,10 +123,11 @@ extension QueryMessagesRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
         2: .standard(proto: "are_group_messages"),
         3: .standard(proto: "are_system_messages"),
         4: .standard(proto: "from_ids"),
-        5: .standard(proto: "delivery_date_after"),
-        6: .standard(proto: "delivery_date_before"),
+        5: .standard(proto: "delivery_date_start"),
+        6: .standard(proto: "delivery_date_end"),
         7: .standard(proto: "max_count"),
         8: .standard(proto: "with_total"),
+        9: .same(proto: "descending"),
     ]
 
     public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -123,10 +140,11 @@ extension QueryMessagesRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
             case 2: try try decoder.decodeSingularBoolField(value: &_areGroupMessages)
             case 3: try try decoder.decodeSingularBoolField(value: &_areSystemMessages)
             case 4: try try decoder.decodeRepeatedInt64Field(value: &fromIds)
-            case 5: try try decoder.decodeSingularInt64Field(value: &_deliveryDateAfter)
-            case 6: try try decoder.decodeSingularInt64Field(value: &_deliveryDateBefore)
+            case 5: try try decoder.decodeSingularInt64Field(value: &_deliveryDateStart)
+            case 6: try try decoder.decodeSingularInt64Field(value: &_deliveryDateEnd)
             case 7: try try decoder.decodeSingularInt32Field(value: &_maxCount)
             case 8: try try decoder.decodeSingularBoolField(value: &withTotal)
+            case 9: try try decoder.decodeSingularBoolField(value: &_descending)
             default: break
             }
         }
@@ -149,10 +167,10 @@ extension QueryMessagesRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
         if !fromIds.isEmpty {
             try visitor.visitPackedInt64Field(value: fromIds, fieldNumber: 4)
         }
-        try { if let v = self._deliveryDateAfter {
+        try { if let v = self._deliveryDateStart {
             try visitor.visitSingularInt64Field(value: v, fieldNumber: 5)
         } }()
-        try { if let v = self._deliveryDateBefore {
+        try { if let v = self._deliveryDateEnd {
             try visitor.visitSingularInt64Field(value: v, fieldNumber: 6)
         } }()
         try { if let v = self._maxCount {
@@ -161,6 +179,9 @@ extension QueryMessagesRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
         if withTotal != false {
             try visitor.visitSingularBoolField(value: withTotal, fieldNumber: 8)
         }
+        try { if let v = self._descending {
+            try visitor.visitSingularBoolField(value: v, fieldNumber: 9)
+        } }()
         try unknownFields.traverse(visitor: &visitor)
     }
 
@@ -169,10 +190,11 @@ extension QueryMessagesRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
         if lhs._areGroupMessages != rhs._areGroupMessages { return false }
         if lhs._areSystemMessages != rhs._areSystemMessages { return false }
         if lhs.fromIds != rhs.fromIds { return false }
-        if lhs._deliveryDateAfter != rhs._deliveryDateAfter { return false }
-        if lhs._deliveryDateBefore != rhs._deliveryDateBefore { return false }
+        if lhs._deliveryDateStart != rhs._deliveryDateStart { return false }
+        if lhs._deliveryDateEnd != rhs._deliveryDateEnd { return false }
         if lhs._maxCount != rhs._maxCount { return false }
         if lhs.withTotal != rhs.withTotal { return false }
+        if lhs._descending != rhs._descending { return false }
         if lhs.unknownFields != rhs.unknownFields { return false }
         return true
     }

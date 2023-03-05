@@ -123,12 +123,7 @@ public enum DeviceType
 
     private static final com.google.protobuf.Internal.EnumLiteMap<
             DeviceType> internalValueMap =
-            new com.google.protobuf.Internal.EnumLiteMap<DeviceType>() {
-                @java.lang.Override
-                public DeviceType findValueByNumber(int number) {
-                    return DeviceType.forNumber(number);
-                }
-            };
+            number -> DeviceType.forNumber(number);
 
     public static com.google.protobuf.Internal.EnumVerifier
     internalGetVerifier() {
@@ -145,11 +140,9 @@ public enum DeviceType
         }
     }
 
-    ;
-
     private final int value;
 
-    private DeviceType(int value) {
+    DeviceType(int value) {
         this.value = value;
     }
 

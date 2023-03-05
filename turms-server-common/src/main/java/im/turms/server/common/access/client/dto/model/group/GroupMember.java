@@ -48,12 +48,6 @@ public final class GroupMember extends
         return new GroupMember();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-        return this.unknownFields;
-    }
-
     public static final com.google.protobuf.Descriptors.Descriptor
     getDescriptor() {
         return im.turms.server.common.access.client.dto.model.group.GroupMemberOuterClass.internal_static_im_turms_proto_GroupMember_descriptor;
@@ -69,7 +63,7 @@ public final class GroupMember extends
 
     private int bitField0_;
     public static final int GROUP_ID_FIELD_NUMBER = 1;
-    private long groupId_;
+    private long groupId_ = 0L;
 
     /**
      * <code>optional int64 group_id = 1;</code>
@@ -92,7 +86,7 @@ public final class GroupMember extends
     }
 
     public static final int USER_ID_FIELD_NUMBER = 2;
-    private long userId_;
+    private long userId_ = 0L;
 
     /**
      * <code>optional int64 user_id = 2;</code>
@@ -115,7 +109,8 @@ public final class GroupMember extends
     }
 
     public static final int NAME_FIELD_NUMBER = 3;
-    private volatile java.lang.Object name_;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object name_ = "";
 
     /**
      * <code>optional string name = 3;</code>
@@ -167,7 +162,7 @@ public final class GroupMember extends
     }
 
     public static final int ROLE_FIELD_NUMBER = 4;
-    private int role_;
+    private int role_ = 0;
 
     /**
      * <code>optional .im.turms.proto.GroupMemberRole role = 4;</code>
@@ -196,13 +191,12 @@ public final class GroupMember extends
      */
     @java.lang.Override
     public im.turms.server.common.access.client.dto.constant.GroupMemberRole getRole() {
-        @SuppressWarnings("deprecation")
-        im.turms.server.common.access.client.dto.constant.GroupMemberRole result = im.turms.server.common.access.client.dto.constant.GroupMemberRole.valueOf(role_);
+        im.turms.server.common.access.client.dto.constant.GroupMemberRole result = im.turms.server.common.access.client.dto.constant.GroupMemberRole.forNumber(role_);
         return result == null ? im.turms.server.common.access.client.dto.constant.GroupMemberRole.UNRECOGNIZED : result;
     }
 
     public static final int JOIN_DATE_FIELD_NUMBER = 5;
-    private long joinDate_;
+    private long joinDate_ = 0L;
 
     /**
      * <code>optional int64 join_date = 5;</code>
@@ -225,7 +219,7 @@ public final class GroupMember extends
     }
 
     public static final int MUTE_END_DATE_FIELD_NUMBER = 6;
-    private long muteEndDate_;
+    private long muteEndDate_ = 0L;
 
     /**
      * <code>optional int64 mute_end_date = 6;</code>
@@ -248,7 +242,7 @@ public final class GroupMember extends
     }
 
     public static final int USER_STATUS_FIELD_NUMBER = 7;
-    private int userStatus_;
+    private int userStatus_ = 0;
 
     /**
      * <code>optional .im.turms.proto.UserStatus user_status = 7;</code>
@@ -277,22 +271,18 @@ public final class GroupMember extends
      */
     @java.lang.Override
     public im.turms.server.common.access.client.dto.constant.UserStatus getUserStatus() {
-        @SuppressWarnings("deprecation")
-        im.turms.server.common.access.client.dto.constant.UserStatus result = im.turms.server.common.access.client.dto.constant.UserStatus.valueOf(userStatus_);
+        im.turms.server.common.access.client.dto.constant.UserStatus result = im.turms.server.common.access.client.dto.constant.UserStatus.forNumber(userStatus_);
         return result == null ? im.turms.server.common.access.client.dto.constant.UserStatus.UNRECOGNIZED : result;
     }
 
     public static final int USING_DEVICE_TYPES_FIELD_NUMBER = 8;
+    @SuppressWarnings("serial")
     private java.util.List<java.lang.Integer> usingDeviceTypes_;
     private static final com.google.protobuf.Internal.ListAdapter.Converter<
             java.lang.Integer, im.turms.server.common.access.client.dto.constant.DeviceType> usingDeviceTypes_converter_ =
-            new com.google.protobuf.Internal.ListAdapter.Converter<
-                    java.lang.Integer, im.turms.server.common.access.client.dto.constant.DeviceType>() {
-                public im.turms.server.common.access.client.dto.constant.DeviceType convert(java.lang.Integer from) {
-                    @SuppressWarnings("deprecation")
-                    im.turms.server.common.access.client.dto.constant.DeviceType result = im.turms.server.common.access.client.dto.constant.DeviceType.valueOf(from);
-                    return result == null ? im.turms.server.common.access.client.dto.constant.DeviceType.UNRECOGNIZED : result;
-                }
+            from -> {
+                im.turms.server.common.access.client.dto.constant.DeviceType result = im.turms.server.common.access.client.dto.constant.DeviceType.forNumber(from);
+                return result == null ? im.turms.server.common.access.client.dto.constant.DeviceType.UNRECOGNIZED : result;
             };
 
     /**
@@ -302,8 +292,7 @@ public final class GroupMember extends
      */
     @java.lang.Override
     public java.util.List<im.turms.server.common.access.client.dto.constant.DeviceType> getUsingDeviceTypesList() {
-        return new com.google.protobuf.Internal.ListAdapter<
-                java.lang.Integer, im.turms.server.common.access.client.dto.constant.DeviceType>(usingDeviceTypes_, usingDeviceTypes_converter_);
+        return new com.google.protobuf.Internal.ListAdapter<>(usingDeviceTypes_, usingDeviceTypes_converter_);
     }
 
     /**
@@ -396,8 +385,8 @@ public final class GroupMember extends
             output.writeUInt32NoTag(66);
             output.writeUInt32NoTag(usingDeviceTypesMemoizedSerializedSize);
         }
-        for (int i = 0; i < usingDeviceTypes_.size(); i++) {
-            output.writeEnumNoTag(usingDeviceTypes_.get(i));
+        for (Integer integer : usingDeviceTypes_) {
+            output.writeEnumNoTag(integer);
         }
         getUnknownFields().writeTo(output);
     }
@@ -439,9 +428,9 @@ public final class GroupMember extends
         }
         {
             int dataSize = 0;
-            for (int i = 0; i < usingDeviceTypes_.size(); i++) {
+            for (Integer integer : usingDeviceTypes_) {
                 dataSize += com.google.protobuf.CodedOutputStream
-                        .computeEnumSizeNoTag(usingDeviceTypes_.get(i));
+                        .computeEnumSizeNoTag(integer);
             }
             size += dataSize;
             if (!getUsingDeviceTypesList().isEmpty()) {
@@ -461,10 +450,9 @@ public final class GroupMember extends
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof im.turms.server.common.access.client.dto.model.group.GroupMember)) {
+        if (!(obj instanceof GroupMember other)) {
             return super.equals(obj);
         }
-        im.turms.server.common.access.client.dto.model.group.GroupMember other = (im.turms.server.common.access.client.dto.model.group.GroupMember) obj;
 
         if (hasGroupId() != other.hasGroupId()) {
             return false;
@@ -530,10 +518,7 @@ public final class GroupMember extends
         if (!usingDeviceTypes_.equals(other.usingDeviceTypes_)) {
             return false;
         }
-        if (!getUnknownFields().equals(other.getUnknownFields())) {
-            return false;
-        }
-        return true;
+        return getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -687,8 +672,7 @@ public final class GroupMember extends
     @java.lang.Override
     protected Builder newBuilderForType(
             com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
+        return new Builder(parent);
     }
 
     /**
@@ -725,22 +709,16 @@ public final class GroupMember extends
         @java.lang.Override
         public Builder clear() {
             super.clear();
+            bitField0_ = 0;
             groupId_ = 0L;
-            bitField0_ = (bitField0_ & ~0x00000001);
             userId_ = 0L;
-            bitField0_ = (bitField0_ & ~0x00000002);
             name_ = "";
-            bitField0_ = (bitField0_ & ~0x00000004);
             role_ = 0;
-            bitField0_ = (bitField0_ & ~0x00000008);
             joinDate_ = 0L;
-            bitField0_ = (bitField0_ & ~0x00000010);
             muteEndDate_ = 0L;
-            bitField0_ = (bitField0_ & ~0x00000020);
             userStatus_ = 0;
-            bitField0_ = (bitField0_ & ~0x00000040);
             usingDeviceTypes_ = java.util.Collections.emptyList();
-            bitField0_ = (bitField0_ & ~0x00000080);
+            bitField0_ &= ~0x00000080;
             return this;
         }
 
@@ -767,6 +745,23 @@ public final class GroupMember extends
         @java.lang.Override
         public im.turms.server.common.access.client.dto.model.group.GroupMember buildPartial() {
             im.turms.server.common.access.client.dto.model.group.GroupMember result = new im.turms.server.common.access.client.dto.model.group.GroupMember(this);
+            buildPartialRepeatedFields(result);
+            if (bitField0_ != 0) {
+                buildPartial0(result);
+            }
+            onBuilt();
+            return result;
+        }
+
+        private void buildPartialRepeatedFields(im.turms.server.common.access.client.dto.model.group.GroupMember result) {
+            if (((bitField0_ & 0x00000080) != 0)) {
+                usingDeviceTypes_ = java.util.Collections.unmodifiableList(usingDeviceTypes_);
+                bitField0_ &= ~0x00000080;
+            }
+            result.usingDeviceTypes_ = usingDeviceTypes_;
+        }
+
+        private void buildPartial0(im.turms.server.common.access.client.dto.model.group.GroupMember result) {
             int from_bitField0_ = bitField0_;
             int to_bitField0_ = 0;
             if (((from_bitField0_ & 0x00000001) != 0)) {
@@ -778,13 +773,13 @@ public final class GroupMember extends
                 to_bitField0_ |= 0x00000002;
             }
             if (((from_bitField0_ & 0x00000004) != 0)) {
+                result.name_ = name_;
                 to_bitField0_ |= 0x00000004;
             }
-            result.name_ = name_;
             if (((from_bitField0_ & 0x00000008) != 0)) {
+                result.role_ = role_;
                 to_bitField0_ |= 0x00000008;
             }
-            result.role_ = role_;
             if (((from_bitField0_ & 0x00000010) != 0)) {
                 result.joinDate_ = joinDate_;
                 to_bitField0_ |= 0x00000010;
@@ -794,55 +789,10 @@ public final class GroupMember extends
                 to_bitField0_ |= 0x00000020;
             }
             if (((from_bitField0_ & 0x00000040) != 0)) {
+                result.userStatus_ = userStatus_;
                 to_bitField0_ |= 0x00000040;
             }
-            result.userStatus_ = userStatus_;
-            if (((bitField0_ & 0x00000080) != 0)) {
-                usingDeviceTypes_ = java.util.Collections.unmodifiableList(usingDeviceTypes_);
-                bitField0_ = (bitField0_ & ~0x00000080);
-            }
-            result.usingDeviceTypes_ = usingDeviceTypes_;
-            result.bitField0_ = to_bitField0_;
-            onBuilt();
-            return result;
-        }
-
-        @java.lang.Override
-        public Builder clone() {
-            return super.clone();
-        }
-
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(
-                com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(
-                com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index, java.lang.Object value) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.addRepeatedField(field, value);
+            result.bitField0_ |= to_bitField0_;
         }
 
         @java.lang.Override
@@ -866,8 +816,8 @@ public final class GroupMember extends
                 setUserId(other.getUserId());
             }
             if (other.hasName()) {
-                bitField0_ |= 0x00000004;
                 name_ = other.name_;
+                bitField0_ |= 0x00000004;
                 onChanged();
             }
             if (other.hasRole()) {
@@ -885,7 +835,7 @@ public final class GroupMember extends
             if (!other.usingDeviceTypes_.isEmpty()) {
                 if (usingDeviceTypes_.isEmpty()) {
                     usingDeviceTypes_ = other.usingDeviceTypes_;
-                    bitField0_ = (bitField0_ & ~0x00000080);
+                    bitField0_ &= ~0x00000080;
                 } else {
                     ensureUsingDeviceTypesIsMutable();
                     usingDeviceTypes_.addAll(other.usingDeviceTypes_);
@@ -915,51 +865,41 @@ public final class GroupMember extends
                 while (!done) {
                     int tag = input.readTag();
                     switch (tag) {
-                        case 0:
-                            done = true;
-                            break;
-                        case 8: {
+                        case 0 -> done = true;
+                        case 8 -> {
                             groupId_ = input.readInt64();
                             bitField0_ |= 0x00000001;
-                            break;
                         } // case 8
-                        case 16: {
+                        case 16 -> {
                             userId_ = input.readInt64();
                             bitField0_ |= 0x00000002;
-                            break;
                         } // case 16
-                        case 26: {
+                        case 26 -> {
                             name_ = input.readStringRequireUtf8();
                             bitField0_ |= 0x00000004;
-                            break;
                         } // case 26
-                        case 32: {
+                        case 32 -> {
                             role_ = input.readEnum();
                             bitField0_ |= 0x00000008;
-                            break;
                         } // case 32
-                        case 40: {
+                        case 40 -> {
                             joinDate_ = input.readInt64();
                             bitField0_ |= 0x00000010;
-                            break;
                         } // case 40
-                        case 48: {
+                        case 48 -> {
                             muteEndDate_ = input.readInt64();
                             bitField0_ |= 0x00000020;
-                            break;
                         } // case 48
-                        case 56: {
+                        case 56 -> {
                             userStatus_ = input.readEnum();
                             bitField0_ |= 0x00000040;
-                            break;
                         } // case 56
-                        case 64: {
+                        case 64 -> {
                             int tmpRaw = input.readEnum();
                             ensureUsingDeviceTypesIsMutable();
                             usingDeviceTypes_.add(tmpRaw);
-                            break;
                         } // case 64
-                        case 66: {
+                        case 66 -> {
                             int length = input.readRawVarint32();
                             int oldLimit = input.pushLimit(length);
                             while (input.getBytesUntilLimit() > 0) {
@@ -968,13 +908,11 @@ public final class GroupMember extends
                                 usingDeviceTypes_.add(tmpRaw);
                             }
                             input.popLimit(oldLimit);
-                            break;
                         } // case 66
-                        default: {
+                        default -> {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
                             }
-                            break;
                         } // default:
                     } // switch (tag)
                 } // while (!done)
@@ -1017,8 +955,9 @@ public final class GroupMember extends
          * @return This builder for chaining.
          */
         public Builder setGroupId(long value) {
-            bitField0_ |= 0x00000001;
+
             groupId_ = value;
+            bitField0_ |= 0x00000001;
             onChanged();
             return this;
         }
@@ -1029,7 +968,7 @@ public final class GroupMember extends
          * @return This builder for chaining.
          */
         public Builder clearGroupId() {
-            bitField0_ = (bitField0_ & ~0x00000001);
+            bitField0_ &= ~0x00000001;
             groupId_ = 0L;
             onChanged();
             return this;
@@ -1064,8 +1003,9 @@ public final class GroupMember extends
          * @return This builder for chaining.
          */
         public Builder setUserId(long value) {
-            bitField0_ |= 0x00000002;
+
             userId_ = value;
+            bitField0_ |= 0x00000002;
             onChanged();
             return this;
         }
@@ -1076,7 +1016,7 @@ public final class GroupMember extends
          * @return This builder for chaining.
          */
         public Builder clearUserId() {
-            bitField0_ = (bitField0_ & ~0x00000002);
+            bitField0_ &= ~0x00000002;
             userId_ = 0L;
             onChanged();
             return this;
@@ -1141,8 +1081,8 @@ public final class GroupMember extends
             if (value == null) {
                 throw new NullPointerException();
             }
-            bitField0_ |= 0x00000004;
             name_ = value;
+            bitField0_ |= 0x00000004;
             onChanged();
             return this;
         }
@@ -1153,8 +1093,8 @@ public final class GroupMember extends
          * @return This builder for chaining.
          */
         public Builder clearName() {
-            bitField0_ = (bitField0_ & ~0x00000004);
             name_ = getDefaultInstance().getName();
+            bitField0_ &= ~0x00000004;
             onChanged();
             return this;
         }
@@ -1171,8 +1111,8 @@ public final class GroupMember extends
                 throw new NullPointerException();
             }
             checkByteStringIsUtf8(value);
-            bitField0_ |= 0x00000004;
             name_ = value;
+            bitField0_ |= 0x00000004;
             onChanged();
             return this;
         }
@@ -1206,8 +1146,8 @@ public final class GroupMember extends
          * @return This builder for chaining.
          */
         public Builder setRoleValue(int value) {
-            bitField0_ |= 0x00000008;
             role_ = value;
+            bitField0_ |= 0x00000008;
             onChanged();
             return this;
         }
@@ -1219,8 +1159,7 @@ public final class GroupMember extends
          */
         @java.lang.Override
         public im.turms.server.common.access.client.dto.constant.GroupMemberRole getRole() {
-            @SuppressWarnings("deprecation")
-            im.turms.server.common.access.client.dto.constant.GroupMemberRole result = im.turms.server.common.access.client.dto.constant.GroupMemberRole.valueOf(role_);
+            im.turms.server.common.access.client.dto.constant.GroupMemberRole result = im.turms.server.common.access.client.dto.constant.GroupMemberRole.forNumber(role_);
             return result == null ? im.turms.server.common.access.client.dto.constant.GroupMemberRole.UNRECOGNIZED : result;
         }
 
@@ -1246,7 +1185,7 @@ public final class GroupMember extends
          * @return This builder for chaining.
          */
         public Builder clearRole() {
-            bitField0_ = (bitField0_ & ~0x00000008);
+            bitField0_ &= ~0x00000008;
             role_ = 0;
             onChanged();
             return this;
@@ -1281,8 +1220,9 @@ public final class GroupMember extends
          * @return This builder for chaining.
          */
         public Builder setJoinDate(long value) {
-            bitField0_ |= 0x00000010;
+
             joinDate_ = value;
+            bitField0_ |= 0x00000010;
             onChanged();
             return this;
         }
@@ -1293,7 +1233,7 @@ public final class GroupMember extends
          * @return This builder for chaining.
          */
         public Builder clearJoinDate() {
-            bitField0_ = (bitField0_ & ~0x00000010);
+            bitField0_ &= ~0x00000010;
             joinDate_ = 0L;
             onChanged();
             return this;
@@ -1328,8 +1268,9 @@ public final class GroupMember extends
          * @return This builder for chaining.
          */
         public Builder setMuteEndDate(long value) {
-            bitField0_ |= 0x00000020;
+
             muteEndDate_ = value;
+            bitField0_ |= 0x00000020;
             onChanged();
             return this;
         }
@@ -1340,7 +1281,7 @@ public final class GroupMember extends
          * @return This builder for chaining.
          */
         public Builder clearMuteEndDate() {
-            bitField0_ = (bitField0_ & ~0x00000020);
+            bitField0_ &= ~0x00000020;
             muteEndDate_ = 0L;
             onChanged();
             return this;
@@ -1375,8 +1316,8 @@ public final class GroupMember extends
          * @return This builder for chaining.
          */
         public Builder setUserStatusValue(int value) {
-            bitField0_ |= 0x00000040;
             userStatus_ = value;
+            bitField0_ |= 0x00000040;
             onChanged();
             return this;
         }
@@ -1388,8 +1329,7 @@ public final class GroupMember extends
          */
         @java.lang.Override
         public im.turms.server.common.access.client.dto.constant.UserStatus getUserStatus() {
-            @SuppressWarnings("deprecation")
-            im.turms.server.common.access.client.dto.constant.UserStatus result = im.turms.server.common.access.client.dto.constant.UserStatus.valueOf(userStatus_);
+            im.turms.server.common.access.client.dto.constant.UserStatus result = im.turms.server.common.access.client.dto.constant.UserStatus.forNumber(userStatus_);
             return result == null ? im.turms.server.common.access.client.dto.constant.UserStatus.UNRECOGNIZED : result;
         }
 
@@ -1415,7 +1355,7 @@ public final class GroupMember extends
          * @return This builder for chaining.
          */
         public Builder clearUserStatus() {
-            bitField0_ = (bitField0_ & ~0x00000040);
+            bitField0_ &= ~0x00000040;
             userStatus_ = 0;
             onChanged();
             return this;
@@ -1425,8 +1365,8 @@ public final class GroupMember extends
                 java.util.Collections.emptyList();
 
         private void ensureUsingDeviceTypesIsMutable() {
-            if (!((bitField0_ & 0x00000080) != 0)) {
-                usingDeviceTypes_ = new java.util.ArrayList<java.lang.Integer>(usingDeviceTypes_);
+            if ((bitField0_ & 0x00000080) == 0) {
+                usingDeviceTypes_ = new java.util.ArrayList<>(usingDeviceTypes_);
                 bitField0_ |= 0x00000080;
             }
         }
@@ -1437,8 +1377,7 @@ public final class GroupMember extends
          * @return A list containing the usingDeviceTypes.
          */
         public java.util.List<im.turms.server.common.access.client.dto.constant.DeviceType> getUsingDeviceTypesList() {
-            return new com.google.protobuf.Internal.ListAdapter<
-                    java.lang.Integer, im.turms.server.common.access.client.dto.constant.DeviceType>(usingDeviceTypes_, usingDeviceTypes_converter_);
+            return new com.google.protobuf.Internal.ListAdapter<>(usingDeviceTypes_, usingDeviceTypes_converter_);
         }
 
         /**
@@ -1517,7 +1456,7 @@ public final class GroupMember extends
          */
         public Builder clearUsingDeviceTypes() {
             usingDeviceTypes_ = java.util.Collections.emptyList();
-            bitField0_ = (bitField0_ & ~0x00000080);
+            bitField0_ &= ~0x00000080;
             onChanged();
             return this;
         }
@@ -1614,7 +1553,7 @@ public final class GroupMember extends
     }
 
     private static final com.google.protobuf.Parser<GroupMember>
-            PARSER = new com.google.protobuf.AbstractParser<GroupMember>() {
+            PARSER = new com.google.protobuf.AbstractParser<>() {
         @java.lang.Override
         public GroupMember parsePartialFrom(
                 com.google.protobuf.CodedInputStream input,

@@ -10,12 +10,12 @@ import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
 
 @$core.Deprecated('Use queryGroupJoinQuestionsRequestDescriptor instead')
-const QueryGroupJoinQuestionsRequest$json = {
+const QueryGroupJoinQuestionsRequest$json = const {
   '1': 'QueryGroupJoinQuestionsRequest',
-  '2': [
-    {'1': 'group_id', '3': 1, '4': 1, '5': 3, '10': 'groupId'},
-    {'1': 'with_answers', '3': 2, '4': 1, '5': 8, '10': 'withAnswers'},
-    {
+  '2': const [
+    const {'1': 'group_id', '3': 1, '4': 1, '5': 3, '10': 'groupId'},
+    const {'1': 'with_answers', '3': 2, '4': 1, '5': 8, '10': 'withAnswers'},
+    const {
       '1': 'last_updated_date',
       '3': 3,
       '4': 1,
@@ -25,8 +25,8 @@ const QueryGroupJoinQuestionsRequest$json = {
       '17': true
     },
   ],
-  '8': [
-    {'1': '_last_updated_date'},
+  '8': const [
+    const {'1': '_last_updated_date'},
   ],
 };
 

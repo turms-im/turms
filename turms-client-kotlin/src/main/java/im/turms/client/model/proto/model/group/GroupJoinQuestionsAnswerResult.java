@@ -472,7 +472,7 @@ public final class GroupJoinQuestionsAnswerResult extends
                         parser = PARSER;
                         if (parser == null) {
                             parser =
-                                    new DefaultInstanceBasedParser<im.turms.client.model.proto.model.group.GroupJoinQuestionsAnswerResult>(
+                                    new DefaultInstanceBasedParser<>(
                                             DEFAULT_INSTANCE);
                             PARSER = parser;
                         }

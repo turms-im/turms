@@ -10,10 +10,10 @@ import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
 
 @$core.Deprecated('Use groupMembersWithVersionDescriptor instead')
-const GroupMembersWithVersion$json = {
+const GroupMembersWithVersion$json = const {
   '1': 'GroupMembersWithVersion',
-  '2': [
-    {
+  '2': const [
+    const {
       '1': 'group_members',
       '3': 1,
       '4': 3,
@@ -21,7 +21,7 @@ const GroupMembersWithVersion$json = {
       '6': '.im.turms.proto.GroupMember',
       '10': 'groupMembers'
     },
-    {
+    const {
       '1': 'last_updated_date',
       '3': 2,
       '4': 1,
@@ -31,8 +31,8 @@ const GroupMembersWithVersion$json = {
       '17': true
     },
   ],
-  '8': [
-    {'1': '_last_updated_date'},
+  '8': const [
+    const {'1': '_last_updated_date'},
   ],
 };
 

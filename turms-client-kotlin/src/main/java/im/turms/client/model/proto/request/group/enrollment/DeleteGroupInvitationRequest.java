@@ -236,7 +236,7 @@ public final class DeleteGroupInvitationRequest extends
                         parser = PARSER;
                         if (parser == null) {
                             parser =
-                                    new DefaultInstanceBasedParser<im.turms.client.model.proto.request.group.enrollment.DeleteGroupInvitationRequest>(
+                                    new DefaultInstanceBasedParser<>(
                                             DEFAULT_INSTANCE);
                             PARSER = parser;
                         }

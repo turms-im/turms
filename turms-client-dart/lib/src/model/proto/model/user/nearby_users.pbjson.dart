@@ -10,10 +10,10 @@ import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
 
 @$core.Deprecated('Use nearbyUsersDescriptor instead')
-const NearbyUsers$json = {
+const NearbyUsers$json = const {
   '1': 'NearbyUsers',
-  '2': [
-    {
+  '2': const [
+    const {
       '1': 'nearby_users',
       '3': 1,
       '4': 3,

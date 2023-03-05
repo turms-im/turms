@@ -121,7 +121,7 @@ public final class QueryResourceDownloadInfoRequest extends
      * <code>optional int64 id_num = 2;</code>
      */
     private void clearIdNum() {
-        bitField0_ = (bitField0_ & ~0x00000001);
+        bitField0_ &= ~0x00000001;
         idNum_ = 0L;
     }
 
@@ -175,7 +175,7 @@ public final class QueryResourceDownloadInfoRequest extends
      * <code>optional string id_str = 3;</code>
      */
     private void clearIdStr() {
-        bitField0_ = (bitField0_ & ~0x00000002);
+        bitField0_ &= ~0x00000002;
         idStr_ = getDefaultInstance().getIdStr();
     }
 
@@ -262,8 +262,10 @@ public final class QueryResourceDownloadInfoRequest extends
      */
     @java.lang.Override
 
-    public java.lang.String getExtraOrDefault(
+    public /* nullable */
+    java.lang.String getExtraOrDefault(
             java.lang.String key,
+            /* nullable */
             java.lang.String defaultValue) {
         java.lang.Class<?> keyClass = key.getClass();
         java.util.Map<java.lang.String, java.lang.String> map =
@@ -626,8 +628,10 @@ public final class QueryResourceDownloadInfoRequest extends
          */
         @java.lang.Override
 
-        public java.lang.String getExtraOrDefault(
+        public /* nullable */
+        java.lang.String getExtraOrDefault(
                 java.lang.String key,
+                /* nullable */
                 java.lang.String defaultValue) {
             java.lang.Class<?> keyClass = key.getClass();
             java.util.Map<java.lang.String, java.lang.String> map =
@@ -714,7 +718,7 @@ public final class QueryResourceDownloadInfoRequest extends
                         parser = PARSER;
                         if (parser == null) {
                             parser =
-                                    new DefaultInstanceBasedParser<im.turms.client.model.proto.request.storage.QueryResourceDownloadInfoRequest>(
+                                    new DefaultInstanceBasedParser<>(
                                             DEFAULT_INSTANCE);
                             PARSER = parser;
                         }

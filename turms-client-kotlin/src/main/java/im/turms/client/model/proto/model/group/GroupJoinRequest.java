@@ -70,7 +70,7 @@ public final class GroupJoinRequest extends
      * <code>optional int64 id = 1;</code>
      */
     private void clearId() {
-        bitField0_ = (bitField0_ & ~0x00000001);
+        bitField0_ &= ~0x00000001;
         id_ = 0L;
     }
 
@@ -111,7 +111,7 @@ public final class GroupJoinRequest extends
      * <code>optional int64 creation_date = 2;</code>
      */
     private void clearCreationDate() {
-        bitField0_ = (bitField0_ & ~0x00000002);
+        bitField0_ &= ~0x00000002;
         creationDate_ = 0L;
     }
 
@@ -165,7 +165,7 @@ public final class GroupJoinRequest extends
      * <code>optional string content = 3;</code>
      */
     private void clearContent() {
-        bitField0_ = (bitField0_ & ~0x00000004);
+        bitField0_ &= ~0x00000004;
         content_ = getDefaultInstance().getContent();
     }
 
@@ -239,7 +239,7 @@ public final class GroupJoinRequest extends
      * <code>optional .im.turms.proto.RequestStatus status = 4;</code>
      */
     private void clearStatus() {
-        bitField0_ = (bitField0_ & ~0x00000008);
+        bitField0_ &= ~0x00000008;
         status_ = 0;
     }
 
@@ -280,7 +280,7 @@ public final class GroupJoinRequest extends
      * <code>optional int64 expiration_date = 5;</code>
      */
     private void clearExpirationDate() {
-        bitField0_ = (bitField0_ & ~0x00000010);
+        bitField0_ &= ~0x00000010;
         expirationDate_ = 0L;
     }
 
@@ -321,7 +321,7 @@ public final class GroupJoinRequest extends
      * <code>optional int64 group_id = 6;</code>
      */
     private void clearGroupId() {
-        bitField0_ = (bitField0_ & ~0x00000020);
+        bitField0_ &= ~0x00000020;
         groupId_ = 0L;
     }
 
@@ -362,7 +362,7 @@ public final class GroupJoinRequest extends
      * <code>optional int64 requester_id = 7;</code>
      */
     private void clearRequesterId() {
-        bitField0_ = (bitField0_ & ~0x00000040);
+        bitField0_ &= ~0x00000040;
         requesterId_ = 0L;
     }
 
@@ -403,7 +403,7 @@ public final class GroupJoinRequest extends
      * <code>optional int64 responder_id = 8;</code>
      */
     private void clearResponderId() {
-        bitField0_ = (bitField0_ & ~0x00000080);
+        bitField0_ &= ~0x00000080;
         responderId_ = 0L;
     }
 
@@ -949,7 +949,7 @@ public final class GroupJoinRequest extends
                         parser = PARSER;
                         if (parser == null) {
                             parser =
-                                    new DefaultInstanceBasedParser<im.turms.client.model.proto.model.group.GroupJoinRequest>(
+                                    new DefaultInstanceBasedParser<>(
                                             DEFAULT_INSTANCE);
                             PARSER = parser;
                         }

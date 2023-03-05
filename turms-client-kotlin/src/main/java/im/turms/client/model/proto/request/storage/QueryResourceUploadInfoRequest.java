@@ -123,7 +123,7 @@ public final class QueryResourceUploadInfoRequest extends
      * <code>optional int64 id_num = 2;</code>
      */
     private void clearIdNum() {
-        bitField0_ = (bitField0_ & ~0x00000001);
+        bitField0_ &= ~0x00000001;
         idNum_ = 0L;
     }
 
@@ -177,7 +177,7 @@ public final class QueryResourceUploadInfoRequest extends
      * <code>optional string id_str = 3;</code>
      */
     private void clearIdStr() {
-        bitField0_ = (bitField0_ & ~0x00000002);
+        bitField0_ &= ~0x00000002;
         idStr_ = getDefaultInstance().getIdStr();
     }
 
@@ -243,7 +243,7 @@ public final class QueryResourceUploadInfoRequest extends
      * <code>optional string name = 4;</code>
      */
     private void clearName() {
-        bitField0_ = (bitField0_ & ~0x00000004);
+        bitField0_ &= ~0x00000004;
         name_ = getDefaultInstance().getName();
     }
 
@@ -309,7 +309,7 @@ public final class QueryResourceUploadInfoRequest extends
      * <code>optional string media_type = 5;</code>
      */
     private void clearMediaType() {
-        bitField0_ = (bitField0_ & ~0x00000008);
+        bitField0_ &= ~0x00000008;
         mediaType_ = getDefaultInstance().getMediaType();
     }
 
@@ -396,8 +396,10 @@ public final class QueryResourceUploadInfoRequest extends
      */
     @java.lang.Override
 
-    public java.lang.String getExtraOrDefault(
+    public /* nullable */
+    java.lang.String getExtraOrDefault(
             java.lang.String key,
+            /* nullable */
             java.lang.String defaultValue) {
         java.lang.Class<?> keyClass = key.getClass();
         java.util.Map<java.lang.String, java.lang.String> map =
@@ -896,8 +898,10 @@ public final class QueryResourceUploadInfoRequest extends
          */
         @java.lang.Override
 
-        public java.lang.String getExtraOrDefault(
+        public /* nullable */
+        java.lang.String getExtraOrDefault(
                 java.lang.String key,
+                /* nullable */
                 java.lang.String defaultValue) {
             java.lang.Class<?> keyClass = key.getClass();
             java.util.Map<java.lang.String, java.lang.String> map =
@@ -986,7 +990,7 @@ public final class QueryResourceUploadInfoRequest extends
                         parser = PARSER;
                         if (parser == null) {
                             parser =
-                                    new DefaultInstanceBasedParser<im.turms.client.model.proto.request.storage.QueryResourceUploadInfoRequest>(
+                                    new DefaultInstanceBasedParser<>(
                                             DEFAULT_INSTANCE);
                             PARSER = parser;
                         }

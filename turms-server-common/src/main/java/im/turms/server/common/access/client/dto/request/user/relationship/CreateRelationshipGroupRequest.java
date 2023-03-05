@@ -45,12 +45,6 @@ public final class CreateRelationshipGroupRequest extends
         return new CreateRelationshipGroupRequest();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-        return this.unknownFields;
-    }
-
     public static final com.google.protobuf.Descriptors.Descriptor
     getDescriptor() {
         return im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipGroupRequestOuterClass.internal_static_im_turms_proto_CreateRelationshipGroupRequest_descriptor;
@@ -61,12 +55,12 @@ public final class CreateRelationshipGroupRequest extends
     internalGetFieldAccessorTable() {
         return im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipGroupRequestOuterClass.internal_static_im_turms_proto_CreateRelationshipGroupRequest_fieldAccessorTable
                 .ensureFieldAccessorsInitialized(
-                        im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipGroupRequest.class,
-                        im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipGroupRequest.Builder.class);
+                        im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipGroupRequest.class, im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipGroupRequest.Builder.class);
     }
 
     public static final int NAME_FIELD_NUMBER = 1;
-    private volatile java.lang.Object name_;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object name_ = "";
 
     /**
      * <code>string name = 1;</code>
@@ -153,20 +147,15 @@ public final class CreateRelationshipGroupRequest extends
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipGroupRequest)) {
+        if (!(obj instanceof CreateRelationshipGroupRequest other)) {
             return super.equals(obj);
         }
-        im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipGroupRequest other =
-                (im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipGroupRequest) obj;
 
         if (!getName()
                 .equals(other.getName())) {
             return false;
         }
-        if (!getUnknownFields().equals(other.getUnknownFields())) {
-            return false;
-        }
-        return true;
+        return getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -286,8 +275,7 @@ public final class CreateRelationshipGroupRequest extends
     @java.lang.Override
     protected Builder newBuilderForType(
             com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
+        return new Builder(parent);
     }
 
     /**
@@ -307,8 +295,7 @@ public final class CreateRelationshipGroupRequest extends
         internalGetFieldAccessorTable() {
             return im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipGroupRequestOuterClass.internal_static_im_turms_proto_CreateRelationshipGroupRequest_fieldAccessorTable
                     .ensureFieldAccessorsInitialized(
-                            im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipGroupRequest.class,
-                            im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipGroupRequest.Builder.class);
+                            im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipGroupRequest.class, im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipGroupRequest.Builder.class);
         }
 
         // Construct using im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipGroupRequest.newBuilder()
@@ -325,8 +312,8 @@ public final class CreateRelationshipGroupRequest extends
         @java.lang.Override
         public Builder clear() {
             super.clear();
+            bitField0_ = 0;
             name_ = "";
-
             return this;
         }
 
@@ -352,49 +339,19 @@ public final class CreateRelationshipGroupRequest extends
 
         @java.lang.Override
         public im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipGroupRequest buildPartial() {
-            im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipGroupRequest result =
-                    new im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipGroupRequest(this);
-            result.name_ = name_;
+            im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipGroupRequest result = new im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipGroupRequest(this);
+            if (bitField0_ != 0) {
+                buildPartial0(result);
+            }
             onBuilt();
             return result;
         }
 
-        @java.lang.Override
-        public Builder clone() {
-            return super.clone();
-        }
-
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(
-                com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(
-                com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index, java.lang.Object value) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.addRepeatedField(field, value);
+        private void buildPartial0(im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipGroupRequest result) {
+            int from_bitField0_ = bitField0_;
+            if (((from_bitField0_ & 0x00000001) != 0)) {
+                result.name_ = name_;
+            }
         }
 
         @java.lang.Override
@@ -413,6 +370,7 @@ public final class CreateRelationshipGroupRequest extends
             }
             if (!other.getName().isEmpty()) {
                 name_ = other.name_;
+                bitField0_ |= 0x00000001;
                 onChanged();
             }
             this.mergeUnknownFields(other.getUnknownFields());
@@ -438,19 +396,15 @@ public final class CreateRelationshipGroupRequest extends
                 while (!done) {
                     int tag = input.readTag();
                     switch (tag) {
-                        case 0:
-                            done = true;
-                            break;
-                        case 10: {
+                        case 0 -> done = true;
+                        case 10 -> {
                             name_ = input.readStringRequireUtf8();
-
-                            break;
+                            bitField0_ |= 0x00000001;
                         } // case 10
-                        default: {
+                        default -> {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
                             }
-                            break;
                         } // default:
                     } // switch (tag)
                 } // while (!done)
@@ -461,6 +415,8 @@ public final class CreateRelationshipGroupRequest extends
             } // finally
             return this;
         }
+
+        private int bitField0_;
 
         private java.lang.Object name_ = "";
 
@@ -512,8 +468,8 @@ public final class CreateRelationshipGroupRequest extends
             if (value == null) {
                 throw new NullPointerException();
             }
-
             name_ = value;
+            bitField0_ |= 0x00000001;
             onChanged();
             return this;
         }
@@ -524,8 +480,8 @@ public final class CreateRelationshipGroupRequest extends
          * @return This builder for chaining.
          */
         public Builder clearName() {
-
             name_ = getDefaultInstance().getName();
+            bitField0_ &= ~0x00000001;
             onChanged();
             return this;
         }
@@ -542,8 +498,8 @@ public final class CreateRelationshipGroupRequest extends
                 throw new NullPointerException();
             }
             checkByteStringIsUtf8(value);
-
             name_ = value;
+            bitField0_ |= 0x00000001;
             onChanged();
             return this;
         }
@@ -576,7 +532,7 @@ public final class CreateRelationshipGroupRequest extends
     }
 
     private static final com.google.protobuf.Parser<CreateRelationshipGroupRequest>
-            PARSER = new com.google.protobuf.AbstractParser<CreateRelationshipGroupRequest>() {
+            PARSER = new com.google.protobuf.AbstractParser<>() {
         @java.lang.Override
         public CreateRelationshipGroupRequest parsePartialFrom(
                 com.google.protobuf.CodedInputStream input,

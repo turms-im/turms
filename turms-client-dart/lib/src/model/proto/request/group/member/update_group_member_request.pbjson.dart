@@ -10,13 +10,21 @@ import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
 
 @$core.Deprecated('Use updateGroupMemberRequestDescriptor instead')
-const UpdateGroupMemberRequest$json = {
+const UpdateGroupMemberRequest$json = const {
   '1': 'UpdateGroupMemberRequest',
-  '2': [
-    {'1': 'group_id', '3': 1, '4': 1, '5': 3, '10': 'groupId'},
-    {'1': 'member_id', '3': 2, '4': 1, '5': 3, '10': 'memberId'},
-    {'1': 'name', '3': 3, '4': 1, '5': 9, '9': 0, '10': 'name', '17': true},
-    {
+  '2': const [
+    const {'1': 'group_id', '3': 1, '4': 1, '5': 3, '10': 'groupId'},
+    const {'1': 'member_id', '3': 2, '4': 1, '5': 3, '10': 'memberId'},
+    const {
+      '1': 'name',
+      '3': 3,
+      '4': 1,
+      '5': 9,
+      '9': 0,
+      '10': 'name',
+      '17': true
+    },
+    const {
       '1': 'role',
       '3': 4,
       '4': 1,
@@ -26,7 +34,7 @@ const UpdateGroupMemberRequest$json = {
       '10': 'role',
       '17': true
     },
-    {
+    const {
       '1': 'mute_end_date',
       '3': 5,
       '4': 1,
@@ -36,10 +44,10 @@ const UpdateGroupMemberRequest$json = {
       '17': true
     },
   ],
-  '8': [
-    {'1': '_name'},
-    {'1': '_role'},
-    {'1': '_mute_end_date'},
+  '8': const [
+    const {'1': '_name'},
+    const {'1': '_role'},
+    const {'1': '_mute_end_date'},
   ],
 };
 

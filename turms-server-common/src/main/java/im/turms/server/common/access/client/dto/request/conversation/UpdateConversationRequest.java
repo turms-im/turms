@@ -44,12 +44,6 @@ public final class UpdateConversationRequest extends
         return new UpdateConversationRequest();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-        return this.unknownFields;
-    }
-
     public static final com.google.protobuf.Descriptors.Descriptor
     getDescriptor() {
         return im.turms.server.common.access.client.dto.request.conversation.UpdateConversationRequestOuterClass.internal_static_im_turms_proto_UpdateConversationRequest_descriptor;
@@ -60,13 +54,12 @@ public final class UpdateConversationRequest extends
     internalGetFieldAccessorTable() {
         return im.turms.server.common.access.client.dto.request.conversation.UpdateConversationRequestOuterClass.internal_static_im_turms_proto_UpdateConversationRequest_fieldAccessorTable
                 .ensureFieldAccessorsInitialized(
-                        im.turms.server.common.access.client.dto.request.conversation.UpdateConversationRequest.class,
-                        im.turms.server.common.access.client.dto.request.conversation.UpdateConversationRequest.Builder.class);
+                        im.turms.server.common.access.client.dto.request.conversation.UpdateConversationRequest.class, im.turms.server.common.access.client.dto.request.conversation.UpdateConversationRequest.Builder.class);
     }
 
     private int bitField0_;
     public static final int TARGET_ID_FIELD_NUMBER = 1;
-    private long targetId_;
+    private long targetId_ = 0L;
 
     /**
      * <pre>
@@ -97,7 +90,7 @@ public final class UpdateConversationRequest extends
     }
 
     public static final int GROUP_ID_FIELD_NUMBER = 2;
-    private long groupId_;
+    private long groupId_ = 0L;
 
     /**
      * <code>optional int64 group_id = 2;</code>
@@ -120,7 +113,7 @@ public final class UpdateConversationRequest extends
     }
 
     public static final int READ_DATE_FIELD_NUMBER = 3;
-    private long readDate_;
+    private long readDate_ = 0L;
 
     /**
      * <pre>
@@ -197,10 +190,9 @@ public final class UpdateConversationRequest extends
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof im.turms.server.common.access.client.dto.request.conversation.UpdateConversationRequest)) {
+        if (!(obj instanceof UpdateConversationRequest other)) {
             return super.equals(obj);
         }
-        im.turms.server.common.access.client.dto.request.conversation.UpdateConversationRequest other = (im.turms.server.common.access.client.dto.request.conversation.UpdateConversationRequest) obj;
 
         if (hasTargetId() != other.hasTargetId()) {
             return false;
@@ -224,10 +216,7 @@ public final class UpdateConversationRequest extends
             != other.getReadDate()) {
             return false;
         }
-        if (!getUnknownFields().equals(other.getUnknownFields())) {
-            return false;
-        }
-        return true;
+        return getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -358,8 +347,7 @@ public final class UpdateConversationRequest extends
     @java.lang.Override
     protected Builder newBuilderForType(
             com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
+        return new Builder(parent);
     }
 
     /**
@@ -379,8 +367,7 @@ public final class UpdateConversationRequest extends
         internalGetFieldAccessorTable() {
             return im.turms.server.common.access.client.dto.request.conversation.UpdateConversationRequestOuterClass.internal_static_im_turms_proto_UpdateConversationRequest_fieldAccessorTable
                     .ensureFieldAccessorsInitialized(
-                            im.turms.server.common.access.client.dto.request.conversation.UpdateConversationRequest.class,
-                            im.turms.server.common.access.client.dto.request.conversation.UpdateConversationRequest.Builder.class);
+                            im.turms.server.common.access.client.dto.request.conversation.UpdateConversationRequest.class, im.turms.server.common.access.client.dto.request.conversation.UpdateConversationRequest.Builder.class);
         }
 
         // Construct using im.turms.server.common.access.client.dto.request.conversation.UpdateConversationRequest.newBuilder()
@@ -397,12 +384,10 @@ public final class UpdateConversationRequest extends
         @java.lang.Override
         public Builder clear() {
             super.clear();
+            bitField0_ = 0;
             targetId_ = 0L;
-            bitField0_ = (bitField0_ & ~0x00000001);
             groupId_ = 0L;
-            bitField0_ = (bitField0_ & ~0x00000002);
             readDate_ = 0L;
-
             return this;
         }
 
@@ -428,8 +413,15 @@ public final class UpdateConversationRequest extends
 
         @java.lang.Override
         public im.turms.server.common.access.client.dto.request.conversation.UpdateConversationRequest buildPartial() {
-            im.turms.server.common.access.client.dto.request.conversation.UpdateConversationRequest result =
-                    new im.turms.server.common.access.client.dto.request.conversation.UpdateConversationRequest(this);
+            im.turms.server.common.access.client.dto.request.conversation.UpdateConversationRequest result = new im.turms.server.common.access.client.dto.request.conversation.UpdateConversationRequest(this);
+            if (bitField0_ != 0) {
+                buildPartial0(result);
+            }
+            onBuilt();
+            return result;
+        }
+
+        private void buildPartial0(im.turms.server.common.access.client.dto.request.conversation.UpdateConversationRequest result) {
             int from_bitField0_ = bitField0_;
             int to_bitField0_ = 0;
             if (((from_bitField0_ & 0x00000001) != 0)) {
@@ -440,48 +432,10 @@ public final class UpdateConversationRequest extends
                 result.groupId_ = groupId_;
                 to_bitField0_ |= 0x00000002;
             }
-            result.readDate_ = readDate_;
-            result.bitField0_ = to_bitField0_;
-            onBuilt();
-            return result;
-        }
-
-        @java.lang.Override
-        public Builder clone() {
-            return super.clone();
-        }
-
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(
-                com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(
-                com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index, java.lang.Object value) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.addRepeatedField(field, value);
+            if (((from_bitField0_ & 0x00000004) != 0)) {
+                result.readDate_ = readDate_;
+            }
+            result.bitField0_ |= to_bitField0_;
         }
 
         @java.lang.Override
@@ -530,29 +484,23 @@ public final class UpdateConversationRequest extends
                 while (!done) {
                     int tag = input.readTag();
                     switch (tag) {
-                        case 0:
-                            done = true;
-                            break;
-                        case 8: {
+                        case 0 -> done = true;
+                        case 8 -> {
                             targetId_ = input.readInt64();
                             bitField0_ |= 0x00000001;
-                            break;
                         } // case 8
-                        case 16: {
+                        case 16 -> {
                             groupId_ = input.readInt64();
                             bitField0_ |= 0x00000002;
-                            break;
                         } // case 16
-                        case 24: {
+                        case 24 -> {
                             readDate_ = input.readInt64();
-
-                            break;
+                            bitField0_ |= 0x00000004;
                         } // case 24
-                        default: {
+                        default -> {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
                             }
-                            break;
                         } // default:
                     } // switch (tag)
                 } // while (!done)
@@ -607,8 +555,9 @@ public final class UpdateConversationRequest extends
          * @return This builder for chaining.
          */
         public Builder setTargetId(long value) {
-            bitField0_ |= 0x00000001;
+
             targetId_ = value;
+            bitField0_ |= 0x00000001;
             onChanged();
             return this;
         }
@@ -623,7 +572,7 @@ public final class UpdateConversationRequest extends
          * @return This builder for chaining.
          */
         public Builder clearTargetId() {
-            bitField0_ = (bitField0_ & ~0x00000001);
+            bitField0_ &= ~0x00000001;
             targetId_ = 0L;
             onChanged();
             return this;
@@ -658,8 +607,9 @@ public final class UpdateConversationRequest extends
          * @return This builder for chaining.
          */
         public Builder setGroupId(long value) {
-            bitField0_ |= 0x00000002;
+
             groupId_ = value;
+            bitField0_ |= 0x00000002;
             onChanged();
             return this;
         }
@@ -670,7 +620,7 @@ public final class UpdateConversationRequest extends
          * @return This builder for chaining.
          */
         public Builder clearGroupId() {
-            bitField0_ = (bitField0_ & ~0x00000002);
+            bitField0_ &= ~0x00000002;
             groupId_ = 0L;
             onChanged();
             return this;
@@ -705,6 +655,7 @@ public final class UpdateConversationRequest extends
         public Builder setReadDate(long value) {
 
             readDate_ = value;
+            bitField0_ |= 0x00000004;
             onChanged();
             return this;
         }
@@ -719,7 +670,7 @@ public final class UpdateConversationRequest extends
          * @return This builder for chaining.
          */
         public Builder clearReadDate() {
-
+            bitField0_ &= ~0x00000004;
             readDate_ = 0L;
             onChanged();
             return this;
@@ -753,7 +704,7 @@ public final class UpdateConversationRequest extends
     }
 
     private static final com.google.protobuf.Parser<UpdateConversationRequest>
-            PARSER = new com.google.protobuf.AbstractParser<UpdateConversationRequest>() {
+            PARSER = new com.google.protobuf.AbstractParser<>() {
         @java.lang.Override
         public UpdateConversationRequest parsePartialFrom(
                 com.google.protobuf.CodedInputStream input,

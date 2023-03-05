@@ -10,10 +10,10 @@ import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
 
 @$core.Deprecated('Use audioFileDescriptor instead')
-const AudioFile$json = {
+const AudioFile$json = const {
   '1': 'AudioFile',
-  '2': [
-    {
+  '2': const [
+    const {
       '1': 'description',
       '3': 1,
       '4': 1,
@@ -23,21 +23,29 @@ const AudioFile$json = {
       '10': 'description',
       '17': true
     },
-    {'1': 'data', '3': 2, '4': 1, '5': 12, '9': 1, '10': 'data', '17': true},
+    const {
+      '1': 'data',
+      '3': 2,
+      '4': 1,
+      '5': 12,
+      '9': 1,
+      '10': 'data',
+      '17': true
+    },
   ],
-  '3': [AudioFile_Description$json],
-  '8': [
-    {'1': '_description'},
-    {'1': '_data'},
+  '3': const [AudioFile_Description$json],
+  '8': const [
+    const {'1': '_description'},
+    const {'1': '_data'},
   ],
 };
 
 @$core.Deprecated('Use audioFileDescriptor instead')
-const AudioFile_Description$json = {
+const AudioFile_Description$json = const {
   '1': 'Description',
-  '2': [
-    {'1': 'url', '3': 1, '4': 1, '5': 9, '10': 'url'},
-    {
+  '2': const [
+    const {'1': 'url', '3': 1, '4': 1, '5': 9, '10': 'url'},
+    const {
       '1': 'duration',
       '3': 2,
       '4': 1,
@@ -46,13 +54,29 @@ const AudioFile_Description$json = {
       '10': 'duration',
       '17': true
     },
-    {'1': 'size', '3': 3, '4': 1, '5': 5, '9': 1, '10': 'size', '17': true},
-    {'1': 'format', '3': 4, '4': 1, '5': 9, '9': 2, '10': 'format', '17': true},
+    const {
+      '1': 'size',
+      '3': 3,
+      '4': 1,
+      '5': 5,
+      '9': 1,
+      '10': 'size',
+      '17': true
+    },
+    const {
+      '1': 'format',
+      '3': 4,
+      '4': 1,
+      '5': 9,
+      '9': 2,
+      '10': 'format',
+      '17': true
+    },
   ],
-  '8': [
-    {'1': '_duration'},
-    {'1': '_size'},
-    {'1': '_format'},
+  '8': const [
+    const {'1': '_duration'},
+    const {'1': '_size'},
+    const {'1': '_format'},
   ],
 };
 

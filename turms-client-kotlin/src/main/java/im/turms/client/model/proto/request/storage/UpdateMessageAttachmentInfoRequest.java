@@ -86,7 +86,7 @@ public final class UpdateMessageAttachmentInfoRequest extends
      * <code>optional int64 attachment_id_num = 1;</code>
      */
     private void clearAttachmentIdNum() {
-        bitField0_ = (bitField0_ & ~0x00000001);
+        bitField0_ &= ~0x00000001;
         attachmentIdNum_ = 0L;
     }
 
@@ -140,7 +140,7 @@ public final class UpdateMessageAttachmentInfoRequest extends
      * <code>optional string attachment_id_str = 2;</code>
      */
     private void clearAttachmentIdStr() {
-        bitField0_ = (bitField0_ & ~0x00000002);
+        bitField0_ &= ~0x00000002;
         attachmentIdStr_ = getDefaultInstance().getAttachmentIdStr();
     }
 
@@ -209,7 +209,7 @@ public final class UpdateMessageAttachmentInfoRequest extends
      * <code>optional int64 user_id_to_share_with = 3;</code>
      */
     private void clearUserIdToShareWith() {
-        bitField0_ = (bitField0_ & ~0x00000004);
+        bitField0_ &= ~0x00000004;
         userIdToShareWith_ = 0L;
     }
 
@@ -250,7 +250,7 @@ public final class UpdateMessageAttachmentInfoRequest extends
      * <code>optional int64 user_id_to_unshare_with = 4;</code>
      */
     private void clearUserIdToUnshareWith() {
-        bitField0_ = (bitField0_ & ~0x00000008);
+        bitField0_ &= ~0x00000008;
         userIdToUnshareWith_ = 0L;
     }
 
@@ -291,7 +291,7 @@ public final class UpdateMessageAttachmentInfoRequest extends
      * <code>optional int64 group_id_to_share_with = 5;</code>
      */
     private void clearGroupIdToShareWith() {
-        bitField0_ = (bitField0_ & ~0x00000010);
+        bitField0_ &= ~0x00000010;
         groupIdToShareWith_ = 0L;
     }
 
@@ -332,7 +332,7 @@ public final class UpdateMessageAttachmentInfoRequest extends
      * <code>optional int64 group_id_to_unshare_with = 6;</code>
      */
     private void clearGroupIdToUnshareWith() {
-        bitField0_ = (bitField0_ & ~0x00000020);
+        bitField0_ &= ~0x00000020;
         groupIdToUnshareWith_ = 0L;
     }
 
@@ -800,7 +800,7 @@ public final class UpdateMessageAttachmentInfoRequest extends
                         parser = PARSER;
                         if (parser == null) {
                             parser =
-                                    new DefaultInstanceBasedParser<im.turms.client.model.proto.request.storage.UpdateMessageAttachmentInfoRequest>(
+                                    new DefaultInstanceBasedParser<>(
                                             DEFAULT_INSTANCE);
                             PARSER = parser;
                         }

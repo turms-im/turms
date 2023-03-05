@@ -10,10 +10,10 @@ import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
 
 @$core.Deprecated('Use userRelationshipDescriptor instead')
-const UserRelationship$json = {
+const UserRelationship$json = const {
   '1': 'UserRelationship',
-  '2': [
-    {
+  '2': const [
+    const {
       '1': 'owner_id',
       '3': 1,
       '4': 1,
@@ -22,7 +22,7 @@ const UserRelationship$json = {
       '10': 'ownerId',
       '17': true
     },
-    {
+    const {
       '1': 'related_user_id',
       '3': 2,
       '4': 1,
@@ -31,7 +31,7 @@ const UserRelationship$json = {
       '10': 'relatedUserId',
       '17': true
     },
-    {
+    const {
       '1': 'block_date',
       '3': 3,
       '4': 1,
@@ -40,7 +40,7 @@ const UserRelationship$json = {
       '10': 'blockDate',
       '17': true
     },
-    {
+    const {
       '1': 'group_index',
       '3': 4,
       '4': 1,
@@ -49,7 +49,7 @@ const UserRelationship$json = {
       '10': 'groupIndex',
       '17': true
     },
-    {
+    const {
       '1': 'establishment_date',
       '3': 5,
       '4': 1,
@@ -59,12 +59,12 @@ const UserRelationship$json = {
       '17': true
     },
   ],
-  '8': [
-    {'1': '_owner_id'},
-    {'1': '_related_user_id'},
-    {'1': '_block_date'},
-    {'1': '_group_index'},
-    {'1': '_establishment_date'},
+  '8': const [
+    const {'1': '_owner_id'},
+    const {'1': '_related_user_id'},
+    const {'1': '_block_date'},
+    const {'1': '_group_index'},
+    const {'1': '_establishment_date'},
   ],
 };
 

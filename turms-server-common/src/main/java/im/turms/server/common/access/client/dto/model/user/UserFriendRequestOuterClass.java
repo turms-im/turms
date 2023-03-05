@@ -75,8 +75,7 @@ public final class UserFriendRequestOuterClass {
         internal_static_im_turms_proto_UserFriendRequest_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
                 internal_static_im_turms_proto_UserFriendRequest_descriptor,
-                new java.lang.String[]{"Id", "CreationDate", "Content", "RequestStatus", "Reason", "ExpirationDate", "RequesterId", "RecipientId", "Id", "CreationDate", "Content", "RequestStatus",
-                        "Reason", "ExpirationDate", "RequesterId", "RecipientId",});
+                new java.lang.String[]{"Id", "CreationDate", "Content", "RequestStatus", "Reason", "ExpirationDate", "RequesterId", "RecipientId", "Id", "CreationDate", "Content", "RequestStatus", "Reason", "ExpirationDate", "RequesterId", "RecipientId",});
         im.turms.server.common.access.client.dto.constant.RequestStatusOuterClass.getDescriptor();
     }
 

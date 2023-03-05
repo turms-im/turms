@@ -10,10 +10,10 @@ import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
 
 @$core.Deprecated('Use messagesDescriptor instead')
-const Messages$json = {
+const Messages$json = const {
   '1': 'Messages',
-  '2': [
-    {
+  '2': const [
+    const {
       '1': 'messages',
       '3': 1,
       '4': 3,

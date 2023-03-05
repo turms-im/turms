@@ -12,18 +12,18 @@ import 'package:protobuf/protobuf.dart' as $pb;
 class StorageResourceType extends $pb.ProtobufEnum {
   static const StorageResourceType USER_PROFILE_PICTURE = StorageResourceType._(
       0,
-      $core.bool.fromEnvironment('protobuf.omit_enum_names')
+      const $core.bool.fromEnvironment('protobuf.omit_enum_names')
           ? ''
           : 'USER_PROFILE_PICTURE');
   static const StorageResourceType GROUP_PROFILE_PICTURE =
       StorageResourceType._(
           1,
-          $core.bool.fromEnvironment('protobuf.omit_enum_names')
+          const $core.bool.fromEnvironment('protobuf.omit_enum_names')
               ? ''
               : 'GROUP_PROFILE_PICTURE');
   static const StorageResourceType MESSAGE_ATTACHMENT = StorageResourceType._(
       2,
-      $core.bool.fromEnvironment('protobuf.omit_enum_names')
+      const $core.bool.fromEnvironment('protobuf.omit_enum_names')
           ? ''
           : 'MESSAGE_ATTACHMENT');
 

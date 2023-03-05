@@ -10,16 +10,16 @@ import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
 
 @$core.Deprecated('Use requestStatusDescriptor instead')
-const RequestStatus$json = {
+const RequestStatus$json = const {
   '1': 'RequestStatus',
-  '2': [
-    {'1': 'PENDING', '2': 0},
-    {'1': 'ACCEPTED', '2': 1},
-    {'1': 'ACCEPTED_WITHOUT_CONFIRM', '2': 2},
-    {'1': 'DECLINED', '2': 3},
-    {'1': 'IGNORED', '2': 4},
-    {'1': 'EXPIRED', '2': 5},
-    {'1': 'CANCELED', '2': 6},
+  '2': const [
+    const {'1': 'PENDING', '2': 0},
+    const {'1': 'ACCEPTED', '2': 1},
+    const {'1': 'ACCEPTED_WITHOUT_CONFIRM', '2': 2},
+    const {'1': 'DECLINED', '2': 3},
+    const {'1': 'IGNORED', '2': 4},
+    const {'1': 'EXPIRED', '2': 5},
+    const {'1': 'CANCELED', '2': 6},
   ],
 };
 

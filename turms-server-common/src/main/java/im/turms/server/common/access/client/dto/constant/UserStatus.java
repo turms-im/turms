@@ -109,24 +109,16 @@ public enum UserStatus
      * @return The enum associated with the given numeric wire value.
      */
     public static UserStatus forNumber(int value) {
-        switch (value) {
-            case 0:
-                return AVAILABLE;
-            case 1:
-                return OFFLINE;
-            case 2:
-                return INVISIBLE;
-            case 3:
-                return BUSY;
-            case 4:
-                return DO_NOT_DISTURB;
-            case 5:
-                return AWAY;
-            case 6:
-                return BE_RIGHT_BACK;
-            default:
-                return null;
-        }
+        return switch (value) {
+            case 0 -> AVAILABLE;
+            case 1 -> OFFLINE;
+            case 2 -> INVISIBLE;
+            case 3 -> BUSY;
+            case 4 -> DO_NOT_DISTURB;
+            case 5 -> AWAY;
+            case 6 -> BE_RIGHT_BACK;
+            default -> null;
+        };
     }
 
     public static com.google.protobuf.Internal.EnumLiteMap<UserStatus>
@@ -136,11 +128,7 @@ public enum UserStatus
 
     private static final com.google.protobuf.Internal.EnumLiteMap<
             UserStatus> internalValueMap =
-            new com.google.protobuf.Internal.EnumLiteMap<UserStatus>() {
-                public UserStatus findValueByNumber(int number) {
-                    return UserStatus.forNumber(number);
-                }
-            };
+            number -> UserStatus.forNumber(number);
 
     public final com.google.protobuf.Descriptors.EnumValueDescriptor
     getValueDescriptor() {
@@ -177,7 +165,7 @@ public enum UserStatus
 
     private final int value;
 
-    private UserStatus(int value) {
+    UserStatus(int value) {
         this.value = value;
     }
 

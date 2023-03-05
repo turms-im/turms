@@ -102,8 +102,10 @@ public final class CheckGroupJoinQuestionsAnswersRequest extends
      */
     @java.lang.Override
 
-    public java.lang.String getQuestionIdToAnswerOrDefault(
+    public /* nullable */
+    java.lang.String getQuestionIdToAnswerOrDefault(
             long key,
+            /* nullable */
             java.lang.String defaultValue) {
 
         java.util.Map<java.lang.Long, java.lang.String> map =
@@ -300,8 +302,10 @@ public final class CheckGroupJoinQuestionsAnswersRequest extends
          */
         @java.lang.Override
 
-        public java.lang.String getQuestionIdToAnswerOrDefault(
+        public /* nullable */
+        java.lang.String getQuestionIdToAnswerOrDefault(
                 long key,
+                /* nullable */
                 java.lang.String defaultValue) {
 
             java.util.Map<java.lang.Long, java.lang.String> map =
@@ -383,7 +387,7 @@ public final class CheckGroupJoinQuestionsAnswersRequest extends
                         parser = PARSER;
                         if (parser == null) {
                             parser =
-                                    new DefaultInstanceBasedParser<im.turms.client.model.proto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequest>(
+                                    new DefaultInstanceBasedParser<>(
                                             DEFAULT_INSTANCE);
                             PARSER = parser;
                         }

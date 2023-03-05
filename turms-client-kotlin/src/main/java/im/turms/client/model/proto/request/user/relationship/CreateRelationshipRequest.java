@@ -131,7 +131,7 @@ public final class CreateRelationshipRequest extends
      * <code>optional int32 group_index = 3;</code>
      */
     private void clearGroupIndex() {
-        bitField0_ = (bitField0_ & ~0x00000001);
+        bitField0_ &= ~0x00000001;
         groupIndex_ = 0;
     }
 
@@ -389,7 +389,7 @@ public final class CreateRelationshipRequest extends
                         parser = PARSER;
                         if (parser == null) {
                             parser =
-                                    new DefaultInstanceBasedParser<im.turms.client.model.proto.request.user.relationship.CreateRelationshipRequest>(
+                                    new DefaultInstanceBasedParser<>(
                                             DEFAULT_INSTANCE);
                             PARSER = parser;
                         }

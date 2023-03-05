@@ -46,12 +46,6 @@ public final class QueryResourceDownloadInfoRequest extends
         return new QueryResourceDownloadInfoRequest();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-        return this.unknownFields;
-    }
-
     public static final com.google.protobuf.Descriptors.Descriptor
     getDescriptor() {
         return im.turms.server.common.access.client.dto.request.storage.QueryResourceDownloadInfoRequestOuterClass.internal_static_im_turms_proto_QueryResourceDownloadInfoRequest_descriptor;
@@ -61,13 +55,11 @@ public final class QueryResourceDownloadInfoRequest extends
     @java.lang.Override
     protected com.google.protobuf.MapField internalGetMapField(
             int number) {
-        switch (number) {
-            case 4:
-                return internalGetExtra();
-            default:
-                throw new RuntimeException(
-                        "Invalid map field number: " + number);
-        }
+        return switch (number) {
+            case 4 -> internalGetExtra();
+            default -> throw new RuntimeException(
+                    "Invalid map field number: " + number);
+        };
     }
 
     @java.lang.Override
@@ -75,13 +67,12 @@ public final class QueryResourceDownloadInfoRequest extends
     internalGetFieldAccessorTable() {
         return im.turms.server.common.access.client.dto.request.storage.QueryResourceDownloadInfoRequestOuterClass.internal_static_im_turms_proto_QueryResourceDownloadInfoRequest_fieldAccessorTable
                 .ensureFieldAccessorsInitialized(
-                        im.turms.server.common.access.client.dto.request.storage.QueryResourceDownloadInfoRequest.class,
-                        im.turms.server.common.access.client.dto.request.storage.QueryResourceDownloadInfoRequest.Builder.class);
+                        im.turms.server.common.access.client.dto.request.storage.QueryResourceDownloadInfoRequest.class, im.turms.server.common.access.client.dto.request.storage.QueryResourceDownloadInfoRequest.Builder.class);
     }
 
     private int bitField0_;
     public static final int TYPE_FIELD_NUMBER = 1;
-    private int type_;
+    private int type_ = 0;
 
     /**
      * <code>.im.turms.proto.StorageResourceType type = 1;</code>
@@ -100,13 +91,12 @@ public final class QueryResourceDownloadInfoRequest extends
      */
     @java.lang.Override
     public im.turms.server.common.access.client.dto.constant.StorageResourceType getType() {
-        @SuppressWarnings("deprecation")
-        im.turms.server.common.access.client.dto.constant.StorageResourceType result = im.turms.server.common.access.client.dto.constant.StorageResourceType.valueOf(type_);
+        im.turms.server.common.access.client.dto.constant.StorageResourceType result = im.turms.server.common.access.client.dto.constant.StorageResourceType.forNumber(type_);
         return result == null ? im.turms.server.common.access.client.dto.constant.StorageResourceType.UNRECOGNIZED : result;
     }
 
     public static final int ID_NUM_FIELD_NUMBER = 2;
-    private long idNum_;
+    private long idNum_ = 0L;
 
     /**
      * <code>optional int64 id_num = 2;</code>
@@ -129,7 +119,8 @@ public final class QueryResourceDownloadInfoRequest extends
     }
 
     public static final int ID_STR_FIELD_NUMBER = 3;
-    private volatile java.lang.Object idStr_;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object idStr_ = "";
 
     /**
      * <code>optional string id_str = 3;</code>
@@ -194,6 +185,7 @@ public final class QueryResourceDownloadInfoRequest extends
                                 "");
     }
 
+    @SuppressWarnings("serial")
     private com.google.protobuf.MapField<
             java.lang.String, java.lang.String> extra_;
 
@@ -213,7 +205,6 @@ public final class QueryResourceDownloadInfoRequest extends
     /**
      * <code>map&lt;string, string&gt; extra = 4;</code>
      */
-
     @java.lang.Override
     public boolean containsExtra(
             java.lang.String key) {
@@ -236,7 +227,6 @@ public final class QueryResourceDownloadInfoRequest extends
      * <code>map&lt;string, string&gt; extra = 4;</code>
      */
     @java.lang.Override
-
     public java.util.Map<java.lang.String, java.lang.String> getExtraMap() {
         return internalGetExtra().getMap();
     }
@@ -245,23 +235,23 @@ public final class QueryResourceDownloadInfoRequest extends
      * <code>map&lt;string, string&gt; extra = 4;</code>
      */
     @java.lang.Override
-
-    public java.lang.String getExtraOrDefault(
+    public /* nullable */
+    java.lang.String getExtraOrDefault(
             java.lang.String key,
+            /* nullable */
             java.lang.String defaultValue) {
         if (key == null) {
             throw new NullPointerException("map key");
         }
         java.util.Map<java.lang.String, java.lang.String> map =
                 internalGetExtra().getMap();
-        return map.containsKey(key) ? map.get(key) : defaultValue;
+        return map.getOrDefault(key, defaultValue);
     }
 
     /**
      * <code>map&lt;string, string&gt; extra = 4;</code>
      */
     @java.lang.Override
-
     public java.lang.String getExtraOrThrow(
             java.lang.String key) {
         if (key == null) {
@@ -351,11 +341,9 @@ public final class QueryResourceDownloadInfoRequest extends
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof im.turms.server.common.access.client.dto.request.storage.QueryResourceDownloadInfoRequest)) {
+        if (!(obj instanceof QueryResourceDownloadInfoRequest other)) {
             return super.equals(obj);
         }
-        im.turms.server.common.access.client.dto.request.storage.QueryResourceDownloadInfoRequest other =
-                (im.turms.server.common.access.client.dto.request.storage.QueryResourceDownloadInfoRequest) obj;
 
         if (type_ != other.type_) {
             return false;
@@ -382,10 +370,7 @@ public final class QueryResourceDownloadInfoRequest extends
                 other.internalGetExtra())) {
             return false;
         }
-        if (!getUnknownFields().equals(other.getUnknownFields())) {
-            return false;
-        }
-        return true;
+        return getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -518,8 +503,7 @@ public final class QueryResourceDownloadInfoRequest extends
     @java.lang.Override
     protected Builder newBuilderForType(
             com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
+        return new Builder(parent);
     }
 
     /**
@@ -537,25 +521,21 @@ public final class QueryResourceDownloadInfoRequest extends
         @SuppressWarnings({"rawtypes"})
         protected com.google.protobuf.MapField internalGetMapField(
                 int number) {
-            switch (number) {
-                case 4:
-                    return internalGetExtra();
-                default:
-                    throw new RuntimeException(
-                            "Invalid map field number: " + number);
-            }
+            return switch (number) {
+                case 4 -> internalGetExtra();
+                default -> throw new RuntimeException(
+                        "Invalid map field number: " + number);
+            };
         }
 
         @SuppressWarnings({"rawtypes"})
         protected com.google.protobuf.MapField internalGetMutableMapField(
                 int number) {
-            switch (number) {
-                case 4:
-                    return internalGetMutableExtra();
-                default:
-                    throw new RuntimeException(
-                            "Invalid map field number: " + number);
-            }
+            return switch (number) {
+                case 4 -> internalGetMutableExtra();
+                default -> throw new RuntimeException(
+                        "Invalid map field number: " + number);
+            };
         }
 
         @java.lang.Override
@@ -563,8 +543,7 @@ public final class QueryResourceDownloadInfoRequest extends
         internalGetFieldAccessorTable() {
             return im.turms.server.common.access.client.dto.request.storage.QueryResourceDownloadInfoRequestOuterClass.internal_static_im_turms_proto_QueryResourceDownloadInfoRequest_fieldAccessorTable
                     .ensureFieldAccessorsInitialized(
-                            im.turms.server.common.access.client.dto.request.storage.QueryResourceDownloadInfoRequest.class,
-                            im.turms.server.common.access.client.dto.request.storage.QueryResourceDownloadInfoRequest.Builder.class);
+                            im.turms.server.common.access.client.dto.request.storage.QueryResourceDownloadInfoRequest.class, im.turms.server.common.access.client.dto.request.storage.QueryResourceDownloadInfoRequest.Builder.class);
         }
 
         // Construct using im.turms.server.common.access.client.dto.request.storage.QueryResourceDownloadInfoRequest.newBuilder()
@@ -581,12 +560,10 @@ public final class QueryResourceDownloadInfoRequest extends
         @java.lang.Override
         public Builder clear() {
             super.clear();
+            bitField0_ = 0;
             type_ = 0;
-
             idNum_ = 0L;
-            bitField0_ = (bitField0_ & ~0x00000001);
             idStr_ = "";
-            bitField0_ = (bitField0_ & ~0x00000002);
             internalGetMutableExtra().clear();
             return this;
         }
@@ -613,62 +590,33 @@ public final class QueryResourceDownloadInfoRequest extends
 
         @java.lang.Override
         public im.turms.server.common.access.client.dto.request.storage.QueryResourceDownloadInfoRequest buildPartial() {
-            im.turms.server.common.access.client.dto.request.storage.QueryResourceDownloadInfoRequest result =
-                    new im.turms.server.common.access.client.dto.request.storage.QueryResourceDownloadInfoRequest(this);
-            int from_bitField0_ = bitField0_;
-            int to_bitField0_ = 0;
-            result.type_ = type_;
-            if (((from_bitField0_ & 0x00000001) != 0)) {
-                result.idNum_ = idNum_;
-                to_bitField0_ |= 0x00000001;
+            im.turms.server.common.access.client.dto.request.storage.QueryResourceDownloadInfoRequest result = new im.turms.server.common.access.client.dto.request.storage.QueryResourceDownloadInfoRequest(this);
+            if (bitField0_ != 0) {
+                buildPartial0(result);
             }
-            if (((from_bitField0_ & 0x00000002) != 0)) {
-                to_bitField0_ |= 0x00000002;
-            }
-            result.idStr_ = idStr_;
-            result.extra_ = internalGetExtra();
-            result.extra_.makeImmutable();
-            result.bitField0_ = to_bitField0_;
             onBuilt();
             return result;
         }
 
-        @java.lang.Override
-        public Builder clone() {
-            return super.clone();
-        }
-
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(
-                com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(
-                com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index, java.lang.Object value) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.addRepeatedField(field, value);
+        private void buildPartial0(im.turms.server.common.access.client.dto.request.storage.QueryResourceDownloadInfoRequest result) {
+            int from_bitField0_ = bitField0_;
+            if (((from_bitField0_ & 0x00000001) != 0)) {
+                result.type_ = type_;
+            }
+            int to_bitField0_ = 0;
+            if (((from_bitField0_ & 0x00000002) != 0)) {
+                result.idNum_ = idNum_;
+                to_bitField0_ |= 0x00000001;
+            }
+            if (((from_bitField0_ & 0x00000004) != 0)) {
+                result.idStr_ = idStr_;
+                to_bitField0_ |= 0x00000002;
+            }
+            if (((from_bitField0_ & 0x00000008) != 0)) {
+                result.extra_ = internalGetExtra();
+                result.extra_.makeImmutable();
+            }
+            result.bitField0_ |= to_bitField0_;
         }
 
         @java.lang.Override
@@ -692,12 +640,13 @@ public final class QueryResourceDownloadInfoRequest extends
                 setIdNum(other.getIdNum());
             }
             if (other.hasIdStr()) {
-                bitField0_ |= 0x00000002;
                 idStr_ = other.idStr_;
+                bitField0_ |= 0x00000004;
                 onChanged();
             }
             internalGetMutableExtra().mergeFrom(
                     other.internalGetExtra());
+            bitField0_ |= 0x00000008;
             this.mergeUnknownFields(other.getUnknownFields());
             onChanged();
             return this;
@@ -721,37 +670,31 @@ public final class QueryResourceDownloadInfoRequest extends
                 while (!done) {
                     int tag = input.readTag();
                     switch (tag) {
-                        case 0:
-                            done = true;
-                            break;
-                        case 8: {
+                        case 0 -> done = true;
+                        case 8 -> {
                             type_ = input.readEnum();
-
-                            break;
-                        } // case 8
-                        case 16: {
-                            idNum_ = input.readInt64();
                             bitField0_ |= 0x00000001;
-                            break;
-                        } // case 16
-                        case 26: {
-                            idStr_ = input.readStringRequireUtf8();
+                        } // case 8
+                        case 16 -> {
+                            idNum_ = input.readInt64();
                             bitField0_ |= 0x00000002;
-                            break;
+                        } // case 16
+                        case 26 -> {
+                            idStr_ = input.readStringRequireUtf8();
+                            bitField0_ |= 0x00000004;
                         } // case 26
-                        case 34: {
-                            com.google.protobuf.MapEntry<java.lang.String, java.lang.String>
+                        case 34 -> {
+                            com.google.protobuf.MapEntry<String, String>
                                     extra__ = input.readMessage(
                                     ExtraDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
                             internalGetMutableExtra().getMutableMap().put(
                                     extra__.getKey(), extra__.getValue());
-                            break;
+                            bitField0_ |= 0x00000008;
                         } // case 34
-                        default: {
+                        default -> {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
                             }
-                            break;
                         } // default:
                     } // switch (tag)
                 } // while (!done)
@@ -784,8 +727,8 @@ public final class QueryResourceDownloadInfoRequest extends
          * @return This builder for chaining.
          */
         public Builder setTypeValue(int value) {
-
             type_ = value;
+            bitField0_ |= 0x00000001;
             onChanged();
             return this;
         }
@@ -797,8 +740,7 @@ public final class QueryResourceDownloadInfoRequest extends
          */
         @java.lang.Override
         public im.turms.server.common.access.client.dto.constant.StorageResourceType getType() {
-            @SuppressWarnings("deprecation")
-            im.turms.server.common.access.client.dto.constant.StorageResourceType result = im.turms.server.common.access.client.dto.constant.StorageResourceType.valueOf(type_);
+            im.turms.server.common.access.client.dto.constant.StorageResourceType result = im.turms.server.common.access.client.dto.constant.StorageResourceType.forNumber(type_);
             return result == null ? im.turms.server.common.access.client.dto.constant.StorageResourceType.UNRECOGNIZED : result;
         }
 
@@ -812,7 +754,7 @@ public final class QueryResourceDownloadInfoRequest extends
             if (value == null) {
                 throw new NullPointerException();
             }
-
+            bitField0_ |= 0x00000001;
             type_ = value.getNumber();
             onChanged();
             return this;
@@ -824,7 +766,7 @@ public final class QueryResourceDownloadInfoRequest extends
          * @return This builder for chaining.
          */
         public Builder clearType() {
-
+            bitField0_ &= ~0x00000001;
             type_ = 0;
             onChanged();
             return this;
@@ -839,7 +781,7 @@ public final class QueryResourceDownloadInfoRequest extends
          */
         @java.lang.Override
         public boolean hasIdNum() {
-            return ((bitField0_ & 0x00000001) != 0);
+            return ((bitField0_ & 0x00000002) != 0);
         }
 
         /**
@@ -859,8 +801,9 @@ public final class QueryResourceDownloadInfoRequest extends
          * @return This builder for chaining.
          */
         public Builder setIdNum(long value) {
-            bitField0_ |= 0x00000001;
+
             idNum_ = value;
+            bitField0_ |= 0x00000002;
             onChanged();
             return this;
         }
@@ -871,7 +814,7 @@ public final class QueryResourceDownloadInfoRequest extends
          * @return This builder for chaining.
          */
         public Builder clearIdNum() {
-            bitField0_ = (bitField0_ & ~0x00000001);
+            bitField0_ &= ~0x00000002;
             idNum_ = 0L;
             onChanged();
             return this;
@@ -885,7 +828,7 @@ public final class QueryResourceDownloadInfoRequest extends
          * @return Whether the idStr field is set.
          */
         public boolean hasIdStr() {
-            return ((bitField0_ & 0x00000002) != 0);
+            return ((bitField0_ & 0x00000004) != 0);
         }
 
         /**
@@ -936,8 +879,8 @@ public final class QueryResourceDownloadInfoRequest extends
             if (value == null) {
                 throw new NullPointerException();
             }
-            bitField0_ |= 0x00000002;
             idStr_ = value;
+            bitField0_ |= 0x00000004;
             onChanged();
             return this;
         }
@@ -948,8 +891,8 @@ public final class QueryResourceDownloadInfoRequest extends
          * @return This builder for chaining.
          */
         public Builder clearIdStr() {
-            bitField0_ = (bitField0_ & ~0x00000002);
             idStr_ = getDefaultInstance().getIdStr();
+            bitField0_ &= ~0x00000004;
             onChanged();
             return this;
         }
@@ -966,8 +909,8 @@ public final class QueryResourceDownloadInfoRequest extends
                 throw new NullPointerException();
             }
             checkByteStringIsUtf8(value);
-            bitField0_ |= 0x00000002;
             idStr_ = value;
+            bitField0_ |= 0x00000004;
             onChanged();
             return this;
         }
@@ -986,8 +929,6 @@ public final class QueryResourceDownloadInfoRequest extends
 
         private com.google.protobuf.MapField<java.lang.String, java.lang.String>
         internalGetMutableExtra() {
-            onChanged();
-            ;
             if (extra_ == null) {
                 extra_ = com.google.protobuf.MapField.newMapField(
                         ExtraDefaultEntryHolder.defaultEntry);
@@ -995,6 +936,8 @@ public final class QueryResourceDownloadInfoRequest extends
             if (!extra_.isMutable()) {
                 extra_ = extra_.copy();
             }
+            bitField0_ |= 0x00000008;
+            onChanged();
             return extra_;
         }
 
@@ -1005,7 +948,6 @@ public final class QueryResourceDownloadInfoRequest extends
         /**
          * <code>map&lt;string, string&gt; extra = 4;</code>
          */
-
         @java.lang.Override
         public boolean containsExtra(
                 java.lang.String key) {
@@ -1028,7 +970,6 @@ public final class QueryResourceDownloadInfoRequest extends
          * <code>map&lt;string, string&gt; extra = 4;</code>
          */
         @java.lang.Override
-
         public java.util.Map<java.lang.String, java.lang.String> getExtraMap() {
             return internalGetExtra().getMap();
         }
@@ -1037,23 +978,23 @@ public final class QueryResourceDownloadInfoRequest extends
          * <code>map&lt;string, string&gt; extra = 4;</code>
          */
         @java.lang.Override
-
-        public java.lang.String getExtraOrDefault(
+        public /* nullable */
+        java.lang.String getExtraOrDefault(
                 java.lang.String key,
+                /* nullable */
                 java.lang.String defaultValue) {
             if (key == null) {
                 throw new NullPointerException("map key");
             }
             java.util.Map<java.lang.String, java.lang.String> map =
                     internalGetExtra().getMap();
-            return map.containsKey(key) ? map.get(key) : defaultValue;
+            return map.getOrDefault(key, defaultValue);
         }
 
         /**
          * <code>map&lt;string, string&gt; extra = 4;</code>
          */
         @java.lang.Override
-
         public java.lang.String getExtraOrThrow(
                 java.lang.String key) {
             if (key == null) {
@@ -1068,6 +1009,7 @@ public final class QueryResourceDownloadInfoRequest extends
         }
 
         public Builder clearExtra() {
+            bitField0_ &= ~0x00000008;
             internalGetMutableExtra().getMutableMap()
                     .clear();
             return this;
@@ -1076,7 +1018,6 @@ public final class QueryResourceDownloadInfoRequest extends
         /**
          * <code>map&lt;string, string&gt; extra = 4;</code>
          */
-
         public Builder removeExtra(
                 java.lang.String key) {
             if (key == null) {
@@ -1093,6 +1034,7 @@ public final class QueryResourceDownloadInfoRequest extends
         @java.lang.Deprecated
         public java.util.Map<java.lang.String, java.lang.String>
         getMutableExtra() {
+            bitField0_ |= 0x00000008;
             return internalGetMutableExtra().getMutableMap();
         }
 
@@ -1108,20 +1050,20 @@ public final class QueryResourceDownloadInfoRequest extends
             if (value == null) {
                 throw new NullPointerException("map value");
             }
-
             internalGetMutableExtra().getMutableMap()
                     .put(key, value);
+            bitField0_ |= 0x00000008;
             return this;
         }
 
         /**
          * <code>map&lt;string, string&gt; extra = 4;</code>
          */
-
         public Builder putAllExtra(
                 java.util.Map<java.lang.String, java.lang.String> values) {
             internalGetMutableExtra().getMutableMap()
                     .putAll(values);
+            bitField0_ |= 0x00000008;
             return this;
         }
 
@@ -1153,7 +1095,7 @@ public final class QueryResourceDownloadInfoRequest extends
     }
 
     private static final com.google.protobuf.Parser<QueryResourceDownloadInfoRequest>
-            PARSER = new com.google.protobuf.AbstractParser<QueryResourceDownloadInfoRequest>() {
+            PARSER = new com.google.protobuf.AbstractParser<>() {
         @java.lang.Override
         public QueryResourceDownloadInfoRequest parsePartialFrom(
                 com.google.protobuf.CodedInputStream input,

@@ -10,11 +10,11 @@ import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
 
 @$core.Deprecated('Use createFriendRequestRequestDescriptor instead')
-const CreateFriendRequestRequest$json = {
+const CreateFriendRequestRequest$json = const {
   '1': 'CreateFriendRequestRequest',
-  '2': [
-    {'1': 'recipient_id', '3': 1, '4': 1, '5': 3, '10': 'recipientId'},
-    {'1': 'content', '3': 2, '4': 1, '5': 9, '10': 'content'},
+  '2': const [
+    const {'1': 'recipient_id', '3': 1, '4': 1, '5': 3, '10': 'recipientId'},
+    const {'1': 'content', '3': 2, '4': 1, '5': 9, '10': 'content'},
   ],
 };
 

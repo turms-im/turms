@@ -11,15 +11,21 @@ import 'package:protobuf/protobuf.dart' as $pb;
 
 class ProfileAccessStrategy extends $pb.ProtobufEnum {
   static const ProfileAccessStrategy ALL = ProfileAccessStrategy._(
-      0, $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'ALL');
+      0,
+      const $core.bool.fromEnvironment('protobuf.omit_enum_names')
+          ? ''
+          : 'ALL');
   static const ProfileAccessStrategy ALL_EXCEPT_BLOCKED_USERS =
       ProfileAccessStrategy._(
           1,
-          $core.bool.fromEnvironment('protobuf.omit_enum_names')
+          const $core.bool.fromEnvironment('protobuf.omit_enum_names')
               ? ''
               : 'ALL_EXCEPT_BLOCKED_USERS');
-  static const ProfileAccessStrategy FRIENDS = ProfileAccessStrategy._(2,
-      $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'FRIENDS');
+  static const ProfileAccessStrategy FRIENDS = ProfileAccessStrategy._(
+      2,
+      const $core.bool.fromEnvironment('protobuf.omit_enum_names')
+          ? ''
+          : 'FRIENDS');
 
   static const $core.List<ProfileAccessStrategy> values =
       <ProfileAccessStrategy>[

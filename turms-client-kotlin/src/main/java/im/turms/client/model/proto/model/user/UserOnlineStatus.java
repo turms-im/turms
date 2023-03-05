@@ -118,13 +118,9 @@ public final class UserOnlineStatus extends
     private com.google.protobuf.Internal.IntList usingDeviceTypes_;
     private static final com.google.protobuf.Internal.ListAdapter.Converter<
             java.lang.Integer, im.turms.client.model.proto.constant.DeviceType> usingDeviceTypes_converter_ =
-            new com.google.protobuf.Internal.ListAdapter.Converter<
-                    java.lang.Integer, im.turms.client.model.proto.constant.DeviceType>() {
-                @java.lang.Override
-                public im.turms.client.model.proto.constant.DeviceType convert(java.lang.Integer from) {
-                    im.turms.client.model.proto.constant.DeviceType result = im.turms.client.model.proto.constant.DeviceType.forNumber(from);
-                    return result == null ? im.turms.client.model.proto.constant.DeviceType.UNRECOGNIZED : result;
-                }
+            from -> {
+                im.turms.client.model.proto.constant.DeviceType result = im.turms.client.model.proto.constant.DeviceType.forNumber(from);
+                return result == null ? im.turms.client.model.proto.constant.DeviceType.UNRECOGNIZED : result;
             };
 
     /**
@@ -134,8 +130,7 @@ public final class UserOnlineStatus extends
      */
     @java.lang.Override
     public java.util.List<im.turms.client.model.proto.constant.DeviceType> getUsingDeviceTypesList() {
-        return new com.google.protobuf.Internal.ListAdapter<
-                java.lang.Integer, im.turms.client.model.proto.constant.DeviceType>(usingDeviceTypes_, usingDeviceTypes_converter_);
+        return new com.google.protobuf.Internal.ListAdapter<>(usingDeviceTypes_, usingDeviceTypes_converter_);
     }
 
     /**
@@ -590,6 +585,7 @@ public final class UserOnlineStatus extends
          * @return This builder for chaining.
          */
         public Builder addUsingDeviceTypesValue(int value) {
+            copyOnWrite();
             instance.addUsingDeviceTypesValue(value);
             return this;
         }
@@ -644,7 +640,7 @@ public final class UserOnlineStatus extends
                         parser = PARSER;
                         if (parser == null) {
                             parser =
-                                    new DefaultInstanceBasedParser<im.turms.client.model.proto.model.user.UserOnlineStatus>(
+                                    new DefaultInstanceBasedParser<>(
                                             DEFAULT_INSTANCE);
                             PARSER = parser;
                         }

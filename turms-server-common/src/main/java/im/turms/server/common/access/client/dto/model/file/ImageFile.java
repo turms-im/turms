@@ -45,12 +45,6 @@ public final class ImageFile extends
         return new ImageFile();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-        return this.unknownFields;
-    }
-
     public static final com.google.protobuf.Descriptors.Descriptor
     getDescriptor() {
         return im.turms.server.common.access.client.dto.model.file.ImageFileOuterClass.internal_static_im_turms_proto_ImageFile_descriptor;
@@ -151,12 +145,6 @@ public final class ImageFile extends
             return new Description();
         }
 
-        @java.lang.Override
-        public final com.google.protobuf.UnknownFieldSet
-        getUnknownFields() {
-            return this.unknownFields;
-        }
-
         public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
             return im.turms.server.common.access.client.dto.model.file.ImageFileOuterClass.internal_static_im_turms_proto_ImageFile_Description_descriptor;
@@ -172,7 +160,8 @@ public final class ImageFile extends
 
         private int bitField0_;
         public static final int URL_FIELD_NUMBER = 1;
-        private volatile java.lang.Object url_;
+        @SuppressWarnings("serial")
+        private volatile java.lang.Object url_ = "";
 
         /**
          * <code>string url = 1;</code>
@@ -214,7 +203,7 @@ public final class ImageFile extends
         }
 
         public static final int ORIGINAL_FIELD_NUMBER = 2;
-        private boolean original_;
+        private boolean original_ = false;
 
         /**
          * <code>optional bool original = 2;</code>
@@ -237,7 +226,7 @@ public final class ImageFile extends
         }
 
         public static final int IMAGE_SIZE_FIELD_NUMBER = 3;
-        private int imageSize_;
+        private int imageSize_ = 0;
 
         /**
          * <code>optional int32 image_size = 3;</code>
@@ -260,7 +249,7 @@ public final class ImageFile extends
         }
 
         public static final int FILE_SIZE_FIELD_NUMBER = 4;
-        private int fileSize_;
+        private int fileSize_ = 0;
 
         /**
          * <code>optional int32 file_size = 4;</code>
@@ -349,10 +338,9 @@ public final class ImageFile extends
             if (obj == this) {
                 return true;
             }
-            if (!(obj instanceof im.turms.server.common.access.client.dto.model.file.ImageFile.Description)) {
+            if (!(obj instanceof Description other)) {
                 return super.equals(obj);
             }
-            im.turms.server.common.access.client.dto.model.file.ImageFile.Description other = (im.turms.server.common.access.client.dto.model.file.ImageFile.Description) obj;
 
             if (!getUrl()
                     .equals(other.getUrl())) {
@@ -385,10 +373,7 @@ public final class ImageFile extends
                     return false;
                 }
             }
-            if (!getUnknownFields().equals(other.getUnknownFields())) {
-                return false;
-            }
-            return true;
+            return getUnknownFields().equals(other.getUnknownFields());
         }
 
         @java.lang.Override
@@ -521,8 +506,7 @@ public final class ImageFile extends
         @java.lang.Override
         protected Builder newBuilderForType(
                 com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-            Builder builder = new Builder(parent);
-            return builder;
+            return new Builder(parent);
         }
 
         /**
@@ -542,8 +526,7 @@ public final class ImageFile extends
             internalGetFieldAccessorTable() {
                 return im.turms.server.common.access.client.dto.model.file.ImageFileOuterClass.internal_static_im_turms_proto_ImageFile_Description_fieldAccessorTable
                         .ensureFieldAccessorsInitialized(
-                                im.turms.server.common.access.client.dto.model.file.ImageFile.Description.class,
-                                im.turms.server.common.access.client.dto.model.file.ImageFile.Description.Builder.class);
+                                im.turms.server.common.access.client.dto.model.file.ImageFile.Description.class, im.turms.server.common.access.client.dto.model.file.ImageFile.Description.Builder.class);
             }
 
             // Construct using im.turms.server.common.access.client.dto.model.file.ImageFile.Description.newBuilder()
@@ -560,14 +543,11 @@ public final class ImageFile extends
             @java.lang.Override
             public Builder clear() {
                 super.clear();
+                bitField0_ = 0;
                 url_ = "";
-
                 original_ = false;
-                bitField0_ = (bitField0_ & ~0x00000001);
                 imageSize_ = 0;
-                bitField0_ = (bitField0_ & ~0x00000002);
                 fileSize_ = 0;
-                bitField0_ = (bitField0_ & ~0x00000004);
                 return this;
             }
 
@@ -594,62 +574,32 @@ public final class ImageFile extends
             @java.lang.Override
             public im.turms.server.common.access.client.dto.model.file.ImageFile.Description buildPartial() {
                 im.turms.server.common.access.client.dto.model.file.ImageFile.Description result = new im.turms.server.common.access.client.dto.model.file.ImageFile.Description(this);
-                int from_bitField0_ = bitField0_;
-                int to_bitField0_ = 0;
-                result.url_ = url_;
-                if (((from_bitField0_ & 0x00000001) != 0)) {
-                    result.original_ = original_;
-                    to_bitField0_ |= 0x00000001;
+                if (bitField0_ != 0) {
+                    buildPartial0(result);
                 }
-                if (((from_bitField0_ & 0x00000002) != 0)) {
-                    result.imageSize_ = imageSize_;
-                    to_bitField0_ |= 0x00000002;
-                }
-                if (((from_bitField0_ & 0x00000004) != 0)) {
-                    result.fileSize_ = fileSize_;
-                    to_bitField0_ |= 0x00000004;
-                }
-                result.bitField0_ = to_bitField0_;
                 onBuilt();
                 return result;
             }
 
-            @java.lang.Override
-            public Builder clone() {
-                return super.clone();
-            }
-
-            @java.lang.Override
-            public Builder setField(
-                    com.google.protobuf.Descriptors.FieldDescriptor field,
-                    java.lang.Object value) {
-                return super.setField(field, value);
-            }
-
-            @java.lang.Override
-            public Builder clearField(
-                    com.google.protobuf.Descriptors.FieldDescriptor field) {
-                return super.clearField(field);
-            }
-
-            @java.lang.Override
-            public Builder clearOneof(
-                    com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-                return super.clearOneof(oneof);
-            }
-
-            @java.lang.Override
-            public Builder setRepeatedField(
-                    com.google.protobuf.Descriptors.FieldDescriptor field,
-                    int index, java.lang.Object value) {
-                return super.setRepeatedField(field, index, value);
-            }
-
-            @java.lang.Override
-            public Builder addRepeatedField(
-                    com.google.protobuf.Descriptors.FieldDescriptor field,
-                    java.lang.Object value) {
-                return super.addRepeatedField(field, value);
+            private void buildPartial0(im.turms.server.common.access.client.dto.model.file.ImageFile.Description result) {
+                int from_bitField0_ = bitField0_;
+                if (((from_bitField0_ & 0x00000001) != 0)) {
+                    result.url_ = url_;
+                }
+                int to_bitField0_ = 0;
+                if (((from_bitField0_ & 0x00000002) != 0)) {
+                    result.original_ = original_;
+                    to_bitField0_ |= 0x00000001;
+                }
+                if (((from_bitField0_ & 0x00000004) != 0)) {
+                    result.imageSize_ = imageSize_;
+                    to_bitField0_ |= 0x00000002;
+                }
+                if (((from_bitField0_ & 0x00000008) != 0)) {
+                    result.fileSize_ = fileSize_;
+                    to_bitField0_ |= 0x00000004;
+                }
+                result.bitField0_ |= to_bitField0_;
             }
 
             @java.lang.Override
@@ -668,6 +618,7 @@ public final class ImageFile extends
                 }
                 if (!other.getUrl().isEmpty()) {
                     url_ = other.url_;
+                    bitField0_ |= 0x00000001;
                     onChanged();
                 }
                 if (other.hasOriginal()) {
@@ -702,34 +653,27 @@ public final class ImageFile extends
                     while (!done) {
                         int tag = input.readTag();
                         switch (tag) {
-                            case 0:
-                                done = true;
-                                break;
-                            case 10: {
+                            case 0 -> done = true;
+                            case 10 -> {
                                 url_ = input.readStringRequireUtf8();
-
-                                break;
-                            } // case 10
-                            case 16: {
-                                original_ = input.readBool();
                                 bitField0_ |= 0x00000001;
-                                break;
-                            } // case 16
-                            case 24: {
-                                imageSize_ = input.readInt32();
+                            } // case 10
+                            case 16 -> {
+                                original_ = input.readBool();
                                 bitField0_ |= 0x00000002;
-                                break;
-                            } // case 24
-                            case 32: {
-                                fileSize_ = input.readInt32();
+                            } // case 16
+                            case 24 -> {
+                                imageSize_ = input.readInt32();
                                 bitField0_ |= 0x00000004;
-                                break;
+                            } // case 24
+                            case 32 -> {
+                                fileSize_ = input.readInt32();
+                                bitField0_ |= 0x00000008;
                             } // case 32
-                            default: {
+                            default -> {
                                 if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                     done = true; // was an endgroup tag
                                 }
-                                break;
                             } // default:
                         } // switch (tag)
                     } // while (!done)
@@ -793,8 +737,8 @@ public final class ImageFile extends
                 if (value == null) {
                     throw new NullPointerException();
                 }
-
                 url_ = value;
+                bitField0_ |= 0x00000001;
                 onChanged();
                 return this;
             }
@@ -805,8 +749,8 @@ public final class ImageFile extends
              * @return This builder for chaining.
              */
             public Builder clearUrl() {
-
                 url_ = getDefaultInstance().getUrl();
+                bitField0_ &= ~0x00000001;
                 onChanged();
                 return this;
             }
@@ -823,8 +767,8 @@ public final class ImageFile extends
                     throw new NullPointerException();
                 }
                 checkByteStringIsUtf8(value);
-
                 url_ = value;
+                bitField0_ |= 0x00000001;
                 onChanged();
                 return this;
             }
@@ -838,7 +782,7 @@ public final class ImageFile extends
              */
             @java.lang.Override
             public boolean hasOriginal() {
-                return ((bitField0_ & 0x00000001) != 0);
+                return ((bitField0_ & 0x00000002) != 0);
             }
 
             /**
@@ -858,8 +802,9 @@ public final class ImageFile extends
              * @return This builder for chaining.
              */
             public Builder setOriginal(boolean value) {
-                bitField0_ |= 0x00000001;
+
                 original_ = value;
+                bitField0_ |= 0x00000002;
                 onChanged();
                 return this;
             }
@@ -870,7 +815,7 @@ public final class ImageFile extends
              * @return This builder for chaining.
              */
             public Builder clearOriginal() {
-                bitField0_ = (bitField0_ & ~0x00000001);
+                bitField0_ &= ~0x00000002;
                 original_ = false;
                 onChanged();
                 return this;
@@ -885,7 +830,7 @@ public final class ImageFile extends
              */
             @java.lang.Override
             public boolean hasImageSize() {
-                return ((bitField0_ & 0x00000002) != 0);
+                return ((bitField0_ & 0x00000004) != 0);
             }
 
             /**
@@ -905,8 +850,9 @@ public final class ImageFile extends
              * @return This builder for chaining.
              */
             public Builder setImageSize(int value) {
-                bitField0_ |= 0x00000002;
+
                 imageSize_ = value;
+                bitField0_ |= 0x00000004;
                 onChanged();
                 return this;
             }
@@ -917,7 +863,7 @@ public final class ImageFile extends
              * @return This builder for chaining.
              */
             public Builder clearImageSize() {
-                bitField0_ = (bitField0_ & ~0x00000002);
+                bitField0_ &= ~0x00000004;
                 imageSize_ = 0;
                 onChanged();
                 return this;
@@ -932,7 +878,7 @@ public final class ImageFile extends
              */
             @java.lang.Override
             public boolean hasFileSize() {
-                return ((bitField0_ & 0x00000004) != 0);
+                return ((bitField0_ & 0x00000008) != 0);
             }
 
             /**
@@ -952,8 +898,9 @@ public final class ImageFile extends
              * @return This builder for chaining.
              */
             public Builder setFileSize(int value) {
-                bitField0_ |= 0x00000004;
+
                 fileSize_ = value;
+                bitField0_ |= 0x00000008;
                 onChanged();
                 return this;
             }
@@ -964,7 +911,7 @@ public final class ImageFile extends
              * @return This builder for chaining.
              */
             public Builder clearFileSize() {
-                bitField0_ = (bitField0_ & ~0x00000004);
+                bitField0_ &= ~0x00000008;
                 fileSize_ = 0;
                 onChanged();
                 return this;
@@ -998,7 +945,7 @@ public final class ImageFile extends
         }
 
         private static final com.google.protobuf.Parser<Description>
-                PARSER = new com.google.protobuf.AbstractParser<Description>() {
+                PARSER = new com.google.protobuf.AbstractParser<>() {
             @java.lang.Override
             public Description parsePartialFrom(
                     com.google.protobuf.CodedInputStream input,
@@ -1068,7 +1015,7 @@ public final class ImageFile extends
     }
 
     public static final int DATA_FIELD_NUMBER = 2;
-    private com.google.protobuf.ByteString data_;
+    private com.google.protobuf.ByteString data_ = com.google.protobuf.ByteString.EMPTY;
 
     /**
      * <code>optional bytes data = 2;</code>
@@ -1144,10 +1091,9 @@ public final class ImageFile extends
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof im.turms.server.common.access.client.dto.model.file.ImageFile)) {
+        if (!(obj instanceof ImageFile other)) {
             return super.equals(obj);
         }
-        im.turms.server.common.access.client.dto.model.file.ImageFile other = (im.turms.server.common.access.client.dto.model.file.ImageFile) obj;
 
         if (hasDescription() != other.hasDescription()) {
             return false;
@@ -1167,10 +1113,7 @@ public final class ImageFile extends
                 return false;
             }
         }
-        if (!getUnknownFields().equals(other.getUnknownFields())) {
-            return false;
-        }
-        return true;
+        return getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -1296,8 +1239,7 @@ public final class ImageFile extends
     @java.lang.Override
     protected Builder newBuilderForType(
             com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
+        return new Builder(parent);
     }
 
     /**
@@ -1341,14 +1283,13 @@ public final class ImageFile extends
         @java.lang.Override
         public Builder clear() {
             super.clear();
-            if (descriptionBuilder_ == null) {
-                description_ = null;
-            } else {
-                descriptionBuilder_.clear();
+            bitField0_ = 0;
+            description_ = null;
+            if (descriptionBuilder_ != null) {
+                descriptionBuilder_.dispose();
+                descriptionBuilder_ = null;
             }
-            bitField0_ = (bitField0_ & ~0x00000001);
             data_ = com.google.protobuf.ByteString.EMPTY;
-            bitField0_ = (bitField0_ & ~0x00000002);
             return this;
         }
 
@@ -1375,61 +1316,27 @@ public final class ImageFile extends
         @java.lang.Override
         public im.turms.server.common.access.client.dto.model.file.ImageFile buildPartial() {
             im.turms.server.common.access.client.dto.model.file.ImageFile result = new im.turms.server.common.access.client.dto.model.file.ImageFile(this);
-            int from_bitField0_ = bitField0_;
-            int to_bitField0_ = 0;
-            if (((from_bitField0_ & 0x00000001) != 0)) {
-                if (descriptionBuilder_ == null) {
-                    result.description_ = description_;
-                } else {
-                    result.description_ = descriptionBuilder_.build();
-                }
-                to_bitField0_ |= 0x00000001;
+            if (bitField0_ != 0) {
+                buildPartial0(result);
             }
-            if (((from_bitField0_ & 0x00000002) != 0)) {
-                to_bitField0_ |= 0x00000002;
-            }
-            result.data_ = data_;
-            result.bitField0_ = to_bitField0_;
             onBuilt();
             return result;
         }
 
-        @java.lang.Override
-        public Builder clone() {
-            return super.clone();
-        }
-
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(
-                com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(
-                com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index, java.lang.Object value) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.addRepeatedField(field, value);
+        private void buildPartial0(im.turms.server.common.access.client.dto.model.file.ImageFile result) {
+            int from_bitField0_ = bitField0_;
+            int to_bitField0_ = 0;
+            if (((from_bitField0_ & 0x00000001) != 0)) {
+                result.description_ = descriptionBuilder_ == null
+                        ? description_
+                        : descriptionBuilder_.build();
+                to_bitField0_ |= 0x00000001;
+            }
+            if (((from_bitField0_ & 0x00000002) != 0)) {
+                result.data_ = data_;
+                to_bitField0_ |= 0x00000002;
+            }
+            result.bitField0_ |= to_bitField0_;
         }
 
         @java.lang.Override
@@ -1475,26 +1382,21 @@ public final class ImageFile extends
                 while (!done) {
                     int tag = input.readTag();
                     switch (tag) {
-                        case 0:
-                            done = true;
-                            break;
-                        case 10: {
+                        case 0 -> done = true;
+                        case 10 -> {
                             input.readMessage(
                                     getDescriptionFieldBuilder().getBuilder(),
                                     extensionRegistry);
                             bitField0_ |= 0x00000001;
-                            break;
                         } // case 10
-                        case 18: {
+                        case 18 -> {
                             data_ = input.readBytes();
                             bitField0_ |= 0x00000002;
-                            break;
                         } // case 18
-                        default: {
+                        default -> {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
                             }
-                            break;
                         } // default:
                     } // switch (tag)
                 } // while (!done)
@@ -1510,8 +1412,7 @@ public final class ImageFile extends
 
         private im.turms.server.common.access.client.dto.model.file.ImageFile.Description description_;
         private com.google.protobuf.SingleFieldBuilderV3<
-                im.turms.server.common.access.client.dto.model.file.ImageFile.Description, im.turms.server.common.access.client.dto.model.file.ImageFile.Description.Builder, im.turms.server.common.access.client.dto.model.file.ImageFile.DescriptionOrBuilder>
-                descriptionBuilder_;
+                im.turms.server.common.access.client.dto.model.file.ImageFile.Description, im.turms.server.common.access.client.dto.model.file.ImageFile.Description.Builder, im.turms.server.common.access.client.dto.model.file.ImageFile.DescriptionOrBuilder> descriptionBuilder_;
 
         /**
          * <code>optional .im.turms.proto.ImageFile.Description description = 1;</code>
@@ -1544,11 +1445,11 @@ public final class ImageFile extends
                     throw new NullPointerException();
                 }
                 description_ = value;
-                onChanged();
             } else {
                 descriptionBuilder_.setMessage(value);
             }
             bitField0_ |= 0x00000001;
+            onChanged();
             return this;
         }
 
@@ -1559,11 +1460,11 @@ public final class ImageFile extends
                 im.turms.server.common.access.client.dto.model.file.ImageFile.Description.Builder builderForValue) {
             if (descriptionBuilder_ == null) {
                 description_ = builderForValue.build();
-                onChanged();
             } else {
                 descriptionBuilder_.setMessage(builderForValue.build());
             }
             bitField0_ |= 0x00000001;
+            onChanged();
             return this;
         }
 
@@ -1575,16 +1476,15 @@ public final class ImageFile extends
                 if (((bitField0_ & 0x00000001) != 0) &&
                     description_ != null &&
                     description_ != im.turms.server.common.access.client.dto.model.file.ImageFile.Description.getDefaultInstance()) {
-                    description_ =
-                            im.turms.server.common.access.client.dto.model.file.ImageFile.Description.newBuilder(description_).mergeFrom(value).buildPartial();
+                    getDescriptionBuilder().mergeFrom(value);
                 } else {
                     description_ = value;
                 }
-                onChanged();
             } else {
                 descriptionBuilder_.mergeFrom(value);
             }
             bitField0_ |= 0x00000001;
+            onChanged();
             return this;
         }
 
@@ -1592,13 +1492,13 @@ public final class ImageFile extends
          * <code>optional .im.turms.proto.ImageFile.Description description = 1;</code>
          */
         public Builder clearDescription() {
-            if (descriptionBuilder_ == null) {
-                description_ = null;
-                onChanged();
-            } else {
-                descriptionBuilder_.clear();
+            bitField0_ &= ~0x00000001;
+            description_ = null;
+            if (descriptionBuilder_ != null) {
+                descriptionBuilder_.dispose();
+                descriptionBuilder_ = null;
             }
-            bitField0_ = (bitField0_ & ~0x00000001);
+            onChanged();
             return this;
         }
 
@@ -1630,8 +1530,7 @@ public final class ImageFile extends
                 im.turms.server.common.access.client.dto.model.file.ImageFile.Description, im.turms.server.common.access.client.dto.model.file.ImageFile.Description.Builder, im.turms.server.common.access.client.dto.model.file.ImageFile.DescriptionOrBuilder>
         getDescriptionFieldBuilder() {
             if (descriptionBuilder_ == null) {
-                descriptionBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-                        im.turms.server.common.access.client.dto.model.file.ImageFile.Description, im.turms.server.common.access.client.dto.model.file.ImageFile.Description.Builder, im.turms.server.common.access.client.dto.model.file.ImageFile.DescriptionOrBuilder>(
+                descriptionBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
                         getDescription(),
                         getParentForChildren(),
                         isClean());
@@ -1672,8 +1571,8 @@ public final class ImageFile extends
             if (value == null) {
                 throw new NullPointerException();
             }
-            bitField0_ |= 0x00000002;
             data_ = value;
+            bitField0_ |= 0x00000002;
             onChanged();
             return this;
         }
@@ -1684,7 +1583,7 @@ public final class ImageFile extends
          * @return This builder for chaining.
          */
         public Builder clearData() {
-            bitField0_ = (bitField0_ & ~0x00000002);
+            bitField0_ &= ~0x00000002;
             data_ = getDefaultInstance().getData();
             onChanged();
             return this;
@@ -1718,7 +1617,7 @@ public final class ImageFile extends
     }
 
     private static final com.google.protobuf.Parser<ImageFile>
-            PARSER = new com.google.protobuf.AbstractParser<ImageFile>() {
+            PARSER = new com.google.protobuf.AbstractParser<>() {
         @java.lang.Override
         public ImageFile parsePartialFrom(
                 com.google.protobuf.CodedInputStream input,

@@ -72,8 +72,7 @@ public final class QueryMessageAttachmentInfosRequestOuterClass {
         internal_static_im_turms_proto_QueryMessageAttachmentInfosRequest_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
                 internal_static_im_turms_proto_QueryMessageAttachmentInfosRequest_descriptor,
-                new java.lang.String[]{"UserIds", "GroupIds", "CreationDateStart", "CreationDateEnd", "InPrivateConversation", "AreSharedByMe", "CreationDateStart", "CreationDateEnd",
-                        "InPrivateConversation", "AreSharedByMe",});
+                new java.lang.String[]{"UserIds", "GroupIds", "CreationDateStart", "CreationDateEnd", "InPrivateConversation", "AreSharedByMe", "CreationDateStart", "CreationDateEnd", "InPrivateConversation", "AreSharedByMe",});
     }
 
     // @@protoc_insertion_point(outer_class_scope)

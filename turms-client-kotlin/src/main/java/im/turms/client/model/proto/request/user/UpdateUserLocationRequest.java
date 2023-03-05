@@ -176,8 +176,10 @@ public final class UpdateUserLocationRequest extends
      */
     @java.lang.Override
 
-    public java.lang.String getDetailsOrDefault(
+    public /* nullable */
+    java.lang.String getDetailsOrDefault(
             java.lang.String key,
+            /* nullable */
             java.lang.String defaultValue) {
         java.lang.Class<?> keyClass = key.getClass();
         java.util.Map<java.lang.String, java.lang.String> map =
@@ -452,8 +454,10 @@ public final class UpdateUserLocationRequest extends
          */
         @java.lang.Override
 
-        public java.lang.String getDetailsOrDefault(
+        public /* nullable */
+        java.lang.String getDetailsOrDefault(
                 java.lang.String key,
+                /* nullable */
                 java.lang.String defaultValue) {
             java.lang.Class<?> keyClass = key.getClass();
             java.util.Map<java.lang.String, java.lang.String> map =
@@ -538,7 +542,7 @@ public final class UpdateUserLocationRequest extends
                         parser = PARSER;
                         if (parser == null) {
                             parser =
-                                    new DefaultInstanceBasedParser<im.turms.client.model.proto.request.user.UpdateUserLocationRequest>(
+                                    new DefaultInstanceBasedParser<>(
                                             DEFAULT_INSTANCE);
                             PARSER = parser;
                         }

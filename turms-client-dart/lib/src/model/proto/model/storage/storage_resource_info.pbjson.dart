@@ -10,13 +10,37 @@ import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
 
 @$core.Deprecated('Use storageResourceInfoDescriptor instead')
-const StorageResourceInfo$json = {
+const StorageResourceInfo$json = const {
   '1': 'StorageResourceInfo',
-  '2': [
-    {'1': 'id_num', '3': 1, '4': 1, '5': 3, '9': 0, '10': 'idNum', '17': true},
-    {'1': 'id_str', '3': 2, '4': 1, '5': 9, '9': 1, '10': 'idStr', '17': true},
-    {'1': 'name', '3': 3, '4': 1, '5': 9, '9': 2, '10': 'name', '17': true},
-    {
+  '2': const [
+    const {
+      '1': 'id_num',
+      '3': 1,
+      '4': 1,
+      '5': 3,
+      '9': 0,
+      '10': 'idNum',
+      '17': true
+    },
+    const {
+      '1': 'id_str',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '9': 1,
+      '10': 'idStr',
+      '17': true
+    },
+    const {
+      '1': 'name',
+      '3': 3,
+      '4': 1,
+      '5': 9,
+      '9': 2,
+      '10': 'name',
+      '17': true
+    },
+    const {
       '1': 'media_type',
       '3': 4,
       '4': 1,
@@ -25,14 +49,14 @@ const StorageResourceInfo$json = {
       '10': 'mediaType',
       '17': true
     },
-    {'1': 'uploader_id', '3': 5, '4': 1, '5': 3, '10': 'uploaderId'},
-    {'1': 'creation_date', '3': 6, '4': 1, '5': 3, '10': 'creationDate'},
+    const {'1': 'uploader_id', '3': 5, '4': 1, '5': 3, '10': 'uploaderId'},
+    const {'1': 'creation_date', '3': 6, '4': 1, '5': 3, '10': 'creationDate'},
   ],
-  '8': [
-    {'1': '_id_num'},
-    {'1': '_id_str'},
-    {'1': '_name'},
-    {'1': '_media_type'},
+  '8': const [
+    const {'1': '_id_num'},
+    const {'1': '_id_str'},
+    const {'1': '_name'},
+    const {'1': '_media_type'},
   ],
 };
 

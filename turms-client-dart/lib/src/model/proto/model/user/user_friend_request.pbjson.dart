@@ -10,11 +10,11 @@ import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
 
 @$core.Deprecated('Use userFriendRequestDescriptor instead')
-const UserFriendRequest$json = {
+const UserFriendRequest$json = const {
   '1': 'UserFriendRequest',
-  '2': [
-    {'1': 'id', '3': 1, '4': 1, '5': 3, '9': 0, '10': 'id', '17': true},
-    {
+  '2': const [
+    const {'1': 'id', '3': 1, '4': 1, '5': 3, '9': 0, '10': 'id', '17': true},
+    const {
       '1': 'creation_date',
       '3': 2,
       '4': 1,
@@ -23,7 +23,7 @@ const UserFriendRequest$json = {
       '10': 'creationDate',
       '17': true
     },
-    {
+    const {
       '1': 'content',
       '3': 3,
       '4': 1,
@@ -32,7 +32,7 @@ const UserFriendRequest$json = {
       '10': 'content',
       '17': true
     },
-    {
+    const {
       '1': 'request_status',
       '3': 4,
       '4': 1,
@@ -42,8 +42,16 @@ const UserFriendRequest$json = {
       '10': 'requestStatus',
       '17': true
     },
-    {'1': 'reason', '3': 5, '4': 1, '5': 9, '9': 4, '10': 'reason', '17': true},
-    {
+    const {
+      '1': 'reason',
+      '3': 5,
+      '4': 1,
+      '5': 9,
+      '9': 4,
+      '10': 'reason',
+      '17': true
+    },
+    const {
       '1': 'expiration_date',
       '3': 6,
       '4': 1,
@@ -52,7 +60,7 @@ const UserFriendRequest$json = {
       '10': 'expirationDate',
       '17': true
     },
-    {
+    const {
       '1': 'requester_id',
       '3': 7,
       '4': 1,
@@ -61,7 +69,7 @@ const UserFriendRequest$json = {
       '10': 'requesterId',
       '17': true
     },
-    {
+    const {
       '1': 'recipient_id',
       '3': 8,
       '4': 1,
@@ -71,15 +79,15 @@ const UserFriendRequest$json = {
       '17': true
     },
   ],
-  '8': [
-    {'1': '_id'},
-    {'1': '_creation_date'},
-    {'1': '_content'},
-    {'1': '_request_status'},
-    {'1': '_reason'},
-    {'1': '_expiration_date'},
-    {'1': '_requester_id'},
-    {'1': '_recipient_id'},
+  '8': const [
+    const {'1': '_id'},
+    const {'1': '_creation_date'},
+    const {'1': '_content'},
+    const {'1': '_request_status'},
+    const {'1': '_reason'},
+    const {'1': '_expiration_date'},
+    const {'1': '_requester_id'},
+    const {'1': '_recipient_id'},
   ],
 };
 

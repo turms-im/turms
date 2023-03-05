@@ -243,7 +243,7 @@ public final class QueryMessageAttachmentInfosRequest extends
      * <code>optional int64 creation_date_start = 3;</code>
      */
     private void clearCreationDateStart() {
-        bitField0_ = (bitField0_ & ~0x00000001);
+        bitField0_ &= ~0x00000001;
         creationDateStart_ = 0L;
     }
 
@@ -284,7 +284,7 @@ public final class QueryMessageAttachmentInfosRequest extends
      * <code>optional int64 creation_date_end = 4;</code>
      */
     private void clearCreationDateEnd() {
-        bitField0_ = (bitField0_ & ~0x00000002);
+        bitField0_ &= ~0x00000002;
         creationDateEnd_ = 0L;
     }
 
@@ -325,7 +325,7 @@ public final class QueryMessageAttachmentInfosRequest extends
      * <code>optional bool in_private_conversation = 5;</code>
      */
     private void clearInPrivateConversation() {
-        bitField0_ = (bitField0_ & ~0x00000004);
+        bitField0_ &= ~0x00000004;
         inPrivateConversation_ = false;
     }
 
@@ -366,7 +366,7 @@ public final class QueryMessageAttachmentInfosRequest extends
      * <code>optional bool are_shared_by_me = 6;</code>
      */
     private void clearAreSharedByMe() {
-        bitField0_ = (bitField0_ & ~0x00000008);
+        bitField0_ &= ~0x00000008;
         areSharedByMe_ = false;
     }
 
@@ -854,7 +854,7 @@ public final class QueryMessageAttachmentInfosRequest extends
                         parser = PARSER;
                         if (parser == null) {
                             parser =
-                                    new DefaultInstanceBasedParser<im.turms.client.model.proto.request.storage.QueryMessageAttachmentInfosRequest>(
+                                    new DefaultInstanceBasedParser<>(
                                             DEFAULT_INSTANCE);
                             PARSER = parser;
                         }

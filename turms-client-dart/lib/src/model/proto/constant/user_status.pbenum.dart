@@ -12,28 +12,37 @@ import 'package:protobuf/protobuf.dart' as $pb;
 class UserStatus extends $pb.ProtobufEnum {
   static const UserStatus AVAILABLE = UserStatus._(
       0,
-      $core.bool.fromEnvironment('protobuf.omit_enum_names')
+      const $core.bool.fromEnvironment('protobuf.omit_enum_names')
           ? ''
           : 'AVAILABLE');
-  static const UserStatus OFFLINE = UserStatus._(1,
-      $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'OFFLINE');
+  static const UserStatus OFFLINE = UserStatus._(
+      1,
+      const $core.bool.fromEnvironment('protobuf.omit_enum_names')
+          ? ''
+          : 'OFFLINE');
   static const UserStatus INVISIBLE = UserStatus._(
       2,
-      $core.bool.fromEnvironment('protobuf.omit_enum_names')
+      const $core.bool.fromEnvironment('protobuf.omit_enum_names')
           ? ''
           : 'INVISIBLE');
   static const UserStatus BUSY = UserStatus._(
-      3, $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'BUSY');
+      3,
+      const $core.bool.fromEnvironment('protobuf.omit_enum_names')
+          ? ''
+          : 'BUSY');
   static const UserStatus DO_NOT_DISTURB = UserStatus._(
       4,
-      $core.bool.fromEnvironment('protobuf.omit_enum_names')
+      const $core.bool.fromEnvironment('protobuf.omit_enum_names')
           ? ''
           : 'DO_NOT_DISTURB');
   static const UserStatus AWAY = UserStatus._(
-      5, $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'AWAY');
+      5,
+      const $core.bool.fromEnvironment('protobuf.omit_enum_names')
+          ? ''
+          : 'AWAY');
   static const UserStatus BE_RIGHT_BACK = UserStatus._(
       6,
-      $core.bool.fromEnvironment('protobuf.omit_enum_names')
+      const $core.bool.fromEnvironment('protobuf.omit_enum_names')
           ? ''
           : 'BE_RIGHT_BACK');
 

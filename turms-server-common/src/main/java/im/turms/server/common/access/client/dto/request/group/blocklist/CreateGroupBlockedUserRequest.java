@@ -44,12 +44,6 @@ public final class CreateGroupBlockedUserRequest extends
         return new CreateGroupBlockedUserRequest();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-        return this.unknownFields;
-    }
-
     public static final com.google.protobuf.Descriptors.Descriptor
     getDescriptor() {
         return im.turms.server.common.access.client.dto.request.group.blocklist.CreateGroupBlockedUserRequestOuterClass.internal_static_im_turms_proto_CreateGroupBlockedUserRequest_descriptor;
@@ -60,12 +54,11 @@ public final class CreateGroupBlockedUserRequest extends
     internalGetFieldAccessorTable() {
         return im.turms.server.common.access.client.dto.request.group.blocklist.CreateGroupBlockedUserRequestOuterClass.internal_static_im_turms_proto_CreateGroupBlockedUserRequest_fieldAccessorTable
                 .ensureFieldAccessorsInitialized(
-                        im.turms.server.common.access.client.dto.request.group.blocklist.CreateGroupBlockedUserRequest.class,
-                        im.turms.server.common.access.client.dto.request.group.blocklist.CreateGroupBlockedUserRequest.Builder.class);
+                        im.turms.server.common.access.client.dto.request.group.blocklist.CreateGroupBlockedUserRequest.class, im.turms.server.common.access.client.dto.request.group.blocklist.CreateGroupBlockedUserRequest.Builder.class);
     }
 
     public static final int GROUP_ID_FIELD_NUMBER = 1;
-    private long groupId_;
+    private long groupId_ = 0L;
 
     /**
      * <code>int64 group_id = 1;</code>
@@ -78,7 +71,7 @@ public final class CreateGroupBlockedUserRequest extends
     }
 
     public static final int USER_ID_FIELD_NUMBER = 2;
-    private long userId_;
+    private long userId_ = 0L;
 
     /**
      * <code>int64 user_id = 2;</code>
@@ -144,11 +137,9 @@ public final class CreateGroupBlockedUserRequest extends
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof im.turms.server.common.access.client.dto.request.group.blocklist.CreateGroupBlockedUserRequest)) {
+        if (!(obj instanceof CreateGroupBlockedUserRequest other)) {
             return super.equals(obj);
         }
-        im.turms.server.common.access.client.dto.request.group.blocklist.CreateGroupBlockedUserRequest other =
-                (im.turms.server.common.access.client.dto.request.group.blocklist.CreateGroupBlockedUserRequest) obj;
 
         if (getGroupId()
             != other.getGroupId()) {
@@ -158,10 +149,7 @@ public final class CreateGroupBlockedUserRequest extends
             != other.getUserId()) {
             return false;
         }
-        if (!getUnknownFields().equals(other.getUnknownFields())) {
-            return false;
-        }
-        return true;
+        return getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -285,8 +273,7 @@ public final class CreateGroupBlockedUserRequest extends
     @java.lang.Override
     protected Builder newBuilderForType(
             com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
+        return new Builder(parent);
     }
 
     /**
@@ -306,8 +293,7 @@ public final class CreateGroupBlockedUserRequest extends
         internalGetFieldAccessorTable() {
             return im.turms.server.common.access.client.dto.request.group.blocklist.CreateGroupBlockedUserRequestOuterClass.internal_static_im_turms_proto_CreateGroupBlockedUserRequest_fieldAccessorTable
                     .ensureFieldAccessorsInitialized(
-                            im.turms.server.common.access.client.dto.request.group.blocklist.CreateGroupBlockedUserRequest.class,
-                            im.turms.server.common.access.client.dto.request.group.blocklist.CreateGroupBlockedUserRequest.Builder.class);
+                            im.turms.server.common.access.client.dto.request.group.blocklist.CreateGroupBlockedUserRequest.class, im.turms.server.common.access.client.dto.request.group.blocklist.CreateGroupBlockedUserRequest.Builder.class);
         }
 
         // Construct using im.turms.server.common.access.client.dto.request.group.blocklist.CreateGroupBlockedUserRequest.newBuilder()
@@ -324,10 +310,9 @@ public final class CreateGroupBlockedUserRequest extends
         @java.lang.Override
         public Builder clear() {
             super.clear();
+            bitField0_ = 0;
             groupId_ = 0L;
-
             userId_ = 0L;
-
             return this;
         }
 
@@ -353,50 +338,22 @@ public final class CreateGroupBlockedUserRequest extends
 
         @java.lang.Override
         public im.turms.server.common.access.client.dto.request.group.blocklist.CreateGroupBlockedUserRequest buildPartial() {
-            im.turms.server.common.access.client.dto.request.group.blocklist.CreateGroupBlockedUserRequest result =
-                    new im.turms.server.common.access.client.dto.request.group.blocklist.CreateGroupBlockedUserRequest(this);
-            result.groupId_ = groupId_;
-            result.userId_ = userId_;
+            im.turms.server.common.access.client.dto.request.group.blocklist.CreateGroupBlockedUserRequest result = new im.turms.server.common.access.client.dto.request.group.blocklist.CreateGroupBlockedUserRequest(this);
+            if (bitField0_ != 0) {
+                buildPartial0(result);
+            }
             onBuilt();
             return result;
         }
 
-        @java.lang.Override
-        public Builder clone() {
-            return super.clone();
-        }
-
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(
-                com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(
-                com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index, java.lang.Object value) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.addRepeatedField(field, value);
+        private void buildPartial0(im.turms.server.common.access.client.dto.request.group.blocklist.CreateGroupBlockedUserRequest result) {
+            int from_bitField0_ = bitField0_;
+            if (((from_bitField0_ & 0x00000001) != 0)) {
+                result.groupId_ = groupId_;
+            }
+            if (((from_bitField0_ & 0x00000002) != 0)) {
+                result.userId_ = userId_;
+            }
         }
 
         @java.lang.Override
@@ -442,24 +399,19 @@ public final class CreateGroupBlockedUserRequest extends
                 while (!done) {
                     int tag = input.readTag();
                     switch (tag) {
-                        case 0:
-                            done = true;
-                            break;
-                        case 8: {
+                        case 0 -> done = true;
+                        case 8 -> {
                             groupId_ = input.readInt64();
-
-                            break;
+                            bitField0_ |= 0x00000001;
                         } // case 8
-                        case 16: {
+                        case 16 -> {
                             userId_ = input.readInt64();
-
-                            break;
+                            bitField0_ |= 0x00000002;
                         } // case 16
-                        default: {
+                        default -> {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
                             }
-                            break;
                         } // default:
                     } // switch (tag)
                 } // while (!done)
@@ -470,6 +422,8 @@ public final class CreateGroupBlockedUserRequest extends
             } // finally
             return this;
         }
+
+        private int bitField0_;
 
         private long groupId_;
 
@@ -492,6 +446,7 @@ public final class CreateGroupBlockedUserRequest extends
         public Builder setGroupId(long value) {
 
             groupId_ = value;
+            bitField0_ |= 0x00000001;
             onChanged();
             return this;
         }
@@ -502,7 +457,7 @@ public final class CreateGroupBlockedUserRequest extends
          * @return This builder for chaining.
          */
         public Builder clearGroupId() {
-
+            bitField0_ &= ~0x00000001;
             groupId_ = 0L;
             onChanged();
             return this;
@@ -529,6 +484,7 @@ public final class CreateGroupBlockedUserRequest extends
         public Builder setUserId(long value) {
 
             userId_ = value;
+            bitField0_ |= 0x00000002;
             onChanged();
             return this;
         }
@@ -539,7 +495,7 @@ public final class CreateGroupBlockedUserRequest extends
          * @return This builder for chaining.
          */
         public Builder clearUserId() {
-
+            bitField0_ &= ~0x00000002;
             userId_ = 0L;
             onChanged();
             return this;
@@ -573,7 +529,7 @@ public final class CreateGroupBlockedUserRequest extends
     }
 
     private static final com.google.protobuf.Parser<CreateGroupBlockedUserRequest>
-            PARSER = new com.google.protobuf.AbstractParser<CreateGroupBlockedUserRequest>() {
+            PARSER = new com.google.protobuf.AbstractParser<>() {
         @java.lang.Override
         public CreateGroupBlockedUserRequest parsePartialFrom(
                 com.google.protobuf.CodedInputStream input,

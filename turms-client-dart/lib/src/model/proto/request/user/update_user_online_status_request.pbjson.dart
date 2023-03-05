@@ -10,10 +10,10 @@ import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
 
 @$core.Deprecated('Use updateUserOnlineStatusRequestDescriptor instead')
-const UpdateUserOnlineStatusRequest$json = {
+const UpdateUserOnlineStatusRequest$json = const {
   '1': 'UpdateUserOnlineStatusRequest',
-  '2': [
-    {
+  '2': const [
+    const {
       '1': 'device_types',
       '3': 1,
       '4': 3,
@@ -21,7 +21,7 @@ const UpdateUserOnlineStatusRequest$json = {
       '6': '.im.turms.proto.DeviceType',
       '10': 'deviceTypes'
     },
-    {
+    const {
       '1': 'user_status',
       '3': 2,
       '4': 1,

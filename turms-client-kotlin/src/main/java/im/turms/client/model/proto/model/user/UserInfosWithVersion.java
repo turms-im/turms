@@ -175,7 +175,7 @@ public final class UserInfosWithVersion extends
      * <code>optional int64 last_updated_date = 2;</code>
      */
     private void clearLastUpdatedDate() {
-        bitField0_ = (bitField0_ & ~0x00000001);
+        bitField0_ &= ~0x00000001;
         lastUpdatedDate_ = 0L;
     }
 
@@ -481,7 +481,7 @@ public final class UserInfosWithVersion extends
                         parser = PARSER;
                         if (parser == null) {
                             parser =
-                                    new DefaultInstanceBasedParser<im.turms.client.model.proto.model.user.UserInfosWithVersion>(
+                                    new DefaultInstanceBasedParser<>(
                                             DEFAULT_INSTANCE);
                             PARSER = parser;
                         }

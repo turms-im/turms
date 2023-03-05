@@ -25,6 +25,10 @@ public interface QueryMessagesRequestOrBuilder extends
         com.google.protobuf.MessageLiteOrBuilder {
 
     /**
+     * <pre>
+     * Filter
+     * </pre>
+     *
      * <code>repeated int64 ids = 1;</code>
      *
      * @return A list containing the ids.
@@ -32,6 +36,10 @@ public interface QueryMessagesRequestOrBuilder extends
     java.util.List<java.lang.Long> getIdsList();
 
     /**
+     * <pre>
+     * Filter
+     * </pre>
+     *
      * <code>repeated int64 ids = 1;</code>
      *
      * @return The count of ids.
@@ -39,6 +47,10 @@ public interface QueryMessagesRequestOrBuilder extends
     int getIdsCount();
 
     /**
+     * <pre>
+     * Filter
+     * </pre>
+     *
      * <code>repeated int64 ids = 1;</code>
      *
      * @param index The index of the element to return.
@@ -97,34 +109,38 @@ public interface QueryMessagesRequestOrBuilder extends
     long getFromIds(int index);
 
     /**
-     * <code>optional int64 delivery_date_after = 5;</code>
+     * <code>optional int64 delivery_date_start = 5;</code>
      *
-     * @return Whether the deliveryDateAfter field is set.
+     * @return Whether the deliveryDateStart field is set.
      */
-    boolean hasDeliveryDateAfter();
+    boolean hasDeliveryDateStart();
 
     /**
-     * <code>optional int64 delivery_date_after = 5;</code>
+     * <code>optional int64 delivery_date_start = 5;</code>
      *
-     * @return The deliveryDateAfter.
+     * @return The deliveryDateStart.
      */
-    long getDeliveryDateAfter();
+    long getDeliveryDateStart();
 
     /**
-     * <code>optional int64 delivery_date_before = 6;</code>
+     * <code>optional int64 delivery_date_end = 6;</code>
      *
-     * @return Whether the deliveryDateBefore field is set.
+     * @return Whether the deliveryDateEnd field is set.
      */
-    boolean hasDeliveryDateBefore();
+    boolean hasDeliveryDateEnd();
 
     /**
-     * <code>optional int64 delivery_date_before = 6;</code>
+     * <code>optional int64 delivery_date_end = 6;</code>
      *
-     * @return The deliveryDateBefore.
+     * @return The deliveryDateEnd.
      */
-    long getDeliveryDateBefore();
+    long getDeliveryDateEnd();
 
     /**
+     * <pre>
+     * Option
+     * </pre>
+     *
      * <code>optional int32 max_count = 7;</code>
      *
      * @return Whether the maxCount field is set.
@@ -132,6 +148,10 @@ public interface QueryMessagesRequestOrBuilder extends
     boolean hasMaxCount();
 
     /**
+     * <pre>
+     * Option
+     * </pre>
+     *
      * <code>optional int32 max_count = 7;</code>
      *
      * @return The maxCount.
@@ -139,9 +159,37 @@ public interface QueryMessagesRequestOrBuilder extends
     int getMaxCount();
 
     /**
+     * <pre>
+     * Command
+     * </pre>
+     *
      * <code>bool with_total = 8;</code>
      *
      * @return The withTotal.
      */
     boolean getWithTotal();
+
+    /**
+     * <pre>
+     * Option
+     * TODO: reorder
+     * </pre>
+     *
+     * <code>optional bool descending = 9;</code>
+     *
+     * @return Whether the descending field is set.
+     */
+    boolean hasDescending();
+
+    /**
+     * <pre>
+     * Option
+     * TODO: reorder
+     * </pre>
+     *
+     * <code>optional bool descending = 9;</code>
+     *
+     * @return The descending.
+     */
+    boolean getDescending();
 }

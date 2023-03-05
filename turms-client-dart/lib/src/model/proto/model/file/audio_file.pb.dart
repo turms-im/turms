@@ -15,7 +15,7 @@ class AudioFile_Description extends $pb.GeneratedMessage {
           ? ''
           : 'AudioFile.Description',
       package: const $pb.PackageName(
-          $core.bool.fromEnvironment('protobuf.omit_message_names')
+          const $core.bool.fromEnvironment('protobuf.omit_message_names')
               ? ''
               : 'im.turms.proto'),
       createEmptyInstance: create)
@@ -149,7 +149,7 @@ class AudioFile extends $pb.GeneratedMessage {
           ? ''
           : 'AudioFile',
       package: const $pb.PackageName(
-          $core.bool.fromEnvironment('protobuf.omit_message_names')
+          const $core.bool.fromEnvironment('protobuf.omit_message_names')
               ? ''
               : 'im.turms.proto'),
       createEmptyInstance: create)

@@ -10,10 +10,10 @@ import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
 
 @$core.Deprecated('Use queryRelatedUserIdsRequestDescriptor instead')
-const QueryRelatedUserIdsRequest$json = {
+const QueryRelatedUserIdsRequest$json = const {
   '1': 'QueryRelatedUserIdsRequest',
-  '2': [
-    {
+  '2': const [
+    const {
       '1': 'blocked',
       '3': 1,
       '4': 1,
@@ -22,8 +22,8 @@ const QueryRelatedUserIdsRequest$json = {
       '10': 'blocked',
       '17': true
     },
-    {'1': 'group_indexes', '3': 2, '4': 3, '5': 5, '10': 'groupIndexes'},
-    {
+    const {'1': 'group_indexes', '3': 2, '4': 3, '5': 5, '10': 'groupIndexes'},
+    const {
       '1': 'last_updated_date',
       '3': 3,
       '4': 1,
@@ -33,9 +33,9 @@ const QueryRelatedUserIdsRequest$json = {
       '17': true
     },
   ],
-  '8': [
-    {'1': '_blocked'},
-    {'1': '_last_updated_date'},
+  '8': const [
+    const {'1': '_blocked'},
+    const {'1': '_last_updated_date'},
   ],
 };
 

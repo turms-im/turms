@@ -10,10 +10,10 @@ import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
 
 @$core.Deprecated('Use updateUserRequestDescriptor instead')
-const UpdateUserRequest$json = {
+const UpdateUserRequest$json = const {
   '1': 'UpdateUserRequest',
-  '2': [
-    {
+  '2': const [
+    const {
       '1': 'password',
       '3': 1,
       '4': 1,
@@ -22,9 +22,25 @@ const UpdateUserRequest$json = {
       '10': 'password',
       '17': true
     },
-    {'1': 'name', '3': 2, '4': 1, '5': 9, '9': 1, '10': 'name', '17': true},
-    {'1': 'intro', '3': 3, '4': 1, '5': 9, '9': 2, '10': 'intro', '17': true},
-    {
+    const {
+      '1': 'name',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '9': 1,
+      '10': 'name',
+      '17': true
+    },
+    const {
+      '1': 'intro',
+      '3': 3,
+      '4': 1,
+      '5': 9,
+      '9': 2,
+      '10': 'intro',
+      '17': true
+    },
+    const {
       '1': 'profile_picture',
       '3': 4,
       '4': 1,
@@ -33,7 +49,7 @@ const UpdateUserRequest$json = {
       '10': 'profilePicture',
       '17': true
     },
-    {
+    const {
       '1': 'profile_access_strategy',
       '3': 5,
       '4': 1,
@@ -44,12 +60,12 @@ const UpdateUserRequest$json = {
       '17': true
     },
   ],
-  '8': [
-    {'1': '_password'},
-    {'1': '_name'},
-    {'1': '_intro'},
-    {'1': '_profile_picture'},
-    {'1': '_profile_access_strategy'},
+  '8': const [
+    const {'1': '_password'},
+    const {'1': '_name'},
+    const {'1': '_intro'},
+    const {'1': '_profile_picture'},
+    const {'1': '_profile_access_strategy'},
   ],
 };
 

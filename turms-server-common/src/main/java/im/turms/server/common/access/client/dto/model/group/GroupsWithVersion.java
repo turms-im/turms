@@ -45,12 +45,6 @@ public final class GroupsWithVersion extends
         return new GroupsWithVersion();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-        return this.unknownFields;
-    }
-
     public static final com.google.protobuf.Descriptors.Descriptor
     getDescriptor() {
         return im.turms.server.common.access.client.dto.model.group.GroupsWithVersionOuterClass.internal_static_im_turms_proto_GroupsWithVersion_descriptor;
@@ -66,6 +60,7 @@ public final class GroupsWithVersion extends
 
     private int bitField0_;
     public static final int GROUPS_FIELD_NUMBER = 1;
+    @SuppressWarnings("serial")
     private java.util.List<im.turms.server.common.access.client.dto.model.group.Group> groups_;
 
     /**
@@ -111,7 +106,7 @@ public final class GroupsWithVersion extends
     }
 
     public static final int LAST_UPDATED_DATE_FIELD_NUMBER = 2;
-    private long lastUpdatedDate_;
+    private long lastUpdatedDate_ = 0L;
 
     /**
      * <code>optional int64 last_updated_date = 2;</code>
@@ -152,8 +147,8 @@ public final class GroupsWithVersion extends
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
             throws java.io.IOException {
-        for (int i = 0; i < groups_.size(); i++) {
-            output.writeMessage(1, groups_.get(i));
+        for (Group group : groups_) {
+            output.writeMessage(1, group);
         }
         if (((bitField0_ & 0x00000001) != 0)) {
             output.writeInt64(2, lastUpdatedDate_);
@@ -169,9 +164,9 @@ public final class GroupsWithVersion extends
         }
 
         size = 0;
-        for (int i = 0; i < groups_.size(); i++) {
+        for (Group group : groups_) {
             size += com.google.protobuf.CodedOutputStream
-                    .computeMessageSize(1, groups_.get(i));
+                    .computeMessageSize(1, group);
         }
         if (((bitField0_ & 0x00000001) != 0)) {
             size += com.google.protobuf.CodedOutputStream
@@ -187,10 +182,9 @@ public final class GroupsWithVersion extends
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof im.turms.server.common.access.client.dto.model.group.GroupsWithVersion)) {
+        if (!(obj instanceof GroupsWithVersion other)) {
             return super.equals(obj);
         }
-        im.turms.server.common.access.client.dto.model.group.GroupsWithVersion other = (im.turms.server.common.access.client.dto.model.group.GroupsWithVersion) obj;
 
         if (!getGroupsList()
                 .equals(other.getGroupsList())) {
@@ -205,10 +199,7 @@ public final class GroupsWithVersion extends
                 return false;
             }
         }
-        if (!getUnknownFields().equals(other.getUnknownFields())) {
-            return false;
-        }
-        return true;
+        return getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -335,8 +326,7 @@ public final class GroupsWithVersion extends
     @java.lang.Override
     protected Builder newBuilderForType(
             com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
+        return new Builder(parent);
     }
 
     /**
@@ -373,15 +363,15 @@ public final class GroupsWithVersion extends
         @java.lang.Override
         public Builder clear() {
             super.clear();
+            bitField0_ = 0;
             if (groupsBuilder_ == null) {
                 groups_ = java.util.Collections.emptyList();
             } else {
                 groups_ = null;
                 groupsBuilder_.clear();
             }
-            bitField0_ = (bitField0_ & ~0x00000001);
+            bitField0_ &= ~0x00000001;
             lastUpdatedDate_ = 0L;
-            bitField0_ = (bitField0_ & ~0x00000002);
             return this;
         }
 
@@ -408,62 +398,34 @@ public final class GroupsWithVersion extends
         @java.lang.Override
         public im.turms.server.common.access.client.dto.model.group.GroupsWithVersion buildPartial() {
             im.turms.server.common.access.client.dto.model.group.GroupsWithVersion result = new im.turms.server.common.access.client.dto.model.group.GroupsWithVersion(this);
-            int from_bitField0_ = bitField0_;
-            int to_bitField0_ = 0;
+            buildPartialRepeatedFields(result);
+            if (bitField0_ != 0) {
+                buildPartial0(result);
+            }
+            onBuilt();
+            return result;
+        }
+
+        private void buildPartialRepeatedFields(im.turms.server.common.access.client.dto.model.group.GroupsWithVersion result) {
             if (groupsBuilder_ == null) {
                 if (((bitField0_ & 0x00000001) != 0)) {
                     groups_ = java.util.Collections.unmodifiableList(groups_);
-                    bitField0_ = (bitField0_ & ~0x00000001);
+                    bitField0_ &= ~0x00000001;
                 }
                 result.groups_ = groups_;
             } else {
                 result.groups_ = groupsBuilder_.build();
             }
+        }
+
+        private void buildPartial0(im.turms.server.common.access.client.dto.model.group.GroupsWithVersion result) {
+            int from_bitField0_ = bitField0_;
+            int to_bitField0_ = 0;
             if (((from_bitField0_ & 0x00000002) != 0)) {
                 result.lastUpdatedDate_ = lastUpdatedDate_;
                 to_bitField0_ |= 0x00000001;
             }
-            result.bitField0_ = to_bitField0_;
-            onBuilt();
-            return result;
-        }
-
-        @java.lang.Override
-        public Builder clone() {
-            return super.clone();
-        }
-
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(
-                com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(
-                com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index, java.lang.Object value) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.addRepeatedField(field, value);
+            result.bitField0_ |= to_bitField0_;
         }
 
         @java.lang.Override
@@ -484,7 +446,7 @@ public final class GroupsWithVersion extends
                 if (!other.groups_.isEmpty()) {
                     if (groups_.isEmpty()) {
                         groups_ = other.groups_;
-                        bitField0_ = (bitField0_ & ~0x00000001);
+                        bitField0_ &= ~0x00000001;
                     } else {
                         ensureGroupsIsMutable();
                         groups_.addAll(other.groups_);
@@ -497,7 +459,7 @@ public final class GroupsWithVersion extends
                         groupsBuilder_.dispose();
                         groupsBuilder_ = null;
                         groups_ = other.groups_;
-                        bitField0_ = (bitField0_ & ~0x00000001);
+                        bitField0_ &= ~0x00000001;
                         groupsBuilder_ =
                                 com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
                                         getGroupsFieldBuilder() : null;
@@ -532,13 +494,11 @@ public final class GroupsWithVersion extends
                 while (!done) {
                     int tag = input.readTag();
                     switch (tag) {
-                        case 0:
-                            done = true;
-                            break;
-                        case 10: {
-                            im.turms.server.common.access.client.dto.model.group.Group m =
+                        case 0 -> done = true;
+                        case 10 -> {
+                            Group m =
                                     input.readMessage(
-                                            im.turms.server.common.access.client.dto.model.group.Group.parser(),
+                                            Group.parser(),
                                             extensionRegistry);
                             if (groupsBuilder_ == null) {
                                 ensureGroupsIsMutable();
@@ -546,18 +506,15 @@ public final class GroupsWithVersion extends
                             } else {
                                 groupsBuilder_.addMessage(m);
                             }
-                            break;
                         } // case 10
-                        case 16: {
+                        case 16 -> {
                             lastUpdatedDate_ = input.readInt64();
                             bitField0_ |= 0x00000002;
-                            break;
                         } // case 16
-                        default: {
+                        default -> {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
                             }
-                            break;
                         } // default:
                     } // switch (tag)
                 } // while (!done)
@@ -575,15 +532,14 @@ public final class GroupsWithVersion extends
                 java.util.Collections.emptyList();
 
         private void ensureGroupsIsMutable() {
-            if (!((bitField0_ & 0x00000001) != 0)) {
-                groups_ = new java.util.ArrayList<im.turms.server.common.access.client.dto.model.group.Group>(groups_);
+            if ((bitField0_ & 0x00000001) == 0) {
+                groups_ = new java.util.ArrayList<>(groups_);
                 bitField0_ |= 0x00000001;
             }
         }
 
         private com.google.protobuf.RepeatedFieldBuilderV3<
-                im.turms.server.common.access.client.dto.model.group.Group, im.turms.server.common.access.client.dto.model.group.Group.Builder, im.turms.server.common.access.client.dto.model.group.GroupOrBuilder>
-                groupsBuilder_;
+                im.turms.server.common.access.client.dto.model.group.Group, im.turms.server.common.access.client.dto.model.group.Group.Builder, im.turms.server.common.access.client.dto.model.group.GroupOrBuilder> groupsBuilder_;
 
         /**
          * <code>repeated .im.turms.proto.Group groups = 1;</code>
@@ -738,7 +694,7 @@ public final class GroupsWithVersion extends
         public Builder clearGroups() {
             if (groupsBuilder_ == null) {
                 groups_ = java.util.Collections.emptyList();
-                bitField0_ = (bitField0_ & ~0x00000001);
+                bitField0_ &= ~0x00000001;
                 onChanged();
             } else {
                 groupsBuilder_.clear();
@@ -821,8 +777,7 @@ public final class GroupsWithVersion extends
                 im.turms.server.common.access.client.dto.model.group.Group, im.turms.server.common.access.client.dto.model.group.Group.Builder, im.turms.server.common.access.client.dto.model.group.GroupOrBuilder>
         getGroupsFieldBuilder() {
             if (groupsBuilder_ == null) {
-                groupsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
-                        im.turms.server.common.access.client.dto.model.group.Group, im.turms.server.common.access.client.dto.model.group.Group.Builder, im.turms.server.common.access.client.dto.model.group.GroupOrBuilder>(
+                groupsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<>(
                         groups_,
                         ((bitField0_ & 0x00000001) != 0),
                         getParentForChildren(),
@@ -861,8 +816,9 @@ public final class GroupsWithVersion extends
          * @return This builder for chaining.
          */
         public Builder setLastUpdatedDate(long value) {
-            bitField0_ |= 0x00000002;
+
             lastUpdatedDate_ = value;
+            bitField0_ |= 0x00000002;
             onChanged();
             return this;
         }
@@ -873,7 +829,7 @@ public final class GroupsWithVersion extends
          * @return This builder for chaining.
          */
         public Builder clearLastUpdatedDate() {
-            bitField0_ = (bitField0_ & ~0x00000002);
+            bitField0_ &= ~0x00000002;
             lastUpdatedDate_ = 0L;
             onChanged();
             return this;
@@ -907,7 +863,7 @@ public final class GroupsWithVersion extends
     }
 
     private static final com.google.protobuf.Parser<GroupsWithVersion>
-            PARSER = new com.google.protobuf.AbstractParser<GroupsWithVersion>() {
+            PARSER = new com.google.protobuf.AbstractParser<>() {
         @java.lang.Override
         public GroupsWithVersion parsePartialFrom(
                 com.google.protobuf.CodedInputStream input,

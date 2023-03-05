@@ -46,12 +46,6 @@ public final class GroupJoinRequest extends
         return new GroupJoinRequest();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-        return this.unknownFields;
-    }
-
     public static final com.google.protobuf.Descriptors.Descriptor
     getDescriptor() {
         return im.turms.server.common.access.client.dto.model.group.GroupJoinRequestOuterClass.internal_static_im_turms_proto_GroupJoinRequest_descriptor;
@@ -67,7 +61,7 @@ public final class GroupJoinRequest extends
 
     private int bitField0_;
     public static final int ID_FIELD_NUMBER = 1;
-    private long id_;
+    private long id_ = 0L;
 
     /**
      * <code>optional int64 id = 1;</code>
@@ -90,7 +84,7 @@ public final class GroupJoinRequest extends
     }
 
     public static final int CREATION_DATE_FIELD_NUMBER = 2;
-    private long creationDate_;
+    private long creationDate_ = 0L;
 
     /**
      * <code>optional int64 creation_date = 2;</code>
@@ -113,7 +107,8 @@ public final class GroupJoinRequest extends
     }
 
     public static final int CONTENT_FIELD_NUMBER = 3;
-    private volatile java.lang.Object content_;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object content_ = "";
 
     /**
      * <code>optional string content = 3;</code>
@@ -165,7 +160,7 @@ public final class GroupJoinRequest extends
     }
 
     public static final int STATUS_FIELD_NUMBER = 4;
-    private int status_;
+    private int status_ = 0;
 
     /**
      * <code>optional .im.turms.proto.RequestStatus status = 4;</code>
@@ -194,13 +189,12 @@ public final class GroupJoinRequest extends
      */
     @java.lang.Override
     public im.turms.server.common.access.client.dto.constant.RequestStatus getStatus() {
-        @SuppressWarnings("deprecation")
-        im.turms.server.common.access.client.dto.constant.RequestStatus result = im.turms.server.common.access.client.dto.constant.RequestStatus.valueOf(status_);
+        im.turms.server.common.access.client.dto.constant.RequestStatus result = im.turms.server.common.access.client.dto.constant.RequestStatus.forNumber(status_);
         return result == null ? im.turms.server.common.access.client.dto.constant.RequestStatus.UNRECOGNIZED : result;
     }
 
     public static final int EXPIRATION_DATE_FIELD_NUMBER = 5;
-    private long expirationDate_;
+    private long expirationDate_ = 0L;
 
     /**
      * <code>optional int64 expiration_date = 5;</code>
@@ -223,7 +217,7 @@ public final class GroupJoinRequest extends
     }
 
     public static final int GROUP_ID_FIELD_NUMBER = 6;
-    private long groupId_;
+    private long groupId_ = 0L;
 
     /**
      * <code>optional int64 group_id = 6;</code>
@@ -246,7 +240,7 @@ public final class GroupJoinRequest extends
     }
 
     public static final int REQUESTER_ID_FIELD_NUMBER = 7;
-    private long requesterId_;
+    private long requesterId_ = 0L;
 
     /**
      * <code>optional int64 requester_id = 7;</code>
@@ -269,7 +263,7 @@ public final class GroupJoinRequest extends
     }
 
     public static final int RESPONDER_ID_FIELD_NUMBER = 8;
-    private long responderId_;
+    private long responderId_ = 0L;
 
     /**
      * <code>optional int64 responder_id = 8;</code>
@@ -386,10 +380,9 @@ public final class GroupJoinRequest extends
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof im.turms.server.common.access.client.dto.model.group.GroupJoinRequest)) {
+        if (!(obj instanceof GroupJoinRequest other)) {
             return super.equals(obj);
         }
-        im.turms.server.common.access.client.dto.model.group.GroupJoinRequest other = (im.turms.server.common.access.client.dto.model.group.GroupJoinRequest) obj;
 
         if (hasId() != other.hasId()) {
             return false;
@@ -462,10 +455,7 @@ public final class GroupJoinRequest extends
                 return false;
             }
         }
-        if (!getUnknownFields().equals(other.getUnknownFields())) {
-            return false;
-        }
-        return true;
+        return getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -621,8 +611,7 @@ public final class GroupJoinRequest extends
     @java.lang.Override
     protected Builder newBuilderForType(
             com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
+        return new Builder(parent);
     }
 
     /**
@@ -659,22 +648,15 @@ public final class GroupJoinRequest extends
         @java.lang.Override
         public Builder clear() {
             super.clear();
+            bitField0_ = 0;
             id_ = 0L;
-            bitField0_ = (bitField0_ & ~0x00000001);
             creationDate_ = 0L;
-            bitField0_ = (bitField0_ & ~0x00000002);
             content_ = "";
-            bitField0_ = (bitField0_ & ~0x00000004);
             status_ = 0;
-            bitField0_ = (bitField0_ & ~0x00000008);
             expirationDate_ = 0L;
-            bitField0_ = (bitField0_ & ~0x00000010);
             groupId_ = 0L;
-            bitField0_ = (bitField0_ & ~0x00000020);
             requesterId_ = 0L;
-            bitField0_ = (bitField0_ & ~0x00000040);
             responderId_ = 0L;
-            bitField0_ = (bitField0_ & ~0x00000080);
             return this;
         }
 
@@ -701,6 +683,14 @@ public final class GroupJoinRequest extends
         @java.lang.Override
         public im.turms.server.common.access.client.dto.model.group.GroupJoinRequest buildPartial() {
             im.turms.server.common.access.client.dto.model.group.GroupJoinRequest result = new im.turms.server.common.access.client.dto.model.group.GroupJoinRequest(this);
+            if (bitField0_ != 0) {
+                buildPartial0(result);
+            }
+            onBuilt();
+            return result;
+        }
+
+        private void buildPartial0(im.turms.server.common.access.client.dto.model.group.GroupJoinRequest result) {
             int from_bitField0_ = bitField0_;
             int to_bitField0_ = 0;
             if (((from_bitField0_ & 0x00000001) != 0)) {
@@ -712,13 +702,13 @@ public final class GroupJoinRequest extends
                 to_bitField0_ |= 0x00000002;
             }
             if (((from_bitField0_ & 0x00000004) != 0)) {
+                result.content_ = content_;
                 to_bitField0_ |= 0x00000004;
             }
-            result.content_ = content_;
             if (((from_bitField0_ & 0x00000008) != 0)) {
+                result.status_ = status_;
                 to_bitField0_ |= 0x00000008;
             }
-            result.status_ = status_;
             if (((from_bitField0_ & 0x00000010) != 0)) {
                 result.expirationDate_ = expirationDate_;
                 to_bitField0_ |= 0x00000010;
@@ -735,47 +725,7 @@ public final class GroupJoinRequest extends
                 result.responderId_ = responderId_;
                 to_bitField0_ |= 0x00000080;
             }
-            result.bitField0_ = to_bitField0_;
-            onBuilt();
-            return result;
-        }
-
-        @java.lang.Override
-        public Builder clone() {
-            return super.clone();
-        }
-
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(
-                com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(
-                com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index, java.lang.Object value) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.addRepeatedField(field, value);
+            result.bitField0_ |= to_bitField0_;
         }
 
         @java.lang.Override
@@ -799,8 +749,8 @@ public final class GroupJoinRequest extends
                 setCreationDate(other.getCreationDate());
             }
             if (other.hasContent()) {
-                bitField0_ |= 0x00000004;
                 content_ = other.content_;
+                bitField0_ |= 0x00000004;
                 onChanged();
             }
             if (other.hasStatus()) {
@@ -841,54 +791,43 @@ public final class GroupJoinRequest extends
                 while (!done) {
                     int tag = input.readTag();
                     switch (tag) {
-                        case 0:
-                            done = true;
-                            break;
-                        case 8: {
+                        case 0 -> done = true;
+                        case 8 -> {
                             id_ = input.readInt64();
                             bitField0_ |= 0x00000001;
-                            break;
                         } // case 8
-                        case 16: {
+                        case 16 -> {
                             creationDate_ = input.readInt64();
                             bitField0_ |= 0x00000002;
-                            break;
                         } // case 16
-                        case 26: {
+                        case 26 -> {
                             content_ = input.readStringRequireUtf8();
                             bitField0_ |= 0x00000004;
-                            break;
                         } // case 26
-                        case 32: {
+                        case 32 -> {
                             status_ = input.readEnum();
                             bitField0_ |= 0x00000008;
-                            break;
                         } // case 32
-                        case 40: {
+                        case 40 -> {
                             expirationDate_ = input.readInt64();
                             bitField0_ |= 0x00000010;
-                            break;
                         } // case 40
-                        case 48: {
+                        case 48 -> {
                             groupId_ = input.readInt64();
                             bitField0_ |= 0x00000020;
-                            break;
                         } // case 48
-                        case 56: {
+                        case 56 -> {
                             requesterId_ = input.readInt64();
                             bitField0_ |= 0x00000040;
-                            break;
                         } // case 56
-                        case 64: {
+                        case 64 -> {
                             responderId_ = input.readInt64();
                             bitField0_ |= 0x00000080;
-                            break;
                         } // case 64
-                        default: {
+                        default -> {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
                             }
-                            break;
                         } // default:
                     } // switch (tag)
                 } // while (!done)
@@ -931,8 +870,9 @@ public final class GroupJoinRequest extends
          * @return This builder for chaining.
          */
         public Builder setId(long value) {
-            bitField0_ |= 0x00000001;
+
             id_ = value;
+            bitField0_ |= 0x00000001;
             onChanged();
             return this;
         }
@@ -943,7 +883,7 @@ public final class GroupJoinRequest extends
          * @return This builder for chaining.
          */
         public Builder clearId() {
-            bitField0_ = (bitField0_ & ~0x00000001);
+            bitField0_ &= ~0x00000001;
             id_ = 0L;
             onChanged();
             return this;
@@ -978,8 +918,9 @@ public final class GroupJoinRequest extends
          * @return This builder for chaining.
          */
         public Builder setCreationDate(long value) {
-            bitField0_ |= 0x00000002;
+
             creationDate_ = value;
+            bitField0_ |= 0x00000002;
             onChanged();
             return this;
         }
@@ -990,7 +931,7 @@ public final class GroupJoinRequest extends
          * @return This builder for chaining.
          */
         public Builder clearCreationDate() {
-            bitField0_ = (bitField0_ & ~0x00000002);
+            bitField0_ &= ~0x00000002;
             creationDate_ = 0L;
             onChanged();
             return this;
@@ -1055,8 +996,8 @@ public final class GroupJoinRequest extends
             if (value == null) {
                 throw new NullPointerException();
             }
-            bitField0_ |= 0x00000004;
             content_ = value;
+            bitField0_ |= 0x00000004;
             onChanged();
             return this;
         }
@@ -1067,8 +1008,8 @@ public final class GroupJoinRequest extends
          * @return This builder for chaining.
          */
         public Builder clearContent() {
-            bitField0_ = (bitField0_ & ~0x00000004);
             content_ = getDefaultInstance().getContent();
+            bitField0_ &= ~0x00000004;
             onChanged();
             return this;
         }
@@ -1085,8 +1026,8 @@ public final class GroupJoinRequest extends
                 throw new NullPointerException();
             }
             checkByteStringIsUtf8(value);
-            bitField0_ |= 0x00000004;
             content_ = value;
+            bitField0_ |= 0x00000004;
             onChanged();
             return this;
         }
@@ -1120,8 +1061,8 @@ public final class GroupJoinRequest extends
          * @return This builder for chaining.
          */
         public Builder setStatusValue(int value) {
-            bitField0_ |= 0x00000008;
             status_ = value;
+            bitField0_ |= 0x00000008;
             onChanged();
             return this;
         }
@@ -1133,8 +1074,7 @@ public final class GroupJoinRequest extends
          */
         @java.lang.Override
         public im.turms.server.common.access.client.dto.constant.RequestStatus getStatus() {
-            @SuppressWarnings("deprecation")
-            im.turms.server.common.access.client.dto.constant.RequestStatus result = im.turms.server.common.access.client.dto.constant.RequestStatus.valueOf(status_);
+            im.turms.server.common.access.client.dto.constant.RequestStatus result = im.turms.server.common.access.client.dto.constant.RequestStatus.forNumber(status_);
             return result == null ? im.turms.server.common.access.client.dto.constant.RequestStatus.UNRECOGNIZED : result;
         }
 
@@ -1160,7 +1100,7 @@ public final class GroupJoinRequest extends
          * @return This builder for chaining.
          */
         public Builder clearStatus() {
-            bitField0_ = (bitField0_ & ~0x00000008);
+            bitField0_ &= ~0x00000008;
             status_ = 0;
             onChanged();
             return this;
@@ -1195,8 +1135,9 @@ public final class GroupJoinRequest extends
          * @return This builder for chaining.
          */
         public Builder setExpirationDate(long value) {
-            bitField0_ |= 0x00000010;
+
             expirationDate_ = value;
+            bitField0_ |= 0x00000010;
             onChanged();
             return this;
         }
@@ -1207,7 +1148,7 @@ public final class GroupJoinRequest extends
          * @return This builder for chaining.
          */
         public Builder clearExpirationDate() {
-            bitField0_ = (bitField0_ & ~0x00000010);
+            bitField0_ &= ~0x00000010;
             expirationDate_ = 0L;
             onChanged();
             return this;
@@ -1242,8 +1183,9 @@ public final class GroupJoinRequest extends
          * @return This builder for chaining.
          */
         public Builder setGroupId(long value) {
-            bitField0_ |= 0x00000020;
+
             groupId_ = value;
+            bitField0_ |= 0x00000020;
             onChanged();
             return this;
         }
@@ -1254,7 +1196,7 @@ public final class GroupJoinRequest extends
          * @return This builder for chaining.
          */
         public Builder clearGroupId() {
-            bitField0_ = (bitField0_ & ~0x00000020);
+            bitField0_ &= ~0x00000020;
             groupId_ = 0L;
             onChanged();
             return this;
@@ -1289,8 +1231,9 @@ public final class GroupJoinRequest extends
          * @return This builder for chaining.
          */
         public Builder setRequesterId(long value) {
-            bitField0_ |= 0x00000040;
+
             requesterId_ = value;
+            bitField0_ |= 0x00000040;
             onChanged();
             return this;
         }
@@ -1301,7 +1244,7 @@ public final class GroupJoinRequest extends
          * @return This builder for chaining.
          */
         public Builder clearRequesterId() {
-            bitField0_ = (bitField0_ & ~0x00000040);
+            bitField0_ &= ~0x00000040;
             requesterId_ = 0L;
             onChanged();
             return this;
@@ -1336,8 +1279,9 @@ public final class GroupJoinRequest extends
          * @return This builder for chaining.
          */
         public Builder setResponderId(long value) {
-            bitField0_ |= 0x00000080;
+
             responderId_ = value;
+            bitField0_ |= 0x00000080;
             onChanged();
             return this;
         }
@@ -1348,7 +1292,7 @@ public final class GroupJoinRequest extends
          * @return This builder for chaining.
          */
         public Builder clearResponderId() {
-            bitField0_ = (bitField0_ & ~0x00000080);
+            bitField0_ &= ~0x00000080;
             responderId_ = 0L;
             onChanged();
             return this;
@@ -1382,7 +1326,7 @@ public final class GroupJoinRequest extends
     }
 
     private static final com.google.protobuf.Parser<GroupJoinRequest>
-            PARSER = new com.google.protobuf.AbstractParser<GroupJoinRequest>() {
+            PARSER = new com.google.protobuf.AbstractParser<>() {
         @java.lang.Override
         public GroupJoinRequest parsePartialFrom(
                 com.google.protobuf.CodedInputStream input,

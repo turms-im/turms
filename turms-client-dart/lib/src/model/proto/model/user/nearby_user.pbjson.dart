@@ -10,11 +10,11 @@ import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
 
 @$core.Deprecated('Use nearbyUserDescriptor instead')
-const NearbyUser$json = {
+const NearbyUser$json = const {
   '1': 'NearbyUser',
-  '2': [
-    {'1': 'user_id', '3': 1, '4': 1, '5': 3, '10': 'userId'},
-    {
+  '2': const [
+    const {'1': 'user_id', '3': 1, '4': 1, '5': 3, '10': 'userId'},
+    const {
       '1': 'device_type',
       '3': 2,
       '4': 1,
@@ -24,7 +24,7 @@ const NearbyUser$json = {
       '10': 'deviceType',
       '17': true
     },
-    {
+    const {
       '1': 'info',
       '3': 3,
       '4': 1,
@@ -34,7 +34,7 @@ const NearbyUser$json = {
       '10': 'info',
       '17': true
     },
-    {
+    const {
       '1': 'distance',
       '3': 4,
       '4': 1,
@@ -43,7 +43,7 @@ const NearbyUser$json = {
       '10': 'distance',
       '17': true
     },
-    {
+    const {
       '1': 'location',
       '3': 5,
       '4': 1,
@@ -54,11 +54,11 @@ const NearbyUser$json = {
       '17': true
     },
   ],
-  '8': [
-    {'1': '_device_type'},
-    {'1': '_info'},
-    {'1': '_distance'},
-    {'1': '_location'},
+  '8': const [
+    const {'1': '_device_type'},
+    const {'1': '_info'},
+    const {'1': '_distance'},
+    const {'1': '_location'},
   ],
 };
 

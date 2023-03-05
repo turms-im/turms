@@ -45,12 +45,6 @@ public final class QueryUserProfilesRequest extends
         return new QueryUserProfilesRequest();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-        return this.unknownFields;
-    }
-
     public static final com.google.protobuf.Descriptors.Descriptor
     getDescriptor() {
         return im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequestOuterClass.internal_static_im_turms_proto_QueryUserProfilesRequest_descriptor;
@@ -61,12 +55,12 @@ public final class QueryUserProfilesRequest extends
     internalGetFieldAccessorTable() {
         return im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequestOuterClass.internal_static_im_turms_proto_QueryUserProfilesRequest_fieldAccessorTable
                 .ensureFieldAccessorsInitialized(
-                        im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest.class,
-                        im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest.Builder.class);
+                        im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest.class, im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest.Builder.class);
     }
 
     private int bitField0_;
     public static final int USER_IDS_FIELD_NUMBER = 1;
+    @SuppressWarnings("serial")
     private com.google.protobuf.Internal.LongList userIds_;
 
     /**
@@ -102,7 +96,7 @@ public final class QueryUserProfilesRequest extends
     private int userIdsMemoizedSerializedSize = -1;
 
     public static final int LAST_UPDATED_DATE_FIELD_NUMBER = 2;
-    private long lastUpdatedDate_;
+    private long lastUpdatedDate_ = 0L;
 
     /**
      * <code>optional int64 last_updated_date = 2;</code>
@@ -193,10 +187,9 @@ public final class QueryUserProfilesRequest extends
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest)) {
+        if (!(obj instanceof QueryUserProfilesRequest other)) {
             return super.equals(obj);
         }
-        im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest other = (im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest) obj;
 
         if (!getUserIdsList()
                 .equals(other.getUserIdsList())) {
@@ -211,10 +204,7 @@ public final class QueryUserProfilesRequest extends
                 return false;
             }
         }
-        if (!getUnknownFields().equals(other.getUnknownFields())) {
-            return false;
-        }
-        return true;
+        return getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -341,8 +331,7 @@ public final class QueryUserProfilesRequest extends
     @java.lang.Override
     protected Builder newBuilderForType(
             com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
+        return new Builder(parent);
     }
 
     /**
@@ -362,8 +351,7 @@ public final class QueryUserProfilesRequest extends
         internalGetFieldAccessorTable() {
             return im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequestOuterClass.internal_static_im_turms_proto_QueryUserProfilesRequest_fieldAccessorTable
                     .ensureFieldAccessorsInitialized(
-                            im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest.class,
-                            im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest.Builder.class);
+                            im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest.class, im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest.Builder.class);
         }
 
         // Construct using im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest.newBuilder()
@@ -380,10 +368,9 @@ public final class QueryUserProfilesRequest extends
         @java.lang.Override
         public Builder clear() {
             super.clear();
+            bitField0_ = 0;
             userIds_ = emptyLongList();
-            bitField0_ = (bitField0_ & ~0x00000001);
             lastUpdatedDate_ = 0L;
-            bitField0_ = (bitField0_ & ~0x00000002);
             return this;
         }
 
@@ -410,58 +397,30 @@ public final class QueryUserProfilesRequest extends
         @java.lang.Override
         public im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest buildPartial() {
             im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest result = new im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest(this);
-            int from_bitField0_ = bitField0_;
-            int to_bitField0_ = 0;
-            if (((bitField0_ & 0x00000001) != 0)) {
-                userIds_.makeImmutable();
-                bitField0_ = (bitField0_ & ~0x00000001);
+            buildPartialRepeatedFields(result);
+            if (bitField0_ != 0) {
+                buildPartial0(result);
             }
-            result.userIds_ = userIds_;
-            if (((from_bitField0_ & 0x00000002) != 0)) {
-                result.lastUpdatedDate_ = lastUpdatedDate_;
-                to_bitField0_ |= 0x00000001;
-            }
-            result.bitField0_ = to_bitField0_;
             onBuilt();
             return result;
         }
 
-        @java.lang.Override
-        public Builder clone() {
-            return super.clone();
+        private void buildPartialRepeatedFields(im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest result) {
+            if (((bitField0_ & 0x00000001) != 0)) {
+                userIds_.makeImmutable();
+                bitField0_ &= ~0x00000001;
+            }
+            result.userIds_ = userIds_;
         }
 
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(
-                com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(
-                com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index, java.lang.Object value) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.addRepeatedField(field, value);
+        private void buildPartial0(im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest result) {
+            int from_bitField0_ = bitField0_;
+            int to_bitField0_ = 0;
+            if (((from_bitField0_ & 0x00000002) != 0)) {
+                result.lastUpdatedDate_ = lastUpdatedDate_;
+                to_bitField0_ |= 0x00000001;
+            }
+            result.bitField0_ |= to_bitField0_;
         }
 
         @java.lang.Override
@@ -481,7 +440,7 @@ public final class QueryUserProfilesRequest extends
             if (!other.userIds_.isEmpty()) {
                 if (userIds_.isEmpty()) {
                     userIds_ = other.userIds_;
-                    bitField0_ = (bitField0_ & ~0x00000001);
+                    bitField0_ &= ~0x00000001;
                 } else {
                     ensureUserIdsIsMutable();
                     userIds_.addAll(other.userIds_);
@@ -514,16 +473,13 @@ public final class QueryUserProfilesRequest extends
                 while (!done) {
                     int tag = input.readTag();
                     switch (tag) {
-                        case 0:
-                            done = true;
-                            break;
-                        case 8: {
+                        case 0 -> done = true;
+                        case 8 -> {
                             long v = input.readInt64();
                             ensureUserIdsIsMutable();
                             userIds_.addLong(v);
-                            break;
                         } // case 8
-                        case 10: {
+                        case 10 -> {
                             int length = input.readRawVarint32();
                             int limit = input.pushLimit(length);
                             ensureUserIdsIsMutable();
@@ -531,18 +487,15 @@ public final class QueryUserProfilesRequest extends
                                 userIds_.addLong(input.readInt64());
                             }
                             input.popLimit(limit);
-                            break;
                         } // case 10
-                        case 16: {
+                        case 16 -> {
                             lastUpdatedDate_ = input.readInt64();
                             bitField0_ |= 0x00000002;
-                            break;
                         } // case 16
-                        default: {
+                        default -> {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
                             }
-                            break;
                         } // default:
                     } // switch (tag)
                 } // while (!done)
@@ -559,7 +512,7 @@ public final class QueryUserProfilesRequest extends
         private com.google.protobuf.Internal.LongList userIds_ = emptyLongList();
 
         private void ensureUserIdsIsMutable() {
-            if (!((bitField0_ & 0x00000001) != 0)) {
+            if ((bitField0_ & 0x00000001) == 0) {
                 userIds_ = mutableCopy(userIds_);
                 bitField0_ |= 0x00000001;
             }
@@ -604,6 +557,7 @@ public final class QueryUserProfilesRequest extends
          */
         public Builder setUserIds(
                 int index, long value) {
+
             ensureUserIdsIsMutable();
             userIds_.setLong(index, value);
             onChanged();
@@ -617,6 +571,7 @@ public final class QueryUserProfilesRequest extends
          * @return This builder for chaining.
          */
         public Builder addUserIds(long value) {
+
             ensureUserIdsIsMutable();
             userIds_.addLong(value);
             onChanged();
@@ -645,7 +600,7 @@ public final class QueryUserProfilesRequest extends
          */
         public Builder clearUserIds() {
             userIds_ = emptyLongList();
-            bitField0_ = (bitField0_ & ~0x00000001);
+            bitField0_ &= ~0x00000001;
             onChanged();
             return this;
         }
@@ -679,8 +634,9 @@ public final class QueryUserProfilesRequest extends
          * @return This builder for chaining.
          */
         public Builder setLastUpdatedDate(long value) {
-            bitField0_ |= 0x00000002;
+
             lastUpdatedDate_ = value;
+            bitField0_ |= 0x00000002;
             onChanged();
             return this;
         }
@@ -691,7 +647,7 @@ public final class QueryUserProfilesRequest extends
          * @return This builder for chaining.
          */
         public Builder clearLastUpdatedDate() {
-            bitField0_ = (bitField0_ & ~0x00000002);
+            bitField0_ &= ~0x00000002;
             lastUpdatedDate_ = 0L;
             onChanged();
             return this;
@@ -725,7 +681,7 @@ public final class QueryUserProfilesRequest extends
     }
 
     private static final com.google.protobuf.Parser<QueryUserProfilesRequest>
-            PARSER = new com.google.protobuf.AbstractParser<QueryUserProfilesRequest>() {
+            PARSER = new com.google.protobuf.AbstractParser<>() {
         @java.lang.Override
         public QueryUserProfilesRequest parsePartialFrom(
                 com.google.protobuf.CodedInputStream input,

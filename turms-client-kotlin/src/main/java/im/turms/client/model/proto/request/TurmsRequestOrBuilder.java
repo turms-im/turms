@@ -912,5 +912,5 @@ public interface TurmsRequestOrBuilder extends
      */
     im.turms.client.model.proto.request.storage.UpdateMessageAttachmentInfoRequest getUpdateMessageAttachmentInfoRequest();
 
-    public im.turms.client.model.proto.request.TurmsRequest.KindCase getKindCase();
+    im.turms.client.model.proto.request.TurmsRequest.KindCase getKindCase();
 }

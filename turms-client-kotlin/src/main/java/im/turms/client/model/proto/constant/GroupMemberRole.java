@@ -113,12 +113,7 @@ public enum GroupMemberRole
 
     private static final com.google.protobuf.Internal.EnumLiteMap<
             GroupMemberRole> internalValueMap =
-            new com.google.protobuf.Internal.EnumLiteMap<GroupMemberRole>() {
-                @java.lang.Override
-                public GroupMemberRole findValueByNumber(int number) {
-                    return GroupMemberRole.forNumber(number);
-                }
-            };
+            number -> GroupMemberRole.forNumber(number);
 
     public static com.google.protobuf.Internal.EnumVerifier
     internalGetVerifier() {
@@ -135,11 +130,9 @@ public enum GroupMemberRole
         }
     }
 
-    ;
-
     private final int value;
 
-    private GroupMemberRole(int value) {
+    GroupMemberRole(int value) {
         this.value = value;
     }
 

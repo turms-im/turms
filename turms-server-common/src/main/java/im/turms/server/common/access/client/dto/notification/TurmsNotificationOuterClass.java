@@ -155,17 +155,13 @@ public final class TurmsNotificationOuterClass {
         internal_static_im_turms_proto_TurmsNotification_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
                 internal_static_im_turms_proto_TurmsNotification_descriptor,
-                new java.lang.String[]{"Timestamp", "RequestId", "Code", "Reason", "Data", "RequesterId", "CloseStatus", "RelayedRequest", "RequestId", "Code", "Reason", "RequesterId",
-                        "CloseStatus",});
+                new java.lang.String[]{"Timestamp", "RequestId", "Code", "Reason", "Data", "RequesterId", "CloseStatus", "RelayedRequest", "RequestId", "Code", "Reason", "RequesterId", "CloseStatus",});
         internal_static_im_turms_proto_TurmsNotification_Data_descriptor =
                 internal_static_im_turms_proto_TurmsNotification_descriptor.getNestedTypes().get(0);
         internal_static_im_turms_proto_TurmsNotification_Data_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
                 internal_static_im_turms_proto_TurmsNotification_Data_descriptor,
-                new java.lang.String[]{"Long", "String", "LongsWithVersion", "StringsWithVersion", "Conversations", "Messages", "MessagesWithTotalList", "UserSession", "UserInfosWithVersion",
-                        "UserOnlineStatuses", "UserFriendRequestsWithVersion", "UserRelationshipGroupsWithVersion", "UserRelationshipsWithVersion", "NearbyUsers", "GroupInvitationsWithVersion",
-                        "GroupJoinQuestionAnswerResult", "GroupJoinRequestsWithVersion", "GroupJoinQuestionsWithVersion", "GroupMembersWithVersion", "GroupsWithVersion", "StorageResourceInfos",
-                        "Kind",});
+                new java.lang.String[]{"Long", "String", "LongsWithVersion", "StringsWithVersion", "Conversations", "Messages", "MessagesWithTotalList", "UserSession", "UserInfosWithVersion", "UserOnlineStatuses", "UserFriendRequestsWithVersion", "UserRelationshipGroupsWithVersion", "UserRelationshipsWithVersion", "NearbyUsers", "GroupInvitationsWithVersion", "GroupJoinQuestionAnswerResult", "GroupJoinRequestsWithVersion", "GroupJoinQuestionsWithVersion", "GroupMembersWithVersion", "GroupsWithVersion", "StorageResourceInfos", "Kind",});
         im.turms.server.common.access.client.dto.request.TurmsRequestOuterClass.getDescriptor();
         im.turms.server.common.access.client.dto.model.common.LongsWithVersionOuterClass.getDescriptor();
         im.turms.server.common.access.client.dto.model.common.StringsWithVersionOuterClass.getDescriptor();

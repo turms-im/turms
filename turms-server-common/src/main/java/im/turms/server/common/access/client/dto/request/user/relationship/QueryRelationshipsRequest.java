@@ -46,12 +46,6 @@ public final class QueryRelationshipsRequest extends
         return new QueryRelationshipsRequest();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-        return this.unknownFields;
-    }
-
     public static final com.google.protobuf.Descriptors.Descriptor
     getDescriptor() {
         return im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequestOuterClass.internal_static_im_turms_proto_QueryRelationshipsRequest_descriptor;
@@ -62,12 +56,12 @@ public final class QueryRelationshipsRequest extends
     internalGetFieldAccessorTable() {
         return im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequestOuterClass.internal_static_im_turms_proto_QueryRelationshipsRequest_fieldAccessorTable
                 .ensureFieldAccessorsInitialized(
-                        im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequest.class,
-                        im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequest.Builder.class);
+                        im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequest.class, im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequest.Builder.class);
     }
 
     private int bitField0_;
     public static final int USER_IDS_FIELD_NUMBER = 1;
+    @SuppressWarnings("serial")
     private com.google.protobuf.Internal.LongList userIds_;
 
     /**
@@ -103,7 +97,7 @@ public final class QueryRelationshipsRequest extends
     private int userIdsMemoizedSerializedSize = -1;
 
     public static final int BLOCKED_FIELD_NUMBER = 2;
-    private boolean blocked_;
+    private boolean blocked_ = false;
 
     /**
      * <code>optional bool blocked = 2;</code>
@@ -126,6 +120,7 @@ public final class QueryRelationshipsRequest extends
     }
 
     public static final int GROUP_INDEXES_FIELD_NUMBER = 3;
+    @SuppressWarnings("serial")
     private com.google.protobuf.Internal.IntList groupIndexes_;
 
     /**
@@ -161,7 +156,7 @@ public final class QueryRelationshipsRequest extends
     private int groupIndexesMemoizedSerializedSize = -1;
 
     public static final int LAST_UPDATED_DATE_FIELD_NUMBER = 4;
-    private long lastUpdatedDate_;
+    private long lastUpdatedDate_ = 0L;
 
     /**
      * <code>optional int64 last_updated_date = 4;</code>
@@ -280,11 +275,9 @@ public final class QueryRelationshipsRequest extends
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequest)) {
+        if (!(obj instanceof QueryRelationshipsRequest other)) {
             return super.equals(obj);
         }
-        im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequest other =
-                (im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequest) obj;
 
         if (!getUserIdsList()
                 .equals(other.getUserIdsList())) {
@@ -312,10 +305,7 @@ public final class QueryRelationshipsRequest extends
                 return false;
             }
         }
-        if (!getUnknownFields().equals(other.getUnknownFields())) {
-            return false;
-        }
-        return true;
+        return getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -451,8 +441,7 @@ public final class QueryRelationshipsRequest extends
     @java.lang.Override
     protected Builder newBuilderForType(
             com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
+        return new Builder(parent);
     }
 
     /**
@@ -472,8 +461,7 @@ public final class QueryRelationshipsRequest extends
         internalGetFieldAccessorTable() {
             return im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequestOuterClass.internal_static_im_turms_proto_QueryRelationshipsRequest_fieldAccessorTable
                     .ensureFieldAccessorsInitialized(
-                            im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequest.class,
-                            im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequest.Builder.class);
+                            im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequest.class, im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequest.Builder.class);
         }
 
         // Construct using im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequest.newBuilder()
@@ -490,14 +478,11 @@ public final class QueryRelationshipsRequest extends
         @java.lang.Override
         public Builder clear() {
             super.clear();
+            bitField0_ = 0;
             userIds_ = emptyLongList();
-            bitField0_ = (bitField0_ & ~0x00000001);
             blocked_ = false;
-            bitField0_ = (bitField0_ & ~0x00000002);
             groupIndexes_ = emptyIntList();
-            bitField0_ = (bitField0_ & ~0x00000004);
             lastUpdatedDate_ = 0L;
-            bitField0_ = (bitField0_ & ~0x00000008);
             return this;
         }
 
@@ -523,69 +508,40 @@ public final class QueryRelationshipsRequest extends
 
         @java.lang.Override
         public im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequest buildPartial() {
-            im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequest result =
-                    new im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequest(this);
-            int from_bitField0_ = bitField0_;
-            int to_bitField0_ = 0;
-            if (((bitField0_ & 0x00000001) != 0)) {
-                userIds_.makeImmutable();
-                bitField0_ = (bitField0_ & ~0x00000001);
+            im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequest result = new im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequest(this);
+            buildPartialRepeatedFields(result);
+            if (bitField0_ != 0) {
+                buildPartial0(result);
             }
-            result.userIds_ = userIds_;
-            if (((from_bitField0_ & 0x00000002) != 0)) {
-                result.blocked_ = blocked_;
-                to_bitField0_ |= 0x00000001;
-            }
-            if (((bitField0_ & 0x00000004) != 0)) {
-                groupIndexes_.makeImmutable();
-                bitField0_ = (bitField0_ & ~0x00000004);
-            }
-            result.groupIndexes_ = groupIndexes_;
-            if (((from_bitField0_ & 0x00000008) != 0)) {
-                result.lastUpdatedDate_ = lastUpdatedDate_;
-                to_bitField0_ |= 0x00000002;
-            }
-            result.bitField0_ = to_bitField0_;
             onBuilt();
             return result;
         }
 
-        @java.lang.Override
-        public Builder clone() {
-            return super.clone();
+        private void buildPartialRepeatedFields(im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequest result) {
+            if (((bitField0_ & 0x00000001) != 0)) {
+                userIds_.makeImmutable();
+                bitField0_ &= ~0x00000001;
+            }
+            result.userIds_ = userIds_;
+            if (((bitField0_ & 0x00000004) != 0)) {
+                groupIndexes_.makeImmutable();
+                bitField0_ &= ~0x00000004;
+            }
+            result.groupIndexes_ = groupIndexes_;
         }
 
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(
-                com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(
-                com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index, java.lang.Object value) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.addRepeatedField(field, value);
+        private void buildPartial0(im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequest result) {
+            int from_bitField0_ = bitField0_;
+            int to_bitField0_ = 0;
+            if (((from_bitField0_ & 0x00000002) != 0)) {
+                result.blocked_ = blocked_;
+                to_bitField0_ |= 0x00000001;
+            }
+            if (((from_bitField0_ & 0x00000008) != 0)) {
+                result.lastUpdatedDate_ = lastUpdatedDate_;
+                to_bitField0_ |= 0x00000002;
+            }
+            result.bitField0_ |= to_bitField0_;
         }
 
         @java.lang.Override
@@ -605,7 +561,7 @@ public final class QueryRelationshipsRequest extends
             if (!other.userIds_.isEmpty()) {
                 if (userIds_.isEmpty()) {
                     userIds_ = other.userIds_;
-                    bitField0_ = (bitField0_ & ~0x00000001);
+                    bitField0_ &= ~0x00000001;
                 } else {
                     ensureUserIdsIsMutable();
                     userIds_.addAll(other.userIds_);
@@ -618,7 +574,7 @@ public final class QueryRelationshipsRequest extends
             if (!other.groupIndexes_.isEmpty()) {
                 if (groupIndexes_.isEmpty()) {
                     groupIndexes_ = other.groupIndexes_;
-                    bitField0_ = (bitField0_ & ~0x00000004);
+                    bitField0_ &= ~0x00000004;
                 } else {
                     ensureGroupIndexesIsMutable();
                     groupIndexes_.addAll(other.groupIndexes_);
@@ -651,16 +607,13 @@ public final class QueryRelationshipsRequest extends
                 while (!done) {
                     int tag = input.readTag();
                     switch (tag) {
-                        case 0:
-                            done = true;
-                            break;
-                        case 8: {
+                        case 0 -> done = true;
+                        case 8 -> {
                             long v = input.readInt64();
                             ensureUserIdsIsMutable();
                             userIds_.addLong(v);
-                            break;
                         } // case 8
-                        case 10: {
+                        case 10 -> {
                             int length = input.readRawVarint32();
                             int limit = input.pushLimit(length);
                             ensureUserIdsIsMutable();
@@ -668,20 +621,17 @@ public final class QueryRelationshipsRequest extends
                                 userIds_.addLong(input.readInt64());
                             }
                             input.popLimit(limit);
-                            break;
                         } // case 10
-                        case 16: {
+                        case 16 -> {
                             blocked_ = input.readBool();
                             bitField0_ |= 0x00000002;
-                            break;
                         } // case 16
-                        case 24: {
+                        case 24 -> {
                             int v = input.readInt32();
                             ensureGroupIndexesIsMutable();
                             groupIndexes_.addInt(v);
-                            break;
                         } // case 24
-                        case 26: {
+                        case 26 -> {
                             int length = input.readRawVarint32();
                             int limit = input.pushLimit(length);
                             ensureGroupIndexesIsMutable();
@@ -689,18 +639,15 @@ public final class QueryRelationshipsRequest extends
                                 groupIndexes_.addInt(input.readInt32());
                             }
                             input.popLimit(limit);
-                            break;
                         } // case 26
-                        case 32: {
+                        case 32 -> {
                             lastUpdatedDate_ = input.readInt64();
                             bitField0_ |= 0x00000008;
-                            break;
                         } // case 32
-                        default: {
+                        default -> {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
                             }
-                            break;
                         } // default:
                     } // switch (tag)
                 } // while (!done)
@@ -717,7 +664,7 @@ public final class QueryRelationshipsRequest extends
         private com.google.protobuf.Internal.LongList userIds_ = emptyLongList();
 
         private void ensureUserIdsIsMutable() {
-            if (!((bitField0_ & 0x00000001) != 0)) {
+            if ((bitField0_ & 0x00000001) == 0) {
                 userIds_ = mutableCopy(userIds_);
                 bitField0_ |= 0x00000001;
             }
@@ -762,6 +709,7 @@ public final class QueryRelationshipsRequest extends
          */
         public Builder setUserIds(
                 int index, long value) {
+
             ensureUserIdsIsMutable();
             userIds_.setLong(index, value);
             onChanged();
@@ -775,6 +723,7 @@ public final class QueryRelationshipsRequest extends
          * @return This builder for chaining.
          */
         public Builder addUserIds(long value) {
+
             ensureUserIdsIsMutable();
             userIds_.addLong(value);
             onChanged();
@@ -803,7 +752,7 @@ public final class QueryRelationshipsRequest extends
          */
         public Builder clearUserIds() {
             userIds_ = emptyLongList();
-            bitField0_ = (bitField0_ & ~0x00000001);
+            bitField0_ &= ~0x00000001;
             onChanged();
             return this;
         }
@@ -837,8 +786,9 @@ public final class QueryRelationshipsRequest extends
          * @return This builder for chaining.
          */
         public Builder setBlocked(boolean value) {
-            bitField0_ |= 0x00000002;
+
             blocked_ = value;
+            bitField0_ |= 0x00000002;
             onChanged();
             return this;
         }
@@ -849,7 +799,7 @@ public final class QueryRelationshipsRequest extends
          * @return This builder for chaining.
          */
         public Builder clearBlocked() {
-            bitField0_ = (bitField0_ & ~0x00000002);
+            bitField0_ &= ~0x00000002;
             blocked_ = false;
             onChanged();
             return this;
@@ -858,7 +808,7 @@ public final class QueryRelationshipsRequest extends
         private com.google.protobuf.Internal.IntList groupIndexes_ = emptyIntList();
 
         private void ensureGroupIndexesIsMutable() {
-            if (!((bitField0_ & 0x00000004) != 0)) {
+            if ((bitField0_ & 0x00000004) == 0) {
                 groupIndexes_ = mutableCopy(groupIndexes_);
                 bitField0_ |= 0x00000004;
             }
@@ -903,6 +853,7 @@ public final class QueryRelationshipsRequest extends
          */
         public Builder setGroupIndexes(
                 int index, int value) {
+
             ensureGroupIndexesIsMutable();
             groupIndexes_.setInt(index, value);
             onChanged();
@@ -916,6 +867,7 @@ public final class QueryRelationshipsRequest extends
          * @return This builder for chaining.
          */
         public Builder addGroupIndexes(int value) {
+
             ensureGroupIndexesIsMutable();
             groupIndexes_.addInt(value);
             onChanged();
@@ -944,7 +896,7 @@ public final class QueryRelationshipsRequest extends
          */
         public Builder clearGroupIndexes() {
             groupIndexes_ = emptyIntList();
-            bitField0_ = (bitField0_ & ~0x00000004);
+            bitField0_ &= ~0x00000004;
             onChanged();
             return this;
         }
@@ -978,8 +930,9 @@ public final class QueryRelationshipsRequest extends
          * @return This builder for chaining.
          */
         public Builder setLastUpdatedDate(long value) {
-            bitField0_ |= 0x00000008;
+
             lastUpdatedDate_ = value;
+            bitField0_ |= 0x00000008;
             onChanged();
             return this;
         }
@@ -990,7 +943,7 @@ public final class QueryRelationshipsRequest extends
          * @return This builder for chaining.
          */
         public Builder clearLastUpdatedDate() {
-            bitField0_ = (bitField0_ & ~0x00000008);
+            bitField0_ &= ~0x00000008;
             lastUpdatedDate_ = 0L;
             onChanged();
             return this;
@@ -1024,7 +977,7 @@ public final class QueryRelationshipsRequest extends
     }
 
     private static final com.google.protobuf.Parser<QueryRelationshipsRequest>
-            PARSER = new com.google.protobuf.AbstractParser<QueryRelationshipsRequest>() {
+            PARSER = new com.google.protobuf.AbstractParser<>() {
         @java.lang.Override
         public QueryRelationshipsRequest parsePartialFrom(
                 com.google.protobuf.CodedInputStream input,

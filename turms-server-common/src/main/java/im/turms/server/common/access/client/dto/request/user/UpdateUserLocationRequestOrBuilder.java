@@ -69,7 +69,6 @@ public interface UpdateUserLocationRequestOrBuilder extends
     /**
      * <code>map&lt;string, string&gt; details = 3;</code>
      */
-
     /* nullable */
     java.lang.String getDetailsOrDefault(
             java.lang.String key,
@@ -79,7 +78,6 @@ public interface UpdateUserLocationRequestOrBuilder extends
     /**
      * <code>map&lt;string, string&gt; details = 3;</code>
      */
-
     java.lang.String getDetailsOrThrow(
             java.lang.String key);
 }

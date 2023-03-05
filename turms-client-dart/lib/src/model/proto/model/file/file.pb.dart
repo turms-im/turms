@@ -15,7 +15,7 @@ class File_Description extends $pb.GeneratedMessage {
           ? ''
           : 'File.Description',
       package: const $pb.PackageName(
-          $core.bool.fromEnvironment('protobuf.omit_message_names')
+          const $core.bool.fromEnvironment('protobuf.omit_message_names')
               ? ''
               : 'im.turms.proto'),
       createEmptyInstance: create)
@@ -125,7 +125,7 @@ class File extends $pb.GeneratedMessage {
           ? ''
           : 'File',
       package: const $pb.PackageName(
-          $core.bool.fromEnvironment('protobuf.omit_message_names')
+          const $core.bool.fromEnvironment('protobuf.omit_message_names')
               ? ''
               : 'im.turms.proto'),
       createEmptyInstance: create)

@@ -195,7 +195,7 @@ public final class File extends
          * <code>optional int32 size = 2;</code>
          */
         private void clearSize() {
-            bitField0_ = (bitField0_ & ~0x00000001);
+            bitField0_ &= ~0x00000001;
             size_ = 0;
         }
 
@@ -249,7 +249,7 @@ public final class File extends
          * <code>optional string format = 3;</code>
          */
         private void clearFormat() {
-            bitField0_ = (bitField0_ & ~0x00000002);
+            bitField0_ &= ~0x00000002;
             format_ = getDefaultInstance().getFormat();
         }
 
@@ -579,7 +579,7 @@ public final class File extends
                             parser = PARSER;
                             if (parser == null) {
                                 parser =
-                                        new DefaultInstanceBasedParser<im.turms.client.model.proto.model.file.File.Description>(
+                                        new DefaultInstanceBasedParser<>(
                                                 DEFAULT_INSTANCE);
                                 PARSER = parser;
                             }
@@ -671,7 +671,7 @@ public final class File extends
      */
     private void clearDescription() {
         description_ = null;
-        bitField0_ = (bitField0_ & ~0x00000001);
+        bitField0_ &= ~0x00000001;
     }
 
     public static final int DATA_FIELD_NUMBER = 2;
@@ -712,7 +712,7 @@ public final class File extends
      * <code>optional bytes data = 2;</code>
      */
     private void clearData() {
-        bitField0_ = (bitField0_ & ~0x00000002);
+        bitField0_ &= ~0x00000002;
         data_ = getDefaultInstance().getData();
     }
 
@@ -956,7 +956,7 @@ public final class File extends
                         parser = PARSER;
                         if (parser == null) {
                             parser =
-                                    new DefaultInstanceBasedParser<im.turms.client.model.proto.model.file.File>(
+                                    new DefaultInstanceBasedParser<>(
                                             DEFAULT_INSTANCE);
                             PARSER = parser;
                         }

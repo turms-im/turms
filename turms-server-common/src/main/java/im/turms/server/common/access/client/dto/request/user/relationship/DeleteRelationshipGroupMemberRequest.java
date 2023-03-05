@@ -44,12 +44,6 @@ public final class DeleteRelationshipGroupMemberRequest extends
         return new DeleteRelationshipGroupMemberRequest();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-        return this.unknownFields;
-    }
-
     public static final com.google.protobuf.Descriptors.Descriptor
     getDescriptor() {
         return im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupMemberRequestOuterClass.internal_static_im_turms_proto_DeleteRelationshipGroupMemberRequest_descriptor;
@@ -60,13 +54,12 @@ public final class DeleteRelationshipGroupMemberRequest extends
     internalGetFieldAccessorTable() {
         return im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupMemberRequestOuterClass.internal_static_im_turms_proto_DeleteRelationshipGroupMemberRequest_fieldAccessorTable
                 .ensureFieldAccessorsInitialized(
-                        im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupMemberRequest.class,
-                        im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupMemberRequest.Builder.class);
+                        im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupMemberRequest.class, im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupMemberRequest.Builder.class);
     }
 
     private int bitField0_;
     public static final int USER_ID_FIELD_NUMBER = 1;
-    private long userId_;
+    private long userId_ = 0L;
 
     /**
      * <code>int64 user_id = 1;</code>
@@ -79,7 +72,7 @@ public final class DeleteRelationshipGroupMemberRequest extends
     }
 
     public static final int GROUP_INDEX_FIELD_NUMBER = 2;
-    private int groupIndex_;
+    private int groupIndex_ = 0;
 
     /**
      * <code>int32 group_index = 2;</code>
@@ -92,7 +85,7 @@ public final class DeleteRelationshipGroupMemberRequest extends
     }
 
     public static final int TARGET_GROUP_INDEX_FIELD_NUMBER = 3;
-    private int targetGroupIndex_;
+    private int targetGroupIndex_ = 0;
 
     /**
      * <code>optional int32 target_group_index = 3;</code>
@@ -175,11 +168,9 @@ public final class DeleteRelationshipGroupMemberRequest extends
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupMemberRequest)) {
+        if (!(obj instanceof DeleteRelationshipGroupMemberRequest other)) {
             return super.equals(obj);
         }
-        im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupMemberRequest other =
-                (im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupMemberRequest) obj;
 
         if (getUserId()
             != other.getUserId()) {
@@ -198,10 +189,7 @@ public final class DeleteRelationshipGroupMemberRequest extends
                 return false;
             }
         }
-        if (!getUnknownFields().equals(other.getUnknownFields())) {
-            return false;
-        }
-        return true;
+        return getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -328,8 +316,7 @@ public final class DeleteRelationshipGroupMemberRequest extends
     @java.lang.Override
     protected Builder newBuilderForType(
             com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
+        return new Builder(parent);
     }
 
     /**
@@ -349,8 +336,7 @@ public final class DeleteRelationshipGroupMemberRequest extends
         internalGetFieldAccessorTable() {
             return im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupMemberRequestOuterClass.internal_static_im_turms_proto_DeleteRelationshipGroupMemberRequest_fieldAccessorTable
                     .ensureFieldAccessorsInitialized(
-                            im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupMemberRequest.class,
-                            im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupMemberRequest.Builder.class);
+                            im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupMemberRequest.class, im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupMemberRequest.Builder.class);
         }
 
         // Construct using im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupMemberRequest.newBuilder()
@@ -367,12 +353,10 @@ public final class DeleteRelationshipGroupMemberRequest extends
         @java.lang.Override
         public Builder clear() {
             super.clear();
+            bitField0_ = 0;
             userId_ = 0L;
-
             groupIndex_ = 0;
-
             targetGroupIndex_ = 0;
-            bitField0_ = (bitField0_ & ~0x00000001);
             return this;
         }
 
@@ -398,57 +382,28 @@ public final class DeleteRelationshipGroupMemberRequest extends
 
         @java.lang.Override
         public im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupMemberRequest buildPartial() {
-            im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupMemberRequest result =
-                    new im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupMemberRequest(this);
-            int from_bitField0_ = bitField0_;
-            int to_bitField0_ = 0;
-            result.userId_ = userId_;
-            result.groupIndex_ = groupIndex_;
-            if (((from_bitField0_ & 0x00000001) != 0)) {
-                result.targetGroupIndex_ = targetGroupIndex_;
-                to_bitField0_ |= 0x00000001;
+            im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupMemberRequest result = new im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupMemberRequest(this);
+            if (bitField0_ != 0) {
+                buildPartial0(result);
             }
-            result.bitField0_ = to_bitField0_;
             onBuilt();
             return result;
         }
 
-        @java.lang.Override
-        public Builder clone() {
-            return super.clone();
-        }
-
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(
-                com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(
-                com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index, java.lang.Object value) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.addRepeatedField(field, value);
+        private void buildPartial0(im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupMemberRequest result) {
+            int from_bitField0_ = bitField0_;
+            if (((from_bitField0_ & 0x00000001) != 0)) {
+                result.userId_ = userId_;
+            }
+            if (((from_bitField0_ & 0x00000002) != 0)) {
+                result.groupIndex_ = groupIndex_;
+            }
+            int to_bitField0_ = 0;
+            if (((from_bitField0_ & 0x00000004) != 0)) {
+                result.targetGroupIndex_ = targetGroupIndex_;
+                to_bitField0_ |= 0x00000001;
+            }
+            result.bitField0_ |= to_bitField0_;
         }
 
         @java.lang.Override
@@ -497,29 +452,23 @@ public final class DeleteRelationshipGroupMemberRequest extends
                 while (!done) {
                     int tag = input.readTag();
                     switch (tag) {
-                        case 0:
-                            done = true;
-                            break;
-                        case 8: {
+                        case 0 -> done = true;
+                        case 8 -> {
                             userId_ = input.readInt64();
-
-                            break;
-                        } // case 8
-                        case 16: {
-                            groupIndex_ = input.readInt32();
-
-                            break;
-                        } // case 16
-                        case 24: {
-                            targetGroupIndex_ = input.readInt32();
                             bitField0_ |= 0x00000001;
-                            break;
+                        } // case 8
+                        case 16 -> {
+                            groupIndex_ = input.readInt32();
+                            bitField0_ |= 0x00000002;
+                        } // case 16
+                        case 24 -> {
+                            targetGroupIndex_ = input.readInt32();
+                            bitField0_ |= 0x00000004;
                         } // case 24
-                        default: {
+                        default -> {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
                             }
-                            break;
                         } // default:
                     } // switch (tag)
                 } // while (!done)
@@ -554,6 +503,7 @@ public final class DeleteRelationshipGroupMemberRequest extends
         public Builder setUserId(long value) {
 
             userId_ = value;
+            bitField0_ |= 0x00000001;
             onChanged();
             return this;
         }
@@ -564,7 +514,7 @@ public final class DeleteRelationshipGroupMemberRequest extends
          * @return This builder for chaining.
          */
         public Builder clearUserId() {
-
+            bitField0_ &= ~0x00000001;
             userId_ = 0L;
             onChanged();
             return this;
@@ -591,6 +541,7 @@ public final class DeleteRelationshipGroupMemberRequest extends
         public Builder setGroupIndex(int value) {
 
             groupIndex_ = value;
+            bitField0_ |= 0x00000002;
             onChanged();
             return this;
         }
@@ -601,7 +552,7 @@ public final class DeleteRelationshipGroupMemberRequest extends
          * @return This builder for chaining.
          */
         public Builder clearGroupIndex() {
-
+            bitField0_ &= ~0x00000002;
             groupIndex_ = 0;
             onChanged();
             return this;
@@ -616,7 +567,7 @@ public final class DeleteRelationshipGroupMemberRequest extends
          */
         @java.lang.Override
         public boolean hasTargetGroupIndex() {
-            return ((bitField0_ & 0x00000001) != 0);
+            return ((bitField0_ & 0x00000004) != 0);
         }
 
         /**
@@ -636,8 +587,9 @@ public final class DeleteRelationshipGroupMemberRequest extends
          * @return This builder for chaining.
          */
         public Builder setTargetGroupIndex(int value) {
-            bitField0_ |= 0x00000001;
+
             targetGroupIndex_ = value;
+            bitField0_ |= 0x00000004;
             onChanged();
             return this;
         }
@@ -648,7 +600,7 @@ public final class DeleteRelationshipGroupMemberRequest extends
          * @return This builder for chaining.
          */
         public Builder clearTargetGroupIndex() {
-            bitField0_ = (bitField0_ & ~0x00000001);
+            bitField0_ &= ~0x00000004;
             targetGroupIndex_ = 0;
             onChanged();
             return this;
@@ -682,7 +634,7 @@ public final class DeleteRelationshipGroupMemberRequest extends
     }
 
     private static final com.google.protobuf.Parser<DeleteRelationshipGroupMemberRequest>
-            PARSER = new com.google.protobuf.AbstractParser<DeleteRelationshipGroupMemberRequest>() {
+            PARSER = new com.google.protobuf.AbstractParser<>() {
         @java.lang.Override
         public DeleteRelationshipGroupMemberRequest parsePartialFrom(
                 com.google.protobuf.CodedInputStream input,

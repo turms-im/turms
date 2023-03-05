@@ -10,10 +10,10 @@ import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
 
 @$core.Deprecated('Use queryUserOnlineStatusesRequestDescriptor instead')
-const QueryUserOnlineStatusesRequest$json = {
+const QueryUserOnlineStatusesRequest$json = const {
   '1': 'QueryUserOnlineStatusesRequest',
-  '2': [
-    {'1': 'user_ids', '3': 1, '4': 3, '5': 3, '10': 'userIds'},
+  '2': const [
+    const {'1': 'user_ids', '3': 1, '4': 3, '5': 3, '10': 'userIds'},
   ],
 };
 

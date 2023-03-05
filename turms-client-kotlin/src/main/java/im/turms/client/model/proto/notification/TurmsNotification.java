@@ -386,7 +386,7 @@ public final class TurmsNotification extends
          */
         im.turms.client.model.proto.model.storage.StorageResourceInfos getStorageResourceInfos();
 
-        public im.turms.client.model.proto.notification.TurmsNotification.Data.KindCase getKindCase();
+        im.turms.client.model.proto.notification.TurmsNotification.Data.KindCase getKindCase();
     }
 
     /**
@@ -428,7 +428,7 @@ public final class TurmsNotification extends
             KIND_NOT_SET(0);
             private final int value;
 
-            private KindCase(int value) {
+            KindCase(int value) {
                 this.value = value;
             }
 
@@ -495,8 +495,6 @@ public final class TurmsNotification extends
                 return this.value;
             }
         }
-
-        ;
 
         @java.lang.Override
         public KindCase
@@ -3221,7 +3219,7 @@ public final class TurmsNotification extends
                             parser = PARSER;
                             if (parser == null) {
                                 parser =
-                                        new DefaultInstanceBasedParser<im.turms.client.model.proto.notification.TurmsNotification.Data>(
+                                        new DefaultInstanceBasedParser<>(
                                                 DEFAULT_INSTANCE);
                                 PARSER = parser;
                             }
@@ -3368,7 +3366,7 @@ public final class TurmsNotification extends
      * <code>optional int64 request_id = 4;</code>
      */
     private void clearRequestId() {
-        bitField0_ = (bitField0_ & ~0x00000001);
+        bitField0_ &= ~0x00000001;
         requestId_ = 0L;
     }
 
@@ -3409,7 +3407,7 @@ public final class TurmsNotification extends
      * <code>optional int32 code = 5;</code>
      */
     private void clearCode() {
-        bitField0_ = (bitField0_ & ~0x00000002);
+        bitField0_ &= ~0x00000002;
         code_ = 0;
     }
 
@@ -3463,7 +3461,7 @@ public final class TurmsNotification extends
      * <code>optional string reason = 6;</code>
      */
     private void clearReason() {
-        bitField0_ = (bitField0_ & ~0x00000004);
+        bitField0_ &= ~0x00000004;
         reason_ = getDefaultInstance().getReason();
     }
 
@@ -3596,7 +3594,7 @@ public final class TurmsNotification extends
      * <code>optional int64 requester_id = 10;</code>
      */
     private void clearRequesterId() {
-        bitField0_ = (bitField0_ & ~0x00000008);
+        bitField0_ &= ~0x00000008;
         requesterId_ = 0L;
     }
 
@@ -3637,7 +3635,7 @@ public final class TurmsNotification extends
      * <code>optional int32 close_status = 11;</code>
      */
     private void clearCloseStatus() {
-        bitField0_ = (bitField0_ & ~0x00000010);
+        bitField0_ &= ~0x00000010;
         closeStatus_ = 0;
     }
 
@@ -4286,7 +4284,7 @@ public final class TurmsNotification extends
                         parser = PARSER;
                         if (parser == null) {
                             parser =
-                                    new DefaultInstanceBasedParser<im.turms.client.model.proto.notification.TurmsNotification>(
+                                    new DefaultInstanceBasedParser<>(
                                             DEFAULT_INSTANCE);
                             PARSER = parser;
                         }

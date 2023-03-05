@@ -44,12 +44,6 @@ public final class CreateRelationshipRequest extends
         return new CreateRelationshipRequest();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-        return this.unknownFields;
-    }
-
     public static final com.google.protobuf.Descriptors.Descriptor
     getDescriptor() {
         return im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipRequestOuterClass.internal_static_im_turms_proto_CreateRelationshipRequest_descriptor;
@@ -60,13 +54,12 @@ public final class CreateRelationshipRequest extends
     internalGetFieldAccessorTable() {
         return im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipRequestOuterClass.internal_static_im_turms_proto_CreateRelationshipRequest_fieldAccessorTable
                 .ensureFieldAccessorsInitialized(
-                        im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipRequest.class,
-                        im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipRequest.Builder.class);
+                        im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipRequest.class, im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipRequest.Builder.class);
     }
 
     private int bitField0_;
     public static final int USER_ID_FIELD_NUMBER = 1;
-    private long userId_;
+    private long userId_ = 0L;
 
     /**
      * <code>int64 user_id = 1;</code>
@@ -79,7 +72,7 @@ public final class CreateRelationshipRequest extends
     }
 
     public static final int BLOCKED_FIELD_NUMBER = 2;
-    private boolean blocked_;
+    private boolean blocked_ = false;
 
     /**
      * <code>bool blocked = 2;</code>
@@ -92,7 +85,7 @@ public final class CreateRelationshipRequest extends
     }
 
     public static final int GROUP_INDEX_FIELD_NUMBER = 3;
-    private int groupIndex_;
+    private int groupIndex_ = 0;
 
     /**
      * <code>optional int32 group_index = 3;</code>
@@ -136,7 +129,7 @@ public final class CreateRelationshipRequest extends
         if (userId_ != 0L) {
             output.writeInt64(1, userId_);
         }
-        if (blocked_ != false) {
+        if (blocked_) {
             output.writeBool(2, blocked_);
         }
         if (((bitField0_ & 0x00000001) != 0)) {
@@ -157,7 +150,7 @@ public final class CreateRelationshipRequest extends
             size += com.google.protobuf.CodedOutputStream
                     .computeInt64Size(1, userId_);
         }
-        if (blocked_ != false) {
+        if (blocked_) {
             size += com.google.protobuf.CodedOutputStream
                     .computeBoolSize(2, blocked_);
         }
@@ -175,11 +168,9 @@ public final class CreateRelationshipRequest extends
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipRequest)) {
+        if (!(obj instanceof CreateRelationshipRequest other)) {
             return super.equals(obj);
         }
-        im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipRequest other =
-                (im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipRequest) obj;
 
         if (getUserId()
             != other.getUserId()) {
@@ -198,10 +189,7 @@ public final class CreateRelationshipRequest extends
                 return false;
             }
         }
-        if (!getUnknownFields().equals(other.getUnknownFields())) {
-            return false;
-        }
-        return true;
+        return getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -329,8 +317,7 @@ public final class CreateRelationshipRequest extends
     @java.lang.Override
     protected Builder newBuilderForType(
             com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
+        return new Builder(parent);
     }
 
     /**
@@ -350,8 +337,7 @@ public final class CreateRelationshipRequest extends
         internalGetFieldAccessorTable() {
             return im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipRequestOuterClass.internal_static_im_turms_proto_CreateRelationshipRequest_fieldAccessorTable
                     .ensureFieldAccessorsInitialized(
-                            im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipRequest.class,
-                            im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipRequest.Builder.class);
+                            im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipRequest.class, im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipRequest.Builder.class);
         }
 
         // Construct using im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipRequest.newBuilder()
@@ -368,12 +354,10 @@ public final class CreateRelationshipRequest extends
         @java.lang.Override
         public Builder clear() {
             super.clear();
+            bitField0_ = 0;
             userId_ = 0L;
-
             blocked_ = false;
-
             groupIndex_ = 0;
-            bitField0_ = (bitField0_ & ~0x00000001);
             return this;
         }
 
@@ -399,57 +383,28 @@ public final class CreateRelationshipRequest extends
 
         @java.lang.Override
         public im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipRequest buildPartial() {
-            im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipRequest result =
-                    new im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipRequest(this);
-            int from_bitField0_ = bitField0_;
-            int to_bitField0_ = 0;
-            result.userId_ = userId_;
-            result.blocked_ = blocked_;
-            if (((from_bitField0_ & 0x00000001) != 0)) {
-                result.groupIndex_ = groupIndex_;
-                to_bitField0_ |= 0x00000001;
+            im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipRequest result = new im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipRequest(this);
+            if (bitField0_ != 0) {
+                buildPartial0(result);
             }
-            result.bitField0_ = to_bitField0_;
             onBuilt();
             return result;
         }
 
-        @java.lang.Override
-        public Builder clone() {
-            return super.clone();
-        }
-
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(
-                com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(
-                com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index, java.lang.Object value) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.addRepeatedField(field, value);
+        private void buildPartial0(im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipRequest result) {
+            int from_bitField0_ = bitField0_;
+            if (((from_bitField0_ & 0x00000001) != 0)) {
+                result.userId_ = userId_;
+            }
+            if (((from_bitField0_ & 0x00000002) != 0)) {
+                result.blocked_ = blocked_;
+            }
+            int to_bitField0_ = 0;
+            if (((from_bitField0_ & 0x00000004) != 0)) {
+                result.groupIndex_ = groupIndex_;
+                to_bitField0_ |= 0x00000001;
+            }
+            result.bitField0_ |= to_bitField0_;
         }
 
         @java.lang.Override
@@ -469,7 +424,7 @@ public final class CreateRelationshipRequest extends
             if (other.getUserId() != 0L) {
                 setUserId(other.getUserId());
             }
-            if (other.getBlocked() != false) {
+            if (other.getBlocked()) {
                 setBlocked(other.getBlocked());
             }
             if (other.hasGroupIndex()) {
@@ -498,29 +453,23 @@ public final class CreateRelationshipRequest extends
                 while (!done) {
                     int tag = input.readTag();
                     switch (tag) {
-                        case 0:
-                            done = true;
-                            break;
-                        case 8: {
+                        case 0 -> done = true;
+                        case 8 -> {
                             userId_ = input.readInt64();
-
-                            break;
-                        } // case 8
-                        case 16: {
-                            blocked_ = input.readBool();
-
-                            break;
-                        } // case 16
-                        case 24: {
-                            groupIndex_ = input.readInt32();
                             bitField0_ |= 0x00000001;
-                            break;
+                        } // case 8
+                        case 16 -> {
+                            blocked_ = input.readBool();
+                            bitField0_ |= 0x00000002;
+                        } // case 16
+                        case 24 -> {
+                            groupIndex_ = input.readInt32();
+                            bitField0_ |= 0x00000004;
                         } // case 24
-                        default: {
+                        default -> {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
                             }
-                            break;
                         } // default:
                     } // switch (tag)
                 } // while (!done)
@@ -555,6 +504,7 @@ public final class CreateRelationshipRequest extends
         public Builder setUserId(long value) {
 
             userId_ = value;
+            bitField0_ |= 0x00000001;
             onChanged();
             return this;
         }
@@ -565,7 +515,7 @@ public final class CreateRelationshipRequest extends
          * @return This builder for chaining.
          */
         public Builder clearUserId() {
-
+            bitField0_ &= ~0x00000001;
             userId_ = 0L;
             onChanged();
             return this;
@@ -592,6 +542,7 @@ public final class CreateRelationshipRequest extends
         public Builder setBlocked(boolean value) {
 
             blocked_ = value;
+            bitField0_ |= 0x00000002;
             onChanged();
             return this;
         }
@@ -602,7 +553,7 @@ public final class CreateRelationshipRequest extends
          * @return This builder for chaining.
          */
         public Builder clearBlocked() {
-
+            bitField0_ &= ~0x00000002;
             blocked_ = false;
             onChanged();
             return this;
@@ -617,7 +568,7 @@ public final class CreateRelationshipRequest extends
          */
         @java.lang.Override
         public boolean hasGroupIndex() {
-            return ((bitField0_ & 0x00000001) != 0);
+            return ((bitField0_ & 0x00000004) != 0);
         }
 
         /**
@@ -637,8 +588,9 @@ public final class CreateRelationshipRequest extends
          * @return This builder for chaining.
          */
         public Builder setGroupIndex(int value) {
-            bitField0_ |= 0x00000001;
+
             groupIndex_ = value;
+            bitField0_ |= 0x00000004;
             onChanged();
             return this;
         }
@@ -649,7 +601,7 @@ public final class CreateRelationshipRequest extends
          * @return This builder for chaining.
          */
         public Builder clearGroupIndex() {
-            bitField0_ = (bitField0_ & ~0x00000001);
+            bitField0_ &= ~0x00000004;
             groupIndex_ = 0;
             onChanged();
             return this;
@@ -683,7 +635,7 @@ public final class CreateRelationshipRequest extends
     }
 
     private static final com.google.protobuf.Parser<CreateRelationshipRequest>
-            PARSER = new com.google.protobuf.AbstractParser<CreateRelationshipRequest>() {
+            PARSER = new com.google.protobuf.AbstractParser<>() {
         @java.lang.Override
         public CreateRelationshipRequest parsePartialFrom(
                 com.google.protobuf.CodedInputStream input,

@@ -51,7 +51,6 @@ public interface CheckGroupJoinQuestionsAnswersRequestOrBuilder extends
     /**
      * <code>map&lt;int64, string&gt; question_id_to_answer = 1;</code>
      */
-
     /* nullable */
     java.lang.String getQuestionIdToAnswerOrDefault(
             long key,
@@ -61,7 +60,6 @@ public interface CheckGroupJoinQuestionsAnswersRequestOrBuilder extends
     /**
      * <code>map&lt;int64, string&gt; question_id_to_answer = 1;</code>
      */
-
     java.lang.String getQuestionIdToAnswerOrThrow(
             long key);
 }

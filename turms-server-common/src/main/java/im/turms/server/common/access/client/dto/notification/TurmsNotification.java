@@ -45,12 +45,6 @@ public final class TurmsNotification extends
         return new TurmsNotification();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-        return this.unknownFields;
-    }
-
     public static final com.google.protobuf.Descriptors.Descriptor
     getDescriptor() {
         return im.turms.server.common.access.client.dto.notification.TurmsNotificationOuterClass.internal_static_im_turms_proto_TurmsNotification_descriptor;
@@ -533,7 +527,7 @@ public final class TurmsNotification extends
          */
         im.turms.server.common.access.client.dto.model.storage.StorageResourceInfosOrBuilder getStorageResourceInfosOrBuilder();
 
-        public im.turms.server.common.access.client.dto.notification.TurmsNotification.Data.KindCase getKindCase();
+        im.turms.server.common.access.client.dto.notification.TurmsNotification.Data.KindCase getKindCase();
     }
 
     /**
@@ -560,12 +554,6 @@ public final class TurmsNotification extends
             return new Data();
         }
 
-        @java.lang.Override
-        public final com.google.protobuf.UnknownFieldSet
-        getUnknownFields() {
-            return this.unknownFields;
-        }
-
         public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
             return im.turms.server.common.access.client.dto.notification.TurmsNotificationOuterClass.internal_static_im_turms_proto_TurmsNotification_Data_descriptor;
@@ -576,11 +564,11 @@ public final class TurmsNotification extends
         internalGetFieldAccessorTable() {
             return im.turms.server.common.access.client.dto.notification.TurmsNotificationOuterClass.internal_static_im_turms_proto_TurmsNotification_Data_fieldAccessorTable
                     .ensureFieldAccessorsInitialized(
-                            im.turms.server.common.access.client.dto.notification.TurmsNotification.Data.class,
-                            im.turms.server.common.access.client.dto.notification.TurmsNotification.Data.Builder.class);
+                            im.turms.server.common.access.client.dto.notification.TurmsNotification.Data.class, im.turms.server.common.access.client.dto.notification.TurmsNotification.Data.Builder.class);
         }
 
         private int kindCase_ = 0;
+        @SuppressWarnings("serial")
         private java.lang.Object kind_;
 
         public enum KindCase
@@ -610,7 +598,7 @@ public final class TurmsNotification extends
             KIND_NOT_SET(0);
             private final int value;
 
-            private KindCase(int value) {
+            KindCase(int value) {
                 this.value = value;
             }
 
@@ -625,62 +613,37 @@ public final class TurmsNotification extends
             }
 
             public static KindCase forNumber(int value) {
-                switch (value) {
-                    case 1:
-                        return LONG;
-                    case 2:
-                        return STRING;
-                    case 3:
-                        return LONGS_WITH_VERSION;
-                    case 4:
-                        return STRINGS_WITH_VERSION;
-                    case 5:
-                        return CONVERSATIONS;
-                    case 6:
-                        return MESSAGES;
-                    case 7:
-                        return MESSAGES_WITH_TOTAL_LIST;
-                    case 8:
-                        return USER_SESSION;
-                    case 9:
-                        return USER_INFOS_WITH_VERSION;
-                    case 10:
-                        return USER_ONLINE_STATUSES;
-                    case 11:
-                        return USER_FRIEND_REQUESTS_WITH_VERSION;
-                    case 12:
-                        return USER_RELATIONSHIP_GROUPS_WITH_VERSION;
-                    case 13:
-                        return USER_RELATIONSHIPS_WITH_VERSION;
-                    case 14:
-                        return NEARBY_USERS;
-                    case 15:
-                        return GROUP_INVITATIONS_WITH_VERSION;
-                    case 16:
-                        return GROUP_JOIN_QUESTION_ANSWER_RESULT;
-                    case 17:
-                        return GROUP_JOIN_REQUESTS_WITH_VERSION;
-                    case 18:
-                        return GROUP_JOIN_QUESTIONS_WITH_VERSION;
-                    case 19:
-                        return GROUP_MEMBERS_WITH_VERSION;
-                    case 20:
-                        return GROUPS_WITH_VERSION;
-                    case 50:
-                        return STORAGE_RESOURCE_INFOS;
-                    case 0:
-                        return KIND_NOT_SET;
-                    default:
-                        return null;
-                }
+                return switch (value) {
+                    case 1 -> LONG;
+                    case 2 -> STRING;
+                    case 3 -> LONGS_WITH_VERSION;
+                    case 4 -> STRINGS_WITH_VERSION;
+                    case 5 -> CONVERSATIONS;
+                    case 6 -> MESSAGES;
+                    case 7 -> MESSAGES_WITH_TOTAL_LIST;
+                    case 8 -> USER_SESSION;
+                    case 9 -> USER_INFOS_WITH_VERSION;
+                    case 10 -> USER_ONLINE_STATUSES;
+                    case 11 -> USER_FRIEND_REQUESTS_WITH_VERSION;
+                    case 12 -> USER_RELATIONSHIP_GROUPS_WITH_VERSION;
+                    case 13 -> USER_RELATIONSHIPS_WITH_VERSION;
+                    case 14 -> NEARBY_USERS;
+                    case 15 -> GROUP_INVITATIONS_WITH_VERSION;
+                    case 16 -> GROUP_JOIN_QUESTION_ANSWER_RESULT;
+                    case 17 -> GROUP_JOIN_REQUESTS_WITH_VERSION;
+                    case 18 -> GROUP_JOIN_QUESTIONS_WITH_VERSION;
+                    case 19 -> GROUP_MEMBERS_WITH_VERSION;
+                    case 20 -> GROUPS_WITH_VERSION;
+                    case 50 -> STORAGE_RESOURCE_INFOS;
+                    case 0 -> KIND_NOT_SET;
+                    default -> null;
+                };
             }
 
             public int getNumber() {
                 return this.value;
             }
         }
-
-        ;
 
         public KindCase
         getKindCase() {
@@ -1542,29 +1505,69 @@ public final class TurmsNotification extends
         @java.lang.Override
         public void writeTo(com.google.protobuf.CodedOutputStream output)
                 throws java.io.IOException {
-            switch (kindCase_) {
-                case 1 -> output.writeInt64(
-                        1, (long) ((Long) kind_));
-                case 2 -> com.google.protobuf.GeneratedMessageV3.writeString(output, 2, kind_);
-                case 3 -> output.writeMessage(3, (im.turms.server.common.access.client.dto.model.common.LongsWithVersion) kind_);
-                case 4 -> output.writeMessage(4, (im.turms.server.common.access.client.dto.model.common.StringsWithVersion) kind_);
-                case 5 -> output.writeMessage(5, (im.turms.server.common.access.client.dto.model.conversation.Conversations) kind_);
-                case 6 -> output.writeMessage(6, (im.turms.server.common.access.client.dto.model.message.Messages) kind_);
-                case 7 -> output.writeMessage(7, (im.turms.server.common.access.client.dto.model.message.MessagesWithTotalList) kind_);
-                case 8 -> output.writeMessage(8, (im.turms.server.common.access.client.dto.model.user.UserSession) kind_);
-                case 9 -> output.writeMessage(9, (im.turms.server.common.access.client.dto.model.user.UserInfosWithVersion) kind_);
-                case 10 -> output.writeMessage(10, (im.turms.server.common.access.client.dto.model.user.UserOnlineStatuses) kind_);
-                case 11 -> output.writeMessage(11, (im.turms.server.common.access.client.dto.model.user.UserFriendRequestsWithVersion) kind_);
-                case 12 -> output.writeMessage(12, (im.turms.server.common.access.client.dto.model.user.UserRelationshipGroupsWithVersion) kind_);
-                case 13 -> output.writeMessage(13, (im.turms.server.common.access.client.dto.model.user.UserRelationshipsWithVersion) kind_);
-                case 14 -> output.writeMessage(14, (im.turms.server.common.access.client.dto.model.user.NearbyUsers) kind_);
-                case 15 -> output.writeMessage(15, (im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersion) kind_);
-                case 16 -> output.writeMessage(16, (im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsAnswerResult) kind_);
-                case 17 -> output.writeMessage(17, (im.turms.server.common.access.client.dto.model.group.GroupJoinRequestsWithVersion) kind_);
-                case 18 -> output.writeMessage(18, (im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsWithVersion) kind_);
-                case 19 -> output.writeMessage(19, (im.turms.server.common.access.client.dto.model.group.GroupMembersWithVersion) kind_);
-                case 20 -> output.writeMessage(20, (im.turms.server.common.access.client.dto.model.group.GroupsWithVersion) kind_);
-                case 50 -> output.writeMessage(50, (im.turms.server.common.access.client.dto.model.storage.StorageResourceInfos) kind_);
+            if (kindCase_ == 1) {
+                output.writeInt64(
+                        1, (long) ((java.lang.Long) kind_));
+            }
+            if (kindCase_ == 2) {
+                com.google.protobuf.GeneratedMessageV3.writeString(output, 2, kind_);
+            }
+            if (kindCase_ == 3) {
+                output.writeMessage(3, (im.turms.server.common.access.client.dto.model.common.LongsWithVersion) kind_);
+            }
+            if (kindCase_ == 4) {
+                output.writeMessage(4, (im.turms.server.common.access.client.dto.model.common.StringsWithVersion) kind_);
+            }
+            if (kindCase_ == 5) {
+                output.writeMessage(5, (im.turms.server.common.access.client.dto.model.conversation.Conversations) kind_);
+            }
+            if (kindCase_ == 6) {
+                output.writeMessage(6, (im.turms.server.common.access.client.dto.model.message.Messages) kind_);
+            }
+            if (kindCase_ == 7) {
+                output.writeMessage(7, (im.turms.server.common.access.client.dto.model.message.MessagesWithTotalList) kind_);
+            }
+            if (kindCase_ == 8) {
+                output.writeMessage(8, (im.turms.server.common.access.client.dto.model.user.UserSession) kind_);
+            }
+            if (kindCase_ == 9) {
+                output.writeMessage(9, (im.turms.server.common.access.client.dto.model.user.UserInfosWithVersion) kind_);
+            }
+            if (kindCase_ == 10) {
+                output.writeMessage(10, (im.turms.server.common.access.client.dto.model.user.UserOnlineStatuses) kind_);
+            }
+            if (kindCase_ == 11) {
+                output.writeMessage(11, (im.turms.server.common.access.client.dto.model.user.UserFriendRequestsWithVersion) kind_);
+            }
+            if (kindCase_ == 12) {
+                output.writeMessage(12, (im.turms.server.common.access.client.dto.model.user.UserRelationshipGroupsWithVersion) kind_);
+            }
+            if (kindCase_ == 13) {
+                output.writeMessage(13, (im.turms.server.common.access.client.dto.model.user.UserRelationshipsWithVersion) kind_);
+            }
+            if (kindCase_ == 14) {
+                output.writeMessage(14, (im.turms.server.common.access.client.dto.model.user.NearbyUsers) kind_);
+            }
+            if (kindCase_ == 15) {
+                output.writeMessage(15, (im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersion) kind_);
+            }
+            if (kindCase_ == 16) {
+                output.writeMessage(16, (im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsAnswerResult) kind_);
+            }
+            if (kindCase_ == 17) {
+                output.writeMessage(17, (im.turms.server.common.access.client.dto.model.group.GroupJoinRequestsWithVersion) kind_);
+            }
+            if (kindCase_ == 18) {
+                output.writeMessage(18, (im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsWithVersion) kind_);
+            }
+            if (kindCase_ == 19) {
+                output.writeMessage(19, (im.turms.server.common.access.client.dto.model.group.GroupMembersWithVersion) kind_);
+            }
+            if (kindCase_ == 20) {
+                output.writeMessage(20, (im.turms.server.common.access.client.dto.model.group.GroupsWithVersion) kind_);
+            }
+            if (kindCase_ == 50) {
+                output.writeMessage(50, (im.turms.server.common.access.client.dto.model.storage.StorageResourceInfos) kind_);
             }
             getUnknownFields().writeTo(output);
         }
@@ -1577,48 +1580,88 @@ public final class TurmsNotification extends
             }
 
             size = 0;
-            switch (kindCase_) {
-                case 1 -> size += com.google.protobuf.CodedOutputStream
+            if (kindCase_ == 1) {
+                size += com.google.protobuf.CodedOutputStream
                         .computeInt64Size(
-                                1, (long) ((Long) kind_));
-                case 2 -> size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, kind_);
-                case 3 -> size += com.google.protobuf.CodedOutputStream
+                                1, (long) ((java.lang.Long) kind_));
+            }
+            if (kindCase_ == 2) {
+                size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, kind_);
+            }
+            if (kindCase_ == 3) {
+                size += com.google.protobuf.CodedOutputStream
                         .computeMessageSize(3, (im.turms.server.common.access.client.dto.model.common.LongsWithVersion) kind_);
-                case 4 -> size += com.google.protobuf.CodedOutputStream
+            }
+            if (kindCase_ == 4) {
+                size += com.google.protobuf.CodedOutputStream
                         .computeMessageSize(4, (im.turms.server.common.access.client.dto.model.common.StringsWithVersion) kind_);
-                case 5 -> size += com.google.protobuf.CodedOutputStream
+            }
+            if (kindCase_ == 5) {
+                size += com.google.protobuf.CodedOutputStream
                         .computeMessageSize(5, (im.turms.server.common.access.client.dto.model.conversation.Conversations) kind_);
-                case 6 -> size += com.google.protobuf.CodedOutputStream
+            }
+            if (kindCase_ == 6) {
+                size += com.google.protobuf.CodedOutputStream
                         .computeMessageSize(6, (im.turms.server.common.access.client.dto.model.message.Messages) kind_);
-                case 7 -> size += com.google.protobuf.CodedOutputStream
+            }
+            if (kindCase_ == 7) {
+                size += com.google.protobuf.CodedOutputStream
                         .computeMessageSize(7, (im.turms.server.common.access.client.dto.model.message.MessagesWithTotalList) kind_);
-                case 8 -> size += com.google.protobuf.CodedOutputStream
+            }
+            if (kindCase_ == 8) {
+                size += com.google.protobuf.CodedOutputStream
                         .computeMessageSize(8, (im.turms.server.common.access.client.dto.model.user.UserSession) kind_);
-                case 9 -> size += com.google.protobuf.CodedOutputStream
+            }
+            if (kindCase_ == 9) {
+                size += com.google.protobuf.CodedOutputStream
                         .computeMessageSize(9, (im.turms.server.common.access.client.dto.model.user.UserInfosWithVersion) kind_);
-                case 10 -> size += com.google.protobuf.CodedOutputStream
+            }
+            if (kindCase_ == 10) {
+                size += com.google.protobuf.CodedOutputStream
                         .computeMessageSize(10, (im.turms.server.common.access.client.dto.model.user.UserOnlineStatuses) kind_);
-                case 11 -> size += com.google.protobuf.CodedOutputStream
+            }
+            if (kindCase_ == 11) {
+                size += com.google.protobuf.CodedOutputStream
                         .computeMessageSize(11, (im.turms.server.common.access.client.dto.model.user.UserFriendRequestsWithVersion) kind_);
-                case 12 -> size += com.google.protobuf.CodedOutputStream
+            }
+            if (kindCase_ == 12) {
+                size += com.google.protobuf.CodedOutputStream
                         .computeMessageSize(12, (im.turms.server.common.access.client.dto.model.user.UserRelationshipGroupsWithVersion) kind_);
-                case 13 -> size += com.google.protobuf.CodedOutputStream
+            }
+            if (kindCase_ == 13) {
+                size += com.google.protobuf.CodedOutputStream
                         .computeMessageSize(13, (im.turms.server.common.access.client.dto.model.user.UserRelationshipsWithVersion) kind_);
-                case 14 -> size += com.google.protobuf.CodedOutputStream
+            }
+            if (kindCase_ == 14) {
+                size += com.google.protobuf.CodedOutputStream
                         .computeMessageSize(14, (im.turms.server.common.access.client.dto.model.user.NearbyUsers) kind_);
-                case 15 -> size += com.google.protobuf.CodedOutputStream
+            }
+            if (kindCase_ == 15) {
+                size += com.google.protobuf.CodedOutputStream
                         .computeMessageSize(15, (im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersion) kind_);
-                case 16 -> size += com.google.protobuf.CodedOutputStream
+            }
+            if (kindCase_ == 16) {
+                size += com.google.protobuf.CodedOutputStream
                         .computeMessageSize(16, (im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsAnswerResult) kind_);
-                case 17 -> size += com.google.protobuf.CodedOutputStream
+            }
+            if (kindCase_ == 17) {
+                size += com.google.protobuf.CodedOutputStream
                         .computeMessageSize(17, (im.turms.server.common.access.client.dto.model.group.GroupJoinRequestsWithVersion) kind_);
-                case 18 -> size += com.google.protobuf.CodedOutputStream
+            }
+            if (kindCase_ == 18) {
+                size += com.google.protobuf.CodedOutputStream
                         .computeMessageSize(18, (im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsWithVersion) kind_);
-                case 19 -> size += com.google.protobuf.CodedOutputStream
+            }
+            if (kindCase_ == 19) {
+                size += com.google.protobuf.CodedOutputStream
                         .computeMessageSize(19, (im.turms.server.common.access.client.dto.model.group.GroupMembersWithVersion) kind_);
-                case 20 -> size += com.google.protobuf.CodedOutputStream
+            }
+            if (kindCase_ == 20) {
+                size += com.google.protobuf.CodedOutputStream
                         .computeMessageSize(20, (im.turms.server.common.access.client.dto.model.group.GroupsWithVersion) kind_);
-                case 50 -> size += com.google.protobuf.CodedOutputStream
+            }
+            if (kindCase_ == 50) {
+                size += com.google.protobuf.CodedOutputStream
                         .computeMessageSize(50, (im.turms.server.common.access.client.dto.model.storage.StorageResourceInfos) kind_);
             }
             size += getUnknownFields().getSerializedSize();
@@ -1631,148 +1674,146 @@ public final class TurmsNotification extends
             if (obj == this) {
                 return true;
             }
-            if (!(obj instanceof im.turms.server.common.access.client.dto.notification.TurmsNotification.Data)) {
+            if (!(obj instanceof Data other)) {
                 return super.equals(obj);
             }
-            im.turms.server.common.access.client.dto.notification.TurmsNotification.Data other = (im.turms.server.common.access.client.dto.notification.TurmsNotification.Data) obj;
 
             if (!getKindCase().equals(other.getKindCase())) {
                 return false;
             }
             switch (kindCase_) {
-                case 1:
+                case 1 -> {
                     if (getLong()
                         != other.getLong()) {
                         return false;
                     }
-                    break;
-                case 2:
+                }
+                case 2 -> {
                     if (!getString()
                             .equals(other.getString())) {
                         return false;
                     }
-                    break;
-                case 3:
+                }
+                case 3 -> {
                     if (!getLongsWithVersion()
                             .equals(other.getLongsWithVersion())) {
                         return false;
                     }
-                    break;
-                case 4:
+                }
+                case 4 -> {
                     if (!getStringsWithVersion()
                             .equals(other.getStringsWithVersion())) {
                         return false;
                     }
-                    break;
-                case 5:
+                }
+                case 5 -> {
                     if (!getConversations()
                             .equals(other.getConversations())) {
                         return false;
                     }
-                    break;
-                case 6:
+                }
+                case 6 -> {
                     if (!getMessages()
                             .equals(other.getMessages())) {
                         return false;
                     }
-                    break;
-                case 7:
+                }
+                case 7 -> {
                     if (!getMessagesWithTotalList()
                             .equals(other.getMessagesWithTotalList())) {
                         return false;
                     }
-                    break;
-                case 8:
+                }
+                case 8 -> {
                     if (!getUserSession()
                             .equals(other.getUserSession())) {
                         return false;
                     }
-                    break;
-                case 9:
+                }
+                case 9 -> {
                     if (!getUserInfosWithVersion()
                             .equals(other.getUserInfosWithVersion())) {
                         return false;
                     }
-                    break;
-                case 10:
+                }
+                case 10 -> {
                     if (!getUserOnlineStatuses()
                             .equals(other.getUserOnlineStatuses())) {
                         return false;
                     }
-                    break;
-                case 11:
+                }
+                case 11 -> {
                     if (!getUserFriendRequestsWithVersion()
                             .equals(other.getUserFriendRequestsWithVersion())) {
                         return false;
                     }
-                    break;
-                case 12:
+                }
+                case 12 -> {
                     if (!getUserRelationshipGroupsWithVersion()
                             .equals(other.getUserRelationshipGroupsWithVersion())) {
                         return false;
                     }
-                    break;
-                case 13:
+                }
+                case 13 -> {
                     if (!getUserRelationshipsWithVersion()
                             .equals(other.getUserRelationshipsWithVersion())) {
                         return false;
                     }
-                    break;
-                case 14:
+                }
+                case 14 -> {
                     if (!getNearbyUsers()
                             .equals(other.getNearbyUsers())) {
                         return false;
                     }
-                    break;
-                case 15:
+                }
+                case 15 -> {
                     if (!getGroupInvitationsWithVersion()
                             .equals(other.getGroupInvitationsWithVersion())) {
                         return false;
                     }
-                    break;
-                case 16:
+                }
+                case 16 -> {
                     if (!getGroupJoinQuestionAnswerResult()
                             .equals(other.getGroupJoinQuestionAnswerResult())) {
                         return false;
                     }
-                    break;
-                case 17:
+                }
+                case 17 -> {
                     if (!getGroupJoinRequestsWithVersion()
                             .equals(other.getGroupJoinRequestsWithVersion())) {
                         return false;
                     }
-                    break;
-                case 18:
+                }
+                case 18 -> {
                     if (!getGroupJoinQuestionsWithVersion()
                             .equals(other.getGroupJoinQuestionsWithVersion())) {
                         return false;
                     }
-                    break;
-                case 19:
+                }
+                case 19 -> {
                     if (!getGroupMembersWithVersion()
                             .equals(other.getGroupMembersWithVersion())) {
                         return false;
                     }
-                    break;
-                case 20:
+                }
+                case 20 -> {
                     if (!getGroupsWithVersion()
                             .equals(other.getGroupsWithVersion())) {
                         return false;
                     }
-                    break;
-                case 50:
+                }
+                case 50 -> {
                     if (!getStorageResourceInfos()
                             .equals(other.getStorageResourceInfos())) {
                         return false;
                     }
-                    break;
-                case 0:
-                default:
+                }
+                case 0 -> {
+                }
+                default -> {
+                }
             }
-            if (!getUnknownFields().equals(other.getUnknownFields())) {
-                return false;
-            }
-            return true;
+            return getUnknownFields().equals(other.getUnknownFields());
         }
 
         @java.lang.Override
@@ -1783,93 +1824,95 @@ public final class TurmsNotification extends
             int hash = 41;
             hash = (19 * hash) + getDescriptor().hashCode();
             switch (kindCase_) {
-                case 1:
+                case 1 -> {
                     hash = (37 * hash) + LONG_FIELD_NUMBER;
                     hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
                             getLong());
-                    break;
-                case 2:
+                }
+                case 2 -> {
                     hash = (37 * hash) + STRING_FIELD_NUMBER;
                     hash = (53 * hash) + getString().hashCode();
-                    break;
-                case 3:
+                }
+                case 3 -> {
                     hash = (37 * hash) + LONGS_WITH_VERSION_FIELD_NUMBER;
                     hash = (53 * hash) + getLongsWithVersion().hashCode();
-                    break;
-                case 4:
+                }
+                case 4 -> {
                     hash = (37 * hash) + STRINGS_WITH_VERSION_FIELD_NUMBER;
                     hash = (53 * hash) + getStringsWithVersion().hashCode();
-                    break;
-                case 5:
+                }
+                case 5 -> {
                     hash = (37 * hash) + CONVERSATIONS_FIELD_NUMBER;
                     hash = (53 * hash) + getConversations().hashCode();
-                    break;
-                case 6:
+                }
+                case 6 -> {
                     hash = (37 * hash) + MESSAGES_FIELD_NUMBER;
                     hash = (53 * hash) + getMessages().hashCode();
-                    break;
-                case 7:
+                }
+                case 7 -> {
                     hash = (37 * hash) + MESSAGES_WITH_TOTAL_LIST_FIELD_NUMBER;
                     hash = (53 * hash) + getMessagesWithTotalList().hashCode();
-                    break;
-                case 8:
+                }
+                case 8 -> {
                     hash = (37 * hash) + USER_SESSION_FIELD_NUMBER;
                     hash = (53 * hash) + getUserSession().hashCode();
-                    break;
-                case 9:
+                }
+                case 9 -> {
                     hash = (37 * hash) + USER_INFOS_WITH_VERSION_FIELD_NUMBER;
                     hash = (53 * hash) + getUserInfosWithVersion().hashCode();
-                    break;
-                case 10:
+                }
+                case 10 -> {
                     hash = (37 * hash) + USER_ONLINE_STATUSES_FIELD_NUMBER;
                     hash = (53 * hash) + getUserOnlineStatuses().hashCode();
-                    break;
-                case 11:
+                }
+                case 11 -> {
                     hash = (37 * hash) + USER_FRIEND_REQUESTS_WITH_VERSION_FIELD_NUMBER;
                     hash = (53 * hash) + getUserFriendRequestsWithVersion().hashCode();
-                    break;
-                case 12:
+                }
+                case 12 -> {
                     hash = (37 * hash) + USER_RELATIONSHIP_GROUPS_WITH_VERSION_FIELD_NUMBER;
                     hash = (53 * hash) + getUserRelationshipGroupsWithVersion().hashCode();
-                    break;
-                case 13:
+                }
+                case 13 -> {
                     hash = (37 * hash) + USER_RELATIONSHIPS_WITH_VERSION_FIELD_NUMBER;
                     hash = (53 * hash) + getUserRelationshipsWithVersion().hashCode();
-                    break;
-                case 14:
+                }
+                case 14 -> {
                     hash = (37 * hash) + NEARBY_USERS_FIELD_NUMBER;
                     hash = (53 * hash) + getNearbyUsers().hashCode();
-                    break;
-                case 15:
+                }
+                case 15 -> {
                     hash = (37 * hash) + GROUP_INVITATIONS_WITH_VERSION_FIELD_NUMBER;
                     hash = (53 * hash) + getGroupInvitationsWithVersion().hashCode();
-                    break;
-                case 16:
+                }
+                case 16 -> {
                     hash = (37 * hash) + GROUP_JOIN_QUESTION_ANSWER_RESULT_FIELD_NUMBER;
                     hash = (53 * hash) + getGroupJoinQuestionAnswerResult().hashCode();
-                    break;
-                case 17:
+                }
+                case 17 -> {
                     hash = (37 * hash) + GROUP_JOIN_REQUESTS_WITH_VERSION_FIELD_NUMBER;
                     hash = (53 * hash) + getGroupJoinRequestsWithVersion().hashCode();
-                    break;
-                case 18:
+                }
+                case 18 -> {
                     hash = (37 * hash) + GROUP_JOIN_QUESTIONS_WITH_VERSION_FIELD_NUMBER;
                     hash = (53 * hash) + getGroupJoinQuestionsWithVersion().hashCode();
-                    break;
-                case 19:
+                }
+                case 19 -> {
                     hash = (37 * hash) + GROUP_MEMBERS_WITH_VERSION_FIELD_NUMBER;
                     hash = (53 * hash) + getGroupMembersWithVersion().hashCode();
-                    break;
-                case 20:
+                }
+                case 20 -> {
                     hash = (37 * hash) + GROUPS_WITH_VERSION_FIELD_NUMBER;
                     hash = (53 * hash) + getGroupsWithVersion().hashCode();
-                    break;
-                case 50:
+                }
+                case 50 -> {
                     hash = (37 * hash) + STORAGE_RESOURCE_INFOS_FIELD_NUMBER;
                     hash = (53 * hash) + getStorageResourceInfos().hashCode();
-                    break;
-                case 0:
-                default:
+                }
+                case 0 -> {
+                }
+                default -> {
+                }
             }
             hash = (29 * hash) + getUnknownFields().hashCode();
             memoizedHashCode = hash;
@@ -1979,8 +2022,7 @@ public final class TurmsNotification extends
         @java.lang.Override
         protected Builder newBuilderForType(
                 com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-            Builder builder = new Builder(parent);
-            return builder;
+            return new Builder(parent);
         }
 
         /**
@@ -2000,8 +2042,7 @@ public final class TurmsNotification extends
             internalGetFieldAccessorTable() {
                 return im.turms.server.common.access.client.dto.notification.TurmsNotificationOuterClass.internal_static_im_turms_proto_TurmsNotification_Data_fieldAccessorTable
                         .ensureFieldAccessorsInitialized(
-                                im.turms.server.common.access.client.dto.notification.TurmsNotification.Data.class,
-                                im.turms.server.common.access.client.dto.notification.TurmsNotification.Data.Builder.class);
+                                im.turms.server.common.access.client.dto.notification.TurmsNotification.Data.class, im.turms.server.common.access.client.dto.notification.TurmsNotification.Data.Builder.class);
             }
 
             // Construct using im.turms.server.common.access.client.dto.notification.TurmsNotification.Data.newBuilder()
@@ -2018,6 +2059,7 @@ public final class TurmsNotification extends
             @java.lang.Override
             public Builder clear() {
                 super.clear();
+                bitField0_ = 0;
                 if (longsWithVersionBuilder_ != null) {
                     longsWithVersionBuilder_.clear();
                 }
@@ -2103,184 +2145,97 @@ public final class TurmsNotification extends
             @java.lang.Override
             public im.turms.server.common.access.client.dto.notification.TurmsNotification.Data buildPartial() {
                 im.turms.server.common.access.client.dto.notification.TurmsNotification.Data result = new im.turms.server.common.access.client.dto.notification.TurmsNotification.Data(this);
-                switch (kindCase_) {
-                    case 1 -> result.kind_ = kind_;
-                    case 2 -> result.kind_ = kind_;
-                    case 3 -> {
-                        if (longsWithVersionBuilder_ == null) {
-                            result.kind_ = kind_;
-                        } else {
-                            result.kind_ = longsWithVersionBuilder_.build();
-                        }
-                    }
-                    case 4 -> {
-                        if (stringsWithVersionBuilder_ == null) {
-                            result.kind_ = kind_;
-                        } else {
-                            result.kind_ = stringsWithVersionBuilder_.build();
-                        }
-                    }
-                    case 5 -> {
-                        if (conversationsBuilder_ == null) {
-                            result.kind_ = kind_;
-                        } else {
-                            result.kind_ = conversationsBuilder_.build();
-                        }
-                    }
-                    case 6 -> {
-                        if (messagesBuilder_ == null) {
-                            result.kind_ = kind_;
-                        } else {
-                            result.kind_ = messagesBuilder_.build();
-                        }
-                    }
-                    case 7 -> {
-                        if (messagesWithTotalListBuilder_ == null) {
-                            result.kind_ = kind_;
-                        } else {
-                            result.kind_ = messagesWithTotalListBuilder_.build();
-                        }
-                    }
-                    case 8 -> {
-                        if (userSessionBuilder_ == null) {
-                            result.kind_ = kind_;
-                        } else {
-                            result.kind_ = userSessionBuilder_.build();
-                        }
-                    }
-                    case 9 -> {
-                        if (userInfosWithVersionBuilder_ == null) {
-                            result.kind_ = kind_;
-                        } else {
-                            result.kind_ = userInfosWithVersionBuilder_.build();
-                        }
-                    }
-                    case 10 -> {
-                        if (userOnlineStatusesBuilder_ == null) {
-                            result.kind_ = kind_;
-                        } else {
-                            result.kind_ = userOnlineStatusesBuilder_.build();
-                        }
-                    }
-                    case 11 -> {
-                        if (userFriendRequestsWithVersionBuilder_ == null) {
-                            result.kind_ = kind_;
-                        } else {
-                            result.kind_ = userFriendRequestsWithVersionBuilder_.build();
-                        }
-                    }
-                    case 12 -> {
-                        if (userRelationshipGroupsWithVersionBuilder_ == null) {
-                            result.kind_ = kind_;
-                        } else {
-                            result.kind_ = userRelationshipGroupsWithVersionBuilder_.build();
-                        }
-                    }
-                    case 13 -> {
-                        if (userRelationshipsWithVersionBuilder_ == null) {
-                            result.kind_ = kind_;
-                        } else {
-                            result.kind_ = userRelationshipsWithVersionBuilder_.build();
-                        }
-                    }
-                    case 14 -> {
-                        if (nearbyUsersBuilder_ == null) {
-                            result.kind_ = kind_;
-                        } else {
-                            result.kind_ = nearbyUsersBuilder_.build();
-                        }
-                    }
-                    case 15 -> {
-                        if (groupInvitationsWithVersionBuilder_ == null) {
-                            result.kind_ = kind_;
-                        } else {
-                            result.kind_ = groupInvitationsWithVersionBuilder_.build();
-                        }
-                    }
-                    case 16 -> {
-                        if (groupJoinQuestionAnswerResultBuilder_ == null) {
-                            result.kind_ = kind_;
-                        } else {
-                            result.kind_ = groupJoinQuestionAnswerResultBuilder_.build();
-                        }
-                    }
-                    case 17 -> {
-                        if (groupJoinRequestsWithVersionBuilder_ == null) {
-                            result.kind_ = kind_;
-                        } else {
-                            result.kind_ = groupJoinRequestsWithVersionBuilder_.build();
-                        }
-                    }
-                    case 18 -> {
-                        if (groupJoinQuestionsWithVersionBuilder_ == null) {
-                            result.kind_ = kind_;
-                        } else {
-                            result.kind_ = groupJoinQuestionsWithVersionBuilder_.build();
-                        }
-                    }
-                    case 19 -> {
-                        if (groupMembersWithVersionBuilder_ == null) {
-                            result.kind_ = kind_;
-                        } else {
-                            result.kind_ = groupMembersWithVersionBuilder_.build();
-                        }
-                    }
-                    case 20 -> {
-                        if (groupsWithVersionBuilder_ == null) {
-                            result.kind_ = kind_;
-                        } else {
-                            result.kind_ = groupsWithVersionBuilder_.build();
-                        }
-                    }
-                    case 50 -> {
-                        if (storageResourceInfosBuilder_ == null) {
-                            result.kind_ = kind_;
-                        } else {
-                            result.kind_ = storageResourceInfosBuilder_.build();
-                        }
-                    }
+                if (bitField0_ != 0) {
+                    buildPartial0(result);
                 }
-                result.kindCase_ = kindCase_;
+                buildPartialOneofs(result);
                 onBuilt();
                 return result;
             }
 
-            @java.lang.Override
-            public Builder clone() {
-                return super.clone();
+            private void buildPartial0(im.turms.server.common.access.client.dto.notification.TurmsNotification.Data result) {
+                int from_bitField0_ = bitField0_;
             }
 
-            @java.lang.Override
-            public Builder setField(
-                    com.google.protobuf.Descriptors.FieldDescriptor field,
-                    java.lang.Object value) {
-                return super.setField(field, value);
-            }
-
-            @java.lang.Override
-            public Builder clearField(
-                    com.google.protobuf.Descriptors.FieldDescriptor field) {
-                return super.clearField(field);
-            }
-
-            @java.lang.Override
-            public Builder clearOneof(
-                    com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-                return super.clearOneof(oneof);
-            }
-
-            @java.lang.Override
-            public Builder setRepeatedField(
-                    com.google.protobuf.Descriptors.FieldDescriptor field,
-                    int index, java.lang.Object value) {
-                return super.setRepeatedField(field, index, value);
-            }
-
-            @java.lang.Override
-            public Builder addRepeatedField(
-                    com.google.protobuf.Descriptors.FieldDescriptor field,
-                    java.lang.Object value) {
-                return super.addRepeatedField(field, value);
+            private void buildPartialOneofs(im.turms.server.common.access.client.dto.notification.TurmsNotification.Data result) {
+                result.kindCase_ = kindCase_;
+                result.kind_ = this.kind_;
+                if (kindCase_ == 3 &&
+                    longsWithVersionBuilder_ != null) {
+                    result.kind_ = longsWithVersionBuilder_.build();
+                }
+                if (kindCase_ == 4 &&
+                    stringsWithVersionBuilder_ != null) {
+                    result.kind_ = stringsWithVersionBuilder_.build();
+                }
+                if (kindCase_ == 5 &&
+                    conversationsBuilder_ != null) {
+                    result.kind_ = conversationsBuilder_.build();
+                }
+                if (kindCase_ == 6 &&
+                    messagesBuilder_ != null) {
+                    result.kind_ = messagesBuilder_.build();
+                }
+                if (kindCase_ == 7 &&
+                    messagesWithTotalListBuilder_ != null) {
+                    result.kind_ = messagesWithTotalListBuilder_.build();
+                }
+                if (kindCase_ == 8 &&
+                    userSessionBuilder_ != null) {
+                    result.kind_ = userSessionBuilder_.build();
+                }
+                if (kindCase_ == 9 &&
+                    userInfosWithVersionBuilder_ != null) {
+                    result.kind_ = userInfosWithVersionBuilder_.build();
+                }
+                if (kindCase_ == 10 &&
+                    userOnlineStatusesBuilder_ != null) {
+                    result.kind_ = userOnlineStatusesBuilder_.build();
+                }
+                if (kindCase_ == 11 &&
+                    userFriendRequestsWithVersionBuilder_ != null) {
+                    result.kind_ = userFriendRequestsWithVersionBuilder_.build();
+                }
+                if (kindCase_ == 12 &&
+                    userRelationshipGroupsWithVersionBuilder_ != null) {
+                    result.kind_ = userRelationshipGroupsWithVersionBuilder_.build();
+                }
+                if (kindCase_ == 13 &&
+                    userRelationshipsWithVersionBuilder_ != null) {
+                    result.kind_ = userRelationshipsWithVersionBuilder_.build();
+                }
+                if (kindCase_ == 14 &&
+                    nearbyUsersBuilder_ != null) {
+                    result.kind_ = nearbyUsersBuilder_.build();
+                }
+                if (kindCase_ == 15 &&
+                    groupInvitationsWithVersionBuilder_ != null) {
+                    result.kind_ = groupInvitationsWithVersionBuilder_.build();
+                }
+                if (kindCase_ == 16 &&
+                    groupJoinQuestionAnswerResultBuilder_ != null) {
+                    result.kind_ = groupJoinQuestionAnswerResultBuilder_.build();
+                }
+                if (kindCase_ == 17 &&
+                    groupJoinRequestsWithVersionBuilder_ != null) {
+                    result.kind_ = groupJoinRequestsWithVersionBuilder_.build();
+                }
+                if (kindCase_ == 18 &&
+                    groupJoinQuestionsWithVersionBuilder_ != null) {
+                    result.kind_ = groupJoinQuestionsWithVersionBuilder_.build();
+                }
+                if (kindCase_ == 19 &&
+                    groupMembersWithVersionBuilder_ != null) {
+                    result.kind_ = groupMembersWithVersionBuilder_.build();
+                }
+                if (kindCase_ == 20 &&
+                    groupsWithVersionBuilder_ != null) {
+                    result.kind_ = groupsWithVersionBuilder_.build();
+                }
+                if (kindCase_ == 50 &&
+                    storageResourceInfosBuilder_ != null) {
+                    result.kind_ = storageResourceInfosBuilder_.build();
+                }
             }
 
             @java.lang.Override
@@ -2298,94 +2253,72 @@ public final class TurmsNotification extends
                     return this;
                 }
                 switch (other.getKindCase()) {
-                    case LONG: {
+                    case LONG -> {
                         setLong(other.getLong());
-                        break;
                     }
-                    case STRING: {
+                    case STRING -> {
                         kindCase_ = 2;
                         kind_ = other.kind_;
                         onChanged();
-                        break;
                     }
-                    case LONGS_WITH_VERSION: {
+                    case LONGS_WITH_VERSION -> {
                         mergeLongsWithVersion(other.getLongsWithVersion());
-                        break;
                     }
-                    case STRINGS_WITH_VERSION: {
+                    case STRINGS_WITH_VERSION -> {
                         mergeStringsWithVersion(other.getStringsWithVersion());
-                        break;
                     }
-                    case CONVERSATIONS: {
+                    case CONVERSATIONS -> {
                         mergeConversations(other.getConversations());
-                        break;
                     }
-                    case MESSAGES: {
+                    case MESSAGES -> {
                         mergeMessages(other.getMessages());
-                        break;
                     }
-                    case MESSAGES_WITH_TOTAL_LIST: {
+                    case MESSAGES_WITH_TOTAL_LIST -> {
                         mergeMessagesWithTotalList(other.getMessagesWithTotalList());
-                        break;
                     }
-                    case USER_SESSION: {
+                    case USER_SESSION -> {
                         mergeUserSession(other.getUserSession());
-                        break;
                     }
-                    case USER_INFOS_WITH_VERSION: {
+                    case USER_INFOS_WITH_VERSION -> {
                         mergeUserInfosWithVersion(other.getUserInfosWithVersion());
-                        break;
                     }
-                    case USER_ONLINE_STATUSES: {
+                    case USER_ONLINE_STATUSES -> {
                         mergeUserOnlineStatuses(other.getUserOnlineStatuses());
-                        break;
                     }
-                    case USER_FRIEND_REQUESTS_WITH_VERSION: {
+                    case USER_FRIEND_REQUESTS_WITH_VERSION -> {
                         mergeUserFriendRequestsWithVersion(other.getUserFriendRequestsWithVersion());
-                        break;
                     }
-                    case USER_RELATIONSHIP_GROUPS_WITH_VERSION: {
+                    case USER_RELATIONSHIP_GROUPS_WITH_VERSION -> {
                         mergeUserRelationshipGroupsWithVersion(other.getUserRelationshipGroupsWithVersion());
-                        break;
                     }
-                    case USER_RELATIONSHIPS_WITH_VERSION: {
+                    case USER_RELATIONSHIPS_WITH_VERSION -> {
                         mergeUserRelationshipsWithVersion(other.getUserRelationshipsWithVersion());
-                        break;
                     }
-                    case NEARBY_USERS: {
+                    case NEARBY_USERS -> {
                         mergeNearbyUsers(other.getNearbyUsers());
-                        break;
                     }
-                    case GROUP_INVITATIONS_WITH_VERSION: {
+                    case GROUP_INVITATIONS_WITH_VERSION -> {
                         mergeGroupInvitationsWithVersion(other.getGroupInvitationsWithVersion());
-                        break;
                     }
-                    case GROUP_JOIN_QUESTION_ANSWER_RESULT: {
+                    case GROUP_JOIN_QUESTION_ANSWER_RESULT -> {
                         mergeGroupJoinQuestionAnswerResult(other.getGroupJoinQuestionAnswerResult());
-                        break;
                     }
-                    case GROUP_JOIN_REQUESTS_WITH_VERSION: {
+                    case GROUP_JOIN_REQUESTS_WITH_VERSION -> {
                         mergeGroupJoinRequestsWithVersion(other.getGroupJoinRequestsWithVersion());
-                        break;
                     }
-                    case GROUP_JOIN_QUESTIONS_WITH_VERSION: {
+                    case GROUP_JOIN_QUESTIONS_WITH_VERSION -> {
                         mergeGroupJoinQuestionsWithVersion(other.getGroupJoinQuestionsWithVersion());
-                        break;
                     }
-                    case GROUP_MEMBERS_WITH_VERSION: {
+                    case GROUP_MEMBERS_WITH_VERSION -> {
                         mergeGroupMembersWithVersion(other.getGroupMembersWithVersion());
-                        break;
                     }
-                    case GROUPS_WITH_VERSION: {
+                    case GROUPS_WITH_VERSION -> {
                         mergeGroupsWithVersion(other.getGroupsWithVersion());
-                        break;
                     }
-                    case STORAGE_RESOURCE_INFOS: {
+                    case STORAGE_RESOURCE_INFOS -> {
                         mergeStorageResourceInfos(other.getStorageResourceInfos());
-                        break;
                     }
-                    case KIND_NOT_SET: {
-                        break;
+                    case KIND_NOT_SET -> {
                     }
                 }
                 this.mergeUnknownFields(other.getUnknownFields());
@@ -2411,158 +2344,134 @@ public final class TurmsNotification extends
                     while (!done) {
                         int tag = input.readTag();
                         switch (tag) {
-                            case 0:
-                                done = true;
-                                break;
-                            case 8: {
+                            case 0 -> done = true;
+                            case 8 -> {
                                 kind_ = input.readInt64();
                                 kindCase_ = 1;
-                                break;
                             } // case 8
-                            case 18: {
-                                java.lang.String s = input.readStringRequireUtf8();
+                            case 18 -> {
+                                String s = input.readStringRequireUtf8();
                                 kindCase_ = 2;
                                 kind_ = s;
-                                break;
                             } // case 18
-                            case 26: {
+                            case 26 -> {
                                 input.readMessage(
                                         getLongsWithVersionFieldBuilder().getBuilder(),
                                         extensionRegistry);
                                 kindCase_ = 3;
-                                break;
                             } // case 26
-                            case 34: {
+                            case 34 -> {
                                 input.readMessage(
                                         getStringsWithVersionFieldBuilder().getBuilder(),
                                         extensionRegistry);
                                 kindCase_ = 4;
-                                break;
                             } // case 34
-                            case 42: {
+                            case 42 -> {
                                 input.readMessage(
                                         getConversationsFieldBuilder().getBuilder(),
                                         extensionRegistry);
                                 kindCase_ = 5;
-                                break;
                             } // case 42
-                            case 50: {
+                            case 50 -> {
                                 input.readMessage(
                                         getMessagesFieldBuilder().getBuilder(),
                                         extensionRegistry);
                                 kindCase_ = 6;
-                                break;
                             } // case 50
-                            case 58: {
+                            case 58 -> {
                                 input.readMessage(
                                         getMessagesWithTotalListFieldBuilder().getBuilder(),
                                         extensionRegistry);
                                 kindCase_ = 7;
-                                break;
                             } // case 58
-                            case 66: {
+                            case 66 -> {
                                 input.readMessage(
                                         getUserSessionFieldBuilder().getBuilder(),
                                         extensionRegistry);
                                 kindCase_ = 8;
-                                break;
                             } // case 66
-                            case 74: {
+                            case 74 -> {
                                 input.readMessage(
                                         getUserInfosWithVersionFieldBuilder().getBuilder(),
                                         extensionRegistry);
                                 kindCase_ = 9;
-                                break;
                             } // case 74
-                            case 82: {
+                            case 82 -> {
                                 input.readMessage(
                                         getUserOnlineStatusesFieldBuilder().getBuilder(),
                                         extensionRegistry);
                                 kindCase_ = 10;
-                                break;
                             } // case 82
-                            case 90: {
+                            case 90 -> {
                                 input.readMessage(
                                         getUserFriendRequestsWithVersionFieldBuilder().getBuilder(),
                                         extensionRegistry);
                                 kindCase_ = 11;
-                                break;
                             } // case 90
-                            case 98: {
+                            case 98 -> {
                                 input.readMessage(
                                         getUserRelationshipGroupsWithVersionFieldBuilder().getBuilder(),
                                         extensionRegistry);
                                 kindCase_ = 12;
-                                break;
                             } // case 98
-                            case 106: {
+                            case 106 -> {
                                 input.readMessage(
                                         getUserRelationshipsWithVersionFieldBuilder().getBuilder(),
                                         extensionRegistry);
                                 kindCase_ = 13;
-                                break;
                             } // case 106
-                            case 114: {
+                            case 114 -> {
                                 input.readMessage(
                                         getNearbyUsersFieldBuilder().getBuilder(),
                                         extensionRegistry);
                                 kindCase_ = 14;
-                                break;
                             } // case 114
-                            case 122: {
+                            case 122 -> {
                                 input.readMessage(
                                         getGroupInvitationsWithVersionFieldBuilder().getBuilder(),
                                         extensionRegistry);
                                 kindCase_ = 15;
-                                break;
                             } // case 122
-                            case 130: {
+                            case 130 -> {
                                 input.readMessage(
                                         getGroupJoinQuestionAnswerResultFieldBuilder().getBuilder(),
                                         extensionRegistry);
                                 kindCase_ = 16;
-                                break;
                             } // case 130
-                            case 138: {
+                            case 138 -> {
                                 input.readMessage(
                                         getGroupJoinRequestsWithVersionFieldBuilder().getBuilder(),
                                         extensionRegistry);
                                 kindCase_ = 17;
-                                break;
                             } // case 138
-                            case 146: {
+                            case 146 -> {
                                 input.readMessage(
                                         getGroupJoinQuestionsWithVersionFieldBuilder().getBuilder(),
                                         extensionRegistry);
                                 kindCase_ = 18;
-                                break;
                             } // case 146
-                            case 154: {
+                            case 154 -> {
                                 input.readMessage(
                                         getGroupMembersWithVersionFieldBuilder().getBuilder(),
                                         extensionRegistry);
                                 kindCase_ = 19;
-                                break;
                             } // case 154
-                            case 162: {
+                            case 162 -> {
                                 input.readMessage(
                                         getGroupsWithVersionFieldBuilder().getBuilder(),
                                         extensionRegistry);
                                 kindCase_ = 20;
-                                break;
                             } // case 162
-                            case 402: {
+                            case 402 -> {
                                 input.readMessage(
                                         getStorageResourceInfosFieldBuilder().getBuilder(),
                                         extensionRegistry);
                                 kindCase_ = 50;
-                                break;
                             } // case 402
-                            default: {
+                            default -> {
                                 if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                     done = true; // was an endgroup tag
                                 }
-                                break;
                             } // default:
                         } // switch (tag)
                     } // while (!done)
@@ -2590,6 +2499,7 @@ public final class TurmsNotification extends
                 return this;
             }
 
+            private int bitField0_;
 
             /**
              * <pre>
@@ -2631,6 +2541,7 @@ public final class TurmsNotification extends
              * @return This builder for chaining.
              */
             public Builder setLong(long value) {
+
                 kindCase_ = 1;
                 kind_ = value;
                 onChanged();
@@ -2764,8 +2675,7 @@ public final class TurmsNotification extends
             }
 
             private com.google.protobuf.SingleFieldBuilderV3<
-                    im.turms.server.common.access.client.dto.model.common.LongsWithVersion, im.turms.server.common.access.client.dto.model.common.LongsWithVersion.Builder, im.turms.server.common.access.client.dto.model.common.LongsWithVersionOrBuilder>
-                    longsWithVersionBuilder_;
+                    im.turms.server.common.access.client.dto.model.common.LongsWithVersion, im.turms.server.common.access.client.dto.model.common.LongsWithVersion.Builder, im.turms.server.common.access.client.dto.model.common.LongsWithVersionOrBuilder> longsWithVersionBuilder_;
 
             /**
              * <code>.im.turms.proto.LongsWithVersion longs_with_version = 3;</code>
@@ -2905,8 +2815,7 @@ public final class TurmsNotification extends
                     if (!(kindCase_ == 3)) {
                         kind_ = im.turms.server.common.access.client.dto.model.common.LongsWithVersion.getDefaultInstance();
                     }
-                    longsWithVersionBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-                            im.turms.server.common.access.client.dto.model.common.LongsWithVersion, im.turms.server.common.access.client.dto.model.common.LongsWithVersion.Builder, im.turms.server.common.access.client.dto.model.common.LongsWithVersionOrBuilder>(
+                    longsWithVersionBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
                             (im.turms.server.common.access.client.dto.model.common.LongsWithVersion) kind_,
                             getParentForChildren(),
                             isClean());
@@ -2914,13 +2823,11 @@ public final class TurmsNotification extends
                 }
                 kindCase_ = 3;
                 onChanged();
-                ;
                 return longsWithVersionBuilder_;
             }
 
             private com.google.protobuf.SingleFieldBuilderV3<
-                    im.turms.server.common.access.client.dto.model.common.StringsWithVersion, im.turms.server.common.access.client.dto.model.common.StringsWithVersion.Builder, im.turms.server.common.access.client.dto.model.common.StringsWithVersionOrBuilder>
-                    stringsWithVersionBuilder_;
+                    im.turms.server.common.access.client.dto.model.common.StringsWithVersion, im.turms.server.common.access.client.dto.model.common.StringsWithVersion.Builder, im.turms.server.common.access.client.dto.model.common.StringsWithVersionOrBuilder> stringsWithVersionBuilder_;
 
             /**
              * <code>.im.turms.proto.StringsWithVersion strings_with_version = 4;</code>
@@ -3060,8 +2967,7 @@ public final class TurmsNotification extends
                     if (!(kindCase_ == 4)) {
                         kind_ = im.turms.server.common.access.client.dto.model.common.StringsWithVersion.getDefaultInstance();
                     }
-                    stringsWithVersionBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-                            im.turms.server.common.access.client.dto.model.common.StringsWithVersion, im.turms.server.common.access.client.dto.model.common.StringsWithVersion.Builder, im.turms.server.common.access.client.dto.model.common.StringsWithVersionOrBuilder>(
+                    stringsWithVersionBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
                             (im.turms.server.common.access.client.dto.model.common.StringsWithVersion) kind_,
                             getParentForChildren(),
                             isClean());
@@ -3069,13 +2975,11 @@ public final class TurmsNotification extends
                 }
                 kindCase_ = 4;
                 onChanged();
-                ;
                 return stringsWithVersionBuilder_;
             }
 
             private com.google.protobuf.SingleFieldBuilderV3<
-                    im.turms.server.common.access.client.dto.model.conversation.Conversations, im.turms.server.common.access.client.dto.model.conversation.Conversations.Builder, im.turms.server.common.access.client.dto.model.conversation.ConversationsOrBuilder>
-                    conversationsBuilder_;
+                    im.turms.server.common.access.client.dto.model.conversation.Conversations, im.turms.server.common.access.client.dto.model.conversation.Conversations.Builder, im.turms.server.common.access.client.dto.model.conversation.ConversationsOrBuilder> conversationsBuilder_;
 
             /**
              * <pre>
@@ -3251,8 +3155,7 @@ public final class TurmsNotification extends
                     if (!(kindCase_ == 5)) {
                         kind_ = im.turms.server.common.access.client.dto.model.conversation.Conversations.getDefaultInstance();
                     }
-                    conversationsBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-                            im.turms.server.common.access.client.dto.model.conversation.Conversations, im.turms.server.common.access.client.dto.model.conversation.Conversations.Builder, im.turms.server.common.access.client.dto.model.conversation.ConversationsOrBuilder>(
+                    conversationsBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
                             (im.turms.server.common.access.client.dto.model.conversation.Conversations) kind_,
                             getParentForChildren(),
                             isClean());
@@ -3260,13 +3163,11 @@ public final class TurmsNotification extends
                 }
                 kindCase_ = 5;
                 onChanged();
-                ;
                 return conversationsBuilder_;
             }
 
             private com.google.protobuf.SingleFieldBuilderV3<
-                    im.turms.server.common.access.client.dto.model.message.Messages, im.turms.server.common.access.client.dto.model.message.Messages.Builder, im.turms.server.common.access.client.dto.model.message.MessagesOrBuilder>
-                    messagesBuilder_;
+                    im.turms.server.common.access.client.dto.model.message.Messages, im.turms.server.common.access.client.dto.model.message.Messages.Builder, im.turms.server.common.access.client.dto.model.message.MessagesOrBuilder> messagesBuilder_;
 
             /**
              * <pre>
@@ -3442,8 +3343,7 @@ public final class TurmsNotification extends
                     if (!(kindCase_ == 6)) {
                         kind_ = im.turms.server.common.access.client.dto.model.message.Messages.getDefaultInstance();
                     }
-                    messagesBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-                            im.turms.server.common.access.client.dto.model.message.Messages, im.turms.server.common.access.client.dto.model.message.Messages.Builder, im.turms.server.common.access.client.dto.model.message.MessagesOrBuilder>(
+                    messagesBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
                             (im.turms.server.common.access.client.dto.model.message.Messages) kind_,
                             getParentForChildren(),
                             isClean());
@@ -3451,13 +3351,11 @@ public final class TurmsNotification extends
                 }
                 kindCase_ = 6;
                 onChanged();
-                ;
                 return messagesBuilder_;
             }
 
             private com.google.protobuf.SingleFieldBuilderV3<
-                    im.turms.server.common.access.client.dto.model.message.MessagesWithTotalList, im.turms.server.common.access.client.dto.model.message.MessagesWithTotalList.Builder, im.turms.server.common.access.client.dto.model.message.MessagesWithTotalListOrBuilder>
-                    messagesWithTotalListBuilder_;
+                    im.turms.server.common.access.client.dto.model.message.MessagesWithTotalList, im.turms.server.common.access.client.dto.model.message.MessagesWithTotalList.Builder, im.turms.server.common.access.client.dto.model.message.MessagesWithTotalListOrBuilder> messagesWithTotalListBuilder_;
 
             /**
              * <code>.im.turms.proto.MessagesWithTotalList messages_with_total_list = 7;</code>
@@ -3528,8 +3426,7 @@ public final class TurmsNotification extends
                 if (messagesWithTotalListBuilder_ == null) {
                     if (kindCase_ == 7 &&
                         kind_ != im.turms.server.common.access.client.dto.model.message.MessagesWithTotalList.getDefaultInstance()) {
-                        kind_ = im.turms.server.common.access.client.dto.model.message.MessagesWithTotalList.newBuilder(
-                                        (im.turms.server.common.access.client.dto.model.message.MessagesWithTotalList) kind_)
+                        kind_ = im.turms.server.common.access.client.dto.model.message.MessagesWithTotalList.newBuilder((im.turms.server.common.access.client.dto.model.message.MessagesWithTotalList) kind_)
                                 .mergeFrom(value).buildPartial();
                     } else {
                         kind_ = value;
@@ -3598,8 +3495,7 @@ public final class TurmsNotification extends
                     if (!(kindCase_ == 7)) {
                         kind_ = im.turms.server.common.access.client.dto.model.message.MessagesWithTotalList.getDefaultInstance();
                     }
-                    messagesWithTotalListBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-                            im.turms.server.common.access.client.dto.model.message.MessagesWithTotalList, im.turms.server.common.access.client.dto.model.message.MessagesWithTotalList.Builder, im.turms.server.common.access.client.dto.model.message.MessagesWithTotalListOrBuilder>(
+                    messagesWithTotalListBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
                             (im.turms.server.common.access.client.dto.model.message.MessagesWithTotalList) kind_,
                             getParentForChildren(),
                             isClean());
@@ -3607,13 +3503,11 @@ public final class TurmsNotification extends
                 }
                 kindCase_ = 7;
                 onChanged();
-                ;
                 return messagesWithTotalListBuilder_;
             }
 
             private com.google.protobuf.SingleFieldBuilderV3<
-                    im.turms.server.common.access.client.dto.model.user.UserSession, im.turms.server.common.access.client.dto.model.user.UserSession.Builder, im.turms.server.common.access.client.dto.model.user.UserSessionOrBuilder>
-                    userSessionBuilder_;
+                    im.turms.server.common.access.client.dto.model.user.UserSession, im.turms.server.common.access.client.dto.model.user.UserSession.Builder, im.turms.server.common.access.client.dto.model.user.UserSessionOrBuilder> userSessionBuilder_;
 
             /**
              * <pre>
@@ -3789,8 +3683,7 @@ public final class TurmsNotification extends
                     if (!(kindCase_ == 8)) {
                         kind_ = im.turms.server.common.access.client.dto.model.user.UserSession.getDefaultInstance();
                     }
-                    userSessionBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-                            im.turms.server.common.access.client.dto.model.user.UserSession, im.turms.server.common.access.client.dto.model.user.UserSession.Builder, im.turms.server.common.access.client.dto.model.user.UserSessionOrBuilder>(
+                    userSessionBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
                             (im.turms.server.common.access.client.dto.model.user.UserSession) kind_,
                             getParentForChildren(),
                             isClean());
@@ -3798,13 +3691,11 @@ public final class TurmsNotification extends
                 }
                 kindCase_ = 8;
                 onChanged();
-                ;
                 return userSessionBuilder_;
             }
 
             private com.google.protobuf.SingleFieldBuilderV3<
-                    im.turms.server.common.access.client.dto.model.user.UserInfosWithVersion, im.turms.server.common.access.client.dto.model.user.UserInfosWithVersion.Builder, im.turms.server.common.access.client.dto.model.user.UserInfosWithVersionOrBuilder>
-                    userInfosWithVersionBuilder_;
+                    im.turms.server.common.access.client.dto.model.user.UserInfosWithVersion, im.turms.server.common.access.client.dto.model.user.UserInfosWithVersion.Builder, im.turms.server.common.access.client.dto.model.user.UserInfosWithVersionOrBuilder> userInfosWithVersionBuilder_;
 
             /**
              * <code>.im.turms.proto.UserInfosWithVersion user_infos_with_version = 9;</code>
@@ -3944,8 +3835,7 @@ public final class TurmsNotification extends
                     if (!(kindCase_ == 9)) {
                         kind_ = im.turms.server.common.access.client.dto.model.user.UserInfosWithVersion.getDefaultInstance();
                     }
-                    userInfosWithVersionBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-                            im.turms.server.common.access.client.dto.model.user.UserInfosWithVersion, im.turms.server.common.access.client.dto.model.user.UserInfosWithVersion.Builder, im.turms.server.common.access.client.dto.model.user.UserInfosWithVersionOrBuilder>(
+                    userInfosWithVersionBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
                             (im.turms.server.common.access.client.dto.model.user.UserInfosWithVersion) kind_,
                             getParentForChildren(),
                             isClean());
@@ -3953,13 +3843,11 @@ public final class TurmsNotification extends
                 }
                 kindCase_ = 9;
                 onChanged();
-                ;
                 return userInfosWithVersionBuilder_;
             }
 
             private com.google.protobuf.SingleFieldBuilderV3<
-                    im.turms.server.common.access.client.dto.model.user.UserOnlineStatuses, im.turms.server.common.access.client.dto.model.user.UserOnlineStatuses.Builder, im.turms.server.common.access.client.dto.model.user.UserOnlineStatusesOrBuilder>
-                    userOnlineStatusesBuilder_;
+                    im.turms.server.common.access.client.dto.model.user.UserOnlineStatuses, im.turms.server.common.access.client.dto.model.user.UserOnlineStatuses.Builder, im.turms.server.common.access.client.dto.model.user.UserOnlineStatusesOrBuilder> userOnlineStatusesBuilder_;
 
             /**
              * <code>.im.turms.proto.UserOnlineStatuses user_online_statuses = 10;</code>
@@ -4099,8 +3987,7 @@ public final class TurmsNotification extends
                     if (!(kindCase_ == 10)) {
                         kind_ = im.turms.server.common.access.client.dto.model.user.UserOnlineStatuses.getDefaultInstance();
                     }
-                    userOnlineStatusesBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-                            im.turms.server.common.access.client.dto.model.user.UserOnlineStatuses, im.turms.server.common.access.client.dto.model.user.UserOnlineStatuses.Builder, im.turms.server.common.access.client.dto.model.user.UserOnlineStatusesOrBuilder>(
+                    userOnlineStatusesBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
                             (im.turms.server.common.access.client.dto.model.user.UserOnlineStatuses) kind_,
                             getParentForChildren(),
                             isClean());
@@ -4108,13 +3995,11 @@ public final class TurmsNotification extends
                 }
                 kindCase_ = 10;
                 onChanged();
-                ;
                 return userOnlineStatusesBuilder_;
             }
 
             private com.google.protobuf.SingleFieldBuilderV3<
-                    im.turms.server.common.access.client.dto.model.user.UserFriendRequestsWithVersion, im.turms.server.common.access.client.dto.model.user.UserFriendRequestsWithVersion.Builder, im.turms.server.common.access.client.dto.model.user.UserFriendRequestsWithVersionOrBuilder>
-                    userFriendRequestsWithVersionBuilder_;
+                    im.turms.server.common.access.client.dto.model.user.UserFriendRequestsWithVersion, im.turms.server.common.access.client.dto.model.user.UserFriendRequestsWithVersion.Builder, im.turms.server.common.access.client.dto.model.user.UserFriendRequestsWithVersionOrBuilder> userFriendRequestsWithVersionBuilder_;
 
             /**
              * <code>.im.turms.proto.UserFriendRequestsWithVersion user_friend_requests_with_version = 11;</code>
@@ -4185,8 +4070,7 @@ public final class TurmsNotification extends
                 if (userFriendRequestsWithVersionBuilder_ == null) {
                     if (kindCase_ == 11 &&
                         kind_ != im.turms.server.common.access.client.dto.model.user.UserFriendRequestsWithVersion.getDefaultInstance()) {
-                        kind_ = im.turms.server.common.access.client.dto.model.user.UserFriendRequestsWithVersion.newBuilder(
-                                        (im.turms.server.common.access.client.dto.model.user.UserFriendRequestsWithVersion) kind_)
+                        kind_ = im.turms.server.common.access.client.dto.model.user.UserFriendRequestsWithVersion.newBuilder((im.turms.server.common.access.client.dto.model.user.UserFriendRequestsWithVersion) kind_)
                                 .mergeFrom(value).buildPartial();
                     } else {
                         kind_ = value;
@@ -4255,8 +4139,7 @@ public final class TurmsNotification extends
                     if (!(kindCase_ == 11)) {
                         kind_ = im.turms.server.common.access.client.dto.model.user.UserFriendRequestsWithVersion.getDefaultInstance();
                     }
-                    userFriendRequestsWithVersionBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-                            im.turms.server.common.access.client.dto.model.user.UserFriendRequestsWithVersion, im.turms.server.common.access.client.dto.model.user.UserFriendRequestsWithVersion.Builder, im.turms.server.common.access.client.dto.model.user.UserFriendRequestsWithVersionOrBuilder>(
+                    userFriendRequestsWithVersionBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
                             (im.turms.server.common.access.client.dto.model.user.UserFriendRequestsWithVersion) kind_,
                             getParentForChildren(),
                             isClean());
@@ -4264,13 +4147,11 @@ public final class TurmsNotification extends
                 }
                 kindCase_ = 11;
                 onChanged();
-                ;
                 return userFriendRequestsWithVersionBuilder_;
             }
 
             private com.google.protobuf.SingleFieldBuilderV3<
-                    im.turms.server.common.access.client.dto.model.user.UserRelationshipGroupsWithVersion, im.turms.server.common.access.client.dto.model.user.UserRelationshipGroupsWithVersion.Builder, im.turms.server.common.access.client.dto.model.user.UserRelationshipGroupsWithVersionOrBuilder>
-                    userRelationshipGroupsWithVersionBuilder_;
+                    im.turms.server.common.access.client.dto.model.user.UserRelationshipGroupsWithVersion, im.turms.server.common.access.client.dto.model.user.UserRelationshipGroupsWithVersion.Builder, im.turms.server.common.access.client.dto.model.user.UserRelationshipGroupsWithVersionOrBuilder> userRelationshipGroupsWithVersionBuilder_;
 
             /**
              * <code>.im.turms.proto.UserRelationshipGroupsWithVersion user_relationship_groups_with_version = 12;</code>
@@ -4341,8 +4222,7 @@ public final class TurmsNotification extends
                 if (userRelationshipGroupsWithVersionBuilder_ == null) {
                     if (kindCase_ == 12 &&
                         kind_ != im.turms.server.common.access.client.dto.model.user.UserRelationshipGroupsWithVersion.getDefaultInstance()) {
-                        kind_ = im.turms.server.common.access.client.dto.model.user.UserRelationshipGroupsWithVersion.newBuilder(
-                                        (im.turms.server.common.access.client.dto.model.user.UserRelationshipGroupsWithVersion) kind_)
+                        kind_ = im.turms.server.common.access.client.dto.model.user.UserRelationshipGroupsWithVersion.newBuilder((im.turms.server.common.access.client.dto.model.user.UserRelationshipGroupsWithVersion) kind_)
                                 .mergeFrom(value).buildPartial();
                     } else {
                         kind_ = value;
@@ -4411,8 +4291,7 @@ public final class TurmsNotification extends
                     if (!(kindCase_ == 12)) {
                         kind_ = im.turms.server.common.access.client.dto.model.user.UserRelationshipGroupsWithVersion.getDefaultInstance();
                     }
-                    userRelationshipGroupsWithVersionBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-                            im.turms.server.common.access.client.dto.model.user.UserRelationshipGroupsWithVersion, im.turms.server.common.access.client.dto.model.user.UserRelationshipGroupsWithVersion.Builder, im.turms.server.common.access.client.dto.model.user.UserRelationshipGroupsWithVersionOrBuilder>(
+                    userRelationshipGroupsWithVersionBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
                             (im.turms.server.common.access.client.dto.model.user.UserRelationshipGroupsWithVersion) kind_,
                             getParentForChildren(),
                             isClean());
@@ -4420,13 +4299,11 @@ public final class TurmsNotification extends
                 }
                 kindCase_ = 12;
                 onChanged();
-                ;
                 return userRelationshipGroupsWithVersionBuilder_;
             }
 
             private com.google.protobuf.SingleFieldBuilderV3<
-                    im.turms.server.common.access.client.dto.model.user.UserRelationshipsWithVersion, im.turms.server.common.access.client.dto.model.user.UserRelationshipsWithVersion.Builder, im.turms.server.common.access.client.dto.model.user.UserRelationshipsWithVersionOrBuilder>
-                    userRelationshipsWithVersionBuilder_;
+                    im.turms.server.common.access.client.dto.model.user.UserRelationshipsWithVersion, im.turms.server.common.access.client.dto.model.user.UserRelationshipsWithVersion.Builder, im.turms.server.common.access.client.dto.model.user.UserRelationshipsWithVersionOrBuilder> userRelationshipsWithVersionBuilder_;
 
             /**
              * <code>.im.turms.proto.UserRelationshipsWithVersion user_relationships_with_version = 13;</code>
@@ -4497,8 +4374,7 @@ public final class TurmsNotification extends
                 if (userRelationshipsWithVersionBuilder_ == null) {
                     if (kindCase_ == 13 &&
                         kind_ != im.turms.server.common.access.client.dto.model.user.UserRelationshipsWithVersion.getDefaultInstance()) {
-                        kind_ = im.turms.server.common.access.client.dto.model.user.UserRelationshipsWithVersion.newBuilder(
-                                        (im.turms.server.common.access.client.dto.model.user.UserRelationshipsWithVersion) kind_)
+                        kind_ = im.turms.server.common.access.client.dto.model.user.UserRelationshipsWithVersion.newBuilder((im.turms.server.common.access.client.dto.model.user.UserRelationshipsWithVersion) kind_)
                                 .mergeFrom(value).buildPartial();
                     } else {
                         kind_ = value;
@@ -4567,8 +4443,7 @@ public final class TurmsNotification extends
                     if (!(kindCase_ == 13)) {
                         kind_ = im.turms.server.common.access.client.dto.model.user.UserRelationshipsWithVersion.getDefaultInstance();
                     }
-                    userRelationshipsWithVersionBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-                            im.turms.server.common.access.client.dto.model.user.UserRelationshipsWithVersion, im.turms.server.common.access.client.dto.model.user.UserRelationshipsWithVersion.Builder, im.turms.server.common.access.client.dto.model.user.UserRelationshipsWithVersionOrBuilder>(
+                    userRelationshipsWithVersionBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
                             (im.turms.server.common.access.client.dto.model.user.UserRelationshipsWithVersion) kind_,
                             getParentForChildren(),
                             isClean());
@@ -4576,13 +4451,11 @@ public final class TurmsNotification extends
                 }
                 kindCase_ = 13;
                 onChanged();
-                ;
                 return userRelationshipsWithVersionBuilder_;
             }
 
             private com.google.protobuf.SingleFieldBuilderV3<
-                    im.turms.server.common.access.client.dto.model.user.NearbyUsers, im.turms.server.common.access.client.dto.model.user.NearbyUsers.Builder, im.turms.server.common.access.client.dto.model.user.NearbyUsersOrBuilder>
-                    nearbyUsersBuilder_;
+                    im.turms.server.common.access.client.dto.model.user.NearbyUsers, im.turms.server.common.access.client.dto.model.user.NearbyUsers.Builder, im.turms.server.common.access.client.dto.model.user.NearbyUsersOrBuilder> nearbyUsersBuilder_;
 
             /**
              * <code>.im.turms.proto.NearbyUsers nearby_users = 14;</code>
@@ -4722,8 +4595,7 @@ public final class TurmsNotification extends
                     if (!(kindCase_ == 14)) {
                         kind_ = im.turms.server.common.access.client.dto.model.user.NearbyUsers.getDefaultInstance();
                     }
-                    nearbyUsersBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-                            im.turms.server.common.access.client.dto.model.user.NearbyUsers, im.turms.server.common.access.client.dto.model.user.NearbyUsers.Builder, im.turms.server.common.access.client.dto.model.user.NearbyUsersOrBuilder>(
+                    nearbyUsersBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
                             (im.turms.server.common.access.client.dto.model.user.NearbyUsers) kind_,
                             getParentForChildren(),
                             isClean());
@@ -4731,13 +4603,11 @@ public final class TurmsNotification extends
                 }
                 kindCase_ = 14;
                 onChanged();
-                ;
                 return nearbyUsersBuilder_;
             }
 
             private com.google.protobuf.SingleFieldBuilderV3<
-                    im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersion, im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersion.Builder, im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersionOrBuilder>
-                    groupInvitationsWithVersionBuilder_;
+                    im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersion, im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersion.Builder, im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersionOrBuilder> groupInvitationsWithVersionBuilder_;
 
             /**
              * <pre>
@@ -4828,8 +4698,7 @@ public final class TurmsNotification extends
                 if (groupInvitationsWithVersionBuilder_ == null) {
                     if (kindCase_ == 15 &&
                         kind_ != im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersion.getDefaultInstance()) {
-                        kind_ = im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersion.newBuilder(
-                                        (im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersion) kind_)
+                        kind_ = im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersion.newBuilder((im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersion) kind_)
                                 .mergeFrom(value).buildPartial();
                     } else {
                         kind_ = value;
@@ -4914,8 +4783,7 @@ public final class TurmsNotification extends
                     if (!(kindCase_ == 15)) {
                         kind_ = im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersion.getDefaultInstance();
                     }
-                    groupInvitationsWithVersionBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-                            im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersion, im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersion.Builder, im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersionOrBuilder>(
+                    groupInvitationsWithVersionBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
                             (im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersion) kind_,
                             getParentForChildren(),
                             isClean());
@@ -4923,13 +4791,11 @@ public final class TurmsNotification extends
                 }
                 kindCase_ = 15;
                 onChanged();
-                ;
                 return groupInvitationsWithVersionBuilder_;
             }
 
             private com.google.protobuf.SingleFieldBuilderV3<
-                    im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsAnswerResult, im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsAnswerResult.Builder, im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsAnswerResultOrBuilder>
-                    groupJoinQuestionAnswerResultBuilder_;
+                    im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsAnswerResult, im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsAnswerResult.Builder, im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsAnswerResultOrBuilder> groupJoinQuestionAnswerResultBuilder_;
 
             /**
              * <code>.im.turms.proto.GroupJoinQuestionsAnswerResult group_join_question_answer_result = 16;</code>
@@ -5000,8 +4866,7 @@ public final class TurmsNotification extends
                 if (groupJoinQuestionAnswerResultBuilder_ == null) {
                     if (kindCase_ == 16 &&
                         kind_ != im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsAnswerResult.getDefaultInstance()) {
-                        kind_ = im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsAnswerResult.newBuilder(
-                                        (im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsAnswerResult) kind_)
+                        kind_ = im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsAnswerResult.newBuilder((im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsAnswerResult) kind_)
                                 .mergeFrom(value).buildPartial();
                     } else {
                         kind_ = value;
@@ -5070,8 +4935,7 @@ public final class TurmsNotification extends
                     if (!(kindCase_ == 16)) {
                         kind_ = im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsAnswerResult.getDefaultInstance();
                     }
-                    groupJoinQuestionAnswerResultBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-                            im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsAnswerResult, im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsAnswerResult.Builder, im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsAnswerResultOrBuilder>(
+                    groupJoinQuestionAnswerResultBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
                             (im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsAnswerResult) kind_,
                             getParentForChildren(),
                             isClean());
@@ -5079,13 +4943,11 @@ public final class TurmsNotification extends
                 }
                 kindCase_ = 16;
                 onChanged();
-                ;
                 return groupJoinQuestionAnswerResultBuilder_;
             }
 
             private com.google.protobuf.SingleFieldBuilderV3<
-                    im.turms.server.common.access.client.dto.model.group.GroupJoinRequestsWithVersion, im.turms.server.common.access.client.dto.model.group.GroupJoinRequestsWithVersion.Builder, im.turms.server.common.access.client.dto.model.group.GroupJoinRequestsWithVersionOrBuilder>
-                    groupJoinRequestsWithVersionBuilder_;
+                    im.turms.server.common.access.client.dto.model.group.GroupJoinRequestsWithVersion, im.turms.server.common.access.client.dto.model.group.GroupJoinRequestsWithVersion.Builder, im.turms.server.common.access.client.dto.model.group.GroupJoinRequestsWithVersionOrBuilder> groupJoinRequestsWithVersionBuilder_;
 
             /**
              * <code>.im.turms.proto.GroupJoinRequestsWithVersion group_join_requests_with_version = 17;</code>
@@ -5156,8 +5018,7 @@ public final class TurmsNotification extends
                 if (groupJoinRequestsWithVersionBuilder_ == null) {
                     if (kindCase_ == 17 &&
                         kind_ != im.turms.server.common.access.client.dto.model.group.GroupJoinRequestsWithVersion.getDefaultInstance()) {
-                        kind_ = im.turms.server.common.access.client.dto.model.group.GroupJoinRequestsWithVersion.newBuilder(
-                                        (im.turms.server.common.access.client.dto.model.group.GroupJoinRequestsWithVersion) kind_)
+                        kind_ = im.turms.server.common.access.client.dto.model.group.GroupJoinRequestsWithVersion.newBuilder((im.turms.server.common.access.client.dto.model.group.GroupJoinRequestsWithVersion) kind_)
                                 .mergeFrom(value).buildPartial();
                     } else {
                         kind_ = value;
@@ -5226,8 +5087,7 @@ public final class TurmsNotification extends
                     if (!(kindCase_ == 17)) {
                         kind_ = im.turms.server.common.access.client.dto.model.group.GroupJoinRequestsWithVersion.getDefaultInstance();
                     }
-                    groupJoinRequestsWithVersionBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-                            im.turms.server.common.access.client.dto.model.group.GroupJoinRequestsWithVersion, im.turms.server.common.access.client.dto.model.group.GroupJoinRequestsWithVersion.Builder, im.turms.server.common.access.client.dto.model.group.GroupJoinRequestsWithVersionOrBuilder>(
+                    groupJoinRequestsWithVersionBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
                             (im.turms.server.common.access.client.dto.model.group.GroupJoinRequestsWithVersion) kind_,
                             getParentForChildren(),
                             isClean());
@@ -5235,13 +5095,11 @@ public final class TurmsNotification extends
                 }
                 kindCase_ = 17;
                 onChanged();
-                ;
                 return groupJoinRequestsWithVersionBuilder_;
             }
 
             private com.google.protobuf.SingleFieldBuilderV3<
-                    im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsWithVersion, im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsWithVersion.Builder, im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsWithVersionOrBuilder>
-                    groupJoinQuestionsWithVersionBuilder_;
+                    im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsWithVersion, im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsWithVersion.Builder, im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsWithVersionOrBuilder> groupJoinQuestionsWithVersionBuilder_;
 
             /**
              * <code>.im.turms.proto.GroupJoinQuestionsWithVersion group_join_questions_with_version = 18;</code>
@@ -5312,8 +5170,7 @@ public final class TurmsNotification extends
                 if (groupJoinQuestionsWithVersionBuilder_ == null) {
                     if (kindCase_ == 18 &&
                         kind_ != im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsWithVersion.getDefaultInstance()) {
-                        kind_ = im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsWithVersion.newBuilder(
-                                        (im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsWithVersion) kind_)
+                        kind_ = im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsWithVersion.newBuilder((im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsWithVersion) kind_)
                                 .mergeFrom(value).buildPartial();
                     } else {
                         kind_ = value;
@@ -5382,8 +5239,7 @@ public final class TurmsNotification extends
                     if (!(kindCase_ == 18)) {
                         kind_ = im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsWithVersion.getDefaultInstance();
                     }
-                    groupJoinQuestionsWithVersionBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-                            im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsWithVersion, im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsWithVersion.Builder, im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsWithVersionOrBuilder>(
+                    groupJoinQuestionsWithVersionBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
                             (im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsWithVersion) kind_,
                             getParentForChildren(),
                             isClean());
@@ -5391,13 +5247,11 @@ public final class TurmsNotification extends
                 }
                 kindCase_ = 18;
                 onChanged();
-                ;
                 return groupJoinQuestionsWithVersionBuilder_;
             }
 
             private com.google.protobuf.SingleFieldBuilderV3<
-                    im.turms.server.common.access.client.dto.model.group.GroupMembersWithVersion, im.turms.server.common.access.client.dto.model.group.GroupMembersWithVersion.Builder, im.turms.server.common.access.client.dto.model.group.GroupMembersWithVersionOrBuilder>
-                    groupMembersWithVersionBuilder_;
+                    im.turms.server.common.access.client.dto.model.group.GroupMembersWithVersion, im.turms.server.common.access.client.dto.model.group.GroupMembersWithVersion.Builder, im.turms.server.common.access.client.dto.model.group.GroupMembersWithVersionOrBuilder> groupMembersWithVersionBuilder_;
 
             /**
              * <code>.im.turms.proto.GroupMembersWithVersion group_members_with_version = 19;</code>
@@ -5468,8 +5322,7 @@ public final class TurmsNotification extends
                 if (groupMembersWithVersionBuilder_ == null) {
                     if (kindCase_ == 19 &&
                         kind_ != im.turms.server.common.access.client.dto.model.group.GroupMembersWithVersion.getDefaultInstance()) {
-                        kind_ = im.turms.server.common.access.client.dto.model.group.GroupMembersWithVersion.newBuilder(
-                                        (im.turms.server.common.access.client.dto.model.group.GroupMembersWithVersion) kind_)
+                        kind_ = im.turms.server.common.access.client.dto.model.group.GroupMembersWithVersion.newBuilder((im.turms.server.common.access.client.dto.model.group.GroupMembersWithVersion) kind_)
                                 .mergeFrom(value).buildPartial();
                     } else {
                         kind_ = value;
@@ -5538,8 +5391,7 @@ public final class TurmsNotification extends
                     if (!(kindCase_ == 19)) {
                         kind_ = im.turms.server.common.access.client.dto.model.group.GroupMembersWithVersion.getDefaultInstance();
                     }
-                    groupMembersWithVersionBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-                            im.turms.server.common.access.client.dto.model.group.GroupMembersWithVersion, im.turms.server.common.access.client.dto.model.group.GroupMembersWithVersion.Builder, im.turms.server.common.access.client.dto.model.group.GroupMembersWithVersionOrBuilder>(
+                    groupMembersWithVersionBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
                             (im.turms.server.common.access.client.dto.model.group.GroupMembersWithVersion) kind_,
                             getParentForChildren(),
                             isClean());
@@ -5547,13 +5399,11 @@ public final class TurmsNotification extends
                 }
                 kindCase_ = 19;
                 onChanged();
-                ;
                 return groupMembersWithVersionBuilder_;
             }
 
             private com.google.protobuf.SingleFieldBuilderV3<
-                    im.turms.server.common.access.client.dto.model.group.GroupsWithVersion, im.turms.server.common.access.client.dto.model.group.GroupsWithVersion.Builder, im.turms.server.common.access.client.dto.model.group.GroupsWithVersionOrBuilder>
-                    groupsWithVersionBuilder_;
+                    im.turms.server.common.access.client.dto.model.group.GroupsWithVersion, im.turms.server.common.access.client.dto.model.group.GroupsWithVersion.Builder, im.turms.server.common.access.client.dto.model.group.GroupsWithVersionOrBuilder> groupsWithVersionBuilder_;
 
             /**
              * <code>.im.turms.proto.GroupsWithVersion groups_with_version = 20;</code>
@@ -5693,8 +5543,7 @@ public final class TurmsNotification extends
                     if (!(kindCase_ == 20)) {
                         kind_ = im.turms.server.common.access.client.dto.model.group.GroupsWithVersion.getDefaultInstance();
                     }
-                    groupsWithVersionBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-                            im.turms.server.common.access.client.dto.model.group.GroupsWithVersion, im.turms.server.common.access.client.dto.model.group.GroupsWithVersion.Builder, im.turms.server.common.access.client.dto.model.group.GroupsWithVersionOrBuilder>(
+                    groupsWithVersionBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
                             (im.turms.server.common.access.client.dto.model.group.GroupsWithVersion) kind_,
                             getParentForChildren(),
                             isClean());
@@ -5702,13 +5551,11 @@ public final class TurmsNotification extends
                 }
                 kindCase_ = 20;
                 onChanged();
-                ;
                 return groupsWithVersionBuilder_;
             }
 
             private com.google.protobuf.SingleFieldBuilderV3<
-                    im.turms.server.common.access.client.dto.model.storage.StorageResourceInfos, im.turms.server.common.access.client.dto.model.storage.StorageResourceInfos.Builder, im.turms.server.common.access.client.dto.model.storage.StorageResourceInfosOrBuilder>
-                    storageResourceInfosBuilder_;
+                    im.turms.server.common.access.client.dto.model.storage.StorageResourceInfos, im.turms.server.common.access.client.dto.model.storage.StorageResourceInfos.Builder, im.turms.server.common.access.client.dto.model.storage.StorageResourceInfosOrBuilder> storageResourceInfosBuilder_;
 
             /**
              * <pre>
@@ -5799,8 +5646,7 @@ public final class TurmsNotification extends
                 if (storageResourceInfosBuilder_ == null) {
                     if (kindCase_ == 50 &&
                         kind_ != im.turms.server.common.access.client.dto.model.storage.StorageResourceInfos.getDefaultInstance()) {
-                        kind_ = im.turms.server.common.access.client.dto.model.storage.StorageResourceInfos.newBuilder(
-                                        (im.turms.server.common.access.client.dto.model.storage.StorageResourceInfos) kind_)
+                        kind_ = im.turms.server.common.access.client.dto.model.storage.StorageResourceInfos.newBuilder((im.turms.server.common.access.client.dto.model.storage.StorageResourceInfos) kind_)
                                 .mergeFrom(value).buildPartial();
                     } else {
                         kind_ = value;
@@ -5885,8 +5731,7 @@ public final class TurmsNotification extends
                     if (!(kindCase_ == 50)) {
                         kind_ = im.turms.server.common.access.client.dto.model.storage.StorageResourceInfos.getDefaultInstance();
                     }
-                    storageResourceInfosBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-                            im.turms.server.common.access.client.dto.model.storage.StorageResourceInfos, im.turms.server.common.access.client.dto.model.storage.StorageResourceInfos.Builder, im.turms.server.common.access.client.dto.model.storage.StorageResourceInfosOrBuilder>(
+                    storageResourceInfosBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
                             (im.turms.server.common.access.client.dto.model.storage.StorageResourceInfos) kind_,
                             getParentForChildren(),
                             isClean());
@@ -5894,7 +5739,6 @@ public final class TurmsNotification extends
                 }
                 kindCase_ = 50;
                 onChanged();
-                ;
                 return storageResourceInfosBuilder_;
             }
 
@@ -5926,7 +5770,7 @@ public final class TurmsNotification extends
         }
 
         private static final com.google.protobuf.Parser<Data>
-                PARSER = new com.google.protobuf.AbstractParser<Data>() {
+                PARSER = new com.google.protobuf.AbstractParser<>() {
             @java.lang.Override
             public Data parsePartialFrom(
                     com.google.protobuf.CodedInputStream input,
@@ -5965,7 +5809,7 @@ public final class TurmsNotification extends
 
     private int bitField0_;
     public static final int TIMESTAMP_FIELD_NUMBER = 1;
-    private long timestamp_;
+    private long timestamp_ = 0L;
 
     /**
      * <pre>
@@ -5982,7 +5826,7 @@ public final class TurmsNotification extends
     }
 
     public static final int REQUEST_ID_FIELD_NUMBER = 4;
-    private long requestId_;
+    private long requestId_ = 0L;
 
     /**
      * <pre>
@@ -6017,7 +5861,7 @@ public final class TurmsNotification extends
     }
 
     public static final int CODE_FIELD_NUMBER = 5;
-    private int code_;
+    private int code_ = 0;
 
     /**
      * <code>optional int32 code = 5;</code>
@@ -6040,7 +5884,8 @@ public final class TurmsNotification extends
     }
 
     public static final int REASON_FIELD_NUMBER = 6;
-    private volatile java.lang.Object reason_;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object reason_ = "";
 
     /**
      * <code>optional string reason = 6;</code>
@@ -6119,11 +5964,11 @@ public final class TurmsNotification extends
      */
     @java.lang.Override
     public im.turms.server.common.access.client.dto.notification.TurmsNotification.DataOrBuilder getDataOrBuilder() {
-        return getData();
+        return data_ == null ? im.turms.server.common.access.client.dto.notification.TurmsNotification.Data.getDefaultInstance() : data_;
     }
 
     public static final int REQUESTER_ID_FIELD_NUMBER = 10;
-    private long requesterId_;
+    private long requesterId_ = 0L;
 
     /**
      * <pre>
@@ -6160,7 +6005,7 @@ public final class TurmsNotification extends
     }
 
     public static final int CLOSE_STATUS_FIELD_NUMBER = 11;
-    private int closeStatus_;
+    private int closeStatus_ = 0;
 
     /**
      * <code>optional int32 close_status = 11;</code>
@@ -6210,7 +6055,7 @@ public final class TurmsNotification extends
      */
     @java.lang.Override
     public im.turms.server.common.access.client.dto.request.TurmsRequestOrBuilder getRelayedRequestOrBuilder() {
-        return getRelayedRequest();
+        return relayedRequest_ == null ? im.turms.server.common.access.client.dto.request.TurmsRequest.getDefaultInstance() : relayedRequest_;
     }
 
     private byte memoizedIsInitialized = -1;
@@ -6308,10 +6153,9 @@ public final class TurmsNotification extends
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof im.turms.server.common.access.client.dto.notification.TurmsNotification)) {
+        if (!(obj instanceof TurmsNotification other)) {
             return super.equals(obj);
         }
-        im.turms.server.common.access.client.dto.notification.TurmsNotification other = (im.turms.server.common.access.client.dto.notification.TurmsNotification) obj;
 
         if (getTimestamp()
             != other.getTimestamp()) {
@@ -6380,10 +6224,7 @@ public final class TurmsNotification extends
                 return false;
             }
         }
-        if (!getUnknownFields().equals(other.getUnknownFields())) {
-            return false;
-        }
-        return true;
+        return getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -6534,8 +6375,7 @@ public final class TurmsNotification extends
     @java.lang.Override
     protected Builder newBuilderForType(
             com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
+        return new Builder(parent);
     }
 
     /**
@@ -6572,28 +6412,21 @@ public final class TurmsNotification extends
         @java.lang.Override
         public Builder clear() {
             super.clear();
+            bitField0_ = 0;
             timestamp_ = 0L;
-
             requestId_ = 0L;
-            bitField0_ = (bitField0_ & ~0x00000001);
             code_ = 0;
-            bitField0_ = (bitField0_ & ~0x00000002);
             reason_ = "";
-            bitField0_ = (bitField0_ & ~0x00000004);
-            if (dataBuilder_ == null) {
-                data_ = null;
-            } else {
-                data_ = null;
+            data_ = null;
+            if (dataBuilder_ != null) {
+                dataBuilder_.dispose();
                 dataBuilder_ = null;
             }
             requesterId_ = 0L;
-            bitField0_ = (bitField0_ & ~0x00000008);
             closeStatus_ = 0;
-            bitField0_ = (bitField0_ & ~0x00000010);
-            if (relayedRequestBuilder_ == null) {
-                relayedRequest_ = null;
-            } else {
-                relayedRequest_ = null;
+            relayedRequest_ = null;
+            if (relayedRequestBuilder_ != null) {
+                relayedRequestBuilder_.dispose();
                 relayedRequestBuilder_ = null;
             }
             return this;
@@ -6622,80 +6455,50 @@ public final class TurmsNotification extends
         @java.lang.Override
         public im.turms.server.common.access.client.dto.notification.TurmsNotification buildPartial() {
             im.turms.server.common.access.client.dto.notification.TurmsNotification result = new im.turms.server.common.access.client.dto.notification.TurmsNotification(this);
-            int from_bitField0_ = bitField0_;
-            int to_bitField0_ = 0;
-            result.timestamp_ = timestamp_;
-            if (((from_bitField0_ & 0x00000001) != 0)) {
-                result.requestId_ = requestId_;
-                to_bitField0_ |= 0x00000001;
+            if (bitField0_ != 0) {
+                buildPartial0(result);
             }
-            if (((from_bitField0_ & 0x00000002) != 0)) {
-                result.code_ = code_;
-                to_bitField0_ |= 0x00000002;
-            }
-            if (((from_bitField0_ & 0x00000004) != 0)) {
-                to_bitField0_ |= 0x00000004;
-            }
-            result.reason_ = reason_;
-            if (dataBuilder_ == null) {
-                result.data_ = data_;
-            } else {
-                result.data_ = dataBuilder_.build();
-            }
-            if (((from_bitField0_ & 0x00000008) != 0)) {
-                result.requesterId_ = requesterId_;
-                to_bitField0_ |= 0x00000008;
-            }
-            if (((from_bitField0_ & 0x00000010) != 0)) {
-                result.closeStatus_ = closeStatus_;
-                to_bitField0_ |= 0x00000010;
-            }
-            if (relayedRequestBuilder_ == null) {
-                result.relayedRequest_ = relayedRequest_;
-            } else {
-                result.relayedRequest_ = relayedRequestBuilder_.build();
-            }
-            result.bitField0_ = to_bitField0_;
             onBuilt();
             return result;
         }
 
-        @java.lang.Override
-        public Builder clone() {
-            return super.clone();
-        }
-
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(
-                com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(
-                com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index, java.lang.Object value) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.addRepeatedField(field, value);
+        private void buildPartial0(im.turms.server.common.access.client.dto.notification.TurmsNotification result) {
+            int from_bitField0_ = bitField0_;
+            if (((from_bitField0_ & 0x00000001) != 0)) {
+                result.timestamp_ = timestamp_;
+            }
+            int to_bitField0_ = 0;
+            if (((from_bitField0_ & 0x00000002) != 0)) {
+                result.requestId_ = requestId_;
+                to_bitField0_ |= 0x00000001;
+            }
+            if (((from_bitField0_ & 0x00000004) != 0)) {
+                result.code_ = code_;
+                to_bitField0_ |= 0x00000002;
+            }
+            if (((from_bitField0_ & 0x00000008) != 0)) {
+                result.reason_ = reason_;
+                to_bitField0_ |= 0x00000004;
+            }
+            if (((from_bitField0_ & 0x00000010) != 0)) {
+                result.data_ = dataBuilder_ == null
+                        ? data_
+                        : dataBuilder_.build();
+            }
+            if (((from_bitField0_ & 0x00000020) != 0)) {
+                result.requesterId_ = requesterId_;
+                to_bitField0_ |= 0x00000008;
+            }
+            if (((from_bitField0_ & 0x00000040) != 0)) {
+                result.closeStatus_ = closeStatus_;
+                to_bitField0_ |= 0x00000010;
+            }
+            if (((from_bitField0_ & 0x00000080) != 0)) {
+                result.relayedRequest_ = relayedRequestBuilder_ == null
+                        ? relayedRequest_
+                        : relayedRequestBuilder_.build();
+            }
+            result.bitField0_ |= to_bitField0_;
         }
 
         @java.lang.Override
@@ -6722,8 +6525,8 @@ public final class TurmsNotification extends
                 setCode(other.getCode());
             }
             if (other.hasReason()) {
-                bitField0_ |= 0x00000004;
                 reason_ = other.reason_;
+                bitField0_ |= 0x00000008;
                 onChanged();
             }
             if (other.hasData()) {
@@ -6761,58 +6564,47 @@ public final class TurmsNotification extends
                 while (!done) {
                     int tag = input.readTag();
                     switch (tag) {
-                        case 0:
-                            done = true;
-                            break;
-                        case 8: {
+                        case 0 -> done = true;
+                        case 8 -> {
                             timestamp_ = input.readInt64();
-
-                            break;
-                        } // case 8
-                        case 32: {
-                            requestId_ = input.readInt64();
                             bitField0_ |= 0x00000001;
-                            break;
-                        } // case 32
-                        case 40: {
-                            code_ = input.readInt32();
+                        } // case 8
+                        case 32 -> {
+                            requestId_ = input.readInt64();
                             bitField0_ |= 0x00000002;
-                            break;
-                        } // case 40
-                        case 50: {
-                            reason_ = input.readStringRequireUtf8();
+                        } // case 32
+                        case 40 -> {
+                            code_ = input.readInt32();
                             bitField0_ |= 0x00000004;
-                            break;
+                        } // case 40
+                        case 50 -> {
+                            reason_ = input.readStringRequireUtf8();
+                            bitField0_ |= 0x00000008;
                         } // case 50
-                        case 58: {
+                        case 58 -> {
                             input.readMessage(
                                     getDataFieldBuilder().getBuilder(),
                                     extensionRegistry);
-
-                            break;
-                        } // case 58
-                        case 80: {
-                            requesterId_ = input.readInt64();
-                            bitField0_ |= 0x00000008;
-                            break;
-                        } // case 80
-                        case 88: {
-                            closeStatus_ = input.readInt32();
                             bitField0_ |= 0x00000010;
-                            break;
+                        } // case 58
+                        case 80 -> {
+                            requesterId_ = input.readInt64();
+                            bitField0_ |= 0x00000020;
+                        } // case 80
+                        case 88 -> {
+                            closeStatus_ = input.readInt32();
+                            bitField0_ |= 0x00000040;
                         } // case 88
-                        case 98: {
+                        case 98 -> {
                             input.readMessage(
                                     getRelayedRequestFieldBuilder().getBuilder(),
                                     extensionRegistry);
-
-                            break;
+                            bitField0_ |= 0x00000080;
                         } // case 98
-                        default: {
+                        default -> {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
                             }
-                            break;
                         } // default:
                     } // switch (tag)
                 } // while (!done)
@@ -6855,6 +6647,7 @@ public final class TurmsNotification extends
         public Builder setTimestamp(long value) {
 
             timestamp_ = value;
+            bitField0_ |= 0x00000001;
             onChanged();
             return this;
         }
@@ -6869,7 +6662,7 @@ public final class TurmsNotification extends
          * @return This builder for chaining.
          */
         public Builder clearTimestamp() {
-
+            bitField0_ &= ~0x00000001;
             timestamp_ = 0L;
             onChanged();
             return this;
@@ -6890,7 +6683,7 @@ public final class TurmsNotification extends
          */
         @java.lang.Override
         public boolean hasRequestId() {
-            return ((bitField0_ & 0x00000001) != 0);
+            return ((bitField0_ & 0x00000002) != 0);
         }
 
         /**
@@ -6922,8 +6715,9 @@ public final class TurmsNotification extends
          * @return This builder for chaining.
          */
         public Builder setRequestId(long value) {
-            bitField0_ |= 0x00000001;
+
             requestId_ = value;
+            bitField0_ |= 0x00000002;
             onChanged();
             return this;
         }
@@ -6940,7 +6734,7 @@ public final class TurmsNotification extends
          * @return This builder for chaining.
          */
         public Builder clearRequestId() {
-            bitField0_ = (bitField0_ & ~0x00000001);
+            bitField0_ &= ~0x00000002;
             requestId_ = 0L;
             onChanged();
             return this;
@@ -6955,7 +6749,7 @@ public final class TurmsNotification extends
          */
         @java.lang.Override
         public boolean hasCode() {
-            return ((bitField0_ & 0x00000002) != 0);
+            return ((bitField0_ & 0x00000004) != 0);
         }
 
         /**
@@ -6975,8 +6769,9 @@ public final class TurmsNotification extends
          * @return This builder for chaining.
          */
         public Builder setCode(int value) {
-            bitField0_ |= 0x00000002;
+
             code_ = value;
+            bitField0_ |= 0x00000004;
             onChanged();
             return this;
         }
@@ -6987,7 +6782,7 @@ public final class TurmsNotification extends
          * @return This builder for chaining.
          */
         public Builder clearCode() {
-            bitField0_ = (bitField0_ & ~0x00000002);
+            bitField0_ &= ~0x00000004;
             code_ = 0;
             onChanged();
             return this;
@@ -7001,7 +6796,7 @@ public final class TurmsNotification extends
          * @return Whether the reason field is set.
          */
         public boolean hasReason() {
-            return ((bitField0_ & 0x00000004) != 0);
+            return ((bitField0_ & 0x00000008) != 0);
         }
 
         /**
@@ -7052,8 +6847,8 @@ public final class TurmsNotification extends
             if (value == null) {
                 throw new NullPointerException();
             }
-            bitField0_ |= 0x00000004;
             reason_ = value;
+            bitField0_ |= 0x00000008;
             onChanged();
             return this;
         }
@@ -7064,8 +6859,8 @@ public final class TurmsNotification extends
          * @return This builder for chaining.
          */
         public Builder clearReason() {
-            bitField0_ = (bitField0_ & ~0x00000004);
             reason_ = getDefaultInstance().getReason();
+            bitField0_ &= ~0x00000008;
             onChanged();
             return this;
         }
@@ -7082,16 +6877,15 @@ public final class TurmsNotification extends
                 throw new NullPointerException();
             }
             checkByteStringIsUtf8(value);
-            bitField0_ |= 0x00000004;
             reason_ = value;
+            bitField0_ |= 0x00000008;
             onChanged();
             return this;
         }
 
         private im.turms.server.common.access.client.dto.notification.TurmsNotification.Data data_;
         private com.google.protobuf.SingleFieldBuilderV3<
-                im.turms.server.common.access.client.dto.notification.TurmsNotification.Data, im.turms.server.common.access.client.dto.notification.TurmsNotification.Data.Builder, im.turms.server.common.access.client.dto.notification.TurmsNotification.DataOrBuilder>
-                dataBuilder_;
+                im.turms.server.common.access.client.dto.notification.TurmsNotification.Data, im.turms.server.common.access.client.dto.notification.TurmsNotification.Data.Builder, im.turms.server.common.access.client.dto.notification.TurmsNotification.DataOrBuilder> dataBuilder_;
 
         /**
          * <code>.im.turms.proto.TurmsNotification.Data data = 7;</code>
@@ -7099,7 +6893,7 @@ public final class TurmsNotification extends
          * @return Whether the data field is set.
          */
         public boolean hasData() {
-            return dataBuilder_ != null || data_ != null;
+            return ((bitField0_ & 0x00000010) != 0);
         }
 
         /**
@@ -7124,11 +6918,11 @@ public final class TurmsNotification extends
                     throw new NullPointerException();
                 }
                 data_ = value;
-                onChanged();
             } else {
                 dataBuilder_.setMessage(value);
             }
-
+            bitField0_ |= 0x00000010;
+            onChanged();
             return this;
         }
 
@@ -7139,11 +6933,11 @@ public final class TurmsNotification extends
                 im.turms.server.common.access.client.dto.notification.TurmsNotification.Data.Builder builderForValue) {
             if (dataBuilder_ == null) {
                 data_ = builderForValue.build();
-                onChanged();
             } else {
                 dataBuilder_.setMessage(builderForValue.build());
             }
-
+            bitField0_ |= 0x00000010;
+            onChanged();
             return this;
         }
 
@@ -7152,17 +6946,18 @@ public final class TurmsNotification extends
          */
         public Builder mergeData(im.turms.server.common.access.client.dto.notification.TurmsNotification.Data value) {
             if (dataBuilder_ == null) {
-                if (data_ != null) {
-                    data_ =
-                            im.turms.server.common.access.client.dto.notification.TurmsNotification.Data.newBuilder(data_).mergeFrom(value).buildPartial();
+                if (((bitField0_ & 0x00000010) != 0) &&
+                    data_ != null &&
+                    data_ != im.turms.server.common.access.client.dto.notification.TurmsNotification.Data.getDefaultInstance()) {
+                    getDataBuilder().mergeFrom(value);
                 } else {
                     data_ = value;
                 }
-                onChanged();
             } else {
                 dataBuilder_.mergeFrom(value);
             }
-
+            bitField0_ |= 0x00000010;
+            onChanged();
             return this;
         }
 
@@ -7170,14 +6965,13 @@ public final class TurmsNotification extends
          * <code>.im.turms.proto.TurmsNotification.Data data = 7;</code>
          */
         public Builder clearData() {
-            if (dataBuilder_ == null) {
-                data_ = null;
-                onChanged();
-            } else {
-                data_ = null;
+            bitField0_ &= ~0x00000010;
+            data_ = null;
+            if (dataBuilder_ != null) {
+                dataBuilder_.dispose();
                 dataBuilder_ = null;
             }
-
+            onChanged();
             return this;
         }
 
@@ -7185,7 +6979,7 @@ public final class TurmsNotification extends
          * <code>.im.turms.proto.TurmsNotification.Data data = 7;</code>
          */
         public im.turms.server.common.access.client.dto.notification.TurmsNotification.Data.Builder getDataBuilder() {
-
+            bitField0_ |= 0x00000010;
             onChanged();
             return getDataFieldBuilder().getBuilder();
         }
@@ -7209,8 +7003,7 @@ public final class TurmsNotification extends
                 im.turms.server.common.access.client.dto.notification.TurmsNotification.Data, im.turms.server.common.access.client.dto.notification.TurmsNotification.Data.Builder, im.turms.server.common.access.client.dto.notification.TurmsNotification.DataOrBuilder>
         getDataFieldBuilder() {
             if (dataBuilder_ == null) {
-                dataBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-                        im.turms.server.common.access.client.dto.notification.TurmsNotification.Data, im.turms.server.common.access.client.dto.notification.TurmsNotification.Data.Builder, im.turms.server.common.access.client.dto.notification.TurmsNotification.DataOrBuilder>(
+                dataBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
                         getData(),
                         getParentForChildren(),
                         isClean());
@@ -7235,7 +7028,7 @@ public final class TurmsNotification extends
          */
         @java.lang.Override
         public boolean hasRequesterId() {
-            return ((bitField0_ & 0x00000008) != 0);
+            return ((bitField0_ & 0x00000020) != 0);
         }
 
         /**
@@ -7269,8 +7062,9 @@ public final class TurmsNotification extends
          * @return This builder for chaining.
          */
         public Builder setRequesterId(long value) {
-            bitField0_ |= 0x00000008;
+
             requesterId_ = value;
+            bitField0_ |= 0x00000020;
             onChanged();
             return this;
         }
@@ -7288,7 +7082,7 @@ public final class TurmsNotification extends
          * @return This builder for chaining.
          */
         public Builder clearRequesterId() {
-            bitField0_ = (bitField0_ & ~0x00000008);
+            bitField0_ &= ~0x00000020;
             requesterId_ = 0L;
             onChanged();
             return this;
@@ -7303,7 +7097,7 @@ public final class TurmsNotification extends
          */
         @java.lang.Override
         public boolean hasCloseStatus() {
-            return ((bitField0_ & 0x00000010) != 0);
+            return ((bitField0_ & 0x00000040) != 0);
         }
 
         /**
@@ -7323,8 +7117,9 @@ public final class TurmsNotification extends
          * @return This builder for chaining.
          */
         public Builder setCloseStatus(int value) {
-            bitField0_ |= 0x00000010;
+
             closeStatus_ = value;
+            bitField0_ |= 0x00000040;
             onChanged();
             return this;
         }
@@ -7335,7 +7130,7 @@ public final class TurmsNotification extends
          * @return This builder for chaining.
          */
         public Builder clearCloseStatus() {
-            bitField0_ = (bitField0_ & ~0x00000010);
+            bitField0_ &= ~0x00000040;
             closeStatus_ = 0;
             onChanged();
             return this;
@@ -7343,8 +7138,7 @@ public final class TurmsNotification extends
 
         private im.turms.server.common.access.client.dto.request.TurmsRequest relayedRequest_;
         private com.google.protobuf.SingleFieldBuilderV3<
-                im.turms.server.common.access.client.dto.request.TurmsRequest, im.turms.server.common.access.client.dto.request.TurmsRequest.Builder, im.turms.server.common.access.client.dto.request.TurmsRequestOrBuilder>
-                relayedRequestBuilder_;
+                im.turms.server.common.access.client.dto.request.TurmsRequest, im.turms.server.common.access.client.dto.request.TurmsRequest.Builder, im.turms.server.common.access.client.dto.request.TurmsRequestOrBuilder> relayedRequestBuilder_;
 
         /**
          * <code>.im.turms.proto.TurmsRequest relayed_request = 12;</code>
@@ -7352,7 +7146,7 @@ public final class TurmsNotification extends
          * @return Whether the relayedRequest field is set.
          */
         public boolean hasRelayedRequest() {
-            return relayedRequestBuilder_ != null || relayedRequest_ != null;
+            return ((bitField0_ & 0x00000080) != 0);
         }
 
         /**
@@ -7377,11 +7171,11 @@ public final class TurmsNotification extends
                     throw new NullPointerException();
                 }
                 relayedRequest_ = value;
-                onChanged();
             } else {
                 relayedRequestBuilder_.setMessage(value);
             }
-
+            bitField0_ |= 0x00000080;
+            onChanged();
             return this;
         }
 
@@ -7392,11 +7186,11 @@ public final class TurmsNotification extends
                 im.turms.server.common.access.client.dto.request.TurmsRequest.Builder builderForValue) {
             if (relayedRequestBuilder_ == null) {
                 relayedRequest_ = builderForValue.build();
-                onChanged();
             } else {
                 relayedRequestBuilder_.setMessage(builderForValue.build());
             }
-
+            bitField0_ |= 0x00000080;
+            onChanged();
             return this;
         }
 
@@ -7405,17 +7199,18 @@ public final class TurmsNotification extends
          */
         public Builder mergeRelayedRequest(im.turms.server.common.access.client.dto.request.TurmsRequest value) {
             if (relayedRequestBuilder_ == null) {
-                if (relayedRequest_ != null) {
-                    relayedRequest_ =
-                            im.turms.server.common.access.client.dto.request.TurmsRequest.newBuilder(relayedRequest_).mergeFrom(value).buildPartial();
+                if (((bitField0_ & 0x00000080) != 0) &&
+                    relayedRequest_ != null &&
+                    relayedRequest_ != im.turms.server.common.access.client.dto.request.TurmsRequest.getDefaultInstance()) {
+                    getRelayedRequestBuilder().mergeFrom(value);
                 } else {
                     relayedRequest_ = value;
                 }
-                onChanged();
             } else {
                 relayedRequestBuilder_.mergeFrom(value);
             }
-
+            bitField0_ |= 0x00000080;
+            onChanged();
             return this;
         }
 
@@ -7423,14 +7218,13 @@ public final class TurmsNotification extends
          * <code>.im.turms.proto.TurmsRequest relayed_request = 12;</code>
          */
         public Builder clearRelayedRequest() {
-            if (relayedRequestBuilder_ == null) {
-                relayedRequest_ = null;
-                onChanged();
-            } else {
-                relayedRequest_ = null;
+            bitField0_ &= ~0x00000080;
+            relayedRequest_ = null;
+            if (relayedRequestBuilder_ != null) {
+                relayedRequestBuilder_.dispose();
                 relayedRequestBuilder_ = null;
             }
-
+            onChanged();
             return this;
         }
 
@@ -7438,7 +7232,7 @@ public final class TurmsNotification extends
          * <code>.im.turms.proto.TurmsRequest relayed_request = 12;</code>
          */
         public im.turms.server.common.access.client.dto.request.TurmsRequest.Builder getRelayedRequestBuilder() {
-
+            bitField0_ |= 0x00000080;
             onChanged();
             return getRelayedRequestFieldBuilder().getBuilder();
         }
@@ -7462,8 +7256,7 @@ public final class TurmsNotification extends
                 im.turms.server.common.access.client.dto.request.TurmsRequest, im.turms.server.common.access.client.dto.request.TurmsRequest.Builder, im.turms.server.common.access.client.dto.request.TurmsRequestOrBuilder>
         getRelayedRequestFieldBuilder() {
             if (relayedRequestBuilder_ == null) {
-                relayedRequestBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-                        im.turms.server.common.access.client.dto.request.TurmsRequest, im.turms.server.common.access.client.dto.request.TurmsRequest.Builder, im.turms.server.common.access.client.dto.request.TurmsRequestOrBuilder>(
+                relayedRequestBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
                         getRelayedRequest(),
                         getParentForChildren(),
                         isClean());
@@ -7500,7 +7293,7 @@ public final class TurmsNotification extends
     }
 
     private static final com.google.protobuf.Parser<TurmsNotification>
-            PARSER = new com.google.protobuf.AbstractParser<TurmsNotification>() {
+            PARSER = new com.google.protobuf.AbstractParser<>() {
         @java.lang.Override
         public TurmsNotification parsePartialFrom(
                 com.google.protobuf.CodedInputStream input,

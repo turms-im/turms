@@ -10,12 +10,20 @@ import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
 
 @$core.Deprecated('Use createGroupRequestDescriptor instead')
-const CreateGroupRequest$json = {
+const CreateGroupRequest$json = const {
   '1': 'CreateGroupRequest',
-  '2': [
-    {'1': 'name', '3': 1, '4': 1, '5': 9, '10': 'name'},
-    {'1': 'intro', '3': 2, '4': 1, '5': 9, '9': 0, '10': 'intro', '17': true},
-    {
+  '2': const [
+    const {'1': 'name', '3': 1, '4': 1, '5': 9, '10': 'name'},
+    const {
+      '1': 'intro',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '9': 0,
+      '10': 'intro',
+      '17': true
+    },
+    const {
       '1': 'announcement',
       '3': 3,
       '4': 1,
@@ -24,7 +32,7 @@ const CreateGroupRequest$json = {
       '10': 'announcement',
       '17': true
     },
-    {
+    const {
       '1': 'min_score',
       '3': 4,
       '4': 1,
@@ -33,7 +41,7 @@ const CreateGroupRequest$json = {
       '10': 'minScore',
       '17': true
     },
-    {
+    const {
       '1': 'type_id',
       '3': 5,
       '4': 1,
@@ -42,7 +50,7 @@ const CreateGroupRequest$json = {
       '10': 'typeId',
       '17': true
     },
-    {
+    const {
       '1': 'mute_end_date',
       '3': 6,
       '4': 1,
@@ -52,12 +60,12 @@ const CreateGroupRequest$json = {
       '17': true
     },
   ],
-  '8': [
-    {'1': '_intro'},
-    {'1': '_announcement'},
-    {'1': '_min_score'},
-    {'1': '_type_id'},
-    {'1': '_mute_end_date'},
+  '8': const [
+    const {'1': '_intro'},
+    const {'1': '_announcement'},
+    const {'1': '_min_score'},
+    const {'1': '_type_id'},
+    const {'1': '_mute_end_date'},
   ],
 };
 

@@ -10,12 +10,12 @@ import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
 
 @$core.Deprecated('Use queryNearbyUsersRequestDescriptor instead')
-const QueryNearbyUsersRequest$json = {
+const QueryNearbyUsersRequest$json = const {
   '1': 'QueryNearbyUsersRequest',
-  '2': [
-    {'1': 'latitude', '3': 1, '4': 1, '5': 2, '10': 'latitude'},
-    {'1': 'longitude', '3': 2, '4': 1, '5': 2, '10': 'longitude'},
-    {
+  '2': const [
+    const {'1': 'latitude', '3': 1, '4': 1, '5': 2, '10': 'latitude'},
+    const {'1': 'longitude', '3': 2, '4': 1, '5': 2, '10': 'longitude'},
+    const {
       '1': 'max_count',
       '3': 3,
       '4': 1,
@@ -24,7 +24,7 @@ const QueryNearbyUsersRequest$json = {
       '10': 'maxCount',
       '17': true
     },
-    {
+    const {
       '1': 'max_distance',
       '3': 4,
       '4': 1,
@@ -33,7 +33,7 @@ const QueryNearbyUsersRequest$json = {
       '10': 'maxDistance',
       '17': true
     },
-    {
+    const {
       '1': 'with_coordinates',
       '3': 5,
       '4': 1,
@@ -42,7 +42,7 @@ const QueryNearbyUsersRequest$json = {
       '10': 'withCoordinates',
       '17': true
     },
-    {
+    const {
       '1': 'with_distance',
       '3': 6,
       '4': 1,
@@ -51,7 +51,7 @@ const QueryNearbyUsersRequest$json = {
       '10': 'withDistance',
       '17': true
     },
-    {
+    const {
       '1': 'with_user_info',
       '3': 7,
       '4': 1,
@@ -61,12 +61,12 @@ const QueryNearbyUsersRequest$json = {
       '17': true
     },
   ],
-  '8': [
-    {'1': '_max_count'},
-    {'1': '_max_distance'},
-    {'1': '_with_coordinates'},
-    {'1': '_with_distance'},
-    {'1': '_with_user_info'},
+  '8': const [
+    const {'1': '_max_count'},
+    const {'1': '_max_distance'},
+    const {'1': '_with_coordinates'},
+    const {'1': '_with_distance'},
+    const {'1': '_with_user_info'},
   ],
 };
 

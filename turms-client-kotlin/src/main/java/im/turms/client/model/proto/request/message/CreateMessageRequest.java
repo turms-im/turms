@@ -71,7 +71,7 @@ public final class CreateMessageRequest extends
      * <code>optional int64 message_id = 1;</code>
      */
     private void clearMessageId() {
-        bitField0_ = (bitField0_ & ~0x00000001);
+        bitField0_ &= ~0x00000001;
         messageId_ = 0L;
     }
 
@@ -132,7 +132,7 @@ public final class CreateMessageRequest extends
      * <code>optional bool is_system_message = 2;</code>
      */
     private void clearIsSystemMessage() {
-        bitField0_ = (bitField0_ & ~0x00000002);
+        bitField0_ &= ~0x00000002;
         isSystemMessage_ = false;
     }
 
@@ -173,7 +173,7 @@ public final class CreateMessageRequest extends
      * <code>optional int64 group_id = 3;</code>
      */
     private void clearGroupId() {
-        bitField0_ = (bitField0_ & ~0x00000004);
+        bitField0_ &= ~0x00000004;
         groupId_ = 0L;
     }
 
@@ -214,7 +214,7 @@ public final class CreateMessageRequest extends
      * <code>optional int64 recipient_id = 4;</code>
      */
     private void clearRecipientId() {
-        bitField0_ = (bitField0_ & ~0x00000008);
+        bitField0_ &= ~0x00000008;
         recipientId_ = 0L;
     }
 
@@ -255,7 +255,7 @@ public final class CreateMessageRequest extends
      * <code>optional int64 delivery_date = 5;</code>
      */
     private void clearDeliveryDate() {
-        bitField0_ = (bitField0_ & ~0x00000010);
+        bitField0_ &= ~0x00000010;
         deliveryDate_ = 0L;
     }
 
@@ -309,7 +309,7 @@ public final class CreateMessageRequest extends
      * <code>optional string text = 6;</code>
      */
     private void clearText() {
-        bitField0_ = (bitField0_ & ~0x00000020);
+        bitField0_ &= ~0x00000020;
         text_ = getDefaultInstance().getText();
     }
 
@@ -448,7 +448,7 @@ public final class CreateMessageRequest extends
      * <code>optional int32 burn_after = 8;</code>
      */
     private void clearBurnAfter() {
-        bitField0_ = (bitField0_ & ~0x00000040);
+        bitField0_ &= ~0x00000040;
         burnAfter_ = 0;
     }
 
@@ -489,7 +489,7 @@ public final class CreateMessageRequest extends
      * <code>optional int64 pre_message_id = 9;</code>
      */
     private void clearPreMessageId() {
-        bitField0_ = (bitField0_ & ~0x00000080);
+        bitField0_ &= ~0x00000080;
         preMessageId_ = 0L;
     }
 
@@ -1116,7 +1116,7 @@ public final class CreateMessageRequest extends
                         parser = PARSER;
                         if (parser == null) {
                             parser =
-                                    new DefaultInstanceBasedParser<im.turms.client.model.proto.request.message.CreateMessageRequest>(
+                                    new DefaultInstanceBasedParser<>(
                                             DEFAULT_INSTANCE);
                             PARSER = parser;
                         }

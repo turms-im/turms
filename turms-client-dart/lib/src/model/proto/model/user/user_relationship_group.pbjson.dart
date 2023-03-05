@@ -10,11 +10,11 @@ import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
 
 @$core.Deprecated('Use userRelationshipGroupDescriptor instead')
-const UserRelationshipGroup$json = {
+const UserRelationshipGroup$json = const {
   '1': 'UserRelationshipGroup',
-  '2': [
-    {'1': 'index', '3': 1, '4': 1, '5': 5, '10': 'index'},
-    {'1': 'name', '3': 2, '4': 1, '5': 9, '10': 'name'},
+  '2': const [
+    const {'1': 'index', '3': 1, '4': 1, '5': 5, '10': 'index'},
+    const {'1': 'name', '3': 2, '4': 1, '5': 9, '10': 'name'},
   ],
 };
 

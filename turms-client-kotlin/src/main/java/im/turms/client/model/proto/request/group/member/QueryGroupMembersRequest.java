@@ -101,7 +101,7 @@ public final class QueryGroupMembersRequest extends
      * <code>optional int64 last_updated_date = 2;</code>
      */
     private void clearLastUpdatedDate() {
-        bitField0_ = (bitField0_ & ~0x00000001);
+        bitField0_ &= ~0x00000001;
         lastUpdatedDate_ = 0L;
     }
 
@@ -228,7 +228,7 @@ public final class QueryGroupMembersRequest extends
      * <code>optional bool with_status = 4;</code>
      */
     private void clearWithStatus() {
-        bitField0_ = (bitField0_ & ~0x00000002);
+        bitField0_ &= ~0x00000002;
         withStatus_ = false;
     }
 
@@ -579,7 +579,7 @@ public final class QueryGroupMembersRequest extends
                         parser = PARSER;
                         if (parser == null) {
                             parser =
-                                    new DefaultInstanceBasedParser<im.turms.client.model.proto.request.group.member.QueryGroupMembersRequest>(
+                                    new DefaultInstanceBasedParser<>(
                                             DEFAULT_INSTANCE);
                             PARSER = parser;
                         }

@@ -45,12 +45,6 @@ public final class MessagesWithTotalList extends
         return new MessagesWithTotalList();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-        return this.unknownFields;
-    }
-
     public static final com.google.protobuf.Descriptors.Descriptor
     getDescriptor() {
         return im.turms.server.common.access.client.dto.model.message.MessagesWithTotalListOuterClass.internal_static_im_turms_proto_MessagesWithTotalList_descriptor;
@@ -65,6 +59,7 @@ public final class MessagesWithTotalList extends
     }
 
     public static final int MESSAGES_WITH_TOTAL_LIST_FIELD_NUMBER = 1;
+    @SuppressWarnings("serial")
     private java.util.List<im.turms.server.common.access.client.dto.model.message.MessagesWithTotal> messagesWithTotalList_;
 
     /**
@@ -128,8 +123,8 @@ public final class MessagesWithTotalList extends
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
             throws java.io.IOException {
-        for (int i = 0; i < messagesWithTotalList_.size(); i++) {
-            output.writeMessage(1, messagesWithTotalList_.get(i));
+        for (MessagesWithTotal messagesWithTotal : messagesWithTotalList_) {
+            output.writeMessage(1, messagesWithTotal);
         }
         getUnknownFields().writeTo(output);
     }
@@ -142,9 +137,9 @@ public final class MessagesWithTotalList extends
         }
 
         size = 0;
-        for (int i = 0; i < messagesWithTotalList_.size(); i++) {
+        for (MessagesWithTotal messagesWithTotal : messagesWithTotalList_) {
             size += com.google.protobuf.CodedOutputStream
-                    .computeMessageSize(1, messagesWithTotalList_.get(i));
+                    .computeMessageSize(1, messagesWithTotal);
         }
         size += getUnknownFields().getSerializedSize();
         memoizedSize = size;
@@ -156,19 +151,15 @@ public final class MessagesWithTotalList extends
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof im.turms.server.common.access.client.dto.model.message.MessagesWithTotalList)) {
+        if (!(obj instanceof MessagesWithTotalList other)) {
             return super.equals(obj);
         }
-        im.turms.server.common.access.client.dto.model.message.MessagesWithTotalList other = (im.turms.server.common.access.client.dto.model.message.MessagesWithTotalList) obj;
 
         if (!getMessagesWithTotalListList()
                 .equals(other.getMessagesWithTotalListList())) {
             return false;
         }
-        if (!getUnknownFields().equals(other.getUnknownFields())) {
-            return false;
-        }
-        return true;
+        return getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -290,8 +281,7 @@ public final class MessagesWithTotalList extends
     @java.lang.Override
     protected Builder newBuilderForType(
             com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
+        return new Builder(parent);
     }
 
     /**
@@ -311,8 +301,7 @@ public final class MessagesWithTotalList extends
         internalGetFieldAccessorTable() {
             return im.turms.server.common.access.client.dto.model.message.MessagesWithTotalListOuterClass.internal_static_im_turms_proto_MessagesWithTotalList_fieldAccessorTable
                     .ensureFieldAccessorsInitialized(
-                            im.turms.server.common.access.client.dto.model.message.MessagesWithTotalList.class,
-                            im.turms.server.common.access.client.dto.model.message.MessagesWithTotalList.Builder.class);
+                            im.turms.server.common.access.client.dto.model.message.MessagesWithTotalList.class, im.turms.server.common.access.client.dto.model.message.MessagesWithTotalList.Builder.class);
         }
 
         // Construct using im.turms.server.common.access.client.dto.model.message.MessagesWithTotalList.newBuilder()
@@ -329,13 +318,14 @@ public final class MessagesWithTotalList extends
         @java.lang.Override
         public Builder clear() {
             super.clear();
+            bitField0_ = 0;
             if (messagesWithTotalListBuilder_ == null) {
                 messagesWithTotalList_ = java.util.Collections.emptyList();
             } else {
                 messagesWithTotalList_ = null;
                 messagesWithTotalListBuilder_.clear();
             }
-            bitField0_ = (bitField0_ & ~0x00000001);
+            bitField0_ &= ~0x00000001;
             return this;
         }
 
@@ -362,56 +352,28 @@ public final class MessagesWithTotalList extends
         @java.lang.Override
         public im.turms.server.common.access.client.dto.model.message.MessagesWithTotalList buildPartial() {
             im.turms.server.common.access.client.dto.model.message.MessagesWithTotalList result = new im.turms.server.common.access.client.dto.model.message.MessagesWithTotalList(this);
-            int from_bitField0_ = bitField0_;
-            if (messagesWithTotalListBuilder_ == null) {
-                if (((bitField0_ & 0x00000001) != 0)) {
-                    messagesWithTotalList_ = java.util.Collections.unmodifiableList(messagesWithTotalList_);
-                    bitField0_ = (bitField0_ & ~0x00000001);
-                }
-                result.messagesWithTotalList_ = messagesWithTotalList_;
-            } else {
-                result.messagesWithTotalList_ = messagesWithTotalListBuilder_.build();
+            buildPartialRepeatedFields(result);
+            if (bitField0_ != 0) {
+                buildPartial0(result);
             }
             onBuilt();
             return result;
         }
 
-        @java.lang.Override
-        public Builder clone() {
-            return super.clone();
+        private void buildPartialRepeatedFields(im.turms.server.common.access.client.dto.model.message.MessagesWithTotalList result) {
+            if (messagesWithTotalListBuilder_ == null) {
+                if (((bitField0_ & 0x00000001) != 0)) {
+                    messagesWithTotalList_ = java.util.Collections.unmodifiableList(messagesWithTotalList_);
+                    bitField0_ &= ~0x00000001;
+                }
+                result.messagesWithTotalList_ = messagesWithTotalList_;
+            } else {
+                result.messagesWithTotalList_ = messagesWithTotalListBuilder_.build();
+            }
         }
 
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(
-                com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(
-                com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index, java.lang.Object value) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.addRepeatedField(field, value);
+        private void buildPartial0(im.turms.server.common.access.client.dto.model.message.MessagesWithTotalList result) {
+            int from_bitField0_ = bitField0_;
         }
 
         @java.lang.Override
@@ -432,7 +394,7 @@ public final class MessagesWithTotalList extends
                 if (!other.messagesWithTotalList_.isEmpty()) {
                     if (messagesWithTotalList_.isEmpty()) {
                         messagesWithTotalList_ = other.messagesWithTotalList_;
-                        bitField0_ = (bitField0_ & ~0x00000001);
+                        bitField0_ &= ~0x00000001;
                     } else {
                         ensureMessagesWithTotalListIsMutable();
                         messagesWithTotalList_.addAll(other.messagesWithTotalList_);
@@ -445,7 +407,7 @@ public final class MessagesWithTotalList extends
                         messagesWithTotalListBuilder_.dispose();
                         messagesWithTotalListBuilder_ = null;
                         messagesWithTotalList_ = other.messagesWithTotalList_;
-                        bitField0_ = (bitField0_ & ~0x00000001);
+                        bitField0_ &= ~0x00000001;
                         messagesWithTotalListBuilder_ =
                                 com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
                                         getMessagesWithTotalListFieldBuilder() : null;
@@ -477,13 +439,11 @@ public final class MessagesWithTotalList extends
                 while (!done) {
                     int tag = input.readTag();
                     switch (tag) {
-                        case 0:
-                            done = true;
-                            break;
-                        case 10: {
-                            im.turms.server.common.access.client.dto.model.message.MessagesWithTotal m =
+                        case 0 -> done = true;
+                        case 10 -> {
+                            MessagesWithTotal m =
                                     input.readMessage(
-                                            im.turms.server.common.access.client.dto.model.message.MessagesWithTotal.parser(),
+                                            MessagesWithTotal.parser(),
                                             extensionRegistry);
                             if (messagesWithTotalListBuilder_ == null) {
                                 ensureMessagesWithTotalListIsMutable();
@@ -491,13 +451,11 @@ public final class MessagesWithTotalList extends
                             } else {
                                 messagesWithTotalListBuilder_.addMessage(m);
                             }
-                            break;
                         } // case 10
-                        default: {
+                        default -> {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
                             }
-                            break;
                         } // default:
                     } // switch (tag)
                 } // while (!done)
@@ -515,15 +473,14 @@ public final class MessagesWithTotalList extends
                 java.util.Collections.emptyList();
 
         private void ensureMessagesWithTotalListIsMutable() {
-            if (!((bitField0_ & 0x00000001) != 0)) {
-                messagesWithTotalList_ = new java.util.ArrayList<im.turms.server.common.access.client.dto.model.message.MessagesWithTotal>(messagesWithTotalList_);
+            if ((bitField0_ & 0x00000001) == 0) {
+                messagesWithTotalList_ = new java.util.ArrayList<>(messagesWithTotalList_);
                 bitField0_ |= 0x00000001;
             }
         }
 
         private com.google.protobuf.RepeatedFieldBuilderV3<
-                im.turms.server.common.access.client.dto.model.message.MessagesWithTotal, im.turms.server.common.access.client.dto.model.message.MessagesWithTotal.Builder, im.turms.server.common.access.client.dto.model.message.MessagesWithTotalOrBuilder>
-                messagesWithTotalListBuilder_;
+                im.turms.server.common.access.client.dto.model.message.MessagesWithTotal, im.turms.server.common.access.client.dto.model.message.MessagesWithTotal.Builder, im.turms.server.common.access.client.dto.model.message.MessagesWithTotalOrBuilder> messagesWithTotalListBuilder_;
 
         /**
          * <code>repeated .im.turms.proto.MessagesWithTotal messages_with_total_list = 1;</code>
@@ -678,7 +635,7 @@ public final class MessagesWithTotalList extends
         public Builder clearMessagesWithTotalList() {
             if (messagesWithTotalListBuilder_ == null) {
                 messagesWithTotalList_ = java.util.Collections.emptyList();
-                bitField0_ = (bitField0_ & ~0x00000001);
+                bitField0_ &= ~0x00000001;
                 onChanged();
             } else {
                 messagesWithTotalListBuilder_.clear();
@@ -761,8 +718,7 @@ public final class MessagesWithTotalList extends
                 im.turms.server.common.access.client.dto.model.message.MessagesWithTotal, im.turms.server.common.access.client.dto.model.message.MessagesWithTotal.Builder, im.turms.server.common.access.client.dto.model.message.MessagesWithTotalOrBuilder>
         getMessagesWithTotalListFieldBuilder() {
             if (messagesWithTotalListBuilder_ == null) {
-                messagesWithTotalListBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
-                        im.turms.server.common.access.client.dto.model.message.MessagesWithTotal, im.turms.server.common.access.client.dto.model.message.MessagesWithTotal.Builder, im.turms.server.common.access.client.dto.model.message.MessagesWithTotalOrBuilder>(
+                messagesWithTotalListBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<>(
                         messagesWithTotalList_,
                         ((bitField0_ & 0x00000001) != 0),
                         getParentForChildren(),
@@ -800,7 +756,7 @@ public final class MessagesWithTotalList extends
     }
 
     private static final com.google.protobuf.Parser<MessagesWithTotalList>
-            PARSER = new com.google.protobuf.AbstractParser<MessagesWithTotalList>() {
+            PARSER = new com.google.protobuf.AbstractParser<>() {
         @java.lang.Override
         public MessagesWithTotalList parsePartialFrom(
                 com.google.protobuf.CodedInputStream input,

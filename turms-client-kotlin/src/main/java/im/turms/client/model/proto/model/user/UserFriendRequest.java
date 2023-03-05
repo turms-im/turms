@@ -71,7 +71,7 @@ public final class UserFriendRequest extends
      * <code>optional int64 id = 1;</code>
      */
     private void clearId() {
-        bitField0_ = (bitField0_ & ~0x00000001);
+        bitField0_ &= ~0x00000001;
         id_ = 0L;
     }
 
@@ -112,7 +112,7 @@ public final class UserFriendRequest extends
      * <code>optional int64 creation_date = 2;</code>
      */
     private void clearCreationDate() {
-        bitField0_ = (bitField0_ & ~0x00000002);
+        bitField0_ &= ~0x00000002;
         creationDate_ = 0L;
     }
 
@@ -166,7 +166,7 @@ public final class UserFriendRequest extends
      * <code>optional string content = 3;</code>
      */
     private void clearContent() {
-        bitField0_ = (bitField0_ & ~0x00000004);
+        bitField0_ &= ~0x00000004;
         content_ = getDefaultInstance().getContent();
     }
 
@@ -240,7 +240,7 @@ public final class UserFriendRequest extends
      * <code>optional .im.turms.proto.RequestStatus request_status = 4;</code>
      */
     private void clearRequestStatus() {
-        bitField0_ = (bitField0_ & ~0x00000008);
+        bitField0_ &= ~0x00000008;
         requestStatus_ = 0;
     }
 
@@ -294,7 +294,7 @@ public final class UserFriendRequest extends
      * <code>optional string reason = 5;</code>
      */
     private void clearReason() {
-        bitField0_ = (bitField0_ & ~0x00000010);
+        bitField0_ &= ~0x00000010;
         reason_ = getDefaultInstance().getReason();
     }
 
@@ -347,7 +347,7 @@ public final class UserFriendRequest extends
      * <code>optional int64 expiration_date = 6;</code>
      */
     private void clearExpirationDate() {
-        bitField0_ = (bitField0_ & ~0x00000020);
+        bitField0_ &= ~0x00000020;
         expirationDate_ = 0L;
     }
 
@@ -388,7 +388,7 @@ public final class UserFriendRequest extends
      * <code>optional int64 requester_id = 7;</code>
      */
     private void clearRequesterId() {
-        bitField0_ = (bitField0_ & ~0x00000040);
+        bitField0_ &= ~0x00000040;
         requesterId_ = 0L;
     }
 
@@ -429,7 +429,7 @@ public final class UserFriendRequest extends
      * <code>optional int64 recipient_id = 8;</code>
      */
     private void clearRecipientId() {
-        bitField0_ = (bitField0_ & ~0x00000080);
+        bitField0_ &= ~0x00000080;
         recipientId_ = 0L;
     }
 
@@ -1000,7 +1000,7 @@ public final class UserFriendRequest extends
                         parser = PARSER;
                         if (parser == null) {
                             parser =
-                                    new DefaultInstanceBasedParser<im.turms.client.model.proto.model.user.UserFriendRequest>(
+                                    new DefaultInstanceBasedParser<>(
                                             DEFAULT_INSTANCE);
                             PARSER = parser;
                         }

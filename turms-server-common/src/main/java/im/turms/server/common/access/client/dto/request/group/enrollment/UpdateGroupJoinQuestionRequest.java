@@ -36,7 +36,8 @@ public final class UpdateGroupJoinQuestionRequest extends
 
     private UpdateGroupJoinQuestionRequest() {
         question_ = "";
-        answers_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        answers_ =
+                com.google.protobuf.LazyStringArrayList.emptyList();
     }
 
     @java.lang.Override
@@ -44,12 +45,6 @@ public final class UpdateGroupJoinQuestionRequest extends
     protected java.lang.Object newInstance(
             UnusedPrivateParameter unused) {
         return new UpdateGroupJoinQuestionRequest();
-    }
-
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-        return this.unknownFields;
     }
 
     public static final com.google.protobuf.Descriptors.Descriptor
@@ -62,13 +57,12 @@ public final class UpdateGroupJoinQuestionRequest extends
     internalGetFieldAccessorTable() {
         return im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequestOuterClass.internal_static_im_turms_proto_UpdateGroupJoinQuestionRequest_fieldAccessorTable
                 .ensureFieldAccessorsInitialized(
-                        im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest.class,
-                        im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest.Builder.class);
+                        im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest.class, im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest.Builder.class);
     }
 
     private int bitField0_;
     public static final int QUESTION_ID_FIELD_NUMBER = 1;
-    private long questionId_;
+    private long questionId_ = 0L;
 
     /**
      * <pre>
@@ -85,7 +79,8 @@ public final class UpdateGroupJoinQuestionRequest extends
     }
 
     public static final int QUESTION_FIELD_NUMBER = 2;
-    private volatile java.lang.Object question_;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object question_ = "";
 
     /**
      * <pre>
@@ -149,7 +144,9 @@ public final class UpdateGroupJoinQuestionRequest extends
     }
 
     public static final int ANSWERS_FIELD_NUMBER = 3;
-    private com.google.protobuf.LazyStringList answers_;
+    @SuppressWarnings("serial")
+    private com.google.protobuf.LazyStringArrayList answers_ =
+            com.google.protobuf.LazyStringArrayList.emptyList();
 
     /**
      * <code>repeated string answers = 3;</code>
@@ -192,7 +189,7 @@ public final class UpdateGroupJoinQuestionRequest extends
     }
 
     public static final int SCORE_FIELD_NUMBER = 4;
-    private int score_;
+    private int score_ = 0;
 
     /**
      * <code>optional int32 score = 4;</code>
@@ -285,11 +282,9 @@ public final class UpdateGroupJoinQuestionRequest extends
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest)) {
+        if (!(obj instanceof UpdateGroupJoinQuestionRequest other)) {
             return super.equals(obj);
         }
-        im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest other =
-                (im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest) obj;
 
         if (getQuestionId()
             != other.getQuestionId()) {
@@ -317,10 +312,7 @@ public final class UpdateGroupJoinQuestionRequest extends
                 return false;
             }
         }
-        if (!getUnknownFields().equals(other.getUnknownFields())) {
-            return false;
-        }
-        return true;
+        return getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -453,8 +445,7 @@ public final class UpdateGroupJoinQuestionRequest extends
     @java.lang.Override
     protected Builder newBuilderForType(
             com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
+        return new Builder(parent);
     }
 
     /**
@@ -474,8 +465,7 @@ public final class UpdateGroupJoinQuestionRequest extends
         internalGetFieldAccessorTable() {
             return im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequestOuterClass.internal_static_im_turms_proto_UpdateGroupJoinQuestionRequest_fieldAccessorTable
                     .ensureFieldAccessorsInitialized(
-                            im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest.class,
-                            im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest.Builder.class);
+                            im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest.class, im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest.Builder.class);
         }
 
         // Construct using im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest.newBuilder()
@@ -492,14 +482,12 @@ public final class UpdateGroupJoinQuestionRequest extends
         @java.lang.Override
         public Builder clear() {
             super.clear();
+            bitField0_ = 0;
             questionId_ = 0L;
-
             question_ = "";
-            bitField0_ = (bitField0_ & ~0x00000001);
-            answers_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-            bitField0_ = (bitField0_ & ~0x00000002);
+            answers_ =
+                    com.google.protobuf.LazyStringArrayList.emptyList();
             score_ = 0;
-            bitField0_ = (bitField0_ & ~0x00000004);
             return this;
         }
 
@@ -525,65 +513,33 @@ public final class UpdateGroupJoinQuestionRequest extends
 
         @java.lang.Override
         public im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest buildPartial() {
-            im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest result =
-                    new im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest(this);
-            int from_bitField0_ = bitField0_;
-            int to_bitField0_ = 0;
-            result.questionId_ = questionId_;
-            if (((from_bitField0_ & 0x00000001) != 0)) {
-                to_bitField0_ |= 0x00000001;
+            im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest result = new im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest(this);
+            if (bitField0_ != 0) {
+                buildPartial0(result);
             }
-            result.question_ = question_;
-            if (((bitField0_ & 0x00000002) != 0)) {
-                answers_ = answers_.getUnmodifiableView();
-                bitField0_ = (bitField0_ & ~0x00000002);
-            }
-            result.answers_ = answers_;
-            if (((from_bitField0_ & 0x00000004) != 0)) {
-                result.score_ = score_;
-                to_bitField0_ |= 0x00000002;
-            }
-            result.bitField0_ = to_bitField0_;
             onBuilt();
             return result;
         }
 
-        @java.lang.Override
-        public Builder clone() {
-            return super.clone();
-        }
-
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(
-                com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(
-                com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index, java.lang.Object value) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.addRepeatedField(field, value);
+        private void buildPartial0(im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest result) {
+            int from_bitField0_ = bitField0_;
+            if (((from_bitField0_ & 0x00000001) != 0)) {
+                result.questionId_ = questionId_;
+            }
+            int to_bitField0_ = 0;
+            if (((from_bitField0_ & 0x00000002) != 0)) {
+                result.question_ = question_;
+                to_bitField0_ |= 0x00000001;
+            }
+            if (((from_bitField0_ & 0x00000004) != 0)) {
+                answers_.makeImmutable();
+                result.answers_ = answers_;
+            }
+            if (((from_bitField0_ & 0x00000008) != 0)) {
+                result.score_ = score_;
+                to_bitField0_ |= 0x00000002;
+            }
+            result.bitField0_ |= to_bitField0_;
         }
 
         @java.lang.Override
@@ -604,14 +560,14 @@ public final class UpdateGroupJoinQuestionRequest extends
                 setQuestionId(other.getQuestionId());
             }
             if (other.hasQuestion()) {
-                bitField0_ |= 0x00000001;
                 question_ = other.question_;
+                bitField0_ |= 0x00000002;
                 onChanged();
             }
             if (!other.answers_.isEmpty()) {
                 if (answers_.isEmpty()) {
                     answers_ = other.answers_;
-                    bitField0_ = (bitField0_ & ~0x00000002);
+                    bitField0_ |= 0x00000004;
                 } else {
                     ensureAnswersIsMutable();
                     answers_.addAll(other.answers_);
@@ -644,35 +600,28 @@ public final class UpdateGroupJoinQuestionRequest extends
                 while (!done) {
                     int tag = input.readTag();
                     switch (tag) {
-                        case 0:
-                            done = true;
-                            break;
-                        case 8: {
+                        case 0 -> done = true;
+                        case 8 -> {
                             questionId_ = input.readInt64();
-
-                            break;
-                        } // case 8
-                        case 18: {
-                            question_ = input.readStringRequireUtf8();
                             bitField0_ |= 0x00000001;
-                            break;
+                        } // case 8
+                        case 18 -> {
+                            question_ = input.readStringRequireUtf8();
+                            bitField0_ |= 0x00000002;
                         } // case 18
-                        case 26: {
-                            java.lang.String s = input.readStringRequireUtf8();
+                        case 26 -> {
+                            String s = input.readStringRequireUtf8();
                             ensureAnswersIsMutable();
                             answers_.add(s);
-                            break;
                         } // case 26
-                        case 32: {
+                        case 32 -> {
                             score_ = input.readInt32();
-                            bitField0_ |= 0x00000004;
-                            break;
+                            bitField0_ |= 0x00000008;
                         } // case 32
-                        default: {
+                        default -> {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
                             }
-                            break;
                         } // default:
                     } // switch (tag)
                 } // while (!done)
@@ -715,6 +664,7 @@ public final class UpdateGroupJoinQuestionRequest extends
         public Builder setQuestionId(long value) {
 
             questionId_ = value;
+            bitField0_ |= 0x00000001;
             onChanged();
             return this;
         }
@@ -729,7 +679,7 @@ public final class UpdateGroupJoinQuestionRequest extends
          * @return This builder for chaining.
          */
         public Builder clearQuestionId() {
-
+            bitField0_ &= ~0x00000001;
             questionId_ = 0L;
             onChanged();
             return this;
@@ -747,7 +697,7 @@ public final class UpdateGroupJoinQuestionRequest extends
          * @return Whether the question field is set.
          */
         public boolean hasQuestion() {
-            return ((bitField0_ & 0x00000001) != 0);
+            return ((bitField0_ & 0x00000002) != 0);
         }
 
         /**
@@ -810,8 +760,8 @@ public final class UpdateGroupJoinQuestionRequest extends
             if (value == null) {
                 throw new NullPointerException();
             }
-            bitField0_ |= 0x00000001;
             question_ = value;
+            bitField0_ |= 0x00000002;
             onChanged();
             return this;
         }
@@ -826,8 +776,8 @@ public final class UpdateGroupJoinQuestionRequest extends
          * @return This builder for chaining.
          */
         public Builder clearQuestion() {
-            bitField0_ = (bitField0_ & ~0x00000001);
             question_ = getDefaultInstance().getQuestion();
+            bitField0_ &= ~0x00000002;
             onChanged();
             return this;
         }
@@ -848,19 +798,20 @@ public final class UpdateGroupJoinQuestionRequest extends
                 throw new NullPointerException();
             }
             checkByteStringIsUtf8(value);
-            bitField0_ |= 0x00000001;
             question_ = value;
+            bitField0_ |= 0x00000002;
             onChanged();
             return this;
         }
 
-        private com.google.protobuf.LazyStringList answers_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        private com.google.protobuf.LazyStringArrayList answers_ =
+                com.google.protobuf.LazyStringArrayList.emptyList();
 
         private void ensureAnswersIsMutable() {
-            if (!((bitField0_ & 0x00000002) != 0)) {
+            if (!answers_.isModifiable()) {
                 answers_ = new com.google.protobuf.LazyStringArrayList(answers_);
-                bitField0_ |= 0x00000002;
             }
+            bitField0_ |= 0x00000004;
         }
 
         /**
@@ -870,7 +821,8 @@ public final class UpdateGroupJoinQuestionRequest extends
          */
         public com.google.protobuf.ProtocolStringList
         getAnswersList() {
-            return answers_.getUnmodifiableView();
+            answers_.makeImmutable();
+            return answers_;
         }
 
         /**
@@ -917,6 +869,7 @@ public final class UpdateGroupJoinQuestionRequest extends
             }
             ensureAnswersIsMutable();
             answers_.set(index, value);
+            bitField0_ |= 0x00000004;
             onChanged();
             return this;
         }
@@ -934,6 +887,7 @@ public final class UpdateGroupJoinQuestionRequest extends
             }
             ensureAnswersIsMutable();
             answers_.add(value);
+            bitField0_ |= 0x00000004;
             onChanged();
             return this;
         }
@@ -949,6 +903,7 @@ public final class UpdateGroupJoinQuestionRequest extends
             ensureAnswersIsMutable();
             com.google.protobuf.AbstractMessageLite.Builder.addAll(
                     values, answers_);
+            bitField0_ |= 0x00000004;
             onChanged();
             return this;
         }
@@ -959,8 +914,9 @@ public final class UpdateGroupJoinQuestionRequest extends
          * @return This builder for chaining.
          */
         public Builder clearAnswers() {
-            answers_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-            bitField0_ = (bitField0_ & ~0x00000002);
+            answers_ =
+                    com.google.protobuf.LazyStringArrayList.emptyList();
+            bitField0_ &= ~0x00000004;
             onChanged();
             return this;
         }
@@ -979,6 +935,7 @@ public final class UpdateGroupJoinQuestionRequest extends
             checkByteStringIsUtf8(value);
             ensureAnswersIsMutable();
             answers_.add(value);
+            bitField0_ |= 0x00000004;
             onChanged();
             return this;
         }
@@ -992,7 +949,7 @@ public final class UpdateGroupJoinQuestionRequest extends
          */
         @java.lang.Override
         public boolean hasScore() {
-            return ((bitField0_ & 0x00000004) != 0);
+            return ((bitField0_ & 0x00000008) != 0);
         }
 
         /**
@@ -1012,8 +969,9 @@ public final class UpdateGroupJoinQuestionRequest extends
          * @return This builder for chaining.
          */
         public Builder setScore(int value) {
-            bitField0_ |= 0x00000004;
+
             score_ = value;
+            bitField0_ |= 0x00000008;
             onChanged();
             return this;
         }
@@ -1024,7 +982,7 @@ public final class UpdateGroupJoinQuestionRequest extends
          * @return This builder for chaining.
          */
         public Builder clearScore() {
-            bitField0_ = (bitField0_ & ~0x00000004);
+            bitField0_ &= ~0x00000008;
             score_ = 0;
             onChanged();
             return this;
@@ -1058,7 +1016,7 @@ public final class UpdateGroupJoinQuestionRequest extends
     }
 
     private static final com.google.protobuf.Parser<UpdateGroupJoinQuestionRequest>
-            PARSER = new com.google.protobuf.AbstractParser<UpdateGroupJoinQuestionRequest>() {
+            PARSER = new com.google.protobuf.AbstractParser<>() {
         @java.lang.Override
         public UpdateGroupJoinQuestionRequest parsePartialFrom(
                 com.google.protobuf.CodedInputStream input,

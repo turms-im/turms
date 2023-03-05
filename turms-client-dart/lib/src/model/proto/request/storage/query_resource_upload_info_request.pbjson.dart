@@ -10,10 +10,10 @@ import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
 
 @$core.Deprecated('Use queryResourceUploadInfoRequestDescriptor instead')
-const QueryResourceUploadInfoRequest$json = {
+const QueryResourceUploadInfoRequest$json = const {
   '1': 'QueryResourceUploadInfoRequest',
-  '2': [
-    {
+  '2': const [
+    const {
       '1': 'type',
       '3': 1,
       '4': 1,
@@ -21,10 +21,34 @@ const QueryResourceUploadInfoRequest$json = {
       '6': '.im.turms.proto.StorageResourceType',
       '10': 'type'
     },
-    {'1': 'id_num', '3': 2, '4': 1, '5': 3, '9': 0, '10': 'idNum', '17': true},
-    {'1': 'id_str', '3': 3, '4': 1, '5': 9, '9': 1, '10': 'idStr', '17': true},
-    {'1': 'name', '3': 4, '4': 1, '5': 9, '9': 2, '10': 'name', '17': true},
-    {
+    const {
+      '1': 'id_num',
+      '3': 2,
+      '4': 1,
+      '5': 3,
+      '9': 0,
+      '10': 'idNum',
+      '17': true
+    },
+    const {
+      '1': 'id_str',
+      '3': 3,
+      '4': 1,
+      '5': 9,
+      '9': 1,
+      '10': 'idStr',
+      '17': true
+    },
+    const {
+      '1': 'name',
+      '3': 4,
+      '4': 1,
+      '5': 9,
+      '9': 2,
+      '10': 'name',
+      '17': true
+    },
+    const {
       '1': 'media_type',
       '3': 5,
       '4': 1,
@@ -33,7 +57,7 @@ const QueryResourceUploadInfoRequest$json = {
       '10': 'mediaType',
       '17': true
     },
-    {
+    const {
       '1': 'extra',
       '3': 6,
       '4': 3,
@@ -42,23 +66,23 @@ const QueryResourceUploadInfoRequest$json = {
       '10': 'extra'
     },
   ],
-  '3': [QueryResourceUploadInfoRequest_ExtraEntry$json],
-  '8': [
-    {'1': '_id_num'},
-    {'1': '_id_str'},
-    {'1': '_name'},
-    {'1': '_media_type'},
+  '3': const [QueryResourceUploadInfoRequest_ExtraEntry$json],
+  '8': const [
+    const {'1': '_id_num'},
+    const {'1': '_id_str'},
+    const {'1': '_name'},
+    const {'1': '_media_type'},
   ],
 };
 
 @$core.Deprecated('Use queryResourceUploadInfoRequestDescriptor instead')
-const QueryResourceUploadInfoRequest_ExtraEntry$json = {
+const QueryResourceUploadInfoRequest_ExtraEntry$json = const {
   '1': 'ExtraEntry',
-  '2': [
-    {'1': 'key', '3': 1, '4': 1, '5': 9, '10': 'key'},
-    {'1': 'value', '3': 2, '4': 1, '5': 9, '10': 'value'},
+  '2': const [
+    const {'1': 'key', '3': 1, '4': 1, '5': 9, '10': 'key'},
+    const {'1': 'value', '3': 2, '4': 1, '5': 9, '10': 'value'},
   ],
-  '7': {'7': true},
+  '7': const {'7': true},
 };
 
 /// Descriptor for `QueryResourceUploadInfoRequest`. Decode as a `google.protobuf.DescriptorProto`.

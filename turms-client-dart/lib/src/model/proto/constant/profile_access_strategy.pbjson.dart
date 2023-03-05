@@ -10,12 +10,12 @@ import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
 
 @$core.Deprecated('Use profileAccessStrategyDescriptor instead')
-const ProfileAccessStrategy$json = {
+const ProfileAccessStrategy$json = const {
   '1': 'ProfileAccessStrategy',
-  '2': [
-    {'1': 'ALL', '2': 0},
-    {'1': 'ALL_EXCEPT_BLOCKED_USERS', '2': 1},
-    {'1': 'FRIENDS', '2': 2},
+  '2': const [
+    const {'1': 'ALL', '2': 0},
+    const {'1': 'ALL_EXCEPT_BLOCKED_USERS', '2': 1},
+    const {'1': 'FRIENDS', '2': 2},
   ],
 };
 

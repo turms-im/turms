@@ -122,7 +122,6 @@ public interface CreateSessionRequestOrBuilder extends
     /**
      * <code>map&lt;string, string&gt; device_details = 6;</code>
      */
-
     /* nullable */
     java.lang.String getDeviceDetailsOrDefault(
             java.lang.String key,
@@ -132,7 +131,6 @@ public interface CreateSessionRequestOrBuilder extends
     /**
      * <code>map&lt;string, string&gt; device_details = 6;</code>
      */
-
     java.lang.String getDeviceDetailsOrThrow(
             java.lang.String key);
 

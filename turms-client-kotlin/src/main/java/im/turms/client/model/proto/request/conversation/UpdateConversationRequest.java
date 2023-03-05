@@ -85,7 +85,7 @@ public final class UpdateConversationRequest extends
      * <code>optional int64 target_id = 1;</code>
      */
     private void clearTargetId() {
-        bitField0_ = (bitField0_ & ~0x00000001);
+        bitField0_ &= ~0x00000001;
         targetId_ = 0L;
     }
 
@@ -126,7 +126,7 @@ public final class UpdateConversationRequest extends
      * <code>optional int64 group_id = 2;</code>
      */
     private void clearGroupId() {
-        bitField0_ = (bitField0_ & ~0x00000002);
+        bitField0_ &= ~0x00000002;
         groupId_ = 0L;
     }
 
@@ -465,7 +465,7 @@ public final class UpdateConversationRequest extends
                         parser = PARSER;
                         if (parser == null) {
                             parser =
-                                    new DefaultInstanceBasedParser<im.turms.client.model.proto.request.conversation.UpdateConversationRequest>(
+                                    new DefaultInstanceBasedParser<>(
                                             DEFAULT_INSTANCE);
                             PARSER = parser;
                         }

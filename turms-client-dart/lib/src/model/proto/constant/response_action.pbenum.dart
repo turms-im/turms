@@ -10,12 +10,21 @@ import 'dart:core' as $core;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 class ResponseAction extends $pb.ProtobufEnum {
-  static const ResponseAction ACCEPT = ResponseAction._(0,
-      $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'ACCEPT');
-  static const ResponseAction DECLINE = ResponseAction._(1,
-      $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'DECLINE');
-  static const ResponseAction IGNORE = ResponseAction._(2,
-      $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'IGNORE');
+  static const ResponseAction ACCEPT = ResponseAction._(
+      0,
+      const $core.bool.fromEnvironment('protobuf.omit_enum_names')
+          ? ''
+          : 'ACCEPT');
+  static const ResponseAction DECLINE = ResponseAction._(
+      1,
+      const $core.bool.fromEnvironment('protobuf.omit_enum_names')
+          ? ''
+          : 'DECLINE');
+  static const ResponseAction IGNORE = ResponseAction._(
+      2,
+      const $core.bool.fromEnvironment('protobuf.omit_enum_names')
+          ? ''
+          : 'IGNORE');
 
   static const $core.List<ResponseAction> values = <ResponseAction>[
     ACCEPT,

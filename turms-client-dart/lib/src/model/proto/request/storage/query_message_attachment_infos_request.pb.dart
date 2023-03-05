@@ -16,7 +16,7 @@ class QueryMessageAttachmentInfosRequest extends $pb.GeneratedMessage {
           ? ''
           : 'QueryMessageAttachmentInfosRequest',
       package: const $pb.PackageName(
-          $core.bool.fromEnvironment('protobuf.omit_message_names')
+          const $core.bool.fromEnvironment('protobuf.omit_message_names')
               ? ''
               : 'im.turms.proto'),
       createEmptyInstance: create)
@@ -32,30 +32,36 @@ class QueryMessageAttachmentInfosRequest extends $pb.GeneratedMessage {
             ? ''
             : 'groupIds',
         $pb.PbFieldType.K6)
-    ..aOB(
-        3,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'areSharedByMe')
     ..aInt64(
-        4,
+        3,
         const $core.bool.fromEnvironment('protobuf.omit_field_names')
             ? ''
             : 'creationDateStart')
     ..aInt64(
-        5,
+        4,
         const $core.bool.fromEnvironment('protobuf.omit_field_names')
             ? ''
             : 'creationDateEnd')
+    ..aOB(
+        5,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'inPrivateConversation')
+    ..aOB(
+        6,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'areSharedByMe')
     ..hasRequiredFields = false;
 
   QueryMessageAttachmentInfosRequest._() : super();
   factory QueryMessageAttachmentInfosRequest({
     $core.Iterable<$fixnum.Int64>? userIds,
     $core.Iterable<$fixnum.Int64>? groupIds,
-    $core.bool? areSharedByMe,
     $fixnum.Int64? creationDateStart,
     $fixnum.Int64? creationDateEnd,
+    $core.bool? inPrivateConversation,
+    $core.bool? areSharedByMe,
   }) {
     final _result = create();
     if (userIds != null) {
@@ -64,14 +70,17 @@ class QueryMessageAttachmentInfosRequest extends $pb.GeneratedMessage {
     if (groupIds != null) {
       _result.groupIds.addAll(groupIds);
     }
-    if (areSharedByMe != null) {
-      _result.areSharedByMe = areSharedByMe;
-    }
     if (creationDateStart != null) {
       _result.creationDateStart = creationDateStart;
     }
     if (creationDateEnd != null) {
       _result.creationDateEnd = creationDateEnd;
+    }
+    if (inPrivateConversation != null) {
+      _result.inPrivateConversation = inPrivateConversation;
+    }
+    if (areSharedByMe != null) {
+      _result.areSharedByMe = areSharedByMe;
     }
     return _result;
   }
@@ -114,38 +123,50 @@ class QueryMessageAttachmentInfosRequest extends $pb.GeneratedMessage {
   $core.List<$fixnum.Int64> get groupIds => $_getList(1);
 
   @$pb.TagNumber(3)
-  $core.bool get areSharedByMe => $_getBF(2);
+  $fixnum.Int64 get creationDateStart => $_getI64(2);
   @$pb.TagNumber(3)
-  set areSharedByMe($core.bool v) {
-    $_setBool(2, v);
+  set creationDateStart($fixnum.Int64 v) {
+    $_setInt64(2, v);
   }
 
   @$pb.TagNumber(3)
-  $core.bool hasAreSharedByMe() => $_has(2);
+  $core.bool hasCreationDateStart() => $_has(2);
   @$pb.TagNumber(3)
-  void clearAreSharedByMe() => clearField(3);
+  void clearCreationDateStart() => clearField(3);
 
   @$pb.TagNumber(4)
-  $fixnum.Int64 get creationDateStart => $_getI64(3);
+  $fixnum.Int64 get creationDateEnd => $_getI64(3);
   @$pb.TagNumber(4)
-  set creationDateStart($fixnum.Int64 v) {
+  set creationDateEnd($fixnum.Int64 v) {
     $_setInt64(3, v);
   }
 
   @$pb.TagNumber(4)
-  $core.bool hasCreationDateStart() => $_has(3);
+  $core.bool hasCreationDateEnd() => $_has(3);
   @$pb.TagNumber(4)
-  void clearCreationDateStart() => clearField(4);
+  void clearCreationDateEnd() => clearField(4);
 
   @$pb.TagNumber(5)
-  $fixnum.Int64 get creationDateEnd => $_getI64(4);
+  $core.bool get inPrivateConversation => $_getBF(4);
   @$pb.TagNumber(5)
-  set creationDateEnd($fixnum.Int64 v) {
-    $_setInt64(4, v);
+  set inPrivateConversation($core.bool v) {
+    $_setBool(4, v);
   }
 
   @$pb.TagNumber(5)
-  $core.bool hasCreationDateEnd() => $_has(4);
+  $core.bool hasInPrivateConversation() => $_has(4);
   @$pb.TagNumber(5)
-  void clearCreationDateEnd() => clearField(5);
+  void clearInPrivateConversation() => clearField(5);
+
+  @$pb.TagNumber(6)
+  $core.bool get areSharedByMe => $_getBF(5);
+  @$pb.TagNumber(6)
+  set areSharedByMe($core.bool v) {
+    $_setBool(5, v);
+  }
+
+  @$pb.TagNumber(6)
+  $core.bool hasAreSharedByMe() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearAreSharedByMe() => clearField(6);
 }

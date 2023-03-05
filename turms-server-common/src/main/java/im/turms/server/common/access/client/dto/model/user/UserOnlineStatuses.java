@@ -45,12 +45,6 @@ public final class UserOnlineStatuses extends
         return new UserOnlineStatuses();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-        return this.unknownFields;
-    }
-
     public static final com.google.protobuf.Descriptors.Descriptor
     getDescriptor() {
         return im.turms.server.common.access.client.dto.model.user.UserOnlineStatusesOuterClass.internal_static_im_turms_proto_UserOnlineStatuses_descriptor;
@@ -65,6 +59,7 @@ public final class UserOnlineStatuses extends
     }
 
     public static final int STATUSES_FIELD_NUMBER = 1;
+    @SuppressWarnings("serial")
     private java.util.List<im.turms.server.common.access.client.dto.model.user.UserOnlineStatus> statuses_;
 
     /**
@@ -128,8 +123,8 @@ public final class UserOnlineStatuses extends
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
             throws java.io.IOException {
-        for (int i = 0; i < statuses_.size(); i++) {
-            output.writeMessage(1, statuses_.get(i));
+        for (UserOnlineStatus userOnlineStatus : statuses_) {
+            output.writeMessage(1, userOnlineStatus);
         }
         getUnknownFields().writeTo(output);
     }
@@ -142,9 +137,9 @@ public final class UserOnlineStatuses extends
         }
 
         size = 0;
-        for (int i = 0; i < statuses_.size(); i++) {
+        for (UserOnlineStatus userOnlineStatus : statuses_) {
             size += com.google.protobuf.CodedOutputStream
-                    .computeMessageSize(1, statuses_.get(i));
+                    .computeMessageSize(1, userOnlineStatus);
         }
         size += getUnknownFields().getSerializedSize();
         memoizedSize = size;
@@ -156,19 +151,15 @@ public final class UserOnlineStatuses extends
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof im.turms.server.common.access.client.dto.model.user.UserOnlineStatuses)) {
+        if (!(obj instanceof UserOnlineStatuses other)) {
             return super.equals(obj);
         }
-        im.turms.server.common.access.client.dto.model.user.UserOnlineStatuses other = (im.turms.server.common.access.client.dto.model.user.UserOnlineStatuses) obj;
 
         if (!getStatusesList()
                 .equals(other.getStatusesList())) {
             return false;
         }
-        if (!getUnknownFields().equals(other.getUnknownFields())) {
-            return false;
-        }
-        return true;
+        return getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -290,8 +281,7 @@ public final class UserOnlineStatuses extends
     @java.lang.Override
     protected Builder newBuilderForType(
             com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
+        return new Builder(parent);
     }
 
     /**
@@ -328,13 +318,14 @@ public final class UserOnlineStatuses extends
         @java.lang.Override
         public Builder clear() {
             super.clear();
+            bitField0_ = 0;
             if (statusesBuilder_ == null) {
                 statuses_ = java.util.Collections.emptyList();
             } else {
                 statuses_ = null;
                 statusesBuilder_.clear();
             }
-            bitField0_ = (bitField0_ & ~0x00000001);
+            bitField0_ &= ~0x00000001;
             return this;
         }
 
@@ -361,56 +352,28 @@ public final class UserOnlineStatuses extends
         @java.lang.Override
         public im.turms.server.common.access.client.dto.model.user.UserOnlineStatuses buildPartial() {
             im.turms.server.common.access.client.dto.model.user.UserOnlineStatuses result = new im.turms.server.common.access.client.dto.model.user.UserOnlineStatuses(this);
-            int from_bitField0_ = bitField0_;
-            if (statusesBuilder_ == null) {
-                if (((bitField0_ & 0x00000001) != 0)) {
-                    statuses_ = java.util.Collections.unmodifiableList(statuses_);
-                    bitField0_ = (bitField0_ & ~0x00000001);
-                }
-                result.statuses_ = statuses_;
-            } else {
-                result.statuses_ = statusesBuilder_.build();
+            buildPartialRepeatedFields(result);
+            if (bitField0_ != 0) {
+                buildPartial0(result);
             }
             onBuilt();
             return result;
         }
 
-        @java.lang.Override
-        public Builder clone() {
-            return super.clone();
+        private void buildPartialRepeatedFields(im.turms.server.common.access.client.dto.model.user.UserOnlineStatuses result) {
+            if (statusesBuilder_ == null) {
+                if (((bitField0_ & 0x00000001) != 0)) {
+                    statuses_ = java.util.Collections.unmodifiableList(statuses_);
+                    bitField0_ &= ~0x00000001;
+                }
+                result.statuses_ = statuses_;
+            } else {
+                result.statuses_ = statusesBuilder_.build();
+            }
         }
 
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(
-                com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(
-                com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index, java.lang.Object value) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.addRepeatedField(field, value);
+        private void buildPartial0(im.turms.server.common.access.client.dto.model.user.UserOnlineStatuses result) {
+            int from_bitField0_ = bitField0_;
         }
 
         @java.lang.Override
@@ -431,7 +394,7 @@ public final class UserOnlineStatuses extends
                 if (!other.statuses_.isEmpty()) {
                     if (statuses_.isEmpty()) {
                         statuses_ = other.statuses_;
-                        bitField0_ = (bitField0_ & ~0x00000001);
+                        bitField0_ &= ~0x00000001;
                     } else {
                         ensureStatusesIsMutable();
                         statuses_.addAll(other.statuses_);
@@ -444,7 +407,7 @@ public final class UserOnlineStatuses extends
                         statusesBuilder_.dispose();
                         statusesBuilder_ = null;
                         statuses_ = other.statuses_;
-                        bitField0_ = (bitField0_ & ~0x00000001);
+                        bitField0_ &= ~0x00000001;
                         statusesBuilder_ =
                                 com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
                                         getStatusesFieldBuilder() : null;
@@ -476,13 +439,11 @@ public final class UserOnlineStatuses extends
                 while (!done) {
                     int tag = input.readTag();
                     switch (tag) {
-                        case 0:
-                            done = true;
-                            break;
-                        case 10: {
-                            im.turms.server.common.access.client.dto.model.user.UserOnlineStatus m =
+                        case 0 -> done = true;
+                        case 10 -> {
+                            UserOnlineStatus m =
                                     input.readMessage(
-                                            im.turms.server.common.access.client.dto.model.user.UserOnlineStatus.parser(),
+                                            UserOnlineStatus.parser(),
                                             extensionRegistry);
                             if (statusesBuilder_ == null) {
                                 ensureStatusesIsMutable();
@@ -490,13 +451,11 @@ public final class UserOnlineStatuses extends
                             } else {
                                 statusesBuilder_.addMessage(m);
                             }
-                            break;
                         } // case 10
-                        default: {
+                        default -> {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
                             }
-                            break;
                         } // default:
                     } // switch (tag)
                 } // while (!done)
@@ -514,15 +473,14 @@ public final class UserOnlineStatuses extends
                 java.util.Collections.emptyList();
 
         private void ensureStatusesIsMutable() {
-            if (!((bitField0_ & 0x00000001) != 0)) {
-                statuses_ = new java.util.ArrayList<im.turms.server.common.access.client.dto.model.user.UserOnlineStatus>(statuses_);
+            if ((bitField0_ & 0x00000001) == 0) {
+                statuses_ = new java.util.ArrayList<>(statuses_);
                 bitField0_ |= 0x00000001;
             }
         }
 
         private com.google.protobuf.RepeatedFieldBuilderV3<
-                im.turms.server.common.access.client.dto.model.user.UserOnlineStatus, im.turms.server.common.access.client.dto.model.user.UserOnlineStatus.Builder, im.turms.server.common.access.client.dto.model.user.UserOnlineStatusOrBuilder>
-                statusesBuilder_;
+                im.turms.server.common.access.client.dto.model.user.UserOnlineStatus, im.turms.server.common.access.client.dto.model.user.UserOnlineStatus.Builder, im.turms.server.common.access.client.dto.model.user.UserOnlineStatusOrBuilder> statusesBuilder_;
 
         /**
          * <code>repeated .im.turms.proto.UserOnlineStatus statuses = 1;</code>
@@ -677,7 +635,7 @@ public final class UserOnlineStatuses extends
         public Builder clearStatuses() {
             if (statusesBuilder_ == null) {
                 statuses_ = java.util.Collections.emptyList();
-                bitField0_ = (bitField0_ & ~0x00000001);
+                bitField0_ &= ~0x00000001;
                 onChanged();
             } else {
                 statusesBuilder_.clear();
@@ -760,8 +718,7 @@ public final class UserOnlineStatuses extends
                 im.turms.server.common.access.client.dto.model.user.UserOnlineStatus, im.turms.server.common.access.client.dto.model.user.UserOnlineStatus.Builder, im.turms.server.common.access.client.dto.model.user.UserOnlineStatusOrBuilder>
         getStatusesFieldBuilder() {
             if (statusesBuilder_ == null) {
-                statusesBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
-                        im.turms.server.common.access.client.dto.model.user.UserOnlineStatus, im.turms.server.common.access.client.dto.model.user.UserOnlineStatus.Builder, im.turms.server.common.access.client.dto.model.user.UserOnlineStatusOrBuilder>(
+                statusesBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<>(
                         statuses_,
                         ((bitField0_ & 0x00000001) != 0),
                         getParentForChildren(),
@@ -799,7 +756,7 @@ public final class UserOnlineStatuses extends
     }
 
     private static final com.google.protobuf.Parser<UserOnlineStatuses>
-            PARSER = new com.google.protobuf.AbstractParser<UserOnlineStatuses>() {
+            PARSER = new com.google.protobuf.AbstractParser<>() {
         @java.lang.Override
         public UserOnlineStatuses parsePartialFrom(
                 com.google.protobuf.CodedInputStream input,

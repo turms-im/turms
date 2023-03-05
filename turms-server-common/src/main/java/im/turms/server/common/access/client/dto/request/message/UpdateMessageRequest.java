@@ -46,12 +46,6 @@ public final class UpdateMessageRequest extends
         return new UpdateMessageRequest();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-        return this.unknownFields;
-    }
-
     public static final com.google.protobuf.Descriptors.Descriptor
     getDescriptor() {
         return im.turms.server.common.access.client.dto.request.message.UpdateMessageRequestOuterClass.internal_static_im_turms_proto_UpdateMessageRequest_descriptor;
@@ -62,13 +56,12 @@ public final class UpdateMessageRequest extends
     internalGetFieldAccessorTable() {
         return im.turms.server.common.access.client.dto.request.message.UpdateMessageRequestOuterClass.internal_static_im_turms_proto_UpdateMessageRequest_fieldAccessorTable
                 .ensureFieldAccessorsInitialized(
-                        im.turms.server.common.access.client.dto.request.message.UpdateMessageRequest.class,
-                        im.turms.server.common.access.client.dto.request.message.UpdateMessageRequest.Builder.class);
+                        im.turms.server.common.access.client.dto.request.message.UpdateMessageRequest.class, im.turms.server.common.access.client.dto.request.message.UpdateMessageRequest.Builder.class);
     }
 
     private int bitField0_;
     public static final int MESSAGE_ID_FIELD_NUMBER = 1;
-    private long messageId_;
+    private long messageId_ = 0L;
 
     /**
      * <pre>
@@ -85,7 +78,8 @@ public final class UpdateMessageRequest extends
     }
 
     public static final int TEXT_FIELD_NUMBER = 2;
-    private volatile java.lang.Object text_;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object text_ = "";
 
     /**
      * <pre>
@@ -149,6 +143,7 @@ public final class UpdateMessageRequest extends
     }
 
     public static final int RECORDS_FIELD_NUMBER = 3;
+    @SuppressWarnings("serial")
     private java.util.List<com.google.protobuf.ByteString> records_;
 
     /**
@@ -182,7 +177,7 @@ public final class UpdateMessageRequest extends
     }
 
     public static final int RECALL_DATE_FIELD_NUMBER = 4;
-    private long recallDate_;
+    private long recallDate_ = 0L;
 
     /**
      * <code>optional int64 recall_date = 4;</code>
@@ -229,8 +224,8 @@ public final class UpdateMessageRequest extends
         if (((bitField0_ & 0x00000001) != 0)) {
             com.google.protobuf.GeneratedMessageV3.writeString(output, 2, text_);
         }
-        for (int i = 0; i < records_.size(); i++) {
-            output.writeBytes(3, records_.get(i));
+        for (com.google.protobuf.ByteString bytes : records_) {
+            output.writeBytes(3, bytes);
         }
         if (((bitField0_ & 0x00000002) != 0)) {
             output.writeInt64(4, recallDate_);
@@ -255,9 +250,9 @@ public final class UpdateMessageRequest extends
         }
         {
             int dataSize = 0;
-            for (int i = 0; i < records_.size(); i++) {
+            for (com.google.protobuf.ByteString bytes : records_) {
                 dataSize += com.google.protobuf.CodedOutputStream
-                        .computeBytesSizeNoTag(records_.get(i));
+                        .computeBytesSizeNoTag(bytes);
             }
             size += dataSize;
             size += 1 * getRecordsList().size();
@@ -276,10 +271,9 @@ public final class UpdateMessageRequest extends
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof im.turms.server.common.access.client.dto.request.message.UpdateMessageRequest)) {
+        if (!(obj instanceof UpdateMessageRequest other)) {
             return super.equals(obj);
         }
-        im.turms.server.common.access.client.dto.request.message.UpdateMessageRequest other = (im.turms.server.common.access.client.dto.request.message.UpdateMessageRequest) obj;
 
         if (getMessageId()
             != other.getMessageId()) {
@@ -307,10 +301,7 @@ public final class UpdateMessageRequest extends
                 return false;
             }
         }
-        if (!getUnknownFields().equals(other.getUnknownFields())) {
-            return false;
-        }
-        return true;
+        return getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -444,8 +435,7 @@ public final class UpdateMessageRequest extends
     @java.lang.Override
     protected Builder newBuilderForType(
             com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
+        return new Builder(parent);
     }
 
     /**
@@ -465,8 +455,7 @@ public final class UpdateMessageRequest extends
         internalGetFieldAccessorTable() {
             return im.turms.server.common.access.client.dto.request.message.UpdateMessageRequestOuterClass.internal_static_im_turms_proto_UpdateMessageRequest_fieldAccessorTable
                     .ensureFieldAccessorsInitialized(
-                            im.turms.server.common.access.client.dto.request.message.UpdateMessageRequest.class,
-                            im.turms.server.common.access.client.dto.request.message.UpdateMessageRequest.Builder.class);
+                            im.turms.server.common.access.client.dto.request.message.UpdateMessageRequest.class, im.turms.server.common.access.client.dto.request.message.UpdateMessageRequest.Builder.class);
         }
 
         // Construct using im.turms.server.common.access.client.dto.request.message.UpdateMessageRequest.newBuilder()
@@ -483,14 +472,11 @@ public final class UpdateMessageRequest extends
         @java.lang.Override
         public Builder clear() {
             super.clear();
+            bitField0_ = 0;
             messageId_ = 0L;
-
             text_ = "";
-            bitField0_ = (bitField0_ & ~0x00000001);
             records_ = java.util.Collections.emptyList();
-            bitField0_ = (bitField0_ & ~0x00000002);
             recallDate_ = 0L;
-            bitField0_ = (bitField0_ & ~0x00000004);
             return this;
         }
 
@@ -517,63 +503,37 @@ public final class UpdateMessageRequest extends
         @java.lang.Override
         public im.turms.server.common.access.client.dto.request.message.UpdateMessageRequest buildPartial() {
             im.turms.server.common.access.client.dto.request.message.UpdateMessageRequest result = new im.turms.server.common.access.client.dto.request.message.UpdateMessageRequest(this);
-            int from_bitField0_ = bitField0_;
-            int to_bitField0_ = 0;
-            result.messageId_ = messageId_;
-            if (((from_bitField0_ & 0x00000001) != 0)) {
-                to_bitField0_ |= 0x00000001;
+            buildPartialRepeatedFields(result);
+            if (bitField0_ != 0) {
+                buildPartial0(result);
             }
-            result.text_ = text_;
-            if (((bitField0_ & 0x00000002) != 0)) {
-                records_ = java.util.Collections.unmodifiableList(records_);
-                bitField0_ = (bitField0_ & ~0x00000002);
-            }
-            result.records_ = records_;
-            if (((from_bitField0_ & 0x00000004) != 0)) {
-                result.recallDate_ = recallDate_;
-                to_bitField0_ |= 0x00000002;
-            }
-            result.bitField0_ = to_bitField0_;
             onBuilt();
             return result;
         }
 
-        @java.lang.Override
-        public Builder clone() {
-            return super.clone();
+        private void buildPartialRepeatedFields(im.turms.server.common.access.client.dto.request.message.UpdateMessageRequest result) {
+            if (((bitField0_ & 0x00000004) != 0)) {
+                records_ = java.util.Collections.unmodifiableList(records_);
+                bitField0_ &= ~0x00000004;
+            }
+            result.records_ = records_;
         }
 
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(
-                com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(
-                com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index, java.lang.Object value) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.addRepeatedField(field, value);
+        private void buildPartial0(im.turms.server.common.access.client.dto.request.message.UpdateMessageRequest result) {
+            int from_bitField0_ = bitField0_;
+            if (((from_bitField0_ & 0x00000001) != 0)) {
+                result.messageId_ = messageId_;
+            }
+            int to_bitField0_ = 0;
+            if (((from_bitField0_ & 0x00000002) != 0)) {
+                result.text_ = text_;
+                to_bitField0_ |= 0x00000001;
+            }
+            if (((from_bitField0_ & 0x00000008) != 0)) {
+                result.recallDate_ = recallDate_;
+                to_bitField0_ |= 0x00000002;
+            }
+            result.bitField0_ |= to_bitField0_;
         }
 
         @java.lang.Override
@@ -594,14 +554,14 @@ public final class UpdateMessageRequest extends
                 setMessageId(other.getMessageId());
             }
             if (other.hasText()) {
-                bitField0_ |= 0x00000001;
                 text_ = other.text_;
+                bitField0_ |= 0x00000002;
                 onChanged();
             }
             if (!other.records_.isEmpty()) {
                 if (records_.isEmpty()) {
                     records_ = other.records_;
-                    bitField0_ = (bitField0_ & ~0x00000002);
+                    bitField0_ &= ~0x00000004;
                 } else {
                     ensureRecordsIsMutable();
                     records_.addAll(other.records_);
@@ -634,35 +594,28 @@ public final class UpdateMessageRequest extends
                 while (!done) {
                     int tag = input.readTag();
                     switch (tag) {
-                        case 0:
-                            done = true;
-                            break;
-                        case 8: {
+                        case 0 -> done = true;
+                        case 8 -> {
                             messageId_ = input.readInt64();
-
-                            break;
-                        } // case 8
-                        case 18: {
-                            text_ = input.readStringRequireUtf8();
                             bitField0_ |= 0x00000001;
-                            break;
+                        } // case 8
+                        case 18 -> {
+                            text_ = input.readStringRequireUtf8();
+                            bitField0_ |= 0x00000002;
                         } // case 18
-                        case 26: {
+                        case 26 -> {
                             com.google.protobuf.ByteString v = input.readBytes();
                             ensureRecordsIsMutable();
                             records_.add(v);
-                            break;
                         } // case 26
-                        case 32: {
+                        case 32 -> {
                             recallDate_ = input.readInt64();
-                            bitField0_ |= 0x00000004;
-                            break;
+                            bitField0_ |= 0x00000008;
                         } // case 32
-                        default: {
+                        default -> {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
                             }
-                            break;
                         } // default:
                     } // switch (tag)
                 } // while (!done)
@@ -705,6 +658,7 @@ public final class UpdateMessageRequest extends
         public Builder setMessageId(long value) {
 
             messageId_ = value;
+            bitField0_ |= 0x00000001;
             onChanged();
             return this;
         }
@@ -719,7 +673,7 @@ public final class UpdateMessageRequest extends
          * @return This builder for chaining.
          */
         public Builder clearMessageId() {
-
+            bitField0_ &= ~0x00000001;
             messageId_ = 0L;
             onChanged();
             return this;
@@ -737,7 +691,7 @@ public final class UpdateMessageRequest extends
          * @return Whether the text field is set.
          */
         public boolean hasText() {
-            return ((bitField0_ & 0x00000001) != 0);
+            return ((bitField0_ & 0x00000002) != 0);
         }
 
         /**
@@ -800,8 +754,8 @@ public final class UpdateMessageRequest extends
             if (value == null) {
                 throw new NullPointerException();
             }
-            bitField0_ |= 0x00000001;
             text_ = value;
+            bitField0_ |= 0x00000002;
             onChanged();
             return this;
         }
@@ -816,8 +770,8 @@ public final class UpdateMessageRequest extends
          * @return This builder for chaining.
          */
         public Builder clearText() {
-            bitField0_ = (bitField0_ & ~0x00000001);
             text_ = getDefaultInstance().getText();
+            bitField0_ &= ~0x00000002;
             onChanged();
             return this;
         }
@@ -838,8 +792,8 @@ public final class UpdateMessageRequest extends
                 throw new NullPointerException();
             }
             checkByteStringIsUtf8(value);
-            bitField0_ |= 0x00000001;
             text_ = value;
+            bitField0_ |= 0x00000002;
             onChanged();
             return this;
         }
@@ -847,9 +801,9 @@ public final class UpdateMessageRequest extends
         private java.util.List<com.google.protobuf.ByteString> records_ = java.util.Collections.emptyList();
 
         private void ensureRecordsIsMutable() {
-            if (!((bitField0_ & 0x00000002) != 0)) {
-                records_ = new java.util.ArrayList<com.google.protobuf.ByteString>(records_);
-                bitField0_ |= 0x00000002;
+            if ((bitField0_ & 0x00000004) == 0) {
+                records_ = new java.util.ArrayList<>(records_);
+                bitField0_ |= 0x00000004;
             }
         }
 
@@ -860,7 +814,7 @@ public final class UpdateMessageRequest extends
          */
         public java.util.List<com.google.protobuf.ByteString>
         getRecordsList() {
-            return ((bitField0_ & 0x00000002) != 0) ?
+            return ((bitField0_ & 0x00000004) != 0) ?
                     java.util.Collections.unmodifiableList(records_) : records_;
         }
 
@@ -939,7 +893,7 @@ public final class UpdateMessageRequest extends
          */
         public Builder clearRecords() {
             records_ = java.util.Collections.emptyList();
-            bitField0_ = (bitField0_ & ~0x00000002);
+            bitField0_ &= ~0x00000004;
             onChanged();
             return this;
         }
@@ -953,7 +907,7 @@ public final class UpdateMessageRequest extends
          */
         @java.lang.Override
         public boolean hasRecallDate() {
-            return ((bitField0_ & 0x00000004) != 0);
+            return ((bitField0_ & 0x00000008) != 0);
         }
 
         /**
@@ -973,8 +927,9 @@ public final class UpdateMessageRequest extends
          * @return This builder for chaining.
          */
         public Builder setRecallDate(long value) {
-            bitField0_ |= 0x00000004;
+
             recallDate_ = value;
+            bitField0_ |= 0x00000008;
             onChanged();
             return this;
         }
@@ -985,7 +940,7 @@ public final class UpdateMessageRequest extends
          * @return This builder for chaining.
          */
         public Builder clearRecallDate() {
-            bitField0_ = (bitField0_ & ~0x00000004);
+            bitField0_ &= ~0x00000008;
             recallDate_ = 0L;
             onChanged();
             return this;
@@ -1019,7 +974,7 @@ public final class UpdateMessageRequest extends
     }
 
     private static final com.google.protobuf.Parser<UpdateMessageRequest>
-            PARSER = new com.google.protobuf.AbstractParser<UpdateMessageRequest>() {
+            PARSER = new com.google.protobuf.AbstractParser<>() {
         @java.lang.Override
         public UpdateMessageRequest parsePartialFrom(
                 com.google.protobuf.CodedInputStream input,

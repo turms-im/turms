@@ -5,14 +5,26 @@ import _m0 from "protobufjs/minimal";
 export const protobufPackage = "im.turms.proto";
 
 export interface QueryMessagesRequest {
+  /** Filter */
   ids: string[];
   areGroupMessages?: boolean | undefined;
   areSystemMessages?: boolean | undefined;
   fromIds: string[];
-  deliveryDateAfter?: string | undefined;
-  deliveryDateBefore?: string | undefined;
-  maxCount?: number | undefined;
+  deliveryDateStart?: string | undefined;
+  deliveryDateEnd?:
+    | string
+    | undefined;
+  /** Option */
+  maxCount?:
+    | number
+    | undefined;
+  /** Command */
   withTotal: boolean;
+  /**
+   * Option
+   * TODO: reorder
+   */
+  descending?: boolean | undefined;
 }
 
 function createBaseQueryMessagesRequest(): QueryMessagesRequest {
@@ -21,10 +33,11 @@ function createBaseQueryMessagesRequest(): QueryMessagesRequest {
     areGroupMessages: undefined,
     areSystemMessages: undefined,
     fromIds: [],
-    deliveryDateAfter: undefined,
-    deliveryDateBefore: undefined,
+    deliveryDateStart: undefined,
+    deliveryDateEnd: undefined,
     maxCount: undefined,
     withTotal: false,
+    descending: undefined,
   };
 }
 
@@ -46,17 +59,20 @@ export const QueryMessagesRequest = {
       writer.int64(v);
     }
     writer.ldelim();
-    if (message.deliveryDateAfter !== undefined) {
-      writer.uint32(40).int64(message.deliveryDateAfter);
+    if (message.deliveryDateStart !== undefined) {
+      writer.uint32(40).int64(message.deliveryDateStart);
     }
-    if (message.deliveryDateBefore !== undefined) {
-      writer.uint32(48).int64(message.deliveryDateBefore);
+    if (message.deliveryDateEnd !== undefined) {
+      writer.uint32(48).int64(message.deliveryDateEnd);
     }
     if (message.maxCount !== undefined) {
       writer.uint32(56).int32(message.maxCount);
     }
     if (message.withTotal === true) {
       writer.uint32(64).bool(message.withTotal);
+    }
+    if (message.descending !== undefined) {
+      writer.uint32(72).bool(message.descending);
     }
     return writer;
   },
@@ -95,16 +111,19 @@ export const QueryMessagesRequest = {
           }
           break;
         case 5:
-          message.deliveryDateAfter = longToString(reader.int64() as Long);
+          message.deliveryDateStart = longToString(reader.int64() as Long);
           break;
         case 6:
-          message.deliveryDateBefore = longToString(reader.int64() as Long);
+          message.deliveryDateEnd = longToString(reader.int64() as Long);
           break;
         case 7:
           message.maxCount = reader.int32();
           break;
         case 8:
           message.withTotal = reader.bool();
+          break;
+        case 9:
+          message.descending = reader.bool();
           break;
         default:
           reader.skipType(tag & 7);

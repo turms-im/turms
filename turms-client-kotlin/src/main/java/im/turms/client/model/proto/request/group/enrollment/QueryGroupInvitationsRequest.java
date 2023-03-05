@@ -69,7 +69,7 @@ public final class QueryGroupInvitationsRequest extends
      * <code>optional int64 group_id = 1;</code>
      */
     private void clearGroupId() {
-        bitField0_ = (bitField0_ & ~0x00000001);
+        bitField0_ &= ~0x00000001;
         groupId_ = 0L;
     }
 
@@ -110,7 +110,7 @@ public final class QueryGroupInvitationsRequest extends
      * <code>optional bool are_sent_by_me = 2;</code>
      */
     private void clearAreSentByMe() {
-        bitField0_ = (bitField0_ & ~0x00000002);
+        bitField0_ &= ~0x00000002;
         areSentByMe_ = false;
     }
 
@@ -151,7 +151,7 @@ public final class QueryGroupInvitationsRequest extends
      * <code>optional int64 last_updated_date = 3;</code>
      */
     private void clearLastUpdatedDate() {
-        bitField0_ = (bitField0_ & ~0x00000004);
+        bitField0_ &= ~0x00000004;
         lastUpdatedDate_ = 0L;
     }
 
@@ -429,7 +429,7 @@ public final class QueryGroupInvitationsRequest extends
                         parser = PARSER;
                         if (parser == null) {
                             parser =
-                                    new DefaultInstanceBasedParser<im.turms.client.model.proto.request.group.enrollment.QueryGroupInvitationsRequest>(
+                                    new DefaultInstanceBasedParser<>(
                                             DEFAULT_INSTANCE);
                             PARSER = parser;
                         }

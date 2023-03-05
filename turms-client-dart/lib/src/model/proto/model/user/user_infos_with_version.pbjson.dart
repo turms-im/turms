@@ -10,10 +10,10 @@ import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
 
 @$core.Deprecated('Use userInfosWithVersionDescriptor instead')
-const UserInfosWithVersion$json = {
+const UserInfosWithVersion$json = const {
   '1': 'UserInfosWithVersion',
-  '2': [
-    {
+  '2': const [
+    const {
       '1': 'user_infos',
       '3': 1,
       '4': 3,
@@ -21,7 +21,7 @@ const UserInfosWithVersion$json = {
       '6': '.im.turms.proto.UserInfo',
       '10': 'userInfos'
     },
-    {
+    const {
       '1': 'last_updated_date',
       '3': 2,
       '4': 1,
@@ -31,8 +31,8 @@ const UserInfosWithVersion$json = {
       '17': true
     },
   ],
-  '8': [
-    {'1': '_last_updated_date'},
+  '8': const [
+    const {'1': '_last_updated_date'},
   ],
 };
 

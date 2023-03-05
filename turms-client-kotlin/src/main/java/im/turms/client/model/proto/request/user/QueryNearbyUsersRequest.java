@@ -131,7 +131,7 @@ public final class QueryNearbyUsersRequest extends
      * <code>optional int32 max_count = 3;</code>
      */
     private void clearMaxCount() {
-        bitField0_ = (bitField0_ & ~0x00000001);
+        bitField0_ &= ~0x00000001;
         maxCount_ = 0;
     }
 
@@ -172,7 +172,7 @@ public final class QueryNearbyUsersRequest extends
      * <code>optional int32 max_distance = 4;</code>
      */
     private void clearMaxDistance() {
-        bitField0_ = (bitField0_ & ~0x00000002);
+        bitField0_ &= ~0x00000002;
         maxDistance_ = 0;
     }
 
@@ -213,7 +213,7 @@ public final class QueryNearbyUsersRequest extends
      * <code>optional bool with_coordinates = 5;</code>
      */
     private void clearWithCoordinates() {
-        bitField0_ = (bitField0_ & ~0x00000004);
+        bitField0_ &= ~0x00000004;
         withCoordinates_ = false;
     }
 
@@ -254,7 +254,7 @@ public final class QueryNearbyUsersRequest extends
      * <code>optional bool with_distance = 6;</code>
      */
     private void clearWithDistance() {
-        bitField0_ = (bitField0_ & ~0x00000008);
+        bitField0_ &= ~0x00000008;
         withDistance_ = false;
     }
 
@@ -295,7 +295,7 @@ public final class QueryNearbyUsersRequest extends
      * <code>optional bool with_user_info = 7;</code>
      */
     private void clearWithUserInfo() {
-        bitField0_ = (bitField0_ & ~0x00000010);
+        bitField0_ &= ~0x00000010;
         withUserInfo_ = false;
     }
 
@@ -730,7 +730,7 @@ public final class QueryNearbyUsersRequest extends
                         parser = PARSER;
                         if (parser == null) {
                             parser =
-                                    new DefaultInstanceBasedParser<im.turms.client.model.proto.request.user.QueryNearbyUsersRequest>(
+                                    new DefaultInstanceBasedParser<>(
                                             DEFAULT_INSTANCE);
                             PARSER = parser;
                         }

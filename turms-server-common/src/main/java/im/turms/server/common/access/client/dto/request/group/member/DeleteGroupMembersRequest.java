@@ -45,12 +45,6 @@ public final class DeleteGroupMembersRequest extends
         return new DeleteGroupMembersRequest();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-        return this.unknownFields;
-    }
-
     public static final com.google.protobuf.Descriptors.Descriptor
     getDescriptor() {
         return im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequestOuterClass.internal_static_im_turms_proto_DeleteGroupMembersRequest_descriptor;
@@ -61,13 +55,12 @@ public final class DeleteGroupMembersRequest extends
     internalGetFieldAccessorTable() {
         return im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequestOuterClass.internal_static_im_turms_proto_DeleteGroupMembersRequest_fieldAccessorTable
                 .ensureFieldAccessorsInitialized(
-                        im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequest.class,
-                        im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequest.Builder.class);
+                        im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequest.class, im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequest.Builder.class);
     }
 
     private int bitField0_;
     public static final int GROUP_ID_FIELD_NUMBER = 1;
-    private long groupId_;
+    private long groupId_ = 0L;
 
     /**
      * <code>int64 group_id = 1;</code>
@@ -80,6 +73,7 @@ public final class DeleteGroupMembersRequest extends
     }
 
     public static final int MEMBER_IDS_FIELD_NUMBER = 2;
+    @SuppressWarnings("serial")
     private com.google.protobuf.Internal.LongList memberIds_;
 
     /**
@@ -115,7 +109,7 @@ public final class DeleteGroupMembersRequest extends
     private int memberIdsMemoizedSerializedSize = -1;
 
     public static final int SUCCESSOR_ID_FIELD_NUMBER = 3;
-    private long successorId_;
+    private long successorId_ = 0L;
 
     /**
      * <code>optional int64 successor_id = 3;</code>
@@ -138,7 +132,7 @@ public final class DeleteGroupMembersRequest extends
     }
 
     public static final int QUIT_AFTER_TRANSFER_FIELD_NUMBER = 4;
-    private boolean quitAfterTransfer_;
+    private boolean quitAfterTransfer_ = false;
 
     /**
      * <code>optional bool quit_after_transfer = 4;</code>
@@ -243,10 +237,9 @@ public final class DeleteGroupMembersRequest extends
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequest)) {
+        if (!(obj instanceof DeleteGroupMembersRequest other)) {
             return super.equals(obj);
         }
-        im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequest other = (im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequest) obj;
 
         if (getGroupId()
             != other.getGroupId()) {
@@ -274,10 +267,7 @@ public final class DeleteGroupMembersRequest extends
                 return false;
             }
         }
-        if (!getUnknownFields().equals(other.getUnknownFields())) {
-            return false;
-        }
-        return true;
+        return getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -412,8 +402,7 @@ public final class DeleteGroupMembersRequest extends
     @java.lang.Override
     protected Builder newBuilderForType(
             com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
+        return new Builder(parent);
     }
 
     /**
@@ -433,8 +422,7 @@ public final class DeleteGroupMembersRequest extends
         internalGetFieldAccessorTable() {
             return im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequestOuterClass.internal_static_im_turms_proto_DeleteGroupMembersRequest_fieldAccessorTable
                     .ensureFieldAccessorsInitialized(
-                            im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequest.class,
-                            im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequest.Builder.class);
+                            im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequest.class, im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequest.Builder.class);
         }
 
         // Construct using im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequest.newBuilder()
@@ -451,14 +439,11 @@ public final class DeleteGroupMembersRequest extends
         @java.lang.Override
         public Builder clear() {
             super.clear();
+            bitField0_ = 0;
             groupId_ = 0L;
-
             memberIds_ = emptyLongList();
-            bitField0_ = (bitField0_ & ~0x00000001);
             successorId_ = 0L;
-            bitField0_ = (bitField0_ & ~0x00000002);
             quitAfterTransfer_ = false;
-            bitField0_ = (bitField0_ & ~0x00000004);
             return this;
         }
 
@@ -484,65 +469,38 @@ public final class DeleteGroupMembersRequest extends
 
         @java.lang.Override
         public im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequest buildPartial() {
-            im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequest result =
-                    new im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequest(this);
-            int from_bitField0_ = bitField0_;
-            int to_bitField0_ = 0;
-            result.groupId_ = groupId_;
-            if (((bitField0_ & 0x00000001) != 0)) {
-                memberIds_.makeImmutable();
-                bitField0_ = (bitField0_ & ~0x00000001);
+            im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequest result = new im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequest(this);
+            buildPartialRepeatedFields(result);
+            if (bitField0_ != 0) {
+                buildPartial0(result);
             }
-            result.memberIds_ = memberIds_;
-            if (((from_bitField0_ & 0x00000002) != 0)) {
-                result.successorId_ = successorId_;
-                to_bitField0_ |= 0x00000001;
-            }
-            if (((from_bitField0_ & 0x00000004) != 0)) {
-                result.quitAfterTransfer_ = quitAfterTransfer_;
-                to_bitField0_ |= 0x00000002;
-            }
-            result.bitField0_ = to_bitField0_;
             onBuilt();
             return result;
         }
 
-        @java.lang.Override
-        public Builder clone() {
-            return super.clone();
+        private void buildPartialRepeatedFields(im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequest result) {
+            if (((bitField0_ & 0x00000002) != 0)) {
+                memberIds_.makeImmutable();
+                bitField0_ &= ~0x00000002;
+            }
+            result.memberIds_ = memberIds_;
         }
 
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(
-                com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(
-                com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index, java.lang.Object value) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.addRepeatedField(field, value);
+        private void buildPartial0(im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequest result) {
+            int from_bitField0_ = bitField0_;
+            if (((from_bitField0_ & 0x00000001) != 0)) {
+                result.groupId_ = groupId_;
+            }
+            int to_bitField0_ = 0;
+            if (((from_bitField0_ & 0x00000004) != 0)) {
+                result.successorId_ = successorId_;
+                to_bitField0_ |= 0x00000001;
+            }
+            if (((from_bitField0_ & 0x00000008) != 0)) {
+                result.quitAfterTransfer_ = quitAfterTransfer_;
+                to_bitField0_ |= 0x00000002;
+            }
+            result.bitField0_ |= to_bitField0_;
         }
 
         @java.lang.Override
@@ -565,7 +523,7 @@ public final class DeleteGroupMembersRequest extends
             if (!other.memberIds_.isEmpty()) {
                 if (memberIds_.isEmpty()) {
                     memberIds_ = other.memberIds_;
-                    bitField0_ = (bitField0_ & ~0x00000001);
+                    bitField0_ &= ~0x00000002;
                 } else {
                     ensureMemberIdsIsMutable();
                     memberIds_.addAll(other.memberIds_);
@@ -601,21 +559,17 @@ public final class DeleteGroupMembersRequest extends
                 while (!done) {
                     int tag = input.readTag();
                     switch (tag) {
-                        case 0:
-                            done = true;
-                            break;
-                        case 8: {
+                        case 0 -> done = true;
+                        case 8 -> {
                             groupId_ = input.readInt64();
-
-                            break;
+                            bitField0_ |= 0x00000001;
                         } // case 8
-                        case 16: {
+                        case 16 -> {
                             long v = input.readInt64();
                             ensureMemberIdsIsMutable();
                             memberIds_.addLong(v);
-                            break;
                         } // case 16
-                        case 18: {
+                        case 18 -> {
                             int length = input.readRawVarint32();
                             int limit = input.pushLimit(length);
                             ensureMemberIdsIsMutable();
@@ -623,23 +577,19 @@ public final class DeleteGroupMembersRequest extends
                                 memberIds_.addLong(input.readInt64());
                             }
                             input.popLimit(limit);
-                            break;
                         } // case 18
-                        case 24: {
+                        case 24 -> {
                             successorId_ = input.readInt64();
-                            bitField0_ |= 0x00000002;
-                            break;
-                        } // case 24
-                        case 32: {
-                            quitAfterTransfer_ = input.readBool();
                             bitField0_ |= 0x00000004;
-                            break;
+                        } // case 24
+                        case 32 -> {
+                            quitAfterTransfer_ = input.readBool();
+                            bitField0_ |= 0x00000008;
                         } // case 32
-                        default: {
+                        default -> {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
                             }
-                            break;
                         } // default:
                     } // switch (tag)
                 } // while (!done)
@@ -674,6 +624,7 @@ public final class DeleteGroupMembersRequest extends
         public Builder setGroupId(long value) {
 
             groupId_ = value;
+            bitField0_ |= 0x00000001;
             onChanged();
             return this;
         }
@@ -684,7 +635,7 @@ public final class DeleteGroupMembersRequest extends
          * @return This builder for chaining.
          */
         public Builder clearGroupId() {
-
+            bitField0_ &= ~0x00000001;
             groupId_ = 0L;
             onChanged();
             return this;
@@ -693,9 +644,9 @@ public final class DeleteGroupMembersRequest extends
         private com.google.protobuf.Internal.LongList memberIds_ = emptyLongList();
 
         private void ensureMemberIdsIsMutable() {
-            if (!((bitField0_ & 0x00000001) != 0)) {
+            if ((bitField0_ & 0x00000002) == 0) {
                 memberIds_ = mutableCopy(memberIds_);
-                bitField0_ |= 0x00000001;
+                bitField0_ |= 0x00000002;
             }
         }
 
@@ -706,7 +657,7 @@ public final class DeleteGroupMembersRequest extends
          */
         public java.util.List<java.lang.Long>
         getMemberIdsList() {
-            return ((bitField0_ & 0x00000001) != 0) ?
+            return ((bitField0_ & 0x00000002) != 0) ?
                     java.util.Collections.unmodifiableList(memberIds_) : memberIds_;
         }
 
@@ -738,6 +689,7 @@ public final class DeleteGroupMembersRequest extends
          */
         public Builder setMemberIds(
                 int index, long value) {
+
             ensureMemberIdsIsMutable();
             memberIds_.setLong(index, value);
             onChanged();
@@ -751,6 +703,7 @@ public final class DeleteGroupMembersRequest extends
          * @return This builder for chaining.
          */
         public Builder addMemberIds(long value) {
+
             ensureMemberIdsIsMutable();
             memberIds_.addLong(value);
             onChanged();
@@ -779,7 +732,7 @@ public final class DeleteGroupMembersRequest extends
          */
         public Builder clearMemberIds() {
             memberIds_ = emptyLongList();
-            bitField0_ = (bitField0_ & ~0x00000001);
+            bitField0_ &= ~0x00000002;
             onChanged();
             return this;
         }
@@ -793,7 +746,7 @@ public final class DeleteGroupMembersRequest extends
          */
         @java.lang.Override
         public boolean hasSuccessorId() {
-            return ((bitField0_ & 0x00000002) != 0);
+            return ((bitField0_ & 0x00000004) != 0);
         }
 
         /**
@@ -813,8 +766,9 @@ public final class DeleteGroupMembersRequest extends
          * @return This builder for chaining.
          */
         public Builder setSuccessorId(long value) {
-            bitField0_ |= 0x00000002;
+
             successorId_ = value;
+            bitField0_ |= 0x00000004;
             onChanged();
             return this;
         }
@@ -825,7 +779,7 @@ public final class DeleteGroupMembersRequest extends
          * @return This builder for chaining.
          */
         public Builder clearSuccessorId() {
-            bitField0_ = (bitField0_ & ~0x00000002);
+            bitField0_ &= ~0x00000004;
             successorId_ = 0L;
             onChanged();
             return this;
@@ -840,7 +794,7 @@ public final class DeleteGroupMembersRequest extends
          */
         @java.lang.Override
         public boolean hasQuitAfterTransfer() {
-            return ((bitField0_ & 0x00000004) != 0);
+            return ((bitField0_ & 0x00000008) != 0);
         }
 
         /**
@@ -860,8 +814,9 @@ public final class DeleteGroupMembersRequest extends
          * @return This builder for chaining.
          */
         public Builder setQuitAfterTransfer(boolean value) {
-            bitField0_ |= 0x00000004;
+
             quitAfterTransfer_ = value;
+            bitField0_ |= 0x00000008;
             onChanged();
             return this;
         }
@@ -872,7 +827,7 @@ public final class DeleteGroupMembersRequest extends
          * @return This builder for chaining.
          */
         public Builder clearQuitAfterTransfer() {
-            bitField0_ = (bitField0_ & ~0x00000004);
+            bitField0_ &= ~0x00000008;
             quitAfterTransfer_ = false;
             onChanged();
             return this;
@@ -906,7 +861,7 @@ public final class DeleteGroupMembersRequest extends
     }
 
     private static final com.google.protobuf.Parser<DeleteGroupMembersRequest>
-            PARSER = new com.google.protobuf.AbstractParser<DeleteGroupMembersRequest>() {
+            PARSER = new com.google.protobuf.AbstractParser<>() {
         @java.lang.Override
         public DeleteGroupMembersRequest parsePartialFrom(
                 com.google.protobuf.CodedInputStream input,

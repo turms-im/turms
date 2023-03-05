@@ -10,10 +10,10 @@ import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
 
 @$core.Deprecated('Use userOnlineStatusesDescriptor instead')
-const UserOnlineStatuses$json = {
+const UserOnlineStatuses$json = const {
   '1': 'UserOnlineStatuses',
-  '2': [
-    {
+  '2': const [
+    const {
       '1': 'statuses',
       '3': 1,
       '4': 3,

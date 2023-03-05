@@ -131,7 +131,7 @@ public final class UpdateGroupRequest extends
      * <code>optional bool quit_after_transfer = 2;</code>
      */
     private void clearQuitAfterTransfer() {
-        bitField0_ = (bitField0_ & ~0x00000001);
+        bitField0_ &= ~0x00000001;
         quitAfterTransfer_ = false;
     }
 
@@ -205,7 +205,7 @@ public final class UpdateGroupRequest extends
      * <code>optional string name = 3;</code>
      */
     private void clearName() {
-        bitField0_ = (bitField0_ & ~0x00000002);
+        bitField0_ &= ~0x00000002;
         name_ = getDefaultInstance().getName();
     }
 
@@ -275,7 +275,7 @@ public final class UpdateGroupRequest extends
      * <code>optional string intro = 4;</code>
      */
     private void clearIntro() {
-        bitField0_ = (bitField0_ & ~0x00000004);
+        bitField0_ &= ~0x00000004;
         intro_ = getDefaultInstance().getIntro();
     }
 
@@ -341,7 +341,7 @@ public final class UpdateGroupRequest extends
      * <code>optional string announcement = 5;</code>
      */
     private void clearAnnouncement() {
-        bitField0_ = (bitField0_ & ~0x00000008);
+        bitField0_ &= ~0x00000008;
         announcement_ = getDefaultInstance().getAnnouncement();
     }
 
@@ -394,7 +394,7 @@ public final class UpdateGroupRequest extends
      * <code>optional int32 min_score = 6;</code>
      */
     private void clearMinScore() {
-        bitField0_ = (bitField0_ & ~0x00000010);
+        bitField0_ &= ~0x00000010;
         minScore_ = 0;
     }
 
@@ -435,7 +435,7 @@ public final class UpdateGroupRequest extends
      * <code>optional int64 type_id = 7;</code>
      */
     private void clearTypeId() {
-        bitField0_ = (bitField0_ & ~0x00000020);
+        bitField0_ &= ~0x00000020;
         typeId_ = 0L;
     }
 
@@ -476,7 +476,7 @@ public final class UpdateGroupRequest extends
      * <code>optional int64 mute_end_date = 8;</code>
      */
     private void clearMuteEndDate() {
-        bitField0_ = (bitField0_ & ~0x00000040);
+        bitField0_ &= ~0x00000040;
         muteEndDate_ = 0L;
     }
 
@@ -517,7 +517,7 @@ public final class UpdateGroupRequest extends
      * <code>optional int64 successor_id = 9;</code>
      */
     private void clearSuccessorId() {
-        bitField0_ = (bitField0_ & ~0x00000080);
+        bitField0_ &= ~0x00000080;
         successorId_ = 0L;
     }
 
@@ -1177,7 +1177,7 @@ public final class UpdateGroupRequest extends
                         parser = PARSER;
                         if (parser == null) {
                             parser =
-                                    new DefaultInstanceBasedParser<im.turms.client.model.proto.request.group.UpdateGroupRequest>(
+                                    new DefaultInstanceBasedParser<>(
                                             DEFAULT_INSTANCE);
                             PARSER = parser;
                         }

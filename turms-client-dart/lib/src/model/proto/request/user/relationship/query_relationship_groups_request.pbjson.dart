@@ -10,10 +10,10 @@ import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
 
 @$core.Deprecated('Use queryRelationshipGroupsRequestDescriptor instead')
-const QueryRelationshipGroupsRequest$json = {
+const QueryRelationshipGroupsRequest$json = const {
   '1': 'QueryRelationshipGroupsRequest',
-  '2': [
-    {
+  '2': const [
+    const {
       '1': 'last_updated_date',
       '3': 1,
       '4': 1,
@@ -23,8 +23,8 @@ const QueryRelationshipGroupsRequest$json = {
       '17': true
     },
   ],
-  '8': [
-    {'1': '_last_updated_date'},
+  '8': const [
+    const {'1': '_last_updated_date'},
   ],
 };
 

@@ -10,10 +10,10 @@ import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
 
 @$core.Deprecated('Use createRelationshipGroupRequestDescriptor instead')
-const CreateRelationshipGroupRequest$json = {
+const CreateRelationshipGroupRequest$json = const {
   '1': 'CreateRelationshipGroupRequest',
-  '2': [
-    {'1': 'name', '3': 1, '4': 1, '5': 9, '10': 'name'},
+  '2': const [
+    const {'1': 'name', '3': 1, '4': 1, '5': 9, '10': 'name'},
   ],
 };
 

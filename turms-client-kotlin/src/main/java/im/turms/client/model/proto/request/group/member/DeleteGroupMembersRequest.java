@@ -187,7 +187,7 @@ public final class DeleteGroupMembersRequest extends
      * <code>optional int64 successor_id = 3;</code>
      */
     private void clearSuccessorId() {
-        bitField0_ = (bitField0_ & ~0x00000001);
+        bitField0_ &= ~0x00000001;
         successorId_ = 0L;
     }
 
@@ -228,7 +228,7 @@ public final class DeleteGroupMembersRequest extends
      * <code>optional bool quit_after_transfer = 4;</code>
      */
     private void clearQuitAfterTransfer() {
-        bitField0_ = (bitField0_ & ~0x00000002);
+        bitField0_ &= ~0x00000002;
         quitAfterTransfer_ = false;
     }
 
@@ -579,7 +579,7 @@ public final class DeleteGroupMembersRequest extends
                         parser = PARSER;
                         if (parser == null) {
                             parser =
-                                    new DefaultInstanceBasedParser<im.turms.client.model.proto.request.group.member.DeleteGroupMembersRequest>(
+                                    new DefaultInstanceBasedParser<>(
                                             DEFAULT_INSTANCE);
                             PARSER = parser;
                         }

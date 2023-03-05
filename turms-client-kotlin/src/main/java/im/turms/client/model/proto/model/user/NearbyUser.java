@@ -133,7 +133,7 @@ public final class NearbyUser extends
      * <code>optional .im.turms.proto.DeviceType device_type = 2;</code>
      */
     private void clearDeviceType() {
-        bitField0_ = (bitField0_ & ~0x00000001);
+        bitField0_ &= ~0x00000001;
         deviceType_ = 0;
     }
 
@@ -206,7 +206,7 @@ public final class NearbyUser extends
      */
     private void clearInfo() {
         info_ = null;
-        bitField0_ = (bitField0_ & ~0x00000002);
+        bitField0_ &= ~0x00000002;
     }
 
     public static final int DISTANCE_FIELD_NUMBER = 4;
@@ -262,7 +262,7 @@ public final class NearbyUser extends
      * <code>optional int32 distance = 4;</code>
      */
     private void clearDistance() {
-        bitField0_ = (bitField0_ & ~0x00000004);
+        bitField0_ &= ~0x00000004;
         distance_ = 0;
     }
 
@@ -315,7 +315,7 @@ public final class NearbyUser extends
      */
     private void clearLocation() {
         location_ = null;
-        bitField0_ = (bitField0_ & ~0x00000008);
+        bitField0_ &= ~0x00000008;
     }
 
     public static im.turms.client.model.proto.model.user.NearbyUser parseFrom(
@@ -764,7 +764,7 @@ public final class NearbyUser extends
                         parser = PARSER;
                         if (parser == null) {
                             parser =
-                                    new DefaultInstanceBasedParser<im.turms.client.model.proto.model.user.NearbyUser>(
+                                    new DefaultInstanceBasedParser<>(
                                             DEFAULT_INSTANCE);
                             PARSER = parser;
                         }

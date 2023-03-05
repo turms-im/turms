@@ -10,11 +10,11 @@ import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
 
 @$core.Deprecated('Use userOnlineStatusDescriptor instead')
-const UserOnlineStatus$json = {
+const UserOnlineStatus$json = const {
   '1': 'UserOnlineStatus',
-  '2': [
-    {'1': 'user_id', '3': 1, '4': 1, '5': 3, '10': 'userId'},
-    {
+  '2': const [
+    const {'1': 'user_id', '3': 1, '4': 1, '5': 3, '10': 'userId'},
+    const {
       '1': 'user_status',
       '3': 2,
       '4': 1,
@@ -22,7 +22,7 @@ const UserOnlineStatus$json = {
       '6': '.im.turms.proto.UserStatus',
       '10': 'userStatus'
     },
-    {
+    const {
       '1': 'using_device_types',
       '3': 3,
       '4': 3,

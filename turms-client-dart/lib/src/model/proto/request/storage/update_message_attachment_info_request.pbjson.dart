@@ -10,10 +10,10 @@ import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
 
 @$core.Deprecated('Use updateMessageAttachmentInfoRequestDescriptor instead')
-const UpdateMessageAttachmentInfoRequest$json = {
+const UpdateMessageAttachmentInfoRequest$json = const {
   '1': 'UpdateMessageAttachmentInfoRequest',
-  '2': [
-    {
+  '2': const [
+    const {
       '1': 'attachment_id_num',
       '3': 1,
       '4': 1,
@@ -22,7 +22,7 @@ const UpdateMessageAttachmentInfoRequest$json = {
       '10': 'attachmentIdNum',
       '17': true
     },
-    {
+    const {
       '1': 'attachment_id_str',
       '3': 2,
       '4': 1,
@@ -31,7 +31,7 @@ const UpdateMessageAttachmentInfoRequest$json = {
       '10': 'attachmentIdStr',
       '17': true
     },
-    {
+    const {
       '1': 'user_id_to_share_with',
       '3': 3,
       '4': 1,
@@ -40,7 +40,7 @@ const UpdateMessageAttachmentInfoRequest$json = {
       '10': 'userIdToShareWith',
       '17': true
     },
-    {
+    const {
       '1': 'user_id_to_unshare_with',
       '3': 4,
       '4': 1,
@@ -49,7 +49,7 @@ const UpdateMessageAttachmentInfoRequest$json = {
       '10': 'userIdToUnshareWith',
       '17': true
     },
-    {
+    const {
       '1': 'group_id_to_share_with',
       '3': 5,
       '4': 1,
@@ -58,7 +58,7 @@ const UpdateMessageAttachmentInfoRequest$json = {
       '10': 'groupIdToShareWith',
       '17': true
     },
-    {
+    const {
       '1': 'group_id_to_unshare_with',
       '3': 6,
       '4': 1,
@@ -68,13 +68,13 @@ const UpdateMessageAttachmentInfoRequest$json = {
       '17': true
     },
   ],
-  '8': [
-    {'1': '_attachment_id_num'},
-    {'1': '_attachment_id_str'},
-    {'1': '_user_id_to_share_with'},
-    {'1': '_user_id_to_unshare_with'},
-    {'1': '_group_id_to_share_with'},
-    {'1': '_group_id_to_unshare_with'},
+  '8': const [
+    const {'1': '_attachment_id_num'},
+    const {'1': '_attachment_id_str'},
+    const {'1': '_user_id_to_share_with'},
+    const {'1': '_user_id_to_unshare_with'},
+    const {'1': '_group_id_to_share_with'},
+    const {'1': '_group_id_to_unshare_with'},
   ],
 };
 

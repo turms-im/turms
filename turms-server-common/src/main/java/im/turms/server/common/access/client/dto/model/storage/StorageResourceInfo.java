@@ -47,12 +47,6 @@ public final class StorageResourceInfo extends
         return new StorageResourceInfo();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-        return this.unknownFields;
-    }
-
     public static final com.google.protobuf.Descriptors.Descriptor
     getDescriptor() {
         return im.turms.server.common.access.client.dto.model.storage.StorageResourceInfoOuterClass.internal_static_im_turms_proto_StorageResourceInfo_descriptor;
@@ -68,7 +62,7 @@ public final class StorageResourceInfo extends
 
     private int bitField0_;
     public static final int ID_NUM_FIELD_NUMBER = 1;
-    private long idNum_;
+    private long idNum_ = 0L;
 
     /**
      * <code>optional int64 id_num = 1;</code>
@@ -91,7 +85,8 @@ public final class StorageResourceInfo extends
     }
 
     public static final int ID_STR_FIELD_NUMBER = 2;
-    private volatile java.lang.Object idStr_;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object idStr_ = "";
 
     /**
      * <code>optional string id_str = 2;</code>
@@ -143,7 +138,8 @@ public final class StorageResourceInfo extends
     }
 
     public static final int NAME_FIELD_NUMBER = 3;
-    private volatile java.lang.Object name_;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object name_ = "";
 
     /**
      * <code>optional string name = 3;</code>
@@ -195,7 +191,8 @@ public final class StorageResourceInfo extends
     }
 
     public static final int MEDIA_TYPE_FIELD_NUMBER = 4;
-    private volatile java.lang.Object mediaType_;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object mediaType_ = "";
 
     /**
      * <code>optional string media_type = 4;</code>
@@ -247,7 +244,7 @@ public final class StorageResourceInfo extends
     }
 
     public static final int UPLOADER_ID_FIELD_NUMBER = 5;
-    private long uploaderId_;
+    private long uploaderId_ = 0L;
 
     /**
      * <code>int64 uploader_id = 5;</code>
@@ -260,7 +257,7 @@ public final class StorageResourceInfo extends
     }
 
     public static final int CREATION_DATE_FIELD_NUMBER = 6;
-    private long creationDate_;
+    private long creationDate_ = 0L;
 
     /**
      * <code>int64 creation_date = 6;</code>
@@ -351,10 +348,9 @@ public final class StorageResourceInfo extends
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof im.turms.server.common.access.client.dto.model.storage.StorageResourceInfo)) {
+        if (!(obj instanceof StorageResourceInfo other)) {
             return super.equals(obj);
         }
-        im.turms.server.common.access.client.dto.model.storage.StorageResourceInfo other = (im.turms.server.common.access.client.dto.model.storage.StorageResourceInfo) obj;
 
         if (hasIdNum() != other.hasIdNum()) {
             return false;
@@ -400,10 +396,7 @@ public final class StorageResourceInfo extends
             != other.getCreationDate()) {
             return false;
         }
-        if (!getUnknownFields().equals(other.getUnknownFields())) {
-            return false;
-        }
-        return true;
+        return getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -544,8 +537,7 @@ public final class StorageResourceInfo extends
     @java.lang.Override
     protected Builder newBuilderForType(
             com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
+        return new Builder(parent);
     }
 
     /**
@@ -582,18 +574,13 @@ public final class StorageResourceInfo extends
         @java.lang.Override
         public Builder clear() {
             super.clear();
+            bitField0_ = 0;
             idNum_ = 0L;
-            bitField0_ = (bitField0_ & ~0x00000001);
             idStr_ = "";
-            bitField0_ = (bitField0_ & ~0x00000002);
             name_ = "";
-            bitField0_ = (bitField0_ & ~0x00000004);
             mediaType_ = "";
-            bitField0_ = (bitField0_ & ~0x00000008);
             uploaderId_ = 0L;
-
             creationDate_ = 0L;
-
             return this;
         }
 
@@ -620,6 +607,14 @@ public final class StorageResourceInfo extends
         @java.lang.Override
         public im.turms.server.common.access.client.dto.model.storage.StorageResourceInfo buildPartial() {
             im.turms.server.common.access.client.dto.model.storage.StorageResourceInfo result = new im.turms.server.common.access.client.dto.model.storage.StorageResourceInfo(this);
+            if (bitField0_ != 0) {
+                buildPartial0(result);
+            }
+            onBuilt();
+            return result;
+        }
+
+        private void buildPartial0(im.turms.server.common.access.client.dto.model.storage.StorageResourceInfo result) {
             int from_bitField0_ = bitField0_;
             int to_bitField0_ = 0;
             if (((from_bitField0_ & 0x00000001) != 0)) {
@@ -627,60 +622,24 @@ public final class StorageResourceInfo extends
                 to_bitField0_ |= 0x00000001;
             }
             if (((from_bitField0_ & 0x00000002) != 0)) {
+                result.idStr_ = idStr_;
                 to_bitField0_ |= 0x00000002;
             }
-            result.idStr_ = idStr_;
             if (((from_bitField0_ & 0x00000004) != 0)) {
+                result.name_ = name_;
                 to_bitField0_ |= 0x00000004;
             }
-            result.name_ = name_;
             if (((from_bitField0_ & 0x00000008) != 0)) {
+                result.mediaType_ = mediaType_;
                 to_bitField0_ |= 0x00000008;
             }
-            result.mediaType_ = mediaType_;
-            result.uploaderId_ = uploaderId_;
-            result.creationDate_ = creationDate_;
-            result.bitField0_ = to_bitField0_;
-            onBuilt();
-            return result;
-        }
-
-        @java.lang.Override
-        public Builder clone() {
-            return super.clone();
-        }
-
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(
-                com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(
-                com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index, java.lang.Object value) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.addRepeatedField(field, value);
+            if (((from_bitField0_ & 0x00000010) != 0)) {
+                result.uploaderId_ = uploaderId_;
+            }
+            if (((from_bitField0_ & 0x00000020) != 0)) {
+                result.creationDate_ = creationDate_;
+            }
+            result.bitField0_ |= to_bitField0_;
         }
 
         @java.lang.Override
@@ -701,18 +660,18 @@ public final class StorageResourceInfo extends
                 setIdNum(other.getIdNum());
             }
             if (other.hasIdStr()) {
-                bitField0_ |= 0x00000002;
                 idStr_ = other.idStr_;
+                bitField0_ |= 0x00000002;
                 onChanged();
             }
             if (other.hasName()) {
-                bitField0_ |= 0x00000004;
                 name_ = other.name_;
+                bitField0_ |= 0x00000004;
                 onChanged();
             }
             if (other.hasMediaType()) {
-                bitField0_ |= 0x00000008;
                 mediaType_ = other.mediaType_;
+                bitField0_ |= 0x00000008;
                 onChanged();
             }
             if (other.getUploaderId() != 0L) {
@@ -744,44 +703,35 @@ public final class StorageResourceInfo extends
                 while (!done) {
                     int tag = input.readTag();
                     switch (tag) {
-                        case 0:
-                            done = true;
-                            break;
-                        case 8: {
+                        case 0 -> done = true;
+                        case 8 -> {
                             idNum_ = input.readInt64();
                             bitField0_ |= 0x00000001;
-                            break;
                         } // case 8
-                        case 18: {
+                        case 18 -> {
                             idStr_ = input.readStringRequireUtf8();
                             bitField0_ |= 0x00000002;
-                            break;
                         } // case 18
-                        case 26: {
+                        case 26 -> {
                             name_ = input.readStringRequireUtf8();
                             bitField0_ |= 0x00000004;
-                            break;
                         } // case 26
-                        case 34: {
+                        case 34 -> {
                             mediaType_ = input.readStringRequireUtf8();
                             bitField0_ |= 0x00000008;
-                            break;
                         } // case 34
-                        case 40: {
+                        case 40 -> {
                             uploaderId_ = input.readInt64();
-
-                            break;
+                            bitField0_ |= 0x00000010;
                         } // case 40
-                        case 48: {
+                        case 48 -> {
                             creationDate_ = input.readInt64();
-
-                            break;
+                            bitField0_ |= 0x00000020;
                         } // case 48
-                        default: {
+                        default -> {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
                             }
-                            break;
                         } // default:
                     } // switch (tag)
                 } // while (!done)
@@ -824,8 +774,9 @@ public final class StorageResourceInfo extends
          * @return This builder for chaining.
          */
         public Builder setIdNum(long value) {
-            bitField0_ |= 0x00000001;
+
             idNum_ = value;
+            bitField0_ |= 0x00000001;
             onChanged();
             return this;
         }
@@ -836,7 +787,7 @@ public final class StorageResourceInfo extends
          * @return This builder for chaining.
          */
         public Builder clearIdNum() {
-            bitField0_ = (bitField0_ & ~0x00000001);
+            bitField0_ &= ~0x00000001;
             idNum_ = 0L;
             onChanged();
             return this;
@@ -901,8 +852,8 @@ public final class StorageResourceInfo extends
             if (value == null) {
                 throw new NullPointerException();
             }
-            bitField0_ |= 0x00000002;
             idStr_ = value;
+            bitField0_ |= 0x00000002;
             onChanged();
             return this;
         }
@@ -913,8 +864,8 @@ public final class StorageResourceInfo extends
          * @return This builder for chaining.
          */
         public Builder clearIdStr() {
-            bitField0_ = (bitField0_ & ~0x00000002);
             idStr_ = getDefaultInstance().getIdStr();
+            bitField0_ &= ~0x00000002;
             onChanged();
             return this;
         }
@@ -931,8 +882,8 @@ public final class StorageResourceInfo extends
                 throw new NullPointerException();
             }
             checkByteStringIsUtf8(value);
-            bitField0_ |= 0x00000002;
             idStr_ = value;
+            bitField0_ |= 0x00000002;
             onChanged();
             return this;
         }
@@ -996,8 +947,8 @@ public final class StorageResourceInfo extends
             if (value == null) {
                 throw new NullPointerException();
             }
-            bitField0_ |= 0x00000004;
             name_ = value;
+            bitField0_ |= 0x00000004;
             onChanged();
             return this;
         }
@@ -1008,8 +959,8 @@ public final class StorageResourceInfo extends
          * @return This builder for chaining.
          */
         public Builder clearName() {
-            bitField0_ = (bitField0_ & ~0x00000004);
             name_ = getDefaultInstance().getName();
+            bitField0_ &= ~0x00000004;
             onChanged();
             return this;
         }
@@ -1026,8 +977,8 @@ public final class StorageResourceInfo extends
                 throw new NullPointerException();
             }
             checkByteStringIsUtf8(value);
-            bitField0_ |= 0x00000004;
             name_ = value;
+            bitField0_ |= 0x00000004;
             onChanged();
             return this;
         }
@@ -1091,8 +1042,8 @@ public final class StorageResourceInfo extends
             if (value == null) {
                 throw new NullPointerException();
             }
-            bitField0_ |= 0x00000008;
             mediaType_ = value;
+            bitField0_ |= 0x00000008;
             onChanged();
             return this;
         }
@@ -1103,8 +1054,8 @@ public final class StorageResourceInfo extends
          * @return This builder for chaining.
          */
         public Builder clearMediaType() {
-            bitField0_ = (bitField0_ & ~0x00000008);
             mediaType_ = getDefaultInstance().getMediaType();
+            bitField0_ &= ~0x00000008;
             onChanged();
             return this;
         }
@@ -1121,8 +1072,8 @@ public final class StorageResourceInfo extends
                 throw new NullPointerException();
             }
             checkByteStringIsUtf8(value);
-            bitField0_ |= 0x00000008;
             mediaType_ = value;
+            bitField0_ |= 0x00000008;
             onChanged();
             return this;
         }
@@ -1148,6 +1099,7 @@ public final class StorageResourceInfo extends
         public Builder setUploaderId(long value) {
 
             uploaderId_ = value;
+            bitField0_ |= 0x00000010;
             onChanged();
             return this;
         }
@@ -1158,7 +1110,7 @@ public final class StorageResourceInfo extends
          * @return This builder for chaining.
          */
         public Builder clearUploaderId() {
-
+            bitField0_ &= ~0x00000010;
             uploaderId_ = 0L;
             onChanged();
             return this;
@@ -1185,6 +1137,7 @@ public final class StorageResourceInfo extends
         public Builder setCreationDate(long value) {
 
             creationDate_ = value;
+            bitField0_ |= 0x00000020;
             onChanged();
             return this;
         }
@@ -1195,7 +1148,7 @@ public final class StorageResourceInfo extends
          * @return This builder for chaining.
          */
         public Builder clearCreationDate() {
-
+            bitField0_ &= ~0x00000020;
             creationDate_ = 0L;
             onChanged();
             return this;
@@ -1229,7 +1182,7 @@ public final class StorageResourceInfo extends
     }
 
     private static final com.google.protobuf.Parser<StorageResourceInfo>
-            PARSER = new com.google.protobuf.AbstractParser<StorageResourceInfo>() {
+            PARSER = new com.google.protobuf.AbstractParser<>() {
         @java.lang.Override
         public StorageResourceInfo parsePartialFrom(
                 com.google.protobuf.CodedInputStream input,

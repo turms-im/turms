@@ -10,12 +10,12 @@ import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
 
 @$core.Deprecated('Use deleteGroupMembersRequestDescriptor instead')
-const DeleteGroupMembersRequest$json = {
+const DeleteGroupMembersRequest$json = const {
   '1': 'DeleteGroupMembersRequest',
-  '2': [
-    {'1': 'group_id', '3': 1, '4': 1, '5': 3, '10': 'groupId'},
-    {'1': 'member_ids', '3': 2, '4': 3, '5': 3, '10': 'memberIds'},
-    {
+  '2': const [
+    const {'1': 'group_id', '3': 1, '4': 1, '5': 3, '10': 'groupId'},
+    const {'1': 'member_ids', '3': 2, '4': 3, '5': 3, '10': 'memberIds'},
+    const {
       '1': 'successor_id',
       '3': 3,
       '4': 1,
@@ -24,7 +24,7 @@ const DeleteGroupMembersRequest$json = {
       '10': 'successorId',
       '17': true
     },
-    {
+    const {
       '1': 'quit_after_transfer',
       '3': 4,
       '4': 1,
@@ -34,9 +34,9 @@ const DeleteGroupMembersRequest$json = {
       '17': true
     },
   ],
-  '8': [
-    {'1': '_successor_id'},
-    {'1': '_quit_after_transfer'},
+  '8': const [
+    const {'1': '_successor_id'},
+    const {'1': '_quit_after_transfer'},
   ],
 };
 

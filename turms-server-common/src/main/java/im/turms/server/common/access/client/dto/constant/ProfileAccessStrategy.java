@@ -77,16 +77,12 @@ public enum ProfileAccessStrategy
      * @return The enum associated with the given numeric wire value.
      */
     public static ProfileAccessStrategy forNumber(int value) {
-        switch (value) {
-            case 0:
-                return ALL;
-            case 1:
-                return ALL_EXCEPT_BLOCKED_USERS;
-            case 2:
-                return FRIENDS;
-            default:
-                return null;
-        }
+        return switch (value) {
+            case 0 -> ALL;
+            case 1 -> ALL_EXCEPT_BLOCKED_USERS;
+            case 2 -> FRIENDS;
+            default -> null;
+        };
     }
 
     public static com.google.protobuf.Internal.EnumLiteMap<ProfileAccessStrategy>
@@ -96,11 +92,7 @@ public enum ProfileAccessStrategy
 
     private static final com.google.protobuf.Internal.EnumLiteMap<
             ProfileAccessStrategy> internalValueMap =
-            new com.google.protobuf.Internal.EnumLiteMap<ProfileAccessStrategy>() {
-                public ProfileAccessStrategy findValueByNumber(int number) {
-                    return ProfileAccessStrategy.forNumber(number);
-                }
-            };
+            number -> ProfileAccessStrategy.forNumber(number);
 
     public final com.google.protobuf.Descriptors.EnumValueDescriptor
     getValueDescriptor() {
@@ -137,7 +129,7 @@ public enum ProfileAccessStrategy
 
     private final int value;
 
-    private ProfileAccessStrategy(int value) {
+    ProfileAccessStrategy(int value) {
         this.value = value;
     }
 

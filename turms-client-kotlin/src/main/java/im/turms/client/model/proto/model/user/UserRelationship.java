@@ -69,7 +69,7 @@ public final class UserRelationship extends
      * <code>optional int64 owner_id = 1;</code>
      */
     private void clearOwnerId() {
-        bitField0_ = (bitField0_ & ~0x00000001);
+        bitField0_ &= ~0x00000001;
         ownerId_ = 0L;
     }
 
@@ -110,7 +110,7 @@ public final class UserRelationship extends
      * <code>optional int64 related_user_id = 2;</code>
      */
     private void clearRelatedUserId() {
-        bitField0_ = (bitField0_ & ~0x00000002);
+        bitField0_ &= ~0x00000002;
         relatedUserId_ = 0L;
     }
 
@@ -151,7 +151,7 @@ public final class UserRelationship extends
      * <code>optional int64 block_date = 3;</code>
      */
     private void clearBlockDate() {
-        bitField0_ = (bitField0_ & ~0x00000004);
+        bitField0_ &= ~0x00000004;
         blockDate_ = 0L;
     }
 
@@ -192,7 +192,7 @@ public final class UserRelationship extends
      * <code>optional int64 group_index = 4;</code>
      */
     private void clearGroupIndex() {
-        bitField0_ = (bitField0_ & ~0x00000008);
+        bitField0_ &= ~0x00000008;
         groupIndex_ = 0L;
     }
 
@@ -233,7 +233,7 @@ public final class UserRelationship extends
      * <code>optional int64 establishment_date = 5;</code>
      */
     private void clearEstablishmentDate() {
-        bitField0_ = (bitField0_ & ~0x00000010);
+        bitField0_ &= ~0x00000010;
         establishmentDate_ = 0L;
     }
 
@@ -599,7 +599,7 @@ public final class UserRelationship extends
                         parser = PARSER;
                         if (parser == null) {
                             parser =
-                                    new DefaultInstanceBasedParser<im.turms.client.model.proto.model.user.UserRelationship>(
+                                    new DefaultInstanceBasedParser<>(
                                             DEFAULT_INSTANCE);
                             PARSER = parser;
                         }

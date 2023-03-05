@@ -58,7 +58,6 @@ public interface GroupConversationOrBuilder extends
     /**
      * <code>map&lt;int64, int64&gt; member_id_to_read_date = 2;</code>
      */
-
     long getMemberIdToReadDateOrDefault(
             long key,
             long defaultValue);
@@ -66,7 +65,6 @@ public interface GroupConversationOrBuilder extends
     /**
      * <code>map&lt;int64, int64&gt; member_id_to_read_date = 2;</code>
      */
-
     long getMemberIdToReadDateOrThrow(
             long key);
 }

@@ -10,12 +10,12 @@ import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
 
 @$core.Deprecated('Use groupJoinQuestionsAnswerResultDescriptor instead')
-const GroupJoinQuestionsAnswerResult$json = {
+const GroupJoinQuestionsAnswerResult$json = const {
   '1': 'GroupJoinQuestionsAnswerResult',
-  '2': [
-    {'1': 'score', '3': 1, '4': 1, '5': 5, '10': 'score'},
-    {'1': 'question_ids', '3': 2, '4': 3, '5': 3, '10': 'questionIds'},
-    {'1': 'joined', '3': 3, '4': 1, '5': 8, '10': 'joined'},
+  '2': const [
+    const {'1': 'score', '3': 1, '4': 1, '5': 5, '10': 'score'},
+    const {'1': 'question_ids', '3': 2, '4': 3, '5': 3, '10': 'questionIds'},
+    const {'1': 'joined', '3': 3, '4': 1, '5': 8, '10': 'joined'},
   ],
 };
 

@@ -44,12 +44,6 @@ public final class DeleteSessionRequest extends
         return new DeleteSessionRequest();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-        return this.unknownFields;
-    }
-
     public static final com.google.protobuf.Descriptors.Descriptor
     getDescriptor() {
         return im.turms.server.common.access.client.dto.request.user.DeleteSessionRequestOuterClass.internal_static_im_turms_proto_DeleteSessionRequest_descriptor;
@@ -103,15 +97,11 @@ public final class DeleteSessionRequest extends
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof im.turms.server.common.access.client.dto.request.user.DeleteSessionRequest)) {
+        if (!(obj instanceof DeleteSessionRequest other)) {
             return super.equals(obj);
         }
-        im.turms.server.common.access.client.dto.request.user.DeleteSessionRequest other = (im.turms.server.common.access.client.dto.request.user.DeleteSessionRequest) obj;
 
-        if (!getUnknownFields().equals(other.getUnknownFields())) {
-            return false;
-        }
-        return true;
+        return getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -229,8 +219,7 @@ public final class DeleteSessionRequest extends
     @java.lang.Override
     protected Builder newBuilderForType(
             com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
+        return new Builder(parent);
     }
 
     /**
@@ -298,44 +287,6 @@ public final class DeleteSessionRequest extends
         }
 
         @java.lang.Override
-        public Builder clone() {
-            return super.clone();
-        }
-
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(
-                com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(
-                com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index, java.lang.Object value) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.addRepeatedField(field, value);
-        }
-
-        @java.lang.Override
         public Builder mergeFrom(com.google.protobuf.Message other) {
             if (other instanceof im.turms.server.common.access.client.dto.request.user.DeleteSessionRequest) {
                 return mergeFrom((im.turms.server.common.access.client.dto.request.user.DeleteSessionRequest) other);
@@ -372,14 +323,11 @@ public final class DeleteSessionRequest extends
                 while (!done) {
                     int tag = input.readTag();
                     switch (tag) {
-                        case 0:
-                            done = true;
-                            break;
-                        default: {
+                        case 0 -> done = true;
+                        default -> {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
                             }
-                            break;
                         } // default:
                     } // switch (tag)
                 } // while (!done)
@@ -419,7 +367,7 @@ public final class DeleteSessionRequest extends
     }
 
     private static final com.google.protobuf.Parser<DeleteSessionRequest>
-            PARSER = new com.google.protobuf.AbstractParser<DeleteSessionRequest>() {
+            PARSER = new com.google.protobuf.AbstractParser<>() {
         @java.lang.Override
         public DeleteSessionRequest parsePartialFrom(
                 com.google.protobuf.CodedInputStream input,

@@ -10,12 +10,12 @@ import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
 
 @$core.Deprecated('Use updateUserLocationRequestDescriptor instead')
-const UpdateUserLocationRequest$json = {
+const UpdateUserLocationRequest$json = const {
   '1': 'UpdateUserLocationRequest',
-  '2': [
-    {'1': 'latitude', '3': 1, '4': 1, '5': 2, '10': 'latitude'},
-    {'1': 'longitude', '3': 2, '4': 1, '5': 2, '10': 'longitude'},
-    {
+  '2': const [
+    const {'1': 'latitude', '3': 1, '4': 1, '5': 2, '10': 'latitude'},
+    const {'1': 'longitude', '3': 2, '4': 1, '5': 2, '10': 'longitude'},
+    const {
       '1': 'details',
       '3': 3,
       '4': 3,
@@ -24,17 +24,17 @@ const UpdateUserLocationRequest$json = {
       '10': 'details'
     },
   ],
-  '3': [UpdateUserLocationRequest_DetailsEntry$json],
+  '3': const [UpdateUserLocationRequest_DetailsEntry$json],
 };
 
 @$core.Deprecated('Use updateUserLocationRequestDescriptor instead')
-const UpdateUserLocationRequest_DetailsEntry$json = {
+const UpdateUserLocationRequest_DetailsEntry$json = const {
   '1': 'DetailsEntry',
-  '2': [
-    {'1': 'key', '3': 1, '4': 1, '5': 9, '10': 'key'},
-    {'1': 'value', '3': 2, '4': 1, '5': 9, '10': 'value'},
+  '2': const [
+    const {'1': 'key', '3': 1, '4': 1, '5': 9, '10': 'key'},
+    const {'1': 'value', '3': 2, '4': 1, '5': 9, '10': 'value'},
   ],
-  '7': {'7': true},
+  '7': const {'7': true},
 };
 
 /// Descriptor for `UpdateUserLocationRequest`. Decode as a `google.protobuf.DescriptorProto`.

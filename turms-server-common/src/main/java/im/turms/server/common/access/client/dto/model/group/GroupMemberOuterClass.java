@@ -78,8 +78,7 @@ public final class GroupMemberOuterClass {
         internal_static_im_turms_proto_GroupMember_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
                 internal_static_im_turms_proto_GroupMember_descriptor,
-                new java.lang.String[]{"GroupId", "UserId", "Name", "Role", "JoinDate", "MuteEndDate", "UserStatus", "UsingDeviceTypes", "GroupId", "UserId", "Name", "Role", "JoinDate", "MuteEndDate",
-                        "UserStatus",});
+                new java.lang.String[]{"GroupId", "UserId", "Name", "Role", "JoinDate", "MuteEndDate", "UserStatus", "UsingDeviceTypes", "GroupId", "UserId", "Name", "Role", "JoinDate", "MuteEndDate", "UserStatus",});
         im.turms.server.common.access.client.dto.constant.GroupMemberRoleOuterClass.getDescriptor();
         im.turms.server.common.access.client.dto.constant.UserStatusOuterClass.getDescriptor();
         im.turms.server.common.access.client.dto.constant.DeviceTypeOuterClass.getDescriptor();

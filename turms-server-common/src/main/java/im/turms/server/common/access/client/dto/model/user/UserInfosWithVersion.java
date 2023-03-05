@@ -45,12 +45,6 @@ public final class UserInfosWithVersion extends
         return new UserInfosWithVersion();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-        return this.unknownFields;
-    }
-
     public static final com.google.protobuf.Descriptors.Descriptor
     getDescriptor() {
         return im.turms.server.common.access.client.dto.model.user.UserInfosWithVersionOuterClass.internal_static_im_turms_proto_UserInfosWithVersion_descriptor;
@@ -66,6 +60,7 @@ public final class UserInfosWithVersion extends
 
     private int bitField0_;
     public static final int USER_INFOS_FIELD_NUMBER = 1;
+    @SuppressWarnings("serial")
     private java.util.List<im.turms.server.common.access.client.dto.model.user.UserInfo> userInfos_;
 
     /**
@@ -111,7 +106,7 @@ public final class UserInfosWithVersion extends
     }
 
     public static final int LAST_UPDATED_DATE_FIELD_NUMBER = 2;
-    private long lastUpdatedDate_;
+    private long lastUpdatedDate_ = 0L;
 
     /**
      * <code>optional int64 last_updated_date = 2;</code>
@@ -152,8 +147,8 @@ public final class UserInfosWithVersion extends
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
             throws java.io.IOException {
-        for (int i = 0; i < userInfos_.size(); i++) {
-            output.writeMessage(1, userInfos_.get(i));
+        for (UserInfo userInfo : userInfos_) {
+            output.writeMessage(1, userInfo);
         }
         if (((bitField0_ & 0x00000001) != 0)) {
             output.writeInt64(2, lastUpdatedDate_);
@@ -169,9 +164,9 @@ public final class UserInfosWithVersion extends
         }
 
         size = 0;
-        for (int i = 0; i < userInfos_.size(); i++) {
+        for (UserInfo userInfo : userInfos_) {
             size += com.google.protobuf.CodedOutputStream
-                    .computeMessageSize(1, userInfos_.get(i));
+                    .computeMessageSize(1, userInfo);
         }
         if (((bitField0_ & 0x00000001) != 0)) {
             size += com.google.protobuf.CodedOutputStream
@@ -187,10 +182,9 @@ public final class UserInfosWithVersion extends
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof im.turms.server.common.access.client.dto.model.user.UserInfosWithVersion)) {
+        if (!(obj instanceof UserInfosWithVersion other)) {
             return super.equals(obj);
         }
-        im.turms.server.common.access.client.dto.model.user.UserInfosWithVersion other = (im.turms.server.common.access.client.dto.model.user.UserInfosWithVersion) obj;
 
         if (!getUserInfosList()
                 .equals(other.getUserInfosList())) {
@@ -205,10 +199,7 @@ public final class UserInfosWithVersion extends
                 return false;
             }
         }
-        if (!getUnknownFields().equals(other.getUnknownFields())) {
-            return false;
-        }
-        return true;
+        return getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -335,8 +326,7 @@ public final class UserInfosWithVersion extends
     @java.lang.Override
     protected Builder newBuilderForType(
             com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
+        return new Builder(parent);
     }
 
     /**
@@ -373,15 +363,15 @@ public final class UserInfosWithVersion extends
         @java.lang.Override
         public Builder clear() {
             super.clear();
+            bitField0_ = 0;
             if (userInfosBuilder_ == null) {
                 userInfos_ = java.util.Collections.emptyList();
             } else {
                 userInfos_ = null;
                 userInfosBuilder_.clear();
             }
-            bitField0_ = (bitField0_ & ~0x00000001);
+            bitField0_ &= ~0x00000001;
             lastUpdatedDate_ = 0L;
-            bitField0_ = (bitField0_ & ~0x00000002);
             return this;
         }
 
@@ -408,62 +398,34 @@ public final class UserInfosWithVersion extends
         @java.lang.Override
         public im.turms.server.common.access.client.dto.model.user.UserInfosWithVersion buildPartial() {
             im.turms.server.common.access.client.dto.model.user.UserInfosWithVersion result = new im.turms.server.common.access.client.dto.model.user.UserInfosWithVersion(this);
-            int from_bitField0_ = bitField0_;
-            int to_bitField0_ = 0;
+            buildPartialRepeatedFields(result);
+            if (bitField0_ != 0) {
+                buildPartial0(result);
+            }
+            onBuilt();
+            return result;
+        }
+
+        private void buildPartialRepeatedFields(im.turms.server.common.access.client.dto.model.user.UserInfosWithVersion result) {
             if (userInfosBuilder_ == null) {
                 if (((bitField0_ & 0x00000001) != 0)) {
                     userInfos_ = java.util.Collections.unmodifiableList(userInfos_);
-                    bitField0_ = (bitField0_ & ~0x00000001);
+                    bitField0_ &= ~0x00000001;
                 }
                 result.userInfos_ = userInfos_;
             } else {
                 result.userInfos_ = userInfosBuilder_.build();
             }
+        }
+
+        private void buildPartial0(im.turms.server.common.access.client.dto.model.user.UserInfosWithVersion result) {
+            int from_bitField0_ = bitField0_;
+            int to_bitField0_ = 0;
             if (((from_bitField0_ & 0x00000002) != 0)) {
                 result.lastUpdatedDate_ = lastUpdatedDate_;
                 to_bitField0_ |= 0x00000001;
             }
-            result.bitField0_ = to_bitField0_;
-            onBuilt();
-            return result;
-        }
-
-        @java.lang.Override
-        public Builder clone() {
-            return super.clone();
-        }
-
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(
-                com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(
-                com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index, java.lang.Object value) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.addRepeatedField(field, value);
+            result.bitField0_ |= to_bitField0_;
         }
 
         @java.lang.Override
@@ -484,7 +446,7 @@ public final class UserInfosWithVersion extends
                 if (!other.userInfos_.isEmpty()) {
                     if (userInfos_.isEmpty()) {
                         userInfos_ = other.userInfos_;
-                        bitField0_ = (bitField0_ & ~0x00000001);
+                        bitField0_ &= ~0x00000001;
                     } else {
                         ensureUserInfosIsMutable();
                         userInfos_.addAll(other.userInfos_);
@@ -497,7 +459,7 @@ public final class UserInfosWithVersion extends
                         userInfosBuilder_.dispose();
                         userInfosBuilder_ = null;
                         userInfos_ = other.userInfos_;
-                        bitField0_ = (bitField0_ & ~0x00000001);
+                        bitField0_ &= ~0x00000001;
                         userInfosBuilder_ =
                                 com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
                                         getUserInfosFieldBuilder() : null;
@@ -532,13 +494,11 @@ public final class UserInfosWithVersion extends
                 while (!done) {
                     int tag = input.readTag();
                     switch (tag) {
-                        case 0:
-                            done = true;
-                            break;
-                        case 10: {
-                            im.turms.server.common.access.client.dto.model.user.UserInfo m =
+                        case 0 -> done = true;
+                        case 10 -> {
+                            UserInfo m =
                                     input.readMessage(
-                                            im.turms.server.common.access.client.dto.model.user.UserInfo.parser(),
+                                            UserInfo.parser(),
                                             extensionRegistry);
                             if (userInfosBuilder_ == null) {
                                 ensureUserInfosIsMutable();
@@ -546,18 +506,15 @@ public final class UserInfosWithVersion extends
                             } else {
                                 userInfosBuilder_.addMessage(m);
                             }
-                            break;
                         } // case 10
-                        case 16: {
+                        case 16 -> {
                             lastUpdatedDate_ = input.readInt64();
                             bitField0_ |= 0x00000002;
-                            break;
                         } // case 16
-                        default: {
+                        default -> {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
                             }
-                            break;
                         } // default:
                     } // switch (tag)
                 } // while (!done)
@@ -575,15 +532,14 @@ public final class UserInfosWithVersion extends
                 java.util.Collections.emptyList();
 
         private void ensureUserInfosIsMutable() {
-            if (!((bitField0_ & 0x00000001) != 0)) {
-                userInfos_ = new java.util.ArrayList<im.turms.server.common.access.client.dto.model.user.UserInfo>(userInfos_);
+            if ((bitField0_ & 0x00000001) == 0) {
+                userInfos_ = new java.util.ArrayList<>(userInfos_);
                 bitField0_ |= 0x00000001;
             }
         }
 
         private com.google.protobuf.RepeatedFieldBuilderV3<
-                im.turms.server.common.access.client.dto.model.user.UserInfo, im.turms.server.common.access.client.dto.model.user.UserInfo.Builder, im.turms.server.common.access.client.dto.model.user.UserInfoOrBuilder>
-                userInfosBuilder_;
+                im.turms.server.common.access.client.dto.model.user.UserInfo, im.turms.server.common.access.client.dto.model.user.UserInfo.Builder, im.turms.server.common.access.client.dto.model.user.UserInfoOrBuilder> userInfosBuilder_;
 
         /**
          * <code>repeated .im.turms.proto.UserInfo user_infos = 1;</code>
@@ -738,7 +694,7 @@ public final class UserInfosWithVersion extends
         public Builder clearUserInfos() {
             if (userInfosBuilder_ == null) {
                 userInfos_ = java.util.Collections.emptyList();
-                bitField0_ = (bitField0_ & ~0x00000001);
+                bitField0_ &= ~0x00000001;
                 onChanged();
             } else {
                 userInfosBuilder_.clear();
@@ -821,8 +777,7 @@ public final class UserInfosWithVersion extends
                 im.turms.server.common.access.client.dto.model.user.UserInfo, im.turms.server.common.access.client.dto.model.user.UserInfo.Builder, im.turms.server.common.access.client.dto.model.user.UserInfoOrBuilder>
         getUserInfosFieldBuilder() {
             if (userInfosBuilder_ == null) {
-                userInfosBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
-                        im.turms.server.common.access.client.dto.model.user.UserInfo, im.turms.server.common.access.client.dto.model.user.UserInfo.Builder, im.turms.server.common.access.client.dto.model.user.UserInfoOrBuilder>(
+                userInfosBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<>(
                         userInfos_,
                         ((bitField0_ & 0x00000001) != 0),
                         getParentForChildren(),
@@ -861,8 +816,9 @@ public final class UserInfosWithVersion extends
          * @return This builder for chaining.
          */
         public Builder setLastUpdatedDate(long value) {
-            bitField0_ |= 0x00000002;
+
             lastUpdatedDate_ = value;
+            bitField0_ |= 0x00000002;
             onChanged();
             return this;
         }
@@ -873,7 +829,7 @@ public final class UserInfosWithVersion extends
          * @return This builder for chaining.
          */
         public Builder clearLastUpdatedDate() {
-            bitField0_ = (bitField0_ & ~0x00000002);
+            bitField0_ &= ~0x00000002;
             lastUpdatedDate_ = 0L;
             onChanged();
             return this;
@@ -907,7 +863,7 @@ public final class UserInfosWithVersion extends
     }
 
     private static final com.google.protobuf.Parser<UserInfosWithVersion>
-            PARSER = new com.google.protobuf.AbstractParser<UserInfosWithVersion>() {
+            PARSER = new com.google.protobuf.AbstractParser<>() {
         @java.lang.Override
         public UserInfosWithVersion parsePartialFrom(
                 com.google.protobuf.CodedInputStream input,

@@ -101,22 +101,15 @@ public enum DeviceType
      * @return The enum associated with the given numeric wire value.
      */
     public static DeviceType forNumber(int value) {
-        switch (value) {
-            case 0:
-                return DESKTOP;
-            case 1:
-                return BROWSER;
-            case 2:
-                return IOS;
-            case 3:
-                return ANDROID;
-            case 4:
-                return OTHERS;
-            case 5:
-                return UNKNOWN;
-            default:
-                return null;
-        }
+        return switch (value) {
+            case 0 -> DESKTOP;
+            case 1 -> BROWSER;
+            case 2 -> IOS;
+            case 3 -> ANDROID;
+            case 4 -> OTHERS;
+            case 5 -> UNKNOWN;
+            default -> null;
+        };
     }
 
     public static com.google.protobuf.Internal.EnumLiteMap<DeviceType>
@@ -126,11 +119,7 @@ public enum DeviceType
 
     private static final com.google.protobuf.Internal.EnumLiteMap<
             DeviceType> internalValueMap =
-            new com.google.protobuf.Internal.EnumLiteMap<DeviceType>() {
-                public DeviceType findValueByNumber(int number) {
-                    return DeviceType.forNumber(number);
-                }
-            };
+            number -> DeviceType.forNumber(number);
 
     public final com.google.protobuf.Descriptors.EnumValueDescriptor
     getValueDescriptor() {
@@ -167,7 +156,7 @@ public enum DeviceType
 
     private final int value;
 
-    private DeviceType(int value) {
+    DeviceType(int value) {
         this.value = value;
     }
 

@@ -45,12 +45,6 @@ public final class NearbyUser extends
         return new NearbyUser();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-        return this.unknownFields;
-    }
-
     public static final com.google.protobuf.Descriptors.Descriptor
     getDescriptor() {
         return im.turms.server.common.access.client.dto.model.user.NearbyUserOuterClass.internal_static_im_turms_proto_NearbyUser_descriptor;
@@ -66,7 +60,7 @@ public final class NearbyUser extends
 
     private int bitField0_;
     public static final int USER_ID_FIELD_NUMBER = 1;
-    private long userId_;
+    private long userId_ = 0L;
 
     /**
      * <pre>
@@ -83,7 +77,7 @@ public final class NearbyUser extends
     }
 
     public static final int DEVICE_TYPE_FIELD_NUMBER = 2;
-    private int deviceType_;
+    private int deviceType_ = 0;
 
     /**
      * <code>optional .im.turms.proto.DeviceType device_type = 2;</code>
@@ -112,8 +106,7 @@ public final class NearbyUser extends
      */
     @java.lang.Override
     public im.turms.server.common.access.client.dto.constant.DeviceType getDeviceType() {
-        @SuppressWarnings("deprecation")
-        im.turms.server.common.access.client.dto.constant.DeviceType result = im.turms.server.common.access.client.dto.constant.DeviceType.valueOf(deviceType_);
+        im.turms.server.common.access.client.dto.constant.DeviceType result = im.turms.server.common.access.client.dto.constant.DeviceType.forNumber(deviceType_);
         return result == null ? im.turms.server.common.access.client.dto.constant.DeviceType.UNRECOGNIZED : result;
     }
 
@@ -161,7 +154,7 @@ public final class NearbyUser extends
     }
 
     public static final int DISTANCE_FIELD_NUMBER = 4;
-    private int distance_;
+    private int distance_ = 0;
 
     /**
      * <pre>
@@ -297,10 +290,9 @@ public final class NearbyUser extends
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof im.turms.server.common.access.client.dto.model.user.NearbyUser)) {
+        if (!(obj instanceof NearbyUser other)) {
             return super.equals(obj);
         }
-        im.turms.server.common.access.client.dto.model.user.NearbyUser other = (im.turms.server.common.access.client.dto.model.user.NearbyUser) obj;
 
         if (getUserId()
             != other.getUserId()) {
@@ -341,10 +333,7 @@ public final class NearbyUser extends
                 return false;
             }
         }
-        if (!getUnknownFields().equals(other.getUnknownFields())) {
-            return false;
-        }
-        return true;
+        return getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -481,8 +470,7 @@ public final class NearbyUser extends
     @java.lang.Override
     protected Builder newBuilderForType(
             com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
+        return new Builder(parent);
     }
 
     /**
@@ -527,24 +515,20 @@ public final class NearbyUser extends
         @java.lang.Override
         public Builder clear() {
             super.clear();
+            bitField0_ = 0;
             userId_ = 0L;
-
             deviceType_ = 0;
-            bitField0_ = (bitField0_ & ~0x00000001);
-            if (infoBuilder_ == null) {
-                info_ = null;
-            } else {
-                infoBuilder_.clear();
+            info_ = null;
+            if (infoBuilder_ != null) {
+                infoBuilder_.dispose();
+                infoBuilder_ = null;
             }
-            bitField0_ = (bitField0_ & ~0x00000002);
             distance_ = 0;
-            bitField0_ = (bitField0_ & ~0x00000004);
-            if (locationBuilder_ == null) {
-                location_ = null;
-            } else {
-                locationBuilder_.clear();
+            location_ = null;
+            if (locationBuilder_ != null) {
+                locationBuilder_.dispose();
+                locationBuilder_ = null;
             }
-            bitField0_ = (bitField0_ & ~0x00000008);
             return this;
         }
 
@@ -571,74 +555,40 @@ public final class NearbyUser extends
         @java.lang.Override
         public im.turms.server.common.access.client.dto.model.user.NearbyUser buildPartial() {
             im.turms.server.common.access.client.dto.model.user.NearbyUser result = new im.turms.server.common.access.client.dto.model.user.NearbyUser(this);
-            int from_bitField0_ = bitField0_;
-            int to_bitField0_ = 0;
-            result.userId_ = userId_;
-            if (((from_bitField0_ & 0x00000001) != 0)) {
-                to_bitField0_ |= 0x00000001;
+            if (bitField0_ != 0) {
+                buildPartial0(result);
             }
-            result.deviceType_ = deviceType_;
-            if (((from_bitField0_ & 0x00000002) != 0)) {
-                if (infoBuilder_ == null) {
-                    result.info_ = info_;
-                } else {
-                    result.info_ = infoBuilder_.build();
-                }
-                to_bitField0_ |= 0x00000002;
-            }
-            if (((from_bitField0_ & 0x00000004) != 0)) {
-                result.distance_ = distance_;
-                to_bitField0_ |= 0x00000004;
-            }
-            if (((from_bitField0_ & 0x00000008) != 0)) {
-                if (locationBuilder_ == null) {
-                    result.location_ = location_;
-                } else {
-                    result.location_ = locationBuilder_.build();
-                }
-                to_bitField0_ |= 0x00000008;
-            }
-            result.bitField0_ = to_bitField0_;
             onBuilt();
             return result;
         }
 
-        @java.lang.Override
-        public Builder clone() {
-            return super.clone();
-        }
-
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(
-                com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(
-                com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index, java.lang.Object value) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.addRepeatedField(field, value);
+        private void buildPartial0(im.turms.server.common.access.client.dto.model.user.NearbyUser result) {
+            int from_bitField0_ = bitField0_;
+            if (((from_bitField0_ & 0x00000001) != 0)) {
+                result.userId_ = userId_;
+            }
+            int to_bitField0_ = 0;
+            if (((from_bitField0_ & 0x00000002) != 0)) {
+                result.deviceType_ = deviceType_;
+                to_bitField0_ |= 0x00000001;
+            }
+            if (((from_bitField0_ & 0x00000004) != 0)) {
+                result.info_ = infoBuilder_ == null
+                        ? info_
+                        : infoBuilder_.build();
+                to_bitField0_ |= 0x00000002;
+            }
+            if (((from_bitField0_ & 0x00000008) != 0)) {
+                result.distance_ = distance_;
+                to_bitField0_ |= 0x00000004;
+            }
+            if (((from_bitField0_ & 0x00000010) != 0)) {
+                result.location_ = locationBuilder_ == null
+                        ? location_
+                        : locationBuilder_.build();
+                to_bitField0_ |= 0x00000008;
+            }
+            result.bitField0_ |= to_bitField0_;
         }
 
         @java.lang.Override
@@ -693,43 +643,35 @@ public final class NearbyUser extends
                 while (!done) {
                     int tag = input.readTag();
                     switch (tag) {
-                        case 0:
-                            done = true;
-                            break;
-                        case 8: {
+                        case 0 -> done = true;
+                        case 8 -> {
                             userId_ = input.readInt64();
-
-                            break;
-                        } // case 8
-                        case 16: {
-                            deviceType_ = input.readEnum();
                             bitField0_ |= 0x00000001;
-                            break;
+                        } // case 8
+                        case 16 -> {
+                            deviceType_ = input.readEnum();
+                            bitField0_ |= 0x00000002;
                         } // case 16
-                        case 26: {
+                        case 26 -> {
                             input.readMessage(
                                     getInfoFieldBuilder().getBuilder(),
                                     extensionRegistry);
-                            bitField0_ |= 0x00000002;
-                            break;
-                        } // case 26
-                        case 32: {
-                            distance_ = input.readInt32();
                             bitField0_ |= 0x00000004;
-                            break;
+                        } // case 26
+                        case 32 -> {
+                            distance_ = input.readInt32();
+                            bitField0_ |= 0x00000008;
                         } // case 32
-                        case 42: {
+                        case 42 -> {
                             input.readMessage(
                                     getLocationFieldBuilder().getBuilder(),
                                     extensionRegistry);
-                            bitField0_ |= 0x00000008;
-                            break;
+                            bitField0_ |= 0x00000010;
                         } // case 42
-                        default: {
+                        default -> {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
                             }
-                            break;
                         } // default:
                     } // switch (tag)
                 } // while (!done)
@@ -772,6 +714,7 @@ public final class NearbyUser extends
         public Builder setUserId(long value) {
 
             userId_ = value;
+            bitField0_ |= 0x00000001;
             onChanged();
             return this;
         }
@@ -786,7 +729,7 @@ public final class NearbyUser extends
          * @return This builder for chaining.
          */
         public Builder clearUserId() {
-
+            bitField0_ &= ~0x00000001;
             userId_ = 0L;
             onChanged();
             return this;
@@ -801,7 +744,7 @@ public final class NearbyUser extends
          */
         @java.lang.Override
         public boolean hasDeviceType() {
-            return ((bitField0_ & 0x00000001) != 0);
+            return ((bitField0_ & 0x00000002) != 0);
         }
 
         /**
@@ -821,8 +764,8 @@ public final class NearbyUser extends
          * @return This builder for chaining.
          */
         public Builder setDeviceTypeValue(int value) {
-            bitField0_ |= 0x00000001;
             deviceType_ = value;
+            bitField0_ |= 0x00000002;
             onChanged();
             return this;
         }
@@ -834,8 +777,7 @@ public final class NearbyUser extends
          */
         @java.lang.Override
         public im.turms.server.common.access.client.dto.constant.DeviceType getDeviceType() {
-            @SuppressWarnings("deprecation")
-            im.turms.server.common.access.client.dto.constant.DeviceType result = im.turms.server.common.access.client.dto.constant.DeviceType.valueOf(deviceType_);
+            im.turms.server.common.access.client.dto.constant.DeviceType result = im.turms.server.common.access.client.dto.constant.DeviceType.forNumber(deviceType_);
             return result == null ? im.turms.server.common.access.client.dto.constant.DeviceType.UNRECOGNIZED : result;
         }
 
@@ -849,7 +791,7 @@ public final class NearbyUser extends
             if (value == null) {
                 throw new NullPointerException();
             }
-            bitField0_ |= 0x00000001;
+            bitField0_ |= 0x00000002;
             deviceType_ = value.getNumber();
             onChanged();
             return this;
@@ -861,7 +803,7 @@ public final class NearbyUser extends
          * @return This builder for chaining.
          */
         public Builder clearDeviceType() {
-            bitField0_ = (bitField0_ & ~0x00000001);
+            bitField0_ &= ~0x00000002;
             deviceType_ = 0;
             onChanged();
             return this;
@@ -869,8 +811,7 @@ public final class NearbyUser extends
 
         private im.turms.server.common.access.client.dto.model.user.UserInfo info_;
         private com.google.protobuf.SingleFieldBuilderV3<
-                im.turms.server.common.access.client.dto.model.user.UserInfo, im.turms.server.common.access.client.dto.model.user.UserInfo.Builder, im.turms.server.common.access.client.dto.model.user.UserInfoOrBuilder>
-                infoBuilder_;
+                im.turms.server.common.access.client.dto.model.user.UserInfo, im.turms.server.common.access.client.dto.model.user.UserInfo.Builder, im.turms.server.common.access.client.dto.model.user.UserInfoOrBuilder> infoBuilder_;
 
         /**
          * <pre>
@@ -882,7 +823,7 @@ public final class NearbyUser extends
          * @return Whether the info field is set.
          */
         public boolean hasInfo() {
-            return ((bitField0_ & 0x00000002) != 0);
+            return ((bitField0_ & 0x00000004) != 0);
         }
 
         /**
@@ -915,11 +856,11 @@ public final class NearbyUser extends
                     throw new NullPointerException();
                 }
                 info_ = value;
-                onChanged();
             } else {
                 infoBuilder_.setMessage(value);
             }
-            bitField0_ |= 0x00000002;
+            bitField0_ |= 0x00000004;
+            onChanged();
             return this;
         }
 
@@ -934,11 +875,11 @@ public final class NearbyUser extends
                 im.turms.server.common.access.client.dto.model.user.UserInfo.Builder builderForValue) {
             if (infoBuilder_ == null) {
                 info_ = builderForValue.build();
-                onChanged();
             } else {
                 infoBuilder_.setMessage(builderForValue.build());
             }
-            bitField0_ |= 0x00000002;
+            bitField0_ |= 0x00000004;
+            onChanged();
             return this;
         }
 
@@ -951,19 +892,18 @@ public final class NearbyUser extends
          */
         public Builder mergeInfo(im.turms.server.common.access.client.dto.model.user.UserInfo value) {
             if (infoBuilder_ == null) {
-                if (((bitField0_ & 0x00000002) != 0) &&
+                if (((bitField0_ & 0x00000004) != 0) &&
                     info_ != null &&
                     info_ != im.turms.server.common.access.client.dto.model.user.UserInfo.getDefaultInstance()) {
-                    info_ =
-                            im.turms.server.common.access.client.dto.model.user.UserInfo.newBuilder(info_).mergeFrom(value).buildPartial();
+                    getInfoBuilder().mergeFrom(value);
                 } else {
                     info_ = value;
                 }
-                onChanged();
             } else {
                 infoBuilder_.mergeFrom(value);
             }
-            bitField0_ |= 0x00000002;
+            bitField0_ |= 0x00000004;
+            onChanged();
             return this;
         }
 
@@ -975,13 +915,13 @@ public final class NearbyUser extends
          * <code>optional .im.turms.proto.UserInfo info = 3;</code>
          */
         public Builder clearInfo() {
-            if (infoBuilder_ == null) {
-                info_ = null;
-                onChanged();
-            } else {
-                infoBuilder_.clear();
+            bitField0_ &= ~0x00000004;
+            info_ = null;
+            if (infoBuilder_ != null) {
+                infoBuilder_.dispose();
+                infoBuilder_ = null;
             }
-            bitField0_ = (bitField0_ & ~0x00000002);
+            onChanged();
             return this;
         }
 
@@ -993,7 +933,7 @@ public final class NearbyUser extends
          * <code>optional .im.turms.proto.UserInfo info = 3;</code>
          */
         public im.turms.server.common.access.client.dto.model.user.UserInfo.Builder getInfoBuilder() {
-            bitField0_ |= 0x00000002;
+            bitField0_ |= 0x00000004;
             onChanged();
             return getInfoFieldBuilder().getBuilder();
         }
@@ -1025,8 +965,7 @@ public final class NearbyUser extends
                 im.turms.server.common.access.client.dto.model.user.UserInfo, im.turms.server.common.access.client.dto.model.user.UserInfo.Builder, im.turms.server.common.access.client.dto.model.user.UserInfoOrBuilder>
         getInfoFieldBuilder() {
             if (infoBuilder_ == null) {
-                infoBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-                        im.turms.server.common.access.client.dto.model.user.UserInfo, im.turms.server.common.access.client.dto.model.user.UserInfo.Builder, im.turms.server.common.access.client.dto.model.user.UserInfoOrBuilder>(
+                infoBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
                         getInfo(),
                         getParentForChildren(),
                         isClean());
@@ -1048,7 +987,7 @@ public final class NearbyUser extends
          */
         @java.lang.Override
         public boolean hasDistance() {
-            return ((bitField0_ & 0x00000004) != 0);
+            return ((bitField0_ & 0x00000008) != 0);
         }
 
         /**
@@ -1076,8 +1015,9 @@ public final class NearbyUser extends
          * @return This builder for chaining.
          */
         public Builder setDistance(int value) {
-            bitField0_ |= 0x00000004;
+
             distance_ = value;
+            bitField0_ |= 0x00000008;
             onChanged();
             return this;
         }
@@ -1092,7 +1032,7 @@ public final class NearbyUser extends
          * @return This builder for chaining.
          */
         public Builder clearDistance() {
-            bitField0_ = (bitField0_ & ~0x00000004);
+            bitField0_ &= ~0x00000008;
             distance_ = 0;
             onChanged();
             return this;
@@ -1100,8 +1040,7 @@ public final class NearbyUser extends
 
         private im.turms.server.common.access.client.dto.model.user.UserLocation location_;
         private com.google.protobuf.SingleFieldBuilderV3<
-                im.turms.server.common.access.client.dto.model.user.UserLocation, im.turms.server.common.access.client.dto.model.user.UserLocation.Builder, im.turms.server.common.access.client.dto.model.user.UserLocationOrBuilder>
-                locationBuilder_;
+                im.turms.server.common.access.client.dto.model.user.UserLocation, im.turms.server.common.access.client.dto.model.user.UserLocation.Builder, im.turms.server.common.access.client.dto.model.user.UserLocationOrBuilder> locationBuilder_;
 
         /**
          * <code>optional .im.turms.proto.UserLocation location = 5;</code>
@@ -1109,7 +1048,7 @@ public final class NearbyUser extends
          * @return Whether the location field is set.
          */
         public boolean hasLocation() {
-            return ((bitField0_ & 0x00000008) != 0);
+            return ((bitField0_ & 0x00000010) != 0);
         }
 
         /**
@@ -1134,11 +1073,11 @@ public final class NearbyUser extends
                     throw new NullPointerException();
                 }
                 location_ = value;
-                onChanged();
             } else {
                 locationBuilder_.setMessage(value);
             }
-            bitField0_ |= 0x00000008;
+            bitField0_ |= 0x00000010;
+            onChanged();
             return this;
         }
 
@@ -1149,11 +1088,11 @@ public final class NearbyUser extends
                 im.turms.server.common.access.client.dto.model.user.UserLocation.Builder builderForValue) {
             if (locationBuilder_ == null) {
                 location_ = builderForValue.build();
-                onChanged();
             } else {
                 locationBuilder_.setMessage(builderForValue.build());
             }
-            bitField0_ |= 0x00000008;
+            bitField0_ |= 0x00000010;
+            onChanged();
             return this;
         }
 
@@ -1162,19 +1101,18 @@ public final class NearbyUser extends
          */
         public Builder mergeLocation(im.turms.server.common.access.client.dto.model.user.UserLocation value) {
             if (locationBuilder_ == null) {
-                if (((bitField0_ & 0x00000008) != 0) &&
+                if (((bitField0_ & 0x00000010) != 0) &&
                     location_ != null &&
                     location_ != im.turms.server.common.access.client.dto.model.user.UserLocation.getDefaultInstance()) {
-                    location_ =
-                            im.turms.server.common.access.client.dto.model.user.UserLocation.newBuilder(location_).mergeFrom(value).buildPartial();
+                    getLocationBuilder().mergeFrom(value);
                 } else {
                     location_ = value;
                 }
-                onChanged();
             } else {
                 locationBuilder_.mergeFrom(value);
             }
-            bitField0_ |= 0x00000008;
+            bitField0_ |= 0x00000010;
+            onChanged();
             return this;
         }
 
@@ -1182,13 +1120,13 @@ public final class NearbyUser extends
          * <code>optional .im.turms.proto.UserLocation location = 5;</code>
          */
         public Builder clearLocation() {
-            if (locationBuilder_ == null) {
-                location_ = null;
-                onChanged();
-            } else {
-                locationBuilder_.clear();
+            bitField0_ &= ~0x00000010;
+            location_ = null;
+            if (locationBuilder_ != null) {
+                locationBuilder_.dispose();
+                locationBuilder_ = null;
             }
-            bitField0_ = (bitField0_ & ~0x00000008);
+            onChanged();
             return this;
         }
 
@@ -1196,7 +1134,7 @@ public final class NearbyUser extends
          * <code>optional .im.turms.proto.UserLocation location = 5;</code>
          */
         public im.turms.server.common.access.client.dto.model.user.UserLocation.Builder getLocationBuilder() {
-            bitField0_ |= 0x00000008;
+            bitField0_ |= 0x00000010;
             onChanged();
             return getLocationFieldBuilder().getBuilder();
         }
@@ -1220,8 +1158,7 @@ public final class NearbyUser extends
                 im.turms.server.common.access.client.dto.model.user.UserLocation, im.turms.server.common.access.client.dto.model.user.UserLocation.Builder, im.turms.server.common.access.client.dto.model.user.UserLocationOrBuilder>
         getLocationFieldBuilder() {
             if (locationBuilder_ == null) {
-                locationBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-                        im.turms.server.common.access.client.dto.model.user.UserLocation, im.turms.server.common.access.client.dto.model.user.UserLocation.Builder, im.turms.server.common.access.client.dto.model.user.UserLocationOrBuilder>(
+                locationBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
                         getLocation(),
                         getParentForChildren(),
                         isClean());
@@ -1258,7 +1195,7 @@ public final class NearbyUser extends
     }
 
     private static final com.google.protobuf.Parser<NearbyUser>
-            PARSER = new com.google.protobuf.AbstractParser<NearbyUser>() {
+            PARSER = new com.google.protobuf.AbstractParser<>() {
         @java.lang.Override
         public NearbyUser parsePartialFrom(
                 com.google.protobuf.CodedInputStream input,

@@ -18,7 +18,7 @@ class UpdateUserOnlineStatusRequest extends $pb.GeneratedMessage {
           ? ''
           : 'UpdateUserOnlineStatusRequest',
       package: const $pb.PackageName(
-          $core.bool.fromEnvironment('protobuf.omit_message_names')
+          const $core.bool.fromEnvironment('protobuf.omit_message_names')
               ? ''
               : 'im.turms.proto'),
       createEmptyInstance: create)

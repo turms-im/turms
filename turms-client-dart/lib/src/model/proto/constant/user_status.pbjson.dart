@@ -10,16 +10,16 @@ import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
 
 @$core.Deprecated('Use userStatusDescriptor instead')
-const UserStatus$json = {
+const UserStatus$json = const {
   '1': 'UserStatus',
-  '2': [
-    {'1': 'AVAILABLE', '2': 0},
-    {'1': 'OFFLINE', '2': 1},
-    {'1': 'INVISIBLE', '2': 2},
-    {'1': 'BUSY', '2': 3},
-    {'1': 'DO_NOT_DISTURB', '2': 4},
-    {'1': 'AWAY', '2': 5},
-    {'1': 'BE_RIGHT_BACK', '2': 6},
+  '2': const [
+    const {'1': 'AVAILABLE', '2': 0},
+    const {'1': 'OFFLINE', '2': 1},
+    const {'1': 'INVISIBLE', '2': 2},
+    const {'1': 'BUSY', '2': 3},
+    const {'1': 'DO_NOT_DISTURB', '2': 4},
+    const {'1': 'AWAY', '2': 5},
+    const {'1': 'BE_RIGHT_BACK', '2': 6},
   ],
 };
 

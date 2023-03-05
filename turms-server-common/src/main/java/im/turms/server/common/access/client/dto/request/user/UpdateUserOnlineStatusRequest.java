@@ -46,12 +46,6 @@ public final class UpdateUserOnlineStatusRequest extends
         return new UpdateUserOnlineStatusRequest();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-        return this.unknownFields;
-    }
-
     public static final com.google.protobuf.Descriptors.Descriptor
     getDescriptor() {
         return im.turms.server.common.access.client.dto.request.user.UpdateUserOnlineStatusRequestOuterClass.internal_static_im_turms_proto_UpdateUserOnlineStatusRequest_descriptor;
@@ -62,21 +56,17 @@ public final class UpdateUserOnlineStatusRequest extends
     internalGetFieldAccessorTable() {
         return im.turms.server.common.access.client.dto.request.user.UpdateUserOnlineStatusRequestOuterClass.internal_static_im_turms_proto_UpdateUserOnlineStatusRequest_fieldAccessorTable
                 .ensureFieldAccessorsInitialized(
-                        im.turms.server.common.access.client.dto.request.user.UpdateUserOnlineStatusRequest.class,
-                        im.turms.server.common.access.client.dto.request.user.UpdateUserOnlineStatusRequest.Builder.class);
+                        im.turms.server.common.access.client.dto.request.user.UpdateUserOnlineStatusRequest.class, im.turms.server.common.access.client.dto.request.user.UpdateUserOnlineStatusRequest.Builder.class);
     }
 
     public static final int DEVICE_TYPES_FIELD_NUMBER = 1;
+    @SuppressWarnings("serial")
     private java.util.List<java.lang.Integer> deviceTypes_;
     private static final com.google.protobuf.Internal.ListAdapter.Converter<
             java.lang.Integer, im.turms.server.common.access.client.dto.constant.DeviceType> deviceTypes_converter_ =
-            new com.google.protobuf.Internal.ListAdapter.Converter<
-                    java.lang.Integer, im.turms.server.common.access.client.dto.constant.DeviceType>() {
-                public im.turms.server.common.access.client.dto.constant.DeviceType convert(java.lang.Integer from) {
-                    @SuppressWarnings("deprecation")
-                    im.turms.server.common.access.client.dto.constant.DeviceType result = im.turms.server.common.access.client.dto.constant.DeviceType.valueOf(from);
-                    return result == null ? im.turms.server.common.access.client.dto.constant.DeviceType.UNRECOGNIZED : result;
-                }
+            from -> {
+                im.turms.server.common.access.client.dto.constant.DeviceType result = im.turms.server.common.access.client.dto.constant.DeviceType.forNumber(from);
+                return result == null ? im.turms.server.common.access.client.dto.constant.DeviceType.UNRECOGNIZED : result;
             };
 
     /**
@@ -90,8 +80,7 @@ public final class UpdateUserOnlineStatusRequest extends
      */
     @java.lang.Override
     public java.util.List<im.turms.server.common.access.client.dto.constant.DeviceType> getDeviceTypesList() {
-        return new com.google.protobuf.Internal.ListAdapter<
-                java.lang.Integer, im.turms.server.common.access.client.dto.constant.DeviceType>(deviceTypes_, deviceTypes_converter_);
+        return new com.google.protobuf.Internal.ListAdapter<>(deviceTypes_, deviceTypes_converter_);
     }
 
     /**
@@ -156,7 +145,7 @@ public final class UpdateUserOnlineStatusRequest extends
     private int deviceTypesMemoizedSerializedSize;
 
     public static final int USER_STATUS_FIELD_NUMBER = 2;
-    private int userStatus_;
+    private int userStatus_ = 0;
 
     /**
      * <pre>
@@ -183,8 +172,7 @@ public final class UpdateUserOnlineStatusRequest extends
      */
     @java.lang.Override
     public im.turms.server.common.access.client.dto.constant.UserStatus getUserStatus() {
-        @SuppressWarnings("deprecation")
-        im.turms.server.common.access.client.dto.constant.UserStatus result = im.turms.server.common.access.client.dto.constant.UserStatus.valueOf(userStatus_);
+        im.turms.server.common.access.client.dto.constant.UserStatus result = im.turms.server.common.access.client.dto.constant.UserStatus.forNumber(userStatus_);
         return result == null ? im.turms.server.common.access.client.dto.constant.UserStatus.UNRECOGNIZED : result;
     }
 
@@ -212,8 +200,8 @@ public final class UpdateUserOnlineStatusRequest extends
             output.writeUInt32NoTag(10);
             output.writeUInt32NoTag(deviceTypesMemoizedSerializedSize);
         }
-        for (int i = 0; i < deviceTypes_.size(); i++) {
-            output.writeEnumNoTag(deviceTypes_.get(i));
+        for (Integer integer : deviceTypes_) {
+            output.writeEnumNoTag(integer);
         }
         if (userStatus_ != im.turms.server.common.access.client.dto.constant.UserStatus.AVAILABLE.getNumber()) {
             output.writeEnum(2, userStatus_);
@@ -231,9 +219,9 @@ public final class UpdateUserOnlineStatusRequest extends
         size = 0;
         {
             int dataSize = 0;
-            for (int i = 0; i < deviceTypes_.size(); i++) {
+            for (Integer integer : deviceTypes_) {
                 dataSize += com.google.protobuf.CodedOutputStream
-                        .computeEnumSizeNoTag(deviceTypes_.get(i));
+                        .computeEnumSizeNoTag(integer);
             }
             size += dataSize;
             if (!getDeviceTypesList().isEmpty()) {
@@ -257,10 +245,9 @@ public final class UpdateUserOnlineStatusRequest extends
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof im.turms.server.common.access.client.dto.request.user.UpdateUserOnlineStatusRequest)) {
+        if (!(obj instanceof UpdateUserOnlineStatusRequest other)) {
             return super.equals(obj);
         }
-        im.turms.server.common.access.client.dto.request.user.UpdateUserOnlineStatusRequest other = (im.turms.server.common.access.client.dto.request.user.UpdateUserOnlineStatusRequest) obj;
 
         if (!deviceTypes_.equals(other.deviceTypes_)) {
             return false;
@@ -268,10 +255,7 @@ public final class UpdateUserOnlineStatusRequest extends
         if (userStatus_ != other.userStatus_) {
             return false;
         }
-        if (!getUnknownFields().equals(other.getUnknownFields())) {
-            return false;
-        }
-        return true;
+        return getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -395,8 +379,7 @@ public final class UpdateUserOnlineStatusRequest extends
     @java.lang.Override
     protected Builder newBuilderForType(
             com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
+        return new Builder(parent);
     }
 
     /**
@@ -416,8 +399,7 @@ public final class UpdateUserOnlineStatusRequest extends
         internalGetFieldAccessorTable() {
             return im.turms.server.common.access.client.dto.request.user.UpdateUserOnlineStatusRequestOuterClass.internal_static_im_turms_proto_UpdateUserOnlineStatusRequest_fieldAccessorTable
                     .ensureFieldAccessorsInitialized(
-                            im.turms.server.common.access.client.dto.request.user.UpdateUserOnlineStatusRequest.class,
-                            im.turms.server.common.access.client.dto.request.user.UpdateUserOnlineStatusRequest.Builder.class);
+                            im.turms.server.common.access.client.dto.request.user.UpdateUserOnlineStatusRequest.class, im.turms.server.common.access.client.dto.request.user.UpdateUserOnlineStatusRequest.Builder.class);
         }
 
         // Construct using im.turms.server.common.access.client.dto.request.user.UpdateUserOnlineStatusRequest.newBuilder()
@@ -434,10 +416,10 @@ public final class UpdateUserOnlineStatusRequest extends
         @java.lang.Override
         public Builder clear() {
             super.clear();
+            bitField0_ = 0;
             deviceTypes_ = java.util.Collections.emptyList();
-            bitField0_ = (bitField0_ & ~0x00000001);
+            bitField0_ &= ~0x00000001;
             userStatus_ = 0;
-
             return this;
         }
 
@@ -464,53 +446,27 @@ public final class UpdateUserOnlineStatusRequest extends
         @java.lang.Override
         public im.turms.server.common.access.client.dto.request.user.UpdateUserOnlineStatusRequest buildPartial() {
             im.turms.server.common.access.client.dto.request.user.UpdateUserOnlineStatusRequest result = new im.turms.server.common.access.client.dto.request.user.UpdateUserOnlineStatusRequest(this);
-            int from_bitField0_ = bitField0_;
-            if (((bitField0_ & 0x00000001) != 0)) {
-                deviceTypes_ = java.util.Collections.unmodifiableList(deviceTypes_);
-                bitField0_ = (bitField0_ & ~0x00000001);
+            buildPartialRepeatedFields(result);
+            if (bitField0_ != 0) {
+                buildPartial0(result);
             }
-            result.deviceTypes_ = deviceTypes_;
-            result.userStatus_ = userStatus_;
             onBuilt();
             return result;
         }
 
-        @java.lang.Override
-        public Builder clone() {
-            return super.clone();
+        private void buildPartialRepeatedFields(im.turms.server.common.access.client.dto.request.user.UpdateUserOnlineStatusRequest result) {
+            if (((bitField0_ & 0x00000001) != 0)) {
+                deviceTypes_ = java.util.Collections.unmodifiableList(deviceTypes_);
+                bitField0_ &= ~0x00000001;
+            }
+            result.deviceTypes_ = deviceTypes_;
         }
 
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(
-                com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(
-                com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index, java.lang.Object value) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.addRepeatedField(field, value);
+        private void buildPartial0(im.turms.server.common.access.client.dto.request.user.UpdateUserOnlineStatusRequest result) {
+            int from_bitField0_ = bitField0_;
+            if (((from_bitField0_ & 0x00000002) != 0)) {
+                result.userStatus_ = userStatus_;
+            }
         }
 
         @java.lang.Override
@@ -530,7 +486,7 @@ public final class UpdateUserOnlineStatusRequest extends
             if (!other.deviceTypes_.isEmpty()) {
                 if (deviceTypes_.isEmpty()) {
                     deviceTypes_ = other.deviceTypes_;
-                    bitField0_ = (bitField0_ & ~0x00000001);
+                    bitField0_ &= ~0x00000001;
                 } else {
                     ensureDeviceTypesIsMutable();
                     deviceTypes_.addAll(other.deviceTypes_);
@@ -563,16 +519,13 @@ public final class UpdateUserOnlineStatusRequest extends
                 while (!done) {
                     int tag = input.readTag();
                     switch (tag) {
-                        case 0:
-                            done = true;
-                            break;
-                        case 8: {
+                        case 0 -> done = true;
+                        case 8 -> {
                             int tmpRaw = input.readEnum();
                             ensureDeviceTypesIsMutable();
                             deviceTypes_.add(tmpRaw);
-                            break;
                         } // case 8
-                        case 10: {
+                        case 10 -> {
                             int length = input.readRawVarint32();
                             int oldLimit = input.pushLimit(length);
                             while (input.getBytesUntilLimit() > 0) {
@@ -581,18 +534,15 @@ public final class UpdateUserOnlineStatusRequest extends
                                 deviceTypes_.add(tmpRaw);
                             }
                             input.popLimit(oldLimit);
-                            break;
                         } // case 10
-                        case 16: {
+                        case 16 -> {
                             userStatus_ = input.readEnum();
-
-                            break;
+                            bitField0_ |= 0x00000002;
                         } // case 16
-                        default: {
+                        default -> {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
                             }
-                            break;
                         } // default:
                     } // switch (tag)
                 } // while (!done)
@@ -610,8 +560,8 @@ public final class UpdateUserOnlineStatusRequest extends
                 java.util.Collections.emptyList();
 
         private void ensureDeviceTypesIsMutable() {
-            if (!((bitField0_ & 0x00000001) != 0)) {
-                deviceTypes_ = new java.util.ArrayList<java.lang.Integer>(deviceTypes_);
+            if ((bitField0_ & 0x00000001) == 0) {
+                deviceTypes_ = new java.util.ArrayList<>(deviceTypes_);
                 bitField0_ |= 0x00000001;
             }
         }
@@ -626,8 +576,7 @@ public final class UpdateUserOnlineStatusRequest extends
          * @return A list containing the deviceTypes.
          */
         public java.util.List<im.turms.server.common.access.client.dto.constant.DeviceType> getDeviceTypesList() {
-            return new com.google.protobuf.Internal.ListAdapter<
-                    java.lang.Integer, im.turms.server.common.access.client.dto.constant.DeviceType>(deviceTypes_, deviceTypes_converter_);
+            return new com.google.protobuf.Internal.ListAdapter<>(deviceTypes_, deviceTypes_converter_);
         }
 
         /**
@@ -730,7 +679,7 @@ public final class UpdateUserOnlineStatusRequest extends
          */
         public Builder clearDeviceTypes() {
             deviceTypes_ = java.util.Collections.emptyList();
-            bitField0_ = (bitField0_ & ~0x00000001);
+            bitField0_ &= ~0x00000001;
             onChanged();
             return this;
         }
@@ -846,8 +795,8 @@ public final class UpdateUserOnlineStatusRequest extends
          * @return This builder for chaining.
          */
         public Builder setUserStatusValue(int value) {
-
             userStatus_ = value;
+            bitField0_ |= 0x00000002;
             onChanged();
             return this;
         }
@@ -863,8 +812,7 @@ public final class UpdateUserOnlineStatusRequest extends
          */
         @java.lang.Override
         public im.turms.server.common.access.client.dto.constant.UserStatus getUserStatus() {
-            @SuppressWarnings("deprecation")
-            im.turms.server.common.access.client.dto.constant.UserStatus result = im.turms.server.common.access.client.dto.constant.UserStatus.valueOf(userStatus_);
+            im.turms.server.common.access.client.dto.constant.UserStatus result = im.turms.server.common.access.client.dto.constant.UserStatus.forNumber(userStatus_);
             return result == null ? im.turms.server.common.access.client.dto.constant.UserStatus.UNRECOGNIZED : result;
         }
 
@@ -882,7 +830,7 @@ public final class UpdateUserOnlineStatusRequest extends
             if (value == null) {
                 throw new NullPointerException();
             }
-
+            bitField0_ |= 0x00000002;
             userStatus_ = value.getNumber();
             onChanged();
             return this;
@@ -898,7 +846,7 @@ public final class UpdateUserOnlineStatusRequest extends
          * @return This builder for chaining.
          */
         public Builder clearUserStatus() {
-
+            bitField0_ &= ~0x00000002;
             userStatus_ = 0;
             onChanged();
             return this;
@@ -932,7 +880,7 @@ public final class UpdateUserOnlineStatusRequest extends
     }
 
     private static final com.google.protobuf.Parser<UpdateUserOnlineStatusRequest>
-            PARSER = new com.google.protobuf.AbstractParser<UpdateUserOnlineStatusRequest>() {
+            PARSER = new com.google.protobuf.AbstractParser<>() {
         @java.lang.Override
         public UpdateUserOnlineStatusRequest parsePartialFrom(
                 com.google.protobuf.CodedInputStream input,

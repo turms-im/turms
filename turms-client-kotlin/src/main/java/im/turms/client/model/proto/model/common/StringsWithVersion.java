@@ -182,7 +182,7 @@ public final class StringsWithVersion extends
      * <code>optional int64 last_updated_date = 2;</code>
      */
     private void clearLastUpdatedDate() {
-        bitField0_ = (bitField0_ & ~0x00000001);
+        bitField0_ &= ~0x00000001;
         lastUpdatedDate_ = 0L;
     }
 
@@ -482,7 +482,7 @@ public final class StringsWithVersion extends
                         parser = PARSER;
                         if (parser == null) {
                             parser =
-                                    new DefaultInstanceBasedParser<im.turms.client.model.proto.model.common.StringsWithVersion>(
+                                    new DefaultInstanceBasedParser<>(
                                             DEFAULT_INSTANCE);
                             PARSER = parser;
                         }

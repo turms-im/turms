@@ -74,8 +74,7 @@ public final class UpdateMessageAttachmentInfoRequestOuterClass {
         internal_static_im_turms_proto_UpdateMessageAttachmentInfoRequest_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
                 internal_static_im_turms_proto_UpdateMessageAttachmentInfoRequest_descriptor,
-                new java.lang.String[]{"AttachmentIdNum", "AttachmentIdStr", "UserIdToShareWith", "UserIdToUnshareWith", "GroupIdToShareWith", "GroupIdToUnshareWith", "AttachmentIdNum",
-                        "AttachmentIdStr", "UserIdToShareWith", "UserIdToUnshareWith", "GroupIdToShareWith", "GroupIdToUnshareWith",});
+                new java.lang.String[]{"AttachmentIdNum", "AttachmentIdStr", "UserIdToShareWith", "UserIdToUnshareWith", "GroupIdToShareWith", "GroupIdToUnshareWith", "AttachmentIdNum", "AttachmentIdStr", "UserIdToShareWith", "UserIdToUnshareWith", "GroupIdToShareWith", "GroupIdToUnshareWith",});
     }
 
     // @@protoc_insertion_point(outer_class_scope)

@@ -145,7 +145,7 @@ public final class CreateSessionRequest extends
      * <code>optional string password = 3;</code>
      */
     private void clearPassword() {
-        bitField0_ = (bitField0_ & ~0x00000001);
+        bitField0_ &= ~0x00000001;
         password_ = getDefaultInstance().getPassword();
     }
 
@@ -219,7 +219,7 @@ public final class CreateSessionRequest extends
      * <code>optional .im.turms.proto.UserStatus user_status = 4;</code>
      */
     private void clearUserStatus() {
-        bitField0_ = (bitField0_ & ~0x00000002);
+        bitField0_ &= ~0x00000002;
         userStatus_ = 0;
     }
 
@@ -345,8 +345,10 @@ public final class CreateSessionRequest extends
      */
     @java.lang.Override
 
-    public java.lang.String getDeviceDetailsOrDefault(
+    public /* nullable */
+    java.lang.String getDeviceDetailsOrDefault(
             java.lang.String key,
+            /* nullable */
             java.lang.String defaultValue) {
         java.lang.Class<?> keyClass = key.getClass();
         java.util.Map<java.lang.String, java.lang.String> map =
@@ -427,7 +429,7 @@ public final class CreateSessionRequest extends
      */
     private void clearLocation() {
         location_ = null;
-        bitField0_ = (bitField0_ & ~0x00000004);
+        bitField0_ &= ~0x00000004;
     }
 
     public static im.turms.client.model.proto.request.user.CreateSessionRequest parseFrom(
@@ -849,8 +851,10 @@ public final class CreateSessionRequest extends
          */
         @java.lang.Override
 
-        public java.lang.String getDeviceDetailsOrDefault(
+        public /* nullable */
+        java.lang.String getDeviceDetailsOrDefault(
                 java.lang.String key,
+                /* nullable */
                 java.lang.String defaultValue) {
             java.lang.Class<?> keyClass = key.getClass();
             java.util.Map<java.lang.String, java.lang.String> map =
@@ -993,7 +997,7 @@ public final class CreateSessionRequest extends
                         parser = PARSER;
                         if (parser == null) {
                             parser =
-                                    new DefaultInstanceBasedParser<im.turms.client.model.proto.request.user.CreateSessionRequest>(
+                                    new DefaultInstanceBasedParser<>(
                                             DEFAULT_INSTANCE);
                             PARSER = parser;
                         }

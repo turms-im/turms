@@ -10,10 +10,10 @@ import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
 
 @$core.Deprecated('Use turmsRequestDescriptor instead')
-const TurmsRequest$json = {
+const TurmsRequest$json = const {
   '1': 'TurmsRequest',
-  '2': [
-    {
+  '2': const [
+    const {
       '1': 'request_id',
       '3': 1,
       '4': 1,
@@ -22,7 +22,7 @@ const TurmsRequest$json = {
       '10': 'requestId',
       '17': true
     },
-    {
+    const {
       '1': 'create_session_request',
       '3': 3,
       '4': 1,
@@ -31,7 +31,7 @@ const TurmsRequest$json = {
       '9': 0,
       '10': 'createSessionRequest'
     },
-    {
+    const {
       '1': 'delete_session_request',
       '3': 4,
       '4': 1,
@@ -40,7 +40,7 @@ const TurmsRequest$json = {
       '9': 0,
       '10': 'deleteSessionRequest'
     },
-    {
+    const {
       '1': 'query_conversations_request',
       '3': 5,
       '4': 1,
@@ -49,7 +49,7 @@ const TurmsRequest$json = {
       '9': 0,
       '10': 'queryConversationsRequest'
     },
-    {
+    const {
       '1': 'update_conversation_request',
       '3': 6,
       '4': 1,
@@ -58,7 +58,7 @@ const TurmsRequest$json = {
       '9': 0,
       '10': 'updateConversationRequest'
     },
-    {
+    const {
       '1': 'update_typing_status_request',
       '3': 7,
       '4': 1,
@@ -67,7 +67,7 @@ const TurmsRequest$json = {
       '9': 0,
       '10': 'updateTypingStatusRequest'
     },
-    {
+    const {
       '1': 'create_message_request',
       '3': 8,
       '4': 1,
@@ -76,7 +76,7 @@ const TurmsRequest$json = {
       '9': 0,
       '10': 'createMessageRequest'
     },
-    {
+    const {
       '1': 'query_messages_request',
       '3': 9,
       '4': 1,
@@ -85,7 +85,7 @@ const TurmsRequest$json = {
       '9': 0,
       '10': 'queryMessagesRequest'
     },
-    {
+    const {
       '1': 'update_message_request',
       '3': 10,
       '4': 1,
@@ -94,7 +94,7 @@ const TurmsRequest$json = {
       '9': 0,
       '10': 'updateMessageRequest'
     },
-    {
+    const {
       '1': 'create_group_members_request',
       '3': 11,
       '4': 1,
@@ -103,7 +103,7 @@ const TurmsRequest$json = {
       '9': 0,
       '10': 'createGroupMembersRequest'
     },
-    {
+    const {
       '1': 'delete_group_members_request',
       '3': 12,
       '4': 1,
@@ -112,7 +112,7 @@ const TurmsRequest$json = {
       '9': 0,
       '10': 'deleteGroupMembersRequest'
     },
-    {
+    const {
       '1': 'query_group_members_request',
       '3': 13,
       '4': 1,
@@ -121,7 +121,7 @@ const TurmsRequest$json = {
       '9': 0,
       '10': 'queryGroupMembersRequest'
     },
-    {
+    const {
       '1': 'update_group_member_request',
       '3': 14,
       '4': 1,
@@ -130,7 +130,7 @@ const TurmsRequest$json = {
       '9': 0,
       '10': 'updateGroupMemberRequest'
     },
-    {
+    const {
       '1': 'query_user_profiles_request',
       '3': 100,
       '4': 1,
@@ -139,7 +139,7 @@ const TurmsRequest$json = {
       '9': 0,
       '10': 'queryUserProfilesRequest'
     },
-    {
+    const {
       '1': 'query_nearby_users_request',
       '3': 101,
       '4': 1,
@@ -148,7 +148,7 @@ const TurmsRequest$json = {
       '9': 0,
       '10': 'queryNearbyUsersRequest'
     },
-    {
+    const {
       '1': 'query_user_online_statuses_request',
       '3': 102,
       '4': 1,
@@ -157,7 +157,7 @@ const TurmsRequest$json = {
       '9': 0,
       '10': 'queryUserOnlineStatusesRequest'
     },
-    {
+    const {
       '1': 'update_user_location_request',
       '3': 103,
       '4': 1,
@@ -166,7 +166,7 @@ const TurmsRequest$json = {
       '9': 0,
       '10': 'updateUserLocationRequest'
     },
-    {
+    const {
       '1': 'update_user_online_status_request',
       '3': 104,
       '4': 1,
@@ -175,7 +175,7 @@ const TurmsRequest$json = {
       '9': 0,
       '10': 'updateUserOnlineStatusRequest'
     },
-    {
+    const {
       '1': 'update_user_request',
       '3': 105,
       '4': 1,
@@ -184,7 +184,7 @@ const TurmsRequest$json = {
       '9': 0,
       '10': 'updateUserRequest'
     },
-    {
+    const {
       '1': 'create_friend_request_request',
       '3': 200,
       '4': 1,
@@ -193,7 +193,7 @@ const TurmsRequest$json = {
       '9': 0,
       '10': 'createFriendRequestRequest'
     },
-    {
+    const {
       '1': 'create_relationship_group_request',
       '3': 201,
       '4': 1,
@@ -202,7 +202,7 @@ const TurmsRequest$json = {
       '9': 0,
       '10': 'createRelationshipGroupRequest'
     },
-    {
+    const {
       '1': 'create_relationship_request',
       '3': 202,
       '4': 1,
@@ -211,7 +211,7 @@ const TurmsRequest$json = {
       '9': 0,
       '10': 'createRelationshipRequest'
     },
-    {
+    const {
       '1': 'delete_relationship_group_request',
       '3': 203,
       '4': 1,
@@ -220,7 +220,7 @@ const TurmsRequest$json = {
       '9': 0,
       '10': 'deleteRelationshipGroupRequest'
     },
-    {
+    const {
       '1': 'delete_relationship_request',
       '3': 204,
       '4': 1,
@@ -229,7 +229,7 @@ const TurmsRequest$json = {
       '9': 0,
       '10': 'deleteRelationshipRequest'
     },
-    {
+    const {
       '1': 'query_friend_requests_request',
       '3': 205,
       '4': 1,
@@ -238,7 +238,7 @@ const TurmsRequest$json = {
       '9': 0,
       '10': 'queryFriendRequestsRequest'
     },
-    {
+    const {
       '1': 'query_related_user_ids_request',
       '3': 206,
       '4': 1,
@@ -247,7 +247,7 @@ const TurmsRequest$json = {
       '9': 0,
       '10': 'queryRelatedUserIdsRequest'
     },
-    {
+    const {
       '1': 'query_relationship_groups_request',
       '3': 207,
       '4': 1,
@@ -256,7 +256,7 @@ const TurmsRequest$json = {
       '9': 0,
       '10': 'queryRelationshipGroupsRequest'
     },
-    {
+    const {
       '1': 'query_relationships_request',
       '3': 208,
       '4': 1,
@@ -265,7 +265,7 @@ const TurmsRequest$json = {
       '9': 0,
       '10': 'queryRelationshipsRequest'
     },
-    {
+    const {
       '1': 'update_friend_request_request',
       '3': 209,
       '4': 1,
@@ -274,7 +274,7 @@ const TurmsRequest$json = {
       '9': 0,
       '10': 'updateFriendRequestRequest'
     },
-    {
+    const {
       '1': 'update_relationship_group_request',
       '3': 210,
       '4': 1,
@@ -283,7 +283,7 @@ const TurmsRequest$json = {
       '9': 0,
       '10': 'updateRelationshipGroupRequest'
     },
-    {
+    const {
       '1': 'update_relationship_request',
       '3': 211,
       '4': 1,
@@ -292,7 +292,7 @@ const TurmsRequest$json = {
       '9': 0,
       '10': 'updateRelationshipRequest'
     },
-    {
+    const {
       '1': 'create_group_request',
       '3': 300,
       '4': 1,
@@ -301,7 +301,7 @@ const TurmsRequest$json = {
       '9': 0,
       '10': 'createGroupRequest'
     },
-    {
+    const {
       '1': 'delete_group_request',
       '3': 301,
       '4': 1,
@@ -310,7 +310,7 @@ const TurmsRequest$json = {
       '9': 0,
       '10': 'deleteGroupRequest'
     },
-    {
+    const {
       '1': 'query_groups_request',
       '3': 302,
       '4': 1,
@@ -319,7 +319,7 @@ const TurmsRequest$json = {
       '9': 0,
       '10': 'queryGroupsRequest'
     },
-    {
+    const {
       '1': 'query_joined_group_ids_request',
       '3': 303,
       '4': 1,
@@ -328,7 +328,7 @@ const TurmsRequest$json = {
       '9': 0,
       '10': 'queryJoinedGroupIdsRequest'
     },
-    {
+    const {
       '1': 'query_joined_group_infos_request',
       '3': 304,
       '4': 1,
@@ -337,7 +337,7 @@ const TurmsRequest$json = {
       '9': 0,
       '10': 'queryJoinedGroupInfosRequest'
     },
-    {
+    const {
       '1': 'update_group_request',
       '3': 305,
       '4': 1,
@@ -346,7 +346,7 @@ const TurmsRequest$json = {
       '9': 0,
       '10': 'updateGroupRequest'
     },
-    {
+    const {
       '1': 'create_group_blocked_user_request',
       '3': 400,
       '4': 1,
@@ -355,7 +355,7 @@ const TurmsRequest$json = {
       '9': 0,
       '10': 'createGroupBlockedUserRequest'
     },
-    {
+    const {
       '1': 'delete_group_blocked_user_request',
       '3': 401,
       '4': 1,
@@ -364,7 +364,7 @@ const TurmsRequest$json = {
       '9': 0,
       '10': 'deleteGroupBlockedUserRequest'
     },
-    {
+    const {
       '1': 'query_group_blocked_user_ids_request',
       '3': 402,
       '4': 1,
@@ -373,7 +373,7 @@ const TurmsRequest$json = {
       '9': 0,
       '10': 'queryGroupBlockedUserIdsRequest'
     },
-    {
+    const {
       '1': 'query_group_blocked_user_infos_request',
       '3': 403,
       '4': 1,
@@ -382,7 +382,7 @@ const TurmsRequest$json = {
       '9': 0,
       '10': 'queryGroupBlockedUserInfosRequest'
     },
-    {
+    const {
       '1': 'check_group_join_questions_answers_request',
       '3': 500,
       '4': 1,
@@ -391,7 +391,7 @@ const TurmsRequest$json = {
       '9': 0,
       '10': 'checkGroupJoinQuestionsAnswersRequest'
     },
-    {
+    const {
       '1': 'create_group_invitation_request',
       '3': 501,
       '4': 1,
@@ -400,7 +400,7 @@ const TurmsRequest$json = {
       '9': 0,
       '10': 'createGroupInvitationRequest'
     },
-    {
+    const {
       '1': 'create_group_join_request_request',
       '3': 502,
       '4': 1,
@@ -409,7 +409,7 @@ const TurmsRequest$json = {
       '9': 0,
       '10': 'createGroupJoinRequestRequest'
     },
-    {
+    const {
       '1': 'create_group_join_questions_request',
       '3': 503,
       '4': 1,
@@ -418,7 +418,7 @@ const TurmsRequest$json = {
       '9': 0,
       '10': 'createGroupJoinQuestionsRequest'
     },
-    {
+    const {
       '1': 'delete_group_invitation_request',
       '3': 504,
       '4': 1,
@@ -427,7 +427,7 @@ const TurmsRequest$json = {
       '9': 0,
       '10': 'deleteGroupInvitationRequest'
     },
-    {
+    const {
       '1': 'delete_group_join_request_request',
       '3': 505,
       '4': 1,
@@ -436,7 +436,7 @@ const TurmsRequest$json = {
       '9': 0,
       '10': 'deleteGroupJoinRequestRequest'
     },
-    {
+    const {
       '1': 'delete_group_join_questions_request',
       '3': 506,
       '4': 1,
@@ -445,7 +445,7 @@ const TurmsRequest$json = {
       '9': 0,
       '10': 'deleteGroupJoinQuestionsRequest'
     },
-    {
+    const {
       '1': 'query_group_invitations_request',
       '3': 507,
       '4': 1,
@@ -454,7 +454,7 @@ const TurmsRequest$json = {
       '9': 0,
       '10': 'queryGroupInvitationsRequest'
     },
-    {
+    const {
       '1': 'query_group_join_requests_request',
       '3': 508,
       '4': 1,
@@ -463,7 +463,7 @@ const TurmsRequest$json = {
       '9': 0,
       '10': 'queryGroupJoinRequestsRequest'
     },
-    {
+    const {
       '1': 'query_group_join_questions_request',
       '3': 509,
       '4': 1,
@@ -472,7 +472,7 @@ const TurmsRequest$json = {
       '9': 0,
       '10': 'queryGroupJoinQuestionsRequest'
     },
-    {
+    const {
       '1': 'update_group_join_question_request',
       '3': 510,
       '4': 1,
@@ -481,7 +481,7 @@ const TurmsRequest$json = {
       '9': 0,
       '10': 'updateGroupJoinQuestionRequest'
     },
-    {
+    const {
       '1': 'delete_resource_request',
       '3': 1000,
       '4': 1,
@@ -490,7 +490,7 @@ const TurmsRequest$json = {
       '9': 0,
       '10': 'deleteResourceRequest'
     },
-    {
+    const {
       '1': 'query_resource_download_info_request',
       '3': 1001,
       '4': 1,
@@ -499,7 +499,7 @@ const TurmsRequest$json = {
       '9': 0,
       '10': 'queryResourceDownloadInfoRequest'
     },
-    {
+    const {
       '1': 'query_resource_upload_info_request',
       '3': 1002,
       '4': 1,
@@ -508,7 +508,7 @@ const TurmsRequest$json = {
       '9': 0,
       '10': 'queryResourceUploadInfoRequest'
     },
-    {
+    const {
       '1': 'query_message_attachment_infos_request',
       '3': 1003,
       '4': 1,
@@ -517,7 +517,7 @@ const TurmsRequest$json = {
       '9': 0,
       '10': 'queryMessageAttachmentInfosRequest'
     },
-    {
+    const {
       '1': 'update_message_attachment_info_request',
       '3': 1004,
       '4': 1,
@@ -527,9 +527,9 @@ const TurmsRequest$json = {
       '10': 'updateMessageAttachmentInfoRequest'
     },
   ],
-  '8': [
-    {'1': 'kind'},
-    {'1': '_request_id'},
+  '8': const [
+    const {'1': 'kind'},
+    const {'1': '_request_id'},
   ],
 };
 

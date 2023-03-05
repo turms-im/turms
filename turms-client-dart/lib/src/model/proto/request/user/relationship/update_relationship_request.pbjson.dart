@@ -10,11 +10,11 @@ import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
 
 @$core.Deprecated('Use updateRelationshipRequestDescriptor instead')
-const UpdateRelationshipRequest$json = {
+const UpdateRelationshipRequest$json = const {
   '1': 'UpdateRelationshipRequest',
-  '2': [
-    {'1': 'user_id', '3': 1, '4': 1, '5': 3, '10': 'userId'},
-    {
+  '2': const [
+    const {'1': 'user_id', '3': 1, '4': 1, '5': 3, '10': 'userId'},
+    const {
       '1': 'blocked',
       '3': 2,
       '4': 1,
@@ -23,7 +23,7 @@ const UpdateRelationshipRequest$json = {
       '10': 'blocked',
       '17': true
     },
-    {
+    const {
       '1': 'new_group_index',
       '3': 3,
       '4': 1,
@@ -32,7 +32,7 @@ const UpdateRelationshipRequest$json = {
       '10': 'newGroupIndex',
       '17': true
     },
-    {
+    const {
       '1': 'delete_group_index',
       '3': 4,
       '4': 1,
@@ -42,10 +42,10 @@ const UpdateRelationshipRequest$json = {
       '17': true
     },
   ],
-  '8': [
-    {'1': '_blocked'},
-    {'1': '_new_group_index'},
-    {'1': '_delete_group_index'},
+  '8': const [
+    const {'1': '_blocked'},
+    const {'1': '_new_group_index'},
+    const {'1': '_delete_group_index'},
   ],
 };
 

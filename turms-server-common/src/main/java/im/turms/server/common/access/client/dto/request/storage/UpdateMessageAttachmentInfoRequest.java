@@ -45,12 +45,6 @@ public final class UpdateMessageAttachmentInfoRequest extends
         return new UpdateMessageAttachmentInfoRequest();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-        return this.unknownFields;
-    }
-
     public static final com.google.protobuf.Descriptors.Descriptor
     getDescriptor() {
         return im.turms.server.common.access.client.dto.request.storage.UpdateMessageAttachmentInfoRequestOuterClass.internal_static_im_turms_proto_UpdateMessageAttachmentInfoRequest_descriptor;
@@ -61,13 +55,12 @@ public final class UpdateMessageAttachmentInfoRequest extends
     internalGetFieldAccessorTable() {
         return im.turms.server.common.access.client.dto.request.storage.UpdateMessageAttachmentInfoRequestOuterClass.internal_static_im_turms_proto_UpdateMessageAttachmentInfoRequest_fieldAccessorTable
                 .ensureFieldAccessorsInitialized(
-                        im.turms.server.common.access.client.dto.request.storage.UpdateMessageAttachmentInfoRequest.class,
-                        im.turms.server.common.access.client.dto.request.storage.UpdateMessageAttachmentInfoRequest.Builder.class);
+                        im.turms.server.common.access.client.dto.request.storage.UpdateMessageAttachmentInfoRequest.class, im.turms.server.common.access.client.dto.request.storage.UpdateMessageAttachmentInfoRequest.Builder.class);
     }
 
     private int bitField0_;
     public static final int ATTACHMENT_ID_NUM_FIELD_NUMBER = 1;
-    private long attachmentIdNum_;
+    private long attachmentIdNum_ = 0L;
 
     /**
      * <pre>
@@ -98,7 +91,8 @@ public final class UpdateMessageAttachmentInfoRequest extends
     }
 
     public static final int ATTACHMENT_ID_STR_FIELD_NUMBER = 2;
-    private volatile java.lang.Object attachmentIdStr_;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object attachmentIdStr_ = "";
 
     /**
      * <code>optional string attachment_id_str = 2;</code>
@@ -150,7 +144,7 @@ public final class UpdateMessageAttachmentInfoRequest extends
     }
 
     public static final int USER_ID_TO_SHARE_WITH_FIELD_NUMBER = 3;
-    private long userIdToShareWith_;
+    private long userIdToShareWith_ = 0L;
 
     /**
      * <pre>
@@ -181,7 +175,7 @@ public final class UpdateMessageAttachmentInfoRequest extends
     }
 
     public static final int USER_ID_TO_UNSHARE_WITH_FIELD_NUMBER = 4;
-    private long userIdToUnshareWith_;
+    private long userIdToUnshareWith_ = 0L;
 
     /**
      * <code>optional int64 user_id_to_unshare_with = 4;</code>
@@ -204,7 +198,7 @@ public final class UpdateMessageAttachmentInfoRequest extends
     }
 
     public static final int GROUP_ID_TO_SHARE_WITH_FIELD_NUMBER = 5;
-    private long groupIdToShareWith_;
+    private long groupIdToShareWith_ = 0L;
 
     /**
      * <code>optional int64 group_id_to_share_with = 5;</code>
@@ -227,7 +221,7 @@ public final class UpdateMessageAttachmentInfoRequest extends
     }
 
     public static final int GROUP_ID_TO_UNSHARE_WITH_FIELD_NUMBER = 6;
-    private long groupIdToUnshareWith_;
+    private long groupIdToUnshareWith_ = 0L;
 
     /**
      * <code>optional int64 group_id_to_unshare_with = 6;</code>
@@ -330,11 +324,9 @@ public final class UpdateMessageAttachmentInfoRequest extends
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof im.turms.server.common.access.client.dto.request.storage.UpdateMessageAttachmentInfoRequest)) {
+        if (!(obj instanceof UpdateMessageAttachmentInfoRequest other)) {
             return super.equals(obj);
         }
-        im.turms.server.common.access.client.dto.request.storage.UpdateMessageAttachmentInfoRequest other =
-                (im.turms.server.common.access.client.dto.request.storage.UpdateMessageAttachmentInfoRequest) obj;
 
         if (hasAttachmentIdNum() != other.hasAttachmentIdNum()) {
             return false;
@@ -390,10 +382,7 @@ public final class UpdateMessageAttachmentInfoRequest extends
                 return false;
             }
         }
-        if (!getUnknownFields().equals(other.getUnknownFields())) {
-            return false;
-        }
-        return true;
+        return getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -540,8 +529,7 @@ public final class UpdateMessageAttachmentInfoRequest extends
     @java.lang.Override
     protected Builder newBuilderForType(
             com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
+        return new Builder(parent);
     }
 
     /**
@@ -561,8 +549,7 @@ public final class UpdateMessageAttachmentInfoRequest extends
         internalGetFieldAccessorTable() {
             return im.turms.server.common.access.client.dto.request.storage.UpdateMessageAttachmentInfoRequestOuterClass.internal_static_im_turms_proto_UpdateMessageAttachmentInfoRequest_fieldAccessorTable
                     .ensureFieldAccessorsInitialized(
-                            im.turms.server.common.access.client.dto.request.storage.UpdateMessageAttachmentInfoRequest.class,
-                            im.turms.server.common.access.client.dto.request.storage.UpdateMessageAttachmentInfoRequest.Builder.class);
+                            im.turms.server.common.access.client.dto.request.storage.UpdateMessageAttachmentInfoRequest.class, im.turms.server.common.access.client.dto.request.storage.UpdateMessageAttachmentInfoRequest.Builder.class);
         }
 
         // Construct using im.turms.server.common.access.client.dto.request.storage.UpdateMessageAttachmentInfoRequest.newBuilder()
@@ -579,18 +566,13 @@ public final class UpdateMessageAttachmentInfoRequest extends
         @java.lang.Override
         public Builder clear() {
             super.clear();
+            bitField0_ = 0;
             attachmentIdNum_ = 0L;
-            bitField0_ = (bitField0_ & ~0x00000001);
             attachmentIdStr_ = "";
-            bitField0_ = (bitField0_ & ~0x00000002);
             userIdToShareWith_ = 0L;
-            bitField0_ = (bitField0_ & ~0x00000004);
             userIdToUnshareWith_ = 0L;
-            bitField0_ = (bitField0_ & ~0x00000008);
             groupIdToShareWith_ = 0L;
-            bitField0_ = (bitField0_ & ~0x00000010);
             groupIdToUnshareWith_ = 0L;
-            bitField0_ = (bitField0_ & ~0x00000020);
             return this;
         }
 
@@ -616,8 +598,15 @@ public final class UpdateMessageAttachmentInfoRequest extends
 
         @java.lang.Override
         public im.turms.server.common.access.client.dto.request.storage.UpdateMessageAttachmentInfoRequest buildPartial() {
-            im.turms.server.common.access.client.dto.request.storage.UpdateMessageAttachmentInfoRequest result =
-                    new im.turms.server.common.access.client.dto.request.storage.UpdateMessageAttachmentInfoRequest(this);
+            im.turms.server.common.access.client.dto.request.storage.UpdateMessageAttachmentInfoRequest result = new im.turms.server.common.access.client.dto.request.storage.UpdateMessageAttachmentInfoRequest(this);
+            if (bitField0_ != 0) {
+                buildPartial0(result);
+            }
+            onBuilt();
+            return result;
+        }
+
+        private void buildPartial0(im.turms.server.common.access.client.dto.request.storage.UpdateMessageAttachmentInfoRequest result) {
             int from_bitField0_ = bitField0_;
             int to_bitField0_ = 0;
             if (((from_bitField0_ & 0x00000001) != 0)) {
@@ -625,9 +614,9 @@ public final class UpdateMessageAttachmentInfoRequest extends
                 to_bitField0_ |= 0x00000001;
             }
             if (((from_bitField0_ & 0x00000002) != 0)) {
+                result.attachmentIdStr_ = attachmentIdStr_;
                 to_bitField0_ |= 0x00000002;
             }
-            result.attachmentIdStr_ = attachmentIdStr_;
             if (((from_bitField0_ & 0x00000004) != 0)) {
                 result.userIdToShareWith_ = userIdToShareWith_;
                 to_bitField0_ |= 0x00000004;
@@ -644,47 +633,7 @@ public final class UpdateMessageAttachmentInfoRequest extends
                 result.groupIdToUnshareWith_ = groupIdToUnshareWith_;
                 to_bitField0_ |= 0x00000020;
             }
-            result.bitField0_ = to_bitField0_;
-            onBuilt();
-            return result;
-        }
-
-        @java.lang.Override
-        public Builder clone() {
-            return super.clone();
-        }
-
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(
-                com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(
-                com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index, java.lang.Object value) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.addRepeatedField(field, value);
+            result.bitField0_ |= to_bitField0_;
         }
 
         @java.lang.Override
@@ -705,8 +654,8 @@ public final class UpdateMessageAttachmentInfoRequest extends
                 setAttachmentIdNum(other.getAttachmentIdNum());
             }
             if (other.hasAttachmentIdStr()) {
-                bitField0_ |= 0x00000002;
                 attachmentIdStr_ = other.attachmentIdStr_;
+                bitField0_ |= 0x00000002;
                 onChanged();
             }
             if (other.hasUserIdToShareWith()) {
@@ -744,44 +693,35 @@ public final class UpdateMessageAttachmentInfoRequest extends
                 while (!done) {
                     int tag = input.readTag();
                     switch (tag) {
-                        case 0:
-                            done = true;
-                            break;
-                        case 8: {
+                        case 0 -> done = true;
+                        case 8 -> {
                             attachmentIdNum_ = input.readInt64();
                             bitField0_ |= 0x00000001;
-                            break;
                         } // case 8
-                        case 18: {
+                        case 18 -> {
                             attachmentIdStr_ = input.readStringRequireUtf8();
                             bitField0_ |= 0x00000002;
-                            break;
                         } // case 18
-                        case 24: {
+                        case 24 -> {
                             userIdToShareWith_ = input.readInt64();
                             bitField0_ |= 0x00000004;
-                            break;
                         } // case 24
-                        case 32: {
+                        case 32 -> {
                             userIdToUnshareWith_ = input.readInt64();
                             bitField0_ |= 0x00000008;
-                            break;
                         } // case 32
-                        case 40: {
+                        case 40 -> {
                             groupIdToShareWith_ = input.readInt64();
                             bitField0_ |= 0x00000010;
-                            break;
                         } // case 40
-                        case 48: {
+                        case 48 -> {
                             groupIdToUnshareWith_ = input.readInt64();
                             bitField0_ |= 0x00000020;
-                            break;
                         } // case 48
-                        default: {
+                        default -> {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
                             }
-                            break;
                         } // default:
                     } // switch (tag)
                 } // while (!done)
@@ -836,8 +776,9 @@ public final class UpdateMessageAttachmentInfoRequest extends
          * @return This builder for chaining.
          */
         public Builder setAttachmentIdNum(long value) {
-            bitField0_ |= 0x00000001;
+
             attachmentIdNum_ = value;
+            bitField0_ |= 0x00000001;
             onChanged();
             return this;
         }
@@ -852,7 +793,7 @@ public final class UpdateMessageAttachmentInfoRequest extends
          * @return This builder for chaining.
          */
         public Builder clearAttachmentIdNum() {
-            bitField0_ = (bitField0_ & ~0x00000001);
+            bitField0_ &= ~0x00000001;
             attachmentIdNum_ = 0L;
             onChanged();
             return this;
@@ -917,8 +858,8 @@ public final class UpdateMessageAttachmentInfoRequest extends
             if (value == null) {
                 throw new NullPointerException();
             }
-            bitField0_ |= 0x00000002;
             attachmentIdStr_ = value;
+            bitField0_ |= 0x00000002;
             onChanged();
             return this;
         }
@@ -929,8 +870,8 @@ public final class UpdateMessageAttachmentInfoRequest extends
          * @return This builder for chaining.
          */
         public Builder clearAttachmentIdStr() {
-            bitField0_ = (bitField0_ & ~0x00000002);
             attachmentIdStr_ = getDefaultInstance().getAttachmentIdStr();
+            bitField0_ &= ~0x00000002;
             onChanged();
             return this;
         }
@@ -947,8 +888,8 @@ public final class UpdateMessageAttachmentInfoRequest extends
                 throw new NullPointerException();
             }
             checkByteStringIsUtf8(value);
-            bitField0_ |= 0x00000002;
             attachmentIdStr_ = value;
+            bitField0_ |= 0x00000002;
             onChanged();
             return this;
         }
@@ -994,8 +935,9 @@ public final class UpdateMessageAttachmentInfoRequest extends
          * @return This builder for chaining.
          */
         public Builder setUserIdToShareWith(long value) {
-            bitField0_ |= 0x00000004;
+
             userIdToShareWith_ = value;
+            bitField0_ |= 0x00000004;
             onChanged();
             return this;
         }
@@ -1010,7 +952,7 @@ public final class UpdateMessageAttachmentInfoRequest extends
          * @return This builder for chaining.
          */
         public Builder clearUserIdToShareWith() {
-            bitField0_ = (bitField0_ & ~0x00000004);
+            bitField0_ &= ~0x00000004;
             userIdToShareWith_ = 0L;
             onChanged();
             return this;
@@ -1045,8 +987,9 @@ public final class UpdateMessageAttachmentInfoRequest extends
          * @return This builder for chaining.
          */
         public Builder setUserIdToUnshareWith(long value) {
-            bitField0_ |= 0x00000008;
+
             userIdToUnshareWith_ = value;
+            bitField0_ |= 0x00000008;
             onChanged();
             return this;
         }
@@ -1057,7 +1000,7 @@ public final class UpdateMessageAttachmentInfoRequest extends
          * @return This builder for chaining.
          */
         public Builder clearUserIdToUnshareWith() {
-            bitField0_ = (bitField0_ & ~0x00000008);
+            bitField0_ &= ~0x00000008;
             userIdToUnshareWith_ = 0L;
             onChanged();
             return this;
@@ -1092,8 +1035,9 @@ public final class UpdateMessageAttachmentInfoRequest extends
          * @return This builder for chaining.
          */
         public Builder setGroupIdToShareWith(long value) {
-            bitField0_ |= 0x00000010;
+
             groupIdToShareWith_ = value;
+            bitField0_ |= 0x00000010;
             onChanged();
             return this;
         }
@@ -1104,7 +1048,7 @@ public final class UpdateMessageAttachmentInfoRequest extends
          * @return This builder for chaining.
          */
         public Builder clearGroupIdToShareWith() {
-            bitField0_ = (bitField0_ & ~0x00000010);
+            bitField0_ &= ~0x00000010;
             groupIdToShareWith_ = 0L;
             onChanged();
             return this;
@@ -1139,8 +1083,9 @@ public final class UpdateMessageAttachmentInfoRequest extends
          * @return This builder for chaining.
          */
         public Builder setGroupIdToUnshareWith(long value) {
-            bitField0_ |= 0x00000020;
+
             groupIdToUnshareWith_ = value;
+            bitField0_ |= 0x00000020;
             onChanged();
             return this;
         }
@@ -1151,7 +1096,7 @@ public final class UpdateMessageAttachmentInfoRequest extends
          * @return This builder for chaining.
          */
         public Builder clearGroupIdToUnshareWith() {
-            bitField0_ = (bitField0_ & ~0x00000020);
+            bitField0_ &= ~0x00000020;
             groupIdToUnshareWith_ = 0L;
             onChanged();
             return this;
@@ -1185,7 +1130,7 @@ public final class UpdateMessageAttachmentInfoRequest extends
     }
 
     private static final com.google.protobuf.Parser<UpdateMessageAttachmentInfoRequest>
-            PARSER = new com.google.protobuf.AbstractParser<UpdateMessageAttachmentInfoRequest>() {
+            PARSER = new com.google.protobuf.AbstractParser<>() {
         @java.lang.Override
         public UpdateMessageAttachmentInfoRequest parsePartialFrom(
                 com.google.protobuf.CodedInputStream input,

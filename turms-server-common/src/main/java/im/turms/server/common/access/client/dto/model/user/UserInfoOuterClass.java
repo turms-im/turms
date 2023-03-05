@@ -75,8 +75,7 @@ public final class UserInfoOuterClass {
         internal_static_im_turms_proto_UserInfo_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
                 internal_static_im_turms_proto_UserInfo_descriptor,
-                new java.lang.String[]{"Id", "Name", "Intro", "ProfilePicture", "ProfileAccessStrategy", "RegistrationDate", "LastUpdatedDate", "Active", "Id", "Name", "Intro", "ProfilePicture",
-                        "ProfileAccessStrategy", "RegistrationDate", "LastUpdatedDate", "Active",});
+                new java.lang.String[]{"Id", "Name", "Intro", "ProfilePicture", "ProfileAccessStrategy", "RegistrationDate", "LastUpdatedDate", "Active", "Id", "Name", "Intro", "ProfilePicture", "ProfileAccessStrategy", "RegistrationDate", "LastUpdatedDate", "Active",});
         im.turms.server.common.access.client.dto.constant.ProfileAccessStrategyOuterClass.getDescriptor();
     }
 

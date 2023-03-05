@@ -16,7 +16,7 @@ class StringsWithVersion extends $pb.GeneratedMessage {
           ? ''
           : 'StringsWithVersion',
       package: const $pb.PackageName(
-          $core.bool.fromEnvironment('protobuf.omit_message_names')
+          const $core.bool.fromEnvironment('protobuf.omit_message_names')
               ? ''
               : 'im.turms.proto'),
       createEmptyInstance: create)

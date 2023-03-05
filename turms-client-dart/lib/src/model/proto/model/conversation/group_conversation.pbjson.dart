@@ -10,11 +10,11 @@ import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
 
 @$core.Deprecated('Use groupConversationDescriptor instead')
-const GroupConversation$json = {
+const GroupConversation$json = const {
   '1': 'GroupConversation',
-  '2': [
-    {'1': 'group_id', '3': 1, '4': 1, '5': 3, '10': 'groupId'},
-    {
+  '2': const [
+    const {'1': 'group_id', '3': 1, '4': 1, '5': 3, '10': 'groupId'},
+    const {
       '1': 'member_id_to_read_date',
       '3': 2,
       '4': 3,
@@ -23,17 +23,17 @@ const GroupConversation$json = {
       '10': 'memberIdToReadDate'
     },
   ],
-  '3': [GroupConversation_MemberIdToReadDateEntry$json],
+  '3': const [GroupConversation_MemberIdToReadDateEntry$json],
 };
 
 @$core.Deprecated('Use groupConversationDescriptor instead')
-const GroupConversation_MemberIdToReadDateEntry$json = {
+const GroupConversation_MemberIdToReadDateEntry$json = const {
   '1': 'MemberIdToReadDateEntry',
-  '2': [
-    {'1': 'key', '3': 1, '4': 1, '5': 3, '10': 'key'},
-    {'1': 'value', '3': 2, '4': 1, '5': 3, '10': 'value'},
+  '2': const [
+    const {'1': 'key', '3': 1, '4': 1, '5': 3, '10': 'key'},
+    const {'1': 'value', '3': 2, '4': 1, '5': 3, '10': 'value'},
   ],
-  '7': {'7': true},
+  '7': const {'7': true},
 };
 
 /// Descriptor for `GroupConversation`. Decode as a `google.protobuf.DescriptorProto`.

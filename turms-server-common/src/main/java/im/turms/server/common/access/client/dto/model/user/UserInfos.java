@@ -128,8 +128,8 @@ public final class UserInfos extends
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
             throws java.io.IOException {
-        for (int i = 0; i < userInfos_.size(); i++) {
-            output.writeMessage(1, userInfos_.get(i));
+        for (UserInfo userInfo : userInfos_) {
+            output.writeMessage(1, userInfo);
         }
         getUnknownFields().writeTo(output);
     }
@@ -142,9 +142,9 @@ public final class UserInfos extends
         }
 
         size = 0;
-        for (int i = 0; i < userInfos_.size(); i++) {
+        for (UserInfo userInfo : userInfos_) {
             size += com.google.protobuf.CodedOutputStream
-                    .computeMessageSize(1, userInfos_.get(i));
+                    .computeMessageSize(1, userInfo);
         }
         size += getUnknownFields().getSerializedSize();
         memoizedSize = size;
@@ -156,19 +156,12 @@ public final class UserInfos extends
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof im.turms.server.common.access.client.dto.model.user.UserInfos)) {
+        if (!(obj instanceof UserInfos other)) {
             return super.equals(obj);
         }
-        im.turms.server.common.access.client.dto.model.user.UserInfos other = (im.turms.server.common.access.client.dto.model.user.UserInfos) obj;
 
-        if (!getUserInfosList()
-                .equals(other.getUserInfosList())) {
-            return false;
-        }
-        if (!getUnknownFields().equals(other.getUnknownFields())) {
-            return false;
-        }
-        return true;
+        return getUserInfosList()
+                       .equals(other.getUserInfosList()) && getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -290,8 +283,7 @@ public final class UserInfos extends
     @java.lang.Override
     protected Builder newBuilderForType(
             com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
+        return new Builder(parent);
     }
 
     /**
@@ -334,7 +326,7 @@ public final class UserInfos extends
                 userInfos_ = null;
                 userInfosBuilder_.clear();
             }
-            bitField0_ = (bitField0_ & ~0x00000001);
+            bitField0_ &= ~0x00000001;
             return this;
         }
 
@@ -365,7 +357,7 @@ public final class UserInfos extends
             if (userInfosBuilder_ == null) {
                 if (((bitField0_ & 0x00000001) != 0)) {
                     userInfos_ = java.util.Collections.unmodifiableList(userInfos_);
-                    bitField0_ = (bitField0_ & ~0x00000001);
+                    bitField0_ &= ~0x00000001;
                 }
                 result.userInfos_ = userInfos_;
             } else {
@@ -431,7 +423,7 @@ public final class UserInfos extends
                 if (!other.userInfos_.isEmpty()) {
                     if (userInfos_.isEmpty()) {
                         userInfos_ = other.userInfos_;
-                        bitField0_ = (bitField0_ & ~0x00000001);
+                        bitField0_ &= ~0x00000001;
                     } else {
                         ensureUserInfosIsMutable();
                         userInfos_.addAll(other.userInfos_);
@@ -444,7 +436,7 @@ public final class UserInfos extends
                         userInfosBuilder_.dispose();
                         userInfosBuilder_ = null;
                         userInfos_ = other.userInfos_;
-                        bitField0_ = (bitField0_ & ~0x00000001);
+                        bitField0_ &= ~0x00000001;
                         userInfosBuilder_ =
                                 com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
                                         getUserInfosFieldBuilder() : null;
@@ -476,13 +468,11 @@ public final class UserInfos extends
                 while (!done) {
                     int tag = input.readTag();
                     switch (tag) {
-                        case 0:
-                            done = true;
-                            break;
-                        case 10: {
-                            im.turms.server.common.access.client.dto.model.user.UserInfo m =
+                        case 0 -> done = true;
+                        case 10 -> {
+                            UserInfo m =
                                     input.readMessage(
-                                            im.turms.server.common.access.client.dto.model.user.UserInfo.parser(),
+                                            UserInfo.parser(),
                                             extensionRegistry);
                             if (userInfosBuilder_ == null) {
                                 ensureUserInfosIsMutable();
@@ -490,13 +480,11 @@ public final class UserInfos extends
                             } else {
                                 userInfosBuilder_.addMessage(m);
                             }
-                            break;
                         } // case 10
-                        default: {
+                        default -> {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
                             }
-                            break;
                         } // default:
                     } // switch (tag)
                 } // while (!done)
@@ -514,8 +502,8 @@ public final class UserInfos extends
                 java.util.Collections.emptyList();
 
         private void ensureUserInfosIsMutable() {
-            if (!((bitField0_ & 0x00000001) != 0)) {
-                userInfos_ = new java.util.ArrayList<im.turms.server.common.access.client.dto.model.user.UserInfo>(userInfos_);
+            if ((bitField0_ & 0x00000001) == 0) {
+                userInfos_ = new java.util.ArrayList<>(userInfos_);
                 bitField0_ |= 0x00000001;
             }
         }
@@ -677,7 +665,7 @@ public final class UserInfos extends
         public Builder clearUserInfos() {
             if (userInfosBuilder_ == null) {
                 userInfos_ = java.util.Collections.emptyList();
-                bitField0_ = (bitField0_ & ~0x00000001);
+                bitField0_ &= ~0x00000001;
                 onChanged();
             } else {
                 userInfosBuilder_.clear();
@@ -760,8 +748,7 @@ public final class UserInfos extends
                 im.turms.server.common.access.client.dto.model.user.UserInfo, im.turms.server.common.access.client.dto.model.user.UserInfo.Builder, im.turms.server.common.access.client.dto.model.user.UserInfoOrBuilder>
         getUserInfosFieldBuilder() {
             if (userInfosBuilder_ == null) {
-                userInfosBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
-                        im.turms.server.common.access.client.dto.model.user.UserInfo, im.turms.server.common.access.client.dto.model.user.UserInfo.Builder, im.turms.server.common.access.client.dto.model.user.UserInfoOrBuilder>(
+                userInfosBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<>(
                         userInfos_,
                         ((bitField0_ & 0x00000001) != 0),
                         getParentForChildren(),
@@ -799,7 +786,7 @@ public final class UserInfos extends
     }
 
     private static final com.google.protobuf.Parser<UserInfos>
-            PARSER = new com.google.protobuf.AbstractParser<UserInfos>() {
+            PARSER = new com.google.protobuf.AbstractParser<>() {
         @java.lang.Override
         public UserInfos parsePartialFrom(
                 com.google.protobuf.CodedInputStream input,

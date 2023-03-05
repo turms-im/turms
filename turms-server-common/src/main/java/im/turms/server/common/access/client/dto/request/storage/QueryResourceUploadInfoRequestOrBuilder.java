@@ -145,7 +145,6 @@ public interface QueryResourceUploadInfoRequestOrBuilder extends
     /**
      * <code>map&lt;string, string&gt; extra = 6;</code>
      */
-
     /* nullable */
     java.lang.String getExtraOrDefault(
             java.lang.String key,
@@ -155,7 +154,6 @@ public interface QueryResourceUploadInfoRequestOrBuilder extends
     /**
      * <code>map&lt;string, string&gt; extra = 6;</code>
      */
-
     java.lang.String getExtraOrThrow(
             java.lang.String key);
 }

@@ -46,12 +46,6 @@ public final class QueryConversationsRequest extends
         return new QueryConversationsRequest();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-        return this.unknownFields;
-    }
-
     public static final com.google.protobuf.Descriptors.Descriptor
     getDescriptor() {
         return im.turms.server.common.access.client.dto.request.conversation.QueryConversationsRequestOuterClass.internal_static_im_turms_proto_QueryConversationsRequest_descriptor;
@@ -62,11 +56,11 @@ public final class QueryConversationsRequest extends
     internalGetFieldAccessorTable() {
         return im.turms.server.common.access.client.dto.request.conversation.QueryConversationsRequestOuterClass.internal_static_im_turms_proto_QueryConversationsRequest_fieldAccessorTable
                 .ensureFieldAccessorsInitialized(
-                        im.turms.server.common.access.client.dto.request.conversation.QueryConversationsRequest.class,
-                        im.turms.server.common.access.client.dto.request.conversation.QueryConversationsRequest.Builder.class);
+                        im.turms.server.common.access.client.dto.request.conversation.QueryConversationsRequest.class, im.turms.server.common.access.client.dto.request.conversation.QueryConversationsRequest.Builder.class);
     }
 
     public static final int TARGET_IDS_FIELD_NUMBER = 1;
+    @SuppressWarnings("serial")
     private com.google.protobuf.Internal.LongList targetIds_;
 
     /**
@@ -114,6 +108,7 @@ public final class QueryConversationsRequest extends
     private int targetIdsMemoizedSerializedSize = -1;
 
     public static final int GROUP_IDS_FIELD_NUMBER = 2;
+    @SuppressWarnings("serial")
     private com.google.protobuf.Internal.LongList groupIds_;
 
     /**
@@ -243,10 +238,9 @@ public final class QueryConversationsRequest extends
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof im.turms.server.common.access.client.dto.request.conversation.QueryConversationsRequest)) {
+        if (!(obj instanceof QueryConversationsRequest other)) {
             return super.equals(obj);
         }
-        im.turms.server.common.access.client.dto.request.conversation.QueryConversationsRequest other = (im.turms.server.common.access.client.dto.request.conversation.QueryConversationsRequest) obj;
 
         if (!getTargetIdsList()
                 .equals(other.getTargetIdsList())) {
@@ -256,10 +250,7 @@ public final class QueryConversationsRequest extends
                 .equals(other.getGroupIdsList())) {
             return false;
         }
-        if (!getUnknownFields().equals(other.getUnknownFields())) {
-            return false;
-        }
-        return true;
+        return getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -385,8 +376,7 @@ public final class QueryConversationsRequest extends
     @java.lang.Override
     protected Builder newBuilderForType(
             com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
+        return new Builder(parent);
     }
 
     /**
@@ -406,8 +396,7 @@ public final class QueryConversationsRequest extends
         internalGetFieldAccessorTable() {
             return im.turms.server.common.access.client.dto.request.conversation.QueryConversationsRequestOuterClass.internal_static_im_turms_proto_QueryConversationsRequest_fieldAccessorTable
                     .ensureFieldAccessorsInitialized(
-                            im.turms.server.common.access.client.dto.request.conversation.QueryConversationsRequest.class,
-                            im.turms.server.common.access.client.dto.request.conversation.QueryConversationsRequest.Builder.class);
+                            im.turms.server.common.access.client.dto.request.conversation.QueryConversationsRequest.class, im.turms.server.common.access.client.dto.request.conversation.QueryConversationsRequest.Builder.class);
         }
 
         // Construct using im.turms.server.common.access.client.dto.request.conversation.QueryConversationsRequest.newBuilder()
@@ -424,10 +413,9 @@ public final class QueryConversationsRequest extends
         @java.lang.Override
         public Builder clear() {
             super.clear();
+            bitField0_ = 0;
             targetIds_ = emptyLongList();
-            bitField0_ = (bitField0_ & ~0x00000001);
             groupIds_ = emptyLongList();
-            bitField0_ = (bitField0_ & ~0x00000002);
             return this;
         }
 
@@ -453,59 +441,30 @@ public final class QueryConversationsRequest extends
 
         @java.lang.Override
         public im.turms.server.common.access.client.dto.request.conversation.QueryConversationsRequest buildPartial() {
-            im.turms.server.common.access.client.dto.request.conversation.QueryConversationsRequest result =
-                    new im.turms.server.common.access.client.dto.request.conversation.QueryConversationsRequest(this);
-            int from_bitField0_ = bitField0_;
-            if (((bitField0_ & 0x00000001) != 0)) {
-                targetIds_.makeImmutable();
-                bitField0_ = (bitField0_ & ~0x00000001);
+            im.turms.server.common.access.client.dto.request.conversation.QueryConversationsRequest result = new im.turms.server.common.access.client.dto.request.conversation.QueryConversationsRequest(this);
+            buildPartialRepeatedFields(result);
+            if (bitField0_ != 0) {
+                buildPartial0(result);
             }
-            result.targetIds_ = targetIds_;
-            if (((bitField0_ & 0x00000002) != 0)) {
-                groupIds_.makeImmutable();
-                bitField0_ = (bitField0_ & ~0x00000002);
-            }
-            result.groupIds_ = groupIds_;
             onBuilt();
             return result;
         }
 
-        @java.lang.Override
-        public Builder clone() {
-            return super.clone();
+        private void buildPartialRepeatedFields(im.turms.server.common.access.client.dto.request.conversation.QueryConversationsRequest result) {
+            if (((bitField0_ & 0x00000001) != 0)) {
+                targetIds_.makeImmutable();
+                bitField0_ &= ~0x00000001;
+            }
+            result.targetIds_ = targetIds_;
+            if (((bitField0_ & 0x00000002) != 0)) {
+                groupIds_.makeImmutable();
+                bitField0_ &= ~0x00000002;
+            }
+            result.groupIds_ = groupIds_;
         }
 
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(
-                com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(
-                com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index, java.lang.Object value) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.addRepeatedField(field, value);
+        private void buildPartial0(im.turms.server.common.access.client.dto.request.conversation.QueryConversationsRequest result) {
+            int from_bitField0_ = bitField0_;
         }
 
         @java.lang.Override
@@ -525,7 +484,7 @@ public final class QueryConversationsRequest extends
             if (!other.targetIds_.isEmpty()) {
                 if (targetIds_.isEmpty()) {
                     targetIds_ = other.targetIds_;
-                    bitField0_ = (bitField0_ & ~0x00000001);
+                    bitField0_ &= ~0x00000001;
                 } else {
                     ensureTargetIdsIsMutable();
                     targetIds_.addAll(other.targetIds_);
@@ -535,7 +494,7 @@ public final class QueryConversationsRequest extends
             if (!other.groupIds_.isEmpty()) {
                 if (groupIds_.isEmpty()) {
                     groupIds_ = other.groupIds_;
-                    bitField0_ = (bitField0_ & ~0x00000002);
+                    bitField0_ &= ~0x00000002;
                 } else {
                     ensureGroupIdsIsMutable();
                     groupIds_.addAll(other.groupIds_);
@@ -565,16 +524,13 @@ public final class QueryConversationsRequest extends
                 while (!done) {
                     int tag = input.readTag();
                     switch (tag) {
-                        case 0:
-                            done = true;
-                            break;
-                        case 8: {
+                        case 0 -> done = true;
+                        case 8 -> {
                             long v = input.readInt64();
                             ensureTargetIdsIsMutable();
                             targetIds_.addLong(v);
-                            break;
                         } // case 8
-                        case 10: {
+                        case 10 -> {
                             int length = input.readRawVarint32();
                             int limit = input.pushLimit(length);
                             ensureTargetIdsIsMutable();
@@ -582,15 +538,13 @@ public final class QueryConversationsRequest extends
                                 targetIds_.addLong(input.readInt64());
                             }
                             input.popLimit(limit);
-                            break;
                         } // case 10
-                        case 16: {
+                        case 16 -> {
                             long v = input.readInt64();
                             ensureGroupIdsIsMutable();
                             groupIds_.addLong(v);
-                            break;
                         } // case 16
-                        case 18: {
+                        case 18 -> {
                             int length = input.readRawVarint32();
                             int limit = input.pushLimit(length);
                             ensureGroupIdsIsMutable();
@@ -598,13 +552,11 @@ public final class QueryConversationsRequest extends
                                 groupIds_.addLong(input.readInt64());
                             }
                             input.popLimit(limit);
-                            break;
                         } // case 18
-                        default: {
+                        default -> {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
                             }
-                            break;
                         } // default:
                     } // switch (tag)
                 } // while (!done)
@@ -621,7 +573,7 @@ public final class QueryConversationsRequest extends
         private com.google.protobuf.Internal.LongList targetIds_ = emptyLongList();
 
         private void ensureTargetIdsIsMutable() {
-            if (!((bitField0_ & 0x00000001) != 0)) {
+            if ((bitField0_ & 0x00000001) == 0) {
                 targetIds_ = mutableCopy(targetIds_);
                 bitField0_ |= 0x00000001;
             }
@@ -682,6 +634,7 @@ public final class QueryConversationsRequest extends
          */
         public Builder setTargetIds(
                 int index, long value) {
+
             ensureTargetIdsIsMutable();
             targetIds_.setLong(index, value);
             onChanged();
@@ -699,6 +652,7 @@ public final class QueryConversationsRequest extends
          * @return This builder for chaining.
          */
         public Builder addTargetIds(long value) {
+
             ensureTargetIdsIsMutable();
             targetIds_.addLong(value);
             onChanged();
@@ -735,7 +689,7 @@ public final class QueryConversationsRequest extends
          */
         public Builder clearTargetIds() {
             targetIds_ = emptyLongList();
-            bitField0_ = (bitField0_ & ~0x00000001);
+            bitField0_ &= ~0x00000001;
             onChanged();
             return this;
         }
@@ -743,7 +697,7 @@ public final class QueryConversationsRequest extends
         private com.google.protobuf.Internal.LongList groupIds_ = emptyLongList();
 
         private void ensureGroupIdsIsMutable() {
-            if (!((bitField0_ & 0x00000002) != 0)) {
+            if ((bitField0_ & 0x00000002) == 0) {
                 groupIds_ = mutableCopy(groupIds_);
                 bitField0_ |= 0x00000002;
             }
@@ -804,6 +758,7 @@ public final class QueryConversationsRequest extends
          */
         public Builder setGroupIds(
                 int index, long value) {
+
             ensureGroupIdsIsMutable();
             groupIds_.setLong(index, value);
             onChanged();
@@ -821,6 +776,7 @@ public final class QueryConversationsRequest extends
          * @return This builder for chaining.
          */
         public Builder addGroupIds(long value) {
+
             ensureGroupIdsIsMutable();
             groupIds_.addLong(value);
             onChanged();
@@ -857,7 +813,7 @@ public final class QueryConversationsRequest extends
          */
         public Builder clearGroupIds() {
             groupIds_ = emptyLongList();
-            bitField0_ = (bitField0_ & ~0x00000002);
+            bitField0_ &= ~0x00000002;
             onChanged();
             return this;
         }
@@ -890,7 +846,7 @@ public final class QueryConversationsRequest extends
     }
 
     private static final com.google.protobuf.Parser<QueryConversationsRequest>
-            PARSER = new com.google.protobuf.AbstractParser<QueryConversationsRequest>() {
+            PARSER = new com.google.protobuf.AbstractParser<>() {
         @java.lang.Override
         public QueryConversationsRequest parsePartialFrom(
                 com.google.protobuf.CodedInputStream input,

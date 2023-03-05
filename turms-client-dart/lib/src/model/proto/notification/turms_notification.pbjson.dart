@@ -10,11 +10,11 @@ import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
 
 @$core.Deprecated('Use turmsNotificationDescriptor instead')
-const TurmsNotification$json = {
+const TurmsNotification$json = const {
   '1': 'TurmsNotification',
-  '2': [
-    {'1': 'timestamp', '3': 1, '4': 1, '5': 3, '10': 'timestamp'},
-    {
+  '2': const [
+    const {'1': 'timestamp', '3': 1, '4': 1, '5': 3, '10': 'timestamp'},
+    const {
       '1': 'request_id',
       '3': 4,
       '4': 1,
@@ -23,9 +23,25 @@ const TurmsNotification$json = {
       '10': 'requestId',
       '17': true
     },
-    {'1': 'code', '3': 5, '4': 1, '5': 5, '9': 1, '10': 'code', '17': true},
-    {'1': 'reason', '3': 6, '4': 1, '5': 9, '9': 2, '10': 'reason', '17': true},
-    {
+    const {
+      '1': 'code',
+      '3': 5,
+      '4': 1,
+      '5': 5,
+      '9': 1,
+      '10': 'code',
+      '17': true
+    },
+    const {
+      '1': 'reason',
+      '3': 6,
+      '4': 1,
+      '5': 9,
+      '9': 2,
+      '10': 'reason',
+      '17': true
+    },
+    const {
       '1': 'data',
       '3': 7,
       '4': 1,
@@ -33,7 +49,7 @@ const TurmsNotification$json = {
       '6': '.im.turms.proto.TurmsNotification.Data',
       '10': 'data'
     },
-    {
+    const {
       '1': 'requester_id',
       '3': 10,
       '4': 1,
@@ -42,7 +58,7 @@ const TurmsNotification$json = {
       '10': 'requesterId',
       '17': true
     },
-    {
+    const {
       '1': 'close_status',
       '3': 11,
       '4': 1,
@@ -51,7 +67,7 @@ const TurmsNotification$json = {
       '10': 'closeStatus',
       '17': true
     },
-    {
+    const {
       '1': 'relayed_request',
       '3': 12,
       '4': 1,
@@ -60,23 +76,23 @@ const TurmsNotification$json = {
       '10': 'relayedRequest'
     },
   ],
-  '3': [TurmsNotification_Data$json],
-  '8': [
-    {'1': '_request_id'},
-    {'1': '_code'},
-    {'1': '_reason'},
-    {'1': '_requester_id'},
-    {'1': '_close_status'},
+  '3': const [TurmsNotification_Data$json],
+  '8': const [
+    const {'1': '_request_id'},
+    const {'1': '_code'},
+    const {'1': '_reason'},
+    const {'1': '_requester_id'},
+    const {'1': '_close_status'},
   ],
 };
 
 @$core.Deprecated('Use turmsNotificationDescriptor instead')
-const TurmsNotification_Data$json = {
+const TurmsNotification_Data$json = const {
   '1': 'Data',
-  '2': [
-    {'1': 'long', '3': 1, '4': 1, '5': 3, '9': 0, '10': 'long'},
-    {'1': 'string', '3': 2, '4': 1, '5': 9, '9': 0, '10': 'string'},
-    {
+  '2': const [
+    const {'1': 'long', '3': 1, '4': 1, '5': 3, '9': 0, '10': 'long'},
+    const {'1': 'string', '3': 2, '4': 1, '5': 9, '9': 0, '10': 'string'},
+    const {
       '1': 'longs_with_version',
       '3': 3,
       '4': 1,
@@ -85,7 +101,7 @@ const TurmsNotification_Data$json = {
       '9': 0,
       '10': 'longsWithVersion'
     },
-    {
+    const {
       '1': 'strings_with_version',
       '3': 4,
       '4': 1,
@@ -94,7 +110,7 @@ const TurmsNotification_Data$json = {
       '9': 0,
       '10': 'stringsWithVersion'
     },
-    {
+    const {
       '1': 'conversations',
       '3': 5,
       '4': 1,
@@ -103,7 +119,7 @@ const TurmsNotification_Data$json = {
       '9': 0,
       '10': 'conversations'
     },
-    {
+    const {
       '1': 'messages',
       '3': 6,
       '4': 1,
@@ -112,7 +128,7 @@ const TurmsNotification_Data$json = {
       '9': 0,
       '10': 'messages'
     },
-    {
+    const {
       '1': 'messages_with_total_list',
       '3': 7,
       '4': 1,
@@ -121,7 +137,7 @@ const TurmsNotification_Data$json = {
       '9': 0,
       '10': 'messagesWithTotalList'
     },
-    {
+    const {
       '1': 'user_session',
       '3': 8,
       '4': 1,
@@ -130,7 +146,7 @@ const TurmsNotification_Data$json = {
       '9': 0,
       '10': 'userSession'
     },
-    {
+    const {
       '1': 'user_infos_with_version',
       '3': 9,
       '4': 1,
@@ -139,7 +155,7 @@ const TurmsNotification_Data$json = {
       '9': 0,
       '10': 'userInfosWithVersion'
     },
-    {
+    const {
       '1': 'user_online_statuses',
       '3': 10,
       '4': 1,
@@ -148,7 +164,7 @@ const TurmsNotification_Data$json = {
       '9': 0,
       '10': 'userOnlineStatuses'
     },
-    {
+    const {
       '1': 'user_friend_requests_with_version',
       '3': 11,
       '4': 1,
@@ -157,7 +173,7 @@ const TurmsNotification_Data$json = {
       '9': 0,
       '10': 'userFriendRequestsWithVersion'
     },
-    {
+    const {
       '1': 'user_relationship_groups_with_version',
       '3': 12,
       '4': 1,
@@ -166,7 +182,7 @@ const TurmsNotification_Data$json = {
       '9': 0,
       '10': 'userRelationshipGroupsWithVersion'
     },
-    {
+    const {
       '1': 'user_relationships_with_version',
       '3': 13,
       '4': 1,
@@ -175,7 +191,7 @@ const TurmsNotification_Data$json = {
       '9': 0,
       '10': 'userRelationshipsWithVersion'
     },
-    {
+    const {
       '1': 'nearby_users',
       '3': 14,
       '4': 1,
@@ -184,7 +200,7 @@ const TurmsNotification_Data$json = {
       '9': 0,
       '10': 'nearbyUsers'
     },
-    {
+    const {
       '1': 'group_invitations_with_version',
       '3': 15,
       '4': 1,
@@ -193,7 +209,7 @@ const TurmsNotification_Data$json = {
       '9': 0,
       '10': 'groupInvitationsWithVersion'
     },
-    {
+    const {
       '1': 'group_join_question_answer_result',
       '3': 16,
       '4': 1,
@@ -202,7 +218,7 @@ const TurmsNotification_Data$json = {
       '9': 0,
       '10': 'groupJoinQuestionAnswerResult'
     },
-    {
+    const {
       '1': 'group_join_requests_with_version',
       '3': 17,
       '4': 1,
@@ -211,7 +227,7 @@ const TurmsNotification_Data$json = {
       '9': 0,
       '10': 'groupJoinRequestsWithVersion'
     },
-    {
+    const {
       '1': 'group_join_questions_with_version',
       '3': 18,
       '4': 1,
@@ -220,7 +236,7 @@ const TurmsNotification_Data$json = {
       '9': 0,
       '10': 'groupJoinQuestionsWithVersion'
     },
-    {
+    const {
       '1': 'group_members_with_version',
       '3': 19,
       '4': 1,
@@ -229,7 +245,7 @@ const TurmsNotification_Data$json = {
       '9': 0,
       '10': 'groupMembersWithVersion'
     },
-    {
+    const {
       '1': 'groups_with_version',
       '3': 20,
       '4': 1,
@@ -238,7 +254,7 @@ const TurmsNotification_Data$json = {
       '9': 0,
       '10': 'groupsWithVersion'
     },
-    {
+    const {
       '1': 'storage_resource_infos',
       '3': 50,
       '4': 1,
@@ -248,8 +264,8 @@ const TurmsNotification_Data$json = {
       '10': 'storageResourceInfos'
     },
   ],
-  '8': [
-    {'1': 'kind'},
+  '8': const [
+    const {'1': 'kind'},
   ],
 };
 

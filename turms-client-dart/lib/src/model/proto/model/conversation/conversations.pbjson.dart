@@ -10,10 +10,10 @@ import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
 
 @$core.Deprecated('Use conversationsDescriptor instead')
-const Conversations$json = {
+const Conversations$json = const {
   '1': 'Conversations',
-  '2': [
-    {
+  '2': const [
+    const {
       '1': 'private_conversations',
       '3': 1,
       '4': 3,
@@ -21,7 +21,7 @@ const Conversations$json = {
       '6': '.im.turms.proto.PrivateConversation',
       '10': 'privateConversations'
     },
-    {
+    const {
       '1': 'group_conversations',
       '3': 2,
       '4': 3,

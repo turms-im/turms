@@ -10,10 +10,10 @@ import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
 
 @$core.Deprecated('Use userRelationshipsWithVersionDescriptor instead')
-const UserRelationshipsWithVersion$json = {
+const UserRelationshipsWithVersion$json = const {
   '1': 'UserRelationshipsWithVersion',
-  '2': [
-    {
+  '2': const [
+    const {
       '1': 'user_relationships',
       '3': 1,
       '4': 3,
@@ -21,7 +21,7 @@ const UserRelationshipsWithVersion$json = {
       '6': '.im.turms.proto.UserRelationship',
       '10': 'userRelationships'
     },
-    {
+    const {
       '1': 'last_updated_date',
       '3': 2,
       '4': 1,
@@ -31,8 +31,8 @@ const UserRelationshipsWithVersion$json = {
       '17': true
     },
   ],
-  '8': [
-    {'1': '_last_updated_date'},
+  '8': const [
+    const {'1': '_last_updated_date'},
   ],
 };
 

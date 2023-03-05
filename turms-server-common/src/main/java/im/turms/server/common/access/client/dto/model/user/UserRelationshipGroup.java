@@ -45,12 +45,6 @@ public final class UserRelationshipGroup extends
         return new UserRelationshipGroup();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-        return this.unknownFields;
-    }
-
     public static final com.google.protobuf.Descriptors.Descriptor
     getDescriptor() {
         return im.turms.server.common.access.client.dto.model.user.UserRelationshipGroupOuterClass.internal_static_im_turms_proto_UserRelationshipGroup_descriptor;
@@ -65,7 +59,7 @@ public final class UserRelationshipGroup extends
     }
 
     public static final int INDEX_FIELD_NUMBER = 1;
-    private int index_;
+    private int index_ = 0;
 
     /**
      * <code>int32 index = 1;</code>
@@ -78,7 +72,8 @@ public final class UserRelationshipGroup extends
     }
 
     public static final int NAME_FIELD_NUMBER = 2;
-    private volatile java.lang.Object name_;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object name_ = "";
 
     /**
      * <code>string name = 2;</code>
@@ -172,10 +167,9 @@ public final class UserRelationshipGroup extends
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof im.turms.server.common.access.client.dto.model.user.UserRelationshipGroup)) {
+        if (!(obj instanceof UserRelationshipGroup other)) {
             return super.equals(obj);
         }
-        im.turms.server.common.access.client.dto.model.user.UserRelationshipGroup other = (im.turms.server.common.access.client.dto.model.user.UserRelationshipGroup) obj;
 
         if (getIndex()
             != other.getIndex()) {
@@ -185,10 +179,7 @@ public final class UserRelationshipGroup extends
                 .equals(other.getName())) {
             return false;
         }
-        if (!getUnknownFields().equals(other.getUnknownFields())) {
-            return false;
-        }
-        return true;
+        return getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -310,8 +301,7 @@ public final class UserRelationshipGroup extends
     @java.lang.Override
     protected Builder newBuilderForType(
             com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
+        return new Builder(parent);
     }
 
     /**
@@ -348,10 +338,9 @@ public final class UserRelationshipGroup extends
         @java.lang.Override
         public Builder clear() {
             super.clear();
+            bitField0_ = 0;
             index_ = 0;
-
             name_ = "";
-
             return this;
         }
 
@@ -378,48 +367,21 @@ public final class UserRelationshipGroup extends
         @java.lang.Override
         public im.turms.server.common.access.client.dto.model.user.UserRelationshipGroup buildPartial() {
             im.turms.server.common.access.client.dto.model.user.UserRelationshipGroup result = new im.turms.server.common.access.client.dto.model.user.UserRelationshipGroup(this);
-            result.index_ = index_;
-            result.name_ = name_;
+            if (bitField0_ != 0) {
+                buildPartial0(result);
+            }
             onBuilt();
             return result;
         }
 
-        @java.lang.Override
-        public Builder clone() {
-            return super.clone();
-        }
-
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(
-                com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(
-                com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index, java.lang.Object value) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.addRepeatedField(field, value);
+        private void buildPartial0(im.turms.server.common.access.client.dto.model.user.UserRelationshipGroup result) {
+            int from_bitField0_ = bitField0_;
+            if (((from_bitField0_ & 0x00000001) != 0)) {
+                result.index_ = index_;
+            }
+            if (((from_bitField0_ & 0x00000002) != 0)) {
+                result.name_ = name_;
+            }
         }
 
         @java.lang.Override
@@ -441,6 +403,7 @@ public final class UserRelationshipGroup extends
             }
             if (!other.getName().isEmpty()) {
                 name_ = other.name_;
+                bitField0_ |= 0x00000002;
                 onChanged();
             }
             this.mergeUnknownFields(other.getUnknownFields());
@@ -466,24 +429,19 @@ public final class UserRelationshipGroup extends
                 while (!done) {
                     int tag = input.readTag();
                     switch (tag) {
-                        case 0:
-                            done = true;
-                            break;
-                        case 8: {
+                        case 0 -> done = true;
+                        case 8 -> {
                             index_ = input.readInt32();
-
-                            break;
+                            bitField0_ |= 0x00000001;
                         } // case 8
-                        case 18: {
+                        case 18 -> {
                             name_ = input.readStringRequireUtf8();
-
-                            break;
+                            bitField0_ |= 0x00000002;
                         } // case 18
-                        default: {
+                        default -> {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
                             }
-                            break;
                         } // default:
                     } // switch (tag)
                 } // while (!done)
@@ -494,6 +452,8 @@ public final class UserRelationshipGroup extends
             } // finally
             return this;
         }
+
+        private int bitField0_;
 
         private int index_;
 
@@ -516,6 +476,7 @@ public final class UserRelationshipGroup extends
         public Builder setIndex(int value) {
 
             index_ = value;
+            bitField0_ |= 0x00000001;
             onChanged();
             return this;
         }
@@ -526,7 +487,7 @@ public final class UserRelationshipGroup extends
          * @return This builder for chaining.
          */
         public Builder clearIndex() {
-
+            bitField0_ &= ~0x00000001;
             index_ = 0;
             onChanged();
             return this;
@@ -582,8 +543,8 @@ public final class UserRelationshipGroup extends
             if (value == null) {
                 throw new NullPointerException();
             }
-
             name_ = value;
+            bitField0_ |= 0x00000002;
             onChanged();
             return this;
         }
@@ -594,8 +555,8 @@ public final class UserRelationshipGroup extends
          * @return This builder for chaining.
          */
         public Builder clearName() {
-
             name_ = getDefaultInstance().getName();
+            bitField0_ &= ~0x00000002;
             onChanged();
             return this;
         }
@@ -612,8 +573,8 @@ public final class UserRelationshipGroup extends
                 throw new NullPointerException();
             }
             checkByteStringIsUtf8(value);
-
             name_ = value;
+            bitField0_ |= 0x00000002;
             onChanged();
             return this;
         }
@@ -646,7 +607,7 @@ public final class UserRelationshipGroup extends
     }
 
     private static final com.google.protobuf.Parser<UserRelationshipGroup>
-            PARSER = new com.google.protobuf.AbstractParser<UserRelationshipGroup>() {
+            PARSER = new com.google.protobuf.AbstractParser<>() {
         @java.lang.Override
         public UserRelationshipGroup parsePartialFrom(
                 com.google.protobuf.CodedInputStream input,

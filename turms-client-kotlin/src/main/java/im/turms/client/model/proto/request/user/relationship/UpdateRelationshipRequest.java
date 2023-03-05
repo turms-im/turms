@@ -128,7 +128,7 @@ public final class UpdateRelationshipRequest extends
      * <code>optional bool blocked = 2;</code>
      */
     private void clearBlocked() {
-        bitField0_ = (bitField0_ & ~0x00000001);
+        bitField0_ &= ~0x00000001;
         blocked_ = false;
     }
 
@@ -169,7 +169,7 @@ public final class UpdateRelationshipRequest extends
      * <code>optional int32 new_group_index = 3;</code>
      */
     private void clearNewGroupIndex() {
-        bitField0_ = (bitField0_ & ~0x00000002);
+        bitField0_ &= ~0x00000002;
         newGroupIndex_ = 0;
     }
 
@@ -210,7 +210,7 @@ public final class UpdateRelationshipRequest extends
      * <code>optional int32 delete_group_index = 4;</code>
      */
     private void clearDeleteGroupIndex() {
-        bitField0_ = (bitField0_ & ~0x00000004);
+        bitField0_ &= ~0x00000004;
         deleteGroupIndex_ = 0;
     }
 
@@ -550,7 +550,7 @@ public final class UpdateRelationshipRequest extends
                         parser = PARSER;
                         if (parser == null) {
                             parser =
-                                    new DefaultInstanceBasedParser<im.turms.client.model.proto.request.user.relationship.UpdateRelationshipRequest>(
+                                    new DefaultInstanceBasedParser<>(
                                             DEFAULT_INSTANCE);
                             PARSER = parser;
                         }

@@ -74,8 +74,7 @@ public final class GroupJoinRequestOuterClass {
         internal_static_im_turms_proto_GroupJoinRequest_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
                 internal_static_im_turms_proto_GroupJoinRequest_descriptor,
-                new java.lang.String[]{"Id", "CreationDate", "Content", "Status", "ExpirationDate", "GroupId", "RequesterId", "ResponderId", "Id", "CreationDate", "Content", "Status",
-                        "ExpirationDate", "GroupId", "RequesterId", "ResponderId",});
+                new java.lang.String[]{"Id", "CreationDate", "Content", "Status", "ExpirationDate", "GroupId", "RequesterId", "ResponderId", "Id", "CreationDate", "Content", "Status", "ExpirationDate", "GroupId", "RequesterId", "ResponderId",});
         im.turms.server.common.access.client.dto.constant.RequestStatusOuterClass.getDescriptor();
     }
 

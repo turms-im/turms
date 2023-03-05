@@ -10,12 +10,12 @@ import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
 
 @$core.Deprecated('Use createRelationshipRequestDescriptor instead')
-const CreateRelationshipRequest$json = {
+const CreateRelationshipRequest$json = const {
   '1': 'CreateRelationshipRequest',
-  '2': [
-    {'1': 'user_id', '3': 1, '4': 1, '5': 3, '10': 'userId'},
-    {'1': 'blocked', '3': 2, '4': 1, '5': 8, '10': 'blocked'},
-    {
+  '2': const [
+    const {'1': 'user_id', '3': 1, '4': 1, '5': 3, '10': 'userId'},
+    const {'1': 'blocked', '3': 2, '4': 1, '5': 8, '10': 'blocked'},
+    const {
       '1': 'group_index',
       '3': 3,
       '4': 1,
@@ -25,8 +25,8 @@ const CreateRelationshipRequest$json = {
       '17': true
     },
   ],
-  '8': [
-    {'1': '_group_index'},
+  '8': const [
+    const {'1': '_group_index'},
   ],
 };
 

@@ -197,7 +197,7 @@ public final class UpdateFriendRequestRequest extends
      * <code>optional string reason = 3;</code>
      */
     private void clearReason() {
-        bitField0_ = (bitField0_ & ~0x00000001);
+        bitField0_ &= ~0x00000001;
         reason_ = getDefaultInstance().getReason();
     }
 
@@ -546,7 +546,7 @@ public final class UpdateFriendRequestRequest extends
                         parser = PARSER;
                         if (parser == null) {
                             parser =
-                                    new DefaultInstanceBasedParser<im.turms.client.model.proto.request.user.relationship.UpdateFriendRequestRequest>(
+                                    new DefaultInstanceBasedParser<>(
                                             DEFAULT_INSTANCE);
                             PARSER = parser;
                         }

@@ -85,16 +85,12 @@ public enum ContentType
      * @return The enum associated with the given numeric wire value.
      */
     public static ContentType forNumber(int value) {
-        switch (value) {
-            case 0:
-                return PROFILE;
-            case 1:
-                return GROUP_PROFILE;
-            case 2:
-                return ATTACHMENT;
-            default:
-                return null;
-        }
+        return switch (value) {
+            case 0 -> PROFILE;
+            case 1 -> GROUP_PROFILE;
+            case 2 -> ATTACHMENT;
+            default -> null;
+        };
     }
 
     public static com.google.protobuf.Internal.EnumLiteMap<ContentType>
@@ -104,11 +100,7 @@ public enum ContentType
 
     private static final com.google.protobuf.Internal.EnumLiteMap<
             ContentType> internalValueMap =
-            new com.google.protobuf.Internal.EnumLiteMap<ContentType>() {
-                public ContentType findValueByNumber(int number) {
-                    return ContentType.forNumber(number);
-                }
-            };
+            ContentType::forNumber;
 
     public final com.google.protobuf.Descriptors.EnumValueDescriptor
     getValueDescriptor() {
@@ -145,7 +137,7 @@ public enum ContentType
 
     private final int value;
 
-    private ContentType(int value) {
+    ContentType(int value) {
         this.value = value;
     }
 

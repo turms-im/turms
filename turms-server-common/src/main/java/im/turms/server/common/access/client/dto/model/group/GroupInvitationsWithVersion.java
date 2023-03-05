@@ -45,12 +45,6 @@ public final class GroupInvitationsWithVersion extends
         return new GroupInvitationsWithVersion();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-        return this.unknownFields;
-    }
-
     public static final com.google.protobuf.Descriptors.Descriptor
     getDescriptor() {
         return im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersionOuterClass.internal_static_im_turms_proto_GroupInvitationsWithVersion_descriptor;
@@ -61,12 +55,12 @@ public final class GroupInvitationsWithVersion extends
     internalGetFieldAccessorTable() {
         return im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersionOuterClass.internal_static_im_turms_proto_GroupInvitationsWithVersion_fieldAccessorTable
                 .ensureFieldAccessorsInitialized(
-                        im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersion.class,
-                        im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersion.Builder.class);
+                        im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersion.class, im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersion.Builder.class);
     }
 
     private int bitField0_;
     public static final int GROUP_INVITATIONS_FIELD_NUMBER = 1;
+    @SuppressWarnings("serial")
     private java.util.List<im.turms.server.common.access.client.dto.model.group.GroupInvitation> groupInvitations_;
 
     /**
@@ -112,7 +106,7 @@ public final class GroupInvitationsWithVersion extends
     }
 
     public static final int LAST_UPDATED_DATE_FIELD_NUMBER = 2;
-    private long lastUpdatedDate_;
+    private long lastUpdatedDate_ = 0L;
 
     /**
      * <code>optional int64 last_updated_date = 2;</code>
@@ -153,8 +147,8 @@ public final class GroupInvitationsWithVersion extends
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
             throws java.io.IOException {
-        for (int i = 0; i < groupInvitations_.size(); i++) {
-            output.writeMessage(1, groupInvitations_.get(i));
+        for (GroupInvitation groupInvitation : groupInvitations_) {
+            output.writeMessage(1, groupInvitation);
         }
         if (((bitField0_ & 0x00000001) != 0)) {
             output.writeInt64(2, lastUpdatedDate_);
@@ -170,9 +164,9 @@ public final class GroupInvitationsWithVersion extends
         }
 
         size = 0;
-        for (int i = 0; i < groupInvitations_.size(); i++) {
+        for (GroupInvitation groupInvitation : groupInvitations_) {
             size += com.google.protobuf.CodedOutputStream
-                    .computeMessageSize(1, groupInvitations_.get(i));
+                    .computeMessageSize(1, groupInvitation);
         }
         if (((bitField0_ & 0x00000001) != 0)) {
             size += com.google.protobuf.CodedOutputStream
@@ -188,10 +182,9 @@ public final class GroupInvitationsWithVersion extends
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersion)) {
+        if (!(obj instanceof GroupInvitationsWithVersion other)) {
             return super.equals(obj);
         }
-        im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersion other = (im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersion) obj;
 
         if (!getGroupInvitationsList()
                 .equals(other.getGroupInvitationsList())) {
@@ -206,10 +199,7 @@ public final class GroupInvitationsWithVersion extends
                 return false;
             }
         }
-        if (!getUnknownFields().equals(other.getUnknownFields())) {
-            return false;
-        }
-        return true;
+        return getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -336,8 +326,7 @@ public final class GroupInvitationsWithVersion extends
     @java.lang.Override
     protected Builder newBuilderForType(
             com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
+        return new Builder(parent);
     }
 
     /**
@@ -357,8 +346,7 @@ public final class GroupInvitationsWithVersion extends
         internalGetFieldAccessorTable() {
             return im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersionOuterClass.internal_static_im_turms_proto_GroupInvitationsWithVersion_fieldAccessorTable
                     .ensureFieldAccessorsInitialized(
-                            im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersion.class,
-                            im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersion.Builder.class);
+                            im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersion.class, im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersion.Builder.class);
         }
 
         // Construct using im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersion.newBuilder()
@@ -375,15 +363,15 @@ public final class GroupInvitationsWithVersion extends
         @java.lang.Override
         public Builder clear() {
             super.clear();
+            bitField0_ = 0;
             if (groupInvitationsBuilder_ == null) {
                 groupInvitations_ = java.util.Collections.emptyList();
             } else {
                 groupInvitations_ = null;
                 groupInvitationsBuilder_.clear();
             }
-            bitField0_ = (bitField0_ & ~0x00000001);
+            bitField0_ &= ~0x00000001;
             lastUpdatedDate_ = 0L;
-            bitField0_ = (bitField0_ & ~0x00000002);
             return this;
         }
 
@@ -410,62 +398,34 @@ public final class GroupInvitationsWithVersion extends
         @java.lang.Override
         public im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersion buildPartial() {
             im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersion result = new im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersion(this);
-            int from_bitField0_ = bitField0_;
-            int to_bitField0_ = 0;
+            buildPartialRepeatedFields(result);
+            if (bitField0_ != 0) {
+                buildPartial0(result);
+            }
+            onBuilt();
+            return result;
+        }
+
+        private void buildPartialRepeatedFields(im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersion result) {
             if (groupInvitationsBuilder_ == null) {
                 if (((bitField0_ & 0x00000001) != 0)) {
                     groupInvitations_ = java.util.Collections.unmodifiableList(groupInvitations_);
-                    bitField0_ = (bitField0_ & ~0x00000001);
+                    bitField0_ &= ~0x00000001;
                 }
                 result.groupInvitations_ = groupInvitations_;
             } else {
                 result.groupInvitations_ = groupInvitationsBuilder_.build();
             }
+        }
+
+        private void buildPartial0(im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersion result) {
+            int from_bitField0_ = bitField0_;
+            int to_bitField0_ = 0;
             if (((from_bitField0_ & 0x00000002) != 0)) {
                 result.lastUpdatedDate_ = lastUpdatedDate_;
                 to_bitField0_ |= 0x00000001;
             }
-            result.bitField0_ = to_bitField0_;
-            onBuilt();
-            return result;
-        }
-
-        @java.lang.Override
-        public Builder clone() {
-            return super.clone();
-        }
-
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(
-                com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(
-                com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index, java.lang.Object value) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.addRepeatedField(field, value);
+            result.bitField0_ |= to_bitField0_;
         }
 
         @java.lang.Override
@@ -486,7 +446,7 @@ public final class GroupInvitationsWithVersion extends
                 if (!other.groupInvitations_.isEmpty()) {
                     if (groupInvitations_.isEmpty()) {
                         groupInvitations_ = other.groupInvitations_;
-                        bitField0_ = (bitField0_ & ~0x00000001);
+                        bitField0_ &= ~0x00000001;
                     } else {
                         ensureGroupInvitationsIsMutable();
                         groupInvitations_.addAll(other.groupInvitations_);
@@ -499,7 +459,7 @@ public final class GroupInvitationsWithVersion extends
                         groupInvitationsBuilder_.dispose();
                         groupInvitationsBuilder_ = null;
                         groupInvitations_ = other.groupInvitations_;
-                        bitField0_ = (bitField0_ & ~0x00000001);
+                        bitField0_ &= ~0x00000001;
                         groupInvitationsBuilder_ =
                                 com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
                                         getGroupInvitationsFieldBuilder() : null;
@@ -534,13 +494,11 @@ public final class GroupInvitationsWithVersion extends
                 while (!done) {
                     int tag = input.readTag();
                     switch (tag) {
-                        case 0:
-                            done = true;
-                            break;
-                        case 10: {
-                            im.turms.server.common.access.client.dto.model.group.GroupInvitation m =
+                        case 0 -> done = true;
+                        case 10 -> {
+                            GroupInvitation m =
                                     input.readMessage(
-                                            im.turms.server.common.access.client.dto.model.group.GroupInvitation.parser(),
+                                            GroupInvitation.parser(),
                                             extensionRegistry);
                             if (groupInvitationsBuilder_ == null) {
                                 ensureGroupInvitationsIsMutable();
@@ -548,18 +506,15 @@ public final class GroupInvitationsWithVersion extends
                             } else {
                                 groupInvitationsBuilder_.addMessage(m);
                             }
-                            break;
                         } // case 10
-                        case 16: {
+                        case 16 -> {
                             lastUpdatedDate_ = input.readInt64();
                             bitField0_ |= 0x00000002;
-                            break;
                         } // case 16
-                        default: {
+                        default -> {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
                             }
-                            break;
                         } // default:
                     } // switch (tag)
                 } // while (!done)
@@ -577,15 +532,14 @@ public final class GroupInvitationsWithVersion extends
                 java.util.Collections.emptyList();
 
         private void ensureGroupInvitationsIsMutable() {
-            if (!((bitField0_ & 0x00000001) != 0)) {
-                groupInvitations_ = new java.util.ArrayList<im.turms.server.common.access.client.dto.model.group.GroupInvitation>(groupInvitations_);
+            if ((bitField0_ & 0x00000001) == 0) {
+                groupInvitations_ = new java.util.ArrayList<>(groupInvitations_);
                 bitField0_ |= 0x00000001;
             }
         }
 
         private com.google.protobuf.RepeatedFieldBuilderV3<
-                im.turms.server.common.access.client.dto.model.group.GroupInvitation, im.turms.server.common.access.client.dto.model.group.GroupInvitation.Builder, im.turms.server.common.access.client.dto.model.group.GroupInvitationOrBuilder>
-                groupInvitationsBuilder_;
+                im.turms.server.common.access.client.dto.model.group.GroupInvitation, im.turms.server.common.access.client.dto.model.group.GroupInvitation.Builder, im.turms.server.common.access.client.dto.model.group.GroupInvitationOrBuilder> groupInvitationsBuilder_;
 
         /**
          * <code>repeated .im.turms.proto.GroupInvitation group_invitations = 1;</code>
@@ -740,7 +694,7 @@ public final class GroupInvitationsWithVersion extends
         public Builder clearGroupInvitations() {
             if (groupInvitationsBuilder_ == null) {
                 groupInvitations_ = java.util.Collections.emptyList();
-                bitField0_ = (bitField0_ & ~0x00000001);
+                bitField0_ &= ~0x00000001;
                 onChanged();
             } else {
                 groupInvitationsBuilder_.clear();
@@ -823,8 +777,7 @@ public final class GroupInvitationsWithVersion extends
                 im.turms.server.common.access.client.dto.model.group.GroupInvitation, im.turms.server.common.access.client.dto.model.group.GroupInvitation.Builder, im.turms.server.common.access.client.dto.model.group.GroupInvitationOrBuilder>
         getGroupInvitationsFieldBuilder() {
             if (groupInvitationsBuilder_ == null) {
-                groupInvitationsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
-                        im.turms.server.common.access.client.dto.model.group.GroupInvitation, im.turms.server.common.access.client.dto.model.group.GroupInvitation.Builder, im.turms.server.common.access.client.dto.model.group.GroupInvitationOrBuilder>(
+                groupInvitationsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<>(
                         groupInvitations_,
                         ((bitField0_ & 0x00000001) != 0),
                         getParentForChildren(),
@@ -863,8 +816,9 @@ public final class GroupInvitationsWithVersion extends
          * @return This builder for chaining.
          */
         public Builder setLastUpdatedDate(long value) {
-            bitField0_ |= 0x00000002;
+
             lastUpdatedDate_ = value;
+            bitField0_ |= 0x00000002;
             onChanged();
             return this;
         }
@@ -875,7 +829,7 @@ public final class GroupInvitationsWithVersion extends
          * @return This builder for chaining.
          */
         public Builder clearLastUpdatedDate() {
-            bitField0_ = (bitField0_ & ~0x00000002);
+            bitField0_ &= ~0x00000002;
             lastUpdatedDate_ = 0L;
             onChanged();
             return this;
@@ -909,7 +863,7 @@ public final class GroupInvitationsWithVersion extends
     }
 
     private static final com.google.protobuf.Parser<GroupInvitationsWithVersion>
-            PARSER = new com.google.protobuf.AbstractParser<GroupInvitationsWithVersion>() {
+            PARSER = new com.google.protobuf.AbstractParser<>() {
         @java.lang.Override
         public GroupInvitationsWithVersion parsePartialFrom(
                 com.google.protobuf.CodedInputStream input,

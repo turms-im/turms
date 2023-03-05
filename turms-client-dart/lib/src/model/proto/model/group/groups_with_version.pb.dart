@@ -18,7 +18,7 @@ class GroupsWithVersion extends $pb.GeneratedMessage {
           ? ''
           : 'GroupsWithVersion',
       package: const $pb.PackageName(
-          $core.bool.fromEnvironment('protobuf.omit_message_names')
+          const $core.bool.fromEnvironment('protobuf.omit_message_names')
               ? ''
               : 'im.turms.proto'),
       createEmptyInstance: create)

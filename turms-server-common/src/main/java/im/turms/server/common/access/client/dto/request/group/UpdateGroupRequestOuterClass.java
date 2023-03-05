@@ -73,8 +73,7 @@ public final class UpdateGroupRequestOuterClass {
         internal_static_im_turms_proto_UpdateGroupRequest_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
                 internal_static_im_turms_proto_UpdateGroupRequest_descriptor,
-                new java.lang.String[]{"GroupId", "QuitAfterTransfer", "Name", "Intro", "Announcement", "MinScore", "TypeId", "MuteEndDate", "SuccessorId", "QuitAfterTransfer", "Name", "Intro",
-                        "Announcement", "MinScore", "TypeId", "MuteEndDate", "SuccessorId",});
+                new java.lang.String[]{"GroupId", "QuitAfterTransfer", "Name", "Intro", "Announcement", "MinScore", "TypeId", "MuteEndDate", "SuccessorId", "QuitAfterTransfer", "Name", "Intro", "Announcement", "MinScore", "TypeId", "MuteEndDate", "SuccessorId",});
     }
 
     // @@protoc_insertion_point(outer_class_scope)

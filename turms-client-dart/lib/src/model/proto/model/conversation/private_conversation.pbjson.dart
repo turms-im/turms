@@ -10,12 +10,12 @@ import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
 
 @$core.Deprecated('Use privateConversationDescriptor instead')
-const PrivateConversation$json = {
+const PrivateConversation$json = const {
   '1': 'PrivateConversation',
-  '2': [
-    {'1': 'owner_id', '3': 1, '4': 1, '5': 3, '10': 'ownerId'},
-    {'1': 'target_id', '3': 2, '4': 1, '5': 3, '10': 'targetId'},
-    {'1': 'read_date', '3': 3, '4': 1, '5': 3, '10': 'readDate'},
+  '2': const [
+    const {'1': 'owner_id', '3': 1, '4': 1, '5': 3, '10': 'ownerId'},
+    const {'1': 'target_id', '3': 2, '4': 1, '5': 3, '10': 'targetId'},
+    const {'1': 'read_date', '3': 3, '4': 1, '5': 3, '10': 'readDate'},
   ],
 };
 

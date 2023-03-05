@@ -77,16 +77,12 @@ public enum StorageResourceType
      * @return The enum associated with the given numeric wire value.
      */
     public static StorageResourceType forNumber(int value) {
-        switch (value) {
-            case 0:
-                return USER_PROFILE_PICTURE;
-            case 1:
-                return GROUP_PROFILE_PICTURE;
-            case 2:
-                return MESSAGE_ATTACHMENT;
-            default:
-                return null;
-        }
+        return switch (value) {
+            case 0 -> USER_PROFILE_PICTURE;
+            case 1 -> GROUP_PROFILE_PICTURE;
+            case 2 -> MESSAGE_ATTACHMENT;
+            default -> null;
+        };
     }
 
     public static com.google.protobuf.Internal.EnumLiteMap<StorageResourceType>
@@ -96,11 +92,7 @@ public enum StorageResourceType
 
     private static final com.google.protobuf.Internal.EnumLiteMap<
             StorageResourceType> internalValueMap =
-            new com.google.protobuf.Internal.EnumLiteMap<StorageResourceType>() {
-                public StorageResourceType findValueByNumber(int number) {
-                    return StorageResourceType.forNumber(number);
-                }
-            };
+            number -> StorageResourceType.forNumber(number);
 
     public final com.google.protobuf.Descriptors.EnumValueDescriptor
     getValueDescriptor() {
@@ -137,7 +129,7 @@ public enum StorageResourceType
 
     private final int value;
 
-    private StorageResourceType(int value) {
+    StorageResourceType(int value) {
         this.value = value;
     }
 

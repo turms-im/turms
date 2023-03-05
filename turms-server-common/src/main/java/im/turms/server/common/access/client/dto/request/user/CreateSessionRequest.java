@@ -47,12 +47,6 @@ public final class CreateSessionRequest extends
         return new CreateSessionRequest();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-        return this.unknownFields;
-    }
-
     public static final com.google.protobuf.Descriptors.Descriptor
     getDescriptor() {
         return im.turms.server.common.access.client.dto.request.user.CreateSessionRequestOuterClass.internal_static_im_turms_proto_CreateSessionRequest_descriptor;
@@ -62,13 +56,11 @@ public final class CreateSessionRequest extends
     @java.lang.Override
     protected com.google.protobuf.MapField internalGetMapField(
             int number) {
-        switch (number) {
-            case 6:
-                return internalGetDeviceDetails();
-            default:
-                throw new RuntimeException(
-                        "Invalid map field number: " + number);
-        }
+        return switch (number) {
+            case 6 -> internalGetDeviceDetails();
+            default -> throw new RuntimeException(
+                    "Invalid map field number: " + number);
+        };
     }
 
     @java.lang.Override
@@ -81,7 +73,7 @@ public final class CreateSessionRequest extends
 
     private int bitField0_;
     public static final int VERSION_FIELD_NUMBER = 1;
-    private int version_;
+    private int version_ = 0;
 
     /**
      * <code>int32 version = 1;</code>
@@ -94,7 +86,7 @@ public final class CreateSessionRequest extends
     }
 
     public static final int USER_ID_FIELD_NUMBER = 2;
-    private long userId_;
+    private long userId_ = 0L;
 
     /**
      * <code>int64 user_id = 2;</code>
@@ -107,7 +99,8 @@ public final class CreateSessionRequest extends
     }
 
     public static final int PASSWORD_FIELD_NUMBER = 3;
-    private volatile java.lang.Object password_;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object password_ = "";
 
     /**
      * <code>optional string password = 3;</code>
@@ -159,7 +152,7 @@ public final class CreateSessionRequest extends
     }
 
     public static final int USER_STATUS_FIELD_NUMBER = 4;
-    private int userStatus_;
+    private int userStatus_ = 0;
 
     /**
      * <code>optional .im.turms.proto.UserStatus user_status = 4;</code>
@@ -188,13 +181,12 @@ public final class CreateSessionRequest extends
      */
     @java.lang.Override
     public im.turms.server.common.access.client.dto.constant.UserStatus getUserStatus() {
-        @SuppressWarnings("deprecation")
-        im.turms.server.common.access.client.dto.constant.UserStatus result = im.turms.server.common.access.client.dto.constant.UserStatus.valueOf(userStatus_);
+        im.turms.server.common.access.client.dto.constant.UserStatus result = im.turms.server.common.access.client.dto.constant.UserStatus.forNumber(userStatus_);
         return result == null ? im.turms.server.common.access.client.dto.constant.UserStatus.UNRECOGNIZED : result;
     }
 
     public static final int DEVICE_TYPE_FIELD_NUMBER = 5;
-    private int deviceType_;
+    private int deviceType_ = 0;
 
     /**
      * <code>.im.turms.proto.DeviceType device_type = 5;</code>
@@ -213,8 +205,7 @@ public final class CreateSessionRequest extends
      */
     @java.lang.Override
     public im.turms.server.common.access.client.dto.constant.DeviceType getDeviceType() {
-        @SuppressWarnings("deprecation")
-        im.turms.server.common.access.client.dto.constant.DeviceType result = im.turms.server.common.access.client.dto.constant.DeviceType.valueOf(deviceType_);
+        im.turms.server.common.access.client.dto.constant.DeviceType result = im.turms.server.common.access.client.dto.constant.DeviceType.forNumber(deviceType_);
         return result == null ? im.turms.server.common.access.client.dto.constant.DeviceType.UNRECOGNIZED : result;
     }
 
@@ -232,6 +223,7 @@ public final class CreateSessionRequest extends
                                 "");
     }
 
+    @SuppressWarnings("serial")
     private com.google.protobuf.MapField<
             java.lang.String, java.lang.String> deviceDetails_;
 
@@ -251,7 +243,6 @@ public final class CreateSessionRequest extends
     /**
      * <code>map&lt;string, string&gt; device_details = 6;</code>
      */
-
     @java.lang.Override
     public boolean containsDeviceDetails(
             java.lang.String key) {
@@ -274,7 +265,6 @@ public final class CreateSessionRequest extends
      * <code>map&lt;string, string&gt; device_details = 6;</code>
      */
     @java.lang.Override
-
     public java.util.Map<java.lang.String, java.lang.String> getDeviceDetailsMap() {
         return internalGetDeviceDetails().getMap();
     }
@@ -283,23 +273,23 @@ public final class CreateSessionRequest extends
      * <code>map&lt;string, string&gt; device_details = 6;</code>
      */
     @java.lang.Override
-
-    public java.lang.String getDeviceDetailsOrDefault(
+    public /* nullable */
+    java.lang.String getDeviceDetailsOrDefault(
             java.lang.String key,
+            /* nullable */
             java.lang.String defaultValue) {
         if (key == null) {
             throw new NullPointerException("map key");
         }
         java.util.Map<java.lang.String, java.lang.String> map =
                 internalGetDeviceDetails().getMap();
-        return map.containsKey(key) ? map.get(key) : defaultValue;
+        return map.getOrDefault(key, defaultValue);
     }
 
     /**
      * <code>map&lt;string, string&gt; device_details = 6;</code>
      */
     @java.lang.Override
-
     public java.lang.String getDeviceDetailsOrThrow(
             java.lang.String key) {
         if (key == null) {
@@ -441,10 +431,9 @@ public final class CreateSessionRequest extends
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof im.turms.server.common.access.client.dto.request.user.CreateSessionRequest)) {
+        if (!(obj instanceof CreateSessionRequest other)) {
             return super.equals(obj);
         }
-        im.turms.server.common.access.client.dto.request.user.CreateSessionRequest other = (im.turms.server.common.access.client.dto.request.user.CreateSessionRequest) obj;
 
         if (getVersion()
             != other.getVersion()) {
@@ -487,10 +476,7 @@ public final class CreateSessionRequest extends
                 return false;
             }
         }
-        if (!getUnknownFields().equals(other.getUnknownFields())) {
-            return false;
-        }
-        return true;
+        return getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -631,8 +617,7 @@ public final class CreateSessionRequest extends
     @java.lang.Override
     protected Builder newBuilderForType(
             com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
+        return new Builder(parent);
     }
 
     /**
@@ -650,25 +635,21 @@ public final class CreateSessionRequest extends
         @SuppressWarnings({"rawtypes"})
         protected com.google.protobuf.MapField internalGetMapField(
                 int number) {
-            switch (number) {
-                case 6:
-                    return internalGetDeviceDetails();
-                default:
-                    throw new RuntimeException(
-                            "Invalid map field number: " + number);
-            }
+            return switch (number) {
+                case 6 -> internalGetDeviceDetails();
+                default -> throw new RuntimeException(
+                        "Invalid map field number: " + number);
+            };
         }
 
         @SuppressWarnings({"rawtypes"})
         protected com.google.protobuf.MapField internalGetMutableMapField(
                 int number) {
-            switch (number) {
-                case 6:
-                    return internalGetMutableDeviceDetails();
-                default:
-                    throw new RuntimeException(
-                            "Invalid map field number: " + number);
-            }
+            return switch (number) {
+                case 6 -> internalGetMutableDeviceDetails();
+                default -> throw new RuntimeException(
+                        "Invalid map field number: " + number);
+            };
         }
 
         @java.lang.Override
@@ -700,23 +681,18 @@ public final class CreateSessionRequest extends
         @java.lang.Override
         public Builder clear() {
             super.clear();
+            bitField0_ = 0;
             version_ = 0;
-
             userId_ = 0L;
-
             password_ = "";
-            bitField0_ = (bitField0_ & ~0x00000001);
             userStatus_ = 0;
-            bitField0_ = (bitField0_ & ~0x00000002);
             deviceType_ = 0;
-
             internalGetMutableDeviceDetails().clear();
-            if (locationBuilder_ == null) {
-                location_ = null;
-            } else {
-                locationBuilder_.clear();
+            location_ = null;
+            if (locationBuilder_ != null) {
+                locationBuilder_.dispose();
+                locationBuilder_ = null;
             }
-            bitField0_ = (bitField0_ & ~0x00000008);
             return this;
         }
 
@@ -743,70 +719,44 @@ public final class CreateSessionRequest extends
         @java.lang.Override
         public im.turms.server.common.access.client.dto.request.user.CreateSessionRequest buildPartial() {
             im.turms.server.common.access.client.dto.request.user.CreateSessionRequest result = new im.turms.server.common.access.client.dto.request.user.CreateSessionRequest(this);
-            int from_bitField0_ = bitField0_;
-            int to_bitField0_ = 0;
-            result.version_ = version_;
-            result.userId_ = userId_;
-            if (((from_bitField0_ & 0x00000001) != 0)) {
-                to_bitField0_ |= 0x00000001;
+            if (bitField0_ != 0) {
+                buildPartial0(result);
             }
-            result.password_ = password_;
-            if (((from_bitField0_ & 0x00000002) != 0)) {
-                to_bitField0_ |= 0x00000002;
-            }
-            result.userStatus_ = userStatus_;
-            result.deviceType_ = deviceType_;
-            result.deviceDetails_ = internalGetDeviceDetails();
-            result.deviceDetails_.makeImmutable();
-            if (((from_bitField0_ & 0x00000008) != 0)) {
-                if (locationBuilder_ == null) {
-                    result.location_ = location_;
-                } else {
-                    result.location_ = locationBuilder_.build();
-                }
-                to_bitField0_ |= 0x00000004;
-            }
-            result.bitField0_ = to_bitField0_;
             onBuilt();
             return result;
         }
 
-        @java.lang.Override
-        public Builder clone() {
-            return super.clone();
-        }
-
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(
-                com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(
-                com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index, java.lang.Object value) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.addRepeatedField(field, value);
+        private void buildPartial0(im.turms.server.common.access.client.dto.request.user.CreateSessionRequest result) {
+            int from_bitField0_ = bitField0_;
+            if (((from_bitField0_ & 0x00000001) != 0)) {
+                result.version_ = version_;
+            }
+            if (((from_bitField0_ & 0x00000002) != 0)) {
+                result.userId_ = userId_;
+            }
+            int to_bitField0_ = 0;
+            if (((from_bitField0_ & 0x00000004) != 0)) {
+                result.password_ = password_;
+                to_bitField0_ |= 0x00000001;
+            }
+            if (((from_bitField0_ & 0x00000008) != 0)) {
+                result.userStatus_ = userStatus_;
+                to_bitField0_ |= 0x00000002;
+            }
+            if (((from_bitField0_ & 0x00000010) != 0)) {
+                result.deviceType_ = deviceType_;
+            }
+            if (((from_bitField0_ & 0x00000020) != 0)) {
+                result.deviceDetails_ = internalGetDeviceDetails();
+                result.deviceDetails_.makeImmutable();
+            }
+            if (((from_bitField0_ & 0x00000040) != 0)) {
+                result.location_ = locationBuilder_ == null
+                        ? location_
+                        : locationBuilder_.build();
+                to_bitField0_ |= 0x00000004;
+            }
+            result.bitField0_ |= to_bitField0_;
         }
 
         @java.lang.Override
@@ -830,8 +780,8 @@ public final class CreateSessionRequest extends
                 setUserId(other.getUserId());
             }
             if (other.hasPassword()) {
-                bitField0_ |= 0x00000001;
                 password_ = other.password_;
+                bitField0_ |= 0x00000004;
                 onChanged();
             }
             if (other.hasUserStatus()) {
@@ -842,6 +792,7 @@ public final class CreateSessionRequest extends
             }
             internalGetMutableDeviceDetails().mergeFrom(
                     other.internalGetDeviceDetails());
+            bitField0_ |= 0x00000020;
             if (other.hasLocation()) {
                 mergeLocation(other.getLocation());
             }
@@ -868,54 +819,45 @@ public final class CreateSessionRequest extends
                 while (!done) {
                     int tag = input.readTag();
                     switch (tag) {
-                        case 0:
-                            done = true;
-                            break;
-                        case 8: {
+                        case 0 -> done = true;
+                        case 8 -> {
                             version_ = input.readInt32();
-
-                            break;
-                        } // case 8
-                        case 16: {
-                            userId_ = input.readInt64();
-
-                            break;
-                        } // case 16
-                        case 26: {
-                            password_ = input.readStringRequireUtf8();
                             bitField0_ |= 0x00000001;
-                            break;
-                        } // case 26
-                        case 32: {
-                            userStatus_ = input.readEnum();
+                        } // case 8
+                        case 16 -> {
+                            userId_ = input.readInt64();
                             bitField0_ |= 0x00000002;
-                            break;
+                        } // case 16
+                        case 26 -> {
+                            password_ = input.readStringRequireUtf8();
+                            bitField0_ |= 0x00000004;
+                        } // case 26
+                        case 32 -> {
+                            userStatus_ = input.readEnum();
+                            bitField0_ |= 0x00000008;
                         } // case 32
-                        case 40: {
+                        case 40 -> {
                             deviceType_ = input.readEnum();
-
-                            break;
+                            bitField0_ |= 0x00000010;
                         } // case 40
-                        case 50: {
-                            com.google.protobuf.MapEntry<java.lang.String, java.lang.String>
+                        case 50 -> {
+                            com.google.protobuf.MapEntry<String, String>
                                     deviceDetails__ = input.readMessage(
                                     DeviceDetailsDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
                             internalGetMutableDeviceDetails().getMutableMap().put(
                                     deviceDetails__.getKey(), deviceDetails__.getValue());
-                            break;
+                            bitField0_ |= 0x00000020;
                         } // case 50
-                        case 58: {
+                        case 58 -> {
                             input.readMessage(
                                     getLocationFieldBuilder().getBuilder(),
                                     extensionRegistry);
-                            bitField0_ |= 0x00000008;
-                            break;
+                            bitField0_ |= 0x00000040;
                         } // case 58
-                        default: {
+                        default -> {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
                             }
-                            break;
                         } // default:
                     } // switch (tag)
                 } // while (!done)
@@ -950,6 +892,7 @@ public final class CreateSessionRequest extends
         public Builder setVersion(int value) {
 
             version_ = value;
+            bitField0_ |= 0x00000001;
             onChanged();
             return this;
         }
@@ -960,7 +903,7 @@ public final class CreateSessionRequest extends
          * @return This builder for chaining.
          */
         public Builder clearVersion() {
-
+            bitField0_ &= ~0x00000001;
             version_ = 0;
             onChanged();
             return this;
@@ -987,6 +930,7 @@ public final class CreateSessionRequest extends
         public Builder setUserId(long value) {
 
             userId_ = value;
+            bitField0_ |= 0x00000002;
             onChanged();
             return this;
         }
@@ -997,7 +941,7 @@ public final class CreateSessionRequest extends
          * @return This builder for chaining.
          */
         public Builder clearUserId() {
-
+            bitField0_ &= ~0x00000002;
             userId_ = 0L;
             onChanged();
             return this;
@@ -1011,7 +955,7 @@ public final class CreateSessionRequest extends
          * @return Whether the password field is set.
          */
         public boolean hasPassword() {
-            return ((bitField0_ & 0x00000001) != 0);
+            return ((bitField0_ & 0x00000004) != 0);
         }
 
         /**
@@ -1062,8 +1006,8 @@ public final class CreateSessionRequest extends
             if (value == null) {
                 throw new NullPointerException();
             }
-            bitField0_ |= 0x00000001;
             password_ = value;
+            bitField0_ |= 0x00000004;
             onChanged();
             return this;
         }
@@ -1074,8 +1018,8 @@ public final class CreateSessionRequest extends
          * @return This builder for chaining.
          */
         public Builder clearPassword() {
-            bitField0_ = (bitField0_ & ~0x00000001);
             password_ = getDefaultInstance().getPassword();
+            bitField0_ &= ~0x00000004;
             onChanged();
             return this;
         }
@@ -1092,8 +1036,8 @@ public final class CreateSessionRequest extends
                 throw new NullPointerException();
             }
             checkByteStringIsUtf8(value);
-            bitField0_ |= 0x00000001;
             password_ = value;
+            bitField0_ |= 0x00000004;
             onChanged();
             return this;
         }
@@ -1107,7 +1051,7 @@ public final class CreateSessionRequest extends
          */
         @java.lang.Override
         public boolean hasUserStatus() {
-            return ((bitField0_ & 0x00000002) != 0);
+            return ((bitField0_ & 0x00000008) != 0);
         }
 
         /**
@@ -1127,8 +1071,8 @@ public final class CreateSessionRequest extends
          * @return This builder for chaining.
          */
         public Builder setUserStatusValue(int value) {
-            bitField0_ |= 0x00000002;
             userStatus_ = value;
+            bitField0_ |= 0x00000008;
             onChanged();
             return this;
         }
@@ -1140,8 +1084,7 @@ public final class CreateSessionRequest extends
          */
         @java.lang.Override
         public im.turms.server.common.access.client.dto.constant.UserStatus getUserStatus() {
-            @SuppressWarnings("deprecation")
-            im.turms.server.common.access.client.dto.constant.UserStatus result = im.turms.server.common.access.client.dto.constant.UserStatus.valueOf(userStatus_);
+            im.turms.server.common.access.client.dto.constant.UserStatus result = im.turms.server.common.access.client.dto.constant.UserStatus.forNumber(userStatus_);
             return result == null ? im.turms.server.common.access.client.dto.constant.UserStatus.UNRECOGNIZED : result;
         }
 
@@ -1155,7 +1098,7 @@ public final class CreateSessionRequest extends
             if (value == null) {
                 throw new NullPointerException();
             }
-            bitField0_ |= 0x00000002;
+            bitField0_ |= 0x00000008;
             userStatus_ = value.getNumber();
             onChanged();
             return this;
@@ -1167,7 +1110,7 @@ public final class CreateSessionRequest extends
          * @return This builder for chaining.
          */
         public Builder clearUserStatus() {
-            bitField0_ = (bitField0_ & ~0x00000002);
+            bitField0_ &= ~0x00000008;
             userStatus_ = 0;
             onChanged();
             return this;
@@ -1192,8 +1135,8 @@ public final class CreateSessionRequest extends
          * @return This builder for chaining.
          */
         public Builder setDeviceTypeValue(int value) {
-
             deviceType_ = value;
+            bitField0_ |= 0x00000010;
             onChanged();
             return this;
         }
@@ -1205,8 +1148,7 @@ public final class CreateSessionRequest extends
          */
         @java.lang.Override
         public im.turms.server.common.access.client.dto.constant.DeviceType getDeviceType() {
-            @SuppressWarnings("deprecation")
-            im.turms.server.common.access.client.dto.constant.DeviceType result = im.turms.server.common.access.client.dto.constant.DeviceType.valueOf(deviceType_);
+            im.turms.server.common.access.client.dto.constant.DeviceType result = im.turms.server.common.access.client.dto.constant.DeviceType.forNumber(deviceType_);
             return result == null ? im.turms.server.common.access.client.dto.constant.DeviceType.UNRECOGNIZED : result;
         }
 
@@ -1220,7 +1162,7 @@ public final class CreateSessionRequest extends
             if (value == null) {
                 throw new NullPointerException();
             }
-
+            bitField0_ |= 0x00000010;
             deviceType_ = value.getNumber();
             onChanged();
             return this;
@@ -1232,7 +1174,7 @@ public final class CreateSessionRequest extends
          * @return This builder for chaining.
          */
         public Builder clearDeviceType() {
-
+            bitField0_ &= ~0x00000010;
             deviceType_ = 0;
             onChanged();
             return this;
@@ -1252,8 +1194,6 @@ public final class CreateSessionRequest extends
 
         private com.google.protobuf.MapField<java.lang.String, java.lang.String>
         internalGetMutableDeviceDetails() {
-            onChanged();
-            ;
             if (deviceDetails_ == null) {
                 deviceDetails_ = com.google.protobuf.MapField.newMapField(
                         DeviceDetailsDefaultEntryHolder.defaultEntry);
@@ -1261,6 +1201,8 @@ public final class CreateSessionRequest extends
             if (!deviceDetails_.isMutable()) {
                 deviceDetails_ = deviceDetails_.copy();
             }
+            bitField0_ |= 0x00000020;
+            onChanged();
             return deviceDetails_;
         }
 
@@ -1271,7 +1213,6 @@ public final class CreateSessionRequest extends
         /**
          * <code>map&lt;string, string&gt; device_details = 6;</code>
          */
-
         @java.lang.Override
         public boolean containsDeviceDetails(
                 java.lang.String key) {
@@ -1294,7 +1235,6 @@ public final class CreateSessionRequest extends
          * <code>map&lt;string, string&gt; device_details = 6;</code>
          */
         @java.lang.Override
-
         public java.util.Map<java.lang.String, java.lang.String> getDeviceDetailsMap() {
             return internalGetDeviceDetails().getMap();
         }
@@ -1303,23 +1243,23 @@ public final class CreateSessionRequest extends
          * <code>map&lt;string, string&gt; device_details = 6;</code>
          */
         @java.lang.Override
-
-        public java.lang.String getDeviceDetailsOrDefault(
+        public /* nullable */
+        java.lang.String getDeviceDetailsOrDefault(
                 java.lang.String key,
+                /* nullable */
                 java.lang.String defaultValue) {
             if (key == null) {
                 throw new NullPointerException("map key");
             }
             java.util.Map<java.lang.String, java.lang.String> map =
                     internalGetDeviceDetails().getMap();
-            return map.containsKey(key) ? map.get(key) : defaultValue;
+            return map.getOrDefault(key, defaultValue);
         }
 
         /**
          * <code>map&lt;string, string&gt; device_details = 6;</code>
          */
         @java.lang.Override
-
         public java.lang.String getDeviceDetailsOrThrow(
                 java.lang.String key) {
             if (key == null) {
@@ -1334,6 +1274,7 @@ public final class CreateSessionRequest extends
         }
 
         public Builder clearDeviceDetails() {
+            bitField0_ &= ~0x00000020;
             internalGetMutableDeviceDetails().getMutableMap()
                     .clear();
             return this;
@@ -1342,7 +1283,6 @@ public final class CreateSessionRequest extends
         /**
          * <code>map&lt;string, string&gt; device_details = 6;</code>
          */
-
         public Builder removeDeviceDetails(
                 java.lang.String key) {
             if (key == null) {
@@ -1359,6 +1299,7 @@ public final class CreateSessionRequest extends
         @java.lang.Deprecated
         public java.util.Map<java.lang.String, java.lang.String>
         getMutableDeviceDetails() {
+            bitField0_ |= 0x00000020;
             return internalGetMutableDeviceDetails().getMutableMap();
         }
 
@@ -1374,27 +1315,26 @@ public final class CreateSessionRequest extends
             if (value == null) {
                 throw new NullPointerException("map value");
             }
-
             internalGetMutableDeviceDetails().getMutableMap()
                     .put(key, value);
+            bitField0_ |= 0x00000020;
             return this;
         }
 
         /**
          * <code>map&lt;string, string&gt; device_details = 6;</code>
          */
-
         public Builder putAllDeviceDetails(
                 java.util.Map<java.lang.String, java.lang.String> values) {
             internalGetMutableDeviceDetails().getMutableMap()
                     .putAll(values);
+            bitField0_ |= 0x00000020;
             return this;
         }
 
         private im.turms.server.common.access.client.dto.model.user.UserLocation location_;
         private com.google.protobuf.SingleFieldBuilderV3<
-                im.turms.server.common.access.client.dto.model.user.UserLocation, im.turms.server.common.access.client.dto.model.user.UserLocation.Builder, im.turms.server.common.access.client.dto.model.user.UserLocationOrBuilder>
-                locationBuilder_;
+                im.turms.server.common.access.client.dto.model.user.UserLocation, im.turms.server.common.access.client.dto.model.user.UserLocation.Builder, im.turms.server.common.access.client.dto.model.user.UserLocationOrBuilder> locationBuilder_;
 
         /**
          * <code>optional .im.turms.proto.UserLocation location = 7;</code>
@@ -1402,7 +1342,7 @@ public final class CreateSessionRequest extends
          * @return Whether the location field is set.
          */
         public boolean hasLocation() {
-            return ((bitField0_ & 0x00000008) != 0);
+            return ((bitField0_ & 0x00000040) != 0);
         }
 
         /**
@@ -1427,11 +1367,11 @@ public final class CreateSessionRequest extends
                     throw new NullPointerException();
                 }
                 location_ = value;
-                onChanged();
             } else {
                 locationBuilder_.setMessage(value);
             }
-            bitField0_ |= 0x00000008;
+            bitField0_ |= 0x00000040;
+            onChanged();
             return this;
         }
 
@@ -1442,11 +1382,11 @@ public final class CreateSessionRequest extends
                 im.turms.server.common.access.client.dto.model.user.UserLocation.Builder builderForValue) {
             if (locationBuilder_ == null) {
                 location_ = builderForValue.build();
-                onChanged();
             } else {
                 locationBuilder_.setMessage(builderForValue.build());
             }
-            bitField0_ |= 0x00000008;
+            bitField0_ |= 0x00000040;
+            onChanged();
             return this;
         }
 
@@ -1455,19 +1395,18 @@ public final class CreateSessionRequest extends
          */
         public Builder mergeLocation(im.turms.server.common.access.client.dto.model.user.UserLocation value) {
             if (locationBuilder_ == null) {
-                if (((bitField0_ & 0x00000008) != 0) &&
+                if (((bitField0_ & 0x00000040) != 0) &&
                     location_ != null &&
                     location_ != im.turms.server.common.access.client.dto.model.user.UserLocation.getDefaultInstance()) {
-                    location_ =
-                            im.turms.server.common.access.client.dto.model.user.UserLocation.newBuilder(location_).mergeFrom(value).buildPartial();
+                    getLocationBuilder().mergeFrom(value);
                 } else {
                     location_ = value;
                 }
-                onChanged();
             } else {
                 locationBuilder_.mergeFrom(value);
             }
-            bitField0_ |= 0x00000008;
+            bitField0_ |= 0x00000040;
+            onChanged();
             return this;
         }
 
@@ -1475,13 +1414,13 @@ public final class CreateSessionRequest extends
          * <code>optional .im.turms.proto.UserLocation location = 7;</code>
          */
         public Builder clearLocation() {
-            if (locationBuilder_ == null) {
-                location_ = null;
-                onChanged();
-            } else {
-                locationBuilder_.clear();
+            bitField0_ &= ~0x00000040;
+            location_ = null;
+            if (locationBuilder_ != null) {
+                locationBuilder_.dispose();
+                locationBuilder_ = null;
             }
-            bitField0_ = (bitField0_ & ~0x00000008);
+            onChanged();
             return this;
         }
 
@@ -1489,7 +1428,7 @@ public final class CreateSessionRequest extends
          * <code>optional .im.turms.proto.UserLocation location = 7;</code>
          */
         public im.turms.server.common.access.client.dto.model.user.UserLocation.Builder getLocationBuilder() {
-            bitField0_ |= 0x00000008;
+            bitField0_ |= 0x00000040;
             onChanged();
             return getLocationFieldBuilder().getBuilder();
         }
@@ -1513,8 +1452,7 @@ public final class CreateSessionRequest extends
                 im.turms.server.common.access.client.dto.model.user.UserLocation, im.turms.server.common.access.client.dto.model.user.UserLocation.Builder, im.turms.server.common.access.client.dto.model.user.UserLocationOrBuilder>
         getLocationFieldBuilder() {
             if (locationBuilder_ == null) {
-                locationBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-                        im.turms.server.common.access.client.dto.model.user.UserLocation, im.turms.server.common.access.client.dto.model.user.UserLocation.Builder, im.turms.server.common.access.client.dto.model.user.UserLocationOrBuilder>(
+                locationBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
                         getLocation(),
                         getParentForChildren(),
                         isClean());
@@ -1551,7 +1489,7 @@ public final class CreateSessionRequest extends
     }
 
     private static final com.google.protobuf.Parser<CreateSessionRequest>
-            PARSER = new com.google.protobuf.AbstractParser<CreateSessionRequest>() {
+            PARSER = new com.google.protobuf.AbstractParser<>() {
         @java.lang.Override
         public CreateSessionRequest parsePartialFrom(
                 com.google.protobuf.CodedInputStream input,

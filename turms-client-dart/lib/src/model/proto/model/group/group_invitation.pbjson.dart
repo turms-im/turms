@@ -10,11 +10,11 @@ import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
 
 @$core.Deprecated('Use groupInvitationDescriptor instead')
-const GroupInvitation$json = {
+const GroupInvitation$json = const {
   '1': 'GroupInvitation',
-  '2': [
-    {'1': 'id', '3': 1, '4': 1, '5': 3, '9': 0, '10': 'id', '17': true},
-    {
+  '2': const [
+    const {'1': 'id', '3': 1, '4': 1, '5': 3, '9': 0, '10': 'id', '17': true},
+    const {
       '1': 'creation_date',
       '3': 2,
       '4': 1,
@@ -23,7 +23,7 @@ const GroupInvitation$json = {
       '10': 'creationDate',
       '17': true
     },
-    {
+    const {
       '1': 'content',
       '3': 3,
       '4': 1,
@@ -32,7 +32,7 @@ const GroupInvitation$json = {
       '10': 'content',
       '17': true
     },
-    {
+    const {
       '1': 'status',
       '3': 4,
       '4': 1,
@@ -42,7 +42,7 @@ const GroupInvitation$json = {
       '10': 'status',
       '17': true
     },
-    {
+    const {
       '1': 'expiration_date',
       '3': 5,
       '4': 1,
@@ -51,7 +51,7 @@ const GroupInvitation$json = {
       '10': 'expirationDate',
       '17': true
     },
-    {
+    const {
       '1': 'group_id',
       '3': 6,
       '4': 1,
@@ -60,7 +60,7 @@ const GroupInvitation$json = {
       '10': 'groupId',
       '17': true
     },
-    {
+    const {
       '1': 'inviter_id',
       '3': 7,
       '4': 1,
@@ -69,7 +69,7 @@ const GroupInvitation$json = {
       '10': 'inviterId',
       '17': true
     },
-    {
+    const {
       '1': 'invitee_id',
       '3': 8,
       '4': 1,
@@ -79,15 +79,15 @@ const GroupInvitation$json = {
       '17': true
     },
   ],
-  '8': [
-    {'1': '_id'},
-    {'1': '_creation_date'},
-    {'1': '_content'},
-    {'1': '_status'},
-    {'1': '_expiration_date'},
-    {'1': '_group_id'},
-    {'1': '_inviter_id'},
-    {'1': '_invitee_id'},
+  '8': const [
+    const {'1': '_id'},
+    const {'1': '_creation_date'},
+    const {'1': '_content'},
+    const {'1': '_status'},
+    const {'1': '_expiration_date'},
+    const {'1': '_group_id'},
+    const {'1': '_inviter_id'},
+    const {'1': '_invitee_id'},
   ],
 };
 

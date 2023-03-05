@@ -46,12 +46,6 @@ public final class UpdateGroupMemberRequest extends
         return new UpdateGroupMemberRequest();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-        return this.unknownFields;
-    }
-
     public static final com.google.protobuf.Descriptors.Descriptor
     getDescriptor() {
         return im.turms.server.common.access.client.dto.request.group.member.UpdateGroupMemberRequestOuterClass.internal_static_im_turms_proto_UpdateGroupMemberRequest_descriptor;
@@ -62,13 +56,12 @@ public final class UpdateGroupMemberRequest extends
     internalGetFieldAccessorTable() {
         return im.turms.server.common.access.client.dto.request.group.member.UpdateGroupMemberRequestOuterClass.internal_static_im_turms_proto_UpdateGroupMemberRequest_fieldAccessorTable
                 .ensureFieldAccessorsInitialized(
-                        im.turms.server.common.access.client.dto.request.group.member.UpdateGroupMemberRequest.class,
-                        im.turms.server.common.access.client.dto.request.group.member.UpdateGroupMemberRequest.Builder.class);
+                        im.turms.server.common.access.client.dto.request.group.member.UpdateGroupMemberRequest.class, im.turms.server.common.access.client.dto.request.group.member.UpdateGroupMemberRequest.Builder.class);
     }
 
     private int bitField0_;
     public static final int GROUP_ID_FIELD_NUMBER = 1;
-    private long groupId_;
+    private long groupId_ = 0L;
 
     /**
      * <pre>
@@ -85,7 +78,7 @@ public final class UpdateGroupMemberRequest extends
     }
 
     public static final int MEMBER_ID_FIELD_NUMBER = 2;
-    private long memberId_;
+    private long memberId_ = 0L;
 
     /**
      * <code>int64 member_id = 2;</code>
@@ -98,7 +91,8 @@ public final class UpdateGroupMemberRequest extends
     }
 
     public static final int NAME_FIELD_NUMBER = 3;
-    private volatile java.lang.Object name_;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object name_ = "";
 
     /**
      * <pre>
@@ -162,7 +156,7 @@ public final class UpdateGroupMemberRequest extends
     }
 
     public static final int ROLE_FIELD_NUMBER = 4;
-    private int role_;
+    private int role_ = 0;
 
     /**
      * <code>optional .im.turms.proto.GroupMemberRole role = 4;</code>
@@ -191,13 +185,12 @@ public final class UpdateGroupMemberRequest extends
      */
     @java.lang.Override
     public im.turms.server.common.access.client.dto.constant.GroupMemberRole getRole() {
-        @SuppressWarnings("deprecation")
-        im.turms.server.common.access.client.dto.constant.GroupMemberRole result = im.turms.server.common.access.client.dto.constant.GroupMemberRole.valueOf(role_);
+        im.turms.server.common.access.client.dto.constant.GroupMemberRole result = im.turms.server.common.access.client.dto.constant.GroupMemberRole.forNumber(role_);
         return result == null ? im.turms.server.common.access.client.dto.constant.GroupMemberRole.UNRECOGNIZED : result;
     }
 
     public static final int MUTE_END_DATE_FIELD_NUMBER = 5;
-    private long muteEndDate_;
+    private long muteEndDate_ = 0L;
 
     /**
      * <code>optional int64 mute_end_date = 5;</code>
@@ -293,10 +286,9 @@ public final class UpdateGroupMemberRequest extends
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof im.turms.server.common.access.client.dto.request.group.member.UpdateGroupMemberRequest)) {
+        if (!(obj instanceof UpdateGroupMemberRequest other)) {
             return super.equals(obj);
         }
-        im.turms.server.common.access.client.dto.request.group.member.UpdateGroupMemberRequest other = (im.turms.server.common.access.client.dto.request.group.member.UpdateGroupMemberRequest) obj;
 
         if (getGroupId()
             != other.getGroupId()) {
@@ -332,10 +324,7 @@ public final class UpdateGroupMemberRequest extends
                 return false;
             }
         }
-        if (!getUnknownFields().equals(other.getUnknownFields())) {
-            return false;
-        }
-        return true;
+        return getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -472,8 +461,7 @@ public final class UpdateGroupMemberRequest extends
     @java.lang.Override
     protected Builder newBuilderForType(
             com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
+        return new Builder(parent);
     }
 
     /**
@@ -493,8 +481,7 @@ public final class UpdateGroupMemberRequest extends
         internalGetFieldAccessorTable() {
             return im.turms.server.common.access.client.dto.request.group.member.UpdateGroupMemberRequestOuterClass.internal_static_im_turms_proto_UpdateGroupMemberRequest_fieldAccessorTable
                     .ensureFieldAccessorsInitialized(
-                            im.turms.server.common.access.client.dto.request.group.member.UpdateGroupMemberRequest.class,
-                            im.turms.server.common.access.client.dto.request.group.member.UpdateGroupMemberRequest.Builder.class);
+                            im.turms.server.common.access.client.dto.request.group.member.UpdateGroupMemberRequest.class, im.turms.server.common.access.client.dto.request.group.member.UpdateGroupMemberRequest.Builder.class);
         }
 
         // Construct using im.turms.server.common.access.client.dto.request.group.member.UpdateGroupMemberRequest.newBuilder()
@@ -511,16 +498,12 @@ public final class UpdateGroupMemberRequest extends
         @java.lang.Override
         public Builder clear() {
             super.clear();
+            bitField0_ = 0;
             groupId_ = 0L;
-
             memberId_ = 0L;
-
             name_ = "";
-            bitField0_ = (bitField0_ & ~0x00000001);
             role_ = 0;
-            bitField0_ = (bitField0_ & ~0x00000002);
             muteEndDate_ = 0L;
-            bitField0_ = (bitField0_ & ~0x00000004);
             return this;
         }
 
@@ -546,65 +529,36 @@ public final class UpdateGroupMemberRequest extends
 
         @java.lang.Override
         public im.turms.server.common.access.client.dto.request.group.member.UpdateGroupMemberRequest buildPartial() {
-            im.turms.server.common.access.client.dto.request.group.member.UpdateGroupMemberRequest result =
-                    new im.turms.server.common.access.client.dto.request.group.member.UpdateGroupMemberRequest(this);
-            int from_bitField0_ = bitField0_;
-            int to_bitField0_ = 0;
-            result.groupId_ = groupId_;
-            result.memberId_ = memberId_;
-            if (((from_bitField0_ & 0x00000001) != 0)) {
-                to_bitField0_ |= 0x00000001;
+            im.turms.server.common.access.client.dto.request.group.member.UpdateGroupMemberRequest result = new im.turms.server.common.access.client.dto.request.group.member.UpdateGroupMemberRequest(this);
+            if (bitField0_ != 0) {
+                buildPartial0(result);
             }
-            result.name_ = name_;
-            if (((from_bitField0_ & 0x00000002) != 0)) {
-                to_bitField0_ |= 0x00000002;
-            }
-            result.role_ = role_;
-            if (((from_bitField0_ & 0x00000004) != 0)) {
-                result.muteEndDate_ = muteEndDate_;
-                to_bitField0_ |= 0x00000004;
-            }
-            result.bitField0_ = to_bitField0_;
             onBuilt();
             return result;
         }
 
-        @java.lang.Override
-        public Builder clone() {
-            return super.clone();
-        }
-
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(
-                com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(
-                com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index, java.lang.Object value) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.addRepeatedField(field, value);
+        private void buildPartial0(im.turms.server.common.access.client.dto.request.group.member.UpdateGroupMemberRequest result) {
+            int from_bitField0_ = bitField0_;
+            if (((from_bitField0_ & 0x00000001) != 0)) {
+                result.groupId_ = groupId_;
+            }
+            if (((from_bitField0_ & 0x00000002) != 0)) {
+                result.memberId_ = memberId_;
+            }
+            int to_bitField0_ = 0;
+            if (((from_bitField0_ & 0x00000004) != 0)) {
+                result.name_ = name_;
+                to_bitField0_ |= 0x00000001;
+            }
+            if (((from_bitField0_ & 0x00000008) != 0)) {
+                result.role_ = role_;
+                to_bitField0_ |= 0x00000002;
+            }
+            if (((from_bitField0_ & 0x00000010) != 0)) {
+                result.muteEndDate_ = muteEndDate_;
+                to_bitField0_ |= 0x00000004;
+            }
+            result.bitField0_ |= to_bitField0_;
         }
 
         @java.lang.Override
@@ -628,8 +582,8 @@ public final class UpdateGroupMemberRequest extends
                 setMemberId(other.getMemberId());
             }
             if (other.hasName()) {
-                bitField0_ |= 0x00000001;
                 name_ = other.name_;
+                bitField0_ |= 0x00000004;
                 onChanged();
             }
             if (other.hasRole()) {
@@ -661,39 +615,31 @@ public final class UpdateGroupMemberRequest extends
                 while (!done) {
                     int tag = input.readTag();
                     switch (tag) {
-                        case 0:
-                            done = true;
-                            break;
-                        case 8: {
+                        case 0 -> done = true;
+                        case 8 -> {
                             groupId_ = input.readInt64();
-
-                            break;
-                        } // case 8
-                        case 16: {
-                            memberId_ = input.readInt64();
-
-                            break;
-                        } // case 16
-                        case 26: {
-                            name_ = input.readStringRequireUtf8();
                             bitField0_ |= 0x00000001;
-                            break;
-                        } // case 26
-                        case 32: {
-                            role_ = input.readEnum();
+                        } // case 8
+                        case 16 -> {
+                            memberId_ = input.readInt64();
                             bitField0_ |= 0x00000002;
-                            break;
-                        } // case 32
-                        case 40: {
-                            muteEndDate_ = input.readInt64();
+                        } // case 16
+                        case 26 -> {
+                            name_ = input.readStringRequireUtf8();
                             bitField0_ |= 0x00000004;
-                            break;
+                        } // case 26
+                        case 32 -> {
+                            role_ = input.readEnum();
+                            bitField0_ |= 0x00000008;
+                        } // case 32
+                        case 40 -> {
+                            muteEndDate_ = input.readInt64();
+                            bitField0_ |= 0x00000010;
                         } // case 40
-                        default: {
+                        default -> {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
                             }
-                            break;
                         } // default:
                     } // switch (tag)
                 } // while (!done)
@@ -736,6 +682,7 @@ public final class UpdateGroupMemberRequest extends
         public Builder setGroupId(long value) {
 
             groupId_ = value;
+            bitField0_ |= 0x00000001;
             onChanged();
             return this;
         }
@@ -750,7 +697,7 @@ public final class UpdateGroupMemberRequest extends
          * @return This builder for chaining.
          */
         public Builder clearGroupId() {
-
+            bitField0_ &= ~0x00000001;
             groupId_ = 0L;
             onChanged();
             return this;
@@ -777,6 +724,7 @@ public final class UpdateGroupMemberRequest extends
         public Builder setMemberId(long value) {
 
             memberId_ = value;
+            bitField0_ |= 0x00000002;
             onChanged();
             return this;
         }
@@ -787,7 +735,7 @@ public final class UpdateGroupMemberRequest extends
          * @return This builder for chaining.
          */
         public Builder clearMemberId() {
-
+            bitField0_ &= ~0x00000002;
             memberId_ = 0L;
             onChanged();
             return this;
@@ -805,7 +753,7 @@ public final class UpdateGroupMemberRequest extends
          * @return Whether the name field is set.
          */
         public boolean hasName() {
-            return ((bitField0_ & 0x00000001) != 0);
+            return ((bitField0_ & 0x00000004) != 0);
         }
 
         /**
@@ -868,8 +816,8 @@ public final class UpdateGroupMemberRequest extends
             if (value == null) {
                 throw new NullPointerException();
             }
-            bitField0_ |= 0x00000001;
             name_ = value;
+            bitField0_ |= 0x00000004;
             onChanged();
             return this;
         }
@@ -884,8 +832,8 @@ public final class UpdateGroupMemberRequest extends
          * @return This builder for chaining.
          */
         public Builder clearName() {
-            bitField0_ = (bitField0_ & ~0x00000001);
             name_ = getDefaultInstance().getName();
+            bitField0_ &= ~0x00000004;
             onChanged();
             return this;
         }
@@ -906,8 +854,8 @@ public final class UpdateGroupMemberRequest extends
                 throw new NullPointerException();
             }
             checkByteStringIsUtf8(value);
-            bitField0_ |= 0x00000001;
             name_ = value;
+            bitField0_ |= 0x00000004;
             onChanged();
             return this;
         }
@@ -921,7 +869,7 @@ public final class UpdateGroupMemberRequest extends
          */
         @java.lang.Override
         public boolean hasRole() {
-            return ((bitField0_ & 0x00000002) != 0);
+            return ((bitField0_ & 0x00000008) != 0);
         }
 
         /**
@@ -941,8 +889,8 @@ public final class UpdateGroupMemberRequest extends
          * @return This builder for chaining.
          */
         public Builder setRoleValue(int value) {
-            bitField0_ |= 0x00000002;
             role_ = value;
+            bitField0_ |= 0x00000008;
             onChanged();
             return this;
         }
@@ -954,8 +902,7 @@ public final class UpdateGroupMemberRequest extends
          */
         @java.lang.Override
         public im.turms.server.common.access.client.dto.constant.GroupMemberRole getRole() {
-            @SuppressWarnings("deprecation")
-            im.turms.server.common.access.client.dto.constant.GroupMemberRole result = im.turms.server.common.access.client.dto.constant.GroupMemberRole.valueOf(role_);
+            im.turms.server.common.access.client.dto.constant.GroupMemberRole result = im.turms.server.common.access.client.dto.constant.GroupMemberRole.forNumber(role_);
             return result == null ? im.turms.server.common.access.client.dto.constant.GroupMemberRole.UNRECOGNIZED : result;
         }
 
@@ -969,7 +916,7 @@ public final class UpdateGroupMemberRequest extends
             if (value == null) {
                 throw new NullPointerException();
             }
-            bitField0_ |= 0x00000002;
+            bitField0_ |= 0x00000008;
             role_ = value.getNumber();
             onChanged();
             return this;
@@ -981,7 +928,7 @@ public final class UpdateGroupMemberRequest extends
          * @return This builder for chaining.
          */
         public Builder clearRole() {
-            bitField0_ = (bitField0_ & ~0x00000002);
+            bitField0_ &= ~0x00000008;
             role_ = 0;
             onChanged();
             return this;
@@ -996,7 +943,7 @@ public final class UpdateGroupMemberRequest extends
          */
         @java.lang.Override
         public boolean hasMuteEndDate() {
-            return ((bitField0_ & 0x00000004) != 0);
+            return ((bitField0_ & 0x00000010) != 0);
         }
 
         /**
@@ -1016,8 +963,9 @@ public final class UpdateGroupMemberRequest extends
          * @return This builder for chaining.
          */
         public Builder setMuteEndDate(long value) {
-            bitField0_ |= 0x00000004;
+
             muteEndDate_ = value;
+            bitField0_ |= 0x00000010;
             onChanged();
             return this;
         }
@@ -1028,7 +976,7 @@ public final class UpdateGroupMemberRequest extends
          * @return This builder for chaining.
          */
         public Builder clearMuteEndDate() {
-            bitField0_ = (bitField0_ & ~0x00000004);
+            bitField0_ &= ~0x00000010;
             muteEndDate_ = 0L;
             onChanged();
             return this;
@@ -1062,7 +1010,7 @@ public final class UpdateGroupMemberRequest extends
     }
 
     private static final com.google.protobuf.Parser<UpdateGroupMemberRequest>
-            PARSER = new com.google.protobuf.AbstractParser<UpdateGroupMemberRequest>() {
+            PARSER = new com.google.protobuf.AbstractParser<>() {
         @java.lang.Override
         public UpdateGroupMemberRequest parsePartialFrom(
                 com.google.protobuf.CodedInputStream input,

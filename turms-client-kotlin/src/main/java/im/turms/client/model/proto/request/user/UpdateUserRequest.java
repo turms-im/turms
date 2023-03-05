@@ -106,7 +106,7 @@ public final class UpdateUserRequest extends
      * <code>optional string password = 1;</code>
      */
     private void clearPassword() {
-        bitField0_ = (bitField0_ & ~0x00000001);
+        bitField0_ &= ~0x00000001;
         password_ = getDefaultInstance().getPassword();
     }
 
@@ -176,7 +176,7 @@ public final class UpdateUserRequest extends
      * <code>optional string name = 2;</code>
      */
     private void clearName() {
-        bitField0_ = (bitField0_ & ~0x00000002);
+        bitField0_ &= ~0x00000002;
         name_ = getDefaultInstance().getName();
     }
 
@@ -242,7 +242,7 @@ public final class UpdateUserRequest extends
      * <code>optional string intro = 3;</code>
      */
     private void clearIntro() {
-        bitField0_ = (bitField0_ & ~0x00000004);
+        bitField0_ &= ~0x00000004;
         intro_ = getDefaultInstance().getIntro();
     }
 
@@ -308,7 +308,7 @@ public final class UpdateUserRequest extends
      * <code>optional string profile_picture = 4;</code>
      */
     private void clearProfilePicture() {
-        bitField0_ = (bitField0_ & ~0x00000008);
+        bitField0_ &= ~0x00000008;
         profilePicture_ = getDefaultInstance().getProfilePicture();
     }
 
@@ -382,7 +382,7 @@ public final class UpdateUserRequest extends
      * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 5;</code>
      */
     private void clearProfileAccessStrategy() {
-        bitField0_ = (bitField0_ & ~0x00000010);
+        bitField0_ &= ~0x00000010;
         profileAccessStrategy_ = 0;
     }
 
@@ -894,7 +894,7 @@ public final class UpdateUserRequest extends
                         parser = PARSER;
                         if (parser == null) {
                             parser =
-                                    new DefaultInstanceBasedParser<im.turms.client.model.proto.request.user.UpdateUserRequest>(
+                                    new DefaultInstanceBasedParser<>(
                                             DEFAULT_INSTANCE);
                             PARSER = parser;
                         }

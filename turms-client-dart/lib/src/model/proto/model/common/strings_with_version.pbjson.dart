@@ -10,11 +10,11 @@ import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
 
 @$core.Deprecated('Use stringsWithVersionDescriptor instead')
-const StringsWithVersion$json = {
+const StringsWithVersion$json = const {
   '1': 'StringsWithVersion',
-  '2': [
-    {'1': 'strings', '3': 1, '4': 3, '5': 9, '10': 'strings'},
-    {
+  '2': const [
+    const {'1': 'strings', '3': 1, '4': 3, '5': 9, '10': 'strings'},
+    const {
       '1': 'last_updated_date',
       '3': 2,
       '4': 1,
@@ -24,8 +24,8 @@ const StringsWithVersion$json = {
       '17': true
     },
   ],
-  '8': [
-    {'1': '_last_updated_date'},
+  '8': const [
+    const {'1': '_last_updated_date'},
   ],
 };
 

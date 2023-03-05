@@ -44,12 +44,6 @@ public final class DeleteRelationshipGroupRequest extends
         return new DeleteRelationshipGroupRequest();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-        return this.unknownFields;
-    }
-
     public static final com.google.protobuf.Descriptors.Descriptor
     getDescriptor() {
         return im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequestOuterClass.internal_static_im_turms_proto_DeleteRelationshipGroupRequest_descriptor;
@@ -60,13 +54,12 @@ public final class DeleteRelationshipGroupRequest extends
     internalGetFieldAccessorTable() {
         return im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequestOuterClass.internal_static_im_turms_proto_DeleteRelationshipGroupRequest_fieldAccessorTable
                 .ensureFieldAccessorsInitialized(
-                        im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequest.class,
-                        im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequest.Builder.class);
+                        im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequest.class, im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequest.Builder.class);
     }
 
     private int bitField0_;
     public static final int GROUP_INDEX_FIELD_NUMBER = 1;
-    private int groupIndex_;
+    private int groupIndex_ = 0;
 
     /**
      * <code>int32 group_index = 1;</code>
@@ -79,7 +72,7 @@ public final class DeleteRelationshipGroupRequest extends
     }
 
     public static final int TARGET_GROUP_INDEX_FIELD_NUMBER = 2;
-    private int targetGroupIndex_;
+    private int targetGroupIndex_ = 0;
 
     /**
      * <code>optional int32 target_group_index = 2;</code>
@@ -155,11 +148,9 @@ public final class DeleteRelationshipGroupRequest extends
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequest)) {
+        if (!(obj instanceof DeleteRelationshipGroupRequest other)) {
             return super.equals(obj);
         }
-        im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequest other =
-                (im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequest) obj;
 
         if (getGroupIndex()
             != other.getGroupIndex()) {
@@ -174,10 +165,7 @@ public final class DeleteRelationshipGroupRequest extends
                 return false;
             }
         }
-        if (!getUnknownFields().equals(other.getUnknownFields())) {
-            return false;
-        }
-        return true;
+        return getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -301,8 +289,7 @@ public final class DeleteRelationshipGroupRequest extends
     @java.lang.Override
     protected Builder newBuilderForType(
             com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
+        return new Builder(parent);
     }
 
     /**
@@ -322,8 +309,7 @@ public final class DeleteRelationshipGroupRequest extends
         internalGetFieldAccessorTable() {
             return im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequestOuterClass.internal_static_im_turms_proto_DeleteRelationshipGroupRequest_fieldAccessorTable
                     .ensureFieldAccessorsInitialized(
-                            im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequest.class,
-                            im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequest.Builder.class);
+                            im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequest.class, im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequest.Builder.class);
         }
 
         // Construct using im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequest.newBuilder()
@@ -340,10 +326,9 @@ public final class DeleteRelationshipGroupRequest extends
         @java.lang.Override
         public Builder clear() {
             super.clear();
+            bitField0_ = 0;
             groupIndex_ = 0;
-
             targetGroupIndex_ = 0;
-            bitField0_ = (bitField0_ & ~0x00000001);
             return this;
         }
 
@@ -369,56 +354,25 @@ public final class DeleteRelationshipGroupRequest extends
 
         @java.lang.Override
         public im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequest buildPartial() {
-            im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequest result =
-                    new im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequest(this);
-            int from_bitField0_ = bitField0_;
-            int to_bitField0_ = 0;
-            result.groupIndex_ = groupIndex_;
-            if (((from_bitField0_ & 0x00000001) != 0)) {
-                result.targetGroupIndex_ = targetGroupIndex_;
-                to_bitField0_ |= 0x00000001;
+            im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequest result = new im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequest(this);
+            if (bitField0_ != 0) {
+                buildPartial0(result);
             }
-            result.bitField0_ = to_bitField0_;
             onBuilt();
             return result;
         }
 
-        @java.lang.Override
-        public Builder clone() {
-            return super.clone();
-        }
-
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(
-                com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(
-                com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index, java.lang.Object value) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.addRepeatedField(field, value);
+        private void buildPartial0(im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequest result) {
+            int from_bitField0_ = bitField0_;
+            if (((from_bitField0_ & 0x00000001) != 0)) {
+                result.groupIndex_ = groupIndex_;
+            }
+            int to_bitField0_ = 0;
+            if (((from_bitField0_ & 0x00000002) != 0)) {
+                result.targetGroupIndex_ = targetGroupIndex_;
+                to_bitField0_ |= 0x00000001;
+            }
+            result.bitField0_ |= to_bitField0_;
         }
 
         @java.lang.Override
@@ -464,24 +418,19 @@ public final class DeleteRelationshipGroupRequest extends
                 while (!done) {
                     int tag = input.readTag();
                     switch (tag) {
-                        case 0:
-                            done = true;
-                            break;
-                        case 8: {
+                        case 0 -> done = true;
+                        case 8 -> {
                             groupIndex_ = input.readInt32();
-
-                            break;
-                        } // case 8
-                        case 16: {
-                            targetGroupIndex_ = input.readInt32();
                             bitField0_ |= 0x00000001;
-                            break;
+                        } // case 8
+                        case 16 -> {
+                            targetGroupIndex_ = input.readInt32();
+                            bitField0_ |= 0x00000002;
                         } // case 16
-                        default: {
+                        default -> {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
                             }
-                            break;
                         } // default:
                     } // switch (tag)
                 } // while (!done)
@@ -516,6 +465,7 @@ public final class DeleteRelationshipGroupRequest extends
         public Builder setGroupIndex(int value) {
 
             groupIndex_ = value;
+            bitField0_ |= 0x00000001;
             onChanged();
             return this;
         }
@@ -526,7 +476,7 @@ public final class DeleteRelationshipGroupRequest extends
          * @return This builder for chaining.
          */
         public Builder clearGroupIndex() {
-
+            bitField0_ &= ~0x00000001;
             groupIndex_ = 0;
             onChanged();
             return this;
@@ -541,7 +491,7 @@ public final class DeleteRelationshipGroupRequest extends
          */
         @java.lang.Override
         public boolean hasTargetGroupIndex() {
-            return ((bitField0_ & 0x00000001) != 0);
+            return ((bitField0_ & 0x00000002) != 0);
         }
 
         /**
@@ -561,8 +511,9 @@ public final class DeleteRelationshipGroupRequest extends
          * @return This builder for chaining.
          */
         public Builder setTargetGroupIndex(int value) {
-            bitField0_ |= 0x00000001;
+
             targetGroupIndex_ = value;
+            bitField0_ |= 0x00000002;
             onChanged();
             return this;
         }
@@ -573,7 +524,7 @@ public final class DeleteRelationshipGroupRequest extends
          * @return This builder for chaining.
          */
         public Builder clearTargetGroupIndex() {
-            bitField0_ = (bitField0_ & ~0x00000001);
+            bitField0_ &= ~0x00000002;
             targetGroupIndex_ = 0;
             onChanged();
             return this;
@@ -607,7 +558,7 @@ public final class DeleteRelationshipGroupRequest extends
     }
 
     private static final com.google.protobuf.Parser<DeleteRelationshipGroupRequest>
-            PARSER = new com.google.protobuf.AbstractParser<DeleteRelationshipGroupRequest>() {
+            PARSER = new com.google.protobuf.AbstractParser<>() {
         @java.lang.Override
         public DeleteRelationshipGroupRequest parsePartialFrom(
                 com.google.protobuf.CodedInputStream input,

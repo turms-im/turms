@@ -46,12 +46,6 @@ public final class QueryMessageAttachmentInfosRequest extends
         return new QueryMessageAttachmentInfosRequest();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-        return this.unknownFields;
-    }
-
     public static final com.google.protobuf.Descriptors.Descriptor
     getDescriptor() {
         return im.turms.server.common.access.client.dto.request.storage.QueryMessageAttachmentInfosRequestOuterClass.internal_static_im_turms_proto_QueryMessageAttachmentInfosRequest_descriptor;
@@ -62,12 +56,12 @@ public final class QueryMessageAttachmentInfosRequest extends
     internalGetFieldAccessorTable() {
         return im.turms.server.common.access.client.dto.request.storage.QueryMessageAttachmentInfosRequestOuterClass.internal_static_im_turms_proto_QueryMessageAttachmentInfosRequest_fieldAccessorTable
                 .ensureFieldAccessorsInitialized(
-                        im.turms.server.common.access.client.dto.request.storage.QueryMessageAttachmentInfosRequest.class,
-                        im.turms.server.common.access.client.dto.request.storage.QueryMessageAttachmentInfosRequest.Builder.class);
+                        im.turms.server.common.access.client.dto.request.storage.QueryMessageAttachmentInfosRequest.class, im.turms.server.common.access.client.dto.request.storage.QueryMessageAttachmentInfosRequest.Builder.class);
     }
 
     private int bitField0_;
     public static final int USER_IDS_FIELD_NUMBER = 1;
+    @SuppressWarnings("serial")
     private com.google.protobuf.Internal.LongList userIds_;
 
     /**
@@ -103,6 +97,7 @@ public final class QueryMessageAttachmentInfosRequest extends
     private int userIdsMemoizedSerializedSize = -1;
 
     public static final int GROUP_IDS_FIELD_NUMBER = 2;
+    @SuppressWarnings("serial")
     private com.google.protobuf.Internal.LongList groupIds_;
 
     /**
@@ -138,7 +133,7 @@ public final class QueryMessageAttachmentInfosRequest extends
     private int groupIdsMemoizedSerializedSize = -1;
 
     public static final int CREATION_DATE_START_FIELD_NUMBER = 3;
-    private long creationDateStart_;
+    private long creationDateStart_ = 0L;
 
     /**
      * <code>optional int64 creation_date_start = 3;</code>
@@ -161,7 +156,7 @@ public final class QueryMessageAttachmentInfosRequest extends
     }
 
     public static final int CREATION_DATE_END_FIELD_NUMBER = 4;
-    private long creationDateEnd_;
+    private long creationDateEnd_ = 0L;
 
     /**
      * <code>optional int64 creation_date_end = 4;</code>
@@ -184,7 +179,7 @@ public final class QueryMessageAttachmentInfosRequest extends
     }
 
     public static final int IN_PRIVATE_CONVERSATION_FIELD_NUMBER = 5;
-    private boolean inPrivateConversation_;
+    private boolean inPrivateConversation_ = false;
 
     /**
      * <code>optional bool in_private_conversation = 5;</code>
@@ -207,7 +202,7 @@ public final class QueryMessageAttachmentInfosRequest extends
     }
 
     public static final int ARE_SHARED_BY_ME_FIELD_NUMBER = 6;
-    private boolean areSharedByMe_;
+    private boolean areSharedByMe_ = false;
 
     /**
      * <code>optional bool are_shared_by_me = 6;</code>
@@ -340,11 +335,9 @@ public final class QueryMessageAttachmentInfosRequest extends
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof im.turms.server.common.access.client.dto.request.storage.QueryMessageAttachmentInfosRequest)) {
+        if (!(obj instanceof QueryMessageAttachmentInfosRequest other)) {
             return super.equals(obj);
         }
-        im.turms.server.common.access.client.dto.request.storage.QueryMessageAttachmentInfosRequest other =
-                (im.turms.server.common.access.client.dto.request.storage.QueryMessageAttachmentInfosRequest) obj;
 
         if (!getUserIdsList()
                 .equals(other.getUserIdsList())) {
@@ -390,10 +383,7 @@ public final class QueryMessageAttachmentInfosRequest extends
                 return false;
             }
         }
-        if (!getUnknownFields().equals(other.getUnknownFields())) {
-            return false;
-        }
-        return true;
+        return getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -539,8 +529,7 @@ public final class QueryMessageAttachmentInfosRequest extends
     @java.lang.Override
     protected Builder newBuilderForType(
             com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
+        return new Builder(parent);
     }
 
     /**
@@ -560,8 +549,7 @@ public final class QueryMessageAttachmentInfosRequest extends
         internalGetFieldAccessorTable() {
             return im.turms.server.common.access.client.dto.request.storage.QueryMessageAttachmentInfosRequestOuterClass.internal_static_im_turms_proto_QueryMessageAttachmentInfosRequest_fieldAccessorTable
                     .ensureFieldAccessorsInitialized(
-                            im.turms.server.common.access.client.dto.request.storage.QueryMessageAttachmentInfosRequest.class,
-                            im.turms.server.common.access.client.dto.request.storage.QueryMessageAttachmentInfosRequest.Builder.class);
+                            im.turms.server.common.access.client.dto.request.storage.QueryMessageAttachmentInfosRequest.class, im.turms.server.common.access.client.dto.request.storage.QueryMessageAttachmentInfosRequest.Builder.class);
         }
 
         // Construct using im.turms.server.common.access.client.dto.request.storage.QueryMessageAttachmentInfosRequest.newBuilder()
@@ -578,18 +566,13 @@ public final class QueryMessageAttachmentInfosRequest extends
         @java.lang.Override
         public Builder clear() {
             super.clear();
+            bitField0_ = 0;
             userIds_ = emptyLongList();
-            bitField0_ = (bitField0_ & ~0x00000001);
             groupIds_ = emptyLongList();
-            bitField0_ = (bitField0_ & ~0x00000002);
             creationDateStart_ = 0L;
-            bitField0_ = (bitField0_ & ~0x00000004);
             creationDateEnd_ = 0L;
-            bitField0_ = (bitField0_ & ~0x00000008);
             inPrivateConversation_ = false;
-            bitField0_ = (bitField0_ & ~0x00000010);
             areSharedByMe_ = false;
-            bitField0_ = (bitField0_ & ~0x00000020);
             return this;
         }
 
@@ -615,20 +598,31 @@ public final class QueryMessageAttachmentInfosRequest extends
 
         @java.lang.Override
         public im.turms.server.common.access.client.dto.request.storage.QueryMessageAttachmentInfosRequest buildPartial() {
-            im.turms.server.common.access.client.dto.request.storage.QueryMessageAttachmentInfosRequest result =
-                    new im.turms.server.common.access.client.dto.request.storage.QueryMessageAttachmentInfosRequest(this);
-            int from_bitField0_ = bitField0_;
-            int to_bitField0_ = 0;
+            im.turms.server.common.access.client.dto.request.storage.QueryMessageAttachmentInfosRequest result = new im.turms.server.common.access.client.dto.request.storage.QueryMessageAttachmentInfosRequest(this);
+            buildPartialRepeatedFields(result);
+            if (bitField0_ != 0) {
+                buildPartial0(result);
+            }
+            onBuilt();
+            return result;
+        }
+
+        private void buildPartialRepeatedFields(im.turms.server.common.access.client.dto.request.storage.QueryMessageAttachmentInfosRequest result) {
             if (((bitField0_ & 0x00000001) != 0)) {
                 userIds_.makeImmutable();
-                bitField0_ = (bitField0_ & ~0x00000001);
+                bitField0_ &= ~0x00000001;
             }
             result.userIds_ = userIds_;
             if (((bitField0_ & 0x00000002) != 0)) {
                 groupIds_.makeImmutable();
-                bitField0_ = (bitField0_ & ~0x00000002);
+                bitField0_ &= ~0x00000002;
             }
             result.groupIds_ = groupIds_;
+        }
+
+        private void buildPartial0(im.turms.server.common.access.client.dto.request.storage.QueryMessageAttachmentInfosRequest result) {
+            int from_bitField0_ = bitField0_;
+            int to_bitField0_ = 0;
             if (((from_bitField0_ & 0x00000004) != 0)) {
                 result.creationDateStart_ = creationDateStart_;
                 to_bitField0_ |= 0x00000001;
@@ -645,47 +639,7 @@ public final class QueryMessageAttachmentInfosRequest extends
                 result.areSharedByMe_ = areSharedByMe_;
                 to_bitField0_ |= 0x00000008;
             }
-            result.bitField0_ = to_bitField0_;
-            onBuilt();
-            return result;
-        }
-
-        @java.lang.Override
-        public Builder clone() {
-            return super.clone();
-        }
-
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(
-                com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(
-                com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index, java.lang.Object value) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.addRepeatedField(field, value);
+            result.bitField0_ |= to_bitField0_;
         }
 
         @java.lang.Override
@@ -705,7 +659,7 @@ public final class QueryMessageAttachmentInfosRequest extends
             if (!other.userIds_.isEmpty()) {
                 if (userIds_.isEmpty()) {
                     userIds_ = other.userIds_;
-                    bitField0_ = (bitField0_ & ~0x00000001);
+                    bitField0_ &= ~0x00000001;
                 } else {
                     ensureUserIdsIsMutable();
                     userIds_.addAll(other.userIds_);
@@ -715,7 +669,7 @@ public final class QueryMessageAttachmentInfosRequest extends
             if (!other.groupIds_.isEmpty()) {
                 if (groupIds_.isEmpty()) {
                     groupIds_ = other.groupIds_;
-                    bitField0_ = (bitField0_ & ~0x00000002);
+                    bitField0_ &= ~0x00000002;
                 } else {
                     ensureGroupIdsIsMutable();
                     groupIds_.addAll(other.groupIds_);
@@ -757,16 +711,13 @@ public final class QueryMessageAttachmentInfosRequest extends
                 while (!done) {
                     int tag = input.readTag();
                     switch (tag) {
-                        case 0:
-                            done = true;
-                            break;
-                        case 8: {
+                        case 0 -> done = true;
+                        case 8 -> {
                             long v = input.readInt64();
                             ensureUserIdsIsMutable();
                             userIds_.addLong(v);
-                            break;
                         } // case 8
-                        case 10: {
+                        case 10 -> {
                             int length = input.readRawVarint32();
                             int limit = input.pushLimit(length);
                             ensureUserIdsIsMutable();
@@ -774,15 +725,13 @@ public final class QueryMessageAttachmentInfosRequest extends
                                 userIds_.addLong(input.readInt64());
                             }
                             input.popLimit(limit);
-                            break;
                         } // case 10
-                        case 16: {
+                        case 16 -> {
                             long v = input.readInt64();
                             ensureGroupIdsIsMutable();
                             groupIds_.addLong(v);
-                            break;
                         } // case 16
-                        case 18: {
+                        case 18 -> {
                             int length = input.readRawVarint32();
                             int limit = input.pushLimit(length);
                             ensureGroupIdsIsMutable();
@@ -790,33 +739,27 @@ public final class QueryMessageAttachmentInfosRequest extends
                                 groupIds_.addLong(input.readInt64());
                             }
                             input.popLimit(limit);
-                            break;
                         } // case 18
-                        case 24: {
+                        case 24 -> {
                             creationDateStart_ = input.readInt64();
                             bitField0_ |= 0x00000004;
-                            break;
                         } // case 24
-                        case 32: {
+                        case 32 -> {
                             creationDateEnd_ = input.readInt64();
                             bitField0_ |= 0x00000008;
-                            break;
                         } // case 32
-                        case 40: {
+                        case 40 -> {
                             inPrivateConversation_ = input.readBool();
                             bitField0_ |= 0x00000010;
-                            break;
                         } // case 40
-                        case 48: {
+                        case 48 -> {
                             areSharedByMe_ = input.readBool();
                             bitField0_ |= 0x00000020;
-                            break;
                         } // case 48
-                        default: {
+                        default -> {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
                             }
-                            break;
                         } // default:
                     } // switch (tag)
                 } // while (!done)
@@ -833,7 +776,7 @@ public final class QueryMessageAttachmentInfosRequest extends
         private com.google.protobuf.Internal.LongList userIds_ = emptyLongList();
 
         private void ensureUserIdsIsMutable() {
-            if (!((bitField0_ & 0x00000001) != 0)) {
+            if ((bitField0_ & 0x00000001) == 0) {
                 userIds_ = mutableCopy(userIds_);
                 bitField0_ |= 0x00000001;
             }
@@ -878,6 +821,7 @@ public final class QueryMessageAttachmentInfosRequest extends
          */
         public Builder setUserIds(
                 int index, long value) {
+
             ensureUserIdsIsMutable();
             userIds_.setLong(index, value);
             onChanged();
@@ -891,6 +835,7 @@ public final class QueryMessageAttachmentInfosRequest extends
          * @return This builder for chaining.
          */
         public Builder addUserIds(long value) {
+
             ensureUserIdsIsMutable();
             userIds_.addLong(value);
             onChanged();
@@ -919,7 +864,7 @@ public final class QueryMessageAttachmentInfosRequest extends
          */
         public Builder clearUserIds() {
             userIds_ = emptyLongList();
-            bitField0_ = (bitField0_ & ~0x00000001);
+            bitField0_ &= ~0x00000001;
             onChanged();
             return this;
         }
@@ -927,7 +872,7 @@ public final class QueryMessageAttachmentInfosRequest extends
         private com.google.protobuf.Internal.LongList groupIds_ = emptyLongList();
 
         private void ensureGroupIdsIsMutable() {
-            if (!((bitField0_ & 0x00000002) != 0)) {
+            if ((bitField0_ & 0x00000002) == 0) {
                 groupIds_ = mutableCopy(groupIds_);
                 bitField0_ |= 0x00000002;
             }
@@ -972,6 +917,7 @@ public final class QueryMessageAttachmentInfosRequest extends
          */
         public Builder setGroupIds(
                 int index, long value) {
+
             ensureGroupIdsIsMutable();
             groupIds_.setLong(index, value);
             onChanged();
@@ -985,6 +931,7 @@ public final class QueryMessageAttachmentInfosRequest extends
          * @return This builder for chaining.
          */
         public Builder addGroupIds(long value) {
+
             ensureGroupIdsIsMutable();
             groupIds_.addLong(value);
             onChanged();
@@ -1013,7 +960,7 @@ public final class QueryMessageAttachmentInfosRequest extends
          */
         public Builder clearGroupIds() {
             groupIds_ = emptyLongList();
-            bitField0_ = (bitField0_ & ~0x00000002);
+            bitField0_ &= ~0x00000002;
             onChanged();
             return this;
         }
@@ -1047,8 +994,9 @@ public final class QueryMessageAttachmentInfosRequest extends
          * @return This builder for chaining.
          */
         public Builder setCreationDateStart(long value) {
-            bitField0_ |= 0x00000004;
+
             creationDateStart_ = value;
+            bitField0_ |= 0x00000004;
             onChanged();
             return this;
         }
@@ -1059,7 +1007,7 @@ public final class QueryMessageAttachmentInfosRequest extends
          * @return This builder for chaining.
          */
         public Builder clearCreationDateStart() {
-            bitField0_ = (bitField0_ & ~0x00000004);
+            bitField0_ &= ~0x00000004;
             creationDateStart_ = 0L;
             onChanged();
             return this;
@@ -1094,8 +1042,9 @@ public final class QueryMessageAttachmentInfosRequest extends
          * @return This builder for chaining.
          */
         public Builder setCreationDateEnd(long value) {
-            bitField0_ |= 0x00000008;
+
             creationDateEnd_ = value;
+            bitField0_ |= 0x00000008;
             onChanged();
             return this;
         }
@@ -1106,7 +1055,7 @@ public final class QueryMessageAttachmentInfosRequest extends
          * @return This builder for chaining.
          */
         public Builder clearCreationDateEnd() {
-            bitField0_ = (bitField0_ & ~0x00000008);
+            bitField0_ &= ~0x00000008;
             creationDateEnd_ = 0L;
             onChanged();
             return this;
@@ -1141,8 +1090,9 @@ public final class QueryMessageAttachmentInfosRequest extends
          * @return This builder for chaining.
          */
         public Builder setInPrivateConversation(boolean value) {
-            bitField0_ |= 0x00000010;
+
             inPrivateConversation_ = value;
+            bitField0_ |= 0x00000010;
             onChanged();
             return this;
         }
@@ -1153,7 +1103,7 @@ public final class QueryMessageAttachmentInfosRequest extends
          * @return This builder for chaining.
          */
         public Builder clearInPrivateConversation() {
-            bitField0_ = (bitField0_ & ~0x00000010);
+            bitField0_ &= ~0x00000010;
             inPrivateConversation_ = false;
             onChanged();
             return this;
@@ -1188,8 +1138,9 @@ public final class QueryMessageAttachmentInfosRequest extends
          * @return This builder for chaining.
          */
         public Builder setAreSharedByMe(boolean value) {
-            bitField0_ |= 0x00000020;
+
             areSharedByMe_ = value;
+            bitField0_ |= 0x00000020;
             onChanged();
             return this;
         }
@@ -1200,7 +1151,7 @@ public final class QueryMessageAttachmentInfosRequest extends
          * @return This builder for chaining.
          */
         public Builder clearAreSharedByMe() {
-            bitField0_ = (bitField0_ & ~0x00000020);
+            bitField0_ &= ~0x00000020;
             areSharedByMe_ = false;
             onChanged();
             return this;
@@ -1234,7 +1185,7 @@ public final class QueryMessageAttachmentInfosRequest extends
     }
 
     private static final com.google.protobuf.Parser<QueryMessageAttachmentInfosRequest>
-            PARSER = new com.google.protobuf.AbstractParser<QueryMessageAttachmentInfosRequest>() {
+            PARSER = new com.google.protobuf.AbstractParser<>() {
         @java.lang.Override
         public QueryMessageAttachmentInfosRequest parsePartialFrom(
                 com.google.protobuf.CodedInputStream input,

@@ -10,11 +10,11 @@ import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
 
 @$core.Deprecated('Use userSessionDescriptor instead')
-const UserSession$json = {
+const UserSession$json = const {
   '1': 'UserSession',
-  '2': [
-    {'1': 'session_id', '3': 1, '4': 1, '5': 9, '10': 'sessionId'},
-    {'1': 'server_id', '3': 2, '4': 1, '5': 9, '10': 'serverId'},
+  '2': const [
+    const {'1': 'session_id', '3': 1, '4': 1, '5': 9, '10': 'sessionId'},
+    const {'1': 'server_id', '3': 2, '4': 1, '5': 9, '10': 'serverId'},
   ],
 };
 

@@ -10,10 +10,10 @@ import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
 
 @$core.Deprecated('Use groupMemberDescriptor instead')
-const GroupMember$json = {
+const GroupMember$json = const {
   '1': 'GroupMember',
-  '2': [
-    {
+  '2': const [
+    const {
       '1': 'group_id',
       '3': 1,
       '4': 1,
@@ -22,7 +22,7 @@ const GroupMember$json = {
       '10': 'groupId',
       '17': true
     },
-    {
+    const {
       '1': 'user_id',
       '3': 2,
       '4': 1,
@@ -31,8 +31,16 @@ const GroupMember$json = {
       '10': 'userId',
       '17': true
     },
-    {'1': 'name', '3': 3, '4': 1, '5': 9, '9': 2, '10': 'name', '17': true},
-    {
+    const {
+      '1': 'name',
+      '3': 3,
+      '4': 1,
+      '5': 9,
+      '9': 2,
+      '10': 'name',
+      '17': true
+    },
+    const {
       '1': 'role',
       '3': 4,
       '4': 1,
@@ -42,7 +50,7 @@ const GroupMember$json = {
       '10': 'role',
       '17': true
     },
-    {
+    const {
       '1': 'join_date',
       '3': 5,
       '4': 1,
@@ -51,7 +59,7 @@ const GroupMember$json = {
       '10': 'joinDate',
       '17': true
     },
-    {
+    const {
       '1': 'mute_end_date',
       '3': 6,
       '4': 1,
@@ -60,7 +68,7 @@ const GroupMember$json = {
       '10': 'muteEndDate',
       '17': true
     },
-    {
+    const {
       '1': 'user_status',
       '3': 7,
       '4': 1,
@@ -70,7 +78,7 @@ const GroupMember$json = {
       '10': 'userStatus',
       '17': true
     },
-    {
+    const {
       '1': 'using_device_types',
       '3': 8,
       '4': 3,
@@ -79,14 +87,14 @@ const GroupMember$json = {
       '10': 'usingDeviceTypes'
     },
   ],
-  '8': [
-    {'1': '_group_id'},
-    {'1': '_user_id'},
-    {'1': '_name'},
-    {'1': '_role'},
-    {'1': '_join_date'},
-    {'1': '_mute_end_date'},
-    {'1': '_user_status'},
+  '8': const [
+    const {'1': '_group_id'},
+    const {'1': '_user_id'},
+    const {'1': '_name'},
+    const {'1': '_role'},
+    const {'1': '_join_date'},
+    const {'1': '_mute_end_date'},
+    const {'1': '_user_status'},
   ],
 };
 

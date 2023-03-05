@@ -100,7 +100,7 @@ public final class DeleteRelationshipGroupRequest extends
      * <code>optional int32 target_group_index = 2;</code>
      */
     private void clearTargetGroupIndex() {
-        bitField0_ = (bitField0_ & ~0x00000001);
+        bitField0_ &= ~0x00000001;
         targetGroupIndex_ = 0;
     }
 
@@ -324,7 +324,7 @@ public final class DeleteRelationshipGroupRequest extends
                         parser = PARSER;
                         if (parser == null) {
                             parser =
-                                    new DefaultInstanceBasedParser<im.turms.client.model.proto.request.user.relationship.DeleteRelationshipGroupRequest>(
+                                    new DefaultInstanceBasedParser<>(
                                             DEFAULT_INSTANCE);
                             PARSER = parser;
                         }

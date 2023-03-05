@@ -10,14 +10,14 @@ import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
 
 @$core.Deprecated('Use groupMemberRoleDescriptor instead')
-const GroupMemberRole$json = {
+const GroupMemberRole$json = const {
   '1': 'GroupMemberRole',
-  '2': [
-    {'1': 'OWNER', '2': 0},
-    {'1': 'MANAGER', '2': 1},
-    {'1': 'MEMBER', '2': 2},
-    {'1': 'GUEST', '2': 3},
-    {'1': 'ANONYMOUS_GUEST', '2': 4},
+  '2': const [
+    const {'1': 'OWNER', '2': 0},
+    const {'1': 'MANAGER', '2': 1},
+    const {'1': 'MEMBER', '2': 2},
+    const {'1': 'GUEST', '2': 3},
+    const {'1': 'ANONYMOUS_GUEST', '2': 4},
   ],
 };
 

@@ -10,10 +10,10 @@ import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
 
 @$core.Deprecated('Use groupJoinRequestsWithVersionDescriptor instead')
-const GroupJoinRequestsWithVersion$json = {
+const GroupJoinRequestsWithVersion$json = const {
   '1': 'GroupJoinRequestsWithVersion',
-  '2': [
-    {
+  '2': const [
+    const {
       '1': 'group_join_requests',
       '3': 1,
       '4': 3,
@@ -21,7 +21,7 @@ const GroupJoinRequestsWithVersion$json = {
       '6': '.im.turms.proto.GroupJoinRequest',
       '10': 'groupJoinRequests'
     },
-    {
+    const {
       '1': 'last_updated_date',
       '3': 2,
       '4': 1,
@@ -31,8 +31,8 @@ const GroupJoinRequestsWithVersion$json = {
       '17': true
     },
   ],
-  '8': [
-    {'1': '_last_updated_date'},
+  '8': const [
+    const {'1': '_last_updated_date'},
   ],
 };
 

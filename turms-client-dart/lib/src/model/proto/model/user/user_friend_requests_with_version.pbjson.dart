@@ -10,10 +10,10 @@ import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
 
 @$core.Deprecated('Use userFriendRequestsWithVersionDescriptor instead')
-const UserFriendRequestsWithVersion$json = {
+const UserFriendRequestsWithVersion$json = const {
   '1': 'UserFriendRequestsWithVersion',
-  '2': [
-    {
+  '2': const [
+    const {
       '1': 'user_friend_requests',
       '3': 1,
       '4': 3,
@@ -21,7 +21,7 @@ const UserFriendRequestsWithVersion$json = {
       '6': '.im.turms.proto.UserFriendRequest',
       '10': 'userFriendRequests'
     },
-    {
+    const {
       '1': 'last_updated_date',
       '3': 2,
       '4': 1,
@@ -31,8 +31,8 @@ const UserFriendRequestsWithVersion$json = {
       '17': true
     },
   ],
-  '8': [
-    {'1': '_last_updated_date'},
+  '8': const [
+    const {'1': '_last_updated_date'},
   ],
 };
 

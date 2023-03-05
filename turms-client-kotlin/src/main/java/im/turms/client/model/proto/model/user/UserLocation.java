@@ -131,7 +131,7 @@ public final class UserLocation extends
      * <code>optional int64 timestamp = 3;</code>
      */
     private void clearTimestamp() {
-        bitField0_ = (bitField0_ & ~0x00000001);
+        bitField0_ &= ~0x00000001;
         timestamp_ = 0L;
     }
 
@@ -218,8 +218,10 @@ public final class UserLocation extends
      */
     @java.lang.Override
 
-    public java.lang.String getDetailsOrDefault(
+    public /* nullable */
+    java.lang.String getDetailsOrDefault(
             java.lang.String key,
+            /* nullable */
             java.lang.String defaultValue) {
         java.lang.Class<?> keyClass = key.getClass();
         java.util.Map<java.lang.String, java.lang.String> map =
@@ -549,8 +551,10 @@ public final class UserLocation extends
          */
         @java.lang.Override
 
-        public java.lang.String getDetailsOrDefault(
+        public /* nullable */
+        java.lang.String getDetailsOrDefault(
                 java.lang.String key,
+                /* nullable */
                 java.lang.String defaultValue) {
             java.lang.Class<?> keyClass = key.getClass();
             java.util.Map<java.lang.String, java.lang.String> map =
@@ -649,7 +653,7 @@ public final class UserLocation extends
                         parser = PARSER;
                         if (parser == null) {
                             parser =
-                                    new DefaultInstanceBasedParser<im.turms.client.model.proto.model.user.UserLocation>(
+                                    new DefaultInstanceBasedParser<>(
                                             DEFAULT_INSTANCE);
                             PARSER = parser;
                         }

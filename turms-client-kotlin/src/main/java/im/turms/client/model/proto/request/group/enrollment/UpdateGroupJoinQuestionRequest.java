@@ -147,7 +147,7 @@ public final class UpdateGroupJoinQuestionRequest extends
      * <code>optional string question = 2;</code>
      */
     private void clearQuestion() {
-        bitField0_ = (bitField0_ & ~0x00000001);
+        bitField0_ &= ~0x00000001;
         question_ = getDefaultInstance().getQuestion();
     }
 
@@ -316,7 +316,7 @@ public final class UpdateGroupJoinQuestionRequest extends
      * <code>optional int32 score = 4;</code>
      */
     private void clearScore() {
-        bitField0_ = (bitField0_ & ~0x00000002);
+        bitField0_ &= ~0x00000002;
         score_ = 0;
     }
 
@@ -755,7 +755,7 @@ public final class UpdateGroupJoinQuestionRequest extends
                         parser = PARSER;
                         if (parser == null) {
                             parser =
-                                    new DefaultInstanceBasedParser<im.turms.client.model.proto.request.group.enrollment.UpdateGroupJoinQuestionRequest>(
+                                    new DefaultInstanceBasedParser<>(
                                             DEFAULT_INSTANCE);
                             PARSER = parser;
                         }

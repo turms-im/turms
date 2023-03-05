@@ -77,16 +77,12 @@ public enum ResponseAction
      * @return The enum associated with the given numeric wire value.
      */
     public static ResponseAction forNumber(int value) {
-        switch (value) {
-            case 0:
-                return ACCEPT;
-            case 1:
-                return DECLINE;
-            case 2:
-                return IGNORE;
-            default:
-                return null;
-        }
+        return switch (value) {
+            case 0 -> ACCEPT;
+            case 1 -> DECLINE;
+            case 2 -> IGNORE;
+            default -> null;
+        };
     }
 
     public static com.google.protobuf.Internal.EnumLiteMap<ResponseAction>
@@ -96,11 +92,7 @@ public enum ResponseAction
 
     private static final com.google.protobuf.Internal.EnumLiteMap<
             ResponseAction> internalValueMap =
-            new com.google.protobuf.Internal.EnumLiteMap<ResponseAction>() {
-                public ResponseAction findValueByNumber(int number) {
-                    return ResponseAction.forNumber(number);
-                }
-            };
+            number -> ResponseAction.forNumber(number);
 
     public final com.google.protobuf.Descriptors.EnumValueDescriptor
     getValueDescriptor() {
@@ -137,7 +129,7 @@ public enum ResponseAction
 
     private final int value;
 
-    private ResponseAction(int value) {
+    ResponseAction(int value) {
         this.value = value;
     }
 

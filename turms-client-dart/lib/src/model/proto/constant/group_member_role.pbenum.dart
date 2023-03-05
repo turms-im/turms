@@ -11,16 +11,28 @@ import 'package:protobuf/protobuf.dart' as $pb;
 
 class GroupMemberRole extends $pb.ProtobufEnum {
   static const GroupMemberRole OWNER = GroupMemberRole._(
-      0, $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'OWNER');
-  static const GroupMemberRole MANAGER = GroupMemberRole._(1,
-      $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'MANAGER');
-  static const GroupMemberRole MEMBER = GroupMemberRole._(2,
-      $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'MEMBER');
+      0,
+      const $core.bool.fromEnvironment('protobuf.omit_enum_names')
+          ? ''
+          : 'OWNER');
+  static const GroupMemberRole MANAGER = GroupMemberRole._(
+      1,
+      const $core.bool.fromEnvironment('protobuf.omit_enum_names')
+          ? ''
+          : 'MANAGER');
+  static const GroupMemberRole MEMBER = GroupMemberRole._(
+      2,
+      const $core.bool.fromEnvironment('protobuf.omit_enum_names')
+          ? ''
+          : 'MEMBER');
   static const GroupMemberRole GUEST = GroupMemberRole._(
-      3, $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'GUEST');
+      3,
+      const $core.bool.fromEnvironment('protobuf.omit_enum_names')
+          ? ''
+          : 'GUEST');
   static const GroupMemberRole ANONYMOUS_GUEST = GroupMemberRole._(
       4,
-      $core.bool.fromEnvironment('protobuf.omit_enum_names')
+      const $core.bool.fromEnvironment('protobuf.omit_enum_names')
           ? ''
           : 'ANONYMOUS_GUEST');
 

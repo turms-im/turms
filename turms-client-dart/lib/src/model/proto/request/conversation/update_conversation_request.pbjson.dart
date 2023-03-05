@@ -10,10 +10,10 @@ import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
 
 @$core.Deprecated('Use updateConversationRequestDescriptor instead')
-const UpdateConversationRequest$json = {
+const UpdateConversationRequest$json = const {
   '1': 'UpdateConversationRequest',
-  '2': [
-    {
+  '2': const [
+    const {
       '1': 'target_id',
       '3': 1,
       '4': 1,
@@ -22,7 +22,7 @@ const UpdateConversationRequest$json = {
       '10': 'targetId',
       '17': true
     },
-    {
+    const {
       '1': 'group_id',
       '3': 2,
       '4': 1,
@@ -31,11 +31,11 @@ const UpdateConversationRequest$json = {
       '10': 'groupId',
       '17': true
     },
-    {'1': 'read_date', '3': 3, '4': 1, '5': 3, '10': 'readDate'},
+    const {'1': 'read_date', '3': 3, '4': 1, '5': 3, '10': 'readDate'},
   ],
-  '8': [
-    {'1': '_target_id'},
-    {'1': '_group_id'},
+  '8': const [
+    const {'1': '_target_id'},
+    const {'1': '_group_id'},
   ],
 };
 

@@ -46,12 +46,6 @@ public final class Message extends
         return new Message();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-        return this.unknownFields;
-    }
-
     public static final com.google.protobuf.Descriptors.Descriptor
     getDescriptor() {
         return im.turms.server.common.access.client.dto.model.message.MessageOuterClass.internal_static_im_turms_proto_Message_descriptor;
@@ -67,7 +61,7 @@ public final class Message extends
 
     private int bitField0_;
     public static final int ID_FIELD_NUMBER = 1;
-    private long id_;
+    private long id_ = 0L;
 
     /**
      * <code>optional int64 id = 1;</code>
@@ -90,7 +84,7 @@ public final class Message extends
     }
 
     public static final int DELIVERY_DATE_FIELD_NUMBER = 2;
-    private long deliveryDate_;
+    private long deliveryDate_ = 0L;
 
     /**
      * <code>optional int64 delivery_date = 2;</code>
@@ -113,7 +107,7 @@ public final class Message extends
     }
 
     public static final int MODIFICATION_DATE_FIELD_NUMBER = 3;
-    private long modificationDate_;
+    private long modificationDate_ = 0L;
 
     /**
      * <code>optional int64 modification_date = 3;</code>
@@ -136,7 +130,8 @@ public final class Message extends
     }
 
     public static final int TEXT_FIELD_NUMBER = 4;
-    private volatile java.lang.Object text_;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object text_ = "";
 
     /**
      * <code>optional string text = 4;</code>
@@ -188,7 +183,7 @@ public final class Message extends
     }
 
     public static final int SENDER_ID_FIELD_NUMBER = 5;
-    private long senderId_;
+    private long senderId_ = 0L;
 
     /**
      * <code>optional int64 sender_id = 5;</code>
@@ -211,7 +206,7 @@ public final class Message extends
     }
 
     public static final int GROUP_ID_FIELD_NUMBER = 6;
-    private long groupId_;
+    private long groupId_ = 0L;
 
     /**
      * <code>optional int64 group_id = 6;</code>
@@ -234,7 +229,7 @@ public final class Message extends
     }
 
     public static final int IS_SYSTEM_MESSAGE_FIELD_NUMBER = 7;
-    private boolean isSystemMessage_;
+    private boolean isSystemMessage_ = false;
 
     /**
      * <code>optional bool is_system_message = 7;</code>
@@ -257,7 +252,7 @@ public final class Message extends
     }
 
     public static final int RECIPIENT_ID_FIELD_NUMBER = 8;
-    private long recipientId_;
+    private long recipientId_ = 0L;
 
     /**
      * <code>optional int64 recipient_id = 8;</code>
@@ -280,6 +275,7 @@ public final class Message extends
     }
 
     public static final int RECORDS_FIELD_NUMBER = 9;
+    @SuppressWarnings("serial")
     private java.util.List<com.google.protobuf.ByteString> records_;
 
     /**
@@ -313,7 +309,7 @@ public final class Message extends
     }
 
     public static final int SEQUENCE_ID_FIELD_NUMBER = 10;
-    private int sequenceId_;
+    private int sequenceId_ = 0;
 
     /**
      * <code>optional int32 sequence_id = 10;</code>
@@ -336,7 +332,7 @@ public final class Message extends
     }
 
     public static final int PRE_MESSAGE_ID_FIELD_NUMBER = 11;
-    private long preMessageId_;
+    private long preMessageId_ = 0L;
 
     /**
      * <code>optional int64 pre_message_id = 11;</code>
@@ -401,8 +397,8 @@ public final class Message extends
         if (((bitField0_ & 0x00000080) != 0)) {
             output.writeInt64(8, recipientId_);
         }
-        for (int i = 0; i < records_.size(); i++) {
-            output.writeBytes(9, records_.get(i));
+        for (com.google.protobuf.ByteString bytes : records_) {
+            output.writeBytes(9, bytes);
         }
         if (((bitField0_ & 0x00000100) != 0)) {
             output.writeInt32(10, sequenceId_);
@@ -454,9 +450,9 @@ public final class Message extends
         }
         {
             int dataSize = 0;
-            for (int i = 0; i < records_.size(); i++) {
+            for (com.google.protobuf.ByteString bytes : records_) {
                 dataSize += com.google.protobuf.CodedOutputStream
-                        .computeBytesSizeNoTag(records_.get(i));
+                        .computeBytesSizeNoTag(bytes);
             }
             size += dataSize;
             size += 1 * getRecordsList().size();
@@ -479,10 +475,9 @@ public final class Message extends
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof im.turms.server.common.access.client.dto.model.message.Message)) {
+        if (!(obj instanceof Message other)) {
             return super.equals(obj);
         }
-        im.turms.server.common.access.client.dto.model.message.Message other = (im.turms.server.common.access.client.dto.model.message.Message) obj;
 
         if (hasId() != other.hasId()) {
             return false;
@@ -578,10 +573,7 @@ public final class Message extends
                 return false;
             }
         }
-        if (!getUnknownFields().equals(other.getUnknownFields())) {
-            return false;
-        }
-        return true;
+        return getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -751,8 +743,7 @@ public final class Message extends
     @java.lang.Override
     protected Builder newBuilderForType(
             com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
+        return new Builder(parent);
     }
 
     /**
@@ -789,28 +780,18 @@ public final class Message extends
         @java.lang.Override
         public Builder clear() {
             super.clear();
+            bitField0_ = 0;
             id_ = 0L;
-            bitField0_ = (bitField0_ & ~0x00000001);
             deliveryDate_ = 0L;
-            bitField0_ = (bitField0_ & ~0x00000002);
             modificationDate_ = 0L;
-            bitField0_ = (bitField0_ & ~0x00000004);
             text_ = "";
-            bitField0_ = (bitField0_ & ~0x00000008);
             senderId_ = 0L;
-            bitField0_ = (bitField0_ & ~0x00000010);
             groupId_ = 0L;
-            bitField0_ = (bitField0_ & ~0x00000020);
             isSystemMessage_ = false;
-            bitField0_ = (bitField0_ & ~0x00000040);
             recipientId_ = 0L;
-            bitField0_ = (bitField0_ & ~0x00000080);
             records_ = java.util.Collections.emptyList();
-            bitField0_ = (bitField0_ & ~0x00000100);
             sequenceId_ = 0;
-            bitField0_ = (bitField0_ & ~0x00000200);
             preMessageId_ = 0L;
-            bitField0_ = (bitField0_ & ~0x00000400);
             return this;
         }
 
@@ -837,6 +818,23 @@ public final class Message extends
         @java.lang.Override
         public im.turms.server.common.access.client.dto.model.message.Message buildPartial() {
             im.turms.server.common.access.client.dto.model.message.Message result = new im.turms.server.common.access.client.dto.model.message.Message(this);
+            buildPartialRepeatedFields(result);
+            if (bitField0_ != 0) {
+                buildPartial0(result);
+            }
+            onBuilt();
+            return result;
+        }
+
+        private void buildPartialRepeatedFields(im.turms.server.common.access.client.dto.model.message.Message result) {
+            if (((bitField0_ & 0x00000100) != 0)) {
+                records_ = java.util.Collections.unmodifiableList(records_);
+                bitField0_ &= ~0x00000100;
+            }
+            result.records_ = records_;
+        }
+
+        private void buildPartial0(im.turms.server.common.access.client.dto.model.message.Message result) {
             int from_bitField0_ = bitField0_;
             int to_bitField0_ = 0;
             if (((from_bitField0_ & 0x00000001) != 0)) {
@@ -852,9 +850,9 @@ public final class Message extends
                 to_bitField0_ |= 0x00000004;
             }
             if (((from_bitField0_ & 0x00000008) != 0)) {
+                result.text_ = text_;
                 to_bitField0_ |= 0x00000008;
             }
-            result.text_ = text_;
             if (((from_bitField0_ & 0x00000010) != 0)) {
                 result.senderId_ = senderId_;
                 to_bitField0_ |= 0x00000010;
@@ -871,11 +869,6 @@ public final class Message extends
                 result.recipientId_ = recipientId_;
                 to_bitField0_ |= 0x00000080;
             }
-            if (((bitField0_ & 0x00000100) != 0)) {
-                records_ = java.util.Collections.unmodifiableList(records_);
-                bitField0_ = (bitField0_ & ~0x00000100);
-            }
-            result.records_ = records_;
             if (((from_bitField0_ & 0x00000200) != 0)) {
                 result.sequenceId_ = sequenceId_;
                 to_bitField0_ |= 0x00000100;
@@ -884,47 +877,7 @@ public final class Message extends
                 result.preMessageId_ = preMessageId_;
                 to_bitField0_ |= 0x00000200;
             }
-            result.bitField0_ = to_bitField0_;
-            onBuilt();
-            return result;
-        }
-
-        @java.lang.Override
-        public Builder clone() {
-            return super.clone();
-        }
-
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(
-                com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(
-                com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index, java.lang.Object value) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.addRepeatedField(field, value);
+            result.bitField0_ |= to_bitField0_;
         }
 
         @java.lang.Override
@@ -951,8 +904,8 @@ public final class Message extends
                 setModificationDate(other.getModificationDate());
             }
             if (other.hasText()) {
-                bitField0_ |= 0x00000008;
                 text_ = other.text_;
+                bitField0_ |= 0x00000008;
                 onChanged();
             }
             if (other.hasSenderId()) {
@@ -970,7 +923,7 @@ public final class Message extends
             if (!other.records_.isEmpty()) {
                 if (records_.isEmpty()) {
                     records_ = other.records_;
-                    bitField0_ = (bitField0_ & ~0x00000100);
+                    bitField0_ &= ~0x00000100;
                 } else {
                     ensureRecordsIsMutable();
                     records_.addAll(other.records_);
@@ -1006,70 +959,56 @@ public final class Message extends
                 while (!done) {
                     int tag = input.readTag();
                     switch (tag) {
-                        case 0:
-                            done = true;
-                            break;
-                        case 8: {
+                        case 0 -> done = true;
+                        case 8 -> {
                             id_ = input.readInt64();
                             bitField0_ |= 0x00000001;
-                            break;
                         } // case 8
-                        case 16: {
+                        case 16 -> {
                             deliveryDate_ = input.readInt64();
                             bitField0_ |= 0x00000002;
-                            break;
                         } // case 16
-                        case 24: {
+                        case 24 -> {
                             modificationDate_ = input.readInt64();
                             bitField0_ |= 0x00000004;
-                            break;
                         } // case 24
-                        case 34: {
+                        case 34 -> {
                             text_ = input.readStringRequireUtf8();
                             bitField0_ |= 0x00000008;
-                            break;
                         } // case 34
-                        case 40: {
+                        case 40 -> {
                             senderId_ = input.readInt64();
                             bitField0_ |= 0x00000010;
-                            break;
                         } // case 40
-                        case 48: {
+                        case 48 -> {
                             groupId_ = input.readInt64();
                             bitField0_ |= 0x00000020;
-                            break;
                         } // case 48
-                        case 56: {
+                        case 56 -> {
                             isSystemMessage_ = input.readBool();
                             bitField0_ |= 0x00000040;
-                            break;
                         } // case 56
-                        case 64: {
+                        case 64 -> {
                             recipientId_ = input.readInt64();
                             bitField0_ |= 0x00000080;
-                            break;
                         } // case 64
-                        case 74: {
+                        case 74 -> {
                             com.google.protobuf.ByteString v = input.readBytes();
                             ensureRecordsIsMutable();
                             records_.add(v);
-                            break;
                         } // case 74
-                        case 80: {
+                        case 80 -> {
                             sequenceId_ = input.readInt32();
                             bitField0_ |= 0x00000200;
-                            break;
                         } // case 80
-                        case 88: {
+                        case 88 -> {
                             preMessageId_ = input.readInt64();
                             bitField0_ |= 0x00000400;
-                            break;
                         } // case 88
-                        default: {
+                        default -> {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
                             }
-                            break;
                         } // default:
                     } // switch (tag)
                 } // while (!done)
@@ -1112,8 +1051,9 @@ public final class Message extends
          * @return This builder for chaining.
          */
         public Builder setId(long value) {
-            bitField0_ |= 0x00000001;
+
             id_ = value;
+            bitField0_ |= 0x00000001;
             onChanged();
             return this;
         }
@@ -1124,7 +1064,7 @@ public final class Message extends
          * @return This builder for chaining.
          */
         public Builder clearId() {
-            bitField0_ = (bitField0_ & ~0x00000001);
+            bitField0_ &= ~0x00000001;
             id_ = 0L;
             onChanged();
             return this;
@@ -1159,8 +1099,9 @@ public final class Message extends
          * @return This builder for chaining.
          */
         public Builder setDeliveryDate(long value) {
-            bitField0_ |= 0x00000002;
+
             deliveryDate_ = value;
+            bitField0_ |= 0x00000002;
             onChanged();
             return this;
         }
@@ -1171,7 +1112,7 @@ public final class Message extends
          * @return This builder for chaining.
          */
         public Builder clearDeliveryDate() {
-            bitField0_ = (bitField0_ & ~0x00000002);
+            bitField0_ &= ~0x00000002;
             deliveryDate_ = 0L;
             onChanged();
             return this;
@@ -1206,8 +1147,9 @@ public final class Message extends
          * @return This builder for chaining.
          */
         public Builder setModificationDate(long value) {
-            bitField0_ |= 0x00000004;
+
             modificationDate_ = value;
+            bitField0_ |= 0x00000004;
             onChanged();
             return this;
         }
@@ -1218,7 +1160,7 @@ public final class Message extends
          * @return This builder for chaining.
          */
         public Builder clearModificationDate() {
-            bitField0_ = (bitField0_ & ~0x00000004);
+            bitField0_ &= ~0x00000004;
             modificationDate_ = 0L;
             onChanged();
             return this;
@@ -1283,8 +1225,8 @@ public final class Message extends
             if (value == null) {
                 throw new NullPointerException();
             }
-            bitField0_ |= 0x00000008;
             text_ = value;
+            bitField0_ |= 0x00000008;
             onChanged();
             return this;
         }
@@ -1295,8 +1237,8 @@ public final class Message extends
          * @return This builder for chaining.
          */
         public Builder clearText() {
-            bitField0_ = (bitField0_ & ~0x00000008);
             text_ = getDefaultInstance().getText();
+            bitField0_ &= ~0x00000008;
             onChanged();
             return this;
         }
@@ -1313,8 +1255,8 @@ public final class Message extends
                 throw new NullPointerException();
             }
             checkByteStringIsUtf8(value);
-            bitField0_ |= 0x00000008;
             text_ = value;
+            bitField0_ |= 0x00000008;
             onChanged();
             return this;
         }
@@ -1348,8 +1290,9 @@ public final class Message extends
          * @return This builder for chaining.
          */
         public Builder setSenderId(long value) {
-            bitField0_ |= 0x00000010;
+
             senderId_ = value;
+            bitField0_ |= 0x00000010;
             onChanged();
             return this;
         }
@@ -1360,7 +1303,7 @@ public final class Message extends
          * @return This builder for chaining.
          */
         public Builder clearSenderId() {
-            bitField0_ = (bitField0_ & ~0x00000010);
+            bitField0_ &= ~0x00000010;
             senderId_ = 0L;
             onChanged();
             return this;
@@ -1395,8 +1338,9 @@ public final class Message extends
          * @return This builder for chaining.
          */
         public Builder setGroupId(long value) {
-            bitField0_ |= 0x00000020;
+
             groupId_ = value;
+            bitField0_ |= 0x00000020;
             onChanged();
             return this;
         }
@@ -1407,7 +1351,7 @@ public final class Message extends
          * @return This builder for chaining.
          */
         public Builder clearGroupId() {
-            bitField0_ = (bitField0_ & ~0x00000020);
+            bitField0_ &= ~0x00000020;
             groupId_ = 0L;
             onChanged();
             return this;
@@ -1442,8 +1386,9 @@ public final class Message extends
          * @return This builder for chaining.
          */
         public Builder setIsSystemMessage(boolean value) {
-            bitField0_ |= 0x00000040;
+
             isSystemMessage_ = value;
+            bitField0_ |= 0x00000040;
             onChanged();
             return this;
         }
@@ -1454,7 +1399,7 @@ public final class Message extends
          * @return This builder for chaining.
          */
         public Builder clearIsSystemMessage() {
-            bitField0_ = (bitField0_ & ~0x00000040);
+            bitField0_ &= ~0x00000040;
             isSystemMessage_ = false;
             onChanged();
             return this;
@@ -1489,8 +1434,9 @@ public final class Message extends
          * @return This builder for chaining.
          */
         public Builder setRecipientId(long value) {
-            bitField0_ |= 0x00000080;
+
             recipientId_ = value;
+            bitField0_ |= 0x00000080;
             onChanged();
             return this;
         }
@@ -1501,7 +1447,7 @@ public final class Message extends
          * @return This builder for chaining.
          */
         public Builder clearRecipientId() {
-            bitField0_ = (bitField0_ & ~0x00000080);
+            bitField0_ &= ~0x00000080;
             recipientId_ = 0L;
             onChanged();
             return this;
@@ -1510,8 +1456,8 @@ public final class Message extends
         private java.util.List<com.google.protobuf.ByteString> records_ = java.util.Collections.emptyList();
 
         private void ensureRecordsIsMutable() {
-            if (!((bitField0_ & 0x00000100) != 0)) {
-                records_ = new java.util.ArrayList<com.google.protobuf.ByteString>(records_);
+            if ((bitField0_ & 0x00000100) == 0) {
+                records_ = new java.util.ArrayList<>(records_);
                 bitField0_ |= 0x00000100;
             }
         }
@@ -1602,7 +1548,7 @@ public final class Message extends
          */
         public Builder clearRecords() {
             records_ = java.util.Collections.emptyList();
-            bitField0_ = (bitField0_ & ~0x00000100);
+            bitField0_ &= ~0x00000100;
             onChanged();
             return this;
         }
@@ -1636,8 +1582,9 @@ public final class Message extends
          * @return This builder for chaining.
          */
         public Builder setSequenceId(int value) {
-            bitField0_ |= 0x00000200;
+
             sequenceId_ = value;
+            bitField0_ |= 0x00000200;
             onChanged();
             return this;
         }
@@ -1648,7 +1595,7 @@ public final class Message extends
          * @return This builder for chaining.
          */
         public Builder clearSequenceId() {
-            bitField0_ = (bitField0_ & ~0x00000200);
+            bitField0_ &= ~0x00000200;
             sequenceId_ = 0;
             onChanged();
             return this;
@@ -1683,8 +1630,9 @@ public final class Message extends
          * @return This builder for chaining.
          */
         public Builder setPreMessageId(long value) {
-            bitField0_ |= 0x00000400;
+
             preMessageId_ = value;
+            bitField0_ |= 0x00000400;
             onChanged();
             return this;
         }
@@ -1695,7 +1643,7 @@ public final class Message extends
          * @return This builder for chaining.
          */
         public Builder clearPreMessageId() {
-            bitField0_ = (bitField0_ & ~0x00000400);
+            bitField0_ &= ~0x00000400;
             preMessageId_ = 0L;
             onChanged();
             return this;
@@ -1729,7 +1677,7 @@ public final class Message extends
     }
 
     private static final com.google.protobuf.Parser<Message>
-            PARSER = new com.google.protobuf.AbstractParser<Message>() {
+            PARSER = new com.google.protobuf.AbstractParser<>() {
         @java.lang.Override
         public Message parsePartialFrom(
                 com.google.protobuf.CodedInputStream input,

@@ -74,8 +74,7 @@ public final class GroupOuterClass {
         internal_static_im_turms_proto_Group_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
                 internal_static_im_turms_proto_Group_descriptor,
-                new java.lang.String[]{"Id", "TypeId", "CreatorId", "OwnerId", "Name", "Intro", "Announcement", "CreationDate", "LastUpdatedDate", "MuteEndDate", "Active", "Id", "TypeId", "CreatorId",
-                        "OwnerId", "Name", "Intro", "Announcement", "CreationDate", "LastUpdatedDate", "MuteEndDate", "Active",});
+                new java.lang.String[]{"Id", "TypeId", "CreatorId", "OwnerId", "Name", "Intro", "Announcement", "CreationDate", "LastUpdatedDate", "MuteEndDate", "Active", "Id", "TypeId", "CreatorId", "OwnerId", "Name", "Intro", "Announcement", "CreationDate", "LastUpdatedDate", "MuteEndDate", "Active",});
     }
 
     // @@protoc_insertion_point(outer_class_scope)

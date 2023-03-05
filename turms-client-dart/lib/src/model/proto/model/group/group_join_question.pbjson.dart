@@ -10,11 +10,11 @@ import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
 
 @$core.Deprecated('Use groupJoinQuestionDescriptor instead')
-const GroupJoinQuestion$json = {
+const GroupJoinQuestion$json = const {
   '1': 'GroupJoinQuestion',
-  '2': [
-    {'1': 'id', '3': 1, '4': 1, '5': 3, '9': 0, '10': 'id', '17': true},
-    {
+  '2': const [
+    const {'1': 'id', '3': 1, '4': 1, '5': 3, '9': 0, '10': 'id', '17': true},
+    const {
       '1': 'group_id',
       '3': 2,
       '4': 1,
@@ -23,7 +23,7 @@ const GroupJoinQuestion$json = {
       '10': 'groupId',
       '17': true
     },
-    {
+    const {
       '1': 'question',
       '3': 3,
       '4': 1,
@@ -32,14 +32,22 @@ const GroupJoinQuestion$json = {
       '10': 'question',
       '17': true
     },
-    {'1': 'answers', '3': 4, '4': 3, '5': 9, '10': 'answers'},
-    {'1': 'score', '3': 5, '4': 1, '5': 5, '9': 3, '10': 'score', '17': true},
+    const {'1': 'answers', '3': 4, '4': 3, '5': 9, '10': 'answers'},
+    const {
+      '1': 'score',
+      '3': 5,
+      '4': 1,
+      '5': 5,
+      '9': 3,
+      '10': 'score',
+      '17': true
+    },
   ],
-  '8': [
-    {'1': '_id'},
-    {'1': '_group_id'},
-    {'1': '_question'},
-    {'1': '_score'},
+  '8': const [
+    const {'1': '_id'},
+    const {'1': '_group_id'},
+    const {'1': '_question'},
+    const {'1': '_score'},
   ],
 };
 

@@ -101,7 +101,6 @@ public interface DeleteResourceRequestOrBuilder extends
     /**
      * <code>map&lt;string, string&gt; extra = 4;</code>
      */
-
     /* nullable */
     java.lang.String getExtraOrDefault(
             java.lang.String key,
@@ -111,7 +110,6 @@ public interface DeleteResourceRequestOrBuilder extends
     /**
      * <code>map&lt;string, string&gt; extra = 4;</code>
      */
-
     java.lang.String getExtraOrThrow(
             java.lang.String key);
 }

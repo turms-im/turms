@@ -141,7 +141,7 @@ public final class CreateGroupRequest extends
      * <code>optional string intro = 2;</code>
      */
     private void clearIntro() {
-        bitField0_ = (bitField0_ & ~0x00000001);
+        bitField0_ &= ~0x00000001;
         intro_ = getDefaultInstance().getIntro();
     }
 
@@ -207,7 +207,7 @@ public final class CreateGroupRequest extends
      * <code>optional string announcement = 3;</code>
      */
     private void clearAnnouncement() {
-        bitField0_ = (bitField0_ & ~0x00000002);
+        bitField0_ &= ~0x00000002;
         announcement_ = getDefaultInstance().getAnnouncement();
     }
 
@@ -260,7 +260,7 @@ public final class CreateGroupRequest extends
      * <code>optional int32 min_score = 4;</code>
      */
     private void clearMinScore() {
-        bitField0_ = (bitField0_ & ~0x00000004);
+        bitField0_ &= ~0x00000004;
         minScore_ = 0;
     }
 
@@ -301,7 +301,7 @@ public final class CreateGroupRequest extends
      * <code>optional int64 type_id = 5;</code>
      */
     private void clearTypeId() {
-        bitField0_ = (bitField0_ & ~0x00000008);
+        bitField0_ &= ~0x00000008;
         typeId_ = 0L;
     }
 
@@ -342,7 +342,7 @@ public final class CreateGroupRequest extends
      * <code>optional int64 mute_end_date = 6;</code>
      */
     private void clearMuteEndDate() {
-        bitField0_ = (bitField0_ & ~0x00000010);
+        bitField0_ &= ~0x00000010;
         muteEndDate_ = 0L;
     }
 
@@ -817,7 +817,7 @@ public final class CreateGroupRequest extends
                         parser = PARSER;
                         if (parser == null) {
                             parser =
-                                    new DefaultInstanceBasedParser<im.turms.client.model.proto.request.group.CreateGroupRequest>(
+                                    new DefaultInstanceBasedParser<>(
                                             DEFAULT_INSTANCE);
                             PARSER = parser;
                         }

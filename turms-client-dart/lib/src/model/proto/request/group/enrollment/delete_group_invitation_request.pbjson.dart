@@ -10,10 +10,10 @@ import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
 
 @$core.Deprecated('Use deleteGroupInvitationRequestDescriptor instead')
-const DeleteGroupInvitationRequest$json = {
+const DeleteGroupInvitationRequest$json = const {
   '1': 'DeleteGroupInvitationRequest',
-  '2': [
-    {'1': 'invitation_id', '3': 1, '4': 1, '5': 3, '10': 'invitationId'},
+  '2': const [
+    const {'1': 'invitation_id', '3': 1, '4': 1, '5': 3, '10': 'invitationId'},
   ],
 };
 

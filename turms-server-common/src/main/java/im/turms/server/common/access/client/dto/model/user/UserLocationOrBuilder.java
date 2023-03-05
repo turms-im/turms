@@ -95,7 +95,6 @@ public interface UserLocationOrBuilder extends
      *
      * <code>map&lt;string, string&gt; details = 4;</code>
      */
-
     /* nullable */
     java.lang.String getDetailsOrDefault(
             java.lang.String key,
@@ -109,7 +108,6 @@ public interface UserLocationOrBuilder extends
      *
      * <code>map&lt;string, string&gt; details = 4;</code>
      */
-
     java.lang.String getDetailsOrThrow(
             java.lang.String key);
 }

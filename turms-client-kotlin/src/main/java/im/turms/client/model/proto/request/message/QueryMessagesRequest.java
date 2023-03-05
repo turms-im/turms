@@ -38,6 +38,10 @@ public final class QueryMessagesRequest extends
     private com.google.protobuf.Internal.LongList ids_;
 
     /**
+     * <pre>
+     * Filter
+     * </pre>
+     *
      * <code>repeated int64 ids = 1;</code>
      *
      * @return A list containing the ids.
@@ -49,6 +53,10 @@ public final class QueryMessagesRequest extends
     }
 
     /**
+     * <pre>
+     * Filter
+     * </pre>
+     *
      * <code>repeated int64 ids = 1;</code>
      *
      * @return The count of ids.
@@ -59,6 +67,10 @@ public final class QueryMessagesRequest extends
     }
 
     /**
+     * <pre>
+     * Filter
+     * </pre>
+     *
      * <code>repeated int64 ids = 1;</code>
      *
      * @param index The index of the element to return.
@@ -80,6 +92,10 @@ public final class QueryMessagesRequest extends
     }
 
     /**
+     * <pre>
+     * Filter
+     * </pre>
+     *
      * <code>repeated int64 ids = 1;</code>
      *
      * @param index The index to set the value at.
@@ -92,6 +108,10 @@ public final class QueryMessagesRequest extends
     }
 
     /**
+     * <pre>
+     * Filter
+     * </pre>
+     *
      * <code>repeated int64 ids = 1;</code>
      *
      * @param value The ids to add.
@@ -102,6 +122,10 @@ public final class QueryMessagesRequest extends
     }
 
     /**
+     * <pre>
+     * Filter
+     * </pre>
+     *
      * <code>repeated int64 ids = 1;</code>
      *
      * @param values The ids to add.
@@ -114,6 +138,10 @@ public final class QueryMessagesRequest extends
     }
 
     /**
+     * <pre>
+     * Filter
+     * </pre>
+     *
      * <code>repeated int64 ids = 1;</code>
      */
     private void clearIds() {
@@ -157,7 +185,7 @@ public final class QueryMessagesRequest extends
      * <code>optional bool are_group_messages = 2;</code>
      */
     private void clearAreGroupMessages() {
-        bitField0_ = (bitField0_ & ~0x00000001);
+        bitField0_ &= ~0x00000001;
         areGroupMessages_ = false;
     }
 
@@ -198,7 +226,7 @@ public final class QueryMessagesRequest extends
      * <code>optional bool are_system_messages = 3;</code>
      */
     private void clearAreSystemMessages() {
-        bitField0_ = (bitField0_ & ~0x00000002);
+        bitField0_ &= ~0x00000002;
         areSystemMessages_ = false;
     }
 
@@ -288,92 +316,96 @@ public final class QueryMessagesRequest extends
         fromIds_ = emptyLongList();
     }
 
-    public static final int DELIVERY_DATE_AFTER_FIELD_NUMBER = 5;
-    private long deliveryDateAfter_;
+    public static final int DELIVERY_DATE_START_FIELD_NUMBER = 5;
+    private long deliveryDateStart_;
 
     /**
-     * <code>optional int64 delivery_date_after = 5;</code>
+     * <code>optional int64 delivery_date_start = 5;</code>
      *
-     * @return Whether the deliveryDateAfter field is set.
+     * @return Whether the deliveryDateStart field is set.
      */
     @java.lang.Override
-    public boolean hasDeliveryDateAfter() {
+    public boolean hasDeliveryDateStart() {
         return ((bitField0_ & 0x00000004) != 0);
     }
 
     /**
-     * <code>optional int64 delivery_date_after = 5;</code>
+     * <code>optional int64 delivery_date_start = 5;</code>
      *
-     * @return The deliveryDateAfter.
+     * @return The deliveryDateStart.
      */
     @java.lang.Override
-    public long getDeliveryDateAfter() {
-        return deliveryDateAfter_;
+    public long getDeliveryDateStart() {
+        return deliveryDateStart_;
     }
 
     /**
-     * <code>optional int64 delivery_date_after = 5;</code>
+     * <code>optional int64 delivery_date_start = 5;</code>
      *
-     * @param value The deliveryDateAfter to set.
+     * @param value The deliveryDateStart to set.
      */
-    private void setDeliveryDateAfter(long value) {
+    private void setDeliveryDateStart(long value) {
         bitField0_ |= 0x00000004;
-        deliveryDateAfter_ = value;
+        deliveryDateStart_ = value;
     }
 
     /**
-     * <code>optional int64 delivery_date_after = 5;</code>
+     * <code>optional int64 delivery_date_start = 5;</code>
      */
-    private void clearDeliveryDateAfter() {
-        bitField0_ = (bitField0_ & ~0x00000004);
-        deliveryDateAfter_ = 0L;
+    private void clearDeliveryDateStart() {
+        bitField0_ &= ~0x00000004;
+        deliveryDateStart_ = 0L;
     }
 
-    public static final int DELIVERY_DATE_BEFORE_FIELD_NUMBER = 6;
-    private long deliveryDateBefore_;
+    public static final int DELIVERY_DATE_END_FIELD_NUMBER = 6;
+    private long deliveryDateEnd_;
 
     /**
-     * <code>optional int64 delivery_date_before = 6;</code>
+     * <code>optional int64 delivery_date_end = 6;</code>
      *
-     * @return Whether the deliveryDateBefore field is set.
+     * @return Whether the deliveryDateEnd field is set.
      */
     @java.lang.Override
-    public boolean hasDeliveryDateBefore() {
+    public boolean hasDeliveryDateEnd() {
         return ((bitField0_ & 0x00000008) != 0);
     }
 
     /**
-     * <code>optional int64 delivery_date_before = 6;</code>
+     * <code>optional int64 delivery_date_end = 6;</code>
      *
-     * @return The deliveryDateBefore.
+     * @return The deliveryDateEnd.
      */
     @java.lang.Override
-    public long getDeliveryDateBefore() {
-        return deliveryDateBefore_;
+    public long getDeliveryDateEnd() {
+        return deliveryDateEnd_;
     }
 
     /**
-     * <code>optional int64 delivery_date_before = 6;</code>
+     * <code>optional int64 delivery_date_end = 6;</code>
      *
-     * @param value The deliveryDateBefore to set.
+     * @param value The deliveryDateEnd to set.
      */
-    private void setDeliveryDateBefore(long value) {
+    private void setDeliveryDateEnd(long value) {
         bitField0_ |= 0x00000008;
-        deliveryDateBefore_ = value;
+        deliveryDateEnd_ = value;
     }
 
     /**
-     * <code>optional int64 delivery_date_before = 6;</code>
+     * <code>optional int64 delivery_date_end = 6;</code>
      */
-    private void clearDeliveryDateBefore() {
-        bitField0_ = (bitField0_ & ~0x00000008);
-        deliveryDateBefore_ = 0L;
+    private void clearDeliveryDateEnd() {
+        bitField0_ &= ~0x00000008;
+        deliveryDateEnd_ = 0L;
     }
 
     public static final int MAX_COUNT_FIELD_NUMBER = 7;
     private int maxCount_;
 
     /**
+     * <pre>
+     * Option
+     * </pre>
+     *
      * <code>optional int32 max_count = 7;</code>
      *
      * @return Whether the maxCount field is set.
@@ -384,6 +416,10 @@ public final class QueryMessagesRequest extends
     }
 
     /**
+     * <pre>
+     * Option
+     * </pre>
+     *
      * <code>optional int32 max_count = 7;</code>
      *
      * @return The maxCount.
@@ -394,6 +430,10 @@ public final class QueryMessagesRequest extends
     }
 
     /**
+     * <pre>
+     * Option
+     * </pre>
+     *
      * <code>optional int32 max_count = 7;</code>
      *
      * @param value The maxCount to set.
@@ -404,10 +444,14 @@ public final class QueryMessagesRequest extends
     }
 
     /**
+     * <pre>
+     * Option
+     * </pre>
+     *
      * <code>optional int32 max_count = 7;</code>
      */
     private void clearMaxCount() {
-        bitField0_ = (bitField0_ & ~0x00000010);
+        bitField0_ &= ~0x00000010;
         maxCount_ = 0;
     }
 
@@ -415,6 +459,10 @@ public final class QueryMessagesRequest extends
     private boolean withTotal_;
 
     /**
+     * <pre>
+     * Command
+     * </pre>
+     *
      * <code>bool with_total = 8;</code>
      *
      * @return The withTotal.
@@ -425,6 +473,10 @@ public final class QueryMessagesRequest extends
     }
 
     /**
+     * <pre>
+     * Command
+     * </pre>
+     *
      * <code>bool with_total = 8;</code>
      *
      * @param value The withTotal to set.
@@ -435,11 +487,76 @@ public final class QueryMessagesRequest extends
     }
 
     /**
+     * <pre>
+     * Command
+     * </pre>
+     *
      * <code>bool with_total = 8;</code>
      */
     private void clearWithTotal() {
 
         withTotal_ = false;
+    }
+
+    public static final int DESCENDING_FIELD_NUMBER = 9;
+    private boolean descending_;
+
+    /**
+     * <pre>
+     * Option
+     * TODO: reorder
+     * </pre>
+     *
+     * <code>optional bool descending = 9;</code>
+     *
+     * @return Whether the descending field is set.
+     */
+    @java.lang.Override
+    public boolean hasDescending() {
+        return ((bitField0_ & 0x00000020) != 0);
+    }
+
+    /**
+     * <pre>
+     * Option
+     * TODO: reorder
+     * </pre>
+     *
+     * <code>optional bool descending = 9;</code>
+     *
+     * @return The descending.
+     */
+    @java.lang.Override
+    public boolean getDescending() {
+        return descending_;
+    }
+
+    /**
+     * <pre>
+     * Option
+     * TODO: reorder
+     * </pre>
+     *
+     * <code>optional bool descending = 9;</code>
+     *
+     * @param value The descending to set.
+     */
+    private void setDescending(boolean value) {
+        bitField0_ |= 0x00000020;
+        descending_ = value;
+    }
+
+    /**
+     * <pre>
+     * Option
+     * TODO: reorder
+     * </pre>
+     *
+     * <code>optional bool descending = 9;</code>
+     */
+    private void clearDescending() {
+        bitField0_ &= ~0x00000020;
+        descending_ = false;
     }
 
     public static im.turms.client.model.proto.request.message.QueryMessagesRequest parseFrom(
@@ -550,6 +667,10 @@ public final class QueryMessagesRequest extends
 
 
         /**
+         * <pre>
+         * Filter
+         * </pre>
+         *
          * <code>repeated int64 ids = 1;</code>
          *
          * @return A list containing the ids.
@@ -562,6 +683,10 @@ public final class QueryMessagesRequest extends
         }
 
         /**
+         * <pre>
+         * Filter
+         * </pre>
+         *
          * <code>repeated int64 ids = 1;</code>
          *
          * @return The count of ids.
@@ -572,6 +697,10 @@ public final class QueryMessagesRequest extends
         }
 
         /**
+         * <pre>
+         * Filter
+         * </pre>
+         *
          * <code>repeated int64 ids = 1;</code>
          *
          * @param index The index of the element to return.
@@ -583,6 +712,10 @@ public final class QueryMessagesRequest extends
         }
 
         /**
+         * <pre>
+         * Filter
+         * </pre>
+         *
          * <code>repeated int64 ids = 1;</code>
          *
          * @param value The ids to set.
@@ -596,6 +729,10 @@ public final class QueryMessagesRequest extends
         }
 
         /**
+         * <pre>
+         * Filter
+         * </pre>
+         *
          * <code>repeated int64 ids = 1;</code>
          *
          * @param value The ids to add.
@@ -608,6 +745,10 @@ public final class QueryMessagesRequest extends
         }
 
         /**
+         * <pre>
+         * Filter
+         * </pre>
+         *
          * <code>repeated int64 ids = 1;</code>
          *
          * @param values The ids to add.
@@ -621,6 +762,10 @@ public final class QueryMessagesRequest extends
         }
 
         /**
+         * <pre>
+         * Filter
+         * </pre>
+         *
          * <code>repeated int64 ids = 1;</code>
          *
          * @return This builder for chaining.
@@ -800,92 +945,96 @@ public final class QueryMessagesRequest extends
         }
 
         /**
-         * <code>optional int64 delivery_date_after = 5;</code>
+         * <code>optional int64 delivery_date_start = 5;</code>
          *
-         * @return Whether the deliveryDateAfter field is set.
+         * @return Whether the deliveryDateStart field is set.
          */
         @java.lang.Override
-        public boolean hasDeliveryDateAfter() {
-            return instance.hasDeliveryDateAfter();
+        public boolean hasDeliveryDateStart() {
+            return instance.hasDeliveryDateStart();
         }
 
         /**
-         * <code>optional int64 delivery_date_after = 5;</code>
+         * <code>optional int64 delivery_date_start = 5;</code>
          *
-         * @return The deliveryDateAfter.
+         * @return The deliveryDateStart.
          */
         @java.lang.Override
-        public long getDeliveryDateAfter() {
-            return instance.getDeliveryDateAfter();
+        public long getDeliveryDateStart() {
+            return instance.getDeliveryDateStart();
         }
 
         /**
-         * <code>optional int64 delivery_date_after = 5;</code>
+         * <code>optional int64 delivery_date_start = 5;</code>
          *
-         * @param value The deliveryDateAfter to set.
+         * @param value The deliveryDateStart to set.
          * @return This builder for chaining.
          */
-        public Builder setDeliveryDateAfter(long value) {
+        public Builder setDeliveryDateStart(long value) {
             copyOnWrite();
-            instance.setDeliveryDateAfter(value);
+            instance.setDeliveryDateStart(value);
             return this;
         }
 
         /**
-         * <code>optional int64 delivery_date_after = 5;</code>
+         * <code>optional int64 delivery_date_start = 5;</code>
          *
          * @return This builder for chaining.
          */
-        public Builder clearDeliveryDateAfter() {
+        public Builder clearDeliveryDateStart() {
             copyOnWrite();
-            instance.clearDeliveryDateAfter();
+            instance.clearDeliveryDateStart();
             return this;
         }
 
         /**
-         * <code>optional int64 delivery_date_before = 6;</code>
+         * <code>optional int64 delivery_date_end = 6;</code>
          *
-         * @return Whether the deliveryDateBefore field is set.
+         * @return Whether the deliveryDateEnd field is set.
          */
         @java.lang.Override
-        public boolean hasDeliveryDateBefore() {
-            return instance.hasDeliveryDateBefore();
+        public boolean hasDeliveryDateEnd() {
+            return instance.hasDeliveryDateEnd();
         }
 
         /**
-         * <code>optional int64 delivery_date_before = 6;</code>
+         * <code>optional int64 delivery_date_end = 6;</code>
          *
-         * @return The deliveryDateBefore.
+         * @return The deliveryDateEnd.
          */
         @java.lang.Override
-        public long getDeliveryDateBefore() {
-            return instance.getDeliveryDateBefore();
+        public long getDeliveryDateEnd() {
+            return instance.getDeliveryDateEnd();
         }
 
         /**
-         * <code>optional int64 delivery_date_before = 6;</code>
+         * <code>optional int64 delivery_date_end = 6;</code>
          *
-         * @param value The deliveryDateBefore to set.
+         * @param value The deliveryDateEnd to set.
          * @return This builder for chaining.
          */
-        public Builder setDeliveryDateBefore(long value) {
+        public Builder setDeliveryDateEnd(long value) {
             copyOnWrite();
-            instance.setDeliveryDateBefore(value);
+            instance.setDeliveryDateEnd(value);
             return this;
         }
 
         /**
-         * <code>optional int64 delivery_date_before = 6;</code>
+         * <code>optional int64 delivery_date_end = 6;</code>
          *
          * @return This builder for chaining.
          */
-        public Builder clearDeliveryDateBefore() {
+        public Builder clearDeliveryDateEnd() {
             copyOnWrite();
-            instance.clearDeliveryDateBefore();
+            instance.clearDeliveryDateEnd();
             return this;
         }
 
         /**
+         * <pre>
+         * Option
+         * </pre>
+         *
          * <code>optional int32 max_count = 7;</code>
          *
          * @return Whether the maxCount field is set.
@@ -896,6 +1045,10 @@ public final class QueryMessagesRequest extends
         }
 
         /**
+         * <pre>
+         * Option
+         * </pre>
+         *
          * <code>optional int32 max_count = 7;</code>
          *
          * @return The maxCount.
@@ -906,6 +1059,10 @@ public final class QueryMessagesRequest extends
         }
 
         /**
+         * <pre>
+         * Option
+         * </pre>
+         *
          * <code>optional int32 max_count = 7;</code>
          *
          * @param value The maxCount to set.
@@ -918,6 +1075,10 @@ public final class QueryMessagesRequest extends
         }
 
         /**
+         * <pre>
+         * Option
+         * </pre>
+         *
          * <code>optional int32 max_count = 7;</code>
          *
          * @return This builder for chaining.
@@ -929,6 +1090,10 @@ public final class QueryMessagesRequest extends
         }
 
         /**
+         * <pre>
+         * Command
+         * </pre>
+         *
          * <code>bool with_total = 8;</code>
          *
          * @return The withTotal.
@@ -939,6 +1104,10 @@ public final class QueryMessagesRequest extends
         }
 
         /**
+         * <pre>
+         * Command
+         * </pre>
+         *
          * <code>bool with_total = 8;</code>
          *
          * @param value The withTotal to set.
@@ -951,6 +1120,10 @@ public final class QueryMessagesRequest extends
         }
 
         /**
+         * <pre>
+         * Command
+         * </pre>
+         *
          * <code>bool with_total = 8;</code>
          *
          * @return This builder for chaining.
@@ -958,6 +1131,69 @@ public final class QueryMessagesRequest extends
         public Builder clearWithTotal() {
             copyOnWrite();
             instance.clearWithTotal();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * Option
+         * TODO: reorder
+         * </pre>
+         *
+         * <code>optional bool descending = 9;</code>
+         *
+         * @return Whether the descending field is set.
+         */
+        @java.lang.Override
+        public boolean hasDescending() {
+            return instance.hasDescending();
+        }
+
+        /**
+         * <pre>
+         * Option
+         * TODO: reorder
+         * </pre>
+         *
+         * <code>optional bool descending = 9;</code>
+         *
+         * @return The descending.
+         */
+        @java.lang.Override
+        public boolean getDescending() {
+            return instance.getDescending();
+        }
+
+        /**
+         * <pre>
+         * Option
+         * TODO: reorder
+         * </pre>
+         *
+         * <code>optional bool descending = 9;</code>
+         *
+         * @param value The descending to set.
+         * @return This builder for chaining.
+         */
+        public Builder setDescending(boolean value) {
+            copyOnWrite();
+            instance.setDescending(value);
+            return this;
+        }
+
+        /**
+         * <pre>
+         * Option
+         * TODO: reorder
+         * </pre>
+         *
+         * <code>optional bool descending = 9;</code>
+         *
+         * @return This builder for chaining.
+         */
+        public Builder clearDescending() {
+            copyOnWrite();
+            instance.clearDescending();
             return this;
         }
 
@@ -983,14 +1219,16 @@ public final class QueryMessagesRequest extends
                         "areGroupMessages_",
                         "areSystemMessages_",
                         "fromIds_",
-                        "deliveryDateAfter_",
-                        "deliveryDateBefore_",
+                        "deliveryDateStart_",
+                        "deliveryDateEnd_",
                         "maxCount_",
                         "withTotal_",
+                        "descending_",
                 };
                 java.lang.String info =
-                        "\u0000\b\u0000\u0001\u0001\b\b\u0000\u0002\u0000\u0001%\u0002\u1007\u0000\u0003\u1007" +
-                        "\u0001\u0004%\u0005\u1002\u0002\u0006\u1002\u0003\u0007\u1004\u0004\b\u0007";
+                        "\u0000\t\u0000\u0001\u0001\t\t\u0000\u0002\u0000\u0001%\u0002\u1007\u0000\u0003\u1007" +
+                        "\u0001\u0004%\u0005\u1002\u0002\u0006\u1002\u0003\u0007\u1004\u0004\b\u0007\t\u1007" +
+                        "\u0005";
                 return newMessageInfo(DEFAULT_INSTANCE, info, objects);
             }
             // fall through
@@ -1004,7 +1242,7 @@ public final class QueryMessagesRequest extends
                         parser = PARSER;
                         if (parser == null) {
                             parser =
-                                    new DefaultInstanceBasedParser<im.turms.client.model.proto.request.message.QueryMessagesRequest>(
+                                    new DefaultInstanceBasedParser<>(
                                             DEFAULT_INSTANCE);
                             PARSER = parser;
                         }

@@ -44,12 +44,6 @@ public final class DeleteGroupRequest extends
         return new DeleteGroupRequest();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-        return this.unknownFields;
-    }
-
     public static final com.google.protobuf.Descriptors.Descriptor
     getDescriptor() {
         return im.turms.server.common.access.client.dto.request.group.DeleteGroupRequestOuterClass.internal_static_im_turms_proto_DeleteGroupRequest_descriptor;
@@ -64,7 +58,7 @@ public final class DeleteGroupRequest extends
     }
 
     public static final int GROUP_ID_FIELD_NUMBER = 1;
-    private long groupId_;
+    private long groupId_ = 0L;
 
     /**
      * <code>int64 group_id = 1;</code>
@@ -123,19 +117,15 @@ public final class DeleteGroupRequest extends
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof im.turms.server.common.access.client.dto.request.group.DeleteGroupRequest)) {
+        if (!(obj instanceof DeleteGroupRequest other)) {
             return super.equals(obj);
         }
-        im.turms.server.common.access.client.dto.request.group.DeleteGroupRequest other = (im.turms.server.common.access.client.dto.request.group.DeleteGroupRequest) obj;
 
         if (getGroupId()
             != other.getGroupId()) {
             return false;
         }
-        if (!getUnknownFields().equals(other.getUnknownFields())) {
-            return false;
-        }
-        return true;
+        return getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -256,8 +246,7 @@ public final class DeleteGroupRequest extends
     @java.lang.Override
     protected Builder newBuilderForType(
             com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
+        return new Builder(parent);
     }
 
     /**
@@ -294,8 +283,8 @@ public final class DeleteGroupRequest extends
         @java.lang.Override
         public Builder clear() {
             super.clear();
+            bitField0_ = 0;
             groupId_ = 0L;
-
             return this;
         }
 
@@ -322,47 +311,18 @@ public final class DeleteGroupRequest extends
         @java.lang.Override
         public im.turms.server.common.access.client.dto.request.group.DeleteGroupRequest buildPartial() {
             im.turms.server.common.access.client.dto.request.group.DeleteGroupRequest result = new im.turms.server.common.access.client.dto.request.group.DeleteGroupRequest(this);
-            result.groupId_ = groupId_;
+            if (bitField0_ != 0) {
+                buildPartial0(result);
+            }
             onBuilt();
             return result;
         }
 
-        @java.lang.Override
-        public Builder clone() {
-            return super.clone();
-        }
-
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(
-                com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(
-                com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index, java.lang.Object value) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.addRepeatedField(field, value);
+        private void buildPartial0(im.turms.server.common.access.client.dto.request.group.DeleteGroupRequest result) {
+            int from_bitField0_ = bitField0_;
+            if (((from_bitField0_ & 0x00000001) != 0)) {
+                result.groupId_ = groupId_;
+            }
         }
 
         @java.lang.Override
@@ -405,19 +365,15 @@ public final class DeleteGroupRequest extends
                 while (!done) {
                     int tag = input.readTag();
                     switch (tag) {
-                        case 0:
-                            done = true;
-                            break;
-                        case 8: {
+                        case 0 -> done = true;
+                        case 8 -> {
                             groupId_ = input.readInt64();
-
-                            break;
+                            bitField0_ |= 0x00000001;
                         } // case 8
-                        default: {
+                        default -> {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
                             }
-                            break;
                         } // default:
                     } // switch (tag)
                 } // while (!done)
@@ -428,6 +384,8 @@ public final class DeleteGroupRequest extends
             } // finally
             return this;
         }
+
+        private int bitField0_;
 
         private long groupId_;
 
@@ -450,6 +408,7 @@ public final class DeleteGroupRequest extends
         public Builder setGroupId(long value) {
 
             groupId_ = value;
+            bitField0_ |= 0x00000001;
             onChanged();
             return this;
         }
@@ -460,7 +419,7 @@ public final class DeleteGroupRequest extends
          * @return This builder for chaining.
          */
         public Builder clearGroupId() {
-
+            bitField0_ &= ~0x00000001;
             groupId_ = 0L;
             onChanged();
             return this;
@@ -494,7 +453,7 @@ public final class DeleteGroupRequest extends
     }
 
     private static final com.google.protobuf.Parser<DeleteGroupRequest>
-            PARSER = new com.google.protobuf.AbstractParser<DeleteGroupRequest>() {
+            PARSER = new com.google.protobuf.AbstractParser<>() {
         @java.lang.Override
         public DeleteGroupRequest parsePartialFrom(
                 com.google.protobuf.CodedInputStream input,

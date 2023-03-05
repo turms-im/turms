@@ -73,8 +73,7 @@ public final class CreateMessageRequestOuterClass {
         internal_static_im_turms_proto_CreateMessageRequest_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
                 internal_static_im_turms_proto_CreateMessageRequest_descriptor,
-                new java.lang.String[]{"MessageId", "IsSystemMessage", "GroupId", "RecipientId", "DeliveryDate", "Text", "Records", "BurnAfter", "PreMessageId", "MessageId", "IsSystemMessage",
-                        "GroupId", "RecipientId", "DeliveryDate", "Text", "BurnAfter", "PreMessageId",});
+                new java.lang.String[]{"MessageId", "IsSystemMessage", "GroupId", "RecipientId", "DeliveryDate", "Text", "Records", "BurnAfter", "PreMessageId", "MessageId", "IsSystemMessage", "GroupId", "RecipientId", "DeliveryDate", "Text", "BurnAfter", "PreMessageId",});
     }
 
     // @@protoc_insertion_point(outer_class_scope)

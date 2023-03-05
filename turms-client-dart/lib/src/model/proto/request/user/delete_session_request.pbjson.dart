@@ -10,7 +10,7 @@ import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
 
 @$core.Deprecated('Use deleteSessionRequestDescriptor instead')
-const DeleteSessionRequest$json = {
+const DeleteSessionRequest$json = const {
   '1': 'DeleteSessionRequest',
 };
 

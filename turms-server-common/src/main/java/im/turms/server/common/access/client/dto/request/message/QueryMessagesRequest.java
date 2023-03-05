@@ -46,12 +46,6 @@ public final class QueryMessagesRequest extends
         return new QueryMessagesRequest();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-        return this.unknownFields;
-    }
-
     public static final com.google.protobuf.Descriptors.Descriptor
     getDescriptor() {
         return im.turms.server.common.access.client.dto.request.message.QueryMessagesRequestOuterClass.internal_static_im_turms_proto_QueryMessagesRequest_descriptor;
@@ -62,15 +56,19 @@ public final class QueryMessagesRequest extends
     internalGetFieldAccessorTable() {
         return im.turms.server.common.access.client.dto.request.message.QueryMessagesRequestOuterClass.internal_static_im_turms_proto_QueryMessagesRequest_fieldAccessorTable
                 .ensureFieldAccessorsInitialized(
-                        im.turms.server.common.access.client.dto.request.message.QueryMessagesRequest.class,
-                        im.turms.server.common.access.client.dto.request.message.QueryMessagesRequest.Builder.class);
+                        im.turms.server.common.access.client.dto.request.message.QueryMessagesRequest.class, im.turms.server.common.access.client.dto.request.message.QueryMessagesRequest.Builder.class);
     }
 
     private int bitField0_;
     public static final int IDS_FIELD_NUMBER = 1;
+    @SuppressWarnings("serial")
     private com.google.protobuf.Internal.LongList ids_;
 
     /**
+     * <pre>
+     * Filter
+     * </pre>
+     *
      * <code>repeated int64 ids = 1;</code>
      *
      * @return A list containing the ids.
@@ -82,6 +80,10 @@ public final class QueryMessagesRequest extends
     }
 
     /**
+     * <pre>
+     * Filter
+     * </pre>
+     *
      * <code>repeated int64 ids = 1;</code>
      *
      * @return The count of ids.
@@ -91,6 +93,10 @@ public final class QueryMessagesRequest extends
     }
 
     /**
+     * <pre>
+     * Filter
+     * </pre>
+     *
      * <code>repeated int64 ids = 1;</code>
      *
      * @param index The index of the element to return.
@@ -103,7 +109,7 @@ public final class QueryMessagesRequest extends
     private int idsMemoizedSerializedSize = -1;
 
     public static final int ARE_GROUP_MESSAGES_FIELD_NUMBER = 2;
-    private boolean areGroupMessages_;
+    private boolean areGroupMessages_ = false;
 
     /**
      * <code>optional bool are_group_messages = 2;</code>
@@ -126,7 +132,7 @@ public final class QueryMessagesRequest extends
     }
 
     public static final int ARE_SYSTEM_MESSAGES_FIELD_NUMBER = 3;
-    private boolean areSystemMessages_;
+    private boolean areSystemMessages_ = false;
 
     /**
      * <code>optional bool are_system_messages = 3;</code>
@@ -149,6 +155,7 @@ public final class QueryMessagesRequest extends
     }
 
     public static final int FROM_IDS_FIELD_NUMBER = 4;
+    @SuppressWarnings("serial")
     private com.google.protobuf.Internal.LongList fromIds_;
 
     /**
@@ -183,56 +190,60 @@ public final class QueryMessagesRequest extends
 
     private int fromIdsMemoizedSerializedSize = -1;
 
-    public static final int DELIVERY_DATE_AFTER_FIELD_NUMBER = 5;
-    private long deliveryDateAfter_;
+    public static final int DELIVERY_DATE_START_FIELD_NUMBER = 5;
+    private long deliveryDateStart_ = 0L;
 
     /**
-     * <code>optional int64 delivery_date_after = 5;</code>
+     * <code>optional int64 delivery_date_start = 5;</code>
      *
-     * @return Whether the deliveryDateAfter field is set.
+     * @return Whether the deliveryDateStart field is set.
      */
     @java.lang.Override
-    public boolean hasDeliveryDateAfter() {
+    public boolean hasDeliveryDateStart() {
         return ((bitField0_ & 0x00000004) != 0);
     }
 
     /**
-     * <code>optional int64 delivery_date_after = 5;</code>
+     * <code>optional int64 delivery_date_start = 5;</code>
      *
-     * @return The deliveryDateAfter.
+     * @return The deliveryDateStart.
      */
     @java.lang.Override
-    public long getDeliveryDateAfter() {
-        return deliveryDateAfter_;
+    public long getDeliveryDateStart() {
+        return deliveryDateStart_;
     }
 
-    public static final int DELIVERY_DATE_BEFORE_FIELD_NUMBER = 6;
-    private long deliveryDateBefore_;
+    public static final int DELIVERY_DATE_END_FIELD_NUMBER = 6;
+    private long deliveryDateEnd_ = 0L;
 
     /**
-     * <code>optional int64 delivery_date_before = 6;</code>
+     * <code>optional int64 delivery_date_end = 6;</code>
      *
-     * @return Whether the deliveryDateBefore field is set.
+     * @return Whether the deliveryDateEnd field is set.
      */
     @java.lang.Override
-    public boolean hasDeliveryDateBefore() {
+    public boolean hasDeliveryDateEnd() {
         return ((bitField0_ & 0x00000008) != 0);
     }
 
     /**
-     * <code>optional int64 delivery_date_before = 6;</code>
+     * <code>optional int64 delivery_date_end = 6;</code>
      *
-     * @return The deliveryDateBefore.
+     * @return The deliveryDateEnd.
      */
     @java.lang.Override
-    public long getDeliveryDateBefore() {
-        return deliveryDateBefore_;
+    public long getDeliveryDateEnd() {
+        return deliveryDateEnd_;
     }
 
     public static final int MAX_COUNT_FIELD_NUMBER = 7;
-    private int maxCount_;
+    private int maxCount_ = 0;
 
     /**
+     * <pre>
+     * Option
+     * </pre>
+     *
      * <code>optional int32 max_count = 7;</code>
      *
      * @return Whether the maxCount field is set.
@@ -243,6 +254,10 @@ public final class QueryMessagesRequest extends
     }
 
     /**
+     * <pre>
+     * Option
+     * </pre>
+     *
      * <code>optional int32 max_count = 7;</code>
      *
      * @return The maxCount.
@@ -253,9 +268,13 @@ public final class QueryMessagesRequest extends
     }
 
     public static final int WITH_TOTAL_FIELD_NUMBER = 8;
-    private boolean withTotal_;
+    private boolean withTotal_ = false;
 
     /**
+     * <pre>
+     * Command
+     * </pre>
+     *
      * <code>bool with_total = 8;</code>
      *
      * @return The withTotal.
@@ -263,6 +282,39 @@ public final class QueryMessagesRequest extends
     @java.lang.Override
     public boolean getWithTotal() {
         return withTotal_;
+    }
+
+    public static final int DESCENDING_FIELD_NUMBER = 9;
+    private boolean descending_ = false;
+
+    /**
+     * <pre>
+     * Option
+     * TODO: reorder
+     * </pre>
+     *
+     * <code>optional bool descending = 9;</code>
+     *
+     * @return Whether the descending field is set.
+     */
+    @java.lang.Override
+    public boolean hasDescending() {
+        return ((bitField0_ & 0x00000020) != 0);
+    }
+
+    /**
+     * <pre>
+     * Option
+     * TODO: reorder
+     * </pre>
+     *
+     * <code>optional bool descending = 9;</code>
+     *
+     * @return The descending.
+     */
+    @java.lang.Override
+    public boolean getDescending() {
+        return descending_;
     }
 
     private byte memoizedIsInitialized = -1;
@@ -306,16 +358,19 @@ public final class QueryMessagesRequest extends
             output.writeInt64NoTag(fromIds_.getLong(i));
         }
         if (((bitField0_ & 0x00000004) != 0)) {
-            output.writeInt64(5, deliveryDateAfter_);
+            output.writeInt64(5, deliveryDateStart_);
         }
         if (((bitField0_ & 0x00000008) != 0)) {
-            output.writeInt64(6, deliveryDateBefore_);
+            output.writeInt64(6, deliveryDateEnd_);
         }
         if (((bitField0_ & 0x00000010) != 0)) {
             output.writeInt32(7, maxCount_);
         }
-        if (withTotal_ != false) {
+        if (withTotal_) {
             output.writeBool(8, withTotal_);
+        }
+        if (((bitField0_ & 0x00000020) != 0)) {
+            output.writeBool(9, descending_);
         }
         getUnknownFields().writeTo(output);
     }
@@ -366,19 +421,23 @@ public final class QueryMessagesRequest extends
         }
         if (((bitField0_ & 0x00000004) != 0)) {
             size += com.google.protobuf.CodedOutputStream
-                    .computeInt64Size(5, deliveryDateAfter_);
+                    .computeInt64Size(5, deliveryDateStart_);
         }
         if (((bitField0_ & 0x00000008) != 0)) {
             size += com.google.protobuf.CodedOutputStream
-                    .computeInt64Size(6, deliveryDateBefore_);
+                    .computeInt64Size(6, deliveryDateEnd_);
         }
         if (((bitField0_ & 0x00000010) != 0)) {
             size += com.google.protobuf.CodedOutputStream
                     .computeInt32Size(7, maxCount_);
         }
-        if (withTotal_ != false) {
+        if (withTotal_) {
             size += com.google.protobuf.CodedOutputStream
                     .computeBoolSize(8, withTotal_);
+        }
+        if (((bitField0_ & 0x00000020) != 0)) {
+            size += com.google.protobuf.CodedOutputStream
+                    .computeBoolSize(9, descending_);
         }
         size += getUnknownFields().getSerializedSize();
         memoizedSize = size;
@@ -390,10 +449,9 @@ public final class QueryMessagesRequest extends
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof im.turms.server.common.access.client.dto.request.message.QueryMessagesRequest)) {
+        if (!(obj instanceof QueryMessagesRequest other)) {
             return super.equals(obj);
         }
-        im.turms.server.common.access.client.dto.request.message.QueryMessagesRequest other = (im.turms.server.common.access.client.dto.request.message.QueryMessagesRequest) obj;
 
         if (!getIdsList()
                 .equals(other.getIdsList())) {
@@ -421,21 +479,21 @@ public final class QueryMessagesRequest extends
                 .equals(other.getFromIdsList())) {
             return false;
         }
-        if (hasDeliveryDateAfter() != other.hasDeliveryDateAfter()) {
+        if (hasDeliveryDateStart() != other.hasDeliveryDateStart()) {
             return false;
         }
-        if (hasDeliveryDateAfter()) {
-            if (getDeliveryDateAfter()
-                != other.getDeliveryDateAfter()) {
+        if (hasDeliveryDateStart()) {
+            if (getDeliveryDateStart()
+                != other.getDeliveryDateStart()) {
                 return false;
             }
         }
-        if (hasDeliveryDateBefore() != other.hasDeliveryDateBefore()) {
+        if (hasDeliveryDateEnd() != other.hasDeliveryDateEnd()) {
             return false;
         }
-        if (hasDeliveryDateBefore()) {
-            if (getDeliveryDateBefore()
-                != other.getDeliveryDateBefore()) {
+        if (hasDeliveryDateEnd()) {
+            if (getDeliveryDateEnd()
+                != other.getDeliveryDateEnd()) {
                 return false;
             }
         }
@@ -452,10 +510,16 @@ public final class QueryMessagesRequest extends
             != other.getWithTotal()) {
             return false;
         }
-        if (!getUnknownFields().equals(other.getUnknownFields())) {
+        if (hasDescending() != other.hasDescending()) {
             return false;
         }
-        return true;
+        if (hasDescending()) {
+            if (getDescending()
+                != other.getDescending()) {
+                return false;
+            }
+        }
+        return getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -483,15 +547,15 @@ public final class QueryMessagesRequest extends
             hash = (37 * hash) + FROM_IDS_FIELD_NUMBER;
             hash = (53 * hash) + getFromIdsList().hashCode();
         }
-        if (hasDeliveryDateAfter()) {
-            hash = (37 * hash) + DELIVERY_DATE_AFTER_FIELD_NUMBER;
+        if (hasDeliveryDateStart()) {
+            hash = (37 * hash) + DELIVERY_DATE_START_FIELD_NUMBER;
             hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-                    getDeliveryDateAfter());
+                    getDeliveryDateStart());
         }
-        if (hasDeliveryDateBefore()) {
-            hash = (37 * hash) + DELIVERY_DATE_BEFORE_FIELD_NUMBER;
+        if (hasDeliveryDateEnd()) {
+            hash = (37 * hash) + DELIVERY_DATE_END_FIELD_NUMBER;
             hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-                    getDeliveryDateBefore());
+                    getDeliveryDateEnd());
         }
         if (hasMaxCount()) {
             hash = (37 * hash) + MAX_COUNT_FIELD_NUMBER;
@@ -500,6 +564,11 @@ public final class QueryMessagesRequest extends
         hash = (37 * hash) + WITH_TOTAL_FIELD_NUMBER;
         hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
                 getWithTotal());
+        if (hasDescending()) {
+            hash = (37 * hash) + DESCENDING_FIELD_NUMBER;
+            hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+                    getDescending());
+        }
         hash = (29 * hash) + getUnknownFields().hashCode();
         memoizedHashCode = hash;
         return hash;
@@ -608,8 +677,7 @@ public final class QueryMessagesRequest extends
     @java.lang.Override
     protected Builder newBuilderForType(
             com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
+        return new Builder(parent);
     }
 
     /**
@@ -629,8 +697,7 @@ public final class QueryMessagesRequest extends
         internalGetFieldAccessorTable() {
             return im.turms.server.common.access.client.dto.request.message.QueryMessagesRequestOuterClass.internal_static_im_turms_proto_QueryMessagesRequest_fieldAccessorTable
                     .ensureFieldAccessorsInitialized(
-                            im.turms.server.common.access.client.dto.request.message.QueryMessagesRequest.class,
-                            im.turms.server.common.access.client.dto.request.message.QueryMessagesRequest.Builder.class);
+                            im.turms.server.common.access.client.dto.request.message.QueryMessagesRequest.class, im.turms.server.common.access.client.dto.request.message.QueryMessagesRequest.Builder.class);
         }
 
         // Construct using im.turms.server.common.access.client.dto.request.message.QueryMessagesRequest.newBuilder()
@@ -647,22 +714,16 @@ public final class QueryMessagesRequest extends
         @java.lang.Override
         public Builder clear() {
             super.clear();
+            bitField0_ = 0;
             ids_ = emptyLongList();
-            bitField0_ = (bitField0_ & ~0x00000001);
             areGroupMessages_ = false;
-            bitField0_ = (bitField0_ & ~0x00000002);
             areSystemMessages_ = false;
-            bitField0_ = (bitField0_ & ~0x00000004);
             fromIds_ = emptyLongList();
-            bitField0_ = (bitField0_ & ~0x00000008);
-            deliveryDateAfter_ = 0L;
-            bitField0_ = (bitField0_ & ~0x00000010);
-            deliveryDateBefore_ = 0L;
-            bitField0_ = (bitField0_ & ~0x00000020);
+            deliveryDateStart_ = 0L;
+            deliveryDateEnd_ = 0L;
             maxCount_ = 0;
-            bitField0_ = (bitField0_ & ~0x00000040);
             withTotal_ = false;
-
+            descending_ = false;
             return this;
         }
 
@@ -689,13 +750,30 @@ public final class QueryMessagesRequest extends
         @java.lang.Override
         public im.turms.server.common.access.client.dto.request.message.QueryMessagesRequest buildPartial() {
             im.turms.server.common.access.client.dto.request.message.QueryMessagesRequest result = new im.turms.server.common.access.client.dto.request.message.QueryMessagesRequest(this);
-            int from_bitField0_ = bitField0_;
-            int to_bitField0_ = 0;
+            buildPartialRepeatedFields(result);
+            if (bitField0_ != 0) {
+                buildPartial0(result);
+            }
+            onBuilt();
+            return result;
+        }
+
+        private void buildPartialRepeatedFields(im.turms.server.common.access.client.dto.request.message.QueryMessagesRequest result) {
             if (((bitField0_ & 0x00000001) != 0)) {
                 ids_.makeImmutable();
-                bitField0_ = (bitField0_ & ~0x00000001);
+                bitField0_ &= ~0x00000001;
             }
             result.ids_ = ids_;
+            if (((bitField0_ & 0x00000008) != 0)) {
+                fromIds_.makeImmutable();
+                bitField0_ &= ~0x00000008;
+            }
+            result.fromIds_ = fromIds_;
+        }
+
+        private void buildPartial0(im.turms.server.common.access.client.dto.request.message.QueryMessagesRequest result) {
+            int from_bitField0_ = bitField0_;
+            int to_bitField0_ = 0;
             if (((from_bitField0_ & 0x00000002) != 0)) {
                 result.areGroupMessages_ = areGroupMessages_;
                 to_bitField0_ |= 0x00000001;
@@ -704,65 +782,26 @@ public final class QueryMessagesRequest extends
                 result.areSystemMessages_ = areSystemMessages_;
                 to_bitField0_ |= 0x00000002;
             }
-            if (((bitField0_ & 0x00000008) != 0)) {
-                fromIds_.makeImmutable();
-                bitField0_ = (bitField0_ & ~0x00000008);
-            }
-            result.fromIds_ = fromIds_;
             if (((from_bitField0_ & 0x00000010) != 0)) {
-                result.deliveryDateAfter_ = deliveryDateAfter_;
+                result.deliveryDateStart_ = deliveryDateStart_;
                 to_bitField0_ |= 0x00000004;
             }
             if (((from_bitField0_ & 0x00000020) != 0)) {
-                result.deliveryDateBefore_ = deliveryDateBefore_;
+                result.deliveryDateEnd_ = deliveryDateEnd_;
                 to_bitField0_ |= 0x00000008;
             }
             if (((from_bitField0_ & 0x00000040) != 0)) {
                 result.maxCount_ = maxCount_;
                 to_bitField0_ |= 0x00000010;
             }
-            result.withTotal_ = withTotal_;
-            result.bitField0_ = to_bitField0_;
-            onBuilt();
-            return result;
-        }
-
-        @java.lang.Override
-        public Builder clone() {
-            return super.clone();
-        }
-
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(
-                com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(
-                com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index, java.lang.Object value) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.addRepeatedField(field, value);
+            if (((from_bitField0_ & 0x00000080) != 0)) {
+                result.withTotal_ = withTotal_;
+            }
+            if (((from_bitField0_ & 0x00000100) != 0)) {
+                result.descending_ = descending_;
+                to_bitField0_ |= 0x00000020;
+            }
+            result.bitField0_ |= to_bitField0_;
         }
 
         @java.lang.Override
@@ -782,7 +821,7 @@ public final class QueryMessagesRequest extends
             if (!other.ids_.isEmpty()) {
                 if (ids_.isEmpty()) {
                     ids_ = other.ids_;
-                    bitField0_ = (bitField0_ & ~0x00000001);
+                    bitField0_ &= ~0x00000001;
                 } else {
                     ensureIdsIsMutable();
                     ids_.addAll(other.ids_);
@@ -798,24 +837,27 @@ public final class QueryMessagesRequest extends
             if (!other.fromIds_.isEmpty()) {
                 if (fromIds_.isEmpty()) {
                     fromIds_ = other.fromIds_;
-                    bitField0_ = (bitField0_ & ~0x00000008);
+                    bitField0_ &= ~0x00000008;
                 } else {
                     ensureFromIdsIsMutable();
                     fromIds_.addAll(other.fromIds_);
                 }
                 onChanged();
             }
-            if (other.hasDeliveryDateAfter()) {
-                setDeliveryDateAfter(other.getDeliveryDateAfter());
+            if (other.hasDeliveryDateStart()) {
+                setDeliveryDateStart(other.getDeliveryDateStart());
             }
-            if (other.hasDeliveryDateBefore()) {
-                setDeliveryDateBefore(other.getDeliveryDateBefore());
+            if (other.hasDeliveryDateEnd()) {
+                setDeliveryDateEnd(other.getDeliveryDateEnd());
             }
             if (other.hasMaxCount()) {
                 setMaxCount(other.getMaxCount());
             }
-            if (other.getWithTotal() != false) {
+            if (other.getWithTotal()) {
                 setWithTotal(other.getWithTotal());
+            }
+            if (other.hasDescending()) {
+                setDescending(other.getDescending());
             }
             this.mergeUnknownFields(other.getUnknownFields());
             onChanged();
@@ -840,16 +882,13 @@ public final class QueryMessagesRequest extends
                 while (!done) {
                     int tag = input.readTag();
                     switch (tag) {
-                        case 0:
-                            done = true;
-                            break;
-                        case 8: {
+                        case 0 -> done = true;
+                        case 8 -> {
                             long v = input.readInt64();
                             ensureIdsIsMutable();
                             ids_.addLong(v);
-                            break;
                         } // case 8
-                        case 10: {
+                        case 10 -> {
                             int length = input.readRawVarint32();
                             int limit = input.pushLimit(length);
                             ensureIdsIsMutable();
@@ -857,25 +896,21 @@ public final class QueryMessagesRequest extends
                                 ids_.addLong(input.readInt64());
                             }
                             input.popLimit(limit);
-                            break;
                         } // case 10
-                        case 16: {
+                        case 16 -> {
                             areGroupMessages_ = input.readBool();
                             bitField0_ |= 0x00000002;
-                            break;
                         } // case 16
-                        case 24: {
+                        case 24 -> {
                             areSystemMessages_ = input.readBool();
                             bitField0_ |= 0x00000004;
-                            break;
                         } // case 24
-                        case 32: {
+                        case 32 -> {
                             long v = input.readInt64();
                             ensureFromIdsIsMutable();
                             fromIds_.addLong(v);
-                            break;
                         } // case 32
-                        case 34: {
+                        case 34 -> {
                             int length = input.readRawVarint32();
                             int limit = input.pushLimit(length);
                             ensureFromIdsIsMutable();
@@ -883,33 +918,31 @@ public final class QueryMessagesRequest extends
                                 fromIds_.addLong(input.readInt64());
                             }
                             input.popLimit(limit);
-                            break;
                         } // case 34
-                        case 40: {
-                            deliveryDateAfter_ = input.readInt64();
+                        case 40 -> {
+                            deliveryDateStart_ = input.readInt64();
                             bitField0_ |= 0x00000010;
-                            break;
                         } // case 40
-                        case 48: {
-                            deliveryDateBefore_ = input.readInt64();
+                        case 48 -> {
+                            deliveryDateEnd_ = input.readInt64();
                             bitField0_ |= 0x00000020;
-                            break;
                         } // case 48
-                        case 56: {
+                        case 56 -> {
                             maxCount_ = input.readInt32();
                             bitField0_ |= 0x00000040;
-                            break;
                         } // case 56
-                        case 64: {
+                        case 64 -> {
                             withTotal_ = input.readBool();
-
-                            break;
+                            bitField0_ |= 0x00000080;
                         } // case 64
-                        default: {
+                        case 72 -> {
+                            descending_ = input.readBool();
+                            bitField0_ |= 0x00000100;
+                        } // case 72
+                        default -> {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
                             }
-                            break;
                         } // default:
                     } // switch (tag)
                 } // while (!done)
@@ -926,13 +959,17 @@ public final class QueryMessagesRequest extends
         private com.google.protobuf.Internal.LongList ids_ = emptyLongList();
 
         private void ensureIdsIsMutable() {
-            if (!((bitField0_ & 0x00000001) != 0)) {
+            if ((bitField0_ & 0x00000001) == 0) {
                 ids_ = mutableCopy(ids_);
                 bitField0_ |= 0x00000001;
             }
         }
 
         /**
+         * <pre>
+         * Filter
+         * </pre>
+         *
          * <code>repeated int64 ids = 1;</code>
          *
          * @return A list containing the ids.
@@ -944,6 +981,10 @@ public final class QueryMessagesRequest extends
         }
 
         /**
+         * <pre>
+         * Filter
+         * </pre>
+         *
          * <code>repeated int64 ids = 1;</code>
          *
          * @return The count of ids.
@@ -953,6 +994,10 @@ public final class QueryMessagesRequest extends
         }
 
         /**
+         * <pre>
+         * Filter
+         * </pre>
+         *
          * <code>repeated int64 ids = 1;</code>
          *
          * @param index The index of the element to return.
@@ -963,6 +1008,10 @@ public final class QueryMessagesRequest extends
         }
 
         /**
+         * <pre>
+         * Filter
+         * </pre>
+         *
          * <code>repeated int64 ids = 1;</code>
          *
          * @param index The index to set the value at.
@@ -971,6 +1020,7 @@ public final class QueryMessagesRequest extends
          */
         public Builder setIds(
                 int index, long value) {
+
             ensureIdsIsMutable();
             ids_.setLong(index, value);
             onChanged();
@@ -978,12 +1028,17 @@ public final class QueryMessagesRequest extends
         }
 
         /**
+         * <pre>
+         * Filter
+         * </pre>
+         *
          * <code>repeated int64 ids = 1;</code>
          *
          * @param value The ids to add.
          * @return This builder for chaining.
          */
         public Builder addIds(long value) {
+
             ensureIdsIsMutable();
             ids_.addLong(value);
             onChanged();
@@ -991,6 +1046,10 @@ public final class QueryMessagesRequest extends
         }
 
         /**
+         * <pre>
+         * Filter
+         * </pre>
+         *
          * <code>repeated int64 ids = 1;</code>
          *
          * @param values The ids to add.
@@ -1006,13 +1065,17 @@ public final class QueryMessagesRequest extends
         }
 
         /**
+         * <pre>
+         * Filter
+         * </pre>
+         *
          * <code>repeated int64 ids = 1;</code>
          *
          * @return This builder for chaining.
          */
         public Builder clearIds() {
             ids_ = emptyLongList();
-            bitField0_ = (bitField0_ & ~0x00000001);
+            bitField0_ &= ~0x00000001;
             onChanged();
             return this;
         }
@@ -1046,8 +1109,9 @@ public final class QueryMessagesRequest extends
          * @return This builder for chaining.
          */
         public Builder setAreGroupMessages(boolean value) {
-            bitField0_ |= 0x00000002;
+
             areGroupMessages_ = value;
+            bitField0_ |= 0x00000002;
             onChanged();
             return this;
         }
@@ -1058,7 +1122,7 @@ public final class QueryMessagesRequest extends
          * @return This builder for chaining.
          */
         public Builder clearAreGroupMessages() {
-            bitField0_ = (bitField0_ & ~0x00000002);
+            bitField0_ &= ~0x00000002;
             areGroupMessages_ = false;
             onChanged();
             return this;
@@ -1093,8 +1157,9 @@ public final class QueryMessagesRequest extends
          * @return This builder for chaining.
          */
         public Builder setAreSystemMessages(boolean value) {
-            bitField0_ |= 0x00000004;
+
             areSystemMessages_ = value;
+            bitField0_ |= 0x00000004;
             onChanged();
             return this;
         }
@@ -1105,7 +1170,7 @@ public final class QueryMessagesRequest extends
          * @return This builder for chaining.
          */
         public Builder clearAreSystemMessages() {
-            bitField0_ = (bitField0_ & ~0x00000004);
+            bitField0_ &= ~0x00000004;
             areSystemMessages_ = false;
             onChanged();
             return this;
@@ -1114,7 +1179,7 @@ public final class QueryMessagesRequest extends
         private com.google.protobuf.Internal.LongList fromIds_ = emptyLongList();
 
         private void ensureFromIdsIsMutable() {
-            if (!((bitField0_ & 0x00000008) != 0)) {
+            if ((bitField0_ & 0x00000008) == 0) {
                 fromIds_ = mutableCopy(fromIds_);
                 bitField0_ |= 0x00000008;
             }
@@ -1159,6 +1224,7 @@ public final class QueryMessagesRequest extends
          */
         public Builder setFromIds(
                 int index, long value) {
+
             ensureFromIdsIsMutable();
             fromIds_.setLong(index, value);
             onChanged();
@@ -1172,6 +1238,7 @@ public final class QueryMessagesRequest extends
          * @return This builder for chaining.
          */
         public Builder addFromIds(long value) {
+
             ensureFromIdsIsMutable();
             fromIds_.addLong(value);
             onChanged();
@@ -1200,101 +1267,103 @@ public final class QueryMessagesRequest extends
          */
         public Builder clearFromIds() {
             fromIds_ = emptyLongList();
-            bitField0_ = (bitField0_ & ~0x00000008);
+            bitField0_ &= ~0x00000008;
             onChanged();
             return this;
         }
 
-        private long deliveryDateAfter_;
+        private long deliveryDateStart_;
 
         /**
-         * <code>optional int64 delivery_date_after = 5;</code>
+         * <code>optional int64 delivery_date_start = 5;</code>
          *
-         * @return Whether the deliveryDateAfter field is set.
+         * @return Whether the deliveryDateStart field is set.
          */
         @java.lang.Override
-        public boolean hasDeliveryDateAfter() {
+        public boolean hasDeliveryDateStart() {
             return ((bitField0_ & 0x00000010) != 0);
         }
 
         /**
-         * <code>optional int64 delivery_date_after = 5;</code>
+         * <code>optional int64 delivery_date_start = 5;</code>
          *
-         * @return The deliveryDateAfter.
+         * @return The deliveryDateStart.
          */
         @java.lang.Override
-        public long getDeliveryDateAfter() {
-            return deliveryDateAfter_;
+        public long getDeliveryDateStart() {
+            return deliveryDateStart_;
         }
 
         /**
-         * <code>optional int64 delivery_date_after = 5;</code>
+         * <code>optional int64 delivery_date_start = 5;</code>
          *
-         * @param value The deliveryDateAfter to set.
+         * @param value The deliveryDateStart to set.
          * @return This builder for chaining.
          */
-        public Builder setDeliveryDateAfter(long value) {
+        public Builder setDeliveryDateStart(long value) {
+
+            deliveryDateStart_ = value;
             bitField0_ |= 0x00000010;
-            deliveryDateAfter_ = value;
             onChanged();
             return this;
         }
 
         /**
-         * <code>optional int64 delivery_date_after = 5;</code>
+         * <code>optional int64 delivery_date_start = 5;</code>
          *
          * @return This builder for chaining.
          */
-        public Builder clearDeliveryDateAfter() {
-            bitField0_ = (bitField0_ & ~0x00000010);
-            deliveryDateAfter_ = 0L;
+        public Builder clearDeliveryDateStart() {
+            bitField0_ &= ~0x00000010;
+            deliveryDateStart_ = 0L;
             onChanged();
             return this;
         }
 
-        private long deliveryDateBefore_;
+        private long deliveryDateEnd_;
 
         /**
-         * <code>optional int64 delivery_date_before = 6;</code>
+         * <code>optional int64 delivery_date_end = 6;</code>
          *
-         * @return Whether the deliveryDateBefore field is set.
+         * @return Whether the deliveryDateEnd field is set.
          */
         @java.lang.Override
-        public boolean hasDeliveryDateBefore() {
+        public boolean hasDeliveryDateEnd() {
             return ((bitField0_ & 0x00000020) != 0);
         }
 
         /**
-         * <code>optional int64 delivery_date_before = 6;</code>
+         * <code>optional int64 delivery_date_end = 6;</code>
          *
-         * @return The deliveryDateBefore.
+         * @return The deliveryDateEnd.
          */
         @java.lang.Override
-        public long getDeliveryDateBefore() {
-            return deliveryDateBefore_;
+        public long getDeliveryDateEnd() {
+            return deliveryDateEnd_;
         }
 
         /**
-         * <code>optional int64 delivery_date_before = 6;</code>
+         * <code>optional int64 delivery_date_end = 6;</code>
          *
-         * @param value The deliveryDateBefore to set.
+         * @param value The deliveryDateEnd to set.
          * @return This builder for chaining.
          */
-        public Builder setDeliveryDateBefore(long value) {
+        public Builder setDeliveryDateEnd(long value) {
+
+            deliveryDateEnd_ = value;
             bitField0_ |= 0x00000020;
-            deliveryDateBefore_ = value;
             onChanged();
             return this;
         }
 
         /**
-         * <code>optional int64 delivery_date_before = 6;</code>
+         * <code>optional int64 delivery_date_end = 6;</code>
          *
          * @return This builder for chaining.
          */
-        public Builder clearDeliveryDateBefore() {
-            bitField0_ = (bitField0_ & ~0x00000020);
-            deliveryDateBefore_ = 0L;
+        public Builder clearDeliveryDateEnd() {
+            bitField0_ &= ~0x00000020;
+            deliveryDateEnd_ = 0L;
             onChanged();
             return this;
         }
@@ -1302,6 +1371,10 @@ public final class QueryMessagesRequest extends
         private int maxCount_;
 
         /**
+         * <pre>
+         * Option
+         * </pre>
+         *
          * <code>optional int32 max_count = 7;</code>
          *
          * @return Whether the maxCount field is set.
@@ -1312,6 +1385,10 @@ public final class QueryMessagesRequest extends
         }
 
         /**
+         * <pre>
+         * Option
+         * </pre>
+         *
          * <code>optional int32 max_count = 7;</code>
          *
          * @return The maxCount.
@@ -1322,25 +1399,34 @@ public final class QueryMessagesRequest extends
         }
 
         /**
+         * <pre>
+         * Option
+         * </pre>
+         *
          * <code>optional int32 max_count = 7;</code>
          *
          * @param value The maxCount to set.
          * @return This builder for chaining.
          */
         public Builder setMaxCount(int value) {
-            bitField0_ |= 0x00000040;
+
             maxCount_ = value;
+            bitField0_ |= 0x00000040;
             onChanged();
             return this;
         }
 
         /**
+         * <pre>
+         * Option
+         * </pre>
+         *
          * <code>optional int32 max_count = 7;</code>
          *
          * @return This builder for chaining.
          */
         public Builder clearMaxCount() {
-            bitField0_ = (bitField0_ & ~0x00000040);
+            bitField0_ &= ~0x00000040;
             maxCount_ = 0;
             onChanged();
             return this;
@@ -1349,6 +1435,10 @@ public final class QueryMessagesRequest extends
         private boolean withTotal_;
 
         /**
+         * <pre>
+         * Command
+         * </pre>
+         *
          * <code>bool with_total = 8;</code>
          *
          * @return The withTotal.
@@ -1359,6 +1449,10 @@ public final class QueryMessagesRequest extends
         }
 
         /**
+         * <pre>
+         * Command
+         * </pre>
+         *
          * <code>bool with_total = 8;</code>
          *
          * @param value The withTotal to set.
@@ -1367,18 +1461,91 @@ public final class QueryMessagesRequest extends
         public Builder setWithTotal(boolean value) {
 
             withTotal_ = value;
+            bitField0_ |= 0x00000080;
             onChanged();
             return this;
         }
 
         /**
+         * <pre>
+         * Command
+         * </pre>
+         *
          * <code>bool with_total = 8;</code>
          *
          * @return This builder for chaining.
          */
         public Builder clearWithTotal() {
-
+            bitField0_ &= ~0x00000080;
             withTotal_ = false;
+            onChanged();
+            return this;
+        }
+
+        private boolean descending_;
+
+        /**
+         * <pre>
+         * Option
+         * TODO: reorder
+         * </pre>
+         *
+         * <code>optional bool descending = 9;</code>
+         *
+         * @return Whether the descending field is set.
+         */
+        @java.lang.Override
+        public boolean hasDescending() {
+            return ((bitField0_ & 0x00000100) != 0);
+        }
+
+        /**
+         * <pre>
+         * Option
+         * TODO: reorder
+         * </pre>
+         *
+         * <code>optional bool descending = 9;</code>
+         *
+         * @return The descending.
+         */
+        @java.lang.Override
+        public boolean getDescending() {
+            return descending_;
+        }
+
+        /**
+         * <pre>
+         * Option
+         * TODO: reorder
+         * </pre>
+         *
+         * <code>optional bool descending = 9;</code>
+         *
+         * @param value The descending to set.
+         * @return This builder for chaining.
+         */
+        public Builder setDescending(boolean value) {
+
+            descending_ = value;
+            bitField0_ |= 0x00000100;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * Option
+         * TODO: reorder
+         * </pre>
+         *
+         * <code>optional bool descending = 9;</code>
+         *
+         * @return This builder for chaining.
+         */
+        public Builder clearDescending() {
+            bitField0_ &= ~0x00000100;
+            descending_ = false;
             onChanged();
             return this;
         }
@@ -1411,7 +1578,7 @@ public final class QueryMessagesRequest extends
     }
 
     private static final com.google.protobuf.Parser<QueryMessagesRequest>
-            PARSER = new com.google.protobuf.AbstractParser<QueryMessagesRequest>() {
+            PARSER = new com.google.protobuf.AbstractParser<>() {
         @java.lang.Override
         public QueryMessagesRequest parsePartialFrom(
                 com.google.protobuf.CodedInputStream input,

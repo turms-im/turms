@@ -45,12 +45,6 @@ public final class StorageResourceInfos extends
         return new StorageResourceInfos();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-        return this.unknownFields;
-    }
-
     public static final com.google.protobuf.Descriptors.Descriptor
     getDescriptor() {
         return im.turms.server.common.access.client.dto.model.storage.StorageResourceInfosOuterClass.internal_static_im_turms_proto_StorageResourceInfos_descriptor;
@@ -65,6 +59,7 @@ public final class StorageResourceInfos extends
     }
 
     public static final int INFOS_FIELD_NUMBER = 1;
+    @SuppressWarnings("serial")
     private java.util.List<im.turms.server.common.access.client.dto.model.storage.StorageResourceInfo> infos_;
 
     /**
@@ -128,8 +123,8 @@ public final class StorageResourceInfos extends
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
             throws java.io.IOException {
-        for (int i = 0; i < infos_.size(); i++) {
-            output.writeMessage(1, infos_.get(i));
+        for (StorageResourceInfo storageResourceInfo : infos_) {
+            output.writeMessage(1, storageResourceInfo);
         }
         getUnknownFields().writeTo(output);
     }
@@ -142,9 +137,9 @@ public final class StorageResourceInfos extends
         }
 
         size = 0;
-        for (int i = 0; i < infos_.size(); i++) {
+        for (StorageResourceInfo storageResourceInfo : infos_) {
             size += com.google.protobuf.CodedOutputStream
-                    .computeMessageSize(1, infos_.get(i));
+                    .computeMessageSize(1, storageResourceInfo);
         }
         size += getUnknownFields().getSerializedSize();
         memoizedSize = size;
@@ -156,19 +151,15 @@ public final class StorageResourceInfos extends
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof im.turms.server.common.access.client.dto.model.storage.StorageResourceInfos)) {
+        if (!(obj instanceof StorageResourceInfos other)) {
             return super.equals(obj);
         }
-        im.turms.server.common.access.client.dto.model.storage.StorageResourceInfos other = (im.turms.server.common.access.client.dto.model.storage.StorageResourceInfos) obj;
 
         if (!getInfosList()
                 .equals(other.getInfosList())) {
             return false;
         }
-        if (!getUnknownFields().equals(other.getUnknownFields())) {
-            return false;
-        }
-        return true;
+        return getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -290,8 +281,7 @@ public final class StorageResourceInfos extends
     @java.lang.Override
     protected Builder newBuilderForType(
             com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
+        return new Builder(parent);
     }
 
     /**
@@ -311,8 +301,7 @@ public final class StorageResourceInfos extends
         internalGetFieldAccessorTable() {
             return im.turms.server.common.access.client.dto.model.storage.StorageResourceInfosOuterClass.internal_static_im_turms_proto_StorageResourceInfos_fieldAccessorTable
                     .ensureFieldAccessorsInitialized(
-                            im.turms.server.common.access.client.dto.model.storage.StorageResourceInfos.class,
-                            im.turms.server.common.access.client.dto.model.storage.StorageResourceInfos.Builder.class);
+                            im.turms.server.common.access.client.dto.model.storage.StorageResourceInfos.class, im.turms.server.common.access.client.dto.model.storage.StorageResourceInfos.Builder.class);
         }
 
         // Construct using im.turms.server.common.access.client.dto.model.storage.StorageResourceInfos.newBuilder()
@@ -329,13 +318,14 @@ public final class StorageResourceInfos extends
         @java.lang.Override
         public Builder clear() {
             super.clear();
+            bitField0_ = 0;
             if (infosBuilder_ == null) {
                 infos_ = java.util.Collections.emptyList();
             } else {
                 infos_ = null;
                 infosBuilder_.clear();
             }
-            bitField0_ = (bitField0_ & ~0x00000001);
+            bitField0_ &= ~0x00000001;
             return this;
         }
 
@@ -362,56 +352,28 @@ public final class StorageResourceInfos extends
         @java.lang.Override
         public im.turms.server.common.access.client.dto.model.storage.StorageResourceInfos buildPartial() {
             im.turms.server.common.access.client.dto.model.storage.StorageResourceInfos result = new im.turms.server.common.access.client.dto.model.storage.StorageResourceInfos(this);
-            int from_bitField0_ = bitField0_;
-            if (infosBuilder_ == null) {
-                if (((bitField0_ & 0x00000001) != 0)) {
-                    infos_ = java.util.Collections.unmodifiableList(infos_);
-                    bitField0_ = (bitField0_ & ~0x00000001);
-                }
-                result.infos_ = infos_;
-            } else {
-                result.infos_ = infosBuilder_.build();
+            buildPartialRepeatedFields(result);
+            if (bitField0_ != 0) {
+                buildPartial0(result);
             }
             onBuilt();
             return result;
         }
 
-        @java.lang.Override
-        public Builder clone() {
-            return super.clone();
+        private void buildPartialRepeatedFields(im.turms.server.common.access.client.dto.model.storage.StorageResourceInfos result) {
+            if (infosBuilder_ == null) {
+                if (((bitField0_ & 0x00000001) != 0)) {
+                    infos_ = java.util.Collections.unmodifiableList(infos_);
+                    bitField0_ &= ~0x00000001;
+                }
+                result.infos_ = infos_;
+            } else {
+                result.infos_ = infosBuilder_.build();
+            }
         }
 
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(
-                com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(
-                com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index, java.lang.Object value) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.addRepeatedField(field, value);
+        private void buildPartial0(im.turms.server.common.access.client.dto.model.storage.StorageResourceInfos result) {
+            int from_bitField0_ = bitField0_;
         }
 
         @java.lang.Override
@@ -432,7 +394,7 @@ public final class StorageResourceInfos extends
                 if (!other.infos_.isEmpty()) {
                     if (infos_.isEmpty()) {
                         infos_ = other.infos_;
-                        bitField0_ = (bitField0_ & ~0x00000001);
+                        bitField0_ &= ~0x00000001;
                     } else {
                         ensureInfosIsMutable();
                         infos_.addAll(other.infos_);
@@ -445,7 +407,7 @@ public final class StorageResourceInfos extends
                         infosBuilder_.dispose();
                         infosBuilder_ = null;
                         infos_ = other.infos_;
-                        bitField0_ = (bitField0_ & ~0x00000001);
+                        bitField0_ &= ~0x00000001;
                         infosBuilder_ =
                                 com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
                                         getInfosFieldBuilder() : null;
@@ -477,13 +439,11 @@ public final class StorageResourceInfos extends
                 while (!done) {
                     int tag = input.readTag();
                     switch (tag) {
-                        case 0:
-                            done = true;
-                            break;
-                        case 10: {
-                            im.turms.server.common.access.client.dto.model.storage.StorageResourceInfo m =
+                        case 0 -> done = true;
+                        case 10 -> {
+                            StorageResourceInfo m =
                                     input.readMessage(
-                                            im.turms.server.common.access.client.dto.model.storage.StorageResourceInfo.parser(),
+                                            StorageResourceInfo.parser(),
                                             extensionRegistry);
                             if (infosBuilder_ == null) {
                                 ensureInfosIsMutable();
@@ -491,13 +451,11 @@ public final class StorageResourceInfos extends
                             } else {
                                 infosBuilder_.addMessage(m);
                             }
-                            break;
                         } // case 10
-                        default: {
+                        default -> {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
                             }
-                            break;
                         } // default:
                     } // switch (tag)
                 } // while (!done)
@@ -515,15 +473,14 @@ public final class StorageResourceInfos extends
                 java.util.Collections.emptyList();
 
         private void ensureInfosIsMutable() {
-            if (!((bitField0_ & 0x00000001) != 0)) {
-                infos_ = new java.util.ArrayList<im.turms.server.common.access.client.dto.model.storage.StorageResourceInfo>(infos_);
+            if ((bitField0_ & 0x00000001) == 0) {
+                infos_ = new java.util.ArrayList<>(infos_);
                 bitField0_ |= 0x00000001;
             }
         }
 
         private com.google.protobuf.RepeatedFieldBuilderV3<
-                im.turms.server.common.access.client.dto.model.storage.StorageResourceInfo, im.turms.server.common.access.client.dto.model.storage.StorageResourceInfo.Builder, im.turms.server.common.access.client.dto.model.storage.StorageResourceInfoOrBuilder>
-                infosBuilder_;
+                im.turms.server.common.access.client.dto.model.storage.StorageResourceInfo, im.turms.server.common.access.client.dto.model.storage.StorageResourceInfo.Builder, im.turms.server.common.access.client.dto.model.storage.StorageResourceInfoOrBuilder> infosBuilder_;
 
         /**
          * <code>repeated .im.turms.proto.StorageResourceInfo infos = 1;</code>
@@ -678,7 +635,7 @@ public final class StorageResourceInfos extends
         public Builder clearInfos() {
             if (infosBuilder_ == null) {
                 infos_ = java.util.Collections.emptyList();
-                bitField0_ = (bitField0_ & ~0x00000001);
+                bitField0_ &= ~0x00000001;
                 onChanged();
             } else {
                 infosBuilder_.clear();
@@ -761,8 +718,7 @@ public final class StorageResourceInfos extends
                 im.turms.server.common.access.client.dto.model.storage.StorageResourceInfo, im.turms.server.common.access.client.dto.model.storage.StorageResourceInfo.Builder, im.turms.server.common.access.client.dto.model.storage.StorageResourceInfoOrBuilder>
         getInfosFieldBuilder() {
             if (infosBuilder_ == null) {
-                infosBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
-                        im.turms.server.common.access.client.dto.model.storage.StorageResourceInfo, im.turms.server.common.access.client.dto.model.storage.StorageResourceInfo.Builder, im.turms.server.common.access.client.dto.model.storage.StorageResourceInfoOrBuilder>(
+                infosBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<>(
                         infos_,
                         ((bitField0_ & 0x00000001) != 0),
                         getParentForChildren(),
@@ -800,7 +756,7 @@ public final class StorageResourceInfos extends
     }
 
     private static final com.google.protobuf.Parser<StorageResourceInfos>
-            PARSER = new com.google.protobuf.AbstractParser<StorageResourceInfos>() {
+            PARSER = new com.google.protobuf.AbstractParser<>() {
         @java.lang.Override
         public StorageResourceInfos parsePartialFrom(
                 com.google.protobuf.CodedInputStream input,

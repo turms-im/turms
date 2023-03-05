@@ -16,7 +16,7 @@ class QueryMessagesRequest extends $pb.GeneratedMessage {
           ? ''
           : 'QueryMessagesRequest',
       package: const $pb.PackageName(
-          $core.bool.fromEnvironment('protobuf.omit_message_names')
+          const $core.bool.fromEnvironment('protobuf.omit_message_names')
               ? ''
               : 'im.turms.proto'),
       createEmptyInstance: create)
@@ -46,12 +46,12 @@ class QueryMessagesRequest extends $pb.GeneratedMessage {
         5,
         const $core.bool.fromEnvironment('protobuf.omit_field_names')
             ? ''
-            : 'deliveryDateAfter')
+            : 'deliveryDateStart')
     ..aInt64(
         6,
         const $core.bool.fromEnvironment('protobuf.omit_field_names')
             ? ''
-            : 'deliveryDateBefore')
+            : 'deliveryDateEnd')
     ..a<$core.int>(
         7,
         const $core.bool.fromEnvironment('protobuf.omit_field_names')
@@ -63,6 +63,11 @@ class QueryMessagesRequest extends $pb.GeneratedMessage {
         const $core.bool.fromEnvironment('protobuf.omit_field_names')
             ? ''
             : 'withTotal')
+    ..aOB(
+        9,
+        const $core.bool.fromEnvironment('protobuf.omit_field_names')
+            ? ''
+            : 'descending')
     ..hasRequiredFields = false;
 
   QueryMessagesRequest._() : super();
@@ -71,10 +76,11 @@ class QueryMessagesRequest extends $pb.GeneratedMessage {
     $core.bool? areGroupMessages,
     $core.bool? areSystemMessages,
     $core.Iterable<$fixnum.Int64>? fromIds,
-    $fixnum.Int64? deliveryDateAfter,
-    $fixnum.Int64? deliveryDateBefore,
+    $fixnum.Int64? deliveryDateStart,
+    $fixnum.Int64? deliveryDateEnd,
     $core.int? maxCount,
     $core.bool? withTotal,
+    $core.bool? descending,
   }) {
     final _result = create();
     if (ids != null) {
@@ -89,17 +95,20 @@ class QueryMessagesRequest extends $pb.GeneratedMessage {
     if (fromIds != null) {
       _result.fromIds.addAll(fromIds);
     }
-    if (deliveryDateAfter != null) {
-      _result.deliveryDateAfter = deliveryDateAfter;
+    if (deliveryDateStart != null) {
+      _result.deliveryDateStart = deliveryDateStart;
     }
-    if (deliveryDateBefore != null) {
-      _result.deliveryDateBefore = deliveryDateBefore;
+    if (deliveryDateEnd != null) {
+      _result.deliveryDateEnd = deliveryDateEnd;
     }
     if (maxCount != null) {
       _result.maxCount = maxCount;
     }
     if (withTotal != null) {
       _result.withTotal = withTotal;
+    }
+    if (descending != null) {
+      _result.descending = descending;
     }
     return _result;
   }
@@ -162,28 +171,28 @@ class QueryMessagesRequest extends $pb.GeneratedMessage {
   $core.List<$fixnum.Int64> get fromIds => $_getList(3);
 
   @$pb.TagNumber(5)
-  $fixnum.Int64 get deliveryDateAfter => $_getI64(4);
+  $fixnum.Int64 get deliveryDateStart => $_getI64(4);
   @$pb.TagNumber(5)
-  set deliveryDateAfter($fixnum.Int64 v) {
+  set deliveryDateStart($fixnum.Int64 v) {
     $_setInt64(4, v);
   }
 
   @$pb.TagNumber(5)
-  $core.bool hasDeliveryDateAfter() => $_has(4);
+  $core.bool hasDeliveryDateStart() => $_has(4);
   @$pb.TagNumber(5)
-  void clearDeliveryDateAfter() => clearField(5);
+  void clearDeliveryDateStart() => clearField(5);
 
   @$pb.TagNumber(6)
-  $fixnum.Int64 get deliveryDateBefore => $_getI64(5);
+  $fixnum.Int64 get deliveryDateEnd => $_getI64(5);
   @$pb.TagNumber(6)
-  set deliveryDateBefore($fixnum.Int64 v) {
+  set deliveryDateEnd($fixnum.Int64 v) {
     $_setInt64(5, v);
   }
 
   @$pb.TagNumber(6)
-  $core.bool hasDeliveryDateBefore() => $_has(5);
+  $core.bool hasDeliveryDateEnd() => $_has(5);
   @$pb.TagNumber(6)
-  void clearDeliveryDateBefore() => clearField(6);
+  void clearDeliveryDateEnd() => clearField(6);
 
   @$pb.TagNumber(7)
   $core.int get maxCount => $_getIZ(6);
@@ -208,4 +217,16 @@ class QueryMessagesRequest extends $pb.GeneratedMessage {
   $core.bool hasWithTotal() => $_has(7);
   @$pb.TagNumber(8)
   void clearWithTotal() => clearField(8);
+
+  @$pb.TagNumber(9)
+  $core.bool get descending => $_getBF(8);
+  @$pb.TagNumber(9)
+  set descending($core.bool v) {
+    $_setBool(8, v);
+  }
+
+  @$pb.TagNumber(9)
+  $core.bool hasDescending() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearDescending() => clearField(9);
 }

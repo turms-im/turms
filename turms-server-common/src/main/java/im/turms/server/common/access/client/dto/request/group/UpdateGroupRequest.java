@@ -47,12 +47,6 @@ public final class UpdateGroupRequest extends
         return new UpdateGroupRequest();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-        return this.unknownFields;
-    }
-
     public static final com.google.protobuf.Descriptors.Descriptor
     getDescriptor() {
         return im.turms.server.common.access.client.dto.request.group.UpdateGroupRequestOuterClass.internal_static_im_turms_proto_UpdateGroupRequest_descriptor;
@@ -68,7 +62,7 @@ public final class UpdateGroupRequest extends
 
     private int bitField0_;
     public static final int GROUP_ID_FIELD_NUMBER = 1;
-    private long groupId_;
+    private long groupId_ = 0L;
 
     /**
      * <pre>
@@ -85,7 +79,7 @@ public final class UpdateGroupRequest extends
     }
 
     public static final int QUIT_AFTER_TRANSFER_FIELD_NUMBER = 2;
-    private boolean quitAfterTransfer_;
+    private boolean quitAfterTransfer_ = false;
 
     /**
      * <pre>
@@ -116,7 +110,8 @@ public final class UpdateGroupRequest extends
     }
 
     public static final int NAME_FIELD_NUMBER = 3;
-    private volatile java.lang.Object name_;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object name_ = "";
 
     /**
      * <pre>
@@ -180,7 +175,8 @@ public final class UpdateGroupRequest extends
     }
 
     public static final int INTRO_FIELD_NUMBER = 4;
-    private volatile java.lang.Object intro_;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object intro_ = "";
 
     /**
      * <code>optional string intro = 4;</code>
@@ -232,7 +228,8 @@ public final class UpdateGroupRequest extends
     }
 
     public static final int ANNOUNCEMENT_FIELD_NUMBER = 5;
-    private volatile java.lang.Object announcement_;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object announcement_ = "";
 
     /**
      * <code>optional string announcement = 5;</code>
@@ -284,7 +281,7 @@ public final class UpdateGroupRequest extends
     }
 
     public static final int MIN_SCORE_FIELD_NUMBER = 6;
-    private int minScore_;
+    private int minScore_ = 0;
 
     /**
      * <code>optional int32 min_score = 6;</code>
@@ -307,7 +304,7 @@ public final class UpdateGroupRequest extends
     }
 
     public static final int TYPE_ID_FIELD_NUMBER = 7;
-    private long typeId_;
+    private long typeId_ = 0L;
 
     /**
      * <code>optional int64 type_id = 7;</code>
@@ -330,7 +327,7 @@ public final class UpdateGroupRequest extends
     }
 
     public static final int MUTE_END_DATE_FIELD_NUMBER = 8;
-    private long muteEndDate_;
+    private long muteEndDate_ = 0L;
 
     /**
      * <code>optional int64 mute_end_date = 8;</code>
@@ -353,7 +350,7 @@ public final class UpdateGroupRequest extends
     }
 
     public static final int SUCCESSOR_ID_FIELD_NUMBER = 9;
-    private long successorId_;
+    private long successorId_ = 0L;
 
     /**
      * <code>optional int64 successor_id = 9;</code>
@@ -475,10 +472,9 @@ public final class UpdateGroupRequest extends
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof im.turms.server.common.access.client.dto.request.group.UpdateGroupRequest)) {
+        if (!(obj instanceof UpdateGroupRequest other)) {
             return super.equals(obj);
         }
-        im.turms.server.common.access.client.dto.request.group.UpdateGroupRequest other = (im.turms.server.common.access.client.dto.request.group.UpdateGroupRequest) obj;
 
         if (getGroupId()
             != other.getGroupId()) {
@@ -556,10 +552,7 @@ public final class UpdateGroupRequest extends
                 return false;
             }
         }
-        if (!getUnknownFields().equals(other.getUnknownFields())) {
-            return false;
-        }
-        return true;
+        return getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -716,8 +709,7 @@ public final class UpdateGroupRequest extends
     @java.lang.Override
     protected Builder newBuilderForType(
             com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
+        return new Builder(parent);
     }
 
     /**
@@ -754,24 +746,16 @@ public final class UpdateGroupRequest extends
         @java.lang.Override
         public Builder clear() {
             super.clear();
+            bitField0_ = 0;
             groupId_ = 0L;
-
             quitAfterTransfer_ = false;
-            bitField0_ = (bitField0_ & ~0x00000001);
             name_ = "";
-            bitField0_ = (bitField0_ & ~0x00000002);
             intro_ = "";
-            bitField0_ = (bitField0_ & ~0x00000004);
             announcement_ = "";
-            bitField0_ = (bitField0_ & ~0x00000008);
             minScore_ = 0;
-            bitField0_ = (bitField0_ & ~0x00000010);
             typeId_ = 0L;
-            bitField0_ = (bitField0_ & ~0x00000020);
             muteEndDate_ = 0L;
-            bitField0_ = (bitField0_ & ~0x00000040);
             successorId_ = 0L;
-            bitField0_ = (bitField0_ & ~0x00000080);
             return this;
         }
 
@@ -798,82 +782,52 @@ public final class UpdateGroupRequest extends
         @java.lang.Override
         public im.turms.server.common.access.client.dto.request.group.UpdateGroupRequest buildPartial() {
             im.turms.server.common.access.client.dto.request.group.UpdateGroupRequest result = new im.turms.server.common.access.client.dto.request.group.UpdateGroupRequest(this);
-            int from_bitField0_ = bitField0_;
-            int to_bitField0_ = 0;
-            result.groupId_ = groupId_;
-            if (((from_bitField0_ & 0x00000001) != 0)) {
-                result.quitAfterTransfer_ = quitAfterTransfer_;
-                to_bitField0_ |= 0x00000001;
+            if (bitField0_ != 0) {
+                buildPartial0(result);
             }
-            if (((from_bitField0_ & 0x00000002) != 0)) {
-                to_bitField0_ |= 0x00000002;
-            }
-            result.name_ = name_;
-            if (((from_bitField0_ & 0x00000004) != 0)) {
-                to_bitField0_ |= 0x00000004;
-            }
-            result.intro_ = intro_;
-            if (((from_bitField0_ & 0x00000008) != 0)) {
-                to_bitField0_ |= 0x00000008;
-            }
-            result.announcement_ = announcement_;
-            if (((from_bitField0_ & 0x00000010) != 0)) {
-                result.minScore_ = minScore_;
-                to_bitField0_ |= 0x00000010;
-            }
-            if (((from_bitField0_ & 0x00000020) != 0)) {
-                result.typeId_ = typeId_;
-                to_bitField0_ |= 0x00000020;
-            }
-            if (((from_bitField0_ & 0x00000040) != 0)) {
-                result.muteEndDate_ = muteEndDate_;
-                to_bitField0_ |= 0x00000040;
-            }
-            if (((from_bitField0_ & 0x00000080) != 0)) {
-                result.successorId_ = successorId_;
-                to_bitField0_ |= 0x00000080;
-            }
-            result.bitField0_ = to_bitField0_;
             onBuilt();
             return result;
         }
 
-        @java.lang.Override
-        public Builder clone() {
-            return super.clone();
-        }
-
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(
-                com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(
-                com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index, java.lang.Object value) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.addRepeatedField(field, value);
+        private void buildPartial0(im.turms.server.common.access.client.dto.request.group.UpdateGroupRequest result) {
+            int from_bitField0_ = bitField0_;
+            if (((from_bitField0_ & 0x00000001) != 0)) {
+                result.groupId_ = groupId_;
+            }
+            int to_bitField0_ = 0;
+            if (((from_bitField0_ & 0x00000002) != 0)) {
+                result.quitAfterTransfer_ = quitAfterTransfer_;
+                to_bitField0_ |= 0x00000001;
+            }
+            if (((from_bitField0_ & 0x00000004) != 0)) {
+                result.name_ = name_;
+                to_bitField0_ |= 0x00000002;
+            }
+            if (((from_bitField0_ & 0x00000008) != 0)) {
+                result.intro_ = intro_;
+                to_bitField0_ |= 0x00000004;
+            }
+            if (((from_bitField0_ & 0x00000010) != 0)) {
+                result.announcement_ = announcement_;
+                to_bitField0_ |= 0x00000008;
+            }
+            if (((from_bitField0_ & 0x00000020) != 0)) {
+                result.minScore_ = minScore_;
+                to_bitField0_ |= 0x00000010;
+            }
+            if (((from_bitField0_ & 0x00000040) != 0)) {
+                result.typeId_ = typeId_;
+                to_bitField0_ |= 0x00000020;
+            }
+            if (((from_bitField0_ & 0x00000080) != 0)) {
+                result.muteEndDate_ = muteEndDate_;
+                to_bitField0_ |= 0x00000040;
+            }
+            if (((from_bitField0_ & 0x00000100) != 0)) {
+                result.successorId_ = successorId_;
+                to_bitField0_ |= 0x00000080;
+            }
+            result.bitField0_ |= to_bitField0_;
         }
 
         @java.lang.Override
@@ -897,18 +851,18 @@ public final class UpdateGroupRequest extends
                 setQuitAfterTransfer(other.getQuitAfterTransfer());
             }
             if (other.hasName()) {
-                bitField0_ |= 0x00000002;
                 name_ = other.name_;
+                bitField0_ |= 0x00000004;
                 onChanged();
             }
             if (other.hasIntro()) {
-                bitField0_ |= 0x00000004;
                 intro_ = other.intro_;
+                bitField0_ |= 0x00000008;
                 onChanged();
             }
             if (other.hasAnnouncement()) {
-                bitField0_ |= 0x00000008;
                 announcement_ = other.announcement_;
+                bitField0_ |= 0x00000010;
                 onChanged();
             }
             if (other.hasMinScore()) {
@@ -946,59 +900,47 @@ public final class UpdateGroupRequest extends
                 while (!done) {
                     int tag = input.readTag();
                     switch (tag) {
-                        case 0:
-                            done = true;
-                            break;
-                        case 8: {
+                        case 0 -> done = true;
+                        case 8 -> {
                             groupId_ = input.readInt64();
-
-                            break;
-                        } // case 8
-                        case 16: {
-                            quitAfterTransfer_ = input.readBool();
                             bitField0_ |= 0x00000001;
-                            break;
-                        } // case 16
-                        case 26: {
-                            name_ = input.readStringRequireUtf8();
+                        } // case 8
+                        case 16 -> {
+                            quitAfterTransfer_ = input.readBool();
                             bitField0_ |= 0x00000002;
-                            break;
-                        } // case 26
-                        case 34: {
-                            intro_ = input.readStringRequireUtf8();
+                        } // case 16
+                        case 26 -> {
+                            name_ = input.readStringRequireUtf8();
                             bitField0_ |= 0x00000004;
-                            break;
-                        } // case 34
-                        case 42: {
-                            announcement_ = input.readStringRequireUtf8();
+                        } // case 26
+                        case 34 -> {
+                            intro_ = input.readStringRequireUtf8();
                             bitField0_ |= 0x00000008;
-                            break;
-                        } // case 42
-                        case 48: {
-                            minScore_ = input.readInt32();
+                        } // case 34
+                        case 42 -> {
+                            announcement_ = input.readStringRequireUtf8();
                             bitField0_ |= 0x00000010;
-                            break;
-                        } // case 48
-                        case 56: {
-                            typeId_ = input.readInt64();
+                        } // case 42
+                        case 48 -> {
+                            minScore_ = input.readInt32();
                             bitField0_ |= 0x00000020;
-                            break;
-                        } // case 56
-                        case 64: {
-                            muteEndDate_ = input.readInt64();
+                        } // case 48
+                        case 56 -> {
+                            typeId_ = input.readInt64();
                             bitField0_ |= 0x00000040;
-                            break;
-                        } // case 64
-                        case 72: {
-                            successorId_ = input.readInt64();
+                        } // case 56
+                        case 64 -> {
+                            muteEndDate_ = input.readInt64();
                             bitField0_ |= 0x00000080;
-                            break;
+                        } // case 64
+                        case 72 -> {
+                            successorId_ = input.readInt64();
+                            bitField0_ |= 0x00000100;
                         } // case 72
-                        default: {
+                        default -> {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
                             }
-                            break;
                         } // default:
                     } // switch (tag)
                 } // while (!done)
@@ -1041,6 +983,7 @@ public final class UpdateGroupRequest extends
         public Builder setGroupId(long value) {
 
             groupId_ = value;
+            bitField0_ |= 0x00000001;
             onChanged();
             return this;
         }
@@ -1055,7 +998,7 @@ public final class UpdateGroupRequest extends
          * @return This builder for chaining.
          */
         public Builder clearGroupId() {
-
+            bitField0_ &= ~0x00000001;
             groupId_ = 0L;
             onChanged();
             return this;
@@ -1074,7 +1017,7 @@ public final class UpdateGroupRequest extends
          */
         @java.lang.Override
         public boolean hasQuitAfterTransfer() {
-            return ((bitField0_ & 0x00000001) != 0);
+            return ((bitField0_ & 0x00000002) != 0);
         }
 
         /**
@@ -1102,8 +1045,9 @@ public final class UpdateGroupRequest extends
          * @return This builder for chaining.
          */
         public Builder setQuitAfterTransfer(boolean value) {
-            bitField0_ |= 0x00000001;
+
             quitAfterTransfer_ = value;
+            bitField0_ |= 0x00000002;
             onChanged();
             return this;
         }
@@ -1118,7 +1062,7 @@ public final class UpdateGroupRequest extends
          * @return This builder for chaining.
          */
         public Builder clearQuitAfterTransfer() {
-            bitField0_ = (bitField0_ & ~0x00000001);
+            bitField0_ &= ~0x00000002;
             quitAfterTransfer_ = false;
             onChanged();
             return this;
@@ -1136,7 +1080,7 @@ public final class UpdateGroupRequest extends
          * @return Whether the name field is set.
          */
         public boolean hasName() {
-            return ((bitField0_ & 0x00000002) != 0);
+            return ((bitField0_ & 0x00000004) != 0);
         }
 
         /**
@@ -1199,8 +1143,8 @@ public final class UpdateGroupRequest extends
             if (value == null) {
                 throw new NullPointerException();
             }
-            bitField0_ |= 0x00000002;
             name_ = value;
+            bitField0_ |= 0x00000004;
             onChanged();
             return this;
         }
@@ -1215,8 +1159,8 @@ public final class UpdateGroupRequest extends
          * @return This builder for chaining.
          */
         public Builder clearName() {
-            bitField0_ = (bitField0_ & ~0x00000002);
             name_ = getDefaultInstance().getName();
+            bitField0_ &= ~0x00000004;
             onChanged();
             return this;
         }
@@ -1237,8 +1181,8 @@ public final class UpdateGroupRequest extends
                 throw new NullPointerException();
             }
             checkByteStringIsUtf8(value);
-            bitField0_ |= 0x00000002;
             name_ = value;
+            bitField0_ |= 0x00000004;
             onChanged();
             return this;
         }
@@ -1251,7 +1195,7 @@ public final class UpdateGroupRequest extends
          * @return Whether the intro field is set.
          */
         public boolean hasIntro() {
-            return ((bitField0_ & 0x00000004) != 0);
+            return ((bitField0_ & 0x00000008) != 0);
         }
 
         /**
@@ -1302,8 +1246,8 @@ public final class UpdateGroupRequest extends
             if (value == null) {
                 throw new NullPointerException();
             }
-            bitField0_ |= 0x00000004;
             intro_ = value;
+            bitField0_ |= 0x00000008;
             onChanged();
             return this;
         }
@@ -1314,8 +1258,8 @@ public final class UpdateGroupRequest extends
          * @return This builder for chaining.
          */
         public Builder clearIntro() {
-            bitField0_ = (bitField0_ & ~0x00000004);
             intro_ = getDefaultInstance().getIntro();
+            bitField0_ &= ~0x00000008;
             onChanged();
             return this;
         }
@@ -1332,8 +1276,8 @@ public final class UpdateGroupRequest extends
                 throw new NullPointerException();
             }
             checkByteStringIsUtf8(value);
-            bitField0_ |= 0x00000004;
             intro_ = value;
+            bitField0_ |= 0x00000008;
             onChanged();
             return this;
         }
@@ -1346,7 +1290,7 @@ public final class UpdateGroupRequest extends
          * @return Whether the announcement field is set.
          */
         public boolean hasAnnouncement() {
-            return ((bitField0_ & 0x00000008) != 0);
+            return ((bitField0_ & 0x00000010) != 0);
         }
 
         /**
@@ -1397,8 +1341,8 @@ public final class UpdateGroupRequest extends
             if (value == null) {
                 throw new NullPointerException();
             }
-            bitField0_ |= 0x00000008;
             announcement_ = value;
+            bitField0_ |= 0x00000010;
             onChanged();
             return this;
         }
@@ -1409,8 +1353,8 @@ public final class UpdateGroupRequest extends
          * @return This builder for chaining.
          */
         public Builder clearAnnouncement() {
-            bitField0_ = (bitField0_ & ~0x00000008);
             announcement_ = getDefaultInstance().getAnnouncement();
+            bitField0_ &= ~0x00000010;
             onChanged();
             return this;
         }
@@ -1427,8 +1371,8 @@ public final class UpdateGroupRequest extends
                 throw new NullPointerException();
             }
             checkByteStringIsUtf8(value);
-            bitField0_ |= 0x00000008;
             announcement_ = value;
+            bitField0_ |= 0x00000010;
             onChanged();
             return this;
         }
@@ -1442,7 +1386,7 @@ public final class UpdateGroupRequest extends
          */
         @java.lang.Override
         public boolean hasMinScore() {
-            return ((bitField0_ & 0x00000010) != 0);
+            return ((bitField0_ & 0x00000020) != 0);
         }
 
         /**
@@ -1462,8 +1406,9 @@ public final class UpdateGroupRequest extends
          * @return This builder for chaining.
          */
         public Builder setMinScore(int value) {
-            bitField0_ |= 0x00000010;
+
             minScore_ = value;
+            bitField0_ |= 0x00000020;
             onChanged();
             return this;
         }
@@ -1474,7 +1419,7 @@ public final class UpdateGroupRequest extends
          * @return This builder for chaining.
          */
         public Builder clearMinScore() {
-            bitField0_ = (bitField0_ & ~0x00000010);
+            bitField0_ &= ~0x00000020;
             minScore_ = 0;
             onChanged();
             return this;
@@ -1489,7 +1434,7 @@ public final class UpdateGroupRequest extends
          */
         @java.lang.Override
         public boolean hasTypeId() {
-            return ((bitField0_ & 0x00000020) != 0);
+            return ((bitField0_ & 0x00000040) != 0);
         }
 
         /**
@@ -1509,8 +1454,9 @@ public final class UpdateGroupRequest extends
          * @return This builder for chaining.
          */
         public Builder setTypeId(long value) {
-            bitField0_ |= 0x00000020;
+
             typeId_ = value;
+            bitField0_ |= 0x00000040;
             onChanged();
             return this;
         }
@@ -1521,7 +1467,7 @@ public final class UpdateGroupRequest extends
          * @return This builder for chaining.
          */
         public Builder clearTypeId() {
-            bitField0_ = (bitField0_ & ~0x00000020);
+            bitField0_ &= ~0x00000040;
             typeId_ = 0L;
             onChanged();
             return this;
@@ -1536,7 +1482,7 @@ public final class UpdateGroupRequest extends
          */
         @java.lang.Override
         public boolean hasMuteEndDate() {
-            return ((bitField0_ & 0x00000040) != 0);
+            return ((bitField0_ & 0x00000080) != 0);
         }
 
         /**
@@ -1556,8 +1502,9 @@ public final class UpdateGroupRequest extends
          * @return This builder for chaining.
          */
         public Builder setMuteEndDate(long value) {
-            bitField0_ |= 0x00000040;
+
             muteEndDate_ = value;
+            bitField0_ |= 0x00000080;
             onChanged();
             return this;
         }
@@ -1568,7 +1515,7 @@ public final class UpdateGroupRequest extends
          * @return This builder for chaining.
          */
         public Builder clearMuteEndDate() {
-            bitField0_ = (bitField0_ & ~0x00000040);
+            bitField0_ &= ~0x00000080;
             muteEndDate_ = 0L;
             onChanged();
             return this;
@@ -1583,7 +1530,7 @@ public final class UpdateGroupRequest extends
          */
         @java.lang.Override
         public boolean hasSuccessorId() {
-            return ((bitField0_ & 0x00000080) != 0);
+            return ((bitField0_ & 0x00000100) != 0);
         }
 
         /**
@@ -1603,8 +1550,9 @@ public final class UpdateGroupRequest extends
          * @return This builder for chaining.
          */
         public Builder setSuccessorId(long value) {
-            bitField0_ |= 0x00000080;
+
             successorId_ = value;
+            bitField0_ |= 0x00000100;
             onChanged();
             return this;
         }
@@ -1615,7 +1563,7 @@ public final class UpdateGroupRequest extends
          * @return This builder for chaining.
          */
         public Builder clearSuccessorId() {
-            bitField0_ = (bitField0_ & ~0x00000080);
+            bitField0_ &= ~0x00000100;
             successorId_ = 0L;
             onChanged();
             return this;
@@ -1649,7 +1597,7 @@ public final class UpdateGroupRequest extends
     }
 
     private static final com.google.protobuf.Parser<UpdateGroupRequest>
-            PARSER = new com.google.protobuf.AbstractParser<UpdateGroupRequest>() {
+            PARSER = new com.google.protobuf.AbstractParser<>() {
         @java.lang.Override
         public UpdateGroupRequest parsePartialFrom(
                 com.google.protobuf.CodedInputStream input,

@@ -10,11 +10,11 @@ import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
 
 @$core.Deprecated('Use updateGroupJoinQuestionRequestDescriptor instead')
-const UpdateGroupJoinQuestionRequest$json = {
+const UpdateGroupJoinQuestionRequest$json = const {
   '1': 'UpdateGroupJoinQuestionRequest',
-  '2': [
-    {'1': 'question_id', '3': 1, '4': 1, '5': 3, '10': 'questionId'},
-    {
+  '2': const [
+    const {'1': 'question_id', '3': 1, '4': 1, '5': 3, '10': 'questionId'},
+    const {
       '1': 'question',
       '3': 2,
       '4': 1,
@@ -23,12 +23,20 @@ const UpdateGroupJoinQuestionRequest$json = {
       '10': 'question',
       '17': true
     },
-    {'1': 'answers', '3': 3, '4': 3, '5': 9, '10': 'answers'},
-    {'1': 'score', '3': 4, '4': 1, '5': 5, '9': 1, '10': 'score', '17': true},
+    const {'1': 'answers', '3': 3, '4': 3, '5': 9, '10': 'answers'},
+    const {
+      '1': 'score',
+      '3': 4,
+      '4': 1,
+      '5': 5,
+      '9': 1,
+      '10': 'score',
+      '17': true
+    },
   ],
-  '8': [
-    {'1': '_question'},
-    {'1': '_score'},
+  '8': const [
+    const {'1': '_question'},
+    const {'1': '_score'},
   ],
 };
 

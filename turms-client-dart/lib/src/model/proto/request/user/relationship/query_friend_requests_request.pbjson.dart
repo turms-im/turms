@@ -10,11 +10,11 @@ import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
 
 @$core.Deprecated('Use queryFriendRequestsRequestDescriptor instead')
-const QueryFriendRequestsRequest$json = {
+const QueryFriendRequestsRequest$json = const {
   '1': 'QueryFriendRequestsRequest',
-  '2': [
-    {'1': 'are_sent_by_me', '3': 1, '4': 1, '5': 8, '10': 'areSentByMe'},
-    {
+  '2': const [
+    const {'1': 'are_sent_by_me', '3': 1, '4': 1, '5': 8, '10': 'areSentByMe'},
+    const {
       '1': 'last_updated_date',
       '3': 2,
       '4': 1,
@@ -24,8 +24,8 @@ const QueryFriendRequestsRequest$json = {
       '17': true
     },
   ],
-  '8': [
-    {'1': '_last_updated_date'},
+  '8': const [
+    const {'1': '_last_updated_date'},
   ],
 };
 

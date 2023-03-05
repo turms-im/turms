@@ -10,10 +10,10 @@ import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
 
 @$core.Deprecated('Use queryGroupInvitationsRequestDescriptor instead')
-const QueryGroupInvitationsRequest$json = {
+const QueryGroupInvitationsRequest$json = const {
   '1': 'QueryGroupInvitationsRequest',
-  '2': [
-    {
+  '2': const [
+    const {
       '1': 'group_id',
       '3': 1,
       '4': 1,
@@ -22,7 +22,7 @@ const QueryGroupInvitationsRequest$json = {
       '10': 'groupId',
       '17': true
     },
-    {
+    const {
       '1': 'are_sent_by_me',
       '3': 2,
       '4': 1,
@@ -31,7 +31,7 @@ const QueryGroupInvitationsRequest$json = {
       '10': 'areSentByMe',
       '17': true
     },
-    {
+    const {
       '1': 'last_updated_date',
       '3': 3,
       '4': 1,
@@ -41,10 +41,10 @@ const QueryGroupInvitationsRequest$json = {
       '17': true
     },
   ],
-  '8': [
-    {'1': '_group_id'},
-    {'1': '_are_sent_by_me'},
-    {'1': '_last_updated_date'},
+  '8': const [
+    const {'1': '_group_id'},
+    const {'1': '_are_sent_by_me'},
+    const {'1': '_last_updated_date'},
   ],
 };
 

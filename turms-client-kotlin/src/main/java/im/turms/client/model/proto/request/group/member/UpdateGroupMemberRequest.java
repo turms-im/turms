@@ -177,7 +177,7 @@ public final class UpdateGroupMemberRequest extends
      * <code>optional string name = 3;</code>
      */
     private void clearName() {
-        bitField0_ = (bitField0_ & ~0x00000001);
+        bitField0_ &= ~0x00000001;
         name_ = getDefaultInstance().getName();
     }
 
@@ -255,7 +255,7 @@ public final class UpdateGroupMemberRequest extends
      * <code>optional .im.turms.proto.GroupMemberRole role = 4;</code>
      */
     private void clearRole() {
-        bitField0_ = (bitField0_ & ~0x00000002);
+        bitField0_ &= ~0x00000002;
         role_ = 0;
     }
 
@@ -296,7 +296,7 @@ public final class UpdateGroupMemberRequest extends
      * <code>optional int64 mute_end_date = 5;</code>
      */
     private void clearMuteEndDate() {
-        bitField0_ = (bitField0_ & ~0x00000004);
+        bitField0_ &= ~0x00000004;
         muteEndDate_ = 0L;
     }
 
@@ -725,7 +725,7 @@ public final class UpdateGroupMemberRequest extends
                         parser = PARSER;
                         if (parser == null) {
                             parser =
-                                    new DefaultInstanceBasedParser<im.turms.client.model.proto.request.group.member.UpdateGroupMemberRequest>(
+                                    new DefaultInstanceBasedParser<>(
                                             DEFAULT_INSTANCE);
                             PARSER = parser;
                         }

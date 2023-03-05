@@ -71,8 +71,7 @@ public final class QueryNearbyUsersRequestOuterClass {
         internal_static_im_turms_proto_QueryNearbyUsersRequest_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
                 internal_static_im_turms_proto_QueryNearbyUsersRequest_descriptor,
-                new java.lang.String[]{"Latitude", "Longitude", "MaxCount", "MaxDistance", "WithCoordinates", "WithDistance", "WithUserInfo", "MaxCount", "MaxDistance", "WithCoordinates",
-                        "WithDistance", "WithUserInfo",});
+                new java.lang.String[]{"Latitude", "Longitude", "MaxCount", "MaxDistance", "WithCoordinates", "WithDistance", "WithUserInfo", "MaxCount", "MaxDistance", "WithCoordinates", "WithDistance", "WithUserInfo",});
     }
 
     // @@protoc_insertion_point(outer_class_scope)

@@ -93,20 +93,14 @@ public enum GroupMemberRole
      * @return The enum associated with the given numeric wire value.
      */
     public static GroupMemberRole forNumber(int value) {
-        switch (value) {
-            case 0:
-                return OWNER;
-            case 1:
-                return MANAGER;
-            case 2:
-                return MEMBER;
-            case 3:
-                return GUEST;
-            case 4:
-                return ANONYMOUS_GUEST;
-            default:
-                return null;
-        }
+        return switch (value) {
+            case 0 -> OWNER;
+            case 1 -> MANAGER;
+            case 2 -> MEMBER;
+            case 3 -> GUEST;
+            case 4 -> ANONYMOUS_GUEST;
+            default -> null;
+        };
     }
 
     public static com.google.protobuf.Internal.EnumLiteMap<GroupMemberRole>
@@ -116,11 +110,7 @@ public enum GroupMemberRole
 
     private static final com.google.protobuf.Internal.EnumLiteMap<
             GroupMemberRole> internalValueMap =
-            new com.google.protobuf.Internal.EnumLiteMap<GroupMemberRole>() {
-                public GroupMemberRole findValueByNumber(int number) {
-                    return GroupMemberRole.forNumber(number);
-                }
-            };
+            number -> GroupMemberRole.forNumber(number);
 
     public final com.google.protobuf.Descriptors.EnumValueDescriptor
     getValueDescriptor() {
@@ -157,7 +147,7 @@ public enum GroupMemberRole
 
     private final int value;
 
-    private GroupMemberRole(int value) {
+    GroupMemberRole(int value) {
         this.value = value;
     }
 

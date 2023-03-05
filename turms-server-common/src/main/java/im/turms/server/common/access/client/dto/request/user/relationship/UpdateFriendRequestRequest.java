@@ -46,12 +46,6 @@ public final class UpdateFriendRequestRequest extends
         return new UpdateFriendRequestRequest();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-        return this.unknownFields;
-    }
-
     public static final com.google.protobuf.Descriptors.Descriptor
     getDescriptor() {
         return im.turms.server.common.access.client.dto.request.user.relationship.UpdateFriendRequestRequestOuterClass.internal_static_im_turms_proto_UpdateFriendRequestRequest_descriptor;
@@ -62,13 +56,12 @@ public final class UpdateFriendRequestRequest extends
     internalGetFieldAccessorTable() {
         return im.turms.server.common.access.client.dto.request.user.relationship.UpdateFriendRequestRequestOuterClass.internal_static_im_turms_proto_UpdateFriendRequestRequest_fieldAccessorTable
                 .ensureFieldAccessorsInitialized(
-                        im.turms.server.common.access.client.dto.request.user.relationship.UpdateFriendRequestRequest.class,
-                        im.turms.server.common.access.client.dto.request.user.relationship.UpdateFriendRequestRequest.Builder.class);
+                        im.turms.server.common.access.client.dto.request.user.relationship.UpdateFriendRequestRequest.class, im.turms.server.common.access.client.dto.request.user.relationship.UpdateFriendRequestRequest.Builder.class);
     }
 
     private int bitField0_;
     public static final int REQUEST_ID_FIELD_NUMBER = 1;
-    private long requestId_;
+    private long requestId_ = 0L;
 
     /**
      * <pre>
@@ -85,7 +78,7 @@ public final class UpdateFriendRequestRequest extends
     }
 
     public static final int RESPONSE_ACTION_FIELD_NUMBER = 2;
-    private int responseAction_;
+    private int responseAction_ = 0;
 
     /**
      * <pre>
@@ -112,13 +105,13 @@ public final class UpdateFriendRequestRequest extends
      */
     @java.lang.Override
     public im.turms.server.common.access.client.dto.constant.ResponseAction getResponseAction() {
-        @SuppressWarnings("deprecation")
-        im.turms.server.common.access.client.dto.constant.ResponseAction result = im.turms.server.common.access.client.dto.constant.ResponseAction.valueOf(responseAction_);
+        im.turms.server.common.access.client.dto.constant.ResponseAction result = im.turms.server.common.access.client.dto.constant.ResponseAction.forNumber(responseAction_);
         return result == null ? im.turms.server.common.access.client.dto.constant.ResponseAction.UNRECOGNIZED : result;
     }
 
     public static final int REASON_FIELD_NUMBER = 3;
-    private volatile java.lang.Object reason_;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object reason_ = "";
 
     /**
      * <code>optional string reason = 3;</code>
@@ -229,11 +222,9 @@ public final class UpdateFriendRequestRequest extends
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof im.turms.server.common.access.client.dto.request.user.relationship.UpdateFriendRequestRequest)) {
+        if (!(obj instanceof UpdateFriendRequestRequest other)) {
             return super.equals(obj);
         }
-        im.turms.server.common.access.client.dto.request.user.relationship.UpdateFriendRequestRequest other =
-                (im.turms.server.common.access.client.dto.request.user.relationship.UpdateFriendRequestRequest) obj;
 
         if (getRequestId()
             != other.getRequestId()) {
@@ -251,10 +242,7 @@ public final class UpdateFriendRequestRequest extends
                 return false;
             }
         }
-        if (!getUnknownFields().equals(other.getUnknownFields())) {
-            return false;
-        }
-        return true;
+        return getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -381,8 +369,7 @@ public final class UpdateFriendRequestRequest extends
     @java.lang.Override
     protected Builder newBuilderForType(
             com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
+        return new Builder(parent);
     }
 
     /**
@@ -402,8 +389,7 @@ public final class UpdateFriendRequestRequest extends
         internalGetFieldAccessorTable() {
             return im.turms.server.common.access.client.dto.request.user.relationship.UpdateFriendRequestRequestOuterClass.internal_static_im_turms_proto_UpdateFriendRequestRequest_fieldAccessorTable
                     .ensureFieldAccessorsInitialized(
-                            im.turms.server.common.access.client.dto.request.user.relationship.UpdateFriendRequestRequest.class,
-                            im.turms.server.common.access.client.dto.request.user.relationship.UpdateFriendRequestRequest.Builder.class);
+                            im.turms.server.common.access.client.dto.request.user.relationship.UpdateFriendRequestRequest.class, im.turms.server.common.access.client.dto.request.user.relationship.UpdateFriendRequestRequest.Builder.class);
         }
 
         // Construct using im.turms.server.common.access.client.dto.request.user.relationship.UpdateFriendRequestRequest.newBuilder()
@@ -420,12 +406,10 @@ public final class UpdateFriendRequestRequest extends
         @java.lang.Override
         public Builder clear() {
             super.clear();
+            bitField0_ = 0;
             requestId_ = 0L;
-
             responseAction_ = 0;
-
             reason_ = "";
-            bitField0_ = (bitField0_ & ~0x00000001);
             return this;
         }
 
@@ -451,57 +435,28 @@ public final class UpdateFriendRequestRequest extends
 
         @java.lang.Override
         public im.turms.server.common.access.client.dto.request.user.relationship.UpdateFriendRequestRequest buildPartial() {
-            im.turms.server.common.access.client.dto.request.user.relationship.UpdateFriendRequestRequest result =
-                    new im.turms.server.common.access.client.dto.request.user.relationship.UpdateFriendRequestRequest(this);
-            int from_bitField0_ = bitField0_;
-            int to_bitField0_ = 0;
-            result.requestId_ = requestId_;
-            result.responseAction_ = responseAction_;
-            if (((from_bitField0_ & 0x00000001) != 0)) {
-                to_bitField0_ |= 0x00000001;
+            im.turms.server.common.access.client.dto.request.user.relationship.UpdateFriendRequestRequest result = new im.turms.server.common.access.client.dto.request.user.relationship.UpdateFriendRequestRequest(this);
+            if (bitField0_ != 0) {
+                buildPartial0(result);
             }
-            result.reason_ = reason_;
-            result.bitField0_ = to_bitField0_;
             onBuilt();
             return result;
         }
 
-        @java.lang.Override
-        public Builder clone() {
-            return super.clone();
-        }
-
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(
-                com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(
-                com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index, java.lang.Object value) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.addRepeatedField(field, value);
+        private void buildPartial0(im.turms.server.common.access.client.dto.request.user.relationship.UpdateFriendRequestRequest result) {
+            int from_bitField0_ = bitField0_;
+            if (((from_bitField0_ & 0x00000001) != 0)) {
+                result.requestId_ = requestId_;
+            }
+            if (((from_bitField0_ & 0x00000002) != 0)) {
+                result.responseAction_ = responseAction_;
+            }
+            int to_bitField0_ = 0;
+            if (((from_bitField0_ & 0x00000004) != 0)) {
+                result.reason_ = reason_;
+                to_bitField0_ |= 0x00000001;
+            }
+            result.bitField0_ |= to_bitField0_;
         }
 
         @java.lang.Override
@@ -525,8 +480,8 @@ public final class UpdateFriendRequestRequest extends
                 setResponseActionValue(other.getResponseActionValue());
             }
             if (other.hasReason()) {
-                bitField0_ |= 0x00000001;
                 reason_ = other.reason_;
+                bitField0_ |= 0x00000004;
                 onChanged();
             }
             this.mergeUnknownFields(other.getUnknownFields());
@@ -552,29 +507,23 @@ public final class UpdateFriendRequestRequest extends
                 while (!done) {
                     int tag = input.readTag();
                     switch (tag) {
-                        case 0:
-                            done = true;
-                            break;
-                        case 8: {
+                        case 0 -> done = true;
+                        case 8 -> {
                             requestId_ = input.readInt64();
-
-                            break;
-                        } // case 8
-                        case 16: {
-                            responseAction_ = input.readEnum();
-
-                            break;
-                        } // case 16
-                        case 26: {
-                            reason_ = input.readStringRequireUtf8();
                             bitField0_ |= 0x00000001;
-                            break;
+                        } // case 8
+                        case 16 -> {
+                            responseAction_ = input.readEnum();
+                            bitField0_ |= 0x00000002;
+                        } // case 16
+                        case 26 -> {
+                            reason_ = input.readStringRequireUtf8();
+                            bitField0_ |= 0x00000004;
                         } // case 26
-                        default: {
+                        default -> {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
                             }
-                            break;
                         } // default:
                     } // switch (tag)
                 } // while (!done)
@@ -617,6 +566,7 @@ public final class UpdateFriendRequestRequest extends
         public Builder setRequestId(long value) {
 
             requestId_ = value;
+            bitField0_ |= 0x00000001;
             onChanged();
             return this;
         }
@@ -631,7 +581,7 @@ public final class UpdateFriendRequestRequest extends
          * @return This builder for chaining.
          */
         public Builder clearRequestId() {
-
+            bitField0_ &= ~0x00000001;
             requestId_ = 0L;
             onChanged();
             return this;
@@ -664,8 +614,8 @@ public final class UpdateFriendRequestRequest extends
          * @return This builder for chaining.
          */
         public Builder setResponseActionValue(int value) {
-
             responseAction_ = value;
+            bitField0_ |= 0x00000002;
             onChanged();
             return this;
         }
@@ -681,8 +631,7 @@ public final class UpdateFriendRequestRequest extends
          */
         @java.lang.Override
         public im.turms.server.common.access.client.dto.constant.ResponseAction getResponseAction() {
-            @SuppressWarnings("deprecation")
-            im.turms.server.common.access.client.dto.constant.ResponseAction result = im.turms.server.common.access.client.dto.constant.ResponseAction.valueOf(responseAction_);
+            im.turms.server.common.access.client.dto.constant.ResponseAction result = im.turms.server.common.access.client.dto.constant.ResponseAction.forNumber(responseAction_);
             return result == null ? im.turms.server.common.access.client.dto.constant.ResponseAction.UNRECOGNIZED : result;
         }
 
@@ -700,7 +649,7 @@ public final class UpdateFriendRequestRequest extends
             if (value == null) {
                 throw new NullPointerException();
             }
-
+            bitField0_ |= 0x00000002;
             responseAction_ = value.getNumber();
             onChanged();
             return this;
@@ -716,7 +665,7 @@ public final class UpdateFriendRequestRequest extends
          * @return This builder for chaining.
          */
         public Builder clearResponseAction() {
-
+            bitField0_ &= ~0x00000002;
             responseAction_ = 0;
             onChanged();
             return this;
@@ -730,7 +679,7 @@ public final class UpdateFriendRequestRequest extends
          * @return Whether the reason field is set.
          */
         public boolean hasReason() {
-            return ((bitField0_ & 0x00000001) != 0);
+            return ((bitField0_ & 0x00000004) != 0);
         }
 
         /**
@@ -781,8 +730,8 @@ public final class UpdateFriendRequestRequest extends
             if (value == null) {
                 throw new NullPointerException();
             }
-            bitField0_ |= 0x00000001;
             reason_ = value;
+            bitField0_ |= 0x00000004;
             onChanged();
             return this;
         }
@@ -793,8 +742,8 @@ public final class UpdateFriendRequestRequest extends
          * @return This builder for chaining.
          */
         public Builder clearReason() {
-            bitField0_ = (bitField0_ & ~0x00000001);
             reason_ = getDefaultInstance().getReason();
+            bitField0_ &= ~0x00000004;
             onChanged();
             return this;
         }
@@ -811,8 +760,8 @@ public final class UpdateFriendRequestRequest extends
                 throw new NullPointerException();
             }
             checkByteStringIsUtf8(value);
-            bitField0_ |= 0x00000001;
             reason_ = value;
+            bitField0_ |= 0x00000004;
             onChanged();
             return this;
         }
@@ -845,7 +794,7 @@ public final class UpdateFriendRequestRequest extends
     }
 
     private static final com.google.protobuf.Parser<UpdateFriendRequestRequest>
-            PARSER = new com.google.protobuf.AbstractParser<UpdateFriendRequestRequest>() {
+            PARSER = new com.google.protobuf.AbstractParser<>() {
         @java.lang.Override
         public UpdateFriendRequestRequest parsePartialFrom(
                 com.google.protobuf.CodedInputStream input,

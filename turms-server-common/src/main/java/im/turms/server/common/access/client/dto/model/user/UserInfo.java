@@ -48,12 +48,6 @@ public final class UserInfo extends
         return new UserInfo();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-        return this.unknownFields;
-    }
-
     public static final com.google.protobuf.Descriptors.Descriptor
     getDescriptor() {
         return im.turms.server.common.access.client.dto.model.user.UserInfoOuterClass.internal_static_im_turms_proto_UserInfo_descriptor;
@@ -69,7 +63,7 @@ public final class UserInfo extends
 
     private int bitField0_;
     public static final int ID_FIELD_NUMBER = 1;
-    private long id_;
+    private long id_ = 0L;
 
     /**
      * <code>optional int64 id = 1;</code>
@@ -92,7 +86,8 @@ public final class UserInfo extends
     }
 
     public static final int NAME_FIELD_NUMBER = 2;
-    private volatile java.lang.Object name_;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object name_ = "";
 
     /**
      * <code>optional string name = 2;</code>
@@ -144,7 +139,8 @@ public final class UserInfo extends
     }
 
     public static final int INTRO_FIELD_NUMBER = 3;
-    private volatile java.lang.Object intro_;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object intro_ = "";
 
     /**
      * <code>optional string intro = 3;</code>
@@ -196,7 +192,8 @@ public final class UserInfo extends
     }
 
     public static final int PROFILE_PICTURE_FIELD_NUMBER = 4;
-    private volatile java.lang.Object profilePicture_;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object profilePicture_ = "";
 
     /**
      * <code>optional string profile_picture = 4;</code>
@@ -248,7 +245,7 @@ public final class UserInfo extends
     }
 
     public static final int PROFILE_ACCESS_STRATEGY_FIELD_NUMBER = 5;
-    private int profileAccessStrategy_;
+    private int profileAccessStrategy_ = 0;
 
     /**
      * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 5;</code>
@@ -277,13 +274,12 @@ public final class UserInfo extends
      */
     @java.lang.Override
     public im.turms.server.common.access.client.dto.constant.ProfileAccessStrategy getProfileAccessStrategy() {
-        @SuppressWarnings("deprecation")
-        im.turms.server.common.access.client.dto.constant.ProfileAccessStrategy result = im.turms.server.common.access.client.dto.constant.ProfileAccessStrategy.valueOf(profileAccessStrategy_);
+        im.turms.server.common.access.client.dto.constant.ProfileAccessStrategy result = im.turms.server.common.access.client.dto.constant.ProfileAccessStrategy.forNumber(profileAccessStrategy_);
         return result == null ? im.turms.server.common.access.client.dto.constant.ProfileAccessStrategy.UNRECOGNIZED : result;
     }
 
     public static final int REGISTRATION_DATE_FIELD_NUMBER = 6;
-    private long registrationDate_;
+    private long registrationDate_ = 0L;
 
     /**
      * <code>optional int64 registration_date = 6;</code>
@@ -306,7 +302,7 @@ public final class UserInfo extends
     }
 
     public static final int LAST_UPDATED_DATE_FIELD_NUMBER = 7;
-    private long lastUpdatedDate_;
+    private long lastUpdatedDate_ = 0L;
 
     /**
      * <code>optional int64 last_updated_date = 7;</code>
@@ -329,7 +325,7 @@ public final class UserInfo extends
     }
 
     public static final int ACTIVE_FIELD_NUMBER = 8;
-    private boolean active_;
+    private boolean active_ = false;
 
     /**
      * <code>optional bool active = 8;</code>
@@ -444,10 +440,9 @@ public final class UserInfo extends
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof im.turms.server.common.access.client.dto.model.user.UserInfo)) {
+        if (!(obj instanceof UserInfo other)) {
             return super.equals(obj);
         }
-        im.turms.server.common.access.client.dto.model.user.UserInfo other = (im.turms.server.common.access.client.dto.model.user.UserInfo) obj;
 
         if (hasId() != other.hasId()) {
             return false;
@@ -520,10 +515,7 @@ public final class UserInfo extends
                 return false;
             }
         }
-        if (!getUnknownFields().equals(other.getUnknownFields())) {
-            return false;
-        }
-        return true;
+        return getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -677,8 +669,7 @@ public final class UserInfo extends
     @java.lang.Override
     protected Builder newBuilderForType(
             com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
+        return new Builder(parent);
     }
 
     /**
@@ -715,22 +706,15 @@ public final class UserInfo extends
         @java.lang.Override
         public Builder clear() {
             super.clear();
+            bitField0_ = 0;
             id_ = 0L;
-            bitField0_ = (bitField0_ & ~0x00000001);
             name_ = "";
-            bitField0_ = (bitField0_ & ~0x00000002);
             intro_ = "";
-            bitField0_ = (bitField0_ & ~0x00000004);
             profilePicture_ = "";
-            bitField0_ = (bitField0_ & ~0x00000008);
             profileAccessStrategy_ = 0;
-            bitField0_ = (bitField0_ & ~0x00000010);
             registrationDate_ = 0L;
-            bitField0_ = (bitField0_ & ~0x00000020);
             lastUpdatedDate_ = 0L;
-            bitField0_ = (bitField0_ & ~0x00000040);
             active_ = false;
-            bitField0_ = (bitField0_ & ~0x00000080);
             return this;
         }
 
@@ -757,6 +741,14 @@ public final class UserInfo extends
         @java.lang.Override
         public im.turms.server.common.access.client.dto.model.user.UserInfo buildPartial() {
             im.turms.server.common.access.client.dto.model.user.UserInfo result = new im.turms.server.common.access.client.dto.model.user.UserInfo(this);
+            if (bitField0_ != 0) {
+                buildPartial0(result);
+            }
+            onBuilt();
+            return result;
+        }
+
+        private void buildPartial0(im.turms.server.common.access.client.dto.model.user.UserInfo result) {
             int from_bitField0_ = bitField0_;
             int to_bitField0_ = 0;
             if (((from_bitField0_ & 0x00000001) != 0)) {
@@ -764,21 +756,21 @@ public final class UserInfo extends
                 to_bitField0_ |= 0x00000001;
             }
             if (((from_bitField0_ & 0x00000002) != 0)) {
+                result.name_ = name_;
                 to_bitField0_ |= 0x00000002;
             }
-            result.name_ = name_;
             if (((from_bitField0_ & 0x00000004) != 0)) {
+                result.intro_ = intro_;
                 to_bitField0_ |= 0x00000004;
             }
-            result.intro_ = intro_;
             if (((from_bitField0_ & 0x00000008) != 0)) {
+                result.profilePicture_ = profilePicture_;
                 to_bitField0_ |= 0x00000008;
             }
-            result.profilePicture_ = profilePicture_;
             if (((from_bitField0_ & 0x00000010) != 0)) {
+                result.profileAccessStrategy_ = profileAccessStrategy_;
                 to_bitField0_ |= 0x00000010;
             }
-            result.profileAccessStrategy_ = profileAccessStrategy_;
             if (((from_bitField0_ & 0x00000020) != 0)) {
                 result.registrationDate_ = registrationDate_;
                 to_bitField0_ |= 0x00000020;
@@ -791,47 +783,7 @@ public final class UserInfo extends
                 result.active_ = active_;
                 to_bitField0_ |= 0x00000080;
             }
-            result.bitField0_ = to_bitField0_;
-            onBuilt();
-            return result;
-        }
-
-        @java.lang.Override
-        public Builder clone() {
-            return super.clone();
-        }
-
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(
-                com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(
-                com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index, java.lang.Object value) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.addRepeatedField(field, value);
+            result.bitField0_ |= to_bitField0_;
         }
 
         @java.lang.Override
@@ -852,18 +804,18 @@ public final class UserInfo extends
                 setId(other.getId());
             }
             if (other.hasName()) {
-                bitField0_ |= 0x00000002;
                 name_ = other.name_;
+                bitField0_ |= 0x00000002;
                 onChanged();
             }
             if (other.hasIntro()) {
-                bitField0_ |= 0x00000004;
                 intro_ = other.intro_;
+                bitField0_ |= 0x00000004;
                 onChanged();
             }
             if (other.hasProfilePicture()) {
-                bitField0_ |= 0x00000008;
                 profilePicture_ = other.profilePicture_;
+                bitField0_ |= 0x00000008;
                 onChanged();
             }
             if (other.hasProfileAccessStrategy()) {
@@ -901,54 +853,43 @@ public final class UserInfo extends
                 while (!done) {
                     int tag = input.readTag();
                     switch (tag) {
-                        case 0:
-                            done = true;
-                            break;
-                        case 8: {
+                        case 0 -> done = true;
+                        case 8 -> {
                             id_ = input.readInt64();
                             bitField0_ |= 0x00000001;
-                            break;
                         } // case 8
-                        case 18: {
+                        case 18 -> {
                             name_ = input.readStringRequireUtf8();
                             bitField0_ |= 0x00000002;
-                            break;
                         } // case 18
-                        case 26: {
+                        case 26 -> {
                             intro_ = input.readStringRequireUtf8();
                             bitField0_ |= 0x00000004;
-                            break;
                         } // case 26
-                        case 34: {
+                        case 34 -> {
                             profilePicture_ = input.readStringRequireUtf8();
                             bitField0_ |= 0x00000008;
-                            break;
                         } // case 34
-                        case 40: {
+                        case 40 -> {
                             profileAccessStrategy_ = input.readEnum();
                             bitField0_ |= 0x00000010;
-                            break;
                         } // case 40
-                        case 48: {
+                        case 48 -> {
                             registrationDate_ = input.readInt64();
                             bitField0_ |= 0x00000020;
-                            break;
                         } // case 48
-                        case 56: {
+                        case 56 -> {
                             lastUpdatedDate_ = input.readInt64();
                             bitField0_ |= 0x00000040;
-                            break;
                         } // case 56
-                        case 64: {
+                        case 64 -> {
                             active_ = input.readBool();
                             bitField0_ |= 0x00000080;
-                            break;
                         } // case 64
-                        default: {
+                        default -> {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
                             }
-                            break;
                         } // default:
                     } // switch (tag)
                 } // while (!done)
@@ -991,8 +932,9 @@ public final class UserInfo extends
          * @return This builder for chaining.
          */
         public Builder setId(long value) {
-            bitField0_ |= 0x00000001;
+
             id_ = value;
+            bitField0_ |= 0x00000001;
             onChanged();
             return this;
         }
@@ -1003,7 +945,7 @@ public final class UserInfo extends
          * @return This builder for chaining.
          */
         public Builder clearId() {
-            bitField0_ = (bitField0_ & ~0x00000001);
+            bitField0_ &= ~0x00000001;
             id_ = 0L;
             onChanged();
             return this;
@@ -1068,8 +1010,8 @@ public final class UserInfo extends
             if (value == null) {
                 throw new NullPointerException();
             }
-            bitField0_ |= 0x00000002;
             name_ = value;
+            bitField0_ |= 0x00000002;
             onChanged();
             return this;
         }
@@ -1080,8 +1022,8 @@ public final class UserInfo extends
          * @return This builder for chaining.
          */
         public Builder clearName() {
-            bitField0_ = (bitField0_ & ~0x00000002);
             name_ = getDefaultInstance().getName();
+            bitField0_ &= ~0x00000002;
             onChanged();
             return this;
         }
@@ -1098,8 +1040,8 @@ public final class UserInfo extends
                 throw new NullPointerException();
             }
             checkByteStringIsUtf8(value);
-            bitField0_ |= 0x00000002;
             name_ = value;
+            bitField0_ |= 0x00000002;
             onChanged();
             return this;
         }
@@ -1163,8 +1105,8 @@ public final class UserInfo extends
             if (value == null) {
                 throw new NullPointerException();
             }
-            bitField0_ |= 0x00000004;
             intro_ = value;
+            bitField0_ |= 0x00000004;
             onChanged();
             return this;
         }
@@ -1175,8 +1117,8 @@ public final class UserInfo extends
          * @return This builder for chaining.
          */
         public Builder clearIntro() {
-            bitField0_ = (bitField0_ & ~0x00000004);
             intro_ = getDefaultInstance().getIntro();
+            bitField0_ &= ~0x00000004;
             onChanged();
             return this;
         }
@@ -1193,8 +1135,8 @@ public final class UserInfo extends
                 throw new NullPointerException();
             }
             checkByteStringIsUtf8(value);
-            bitField0_ |= 0x00000004;
             intro_ = value;
+            bitField0_ |= 0x00000004;
             onChanged();
             return this;
         }
@@ -1258,8 +1200,8 @@ public final class UserInfo extends
             if (value == null) {
                 throw new NullPointerException();
             }
-            bitField0_ |= 0x00000008;
             profilePicture_ = value;
+            bitField0_ |= 0x00000008;
             onChanged();
             return this;
         }
@@ -1270,8 +1212,8 @@ public final class UserInfo extends
          * @return This builder for chaining.
          */
         public Builder clearProfilePicture() {
-            bitField0_ = (bitField0_ & ~0x00000008);
             profilePicture_ = getDefaultInstance().getProfilePicture();
+            bitField0_ &= ~0x00000008;
             onChanged();
             return this;
         }
@@ -1288,8 +1230,8 @@ public final class UserInfo extends
                 throw new NullPointerException();
             }
             checkByteStringIsUtf8(value);
-            bitField0_ |= 0x00000008;
             profilePicture_ = value;
+            bitField0_ |= 0x00000008;
             onChanged();
             return this;
         }
@@ -1323,8 +1265,8 @@ public final class UserInfo extends
          * @return This builder for chaining.
          */
         public Builder setProfileAccessStrategyValue(int value) {
-            bitField0_ |= 0x00000010;
             profileAccessStrategy_ = value;
+            bitField0_ |= 0x00000010;
             onChanged();
             return this;
         }
@@ -1336,8 +1278,7 @@ public final class UserInfo extends
          */
         @java.lang.Override
         public im.turms.server.common.access.client.dto.constant.ProfileAccessStrategy getProfileAccessStrategy() {
-            @SuppressWarnings("deprecation")
-            im.turms.server.common.access.client.dto.constant.ProfileAccessStrategy result = im.turms.server.common.access.client.dto.constant.ProfileAccessStrategy.valueOf(profileAccessStrategy_);
+            im.turms.server.common.access.client.dto.constant.ProfileAccessStrategy result = im.turms.server.common.access.client.dto.constant.ProfileAccessStrategy.forNumber(profileAccessStrategy_);
             return result == null ? im.turms.server.common.access.client.dto.constant.ProfileAccessStrategy.UNRECOGNIZED : result;
         }
 
@@ -1363,7 +1304,7 @@ public final class UserInfo extends
          * @return This builder for chaining.
          */
         public Builder clearProfileAccessStrategy() {
-            bitField0_ = (bitField0_ & ~0x00000010);
+            bitField0_ &= ~0x00000010;
             profileAccessStrategy_ = 0;
             onChanged();
             return this;
@@ -1398,8 +1339,9 @@ public final class UserInfo extends
          * @return This builder for chaining.
          */
         public Builder setRegistrationDate(long value) {
-            bitField0_ |= 0x00000020;
+
             registrationDate_ = value;
+            bitField0_ |= 0x00000020;
             onChanged();
             return this;
         }
@@ -1410,7 +1352,7 @@ public final class UserInfo extends
          * @return This builder for chaining.
          */
         public Builder clearRegistrationDate() {
-            bitField0_ = (bitField0_ & ~0x00000020);
+            bitField0_ &= ~0x00000020;
             registrationDate_ = 0L;
             onChanged();
             return this;
@@ -1445,8 +1387,9 @@ public final class UserInfo extends
          * @return This builder for chaining.
          */
         public Builder setLastUpdatedDate(long value) {
-            bitField0_ |= 0x00000040;
+
             lastUpdatedDate_ = value;
+            bitField0_ |= 0x00000040;
             onChanged();
             return this;
         }
@@ -1457,7 +1400,7 @@ public final class UserInfo extends
          * @return This builder for chaining.
          */
         public Builder clearLastUpdatedDate() {
-            bitField0_ = (bitField0_ & ~0x00000040);
+            bitField0_ &= ~0x00000040;
             lastUpdatedDate_ = 0L;
             onChanged();
             return this;
@@ -1492,8 +1435,9 @@ public final class UserInfo extends
          * @return This builder for chaining.
          */
         public Builder setActive(boolean value) {
-            bitField0_ |= 0x00000080;
+
             active_ = value;
+            bitField0_ |= 0x00000080;
             onChanged();
             return this;
         }
@@ -1504,7 +1448,7 @@ public final class UserInfo extends
          * @return This builder for chaining.
          */
         public Builder clearActive() {
-            bitField0_ = (bitField0_ & ~0x00000080);
+            bitField0_ &= ~0x00000080;
             active_ = false;
             onChanged();
             return this;
@@ -1538,7 +1482,7 @@ public final class UserInfo extends
     }
 
     private static final com.google.protobuf.Parser<UserInfo>
-            PARSER = new com.google.protobuf.AbstractParser<UserInfo>() {
+            PARSER = new com.google.protobuf.AbstractParser<>() {
         @java.lang.Override
         public UserInfo parsePartialFrom(
                 com.google.protobuf.CodedInputStream input,

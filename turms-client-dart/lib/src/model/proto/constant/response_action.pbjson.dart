@@ -10,12 +10,12 @@ import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
 
 @$core.Deprecated('Use responseActionDescriptor instead')
-const ResponseAction$json = {
+const ResponseAction$json = const {
   '1': 'ResponseAction',
-  '2': [
-    {'1': 'ACCEPT', '2': 0},
-    {'1': 'DECLINE', '2': 1},
-    {'1': 'IGNORE', '2': 2},
+  '2': const [
+    const {'1': 'ACCEPT', '2': 0},
+    const {'1': 'DECLINE', '2': 1},
+    const {'1': 'IGNORE', '2': 2},
   ],
 };
 

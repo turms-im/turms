@@ -10,11 +10,11 @@ import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
 
 @$core.Deprecated('Use longsWithVersionDescriptor instead')
-const LongsWithVersion$json = {
+const LongsWithVersion$json = const {
   '1': 'LongsWithVersion',
-  '2': [
-    {'1': 'longs', '3': 1, '4': 3, '5': 3, '10': 'longs'},
-    {
+  '2': const [
+    const {'1': 'longs', '3': 1, '4': 3, '5': 3, '10': 'longs'},
+    const {
       '1': 'last_updated_date',
       '3': 2,
       '4': 1,
@@ -24,8 +24,8 @@ const LongsWithVersion$json = {
       '17': true
     },
   ],
-  '8': [
-    {'1': '_last_updated_date'},
+  '8': const [
+    const {'1': '_last_updated_date'},
   ],
 };
 

@@ -45,12 +45,6 @@ public final class NearbyUsers extends
         return new NearbyUsers();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-        return this.unknownFields;
-    }
-
     public static final com.google.protobuf.Descriptors.Descriptor
     getDescriptor() {
         return im.turms.server.common.access.client.dto.model.user.NearbyUsersOuterClass.internal_static_im_turms_proto_NearbyUsers_descriptor;
@@ -65,6 +59,7 @@ public final class NearbyUsers extends
     }
 
     public static final int NEARBY_USERS_FIELD_NUMBER = 1;
+    @SuppressWarnings("serial")
     private java.util.List<im.turms.server.common.access.client.dto.model.user.NearbyUser> nearbyUsers_;
 
     /**
@@ -128,8 +123,8 @@ public final class NearbyUsers extends
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
             throws java.io.IOException {
-        for (int i = 0; i < nearbyUsers_.size(); i++) {
-            output.writeMessage(1, nearbyUsers_.get(i));
+        for (NearbyUser nearbyUser : nearbyUsers_) {
+            output.writeMessage(1, nearbyUser);
         }
         getUnknownFields().writeTo(output);
     }
@@ -142,9 +137,9 @@ public final class NearbyUsers extends
         }
 
         size = 0;
-        for (int i = 0; i < nearbyUsers_.size(); i++) {
+        for (NearbyUser nearbyUser : nearbyUsers_) {
             size += com.google.protobuf.CodedOutputStream
-                    .computeMessageSize(1, nearbyUsers_.get(i));
+                    .computeMessageSize(1, nearbyUser);
         }
         size += getUnknownFields().getSerializedSize();
         memoizedSize = size;
@@ -156,19 +151,15 @@ public final class NearbyUsers extends
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof im.turms.server.common.access.client.dto.model.user.NearbyUsers)) {
+        if (!(obj instanceof NearbyUsers other)) {
             return super.equals(obj);
         }
-        im.turms.server.common.access.client.dto.model.user.NearbyUsers other = (im.turms.server.common.access.client.dto.model.user.NearbyUsers) obj;
 
         if (!getNearbyUsersList()
                 .equals(other.getNearbyUsersList())) {
             return false;
         }
-        if (!getUnknownFields().equals(other.getUnknownFields())) {
-            return false;
-        }
-        return true;
+        return getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -290,8 +281,7 @@ public final class NearbyUsers extends
     @java.lang.Override
     protected Builder newBuilderForType(
             com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
+        return new Builder(parent);
     }
 
     /**
@@ -328,13 +318,14 @@ public final class NearbyUsers extends
         @java.lang.Override
         public Builder clear() {
             super.clear();
+            bitField0_ = 0;
             if (nearbyUsersBuilder_ == null) {
                 nearbyUsers_ = java.util.Collections.emptyList();
             } else {
                 nearbyUsers_ = null;
                 nearbyUsersBuilder_.clear();
             }
-            bitField0_ = (bitField0_ & ~0x00000001);
+            bitField0_ &= ~0x00000001;
             return this;
         }
 
@@ -361,56 +352,28 @@ public final class NearbyUsers extends
         @java.lang.Override
         public im.turms.server.common.access.client.dto.model.user.NearbyUsers buildPartial() {
             im.turms.server.common.access.client.dto.model.user.NearbyUsers result = new im.turms.server.common.access.client.dto.model.user.NearbyUsers(this);
-            int from_bitField0_ = bitField0_;
-            if (nearbyUsersBuilder_ == null) {
-                if (((bitField0_ & 0x00000001) != 0)) {
-                    nearbyUsers_ = java.util.Collections.unmodifiableList(nearbyUsers_);
-                    bitField0_ = (bitField0_ & ~0x00000001);
-                }
-                result.nearbyUsers_ = nearbyUsers_;
-            } else {
-                result.nearbyUsers_ = nearbyUsersBuilder_.build();
+            buildPartialRepeatedFields(result);
+            if (bitField0_ != 0) {
+                buildPartial0(result);
             }
             onBuilt();
             return result;
         }
 
-        @java.lang.Override
-        public Builder clone() {
-            return super.clone();
+        private void buildPartialRepeatedFields(im.turms.server.common.access.client.dto.model.user.NearbyUsers result) {
+            if (nearbyUsersBuilder_ == null) {
+                if (((bitField0_ & 0x00000001) != 0)) {
+                    nearbyUsers_ = java.util.Collections.unmodifiableList(nearbyUsers_);
+                    bitField0_ &= ~0x00000001;
+                }
+                result.nearbyUsers_ = nearbyUsers_;
+            } else {
+                result.nearbyUsers_ = nearbyUsersBuilder_.build();
+            }
         }
 
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(
-                com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(
-                com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index, java.lang.Object value) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.addRepeatedField(field, value);
+        private void buildPartial0(im.turms.server.common.access.client.dto.model.user.NearbyUsers result) {
+            int from_bitField0_ = bitField0_;
         }
 
         @java.lang.Override
@@ -431,7 +394,7 @@ public final class NearbyUsers extends
                 if (!other.nearbyUsers_.isEmpty()) {
                     if (nearbyUsers_.isEmpty()) {
                         nearbyUsers_ = other.nearbyUsers_;
-                        bitField0_ = (bitField0_ & ~0x00000001);
+                        bitField0_ &= ~0x00000001;
                     } else {
                         ensureNearbyUsersIsMutable();
                         nearbyUsers_.addAll(other.nearbyUsers_);
@@ -444,7 +407,7 @@ public final class NearbyUsers extends
                         nearbyUsersBuilder_.dispose();
                         nearbyUsersBuilder_ = null;
                         nearbyUsers_ = other.nearbyUsers_;
-                        bitField0_ = (bitField0_ & ~0x00000001);
+                        bitField0_ &= ~0x00000001;
                         nearbyUsersBuilder_ =
                                 com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
                                         getNearbyUsersFieldBuilder() : null;
@@ -476,13 +439,11 @@ public final class NearbyUsers extends
                 while (!done) {
                     int tag = input.readTag();
                     switch (tag) {
-                        case 0:
-                            done = true;
-                            break;
-                        case 10: {
-                            im.turms.server.common.access.client.dto.model.user.NearbyUser m =
+                        case 0 -> done = true;
+                        case 10 -> {
+                            NearbyUser m =
                                     input.readMessage(
-                                            im.turms.server.common.access.client.dto.model.user.NearbyUser.parser(),
+                                            NearbyUser.parser(),
                                             extensionRegistry);
                             if (nearbyUsersBuilder_ == null) {
                                 ensureNearbyUsersIsMutable();
@@ -490,13 +451,11 @@ public final class NearbyUsers extends
                             } else {
                                 nearbyUsersBuilder_.addMessage(m);
                             }
-                            break;
                         } // case 10
-                        default: {
+                        default -> {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
                             }
-                            break;
                         } // default:
                     } // switch (tag)
                 } // while (!done)
@@ -514,15 +473,14 @@ public final class NearbyUsers extends
                 java.util.Collections.emptyList();
 
         private void ensureNearbyUsersIsMutable() {
-            if (!((bitField0_ & 0x00000001) != 0)) {
-                nearbyUsers_ = new java.util.ArrayList<im.turms.server.common.access.client.dto.model.user.NearbyUser>(nearbyUsers_);
+            if ((bitField0_ & 0x00000001) == 0) {
+                nearbyUsers_ = new java.util.ArrayList<>(nearbyUsers_);
                 bitField0_ |= 0x00000001;
             }
         }
 
         private com.google.protobuf.RepeatedFieldBuilderV3<
-                im.turms.server.common.access.client.dto.model.user.NearbyUser, im.turms.server.common.access.client.dto.model.user.NearbyUser.Builder, im.turms.server.common.access.client.dto.model.user.NearbyUserOrBuilder>
-                nearbyUsersBuilder_;
+                im.turms.server.common.access.client.dto.model.user.NearbyUser, im.turms.server.common.access.client.dto.model.user.NearbyUser.Builder, im.turms.server.common.access.client.dto.model.user.NearbyUserOrBuilder> nearbyUsersBuilder_;
 
         /**
          * <code>repeated .im.turms.proto.NearbyUser nearby_users = 1;</code>
@@ -677,7 +635,7 @@ public final class NearbyUsers extends
         public Builder clearNearbyUsers() {
             if (nearbyUsersBuilder_ == null) {
                 nearbyUsers_ = java.util.Collections.emptyList();
-                bitField0_ = (bitField0_ & ~0x00000001);
+                bitField0_ &= ~0x00000001;
                 onChanged();
             } else {
                 nearbyUsersBuilder_.clear();
@@ -760,8 +718,7 @@ public final class NearbyUsers extends
                 im.turms.server.common.access.client.dto.model.user.NearbyUser, im.turms.server.common.access.client.dto.model.user.NearbyUser.Builder, im.turms.server.common.access.client.dto.model.user.NearbyUserOrBuilder>
         getNearbyUsersFieldBuilder() {
             if (nearbyUsersBuilder_ == null) {
-                nearbyUsersBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
-                        im.turms.server.common.access.client.dto.model.user.NearbyUser, im.turms.server.common.access.client.dto.model.user.NearbyUser.Builder, im.turms.server.common.access.client.dto.model.user.NearbyUserOrBuilder>(
+                nearbyUsersBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<>(
                         nearbyUsers_,
                         ((bitField0_ & 0x00000001) != 0),
                         getParentForChildren(),
@@ -799,7 +756,7 @@ public final class NearbyUsers extends
     }
 
     private static final com.google.protobuf.Parser<NearbyUsers>
-            PARSER = new com.google.protobuf.AbstractParser<NearbyUsers>() {
+            PARSER = new com.google.protobuf.AbstractParser<>() {
         @java.lang.Override
         public NearbyUsers parsePartialFrom(
                 com.google.protobuf.CodedInputStream input,

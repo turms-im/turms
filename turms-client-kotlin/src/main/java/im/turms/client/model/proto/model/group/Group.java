@@ -72,7 +72,7 @@ public final class Group extends
      * <code>optional int64 id = 1;</code>
      */
     private void clearId() {
-        bitField0_ = (bitField0_ & ~0x00000001);
+        bitField0_ &= ~0x00000001;
         id_ = 0L;
     }
 
@@ -113,7 +113,7 @@ public final class Group extends
      * <code>optional int64 type_id = 2;</code>
      */
     private void clearTypeId() {
-        bitField0_ = (bitField0_ & ~0x00000002);
+        bitField0_ &= ~0x00000002;
         typeId_ = 0L;
     }
 
@@ -154,7 +154,7 @@ public final class Group extends
      * <code>optional int64 creator_id = 3;</code>
      */
     private void clearCreatorId() {
-        bitField0_ = (bitField0_ & ~0x00000004);
+        bitField0_ &= ~0x00000004;
         creatorId_ = 0L;
     }
 
@@ -195,7 +195,7 @@ public final class Group extends
      * <code>optional int64 owner_id = 4;</code>
      */
     private void clearOwnerId() {
-        bitField0_ = (bitField0_ & ~0x00000008);
+        bitField0_ &= ~0x00000008;
         ownerId_ = 0L;
     }
 
@@ -249,7 +249,7 @@ public final class Group extends
      * <code>optional string name = 5;</code>
      */
     private void clearName() {
-        bitField0_ = (bitField0_ & ~0x00000010);
+        bitField0_ &= ~0x00000010;
         name_ = getDefaultInstance().getName();
     }
 
@@ -315,7 +315,7 @@ public final class Group extends
      * <code>optional string intro = 6;</code>
      */
     private void clearIntro() {
-        bitField0_ = (bitField0_ & ~0x00000020);
+        bitField0_ &= ~0x00000020;
         intro_ = getDefaultInstance().getIntro();
     }
 
@@ -381,7 +381,7 @@ public final class Group extends
      * <code>optional string announcement = 7;</code>
      */
     private void clearAnnouncement() {
-        bitField0_ = (bitField0_ & ~0x00000040);
+        bitField0_ &= ~0x00000040;
         announcement_ = getDefaultInstance().getAnnouncement();
     }
 
@@ -434,7 +434,7 @@ public final class Group extends
      * <code>optional int64 creation_date = 8;</code>
      */
     private void clearCreationDate() {
-        bitField0_ = (bitField0_ & ~0x00000080);
+        bitField0_ &= ~0x00000080;
         creationDate_ = 0L;
     }
 
@@ -475,7 +475,7 @@ public final class Group extends
      * <code>optional int64 last_updated_date = 9;</code>
      */
     private void clearLastUpdatedDate() {
-        bitField0_ = (bitField0_ & ~0x00000100);
+        bitField0_ &= ~0x00000100;
         lastUpdatedDate_ = 0L;
     }
 
@@ -516,7 +516,7 @@ public final class Group extends
      * <code>optional int64 mute_end_date = 10;</code>
      */
     private void clearMuteEndDate() {
-        bitField0_ = (bitField0_ & ~0x00000200);
+        bitField0_ &= ~0x00000200;
         muteEndDate_ = 0L;
     }
 
@@ -557,7 +557,7 @@ public final class Group extends
      * <code>optional bool active = 11;</code>
      */
     private void clearActive() {
-        bitField0_ = (bitField0_ & ~0x00000400);
+        bitField0_ &= ~0x00000400;
         active_ = false;
     }
 
@@ -1263,7 +1263,7 @@ public final class Group extends
                         parser = PARSER;
                         if (parser == null) {
                             parser =
-                                    new DefaultInstanceBasedParser<im.turms.client.model.proto.model.group.Group>(
+                                    new DefaultInstanceBasedParser<>(
                                             DEFAULT_INSTANCE);
                             PARSER = parser;
                         }

@@ -200,7 +200,7 @@ public final class ImageFile extends
          * <code>optional bool original = 2;</code>
          */
         private void clearOriginal() {
-            bitField0_ = (bitField0_ & ~0x00000001);
+            bitField0_ &= ~0x00000001;
             original_ = false;
         }
 
@@ -241,7 +241,7 @@ public final class ImageFile extends
          * <code>optional int32 image_size = 3;</code>
          */
         private void clearImageSize() {
-            bitField0_ = (bitField0_ & ~0x00000002);
+            bitField0_ &= ~0x00000002;
             imageSize_ = 0;
         }
 
@@ -282,7 +282,7 @@ public final class ImageFile extends
          * <code>optional int32 file_size = 4;</code>
          */
         private void clearFileSize() {
-            bitField0_ = (bitField0_ & ~0x00000004);
+            bitField0_ &= ~0x00000004;
             fileSize_ = 0;
         }
 
@@ -619,7 +619,7 @@ public final class ImageFile extends
                             parser = PARSER;
                             if (parser == null) {
                                 parser =
-                                        new DefaultInstanceBasedParser<im.turms.client.model.proto.model.file.ImageFile.Description>(
+                                        new DefaultInstanceBasedParser<>(
                                                 DEFAULT_INSTANCE);
                                 PARSER = parser;
                             }
@@ -711,7 +711,7 @@ public final class ImageFile extends
      */
     private void clearDescription() {
         description_ = null;
-        bitField0_ = (bitField0_ & ~0x00000001);
+        bitField0_ &= ~0x00000001;
     }
 
     public static final int DATA_FIELD_NUMBER = 2;
@@ -752,7 +752,7 @@ public final class ImageFile extends
      * <code>optional bytes data = 2;</code>
      */
     private void clearData() {
-        bitField0_ = (bitField0_ & ~0x00000002);
+        bitField0_ &= ~0x00000002;
         data_ = getDefaultInstance().getData();
     }
 
@@ -996,7 +996,7 @@ public final class ImageFile extends
                         parser = PARSER;
                         if (parser == null) {
                             parser =
-                                    new DefaultInstanceBasedParser<im.turms.client.model.proto.model.file.ImageFile>(
+                                    new DefaultInstanceBasedParser<>(
                                             DEFAULT_INSTANCE);
                             PARSER = parser;
                         }

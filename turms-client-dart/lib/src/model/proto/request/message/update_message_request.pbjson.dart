@@ -10,13 +10,21 @@ import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
 
 @$core.Deprecated('Use updateMessageRequestDescriptor instead')
-const UpdateMessageRequest$json = {
+const UpdateMessageRequest$json = const {
   '1': 'UpdateMessageRequest',
-  '2': [
-    {'1': 'message_id', '3': 1, '4': 1, '5': 3, '10': 'messageId'},
-    {'1': 'text', '3': 2, '4': 1, '5': 9, '9': 0, '10': 'text', '17': true},
-    {'1': 'records', '3': 3, '4': 3, '5': 12, '10': 'records'},
-    {
+  '2': const [
+    const {'1': 'message_id', '3': 1, '4': 1, '5': 3, '10': 'messageId'},
+    const {
+      '1': 'text',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '9': 0,
+      '10': 'text',
+      '17': true
+    },
+    const {'1': 'records', '3': 3, '4': 3, '5': 12, '10': 'records'},
+    const {
       '1': 'recall_date',
       '3': 4,
       '4': 1,
@@ -26,9 +34,9 @@ const UpdateMessageRequest$json = {
       '17': true
     },
   ],
-  '8': [
-    {'1': '_text'},
-    {'1': '_recall_date'},
+  '8': const [
+    const {'1': '_text'},
+    const {'1': '_recall_date'},
   ],
 };
 

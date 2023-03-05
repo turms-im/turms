@@ -44,12 +44,6 @@ public final class GroupConversation extends
         return new GroupConversation();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-        return this.unknownFields;
-    }
-
     public static final com.google.protobuf.Descriptors.Descriptor
     getDescriptor() {
         return im.turms.server.common.access.client.dto.model.conversation.GroupConversationOuterClass.internal_static_im_turms_proto_GroupConversation_descriptor;
@@ -59,13 +53,11 @@ public final class GroupConversation extends
     @java.lang.Override
     protected com.google.protobuf.MapField internalGetMapField(
             int number) {
-        switch (number) {
-            case 2:
-                return internalGetMemberIdToReadDate();
-            default:
-                throw new RuntimeException(
-                        "Invalid map field number: " + number);
-        }
+        return switch (number) {
+            case 2 -> internalGetMemberIdToReadDate();
+            default -> throw new RuntimeException(
+                    "Invalid map field number: " + number);
+        };
     }
 
     @java.lang.Override
@@ -73,12 +65,11 @@ public final class GroupConversation extends
     internalGetFieldAccessorTable() {
         return im.turms.server.common.access.client.dto.model.conversation.GroupConversationOuterClass.internal_static_im_turms_proto_GroupConversation_fieldAccessorTable
                 .ensureFieldAccessorsInitialized(
-                        im.turms.server.common.access.client.dto.model.conversation.GroupConversation.class,
-                        im.turms.server.common.access.client.dto.model.conversation.GroupConversation.Builder.class);
+                        im.turms.server.common.access.client.dto.model.conversation.GroupConversation.class, im.turms.server.common.access.client.dto.model.conversation.GroupConversation.Builder.class);
     }
 
     public static final int GROUP_ID_FIELD_NUMBER = 1;
-    private long groupId_;
+    private long groupId_ = 0L;
 
     /**
      * <code>int64 group_id = 1;</code>
@@ -104,6 +95,7 @@ public final class GroupConversation extends
                                 0L);
     }
 
+    @SuppressWarnings("serial")
     private com.google.protobuf.MapField<
             java.lang.Long, java.lang.Long> memberIdToReadDate_;
 
@@ -123,7 +115,6 @@ public final class GroupConversation extends
     /**
      * <code>map&lt;int64, int64&gt; member_id_to_read_date = 2;</code>
      */
-
     @java.lang.Override
     public boolean containsMemberIdToReadDate(
             long key) {
@@ -144,7 +135,6 @@ public final class GroupConversation extends
      * <code>map&lt;int64, int64&gt; member_id_to_read_date = 2;</code>
      */
     @java.lang.Override
-
     public java.util.Map<java.lang.Long, java.lang.Long> getMemberIdToReadDateMap() {
         return internalGetMemberIdToReadDate().getMap();
     }
@@ -153,21 +143,19 @@ public final class GroupConversation extends
      * <code>map&lt;int64, int64&gt; member_id_to_read_date = 2;</code>
      */
     @java.lang.Override
-
     public long getMemberIdToReadDateOrDefault(
             long key,
             long defaultValue) {
 
         java.util.Map<java.lang.Long, java.lang.Long> map =
                 internalGetMemberIdToReadDate().getMap();
-        return map.containsKey(key) ? map.get(key) : defaultValue;
+        return map.getOrDefault(key, defaultValue);
     }
 
     /**
      * <code>map&lt;int64, int64&gt; member_id_to_read_date = 2;</code>
      */
     @java.lang.Override
-
     public long getMemberIdToReadDateOrThrow(
             long key) {
 
@@ -242,10 +230,9 @@ public final class GroupConversation extends
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof im.turms.server.common.access.client.dto.model.conversation.GroupConversation)) {
+        if (!(obj instanceof GroupConversation other)) {
             return super.equals(obj);
         }
-        im.turms.server.common.access.client.dto.model.conversation.GroupConversation other = (im.turms.server.common.access.client.dto.model.conversation.GroupConversation) obj;
 
         if (getGroupId()
             != other.getGroupId()) {
@@ -255,10 +242,7 @@ public final class GroupConversation extends
                 other.internalGetMemberIdToReadDate())) {
             return false;
         }
-        if (!getUnknownFields().equals(other.getUnknownFields())) {
-            return false;
-        }
-        return true;
+        return getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -383,8 +367,7 @@ public final class GroupConversation extends
     @java.lang.Override
     protected Builder newBuilderForType(
             com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
+        return new Builder(parent);
     }
 
     /**
@@ -402,25 +385,21 @@ public final class GroupConversation extends
         @SuppressWarnings({"rawtypes"})
         protected com.google.protobuf.MapField internalGetMapField(
                 int number) {
-            switch (number) {
-                case 2:
-                    return internalGetMemberIdToReadDate();
-                default:
-                    throw new RuntimeException(
-                            "Invalid map field number: " + number);
-            }
+            return switch (number) {
+                case 2 -> internalGetMemberIdToReadDate();
+                default -> throw new RuntimeException(
+                        "Invalid map field number: " + number);
+            };
         }
 
         @SuppressWarnings({"rawtypes"})
         protected com.google.protobuf.MapField internalGetMutableMapField(
                 int number) {
-            switch (number) {
-                case 2:
-                    return internalGetMutableMemberIdToReadDate();
-                default:
-                    throw new RuntimeException(
-                            "Invalid map field number: " + number);
-            }
+            return switch (number) {
+                case 2 -> internalGetMutableMemberIdToReadDate();
+                default -> throw new RuntimeException(
+                        "Invalid map field number: " + number);
+            };
         }
 
         @java.lang.Override
@@ -428,8 +407,7 @@ public final class GroupConversation extends
         internalGetFieldAccessorTable() {
             return im.turms.server.common.access.client.dto.model.conversation.GroupConversationOuterClass.internal_static_im_turms_proto_GroupConversation_fieldAccessorTable
                     .ensureFieldAccessorsInitialized(
-                            im.turms.server.common.access.client.dto.model.conversation.GroupConversation.class,
-                            im.turms.server.common.access.client.dto.model.conversation.GroupConversation.Builder.class);
+                            im.turms.server.common.access.client.dto.model.conversation.GroupConversation.class, im.turms.server.common.access.client.dto.model.conversation.GroupConversation.Builder.class);
         }
 
         // Construct using im.turms.server.common.access.client.dto.model.conversation.GroupConversation.newBuilder()
@@ -446,8 +424,8 @@ public final class GroupConversation extends
         @java.lang.Override
         public Builder clear() {
             super.clear();
+            bitField0_ = 0;
             groupId_ = 0L;
-
             internalGetMutableMemberIdToReadDate().clear();
             return this;
         }
@@ -475,50 +453,22 @@ public final class GroupConversation extends
         @java.lang.Override
         public im.turms.server.common.access.client.dto.model.conversation.GroupConversation buildPartial() {
             im.turms.server.common.access.client.dto.model.conversation.GroupConversation result = new im.turms.server.common.access.client.dto.model.conversation.GroupConversation(this);
-            int from_bitField0_ = bitField0_;
-            result.groupId_ = groupId_;
-            result.memberIdToReadDate_ = internalGetMemberIdToReadDate();
-            result.memberIdToReadDate_.makeImmutable();
+            if (bitField0_ != 0) {
+                buildPartial0(result);
+            }
             onBuilt();
             return result;
         }
 
-        @java.lang.Override
-        public Builder clone() {
-            return super.clone();
-        }
-
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(
-                com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(
-                com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index, java.lang.Object value) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.addRepeatedField(field, value);
+        private void buildPartial0(im.turms.server.common.access.client.dto.model.conversation.GroupConversation result) {
+            int from_bitField0_ = bitField0_;
+            if (((from_bitField0_ & 0x00000001) != 0)) {
+                result.groupId_ = groupId_;
+            }
+            if (((from_bitField0_ & 0x00000002) != 0)) {
+                result.memberIdToReadDate_ = internalGetMemberIdToReadDate();
+                result.memberIdToReadDate_.makeImmutable();
+            }
         }
 
         @java.lang.Override
@@ -540,6 +490,7 @@ public final class GroupConversation extends
             }
             internalGetMutableMemberIdToReadDate().mergeFrom(
                     other.internalGetMemberIdToReadDate());
+            bitField0_ |= 0x00000002;
             this.mergeUnknownFields(other.getUnknownFields());
             onChanged();
             return this;
@@ -563,27 +514,23 @@ public final class GroupConversation extends
                 while (!done) {
                     int tag = input.readTag();
                     switch (tag) {
-                        case 0:
-                            done = true;
-                            break;
-                        case 8: {
+                        case 0 -> done = true;
+                        case 8 -> {
                             groupId_ = input.readInt64();
-
-                            break;
+                            bitField0_ |= 0x00000001;
                         } // case 8
-                        case 18: {
-                            com.google.protobuf.MapEntry<java.lang.Long, java.lang.Long>
+                        case 18 -> {
+                            com.google.protobuf.MapEntry<Long, Long>
                                     memberIdToReadDate__ = input.readMessage(
                                     MemberIdToReadDateDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
                             internalGetMutableMemberIdToReadDate().getMutableMap().put(
                                     memberIdToReadDate__.getKey(), memberIdToReadDate__.getValue());
-                            break;
+                            bitField0_ |= 0x00000002;
                         } // case 18
-                        default: {
+                        default -> {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
                             }
-                            break;
                         } // default:
                     } // switch (tag)
                 } // while (!done)
@@ -618,6 +565,7 @@ public final class GroupConversation extends
         public Builder setGroupId(long value) {
 
             groupId_ = value;
+            bitField0_ |= 0x00000001;
             onChanged();
             return this;
         }
@@ -628,7 +576,7 @@ public final class GroupConversation extends
          * @return This builder for chaining.
          */
         public Builder clearGroupId() {
-
+            bitField0_ &= ~0x00000001;
             groupId_ = 0L;
             onChanged();
             return this;
@@ -648,8 +596,6 @@ public final class GroupConversation extends
 
         private com.google.protobuf.MapField<java.lang.Long, java.lang.Long>
         internalGetMutableMemberIdToReadDate() {
-            onChanged();
-            ;
             if (memberIdToReadDate_ == null) {
                 memberIdToReadDate_ = com.google.protobuf.MapField.newMapField(
                         MemberIdToReadDateDefaultEntryHolder.defaultEntry);
@@ -657,6 +603,8 @@ public final class GroupConversation extends
             if (!memberIdToReadDate_.isMutable()) {
                 memberIdToReadDate_ = memberIdToReadDate_.copy();
             }
+            bitField0_ |= 0x00000002;
+            onChanged();
             return memberIdToReadDate_;
         }
 
@@ -667,7 +615,6 @@ public final class GroupConversation extends
         /**
          * <code>map&lt;int64, int64&gt; member_id_to_read_date = 2;</code>
          */
-
         @java.lang.Override
         public boolean containsMemberIdToReadDate(
                 long key) {
@@ -688,7 +635,6 @@ public final class GroupConversation extends
          * <code>map&lt;int64, int64&gt; member_id_to_read_date = 2;</code>
          */
         @java.lang.Override
-
         public java.util.Map<java.lang.Long, java.lang.Long> getMemberIdToReadDateMap() {
             return internalGetMemberIdToReadDate().getMap();
         }
@@ -697,21 +643,19 @@ public final class GroupConversation extends
          * <code>map&lt;int64, int64&gt; member_id_to_read_date = 2;</code>
          */
         @java.lang.Override
-
         public long getMemberIdToReadDateOrDefault(
                 long key,
                 long defaultValue) {
 
             java.util.Map<java.lang.Long, java.lang.Long> map =
                     internalGetMemberIdToReadDate().getMap();
-            return map.containsKey(key) ? map.get(key) : defaultValue;
+            return map.getOrDefault(key, defaultValue);
         }
 
         /**
          * <code>map&lt;int64, int64&gt; member_id_to_read_date = 2;</code>
          */
         @java.lang.Override
-
         public long getMemberIdToReadDateOrThrow(
                 long key) {
 
@@ -724,6 +668,7 @@ public final class GroupConversation extends
         }
 
         public Builder clearMemberIdToReadDate() {
+            bitField0_ &= ~0x00000002;
             internalGetMutableMemberIdToReadDate().getMutableMap()
                     .clear();
             return this;
@@ -732,7 +677,6 @@ public final class GroupConversation extends
         /**
          * <code>map&lt;int64, int64&gt; member_id_to_read_date = 2;</code>
          */
-
         public Builder removeMemberIdToReadDate(
                 long key) {
 
@@ -747,6 +691,7 @@ public final class GroupConversation extends
         @java.lang.Deprecated
         public java.util.Map<java.lang.Long, java.lang.Long>
         getMutableMemberIdToReadDate() {
+            bitField0_ |= 0x00000002;
             return internalGetMutableMemberIdToReadDate().getMutableMap();
         }
 
@@ -760,17 +705,18 @@ public final class GroupConversation extends
 
             internalGetMutableMemberIdToReadDate().getMutableMap()
                     .put(key, value);
+            bitField0_ |= 0x00000002;
             return this;
         }
 
         /**
          * <code>map&lt;int64, int64&gt; member_id_to_read_date = 2;</code>
          */
-
         public Builder putAllMemberIdToReadDate(
                 java.util.Map<java.lang.Long, java.lang.Long> values) {
             internalGetMutableMemberIdToReadDate().getMutableMap()
                     .putAll(values);
+            bitField0_ |= 0x00000002;
             return this;
         }
 
@@ -802,7 +748,7 @@ public final class GroupConversation extends
     }
 
     private static final com.google.protobuf.Parser<GroupConversation>
-            PARSER = new com.google.protobuf.AbstractParser<GroupConversation>() {
+            PARSER = new com.google.protobuf.AbstractParser<>() {
         @java.lang.Override
         public GroupConversation parsePartialFrom(
                 com.google.protobuf.CodedInputStream input,

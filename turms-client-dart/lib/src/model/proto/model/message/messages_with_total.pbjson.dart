@@ -10,13 +10,19 @@ import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
 
 @$core.Deprecated('Use messagesWithTotalDescriptor instead')
-const MessagesWithTotal$json = {
+const MessagesWithTotal$json = const {
   '1': 'MessagesWithTotal',
-  '2': [
-    {'1': 'total', '3': 1, '4': 1, '5': 5, '10': 'total'},
-    {'1': 'is_group_message', '3': 2, '4': 1, '5': 8, '10': 'isGroupMessage'},
-    {'1': 'from_id', '3': 3, '4': 1, '5': 3, '10': 'fromId'},
-    {
+  '2': const [
+    const {'1': 'total', '3': 1, '4': 1, '5': 5, '10': 'total'},
+    const {
+      '1': 'is_group_message',
+      '3': 2,
+      '4': 1,
+      '5': 8,
+      '10': 'isGroupMessage'
+    },
+    const {'1': 'from_id', '3': 3, '4': 1, '5': 3, '10': 'fromId'},
+    const {
       '1': 'messages',
       '3': 4,
       '4': 3,

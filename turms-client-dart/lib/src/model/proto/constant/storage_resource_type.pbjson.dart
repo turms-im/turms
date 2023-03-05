@@ -10,12 +10,12 @@ import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
 
 @$core.Deprecated('Use storageResourceTypeDescriptor instead')
-const StorageResourceType$json = {
+const StorageResourceType$json = const {
   '1': 'StorageResourceType',
-  '2': [
-    {'1': 'USER_PROFILE_PICTURE', '2': 0},
-    {'1': 'GROUP_PROFILE_PICTURE', '2': 1},
-    {'1': 'MESSAGE_ATTACHMENT', '2': 2},
+  '2': const [
+    const {'1': 'USER_PROFILE_PICTURE', '2': 0},
+    const {'1': 'GROUP_PROFILE_PICTURE', '2': 1},
+    const {'1': 'MESSAGE_ATTACHMENT', '2': 2},
   ],
 };
 

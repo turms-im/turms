@@ -10,10 +10,10 @@ import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
 
 @$core.Deprecated('Use checkGroupJoinQuestionsAnswersRequestDescriptor instead')
-const CheckGroupJoinQuestionsAnswersRequest$json = {
+const CheckGroupJoinQuestionsAnswersRequest$json = const {
   '1': 'CheckGroupJoinQuestionsAnswersRequest',
-  '2': [
-    {
+  '2': const [
+    const {
       '1': 'question_id_to_answer',
       '3': 1,
       '4': 3,
@@ -23,17 +23,20 @@ const CheckGroupJoinQuestionsAnswersRequest$json = {
       '10': 'questionIdToAnswer'
     },
   ],
-  '3': [CheckGroupJoinQuestionsAnswersRequest_QuestionIdToAnswerEntry$json],
+  '3': const [
+    CheckGroupJoinQuestionsAnswersRequest_QuestionIdToAnswerEntry$json
+  ],
 };
 
 @$core.Deprecated('Use checkGroupJoinQuestionsAnswersRequestDescriptor instead')
-const CheckGroupJoinQuestionsAnswersRequest_QuestionIdToAnswerEntry$json = {
+const CheckGroupJoinQuestionsAnswersRequest_QuestionIdToAnswerEntry$json =
+    const {
   '1': 'QuestionIdToAnswerEntry',
-  '2': [
-    {'1': 'key', '3': 1, '4': 1, '5': 3, '10': 'key'},
-    {'1': 'value', '3': 2, '4': 1, '5': 9, '10': 'value'},
+  '2': const [
+    const {'1': 'key', '3': 1, '4': 1, '5': 3, '10': 'key'},
+    const {'1': 'value', '3': 2, '4': 1, '5': 9, '10': 'value'},
   ],
-  '7': {'7': true},
+  '7': const {'7': true},
 };
 
 /// Descriptor for `CheckGroupJoinQuestionsAnswersRequest`. Decode as a `google.protobuf.DescriptorProto`.

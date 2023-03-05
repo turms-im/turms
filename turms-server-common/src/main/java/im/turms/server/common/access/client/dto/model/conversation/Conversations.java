@@ -46,12 +46,6 @@ public final class Conversations extends
         return new Conversations();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-        return this.unknownFields;
-    }
-
     public static final com.google.protobuf.Descriptors.Descriptor
     getDescriptor() {
         return im.turms.server.common.access.client.dto.model.conversation.ConversationsOuterClass.internal_static_im_turms_proto_Conversations_descriptor;
@@ -66,6 +60,7 @@ public final class Conversations extends
     }
 
     public static final int PRIVATE_CONVERSATIONS_FIELD_NUMBER = 1;
+    @SuppressWarnings("serial")
     private java.util.List<im.turms.server.common.access.client.dto.model.conversation.PrivateConversation> privateConversations_;
 
     /**
@@ -111,6 +106,7 @@ public final class Conversations extends
     }
 
     public static final int GROUP_CONVERSATIONS_FIELD_NUMBER = 2;
+    @SuppressWarnings("serial")
     private java.util.List<im.turms.server.common.access.client.dto.model.conversation.GroupConversation> groupConversations_;
 
     /**
@@ -174,11 +170,11 @@ public final class Conversations extends
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
             throws java.io.IOException {
-        for (int i = 0; i < privateConversations_.size(); i++) {
-            output.writeMessage(1, privateConversations_.get(i));
+        for (PrivateConversation privateConversation : privateConversations_) {
+            output.writeMessage(1, privateConversation);
         }
-        for (int i = 0; i < groupConversations_.size(); i++) {
-            output.writeMessage(2, groupConversations_.get(i));
+        for (GroupConversation groupConversation : groupConversations_) {
+            output.writeMessage(2, groupConversation);
         }
         getUnknownFields().writeTo(output);
     }
@@ -191,13 +187,13 @@ public final class Conversations extends
         }
 
         size = 0;
-        for (int i = 0; i < privateConversations_.size(); i++) {
+        for (PrivateConversation privateConversation : privateConversations_) {
             size += com.google.protobuf.CodedOutputStream
-                    .computeMessageSize(1, privateConversations_.get(i));
+                    .computeMessageSize(1, privateConversation);
         }
-        for (int i = 0; i < groupConversations_.size(); i++) {
+        for (GroupConversation groupConversation : groupConversations_) {
             size += com.google.protobuf.CodedOutputStream
-                    .computeMessageSize(2, groupConversations_.get(i));
+                    .computeMessageSize(2, groupConversation);
         }
         size += getUnknownFields().getSerializedSize();
         memoizedSize = size;
@@ -209,10 +205,9 @@ public final class Conversations extends
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof im.turms.server.common.access.client.dto.model.conversation.Conversations)) {
+        if (!(obj instanceof Conversations other)) {
             return super.equals(obj);
         }
-        im.turms.server.common.access.client.dto.model.conversation.Conversations other = (im.turms.server.common.access.client.dto.model.conversation.Conversations) obj;
 
         if (!getPrivateConversationsList()
                 .equals(other.getPrivateConversationsList())) {
@@ -222,10 +217,7 @@ public final class Conversations extends
                 .equals(other.getGroupConversationsList())) {
             return false;
         }
-        if (!getUnknownFields().equals(other.getUnknownFields())) {
-            return false;
-        }
-        return true;
+        return getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -351,8 +343,7 @@ public final class Conversations extends
     @java.lang.Override
     protected Builder newBuilderForType(
             com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
+        return new Builder(parent);
     }
 
     /**
@@ -389,20 +380,21 @@ public final class Conversations extends
         @java.lang.Override
         public Builder clear() {
             super.clear();
+            bitField0_ = 0;
             if (privateConversationsBuilder_ == null) {
                 privateConversations_ = java.util.Collections.emptyList();
             } else {
                 privateConversations_ = null;
                 privateConversationsBuilder_.clear();
             }
-            bitField0_ = (bitField0_ & ~0x00000001);
+            bitField0_ &= ~0x00000001;
             if (groupConversationsBuilder_ == null) {
                 groupConversations_ = java.util.Collections.emptyList();
             } else {
                 groupConversations_ = null;
                 groupConversationsBuilder_.clear();
             }
-            bitField0_ = (bitField0_ & ~0x00000002);
+            bitField0_ &= ~0x00000002;
             return this;
         }
 
@@ -429,11 +421,19 @@ public final class Conversations extends
         @java.lang.Override
         public im.turms.server.common.access.client.dto.model.conversation.Conversations buildPartial() {
             im.turms.server.common.access.client.dto.model.conversation.Conversations result = new im.turms.server.common.access.client.dto.model.conversation.Conversations(this);
-            int from_bitField0_ = bitField0_;
+            buildPartialRepeatedFields(result);
+            if (bitField0_ != 0) {
+                buildPartial0(result);
+            }
+            onBuilt();
+            return result;
+        }
+
+        private void buildPartialRepeatedFields(im.turms.server.common.access.client.dto.model.conversation.Conversations result) {
             if (privateConversationsBuilder_ == null) {
                 if (((bitField0_ & 0x00000001) != 0)) {
                     privateConversations_ = java.util.Collections.unmodifiableList(privateConversations_);
-                    bitField0_ = (bitField0_ & ~0x00000001);
+                    bitField0_ &= ~0x00000001;
                 }
                 result.privateConversations_ = privateConversations_;
             } else {
@@ -442,52 +442,16 @@ public final class Conversations extends
             if (groupConversationsBuilder_ == null) {
                 if (((bitField0_ & 0x00000002) != 0)) {
                     groupConversations_ = java.util.Collections.unmodifiableList(groupConversations_);
-                    bitField0_ = (bitField0_ & ~0x00000002);
+                    bitField0_ &= ~0x00000002;
                 }
                 result.groupConversations_ = groupConversations_;
             } else {
                 result.groupConversations_ = groupConversationsBuilder_.build();
             }
-            onBuilt();
-            return result;
         }
 
-        @java.lang.Override
-        public Builder clone() {
-            return super.clone();
-        }
-
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(
-                com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(
-                com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index, java.lang.Object value) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.addRepeatedField(field, value);
+        private void buildPartial0(im.turms.server.common.access.client.dto.model.conversation.Conversations result) {
+            int from_bitField0_ = bitField0_;
         }
 
         @java.lang.Override
@@ -508,7 +472,7 @@ public final class Conversations extends
                 if (!other.privateConversations_.isEmpty()) {
                     if (privateConversations_.isEmpty()) {
                         privateConversations_ = other.privateConversations_;
-                        bitField0_ = (bitField0_ & ~0x00000001);
+                        bitField0_ &= ~0x00000001;
                     } else {
                         ensurePrivateConversationsIsMutable();
                         privateConversations_.addAll(other.privateConversations_);
@@ -521,7 +485,7 @@ public final class Conversations extends
                         privateConversationsBuilder_.dispose();
                         privateConversationsBuilder_ = null;
                         privateConversations_ = other.privateConversations_;
-                        bitField0_ = (bitField0_ & ~0x00000001);
+                        bitField0_ &= ~0x00000001;
                         privateConversationsBuilder_ =
                                 com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
                                         getPrivateConversationsFieldBuilder() : null;
@@ -534,7 +498,7 @@ public final class Conversations extends
                 if (!other.groupConversations_.isEmpty()) {
                     if (groupConversations_.isEmpty()) {
                         groupConversations_ = other.groupConversations_;
-                        bitField0_ = (bitField0_ & ~0x00000002);
+                        bitField0_ &= ~0x00000002;
                     } else {
                         ensureGroupConversationsIsMutable();
                         groupConversations_.addAll(other.groupConversations_);
@@ -547,7 +511,7 @@ public final class Conversations extends
                         groupConversationsBuilder_.dispose();
                         groupConversationsBuilder_ = null;
                         groupConversations_ = other.groupConversations_;
-                        bitField0_ = (bitField0_ & ~0x00000002);
+                        bitField0_ &= ~0x00000002;
                         groupConversationsBuilder_ =
                                 com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
                                         getGroupConversationsFieldBuilder() : null;
@@ -579,13 +543,11 @@ public final class Conversations extends
                 while (!done) {
                     int tag = input.readTag();
                     switch (tag) {
-                        case 0:
-                            done = true;
-                            break;
-                        case 10: {
-                            im.turms.server.common.access.client.dto.model.conversation.PrivateConversation m =
+                        case 0 -> done = true;
+                        case 10 -> {
+                            PrivateConversation m =
                                     input.readMessage(
-                                            im.turms.server.common.access.client.dto.model.conversation.PrivateConversation.parser(),
+                                            PrivateConversation.parser(),
                                             extensionRegistry);
                             if (privateConversationsBuilder_ == null) {
                                 ensurePrivateConversationsIsMutable();
@@ -593,12 +555,11 @@ public final class Conversations extends
                             } else {
                                 privateConversationsBuilder_.addMessage(m);
                             }
-                            break;
                         } // case 10
-                        case 18: {
-                            im.turms.server.common.access.client.dto.model.conversation.GroupConversation m =
+                        case 18 -> {
+                            GroupConversation m =
                                     input.readMessage(
-                                            im.turms.server.common.access.client.dto.model.conversation.GroupConversation.parser(),
+                                            GroupConversation.parser(),
                                             extensionRegistry);
                             if (groupConversationsBuilder_ == null) {
                                 ensureGroupConversationsIsMutable();
@@ -606,13 +567,11 @@ public final class Conversations extends
                             } else {
                                 groupConversationsBuilder_.addMessage(m);
                             }
-                            break;
                         } // case 18
-                        default: {
+                        default -> {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
                             }
-                            break;
                         } // default:
                     } // switch (tag)
                 } // while (!done)
@@ -630,15 +589,14 @@ public final class Conversations extends
                 java.util.Collections.emptyList();
 
         private void ensurePrivateConversationsIsMutable() {
-            if (!((bitField0_ & 0x00000001) != 0)) {
-                privateConversations_ = new java.util.ArrayList<im.turms.server.common.access.client.dto.model.conversation.PrivateConversation>(privateConversations_);
+            if ((bitField0_ & 0x00000001) == 0) {
+                privateConversations_ = new java.util.ArrayList<>(privateConversations_);
                 bitField0_ |= 0x00000001;
             }
         }
 
         private com.google.protobuf.RepeatedFieldBuilderV3<
-                im.turms.server.common.access.client.dto.model.conversation.PrivateConversation, im.turms.server.common.access.client.dto.model.conversation.PrivateConversation.Builder, im.turms.server.common.access.client.dto.model.conversation.PrivateConversationOrBuilder>
-                privateConversationsBuilder_;
+                im.turms.server.common.access.client.dto.model.conversation.PrivateConversation, im.turms.server.common.access.client.dto.model.conversation.PrivateConversation.Builder, im.turms.server.common.access.client.dto.model.conversation.PrivateConversationOrBuilder> privateConversationsBuilder_;
 
         /**
          * <code>repeated .im.turms.proto.PrivateConversation private_conversations = 1;</code>
@@ -793,7 +751,7 @@ public final class Conversations extends
         public Builder clearPrivateConversations() {
             if (privateConversationsBuilder_ == null) {
                 privateConversations_ = java.util.Collections.emptyList();
-                bitField0_ = (bitField0_ & ~0x00000001);
+                bitField0_ &= ~0x00000001;
                 onChanged();
             } else {
                 privateConversationsBuilder_.clear();
@@ -876,8 +834,7 @@ public final class Conversations extends
                 im.turms.server.common.access.client.dto.model.conversation.PrivateConversation, im.turms.server.common.access.client.dto.model.conversation.PrivateConversation.Builder, im.turms.server.common.access.client.dto.model.conversation.PrivateConversationOrBuilder>
         getPrivateConversationsFieldBuilder() {
             if (privateConversationsBuilder_ == null) {
-                privateConversationsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
-                        im.turms.server.common.access.client.dto.model.conversation.PrivateConversation, im.turms.server.common.access.client.dto.model.conversation.PrivateConversation.Builder, im.turms.server.common.access.client.dto.model.conversation.PrivateConversationOrBuilder>(
+                privateConversationsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<>(
                         privateConversations_,
                         ((bitField0_ & 0x00000001) != 0),
                         getParentForChildren(),
@@ -891,15 +848,14 @@ public final class Conversations extends
                 java.util.Collections.emptyList();
 
         private void ensureGroupConversationsIsMutable() {
-            if (!((bitField0_ & 0x00000002) != 0)) {
-                groupConversations_ = new java.util.ArrayList<im.turms.server.common.access.client.dto.model.conversation.GroupConversation>(groupConversations_);
+            if ((bitField0_ & 0x00000002) == 0) {
+                groupConversations_ = new java.util.ArrayList<>(groupConversations_);
                 bitField0_ |= 0x00000002;
             }
         }
 
         private com.google.protobuf.RepeatedFieldBuilderV3<
-                im.turms.server.common.access.client.dto.model.conversation.GroupConversation, im.turms.server.common.access.client.dto.model.conversation.GroupConversation.Builder, im.turms.server.common.access.client.dto.model.conversation.GroupConversationOrBuilder>
-                groupConversationsBuilder_;
+                im.turms.server.common.access.client.dto.model.conversation.GroupConversation, im.turms.server.common.access.client.dto.model.conversation.GroupConversation.Builder, im.turms.server.common.access.client.dto.model.conversation.GroupConversationOrBuilder> groupConversationsBuilder_;
 
         /**
          * <code>repeated .im.turms.proto.GroupConversation group_conversations = 2;</code>
@@ -1054,7 +1010,7 @@ public final class Conversations extends
         public Builder clearGroupConversations() {
             if (groupConversationsBuilder_ == null) {
                 groupConversations_ = java.util.Collections.emptyList();
-                bitField0_ = (bitField0_ & ~0x00000002);
+                bitField0_ &= ~0x00000002;
                 onChanged();
             } else {
                 groupConversationsBuilder_.clear();
@@ -1137,8 +1093,7 @@ public final class Conversations extends
                 im.turms.server.common.access.client.dto.model.conversation.GroupConversation, im.turms.server.common.access.client.dto.model.conversation.GroupConversation.Builder, im.turms.server.common.access.client.dto.model.conversation.GroupConversationOrBuilder>
         getGroupConversationsFieldBuilder() {
             if (groupConversationsBuilder_ == null) {
-                groupConversationsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
-                        im.turms.server.common.access.client.dto.model.conversation.GroupConversation, im.turms.server.common.access.client.dto.model.conversation.GroupConversation.Builder, im.turms.server.common.access.client.dto.model.conversation.GroupConversationOrBuilder>(
+                groupConversationsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<>(
                         groupConversations_,
                         ((bitField0_ & 0x00000002) != 0),
                         getParentForChildren(),
@@ -1176,7 +1131,7 @@ public final class Conversations extends
     }
 
     private static final com.google.protobuf.Parser<Conversations>
-            PARSER = new com.google.protobuf.AbstractParser<Conversations>() {
+            PARSER = new com.google.protobuf.AbstractParser<>() {
         @java.lang.Override
         public Conversations parsePartialFrom(
                 com.google.protobuf.CodedInputStream input,

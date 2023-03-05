@@ -99,7 +99,7 @@ public final class TurmsRequest extends
         KIND_NOT_SET(0);
         private final int value;
 
-        private KindCase(int value) {
+        KindCase(int value) {
             this.value = value;
         }
 
@@ -237,8 +237,6 @@ public final class TurmsRequest extends
         }
     }
 
-    ;
-
     @java.lang.Override
     public KindCase
     getKindCase() {
@@ -308,7 +306,7 @@ public final class TurmsRequest extends
      * <code>optional int64 request_id = 1;</code>
      */
     private void clearRequestId() {
-        bitField0_ = (bitField0_ & ~0x00000001);
+        bitField0_ &= ~0x00000001;
         requestId_ = 0L;
     }
 
@@ -1455,8 +1453,7 @@ public final class TurmsRequest extends
         value.getClass();
         if (kindCase_ == 200 &&
             kind_ != im.turms.client.model.proto.request.user.relationship.CreateFriendRequestRequest.getDefaultInstance()) {
-            kind_ = im.turms.client.model.proto.request.user.relationship.CreateFriendRequestRequest.newBuilder(
-                            (im.turms.client.model.proto.request.user.relationship.CreateFriendRequestRequest) kind_)
+            kind_ = im.turms.client.model.proto.request.user.relationship.CreateFriendRequestRequest.newBuilder((im.turms.client.model.proto.request.user.relationship.CreateFriendRequestRequest) kind_)
                     .mergeFrom(value).buildPartial();
         } else {
             kind_ = value;
@@ -1515,8 +1512,7 @@ public final class TurmsRequest extends
         value.getClass();
         if (kindCase_ == 201 &&
             kind_ != im.turms.client.model.proto.request.user.relationship.CreateRelationshipGroupRequest.getDefaultInstance()) {
-            kind_ = im.turms.client.model.proto.request.user.relationship.CreateRelationshipGroupRequest.newBuilder(
-                            (im.turms.client.model.proto.request.user.relationship.CreateRelationshipGroupRequest) kind_)
+            kind_ = im.turms.client.model.proto.request.user.relationship.CreateRelationshipGroupRequest.newBuilder((im.turms.client.model.proto.request.user.relationship.CreateRelationshipGroupRequest) kind_)
                     .mergeFrom(value).buildPartial();
         } else {
             kind_ = value;
@@ -1626,8 +1622,7 @@ public final class TurmsRequest extends
         value.getClass();
         if (kindCase_ == 203 &&
             kind_ != im.turms.client.model.proto.request.user.relationship.DeleteRelationshipGroupRequest.getDefaultInstance()) {
-            kind_ = im.turms.client.model.proto.request.user.relationship.DeleteRelationshipGroupRequest.newBuilder(
-                            (im.turms.client.model.proto.request.user.relationship.DeleteRelationshipGroupRequest) kind_)
+            kind_ = im.turms.client.model.proto.request.user.relationship.DeleteRelationshipGroupRequest.newBuilder((im.turms.client.model.proto.request.user.relationship.DeleteRelationshipGroupRequest) kind_)
                     .mergeFrom(value).buildPartial();
         } else {
             kind_ = value;
@@ -1737,8 +1732,7 @@ public final class TurmsRequest extends
         value.getClass();
         if (kindCase_ == 205 &&
             kind_ != im.turms.client.model.proto.request.user.relationship.QueryFriendRequestsRequest.getDefaultInstance()) {
-            kind_ = im.turms.client.model.proto.request.user.relationship.QueryFriendRequestsRequest.newBuilder(
-                            (im.turms.client.model.proto.request.user.relationship.QueryFriendRequestsRequest) kind_)
+            kind_ = im.turms.client.model.proto.request.user.relationship.QueryFriendRequestsRequest.newBuilder((im.turms.client.model.proto.request.user.relationship.QueryFriendRequestsRequest) kind_)
                     .mergeFrom(value).buildPartial();
         } else {
             kind_ = value;
@@ -1793,8 +1787,7 @@ public final class TurmsRequest extends
         value.getClass();
         if (kindCase_ == 206 &&
             kind_ != im.turms.client.model.proto.request.user.relationship.QueryRelatedUserIdsRequest.getDefaultInstance()) {
-            kind_ = im.turms.client.model.proto.request.user.relationship.QueryRelatedUserIdsRequest.newBuilder(
-                            (im.turms.client.model.proto.request.user.relationship.QueryRelatedUserIdsRequest) kind_)
+            kind_ = im.turms.client.model.proto.request.user.relationship.QueryRelatedUserIdsRequest.newBuilder((im.turms.client.model.proto.request.user.relationship.QueryRelatedUserIdsRequest) kind_)
                     .mergeFrom(value).buildPartial();
         } else {
             kind_ = value;
@@ -1849,8 +1842,7 @@ public final class TurmsRequest extends
         value.getClass();
         if (kindCase_ == 207 &&
             kind_ != im.turms.client.model.proto.request.user.relationship.QueryRelationshipGroupsRequest.getDefaultInstance()) {
-            kind_ = im.turms.client.model.proto.request.user.relationship.QueryRelationshipGroupsRequest.newBuilder(
-                            (im.turms.client.model.proto.request.user.relationship.QueryRelationshipGroupsRequest) kind_)
+            kind_ = im.turms.client.model.proto.request.user.relationship.QueryRelationshipGroupsRequest.newBuilder((im.turms.client.model.proto.request.user.relationship.QueryRelationshipGroupsRequest) kind_)
                     .mergeFrom(value).buildPartial();
         } else {
             kind_ = value;
@@ -1960,8 +1952,7 @@ public final class TurmsRequest extends
         value.getClass();
         if (kindCase_ == 209 &&
             kind_ != im.turms.client.model.proto.request.user.relationship.UpdateFriendRequestRequest.getDefaultInstance()) {
-            kind_ = im.turms.client.model.proto.request.user.relationship.UpdateFriendRequestRequest.newBuilder(
-                            (im.turms.client.model.proto.request.user.relationship.UpdateFriendRequestRequest) kind_)
+            kind_ = im.turms.client.model.proto.request.user.relationship.UpdateFriendRequestRequest.newBuilder((im.turms.client.model.proto.request.user.relationship.UpdateFriendRequestRequest) kind_)
                     .mergeFrom(value).buildPartial();
         } else {
             kind_ = value;
@@ -2016,8 +2007,7 @@ public final class TurmsRequest extends
         value.getClass();
         if (kindCase_ == 210 &&
             kind_ != im.turms.client.model.proto.request.user.relationship.UpdateRelationshipGroupRequest.getDefaultInstance()) {
-            kind_ = im.turms.client.model.proto.request.user.relationship.UpdateRelationshipGroupRequest.newBuilder(
-                            (im.turms.client.model.proto.request.user.relationship.UpdateRelationshipGroupRequest) kind_)
+            kind_ = im.turms.client.model.proto.request.user.relationship.UpdateRelationshipGroupRequest.newBuilder((im.turms.client.model.proto.request.user.relationship.UpdateRelationshipGroupRequest) kind_)
                     .mergeFrom(value).buildPartial();
         } else {
             kind_ = value;
@@ -2493,8 +2483,7 @@ public final class TurmsRequest extends
         value.getClass();
         if (kindCase_ == 400 &&
             kind_ != im.turms.client.model.proto.request.group.blocklist.CreateGroupBlockedUserRequest.getDefaultInstance()) {
-            kind_ = im.turms.client.model.proto.request.group.blocklist.CreateGroupBlockedUserRequest.newBuilder(
-                            (im.turms.client.model.proto.request.group.blocklist.CreateGroupBlockedUserRequest) kind_)
+            kind_ = im.turms.client.model.proto.request.group.blocklist.CreateGroupBlockedUserRequest.newBuilder((im.turms.client.model.proto.request.group.blocklist.CreateGroupBlockedUserRequest) kind_)
                     .mergeFrom(value).buildPartial();
         } else {
             kind_ = value;
@@ -2553,8 +2542,7 @@ public final class TurmsRequest extends
         value.getClass();
         if (kindCase_ == 401 &&
             kind_ != im.turms.client.model.proto.request.group.blocklist.DeleteGroupBlockedUserRequest.getDefaultInstance()) {
-            kind_ = im.turms.client.model.proto.request.group.blocklist.DeleteGroupBlockedUserRequest.newBuilder(
-                            (im.turms.client.model.proto.request.group.blocklist.DeleteGroupBlockedUserRequest) kind_)
+            kind_ = im.turms.client.model.proto.request.group.blocklist.DeleteGroupBlockedUserRequest.newBuilder((im.turms.client.model.proto.request.group.blocklist.DeleteGroupBlockedUserRequest) kind_)
                     .mergeFrom(value).buildPartial();
         } else {
             kind_ = value;
@@ -2609,8 +2597,7 @@ public final class TurmsRequest extends
         value.getClass();
         if (kindCase_ == 402 &&
             kind_ != im.turms.client.model.proto.request.group.blocklist.QueryGroupBlockedUserIdsRequest.getDefaultInstance()) {
-            kind_ = im.turms.client.model.proto.request.group.blocklist.QueryGroupBlockedUserIdsRequest.newBuilder(
-                            (im.turms.client.model.proto.request.group.blocklist.QueryGroupBlockedUserIdsRequest) kind_)
+            kind_ = im.turms.client.model.proto.request.group.blocklist.QueryGroupBlockedUserIdsRequest.newBuilder((im.turms.client.model.proto.request.group.blocklist.QueryGroupBlockedUserIdsRequest) kind_)
                     .mergeFrom(value).buildPartial();
         } else {
             kind_ = value;
@@ -2665,8 +2652,7 @@ public final class TurmsRequest extends
         value.getClass();
         if (kindCase_ == 403 &&
             kind_ != im.turms.client.model.proto.request.group.blocklist.QueryGroupBlockedUserInfosRequest.getDefaultInstance()) {
-            kind_ = im.turms.client.model.proto.request.group.blocklist.QueryGroupBlockedUserInfosRequest.newBuilder(
-                            (im.turms.client.model.proto.request.group.blocklist.QueryGroupBlockedUserInfosRequest) kind_)
+            kind_ = im.turms.client.model.proto.request.group.blocklist.QueryGroupBlockedUserInfosRequest.newBuilder((im.turms.client.model.proto.request.group.blocklist.QueryGroupBlockedUserInfosRequest) kind_)
                     .mergeFrom(value).buildPartial();
         } else {
             kind_ = value;
@@ -2737,8 +2723,7 @@ public final class TurmsRequest extends
         value.getClass();
         if (kindCase_ == 500 &&
             kind_ != im.turms.client.model.proto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequest.getDefaultInstance()) {
-            kind_ = im.turms.client.model.proto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequest.newBuilder(
-                            (im.turms.client.model.proto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequest) kind_)
+            kind_ = im.turms.client.model.proto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequest.newBuilder((im.turms.client.model.proto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequest) kind_)
                     .mergeFrom(value).buildPartial();
         } else {
             kind_ = value;
@@ -2797,8 +2782,7 @@ public final class TurmsRequest extends
         value.getClass();
         if (kindCase_ == 501 &&
             kind_ != im.turms.client.model.proto.request.group.enrollment.CreateGroupInvitationRequest.getDefaultInstance()) {
-            kind_ = im.turms.client.model.proto.request.group.enrollment.CreateGroupInvitationRequest.newBuilder(
-                            (im.turms.client.model.proto.request.group.enrollment.CreateGroupInvitationRequest) kind_)
+            kind_ = im.turms.client.model.proto.request.group.enrollment.CreateGroupInvitationRequest.newBuilder((im.turms.client.model.proto.request.group.enrollment.CreateGroupInvitationRequest) kind_)
                     .mergeFrom(value).buildPartial();
         } else {
             kind_ = value;
@@ -2853,8 +2837,7 @@ public final class TurmsRequest extends
         value.getClass();
         if (kindCase_ == 502 &&
             kind_ != im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinRequestRequest.getDefaultInstance()) {
-            kind_ = im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinRequestRequest.newBuilder(
-                            (im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinRequestRequest) kind_)
+            kind_ = im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinRequestRequest.newBuilder((im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinRequestRequest) kind_)
                     .mergeFrom(value).buildPartial();
         } else {
             kind_ = value;
@@ -2909,8 +2892,7 @@ public final class TurmsRequest extends
         value.getClass();
         if (kindCase_ == 503 &&
             kind_ != im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionsRequest.getDefaultInstance()) {
-            kind_ = im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionsRequest.newBuilder(
-                            (im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionsRequest) kind_)
+            kind_ = im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionsRequest.newBuilder((im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionsRequest) kind_)
                     .mergeFrom(value).buildPartial();
         } else {
             kind_ = value;
@@ -2965,8 +2947,7 @@ public final class TurmsRequest extends
         value.getClass();
         if (kindCase_ == 504 &&
             kind_ != im.turms.client.model.proto.request.group.enrollment.DeleteGroupInvitationRequest.getDefaultInstance()) {
-            kind_ = im.turms.client.model.proto.request.group.enrollment.DeleteGroupInvitationRequest.newBuilder(
-                            (im.turms.client.model.proto.request.group.enrollment.DeleteGroupInvitationRequest) kind_)
+            kind_ = im.turms.client.model.proto.request.group.enrollment.DeleteGroupInvitationRequest.newBuilder((im.turms.client.model.proto.request.group.enrollment.DeleteGroupInvitationRequest) kind_)
                     .mergeFrom(value).buildPartial();
         } else {
             kind_ = value;
@@ -3021,8 +3002,7 @@ public final class TurmsRequest extends
         value.getClass();
         if (kindCase_ == 505 &&
             kind_ != im.turms.client.model.proto.request.group.enrollment.DeleteGroupJoinRequestRequest.getDefaultInstance()) {
-            kind_ = im.turms.client.model.proto.request.group.enrollment.DeleteGroupJoinRequestRequest.newBuilder(
-                            (im.turms.client.model.proto.request.group.enrollment.DeleteGroupJoinRequestRequest) kind_)
+            kind_ = im.turms.client.model.proto.request.group.enrollment.DeleteGroupJoinRequestRequest.newBuilder((im.turms.client.model.proto.request.group.enrollment.DeleteGroupJoinRequestRequest) kind_)
                     .mergeFrom(value).buildPartial();
         } else {
             kind_ = value;
@@ -3077,8 +3057,7 @@ public final class TurmsRequest extends
         value.getClass();
         if (kindCase_ == 506 &&
             kind_ != im.turms.client.model.proto.request.group.enrollment.DeleteGroupJoinQuestionsRequest.getDefaultInstance()) {
-            kind_ = im.turms.client.model.proto.request.group.enrollment.DeleteGroupJoinQuestionsRequest.newBuilder(
-                            (im.turms.client.model.proto.request.group.enrollment.DeleteGroupJoinQuestionsRequest) kind_)
+            kind_ = im.turms.client.model.proto.request.group.enrollment.DeleteGroupJoinQuestionsRequest.newBuilder((im.turms.client.model.proto.request.group.enrollment.DeleteGroupJoinQuestionsRequest) kind_)
                     .mergeFrom(value).buildPartial();
         } else {
             kind_ = value;
@@ -3133,8 +3112,7 @@ public final class TurmsRequest extends
         value.getClass();
         if (kindCase_ == 507 &&
             kind_ != im.turms.client.model.proto.request.group.enrollment.QueryGroupInvitationsRequest.getDefaultInstance()) {
-            kind_ = im.turms.client.model.proto.request.group.enrollment.QueryGroupInvitationsRequest.newBuilder(
-                            (im.turms.client.model.proto.request.group.enrollment.QueryGroupInvitationsRequest) kind_)
+            kind_ = im.turms.client.model.proto.request.group.enrollment.QueryGroupInvitationsRequest.newBuilder((im.turms.client.model.proto.request.group.enrollment.QueryGroupInvitationsRequest) kind_)
                     .mergeFrom(value).buildPartial();
         } else {
             kind_ = value;
@@ -3189,8 +3167,7 @@ public final class TurmsRequest extends
         value.getClass();
         if (kindCase_ == 508 &&
             kind_ != im.turms.client.model.proto.request.group.enrollment.QueryGroupJoinRequestsRequest.getDefaultInstance()) {
-            kind_ = im.turms.client.model.proto.request.group.enrollment.QueryGroupJoinRequestsRequest.newBuilder(
-                            (im.turms.client.model.proto.request.group.enrollment.QueryGroupJoinRequestsRequest) kind_)
+            kind_ = im.turms.client.model.proto.request.group.enrollment.QueryGroupJoinRequestsRequest.newBuilder((im.turms.client.model.proto.request.group.enrollment.QueryGroupJoinRequestsRequest) kind_)
                     .mergeFrom(value).buildPartial();
         } else {
             kind_ = value;
@@ -3245,8 +3222,7 @@ public final class TurmsRequest extends
         value.getClass();
         if (kindCase_ == 509 &&
             kind_ != im.turms.client.model.proto.request.group.enrollment.QueryGroupJoinQuestionsRequest.getDefaultInstance()) {
-            kind_ = im.turms.client.model.proto.request.group.enrollment.QueryGroupJoinQuestionsRequest.newBuilder(
-                            (im.turms.client.model.proto.request.group.enrollment.QueryGroupJoinQuestionsRequest) kind_)
+            kind_ = im.turms.client.model.proto.request.group.enrollment.QueryGroupJoinQuestionsRequest.newBuilder((im.turms.client.model.proto.request.group.enrollment.QueryGroupJoinQuestionsRequest) kind_)
                     .mergeFrom(value).buildPartial();
         } else {
             kind_ = value;
@@ -3301,8 +3277,7 @@ public final class TurmsRequest extends
         value.getClass();
         if (kindCase_ == 510 &&
             kind_ != im.turms.client.model.proto.request.group.enrollment.UpdateGroupJoinQuestionRequest.getDefaultInstance()) {
-            kind_ = im.turms.client.model.proto.request.group.enrollment.UpdateGroupJoinQuestionRequest.newBuilder(
-                            (im.turms.client.model.proto.request.group.enrollment.UpdateGroupJoinQuestionRequest) kind_)
+            kind_ = im.turms.client.model.proto.request.group.enrollment.UpdateGroupJoinQuestionRequest.newBuilder((im.turms.client.model.proto.request.group.enrollment.UpdateGroupJoinQuestionRequest) kind_)
                     .mergeFrom(value).buildPartial();
         } else {
             kind_ = value;
@@ -7110,7 +7085,7 @@ public final class TurmsRequest extends
                         parser = PARSER;
                         if (parser == null) {
                             parser =
-                                    new DefaultInstanceBasedParser<im.turms.client.model.proto.request.TurmsRequest>(
+                                    new DefaultInstanceBasedParser<>(
                                             DEFAULT_INSTANCE);
                             PARSER = parser;
                         }

@@ -45,12 +45,6 @@ public final class File extends
         return new File();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-        return this.unknownFields;
-    }
-
     public static final com.google.protobuf.Descriptors.Descriptor
     getDescriptor() {
         return im.turms.server.common.access.client.dto.model.file.FileOuterClass.internal_static_im_turms_proto_File_descriptor;
@@ -146,12 +140,6 @@ public final class File extends
             return new Description();
         }
 
-        @java.lang.Override
-        public final com.google.protobuf.UnknownFieldSet
-        getUnknownFields() {
-            return this.unknownFields;
-        }
-
         public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
             return im.turms.server.common.access.client.dto.model.file.FileOuterClass.internal_static_im_turms_proto_File_Description_descriptor;
@@ -167,7 +155,8 @@ public final class File extends
 
         private int bitField0_;
         public static final int URL_FIELD_NUMBER = 1;
-        private volatile java.lang.Object url_;
+        @SuppressWarnings("serial")
+        private volatile java.lang.Object url_ = "";
 
         /**
          * <code>string url = 1;</code>
@@ -209,7 +198,7 @@ public final class File extends
         }
 
         public static final int SIZE_FIELD_NUMBER = 2;
-        private int size_;
+        private int size_ = 0;
 
         /**
          * <code>optional int32 size = 2;</code>
@@ -232,7 +221,8 @@ public final class File extends
         }
 
         public static final int FORMAT_FIELD_NUMBER = 3;
-        private volatile java.lang.Object format_;
+        @SuppressWarnings("serial")
+        private volatile java.lang.Object format_ = "";
 
         /**
          * <code>optional string format = 3;</code>
@@ -342,10 +332,9 @@ public final class File extends
             if (obj == this) {
                 return true;
             }
-            if (!(obj instanceof im.turms.server.common.access.client.dto.model.file.File.Description)) {
+            if (!(obj instanceof Description other)) {
                 return super.equals(obj);
             }
-            im.turms.server.common.access.client.dto.model.file.File.Description other = (im.turms.server.common.access.client.dto.model.file.File.Description) obj;
 
             if (!getUrl()
                     .equals(other.getUrl())) {
@@ -369,10 +358,7 @@ public final class File extends
                     return false;
                 }
             }
-            if (!getUnknownFields().equals(other.getUnknownFields())) {
-                return false;
-            }
-            return true;
+            return getUnknownFields().equals(other.getUnknownFields());
         }
 
         @java.lang.Override
@@ -500,8 +486,7 @@ public final class File extends
         @java.lang.Override
         protected Builder newBuilderForType(
                 com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-            Builder builder = new Builder(parent);
-            return builder;
+            return new Builder(parent);
         }
 
         /**
@@ -538,12 +523,10 @@ public final class File extends
             @java.lang.Override
             public Builder clear() {
                 super.clear();
+                bitField0_ = 0;
                 url_ = "";
-
                 size_ = 0;
-                bitField0_ = (bitField0_ & ~0x00000001);
                 format_ = "";
-                bitField0_ = (bitField0_ & ~0x00000002);
                 return this;
             }
 
@@ -570,58 +553,28 @@ public final class File extends
             @java.lang.Override
             public im.turms.server.common.access.client.dto.model.file.File.Description buildPartial() {
                 im.turms.server.common.access.client.dto.model.file.File.Description result = new im.turms.server.common.access.client.dto.model.file.File.Description(this);
-                int from_bitField0_ = bitField0_;
-                int to_bitField0_ = 0;
-                result.url_ = url_;
-                if (((from_bitField0_ & 0x00000001) != 0)) {
-                    result.size_ = size_;
-                    to_bitField0_ |= 0x00000001;
+                if (bitField0_ != 0) {
+                    buildPartial0(result);
                 }
-                if (((from_bitField0_ & 0x00000002) != 0)) {
-                    to_bitField0_ |= 0x00000002;
-                }
-                result.format_ = format_;
-                result.bitField0_ = to_bitField0_;
                 onBuilt();
                 return result;
             }
 
-            @java.lang.Override
-            public Builder clone() {
-                return super.clone();
-            }
-
-            @java.lang.Override
-            public Builder setField(
-                    com.google.protobuf.Descriptors.FieldDescriptor field,
-                    java.lang.Object value) {
-                return super.setField(field, value);
-            }
-
-            @java.lang.Override
-            public Builder clearField(
-                    com.google.protobuf.Descriptors.FieldDescriptor field) {
-                return super.clearField(field);
-            }
-
-            @java.lang.Override
-            public Builder clearOneof(
-                    com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-                return super.clearOneof(oneof);
-            }
-
-            @java.lang.Override
-            public Builder setRepeatedField(
-                    com.google.protobuf.Descriptors.FieldDescriptor field,
-                    int index, java.lang.Object value) {
-                return super.setRepeatedField(field, index, value);
-            }
-
-            @java.lang.Override
-            public Builder addRepeatedField(
-                    com.google.protobuf.Descriptors.FieldDescriptor field,
-                    java.lang.Object value) {
-                return super.addRepeatedField(field, value);
+            private void buildPartial0(im.turms.server.common.access.client.dto.model.file.File.Description result) {
+                int from_bitField0_ = bitField0_;
+                if (((from_bitField0_ & 0x00000001) != 0)) {
+                    result.url_ = url_;
+                }
+                int to_bitField0_ = 0;
+                if (((from_bitField0_ & 0x00000002) != 0)) {
+                    result.size_ = size_;
+                    to_bitField0_ |= 0x00000001;
+                }
+                if (((from_bitField0_ & 0x00000004) != 0)) {
+                    result.format_ = format_;
+                    to_bitField0_ |= 0x00000002;
+                }
+                result.bitField0_ |= to_bitField0_;
             }
 
             @java.lang.Override
@@ -640,14 +593,15 @@ public final class File extends
                 }
                 if (!other.getUrl().isEmpty()) {
                     url_ = other.url_;
+                    bitField0_ |= 0x00000001;
                     onChanged();
                 }
                 if (other.hasSize()) {
                     setSize(other.getSize());
                 }
                 if (other.hasFormat()) {
-                    bitField0_ |= 0x00000002;
                     format_ = other.format_;
+                    bitField0_ |= 0x00000004;
                     onChanged();
                 }
                 this.mergeUnknownFields(other.getUnknownFields());
@@ -673,29 +627,23 @@ public final class File extends
                     while (!done) {
                         int tag = input.readTag();
                         switch (tag) {
-                            case 0:
-                                done = true;
-                                break;
-                            case 10: {
+                            case 0 -> done = true;
+                            case 10 -> {
                                 url_ = input.readStringRequireUtf8();
-
-                                break;
-                            } // case 10
-                            case 16: {
-                                size_ = input.readInt32();
                                 bitField0_ |= 0x00000001;
-                                break;
-                            } // case 16
-                            case 26: {
-                                format_ = input.readStringRequireUtf8();
+                            } // case 10
+                            case 16 -> {
+                                size_ = input.readInt32();
                                 bitField0_ |= 0x00000002;
-                                break;
+                            } // case 16
+                            case 26 -> {
+                                format_ = input.readStringRequireUtf8();
+                                bitField0_ |= 0x00000004;
                             } // case 26
-                            default: {
+                            default -> {
                                 if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                     done = true; // was an endgroup tag
                                 }
-                                break;
                             } // default:
                         } // switch (tag)
                     } // while (!done)
@@ -759,8 +707,8 @@ public final class File extends
                 if (value == null) {
                     throw new NullPointerException();
                 }
-
                 url_ = value;
+                bitField0_ |= 0x00000001;
                 onChanged();
                 return this;
             }
@@ -771,8 +719,8 @@ public final class File extends
              * @return This builder for chaining.
              */
             public Builder clearUrl() {
-
                 url_ = getDefaultInstance().getUrl();
+                bitField0_ &= ~0x00000001;
                 onChanged();
                 return this;
             }
@@ -789,8 +737,8 @@ public final class File extends
                     throw new NullPointerException();
                 }
                 checkByteStringIsUtf8(value);
-
                 url_ = value;
+                bitField0_ |= 0x00000001;
                 onChanged();
                 return this;
             }
@@ -804,7 +752,7 @@ public final class File extends
              */
             @java.lang.Override
             public boolean hasSize() {
-                return ((bitField0_ & 0x00000001) != 0);
+                return ((bitField0_ & 0x00000002) != 0);
             }
 
             /**
@@ -824,8 +772,9 @@ public final class File extends
              * @return This builder for chaining.
              */
             public Builder setSize(int value) {
-                bitField0_ |= 0x00000001;
+
                 size_ = value;
+                bitField0_ |= 0x00000002;
                 onChanged();
                 return this;
             }
@@ -836,7 +785,7 @@ public final class File extends
              * @return This builder for chaining.
              */
             public Builder clearSize() {
-                bitField0_ = (bitField0_ & ~0x00000001);
+                bitField0_ &= ~0x00000002;
                 size_ = 0;
                 onChanged();
                 return this;
@@ -850,7 +799,7 @@ public final class File extends
              * @return Whether the format field is set.
              */
             public boolean hasFormat() {
-                return ((bitField0_ & 0x00000002) != 0);
+                return ((bitField0_ & 0x00000004) != 0);
             }
 
             /**
@@ -901,8 +850,8 @@ public final class File extends
                 if (value == null) {
                     throw new NullPointerException();
                 }
-                bitField0_ |= 0x00000002;
                 format_ = value;
+                bitField0_ |= 0x00000004;
                 onChanged();
                 return this;
             }
@@ -913,8 +862,8 @@ public final class File extends
              * @return This builder for chaining.
              */
             public Builder clearFormat() {
-                bitField0_ = (bitField0_ & ~0x00000002);
                 format_ = getDefaultInstance().getFormat();
+                bitField0_ &= ~0x00000004;
                 onChanged();
                 return this;
             }
@@ -931,8 +880,8 @@ public final class File extends
                     throw new NullPointerException();
                 }
                 checkByteStringIsUtf8(value);
-                bitField0_ |= 0x00000002;
                 format_ = value;
+                bitField0_ |= 0x00000004;
                 onChanged();
                 return this;
             }
@@ -965,7 +914,7 @@ public final class File extends
         }
 
         private static final com.google.protobuf.Parser<Description>
-                PARSER = new com.google.protobuf.AbstractParser<Description>() {
+                PARSER = new com.google.protobuf.AbstractParser<>() {
             @java.lang.Override
             public Description parsePartialFrom(
                     com.google.protobuf.CodedInputStream input,
@@ -1035,7 +984,7 @@ public final class File extends
     }
 
     public static final int DATA_FIELD_NUMBER = 2;
-    private com.google.protobuf.ByteString data_;
+    private com.google.protobuf.ByteString data_ = com.google.protobuf.ByteString.EMPTY;
 
     /**
      * <code>optional bytes data = 2;</code>
@@ -1111,10 +1060,9 @@ public final class File extends
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof im.turms.server.common.access.client.dto.model.file.File)) {
+        if (!(obj instanceof File other)) {
             return super.equals(obj);
         }
-        im.turms.server.common.access.client.dto.model.file.File other = (im.turms.server.common.access.client.dto.model.file.File) obj;
 
         if (hasDescription() != other.hasDescription()) {
             return false;
@@ -1134,10 +1082,7 @@ public final class File extends
                 return false;
             }
         }
-        if (!getUnknownFields().equals(other.getUnknownFields())) {
-            return false;
-        }
-        return true;
+        return getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -1263,8 +1208,7 @@ public final class File extends
     @java.lang.Override
     protected Builder newBuilderForType(
             com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
+        return new Builder(parent);
     }
 
     /**
@@ -1308,14 +1252,13 @@ public final class File extends
         @java.lang.Override
         public Builder clear() {
             super.clear();
-            if (descriptionBuilder_ == null) {
-                description_ = null;
-            } else {
-                descriptionBuilder_.clear();
+            bitField0_ = 0;
+            description_ = null;
+            if (descriptionBuilder_ != null) {
+                descriptionBuilder_.dispose();
+                descriptionBuilder_ = null;
             }
-            bitField0_ = (bitField0_ & ~0x00000001);
             data_ = com.google.protobuf.ByteString.EMPTY;
-            bitField0_ = (bitField0_ & ~0x00000002);
             return this;
         }
 
@@ -1342,61 +1285,27 @@ public final class File extends
         @java.lang.Override
         public im.turms.server.common.access.client.dto.model.file.File buildPartial() {
             im.turms.server.common.access.client.dto.model.file.File result = new im.turms.server.common.access.client.dto.model.file.File(this);
-            int from_bitField0_ = bitField0_;
-            int to_bitField0_ = 0;
-            if (((from_bitField0_ & 0x00000001) != 0)) {
-                if (descriptionBuilder_ == null) {
-                    result.description_ = description_;
-                } else {
-                    result.description_ = descriptionBuilder_.build();
-                }
-                to_bitField0_ |= 0x00000001;
+            if (bitField0_ != 0) {
+                buildPartial0(result);
             }
-            if (((from_bitField0_ & 0x00000002) != 0)) {
-                to_bitField0_ |= 0x00000002;
-            }
-            result.data_ = data_;
-            result.bitField0_ = to_bitField0_;
             onBuilt();
             return result;
         }
 
-        @java.lang.Override
-        public Builder clone() {
-            return super.clone();
-        }
-
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(
-                com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(
-                com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index, java.lang.Object value) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.addRepeatedField(field, value);
+        private void buildPartial0(im.turms.server.common.access.client.dto.model.file.File result) {
+            int from_bitField0_ = bitField0_;
+            int to_bitField0_ = 0;
+            if (((from_bitField0_ & 0x00000001) != 0)) {
+                result.description_ = descriptionBuilder_ == null
+                        ? description_
+                        : descriptionBuilder_.build();
+                to_bitField0_ |= 0x00000001;
+            }
+            if (((from_bitField0_ & 0x00000002) != 0)) {
+                result.data_ = data_;
+                to_bitField0_ |= 0x00000002;
+            }
+            result.bitField0_ |= to_bitField0_;
         }
 
         @java.lang.Override
@@ -1442,26 +1351,21 @@ public final class File extends
                 while (!done) {
                     int tag = input.readTag();
                     switch (tag) {
-                        case 0:
-                            done = true;
-                            break;
-                        case 10: {
+                        case 0 -> done = true;
+                        case 10 -> {
                             input.readMessage(
                                     getDescriptionFieldBuilder().getBuilder(),
                                     extensionRegistry);
                             bitField0_ |= 0x00000001;
-                            break;
                         } // case 10
-                        case 18: {
+                        case 18 -> {
                             data_ = input.readBytes();
                             bitField0_ |= 0x00000002;
-                            break;
                         } // case 18
-                        default: {
+                        default -> {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
                             }
-                            break;
                         } // default:
                     } // switch (tag)
                 } // while (!done)
@@ -1477,8 +1381,7 @@ public final class File extends
 
         private im.turms.server.common.access.client.dto.model.file.File.Description description_;
         private com.google.protobuf.SingleFieldBuilderV3<
-                im.turms.server.common.access.client.dto.model.file.File.Description, im.turms.server.common.access.client.dto.model.file.File.Description.Builder, im.turms.server.common.access.client.dto.model.file.File.DescriptionOrBuilder>
-                descriptionBuilder_;
+                im.turms.server.common.access.client.dto.model.file.File.Description, im.turms.server.common.access.client.dto.model.file.File.Description.Builder, im.turms.server.common.access.client.dto.model.file.File.DescriptionOrBuilder> descriptionBuilder_;
 
         /**
          * <code>optional .im.turms.proto.File.Description description = 1;</code>
@@ -1511,11 +1414,11 @@ public final class File extends
                     throw new NullPointerException();
                 }
                 description_ = value;
-                onChanged();
             } else {
                 descriptionBuilder_.setMessage(value);
             }
             bitField0_ |= 0x00000001;
+            onChanged();
             return this;
         }
 
@@ -1526,11 +1429,11 @@ public final class File extends
                 im.turms.server.common.access.client.dto.model.file.File.Description.Builder builderForValue) {
             if (descriptionBuilder_ == null) {
                 description_ = builderForValue.build();
-                onChanged();
             } else {
                 descriptionBuilder_.setMessage(builderForValue.build());
             }
             bitField0_ |= 0x00000001;
+            onChanged();
             return this;
         }
 
@@ -1542,16 +1445,15 @@ public final class File extends
                 if (((bitField0_ & 0x00000001) != 0) &&
                     description_ != null &&
                     description_ != im.turms.server.common.access.client.dto.model.file.File.Description.getDefaultInstance()) {
-                    description_ =
-                            im.turms.server.common.access.client.dto.model.file.File.Description.newBuilder(description_).mergeFrom(value).buildPartial();
+                    getDescriptionBuilder().mergeFrom(value);
                 } else {
                     description_ = value;
                 }
-                onChanged();
             } else {
                 descriptionBuilder_.mergeFrom(value);
             }
             bitField0_ |= 0x00000001;
+            onChanged();
             return this;
         }
 
@@ -1559,13 +1461,13 @@ public final class File extends
          * <code>optional .im.turms.proto.File.Description description = 1;</code>
          */
         public Builder clearDescription() {
-            if (descriptionBuilder_ == null) {
-                description_ = null;
-                onChanged();
-            } else {
-                descriptionBuilder_.clear();
+            bitField0_ &= ~0x00000001;
+            description_ = null;
+            if (descriptionBuilder_ != null) {
+                descriptionBuilder_.dispose();
+                descriptionBuilder_ = null;
             }
-            bitField0_ = (bitField0_ & ~0x00000001);
+            onChanged();
             return this;
         }
 
@@ -1597,8 +1499,7 @@ public final class File extends
                 im.turms.server.common.access.client.dto.model.file.File.Description, im.turms.server.common.access.client.dto.model.file.File.Description.Builder, im.turms.server.common.access.client.dto.model.file.File.DescriptionOrBuilder>
         getDescriptionFieldBuilder() {
             if (descriptionBuilder_ == null) {
-                descriptionBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-                        im.turms.server.common.access.client.dto.model.file.File.Description, im.turms.server.common.access.client.dto.model.file.File.Description.Builder, im.turms.server.common.access.client.dto.model.file.File.DescriptionOrBuilder>(
+                descriptionBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
                         getDescription(),
                         getParentForChildren(),
                         isClean());
@@ -1639,8 +1540,8 @@ public final class File extends
             if (value == null) {
                 throw new NullPointerException();
             }
-            bitField0_ |= 0x00000002;
             data_ = value;
+            bitField0_ |= 0x00000002;
             onChanged();
             return this;
         }
@@ -1651,7 +1552,7 @@ public final class File extends
          * @return This builder for chaining.
          */
         public Builder clearData() {
-            bitField0_ = (bitField0_ & ~0x00000002);
+            bitField0_ &= ~0x00000002;
             data_ = getDefaultInstance().getData();
             onChanged();
             return this;
@@ -1685,7 +1586,7 @@ public final class File extends
     }
 
     private static final com.google.protobuf.Parser<File>
-            PARSER = new com.google.protobuf.AbstractParser<File>() {
+            PARSER = new com.google.protobuf.AbstractParser<>() {
         @java.lang.Override
         public File parsePartialFrom(
                 com.google.protobuf.CodedInputStream input,

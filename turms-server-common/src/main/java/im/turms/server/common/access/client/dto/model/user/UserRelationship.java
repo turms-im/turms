@@ -44,12 +44,6 @@ public final class UserRelationship extends
         return new UserRelationship();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-        return this.unknownFields;
-    }
-
     public static final com.google.protobuf.Descriptors.Descriptor
     getDescriptor() {
         return im.turms.server.common.access.client.dto.model.user.UserRelationshipOuterClass.internal_static_im_turms_proto_UserRelationship_descriptor;
@@ -65,7 +59,7 @@ public final class UserRelationship extends
 
     private int bitField0_;
     public static final int OWNER_ID_FIELD_NUMBER = 1;
-    private long ownerId_;
+    private long ownerId_ = 0L;
 
     /**
      * <code>optional int64 owner_id = 1;</code>
@@ -88,7 +82,7 @@ public final class UserRelationship extends
     }
 
     public static final int RELATED_USER_ID_FIELD_NUMBER = 2;
-    private long relatedUserId_;
+    private long relatedUserId_ = 0L;
 
     /**
      * <code>optional int64 related_user_id = 2;</code>
@@ -111,7 +105,7 @@ public final class UserRelationship extends
     }
 
     public static final int BLOCK_DATE_FIELD_NUMBER = 3;
-    private long blockDate_;
+    private long blockDate_ = 0L;
 
     /**
      * <code>optional int64 block_date = 3;</code>
@@ -134,7 +128,7 @@ public final class UserRelationship extends
     }
 
     public static final int GROUP_INDEX_FIELD_NUMBER = 4;
-    private long groupIndex_;
+    private long groupIndex_ = 0L;
 
     /**
      * <code>optional int64 group_index = 4;</code>
@@ -157,7 +151,7 @@ public final class UserRelationship extends
     }
 
     public static final int ESTABLISHMENT_DATE_FIELD_NUMBER = 5;
-    private long establishmentDate_;
+    private long establishmentDate_ = 0L;
 
     /**
      * <code>optional int64 establishment_date = 5;</code>
@@ -254,10 +248,9 @@ public final class UserRelationship extends
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof im.turms.server.common.access.client.dto.model.user.UserRelationship)) {
+        if (!(obj instanceof UserRelationship other)) {
             return super.equals(obj);
         }
-        im.turms.server.common.access.client.dto.model.user.UserRelationship other = (im.turms.server.common.access.client.dto.model.user.UserRelationship) obj;
 
         if (hasOwnerId() != other.hasOwnerId()) {
             return false;
@@ -304,10 +297,7 @@ public final class UserRelationship extends
                 return false;
             }
         }
-        if (!getUnknownFields().equals(other.getUnknownFields())) {
-            return false;
-        }
-        return true;
+        return getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -450,8 +440,7 @@ public final class UserRelationship extends
     @java.lang.Override
     protected Builder newBuilderForType(
             com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
+        return new Builder(parent);
     }
 
     /**
@@ -488,16 +477,12 @@ public final class UserRelationship extends
         @java.lang.Override
         public Builder clear() {
             super.clear();
+            bitField0_ = 0;
             ownerId_ = 0L;
-            bitField0_ = (bitField0_ & ~0x00000001);
             relatedUserId_ = 0L;
-            bitField0_ = (bitField0_ & ~0x00000002);
             blockDate_ = 0L;
-            bitField0_ = (bitField0_ & ~0x00000004);
             groupIndex_ = 0L;
-            bitField0_ = (bitField0_ & ~0x00000008);
             establishmentDate_ = 0L;
-            bitField0_ = (bitField0_ & ~0x00000010);
             return this;
         }
 
@@ -524,6 +509,14 @@ public final class UserRelationship extends
         @java.lang.Override
         public im.turms.server.common.access.client.dto.model.user.UserRelationship buildPartial() {
             im.turms.server.common.access.client.dto.model.user.UserRelationship result = new im.turms.server.common.access.client.dto.model.user.UserRelationship(this);
+            if (bitField0_ != 0) {
+                buildPartial0(result);
+            }
+            onBuilt();
+            return result;
+        }
+
+        private void buildPartial0(im.turms.server.common.access.client.dto.model.user.UserRelationship result) {
             int from_bitField0_ = bitField0_;
             int to_bitField0_ = 0;
             if (((from_bitField0_ & 0x00000001) != 0)) {
@@ -546,47 +539,7 @@ public final class UserRelationship extends
                 result.establishmentDate_ = establishmentDate_;
                 to_bitField0_ |= 0x00000010;
             }
-            result.bitField0_ = to_bitField0_;
-            onBuilt();
-            return result;
-        }
-
-        @java.lang.Override
-        public Builder clone() {
-            return super.clone();
-        }
-
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(
-                com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(
-                com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index, java.lang.Object value) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.addRepeatedField(field, value);
+            result.bitField0_ |= to_bitField0_;
         }
 
         @java.lang.Override
@@ -641,39 +594,31 @@ public final class UserRelationship extends
                 while (!done) {
                     int tag = input.readTag();
                     switch (tag) {
-                        case 0:
-                            done = true;
-                            break;
-                        case 8: {
+                        case 0 -> done = true;
+                        case 8 -> {
                             ownerId_ = input.readInt64();
                             bitField0_ |= 0x00000001;
-                            break;
                         } // case 8
-                        case 16: {
+                        case 16 -> {
                             relatedUserId_ = input.readInt64();
                             bitField0_ |= 0x00000002;
-                            break;
                         } // case 16
-                        case 24: {
+                        case 24 -> {
                             blockDate_ = input.readInt64();
                             bitField0_ |= 0x00000004;
-                            break;
                         } // case 24
-                        case 32: {
+                        case 32 -> {
                             groupIndex_ = input.readInt64();
                             bitField0_ |= 0x00000008;
-                            break;
                         } // case 32
-                        case 40: {
+                        case 40 -> {
                             establishmentDate_ = input.readInt64();
                             bitField0_ |= 0x00000010;
-                            break;
                         } // case 40
-                        default: {
+                        default -> {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
                             }
-                            break;
                         } // default:
                     } // switch (tag)
                 } // while (!done)
@@ -716,8 +661,9 @@ public final class UserRelationship extends
          * @return This builder for chaining.
          */
         public Builder setOwnerId(long value) {
-            bitField0_ |= 0x00000001;
+
             ownerId_ = value;
+            bitField0_ |= 0x00000001;
             onChanged();
             return this;
         }
@@ -728,7 +674,7 @@ public final class UserRelationship extends
          * @return This builder for chaining.
          */
         public Builder clearOwnerId() {
-            bitField0_ = (bitField0_ & ~0x00000001);
+            bitField0_ &= ~0x00000001;
             ownerId_ = 0L;
             onChanged();
             return this;
@@ -763,8 +709,9 @@ public final class UserRelationship extends
          * @return This builder for chaining.
          */
         public Builder setRelatedUserId(long value) {
-            bitField0_ |= 0x00000002;
+
             relatedUserId_ = value;
+            bitField0_ |= 0x00000002;
             onChanged();
             return this;
         }
@@ -775,7 +722,7 @@ public final class UserRelationship extends
          * @return This builder for chaining.
          */
         public Builder clearRelatedUserId() {
-            bitField0_ = (bitField0_ & ~0x00000002);
+            bitField0_ &= ~0x00000002;
             relatedUserId_ = 0L;
             onChanged();
             return this;
@@ -810,8 +757,9 @@ public final class UserRelationship extends
          * @return This builder for chaining.
          */
         public Builder setBlockDate(long value) {
-            bitField0_ |= 0x00000004;
+
             blockDate_ = value;
+            bitField0_ |= 0x00000004;
             onChanged();
             return this;
         }
@@ -822,7 +770,7 @@ public final class UserRelationship extends
          * @return This builder for chaining.
          */
         public Builder clearBlockDate() {
-            bitField0_ = (bitField0_ & ~0x00000004);
+            bitField0_ &= ~0x00000004;
             blockDate_ = 0L;
             onChanged();
             return this;
@@ -857,8 +805,9 @@ public final class UserRelationship extends
          * @return This builder for chaining.
          */
         public Builder setGroupIndex(long value) {
-            bitField0_ |= 0x00000008;
+
             groupIndex_ = value;
+            bitField0_ |= 0x00000008;
             onChanged();
             return this;
         }
@@ -869,7 +818,7 @@ public final class UserRelationship extends
          * @return This builder for chaining.
          */
         public Builder clearGroupIndex() {
-            bitField0_ = (bitField0_ & ~0x00000008);
+            bitField0_ &= ~0x00000008;
             groupIndex_ = 0L;
             onChanged();
             return this;
@@ -904,8 +853,9 @@ public final class UserRelationship extends
          * @return This builder for chaining.
          */
         public Builder setEstablishmentDate(long value) {
-            bitField0_ |= 0x00000010;
+
             establishmentDate_ = value;
+            bitField0_ |= 0x00000010;
             onChanged();
             return this;
         }
@@ -916,7 +866,7 @@ public final class UserRelationship extends
          * @return This builder for chaining.
          */
         public Builder clearEstablishmentDate() {
-            bitField0_ = (bitField0_ & ~0x00000010);
+            bitField0_ &= ~0x00000010;
             establishmentDate_ = 0L;
             onChanged();
             return this;
@@ -950,7 +900,7 @@ public final class UserRelationship extends
     }
 
     private static final com.google.protobuf.Parser<UserRelationship>
-            PARSER = new com.google.protobuf.AbstractParser<UserRelationship>() {
+            PARSER = new com.google.protobuf.AbstractParser<>() {
         @java.lang.Override
         public UserRelationship parsePartialFrom(
                 com.google.protobuf.CodedInputStream input,

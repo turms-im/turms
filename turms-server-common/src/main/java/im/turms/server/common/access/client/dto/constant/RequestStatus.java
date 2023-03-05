@@ -109,24 +109,16 @@ public enum RequestStatus
      * @return The enum associated with the given numeric wire value.
      */
     public static RequestStatus forNumber(int value) {
-        switch (value) {
-            case 0:
-                return PENDING;
-            case 1:
-                return ACCEPTED;
-            case 2:
-                return ACCEPTED_WITHOUT_CONFIRM;
-            case 3:
-                return DECLINED;
-            case 4:
-                return IGNORED;
-            case 5:
-                return EXPIRED;
-            case 6:
-                return CANCELED;
-            default:
-                return null;
-        }
+        return switch (value) {
+            case 0 -> PENDING;
+            case 1 -> ACCEPTED;
+            case 2 -> ACCEPTED_WITHOUT_CONFIRM;
+            case 3 -> DECLINED;
+            case 4 -> IGNORED;
+            case 5 -> EXPIRED;
+            case 6 -> CANCELED;
+            default -> null;
+        };
     }
 
     public static com.google.protobuf.Internal.EnumLiteMap<RequestStatus>
@@ -136,11 +128,7 @@ public enum RequestStatus
 
     private static final com.google.protobuf.Internal.EnumLiteMap<
             RequestStatus> internalValueMap =
-            new com.google.protobuf.Internal.EnumLiteMap<RequestStatus>() {
-                public RequestStatus findValueByNumber(int number) {
-                    return RequestStatus.forNumber(number);
-                }
-            };
+            number -> RequestStatus.forNumber(number);
 
     public final com.google.protobuf.Descriptors.EnumValueDescriptor
     getValueDescriptor() {
@@ -177,7 +165,7 @@ public enum RequestStatus
 
     private final int value;
 
-    private RequestStatus(int value) {
+    RequestStatus(int value) {
         this.value = value;
     }
 

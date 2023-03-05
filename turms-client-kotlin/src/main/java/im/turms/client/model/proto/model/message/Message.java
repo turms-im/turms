@@ -71,7 +71,7 @@ public final class Message extends
      * <code>optional int64 id = 1;</code>
      */
     private void clearId() {
-        bitField0_ = (bitField0_ & ~0x00000001);
+        bitField0_ &= ~0x00000001;
         id_ = 0L;
     }
 
@@ -112,7 +112,7 @@ public final class Message extends
      * <code>optional int64 delivery_date = 2;</code>
      */
     private void clearDeliveryDate() {
-        bitField0_ = (bitField0_ & ~0x00000002);
+        bitField0_ &= ~0x00000002;
         deliveryDate_ = 0L;
     }
 
@@ -153,7 +153,7 @@ public final class Message extends
      * <code>optional int64 modification_date = 3;</code>
      */
     private void clearModificationDate() {
-        bitField0_ = (bitField0_ & ~0x00000004);
+        bitField0_ &= ~0x00000004;
         modificationDate_ = 0L;
     }
 
@@ -207,7 +207,7 @@ public final class Message extends
      * <code>optional string text = 4;</code>
      */
     private void clearText() {
-        bitField0_ = (bitField0_ & ~0x00000008);
+        bitField0_ &= ~0x00000008;
         text_ = getDefaultInstance().getText();
     }
 
@@ -260,7 +260,7 @@ public final class Message extends
      * <code>optional int64 sender_id = 5;</code>
      */
     private void clearSenderId() {
-        bitField0_ = (bitField0_ & ~0x00000010);
+        bitField0_ &= ~0x00000010;
         senderId_ = 0L;
     }
 
@@ -301,7 +301,7 @@ public final class Message extends
      * <code>optional int64 group_id = 6;</code>
      */
     private void clearGroupId() {
-        bitField0_ = (bitField0_ & ~0x00000020);
+        bitField0_ &= ~0x00000020;
         groupId_ = 0L;
     }
 
@@ -342,7 +342,7 @@ public final class Message extends
      * <code>optional bool is_system_message = 7;</code>
      */
     private void clearIsSystemMessage() {
-        bitField0_ = (bitField0_ & ~0x00000040);
+        bitField0_ &= ~0x00000040;
         isSystemMessage_ = false;
     }
 
@@ -383,7 +383,7 @@ public final class Message extends
      * <code>optional int64 recipient_id = 8;</code>
      */
     private void clearRecipientId() {
-        bitField0_ = (bitField0_ & ~0x00000080);
+        bitField0_ &= ~0x00000080;
         recipientId_ = 0L;
     }
 
@@ -510,7 +510,7 @@ public final class Message extends
      * <code>optional int32 sequence_id = 10;</code>
      */
     private void clearSequenceId() {
-        bitField0_ = (bitField0_ & ~0x00000100);
+        bitField0_ &= ~0x00000100;
         sequenceId_ = 0;
     }
 
@@ -551,7 +551,7 @@ public final class Message extends
      * <code>optional int64 pre_message_id = 11;</code>
      */
     private void clearPreMessageId() {
-        bitField0_ = (bitField0_ & ~0x00000200);
+        bitField0_ &= ~0x00000200;
         preMessageId_ = 0L;
     }
 
@@ -1246,7 +1246,7 @@ public final class Message extends
                         parser = PARSER;
                         if (parser == null) {
                             parser =
-                                    new DefaultInstanceBasedParser<im.turms.client.model.proto.model.message.Message>(
+                                    new DefaultInstanceBasedParser<>(
                                             DEFAULT_INSTANCE);
                             PARSER = parser;
                         }

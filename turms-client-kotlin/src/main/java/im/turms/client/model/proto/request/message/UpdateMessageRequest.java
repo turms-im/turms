@@ -147,7 +147,7 @@ public final class UpdateMessageRequest extends
      * <code>optional string text = 2;</code>
      */
     private void clearText() {
-        bitField0_ = (bitField0_ & ~0x00000001);
+        bitField0_ &= ~0x00000001;
         text_ = getDefaultInstance().getText();
     }
 
@@ -290,7 +290,7 @@ public final class UpdateMessageRequest extends
      * <code>optional int64 recall_date = 4;</code>
      */
     private void clearRecallDate() {
-        bitField0_ = (bitField0_ & ~0x00000002);
+        bitField0_ &= ~0x00000002;
         recallDate_ = 0L;
     }
 
@@ -702,7 +702,7 @@ public final class UpdateMessageRequest extends
                         parser = PARSER;
                         if (parser == null) {
                             parser =
-                                    new DefaultInstanceBasedParser<im.turms.client.model.proto.request.message.UpdateMessageRequest>(
+                                    new DefaultInstanceBasedParser<>(
                                             DEFAULT_INSTANCE);
                             PARSER = parser;
                         }

@@ -10,12 +10,12 @@ import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
 
 @$core.Deprecated('Use deleteRelationshipGroupMemberRequestDescriptor instead')
-const DeleteRelationshipGroupMemberRequest$json = {
+const DeleteRelationshipGroupMemberRequest$json = const {
   '1': 'DeleteRelationshipGroupMemberRequest',
-  '2': [
-    {'1': 'user_id', '3': 1, '4': 1, '5': 3, '10': 'userId'},
-    {'1': 'group_index', '3': 2, '4': 1, '5': 5, '10': 'groupIndex'},
-    {
+  '2': const [
+    const {'1': 'user_id', '3': 1, '4': 1, '5': 3, '10': 'userId'},
+    const {'1': 'group_index', '3': 2, '4': 1, '5': 5, '10': 'groupIndex'},
+    const {
       '1': 'target_group_index',
       '3': 3,
       '4': 1,
@@ -25,8 +25,8 @@ const DeleteRelationshipGroupMemberRequest$json = {
       '17': true
     },
   ],
-  '8': [
-    {'1': '_target_group_index'},
+  '8': const [
+    const {'1': '_target_group_index'},
   ],
 };
 

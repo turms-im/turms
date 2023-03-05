@@ -87,7 +87,7 @@ class TurmsNotification_Data extends $pb.GeneratedMessage {
           ? ''
           : 'TurmsNotification.Data',
       package: const $pb.PackageName(
-          $core.bool.fromEnvironment('protobuf.omit_message_names')
+          const $core.bool.fromEnvironment('protobuf.omit_message_names')
               ? ''
               : 'im.turms.proto'),
       createEmptyInstance: create)
@@ -675,7 +675,7 @@ class TurmsNotification extends $pb.GeneratedMessage {
           ? ''
           : 'TurmsNotification',
       package: const $pb.PackageName(
-          $core.bool.fromEnvironment('protobuf.omit_message_names')
+          const $core.bool.fromEnvironment('protobuf.omit_message_names')
               ? ''
               : 'im.turms.proto'),
       createEmptyInstance: create)

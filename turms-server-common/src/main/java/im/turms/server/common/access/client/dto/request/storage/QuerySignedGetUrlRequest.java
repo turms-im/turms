@@ -227,10 +227,9 @@ public final class QuerySignedGetUrlRequest extends
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof im.turms.server.common.access.client.dto.request.storage.QuerySignedGetUrlRequest)) {
+        if (!(obj instanceof QuerySignedGetUrlRequest other)) {
             return super.equals(obj);
         }
-        im.turms.server.common.access.client.dto.request.storage.QuerySignedGetUrlRequest other = (im.turms.server.common.access.client.dto.request.storage.QuerySignedGetUrlRequest) obj;
 
         if (contentType_ != other.contentType_) {
             return false;
@@ -253,10 +252,7 @@ public final class QuerySignedGetUrlRequest extends
                 return false;
             }
         }
-        if (!getUnknownFields().equals(other.getUnknownFields())) {
-            return false;
-        }
-        return true;
+        return getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -385,8 +381,7 @@ public final class QuerySignedGetUrlRequest extends
     @java.lang.Override
     protected Builder newBuilderForType(
             com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
+        return new Builder(parent);
     }
 
     /**
@@ -427,9 +422,9 @@ public final class QuerySignedGetUrlRequest extends
             contentType_ = 0;
 
             keyStr_ = "";
-            bitField0_ = (bitField0_ & ~0x00000001);
+            bitField0_ &= ~0x00000001;
             keyNum_ = 0L;
-            bitField0_ = (bitField0_ & ~0x00000002);
+            bitField0_ &= ~0x00000002;
             return this;
         }
 
@@ -558,29 +553,20 @@ public final class QuerySignedGetUrlRequest extends
                 while (!done) {
                     int tag = input.readTag();
                     switch (tag) {
-                        case 0:
-                            done = true;
-                            break;
-                        case 8: {
-                            contentType_ = input.readEnum();
-
-                            break;
-                        } // case 8
-                        case 18: {
+                        case 0 -> done = true;
+                        case 8 -> contentType_ = input.readEnum(); // case 8
+                        case 18 -> {
                             keyStr_ = input.readStringRequireUtf8();
                             bitField0_ |= 0x00000001;
-                            break;
                         } // case 18
-                        case 24: {
+                        case 24 -> {
                             keyNum_ = input.readInt64();
                             bitField0_ |= 0x00000002;
-                            break;
                         } // case 24
-                        default: {
+                        default -> {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
                             }
-                            break;
                         } // default:
                     } // switch (tag)
                 } // while (!done)
@@ -730,7 +716,7 @@ public final class QuerySignedGetUrlRequest extends
          * @return This builder for chaining.
          */
         public Builder clearKeyStr() {
-            bitField0_ = (bitField0_ & ~0x00000001);
+            bitField0_ &= ~0x00000001;
             keyStr_ = getDefaultInstance().getKeyStr();
             onChanged();
             return this;
@@ -795,7 +781,7 @@ public final class QuerySignedGetUrlRequest extends
          * @return This builder for chaining.
          */
         public Builder clearKeyNum() {
-            bitField0_ = (bitField0_ & ~0x00000002);
+            bitField0_ &= ~0x00000002;
             keyNum_ = 0L;
             onChanged();
             return this;
@@ -829,7 +815,7 @@ public final class QuerySignedGetUrlRequest extends
     }
 
     private static final com.google.protobuf.Parser<QuerySignedGetUrlRequest>
-            PARSER = new com.google.protobuf.AbstractParser<QuerySignedGetUrlRequest>() {
+            PARSER = new com.google.protobuf.AbstractParser<>() {
         @java.lang.Override
         public QuerySignedGetUrlRequest parsePartialFrom(
                 com.google.protobuf.CodedInputStream input,

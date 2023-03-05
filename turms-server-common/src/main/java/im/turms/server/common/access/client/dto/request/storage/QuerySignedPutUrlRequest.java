@@ -247,10 +247,9 @@ public final class QuerySignedPutUrlRequest extends
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof im.turms.server.common.access.client.dto.request.storage.QuerySignedPutUrlRequest)) {
+        if (!(obj instanceof QuerySignedPutUrlRequest other)) {
             return super.equals(obj);
         }
-        im.turms.server.common.access.client.dto.request.storage.QuerySignedPutUrlRequest other = (im.turms.server.common.access.client.dto.request.storage.QuerySignedPutUrlRequest) obj;
 
         if (contentType_ != other.contentType_) {
             return false;
@@ -273,14 +272,7 @@ public final class QuerySignedPutUrlRequest extends
                 return false;
             }
         }
-        if (getContentLength()
-            != other.getContentLength()) {
-            return false;
-        }
-        if (!getUnknownFields().equals(other.getUnknownFields())) {
-            return false;
-        }
-        return true;
+        return getContentLength() == other.getContentLength() && getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -412,8 +404,7 @@ public final class QuerySignedPutUrlRequest extends
     @java.lang.Override
     protected Builder newBuilderForType(
             com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
+        return new Builder(parent);
     }
 
     /**
@@ -454,9 +445,9 @@ public final class QuerySignedPutUrlRequest extends
             contentType_ = 0;
 
             keyStr_ = "";
-            bitField0_ = (bitField0_ & ~0x00000001);
+            bitField0_ &= ~0x00000001;
             keyNum_ = 0L;
-            bitField0_ = (bitField0_ & ~0x00000002);
+            bitField0_ &= ~0x00000002;
             contentLength_ = 0L;
 
             return this;
@@ -591,34 +582,21 @@ public final class QuerySignedPutUrlRequest extends
                 while (!done) {
                     int tag = input.readTag();
                     switch (tag) {
-                        case 0:
-                            done = true;
-                            break;
-                        case 8: {
-                            contentType_ = input.readEnum();
-
-                            break;
-                        } // case 8
-                        case 18: {
+                        case 0 -> done = true;
+                        case 8 -> contentType_ = input.readEnum(); // case 8
+                        case 18 -> {
                             keyStr_ = input.readStringRequireUtf8();
                             bitField0_ |= 0x00000001;
-                            break;
                         } // case 18
-                        case 24: {
+                        case 24 -> {
                             keyNum_ = input.readInt64();
                             bitField0_ |= 0x00000002;
-                            break;
                         } // case 24
-                        case 32: {
-                            contentLength_ = input.readInt64();
-
-                            break;
-                        } // case 32
-                        default: {
+                        case 32 -> contentLength_ = input.readInt64(); // case 32
+                        default -> {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
                             }
-                            break;
                         } // default:
                     } // switch (tag)
                 } // while (!done)
@@ -768,7 +746,7 @@ public final class QuerySignedPutUrlRequest extends
          * @return This builder for chaining.
          */
         public Builder clearKeyStr() {
-            bitField0_ = (bitField0_ & ~0x00000001);
+            bitField0_ &= ~0x00000001;
             keyStr_ = getDefaultInstance().getKeyStr();
             onChanged();
             return this;
@@ -833,7 +811,7 @@ public final class QuerySignedPutUrlRequest extends
          * @return This builder for chaining.
          */
         public Builder clearKeyNum() {
-            bitField0_ = (bitField0_ & ~0x00000002);
+            bitField0_ &= ~0x00000002;
             keyNum_ = 0L;
             onChanged();
             return this;
@@ -904,7 +882,7 @@ public final class QuerySignedPutUrlRequest extends
     }
 
     private static final com.google.protobuf.Parser<QuerySignedPutUrlRequest>
-            PARSER = new com.google.protobuf.AbstractParser<QuerySignedPutUrlRequest>() {
+            PARSER = new com.google.protobuf.AbstractParser<>() {
         @java.lang.Override
         public QuerySignedPutUrlRequest parsePartialFrom(
                 com.google.protobuf.CodedInputStream input,

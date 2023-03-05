@@ -51,8 +51,8 @@ public class ClientMessageEncoder {
     public static ByteBuf encodeResponse(long timestamp, long requestId, int code, @Nullable String reason) {
         boolean hasReason = reason != null;
         int capacity = computeInt64Size(TurmsNotification.TIMESTAMP_FIELD_NUMBER, timestamp)
-                + computeInt64Size(TurmsNotification.REQUEST_ID_FIELD_NUMBER, requestId)
-                + computeInt32Size(TurmsNotification.CODE_FIELD_NUMBER, code);
+                       + computeInt64Size(TurmsNotification.REQUEST_ID_FIELD_NUMBER, requestId)
+                       + computeInt32Size(TurmsNotification.CODE_FIELD_NUMBER, code);
         if (hasReason) {
             capacity += computeStringSize(TurmsNotification.REASON_FIELD_NUMBER, reason);
         }
@@ -81,7 +81,7 @@ public class ClientMessageEncoder {
         boolean hasReason = reason != null;
         int code = closeStatus.getCode();
         int capacity = computeInt64Size(TurmsNotification.TIMESTAMP_FIELD_NUMBER, timestamp)
-                + computeInt32Size(TurmsNotification.CLOSE_STATUS_FIELD_NUMBER, code);
+                       + computeInt32Size(TurmsNotification.CLOSE_STATUS_FIELD_NUMBER, code);
         if (hasCode) {
             capacity += computeInt32Size(TurmsNotification.CODE_FIELD_NUMBER, statusCode.getBusinessCode());
         }
@@ -109,17 +109,17 @@ public class ClientMessageEncoder {
 
     public static ByteBuf encodeUserSessionNotification(long timestamp, String sessionId, String serverId) {
         int userSessionSize = computeStringSize(UserSession.SESSION_ID_FIELD_NUMBER, sessionId)
-                + computeStringSize(UserSession.SERVER_ID_FIELD_NUMBER, serverId);
+                              + computeStringSize(UserSession.SERVER_ID_FIELD_NUMBER, serverId);
         int userSessionWithTagSize = computeTagSize(TurmsNotification.Data.USER_SESSION_FIELD_NUMBER)
-                + computeUInt32SizeNoTag(userSessionSize)
-                + userSessionSize;
+                                     + computeUInt32SizeNoTag(userSessionSize)
+                                     + userSessionSize;
         int capacity = computeInt64Size(TurmsNotification.TIMESTAMP_FIELD_NUMBER, timestamp)
-                + computeTagSize(TurmsNotification.DATA_FIELD_NUMBER)
-                + computeUInt32SizeNoTag(userSessionWithTagSize)
-                + computeTagSize(TurmsNotification.Data.USER_SESSION_FIELD_NUMBER)
-                + computeUInt32SizeNoTag(userSessionSize)
-                + computeStringSize(UserSession.SESSION_ID_FIELD_NUMBER, sessionId)
-                + computeStringSize(UserSession.SERVER_ID_FIELD_NUMBER, serverId);
+                       + computeTagSize(TurmsNotification.DATA_FIELD_NUMBER)
+                       + computeUInt32SizeNoTag(userSessionWithTagSize)
+                       + computeTagSize(TurmsNotification.Data.USER_SESSION_FIELD_NUMBER)
+                       + computeUInt32SizeNoTag(userSessionSize)
+                       + computeStringSize(UserSession.SESSION_ID_FIELD_NUMBER, sessionId)
+                       + computeStringSize(UserSession.SERVER_ID_FIELD_NUMBER, serverId);
         ByteBuf output = PooledByteBufAllocator.DEFAULT.directBuffer(capacity);
         try {
             CodedOutputStream stream = newInstance(output.nioBuffer(0, capacity));

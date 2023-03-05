@@ -46,12 +46,6 @@ public final class UserSession extends
         return new UserSession();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-        return this.unknownFields;
-    }
-
     public static final com.google.protobuf.Descriptors.Descriptor
     getDescriptor() {
         return im.turms.server.common.access.client.dto.model.user.UserSessionOuterClass.internal_static_im_turms_proto_UserSession_descriptor;
@@ -66,7 +60,8 @@ public final class UserSession extends
     }
 
     public static final int SESSION_ID_FIELD_NUMBER = 1;
-    private volatile java.lang.Object sessionId_;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object sessionId_ = "";
 
     /**
      * <code>string session_id = 1;</code>
@@ -108,7 +103,8 @@ public final class UserSession extends
     }
 
     public static final int SERVER_ID_FIELD_NUMBER = 2;
-    private volatile java.lang.Object serverId_;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object serverId_ = "";
 
     /**
      * <code>string server_id = 2;</code>
@@ -201,10 +197,9 @@ public final class UserSession extends
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof im.turms.server.common.access.client.dto.model.user.UserSession)) {
+        if (!(obj instanceof UserSession other)) {
             return super.equals(obj);
         }
-        im.turms.server.common.access.client.dto.model.user.UserSession other = (im.turms.server.common.access.client.dto.model.user.UserSession) obj;
 
         if (!getSessionId()
                 .equals(other.getSessionId())) {
@@ -214,10 +209,7 @@ public final class UserSession extends
                 .equals(other.getServerId())) {
             return false;
         }
-        if (!getUnknownFields().equals(other.getUnknownFields())) {
-            return false;
-        }
-        return true;
+        return getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -339,8 +331,7 @@ public final class UserSession extends
     @java.lang.Override
     protected Builder newBuilderForType(
             com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
+        return new Builder(parent);
     }
 
     /**
@@ -377,10 +368,9 @@ public final class UserSession extends
         @java.lang.Override
         public Builder clear() {
             super.clear();
+            bitField0_ = 0;
             sessionId_ = "";
-
             serverId_ = "";
-
             return this;
         }
 
@@ -407,48 +397,21 @@ public final class UserSession extends
         @java.lang.Override
         public im.turms.server.common.access.client.dto.model.user.UserSession buildPartial() {
             im.turms.server.common.access.client.dto.model.user.UserSession result = new im.turms.server.common.access.client.dto.model.user.UserSession(this);
-            result.sessionId_ = sessionId_;
-            result.serverId_ = serverId_;
+            if (bitField0_ != 0) {
+                buildPartial0(result);
+            }
             onBuilt();
             return result;
         }
 
-        @java.lang.Override
-        public Builder clone() {
-            return super.clone();
-        }
-
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(
-                com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(
-                com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index, java.lang.Object value) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.addRepeatedField(field, value);
+        private void buildPartial0(im.turms.server.common.access.client.dto.model.user.UserSession result) {
+            int from_bitField0_ = bitField0_;
+            if (((from_bitField0_ & 0x00000001) != 0)) {
+                result.sessionId_ = sessionId_;
+            }
+            if (((from_bitField0_ & 0x00000002) != 0)) {
+                result.serverId_ = serverId_;
+            }
         }
 
         @java.lang.Override
@@ -467,10 +430,12 @@ public final class UserSession extends
             }
             if (!other.getSessionId().isEmpty()) {
                 sessionId_ = other.sessionId_;
+                bitField0_ |= 0x00000001;
                 onChanged();
             }
             if (!other.getServerId().isEmpty()) {
                 serverId_ = other.serverId_;
+                bitField0_ |= 0x00000002;
                 onChanged();
             }
             this.mergeUnknownFields(other.getUnknownFields());
@@ -496,24 +461,19 @@ public final class UserSession extends
                 while (!done) {
                     int tag = input.readTag();
                     switch (tag) {
-                        case 0:
-                            done = true;
-                            break;
-                        case 10: {
+                        case 0 -> done = true;
+                        case 10 -> {
                             sessionId_ = input.readStringRequireUtf8();
-
-                            break;
+                            bitField0_ |= 0x00000001;
                         } // case 10
-                        case 18: {
+                        case 18 -> {
                             serverId_ = input.readStringRequireUtf8();
-
-                            break;
+                            bitField0_ |= 0x00000002;
                         } // case 18
-                        default: {
+                        default -> {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
                             }
-                            break;
                         } // default:
                     } // switch (tag)
                 } // while (!done)
@@ -524,6 +484,8 @@ public final class UserSession extends
             } // finally
             return this;
         }
+
+        private int bitField0_;
 
         private java.lang.Object sessionId_ = "";
 
@@ -575,8 +537,8 @@ public final class UserSession extends
             if (value == null) {
                 throw new NullPointerException();
             }
-
             sessionId_ = value;
+            bitField0_ |= 0x00000001;
             onChanged();
             return this;
         }
@@ -587,8 +549,8 @@ public final class UserSession extends
          * @return This builder for chaining.
          */
         public Builder clearSessionId() {
-
             sessionId_ = getDefaultInstance().getSessionId();
+            bitField0_ &= ~0x00000001;
             onChanged();
             return this;
         }
@@ -605,8 +567,8 @@ public final class UserSession extends
                 throw new NullPointerException();
             }
             checkByteStringIsUtf8(value);
-
             sessionId_ = value;
+            bitField0_ |= 0x00000001;
             onChanged();
             return this;
         }
@@ -661,8 +623,8 @@ public final class UserSession extends
             if (value == null) {
                 throw new NullPointerException();
             }
-
             serverId_ = value;
+            bitField0_ |= 0x00000002;
             onChanged();
             return this;
         }
@@ -673,8 +635,8 @@ public final class UserSession extends
          * @return This builder for chaining.
          */
         public Builder clearServerId() {
-
             serverId_ = getDefaultInstance().getServerId();
+            bitField0_ &= ~0x00000002;
             onChanged();
             return this;
         }
@@ -691,8 +653,8 @@ public final class UserSession extends
                 throw new NullPointerException();
             }
             checkByteStringIsUtf8(value);
-
             serverId_ = value;
+            bitField0_ |= 0x00000002;
             onChanged();
             return this;
         }
@@ -725,7 +687,7 @@ public final class UserSession extends
     }
 
     private static final com.google.protobuf.Parser<UserSession>
-            PARSER = new com.google.protobuf.AbstractParser<UserSession>() {
+            PARSER = new com.google.protobuf.AbstractParser<>() {
         @java.lang.Override
         public UserSession parsePartialFrom(
                 com.google.protobuf.CodedInputStream input,

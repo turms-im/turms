@@ -45,12 +45,6 @@ public final class UpdateRelationshipGroupRequest extends
         return new UpdateRelationshipGroupRequest();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-        return this.unknownFields;
-    }
-
     public static final com.google.protobuf.Descriptors.Descriptor
     getDescriptor() {
         return im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipGroupRequestOuterClass.internal_static_im_turms_proto_UpdateRelationshipGroupRequest_descriptor;
@@ -61,12 +55,11 @@ public final class UpdateRelationshipGroupRequest extends
     internalGetFieldAccessorTable() {
         return im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipGroupRequestOuterClass.internal_static_im_turms_proto_UpdateRelationshipGroupRequest_fieldAccessorTable
                 .ensureFieldAccessorsInitialized(
-                        im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipGroupRequest.class,
-                        im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipGroupRequest.Builder.class);
+                        im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipGroupRequest.class, im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipGroupRequest.Builder.class);
     }
 
     public static final int GROUP_INDEX_FIELD_NUMBER = 1;
-    private int groupIndex_;
+    private int groupIndex_ = 0;
 
     /**
      * <pre>
@@ -83,7 +76,8 @@ public final class UpdateRelationshipGroupRequest extends
     }
 
     public static final int NEW_NAME_FIELD_NUMBER = 2;
-    private volatile java.lang.Object newName_;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object newName_ = "";
 
     /**
      * <pre>
@@ -185,11 +179,9 @@ public final class UpdateRelationshipGroupRequest extends
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipGroupRequest)) {
+        if (!(obj instanceof UpdateRelationshipGroupRequest other)) {
             return super.equals(obj);
         }
-        im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipGroupRequest other =
-                (im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipGroupRequest) obj;
 
         if (getGroupIndex()
             != other.getGroupIndex()) {
@@ -199,10 +191,7 @@ public final class UpdateRelationshipGroupRequest extends
                 .equals(other.getNewName())) {
             return false;
         }
-        if (!getUnknownFields().equals(other.getUnknownFields())) {
-            return false;
-        }
-        return true;
+        return getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -324,8 +313,7 @@ public final class UpdateRelationshipGroupRequest extends
     @java.lang.Override
     protected Builder newBuilderForType(
             com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
+        return new Builder(parent);
     }
 
     /**
@@ -345,8 +333,7 @@ public final class UpdateRelationshipGroupRequest extends
         internalGetFieldAccessorTable() {
             return im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipGroupRequestOuterClass.internal_static_im_turms_proto_UpdateRelationshipGroupRequest_fieldAccessorTable
                     .ensureFieldAccessorsInitialized(
-                            im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipGroupRequest.class,
-                            im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipGroupRequest.Builder.class);
+                            im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipGroupRequest.class, im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipGroupRequest.Builder.class);
         }
 
         // Construct using im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipGroupRequest.newBuilder()
@@ -363,10 +350,9 @@ public final class UpdateRelationshipGroupRequest extends
         @java.lang.Override
         public Builder clear() {
             super.clear();
+            bitField0_ = 0;
             groupIndex_ = 0;
-
             newName_ = "";
-
             return this;
         }
 
@@ -392,50 +378,22 @@ public final class UpdateRelationshipGroupRequest extends
 
         @java.lang.Override
         public im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipGroupRequest buildPartial() {
-            im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipGroupRequest result =
-                    new im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipGroupRequest(this);
-            result.groupIndex_ = groupIndex_;
-            result.newName_ = newName_;
+            im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipGroupRequest result = new im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipGroupRequest(this);
+            if (bitField0_ != 0) {
+                buildPartial0(result);
+            }
             onBuilt();
             return result;
         }
 
-        @java.lang.Override
-        public Builder clone() {
-            return super.clone();
-        }
-
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(
-                com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(
-                com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index, java.lang.Object value) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.addRepeatedField(field, value);
+        private void buildPartial0(im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipGroupRequest result) {
+            int from_bitField0_ = bitField0_;
+            if (((from_bitField0_ & 0x00000001) != 0)) {
+                result.groupIndex_ = groupIndex_;
+            }
+            if (((from_bitField0_ & 0x00000002) != 0)) {
+                result.newName_ = newName_;
+            }
         }
 
         @java.lang.Override
@@ -457,6 +415,7 @@ public final class UpdateRelationshipGroupRequest extends
             }
             if (!other.getNewName().isEmpty()) {
                 newName_ = other.newName_;
+                bitField0_ |= 0x00000002;
                 onChanged();
             }
             this.mergeUnknownFields(other.getUnknownFields());
@@ -482,24 +441,19 @@ public final class UpdateRelationshipGroupRequest extends
                 while (!done) {
                     int tag = input.readTag();
                     switch (tag) {
-                        case 0:
-                            done = true;
-                            break;
-                        case 8: {
+                        case 0 -> done = true;
+                        case 8 -> {
                             groupIndex_ = input.readInt32();
-
-                            break;
+                            bitField0_ |= 0x00000001;
                         } // case 8
-                        case 18: {
+                        case 18 -> {
                             newName_ = input.readStringRequireUtf8();
-
-                            break;
+                            bitField0_ |= 0x00000002;
                         } // case 18
-                        default: {
+                        default -> {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
                             }
-                            break;
                         } // default:
                     } // switch (tag)
                 } // while (!done)
@@ -510,6 +464,8 @@ public final class UpdateRelationshipGroupRequest extends
             } // finally
             return this;
         }
+
+        private int bitField0_;
 
         private int groupIndex_;
 
@@ -540,6 +496,7 @@ public final class UpdateRelationshipGroupRequest extends
         public Builder setGroupIndex(int value) {
 
             groupIndex_ = value;
+            bitField0_ |= 0x00000001;
             onChanged();
             return this;
         }
@@ -554,7 +511,7 @@ public final class UpdateRelationshipGroupRequest extends
          * @return This builder for chaining.
          */
         public Builder clearGroupIndex() {
-
+            bitField0_ &= ~0x00000001;
             groupIndex_ = 0;
             onChanged();
             return this;
@@ -622,8 +579,8 @@ public final class UpdateRelationshipGroupRequest extends
             if (value == null) {
                 throw new NullPointerException();
             }
-
             newName_ = value;
+            bitField0_ |= 0x00000002;
             onChanged();
             return this;
         }
@@ -638,8 +595,8 @@ public final class UpdateRelationshipGroupRequest extends
          * @return This builder for chaining.
          */
         public Builder clearNewName() {
-
             newName_ = getDefaultInstance().getNewName();
+            bitField0_ &= ~0x00000002;
             onChanged();
             return this;
         }
@@ -660,8 +617,8 @@ public final class UpdateRelationshipGroupRequest extends
                 throw new NullPointerException();
             }
             checkByteStringIsUtf8(value);
-
             newName_ = value;
+            bitField0_ |= 0x00000002;
             onChanged();
             return this;
         }
@@ -694,7 +651,7 @@ public final class UpdateRelationshipGroupRequest extends
     }
 
     private static final com.google.protobuf.Parser<UpdateRelationshipGroupRequest>
-            PARSER = new com.google.protobuf.AbstractParser<UpdateRelationshipGroupRequest>() {
+            PARSER = new com.google.protobuf.AbstractParser<>() {
         @java.lang.Override
         public UpdateRelationshipGroupRequest parsePartialFrom(
                 com.google.protobuf.CodedInputStream input,

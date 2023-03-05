@@ -44,12 +44,6 @@ public final class DeleteGroupInvitationRequest extends
         return new DeleteGroupInvitationRequest();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-        return this.unknownFields;
-    }
-
     public static final com.google.protobuf.Descriptors.Descriptor
     getDescriptor() {
         return im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupInvitationRequestOuterClass.internal_static_im_turms_proto_DeleteGroupInvitationRequest_descriptor;
@@ -60,12 +54,11 @@ public final class DeleteGroupInvitationRequest extends
     internalGetFieldAccessorTable() {
         return im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupInvitationRequestOuterClass.internal_static_im_turms_proto_DeleteGroupInvitationRequest_fieldAccessorTable
                 .ensureFieldAccessorsInitialized(
-                        im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupInvitationRequest.class,
-                        im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupInvitationRequest.Builder.class);
+                        im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupInvitationRequest.class, im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupInvitationRequest.Builder.class);
     }
 
     public static final int INVITATION_ID_FIELD_NUMBER = 1;
-    private long invitationId_;
+    private long invitationId_ = 0L;
 
     /**
      * <code>int64 invitation_id = 1;</code>
@@ -124,20 +117,15 @@ public final class DeleteGroupInvitationRequest extends
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupInvitationRequest)) {
+        if (!(obj instanceof DeleteGroupInvitationRequest other)) {
             return super.equals(obj);
         }
-        im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupInvitationRequest other =
-                (im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupInvitationRequest) obj;
 
         if (getInvitationId()
             != other.getInvitationId()) {
             return false;
         }
-        if (!getUnknownFields().equals(other.getUnknownFields())) {
-            return false;
-        }
-        return true;
+        return getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -258,8 +246,7 @@ public final class DeleteGroupInvitationRequest extends
     @java.lang.Override
     protected Builder newBuilderForType(
             com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
+        return new Builder(parent);
     }
 
     /**
@@ -279,8 +266,7 @@ public final class DeleteGroupInvitationRequest extends
         internalGetFieldAccessorTable() {
             return im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupInvitationRequestOuterClass.internal_static_im_turms_proto_DeleteGroupInvitationRequest_fieldAccessorTable
                     .ensureFieldAccessorsInitialized(
-                            im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupInvitationRequest.class,
-                            im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupInvitationRequest.Builder.class);
+                            im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupInvitationRequest.class, im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupInvitationRequest.Builder.class);
         }
 
         // Construct using im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupInvitationRequest.newBuilder()
@@ -297,8 +283,8 @@ public final class DeleteGroupInvitationRequest extends
         @java.lang.Override
         public Builder clear() {
             super.clear();
+            bitField0_ = 0;
             invitationId_ = 0L;
-
             return this;
         }
 
@@ -324,49 +310,19 @@ public final class DeleteGroupInvitationRequest extends
 
         @java.lang.Override
         public im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupInvitationRequest buildPartial() {
-            im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupInvitationRequest result =
-                    new im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupInvitationRequest(this);
-            result.invitationId_ = invitationId_;
+            im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupInvitationRequest result = new im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupInvitationRequest(this);
+            if (bitField0_ != 0) {
+                buildPartial0(result);
+            }
             onBuilt();
             return result;
         }
 
-        @java.lang.Override
-        public Builder clone() {
-            return super.clone();
-        }
-
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(
-                com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(
-                com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index, java.lang.Object value) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.addRepeatedField(field, value);
+        private void buildPartial0(im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupInvitationRequest result) {
+            int from_bitField0_ = bitField0_;
+            if (((from_bitField0_ & 0x00000001) != 0)) {
+                result.invitationId_ = invitationId_;
+            }
         }
 
         @java.lang.Override
@@ -409,19 +365,15 @@ public final class DeleteGroupInvitationRequest extends
                 while (!done) {
                     int tag = input.readTag();
                     switch (tag) {
-                        case 0:
-                            done = true;
-                            break;
-                        case 8: {
+                        case 0 -> done = true;
+                        case 8 -> {
                             invitationId_ = input.readInt64();
-
-                            break;
+                            bitField0_ |= 0x00000001;
                         } // case 8
-                        default: {
+                        default -> {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
                             }
-                            break;
                         } // default:
                     } // switch (tag)
                 } // while (!done)
@@ -432,6 +384,8 @@ public final class DeleteGroupInvitationRequest extends
             } // finally
             return this;
         }
+
+        private int bitField0_;
 
         private long invitationId_;
 
@@ -454,6 +408,7 @@ public final class DeleteGroupInvitationRequest extends
         public Builder setInvitationId(long value) {
 
             invitationId_ = value;
+            bitField0_ |= 0x00000001;
             onChanged();
             return this;
         }
@@ -464,7 +419,7 @@ public final class DeleteGroupInvitationRequest extends
          * @return This builder for chaining.
          */
         public Builder clearInvitationId() {
-
+            bitField0_ &= ~0x00000001;
             invitationId_ = 0L;
             onChanged();
             return this;
@@ -498,7 +453,7 @@ public final class DeleteGroupInvitationRequest extends
     }
 
     private static final com.google.protobuf.Parser<DeleteGroupInvitationRequest>
-            PARSER = new com.google.protobuf.AbstractParser<DeleteGroupInvitationRequest>() {
+            PARSER = new com.google.protobuf.AbstractParser<>() {
         @java.lang.Override
         public DeleteGroupInvitationRequest parsePartialFrom(
                 com.google.protobuf.CodedInputStream input,

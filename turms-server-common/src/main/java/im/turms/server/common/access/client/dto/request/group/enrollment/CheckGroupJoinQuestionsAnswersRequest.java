@@ -44,12 +44,6 @@ public final class CheckGroupJoinQuestionsAnswersRequest extends
         return new CheckGroupJoinQuestionsAnswersRequest();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-        return this.unknownFields;
-    }
-
     public static final com.google.protobuf.Descriptors.Descriptor
     getDescriptor() {
         return im.turms.server.common.access.client.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequestOuterClass.internal_static_im_turms_proto_CheckGroupJoinQuestionsAnswersRequest_descriptor;
@@ -59,13 +53,11 @@ public final class CheckGroupJoinQuestionsAnswersRequest extends
     @java.lang.Override
     protected com.google.protobuf.MapField internalGetMapField(
             int number) {
-        switch (number) {
-            case 1:
-                return internalGetQuestionIdToAnswer();
-            default:
-                throw new RuntimeException(
-                        "Invalid map field number: " + number);
-        }
+        return switch (number) {
+            case 1 -> internalGetQuestionIdToAnswer();
+            default -> throw new RuntimeException(
+                    "Invalid map field number: " + number);
+        };
     }
 
     @java.lang.Override
@@ -73,8 +65,7 @@ public final class CheckGroupJoinQuestionsAnswersRequest extends
     internalGetFieldAccessorTable() {
         return im.turms.server.common.access.client.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequestOuterClass.internal_static_im_turms_proto_CheckGroupJoinQuestionsAnswersRequest_fieldAccessorTable
                 .ensureFieldAccessorsInitialized(
-                        im.turms.server.common.access.client.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequest.class,
-                        im.turms.server.common.access.client.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequest.Builder.class);
+                        im.turms.server.common.access.client.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequest.class, im.turms.server.common.access.client.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequest.Builder.class);
     }
 
     public static final int QUESTION_ID_TO_ANSWER_FIELD_NUMBER = 1;
@@ -91,6 +82,7 @@ public final class CheckGroupJoinQuestionsAnswersRequest extends
                                 "");
     }
 
+    @SuppressWarnings("serial")
     private com.google.protobuf.MapField<
             java.lang.Long, java.lang.String> questionIdToAnswer_;
 
@@ -110,7 +102,6 @@ public final class CheckGroupJoinQuestionsAnswersRequest extends
     /**
      * <code>map&lt;int64, string&gt; question_id_to_answer = 1;</code>
      */
-
     @java.lang.Override
     public boolean containsQuestionIdToAnswer(
             long key) {
@@ -131,7 +122,6 @@ public final class CheckGroupJoinQuestionsAnswersRequest extends
      * <code>map&lt;int64, string&gt; question_id_to_answer = 1;</code>
      */
     @java.lang.Override
-
     public java.util.Map<java.lang.Long, java.lang.String> getQuestionIdToAnswerMap() {
         return internalGetQuestionIdToAnswer().getMap();
     }
@@ -140,21 +130,21 @@ public final class CheckGroupJoinQuestionsAnswersRequest extends
      * <code>map&lt;int64, string&gt; question_id_to_answer = 1;</code>
      */
     @java.lang.Override
-
-    public java.lang.String getQuestionIdToAnswerOrDefault(
+    public /* nullable */
+    java.lang.String getQuestionIdToAnswerOrDefault(
             long key,
+            /* nullable */
             java.lang.String defaultValue) {
 
         java.util.Map<java.lang.Long, java.lang.String> map =
                 internalGetQuestionIdToAnswer().getMap();
-        return map.containsKey(key) ? map.get(key) : defaultValue;
+        return map.getOrDefault(key, defaultValue);
     }
 
     /**
      * <code>map&lt;int64, string&gt; question_id_to_answer = 1;</code>
      */
     @java.lang.Override
-
     public java.lang.String getQuestionIdToAnswerOrThrow(
             long key) {
 
@@ -222,20 +212,15 @@ public final class CheckGroupJoinQuestionsAnswersRequest extends
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof im.turms.server.common.access.client.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequest)) {
+        if (!(obj instanceof CheckGroupJoinQuestionsAnswersRequest other)) {
             return super.equals(obj);
         }
-        im.turms.server.common.access.client.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequest other =
-                (im.turms.server.common.access.client.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequest) obj;
 
         if (!internalGetQuestionIdToAnswer().equals(
                 other.internalGetQuestionIdToAnswer())) {
             return false;
         }
-        if (!getUnknownFields().equals(other.getUnknownFields())) {
-            return false;
-        }
-        return true;
+        return getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -357,8 +342,7 @@ public final class CheckGroupJoinQuestionsAnswersRequest extends
     @java.lang.Override
     protected Builder newBuilderForType(
             com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
+        return new Builder(parent);
     }
 
     /**
@@ -376,25 +360,21 @@ public final class CheckGroupJoinQuestionsAnswersRequest extends
         @SuppressWarnings({"rawtypes"})
         protected com.google.protobuf.MapField internalGetMapField(
                 int number) {
-            switch (number) {
-                case 1:
-                    return internalGetQuestionIdToAnswer();
-                default:
-                    throw new RuntimeException(
-                            "Invalid map field number: " + number);
-            }
+            return switch (number) {
+                case 1 -> internalGetQuestionIdToAnswer();
+                default -> throw new RuntimeException(
+                        "Invalid map field number: " + number);
+            };
         }
 
         @SuppressWarnings({"rawtypes"})
         protected com.google.protobuf.MapField internalGetMutableMapField(
                 int number) {
-            switch (number) {
-                case 1:
-                    return internalGetMutableQuestionIdToAnswer();
-                default:
-                    throw new RuntimeException(
-                            "Invalid map field number: " + number);
-            }
+            return switch (number) {
+                case 1 -> internalGetMutableQuestionIdToAnswer();
+                default -> throw new RuntimeException(
+                        "Invalid map field number: " + number);
+            };
         }
 
         @java.lang.Override
@@ -402,8 +382,7 @@ public final class CheckGroupJoinQuestionsAnswersRequest extends
         internalGetFieldAccessorTable() {
             return im.turms.server.common.access.client.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequestOuterClass.internal_static_im_turms_proto_CheckGroupJoinQuestionsAnswersRequest_fieldAccessorTable
                     .ensureFieldAccessorsInitialized(
-                            im.turms.server.common.access.client.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequest.class,
-                            im.turms.server.common.access.client.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequest.Builder.class);
+                            im.turms.server.common.access.client.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequest.class, im.turms.server.common.access.client.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequest.Builder.class);
         }
 
         // Construct using im.turms.server.common.access.client.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequest.newBuilder()
@@ -420,6 +399,7 @@ public final class CheckGroupJoinQuestionsAnswersRequest extends
         @java.lang.Override
         public Builder clear() {
             super.clear();
+            bitField0_ = 0;
             internalGetMutableQuestionIdToAnswer().clear();
             return this;
         }
@@ -446,51 +426,20 @@ public final class CheckGroupJoinQuestionsAnswersRequest extends
 
         @java.lang.Override
         public im.turms.server.common.access.client.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequest buildPartial() {
-            im.turms.server.common.access.client.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequest result =
-                    new im.turms.server.common.access.client.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequest(this);
-            int from_bitField0_ = bitField0_;
-            result.questionIdToAnswer_ = internalGetQuestionIdToAnswer();
-            result.questionIdToAnswer_.makeImmutable();
+            im.turms.server.common.access.client.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequest result = new im.turms.server.common.access.client.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequest(this);
+            if (bitField0_ != 0) {
+                buildPartial0(result);
+            }
             onBuilt();
             return result;
         }
 
-        @java.lang.Override
-        public Builder clone() {
-            return super.clone();
-        }
-
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(
-                com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(
-                com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index, java.lang.Object value) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.addRepeatedField(field, value);
+        private void buildPartial0(im.turms.server.common.access.client.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequest result) {
+            int from_bitField0_ = bitField0_;
+            if (((from_bitField0_ & 0x00000001) != 0)) {
+                result.questionIdToAnswer_ = internalGetQuestionIdToAnswer();
+                result.questionIdToAnswer_.makeImmutable();
+            }
         }
 
         @java.lang.Override
@@ -509,6 +458,7 @@ public final class CheckGroupJoinQuestionsAnswersRequest extends
             }
             internalGetMutableQuestionIdToAnswer().mergeFrom(
                     other.internalGetQuestionIdToAnswer());
+            bitField0_ |= 0x00000001;
             this.mergeUnknownFields(other.getUnknownFields());
             onChanged();
             return this;
@@ -532,22 +482,19 @@ public final class CheckGroupJoinQuestionsAnswersRequest extends
                 while (!done) {
                     int tag = input.readTag();
                     switch (tag) {
-                        case 0:
-                            done = true;
-                            break;
-                        case 10: {
-                            com.google.protobuf.MapEntry<java.lang.Long, java.lang.String>
+                        case 0 -> done = true;
+                        case 10 -> {
+                            com.google.protobuf.MapEntry<Long, String>
                                     questionIdToAnswer__ = input.readMessage(
                                     QuestionIdToAnswerDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
                             internalGetMutableQuestionIdToAnswer().getMutableMap().put(
                                     questionIdToAnswer__.getKey(), questionIdToAnswer__.getValue());
-                            break;
+                            bitField0_ |= 0x00000001;
                         } // case 10
-                        default: {
+                        default -> {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
                             }
-                            break;
                         } // default:
                     } // switch (tag)
                 } // while (!done)
@@ -575,8 +522,6 @@ public final class CheckGroupJoinQuestionsAnswersRequest extends
 
         private com.google.protobuf.MapField<java.lang.Long, java.lang.String>
         internalGetMutableQuestionIdToAnswer() {
-            onChanged();
-            ;
             if (questionIdToAnswer_ == null) {
                 questionIdToAnswer_ = com.google.protobuf.MapField.newMapField(
                         QuestionIdToAnswerDefaultEntryHolder.defaultEntry);
@@ -584,6 +529,8 @@ public final class CheckGroupJoinQuestionsAnswersRequest extends
             if (!questionIdToAnswer_.isMutable()) {
                 questionIdToAnswer_ = questionIdToAnswer_.copy();
             }
+            bitField0_ |= 0x00000001;
+            onChanged();
             return questionIdToAnswer_;
         }
 
@@ -594,7 +541,6 @@ public final class CheckGroupJoinQuestionsAnswersRequest extends
         /**
          * <code>map&lt;int64, string&gt; question_id_to_answer = 1;</code>
          */
-
         @java.lang.Override
         public boolean containsQuestionIdToAnswer(
                 long key) {
@@ -615,7 +561,6 @@ public final class CheckGroupJoinQuestionsAnswersRequest extends
          * <code>map&lt;int64, string&gt; question_id_to_answer = 1;</code>
          */
         @java.lang.Override
-
         public java.util.Map<java.lang.Long, java.lang.String> getQuestionIdToAnswerMap() {
             return internalGetQuestionIdToAnswer().getMap();
         }
@@ -624,21 +569,21 @@ public final class CheckGroupJoinQuestionsAnswersRequest extends
          * <code>map&lt;int64, string&gt; question_id_to_answer = 1;</code>
          */
         @java.lang.Override
-
-        public java.lang.String getQuestionIdToAnswerOrDefault(
+        public /* nullable */
+        java.lang.String getQuestionIdToAnswerOrDefault(
                 long key,
+                /* nullable */
                 java.lang.String defaultValue) {
 
             java.util.Map<java.lang.Long, java.lang.String> map =
                     internalGetQuestionIdToAnswer().getMap();
-            return map.containsKey(key) ? map.get(key) : defaultValue;
+            return map.getOrDefault(key, defaultValue);
         }
 
         /**
          * <code>map&lt;int64, string&gt; question_id_to_answer = 1;</code>
          */
         @java.lang.Override
-
         public java.lang.String getQuestionIdToAnswerOrThrow(
                 long key) {
 
@@ -651,6 +596,7 @@ public final class CheckGroupJoinQuestionsAnswersRequest extends
         }
 
         public Builder clearQuestionIdToAnswer() {
+            bitField0_ &= ~0x00000001;
             internalGetMutableQuestionIdToAnswer().getMutableMap()
                     .clear();
             return this;
@@ -659,7 +605,6 @@ public final class CheckGroupJoinQuestionsAnswersRequest extends
         /**
          * <code>map&lt;int64, string&gt; question_id_to_answer = 1;</code>
          */
-
         public Builder removeQuestionIdToAnswer(
                 long key) {
 
@@ -674,6 +619,7 @@ public final class CheckGroupJoinQuestionsAnswersRequest extends
         @java.lang.Deprecated
         public java.util.Map<java.lang.Long, java.lang.String>
         getMutableQuestionIdToAnswer() {
+            bitField0_ |= 0x00000001;
             return internalGetMutableQuestionIdToAnswer().getMutableMap();
         }
 
@@ -687,20 +633,20 @@ public final class CheckGroupJoinQuestionsAnswersRequest extends
             if (value == null) {
                 throw new NullPointerException("map value");
             }
-
             internalGetMutableQuestionIdToAnswer().getMutableMap()
                     .put(key, value);
+            bitField0_ |= 0x00000001;
             return this;
         }
 
         /**
          * <code>map&lt;int64, string&gt; question_id_to_answer = 1;</code>
          */
-
         public Builder putAllQuestionIdToAnswer(
                 java.util.Map<java.lang.Long, java.lang.String> values) {
             internalGetMutableQuestionIdToAnswer().getMutableMap()
                     .putAll(values);
+            bitField0_ |= 0x00000001;
             return this;
         }
 
@@ -732,7 +678,7 @@ public final class CheckGroupJoinQuestionsAnswersRequest extends
     }
 
     private static final com.google.protobuf.Parser<CheckGroupJoinQuestionsAnswersRequest>
-            PARSER = new com.google.protobuf.AbstractParser<CheckGroupJoinQuestionsAnswersRequest>() {
+            PARSER = new com.google.protobuf.AbstractParser<>() {
         @java.lang.Override
         public CheckGroupJoinQuestionsAnswersRequest parsePartialFrom(
                 com.google.protobuf.CodedInputStream input,

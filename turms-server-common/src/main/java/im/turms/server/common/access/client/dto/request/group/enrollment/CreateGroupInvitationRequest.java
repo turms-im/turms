@@ -45,12 +45,6 @@ public final class CreateGroupInvitationRequest extends
         return new CreateGroupInvitationRequest();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-        return this.unknownFields;
-    }
-
     public static final com.google.protobuf.Descriptors.Descriptor
     getDescriptor() {
         return im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupInvitationRequestOuterClass.internal_static_im_turms_proto_CreateGroupInvitationRequest_descriptor;
@@ -61,12 +55,11 @@ public final class CreateGroupInvitationRequest extends
     internalGetFieldAccessorTable() {
         return im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupInvitationRequestOuterClass.internal_static_im_turms_proto_CreateGroupInvitationRequest_fieldAccessorTable
                 .ensureFieldAccessorsInitialized(
-                        im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupInvitationRequest.class,
-                        im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupInvitationRequest.Builder.class);
+                        im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupInvitationRequest.class, im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupInvitationRequest.Builder.class);
     }
 
     public static final int GROUP_ID_FIELD_NUMBER = 1;
-    private long groupId_;
+    private long groupId_ = 0L;
 
     /**
      * <code>int64 group_id = 1;</code>
@@ -79,7 +72,7 @@ public final class CreateGroupInvitationRequest extends
     }
 
     public static final int INVITEE_ID_FIELD_NUMBER = 2;
-    private long inviteeId_;
+    private long inviteeId_ = 0L;
 
     /**
      * <code>int64 invitee_id = 2;</code>
@@ -92,7 +85,8 @@ public final class CreateGroupInvitationRequest extends
     }
 
     public static final int CONTENT_FIELD_NUMBER = 3;
-    private volatile java.lang.Object content_;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object content_ = "";
 
     /**
      * <code>string content = 3;</code>
@@ -193,11 +187,9 @@ public final class CreateGroupInvitationRequest extends
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupInvitationRequest)) {
+        if (!(obj instanceof CreateGroupInvitationRequest other)) {
             return super.equals(obj);
         }
-        im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupInvitationRequest other =
-                (im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupInvitationRequest) obj;
 
         if (getGroupId()
             != other.getGroupId()) {
@@ -211,10 +203,7 @@ public final class CreateGroupInvitationRequest extends
                 .equals(other.getContent())) {
             return false;
         }
-        if (!getUnknownFields().equals(other.getUnknownFields())) {
-            return false;
-        }
-        return true;
+        return getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -340,8 +329,7 @@ public final class CreateGroupInvitationRequest extends
     @java.lang.Override
     protected Builder newBuilderForType(
             com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
+        return new Builder(parent);
     }
 
     /**
@@ -361,8 +349,7 @@ public final class CreateGroupInvitationRequest extends
         internalGetFieldAccessorTable() {
             return im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupInvitationRequestOuterClass.internal_static_im_turms_proto_CreateGroupInvitationRequest_fieldAccessorTable
                     .ensureFieldAccessorsInitialized(
-                            im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupInvitationRequest.class,
-                            im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupInvitationRequest.Builder.class);
+                            im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupInvitationRequest.class, im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupInvitationRequest.Builder.class);
         }
 
         // Construct using im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupInvitationRequest.newBuilder()
@@ -379,12 +366,10 @@ public final class CreateGroupInvitationRequest extends
         @java.lang.Override
         public Builder clear() {
             super.clear();
+            bitField0_ = 0;
             groupId_ = 0L;
-
             inviteeId_ = 0L;
-
             content_ = "";
-
             return this;
         }
 
@@ -410,51 +395,25 @@ public final class CreateGroupInvitationRequest extends
 
         @java.lang.Override
         public im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupInvitationRequest buildPartial() {
-            im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupInvitationRequest result =
-                    new im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupInvitationRequest(this);
-            result.groupId_ = groupId_;
-            result.inviteeId_ = inviteeId_;
-            result.content_ = content_;
+            im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupInvitationRequest result = new im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupInvitationRequest(this);
+            if (bitField0_ != 0) {
+                buildPartial0(result);
+            }
             onBuilt();
             return result;
         }
 
-        @java.lang.Override
-        public Builder clone() {
-            return super.clone();
-        }
-
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(
-                com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(
-                com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index, java.lang.Object value) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.addRepeatedField(field, value);
+        private void buildPartial0(im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupInvitationRequest result) {
+            int from_bitField0_ = bitField0_;
+            if (((from_bitField0_ & 0x00000001) != 0)) {
+                result.groupId_ = groupId_;
+            }
+            if (((from_bitField0_ & 0x00000002) != 0)) {
+                result.inviteeId_ = inviteeId_;
+            }
+            if (((from_bitField0_ & 0x00000004) != 0)) {
+                result.content_ = content_;
+            }
         }
 
         @java.lang.Override
@@ -479,6 +438,7 @@ public final class CreateGroupInvitationRequest extends
             }
             if (!other.getContent().isEmpty()) {
                 content_ = other.content_;
+                bitField0_ |= 0x00000004;
                 onChanged();
             }
             this.mergeUnknownFields(other.getUnknownFields());
@@ -504,29 +464,23 @@ public final class CreateGroupInvitationRequest extends
                 while (!done) {
                     int tag = input.readTag();
                     switch (tag) {
-                        case 0:
-                            done = true;
-                            break;
-                        case 8: {
+                        case 0 -> done = true;
+                        case 8 -> {
                             groupId_ = input.readInt64();
-
-                            break;
+                            bitField0_ |= 0x00000001;
                         } // case 8
-                        case 16: {
+                        case 16 -> {
                             inviteeId_ = input.readInt64();
-
-                            break;
+                            bitField0_ |= 0x00000002;
                         } // case 16
-                        case 26: {
+                        case 26 -> {
                             content_ = input.readStringRequireUtf8();
-
-                            break;
+                            bitField0_ |= 0x00000004;
                         } // case 26
-                        default: {
+                        default -> {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
                             }
-                            break;
                         } // default:
                     } // switch (tag)
                 } // while (!done)
@@ -537,6 +491,8 @@ public final class CreateGroupInvitationRequest extends
             } // finally
             return this;
         }
+
+        private int bitField0_;
 
         private long groupId_;
 
@@ -559,6 +515,7 @@ public final class CreateGroupInvitationRequest extends
         public Builder setGroupId(long value) {
 
             groupId_ = value;
+            bitField0_ |= 0x00000001;
             onChanged();
             return this;
         }
@@ -569,7 +526,7 @@ public final class CreateGroupInvitationRequest extends
          * @return This builder for chaining.
          */
         public Builder clearGroupId() {
-
+            bitField0_ &= ~0x00000001;
             groupId_ = 0L;
             onChanged();
             return this;
@@ -596,6 +553,7 @@ public final class CreateGroupInvitationRequest extends
         public Builder setInviteeId(long value) {
 
             inviteeId_ = value;
+            bitField0_ |= 0x00000002;
             onChanged();
             return this;
         }
@@ -606,7 +564,7 @@ public final class CreateGroupInvitationRequest extends
          * @return This builder for chaining.
          */
         public Builder clearInviteeId() {
-
+            bitField0_ &= ~0x00000002;
             inviteeId_ = 0L;
             onChanged();
             return this;
@@ -662,8 +620,8 @@ public final class CreateGroupInvitationRequest extends
             if (value == null) {
                 throw new NullPointerException();
             }
-
             content_ = value;
+            bitField0_ |= 0x00000004;
             onChanged();
             return this;
         }
@@ -674,8 +632,8 @@ public final class CreateGroupInvitationRequest extends
          * @return This builder for chaining.
          */
         public Builder clearContent() {
-
             content_ = getDefaultInstance().getContent();
+            bitField0_ &= ~0x00000004;
             onChanged();
             return this;
         }
@@ -692,8 +650,8 @@ public final class CreateGroupInvitationRequest extends
                 throw new NullPointerException();
             }
             checkByteStringIsUtf8(value);
-
             content_ = value;
+            bitField0_ |= 0x00000004;
             onChanged();
             return this;
         }
@@ -726,7 +684,7 @@ public final class CreateGroupInvitationRequest extends
     }
 
     private static final com.google.protobuf.Parser<CreateGroupInvitationRequest>
-            PARSER = new com.google.protobuf.AbstractParser<CreateGroupInvitationRequest>() {
+            PARSER = new com.google.protobuf.AbstractParser<>() {
         @java.lang.Override
         public CreateGroupInvitationRequest parsePartialFrom(
                 com.google.protobuf.CodedInputStream input,

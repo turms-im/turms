@@ -45,12 +45,6 @@ public final class CreateGroupJoinQuestionsRequest extends
         return new CreateGroupJoinQuestionsRequest();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-        return this.unknownFields;
-    }
-
     public static final com.google.protobuf.Descriptors.Descriptor
     getDescriptor() {
         return im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequestOuterClass.internal_static_im_turms_proto_CreateGroupJoinQuestionsRequest_descriptor;
@@ -61,12 +55,11 @@ public final class CreateGroupJoinQuestionsRequest extends
     internalGetFieldAccessorTable() {
         return im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequestOuterClass.internal_static_im_turms_proto_CreateGroupJoinQuestionsRequest_fieldAccessorTable
                 .ensureFieldAccessorsInitialized(
-                        im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequest.class,
-                        im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequest.Builder.class);
+                        im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequest.class, im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequest.Builder.class);
     }
 
     public static final int GROUP_ID_FIELD_NUMBER = 1;
-    private long groupId_;
+    private long groupId_ = 0L;
 
     /**
      * <code>int64 group_id = 1;</code>
@@ -79,6 +72,7 @@ public final class CreateGroupJoinQuestionsRequest extends
     }
 
     public static final int QUESTIONS_FIELD_NUMBER = 2;
+    @SuppressWarnings("serial")
     private java.util.List<im.turms.server.common.access.client.dto.model.group.GroupJoinQuestion> questions_;
 
     /**
@@ -145,8 +139,8 @@ public final class CreateGroupJoinQuestionsRequest extends
         if (groupId_ != 0L) {
             output.writeInt64(1, groupId_);
         }
-        for (int i = 0; i < questions_.size(); i++) {
-            output.writeMessage(2, questions_.get(i));
+        for (im.turms.server.common.access.client.dto.model.group.GroupJoinQuestion groupJoinQuestion : questions_) {
+            output.writeMessage(2, groupJoinQuestion);
         }
         getUnknownFields().writeTo(output);
     }
@@ -163,9 +157,9 @@ public final class CreateGroupJoinQuestionsRequest extends
             size += com.google.protobuf.CodedOutputStream
                     .computeInt64Size(1, groupId_);
         }
-        for (int i = 0; i < questions_.size(); i++) {
+        for (im.turms.server.common.access.client.dto.model.group.GroupJoinQuestion groupJoinQuestion : questions_) {
             size += com.google.protobuf.CodedOutputStream
-                    .computeMessageSize(2, questions_.get(i));
+                    .computeMessageSize(2, groupJoinQuestion);
         }
         size += getUnknownFields().getSerializedSize();
         memoizedSize = size;
@@ -177,11 +171,9 @@ public final class CreateGroupJoinQuestionsRequest extends
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequest)) {
+        if (!(obj instanceof CreateGroupJoinQuestionsRequest other)) {
             return super.equals(obj);
         }
-        im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequest other =
-                (im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequest) obj;
 
         if (getGroupId()
             != other.getGroupId()) {
@@ -191,10 +183,7 @@ public final class CreateGroupJoinQuestionsRequest extends
                 .equals(other.getQuestionsList())) {
             return false;
         }
-        if (!getUnknownFields().equals(other.getUnknownFields())) {
-            return false;
-        }
-        return true;
+        return getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -319,8 +308,7 @@ public final class CreateGroupJoinQuestionsRequest extends
     @java.lang.Override
     protected Builder newBuilderForType(
             com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
+        return new Builder(parent);
     }
 
     /**
@@ -340,8 +328,7 @@ public final class CreateGroupJoinQuestionsRequest extends
         internalGetFieldAccessorTable() {
             return im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequestOuterClass.internal_static_im_turms_proto_CreateGroupJoinQuestionsRequest_fieldAccessorTable
                     .ensureFieldAccessorsInitialized(
-                            im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequest.class,
-                            im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequest.Builder.class);
+                            im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequest.class, im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequest.Builder.class);
         }
 
         // Construct using im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequest.newBuilder()
@@ -358,15 +345,15 @@ public final class CreateGroupJoinQuestionsRequest extends
         @java.lang.Override
         public Builder clear() {
             super.clear();
+            bitField0_ = 0;
             groupId_ = 0L;
-
             if (questionsBuilder_ == null) {
                 questions_ = java.util.Collections.emptyList();
             } else {
                 questions_ = null;
                 questionsBuilder_.clear();
             }
-            bitField0_ = (bitField0_ & ~0x00000001);
+            bitField0_ &= ~0x00000002;
             return this;
         }
 
@@ -392,59 +379,32 @@ public final class CreateGroupJoinQuestionsRequest extends
 
         @java.lang.Override
         public im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequest buildPartial() {
-            im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequest result =
-                    new im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequest(this);
-            int from_bitField0_ = bitField0_;
-            result.groupId_ = groupId_;
-            if (questionsBuilder_ == null) {
-                if (((bitField0_ & 0x00000001) != 0)) {
-                    questions_ = java.util.Collections.unmodifiableList(questions_);
-                    bitField0_ = (bitField0_ & ~0x00000001);
-                }
-                result.questions_ = questions_;
-            } else {
-                result.questions_ = questionsBuilder_.build();
+            im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequest result = new im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequest(this);
+            buildPartialRepeatedFields(result);
+            if (bitField0_ != 0) {
+                buildPartial0(result);
             }
             onBuilt();
             return result;
         }
 
-        @java.lang.Override
-        public Builder clone() {
-            return super.clone();
+        private void buildPartialRepeatedFields(im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequest result) {
+            if (questionsBuilder_ == null) {
+                if (((bitField0_ & 0x00000002) != 0)) {
+                    questions_ = java.util.Collections.unmodifiableList(questions_);
+                    bitField0_ &= ~0x00000002;
+                }
+                result.questions_ = questions_;
+            } else {
+                result.questions_ = questionsBuilder_.build();
+            }
         }
 
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(
-                com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(
-                com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index, java.lang.Object value) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.addRepeatedField(field, value);
+        private void buildPartial0(im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequest result) {
+            int from_bitField0_ = bitField0_;
+            if (((from_bitField0_ & 0x00000001) != 0)) {
+                result.groupId_ = groupId_;
+            }
         }
 
         @java.lang.Override
@@ -468,7 +428,7 @@ public final class CreateGroupJoinQuestionsRequest extends
                 if (!other.questions_.isEmpty()) {
                     if (questions_.isEmpty()) {
                         questions_ = other.questions_;
-                        bitField0_ = (bitField0_ & ~0x00000001);
+                        bitField0_ &= ~0x00000002;
                     } else {
                         ensureQuestionsIsMutable();
                         questions_.addAll(other.questions_);
@@ -481,7 +441,7 @@ public final class CreateGroupJoinQuestionsRequest extends
                         questionsBuilder_.dispose();
                         questionsBuilder_ = null;
                         questions_ = other.questions_;
-                        bitField0_ = (bitField0_ & ~0x00000001);
+                        bitField0_ &= ~0x00000002;
                         questionsBuilder_ =
                                 com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
                                         getQuestionsFieldBuilder() : null;
@@ -513,15 +473,12 @@ public final class CreateGroupJoinQuestionsRequest extends
                 while (!done) {
                     int tag = input.readTag();
                     switch (tag) {
-                        case 0:
-                            done = true;
-                            break;
-                        case 8: {
+                        case 0 -> done = true;
+                        case 8 -> {
                             groupId_ = input.readInt64();
-
-                            break;
+                            bitField0_ |= 0x00000001;
                         } // case 8
-                        case 18: {
+                        case 18 -> {
                             im.turms.server.common.access.client.dto.model.group.GroupJoinQuestion m =
                                     input.readMessage(
                                             im.turms.server.common.access.client.dto.model.group.GroupJoinQuestion.parser(),
@@ -532,13 +489,11 @@ public final class CreateGroupJoinQuestionsRequest extends
                             } else {
                                 questionsBuilder_.addMessage(m);
                             }
-                            break;
                         } // case 18
-                        default: {
+                        default -> {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
                             }
-                            break;
                         } // default:
                     } // switch (tag)
                 } // while (!done)
@@ -573,6 +528,7 @@ public final class CreateGroupJoinQuestionsRequest extends
         public Builder setGroupId(long value) {
 
             groupId_ = value;
+            bitField0_ |= 0x00000001;
             onChanged();
             return this;
         }
@@ -583,7 +539,7 @@ public final class CreateGroupJoinQuestionsRequest extends
          * @return This builder for chaining.
          */
         public Builder clearGroupId() {
-
+            bitField0_ &= ~0x00000001;
             groupId_ = 0L;
             onChanged();
             return this;
@@ -593,15 +549,14 @@ public final class CreateGroupJoinQuestionsRequest extends
                 java.util.Collections.emptyList();
 
         private void ensureQuestionsIsMutable() {
-            if (!((bitField0_ & 0x00000001) != 0)) {
-                questions_ = new java.util.ArrayList<im.turms.server.common.access.client.dto.model.group.GroupJoinQuestion>(questions_);
-                bitField0_ |= 0x00000001;
+            if ((bitField0_ & 0x00000002) == 0) {
+                questions_ = new java.util.ArrayList<>(questions_);
+                bitField0_ |= 0x00000002;
             }
         }
 
         private com.google.protobuf.RepeatedFieldBuilderV3<
-                im.turms.server.common.access.client.dto.model.group.GroupJoinQuestion, im.turms.server.common.access.client.dto.model.group.GroupJoinQuestion.Builder, im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionOrBuilder>
-                questionsBuilder_;
+                im.turms.server.common.access.client.dto.model.group.GroupJoinQuestion, im.turms.server.common.access.client.dto.model.group.GroupJoinQuestion.Builder, im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionOrBuilder> questionsBuilder_;
 
         /**
          * <code>repeated .im.turms.proto.GroupJoinQuestion questions = 2;</code>
@@ -756,7 +711,7 @@ public final class CreateGroupJoinQuestionsRequest extends
         public Builder clearQuestions() {
             if (questionsBuilder_ == null) {
                 questions_ = java.util.Collections.emptyList();
-                bitField0_ = (bitField0_ & ~0x00000001);
+                bitField0_ &= ~0x00000002;
                 onChanged();
             } else {
                 questionsBuilder_.clear();
@@ -839,10 +794,9 @@ public final class CreateGroupJoinQuestionsRequest extends
                 im.turms.server.common.access.client.dto.model.group.GroupJoinQuestion, im.turms.server.common.access.client.dto.model.group.GroupJoinQuestion.Builder, im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionOrBuilder>
         getQuestionsFieldBuilder() {
             if (questionsBuilder_ == null) {
-                questionsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
-                        im.turms.server.common.access.client.dto.model.group.GroupJoinQuestion, im.turms.server.common.access.client.dto.model.group.GroupJoinQuestion.Builder, im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionOrBuilder>(
+                questionsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<>(
                         questions_,
-                        ((bitField0_ & 0x00000001) != 0),
+                        ((bitField0_ & 0x00000002) != 0),
                         getParentForChildren(),
                         isClean());
                 questions_ = null;
@@ -878,7 +832,7 @@ public final class CreateGroupJoinQuestionsRequest extends
     }
 
     private static final com.google.protobuf.Parser<CreateGroupJoinQuestionsRequest>
-            PARSER = new com.google.protobuf.AbstractParser<CreateGroupJoinQuestionsRequest>() {
+            PARSER = new com.google.protobuf.AbstractParser<>() {
         @java.lang.Override
         public CreateGroupJoinQuestionsRequest parsePartialFrom(
                 com.google.protobuf.CodedInputStream input,

@@ -70,7 +70,7 @@ public final class QueryRelatedUserIdsRequest extends
      * <code>optional bool blocked = 1;</code>
      */
     private void clearBlocked() {
-        bitField0_ = (bitField0_ & ~0x00000001);
+        bitField0_ &= ~0x00000001;
         blocked_ = false;
     }
 
@@ -197,7 +197,7 @@ public final class QueryRelatedUserIdsRequest extends
      * <code>optional int64 last_updated_date = 3;</code>
      */
     private void clearLastUpdatedDate() {
-        bitField0_ = (bitField0_ & ~0x00000002);
+        bitField0_ &= ~0x00000002;
         lastUpdatedDate_ = 0L;
     }
 
@@ -514,7 +514,7 @@ public final class QueryRelatedUserIdsRequest extends
                         parser = PARSER;
                         if (parser == null) {
                             parser =
-                                    new DefaultInstanceBasedParser<im.turms.client.model.proto.request.user.relationship.QueryRelatedUserIdsRequest>(
+                                    new DefaultInstanceBasedParser<>(
                                             DEFAULT_INSTANCE);
                             PARSER = parser;
                         }

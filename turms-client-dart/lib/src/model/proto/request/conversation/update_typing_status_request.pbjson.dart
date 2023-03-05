@@ -10,11 +10,17 @@ import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
 
 @$core.Deprecated('Use updateTypingStatusRequestDescriptor instead')
-const UpdateTypingStatusRequest$json = {
+const UpdateTypingStatusRequest$json = const {
   '1': 'UpdateTypingStatusRequest',
-  '2': [
-    {'1': 'is_group_message', '3': 1, '4': 1, '5': 8, '10': 'isGroupMessage'},
-    {'1': 'to_id', '3': 2, '4': 1, '5': 3, '10': 'toId'},
+  '2': const [
+    const {
+      '1': 'is_group_message',
+      '3': 1,
+      '4': 1,
+      '5': 8,
+      '10': 'isGroupMessage'
+    },
+    const {'1': 'to_id', '3': 2, '4': 1, '5': 3, '10': 'toId'},
   ],
 };
 

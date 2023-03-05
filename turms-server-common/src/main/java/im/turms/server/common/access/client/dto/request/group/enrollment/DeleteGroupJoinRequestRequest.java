@@ -44,12 +44,6 @@ public final class DeleteGroupJoinRequestRequest extends
         return new DeleteGroupJoinRequestRequest();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-        return this.unknownFields;
-    }
-
     public static final com.google.protobuf.Descriptors.Descriptor
     getDescriptor() {
         return im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinRequestRequestOuterClass.internal_static_im_turms_proto_DeleteGroupJoinRequestRequest_descriptor;
@@ -60,12 +54,11 @@ public final class DeleteGroupJoinRequestRequest extends
     internalGetFieldAccessorTable() {
         return im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinRequestRequestOuterClass.internal_static_im_turms_proto_DeleteGroupJoinRequestRequest_fieldAccessorTable
                 .ensureFieldAccessorsInitialized(
-                        im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinRequestRequest.class,
-                        im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinRequestRequest.Builder.class);
+                        im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinRequestRequest.class, im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinRequestRequest.Builder.class);
     }
 
     public static final int REQUEST_ID_FIELD_NUMBER = 1;
-    private long requestId_;
+    private long requestId_ = 0L;
 
     /**
      * <code>int64 request_id = 1;</code>
@@ -124,20 +117,15 @@ public final class DeleteGroupJoinRequestRequest extends
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinRequestRequest)) {
+        if (!(obj instanceof DeleteGroupJoinRequestRequest other)) {
             return super.equals(obj);
         }
-        im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinRequestRequest other =
-                (im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinRequestRequest) obj;
 
         if (getRequestId()
             != other.getRequestId()) {
             return false;
         }
-        if (!getUnknownFields().equals(other.getUnknownFields())) {
-            return false;
-        }
-        return true;
+        return getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -258,8 +246,7 @@ public final class DeleteGroupJoinRequestRequest extends
     @java.lang.Override
     protected Builder newBuilderForType(
             com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
+        return new Builder(parent);
     }
 
     /**
@@ -279,8 +266,7 @@ public final class DeleteGroupJoinRequestRequest extends
         internalGetFieldAccessorTable() {
             return im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinRequestRequestOuterClass.internal_static_im_turms_proto_DeleteGroupJoinRequestRequest_fieldAccessorTable
                     .ensureFieldAccessorsInitialized(
-                            im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinRequestRequest.class,
-                            im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinRequestRequest.Builder.class);
+                            im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinRequestRequest.class, im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinRequestRequest.Builder.class);
         }
 
         // Construct using im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinRequestRequest.newBuilder()
@@ -297,8 +283,8 @@ public final class DeleteGroupJoinRequestRequest extends
         @java.lang.Override
         public Builder clear() {
             super.clear();
+            bitField0_ = 0;
             requestId_ = 0L;
-
             return this;
         }
 
@@ -324,49 +310,19 @@ public final class DeleteGroupJoinRequestRequest extends
 
         @java.lang.Override
         public im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinRequestRequest buildPartial() {
-            im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinRequestRequest result =
-                    new im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinRequestRequest(this);
-            result.requestId_ = requestId_;
+            im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinRequestRequest result = new im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinRequestRequest(this);
+            if (bitField0_ != 0) {
+                buildPartial0(result);
+            }
             onBuilt();
             return result;
         }
 
-        @java.lang.Override
-        public Builder clone() {
-            return super.clone();
-        }
-
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(
-                com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(
-                com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index, java.lang.Object value) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.addRepeatedField(field, value);
+        private void buildPartial0(im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinRequestRequest result) {
+            int from_bitField0_ = bitField0_;
+            if (((from_bitField0_ & 0x00000001) != 0)) {
+                result.requestId_ = requestId_;
+            }
         }
 
         @java.lang.Override
@@ -409,19 +365,15 @@ public final class DeleteGroupJoinRequestRequest extends
                 while (!done) {
                     int tag = input.readTag();
                     switch (tag) {
-                        case 0:
-                            done = true;
-                            break;
-                        case 8: {
+                        case 0 -> done = true;
+                        case 8 -> {
                             requestId_ = input.readInt64();
-
-                            break;
+                            bitField0_ |= 0x00000001;
                         } // case 8
-                        default: {
+                        default -> {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
                             }
-                            break;
                         } // default:
                     } // switch (tag)
                 } // while (!done)
@@ -432,6 +384,8 @@ public final class DeleteGroupJoinRequestRequest extends
             } // finally
             return this;
         }
+
+        private int bitField0_;
 
         private long requestId_;
 
@@ -454,6 +408,7 @@ public final class DeleteGroupJoinRequestRequest extends
         public Builder setRequestId(long value) {
 
             requestId_ = value;
+            bitField0_ |= 0x00000001;
             onChanged();
             return this;
         }
@@ -464,7 +419,7 @@ public final class DeleteGroupJoinRequestRequest extends
          * @return This builder for chaining.
          */
         public Builder clearRequestId() {
-
+            bitField0_ &= ~0x00000001;
             requestId_ = 0L;
             onChanged();
             return this;
@@ -498,7 +453,7 @@ public final class DeleteGroupJoinRequestRequest extends
     }
 
     private static final com.google.protobuf.Parser<DeleteGroupJoinRequestRequest>
-            PARSER = new com.google.protobuf.AbstractParser<DeleteGroupJoinRequestRequest>() {
+            PARSER = new com.google.protobuf.AbstractParser<>() {
         @java.lang.Override
         public DeleteGroupJoinRequestRequest parsePartialFrom(
                 com.google.protobuf.CodedInputStream input,

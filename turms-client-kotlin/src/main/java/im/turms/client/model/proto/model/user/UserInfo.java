@@ -72,7 +72,7 @@ public final class UserInfo extends
      * <code>optional int64 id = 1;</code>
      */
     private void clearId() {
-        bitField0_ = (bitField0_ & ~0x00000001);
+        bitField0_ &= ~0x00000001;
         id_ = 0L;
     }
 
@@ -126,7 +126,7 @@ public final class UserInfo extends
      * <code>optional string name = 2;</code>
      */
     private void clearName() {
-        bitField0_ = (bitField0_ & ~0x00000002);
+        bitField0_ &= ~0x00000002;
         name_ = getDefaultInstance().getName();
     }
 
@@ -192,7 +192,7 @@ public final class UserInfo extends
      * <code>optional string intro = 3;</code>
      */
     private void clearIntro() {
-        bitField0_ = (bitField0_ & ~0x00000004);
+        bitField0_ &= ~0x00000004;
         intro_ = getDefaultInstance().getIntro();
     }
 
@@ -258,7 +258,7 @@ public final class UserInfo extends
      * <code>optional string profile_picture = 4;</code>
      */
     private void clearProfilePicture() {
-        bitField0_ = (bitField0_ & ~0x00000008);
+        bitField0_ &= ~0x00000008;
         profilePicture_ = getDefaultInstance().getProfilePicture();
     }
 
@@ -332,7 +332,7 @@ public final class UserInfo extends
      * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 5;</code>
      */
     private void clearProfileAccessStrategy() {
-        bitField0_ = (bitField0_ & ~0x00000010);
+        bitField0_ &= ~0x00000010;
         profileAccessStrategy_ = 0;
     }
 
@@ -373,7 +373,7 @@ public final class UserInfo extends
      * <code>optional int64 registration_date = 6;</code>
      */
     private void clearRegistrationDate() {
-        bitField0_ = (bitField0_ & ~0x00000020);
+        bitField0_ &= ~0x00000020;
         registrationDate_ = 0L;
     }
 
@@ -414,7 +414,7 @@ public final class UserInfo extends
      * <code>optional int64 last_updated_date = 7;</code>
      */
     private void clearLastUpdatedDate() {
-        bitField0_ = (bitField0_ & ~0x00000040);
+        bitField0_ &= ~0x00000040;
         lastUpdatedDate_ = 0L;
     }
 
@@ -455,7 +455,7 @@ public final class UserInfo extends
      * <code>optional bool active = 8;</code>
      */
     private void clearActive() {
-        bitField0_ = (bitField0_ & ~0x00000080);
+        bitField0_ &= ~0x00000080;
         active_ = false;
     }
 
@@ -1051,7 +1051,7 @@ public final class UserInfo extends
                         parser = PARSER;
                         if (parser == null) {
                             parser =
-                                    new DefaultInstanceBasedParser<im.turms.client.model.proto.model.user.UserInfo>(
+                                    new DefaultInstanceBasedParser<>(
                                             DEFAULT_INSTANCE);
                             PARSER = parser;
                         }

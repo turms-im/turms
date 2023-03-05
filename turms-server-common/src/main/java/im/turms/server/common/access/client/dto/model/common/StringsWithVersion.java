@@ -35,7 +35,8 @@ public final class StringsWithVersion extends
     }
 
     private StringsWithVersion() {
-        strings_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        strings_ =
+                com.google.protobuf.LazyStringArrayList.emptyList();
     }
 
     @java.lang.Override
@@ -43,12 +44,6 @@ public final class StringsWithVersion extends
     protected java.lang.Object newInstance(
             UnusedPrivateParameter unused) {
         return new StringsWithVersion();
-    }
-
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-        return this.unknownFields;
     }
 
     public static final com.google.protobuf.Descriptors.Descriptor
@@ -66,7 +61,9 @@ public final class StringsWithVersion extends
 
     private int bitField0_;
     public static final int STRINGS_FIELD_NUMBER = 1;
-    private com.google.protobuf.LazyStringList strings_;
+    @SuppressWarnings("serial")
+    private com.google.protobuf.LazyStringArrayList strings_ =
+            com.google.protobuf.LazyStringArrayList.emptyList();
 
     /**
      * <code>repeated string strings = 1;</code>
@@ -109,7 +106,7 @@ public final class StringsWithVersion extends
     }
 
     public static final int LAST_UPDATED_DATE_FIELD_NUMBER = 2;
-    private long lastUpdatedDate_;
+    private long lastUpdatedDate_ = 0L;
 
     /**
      * <code>optional int64 last_updated_date = 2;</code>
@@ -189,10 +186,9 @@ public final class StringsWithVersion extends
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof im.turms.server.common.access.client.dto.model.common.StringsWithVersion)) {
+        if (!(obj instanceof StringsWithVersion other)) {
             return super.equals(obj);
         }
-        im.turms.server.common.access.client.dto.model.common.StringsWithVersion other = (im.turms.server.common.access.client.dto.model.common.StringsWithVersion) obj;
 
         if (!getStringsList()
                 .equals(other.getStringsList())) {
@@ -207,10 +203,7 @@ public final class StringsWithVersion extends
                 return false;
             }
         }
-        if (!getUnknownFields().equals(other.getUnknownFields())) {
-            return false;
-        }
-        return true;
+        return getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -337,8 +330,7 @@ public final class StringsWithVersion extends
     @java.lang.Override
     protected Builder newBuilderForType(
             com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
+        return new Builder(parent);
     }
 
     /**
@@ -375,10 +367,10 @@ public final class StringsWithVersion extends
         @java.lang.Override
         public Builder clear() {
             super.clear();
-            strings_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-            bitField0_ = (bitField0_ & ~0x00000001);
+            bitField0_ = 0;
+            strings_ =
+                    com.google.protobuf.LazyStringArrayList.emptyList();
             lastUpdatedDate_ = 0L;
-            bitField0_ = (bitField0_ & ~0x00000002);
             return this;
         }
 
@@ -405,58 +397,25 @@ public final class StringsWithVersion extends
         @java.lang.Override
         public im.turms.server.common.access.client.dto.model.common.StringsWithVersion buildPartial() {
             im.turms.server.common.access.client.dto.model.common.StringsWithVersion result = new im.turms.server.common.access.client.dto.model.common.StringsWithVersion(this);
-            int from_bitField0_ = bitField0_;
-            int to_bitField0_ = 0;
-            if (((bitField0_ & 0x00000001) != 0)) {
-                strings_ = strings_.getUnmodifiableView();
-                bitField0_ = (bitField0_ & ~0x00000001);
+            if (bitField0_ != 0) {
+                buildPartial0(result);
             }
-            result.strings_ = strings_;
-            if (((from_bitField0_ & 0x00000002) != 0)) {
-                result.lastUpdatedDate_ = lastUpdatedDate_;
-                to_bitField0_ |= 0x00000001;
-            }
-            result.bitField0_ = to_bitField0_;
             onBuilt();
             return result;
         }
 
-        @java.lang.Override
-        public Builder clone() {
-            return super.clone();
-        }
-
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(
-                com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(
-                com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index, java.lang.Object value) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.addRepeatedField(field, value);
+        private void buildPartial0(im.turms.server.common.access.client.dto.model.common.StringsWithVersion result) {
+            int from_bitField0_ = bitField0_;
+            if (((from_bitField0_ & 0x00000001) != 0)) {
+                strings_.makeImmutable();
+                result.strings_ = strings_;
+            }
+            int to_bitField0_ = 0;
+            if (((from_bitField0_ & 0x00000002) != 0)) {
+                result.lastUpdatedDate_ = lastUpdatedDate_;
+                to_bitField0_ |= 0x00000001;
+            }
+            result.bitField0_ |= to_bitField0_;
         }
 
         @java.lang.Override
@@ -476,7 +435,7 @@ public final class StringsWithVersion extends
             if (!other.strings_.isEmpty()) {
                 if (strings_.isEmpty()) {
                     strings_ = other.strings_;
-                    bitField0_ = (bitField0_ & ~0x00000001);
+                    bitField0_ |= 0x00000001;
                 } else {
                     ensureStringsIsMutable();
                     strings_.addAll(other.strings_);
@@ -509,25 +468,20 @@ public final class StringsWithVersion extends
                 while (!done) {
                     int tag = input.readTag();
                     switch (tag) {
-                        case 0:
-                            done = true;
-                            break;
-                        case 10: {
-                            java.lang.String s = input.readStringRequireUtf8();
+                        case 0 -> done = true;
+                        case 10 -> {
+                            String s = input.readStringRequireUtf8();
                             ensureStringsIsMutable();
                             strings_.add(s);
-                            break;
                         } // case 10
-                        case 16: {
+                        case 16 -> {
                             lastUpdatedDate_ = input.readInt64();
                             bitField0_ |= 0x00000002;
-                            break;
                         } // case 16
-                        default: {
+                        default -> {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
                             }
-                            break;
                         } // default:
                     } // switch (tag)
                 } // while (!done)
@@ -541,13 +495,14 @@ public final class StringsWithVersion extends
 
         private int bitField0_;
 
-        private com.google.protobuf.LazyStringList strings_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        private com.google.protobuf.LazyStringArrayList strings_ =
+                com.google.protobuf.LazyStringArrayList.emptyList();
 
         private void ensureStringsIsMutable() {
-            if (!((bitField0_ & 0x00000001) != 0)) {
+            if (!strings_.isModifiable()) {
                 strings_ = new com.google.protobuf.LazyStringArrayList(strings_);
-                bitField0_ |= 0x00000001;
             }
+            bitField0_ |= 0x00000001;
         }
 
         /**
@@ -557,7 +512,8 @@ public final class StringsWithVersion extends
          */
         public com.google.protobuf.ProtocolStringList
         getStringsList() {
-            return strings_.getUnmodifiableView();
+            strings_.makeImmutable();
+            return strings_;
         }
 
         /**
@@ -604,6 +560,7 @@ public final class StringsWithVersion extends
             }
             ensureStringsIsMutable();
             strings_.set(index, value);
+            bitField0_ |= 0x00000001;
             onChanged();
             return this;
         }
@@ -621,6 +578,7 @@ public final class StringsWithVersion extends
             }
             ensureStringsIsMutable();
             strings_.add(value);
+            bitField0_ |= 0x00000001;
             onChanged();
             return this;
         }
@@ -636,6 +594,7 @@ public final class StringsWithVersion extends
             ensureStringsIsMutable();
             com.google.protobuf.AbstractMessageLite.Builder.addAll(
                     values, strings_);
+            bitField0_ |= 0x00000001;
             onChanged();
             return this;
         }
@@ -646,8 +605,9 @@ public final class StringsWithVersion extends
          * @return This builder for chaining.
          */
         public Builder clearStrings() {
-            strings_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-            bitField0_ = (bitField0_ & ~0x00000001);
+            strings_ =
+                    com.google.protobuf.LazyStringArrayList.emptyList();
+            bitField0_ &= ~0x00000001;
             onChanged();
             return this;
         }
@@ -666,6 +626,7 @@ public final class StringsWithVersion extends
             checkByteStringIsUtf8(value);
             ensureStringsIsMutable();
             strings_.add(value);
+            bitField0_ |= 0x00000001;
             onChanged();
             return this;
         }
@@ -699,8 +660,9 @@ public final class StringsWithVersion extends
          * @return This builder for chaining.
          */
         public Builder setLastUpdatedDate(long value) {
-            bitField0_ |= 0x00000002;
+
             lastUpdatedDate_ = value;
+            bitField0_ |= 0x00000002;
             onChanged();
             return this;
         }
@@ -711,7 +673,7 @@ public final class StringsWithVersion extends
          * @return This builder for chaining.
          */
         public Builder clearLastUpdatedDate() {
-            bitField0_ = (bitField0_ & ~0x00000002);
+            bitField0_ &= ~0x00000002;
             lastUpdatedDate_ = 0L;
             onChanged();
             return this;
@@ -745,7 +707,7 @@ public final class StringsWithVersion extends
     }
 
     private static final com.google.protobuf.Parser<StringsWithVersion>
-            PARSER = new com.google.protobuf.AbstractParser<StringsWithVersion>() {
+            PARSER = new com.google.protobuf.AbstractParser<>() {
         @java.lang.Override
         public StringsWithVersion parsePartialFrom(
                 com.google.protobuf.CodedInputStream input,

@@ -71,7 +71,7 @@ public final class GroupJoinQuestion extends
      * <code>optional int64 id = 1;</code>
      */
     private void clearId() {
-        bitField0_ = (bitField0_ & ~0x00000001);
+        bitField0_ &= ~0x00000001;
         id_ = 0L;
     }
 
@@ -112,7 +112,7 @@ public final class GroupJoinQuestion extends
      * <code>optional int64 group_id = 2;</code>
      */
     private void clearGroupId() {
-        bitField0_ = (bitField0_ & ~0x00000002);
+        bitField0_ &= ~0x00000002;
         groupId_ = 0L;
     }
 
@@ -166,7 +166,7 @@ public final class GroupJoinQuestion extends
      * <code>optional string question = 3;</code>
      */
     private void clearQuestion() {
-        bitField0_ = (bitField0_ & ~0x00000004);
+        bitField0_ &= ~0x00000004;
         question_ = getDefaultInstance().getQuestion();
     }
 
@@ -331,7 +331,7 @@ public final class GroupJoinQuestion extends
      * <code>optional int32 score = 5;</code>
      */
     private void clearScore() {
-        bitField0_ = (bitField0_ & ~0x00000008);
+        bitField0_ &= ~0x00000008;
         score_ = 0;
     }
 
@@ -788,7 +788,7 @@ public final class GroupJoinQuestion extends
                         parser = PARSER;
                         if (parser == null) {
                             parser =
-                                    new DefaultInstanceBasedParser<im.turms.client.model.proto.model.group.GroupJoinQuestion>(
+                                    new DefaultInstanceBasedParser<>(
                                             DEFAULT_INSTANCE);
                             PARSER = parser;
                         }

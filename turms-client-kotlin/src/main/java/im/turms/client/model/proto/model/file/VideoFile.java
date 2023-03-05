@@ -209,7 +209,7 @@ public final class VideoFile extends
          * <code>optional int32 duration = 2;</code>
          */
         private void clearDuration() {
-            bitField0_ = (bitField0_ & ~0x00000001);
+            bitField0_ &= ~0x00000001;
             duration_ = 0;
         }
 
@@ -250,7 +250,7 @@ public final class VideoFile extends
          * <code>optional int32 size = 3;</code>
          */
         private void clearSize() {
-            bitField0_ = (bitField0_ & ~0x00000002);
+            bitField0_ &= ~0x00000002;
             size_ = 0;
         }
 
@@ -304,7 +304,7 @@ public final class VideoFile extends
          * <code>optional string format = 4;</code>
          */
         private void clearFormat() {
-            bitField0_ = (bitField0_ & ~0x00000004);
+            bitField0_ &= ~0x00000004;
             format_ = getDefaultInstance().getFormat();
         }
 
@@ -678,7 +678,7 @@ public final class VideoFile extends
                             parser = PARSER;
                             if (parser == null) {
                                 parser =
-                                        new DefaultInstanceBasedParser<im.turms.client.model.proto.model.file.VideoFile.Description>(
+                                        new DefaultInstanceBasedParser<>(
                                                 DEFAULT_INSTANCE);
                                 PARSER = parser;
                             }
@@ -770,7 +770,7 @@ public final class VideoFile extends
      */
     private void clearDescription() {
         description_ = null;
-        bitField0_ = (bitField0_ & ~0x00000001);
+        bitField0_ &= ~0x00000001;
     }
 
     public static final int DATA_FIELD_NUMBER = 2;
@@ -811,7 +811,7 @@ public final class VideoFile extends
      * <code>optional bytes data = 2;</code>
      */
     private void clearData() {
-        bitField0_ = (bitField0_ & ~0x00000002);
+        bitField0_ &= ~0x00000002;
         data_ = getDefaultInstance().getData();
     }
 
@@ -1055,7 +1055,7 @@ public final class VideoFile extends
                         parser = PARSER;
                         if (parser == null) {
                             parser =
-                                    new DefaultInstanceBasedParser<im.turms.client.model.proto.model.file.VideoFile>(
+                                    new DefaultInstanceBasedParser<>(
                                             DEFAULT_INSTANCE);
                             PARSER = parser;
                         }

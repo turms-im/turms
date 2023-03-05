@@ -44,12 +44,6 @@ public final class UpdateUserLocationRequest extends
         return new UpdateUserLocationRequest();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-        return this.unknownFields;
-    }
-
     public static final com.google.protobuf.Descriptors.Descriptor
     getDescriptor() {
         return im.turms.server.common.access.client.dto.request.user.UpdateUserLocationRequestOuterClass.internal_static_im_turms_proto_UpdateUserLocationRequest_descriptor;
@@ -59,13 +53,11 @@ public final class UpdateUserLocationRequest extends
     @java.lang.Override
     protected com.google.protobuf.MapField internalGetMapField(
             int number) {
-        switch (number) {
-            case 3:
-                return internalGetDetails();
-            default:
-                throw new RuntimeException(
-                        "Invalid map field number: " + number);
-        }
+        return switch (number) {
+            case 3 -> internalGetDetails();
+            default -> throw new RuntimeException(
+                    "Invalid map field number: " + number);
+        };
     }
 
     @java.lang.Override
@@ -73,12 +65,11 @@ public final class UpdateUserLocationRequest extends
     internalGetFieldAccessorTable() {
         return im.turms.server.common.access.client.dto.request.user.UpdateUserLocationRequestOuterClass.internal_static_im_turms_proto_UpdateUserLocationRequest_fieldAccessorTable
                 .ensureFieldAccessorsInitialized(
-                        im.turms.server.common.access.client.dto.request.user.UpdateUserLocationRequest.class,
-                        im.turms.server.common.access.client.dto.request.user.UpdateUserLocationRequest.Builder.class);
+                        im.turms.server.common.access.client.dto.request.user.UpdateUserLocationRequest.class, im.turms.server.common.access.client.dto.request.user.UpdateUserLocationRequest.Builder.class);
     }
 
     public static final int LATITUDE_FIELD_NUMBER = 1;
-    private float latitude_;
+    private float latitude_ = 0F;
 
     /**
      * <pre>
@@ -95,7 +86,7 @@ public final class UpdateUserLocationRequest extends
     }
 
     public static final int LONGITUDE_FIELD_NUMBER = 2;
-    private float longitude_;
+    private float longitude_ = 0F;
 
     /**
      * <code>float longitude = 2;</code>
@@ -121,6 +112,7 @@ public final class UpdateUserLocationRequest extends
                                 "");
     }
 
+    @SuppressWarnings("serial")
     private com.google.protobuf.MapField<
             java.lang.String, java.lang.String> details_;
 
@@ -140,7 +132,6 @@ public final class UpdateUserLocationRequest extends
     /**
      * <code>map&lt;string, string&gt; details = 3;</code>
      */
-
     @java.lang.Override
     public boolean containsDetails(
             java.lang.String key) {
@@ -163,7 +154,6 @@ public final class UpdateUserLocationRequest extends
      * <code>map&lt;string, string&gt; details = 3;</code>
      */
     @java.lang.Override
-
     public java.util.Map<java.lang.String, java.lang.String> getDetailsMap() {
         return internalGetDetails().getMap();
     }
@@ -172,23 +162,23 @@ public final class UpdateUserLocationRequest extends
      * <code>map&lt;string, string&gt; details = 3;</code>
      */
     @java.lang.Override
-
-    public java.lang.String getDetailsOrDefault(
+    public /* nullable */
+    java.lang.String getDetailsOrDefault(
             java.lang.String key,
+            /* nullable */
             java.lang.String defaultValue) {
         if (key == null) {
             throw new NullPointerException("map key");
         }
         java.util.Map<java.lang.String, java.lang.String> map =
                 internalGetDetails().getMap();
-        return map.containsKey(key) ? map.get(key) : defaultValue;
+        return map.getOrDefault(key, defaultValue);
     }
 
     /**
      * <code>map&lt;string, string&gt; details = 3;</code>
      */
     @java.lang.Override
-
     public java.lang.String getDetailsOrThrow(
             java.lang.String key) {
         if (key == null) {
@@ -272,10 +262,9 @@ public final class UpdateUserLocationRequest extends
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof im.turms.server.common.access.client.dto.request.user.UpdateUserLocationRequest)) {
+        if (!(obj instanceof UpdateUserLocationRequest other)) {
             return super.equals(obj);
         }
-        im.turms.server.common.access.client.dto.request.user.UpdateUserLocationRequest other = (im.turms.server.common.access.client.dto.request.user.UpdateUserLocationRequest) obj;
 
         if (java.lang.Float.floatToIntBits(getLatitude())
             != java.lang.Float.floatToIntBits(
@@ -291,10 +280,7 @@ public final class UpdateUserLocationRequest extends
                 other.internalGetDetails())) {
             return false;
         }
-        if (!getUnknownFields().equals(other.getUnknownFields())) {
-            return false;
-        }
-        return true;
+        return getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -422,8 +408,7 @@ public final class UpdateUserLocationRequest extends
     @java.lang.Override
     protected Builder newBuilderForType(
             com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
+        return new Builder(parent);
     }
 
     /**
@@ -441,25 +426,21 @@ public final class UpdateUserLocationRequest extends
         @SuppressWarnings({"rawtypes"})
         protected com.google.protobuf.MapField internalGetMapField(
                 int number) {
-            switch (number) {
-                case 3:
-                    return internalGetDetails();
-                default:
-                    throw new RuntimeException(
-                            "Invalid map field number: " + number);
-            }
+            return switch (number) {
+                case 3 -> internalGetDetails();
+                default -> throw new RuntimeException(
+                        "Invalid map field number: " + number);
+            };
         }
 
         @SuppressWarnings({"rawtypes"})
         protected com.google.protobuf.MapField internalGetMutableMapField(
                 int number) {
-            switch (number) {
-                case 3:
-                    return internalGetMutableDetails();
-                default:
-                    throw new RuntimeException(
-                            "Invalid map field number: " + number);
-            }
+            return switch (number) {
+                case 3 -> internalGetMutableDetails();
+                default -> throw new RuntimeException(
+                        "Invalid map field number: " + number);
+            };
         }
 
         @java.lang.Override
@@ -467,8 +448,7 @@ public final class UpdateUserLocationRequest extends
         internalGetFieldAccessorTable() {
             return im.turms.server.common.access.client.dto.request.user.UpdateUserLocationRequestOuterClass.internal_static_im_turms_proto_UpdateUserLocationRequest_fieldAccessorTable
                     .ensureFieldAccessorsInitialized(
-                            im.turms.server.common.access.client.dto.request.user.UpdateUserLocationRequest.class,
-                            im.turms.server.common.access.client.dto.request.user.UpdateUserLocationRequest.Builder.class);
+                            im.turms.server.common.access.client.dto.request.user.UpdateUserLocationRequest.class, im.turms.server.common.access.client.dto.request.user.UpdateUserLocationRequest.Builder.class);
         }
 
         // Construct using im.turms.server.common.access.client.dto.request.user.UpdateUserLocationRequest.newBuilder()
@@ -485,10 +465,9 @@ public final class UpdateUserLocationRequest extends
         @java.lang.Override
         public Builder clear() {
             super.clear();
+            bitField0_ = 0;
             latitude_ = 0F;
-
             longitude_ = 0F;
-
             internalGetMutableDetails().clear();
             return this;
         }
@@ -516,51 +495,25 @@ public final class UpdateUserLocationRequest extends
         @java.lang.Override
         public im.turms.server.common.access.client.dto.request.user.UpdateUserLocationRequest buildPartial() {
             im.turms.server.common.access.client.dto.request.user.UpdateUserLocationRequest result = new im.turms.server.common.access.client.dto.request.user.UpdateUserLocationRequest(this);
-            int from_bitField0_ = bitField0_;
-            result.latitude_ = latitude_;
-            result.longitude_ = longitude_;
-            result.details_ = internalGetDetails();
-            result.details_.makeImmutable();
+            if (bitField0_ != 0) {
+                buildPartial0(result);
+            }
             onBuilt();
             return result;
         }
 
-        @java.lang.Override
-        public Builder clone() {
-            return super.clone();
-        }
-
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(
-                com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(
-                com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index, java.lang.Object value) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.addRepeatedField(field, value);
+        private void buildPartial0(im.turms.server.common.access.client.dto.request.user.UpdateUserLocationRequest result) {
+            int from_bitField0_ = bitField0_;
+            if (((from_bitField0_ & 0x00000001) != 0)) {
+                result.latitude_ = latitude_;
+            }
+            if (((from_bitField0_ & 0x00000002) != 0)) {
+                result.longitude_ = longitude_;
+            }
+            if (((from_bitField0_ & 0x00000004) != 0)) {
+                result.details_ = internalGetDetails();
+                result.details_.makeImmutable();
+            }
         }
 
         @java.lang.Override
@@ -585,6 +538,7 @@ public final class UpdateUserLocationRequest extends
             }
             internalGetMutableDetails().mergeFrom(
                     other.internalGetDetails());
+            bitField0_ |= 0x00000004;
             this.mergeUnknownFields(other.getUnknownFields());
             onChanged();
             return this;
@@ -608,32 +562,27 @@ public final class UpdateUserLocationRequest extends
                 while (!done) {
                     int tag = input.readTag();
                     switch (tag) {
-                        case 0:
-                            done = true;
-                            break;
-                        case 13: {
+                        case 0 -> done = true;
+                        case 13 -> {
                             latitude_ = input.readFloat();
-
-                            break;
+                            bitField0_ |= 0x00000001;
                         } // case 13
-                        case 21: {
+                        case 21 -> {
                             longitude_ = input.readFloat();
-
-                            break;
+                            bitField0_ |= 0x00000002;
                         } // case 21
-                        case 26: {
-                            com.google.protobuf.MapEntry<java.lang.String, java.lang.String>
+                        case 26 -> {
+                            com.google.protobuf.MapEntry<String, String>
                                     details__ = input.readMessage(
                                     DetailsDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
                             internalGetMutableDetails().getMutableMap().put(
                                     details__.getKey(), details__.getValue());
-                            break;
+                            bitField0_ |= 0x00000004;
                         } // case 26
-                        default: {
+                        default -> {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
                             }
-                            break;
                         } // default:
                     } // switch (tag)
                 } // while (!done)
@@ -676,6 +625,7 @@ public final class UpdateUserLocationRequest extends
         public Builder setLatitude(float value) {
 
             latitude_ = value;
+            bitField0_ |= 0x00000001;
             onChanged();
             return this;
         }
@@ -690,7 +640,7 @@ public final class UpdateUserLocationRequest extends
          * @return This builder for chaining.
          */
         public Builder clearLatitude() {
-
+            bitField0_ &= ~0x00000001;
             latitude_ = 0F;
             onChanged();
             return this;
@@ -717,6 +667,7 @@ public final class UpdateUserLocationRequest extends
         public Builder setLongitude(float value) {
 
             longitude_ = value;
+            bitField0_ |= 0x00000002;
             onChanged();
             return this;
         }
@@ -727,7 +678,7 @@ public final class UpdateUserLocationRequest extends
          * @return This builder for chaining.
          */
         public Builder clearLongitude() {
-
+            bitField0_ &= ~0x00000002;
             longitude_ = 0F;
             onChanged();
             return this;
@@ -747,8 +698,6 @@ public final class UpdateUserLocationRequest extends
 
         private com.google.protobuf.MapField<java.lang.String, java.lang.String>
         internalGetMutableDetails() {
-            onChanged();
-            ;
             if (details_ == null) {
                 details_ = com.google.protobuf.MapField.newMapField(
                         DetailsDefaultEntryHolder.defaultEntry);
@@ -756,6 +705,8 @@ public final class UpdateUserLocationRequest extends
             if (!details_.isMutable()) {
                 details_ = details_.copy();
             }
+            bitField0_ |= 0x00000004;
+            onChanged();
             return details_;
         }
 
@@ -766,7 +717,6 @@ public final class UpdateUserLocationRequest extends
         /**
          * <code>map&lt;string, string&gt; details = 3;</code>
          */
-
         @java.lang.Override
         public boolean containsDetails(
                 java.lang.String key) {
@@ -789,7 +739,6 @@ public final class UpdateUserLocationRequest extends
          * <code>map&lt;string, string&gt; details = 3;</code>
          */
         @java.lang.Override
-
         public java.util.Map<java.lang.String, java.lang.String> getDetailsMap() {
             return internalGetDetails().getMap();
         }
@@ -798,23 +747,23 @@ public final class UpdateUserLocationRequest extends
          * <code>map&lt;string, string&gt; details = 3;</code>
          */
         @java.lang.Override
-
-        public java.lang.String getDetailsOrDefault(
+        public /* nullable */
+        java.lang.String getDetailsOrDefault(
                 java.lang.String key,
+                /* nullable */
                 java.lang.String defaultValue) {
             if (key == null) {
                 throw new NullPointerException("map key");
             }
             java.util.Map<java.lang.String, java.lang.String> map =
                     internalGetDetails().getMap();
-            return map.containsKey(key) ? map.get(key) : defaultValue;
+            return map.getOrDefault(key, defaultValue);
         }
 
         /**
          * <code>map&lt;string, string&gt; details = 3;</code>
          */
         @java.lang.Override
-
         public java.lang.String getDetailsOrThrow(
                 java.lang.String key) {
             if (key == null) {
@@ -829,6 +778,7 @@ public final class UpdateUserLocationRequest extends
         }
 
         public Builder clearDetails() {
+            bitField0_ &= ~0x00000004;
             internalGetMutableDetails().getMutableMap()
                     .clear();
             return this;
@@ -837,7 +787,6 @@ public final class UpdateUserLocationRequest extends
         /**
          * <code>map&lt;string, string&gt; details = 3;</code>
          */
-
         public Builder removeDetails(
                 java.lang.String key) {
             if (key == null) {
@@ -854,6 +803,7 @@ public final class UpdateUserLocationRequest extends
         @java.lang.Deprecated
         public java.util.Map<java.lang.String, java.lang.String>
         getMutableDetails() {
+            bitField0_ |= 0x00000004;
             return internalGetMutableDetails().getMutableMap();
         }
 
@@ -869,20 +819,20 @@ public final class UpdateUserLocationRequest extends
             if (value == null) {
                 throw new NullPointerException("map value");
             }
-
             internalGetMutableDetails().getMutableMap()
                     .put(key, value);
+            bitField0_ |= 0x00000004;
             return this;
         }
 
         /**
          * <code>map&lt;string, string&gt; details = 3;</code>
          */
-
         public Builder putAllDetails(
                 java.util.Map<java.lang.String, java.lang.String> values) {
             internalGetMutableDetails().getMutableMap()
                     .putAll(values);
+            bitField0_ |= 0x00000004;
             return this;
         }
 
@@ -914,7 +864,7 @@ public final class UpdateUserLocationRequest extends
     }
 
     private static final com.google.protobuf.Parser<UpdateUserLocationRequest>
-            PARSER = new com.google.protobuf.AbstractParser<UpdateUserLocationRequest>() {
+            PARSER = new com.google.protobuf.AbstractParser<>() {
         @java.lang.Override
         public UpdateUserLocationRequest parsePartialFrom(
                 com.google.protobuf.CodedInputStream input,

@@ -10,11 +10,11 @@ import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
 
 @$core.Deprecated('Use queryConversationsRequestDescriptor instead')
-const QueryConversationsRequest$json = {
+const QueryConversationsRequest$json = const {
   '1': 'QueryConversationsRequest',
-  '2': [
-    {'1': 'target_ids', '3': 1, '4': 3, '5': 3, '10': 'targetIds'},
-    {'1': 'group_ids', '3': 2, '4': 3, '5': 3, '10': 'groupIds'},
+  '2': const [
+    const {'1': 'target_ids', '3': 1, '4': 3, '5': 3, '10': 'targetIds'},
+    const {'1': 'group_ids', '3': 2, '4': 3, '5': 3, '10': 'groupIds'},
   ],
 };
 

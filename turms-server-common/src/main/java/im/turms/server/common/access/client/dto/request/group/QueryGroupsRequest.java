@@ -45,12 +45,6 @@ public final class QueryGroupsRequest extends
         return new QueryGroupsRequest();
     }
 
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-        return this.unknownFields;
-    }
-
     public static final com.google.protobuf.Descriptors.Descriptor
     getDescriptor() {
         return im.turms.server.common.access.client.dto.request.group.QueryGroupsRequestOuterClass.internal_static_im_turms_proto_QueryGroupsRequest_descriptor;
@@ -66,6 +60,7 @@ public final class QueryGroupsRequest extends
 
     private int bitField0_;
     public static final int GROUP_IDS_FIELD_NUMBER = 1;
+    @SuppressWarnings("serial")
     private com.google.protobuf.Internal.LongList groupIds_;
 
     /**
@@ -101,7 +96,7 @@ public final class QueryGroupsRequest extends
     private int groupIdsMemoizedSerializedSize = -1;
 
     public static final int LAST_UPDATED_DATE_FIELD_NUMBER = 2;
-    private long lastUpdatedDate_;
+    private long lastUpdatedDate_ = 0L;
 
     /**
      * <code>optional int64 last_updated_date = 2;</code>
@@ -192,10 +187,9 @@ public final class QueryGroupsRequest extends
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof im.turms.server.common.access.client.dto.request.group.QueryGroupsRequest)) {
+        if (!(obj instanceof QueryGroupsRequest other)) {
             return super.equals(obj);
         }
-        im.turms.server.common.access.client.dto.request.group.QueryGroupsRequest other = (im.turms.server.common.access.client.dto.request.group.QueryGroupsRequest) obj;
 
         if (!getGroupIdsList()
                 .equals(other.getGroupIdsList())) {
@@ -210,10 +204,7 @@ public final class QueryGroupsRequest extends
                 return false;
             }
         }
-        if (!getUnknownFields().equals(other.getUnknownFields())) {
-            return false;
-        }
-        return true;
+        return getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -340,8 +331,7 @@ public final class QueryGroupsRequest extends
     @java.lang.Override
     protected Builder newBuilderForType(
             com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
+        return new Builder(parent);
     }
 
     /**
@@ -378,10 +368,9 @@ public final class QueryGroupsRequest extends
         @java.lang.Override
         public Builder clear() {
             super.clear();
+            bitField0_ = 0;
             groupIds_ = emptyLongList();
-            bitField0_ = (bitField0_ & ~0x00000001);
             lastUpdatedDate_ = 0L;
-            bitField0_ = (bitField0_ & ~0x00000002);
             return this;
         }
 
@@ -408,58 +397,30 @@ public final class QueryGroupsRequest extends
         @java.lang.Override
         public im.turms.server.common.access.client.dto.request.group.QueryGroupsRequest buildPartial() {
             im.turms.server.common.access.client.dto.request.group.QueryGroupsRequest result = new im.turms.server.common.access.client.dto.request.group.QueryGroupsRequest(this);
-            int from_bitField0_ = bitField0_;
-            int to_bitField0_ = 0;
-            if (((bitField0_ & 0x00000001) != 0)) {
-                groupIds_.makeImmutable();
-                bitField0_ = (bitField0_ & ~0x00000001);
+            buildPartialRepeatedFields(result);
+            if (bitField0_ != 0) {
+                buildPartial0(result);
             }
-            result.groupIds_ = groupIds_;
-            if (((from_bitField0_ & 0x00000002) != 0)) {
-                result.lastUpdatedDate_ = lastUpdatedDate_;
-                to_bitField0_ |= 0x00000001;
-            }
-            result.bitField0_ = to_bitField0_;
             onBuilt();
             return result;
         }
 
-        @java.lang.Override
-        public Builder clone() {
-            return super.clone();
+        private void buildPartialRepeatedFields(im.turms.server.common.access.client.dto.request.group.QueryGroupsRequest result) {
+            if (((bitField0_ & 0x00000001) != 0)) {
+                groupIds_.makeImmutable();
+                bitField0_ &= ~0x00000001;
+            }
+            result.groupIds_ = groupIds_;
         }
 
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(
-                com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(
-                com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index, java.lang.Object value) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.addRepeatedField(field, value);
+        private void buildPartial0(im.turms.server.common.access.client.dto.request.group.QueryGroupsRequest result) {
+            int from_bitField0_ = bitField0_;
+            int to_bitField0_ = 0;
+            if (((from_bitField0_ & 0x00000002) != 0)) {
+                result.lastUpdatedDate_ = lastUpdatedDate_;
+                to_bitField0_ |= 0x00000001;
+            }
+            result.bitField0_ |= to_bitField0_;
         }
 
         @java.lang.Override
@@ -479,7 +440,7 @@ public final class QueryGroupsRequest extends
             if (!other.groupIds_.isEmpty()) {
                 if (groupIds_.isEmpty()) {
                     groupIds_ = other.groupIds_;
-                    bitField0_ = (bitField0_ & ~0x00000001);
+                    bitField0_ &= ~0x00000001;
                 } else {
                     ensureGroupIdsIsMutable();
                     groupIds_.addAll(other.groupIds_);
@@ -512,16 +473,13 @@ public final class QueryGroupsRequest extends
                 while (!done) {
                     int tag = input.readTag();
                     switch (tag) {
-                        case 0:
-                            done = true;
-                            break;
-                        case 8: {
+                        case 0 -> done = true;
+                        case 8 -> {
                             long v = input.readInt64();
                             ensureGroupIdsIsMutable();
                             groupIds_.addLong(v);
-                            break;
                         } // case 8
-                        case 10: {
+                        case 10 -> {
                             int length = input.readRawVarint32();
                             int limit = input.pushLimit(length);
                             ensureGroupIdsIsMutable();
@@ -529,18 +487,15 @@ public final class QueryGroupsRequest extends
                                 groupIds_.addLong(input.readInt64());
                             }
                             input.popLimit(limit);
-                            break;
                         } // case 10
-                        case 16: {
+                        case 16 -> {
                             lastUpdatedDate_ = input.readInt64();
                             bitField0_ |= 0x00000002;
-                            break;
                         } // case 16
-                        default: {
+                        default -> {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
                             }
-                            break;
                         } // default:
                     } // switch (tag)
                 } // while (!done)
@@ -557,7 +512,7 @@ public final class QueryGroupsRequest extends
         private com.google.protobuf.Internal.LongList groupIds_ = emptyLongList();
 
         private void ensureGroupIdsIsMutable() {
-            if (!((bitField0_ & 0x00000001) != 0)) {
+            if ((bitField0_ & 0x00000001) == 0) {
                 groupIds_ = mutableCopy(groupIds_);
                 bitField0_ |= 0x00000001;
             }
@@ -602,6 +557,7 @@ public final class QueryGroupsRequest extends
          */
         public Builder setGroupIds(
                 int index, long value) {
+
             ensureGroupIdsIsMutable();
             groupIds_.setLong(index, value);
             onChanged();
@@ -615,6 +571,7 @@ public final class QueryGroupsRequest extends
          * @return This builder for chaining.
          */
         public Builder addGroupIds(long value) {
+
             ensureGroupIdsIsMutable();
             groupIds_.addLong(value);
             onChanged();
@@ -643,7 +600,7 @@ public final class QueryGroupsRequest extends
          */
         public Builder clearGroupIds() {
             groupIds_ = emptyLongList();
-            bitField0_ = (bitField0_ & ~0x00000001);
+            bitField0_ &= ~0x00000001;
             onChanged();
             return this;
         }
@@ -677,8 +634,9 @@ public final class QueryGroupsRequest extends
          * @return This builder for chaining.
          */
         public Builder setLastUpdatedDate(long value) {
-            bitField0_ |= 0x00000002;
+
             lastUpdatedDate_ = value;
+            bitField0_ |= 0x00000002;
             onChanged();
             return this;
         }
@@ -689,7 +647,7 @@ public final class QueryGroupsRequest extends
          * @return This builder for chaining.
          */
         public Builder clearLastUpdatedDate() {
-            bitField0_ = (bitField0_ & ~0x00000002);
+            bitField0_ &= ~0x00000002;
             lastUpdatedDate_ = 0L;
             onChanged();
             return this;
@@ -723,7 +681,7 @@ public final class QueryGroupsRequest extends
     }
 
     private static final com.google.protobuf.Parser<QueryGroupsRequest>
-            PARSER = new com.google.protobuf.AbstractParser<QueryGroupsRequest>() {
+            PARSER = new com.google.protobuf.AbstractParser<>() {
         @java.lang.Override
         public QueryGroupsRequest parsePartialFrom(
                 com.google.protobuf.CodedInputStream input,

@@ -72,7 +72,7 @@ public final class StorageResourceInfo extends
      * <code>optional int64 id_num = 1;</code>
      */
     private void clearIdNum() {
-        bitField0_ = (bitField0_ & ~0x00000001);
+        bitField0_ &= ~0x00000001;
         idNum_ = 0L;
     }
 
@@ -126,7 +126,7 @@ public final class StorageResourceInfo extends
      * <code>optional string id_str = 2;</code>
      */
     private void clearIdStr() {
-        bitField0_ = (bitField0_ & ~0x00000002);
+        bitField0_ &= ~0x00000002;
         idStr_ = getDefaultInstance().getIdStr();
     }
 
@@ -192,7 +192,7 @@ public final class StorageResourceInfo extends
      * <code>optional string name = 3;</code>
      */
     private void clearName() {
-        bitField0_ = (bitField0_ & ~0x00000004);
+        bitField0_ &= ~0x00000004;
         name_ = getDefaultInstance().getName();
     }
 
@@ -258,7 +258,7 @@ public final class StorageResourceInfo extends
      * <code>optional string media_type = 4;</code>
      */
     private void clearMediaType() {
-        bitField0_ = (bitField0_ & ~0x00000008);
+        bitField0_ &= ~0x00000008;
         mediaType_ = getDefaultInstance().getMediaType();
     }
 
@@ -797,7 +797,7 @@ public final class StorageResourceInfo extends
                         parser = PARSER;
                         if (parser == null) {
                             parser =
-                                    new DefaultInstanceBasedParser<im.turms.client.model.proto.model.storage.StorageResourceInfo>(
+                                    new DefaultInstanceBasedParser<>(
                                             DEFAULT_INSTANCE);
                             PARSER = parser;
                         }
