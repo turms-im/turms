@@ -210,20 +210,22 @@ public class MessageServiceController extends BaseServiceController {
             Boolean areGroupMessages = request.hasAreGroupMessages() ? request.getAreGroupMessages() : null;
             Boolean areSystemMessages = request.hasAreSystemMessages() ? request.getAreSystemMessages() : null;
             Set<Long> fromIds = request.getFromIdsCount() > 0 ? CollectionUtil.newSet(request.getFromIdsList()) : null;
-            Date deliveryDateAfter = request.hasDeliveryDateAfter() ? new Date(request.getDeliveryDateAfter()) : null;
-            Date deliveryDateBefore = request.hasDeliveryDateBefore() ? new Date(request.getDeliveryDateBefore()) : null;
+            Date deliveryDateStart = request.hasDeliveryDateStart() ? new Date(request.getDeliveryDateStart()) : null;
+            Date deliveryDateEnd = request.hasDeliveryDateEnd() ? new Date(request.getDeliveryDateEnd()) : null;
             Integer maxCount = request.hasMaxCount() ? request.getMaxCount() : null;
+            boolean ascending = !request.getDescending();
             boolean withTotal = request.getWithTotal();
             Long userId = clientRequest.userId();
-            DateRange dateRange = DateRange.of(deliveryDateAfter, deliveryDateBefore);
+            DateRange deliveryDate = DateRange.of(deliveryDateStart, deliveryDateEnd);
             return messageService.authAndQueryCompleteMessages(
                             userId,
                             ids,
                             areGroupMessages,
                             areSystemMessages,
                             fromIds,
-                            dateRange,
+                            deliveryDate,
                             maxCount,
+                            ascending,
                             withTotal)
                     .collect(CollectorUtil.toChunkedList())
                     .flatMap(messages -> {
@@ -256,7 +258,7 @@ public class MessageServiceController extends BaseServiceController {
                                                 null,
                                                 isGroupMessage ? null : Set.of(senderKey.fromId()),
                                                 isGroupMessage ? Set.of(senderKey.fromId()) : Set.of(userId),
-                                                dateRange,
+                                                deliveryDate,
                                                 null)
                                         .map(total -> ClientMessagePool
                                                 .getMessagesWithTotalBuilder()

@@ -143,9 +143,10 @@ public class MessageService {
         areGroupMessages: Bool? = nil,
         areSystemMessages: Bool? = nil,
         fromIds: [Int64]? = nil,
-        deliveryDateAfter: Date? = nil,
-        deliveryDateBefore: Date? = nil,
-        maxCount: Int32 = 50
+        deliveryDateStart: Date? = nil,
+        deliveryDateEnd: Date? = nil,
+        maxCount: Int32 = 50,
+        descending: Bool? = nil
     ) -> Promise<Response<[Message]>> {
         return turmsClient.driver
             .send {
@@ -162,13 +163,16 @@ public class MessageService {
                     if let v = fromIds {
                         $0.fromIds = v
                     }
-                    if let v = deliveryDateAfter {
-                        $0.deliveryDateAfter = v.toMillis()
+                    if let v = deliveryDateStart {
+                        $0.deliveryDateStart = v.toMillis()
                     }
-                    if let v = deliveryDateBefore {
-                        $0.deliveryDateBefore = v.toMillis()
+                    if let v = deliveryDateEnd {
+                        $0.deliveryDateEnd = v.toMillis()
                     }
                     $0.maxCount = maxCount
+                    if let v = descending, v {
+                        $0.descending = true
+                    }
                     $0.withTotal = false
                 }
             }
@@ -184,9 +188,10 @@ public class MessageService {
         areGroupMessages: Bool? = nil,
         areSystemMessages: Bool? = nil,
         fromIds: [Int64]? = nil,
-        deliveryDateAfter: Date? = nil,
-        deliveryDateBefore: Date? = nil,
-        maxCount: Int32 = 1
+        deliveryDateStart: Date? = nil,
+        deliveryDateEnd: Date? = nil,
+        maxCount: Int32 = 1,
+        descending: Bool? = nil
     ) -> Promise<Response<[MessagesWithTotal]>> {
         return turmsClient.driver
             .send {
@@ -203,13 +208,16 @@ public class MessageService {
                     if let v = fromIds {
                         $0.fromIds = v
                     }
-                    if let v = deliveryDateAfter {
-                        $0.deliveryDateAfter = v.toMillis()
+                    if let v = deliveryDateStart {
+                        $0.deliveryDateStart = v.toMillis()
                     }
-                    if let v = deliveryDateBefore {
-                        $0.deliveryDateBefore = v.toMillis()
+                    if let v = deliveryDateEnd {
+                        $0.deliveryDateEnd = v.toMillis()
                     }
                     $0.maxCount = maxCount
+                    if let v = descending, v {
+                        $0.descending = true
+                    }
                     $0.withTotal = true
                 }
             }

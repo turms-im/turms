@@ -127,7 +127,8 @@ class MessageService(private val turmsClient: TurmsClient) {
         fromIds: Set<Long>? = null,
         deliveryDateStart: Date? = null,
         deliveryDateEnd: Date? = null,
-        maxCount: Int = 50
+        maxCount: Int = 50,
+        descending: Boolean? = null
     ): Response<List<Message>> = turmsClient.driver
         .send(
             QueryMessagesRequest.newBuilder().apply {
@@ -135,9 +136,10 @@ class MessageService(private val turmsClient: TurmsClient) {
                 areGroupMessages?.let { this.areGroupMessages = it }
                 areSystemMessages?.let { this.areSystemMessages = it }
                 fromIds?.let { this.addAllFromIds(it) }
-                deliveryDateStart?.let { this.deliveryDateAfter = it.time }
-                deliveryDateEnd?.let { this.deliveryDateBefore = it.time }
+                deliveryDateStart?.let { this.deliveryDateStart = it.time }
+                deliveryDateEnd?.let { this.deliveryDateEnd = it.time }
                 this.maxCount = maxCount
+                descending?.let { this.descending = it }
                 withTotal = false
             }
         ).toResponse {
@@ -151,7 +153,8 @@ class MessageService(private val turmsClient: TurmsClient) {
         fromIds: Set<Long>? = null,
         deliveryDateStart: Date? = null,
         deliveryDateEnd: Date? = null,
-        maxCount: Int = 1
+        maxCount: Int = 1,
+        descending: Boolean? = null
     ): Response<List<MessagesWithTotal>> = turmsClient.driver
         .send(
             QueryMessagesRequest.newBuilder().apply {
@@ -159,9 +162,10 @@ class MessageService(private val turmsClient: TurmsClient) {
                 areGroupMessages?.let { this.areGroupMessages = it }
                 areSystemMessages?.let { this.areSystemMessages = it }
                 fromIds?.let { this.addAllFromIds(it) }
-                deliveryDateStart?.let { this.deliveryDateAfter = it.time }
-                deliveryDateEnd?.let { this.deliveryDateBefore = it.time }
+                deliveryDateStart?.let { this.deliveryDateStart = it.time }
+                deliveryDateEnd?.let { this.deliveryDateEnd = it.time }
                 this.maxCount = maxCount
+                descending?.let { this.descending = it }
                 withTotal = true
             }
         ).toResponse {

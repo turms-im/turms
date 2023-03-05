@@ -102,9 +102,9 @@ public class MessageController extends BaseController {
             @QueryParam(required = false) Date deliveryDateEnd,
             @QueryParam(required = false) Date deletionDateStart,
             @QueryParam(required = false) Date deletionDateEnd,
-            @QueryParam(required = false) Integer size) {
+            @QueryParam(required = false) Integer size,
+            @QueryParam(required = false) Boolean ascending) {
         Flux<Message> completeMessagesFlux = messageService.queryMessages(
-                false,
                 ids,
                 areGroupMessages,
                 areSystemMessages,
@@ -113,7 +113,8 @@ public class MessageController extends BaseController {
                 DateRange.of(deliveryDateStart, deliveryDateEnd),
                 DateRange.of(deletionDateStart, deletionDateEnd),
                 0,
-                getPageSize(size));
+                getPageSize(size),
+                ascending);
         return HttpHandlerResult.okIfTruthy(completeMessagesFlux);
     }
 
@@ -130,7 +131,8 @@ public class MessageController extends BaseController {
             @QueryParam(required = false) Date deletionDateStart,
             @QueryParam(required = false) Date deletionDateEnd,
             int page,
-            @QueryParam(required = false) Integer size) {
+            @QueryParam(required = false) Integer size,
+            @QueryParam(required = false) Boolean ascending) {
         DateRange deliveryDateRange = DateRange.of(deliveryDateStart, deliveryDateEnd);
         DateRange deletionDateRange = DateRange.of(deletionDateStart, deletionDateEnd);
         Mono<Long> count = messageService.countMessages(
@@ -142,7 +144,6 @@ public class MessageController extends BaseController {
                 deliveryDateRange,
                 deletionDateRange);
         Flux<Message> completeMessagesFlux = messageService.queryMessages(
-                false,
                 ids,
                 areGroupMessages,
                 areSystemMessages,
@@ -151,7 +152,8 @@ public class MessageController extends BaseController {
                 deliveryDateRange,
                 deletionDateRange,
                 page,
-                getPageSize(size));
+                getPageSize(size),
+                ascending);
         return HttpHandlerResult.page(count, completeMessagesFlux);
     }
 

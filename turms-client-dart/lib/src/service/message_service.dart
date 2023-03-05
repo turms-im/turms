@@ -101,18 +101,20 @@ class MessageService {
       bool? areGroupMessages,
       bool? areSystemMessages,
       Set<Int64>? fromIds,
-      DateTime? deliveryDateAfter,
-      DateTime? deliveryDateBefore,
-      int maxCount = 50}) async {
+      DateTime? deliveryDateStart,
+      DateTime? deliveryDateEnd,
+      int maxCount = 50,
+      bool? descending}) async {
     final n = await _turmsClient.driver.send(QueryMessagesRequest(
         ids: ids,
         areGroupMessages: areGroupMessages,
         areSystemMessages: areSystemMessages,
         fromIds: fromIds,
-        deliveryDateAfter: deliveryDateAfter?.toInt64(),
-        deliveryDateBefore: deliveryDateBefore?.toInt64(),
+        deliveryDateStart: deliveryDateStart?.toInt64(),
+        deliveryDateEnd: deliveryDateEnd?.toInt64(),
         maxCount: maxCount,
-        withTotal: false));
+        withTotal: false,
+        descending: descending != null && descending ? true : null));
     return n.toResponse((data) => data.messages.messages);
   }
 
@@ -121,18 +123,20 @@ class MessageService {
       bool? areGroupMessages,
       bool? areSystemMessages,
       Set<Int64>? fromIds,
-      DateTime? deliveryDateAfter,
-      DateTime? deliveryDateBefore,
-      int maxCount = 1}) async {
+      DateTime? deliveryDateStart,
+      DateTime? deliveryDateEnd,
+      int maxCount = 1,
+      bool? descending}) async {
     final n = await _turmsClient.driver.send(QueryMessagesRequest(
         ids: ids,
         areGroupMessages: areGroupMessages,
         areSystemMessages: areSystemMessages,
         fromIds: fromIds,
-        deliveryDateAfter: deliveryDateAfter?.toInt64(),
-        deliveryDateBefore: deliveryDateBefore?.toInt64(),
+        deliveryDateStart: deliveryDateStart?.toInt64(),
+        deliveryDateEnd: deliveryDateEnd?.toInt64(),
         maxCount: maxCount,
-        withTotal: true));
+        withTotal: true,
+        descending: descending != null && descending ? true : null));
     return n
         .toResponse((data) => data.messagesWithTotalList.messagesWithTotalList);
   }

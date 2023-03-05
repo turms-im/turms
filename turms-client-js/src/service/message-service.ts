@@ -154,17 +154,19 @@ export default class MessageService {
         areGroupMessages,
         areSystemMessages,
         fromIds,
-        deliveryDateAfter,
-        deliveryDateBefore,
-        maxCount = 50
+        deliveryDateStart,
+        deliveryDateEnd,
+        maxCount = 50,
+        descending,
     }: {
         ids?: string[],
         areGroupMessages?: boolean,
         areSystemMessages?: boolean,
         fromIds?: string[],
-        deliveryDateAfter?: Date,
-        deliveryDateBefore?: Date,
+        deliveryDateStart?: Date,
+        deliveryDateEnd?: Date,
         maxCount?: number
+        descending?: boolean
     }): Promise<Response<ParsedModel.Message[]>> {
         return this._turmsClient.driver.send({
             queryMessagesRequest: {
@@ -172,9 +174,10 @@ export default class MessageService {
                 areGroupMessages,
                 areSystemMessages,
                 fromIds: fromIds || [],
-                deliveryDateAfter: DataParser.getDateTimeStr(deliveryDateAfter),
-                deliveryDateBefore: DataParser.getDateTimeStr(deliveryDateBefore),
+                deliveryDateStart: DataParser.getDateTimeStr(deliveryDateStart),
+                deliveryDateEnd: DataParser.getDateTimeStr(deliveryDateEnd),
                 maxCount,
+                descending: descending != null && descending ? true : null,
                 withTotal: false
             }
         }).then(n => Response.fromNotification(n, data => NotificationUtil.transformOrEmpty(data.messages?.messages)));
@@ -185,17 +188,19 @@ export default class MessageService {
         areGroupMessages,
         areSystemMessages,
         fromIds,
-        deliveryDateAfter,
-        deliveryDateBefore,
-        maxCount = 1
+        deliveryDateStart,
+        deliveryDateEnd,
+        maxCount = 1,
+        descending
     }: {
         ids?: string[],
         areGroupMessages?: boolean,
         areSystemMessages?: boolean,
         fromIds?: string[],
-        deliveryDateAfter?: Date,
-        deliveryDateBefore?: Date,
-        maxCount?: number
+        deliveryDateStart?: Date,
+        deliveryDateEnd?: Date,
+        maxCount?: number,
+        descending?: boolean
     }): Promise<Response<ParsedModel.MessagesWithTotal[]>> {
         return this._turmsClient.driver.send({
             queryMessagesRequest: {
@@ -203,9 +208,10 @@ export default class MessageService {
                 areGroupMessages,
                 areSystemMessages,
                 fromIds: fromIds || [],
-                deliveryDateAfter: DataParser.getDateTimeStr(deliveryDateAfter),
-                deliveryDateBefore: DataParser.getDateTimeStr(deliveryDateBefore),
+                deliveryDateStart: DataParser.getDateTimeStr(deliveryDateStart),
+                deliveryDateEnd: DataParser.getDateTimeStr(deliveryDateEnd),
                 maxCount,
+                descending: descending != null && descending ? true : null,
                 withTotal: true
             }
         }).then(n => Response.fromNotification(n, data => NotificationUtil.transformOrEmpty(data.messagesWithTotalList?.messagesWithTotalList)));

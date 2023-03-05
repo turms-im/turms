@@ -310,6 +310,7 @@ public class MessageService {
             @Nullable Set<Long> fromIds,
             @Nullable DateRange deliveryDateRange,
             @Nullable Integer maxCount,
+            boolean ascending,
             boolean withTotal) {
         // We don't support the case when "areGroupMessages" is null currently (meaning we will support it in the future)
         // because it makes the pagination implementation complex
@@ -330,7 +331,7 @@ public class MessageService {
             if (CollectionUtil.isEmpty(fromIds)) {
                 return groupMemberService.queryUserJoinedGroupIds(requesterId)
                         .collect(Collectors.toCollection(recyclableSet::getValue))
-                        .flatMapMany(groupIds -> queryMessages(true,
+                        .flatMapMany(groupIds -> queryMessages(
                                 messageIds,
                                 true,
                                 areSystemMessages,
@@ -339,7 +340,8 @@ public class MessageService {
                                 deliveryDateRange,
                                 DateRange.NULL,
                                 0,
-                                finalMaxCount))
+                                finalMaxCount,
+                                ascending))
                         .doFinally(signalType -> recyclableSet.recycle());
             }
             return groupMemberService.findExistentMemberGroupIds(fromIds, requesterId)
@@ -360,7 +362,6 @@ public class MessageService {
                                             nonGroupMemberGroupIds));
                         }
                         return queryMessages(
-                                true,
                                 messageIds,
                                 true,
                                 areSystemMessages,
@@ -369,12 +370,12 @@ public class MessageService {
                                 deliveryDateRange,
                                 DateRange.NULL,
                                 0,
-                                finalMaxCount);
+                                finalMaxCount,
+                                ascending);
                     })
                     .doFinally(signalType -> recyclableSet.recycle());
         }
         return queryMessages(
-                true,
                 messageIds,
                 false,
                 areSystemMessages,
@@ -383,7 +384,8 @@ public class MessageService {
                 deliveryDateRange,
                 DateRange.NULL,
                 0,
-                maxCount);
+                maxCount,
+                ascending);
     }
 
     public Mono<Message> queryMessage(@NotNull Long messageId) {
@@ -396,7 +398,6 @@ public class MessageService {
     }
 
     public Flux<Message> queryMessages(
-            boolean closeToDate,
             @Nullable Collection<Long> messageIds,
             @Nullable Boolean areGroupMessages,
             @Nullable Boolean areSystemMessages,
@@ -405,7 +406,8 @@ public class MessageService {
             @Nullable DateRange deliveryDateRange,
             @Nullable DateRange deletionDateRange,
             @Nullable Integer page,
-            @Nullable Integer size) {
+            @Nullable Integer size,
+            @Nullable Boolean ascending) {
         int targetIdCount = CollectionUtil.getSize(targetIds);
         boolean enableConversationId = useConversationId && targetIdCount > 0;
         List<byte[]> conversationIds = null;
@@ -476,7 +478,6 @@ public class MessageService {
             }
         }
         return messageRepository.findMessages(
-                closeToDate,
                 messageIds,
                 conversationIds,
                 areGroupMessages,
@@ -486,7 +487,8 @@ public class MessageService {
                 deliveryDateRange,
                 deletionDateRange,
                 page,
-                size);
+                size,
+                ascending);
     }
 
     public Mono<Message> saveMessage(

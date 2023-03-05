@@ -167,7 +167,6 @@ public class MessageRepository extends BaseRepository<Message, Long> {
     }
 
     public Flux<Message> findMessages(
-            boolean closeToDate,
             @Nullable Collection<Long> messageIds,
             @Nullable Collection<byte[]> conversationIds,
             @Nullable Boolean areGroupMessages,
@@ -177,7 +176,8 @@ public class MessageRepository extends BaseRepository<Message, Long> {
             @Nullable DateRange deliveryDateRange,
             @Nullable DateRange deletionDateRange,
             @Nullable Integer page,
-            @Nullable Integer size) {
+            @Nullable Integer size,
+            @Nullable Boolean ascending) {
         Filter filter = Filter.newBuilder(7)
                 .inIfNotNull(Message.Fields.CONVERSATION_ID, conversationIds)
                 .eqIfNotNull(Message.Fields.IS_GROUP_MESSAGE, areGroupMessages)
@@ -190,10 +190,10 @@ public class MessageRepository extends BaseRepository<Message, Long> {
         } else {
             filter.addBetweenIfNotNull(Message.Fields.DELETION_DATE, deletionDateRange);
         }
-        QueryOptions options = QueryOptions.newBuilder(closeToDate ? 3 : 2)
+        QueryOptions options = QueryOptions.newBuilder(3)
                 .paginateIfNotNull(page, size);
-        if (closeToDate) {
-            options.sort(true, Message.Fields.DELIVERY_DATE);
+        if (ascending != null) {
+            options.sort(ascending, Message.Fields.DELIVERY_DATE);
         }
         filter.inIfNotNull(DomainFieldName.ID, messageIds);
         return mongoClient.findMany(entityClass, filter, options);
