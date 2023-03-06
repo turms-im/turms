@@ -20,6 +20,7 @@ package im.turms.service.domain.group.service;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import im.turms.server.common.access.client.dto.ClientMessagePool;
+import im.turms.server.common.access.client.dto.constant.GroupMemberRole;
 import im.turms.server.common.access.client.dto.constant.RequestStatus;
 import im.turms.server.common.access.client.dto.model.group.GroupJoinRequestsWithVersion;
 import im.turms.server.common.access.common.ResponseStatusCode;
@@ -76,6 +77,7 @@ public class GroupJoinRequestService extends ExpirableEntityService<GroupJoinReq
     private final GroupBlocklistService groupBlocklistService;
     private final GroupJoinRequestRepository groupJoinRequestRepository;
     private final GroupService groupService;
+    private final GroupTypeService groupTypeService;
     private final GroupVersionService groupVersionService;
     private final GroupMemberService groupMemberService;
     private final UserVersionService userVersionService;
@@ -93,6 +95,7 @@ public class GroupJoinRequestService extends ExpirableEntityService<GroupJoinReq
             GroupVersionService groupVersionService,
             GroupMemberService groupMemberService,
             GroupService groupService,
+            GroupTypeService groupTypeService,
             UserVersionService userVersionService) {
         super(groupJoinRequestRepository);
         this.node = node;
@@ -101,6 +104,7 @@ public class GroupJoinRequestService extends ExpirableEntityService<GroupJoinReq
         this.groupVersionService = groupVersionService;
         this.groupMemberService = groupMemberService;
         this.groupService = groupService;
+        this.groupTypeService = groupTypeService;
         this.userVersionService = userVersionService;
 
         propertiesManager.notifyAndAddGlobalPropertiesChangeListener(this::updateProperties);
@@ -141,38 +145,46 @@ public class GroupJoinRequestService extends ExpirableEntityService<GroupJoinReq
         return groupBlocklistService.isBlocked(groupId, requesterId)
                 .flatMap(isBlocked -> isBlocked
                         ? Mono.error(ResponseException.get(ResponseStatusCode.GROUP_JOIN_REQUEST_SENDER_HAS_BEEN_BLOCKED))
-                        : groupService.isGroupActiveAndNotDeleted(groupId))
-                .flatMap(isActive -> {
-                    if (!isActive) {
-                        return Mono.error(ResponseException.get(ResponseStatusCode.SEND_JOIN_REQUEST_TO_INACTIVE_GROUP));
+                        : groupService.queryGroupTypeIdIfActiveAndNotDeleted(groupId))
+                .switchIfEmpty(Mono.error(ResponseException.get(ResponseStatusCode.SEND_JOIN_REQUEST_TO_INACTIVE_GROUP)))
+                .flatMap(groupTypeService::queryGroupType)
+                .flatMap(type -> switch (type.getJoinStrategy()) {
+                    case ACCEPT_ANY_REQUEST ->
+                            groupMemberService.addGroupMember(groupId, requesterId, GroupMemberRole.MEMBER, null, null, null, null)
+                                    .then(Mono.empty());
+                    case DECLINE_ANY_REQUEST ->
+                            Mono.error(ResponseException.get(ResponseStatusCode.SEND_JOIN_REQUEST_TO_GROUP_DECLINING_REQUEST));
+                    case REQUIRE_ANSWER_QUESTION ->
+                            Mono.error(ResponseException.get(ResponseStatusCode.SEND_JOIN_REQUEST_TO_GROUP_REQUIRING_ANSWER_QUESTION));
+                    case REQUIRE_APPROVAL -> {
+                        long id = node.nextLargeGapId(ServiceType.GROUP_JOIN_REQUEST);
+                        String finalContent = content == null ? "" : content;
+                        GroupJoinRequest groupJoinRequest = new GroupJoinRequest(
+                                id,
+                                finalContent,
+                                RequestStatus.PENDING,
+                                new Date(),
+                                null,
+                                groupId,
+                                requesterId,
+                                null);
+                        yield groupJoinRequestRepository.insert(groupJoinRequest)
+                                .then(Mono.whenDelayError(
+                                        groupVersionService.updateJoinRequestsVersion(groupId)
+                                                .onErrorResume(t -> {
+                                                    LOGGER.error("Caught an error while updating the join requests version of the group ({}) after creating a join request",
+                                                            groupId, t);
+                                                    return Mono.empty();
+                                                }),
+                                        userVersionService.updateSentGroupJoinRequestsVersion(requesterId)
+                                                .onErrorResume(t -> {
+                                                    LOGGER.error("Caught an error while updating the sent group join requests version of the requester ({}) after creating a join request",
+                                                            requesterId, t);
+                                                    return Mono.empty();
+                                                })
+                                ))
+                                .thenReturn(groupJoinRequest);
                     }
-                    long id = node.nextLargeGapId(ServiceType.GROUP_JOIN_REQUEST);
-                    String finalContent = content == null ? "" : content;
-                    GroupJoinRequest groupJoinRequest = new GroupJoinRequest(
-                            id,
-                            finalContent,
-                            RequestStatus.PENDING,
-                            new Date(),
-                            null,
-                            groupId,
-                            requesterId,
-                            null);
-                    return groupJoinRequestRepository.insert(groupJoinRequest)
-                            .then(Mono.whenDelayError(
-                                    groupVersionService.updateJoinRequestsVersion(groupId)
-                                            .onErrorResume(t -> {
-                                                LOGGER.error("Caught an error while updating the join requests version of the group ({}) after creating a join request",
-                                                        groupId, t);
-                                                return Mono.empty();
-                                            }),
-                                    userVersionService.updateSentGroupJoinRequestsVersion(requesterId)
-                                            .onErrorResume(t -> {
-                                                LOGGER.error("Caught an error while updating the sent group join requests version of the requester ({}) after creating a join request",
-                                                        requesterId, t);
-                                                return Mono.empty();
-                                            })
-                            ))
-                            .thenReturn(groupJoinRequest);
                 });
     }
 

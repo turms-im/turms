@@ -159,7 +159,9 @@ class ResponseStatusCode {
   static const notOwnerOrManagerToAccessGroupRequest = 3602;
   static const recallNotPendingGroupJoinRequest = 3603;
   static const sendJoinRequestToInactiveGroup = 3604;
-  static const recallingGroupJoinRequestIsDisabled = 3605;
+  static const sendJoinRequestToGroupDecliningRequest = 3605;
+  static const sendJoinRequestToGroupRequiringAnswerQuestion = 3606;
+  static const recallingGroupJoinRequestIsDisabled = 3607;
 
   // Group - Invitation
   static const groupInviterNotMember = 3700;

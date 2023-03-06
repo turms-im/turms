@@ -336,14 +336,14 @@ class GroupService(private val turmsClient: TurmsClient) {
                 if (it.hasGroupInvitationsWithVersion()) it.groupInvitationsWithVersion else null
             }
 
-    suspend fun createJoinRequest(groupId: Long, content: String): Response<Long> = turmsClient.driver
+    suspend fun createJoinRequest(groupId: Long, content: String): Response<Long?> = turmsClient.driver
         .send(
             CreateGroupJoinRequestRequest.newBuilder().apply {
                 this.groupId = groupId
                 this.content = content
             }
         ).toResponse {
-            it.getLongOrThrow()
+            if (it.hasLong()) it.long else null
         }
 
     suspend fun deleteJoinRequest(requestId: Long): Response<Unit> = turmsClient.driver

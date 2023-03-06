@@ -100,7 +100,9 @@ ResponseStatusCode表明请求响应中的处理状态，类似HTTP的状态码�
 |                      | NOT_OWNER_OR_MANAGER_TO_ACCESS_GROUP_REQUEST         | 3602   |      |
 |                      | RECALL_NOT_PENDING_GROUP_JOIN_REQUEST                | 3603   |      |
 |                      | SEND_JOIN_REQUEST_TO_INACTIVE_GROUP                  | 3604   |      |
-|                      | RECALLING_GROUP_JOIN_REQUEST_IS_DISABLED             | 3605   |      |
+|                      | SEND_JOIN_REQUEST_TO_GROUP_DECLINING_REQUEST         | 3605   |      |
+|                      | SEND_JOIN_REQUEST_TO_GROUP_REQUIRING_ANSWER_QUESTION | 3606   |      |
+|                      | RECALLING_GROUP_JOIN_REQUEST_IS_DISABLED             | 3607   |      |
 | 群组邀请相关错误     | GROUP_INVITER_NOT_MEMBER                             | 3700   |      |
 |                      | GROUP_INVITEE_ALREADY_GROUP_MEMBER                   | 3701   |      |
 |                      | NOT_OWNER_OR_MANAGER_TO_RECALL_INVITATION            | 3702   |      |

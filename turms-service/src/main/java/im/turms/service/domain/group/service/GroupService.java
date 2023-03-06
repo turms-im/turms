@@ -330,7 +330,16 @@ public class GroupService {
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        return groupRepository.findGroupTypeId(groupId);
+        return groupRepository.findTypeId(groupId);
+    }
+
+    public Mono<Long> queryGroupTypeIdIfActiveAndNotDeleted(@NotNull Long groupId) {
+        try {
+            Validator.notNull(groupId, "groupId");
+        } catch (ResponseException e) {
+            return Mono.error(e);
+        }
+        return groupRepository.findTypeIdIfActiveAndNotDeleted(groupId);
     }
 
     public Mono<Integer> queryGroupMinimumScore(@NotNull Long groupId) {
@@ -483,7 +492,7 @@ public class GroupService {
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        return groupRepository.findGroupTypeId(groupId)
+        return groupRepository.findTypeId(groupId)
                 .flatMap(groupTypeService::queryGroupType);
     }
 

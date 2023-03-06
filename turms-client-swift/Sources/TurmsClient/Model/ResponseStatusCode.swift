@@ -159,6 +159,8 @@ public enum ResponseStatusCode: Int {
     case notOwnerOrManagerToAccessGroupRequest
     case recallNotPendingGroupJoinRequest
     case sendJoinRequestToInactiveGroup
+    case sendJoinRequestToGroupDecliningRequest
+    case sendJoinRequestToGroupRequiringAnswerQuestion
     case recallingGroupJoinRequestIsDisabled
 
     // Group - Invitation

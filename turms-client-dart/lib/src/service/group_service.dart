@@ -199,11 +199,11 @@ class GroupService {
         : null);
   }
 
-  Future<Response<Int64>> createJoinRequest(
+  Future<Response<Int64?>> createJoinRequest(
       Int64 groupId, String content) async {
     final n = await _turmsClient.driver.send(
         CreateGroupJoinRequestRequest(groupId: groupId, content: content));
-    return n.toResponse((data) => data.getLongOrThrow());
+    return n.toResponse((data) => data.hasLong() ? data.long : null);
   }
 
   Future<Response<void>> deleteJoinRequest(Int64 requestId) async {

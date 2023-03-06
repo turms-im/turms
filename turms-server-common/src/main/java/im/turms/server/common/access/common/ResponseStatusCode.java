@@ -177,7 +177,9 @@ public enum ResponseStatusCode {
     NOT_OWNER_OR_MANAGER_TO_ACCESS_GROUP_REQUEST(3602, "Only the owner and managers of the group can access group requests", 403),
     RECALL_NOT_PENDING_GROUP_JOIN_REQUEST(3603, "Cannot recall non-pending group join requests", 403),
     SEND_JOIN_REQUEST_TO_INACTIVE_GROUP(3604, "Cannot send a join request to an inactive group", 403),
-    RECALLING_GROUP_JOIN_REQUEST_IS_DISABLED(3605, "The feature to recall group join requests is disabled", 510),
+    SEND_JOIN_REQUEST_TO_GROUP_DECLINING_REQUEST(3605, "Cannot send a join request to the group that declines requests", 403),
+    SEND_JOIN_REQUEST_TO_GROUP_REQUIRING_ANSWER_QUESTION(3606, "Cannot send a join request to the group that requires users to answer questions", 403),
+    RECALLING_GROUP_JOIN_REQUEST_IS_DISABLED(3607, "The feature to recall group join requests is disabled", 510),
 
     // Group - Invitation
     GROUP_INVITER_NOT_MEMBER(3700, "Only the group members can invite other users", 403),

@@ -35,7 +35,7 @@ class GroupServiceTests: XCTestCase {
             groupQuestionId = $0.data[0]
         })
         assertCompleted("createJoinRequest_shouldReturnJoinRequestId", service.createJoinRequest(groupId: groupId!, content: "content").done {
-            groupJoinRequestId = $0.data
+            groupJoinRequestId = $0.data!
         })
         assertCompleted("addGroupMembers_shouldSucceed", service.addGroupMembers(groupId: groupId!, userIds: [groupMemberId], name: "name", role: .member))
         assertCompleted("blockUser_shouldSucceed", service.blockUser(groupId: groupId!, userId: groupBlockedUserId))

@@ -175,9 +175,20 @@ public class GroupRepository extends BaseRepository<Group, Long> {
         return mongoClient.findMany(entityClass, filter);
     }
 
-    public Mono<Long> findGroupTypeId(Long groupId) {
+    public Mono<Long> findTypeId(Long groupId) {
         Filter filter = Filter.newBuilder(1)
                 .eq(DomainFieldName.ID, groupId);
+        QueryOptions options = QueryOptions.newBuilder(1)
+                .include(Group.Fields.TYPE_ID);
+        return mongoClient.findOne(entityClass, filter, options)
+                .map(Group::getTypeId);
+    }
+
+    public Mono<Long> findTypeIdIfActiveAndNotDeleted(Long groupId) {
+        Filter filter = Filter.newBuilder(3)
+                .eq(DomainFieldName.ID, groupId)
+                .eq(Group.Fields.IS_ACTIVE, true)
+                .eq(Group.Fields.DELETION_DATE, null);
         QueryOptions options = QueryOptions.newBuilder(1)
                 .include(Group.Fields.TYPE_ID);
         return mongoClient.findOne(entityClass, filter, options)
