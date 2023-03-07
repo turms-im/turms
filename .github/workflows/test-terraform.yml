@@ -1,0 +1,34 @@
+name: Test Terraform
+
+on: [ push, pull_request ]
+
+jobs:
+  test:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Init - Playground
+        working-directory: './terraform/alicloud/playground'
+        run: terraform init
+
+      - name: Validate - Playground
+        working-directory: './terraform/alicloud/playground'
+        run: terraform validate
+
+      - name: Verify Format - Playground
+        working-directory: './terraform/alicloud/playground'
+        run: terraform fmt -diff -check
+
+      - name: Init - Cluster
+        working-directory: './terraform/alicloud/cluster'
+        run: terraform init
+
+      - name: Validate - Cluster
+        working-directory: './terraform/alicloud/cluster'
+        run: terraform validate
+
+      - name: Verify Format - Cluster
+        working-directory: './terraform/alicloud/cluster'
+        run: terraform fmt -diff -check
