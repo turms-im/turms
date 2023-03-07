@@ -154,25 +154,33 @@ module "turms_gateway" {
 
   # Turms Gateway
   turms_gateway_jvm_options = var.turms_gateway_jvm_options
-  turms_gateway_profile  = var.turms_gateway_profile
+  turms_gateway_profile     = var.turms_gateway_profile
 
   # MongoDB
   config_mongodb_hosts            = module.mongodb.config_mongodb_hosts
   config_mongodb_account_password = module.mongodb.config_mongodb_account_password
+  admin_mongodb_hosts             = module.mongodb.admin_mongodb_hosts
+  admin_mongodb_account_password  = module.mongodb.admin_mongodb_account_password
   user_mongodb_hosts              = module.mongodb.user_mongodb_hosts
   user_mongodb_account_password   = module.mongodb.user_mongodb_account_password
 
   # Redis
-  session_redis_host              = module.redis.session_redis_host
-  session_redis_account_name      = module.redis.session_redis_account_name
-  session_redis_account_password  = module.redis.session_redis_account_password
-  location_redis_host             = module.redis.location_redis_host
-  location_redis_account_name     = module.redis.location_redis_account_name
-  location_redis_account_password = module.redis.location_redis_account_password
+  session_redis_host                    = module.redis.session_redis_host
+  session_redis_account_name            = module.redis.session_redis_account_name
+  session_redis_account_password        = module.redis.session_redis_account_password
+  location_redis_host                   = module.redis.location_redis_host
+  location_redis_account_name           = module.redis.location_redis_account_name
+  location_redis_account_password       = module.redis.location_redis_account_password
+  ip_blocklist_redis_host               = module.redis.ip_blocklist_redis_host
+  ip_blocklist_redis_account_name       = module.redis.ip_blocklist_redis_account_name
+  ip_blocklist_redis_account_password   = module.redis.ip_blocklist_redis_account_password
+  user_blocklist_redis_host             = module.redis.user_blocklist_redis_host
+  user_blocklist_redis_account_name     = module.redis.user_blocklist_redis_account_name
+  user_blocklist_redis_account_password = module.redis.user_blocklist_redis_account_password
 }
 
 module "turms_service" {
-  source       = "./modules/turms-service"
+  source               = "./modules/turms-service"
   create_turms_service = var.create_turms_service
 
   instance_count = var.turms_service_instance_count
@@ -211,7 +219,7 @@ module "turms_service" {
 
   # Turms Service
   turms_service_jvm_options = var.turms_service_jvm_options
-  turms_service_profile  = var.turms_service_profile
+  turms_service_profile     = var.turms_service_profile
 
   # MongoDB
   config_mongodb_hosts                  = module.mongodb.config_mongodb_hosts
@@ -228,12 +236,18 @@ module "turms_service" {
   message_mongodb_account_password      = module.mongodb.message_mongodb_account_password
 
   # Redis
-  session_redis_host              = module.redis.session_redis_host
-  session_redis_account_name      = module.redis.session_redis_account_name
-  session_redis_account_password  = module.redis.session_redis_account_password
-  location_redis_host             = module.redis.location_redis_host
-  location_redis_account_name     = module.redis.location_redis_account_name
-  location_redis_account_password = module.redis.location_redis_account_password
+  session_redis_host                    = module.redis.session_redis_host
+  session_redis_account_name            = module.redis.session_redis_account_name
+  session_redis_account_password        = module.redis.session_redis_account_password
+  location_redis_host                   = module.redis.location_redis_host
+  location_redis_account_name           = module.redis.location_redis_account_name
+  location_redis_account_password       = module.redis.location_redis_account_password
+  ip_blocklist_redis_host               = module.redis.ip_blocklist_redis_host
+  ip_blocklist_redis_account_name       = module.redis.ip_blocklist_redis_account_name
+  ip_blocklist_redis_account_password   = module.redis.ip_blocklist_redis_account_password
+  user_blocklist_redis_host             = module.redis.user_blocklist_redis_host
+  user_blocklist_redis_account_name     = module.redis.user_blocklist_redis_account_name
+  user_blocklist_redis_account_password = module.redis.user_blocklist_redis_account_password
 }
 
 module "turms_admin" {

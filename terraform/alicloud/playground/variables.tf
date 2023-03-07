@@ -24,7 +24,7 @@ variable "image_name_regex" {
 }
 
 variable "instance_type" {
-  type    = string
+  type = string
   // 0.0472RMB/Hour in Shenzhen
   default = "ecs.t6-c1m2.large"
 }
@@ -35,7 +35,7 @@ variable "spot_price_limit" {
 }
 
 variable "auto_release_time" {
-  type    = string
+  type = string
   # yyyy-MM-ddTHH:mm:ssZ
   # The time follows the ISO 8601 standard and is a UTC time
   # To get a current UTC time: date -u +"%Y-%m-%dT%H:%M:%SZ"
@@ -43,10 +43,10 @@ variable "auto_release_time" {
 }
 
 variable "tags" {
-  type    = map(string)
+  type = map(string)
   default = {
-    Group: "turms"
-    Type:  "standalone"
+    Group : "turms"
+    Type : "standalone"
   }
 }
 

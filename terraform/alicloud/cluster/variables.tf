@@ -71,7 +71,7 @@ variable "vpc_name" {
 }
 
 variable "vpc_tags" {
-  type    = map(string)
+  type = map(string)
   default = {
     Group = "turms"
     Type  = "cluster"
@@ -89,24 +89,24 @@ variable "vswitch_name" {
 }
 
 variable "vswitch_tags" {
-  type    = map(string)
+  type = map(string)
   default = {
-    Group: "turms"
-    Type:  "cluster"
+    Group : "turms"
+    Type : "cluster"
   }
 }
 
 variable "vswitch_zone_cidr_list" {
-  type    = list(object({
+  type = list(object({
     zone_id = string
     cidr    = string
   }))
   default = [{
-    zone_id: "cn-hangzhou-e"
-    cidr: "172.16.1.0/21"
-  }, {
-    zone_id: "cn-hangzhou-h"
-    cidr: "172.16.2.0/21"
+    zone_id : "cn-hangzhou-e"
+    cidr : "172.16.1.0/21"
+    }, {
+    zone_id : "cn-hangzhou-h"
+    cidr : "172.16.2.0/21"
   }]
 }
 
@@ -155,7 +155,7 @@ variable "nat_eip_address_name" {
 }
 
 variable "nat_eip_tags" {
-  type    = map(string)
+  type = map(string)
   default = {
     Group = "turms"
     Type  = "cluster"
@@ -190,7 +190,7 @@ variable "slb_name" {
 }
 
 variable "slb_tags" {
-  type    = map(string)
+  type = map(string)
   default = {
     Group = "turms"
     Type  = "cluster"
@@ -235,7 +235,7 @@ variable "turms_gateway_instance_ids" {
 #=============== MongoDB
 
 variable "mongodb_instances" {
-  type    = list(object({
+  type = list(object({
     associations = optional(set(string))
 
     name = optional(string)
@@ -269,14 +269,14 @@ variable "mongodb_instances" {
   }))
   default = []
   validation {
-    condition     = alltrue([for association in var.mongodb_instances[*].associations : contains(["config", "admin",
-      "user", "group", "conversation", "message"], association) if association != null])
+    condition = alltrue([for association in var.mongodb_instances[*].associations : contains(["config", "admin",
+    "user", "group", "conversation", "message"], association) if association != null])
     error_message = "Allowed values for input_parameter are \"config\", \"admin\", \"user\", \"group\", \"conversation\", or \"message\"."
   }
 }
 
 variable "mongodb_sharding_instances" {
-  type    = list(object({
+  type = list(object({
     associations = optional(set(string))
 
     name = optional(string)
@@ -314,8 +314,8 @@ variable "mongodb_sharding_instances" {
   }))
   default = [{}]
   validation {
-    condition     = alltrue([for association in var.mongodb_sharding_instances[*].associations : contains(["config",
-      "admin", "user", "group", "conversation", "message"], association) if association != null])
+    condition = alltrue([for association in var.mongodb_sharding_instances[*].associations : contains(["config",
+    "admin", "user", "group", "conversation", "message"], association) if association != null])
     error_message = "Allowed values for input_parameter are \"config\", \"admin\", \"user\", \"group\", \"conversation\", or \"message\"."
   }
 }
@@ -342,7 +342,7 @@ locals {
     db_instance_storage = 10
 
     account_password = "Turms_9510"
-  }, {for k, v in val: k => v if v != null})]
+  }, { for k, v in val : k => v if v != null })]
 
   mongodb_sharding_instances = [for val in var.mongodb_sharding_instances : merge(val, {
     associations = ["config", "admin", "user", "group", "conversation", "message"]
@@ -366,19 +366,19 @@ locals {
 
     mongo_list = [{
       node_class = "dds.mongos.mid"
-    }, {
+      }, {
       node_class = "dds.mongos.mid"
     }]
     shard_list = [{
       node_class        = "dds.shard.mid"
       node_storage      = 10
       readonly_replicas = 0
-    }, {
+      }, {
       node_class        = "dds.shard.mid"
       node_storage      = 10
       readonly_replicas = 0
     }]
-  }, {for k, v in val: k => v if v != null})]
+  }, { for k, v in val : k => v if v != null })]
 }
 
 #=============== Redis
@@ -411,15 +411,15 @@ variable "redis_instances" {
 
   default = [{}]
   validation {
-    condition     = alltrue([for association in var.redis_instances[*].associations : contains(["session",
-      "location"], association) if association != null])
-    error_message = "Allowed values for input_parameter are \"session\" or \"location\"."
+    condition = alltrue([for association in var.redis_instances[*].associations : contains(["session",
+    "location", "ip_blocklist", "user_blocklist"], association) if association != null])
+    error_message = "Allowed values for input_parameter are \"session\", \"location\", \"ip_blocklist\" or \"user_blocklist\"."
   }
 }
 
 locals {
   redis_instances = [for val in var.redis_instances : merge(val, {
-    associations: ["session", "location"]
+    associations : ["session", "location", "ip_blocklist", "user_blocklist"]
 
     name = "redis-turms"
     tags = {
@@ -439,7 +439,7 @@ locals {
     account_name      = "turms"
     account_password  = "Turms_9510"
     account_privilege = "RoleReadWrite"
-  }, {for k, v in val: k => v if v != null})]
+  }, { for k, v in val : k => v if v != null })]
 }
 
 #=============== ECS - Turms Gateway
@@ -462,7 +462,7 @@ variable "turms_gateway_ecs_name" {
 }
 
 variable "turms_gateway_ecs_tags" {
-  type    = map(string)
+  type = map(string)
   default = {
     Group = "turms"
     Type  = "cluster"
@@ -525,7 +525,7 @@ variable "turms_gateway_security_group_name" {
 }
 
 variable "turms_gateway_security_group_tags" {
-  type    = map(string)
+  type = map(string)
   default = {
     Group = "turms"
     Type  = "cluster"
@@ -538,7 +538,7 @@ variable "turms_gateway_key_pair_name" {
 }
 
 variable "turms_gateway_key_pair_tags" {
-  type    = map(string)
+  type = map(string)
   default = {
     Group = "turms"
     Type  = "cluster"
@@ -584,7 +584,7 @@ variable "turms_service_ecs_name" {
 }
 
 variable "turms_service_ecs_tags" {
-  type    = map(string)
+  type = map(string)
   default = {
     Group = "turms"
     Type  = "cluster"
@@ -647,7 +647,7 @@ variable "turms_service_security_group_name" {
 }
 
 variable "turms_service_security_group_tags" {
-  type    = map(string)
+  type = map(string)
   default = {
     Group = "turms"
     Type  = "cluster"
@@ -660,7 +660,7 @@ variable "turms_service_key_pair_name" {
 }
 
 variable "turms_service_key_pair_tags" {
-  type    = map(string)
+  type = map(string)
   default = {
     Group = "turms"
     Type  = "cluster"
@@ -706,7 +706,7 @@ variable "turms_admin_ecs_name" {
 }
 
 variable "turms_admin_ecs_tags" {
-  type    = map(string)
+  type = map(string)
   default = {
     Group = "turms"
     Type  = "cluster"
@@ -769,7 +769,7 @@ variable "turms_admin_security_group_name" {
 }
 
 variable "turms_admin_security_group_tags" {
-  type    = map(string)
+  type = map(string)
   default = {
     Group = "turms"
     Type  = "cluster"
@@ -782,7 +782,7 @@ variable "turms_admin_key_pair_name" {
 }
 
 variable "turms_admin_key_pair_tags" {
-  type    = map(string)
+  type = map(string)
   default = {
     Group = "turms"
     Type  = "cluster"

@@ -27,8 +27,10 @@ output "mongodb" {
 
 output "redis" {
   value = (var.create_redis ? {
-    session_redis_host  = module.redis.session_redis_host
-    location_redis_host = module.redis.location_redis_host
+    session_redis_host        = module.redis.session_redis_host
+    location_redis_host       = module.redis.location_redis_host
+    ip_blocklist_redis_host   = module.redis.ip_blocklist_redis_host
+    user_blocklist_redis_host = module.redis.user_blocklist_redis_host
   } : null)
 }
 

@@ -32,7 +32,7 @@ locals {
   ]
   open_udp_ports = [
     # turms-gateway: UDP
-    "12510/12510"]
+  "12510/12510"]
 }
 
 #=============== Network
@@ -112,8 +112,8 @@ resource "alicloud_instance" "standalone" {
   auto_release_time = var.auto_release_time
 
   user_data = templatefile("${path.module}/../../common/playground/tpl/user-data.sh", {
-    ENV: var.env
-    USE_CHINA_MIRROR: var.use_china_mirror
+    ENV : var.env
+    USE_CHINA_MIRROR : var.use_china_mirror
   })
 
   tags = var.tags

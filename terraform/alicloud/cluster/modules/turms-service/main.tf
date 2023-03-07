@@ -80,7 +80,7 @@ resource "alicloud_instance" "default" {
   deletion_protection = var.delete_protection
 
   # TODO: replace with image
-  user_data = templatefile("${path.root}/../../common/cluster/tpl/user-data-turms.sh", {
+  user_data = templatefile("${path.root}/../../common/cluster/tpl/user-data-turms-service.sh", {
     PROFILE         = var.turms_service_profile
     CUSTOM_JVM_OPTS = var.turms_service_jvm_options
 
