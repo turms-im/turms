@@ -1,9 +1,9 @@
 terraform {
-  required_version = ">= 1.00"
+  required_version = ">= 1.3.0"
   required_providers {
     alicloud = {
       source  = "aliyun/alicloud"
-      version = "~> 1.129.0"
+      version = "~> 1.200.0"
     }
   }
 }
