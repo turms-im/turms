@@ -1,0 +1,13 @@
+name: Test Docker Compose
+
+on: [ push, pull_request ]
+
+jobs:
+  test:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Validate
+        run: docker compose -f docker-compose.standalone.yml config -q
