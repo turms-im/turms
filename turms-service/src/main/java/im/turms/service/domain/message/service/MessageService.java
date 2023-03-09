@@ -146,6 +146,7 @@ public class MessageService {
     private boolean sendMessageToOtherSenderOnlineDevices;
     @Getter
     private TimeType timeType;
+    private DateRange recalledMessageQueryDateRange;
 
     private final Cache<Long, Message> sentMessageCache;
 
@@ -232,6 +233,7 @@ public class MessageService {
         persistSenderIp = messageProperties.isPersistSenderIp();
         updateReadDateAfterMessageSent = properties.getService().getConversation().getReadReceipt().isUpdateReadDateAfterMessageSent();
         deleteMessageLogicallyByDefault = messageProperties.isDeleteMessageLogicallyByDefault();
+        recalledMessageQueryDateRange = messageProperties.isRecalledMessageVisible() ? null : DateRange.NULL;
         allowRecallMessage = messageProperties.isAllowRecallMessage();
         allowEditMessageBySender = messageProperties.isAllowEditMessageBySender();
         sendMessageToOtherSenderOnlineDevices = messageProperties.isSendMessageToOtherSenderOnlineDevices();
@@ -339,6 +341,7 @@ public class MessageService {
                                 groupIds,
                                 deliveryDateRange,
                                 DateRange.NULL,
+                                recalledMessageQueryDateRange,
                                 0,
                                 finalMaxCount,
                                 ascending))
@@ -369,6 +372,7 @@ public class MessageService {
                                 fromIds,
                                 deliveryDateRange,
                                 DateRange.NULL,
+                                recalledMessageQueryDateRange,
                                 0,
                                 finalMaxCount,
                                 ascending);
@@ -383,6 +387,7 @@ public class MessageService {
                 Set.of(requesterId),
                 deliveryDateRange,
                 DateRange.NULL,
+                recalledMessageQueryDateRange,
                 0,
                 maxCount,
                 ascending);
@@ -405,6 +410,7 @@ public class MessageService {
             @Nullable Set<Long> targetIds,
             @Nullable DateRange deliveryDateRange,
             @Nullable DateRange deletionDateRange,
+            @Nullable DateRange recallDateRange,
             @Nullable Integer page,
             @Nullable Integer size,
             @Nullable Boolean ascending) {
@@ -486,6 +492,7 @@ public class MessageService {
                 targetIds,
                 deliveryDateRange,
                 deletionDateRange,
+                recallDateRange,
                 page,
                 size,
                 ascending);

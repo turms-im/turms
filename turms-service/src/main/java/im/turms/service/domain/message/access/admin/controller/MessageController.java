@@ -102,6 +102,8 @@ public class MessageController extends BaseController {
             @QueryParam(required = false) Date deliveryDateEnd,
             @QueryParam(required = false) Date deletionDateStart,
             @QueryParam(required = false) Date deletionDateEnd,
+            @QueryParam(required = false) Date recallDateStart,
+            @QueryParam(required = false) Date recallDateEnd,
             @QueryParam(required = false) Integer size,
             @QueryParam(required = false) Boolean ascending) {
         Flux<Message> completeMessagesFlux = messageService.queryMessages(
@@ -112,6 +114,7 @@ public class MessageController extends BaseController {
                 targetIds,
                 DateRange.of(deliveryDateStart, deliveryDateEnd),
                 DateRange.of(deletionDateStart, deletionDateEnd),
+                DateRange.of(recallDateStart, recallDateEnd),
                 0,
                 getPageSize(size),
                 ascending);
@@ -130,11 +133,14 @@ public class MessageController extends BaseController {
             @QueryParam(required = false) Date deliveryDateEnd,
             @QueryParam(required = false) Date deletionDateStart,
             @QueryParam(required = false) Date deletionDateEnd,
+            @QueryParam(required = false) Date recallDateStart,
+            @QueryParam(required = false) Date recallDateEnd,
             int page,
             @QueryParam(required = false) Integer size,
             @QueryParam(required = false) Boolean ascending) {
         DateRange deliveryDateRange = DateRange.of(deliveryDateStart, deliveryDateEnd);
         DateRange deletionDateRange = DateRange.of(deletionDateStart, deletionDateEnd);
+        DateRange recallDateRange = DateRange.of(recallDateStart, recallDateEnd);
         Mono<Long> count = messageService.countMessages(
                 ids,
                 areGroupMessages,
@@ -151,6 +157,7 @@ public class MessageController extends BaseController {
                 targetIds,
                 deliveryDateRange,
                 deletionDateRange,
+                recallDateRange,
                 page,
                 getPageSize(size),
                 ascending);

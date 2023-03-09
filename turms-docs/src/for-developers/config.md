@@ -472,6 +472,7 @@ Turms配置分为三大类：Turms Service配置、Turms Gateway配置，以及C
 |turms.service.message.default-available-messages-number-with-total|✅|✅|int|1|The default available messages number with the "total" field that users request|
 |turms.service.message.delete-message-logically-by-default|✅|✅|boolean|true|Whether to delete messages logically by default|
 |turms.service.message.expired-messages-cleanup-cron|||string|0 45 2 * * *|Clean the expired messages when the cron expression is triggered|
+|turms.service.message.is-recalled-message-visible|✅|✅|boolean|false|Whether to respond with recalled messages to clients' message query requests|
 |turms.service.message.max-records-size-bytes|✅|✅|int|15728640|The maximum allowed size for the records of a message|
 |turms.service.message.max-text-limit|✅|✅|int|500|The maximum allowed length for the text of a message|
 |turms.service.message.message-retention-period-hours|✅|✅|int|0|A message will be retained for the given period and will be removed from the database after the retention period|

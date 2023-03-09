@@ -108,6 +108,18 @@ public class MessageProperties {
     @MutableProperty
     private boolean deleteMessageLogicallyByDefault = true;
 
+    @Description("Whether to respond with recalled messages to clients' message query requests")
+    @GlobalProperty
+    @MutableProperty
+    private boolean isRecalledMessageVisible;
+
+    // TODO
+//    @Description("Whether to hide the content (text and records) of recalled messages, " +
+//            "but still return when responding to clients' message query requests")
+//    @GlobalProperty
+//    @MutableProperty
+//    private boolean hideRecalledMessageContent = true;
+
     @Description("Whether to allow users to send messages to a stranger")
     @GlobalProperty
     @MutableProperty

@@ -2744,6 +2744,14 @@
         "sensitive": false,
         "type": "string"
       },
+      "isRecalledMessageVisible": {
+        "deprecated": false,
+        "description": "Whether to respond with recalled messages to clients' message query requests",
+        "global": true,
+        "mutable": true,
+        "sensitive": false,
+        "type": "boolean"
+      },
       "maxRecordsSizeBytes": {
         "deprecated": false,
         "description": "The maximum allowed size for the records of a message",

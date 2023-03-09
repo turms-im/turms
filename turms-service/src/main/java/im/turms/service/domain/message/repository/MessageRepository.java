@@ -175,10 +175,11 @@ public class MessageRepository extends BaseRepository<Message, Long> {
             @Nullable Set<Long> targetIds,
             @Nullable DateRange deliveryDateRange,
             @Nullable DateRange deletionDateRange,
+            @Nullable DateRange recallDateRange,
             @Nullable Integer page,
             @Nullable Integer size,
             @Nullable Boolean ascending) {
-        Filter filter = Filter.newBuilder(7)
+        Filter filter = Filter.newBuilder(8)
                 .inIfNotNull(Message.Fields.CONVERSATION_ID, conversationIds)
                 .eqIfNotNull(Message.Fields.IS_GROUP_MESSAGE, areGroupMessages)
                 .eqIfNotNull(Message.Fields.IS_SYSTEM_MESSAGE, areSystemMessages)
@@ -189,6 +190,11 @@ public class MessageRepository extends BaseRepository<Message, Long> {
             filter.eq(Message.Fields.DELETION_DATE, null);
         } else {
             filter.addBetweenIfNotNull(Message.Fields.DELETION_DATE, deletionDateRange);
+        }
+        if (recallDateRange == DateRange.NULL) {
+            filter.eq(Message.Fields.RECALL_DATE, null);
+        } else {
+            filter.addBetweenIfNotNull(Message.Fields.RECALL_DATE, recallDateRange);
         }
         QueryOptions options = QueryOptions.newBuilder(3)
                 .paginateIfNotNull(page, size);
