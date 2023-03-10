@@ -331,7 +331,10 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
             @NotNull DeviceType requesterDevice) {
         TurmsRequest dataForRecipients = result.dataForRecipients();
         Set<Long> recipients = result.recipients();
-        if (dataForRecipients == null || recipients.isEmpty()) {
+        boolean noRecipient = recipients.isEmpty();
+        boolean forwardDataForRecipientsToOtherSenderOnlineDevices = result
+                .forwardDataForRecipientsToOtherSenderOnlineDevices();
+        if (dataForRecipients == null || (noRecipient && !forwardDataForRecipientsToOtherSenderOnlineDevices)) {
             return Mono.empty();
         }
         TurmsNotification notificationForRecipients = ClientMessagePool
@@ -341,14 +344,20 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                 .setRequesterId(requesterId)
                 .build();
         ByteBuf notificationByteBuf = ProtoEncoder.getDirectByteBuffer(notificationForRecipients);
-        if (result.forwardDataForRecipientsToOtherSenderOnlineDevices()) {
-            notificationByteBuf.retain(2);
-            Mono<Boolean> notifyRequesterMono = outboundMessageService
-                    .forwardNotification(notificationForRecipients, notificationByteBuf, requesterId, requesterDevice);
-            Mono<Boolean> notifyRecipientsMono = outboundMessageService
-                    .forwardNotification(notificationForRecipients, notificationByteBuf, recipients);
-            return Mono.whenDelayError(notifyRequesterMono, notifyRecipientsMono)
-                    .doFinally(signal -> notificationByteBuf.release());
+        if (forwardDataForRecipientsToOtherSenderOnlineDevices) {
+            if (noRecipient) {
+                return outboundMessageService
+                        .forwardNotification(notificationForRecipients, notificationByteBuf, requesterId, requesterDevice)
+                        .then();
+            } else {
+                notificationByteBuf.retain(2);
+                Mono<Boolean> notifyRequesterMono = outboundMessageService
+                        .forwardNotification(notificationForRecipients, notificationByteBuf, requesterId, requesterDevice);
+                Mono<Boolean> notifyRecipientsMono = outboundMessageService
+                        .forwardNotification(notificationForRecipients, notificationByteBuf, recipients);
+                return Mono.whenDelayError(notifyRequesterMono, notifyRecipientsMono)
+                        .doFinally(signal -> notificationByteBuf.release());
+            }
         }
         return outboundMessageService.forwardNotification(notificationForRecipients, notificationByteBuf, recipients)
                 .then();
