@@ -89,7 +89,7 @@ public class GroupBlocklistService {
      * @return an empty publish if the user was blocked successfully, or an error for other cases.
      * Note that the method will throw if the user has been blocked
      */
-    public Mono<Void> blockUser(
+    public Mono<Void> authAndBlockUser(
             @NotNull Long requesterId,
             @NotNull Long groupId,
             @NotNull Long userIdToBlock,
@@ -100,6 +100,10 @@ public class GroupBlocklistService {
             Validator.notNull(userIdToBlock, "userIdToBlock");
         } catch (ResponseException e) {
             return Mono.error(e);
+        }
+        if (requesterId.equals(userIdToBlock)) {
+            return Mono.error(ResponseException
+                    .get(ResponseStatusCode.ILLEGAL_ARGUMENT, "Cannot block oneself"));
         }
         return groupMemberService.isOwnerOrManager(requesterId, groupId, false)
                 .flatMap(authenticated -> authenticated

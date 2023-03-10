@@ -318,7 +318,7 @@ public class GroupServiceController extends BaseServiceController {
         return clientRequest -> {
             CreateGroupBlockedUserRequest request = clientRequest.turmsRequest()
                     .getCreateGroupBlockedUserRequest();
-            return groupBlocklistService.blockUser(
+            return groupBlocklistService.authAndBlockUser(
                             clientRequest.userId(),
                             request.getGroupId(),
                             request.getUserId(),
