@@ -198,7 +198,7 @@ public class GroupJoinRequestService extends ExpirableEntityService<GroupJoinReq
     }
 
     /**
-     * @return return a empty publisher even if the request doesn't exist
+     * @return return an empty publisher even if the request doesn't exist
      */
     public Mono<Void> recallPendingGroupJoinRequest(@NotNull Long requesterId, @NotNull Long requestId) {
         try {
@@ -213,12 +213,15 @@ public class GroupJoinRequestService extends ExpirableEntityService<GroupJoinReq
         return queryRequesterIdAndStatusAndGroupId(requestId)
                 .flatMap(request -> {
                     RequestStatus status = request.getStatus();
+                    // If the requester is not authorized to the request,
+                    // it should not know the status of request from the error code.
+                    // So we check whether the requester is authorized first.
+                    if (!request.getRequesterId().equals(requesterId)) {
+                        return Mono.error(ResponseException.get(ResponseStatusCode.NOT_JOIN_REQUEST_SENDER_TO_RECALL_REQUEST));
+                    }
                     if (status != RequestStatus.PENDING) {
                         String reason = "The request is under the status " + status;
                         return Mono.error(ResponseException.get(ResponseStatusCode.RECALL_NOT_PENDING_GROUP_JOIN_REQUEST, reason));
-                    }
-                    if (!request.getRequesterId().equals(requesterId)) {
-                        return Mono.error(ResponseException.get(ResponseStatusCode.NOT_JOIN_REQUEST_SENDER_TO_RECALL_REQUEST));
                     }
                     return groupJoinRequestRepository.updateRequest(requestId, RequestStatus.CANCELED, requesterId)
                             .flatMap(result -> result.getModifiedCount() > 0
