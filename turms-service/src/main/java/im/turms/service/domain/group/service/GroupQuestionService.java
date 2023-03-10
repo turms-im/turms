@@ -41,6 +41,7 @@ import im.turms.server.common.infra.time.DateUtil;
 import im.turms.server.common.infra.validation.Validator;
 import im.turms.server.common.storage.mongo.IMongoCollectionInitializer;
 import im.turms.service.domain.common.validation.DataValidator;
+import im.turms.service.domain.group.bo.GroupJoinStrategy;
 import im.turms.service.domain.group.bo.GroupQuestionIdAndAnswer;
 import im.turms.service.domain.group.bo.NewGroupQuestion;
 import im.turms.service.domain.group.po.GroupJoinQuestion;
@@ -179,10 +180,11 @@ public class GroupQuestionService {
                                 : groupMemberService.isGroupMember(groupId, requesterId, false))
                         .flatMap(isGroupMember -> isGroupMember
                                 ? Mono.error(ResponseException.get(ResponseStatusCode.MEMBER_CANNOT_ANSWER_GROUP_QUESTION))
-                                : groupService.isGroupActiveAndNotDeleted(groupId))
-                        .flatMap(isActive -> isActive
+                                : groupService.queryGroupTypeIfActiveAndNotDeleted(groupId)
+                                .switchIfEmpty(Mono.error(ResponseException.get(ResponseStatusCode.ANSWER_QUESTION_OF_INACTIVE_GROUP))))
+                        .flatMap(type -> type.getJoinStrategy() == GroupJoinStrategy.QUESTION
                                 ? checkGroupQuestionAnswersAndCountScore(questionIdAndAnswerPairs, groupId)
-                                : Mono.error(ResponseException.get(ResponseStatusCode.ANSWER_QUESTION_OF_INACTIVE_GROUP)))
+                                : Mono.error(ResponseException.get(ResponseStatusCode.ANSWER_INACTIVE_QUESTION)))
                         .flatMap(idsAndScore -> groupService.queryGroupMinimumScore(groupId)
                                 .flatMap(minimumScore -> idsAndScore.getRight() >= minimumScore
                                         ? groupMemberService.addGroupMember(
@@ -220,8 +222,15 @@ public class GroupQuestionService {
         }
         return groupMemberService.isOwnerOrManager(requesterId, groupId, false)
                 .flatMap(authenticated -> authenticated
-                        ? createGroupJoinQuestions(groupId, questions)
-                        : Mono.error(ResponseException.get(ResponseStatusCode.NOT_OWNER_OR_MANAGER_TO_CREATE_GROUP_QUESTION)));
+                        ? groupService.queryGroupTypeIfActiveAndNotDeleted(groupId)
+                        .switchIfEmpty(Mono.error(ResponseException.get(ResponseStatusCode.CREATE_GROUP_QUESTION_FOR_INACTIVE_GROUP)))
+                        : Mono.error(ResponseException.get(ResponseStatusCode.NOT_OWNER_OR_MANAGER_TO_CREATE_GROUP_QUESTION)))
+                .flatMap(type -> switch (type.getJoinStrategy()) {
+                    case JOIN_REQUEST -> Mono.error(ResponseException.get(ResponseStatusCode.CREATE_GROUP_QUESTION_FOR_GROUP_USING_JOIN_REQUEST));
+                    case INVITATION -> Mono.error(ResponseException.get(ResponseStatusCode.CREATE_GROUP_QUESTION_FOR_GROUP_USING_INVITATION));
+                    case MEMBERSHIP_REQUEST -> Mono.error(ResponseException.get(ResponseStatusCode.CREATE_GROUP_QUESTION_FOR_GROUP_USING_MEMBERSHIP_REQUEST));
+                    case QUESTION -> createGroupJoinQuestions(groupId, questions);
+                });
     }
 
     public Mono<List<GroupJoinQuestion>> createGroupJoinQuestions(

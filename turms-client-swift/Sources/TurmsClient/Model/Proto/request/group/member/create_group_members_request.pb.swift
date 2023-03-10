@@ -39,7 +39,15 @@ public struct CreateGroupMembersRequest {
     /// Clears the value of `name`. Subsequent reads from it will return its default value.
     public mutating func clearName() { _name = nil }
 
-    public var role: GroupMemberRole = .owner
+    public var role: GroupMemberRole {
+        get { return _role ?? .owner }
+        set { _role = newValue }
+    }
+
+    /// Returns true if `role` has been explicitly set.
+    public var hasRole: Bool { return _role != nil }
+    /// Clears the value of `role`. Subsequent reads from it will return its default value.
+    public mutating func clearRole() { _role = nil }
 
     public var muteEndDate: Int64 {
         get { return _muteEndDate ?? 0 }
@@ -56,6 +64,7 @@ public struct CreateGroupMembersRequest {
     public init() {}
 
     fileprivate var _name: String?
+    fileprivate var _role: GroupMemberRole?
     fileprivate var _muteEndDate: Int64?
 }
 
@@ -86,7 +95,7 @@ extension CreateGroupMembersRequest: SwiftProtobuf.Message, SwiftProtobuf._Messa
             case 1: try try decoder.decodeSingularInt64Field(value: &groupID)
             case 2: try try decoder.decodeRepeatedInt64Field(value: &userIds)
             case 3: try try decoder.decodeSingularStringField(value: &_name)
-            case 4: try try decoder.decodeSingularEnumField(value: &role)
+            case 4: try try decoder.decodeSingularEnumField(value: &_role)
             case 5: try try decoder.decodeSingularInt64Field(value: &_muteEndDate)
             default: break
             }
@@ -107,9 +116,9 @@ extension CreateGroupMembersRequest: SwiftProtobuf.Message, SwiftProtobuf._Messa
         try { if let v = self._name {
             try visitor.visitSingularStringField(value: v, fieldNumber: 3)
         } }()
-        if role != .owner {
-            try visitor.visitSingularEnumField(value: role, fieldNumber: 4)
-        }
+        try { if let v = self._role {
+            try visitor.visitSingularEnumField(value: v, fieldNumber: 4)
+        } }()
         try { if let v = self._muteEndDate {
             try visitor.visitSingularInt64Field(value: v, fieldNumber: 5)
         } }()
@@ -120,7 +129,7 @@ extension CreateGroupMembersRequest: SwiftProtobuf.Message, SwiftProtobuf._Messa
         if lhs.groupID != rhs.groupID { return false }
         if lhs.userIds != rhs.userIds { return false }
         if lhs._name != rhs._name { return false }
-        if lhs.role != rhs.role { return false }
+        if lhs._role != rhs._role { return false }
         if lhs._muteEndDate != rhs._muteEndDate { return false }
         if lhs.unknownFields != rhs.unknownFields { return false }
         return true

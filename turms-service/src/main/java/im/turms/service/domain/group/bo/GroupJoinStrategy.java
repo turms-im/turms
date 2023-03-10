@@ -21,8 +21,21 @@ package im.turms.service.domain.group.bo;
  * @author James Chen
  */
 public enum GroupJoinStrategy {
-    ACCEPT_ANY_REQUEST,
-    DECLINE_ANY_REQUEST,
-    REQUIRE_ANSWER_QUESTION,
-    REQUIRE_APPROVAL
+    /**
+     * Add the requester as a group member when the server received a membership request
+     */
+    MEMBERSHIP_REQUEST,
+    /**
+     * A user can only join these groups via invitations
+     */
+    INVITATION,
+    /**
+     * A user is required to answer questions to join
+     */
+    QUESTION,
+    /**
+     * A user sends a join request to the server, and can only join the group
+     * automatically when the request is approved
+     */
+    JOIN_REQUEST
 }

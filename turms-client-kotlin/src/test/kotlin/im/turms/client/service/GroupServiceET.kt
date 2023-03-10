@@ -98,7 +98,7 @@ internal class GroupServiceET {
     @Timeout(5)
     fun createJoinRequest_shouldReturnJoinRequestId() = runBlocking {
         groupJoinRequestId = client.groupService.createJoinRequest(groupId, "content")
-            .data!!
+            .data
         assertNotNull(groupJoinRequestId)
     }
 

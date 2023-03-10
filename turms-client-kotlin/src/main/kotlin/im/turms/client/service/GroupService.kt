@@ -336,14 +336,14 @@ class GroupService(private val turmsClient: TurmsClient) {
                 if (it.hasGroupInvitationsWithVersion()) it.groupInvitationsWithVersion else null
             }
 
-    suspend fun createJoinRequest(groupId: Long, content: String): Response<Long?> = turmsClient.driver
+    suspend fun createJoinRequest(groupId: Long, content: String): Response<Long> = turmsClient.driver
         .send(
             CreateGroupJoinRequestRequest.newBuilder().apply {
                 this.groupId = groupId
                 this.content = content
             }
         ).toResponse {
-            if (it.hasLong()) it.long else null
+            it.getLongOrThrow()
         }
 
     suspend fun deleteJoinRequest(requestId: Long): Response<Unit> = turmsClient.driver
@@ -446,7 +446,7 @@ class GroupService(private val turmsClient: TurmsClient) {
     ): Response<Unit> {
         val info = turmsClient.userService.userInfo
             ?: throw ResponseException.from(ResponseStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED)
-        return addGroupMembers(groupId, setOf(info.userId), name);
+        return addGroupMembers(groupId, setOf(info.userId), name)
     }
 
     suspend fun quitGroup(

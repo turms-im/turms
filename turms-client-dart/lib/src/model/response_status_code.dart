@@ -134,20 +134,26 @@ class ResponseStatusCode {
   static const notOwnerOrManagerToDeleteGroupQuestion = 3301;
   static const notOwnerOrManagerToUpdateGroupQuestion = 3302;
   static const notOwnerOrManagerToAccessGroupQuestionAnswer = 3303;
-  static const groupQuestionAnswererHasBeenBlocked = 3304;
-  static const memberCannotAnswerGroupQuestion = 3305;
-  static const answerQuestionOfInactiveGroup = 3306;
+  static const createGroupQuestionForInactiveGroup = 3304;
+  static const createGroupQuestionForGroupUsingJoinRequest = 3305;
+  static const createGroupQuestionForGroupUsingInvitation = 3306;
+  static const createGroupQuestionForGroupUsingMembershipRequest = 3307;
+  static const groupQuestionAnswererHasBeenBlocked = 3308;
+  static const memberCannotAnswerGroupQuestion = 3309;
+  static const answerInactiveQuestion = 3310;
+  static const answerQuestionOfInactiveGroup = 3311;
 
   // Group - Member
-  static const addUserToInactiveGroup = 3400;
-  static const addNewMemberWithRoleHigherThanRequester = 3401;
-  static const addBlockedUserToGroup = 3402;
-  static const addBlockedUserToInactiveGroup = 3403;
-  static const notOwnerOrManagerToRemoveGroupMember = 3404;
-  static const notOwnerToRemoveGroupOwnerOrManager = 3405;
-  static const notOwnerToUpdateGroupMemberInfo = 3406;
-  static const notOwnerOrManagerToUpdateGroupMemberInfo = 3407;
-  static const notMemberToQueryMemberInfo = 3408;
+  static const addUserToGroupRequiringInvitation = 3400;
+  static const addUserToInactiveGroup = 3401;
+  static const addUserWithRoleHigherThanRequester = 3402;
+  static const addBlockedUserToGroup = 3403;
+  static const addBlockedUserToInactiveGroup = 3404;
+  static const notOwnerOrManagerToRemoveGroupMember = 3405;
+  static const notOwnerToRemoveGroupOwnerOrManager = 3406;
+  static const notOwnerToUpdateGroupMemberInfo = 3407;
+  static const notOwnerOrManagerToUpdateGroupMemberInfo = 3408;
+  static const notMemberToQueryMemberInfo = 3409;
 
   // Group - Blocklist
   static const notOwnerOrManagerToAddBlockedUser = 3500;
@@ -159,9 +165,10 @@ class ResponseStatusCode {
   static const notOwnerOrManagerToAccessGroupRequest = 3602;
   static const recallNotPendingGroupJoinRequest = 3603;
   static const sendJoinRequestToInactiveGroup = 3604;
-  static const sendJoinRequestToGroupDecliningRequest = 3605;
-  static const sendJoinRequestToGroupRequiringAnswerQuestion = 3606;
-  static const recallingGroupJoinRequestIsDisabled = 3607;
+  static const sendJoinRequestToGroupUsingMembershipRequest = 3605;
+  static const sendJoinRequestToGroupUsingInvitation = 3606;
+  static const sendJoinRequestToGroupUsingQuestion = 3607;
+  static const recallingGroupJoinRequestIsDisabled = 3608;
 
   // Group - Invitation
   static const groupInviterNotMember = 3700;
@@ -173,7 +180,7 @@ class ResponseStatusCode {
   static const notMemberToSendInvitation = 3706;
   static const inviteeHasBeenBlocked = 3707;
   static const recallingGroupInvitationIsDisabled = 3708;
-  static const redundantGroupInvitation = 3709;
+  static const sendGroupInvitationToGroupNotRequireInvitation = 3709;
   static const recallNotPendingGroupInvitation = 3710;
 
   // Conversation

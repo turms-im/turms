@@ -76,14 +76,21 @@ public interface CreateGroupMembersRequestOrBuilder extends
     getNameBytes();
 
     /**
-     * <code>.im.turms.proto.GroupMemberRole role = 4;</code>
+     * <code>optional .im.turms.proto.GroupMemberRole role = 4;</code>
+     *
+     * @return Whether the role field is set.
+     */
+    boolean hasRole();
+
+    /**
+     * <code>optional .im.turms.proto.GroupMemberRole role = 4;</code>
      *
      * @return The enum numeric value on the wire for role.
      */
     int getRoleValue();
 
     /**
-     * <code>.im.turms.proto.GroupMemberRole role = 4;</code>
+     * <code>optional .im.turms.proto.GroupMemberRole role = 4;</code>
      *
      * @return The role.
      */

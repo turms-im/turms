@@ -13,10 +13,10 @@
         "OWNER"
     ],
     "groupJoinStrategies": [
-        "ACCEPT_ANY_REQUEST",
-        "DECLINE_ANY_REQUEST",
-        "REQUIRE_ANSWER_QUESTION",
-        "REQUIRE_PERMISSION"
+        "MEMBERSHIP_REQUEST",
+        "INVITATION",
+        "QUESTION",
+        "JOIN_REQUEST"
     ],
     "groupUpdateStrategies": [
         "ALL",

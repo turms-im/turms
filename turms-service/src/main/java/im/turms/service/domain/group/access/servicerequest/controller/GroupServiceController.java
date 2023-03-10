@@ -613,7 +613,7 @@ public class GroupServiceController extends BaseServiceController {
                             clientRequest.userId(),
                             request.getGroupId(),
                             userIds,
-                            request.getRole(),
+                            request.hasRole() ? request.getRole() : null,
                             name,
                             muteEndDate,
                             null)

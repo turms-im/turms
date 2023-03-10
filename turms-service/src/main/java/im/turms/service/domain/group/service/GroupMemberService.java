@@ -49,6 +49,7 @@ import im.turms.server.common.storage.mongo.IMongoCollectionInitializer;
 import im.turms.service.domain.common.permission.ServicePermission;
 import im.turms.service.domain.common.validation.DataValidator;
 import im.turms.service.domain.group.bo.GroupInvitationStrategy;
+import im.turms.service.domain.group.bo.GroupJoinStrategy;
 import im.turms.service.domain.group.po.GroupMember;
 import im.turms.service.domain.group.repository.GroupMemberRepository;
 import im.turms.service.infra.proto.ProtoModelConvertor;
@@ -224,18 +225,32 @@ public class GroupMemberService {
                 .thenReturn(groupMembers);
     }
 
+    /**
+     * If the users for group members are already group members,
+     * the method will return an error
+     */
     public Mono<List<GroupMember>> authAndAddGroupMembers(
             @NotNull Long requesterId,
             @NotNull Long groupId,
             @NotNull Set<Long> userIds,
-            @NotNull @ValidGroupMemberRole GroupMemberRole groupMemberRole,
+            @Nullable @ValidGroupMemberRole GroupMemberRole groupMemberRole,
             @Nullable String name,
             @Nullable Date muteEndDate,
             @Nullable ClientSession session) {
+        boolean onlyRequester = CollectionUtil.containsExactly(userIds, requesterId);
         try {
             Validator.notNull(userIds, "userIds");
             // TODO: configurable
             Validator.maxSize(userIds, "userIds", 100);
+            if (onlyRequester) {
+                if (groupMemberRole == null) {
+                    groupMemberRole = GroupMemberRole.MEMBER;
+                } else if (groupMemberRole != GroupMemberRole.MEMBER) {
+                    return Mono.error(ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
+                            "The role of the new group member for the requester must be MEMBER"));
+                }
+            }
+            Validator.notNull(groupMemberRole, "groupMemberRole");
             DataValidator.validGroupMemberRole(groupMemberRole);
         } catch (ResponseException e) {
             return Mono.error(e);
@@ -244,15 +259,32 @@ public class GroupMemberService {
             return Mono.error(ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
                     "The role of the new member must not be OWNER"));
         }
-        return isAllowedToInviteOrAdd(groupId, requesterId, groupMemberRole)
-                .flatMap(permissionAndCode -> {
-                    ServicePermission permission = permissionAndCode.getLeft();
-                    ResponseStatusCode code = permission.code();
-                    if (code != ResponseStatusCode.OK) {
-                        return Mono.error(ResponseException.get(code, permission.reason()));
+        if (userIds.isEmpty()) {
+            return Mono.empty();
+        }
+        GroupMemberRole finalGroupMemberRole = groupMemberRole;
+        return groupService.queryGroupType(groupId)
+                .switchIfEmpty(Mono.error(ResponseException.get(ResponseStatusCode.ADD_USER_TO_INACTIVE_GROUP)))
+                .flatMap(groupType -> {
+                    if (onlyRequester && groupType.getJoinStrategy() == GroupJoinStrategy.MEMBERSHIP_REQUEST) {
+                        return Mono.just(ResponseStatusCode.OK);
                     }
-                    return groupService.isGroupActiveAndNotDeleted(groupId);
+                    if (groupType.getInvitationStrategy().requiresApproval()) {
+                        return Mono.just(ResponseStatusCode.ADD_USER_TO_GROUP_REQUIRING_INVITATION);
+                    }
+                    return queryGroupMemberRole(requesterId, groupId, false)
+                            .map(requesterRole -> {
+                                boolean isRequesterRoleHigherThanNewMemberRole =
+                                        requesterRole.getNumber() < finalGroupMemberRole.getNumber();
+                                return isRequesterRoleHigherThanNewMemberRole
+                                        ? ResponseStatusCode.OK
+                                        : ResponseStatusCode.ADD_USER_WITH_ROLE_HIGHER_THAN_REQUESTER;
+                            })
+                            .defaultIfEmpty(ResponseStatusCode.GROUP_INVITER_NOT_MEMBER);
                 })
+                .flatMap(code -> code == ResponseStatusCode.OK
+                        ? groupService.isGroupActiveAndNotDeleted(groupId)
+                        : Mono.error(ResponseException.get(code)))
                 .flatMap(isGroupActive -> {
                     if (!isGroupActive) {
                         return ResponseExceptionPublisherPool.addBlockedUserToInactiveGroup();
@@ -262,7 +294,7 @@ public class GroupMemberService {
                 })
                 .flatMap(blockedUserIds -> {
                     if (blockedUserIds.isEmpty()) {
-                        return addGroupMembers(groupId, userIds, groupMemberRole, name, new Date(), muteEndDate, session);
+                        return addGroupMembers(groupId, userIds, finalGroupMemberRole, name, new Date(), muteEndDate, session);
                     }
                     String ids = StringUtil.joinLatin1(", ", blockedUserIds);
                     return Mono.error(ResponseException.get(ResponseStatusCode.ADD_BLOCKED_USER_TO_GROUP, "The blocked user IDs: " + ids));
@@ -531,7 +563,7 @@ public class GroupMemberService {
                 .map(groupMember -> groupMember.getKey().getGroupId());
     }
 
-    public Mono<Pair<ServicePermission, GroupInvitationStrategy>> isAllowedToInviteOrAdd(
+    public Mono<Pair<ServicePermission, GroupInvitationStrategy>> isAllowedToInviteUser(
             @NotNull Long groupId,
             @NotNull Long inviterId,
             @Nullable @ValidGroupMemberRole GroupMemberRole newMemberRole) {
@@ -1102,6 +1134,7 @@ public class GroupMemberService {
                                                                       @Nullable GroupMemberRole newMemberRole,
                                                                       @NotNull GroupInvitationStrategy groupInvitationStrategy) {
         ResponseStatusCode isAllowToAddRole = switch (groupInvitationStrategy) {
+            case ALL, ALL_REQUIRING_APPROVAL -> ResponseStatusCode.OK;
             case OWNER, OWNER_REQUIRING_APPROVAL -> requesterRole == GroupMemberRole.OWNER
                     ? ResponseStatusCode.OK
                     : ResponseStatusCode.NOT_OWNER_TO_SEND_INVITATION;
@@ -1114,7 +1147,6 @@ public class GroupMemberService {
                     || requesterRole == GroupMemberRole.MEMBER
                     ? ResponseStatusCode.OK
                     : ResponseStatusCode.NOT_MEMBER_TO_SEND_INVITATION;
-            default -> ResponseStatusCode.OK;
         };
         if (isAllowToAddRole == ResponseStatusCode.OK) {
             boolean isRequesterRoleHigherThanNewMemberRole = newMemberRole == null
@@ -1122,7 +1154,7 @@ public class GroupMemberService {
             if (isRequesterRoleHigherThanNewMemberRole) {
                 return ResponseStatusCode.OK;
             }
-            return ResponseStatusCode.ADD_NEW_MEMBER_WITH_ROLE_HIGHER_THAN_REQUESTER;
+            return ResponseStatusCode.ADD_USER_WITH_ROLE_HIGHER_THAN_REQUESTER;
         }
         return isAllowToAddRole;
     }

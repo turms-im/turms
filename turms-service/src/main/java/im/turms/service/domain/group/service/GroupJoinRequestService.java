@@ -20,7 +20,6 @@ package im.turms.service.domain.group.service;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import im.turms.server.common.access.client.dto.ClientMessagePool;
-import im.turms.server.common.access.client.dto.constant.GroupMemberRole;
 import im.turms.server.common.access.client.dto.constant.RequestStatus;
 import im.turms.server.common.access.client.dto.model.group.GroupJoinRequestsWithVersion;
 import im.turms.server.common.access.common.ResponseStatusCode;
@@ -149,14 +148,13 @@ public class GroupJoinRequestService extends ExpirableEntityService<GroupJoinReq
                 .switchIfEmpty(Mono.error(ResponseException.get(ResponseStatusCode.SEND_JOIN_REQUEST_TO_INACTIVE_GROUP)))
                 .flatMap(groupTypeService::queryGroupType)
                 .flatMap(type -> switch (type.getJoinStrategy()) {
-                    case ACCEPT_ANY_REQUEST ->
-                            groupMemberService.addGroupMember(groupId, requesterId, GroupMemberRole.MEMBER, null, null, null, null)
-                                    .then(Mono.empty());
-                    case DECLINE_ANY_REQUEST ->
-                            Mono.error(ResponseException.get(ResponseStatusCode.SEND_JOIN_REQUEST_TO_GROUP_DECLINING_REQUEST));
-                    case REQUIRE_ANSWER_QUESTION ->
-                            Mono.error(ResponseException.get(ResponseStatusCode.SEND_JOIN_REQUEST_TO_GROUP_REQUIRING_ANSWER_QUESTION));
-                    case REQUIRE_APPROVAL -> {
+                    case MEMBERSHIP_REQUEST ->
+                            Mono.error(ResponseException.get(ResponseStatusCode.SEND_JOIN_REQUEST_TO_GROUP_USING_MEMBERSHIP_REQUEST));
+                    case INVITATION ->
+                            Mono.error(ResponseException.get(ResponseStatusCode.SEND_JOIN_REQUEST_TO_GROUP_USING_INVITATION));
+                    case QUESTION ->
+                            Mono.error(ResponseException.get(ResponseStatusCode.SEND_JOIN_REQUEST_TO_GROUP_USING_QUESTION));
+                    case JOIN_REQUEST -> {
                         long id = node.nextLargeGapId(ServiceType.GROUP_JOIN_REQUEST);
                         String finalContent = content == null ? "" : content;
                         GroupJoinRequest groupJoinRequest = new GroupJoinRequest(
@@ -252,8 +250,8 @@ public class GroupJoinRequestService extends ExpirableEntityService<GroupJoinReq
             return Mono.error(e);
         }
         boolean searchRequestsByGroupId = groupId != null;
-        Mono<Date> versionMono = searchRequestsByGroupId ?
-                groupMemberService.isOwnerOrManager(requesterId, groupId, false)
+        Mono<Date> versionMono = searchRequestsByGroupId
+                ? groupMemberService.isOwnerOrManager(requesterId, groupId, false)
                         .flatMap(authenticated -> {
                             if (!authenticated) {
                                 return Mono.error(ResponseException.get(ResponseStatusCode.NOT_OWNER_OR_MANAGER_TO_ACCESS_GROUP_REQUEST));

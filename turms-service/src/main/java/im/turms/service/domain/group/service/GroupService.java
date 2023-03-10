@@ -324,6 +324,16 @@ public class GroupService {
                         page, size));
     }
 
+    public Mono<GroupType> queryGroupTypeIfActiveAndNotDeleted(@NotNull Long groupId) {
+        try {
+            Validator.notNull(groupId, "groupId");
+        } catch (ResponseException e) {
+            return Mono.error(e);
+        }
+        return groupRepository.findTypeIdIfActiveAndNotDeleted(groupId)
+                .flatMap(groupTypeService::queryGroupType);
+    }
+
     public Mono<Long> queryGroupTypeId(@NotNull Long groupId) {
         try {
             Validator.notNull(groupId, "groupId");

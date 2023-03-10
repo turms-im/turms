@@ -167,7 +167,17 @@ public final class CreateGroupMembersRequest extends
     private int role_ = 0;
 
     /**
-     * <code>.im.turms.proto.GroupMemberRole role = 4;</code>
+     * <code>optional .im.turms.proto.GroupMemberRole role = 4;</code>
+     *
+     * @return Whether the role field is set.
+     */
+    @java.lang.Override
+    public boolean hasRole() {
+        return ((bitField0_ & 0x00000002) != 0);
+    }
+
+    /**
+     * <code>optional .im.turms.proto.GroupMemberRole role = 4;</code>
      *
      * @return The enum numeric value on the wire for role.
      */
@@ -177,7 +187,7 @@ public final class CreateGroupMembersRequest extends
     }
 
     /**
-     * <code>.im.turms.proto.GroupMemberRole role = 4;</code>
+     * <code>optional .im.turms.proto.GroupMemberRole role = 4;</code>
      *
      * @return The role.
      */
@@ -197,7 +207,7 @@ public final class CreateGroupMembersRequest extends
      */
     @java.lang.Override
     public boolean hasMuteEndDate() {
-        return ((bitField0_ & 0x00000002) != 0);
+        return ((bitField0_ & 0x00000004) != 0);
     }
 
     /**
@@ -243,10 +253,10 @@ public final class CreateGroupMembersRequest extends
         if (((bitField0_ & 0x00000001) != 0)) {
             com.google.protobuf.GeneratedMessageV3.writeString(output, 3, name_);
         }
-        if (role_ != im.turms.server.common.access.client.dto.constant.GroupMemberRole.OWNER.getNumber()) {
+        if (((bitField0_ & 0x00000002) != 0)) {
             output.writeEnum(4, role_);
         }
-        if (((bitField0_ & 0x00000002) != 0)) {
+        if (((bitField0_ & 0x00000004) != 0)) {
             output.writeInt64(5, muteEndDate_);
         }
         getUnknownFields().writeTo(output);
@@ -281,11 +291,11 @@ public final class CreateGroupMembersRequest extends
         if (((bitField0_ & 0x00000001) != 0)) {
             size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, name_);
         }
-        if (role_ != im.turms.server.common.access.client.dto.constant.GroupMemberRole.OWNER.getNumber()) {
+        if (((bitField0_ & 0x00000002) != 0)) {
             size += com.google.protobuf.CodedOutputStream
                     .computeEnumSize(4, role_);
         }
-        if (((bitField0_ & 0x00000002) != 0)) {
+        if (((bitField0_ & 0x00000004) != 0)) {
             size += com.google.protobuf.CodedOutputStream
                     .computeInt64Size(5, muteEndDate_);
         }
@@ -320,8 +330,13 @@ public final class CreateGroupMembersRequest extends
                 return false;
             }
         }
-        if (role_ != other.role_) {
+        if (hasRole() != other.hasRole()) {
             return false;
+        }
+        if (hasRole()) {
+            if (role_ != other.role_) {
+                return false;
+            }
         }
         if (hasMuteEndDate() != other.hasMuteEndDate()) {
             return false;
@@ -353,8 +368,10 @@ public final class CreateGroupMembersRequest extends
             hash = (37 * hash) + NAME_FIELD_NUMBER;
             hash = (53 * hash) + getName().hashCode();
         }
-        hash = (37 * hash) + ROLE_FIELD_NUMBER;
-        hash = (53 * hash) + role_;
+        if (hasRole()) {
+            hash = (37 * hash) + ROLE_FIELD_NUMBER;
+            hash = (53 * hash) + role_;
+        }
         if (hasMuteEndDate()) {
             hash = (37 * hash) + MUTE_END_DATE_FIELD_NUMBER;
             hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
@@ -565,10 +582,11 @@ public final class CreateGroupMembersRequest extends
             }
             if (((from_bitField0_ & 0x00000008) != 0)) {
                 result.role_ = role_;
+                to_bitField0_ |= 0x00000002;
             }
             if (((from_bitField0_ & 0x00000010) != 0)) {
                 result.muteEndDate_ = muteEndDate_;
-                to_bitField0_ |= 0x00000002;
+                to_bitField0_ |= 0x00000004;
             }
             result.bitField0_ |= to_bitField0_;
         }
@@ -605,8 +623,8 @@ public final class CreateGroupMembersRequest extends
                 bitField0_ |= 0x00000004;
                 onChanged();
             }
-            if (other.role_ != 0) {
-                setRoleValue(other.getRoleValue());
+            if (other.hasRole()) {
+                setRole(other.getRole());
             }
             if (other.hasMuteEndDate()) {
                 setMuteEndDate(other.getMuteEndDate());
@@ -914,7 +932,17 @@ public final class CreateGroupMembersRequest extends
         private int role_ = 0;
 
         /**
-         * <code>.im.turms.proto.GroupMemberRole role = 4;</code>
+         * <code>optional .im.turms.proto.GroupMemberRole role = 4;</code>
+         *
+         * @return Whether the role field is set.
+         */
+        @java.lang.Override
+        public boolean hasRole() {
+            return ((bitField0_ & 0x00000008) != 0);
+        }
+
+        /**
+         * <code>optional .im.turms.proto.GroupMemberRole role = 4;</code>
          *
          * @return The enum numeric value on the wire for role.
          */
@@ -924,7 +952,7 @@ public final class CreateGroupMembersRequest extends
         }
 
         /**
-         * <code>.im.turms.proto.GroupMemberRole role = 4;</code>
+         * <code>optional .im.turms.proto.GroupMemberRole role = 4;</code>
          *
          * @param value The enum numeric value on the wire for role to set.
          * @return This builder for chaining.
@@ -937,7 +965,7 @@ public final class CreateGroupMembersRequest extends
         }
 
         /**
-         * <code>.im.turms.proto.GroupMemberRole role = 4;</code>
+         * <code>optional .im.turms.proto.GroupMemberRole role = 4;</code>
          *
          * @return The role.
          */
@@ -948,7 +976,7 @@ public final class CreateGroupMembersRequest extends
         }
 
         /**
-         * <code>.im.turms.proto.GroupMemberRole role = 4;</code>
+         * <code>optional .im.turms.proto.GroupMemberRole role = 4;</code>
          *
          * @param value The role to set.
          * @return This builder for chaining.
@@ -964,7 +992,7 @@ public final class CreateGroupMembersRequest extends
         }
 
         /**
-         * <code>.im.turms.proto.GroupMemberRole role = 4;</code>
+         * <code>optional .im.turms.proto.GroupMemberRole role = 4;</code>
          *
          * @return This builder for chaining.
          */

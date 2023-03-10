@@ -266,7 +266,7 @@ public final class MongoFakingManager {
                 "test",
                 1000,
                 GroupInvitationStrategy.ALL,
-                GroupJoinStrategy.ACCEPT_ANY_REQUEST,
+                GroupJoinStrategy.MEMBERSHIP_REQUEST,
                 GroupUpdateStrategy.OWNER_MANAGER,
                 GroupUpdateStrategy.OWNER_MANAGER_MEMBER,
                 true,

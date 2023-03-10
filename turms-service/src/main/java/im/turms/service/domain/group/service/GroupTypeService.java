@@ -82,7 +82,7 @@ public class GroupTypeService {
                         DEFAULT_GROUP_TYPE_NAME,
                         500,
                         GroupInvitationStrategy.OWNER_MANAGER_MEMBER_REQUIRING_APPROVAL,
-                        GroupJoinStrategy.DECLINE_ANY_REQUEST,
+                        GroupJoinStrategy.INVITATION,
                         GroupUpdateStrategy.OWNER_MANAGER,
                         GroupUpdateStrategy.OWNER_MANAGER,
                         false,

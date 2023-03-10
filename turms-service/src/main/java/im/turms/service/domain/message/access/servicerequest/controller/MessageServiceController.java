@@ -297,10 +297,10 @@ public class MessageServiceController extends BaseServiceController {
                                         .upsertPrivateConversationReadDate(userId, messages.get(0).getTargetId(), new Date());
                                 mono.subscribe(null, t -> {
                                     Message message = messages.get(0);
-                                    if (areGroupMessages)
+                                    if (areGroupMessages) {
                                         LOGGER.error("Caught an error while upserting the group conversation read date: {}",
                                                 message.groupId(), t);
-                                    else {
+                                    } else {
                                         LOGGER.error("Caught an error while upserting the private conversation read date: {sender={}, recipient={}}",
                                                 message.getSenderId(), message.getTargetId(), t);
                                     }

@@ -221,7 +221,17 @@ public final class CreateGroupMembersRequest extends
     private int role_;
 
     /**
-     * <code>.im.turms.proto.GroupMemberRole role = 4;</code>
+     * <code>optional .im.turms.proto.GroupMemberRole role = 4;</code>
+     *
+     * @return Whether the role field is set.
+     */
+    @java.lang.Override
+    public boolean hasRole() {
+        return ((bitField0_ & 0x00000002) != 0);
+    }
+
+    /**
+     * <code>optional .im.turms.proto.GroupMemberRole role = 4;</code>
      *
      * @return The enum numeric value on the wire for role.
      */
@@ -231,7 +241,7 @@ public final class CreateGroupMembersRequest extends
     }
 
     /**
-     * <code>.im.turms.proto.GroupMemberRole role = 4;</code>
+     * <code>optional .im.turms.proto.GroupMemberRole role = 4;</code>
      *
      * @return The role.
      */
@@ -242,29 +252,30 @@ public final class CreateGroupMembersRequest extends
     }
 
     /**
-     * <code>.im.turms.proto.GroupMemberRole role = 4;</code>
+     * <code>optional .im.turms.proto.GroupMemberRole role = 4;</code>
      *
      * @param value The enum numeric value on the wire for role to set.
      */
     private void setRoleValue(int value) {
+        bitField0_ |= 0x00000002;
         role_ = value;
     }
 
     /**
-     * <code>.im.turms.proto.GroupMemberRole role = 4;</code>
+     * <code>optional .im.turms.proto.GroupMemberRole role = 4;</code>
      *
      * @param value The role to set.
      */
     private void setRole(im.turms.client.model.proto.constant.GroupMemberRole value) {
         role_ = value.getNumber();
-
+        bitField0_ |= 0x00000002;
     }
 
     /**
-     * <code>.im.turms.proto.GroupMemberRole role = 4;</code>
+     * <code>optional .im.turms.proto.GroupMemberRole role = 4;</code>
      */
     private void clearRole() {
-
+        bitField0_ &= ~0x00000002;
         role_ = 0;
     }
 
@@ -278,7 +289,7 @@ public final class CreateGroupMembersRequest extends
      */
     @java.lang.Override
     public boolean hasMuteEndDate() {
-        return ((bitField0_ & 0x00000002) != 0);
+        return ((bitField0_ & 0x00000004) != 0);
     }
 
     /**
@@ -297,7 +308,7 @@ public final class CreateGroupMembersRequest extends
      * @param value The muteEndDate to set.
      */
     private void setMuteEndDate(long value) {
-        bitField0_ |= 0x00000002;
+        bitField0_ |= 0x00000004;
         muteEndDate_ = value;
     }
 
@@ -305,7 +316,7 @@ public final class CreateGroupMembersRequest extends
      * <code>optional int64 mute_end_date = 5;</code>
      */
     private void clearMuteEndDate() {
-        bitField0_ &= ~0x00000002;
+        bitField0_ &= ~0x00000004;
         muteEndDate_ = 0L;
     }
 
@@ -395,11 +406,11 @@ public final class CreateGroupMembersRequest extends
     }
 
     public static Builder newBuilder() {
-        return (Builder) DEFAULT_INSTANCE.createBuilder();
+        return DEFAULT_INSTANCE.createBuilder();
     }
 
     public static Builder newBuilder(im.turms.client.model.proto.request.group.member.CreateGroupMembersRequest prototype) {
-        return (Builder) DEFAULT_INSTANCE.createBuilder(prototype);
+        return DEFAULT_INSTANCE.createBuilder(prototype);
     }
 
     /**
@@ -600,7 +611,17 @@ public final class CreateGroupMembersRequest extends
         }
 
         /**
-         * <code>.im.turms.proto.GroupMemberRole role = 4;</code>
+         * <code>optional .im.turms.proto.GroupMemberRole role = 4;</code>
+         *
+         * @return Whether the role field is set.
+         */
+        @java.lang.Override
+        public boolean hasRole() {
+            return instance.hasRole();
+        }
+
+        /**
+         * <code>optional .im.turms.proto.GroupMemberRole role = 4;</code>
          *
          * @return The enum numeric value on the wire for role.
          */
@@ -610,7 +631,7 @@ public final class CreateGroupMembersRequest extends
         }
 
         /**
-         * <code>.im.turms.proto.GroupMemberRole role = 4;</code>
+         * <code>optional .im.turms.proto.GroupMemberRole role = 4;</code>
          *
          * @param value The role to set.
          * @return This builder for chaining.
@@ -622,7 +643,7 @@ public final class CreateGroupMembersRequest extends
         }
 
         /**
-         * <code>.im.turms.proto.GroupMemberRole role = 4;</code>
+         * <code>optional .im.turms.proto.GroupMemberRole role = 4;</code>
          *
          * @return The role.
          */
@@ -632,7 +653,7 @@ public final class CreateGroupMembersRequest extends
         }
 
         /**
-         * <code>.im.turms.proto.GroupMemberRole role = 4;</code>
+         * <code>optional .im.turms.proto.GroupMemberRole role = 4;</code>
          *
          * @param value The enum numeric value on the wire for role to set.
          * @return This builder for chaining.
@@ -644,7 +665,7 @@ public final class CreateGroupMembersRequest extends
         }
 
         /**
-         * <code>.im.turms.proto.GroupMemberRole role = 4;</code>
+         * <code>optional .im.turms.proto.GroupMemberRole role = 4;</code>
          *
          * @return This builder for chaining.
          */
@@ -723,7 +744,7 @@ public final class CreateGroupMembersRequest extends
                 };
                 java.lang.String info =
                         "\u0000\u0005\u0000\u0001\u0001\u0005\u0005\u0000\u0001\u0000\u0001\u0002\u0002%\u0003" +
-                        "\u1208\u0000\u0004\f\u0005\u1002\u0001";
+                        "\u1208\u0000\u0004\u100c\u0001\u0005\u1002\u0002";
                 return newMessageInfo(DEFAULT_INSTANCE, info, objects);
             }
             // fall through

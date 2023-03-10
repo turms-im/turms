@@ -134,13 +134,19 @@ public enum ResponseStatusCode: Int {
     case notOwnerOrManagerToDeleteGroupQuestion
     case notOwnerOrManagerToUpdateGroupQuestion
     case notOwnerOrManagerToAccessGroupQuestionAnswer
+    case createGroupQuestionForInactiveGroup
+    case createGroupQuestionForGroupUsingJoinRequest
+    case createGroupQuestionForGroupUsingInvitation
+    case createGroupQuestionForGroupUsingMembershipRequest
     case groupQuestionAnswererHasBeenBlocked
     case memberCannotAnswerGroupQuestion
+    case answerInactiveQuestion
     case answerQuestionOfInactiveGroup
 
     // Group - Member
-    case addUserToInactiveGroup = 3400
-    case addNewMemberWithRoleHigherThanRequester
+    case addUserToGroupRequiringInvitation = 3400
+    case addUserToInactiveGroup
+    case addUserWithRoleHigherThanRequester
     case addBlockedUserToGroup
     case addBlockedUserToInactiveGroup
     case notOwnerOrManagerToRemoveGroupMember
@@ -159,8 +165,9 @@ public enum ResponseStatusCode: Int {
     case notOwnerOrManagerToAccessGroupRequest
     case recallNotPendingGroupJoinRequest
     case sendJoinRequestToInactiveGroup
-    case sendJoinRequestToGroupDecliningRequest
-    case sendJoinRequestToGroupRequiringAnswerQuestion
+    case sendJoinRequestToGroupUsingMembershipRequest
+    case sendJoinRequestToGroupUsingInvitation
+    case sendJoinRequestToGroupUsingQuestion
     case recallingGroupJoinRequestIsDisabled
 
     // Group - Invitation
@@ -173,7 +180,7 @@ public enum ResponseStatusCode: Int {
     case notMemberToSendInvitation
     case inviteeHasBeenBlocked
     case recallingGroupInvitationIsDisabled
-    case redundantGroupInvitation
+    case sendGroupInvitationToGroupNotRequireInvitation
     case recallNotPendingGroupInvitation
 
     // Conversation

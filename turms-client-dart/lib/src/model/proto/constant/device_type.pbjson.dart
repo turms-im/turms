@@ -10,15 +10,15 @@ import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
 
 @$core.Deprecated('Use deviceTypeDescriptor instead')
-const DeviceType$json = {
+const DeviceType$json = const {
   '1': 'DeviceType',
-  '2': [
-    {'1': 'DESKTOP', '2': 0},
-    {'1': 'BROWSER', '2': 1},
-    {'1': 'IOS', '2': 2},
-    {'1': 'ANDROID', '2': 3},
-    {'1': 'OTHERS', '2': 4},
-    {'1': 'UNKNOWN', '2': 5},
+  '2': const [
+    const {'1': 'DESKTOP', '2': 0},
+    const {'1': 'BROWSER', '2': 1},
+    const {'1': 'IOS', '2': 2},
+    const {'1': 'ANDROID', '2': 3},
+    const {'1': 'OTHERS', '2': 4},
+    const {'1': 'UNKNOWN', '2': 5},
   ],
 };
 

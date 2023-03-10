@@ -404,7 +404,7 @@ public class GroupService {
             }
     }
 
-    public func createJoinRequest(groupId: Int64, content: String) -> Promise<Response<Int64?>> {
+    public func createJoinRequest(groupId: Int64, content: String) -> Promise<Response<Int64>> {
         return turmsClient.driver
             .send {
                 $0.createGroupJoinRequestRequest = .with {
@@ -414,7 +414,7 @@ public class GroupService {
             }
             .map {
                 try $0.toResponse {
-                    try $0.kind?.getKindData(Int64.self)
+                    try $0.getLongOrThrow()
                 }
             }
     }

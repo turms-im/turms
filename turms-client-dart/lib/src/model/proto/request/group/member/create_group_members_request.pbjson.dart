@@ -30,20 +30,23 @@ const CreateGroupMembersRequest$json = const {
       '4': 1,
       '5': 14,
       '6': '.im.turms.proto.GroupMemberRole',
-      '10': 'role'
+      '9': 1,
+      '10': 'role',
+      '17': true
     },
     const {
       '1': 'mute_end_date',
       '3': 5,
       '4': 1,
       '5': 3,
-      '9': 1,
+      '9': 2,
       '10': 'muteEndDate',
       '17': true
     },
   ],
   '8': const [
     const {'1': '_name'},
+    const {'1': '_role'},
     const {'1': '_mute_end_date'},
   ],
 };
@@ -51,4 +54,4 @@ const CreateGroupMembersRequest$json = const {
 /// Descriptor for `CreateGroupMembersRequest`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List createGroupMembersRequestDescriptor =
     $convert.base64Decode(
-        'ChlDcmVhdGVHcm91cE1lbWJlcnNSZXF1ZXN0EhkKCGdyb3VwX2lkGAEgASgDUgdncm91cElkEhkKCHVzZXJfaWRzGAIgAygDUgd1c2VySWRzEhcKBG5hbWUYAyABKAlIAFIEbmFtZYgBARIzCgRyb2xlGAQgASgOMh8uaW0udHVybXMucHJvdG8uR3JvdXBNZW1iZXJSb2xlUgRyb2xlEicKDW11dGVfZW5kX2RhdGUYBSABKANIAVILbXV0ZUVuZERhdGWIAQFCBwoFX25hbWVCEAoOX211dGVfZW5kX2RhdGU=');
+        'ChlDcmVhdGVHcm91cE1lbWJlcnNSZXF1ZXN0EhkKCGdyb3VwX2lkGAEgASgDUgdncm91cElkEhkKCHVzZXJfaWRzGAIgAygDUgd1c2VySWRzEhcKBG5hbWUYAyABKAlIAFIEbmFtZYgBARI4CgRyb2xlGAQgASgOMh8uaW0udHVybXMucHJvdG8uR3JvdXBNZW1iZXJSb2xlSAFSBHJvbGWIAQESJwoNbXV0ZV9lbmRfZGF0ZRgFIAEoA0gCUgttdXRlRW5kRGF0ZYgBAUIHCgVfbmFtZUIHCgVfcm9sZUIQCg5fbXV0ZV9lbmRfZGF0ZQ==');

@@ -455,7 +455,7 @@ export default class GroupService {
     }: {
         groupId: string,
         content: string
-    }): Promise<Response<string | undefined>> {
+    }): Promise<Response<string>> {
         if (Validator.isFalsy(groupId)) {
             return ResponseError.notFalsyPromise('groupId');
         }
@@ -467,7 +467,7 @@ export default class GroupService {
                 groupId,
                 content
             }
-        }).then(n => Response.fromNotification(n, data => data.long));
+        }).then(n => Response.fromNotification(n, data => NotificationUtil.getLongOrThrow(data)));
     }
 
     deleteJoinRequest({

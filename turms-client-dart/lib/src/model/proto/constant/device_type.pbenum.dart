@@ -10,18 +10,36 @@ import 'dart:core' as $core;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 class DeviceType extends $pb.ProtobufEnum {
-  static const DeviceType DESKTOP = DeviceType._(0,
-      $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'DESKTOP');
-  static const DeviceType BROWSER = DeviceType._(1,
-      $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'BROWSER');
+  static const DeviceType DESKTOP = DeviceType._(
+      0,
+      const $core.bool.fromEnvironment('protobuf.omit_enum_names')
+          ? ''
+          : 'DESKTOP');
+  static const DeviceType BROWSER = DeviceType._(
+      1,
+      const $core.bool.fromEnvironment('protobuf.omit_enum_names')
+          ? ''
+          : 'BROWSER');
   static const DeviceType IOS = DeviceType._(
-      2, $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'IOS');
-  static const DeviceType ANDROID = DeviceType._(3,
-      $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'ANDROID');
-  static const DeviceType OTHERS = DeviceType._(4,
-      $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'OTHERS');
-  static const DeviceType UNKNOWN = DeviceType._(5,
-      $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'UNKNOWN');
+      2,
+      const $core.bool.fromEnvironment('protobuf.omit_enum_names')
+          ? ''
+          : 'IOS');
+  static const DeviceType ANDROID = DeviceType._(
+      3,
+      const $core.bool.fromEnvironment('protobuf.omit_enum_names')
+          ? ''
+          : 'ANDROID');
+  static const DeviceType OTHERS = DeviceType._(
+      4,
+      const $core.bool.fromEnvironment('protobuf.omit_enum_names')
+          ? ''
+          : 'OTHERS');
+  static const DeviceType UNKNOWN = DeviceType._(
+      5,
+      const $core.bool.fromEnvironment('protobuf.omit_enum_names')
+          ? ''
+          : 'UNKNOWN');
 
   static const $core.List<DeviceType> values = <DeviceType>[
     DESKTOP,

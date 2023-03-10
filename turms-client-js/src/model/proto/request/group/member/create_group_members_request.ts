@@ -9,12 +9,12 @@ export interface CreateGroupMembersRequest {
   groupId: string;
   userIds: string[];
   name?: string | undefined;
-  role: GroupMemberRole;
+  role?: GroupMemberRole | undefined;
   muteEndDate?: string | undefined;
 }
 
 function createBaseCreateGroupMembersRequest(): CreateGroupMembersRequest {
-  return { groupId: "0", userIds: [], name: undefined, role: 0, muteEndDate: undefined };
+  return { groupId: "0", userIds: [], name: undefined, role: undefined, muteEndDate: undefined };
 }
 
 export const CreateGroupMembersRequest = {
@@ -30,7 +30,7 @@ export const CreateGroupMembersRequest = {
     if (message.name !== undefined) {
       writer.uint32(26).string(message.name);
     }
-    if (message.role !== 0) {
+    if (message.role !== undefined) {
       writer.uint32(32).int32(message.role);
     }
     if (message.muteEndDate !== undefined) {

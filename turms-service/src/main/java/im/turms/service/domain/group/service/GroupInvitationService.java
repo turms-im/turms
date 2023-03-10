@@ -141,7 +141,7 @@ public class GroupInvitationService extends ExpirableEntityService<GroupInvitati
             return Mono.error(e);
         }
         return groupMemberService
-                .isAllowedToInviteOrAdd(groupId, inviterId, null)
+                .isAllowedToInviteUser(groupId, inviterId, null)
                 .flatMap(pair -> {
                     ServicePermission permission = pair.getLeft();
                     ResponseStatusCode statusCode = permission.code();
@@ -156,8 +156,8 @@ public class GroupInvitationService extends ExpirableEntityService<GroupInvitati
                                 }
                                 GroupInvitationStrategy strategy = pair.getRight();
                                 if (!strategy.requiresApproval()) {
-                                    return Mono.error(ResponseException.get(ResponseStatusCode.REDUNDANT_GROUP_INVITATION,
-                                            "The invitation is redundant under the strategy " + strategy));
+                                    return Mono.error(ResponseException
+                                            .get(ResponseStatusCode.SEND_GROUP_INVITATION_TO_GROUP_NOT_REQUIRE_INVITATION));
                                 }
                                 String finalContent = content == null ? "" : content;
                                 return createGroupInvitation(null, groupId, inviterId, inviteeId, finalContent,

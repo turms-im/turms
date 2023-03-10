@@ -249,11 +249,10 @@ public class OutboundMessageService {
         }
         List<Mono<Boolean>> monos = new ArrayList<>(size);
         messageData.retain(size);
-        for (String nodeId : nodeIds) {
-            Set<Long> recipientIds = nodeIdToRecipientIds.get(nodeId);
+        for (Map.Entry<String, Set<Long>> entry : nodeIdToRecipientIds.entrySet()) {
             monos.add(forwardClientMessageToNode(messageData,
-                    nodeId,
-                    recipientIds,
+                    entry.getKey(),
+                    entry.getValue(),
                     excludedUserSessionIds,
                     null));
         }

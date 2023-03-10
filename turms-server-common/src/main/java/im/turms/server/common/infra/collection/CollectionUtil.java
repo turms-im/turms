@@ -221,6 +221,10 @@ public final class CollectionUtil {
         return true;
     }
 
+    public static <T> boolean containsExactly(Collection<T> collection, T value) {
+        return collection.size() == 1 && collection.contains(value);
+    }
+
     private static boolean areTwoObjectsLooselyEqual(@Nullable Object actualValue, @Nullable Object expectedValue) {
         if (actualValue == null) {
             return null == expectedValue;

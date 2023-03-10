@@ -21,20 +21,27 @@ package im.turms.service.domain.group.bo;
  * @author James Chen
  */
 public enum GroupInvitationStrategy {
-    ALL_REQUIRING_APPROVAL,
-    OWNER_MANAGER_MEMBER_REQUIRING_APPROVAL,
-    OWNER_MANAGER_REQUIRING_APPROVAL,
-    OWNER_REQUIRING_APPROVAL,
-    ALL,
-    OWNER_MANAGER_MEMBER,
-    OWNER_MANAGER,
-    OWNER;
+    ALL_REQUIRING_APPROVAL(true),
+    OWNER_MANAGER_MEMBER_REQUIRING_APPROVAL(true),
+    OWNER_MANAGER_REQUIRING_APPROVAL(true),
+    OWNER_REQUIRING_APPROVAL(true),
+    ALL(false),
+    OWNER_MANAGER_MEMBER(false),
+    OWNER_MANAGER(false),
+    OWNER(false);
 
+    private final boolean requiresApproval;
+
+    GroupInvitationStrategy(boolean requiresApproval) {
+        this.requiresApproval = requiresApproval;
+    }
+
+    /**
+     * If requiring approval, the group admin needs to send an invitation to the invitee.
+     * Otherwise, the group admin can add any user to the group without their approval.
+     */
     public boolean requiresApproval() {
-        return this == GroupInvitationStrategy.ALL_REQUIRING_APPROVAL
-                || this == GroupInvitationStrategy.OWNER_REQUIRING_APPROVAL
-                || this == GroupInvitationStrategy.OWNER_MANAGER_REQUIRING_APPROVAL
-                || this == GroupInvitationStrategy.OWNER_MANAGER_MEMBER_REQUIRING_APPROVAL;
+        return requiresApproval;
     }
 
 }
