@@ -544,6 +544,13 @@ public class GroupService {
             }
     }
 
+    public func joinGroup(groupId: Int64, name: String? = nil) -> Promise<Response<Void>> {
+        guard let info = turmsClient.userService.userInfo else {
+            return Promise(error: ResponseError(code: .clientSessionHasBeenClosed))
+        }
+        return addGroupMembers(groupId: groupId, userIds: [info.userId], name: name)
+    }
+
     public func quitGroup(groupId: Int64, successorId: Int64? = nil, quitAfterTransfer: Bool? = nil) -> Promise<Response<Void>> {
         return turmsClient.driver
             .send {

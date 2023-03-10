@@ -440,6 +440,15 @@ class GroupService(private val turmsClient: TurmsClient) {
                 .toResponse()
         }
 
+    suspend fun joinGroup(
+        groupId: Long,
+        name: String? = null
+    ): Response<Unit> {
+        val info = turmsClient.userService.userInfo
+            ?: throw ResponseException.from(ResponseStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED)
+        return addGroupMembers(groupId, setOf(info.userId), name);
+    }
+
     suspend fun quitGroup(
         groupId: Long,
         successorId: Long? = null,

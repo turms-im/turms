@@ -278,6 +278,15 @@ class GroupService {
     return n.toNullResponse();
   }
 
+  Future<Response<void>> joinGroup(Int64 groupId, {String? name}) async {
+    final info = _turmsClient.userService.userInfo;
+    if (info == null) {
+      throw ResponseException(
+          code: ResponseStatusCode.clientSessionHasBeenClosed);
+    }
+    return addGroupMembers(groupId, {info.userId}, name: name);
+  }
+
   Future<Response<void>> quitGroup(Int64 groupId,
       {Int64? successorId, bool? quitAfterTransfer}) async {
     final n = await _turmsClient.driver.send(DeleteGroupMembersRequest(

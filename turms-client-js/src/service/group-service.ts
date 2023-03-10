@@ -600,6 +600,26 @@ export default class GroupService {
         }).then(n => Response.fromNotification(n));
     }
 
+    joinGroup({
+        groupId
+    }: {
+        groupId: string
+    }): Promise<Response<void>> {
+        if (Validator.isFalsy(groupId)) {
+            return ResponseError.notFalsyPromise('groupId');
+        }
+        const userId = this._turmsClient.userService.userInfo.userId;
+        if (userId == null) {
+            return Promise.reject(ResponseError.from({
+                code: ResponseStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED
+            }));
+        }
+        return this.addGroupMembers({
+            groupId,
+            userIds: [userId]
+        });
+    }
+
     quitGroup({
         groupId,
         successorId,
@@ -612,10 +632,16 @@ export default class GroupService {
         if (Validator.isFalsy(groupId)) {
             return ResponseError.notFalsyPromise('groupId');
         }
+        const userId = this._turmsClient.userService.userInfo.userId;
+        if (userId == null) {
+            return Promise.reject(ResponseError.from({
+                code: ResponseStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED
+            }));
+        }
         return this._turmsClient.driver.send({
             deleteGroupMembersRequest: {
                 groupId,
-                memberIds: [this._turmsClient.userService.userInfo.userId],
+                memberIds: [userId],
                 successorId,
                 quitAfterTransfer
             }
