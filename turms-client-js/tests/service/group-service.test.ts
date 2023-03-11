@@ -194,8 +194,8 @@ describe('Query', () => {
         const groupJoinRequestsWithVersion = response.data;
         expect(groupJoinRequestsWithVersion.groupJoinRequests[0].id).toEqual(groupJoinRequestId);
     });
-    it('queryGroupJoinQuestionsRequest_shouldEqualNewGroupQuestionId', async () => {
-        const response = await turmsClient.groupService.queryGroupJoinQuestionsRequest({
+    it('queryGroupJoinQuestions_shouldEqualNewGroupQuestionId', async () => {
+        const response = await turmsClient.groupService.queryGroupJoinQuestions({
             groupId,
             withAnswers: true
         });

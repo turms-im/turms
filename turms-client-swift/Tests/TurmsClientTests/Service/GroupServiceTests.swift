@@ -77,7 +77,7 @@ class GroupServiceTests: XCTestCase {
         assertCompleted("queryJoinRequests_shouldEqualNewJoinRequestId", service.queryJoinRequests(groupId: groupId!).done {
             XCTAssertEqual(groupJoinRequestId, $0.data!.groupJoinRequests[0].id)
         })
-        assertCompleted("queryGroupJoinQuestionsRequest_shouldEqualNewGroupQuestionId", service.queryGroupJoinQuestionsRequest(groupId: groupId!, withAnswers: true).done {
+        assertCompleted("queryGroupJoinQuestions_shouldEqualNewGroupQuestionId", service.queryGroupJoinQuestions(groupId: groupId!, withAnswers: true).done {
             XCTAssertEqual(groupQuestionId, $0.data!.groupJoinQuestions[0].id)
         })
         assertCompleted("queryGroupMembers_shouldEqualNewMemberId", service.queryGroupMembers(groupId: groupId!, withStatus: true).done {

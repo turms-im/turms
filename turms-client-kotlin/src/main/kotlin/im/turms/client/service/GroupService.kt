@@ -380,7 +380,7 @@ class GroupService(private val turmsClient: TurmsClient) {
     /**
      * Note: Only the owner and managers have the right to fetch questions with answers
      */
-    suspend fun queryGroupJoinQuestionsRequest(
+    suspend fun queryGroupJoinQuestions(
         groupId: Long,
         withAnswers: Boolean,
         lastUpdatedDate: Date? = null

@@ -280,8 +280,8 @@ internal class GroupServiceET {
     @Test
     @Order(ORDER_MIDDLE_PRIORITY)
     @Timeout(5)
-    fun queryGroupJoinQuestionsRequest_shouldEqualNewGroupQuestionId() = runBlocking {
-        val groupJoinQuestionsWithVersion = client.groupService.queryGroupJoinQuestionsRequest(groupId, true)
+    fun queryGroupJoinQuestions_shouldEqualNewGroupQuestionId() = runBlocking {
+        val groupJoinQuestionsWithVersion = client.groupService.queryGroupJoinQuestions(groupId, true)
             .data
         assertEquals(
             groupJoinQuestionId,

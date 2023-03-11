@@ -467,7 +467,7 @@ public class GroupService {
     /**
      * Note: Only the owner and managers have the right to fetch questions with answers
      */
-    public func queryGroupJoinQuestionsRequest(
+    public func queryGroupJoinQuestions(
         groupId: Int64,
         withAnswers: Bool = false,
         lastUpdatedDate: Date? = nil

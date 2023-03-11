@@ -518,7 +518,7 @@ export default class GroupService {
     /**
      * Note: Only the owner and managers have the right to fetch questions with answers
      */
-    queryGroupJoinQuestionsRequest({
+    queryGroupJoinQuestions({
         groupId,
         withAnswers = false,
         lastUpdatedDate

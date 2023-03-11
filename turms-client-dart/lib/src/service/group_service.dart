@@ -232,9 +232,10 @@ class GroupService {
   }
 
   /// Note: Only the owner and managers have the right to fetch questions with answers
-  Future<Response<GroupJoinQuestionsWithVersion?>>
-      queryGroupJoinQuestionsRequest(Int64 groupId,
-          {bool withAnswers = false, DateTime? lastUpdatedDate}) async {
+  Future<Response<GroupJoinQuestionsWithVersion?>> queryGroupJoinQuestions(
+      Int64 groupId,
+      {bool withAnswers = false,
+      DateTime? lastUpdatedDate}) async {
     final n = await _turmsClient.driver.send(QueryGroupJoinQuestionsRequest(
         groupId: groupId,
         withAnswers: withAnswers,
