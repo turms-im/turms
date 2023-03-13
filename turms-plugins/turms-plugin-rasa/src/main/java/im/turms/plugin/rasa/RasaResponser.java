@@ -110,7 +110,7 @@ public class RasaResponser extends TurmsExtension implements RequestHandlerResul
                                              @NotNull DeviceType requesterDevice) {
         // 1. Validate
         TurmsRequest request = result.dataForRecipients();
-        if (request.getKindCase() != TurmsRequest.KindCase.CREATE_MESSAGE_REQUEST) {
+        if (request == null || request.getKindCase() != TurmsRequest.KindCase.CREATE_MESSAGE_REQUEST) {
             return Mono.just(result);
         }
         CreateMessageRequest createMessageRequest = request.getCreateMessageRequest();
@@ -122,9 +122,9 @@ public class RasaResponser extends TurmsExtension implements RequestHandlerResul
         if (CollectionUtil.isEmpty(recipients)) {
             return Mono.just(result);
         }
-        Set<Long> currentChatbotUserIds = CollectionUtil
+        Set<Long> specifiedChatbotUserIds = CollectionUtil
                 .intersection(recipients, chatbotUserIds);
-        if (currentChatbotUserIds.isEmpty()) {
+        if (specifiedChatbotUserIds.isEmpty()) {
             return Mono.just(result);
         }
         // 2. Send requests
@@ -132,8 +132,8 @@ public class RasaResponser extends TurmsExtension implements RequestHandlerResul
         long targetId = isGroupMessage
                 ? createMessageRequest.getGroupId()
                 : createMessageRequest.getRecipientId();
-        List<Mono<Void>> sendRequests = new ArrayList<>(currentChatbotUserIds.size());
-        for (Long chatbotUserId : currentChatbotUserIds) {
+        List<Mono<Void>> sendRequests = new ArrayList<>(specifiedChatbotUserIds.size());
+        for (Long chatbotUserId : specifiedChatbotUserIds) {
             RasaClientInfo clientInfo = idToClientInfo.get(chatbotUserId);
             Mono<Void> sendRequest = clientInfo.client
                     .sendRequest(new RasaRequest(requesterId, text))
@@ -141,6 +141,7 @@ public class RasaResponser extends TurmsExtension implements RequestHandlerResul
                         if (responses.isEmpty()) {
                             return Mono.empty();
                         }
+                        // 3. Send rasa responses to the requester
                         String responseText = formatResponse(clientInfo.properties.getResponse(), responses);
                         return messageService.authAndSaveAndSendMessage(true,
                                 chatbotUserId,
@@ -166,8 +167,8 @@ public class RasaResponser extends TurmsExtension implements RequestHandlerResul
                             LOGGER.error("Caught an error while sending requests to Rasa servers", t);
                         }
                     });
-            // 3. Return final handler result
-            Set<Long> recipientIds = CollectionUtil.remove(recipients, currentChatbotUserIds);
+            // 4. Return final handler result
+            Set<Long> recipientIds = CollectionUtil.remove(recipients, specifiedChatbotUserIds);
             return Mono.just(result.withRecipients(recipientIds));
         });
     }
