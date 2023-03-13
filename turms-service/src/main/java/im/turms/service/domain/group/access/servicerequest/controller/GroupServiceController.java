@@ -469,7 +469,7 @@ public class GroupServiceController extends BaseServiceController {
         return clientRequest -> {
             DeleteGroupInvitationRequest request = clientRequest.turmsRequest().getDeleteGroupInvitationRequest();
             return groupInvitationService.queryInviteeIdByInvitationId(request.getInvitationId())
-                    .flatMap(inviteeId -> groupInvitationService.recallPendingGroupInvitation(
+                    .flatMap(inviteeId -> groupInvitationService.authAndRecallPendingGroupInvitation(
                                     clientRequest.userId(),
                                     request.getInvitationId())
                             .then(Mono.fromCallable(() -> notifyInviteeAfterGroupInvitationRecalled
@@ -483,7 +483,7 @@ public class GroupServiceController extends BaseServiceController {
         return clientRequest -> {
             DeleteGroupJoinRequestRequest request = clientRequest.turmsRequest()
                     .getDeleteGroupJoinRequestRequest();
-            return groupJoinRequestService.recallPendingGroupJoinRequest(
+            return groupJoinRequestService.authAndRecallPendingGroupJoinRequest(
                             clientRequest.userId(),
                             request.getRequestId())
                     .then(Mono.defer(() -> {

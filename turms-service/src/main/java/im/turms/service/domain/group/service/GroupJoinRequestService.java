@@ -195,10 +195,9 @@ public class GroupJoinRequestService extends ExpirableEntityService<GroupJoinReq
         return groupJoinRequestRepository.findRequesterIdAndStatusAndGroupId(requestId);
     }
 
-    /**
-     * @return return an empty publisher even if the request doesn't exist
-     */
-    public Mono<Void> recallPendingGroupJoinRequest(@NotNull Long requesterId, @NotNull Long requestId) {
+    public Mono<Void> authAndRecallPendingGroupJoinRequest(
+            @NotNull Long requesterId,
+            @NotNull Long requestId) {
         try {
             Validator.notNull(requesterId, "requesterId");
             Validator.notNull(requestId, "requestId");
@@ -209,6 +208,7 @@ public class GroupJoinRequestService extends ExpirableEntityService<GroupJoinReq
             return Mono.error(ResponseException.get(ResponseStatusCode.RECALLING_GROUP_JOIN_REQUEST_IS_DISABLED));
         }
         return queryRequesterIdAndStatusAndGroupId(requestId)
+                .switchIfEmpty(ResponseExceptionPublisherPool.resourceNotFound())
                 .flatMap(request -> {
                     RequestStatus status = request.getStatus();
                     // If the requester is not authorized to the request,
@@ -221,22 +221,26 @@ public class GroupJoinRequestService extends ExpirableEntityService<GroupJoinReq
                         String reason = "The request is under the status " + status;
                         return Mono.error(ResponseException.get(ResponseStatusCode.RECALL_NOT_PENDING_GROUP_JOIN_REQUEST, reason));
                     }
-                    return groupJoinRequestRepository.updateRequest(requestId, RequestStatus.CANCELED, requesterId)
-                            .flatMap(result -> result.getModifiedCount() > 0
-                                    ? Mono.whenDelayError(
-                                    groupVersionService.updateJoinRequestsVersion(request.getGroupId())
-                                            .onErrorResume(t -> {
-                                                LOGGER.error("Caught an error while updating the join requests version of the group ({}) after recalling a pending join request",
-                                                        request.getGroupId(), t);
-                                                return Mono.empty();
-                                            }),
-                                    userVersionService.updateSentGroupJoinRequestsVersion(requesterId)
-                                            .onErrorResume(t -> {
-                                                LOGGER.error("Caught an error while updating the sent join requests version of the requester ({}) after recalling a pending join request",
-                                                        requesterId, t);
-                                                return Mono.empty();
-                                            }))
-                                    : Mono.empty());
+                    return groupJoinRequestRepository.updateStatusIfPending(requestId, RequestStatus.CANCELED, requesterId)
+                            .flatMap(result -> result.getModifiedCount() == 0
+                                    // Though it may return empty because the request had been deleted between the status check,
+                                    // but only admins can delete them, and it is really rare.
+                                    // So we handle these cases as if the status of the request has changed.
+                                    ? Mono.error(ResponseException.get(ResponseStatusCode.RECALL_NOT_PENDING_GROUP_JOIN_REQUEST))
+                                    : Mono.whenDelayError(
+                                            groupVersionService.updateJoinRequestsVersion(request.getGroupId())
+                                                    .onErrorResume(t -> {
+                                                        LOGGER.error("Caught an error while updating the join requests version of the group ({}) after recalling a pending join request",
+                                                                request.getGroupId(), t);
+                                                        return Mono.empty();
+                                                    }),
+                                            userVersionService.updateSentGroupJoinRequestsVersion(requesterId)
+                                                    .onErrorResume(t -> {
+                                                        LOGGER.error("Caught an error while updating the sent join requests version of the requester ({}) after recalling a pending join request",
+                                                                requesterId, t);
+                                                        return Mono.empty();
+                                                    }))
+                                    .then());
                 });
     }
 

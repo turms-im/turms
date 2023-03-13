@@ -65,11 +65,12 @@ public class GroupInvitationRepository extends ExpirableEntityRepository<GroupIn
         return expireAfterSeconds;
     }
 
-    public Mono<UpdateResult> updateToCanceledStatus(Long invitationId) {
-        Filter filter = Filter.newBuilder(1)
-                .eq(DomainFieldName.ID, invitationId);
+    public Mono<UpdateResult> updateStatusIfPending(Long invitationId, RequestStatus requestStatus) {
+        Filter filter = Filter.newBuilder(2)
+                .eq(DomainFieldName.ID, invitationId)
+                .eq(GroupInvitation.Fields.STATUS, RequestStatus.PENDING);
         Update update = Update.newBuilder(1)
-                .set(GroupInvitation.Fields.STATUS, RequestStatus.CANCELED);
+                .set(GroupInvitation.Fields.STATUS, requestStatus);
         return mongoClient.updateOne(entityClass, filter, update);
     }
 

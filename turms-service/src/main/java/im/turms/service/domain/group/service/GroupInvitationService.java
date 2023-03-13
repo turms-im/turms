@@ -231,10 +231,7 @@ public class GroupInvitationService extends ExpirableEntityService<GroupInvitati
         return groupInvitationRepository.findGroupIdAndStatus(invitationId);
     }
 
-    /**
-     * @return return an empty publisher even if the invitation doesn't exist
-     */
-    public Mono<Void> recallPendingGroupInvitation(
+    public Mono<Void> authAndRecallPendingGroupInvitation(
             @NotNull Long requesterId,
             @NotNull Long invitationId) {
         try {
@@ -243,37 +240,37 @@ public class GroupInvitationService extends ExpirableEntityService<GroupInvitati
         } catch (ResponseException e) {
             return Mono.error(e);
         }
+        // TODO: recalled by sender
         if (!allowRecallPendingInvitationByOwnerAndManager) {
             return Mono.error(ResponseException.get(ResponseStatusCode.RECALLING_GROUP_INVITATION_IS_DISABLED));
         }
         return queryGroupIdAndStatus(invitationId)
-                .flatMap(invitation -> {
-                    RequestStatus requestStatus = invitation.getStatus();
-                    if (requestStatus != RequestStatus.PENDING) {
-                        String reason = "The invitation is under the status " + requestStatus;
-                        return Mono.error(ResponseException.get(ResponseStatusCode.RECALL_NOT_PENDING_GROUP_INVITATION, reason));
-                    }
-                    return groupMemberService.isOwnerOrManager(requesterId, invitation.getGroupId(), false)
-                            .flatMap(authenticated -> {
-                                if (!authenticated) {
-                                    return Mono
-                                            .error(ResponseException.get(ResponseStatusCode.NOT_OWNER_OR_MANAGER_TO_RECALL_INVITATION));
-                                }
-                                return groupInvitationRepository.updateToCanceledStatus(invitationId)
-                                        .flatMap(result -> {
-                                            if (result.getModifiedCount() <= 0) {
+                .switchIfEmpty(ResponseExceptionPublisherPool.resourceNotFound())
+                .flatMap(invitation -> groupMemberService.isOwnerOrManager(requesterId, invitation.getGroupId(), false)
+                        .flatMap(authenticated -> {
+                            if (!authenticated) {
+                                return Mono
+                                        .error(ResponseException.get(ResponseStatusCode.NOT_OWNER_OR_MANAGER_TO_RECALL_INVITATION));
+                            }
+                            RequestStatus requestStatus = invitation.getStatus();
+                            if (requestStatus != RequestStatus.PENDING) {
+                                String reason = "The invitation is under the status " + requestStatus;
+                                return Mono.error(ResponseException.get(ResponseStatusCode.RECALL_NOT_PENDING_GROUP_INVITATION, reason));
+                            }
+                            return groupInvitationRepository.updateStatusIfPending(invitationId, RequestStatus.CANCELED)
+                                    .flatMap(result -> result.getModifiedCount() == 0
+                                            // Though it may be 0 because the request had been deleted between the status check,
+                                            // but only admins can delete them, and it is really rare.
+                                            // So we handle these cases as if the status of the request has changed.
+                                            ? Mono.error(ResponseException.get(ResponseStatusCode.RECALL_NOT_PENDING_GROUP_INVITATION))
+                                            : groupVersionService.updateGroupInvitationsVersion(invitation.getGroupId())
+                                            .onErrorResume(t -> {
+                                                LOGGER.error("Caught an error while updating the group invitations version of the group ({}) after recalling a pending invitation",
+                                                        invitation.getGroupId(), t);
                                                 return Mono.empty();
-                                            }
-                                            return groupVersionService.updateGroupInvitationsVersion(invitation.getGroupId())
-                                                    .onErrorResume(t -> {
-                                                        LOGGER.error("Caught an error while updating the group invitations version of the group ({}) after recalling a pending invitation",
-                                                                invitation.getGroupId(), t);
-                                                        return Mono.empty();
-                                                    })
-                                                    .then();
-                                        });
-                            });
-                });
+                                            })
+                                            .then());
+                        }));
     }
 
     public Flux<GroupInvitation> queryGroupInvitationsByInviteeId(@NotNull Long inviteeId) {

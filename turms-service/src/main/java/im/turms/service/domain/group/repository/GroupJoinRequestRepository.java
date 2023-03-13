@@ -67,9 +67,10 @@ public class GroupJoinRequestRepository extends ExpirableEntityRepository<GroupJ
         return expireAfterSeconds;
     }
 
-    public Mono<UpdateResult> updateRequest(Long requestId, RequestStatus status, Long responderId) {
-        Filter filter = Filter.newBuilder(1)
-                .eq(DomainFieldName.ID, requestId);
+    public Mono<UpdateResult> updateStatusIfPending(Long requestId, RequestStatus status, Long responderId) {
+        Filter filter = Filter.newBuilder(2)
+                .eq(DomainFieldName.ID, requestId)
+                .eq(GroupJoinRequest.Fields.STATUS, RequestStatus.PENDING);
         Update update = Update.newBuilder(2)
                 .set(GroupJoinRequest.Fields.STATUS, status)
                 .set(GroupJoinRequest.Fields.RESPONDER_ID, responderId);

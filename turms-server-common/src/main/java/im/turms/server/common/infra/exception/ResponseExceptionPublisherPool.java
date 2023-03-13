@@ -49,6 +49,9 @@ public class ResponseExceptionPublisherPool {
     private static final Mono OK = Mono
             .error(ResponseException.get(ResponseStatusCode.OK));
 
+    private static final Mono RESOURCE_NOT_FOUND = Mono
+            .error(ResponseException.get(ResponseStatusCode.RESOURCE_NOT_FOUND));
+
     private static final Mono SEND_REQUEST_FROM_NON_EXISTING_SESSION = Mono
             .error(ResponseException.get(ResponseStatusCode.SEND_REQUEST_FROM_NON_EXISTING_SESSION));
 
@@ -103,6 +106,11 @@ public class ResponseExceptionPublisherPool {
     @SuppressWarnings("unchecked")
     public static <T> Mono<T> ok() {
         return OK;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> Mono<T> resourceNotFound() {
+        return RESOURCE_NOT_FOUND;
     }
 
     @SuppressWarnings("unchecked")
