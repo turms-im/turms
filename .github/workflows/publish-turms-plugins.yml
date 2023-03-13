@@ -1,0 +1,35 @@
+name: Publish turms plugins
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+
+jobs:
+  publish:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: 17
+
+      - name: Build
+        run: mvn clean package -Dmaven.test.skip=true -am -B -pl turms-plugins/turms-plugin-antispam,turms-plugins/turms-plugin-minio,turms-plugins/turms-plugin-rasa --no-transfer-progress
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          # TODO: Use a fixed name until we start a general release
+          name: v0.10.0-SNAPSHOT
+          tag_name: v0.10.0-SNAPSHOT
+          prerelease: true
+          generate_release_notes: false
+          fail_on_unmatched_files: true
+          files: |
+            turms-plugins/**/target/*.jar
