@@ -17,12 +17,14 @@
 
 package im.turms.server.common.infra.property.env.common.plugin;
 
-import im.turms.server.common.infra.property.metadata.Description;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author James Chen
@@ -31,21 +33,11 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
 @Builder(toBuilder = true)
 @Data
 @NoArgsConstructor
-public class PluginProperties {
-
-    @Description("Whether to enable plugins")
-    private boolean enabled = true;
-
-    @Description("The relative path of plugins")
-    private String dir = "plugins";
+public class NetworkProperties {
 
     @NestedConfigurationProperty
-    private JavaPluginProperties java = new JavaPluginProperties();
+    private ProxyProperties proxy = new ProxyProperties();
 
-    @NestedConfigurationProperty
-    private JsPluginProperties js = new JsPluginProperties();
-
-    @NestedConfigurationProperty
-    private NetworkProperties network = new NetworkProperties();
+    private List<NetworkPluginProperties> plugins = Collections.emptyList();
 
 }

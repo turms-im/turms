@@ -18,11 +18,14 @@
 package im.turms.server.common.infra.property.env.common.plugin;
 
 import im.turms.server.common.infra.property.metadata.Description;
+import im.turms.server.common.infra.security.SensitiveProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.boot.context.properties.NestedConfigurationProperty;
+
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 
 /**
  * @author James Chen
@@ -31,21 +34,28 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
 @Builder(toBuilder = true)
 @Data
 @NoArgsConstructor
-public class PluginProperties {
+public class ProxyProperties {
 
-    @Description("Whether to enable plugins")
-    private boolean enabled = true;
+    @Description("Whether to enable HTTP proxy")
+    private boolean enabled;
 
-    @Description("The relative path of plugins")
-    private String dir = "plugins";
+    @Description("The HTTP proxy username")
+    private String username = "";
 
-    @NestedConfigurationProperty
-    private JavaPluginProperties java = new JavaPluginProperties();
+    @Description("The HTTP proxy password")
+    @SensitiveProperty
+    private String password = "";
 
-    @NestedConfigurationProperty
-    private JsPluginProperties js = new JsPluginProperties();
+    @Description("The HTTP proxy host")
+    private String host = "";
 
-    @NestedConfigurationProperty
-    private NetworkProperties network = new NetworkProperties();
+    @Description("The HTTP proxy port")
+    @Max(65535)
+    @Min(1)
+    private int port = 8080;
+
+    @Description("The HTTP proxy connect timeout in millis")
+    @Min(1)
+    private int connectTimeoutMillis = 60_000;
 
 }

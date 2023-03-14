@@ -445,6 +445,9 @@
     "java": {},
     "js": {
       "debug": {}
+    },
+    "network": {
+      "proxy": {}
     }
   },
   "security": {

@@ -26,6 +26,8 @@ import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.buffer.RefCntCorrectorByteBuf;
 import io.netty.buffer.Unpooled;
 
+import java.nio.charset.StandardCharsets;
+
 /**
  * @author James Chen
  */
@@ -56,7 +58,13 @@ public final class ByteBufUtil {
         byte[] bytes = new byte[buffer.readableBytes()];
         buffer.readBytes(bytes);
         buffer.resetReaderIndex();
-        return new String(bytes);
+        return new String(bytes, StandardCharsets.UTF_8);
+    }
+
+    public static String readString(ByteBuf buffer) {
+        byte[] bytes = new byte[buffer.readableBytes()];
+        buffer.readBytes(bytes);
+        return new String(bytes, StandardCharsets.UTF_8);
     }
 
     public static ByteBuf getPooledPreferredByteBuffer(int value) {

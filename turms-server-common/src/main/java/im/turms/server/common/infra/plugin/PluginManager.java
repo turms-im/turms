@@ -24,18 +24,26 @@ import im.turms.server.common.infra.context.JobShutdownOrder;
 import im.turms.server.common.infra.context.TurmsApplicationContext;
 import im.turms.server.common.infra.exception.FeatureDisabledException;
 import im.turms.server.common.infra.exception.ThrowableUtil;
+import im.turms.server.common.infra.io.FileUtil;
 import im.turms.server.common.infra.io.InputOutputException;
 import im.turms.server.common.infra.lang.ClassUtil;
+import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
+import im.turms.server.common.infra.netty.ByteBufUtil;
 import im.turms.server.common.infra.plugin.invoker.FirstExtensionPointInvoker;
 import im.turms.server.common.infra.plugin.invoker.SequentialExtensionPointInvoker;
 import im.turms.server.common.infra.plugin.invoker.SimultaneousExtensionPointInvoker;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
+import im.turms.server.common.infra.property.constant.PluginType;
 import im.turms.server.common.infra.property.env.common.plugin.JsPluginDebugProperties;
 import im.turms.server.common.infra.property.env.common.plugin.JsPluginProperties;
+import im.turms.server.common.infra.property.env.common.plugin.NetworkPluginProperties;
+import im.turms.server.common.infra.property.env.common.plugin.NetworkProperties;
 import im.turms.server.common.infra.property.env.common.plugin.PluginProperties;
+import im.turms.server.common.infra.property.env.common.plugin.ProxyProperties;
 import im.turms.server.common.infra.security.MessageDigestPool;
+import io.netty.handler.codec.http.HttpStatusClass;
 import lombok.Getter;
 import org.graalvm.polyglot.Engine;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,14 +52,20 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
+import reactor.netty.http.client.HttpClient;
+import reactor.netty.resources.ConnectionProvider;
+import reactor.netty.transport.ProxyProvider;
 
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -124,6 +138,7 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
             jsInspectHost = null;
             jsInspectPort = 0;
         }
+        loadNetworkPlugins(pluginProperties.getNetwork());
         applicationContext.addShutdownHook(JobShutdownOrder.CLOSE_PLUGINS, timeoutMillis -> destroy());
     }
 
@@ -168,6 +183,133 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
             return Mono.error(e);
         }
         return Mono.empty();
+    }
+
+    private void loadNetworkPlugins(NetworkProperties properties) {
+        List<NetworkPluginProperties> propertiesList = properties.getPlugins();
+        if (propertiesList.isEmpty()) {
+            return;
+        }
+        ConnectionProvider connectionProvider = ConnectionProvider.newConnection();
+        HttpClient client = HttpClient.create(connectionProvider);
+        ProxyProperties proxy = properties.getProxy();
+        if (proxy.isEnabled()) {
+            client = client
+                .proxy(spec -> {
+                    String host = proxy.getHost();
+                    if (StringUtil.isBlank(host)) {
+                        throw new IllegalArgumentException("The host cannot be blank");
+                    }
+                    ProxyProvider.Builder builder = spec
+                        .type(ProxyProvider.Proxy.HTTP)
+                        .host(host)
+                        .port(proxy.getPort())
+                        .connectTimeoutMillis(proxy.getConnectTimeoutMillis());
+                    String username = proxy.getUsername();
+                    String password = proxy.getPassword();
+                    if (StringUtil.isNotBlank(username)) {
+                        builder.username(username);
+                    }
+                    if (StringUtil.isNotBlank(password)) {
+                        builder.password(s -> password);
+                    }
+                });
+        }
+        List<Mono<?>> monos = new ArrayList<>(propertiesList.size());
+        for (NetworkPluginProperties pluginProperties : propertiesList) {
+            monos.add(loadNetworkPlugin(client, pluginProperties));
+        }
+        Mono.when(monos)
+            .doFinally(type -> connectionProvider.dispose())
+            // No need timeout here because we use the request timeout
+            .block();
+    }
+
+    private Mono<Void> loadNetworkPlugin(HttpClient client, NetworkPluginProperties properties) {
+        String url = properties.getUrl();
+        if (StringUtil.isBlank(url)) {
+            return Mono.error(new IllegalArgumentException("The plugin URL must not be blank"));
+        }
+        URI uri;
+        try {
+            uri = URI.create(url);
+        } catch (Exception e) {
+            return Mono.error(new IllegalArgumentException("Invalid plugin URL: " + url));
+        }
+        String fileName = Paths.get(uri.getPath()).getFileName().toString();
+        boolean isJavaPlugin;
+        PluginType type = properties.getType();
+        String newFileName;
+        if (type == PluginType.AUTO) {
+            isJavaPlugin = fileName.endsWith(".jar");
+            boolean isJsPlugin = !isJavaPlugin && fileName.endsWith(".js");
+            if (!isJavaPlugin && !isJsPlugin) {
+                return Mono.error(new IllegalArgumentException("Cannot detect the plugin type from the URL: "
+                                                               + url
+                                                               + ". The URL must end with \".jar\" for Java plugins or \".js\" for JavaScript plugins"));
+            }
+            newFileName = EXTERNAL_PLUGIN_ARCHIVE_NAME_PREFIX + fileName;
+        } else {
+            isJavaPlugin = type == PluginType.JAVA;
+            newFileName = EXTERNAL_PLUGIN_ARCHIVE_NAME_PREFIX + fileName + (isJavaPlugin ? ".jar" : ".js");
+        }
+        Path path = pluginDir.resolve(newFileName);
+        File file = path.toFile();
+        if (file.exists()) {
+            if (properties.isUseLocalCache()) {
+                // No need to load cached network plugins here
+                // because the plugin manager will load them as local plugins
+                return Mono.empty();
+            } else {
+                file.delete();
+            }
+        }
+        NetworkPluginProperties.DownloadProperties downloadProperties = properties.getDownload();
+        return client
+            .followRedirect(true)
+            .responseTimeout(Duration.ofMillis(downloadProperties.getTimeoutMillis()))
+            .request(downloadProperties.getHttpMethod().getMethod())
+            .uri(uri)
+            .responseSingle((response, bodyMono) -> {
+                int code = response.status().code();
+                return HttpStatusClass.SUCCESS.contains(code)
+                    ? bodyMono
+                    : Mono.error(new RuntimeException("Expected a success code, but got: " + code));
+            })
+            .doOnError(t -> LOGGER.error("Failed to download the plugin with the URL: " + url, t))
+            .doOnSuccess(buffer -> {
+                LOGGER.info("Downloaded the plugin with the URL: " + url);
+                if (isJavaPlugin) {
+                    if (!allowSaveJavaPlugins) {
+                        file.deleteOnExit();
+                    }
+                } else if (isJsScriptEnabled && !allowSaveJsPlugins) {
+                    file.deleteOnExit();
+                }
+                try {
+                    Files.createDirectories(pluginDir);
+                } catch (IOException e) {
+                    throw new InputOutputException("Failed to create the plugin directory: " +
+                                                   pluginDir, e);
+                }
+                FileUtil.write(file, buffer);
+                if (isJavaPlugin) {
+                    ZipFile zipFile;
+                    try {
+                        zipFile = new ZipFile(file);
+                    } catch (IOException e) {
+                        throw new InputOutputException("Failed to new a zip file from the file: " + path, e);
+                    }
+                    loadJavaPlugin(zipFile);
+                } else {
+                    if (isJsScriptEnabled) {
+                        String script = ByteBufUtil.readString(buffer);
+                        loadJsPlugin(script, path);
+                    }
+                }
+            })
+            .doOnSubscribe(subscription -> LOGGER.info("Downloading the plugin with the URL: " + url))
+            .then();
     }
 
     public void loadJavaPlugins(List<MultipartFile> files, boolean save) {
@@ -227,12 +369,22 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
         }
     }
 
-    public void loadJavaPlugins(List<ZipFile> zipFiles) {
+    private void loadJavaPlugins(List<ZipFile> zipFiles) {
         List<JavaPluginDescriptor> descriptors = JavaPluginDescriptorFactory.load(zipFiles);
         for (JavaPluginDescriptor descriptor : descriptors) {
             Plugin plugin = JavaPluginFactory.create(descriptor, context);
             pluginRepository.register(plugin);
         }
+    }
+
+    private boolean loadJavaPlugin(ZipFile zipFile) {
+        JavaPluginDescriptor descriptor = JavaPluginDescriptorFactory.load(zipFile);
+        if (descriptor == null) {
+            return false;
+        }
+        Plugin plugin = JavaPluginFactory.create(descriptor, context);
+        pluginRepository.register(plugin);
+        return true;
     }
 
     public void loadJsPlugins(Collection<JsFile> files) {

@@ -1715,6 +1715,66 @@
           "type": "int"
         }
       }
+    },
+    "network": {
+      "plugins": {
+        "deprecated": false,
+        "elementType": "im.turms.server.common.infra.property.env.common.plugin.NetworkPluginProperties",
+        "global": false,
+        "mutable": false,
+        "sensitive": false,
+        "type": "java.util.List"
+      },
+      "proxy": {
+        "connectTimeoutMillis": {
+          "deprecated": false,
+          "description": "The HTTP proxy connect timeout in millis",
+          "global": false,
+          "mutable": false,
+          "sensitive": false,
+          "type": "int"
+        },
+        "enabled": {
+          "deprecated": false,
+          "description": "Whether to enable HTTP proxy",
+          "global": false,
+          "mutable": false,
+          "sensitive": false,
+          "type": "boolean"
+        },
+        "host": {
+          "deprecated": false,
+          "description": "The HTTP proxy host",
+          "global": false,
+          "mutable": false,
+          "sensitive": false,
+          "type": "string"
+        },
+        "password": {
+          "deprecated": false,
+          "description": "The HTTP proxy password",
+          "global": false,
+          "mutable": false,
+          "sensitive": true,
+          "type": "string"
+        },
+        "port": {
+          "deprecated": false,
+          "description": "The HTTP proxy port",
+          "global": false,
+          "mutable": false,
+          "sensitive": false,
+          "type": "int"
+        },
+        "username": {
+          "deprecated": false,
+          "description": "The HTTP proxy username",
+          "global": false,
+          "mutable": false,
+          "sensitive": false,
+          "type": "string"
+        }
+      }
     }
   },
   "security": {

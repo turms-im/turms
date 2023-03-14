@@ -379,6 +379,13 @@ Turms配置分为三大类：Turms Service配置、Turms Gateway配置，以及C
 |turms.plugin.js.debug.enabled|||boolean|false|Whether to enable debugging|
 |turms.plugin.js.debug.inspect-host|||string|localhost|The inspect host|
 |turms.plugin.js.debug.inspect-port|||int|24242|The inspect port|
+|turms.plugin.network.plugins|||List-NetworkPluginProperties|[]||
+|turms.plugin.network.proxy.connect-timeout-millis|||int|60000|The HTTP proxy connect timeout in millis|
+|turms.plugin.network.proxy.enabled|||boolean|false|Whether to enable HTTP proxy|
+|turms.plugin.network.proxy.host|||string||The HTTP proxy host|
+|turms.plugin.network.proxy.password|||string||The HTTP proxy password|
+|turms.plugin.network.proxy.port|||int|8080|The HTTP proxy port|
+|turms.plugin.network.proxy.username|||string||The HTTP proxy username|
 |turms.security.blocklist.ip.auto-block.corrupted-frame.block-levels|||List-BlockLevel|[<br/>  {<br/>    "blockMinutes": 10,<br/>    "goNextLevelTriggerTimes": 1,<br/>    "reduceOneTriggerTimeIntervalMillis": 60000<br/>  },<br/>  {<br/>    "blockMinutes": 30,<br/>    "goNextLevelTriggerTimes": 1,<br/>    "reduceOneTriggerTimeIntervalMillis": 60000<br/>  },<br/>  {<br/>    "blockMinutes": 60,<br/>    "goNextLevelTriggerTimes": 0,<br/>    "reduceOneTriggerTimeIntervalMillis": 60000<br/>  }<br/>]||
 |turms.security.blocklist.ip.auto-block.corrupted-frame.block-trigger-times|||int|5|Block the client when the block condition is triggered the times|
 |turms.security.blocklist.ip.auto-block.corrupted-frame.enabled|||boolean|false||

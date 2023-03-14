@@ -23,8 +23,11 @@ import org.springframework.util.AntPathMatcher;
 import org.webjars.WebJarAssetLocator;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Set;
@@ -90,6 +93,21 @@ public class FileUtil {
             return Files.size(path);
         } catch (IOException e) {
             throw new InputOutputException("Failed to get the size of the file: " + path, e);
+        }
+    }
+
+    public static void write(File file, ByteBuf buffer) {
+        try (FileOutputStream outputStream = new FileOutputStream(file);
+             FileChannel channel = outputStream.getChannel()) {
+            if (buffer.nioBufferCount() == 1) {
+                channel.write(buffer.nioBuffer());
+            } else {
+                for (ByteBuffer buf : buffer.nioBuffers()) {
+                    channel.write(buf);
+                }
+            }
+        } catch (IOException e) {
+            throw new InputOutputException("Caught an error while closing the file channel", e);
         }
     }
 
