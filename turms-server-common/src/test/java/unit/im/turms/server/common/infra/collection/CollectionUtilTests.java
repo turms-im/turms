@@ -20,6 +20,8 @@ package unit.im.turms.server.common.infra.collection;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import org.junit.jupiter.api.Test;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 
@@ -106,6 +108,16 @@ class CollectionUtilTests {
         assertThat(CollectionUtil.containsAllLooseComparison(map2, map1))
                 .isFalse();
 
+        map2 = Map.of(
+                "map", Map.of(
+                        "key1", "value2"
+                )
+        );
+        assertThat(CollectionUtil.containsAllLooseComparison(map1, map2))
+                .isFalse();
+        assertThat(CollectionUtil.containsAllLooseComparison(map2, map1))
+                .isFalse();
+
         map1 = Map.of(
                 "list", List.of(
                         "value1",
@@ -123,5 +135,24 @@ class CollectionUtilTests {
                 .isFalse();
         assertThat(CollectionUtil.containsAllLooseComparison(map2, map1))
                 .isFalse();
+
+        map1 = Map.of(
+                "key", Duration.ofSeconds(123)
+        );
+        map2 = Map.of(
+                "key", Instant.ofEpochMilli(123)
+        );
+        assertThat(CollectionUtil.containsAllLooseComparison(map1, map2))
+                .isFalse();
+        assertThat(CollectionUtil.containsAllLooseComparison(map2, map1))
+                .isFalse();
+
+        map2 = Map.of(
+                "key", Duration.ofSeconds(123)
+        );
+        assertThat(CollectionUtil.containsAllLooseComparison(map1, map2))
+                .isTrue();
+        assertThat(CollectionUtil.containsAllLooseComparison(map2, map1))
+                .isTrue();
     }
 }

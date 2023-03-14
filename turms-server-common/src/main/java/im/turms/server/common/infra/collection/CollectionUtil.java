@@ -234,19 +234,23 @@ public final class CollectionUtil {
         if (expectedValue.equals(actualValue)) {
             return true;
         }
+        // For strings and primitives, check if their strings are equal
         if (expectedValue instanceof String || PrimitiveUtil.isPrimitiveOrWrapperClass(expectedValue.getClass())) {
             return (actualValue instanceof String || PrimitiveUtil.isPrimitiveOrWrapperClass(actualValue.getClass())) &&
                     expectedValue.toString().equals(actualValue.toString());
         }
         if (expectedValue.getClass().isArray()) {
+            // Compare for arrays and collections
             return areCollectionsLooselyEqual(ArrayUtil.getArray(expectedValue), actualValue);
         } else if (expectedValue instanceof Collection<?> expectedValueCollection) {
+            // Compare for arrays and collections
             return areCollectionsLooselyEqual(expectedValueCollection, actualValue);
         } else if (expectedValue instanceof Map<?, ?> expectedValueMap) {
+            // Compare for maps
             return actualValue instanceof Map<?, ?> actualValueMap
                     && containsAllLooseComparison(actualValueMap, expectedValueMap);
         }
-        throw new UnsupportedOperationException("Unsupported expected value: " + expectedValue);
+        return false;
     }
 
     private static boolean areCollectionsLooselyEqual(Object[] value1, Object value2) {
