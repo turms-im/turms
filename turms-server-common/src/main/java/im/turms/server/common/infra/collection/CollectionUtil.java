@@ -235,7 +235,7 @@ public final class CollectionUtil {
             return true;
         }
         if (expectedValue instanceof String || PrimitiveUtil.isPrimitiveOrWrapperClass(expectedValue.getClass())) {
-            return actualValue instanceof String || PrimitiveUtil.isPrimitiveOrWrapperClass(actualValue.getClass()) &&
+            return (actualValue instanceof String || PrimitiveUtil.isPrimitiveOrWrapperClass(actualValue.getClass())) &&
                     expectedValue.toString().equals(actualValue.toString());
         }
         if (expectedValue.getClass().isArray()) {
