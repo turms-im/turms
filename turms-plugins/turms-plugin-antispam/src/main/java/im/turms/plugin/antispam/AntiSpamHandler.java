@@ -31,6 +31,7 @@ import im.turms.server.common.access.client.dto.request.TurmsRequest;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.plugin.TurmsExtension;
+import im.turms.server.common.infra.test.VisibleForTesting;
 import im.turms.service.access.servicerequest.dto.ClientRequest;
 import im.turms.service.infra.plugin.extension.ClientRequestTransformer;
 import reactor.core.publisher.Mono;
@@ -41,24 +42,29 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen
  */
 public class AntiSpamHandler extends TurmsExtension implements ClientRequestTransformer {
 
-    private final boolean enabled;
-    private final UnwantedWordHandleStrategy unwantedWordHandleStrategy;
-    private final byte mask;
-    private final int maxNumberOfUnwantedWordsToReturn;
+    private boolean enabled;
+    private UnwantedWordHandleStrategy unwantedWordHandleStrategy;
+    private byte mask;
+    private int maxNumberOfUnwantedWordsToReturn;
 
-    private final SpamDetector spamDetector;
-    private final TextPreprocessor textPreprocessor;
+    @Nullable
+    private SpamDetector spamDetector;
+    private TextPreprocessor textPreprocessor;
 
-    private final Map<TurmsRequest.KindCase, TextTypeProperties> textTypeToProperties;
+    private Map<TurmsRequest.KindCase, TextTypeProperties> textTypeToProperties;
 
     public AntiSpamHandler() {
-        AntiSpamProperties properties = loadProperties(AntiSpamProperties.class);
+    }
+
+    @VisibleForTesting
+    public AntiSpamHandler(AntiSpamProperties properties) {
         enabled = properties.isEnabled();
         textPreprocessor = new TextPreprocessor(properties.getTextParsingStrategy());
         unwantedWordHandleStrategy = properties.getUnwantedWordHandleStrategy();
@@ -71,7 +77,9 @@ public class AntiSpamHandler extends TurmsExtension implements ClientRequestTran
                 properties.getSilentIllegalTextTypes());
     }
 
-    public AntiSpamHandler(AntiSpamProperties properties) {
+    @Override
+    protected void onStarted() {
+        AntiSpamProperties properties = loadProperties(AntiSpamProperties.class);
         enabled = properties.isEnabled();
         textPreprocessor = new TextPreprocessor(properties.getTextParsingStrategy());
         unwantedWordHandleStrategy = properties.getUnwantedWordHandleStrategy();
