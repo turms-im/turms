@@ -298,6 +298,24 @@ TODO
 
 4. 等JavaScript插件函数执行完毕后，Java调用线程会进入`RUNNABLE`状态，而Java的代理函数也会接着返回JavaScript插件函数返回的数据。
 
+## 配置项
+
+| 配置名                                                  | 默认值    | 说明                                                         |
+| ------------------------------------------------------- | --------- | ------------------------------------------------------------ |
+| turms.plugin.enabled                                    | true      | 是否开启插件机制                                             |
+| turms.plugin.dir                                        | `plugins` | 本地插件所在目录。Turms服务端将从该目录中加载插件            |
+| turms.plugin.network.proxy.enabled                      | false     | 下载网络插件时，是否开启HTTP代理                             |
+| turms.plugin.network.proxy.username                     |           | HTTP代理用户名                                               |
+| turms.plugin.network.proxy.password                     |           | HTTP代理密码                                                 |
+| turms.plugin.network.proxy.host                         |           | HTTP代理主机名                                               |
+| turms.plugin.network.proxy.port                         | 8080      | HTTP代理端口号                                               |
+| turms.plugin.network.proxy.connect-timeout-millis       | 60_000    | HTTP代理连接超时时长（毫秒）                                 |
+| turms.plugin.network.plugins[?].url                     |           | 插件URL                                                      |
+| turms.plugin.network.plugins[?].type                    | `AUTO`    | 插件类型。<br />当值为`AUTO`时，Turms服务端会根据URL的路径检测插件的类型：如果URL以`.jar`结尾，则判断为Java插件，如果URL以`.js`结尾，则判断为JavaScript插件，否则Turms服务端会抛出无法识别插件类型的异常。<br />当值为`JAVA`时，则为Java插件类型<br />当值为`JAVA_SCRIPT`时，则为JavaScript插件类型 |
+| turms.plugin.network.plugins[?].use-local-cache         | false     | 是否使用本地插件缓存。如果`false`，Turms服务端会在每次启动时都重新下载插件 |
+| turms.plugin.network.plugins[?].download.http-method    | `GET`     | 请求插件URL时，HTTP请求的方法类型                            |
+| turms.plugin.network.plugins[?].download.timeout-millis | 60_000    | 下载插件的超时时间（毫秒）                                   |
+
 ## 插件相关API接口
 
 OpenAPI地址：http://playground.turms.im:8510/openapi/ui#/plugin-controller
