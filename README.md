@@ -136,10 +136,23 @@ Although there are many open source IM projects in the world, there is only one 
 
 ## Demo with Specific Business Implementation
 
-Considering the positioning of Turms, we do not plan to provide client demo with UI and specific business logic in the near future because:
+Considering the positioning of Turms, we do not plan to provide a client demo with UI and specific business logic in the near future because.
 
-* It is easy for developers to verify the business features supported by Turms. If you just want to test the business features of Turms, you can run the Turms server without even typing a line of code. Only ten lines of code can realize the login, sending messages, sending friends' requests and other business features, or modify properties to customize various requirements.
-* The design and implementation of the demo are closely related to the specific business scenarios, specific programming language, specific technical architecture, and specific OS while Turms has been committed to efficiently meeting various complex and challenging instant messaging scenarios, and we don't want to publish a demo that limits the imagination of developers. And developing and maintaining a demo is also very time-consuming and will slow down the progress of the development of Turms.
+1. It is easy for developers to verify the business features supported by Turms. If you just want to test the business features of Turms, you can run the Turms server without even typing a line of code. Only ten lines of code can realize the login, sending messages, sending friends' requests and other business features, or modify properties to customize various requirements.
+
+2. The design and implementation of the demo are closely related to the specific business scenarios, specific programming language, specific technical architecture, and specific OS while Turms has been committed to efficiently meeting various complex and challenging instant messaging scenarios, and we don't want to publish a demo that limits the imagination of developers. And developing and maintaining a demo is also very time-consuming and will slow down the progress of the development of Turms.
+
+3. Currently, you only need to "chat" with GPT-3.5 and GPT-4 to realize custom technical solutions and UI design. Take the text as an input example (in addition, GPT-4 supports image input, and you can also draw UI wireframes to suggest how it wants to design the UI).
+
+   > Please implement a customer service chat window running on the web end based on Vue3, Vite, Eslint and other technologies. Specific requirements. 
+   >
+   > 1. The UI design style needs to refer to: Ant Design
+   > 2. The chat window should be divided into three parts: at the top, the customer service name should be displayed; in the middle, the chat message between the user and the customer service should be displayed; and at the bottom, a text input box and a send button should be provided to allow the user to enter text and send messages.
+   > 3. The chat window should always be displayed at the top right corner of the page
+   > 4. You need to assume that the chat window is based on the WebSocket protocol to communicate with the backend server to log in, send messages, receive messages, etc.
+   > 5. You need to give the project structure and all the specific code implementation in the project based on the UI componentized design solution
+
+   GPT can provide the corresponding code implementation right away, and you can keep "chatting" with it on the basis of various scenarios (you can let GPT provide and compare multiple scenarios) to refine its UI design and code implementation to make the final implementation close to your idea.
 
 ## License
 
