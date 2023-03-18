@@ -251,7 +251,9 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
             newFileName = EXTERNAL_PLUGIN_ARCHIVE_NAME_PREFIX + fileName;
         } else {
             isJavaPlugin = type == PluginType.JAVA;
-            newFileName = EXTERNAL_PLUGIN_ARCHIVE_NAME_PREFIX + fileName + (isJavaPlugin ? ".jar" : ".js");
+            newFileName = fileName.endsWith(".jar") || fileName.endsWith(".js")
+                ? EXTERNAL_PLUGIN_ARCHIVE_NAME_PREFIX + fileName
+                : EXTERNAL_PLUGIN_ARCHIVE_NAME_PREFIX + fileName + (isJavaPlugin ? ".jar" : ".js");
         }
         Path path = pluginDir.resolve(newFileName);
         File file = path.toFile();
