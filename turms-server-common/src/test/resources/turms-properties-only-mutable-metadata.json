@@ -232,6 +232,16 @@
         "sensitive": false,
         "type": "int"
       },
+      "deviceDetails": {
+        "items": {
+          "deprecated": false,
+          "elementType": "im.turms.server.common.infra.property.env.gateway.session.DeviceDetailsItemProperties",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "java.util.List"
+        }
+      },
       "identityAccessManagement": {
         "enabled": {
           "deprecated": false,

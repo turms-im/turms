@@ -86,7 +86,7 @@ class NotificationServiceTests {
 
         ByteBuf byteBuf = UnpooledByteBufAllocator.DEFAULT.directBuffer();
         Set<Long> recipientIds = Set.of(1L);
-        boolean sent = notificationService.sendNotificationToLocalClients(TracingContext.NOOP,
+        Set<Long> offlineRecipientIds = notificationService.sendNotificationToLocalClients(TracingContext.NOOP,
                 byteBuf,
                 recipientIds,
                 Collections.emptySet(),
@@ -99,9 +99,9 @@ class NotificationServiceTests {
                 .expectNextMatches(buf -> buf.refCnt() == 0)
                 .as("Buffer should be released if the notification is sent")
                 .verifyComplete();
-        assertThat(sent)
-                .as("Notification is sent or queued")
-                .isTrue();
+        assertThat(offlineRecipientIds)
+                .as("Should not have offline recipient")
+                .isEmpty();
     }
 
     @Test
@@ -110,7 +110,7 @@ class NotificationServiceTests {
 
         ByteBuf byteBuf = UnpooledByteBufAllocator.DEFAULT.directBuffer();
         Set<Long> recipientIds = Set.of(1L);
-        boolean sent = notificationService.sendNotificationToLocalClients(TracingContext.NOOP,
+        Set<Long> offlineRecipientIds= notificationService.sendNotificationToLocalClients(TracingContext.NOOP,
                 byteBuf,
                 recipientIds,
                 Collections.emptySet(),
@@ -119,9 +119,9 @@ class NotificationServiceTests {
         assertThat(byteBuf.refCnt())
                 .as("Buffer should be released if recipients are offline")
                 .isZero();
-        assertThat(sent)
-                .as("Notification is not sent or queued")
-                .isFalse();
+        assertThat(offlineRecipientIds)
+                .as("Should have offline recipient")
+                .isNotEmpty();
     }
 
     private NotificationService newOutboundMessageService(UserSessionsManager userSessionsManager) {

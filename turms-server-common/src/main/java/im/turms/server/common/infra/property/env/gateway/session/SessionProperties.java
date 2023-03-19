@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.infra.property.env.gateway;
+package im.turms.server.common.infra.property.env.gateway.session;
 
 import im.turms.server.common.infra.property.env.gateway.identityaccessmanagement.IdentityAccessManagementProperties;
 import im.turms.server.common.infra.property.metadata.Description;
@@ -77,5 +77,8 @@ public class SessionProperties {
 
     @NestedConfigurationProperty
     private IdentityAccessManagementProperties identityAccessManagement = new IdentityAccessManagementProperties();
+
+    @NestedConfigurationProperty
+    private DeviceDetailsProperties deviceDetails = new DeviceDetailsProperties();
 
 }

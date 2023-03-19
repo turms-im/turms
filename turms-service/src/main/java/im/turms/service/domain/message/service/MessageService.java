@@ -43,7 +43,6 @@ import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.constant.TimeType;
 import im.turms.server.common.infra.property.env.service.business.message.MessageProperties;
 import im.turms.server.common.infra.property.env.service.business.message.SequenceIdProperties;
-import im.turms.server.common.infra.reactor.PublisherPool;
 import im.turms.server.common.infra.recycler.Recyclable;
 import im.turms.server.common.infra.recycler.SetRecycler;
 import im.turms.server.common.infra.task.TaskManager;
@@ -1044,11 +1043,11 @@ public class MessageService {
     /**
      * @param senderDeviceType can be null when it is a system message
      */
-    private Mono<Boolean> sendMessage(@NotNull Message message,
-                                      @NotNull Set<Long> recipientIds,
-                                      @Nullable DeviceType senderDeviceType) {
+    private Mono<Void> sendMessage(@NotNull Message message,
+                                   @NotNull Set<Long> recipientIds,
+                                   @Nullable DeviceType senderDeviceType) {
         if (recipientIds.isEmpty()) {
-            return PublisherPool.TRUE;
+            return Mono.empty();
         }
         Long senderId = message.getSenderId();
         TurmsNotification notification = ClientMessagePool
@@ -1067,10 +1066,13 @@ public class MessageService {
         } else {
             excludedUserSessionIds = Collections.emptySet();
         }
-        return outboundMessageService.forwardNotification(
-                notification,
-                recipientIds,
-                excludedUserSessionIds);
+        return outboundMessageService
+                .forwardNotification(notification,
+                        recipientIds,
+                        excludedUserSessionIds)
+                // TODO: Should trigger extension points
+                // https://github.com/turms-im/turms/issues/1189
+                .then();
     }
 
     private void cacheSentMessage(@NotNull Message message) {
@@ -1155,7 +1157,7 @@ public class MessageService {
                 keys.add(buffer);
             }
             return client.del(keys);
-        });
+        }).then();
     }
 
     private Mono<Long> fetchSequenceId(boolean isGroupConversation, Long targetId) {

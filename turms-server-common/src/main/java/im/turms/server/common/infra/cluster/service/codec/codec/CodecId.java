@@ -42,6 +42,7 @@ public enum CodecId {
     STRING(10),
 
     COLLECTION_LIST(100),
+    COLLECTION_SET(101),
 
     BO_USER_ONLINE_INFO(200),
     BO_USER_SESSIONS(201),

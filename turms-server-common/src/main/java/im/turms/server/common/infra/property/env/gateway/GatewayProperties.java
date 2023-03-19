@@ -19,6 +19,7 @@ package im.turms.server.common.infra.property.env.gateway;
 
 import im.turms.server.common.infra.property.env.gateway.clientapi.ClientApiProperties;
 import im.turms.server.common.infra.property.env.gateway.redis.TurmsRedisProperties;
+import im.turms.server.common.infra.property.env.gateway.session.SessionProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

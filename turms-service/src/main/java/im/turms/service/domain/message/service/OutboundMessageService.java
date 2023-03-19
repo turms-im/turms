@@ -27,7 +27,6 @@ import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.collection.CollectorUtil;
 import im.turms.server.common.infra.proto.ProtoEncoder;
 import im.turms.server.common.infra.reactor.PublisherPool;
-import im.turms.server.common.infra.reactor.PublisherUtil;
 import im.turms.server.common.infra.tracing.TracingCloseableContext;
 import im.turms.server.common.infra.tracing.TracingContext;
 import im.turms.server.common.storage.mongo.IMongoCollectionInitializer;
@@ -71,62 +70,68 @@ public class OutboundMessageService {
     }
 
     /**
-     * @return true if recipientIds is empty, or at least one recipient has received the notification
+     * @return offline recipient IDs
      */
-    public Mono<Boolean> forwardNotification(
+    public Mono<Set<Long>> forwardNotification(
             @NotNull TurmsNotification notification,
             @NotNull Set<Long> recipientIds) {
-        return forwardNotification(notification, ProtoEncoder.getDirectByteBuffer(notification), recipientIds, Collections.emptySet());
+        return forwardNotification(notification,
+                ProtoEncoder.getDirectByteBuffer(notification),
+                recipientIds,
+                Collections.emptySet());
     }
 
     /**
-     * @return true if recipientIds is empty, or at least one recipient has received the notification
+     * @return offline recipient IDs
      */
-    public Mono<Boolean> forwardNotification(
+    public Mono<Set<Long>> forwardNotification(
             @NotNull TurmsNotification notification,
             @NotNull Set<Long> recipientIds,
             @NotNull Set<UserSessionId> excludedUserSessionIds) {
         if (recipientIds.isEmpty()) {
-            return PublisherPool.TRUE;
+            return PublisherPool.emptySet();
         }
         ByteBuf notificationData = ProtoEncoder.getDirectByteBuffer(notification);
         int recipientCount = recipientIds.size();
-        Mono<Boolean> mono = recipientCount == 1
+        Mono<Set<Long>> mono = recipientCount == 1
                 ? forwardClientMessageByRecipientId(notificationData, recipientIds.iterator().next(), excludedUserSessionIds)
                 : forwardClientMessageByRecipientIds(notificationData, recipientIds, excludedUserSessionIds);
         return tryLogNotification(mono, notification, recipientCount);
     }
 
-    public Mono<Boolean> forwardNotification(
+    public Mono<Set<Long>> forwardNotification(
             @NotNull TurmsNotification notificationForLogging,
             @NotNull ByteBuf notificationData,
             @NotNull Set<Long> recipientIds) {
-        return forwardNotification(notificationForLogging, notificationData, recipientIds, Collections.emptySet());
+        return forwardNotification(notificationForLogging,
+                notificationData,
+                recipientIds,
+                Collections.emptySet());
     }
 
     /**
-     * @return true if recipientIds is empty, or at least one recipient has received the notification
+     * @return offline recipient IDs
      */
-    public Mono<Boolean> forwardNotification(
+    public Mono<Set<Long>> forwardNotification(
             @NotNull TurmsNotification notificationForLogging,
             @NotNull ByteBuf notificationData,
             @NotNull Set<Long> recipientIds,
             @NotNull Set<UserSessionId> excludedUserSessionIds) {
         if (recipientIds.isEmpty()) {
             notificationData.release();
-            return PublisherPool.TRUE;
+            return PublisherPool.emptySet();
         }
         int recipientCount = recipientIds.size();
-        Mono<Boolean> mono = recipientCount == 1
+        Mono<Set<Long>> mono = recipientCount == 1
                 ? forwardClientMessageByRecipientId(notificationData, recipientIds.iterator().next(), excludedUserSessionIds)
                 : forwardClientMessageByRecipientIds(notificationData, recipientIds, excludedUserSessionIds);
         return tryLogNotification(mono, notificationForLogging, recipientCount);
     }
 
     /**
-     * @return true if recipientIds is empty, or at least one recipient has received the notification
+     * @return offline recipient IDs
      */
-    public Mono<Boolean> forwardNotification(
+    public Mono<Set<Long>> forwardNotification(
             @NotNull TurmsNotification notificationForLogging,
             @NotNull ByteBuf notificationData,
             @NotNull Long recipientId,
@@ -143,9 +148,9 @@ public class OutboundMessageService {
                     }
                     if (nodeIds.isEmpty()) {
                         notificationData.release();
-                        return PublisherPool.FALSE;
+                        return PublisherPool.<Long>emptySet();
                     }
-                    Mono<Boolean> mono = forwardClientMessageToNodes(notificationData,
+                    Mono<Set<Long>> mono = forwardClientMessageToNodes(notificationData,
                             nodeIds,
                             recipientId,
                             Collections.emptySet(),
@@ -154,24 +159,26 @@ public class OutboundMessageService {
                 })
                 .switchIfEmpty(Mono.fromCallable(() -> {
                     notificationData.release();
-                    return false;
+                    return Collections.emptySet();
                 }));
     }
 
     /**
-     * @return true if recipientIds is empty, or at least one recipient has received the notification
+     * @return offline recipient IDs
      */
-    private Mono<Boolean> forwardClientMessageByRecipientIds(
+    private Mono<Set<Long>> forwardClientMessageByRecipientIds(
             @NotNull ByteBuf messageData,
             @NotNull Set<Long> recipientIds,
             @NotNull Set<UserSessionId> excludedUserSessionIds) {
         if (recipientIds.isEmpty()) {
             messageData.release();
-            return PublisherPool.TRUE;
+            return PublisherPool.emptySet();
         }
         int recipientIdCount = recipientIds.size();
         if (recipientIdCount == 1) {
-            return forwardClientMessageByRecipientId(messageData, recipientIds.iterator().next(), excludedUserSessionIds);
+            return forwardClientMessageByRecipientId(messageData,
+                    recipientIds.iterator().next(),
+                    excludedUserSessionIds);
         }
         List<Mono<RecipientAndNodeIds>> monos = new ArrayList<>(recipientIdCount);
         for (Long recipientId : recipientIds) {
@@ -184,12 +191,12 @@ public class OutboundMessageService {
                 .flatMap(pairs -> {
                     if (pairs.isEmpty()) {
                         messageData.release();
-                        return PublisherPool.FALSE;
+                        return PublisherPool.emptySet();
                     }
                     int gatewayMemberCount = node.getDiscoveryService().getActiveSortedGatewayMembers().size();
                     if (gatewayMemberCount == 0) {
                         messageData.release();
-                        return PublisherPool.FALSE;
+                        return PublisherPool.emptySet();
                     }
                     int expectedMembersCount = Math.min(gatewayMemberCount, recipientIdCount);
                     int expectedRecipientCountPerMember = Math.max(1, recipientIdCount / expectedMembersCount);
@@ -208,7 +215,7 @@ public class OutboundMessageService {
     /**
      * @return true if at least one recipient has received the notification
      */
-    private Mono<Boolean> forwardClientMessageByRecipientId(
+    private Mono<Set<Long>> forwardClientMessageByRecipientId(
             @NotNull ByteBuf notificationData,
             @NotNull Long recipientId,
             @NotNull Set<UserSessionId> excludedUserSessionIds) {
@@ -218,26 +225,31 @@ public class OutboundMessageService {
                     Set<String> nodeIds = CollectionUtil.newSet(deviceTypeAndNodeIdMap.values());
                     if (nodeIds.isEmpty()) {
                         notificationData.release();
-                        return PublisherPool.FALSE;
+                        return PublisherPool.<Long>emptySet();
                     }
-                    return forwardClientMessageToNodes(notificationData, nodeIds, recipientId, excludedUserSessionIds, null);
+                    return forwardClientMessageToNodes(notificationData,
+                            nodeIds,
+                            recipientId,
+                            excludedUserSessionIds,
+                            null);
                 })
                 .switchIfEmpty(Mono.fromCallable(() -> {
                     notificationData.release();
-                    return false;
+                    return Collections.emptySet();
                 }));
     }
 
     // Network transmission methods
 
-    private Mono<Boolean> forwardClientMessageToNodes(ByteBuf messageData,
-                                                      Map<String, Set<Long>> nodeIdToRecipientIds,
-                                                      Set<UserSessionId> excludedUserSessionIds) {
+    private Mono<Set<Long>> forwardClientMessageToNodes(
+            ByteBuf messageData,
+            Map<String, Set<Long>> nodeIdToRecipientIds,
+            Set<UserSessionId> excludedUserSessionIds) {
         Set<String> nodeIds = nodeIdToRecipientIds.keySet();
         int size = nodeIds.size();
         if (size == 0) {
             messageData.release();
-            return PublisherPool.FALSE;
+            return PublisherPool.emptySet();
         }
         if (size == 1) {
             String nodeId = nodeIds.iterator().next();
@@ -247,7 +259,7 @@ public class OutboundMessageService {
                     excludedUserSessionIds,
                     null);
         }
-        List<Mono<Boolean>> monos = new ArrayList<>(size);
+        List<Mono<Set<Long>>> monos = new ArrayList<>(size);
         messageData.retain(size);
         for (Map.Entry<String, Set<Long>> entry : nodeIdToRecipientIds.entrySet()) {
             monos.add(forwardClientMessageToNode(messageData,
@@ -256,11 +268,17 @@ public class OutboundMessageService {
                     excludedUserSessionIds,
                     null));
         }
-        return PublisherUtil.atLeastOneTrue(monos)
+        return collectOfflineRecipientIds(monos)
                 .doFinally(signal -> messageData.release());
     }
 
-    private Mono<Boolean> forwardClientMessageToNodes(
+    private Mono<Set<Long>> collectOfflineRecipientIds(List<Mono<Set<Long>>> monos) {
+        return Flux.merge(monos)
+                .collect(CollectorUtil.toList(monos.size()))
+                .map(CollectionUtil::union);
+    }
+
+    private Mono<Set<Long>> forwardClientMessageToNodes(
             @NotNull ByteBuf messageData,
             @NotNull Set<String> nodeIds,
             @NotNull Long recipientId,
@@ -269,7 +287,7 @@ public class OutboundMessageService {
         int size = nodeIds.size();
         if (size == 0) {
             messageData.release();
-            return PublisherPool.FALSE;
+            return PublisherPool.emptySet();
         }
         if (size == 1) {
             return forwardClientMessageToNode(messageData,
@@ -284,15 +302,15 @@ public class OutboundMessageService {
                 excludedUserSessionIds,
                 excludedDeviceType);
         messageData.retain(size);
-        List<Mono<Boolean>> monos = new ArrayList<>(size);
+        List<Mono<Set<Long>>> monos = new ArrayList<>(size);
         for (String nodeId : nodeIds) {
             monos.add(node.getRpcService().requestResponse(nodeId, request));
         }
-        return PublisherUtil.atLeastOneTrue(monos)
+        return collectOfflineRecipientIds(monos)
                 .doFinally(signal -> messageData.release());
     }
 
-    private Mono<Boolean> forwardClientMessageToNode(
+    private Mono<Set<Long>> forwardClientMessageToNode(
             @NotNull ByteBuf messageData,
             @NotNull String nodeId,
             @NotNull Set<Long> recipients,
@@ -301,7 +319,7 @@ public class OutboundMessageService {
         int size = recipients.size();
         if (size == 0) {
             messageData.release();
-            return PublisherPool.FALSE;
+            return PublisherPool.emptySet();
         }
         SendNotificationRequest request = new SendNotificationRequest(
                 messageData,
@@ -313,7 +331,7 @@ public class OutboundMessageService {
 
     // Logging
 
-    private Mono<Boolean> tryLogNotification(Mono<Boolean> mono, TurmsNotification notification, int recipientCount) {
+    private Mono<Set<Long>> tryLogNotification(Mono<Set<Long>> mono, TurmsNotification notification, int recipientCount) {
         if (!apiLoggingContext.shouldLogNotification(notification.getRelayedRequest().getKindCase())) {
             return mono;
         }
@@ -322,9 +340,9 @@ public class OutboundMessageService {
                     if (!signal.isOnNext()) {
                         return;
                     }
-                    boolean sent = Boolean.TRUE.equals(signal.get());
+                    int offlineRecipientCount = CollectionUtil.getSize(signal.get());
                     try (TracingCloseableContext ignored = TracingContext.getCloseableContext(signal.getContextView())) {
-                        NotificationLogging.log(sent, notification, recipientCount);
+                        NotificationLogging.log(recipientCount, recipientCount - offlineRecipientCount, notification);
                     }
                 });
     }

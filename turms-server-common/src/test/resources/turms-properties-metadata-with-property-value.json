@@ -763,6 +763,35 @@
         "type": "int",
         "value": 180
       },
+      "deviceDetails": {
+        "expireAfterSeconds": {
+          "deprecated": false,
+          "description": "Device details information will expire after the specified time has elapsed. 0 means never expire",
+          "global": false,
+          "mutable": false,
+          "sensitive": false,
+          "type": "int",
+          "value": 2592000
+        },
+        "items": {
+          "deprecated": false,
+          "elementType": "im.turms.server.common.infra.property.env.gateway.session.DeviceDetailsItemProperties",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "java.util.List",
+          "value": [
+            {
+              "fieldName": "apns",
+              "redisFieldName": "a"
+            },
+            {
+              "fieldName": "fcm",
+              "redisFieldName": "f"
+            }
+          ]
+        }
+      },
       "identityAccessManagement": {
         "enabled": {
           "deprecated": false,

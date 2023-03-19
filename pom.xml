@@ -35,13 +35,11 @@
         <blockhound.version>1.0.7.RELEASE</blockhound.version>
         <disruptor.version>3.4.4</disruptor.version>
         <eclipse-collections.version>11.1.0</eclipse-collections.version>
-        <firebase-admin.version>9.1.1</firebase-admin.version>
         <graalvm.version>22.3.1</graalvm.version>
         <icu4j.version>72.1</icu4j.version>
         <jctools-core.version>4.0.1</jctools-core.version>
         <log4j.version>2.19.0</log4j.version>
         <protobuf.version>3.22.0</protobuf.version>
-        <pushy.version>0.15.2</pushy.version>
         <swagger.version>2.2.8</swagger.version>
         <swagger-ui.version>4.15.5</swagger-ui.version>
 
@@ -82,6 +80,7 @@
 
         <module>turms-plugins/turms-plugin-antispam</module>
         <module>turms-plugins/turms-plugin-minio</module>
+        <module>turms-plugins/turms-plugin-push</module>
         <module>turms-plugins/turms-plugin-rasa</module>
 
         <module>turms-server-test</module>
@@ -170,11 +169,6 @@
                 <version>${eclipse-collections.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.google.firebase</groupId>
-                <artifactId>firebase-admin</artifactId>
-                <version>${firebase-admin.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>com.ibm.icu</groupId>
                 <artifactId>icu4j</artifactId>
                 <version>${icu4j.version}</version>
@@ -208,11 +202,6 @@
                 <groupId>com.google.protobuf</groupId>
                 <artifactId>protobuf-java-util</artifactId>
                 <version>${protobuf.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.eatthepath</groupId>
-                <artifactId>pushy</artifactId>
-                <version>${pushy.version}</version>
             </dependency>
 
             <!-- Testing -->

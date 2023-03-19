@@ -44,7 +44,6 @@ import reactor.core.publisher.Mono;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import jakarta.annotation.Nullable;
@@ -90,43 +89,35 @@ public class NotificationService implements INotificationService {
     /**
      * @param notificationData should be a buffer of TurmsNotification, and it is
      *                         always a "notification" instead of "response" in fact
-     * @return true if the notification is ready to forward or has forwarded
-     * to one recipient at least
+     * @return offline recipient IDs
      * @implNote 1. The method ensures notificationData will be released by 1
      * 2. No need to updateMdc for trace ID here
      * because we know sendNotificationToLocalClients() is in the tracing scope
      */
     @Override
-    public boolean sendNotificationToLocalClients(TracingContext tracingContext,
-                                                  ByteBuf notificationData,
-                                                  Set<Long> recipientIds,
-                                                  Set<UserSessionId> excludedUserSessionIds,
-                                                  @Nullable DeviceType excludedDeviceType) {
+    public Set<Long> sendNotificationToLocalClients(
+            TracingContext tracingContext,
+            ByteBuf notificationData,
+            Set<Long> recipientIds,
+            Set<UserSessionId> excludedUserSessionIds,
+            @Nullable DeviceType excludedDeviceType) {
         Validator.notNull(notificationData, "notificationData");
         Validator.notEmpty(recipientIds, "recipientIds");
         Validator.notNull(excludedUserSessionIds, "excludedUserSessionIds");
         // Prepare data
-        boolean hasForwardedMessageToOneRecipient = false;
-        boolean invokeHandlers = pluginManager.hasRunningExtensions(NotificationHandler.class);
-        Set<Long> offlineRecipientIds = invokeHandlers
-                ? CollectionUtil.newSetWithExpectedSize(Math.max(1, recipientIds.size() / 2))
-                : Collections.emptySet();
+        int recipientCount = recipientIds.size();
+        int halfRecipientCount = recipientCount >> 1;
+        Set<Long> offlineRecipientIds = CollectionUtil
+                .newSetWithExpectedSize(halfRecipientCount);
 
-        int notificationSize = notificationData.readableBytes();
-        SimpleTurmsNotification notification = isNotificationLoggingEnabled
-                ? TurmsNotificationParser.parseSimpleNotification(ProtoDecoder.newInputStream(notificationData))
-                : null;
-
-        List<Mono<Void>> monos = new ArrayList<>(recipientIds.size() >> 2);
+        List<Mono<Void>> monos = new ArrayList<>(halfRecipientCount);
 
         // Send notification
         boolean hasExcludedUserSessionIds = !excludedUserSessionIds.isEmpty();
         for (Long recipientId : recipientIds) {
             UserSessionsManager userSessionsManager = sessionService.getUserSessionsManager(recipientId);
             if (userSessionsManager == null) {
-                if (invokeHandlers) {
-                    offlineRecipientIds.add(recipientId);
-                }
+                offlineRecipientIds.add(recipientId);
             } else {
                 for (UserSession userSession : userSessionsManager.getDeviceTypeToSession().values()) {
                     if (excludedDeviceType == userSession.getDeviceType()
@@ -145,15 +136,13 @@ public class NotificationService implements INotificationService {
                                 }
                                 return Mono.empty();
                             }));
-                    // Keep the logic simple, and we don't care about whether the notification is flushed
-                    hasForwardedMessageToOneRecipient = true;
                     userSession.getConnection().tryNotifyClientToRecover();
                 }
             }
         }
 
         // Invoke handlers
-        if (invokeHandlers) {
+        if (pluginManager.hasRunningExtensions(NotificationHandler.class)) {
             invokeExtensionPointHandlers(notificationData, recipientIds, offlineRecipientIds);
         }
 
@@ -161,15 +150,20 @@ public class NotificationService implements INotificationService {
                 .doFinally(signalType -> notificationData.release())
                 .subscribe(null, t -> LOGGER.error("Caught an error while sending a notification to user sessions", t));
 
+        SimpleTurmsNotification notification = isNotificationLoggingEnabled
+                ? TurmsNotificationParser.parseSimpleNotification(ProtoDecoder.newInputStream(notificationData))
+                : null;
         if (isNotificationLoggingEnabled
                 && apiLoggingContext.shouldLogNotification(notification.relayedRequestType())) {
-            NotificationLogging.log(hasForwardedMessageToOneRecipient,
-                    notification,
-                    notificationSize,
-                    recipientIds.size());
+            int offlineRecipientCount = offlineRecipientIds.size();
+            int notificationBytes = notificationData.readableBytes();
+            NotificationLogging.log(notification,
+                    notificationBytes,
+                    recipientCount,
+                    recipientCount - offlineRecipientCount);
         }
 
-        return hasForwardedMessageToOneRecipient;
+        return offlineRecipientIds;
     }
 
     private void invokeExtensionPointHandlers(

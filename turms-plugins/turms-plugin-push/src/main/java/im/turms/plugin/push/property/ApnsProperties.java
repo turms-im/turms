@@ -15,17 +15,34 @@
  * limitations under the License.
  */
 
-package im.turms.service.infra.push;
+package im.turms.plugin.push.property;
 
-import reactor.core.publisher.Mono;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @author James Chen
  */
-public interface PushNotificationSender {
+@AllArgsConstructor
+@Builder(toBuilder = true)
+@Data
+@NoArgsConstructor
+public class ApnsProperties {
 
-    Mono<SendPushNotificationResult> sendNotification(PushNotification notification);
+    private boolean enabled;
 
-    Mono<Void> close();
+    private String bundleId = "";
+
+    private String signingKey = "";
+
+    private String teamId = "";
+
+    private String keyId = "";
+
+    private boolean sandboxEnabled;
+
+    private String deviceTokenFieldName = "f";
 
 }

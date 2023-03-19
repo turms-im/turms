@@ -346,14 +346,15 @@ turms-service的服务端JVM GC配置为：`-Xlog:gc*,gc+age=trace,safepoint:fil
 格式：`通知触发用户ID|发送状态|通知目标用户数|会话关闭状态码|通知大小|通知转发的请求类型`。其中：
 
 * 通知触发用户信息：通知触发用户ID
-* 通知信息：发送状态、通知目标用户数、会话关闭状态码、通知大小
+* 通知接收用户信息：通知接收用户数量、在线的通知接收用户数量
+* 通知信息：会话关闭状态码、通知大小
 * 通知转发的请求信息：通知转发的请求类型
 
 示例：
 
 ```spreadsheet
-2021-09-03 00:08:22.537  INFO G hkivjeav 3166178398923546492 -client-io-15-3 : 149|SENT|1||75|UPDATE_FRIEND_REQUEST_REQUEST
-2021-09-03 00:08:37.636  INFO G hkivjeav 8332948877634499289 -client-io-15-3 : 190|SENT|1||19|UPDATE_TYPING_STATUS_REQUEST
+2021-09-03 00:08:22.537  INFO G hkivjeav 3166178398923546492 -client-io-15-3 : 149|1|1||75|UPDATE_FRIEND_REQUEST_REQUEST
+2021-09-03 00:08:37.636  INFO G hkivjeav 8332948877634499289 -client-io-15-3 : 190|1|0||19|UPDATE_TYPING_STATUS_REQUEST
 ```
 
 ##### turms-service服务端
@@ -363,14 +364,15 @@ turms-service的服务端JVM GC配置为：`-Xlog:gc*,gc+age=trace,safepoint:fil
 格式：`通知触发用户ID|发送状态|通知目标用户数|会话关闭状态码|通知大小|通知转发的请求ID|通知转发的请求类型`。其中：
 
 * 通知触发用户信息：通知触发用户ID
-* 通知信息：发送状态、通知目标用户数、会话关闭状态码、通知大小
+* 通知接收用户信息：通知接收用户数量、在线的通知接收用户数量
+* 通知信息：会话关闭状态码、通知大小
 * 通知转发的请求信息：通知转发的请求ID、通知转发的请求类型
 
 示例：
 
 ```spreadsheet
-2021-09-03 00:08:22.537  INFO S hkivjeav 3166178398923546492 -client-io-15-3 : 149|SENT|1||75|4971734074638762694|UPDATE_FRIEND_REQUEST_REQUEST
-2021-09-03 00:08:37.636  INFO S hkivjeav 8332948877634499289 -client-io-15-3 : 190|SENT|1||19|6469201046445182337|UPDATE_TYPING_STATUS_REQUEST
+2021-09-03 00:08:22.537  INFO S hkivjeav 3166178398923546492 -client-io-15-3 : 149|1|1||75|4971734074638762694|UPDATE_FRIEND_REQUEST_REQUEST
+2021-09-03 00:08:37.636  INFO S hkivjeav 8332948877634499289 -client-io-15-3 : 190|1|0||19|6469201046445182337|UPDATE_TYPING_STATUS_REQUEST
 ```
 
 #### 慢日志

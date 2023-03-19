@@ -15,13 +15,17 @@
  * limitations under the License.
  */
 
-package im.turms.service.infra.push;
+package im.turms.plugin.push.core;
+
+import reactor.core.publisher.Mono;
 
 /**
  * @author James Chen
  */
-public enum DeviceTokenType {
-    FCM,
-    APN,
-    APN_VOIP
+public interface PushNotificationSender {
+
+    Mono<SendPushNotificationResult> sendNotification(PushNotification notification);
+
+    Mono<Void> close();
+
 }

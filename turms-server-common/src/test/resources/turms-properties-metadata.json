@@ -697,6 +697,24 @@
         "sensitive": false,
         "type": "int"
       },
+      "deviceDetails": {
+        "expireAfterSeconds": {
+          "deprecated": false,
+          "description": "Device details information will expire after the specified time has elapsed. 0 means never expire",
+          "global": false,
+          "mutable": false,
+          "sensitive": false,
+          "type": "int"
+        },
+        "items": {
+          "deprecated": false,
+          "elementType": "im.turms.server.common.infra.property.env.gateway.session.DeviceDetailsItemProperties",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "java.util.List"
+        }
+      },
       "identityAccessManagement": {
         "enabled": {
           "deprecated": false,

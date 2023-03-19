@@ -74,13 +74,12 @@ public class TurmsRedisClientManager {
         return Mono.whenDelayError(monos);
     }
 
-    public <T> Mono<Void> execute(Set<Long> shardKeys, BiFunction<TurmsRedisClient, Collection<Long>, Mono<T>> execute) {
+    public <T> Flux<T> execute(Set<Long> shardKeys, BiFunction<TurmsRedisClient, Collection<Long>, Mono<T>> execute) {
         int size = shardKeys.size();
         if (size == 0) {
-            return Mono.empty();
+            return Flux.empty();
         } else if (size == 1) {
-            return execute.apply(getClient(shardKeys.iterator().next()), shardKeys)
-                    .then();
+            return Flux.from(execute.apply(getClient(shardKeys.iterator().next()), shardKeys));
         }
         Map<TurmsRedisClient, Collection<Long>> clients = new IdentityHashMap<>();
         for (Long shardKey : shardKeys) {
@@ -89,11 +88,12 @@ public class TurmsRedisClientManager {
             collection.add(shardKey);
         }
         Set<Map.Entry<TurmsRedisClient, Collection<Long>>> entries = clients.entrySet();
-        List<Mono<Void>> results = new ArrayList<>(entries.size());
+        Mono<T>[] results = new Mono[entries.size()];
+        int i = 0;
         for (Map.Entry<TurmsRedisClient, Collection<Long>> entry : entries) {
-            results.add(execute.apply(entry.getKey(), entry.getValue()).then());
+            results[i++] = execute.apply(entry.getKey(), entry.getValue());
         }
-        return Mono.whenDelayError(results);
+        return Flux.mergeDelayError(results.length, results);
     }
 
     public Mono<Long> del(Long shardKey, Collection<ByteBuf> keys) {

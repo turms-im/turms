@@ -41,7 +41,7 @@ import im.turms.server.common.infra.plugin.invoker.SequentialExtensionPointInvok
 import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.constant.IdentityAccessManagementType;
-import im.turms.server.common.infra.property.env.gateway.SessionProperties;
+import im.turms.server.common.infra.property.env.gateway.session.SessionProperties;
 import im.turms.server.common.infra.property.env.gateway.identityaccessmanagement.IdentityAccessManagementProperties;
 import im.turms.server.common.infra.property.env.gateway.identityaccessmanagement.http.HttpAuthenticationResponseExpectationProperties;
 import im.turms.server.common.infra.property.env.gateway.identityaccessmanagement.http.HttpIdentityAccessManagementProperties;

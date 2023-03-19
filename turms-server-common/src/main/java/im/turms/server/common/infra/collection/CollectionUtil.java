@@ -517,6 +517,21 @@ public final class CollectionUtil {
         return result;
     }
 
+    public static <T> Set<T> union(Collection<Set<T>> collections) {
+        int count = 0;
+        for (Collection<? extends T> collection : collections) {
+            count += collection.size();
+        }
+        if (count == 0) {
+            return Collections.emptySet();
+        }
+        Set<T> set = newSetWithExpectedSize(count);
+        for (Collection<? extends T> collection : collections) {
+            set.addAll(collection);
+        }
+        return set;
+    }
+
     public static <T> boolean contains(@Nullable List<T> list, T value) {
         if (list == null) {
             return false;

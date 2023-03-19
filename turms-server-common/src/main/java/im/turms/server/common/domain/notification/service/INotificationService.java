@@ -32,7 +32,7 @@ import jakarta.validation.constraints.NotNull;
  */
 public interface INotificationService {
 
-    boolean sendNotificationToLocalClients(
+    Set<Long> sendNotificationToLocalClients(
             @NotNull TracingContext context,
             @NotNull ByteBuf notificationData,
             @NotEmpty Set<Long> recipientIds,

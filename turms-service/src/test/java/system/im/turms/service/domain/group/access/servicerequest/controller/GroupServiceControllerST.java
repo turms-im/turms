@@ -426,7 +426,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
 
     @Test
     @Order(ORDER_MIDDLE_PRIORITY)
-    void handleQueryGroupJoinQuestionsRequest_queryGroupJoinQuestionsRequest_shouldEqualNewGroupQuestionId() {
+    void handleQueryGroupJoinQuestions_queryGroupJoinQuestions_shouldEqualNewGroupQuestionId() {
         TurmsRequest request = TurmsRequest.newBuilder()
                 .setQueryGroupJoinQuestionsRequest(QueryGroupJoinQuestionsRequest.newBuilder()
                         .setGroupId(groupId)

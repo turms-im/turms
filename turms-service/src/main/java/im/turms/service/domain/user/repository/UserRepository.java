@@ -121,6 +121,15 @@ public class UserRepository extends BaseRepository<User, Long> {
         return mongoClient.count(entityClass, filter);
     }
 
+    public Mono<String> findName(Long userId) {
+        Filter filter = Filter.newBuilder(1)
+                .eq(DomainFieldName.ID, userId);
+        QueryOptions options = QueryOptions.newBuilder(1)
+                .include(User.Fields.NAME);
+        return mongoClient.findOne(entityClass, filter, options)
+                .map(User::getName);
+    }
+
     public Mono<ProfileAccessStrategy> findProfileAccessIfNotDeleted(Long userId) {
         Filter filter = Filter.newBuilder(2)
                 .eq(DomainFieldName.ID, userId)

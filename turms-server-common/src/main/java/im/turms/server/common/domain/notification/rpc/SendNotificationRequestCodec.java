@@ -87,9 +87,13 @@ public class SendNotificationRequestCodec extends RpcRequestCodec<SendNotificati
         DeviceType excludedDeviceType = excludedDeviceTypeByte == -1
                 ? null
                 : DeviceTypeUtil.byte2DeviceType(excludedDeviceTypeByte);
+
         // read "notificationBuffer"
         ByteBuf notificationBuffer = in.readRetainedSlice(in.readableBytes());
-        return new SendNotificationRequest(notificationBuffer, recipientIds, excludedUserSessionIds, excludedDeviceType);
+        return new SendNotificationRequest(notificationBuffer,
+                recipientIds,
+                excludedUserSessionIds,
+                excludedDeviceType);
     }
 
     @Override

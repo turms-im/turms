@@ -29,6 +29,7 @@ import im.turms.server.common.access.servicerequest.dispatcher.IServiceRequestDi
 import im.turms.server.common.access.servicerequest.dto.ServiceRequest;
 import im.turms.server.common.access.servicerequest.dto.ServiceResponse;
 import im.turms.server.common.domain.blocklist.service.BlocklistService;
+import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.collection.FastEnumMap;
 import im.turms.server.common.infra.exception.IncompatibleInternalChangeException;
 import im.turms.server.common.infra.exception.ThrowableInfo;
@@ -51,13 +52,14 @@ import im.turms.service.domain.message.service.OutboundMessageService;
 import im.turms.service.infra.logging.ApiLoggingContext;
 import im.turms.service.infra.logging.ClientApiLogging;
 import im.turms.service.infra.plugin.extension.ClientRequestTransformer;
-import im.turms.service.infra.plugin.extension.RequestHandlerResultNotifier;
+import im.turms.service.infra.plugin.extension.RequestHandlerResultHandler;
 import io.netty.buffer.ByteBuf;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.io.IOException;
@@ -81,7 +83,8 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
 
     private static final Method REQUEST_TRANSFORM_METHOD;
     private static final Method REQUEST_HANDLE_METHOD;
-    private static final Method RESULT_NOTIFY_METHOD;
+    private static final Method RESULT_BEFORE_NOTIFY_METHOD;
+    private static final Method RESULT_AFTER_NOTIFY_METHOD;
 
     private final ApiLoggingContext apiLoggingContext;
     private final BlocklistService blocklistService;
@@ -97,8 +100,10 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                     .getDeclaredMethod("transform", ClientRequest.class);
             REQUEST_HANDLE_METHOD = ClientRequestHandler.class
                     .getDeclaredMethod("handle", ClientRequest.class);
-            RESULT_NOTIFY_METHOD = RequestHandlerResultNotifier.class
-                    .getDeclaredMethod("notify", RequestHandlerResult.class, Long.class, DeviceType.class);
+            RESULT_BEFORE_NOTIFY_METHOD = RequestHandlerResultHandler.class
+                    .getDeclaredMethod("beforeNotify", RequestHandlerResult.class, Long.class, DeviceType.class);
+            RESULT_AFTER_NOTIFY_METHOD = RequestHandlerResultHandler.class
+                    .getDeclaredMethod("afterNotify", RequestHandlerResult.class, Long.class, DeviceType.class, Set.class);
         } catch (NoSuchMethodException e) {
             throw new IncompatibleInternalChangeException(e);
         }
@@ -316,10 +321,10 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
             @NotNull RequestHandlerResult result,
             @NotNull Long requesterId,
             @NotNull DeviceType requesterDevice) {
-        Mono<RequestHandlerResult> notify = pluginManager.invokeExtensionPointsSequentially(RequestHandlerResultNotifier.class,
-                RESULT_NOTIFY_METHOD,
+        Mono<RequestHandlerResult> notify = pluginManager.invokeExtensionPointsSequentially(RequestHandlerResultHandler.class,
+                RESULT_BEFORE_NOTIFY_METHOD,
                 result,
-                (resultNotifier, pre) -> pre.flatMap(handlerResult -> resultNotifier.notify(handlerResult, requesterId, requesterDevice)));
+                (resultNotifier, pre) -> pre.flatMap(handlerResult -> resultNotifier.beforeNotify(handlerResult, requesterId, requesterDevice)));
         return notify
                 .flatMap(handlerResult -> notifyRelatedUsersOfAction0(handlerResult, requesterId, requesterDevice))
                 .then();
@@ -344,22 +349,30 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                 .setRequesterId(requesterId)
                 .build();
         ByteBuf notificationByteBuf = ProtoEncoder.getDirectByteBuffer(notificationForRecipients);
+        Mono<Set<Long>> mono;
         if (forwardDataForRecipientsToOtherSenderOnlineDevices) {
             if (noRecipient) {
-                return outboundMessageService
-                        .forwardNotification(notificationForRecipients, notificationByteBuf, requesterId, requesterDevice)
-                        .then();
+                mono = outboundMessageService
+                        .forwardNotification(notificationForRecipients, notificationByteBuf, requesterId, requesterDevice);
             } else {
                 notificationByteBuf.retain(2);
-                Mono<Boolean> notifyRequesterMono = outboundMessageService
+                Mono<Set<Long>> notifyRequesterMono = outboundMessageService
                         .forwardNotification(notificationForRecipients, notificationByteBuf, requesterId, requesterDevice);
-                Mono<Boolean> notifyRecipientsMono = outboundMessageService
+                Mono<Set<Long>> notifyRecipientsMono = outboundMessageService
                         .forwardNotification(notificationForRecipients, notificationByteBuf, recipients);
-                return Mono.whenDelayError(notifyRequesterMono, notifyRecipientsMono)
+                mono = Flux.mergeDelayError(2, notifyRequesterMono, notifyRecipientsMono)
+                        .collectList()
+                        .map(CollectionUtil::union)
                         .doFinally(signal -> notificationByteBuf.release());
             }
+        } else {
+            mono = outboundMessageService.forwardNotification(notificationForRecipients, notificationByteBuf, recipients);
         }
-        return outboundMessageService.forwardNotification(notificationForRecipients, notificationByteBuf, recipients)
+        return mono
+                .map(offlineRecipientIds -> pluginManager.invokeExtensionPointsSequentially(RequestHandlerResultHandler.class,
+                        RESULT_AFTER_NOTIFY_METHOD,
+                        (cur, pre) -> pre.switchIfEmpty(Mono.defer(() ->
+                                cur.afterNotify(result, requesterId, requesterDevice, offlineRecipientIds)))))
                 .then();
     }
 

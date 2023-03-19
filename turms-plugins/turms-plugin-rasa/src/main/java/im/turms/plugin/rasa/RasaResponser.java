@@ -38,7 +38,7 @@ import im.turms.server.common.infra.tracing.TracingCloseableContext;
 import im.turms.server.common.infra.tracing.TracingContext;
 import im.turms.service.access.servicerequest.dto.RequestHandlerResult;
 import im.turms.service.domain.message.service.MessageService;
-import im.turms.service.infra.plugin.extension.RequestHandlerResultNotifier;
+import im.turms.service.infra.plugin.extension.RequestHandlerResultHandler;
 import org.springframework.context.ApplicationContext;
 import reactor.core.publisher.Mono;
 
@@ -54,7 +54,7 @@ import jakarta.validation.constraints.NotNull;
 /**
  * @author James Chen
  */
-public class RasaResponser extends TurmsExtension implements RequestHandlerResultNotifier {
+public class RasaResponser extends TurmsExtension implements RequestHandlerResultHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RasaResponser.class);
 
@@ -105,9 +105,10 @@ public class RasaResponser extends TurmsExtension implements RequestHandlerResul
     }
 
     @Override
-    public Mono<RequestHandlerResult> notify(@NotNull RequestHandlerResult result,
-                                             @NotNull Long requesterId,
-                                             @NotNull DeviceType requesterDevice) {
+    public Mono<RequestHandlerResult> beforeNotify(
+            @NotNull RequestHandlerResult result,
+            @NotNull Long requesterId,
+            @NotNull DeviceType requesterDevice) {
         // 1. Validate
         TurmsRequest request = result.dataForRecipients();
         if (request == null || request.getKindCase() != TurmsRequest.KindCase.CREATE_MESSAGE_REQUEST) {

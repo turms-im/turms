@@ -30,22 +30,23 @@ import static im.turms.server.common.infra.logging.CommonLogger.NOTIFICATION_LOG
  */
 public final class NotificationLogging {
 
-    private static final byte[] SENT = {'S', 'E', 'N', 'T'};
-    private static final byte[] UNSENT = {'U', 'N', 'S', 'E', 'N', 'T'};
-
     private NotificationLogging() {
     }
 
-    public static void log(boolean sent, SimpleTurmsNotification notification, int size, int recipientCount) {
+    public static void log(SimpleTurmsNotification notification,
+                           int notificationBytes,
+                           int recipientCount,
+                           int onlineRecipientCount) {
         Integer closeStatus = notification.closeStatus();
         ByteBuf buffer = ByteBufUtil.join(64, LOG_FIELD_DELIMITER,
-                // User info
+                // Requester info
                 NumberFormatter.toCharBytes(notification.requesterId()),
-                // Notification info
-                sent ? SENT : UNSENT,
+                // Recipient info
                 NumberFormatter.toCharBytes(recipientCount),
+                NumberFormatter.toCharBytes(onlineRecipientCount),
+                // Notification info: self info + meta info
                 closeStatus,
-                NumberFormatter.toCharBytes(size),
+                NumberFormatter.toCharBytes(notificationBytes),
                 // Relayed request info
                 notification.relayedRequestType().name());
         NOTIFICATION_LOGGER.info(buffer);

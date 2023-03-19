@@ -50,7 +50,9 @@ import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.plugin.PluginManager;
 import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
-import im.turms.server.common.infra.property.env.gateway.SessionProperties;
+import im.turms.server.common.infra.property.env.gateway.session.DeviceDetailsItemProperties;
+import im.turms.server.common.infra.property.env.gateway.session.DeviceDetailsProperties;
+import im.turms.server.common.infra.property.env.gateway.session.SessionProperties;
 import im.turms.server.common.infra.reactor.PublisherPool;
 import im.turms.server.common.infra.reactor.PublisherUtil;
 import im.turms.server.common.infra.validation.ValidDeviceType;
@@ -120,6 +122,7 @@ public class SessionService implements ISessionService, SessionIdentityAccessMan
 
     private int closeIdleSessionAfterSeconds;
     private boolean notifyClientsOfSessionInfoAfterConnected;
+    private List<DeviceDetailsItemProperties> detailsItem;
     private String serverId;
 
     static {
@@ -185,6 +188,8 @@ public class SessionService implements ISessionService, SessionIdentityAccessMan
         SessionProperties sessionProperties = properties.getGateway().getSession();
         closeIdleSessionAfterSeconds = sessionProperties.getCloseIdleSessionAfterSeconds();
         notifyClientsOfSessionInfoAfterConnected = sessionProperties.isNotifyClientsOfSessionInfoAfterConnected();
+        DeviceDetailsProperties detailsProperties = sessionProperties.getDeviceDetails();
+        detailsItem = detailsProperties.getItems();
     }
 
     private void updateLocalProperties(TurmsProperties properties) {
@@ -700,8 +705,26 @@ public class SessionService implements ISessionService, SessionIdentityAccessMan
             @Nullable Map<String, String> deviceDetails,
             @Nullable UserStatus userStatus,
             @Nullable Location location) {
+        // TODO: Add extension point https://github.com/turms-im/turms/issues/1187
+        Map<String, String> details;
+        List<DeviceDetailsItemProperties> localDetailsItem = detailsItem;
+        if (localDetailsItem.isEmpty() || CollectionUtil.isEmpty(deviceDetails)) {
+            details = null;
+        } else {
+            details = CollectionUtil.newMapWithExpectedSize(localDetailsItem.size());
+            for (DeviceDetailsItemProperties itemProperties : localDetailsItem) {
+                String value = deviceDetails.get(itemProperties.getFieldName());
+                if (value != null) {
+                    details.put(itemProperties.getRedisFieldName(), value);
+                }
+            }
+        }
         // Try to update the global user status
-        return userStatusService.addOnlineDeviceIfAbsent(userId, deviceType, userStatus, closeIdleSessionAfterSeconds)
+        return userStatusService.addOnlineDeviceIfAbsent(userId,
+                        deviceType,
+                        details,
+                        userStatus,
+                        closeIdleSessionAfterSeconds)
                 .flatMap(wasSuccessful -> {
                     if (!wasSuccessful) {
                         return Mono.error(ResponseException.get(ResponseStatusCode.SESSION_SIMULTANEOUS_CONFLICTS_DECLINE));

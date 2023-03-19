@@ -320,6 +320,15 @@ public class UserService {
                 .collect(CollectorUtil.toList(userIds.size()));
     }
 
+    public Mono<String> queryUserName(@NotNull Long userId) {
+        try {
+            Validator.notNull(userId, "userId");
+        } catch (ResponseException e) {
+            return Mono.error(e);
+        }
+        return userRepository.findName(userId);
+    }
+
     public Flux<User> queryUsersProfile(@NotEmpty Collection<Long> userIds, boolean queryDeletedRecords) {
         try {
             Validator.notEmpty(userIds, "userIds");
@@ -361,6 +370,7 @@ public class UserService {
                                 if (count > 0) {
                                     deletedUsersCounter.increment(count);
                                 }
+                                // TODO: Remove data on Redis
                                 return userRelationshipService.deleteAllRelationships(userIds, session, false)
                                         .then(userRelationshipGroupService.deleteAllRelationshipGroups(userIds, session, false))
                                         .then(conversationService.deletePrivateConversations(userIds, session))

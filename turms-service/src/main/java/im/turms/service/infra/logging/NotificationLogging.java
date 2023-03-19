@@ -39,17 +39,19 @@ public final class NotificationLogging {
      * Note that although TurmsNotification can represent a "response" or "notification",
      * the method is only designed to log "notification" instead of "response"
      */
-    public static void log(boolean sent, TurmsNotification notification, int recipientCount) {
+    public static void log(int recipientCount, int onlineRecipientCount, TurmsNotification notification) {
         TurmsRequest relayedRequest = notification.getRelayedRequest();
         ByteBuf buffer = ByteBufUtil.join(64, LOG_FIELD_DELIMITER,
-                // User info
+                // Requester info
                 NumberFormatter.toCharBytes(notification.getRequesterId()),
-                // Notification info
-                sent ? "SENT" : "UNSENT",
+                // Recipient info
                 NumberFormatter.toCharBytes(recipientCount),
+                NumberFormatter.toCharBytes(onlineRecipientCount),
+                // Notification info: self info + meta info
                 notification.hasCloseStatus() ? NumberFormatter.toCharBytes(notification.getCloseStatus()) : null,
                 NumberFormatter.toCharBytes(notification.getSerializedSize()),
                 // Relayed request info
+                // ID is most important, so we put it first
                 NumberFormatter.toCharBytes(relayedRequest.getRequestId()),
                 relayedRequest.getKindCase().name());
         NOTIFICATION_LOGGER.info(buffer);

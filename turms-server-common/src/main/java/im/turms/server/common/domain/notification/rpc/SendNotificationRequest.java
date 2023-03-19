@@ -35,7 +35,7 @@ import jakarta.validation.constraints.NotNull;
  * @author James Chen
  */
 @Data
-public class SendNotificationRequest extends RpcRequest<Boolean> {
+public class SendNotificationRequest extends RpcRequest<Set<Long>> {
 
     private static final String NAME = "sendNotification";
     private static INotificationService notificationService;
@@ -89,10 +89,10 @@ public class SendNotificationRequest extends RpcRequest<Boolean> {
     }
 
     /**
-     * @return true if the notification has forwarded to one recipient at least
+     * @return offline recipient IDs
      */
     @Override
-    public Boolean call() {
+    public Set<Long> call() {
         return notificationService.sendNotificationToLocalClients(getTracingContext(),
                 notificationBuffer,
                 recipientIds,

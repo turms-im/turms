@@ -11,11 +11,20 @@ if result == 0 then
 end
 
 local previous_status = redis.call('HGET', user_id, 's')
-if previous_status == nil then
+if previous_status == false then
     redis.call('HSET', user_id, 's', status or string.char(0))
 elseif status ~= nil and previous_status ~= status then
     redis.call('HSET', user_id, 's', status)
 end
 redis.call('EXPIRE', user_id, ttl)
+
+local count = #KEYS
+if count - 5 > 0 then
+    local key = user_id .. ':d'
+    redis.call('HMSET', key, unpack(KEYS, 6, count))
+    if DEVICE_DETAILS_TTL > 0 then
+        redis.call('EXPIRE', key, DEVICE_DETAILS_TTL)
+    end
+end
 
 return true

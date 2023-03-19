@@ -15,21 +15,29 @@
  * limitations under the License.
  */
 
-package im.turms.service.infra.push;
+package im.turms.plugin.push.property;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 /**
  * @author James Chen
  */
 @AllArgsConstructor
-public enum PushNotificationType {
-    NOTIFICATION("notification"),
-    CHALLENGE("challenge"),
-    RATE_LIMIT_CHALLENGE("rateLimitChallenge");
+@Builder(toBuilder = true)
+@ConfigurationProperties("turms-plugin.push")
+@Data
+@NoArgsConstructor
+public class PushNotificationProperties {
 
-    @Getter
-    private final String type;
+    @NestedConfigurationProperty
+    private ApnsProperties apns = new ApnsProperties();
+
+    @NestedConfigurationProperty
+    private FcmProperties fcm = new FcmProperties();
 
 }

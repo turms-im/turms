@@ -33,12 +33,14 @@ import im.turms.server.common.infra.cluster.service.codec.codec.impl.IntegerCode
 import im.turms.server.common.infra.cluster.service.codec.codec.impl.ListCodec;
 import im.turms.server.common.infra.cluster.service.codec.codec.impl.LongCodec;
 import im.turms.server.common.infra.cluster.service.codec.codec.impl.NullCodec;
+import im.turms.server.common.infra.cluster.service.codec.codec.impl.SetCodec;
 import im.turms.server.common.infra.cluster.service.codec.codec.impl.ShortCodec;
 import im.turms.server.common.infra.cluster.service.codec.codec.impl.StringCodec;
 import im.turms.server.common.infra.cluster.service.connection.codec.ClosingHandshakeRequestCodec;
 import im.turms.server.common.infra.cluster.service.connection.codec.KeepaliveRequestCodec;
 import im.turms.server.common.infra.cluster.service.connection.codec.OpeningHandshakeRequestCodec;
 import im.turms.server.common.infra.cluster.service.rpc.codec.RpcExceptionCodec;
+import im.turms.server.common.infra.collection.CollectionUtil;
 import io.netty.util.collection.IntObjectHashMap;
 import org.springframework.core.GenericTypeResolver;
 
@@ -54,6 +56,7 @@ public final class CodecPool {
 
     private static final IntObjectHashMap<Codec> ID_TO_CODEC = new IntObjectHashMap<>(32);
     private static final Map<Class<?>, Codec> CLASS_TO_CODEC = new IdentityHashMap<>(32);
+    private static final Map<Class<?>, Codec> SUPERCLASS_TO_CODEC = new IdentityHashMap<>(16);
 
     public static void init() {
         if (!ID_TO_CODEC.isEmpty()) {
@@ -75,6 +78,7 @@ public final class CodecPool {
 
         // Collections
         register(new ListCodec());
+        register(new SetCodec());
 
         // RPC
         register(new RpcExceptionCodec());
@@ -110,7 +114,16 @@ public final class CodecPool {
      */
     @Nullable
     public static <T> Codec<T> getCodec(Class<?> clazz) {
-        return CLASS_TO_CODEC.get(clazz);
+        Codec<T> codec = CLASS_TO_CODEC.get(clazz);
+        if (codec != null) {
+            return codec;
+        }
+        for (Map.Entry<Class<?>, Codec> entry : SUPERCLASS_TO_CODEC.entrySet()) {
+            if (entry.getKey().isAssignableFrom(clazz)) {
+                return entry.getValue();
+            }
+        }
+        return null;
     }
 
     /**
@@ -119,7 +132,7 @@ public final class CodecPool {
      */
     private static void register(Codec<?> codec) {
         List<Class<?>> encodableClasses = codec.getEncodableClasses();
-        if (encodableClasses == null || encodableClasses.isEmpty()) {
+        if (CollectionUtil.isEmpty(encodableClasses)) {
             Class<?> clazz = GenericTypeResolver.resolveTypeArgument(codec.getClass(), Codec.class);
             if (clazz == null) {
                 throw new IllegalArgumentException("The codec with the ID (" +
@@ -138,6 +151,16 @@ public final class CodecPool {
         int codecId = codec.getCodecId().getId();
         if (ID_TO_CODEC.putIfAbsent(codecId, codec) != null) {
             throw new IllegalArgumentException("The codec ID (" + codecId + ") has already existed");
+        }
+        List<Class<?>> encodableSuperClasses = codec.getEncodableSuperClasses();
+        if (CollectionUtil.isNotEmpty(encodableSuperClasses)) {
+            for (Class<?> encodableSuperClass : encodableSuperClasses) {
+                if (SUPERCLASS_TO_CODEC.putIfAbsent(encodableSuperClass, codec) != null) {
+                    throw new IllegalArgumentException("The codec for the class (" +
+                            encodableSuperClass.getName() +
+                            ") has already existed");
+                }
+            }
         }
     }
 

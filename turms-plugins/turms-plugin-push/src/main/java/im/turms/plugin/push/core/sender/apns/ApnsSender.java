@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package im.turms.service.infra.push.sender.apns;
+package im.turms.plugin.push.core.sender.apns;
 
 import com.eatthepath.pushy.apns.ApnsClient;
 import com.eatthepath.pushy.apns.ApnsClientBuilder;
@@ -23,14 +23,13 @@ import com.eatthepath.pushy.apns.PushNotificationResponse;
 import com.eatthepath.pushy.apns.PushType;
 import com.eatthepath.pushy.apns.auth.ApnsSigningKey;
 import com.eatthepath.pushy.apns.util.SimpleApnsPushNotification;
+import im.turms.plugin.push.core.PushNotification;
+import im.turms.plugin.push.core.PushNotificationSender;
+import im.turms.plugin.push.core.SendPushNotificationResult;
+import im.turms.plugin.push.property.ApnsProperties;
 import im.turms.server.common.infra.exception.FeatureDisabledException;
-import im.turms.server.common.infra.lang.StringUtil;
-import im.turms.server.common.infra.property.env.service.env.push.ApnsProperties;
-import im.turms.service.infra.push.DeviceTokenType;
-import im.turms.service.infra.push.PushNotification;
-import im.turms.service.infra.push.PushNotificationSender;
-import im.turms.service.infra.push.PushNotificationType;
-import im.turms.service.infra.push.SendPushNotificationResult;
+import im.turms.server.common.infra.lang.StrJoiner;
+import lombok.Getter;
 import reactor.core.publisher.Mono;
 
 import java.io.ByteArrayInputStream;
@@ -42,22 +41,13 @@ import java.util.function.BiConsumer;
  */
 public class ApnsSender implements PushNotificationSender {
 
-    private static final String APN_CHALLENGE_PAYLOAD =
-            "{\"aps\":{\"sound\":\"default\",\"alert\":{\"loc-key\":\"APN_Message\"}},\"challenge\":\"{}\"}";
-    private static final String APN_NSE_NOTIFICATION_PAYLOAD =
-            "{\"aps\":{\"mutable-content\":1,\"alert\":{\"loc-key\":\"APN_Message\"}}}";
-    private static final String APN_RATE_LIMIT_CHALLENGE_PAYLOAD =
-            "{\"aps\":{\"sound\":\"default\",\"alert\":{\"loc-key\":\"APN_Message\"}},\"rateLimitChallenge\":\"{}\"}";
-    private static final String APN_VOIP_NOTIFICATION_PAYLOAD =
-            "{\"aps\":{\"sound\":\"default\",\"alert\":{\"loc-key\":\"APN_Message\"}}}";
-
-    private static final String APNS_CA_FILENAME = "apns-certificates.pem";
-
     private static final Instant MAX_EXPIRATION = Instant.ofEpochMilli(Integer.MAX_VALUE * 1000L);
+    private static final String COLLAPSE_ID = "0";
 
     private final boolean isEnabled;
     private final String bundleId;
-    private final String bundleIdForVoip;
+    @Getter
+    private final String deviceTokenFieldName;
 
     private final ApnsClient apnsClient;
 
@@ -65,12 +55,12 @@ public class ApnsSender implements PushNotificationSender {
         isEnabled = apnsProperties.isEnabled();
         if (!isEnabled) {
             bundleId = null;
-            bundleIdForVoip = null;
+            deviceTokenFieldName = null;
             apnsClient = null;
             return;
         }
         bundleId = apnsProperties.getBundleId();
-        bundleIdForVoip = bundleId + ".voip";
+        deviceTokenFieldName = apnsProperties.getDeviceTokenFieldName();
         byte[] signingKeyBytes = apnsProperties.getSigningKey().getBytes();
         ApnsSigningKey signingKey;
         try {
@@ -87,7 +77,6 @@ public class ApnsSender implements PushNotificationSender {
                     : ApnsClientBuilder.PRODUCTION_APNS_HOST;
             apnsClient = new ApnsClientBuilder()
                     .setSigningKey(signingKey)
-                    .setTrustedServerCertificateChain(getClass().getResourceAsStream(APNS_CA_FILENAME))
                     .setApnsServer(hostname)
                     .build();
         } catch (Exception e) {
@@ -100,30 +89,38 @@ public class ApnsSender implements PushNotificationSender {
         if (!isEnabled) {
             return Mono.error(new FeatureDisabledException("APNs is disabled"));
         }
-        DeviceTokenType deviceTokenType = notification.deviceTokenType();
-        String topic = switch (deviceTokenType) {
-            case APN -> bundleId;
-            case APN_VOIP -> bundleIdForVoip;
-            default -> throw new IllegalArgumentException("Unsupported token type: " + deviceTokenType);
-        };
-        boolean isVoip = deviceTokenType == DeviceTokenType.APN_VOIP;
-        PushNotificationType notificationType = notification.notificationType();
-        String payload = switch (notificationType) {
-            case NOTIFICATION -> isVoip ? APN_VOIP_NOTIFICATION_PAYLOAD : APN_NSE_NOTIFICATION_PAYLOAD;
-            case CHALLENGE -> StringUtil.substitute(APN_CHALLENGE_PAYLOAD, notification.data());
-            case RATE_LIMIT_CHALLENGE -> StringUtil.substitute(APN_RATE_LIMIT_CHALLENGE_PAYLOAD, notification.data());
-        };
-        String collapseId = notificationType == PushNotificationType.NOTIFICATION && !isVoip
-                ? "0"
-                : null;
+        String title = notification.title();
+        Integer badgeNumber = notification.badgeNumber();
+        int count = 3;
+        boolean hasTitle = title != null;
+        boolean hasBadgeNumber = badgeNumber != null;
+        if (hasTitle) {
+            count++;
+        }
+        if (hasBadgeNumber) {
+            count++;
+        }
+        StrJoiner joiner = new StrJoiner(count);
+        joiner.add("""
+                {"aps":{"mutable-content":1,"alert":{"loc-key":"APN_Message"}}""");
+        if (hasTitle) {
+            // TODO: sanitize
+            joiner.add(",\"title\":\"" + title + "\"");
+        }
+        // TODO: sanitize
+        joiner.add(",\"body\":\"" + notification.body() + "\"");
+        if (hasBadgeNumber) {
+            joiner.add(",\"badge\":" + badgeNumber);
+        }
+        joiner.add("}");
         SimpleApnsPushNotification pushNotification = new SimpleApnsPushNotification(
                 notification.deviceToken(),
-                topic,
-                payload,
+                bundleId,
+                joiner.toString(),
                 MAX_EXPIRATION,
                 DeliveryPriority.IMMEDIATE,
-                isVoip ? PushType.VOIP : PushType.ALERT,
-                collapseId);
+                PushType.ALERT,
+                COLLAPSE_ID);
         return Mono.create(sink -> {
             BiConsumer<PushNotificationResponse<SimpleApnsPushNotification>, Throwable> consumer = (response, throwable) -> {
                 if (throwable != null) {

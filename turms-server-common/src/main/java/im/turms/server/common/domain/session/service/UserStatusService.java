@@ -62,8 +62,9 @@ import jakarta.validation.constraints.NotNull;
 @Service
 public class UserStatusService {
 
-    private final RedisScript addOnlineUserScript =
-            RedisScript.get(new ClassPathResource("redis/session/try_add_online_user_with_ttl.lua"), ScriptOutputType.BOOLEAN);
+    private final RedisScript addOnlineUserScript;
+    private final RedisScript getUsersDeviceDetailsScript =
+            RedisScript.get(new ClassPathResource("redis/session/get_users_device_details.lua"), ScriptOutputType.MULTI);
     private final RedisScript updateUsersTtlScript =
             RedisScript.get(new ClassPathResource("redis/session/update_users_ttl.lua"), ScriptOutputType.BOOLEAN);
     private final RedisScript updateOnlineUserStatusIfPresent =
@@ -109,6 +110,9 @@ public class UserStatusService {
             TurmsRedisClientManager sessionRedisClientManager) {
         localNodeId = ByteBufUtil.getUnreleasableDirectBuffer(node.getLocalMemberId().getBytes(StandardCharsets.US_ASCII));
         TurmsProperties turmsProperties = propertiesManager.getLocalProperties();
+        addOnlineUserScript = RedisScript.get(new ClassPathResource("redis/session/try_add_online_user_with_ttl.lua"),
+                ScriptOutputType.BOOLEAN,
+                Map.of("DEVICE_DETAILS_TTL", turmsProperties.getGateway().getSession().getDeviceDetails().getExpireAfterSeconds()));
         cacheUserSessionsStatus = turmsProperties.getUserStatus().isCacheUserSessionsStatus();
         operationTimeout = Duration.ofSeconds(10);
         this.sessionRedisClientManager = sessionRedisClientManager;
@@ -216,10 +220,9 @@ public class UserStatusService {
                 .timeout(operationTimeout);
     }
 
-    public Mono<Void> updateOnlineUsersTtl(@NotNull LongKeyGenerator userIdGenerator, @NotNull int timeoutSeconds) {
+    public Mono<Void> updateOnlineUsersTtl(@NotNull LongKeyGenerator userIdGenerator, int timeoutSeconds) {
         try {
             Validator.notNull(userIdGenerator, "userIdGenerator");
-            Validator.notNull(timeoutSeconds, "timeoutSeconds");
         } catch (ResponseException e) {
             return Mono.error(e);
         }
@@ -286,6 +289,59 @@ public class UserStatusService {
     }
 
     /**
+     * TODO: cache
+     */
+    public Mono<Map<Long, Map<String, String>>> fetchDeviceDetails(
+            @NotEmpty Set<Long> userIds,
+            @NotEmpty List<String> fields) {
+        try {
+            Validator.notEmpty(userIds, "userIds");
+            Validator.notEmpty(fields, "fields");
+        } catch (ResponseException e) {
+            return Mono.error(e);
+        }
+        return sessionRedisClientManager
+                .execute(userIds, (client, ids) -> {
+                    int fieldCount = fields.size();
+                    int count = 1 + fieldCount + ids.size();
+                    ByteBuf[] args = new ByteBuf[count];
+                    int index = 0;
+                    args[index++] = ByteBufUtil.obj2Buffer((byte) fieldCount);
+                    for (String field : fields) {
+                        args[index++] = ByteBufUtil.obj2Buffer(field);
+                    }
+                    for (Long userId : ids) {
+                        args[index++] = ByteBufUtil.obj2Buffer(userId);
+                    }
+                    return client.eval(getUsersDeviceDetailsScript, args);
+                })
+                .collect(CollectorUtil.toList(4))
+                .map(results -> {
+                    Map<Long, Map<String, String>> userIdToDetails = CollectionUtil.newMapWithExpectedSize(userIds.size());
+                    for (Object rawElements : results) {
+                        List<Object> elements = (List<Object>) rawElements;
+                        int elementCount = elements.size();
+                        if (elementCount == 0) {
+                            continue;
+                        }
+                        int index = 0;
+                        do {
+                            Long userId = ((ByteBuf) elements.get(index++)).readLong();
+                            int fieldCount = ((int) (long) elements.get(index++));
+                            Map<String, String> details = CollectionUtil.newMapWithExpectedSize(fieldCount);
+                            for (int i = 0; i < fieldCount; i++) {
+                                String key = ByteBufUtil.readString((ByteBuf) elements.get(index++));
+                                String value = ByteBufUtil.readString((ByteBuf) elements.get(index++));
+                                details.put(key, value);
+                            }
+                            userIdToDetails.put(userId, details);
+                        } while (index < elementCount);
+                    }
+                    return userIdToDetails;
+                });
+    }
+
+    /**
      * Note that the method only removes the device information of a user
      * and doesn't remove the online status information to avoid querying and removing one more time.
      * The status will be removed when the TTL has been reached
@@ -313,25 +369,39 @@ public class UserStatusService {
      */
     public Mono<Boolean> addOnlineDeviceIfAbsent(@NotNull Long userId,
                                                  @NotNull @ValidDeviceType DeviceType deviceType,
+                                                 @Nullable Map<String, String> deviceDetails,
                                                  @Nullable UserStatus userStatus,
-                                                 @NotNull int heartbeatSeconds) {
+                                                 int heartbeatSeconds) {
         try {
             Validator.notNull(userId, "userId");
             Validator.notNull(deviceType, "deviceType");
             DeviceTypeUtil.validDeviceType(deviceType);
             Validator.notEquals(userStatus, UserStatus.UNRECOGNIZED, "The user status must not be UNRECOGNIZED");
             Validator.notEquals(userStatus, UserStatus.OFFLINE, "The user status must not be OFFLINE");
-            Validator.notNull(heartbeatSeconds, "heartbeatSeconds");
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        Object[] args = new Object[userStatus == null ? 4 : 5];
-        args[0] = userId;
-        args[1] = (byte) deviceType.getNumber();
-        args[2] = localNodeId;
-        args[3] = (short) heartbeatSeconds;
-        if (userStatus != null) {
-            args[4] = (byte) userStatus.getNumber();
+        int deviceDetailCount = CollectionUtil.getSize(deviceDetails);
+        boolean hasDeviceDetails = deviceDetailCount > 0;
+        boolean hasUserStatus = userStatus != null;
+        int count = hasUserStatus ? 5 : 4;
+        if (hasDeviceDetails) {
+            count += 2 * deviceDetailCount;
+        }
+        int index = 0;
+        Object[] args = new Object[count];
+        args[index++] = userId;
+        args[index++] = (byte) deviceType.getNumber();
+        args[index++] = localNodeId;
+        args[index++] = (short) heartbeatSeconds;
+        if (hasUserStatus) {
+            args[index++] = (byte) userStatus.getNumber();
+        }
+        if (hasDeviceDetails) {
+            for (Map.Entry<String, String> entry : deviceDetails.entrySet()) {
+                args[index++] = entry.getKey();
+                args[index++] = entry.getValue();
+            }
         }
         return sessionRedisClientManager.eval(userId, addOnlineUserScript, args);
     }

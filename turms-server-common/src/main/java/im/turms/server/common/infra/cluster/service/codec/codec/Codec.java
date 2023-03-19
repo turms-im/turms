@@ -34,6 +34,10 @@ public interface Codec<T> {
         return null;
     }
 
+    default List<Class<?>> getEncodableSuperClasses() {
+        return null;
+    }
+
     void write(CodecStreamOutput output, T data);
 
     T read(CodecStreamInput input);

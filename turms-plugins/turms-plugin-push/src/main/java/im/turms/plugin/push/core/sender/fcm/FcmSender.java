@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package im.turms.service.infra.push.sender.fcm;
+package im.turms.plugin.push.core.sender.fcm;
 
 import com.google.api.core.ApiFuture;
 import com.google.auth.oauth2.GoogleCredentials;
@@ -27,18 +27,21 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.MessagingErrorCode;
+import com.google.firebase.messaging.Notification;
+import im.turms.plugin.push.core.PushNotification;
+import im.turms.plugin.push.core.PushNotificationSender;
+import im.turms.plugin.push.core.SendPushNotificationResult;
+import im.turms.plugin.push.property.FcmProperties;
 import im.turms.server.common.infra.exception.FeatureDisabledException;
 import im.turms.server.common.infra.io.InputOutputException;
-import im.turms.server.common.infra.property.env.service.env.push.FcmProperties;
-import im.turms.service.infra.push.PushNotification;
-import im.turms.service.infra.push.PushNotificationSender;
-import im.turms.service.infra.push.SendPushNotificationResult;
+import lombok.Getter;
 import reactor.core.publisher.Mono;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ExecutionException;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen
@@ -50,14 +53,18 @@ public class FcmSender implements PushNotificationSender {
             .build();
 
     private final boolean isEnabled;
+    @Getter
+    private final String deviceTokenFieldName;
     private final FirebaseMessaging firebaseMessagingClient;
 
     public FcmSender(FcmProperties fcmProperties) {
         isEnabled = fcmProperties.isEnabled();
         if (!isEnabled) {
+            deviceTokenFieldName = null;
             firebaseMessagingClient = null;
             return;
         }
+        deviceTokenFieldName = fcmProperties.getDeviceTokenFieldName();
         byte[] credentialsBytes = fcmProperties.getCredentials().getBytes(StandardCharsets.UTF_8);
         ByteArrayInputStream credentialInputStream = new ByteArrayInputStream(credentialsBytes);
         GoogleCredentials credentials;
@@ -100,14 +107,28 @@ public class FcmSender implements PushNotificationSender {
         if (!isEnabled) {
             return Mono.error(new FeatureDisabledException("FCM is disabled"));
         }
-        Message message = Message.builder()
+        String body = notification.body();
+        Notification.Builder notificationBuilder = Notification.builder()
+                .setBody(body);
+        String title = notification.title();
+        boolean hasTitle = title != null;
+        if (hasTitle) {
+            notificationBuilder.setTitle(title);
+        }
+        Message.Builder messageBuilder = Message.builder()
                 .setToken(notification.deviceToken())
                 .setAndroidConfig(ANDROID_CONFIG)
-                .putData(
-                        notification.notificationType().getType(),
-                        notification.data() == null ? "" : notification.data())
-                .build();
-        ApiFuture<String> sendFuture = firebaseMessagingClient.sendAsync(message);
+                .setNotification(notificationBuilder.build())
+                .putData("body", body);
+        if (hasTitle) {
+            messageBuilder.putData("title", title);
+        }
+        Integer badgeNumber = notification.badgeNumber();
+        if (badgeNumber != null) {
+            messageBuilder.putData("badge", String.valueOf(badgeNumber));
+        }
+        ApiFuture<String> sendFuture = firebaseMessagingClient
+                .sendAsync(messageBuilder.build());
         return Mono.create(sink -> {
             Runnable listener = () -> {
                 try {

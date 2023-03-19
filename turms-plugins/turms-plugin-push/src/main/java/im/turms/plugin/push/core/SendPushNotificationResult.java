@@ -15,26 +15,16 @@
  * limitations under the License.
  */
 
-package im.turms.service.infra.push;
+package im.turms.plugin.push.core;
 
 import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen
  */
-public record PushNotification(
-        String deviceToken,
-        DeviceTokenType deviceTokenType,
-        PushNotificationType notificationType,
-        @Nullable String data
+public record SendPushNotificationResult(
+        boolean accepted,
+        @Nullable String errorCode,
+        boolean unregistered
 ) {
-
-    public String toStringWithoutDate() {
-        return "PushNotification{" +
-                "deviceToken=\"" + deviceToken + '\"' +
-                ", deviceTokenType=" + deviceTokenType +
-                ", notificationType=" + notificationType +
-                '}';
-    }
-
 }

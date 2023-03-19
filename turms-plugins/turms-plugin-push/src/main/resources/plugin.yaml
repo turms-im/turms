@@ -1,0 +1,6 @@
+id: im.turms.plugin.push.PushNotificationPlugin
+class: im.turms.plugin.push.PushNotificationPlugin
+version: 0.10.0
+provider: im.turms
+license: MIT
+description: ''

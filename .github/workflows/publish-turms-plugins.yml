@@ -20,7 +20,13 @@ jobs:
           java-version: 17
 
       - name: Build
-        run: mvn clean package -Dmaven.test.skip=true -am -B -pl turms-plugins/turms-plugin-antispam,turms-plugins/turms-plugin-minio,turms-plugins/turms-plugin-rasa --no-transfer-progress
+        run: |
+          mvn clean package -Dmaven.test.skip=true -am -B -pl \
+          turms-plugins/turms-plugin-antispam,\
+          turms-plugins/turms-plugin-minio,\
+          turms-plugins/turms-plugin-push,\
+          turms-plugins/turms-plugin-rasa \
+          --no-transfer-progress
 
       - name: Release
         uses: softprops/action-gh-release@v1
