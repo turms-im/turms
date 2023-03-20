@@ -36,7 +36,6 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.UnpooledByteBufAllocator;
 import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Mono;
-import reactor.core.publisher.Sinks;
 import reactor.test.StepVerifier;
 
 import java.time.Duration;
@@ -69,24 +68,16 @@ class NotificationServiceTests {
         TcpConnection connection = mock(TcpConnection.class);
         UserSession session = new UserSession(1, TurmsRequestTypePool.ALL, 1L, DeviceType.ANDROID, null, new Location(1F, 1F));
         session.setConnection(connection, new ByteArrayWrapper(new byte[]{}));
-        Sinks.One<ByteBuf> sink = Sinks.one();
-        session.setNotificationConsumer((notification, tracingContext) -> {
-            sink.tryEmitValue(notification);
-            return Mono.empty();
-        });
-        Mono<ByteBuf> result = sink.asMono()
-                .flatMap(byteBuf -> Mono
-                        // Wait 1s to simulate the async process
-                        .delay(Duration.ofSeconds(1))
-                        .then(Mono.fromRunnable(byteBuf::release))
-                        .thenReturn(byteBuf));
+        session.setNotificationConsumer((notification, tracingContext) ->
+                // Wait 1s to simulate the async process
+                Mono.delay(Duration.ofSeconds(1)).then(Mono.fromRunnable(notification::release)));
         when(sessionsManager.getDeviceTypeToSession())
                 .thenReturn(Map.of(DeviceType.ANDROID, session));
         NotificationService notificationService = newOutboundMessageService(sessionsManager);
 
         ByteBuf byteBuf = UnpooledByteBufAllocator.DEFAULT.directBuffer();
         Set<Long> recipientIds = Set.of(1L);
-        Set<Long> offlineRecipientIds = notificationService.sendNotificationToLocalClients(TracingContext.NOOP,
+        Mono<Set<Long>> offlineRecipientIdsMono = notificationService.sendNotificationToLocalClients(TracingContext.NOOP,
                 byteBuf,
                 recipientIds,
                 Collections.emptySet(),
@@ -95,13 +86,13 @@ class NotificationServiceTests {
         assertThat(byteBuf.refCnt())
                 .as("Buffer should not be released if the notification has not been sent")
                 .isPositive();
-        StepVerifier.create(result)
-                .expectNextMatches(buf -> buf.refCnt() == 0)
-                .as("Buffer should be released if the notification is sent")
-                .verifyComplete();
-        assertThat(offlineRecipientIds)
+        StepVerifier.create(offlineRecipientIdsMono)
+                .expectNextMatches(Set::isEmpty)
                 .as("Should not have offline recipient")
-                .isEmpty();
+                .verifyComplete();
+        assertThat(byteBuf.refCnt())
+                .as("Buffer should be released if the notification is sent")
+                .isZero();
     }
 
     @Test
@@ -110,18 +101,19 @@ class NotificationServiceTests {
 
         ByteBuf byteBuf = UnpooledByteBufAllocator.DEFAULT.directBuffer();
         Set<Long> recipientIds = Set.of(1L);
-        Set<Long> offlineRecipientIds= notificationService.sendNotificationToLocalClients(TracingContext.NOOP,
+        Mono<Set<Long>> offlineRecipientIdsMono = notificationService.sendNotificationToLocalClients(TracingContext.NOOP,
                 byteBuf,
                 recipientIds,
                 Collections.emptySet(),
                 null);
 
+        StepVerifier.create(offlineRecipientIdsMono)
+                .expectNextMatches(ids -> !ids.isEmpty())
+                .as("Should have offline recipient")
+                .verifyComplete();
         assertThat(byteBuf.refCnt())
                 .as("Buffer should be released if recipients are offline")
                 .isZero();
-        assertThat(offlineRecipientIds)
-                .as("Should have offline recipient")
-                .isNotEmpty();
     }
 
     private NotificationService newOutboundMessageService(UserSessionsManager userSessionsManager) {

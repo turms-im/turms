@@ -21,6 +21,7 @@ import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.domain.session.bo.UserSessionId;
 import im.turms.server.common.infra.tracing.TracingContext;
 import io.netty.buffer.ByteBuf;
+import reactor.core.publisher.Mono;
 
 import java.util.Set;
 import jakarta.annotation.Nullable;
@@ -32,7 +33,7 @@ import jakarta.validation.constraints.NotNull;
  */
 public interface INotificationService {
 
-    Set<Long> sendNotificationToLocalClients(
+    Mono<Set<Long>> sendNotificationToLocalClients(
             @NotNull TracingContext context,
             @NotNull ByteBuf notificationData,
             @NotEmpty Set<Long> recipientIds,

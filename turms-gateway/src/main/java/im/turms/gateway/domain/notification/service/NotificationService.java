@@ -31,11 +31,13 @@ import im.turms.server.common.domain.notification.service.INotificationService;
 import im.turms.server.common.domain.session.bo.UserSessionId;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.exception.IncompatibleInternalChangeException;
+import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.plugin.PluginManager;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.proto.ProtoDecoder;
+import im.turms.server.common.infra.tracing.TracingCloseableContext;
 import im.turms.server.common.infra.tracing.TracingContext;
 import im.turms.server.common.infra.validation.Validator;
 import io.netty.buffer.ByteBuf;
@@ -95,20 +97,24 @@ public class NotificationService implements INotificationService {
      * because we know sendNotificationToLocalClients() is in the tracing scope
      */
     @Override
-    public Set<Long> sendNotificationToLocalClients(
+    public Mono<Set<Long>> sendNotificationToLocalClients(
             TracingContext tracingContext,
             ByteBuf notificationData,
             Set<Long> recipientIds,
             Set<UserSessionId> excludedUserSessionIds,
             @Nullable DeviceType excludedDeviceType) {
-        Validator.notNull(notificationData, "notificationData");
-        Validator.notEmpty(recipientIds, "recipientIds");
-        Validator.notNull(excludedUserSessionIds, "excludedUserSessionIds");
+        try {
+            Validator.notNull(notificationData, "notificationData");
+            Validator.notEmpty(recipientIds, "recipientIds");
+            Validator.notNull(excludedUserSessionIds, "excludedUserSessionIds");
+        } catch (ResponseException e) {
+            return Mono.error(e);
+        }
         // Prepare data
         int recipientCount = recipientIds.size();
         int halfRecipientCount = recipientCount >> 1;
         Set<Long> offlineRecipientIds = CollectionUtil
-                .newSetWithExpectedSize(halfRecipientCount);
+                .newConcurrentSetWithExpectedSize(halfRecipientCount);
 
         List<Mono<Void>> monos = new ArrayList<>(halfRecipientCount);
 
@@ -131,8 +137,9 @@ public class NotificationService implements INotificationService {
                     // Otherwise, a memory leak will occur.
                     monos.add(userSession.sendNotification(notificationData, tracingContext)
                             .onErrorResume(t -> {
+                                offlineRecipientIds.add(recipientId);
                                 if (userSession.isSessionOpen()) {
-                                    LOGGER.warn("Failed to send a notification to the user session: {}", userSession);
+                                    return Mono.error(new RuntimeException("Failed to send a notification to the user session: " + userSession));
                                 }
                                 return Mono.empty();
                             }));
@@ -140,30 +147,41 @@ public class NotificationService implements INotificationService {
                 }
             }
         }
-
-        // Invoke handlers
-        if (pluginManager.hasRunningExtensions(NotificationHandler.class)) {
-            invokeExtensionPointHandlers(notificationData, recipientIds, offlineRecipientIds);
-        }
-
-        Mono.whenDelayError(monos)
-                .doFinally(signalType -> notificationData.release())
-                .subscribe(null, t -> LOGGER.error("Caught an error while sending a notification to user sessions", t));
-
-        SimpleTurmsNotification notification = isNotificationLoggingEnabled
-                ? TurmsNotificationParser.parseSimpleNotification(ProtoDecoder.newInputStream(notificationData))
-                : null;
-        if (isNotificationLoggingEnabled
-                && apiLoggingContext.shouldLogNotification(notification.relayedRequestType())) {
-            int offlineRecipientCount = offlineRecipientIds.size();
-            int notificationBytes = notificationData.readableBytes();
-            NotificationLogging.log(notification,
-                    notificationBytes,
-                    recipientCount,
-                    recipientCount - offlineRecipientCount);
-        }
-
-        return offlineRecipientIds;
+        return Mono.deferContextual(context -> Mono.whenDelayError(monos)
+                .doOnEach(signal -> {
+                    boolean isOnError = signal.isOnError();
+                    if (!signal.isOnComplete() && !isOnError) {
+                        return;
+                    }
+                    if (pluginManager.hasRunningExtensions(NotificationHandler.class)) {
+                        invokeExtensionPointHandlers(notificationData, recipientIds, offlineRecipientIds);
+                    }
+                    SimpleTurmsNotification notification = isNotificationLoggingEnabled
+                            ? TurmsNotificationParser.parseSimpleNotification(ProtoDecoder.newInputStream(notificationData))
+                            : null;
+                    Throwable t = signal.getThrowable();
+                    if (isNotificationLoggingEnabled
+                            && apiLoggingContext.shouldLogNotification(notification.relayedRequestType())) {
+                        int offlineRecipientCount = offlineRecipientIds.size();
+                        int notificationBytes = notificationData.readableBytes();
+                        try (TracingCloseableContext ignored = TracingContext.getCloseableContext(context)) {
+                            NotificationLogging.log(notification,
+                                    notificationBytes,
+                                    recipientCount,
+                                    recipientCount - offlineRecipientCount);
+                            if (t != null) {
+                                LOGGER.error("Caught an error while sending a notification to user sessions", t);
+                            }
+                        }
+                    } else if (t != null) {
+                        try (TracingCloseableContext ignored = TracingContext.getCloseableContext(context)) {
+                            LOGGER.error("Caught an error while sending a notification to user sessions", t);
+                        }
+                    }
+                })
+                .onErrorComplete(t -> true)
+                .thenReturn(offlineRecipientIds)
+                .doFinally(signalType -> notificationData.release()));
     }
 
     private void invokeExtensionPointHandlers(

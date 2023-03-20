@@ -35,6 +35,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.RandomAccess;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import jakarta.annotation.Nullable;
 
@@ -122,6 +123,10 @@ public final class CollectionUtil {
 
     public static <T> Set<T> newSetWithExpectedSize(int expectedSize) {
         return UnifiedSet.newSet(expectedSize);
+    }
+
+    public static <T> Set<T> newConcurrentSetWithExpectedSize(int expectedSize) {
+        return ConcurrentHashMap.newKeySet(getMapCapability(expectedSize));
     }
 
     public static <K, V> Map<K, V> newMap(Collection<K> keys, Function<K, V> valueMapper) {

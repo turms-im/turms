@@ -25,6 +25,7 @@ import im.turms.server.common.infra.cluster.service.rpc.dto.RpcRequest;
 import io.netty.buffer.ByteBuf;
 import lombok.Data;
 import org.springframework.context.ApplicationContext;
+import reactor.core.publisher.Mono;
 
 import java.util.Set;
 import jakarta.annotation.Nullable;
@@ -77,7 +78,7 @@ public class SendNotificationRequest extends RpcRequest<Set<Long>> {
 
     @Override
     public boolean isAsync() {
-        return false;
+        return true;
     }
 
     @Override
@@ -92,7 +93,7 @@ public class SendNotificationRequest extends RpcRequest<Set<Long>> {
      * @return offline recipient IDs
      */
     @Override
-    public Set<Long> call() {
+    public Mono<Set<Long>> callAsync() {
         return notificationService.sendNotificationToLocalClients(getTracingContext(),
                 notificationBuffer,
                 recipientIds,
