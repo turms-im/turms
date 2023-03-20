@@ -28,7 +28,9 @@ import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.collection.CollectorUtil;
 import im.turms.server.common.infra.collection.FastEnumMap;
 import im.turms.server.common.infra.exception.ResponseException;
+import im.turms.server.common.infra.io.InputOutputException;
 import im.turms.server.common.infra.netty.ByteBufUtil;
+import im.turms.server.common.infra.netty.ReferenceCountUtil;
 import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.reactor.PublisherPool;
@@ -306,12 +308,17 @@ public class UserStatusService {
                     int count = 1 + fieldCount + ids.size();
                     ByteBuf[] args = new ByteBuf[count];
                     int index = 0;
-                    args[index++] = ByteBufUtil.obj2Buffer((byte) fieldCount);
-                    for (String field : fields) {
-                        args[index++] = ByteBufUtil.obj2Buffer(field);
-                    }
-                    for (Long userId : ids) {
-                        args[index++] = ByteBufUtil.obj2Buffer(userId);
+                    try {
+                        args[index++] = ByteBufUtil.writeByte((byte) fieldCount);
+                        for (String field : fields) {
+                            args[index++] = ByteBufUtil.writeString(field);
+                        }
+                        for (Long userId : ids) {
+                            args[index++] = ByteBufUtil.writeLong(userId);
+                        }
+                    } catch (Exception e) {
+                        ReferenceCountUtil.ensureReleased(args, 0, index);
+                        return Mono.error(new InputOutputException("Failed to encode arguments", e));
                     }
                     return client.eval(getUsersDeviceDetailsScript, args);
                 })
@@ -389,19 +396,24 @@ public class UserStatusService {
             count += 2 * deviceDetailCount;
         }
         int index = 0;
-        Object[] args = new Object[count];
-        args[index++] = userId;
-        args[index++] = (byte) deviceType.getNumber();
-        args[index++] = localNodeId;
-        args[index++] = (short) heartbeatSeconds;
-        if (hasUserStatus) {
-            args[index++] = (byte) userStatus.getNumber();
-        }
-        if (hasDeviceDetails) {
-            for (Map.Entry<String, String> entry : deviceDetails.entrySet()) {
-                args[index++] = entry.getKey();
-                args[index++] = entry.getValue();
+        ByteBuf[] args = new ByteBuf[count];
+        try {
+            args[index++] = ByteBufUtil.writeLong(userId);
+            args[index++] = ByteBufUtil.writeByte((byte) deviceType.getNumber());
+            args[index++] = localNodeId;
+            args[index++] = ByteBufUtil.writeShort((short) heartbeatSeconds);
+            if (hasUserStatus) {
+                args[index++] = ByteBufUtil.writeByte((byte) userStatus.getNumber());
             }
+            if (hasDeviceDetails) {
+                for (Map.Entry<String, String> entry : deviceDetails.entrySet()) {
+                    args[index++] = ByteBufUtil.writeString(entry.getKey());
+                    args[index++] = ByteBufUtil.writeString(entry.getValue());
+                }
+            }
+        } catch (Exception e) {
+            ReferenceCountUtil.ensureReleased(args, 0, index);
+            return Mono.error(new InputOutputException("Failed to encode arguments", e));
         }
         return sessionRedisClientManager.eval(userId, addOnlineUserScript, args);
     }

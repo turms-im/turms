@@ -40,6 +40,12 @@ public final class ReferenceCountUtil {
         }
     }
 
+    public static void ensureReleased(ReferenceCounted[] values, int start, int end) {
+        for (int i = start; i < end; i++) {
+            ensureReleased(values[i]);
+        }
+    }
+
     public static void safeEnsureReleased(ReferenceCounted value) {
         try {
             int refCnt = value.refCnt();

@@ -52,21 +52,6 @@ public final class ByteBufUtil {
     private ByteBufUtil() {
     }
 
-    @VisibleForTesting
-    public static String getString(ByteBuf buffer) {
-        buffer.markReaderIndex();
-        byte[] bytes = new byte[buffer.readableBytes()];
-        buffer.readBytes(bytes);
-        buffer.resetReaderIndex();
-        return new String(bytes, StandardCharsets.UTF_8);
-    }
-
-    public static String readString(ByteBuf buffer) {
-        byte[] bytes = new byte[buffer.readableBytes()];
-        buffer.readBytes(bytes);
-        return new String(bytes, StandardCharsets.UTF_8);
-    }
-
     public static ByteBuf getPooledPreferredByteBuffer(int value) {
         if (0 <= value && value < BYTE_CACHE_SIZE) {
             return BYTE_CACHE[value];
@@ -109,7 +94,59 @@ public final class ByteBufUtil {
                 .directBuffer(bytes.length).writeBytes(bytes));
     }
 
-    public static ByteBuf obj2Buffer(Object obj) {
+    public static ByteBuf writeByte(byte element) {
+        return getPooledPreferredByteBuffer(element);
+    }
+
+    public static ByteBuf writeShort(short element) {
+        return PooledByteBufAllocator.DEFAULT.directBuffer(Short.BYTES).writeShort(element);
+    }
+
+    public static ByteBuf writeInt(int element) {
+        return getPooledPreferredIntegerBuffer(element);
+    }
+
+    public static ByteBuf writeLong(long element) {
+        return PooledByteBufAllocator.DEFAULT.directBuffer(Long.BYTES).writeLong(element);
+    }
+
+    public static ByteBuf writeFloat(float element) {
+        return PooledByteBufAllocator.DEFAULT.directBuffer(Float.BYTES).writeFloat(element);
+    }
+
+    public static ByteBuf writeDouble(double element) {
+        return PooledByteBufAllocator.DEFAULT.directBuffer(Double.BYTES).writeDouble(element);
+    }
+
+    public static ByteBuf writeChar(char element) {
+        return PooledByteBufAllocator.DEFAULT.directBuffer(Character.BYTES).writeChar(element);
+    }
+
+    public static ByteBuf writeBoolean(boolean element) {
+        return getPooledPreferredByteBuffer(element ? 1 : 0);
+    }
+
+    public static ByteBuf writeString(String element) {
+        byte[] bytes = StringUtil.getUtf8Bytes(element);
+        return PooledByteBufAllocator.DEFAULT.directBuffer(bytes.length).writeBytes(bytes);
+    }
+
+    public static String readString(ByteBuf buffer) {
+        byte[] bytes = new byte[buffer.readableBytes()];
+        buffer.readBytes(bytes);
+        return new String(bytes, StandardCharsets.UTF_8);
+    }
+
+    @VisibleForTesting
+    public static String getString(ByteBuf buffer) {
+        buffer.markReaderIndex();
+        byte[] bytes = new byte[buffer.readableBytes()];
+        buffer.readBytes(bytes);
+        buffer.resetReaderIndex();
+        return new String(bytes, StandardCharsets.UTF_8);
+    }
+
+    public static ByteBuf writeObject(Object obj) {
         if (obj instanceof ByteBuf element) {
             return element;
         }
@@ -144,12 +181,12 @@ public final class ByteBufUtil {
         throw new IllegalArgumentException("Could not serialize the unknown value: " + obj);
     }
 
-    public static ByteBuf[] objs2Buffers(Object... objs) {
+    public static ByteBuf[] writeObjects(Object... objs) {
         int length = objs.length;
         ByteBuf[] buffers = new ByteBuf[length];
         for (int i = 0; i < length; i++) {
             try {
-                buffers[i] = ByteBufUtil.obj2Buffer(objs[i]);
+                buffers[i] = ByteBufUtil.writeObject(objs[i]);
             } catch (Exception e) {
                 for (int j = 0; j < i; j++) {
                     buffers[j].release();

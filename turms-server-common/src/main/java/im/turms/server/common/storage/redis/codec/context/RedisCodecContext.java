@@ -97,7 +97,7 @@ public class RedisCodecContext {
 
     private ByteBuf encode(TurmsRedisCodec codec, Object value) {
         if (codec == null) {
-            ByteBuf byteBuf = ByteBufUtil.obj2Buffer(value);
+            ByteBuf byteBuf = ByteBufUtil.writeObject(value);
             if (byteBuf == null) {
                 throw new UnsupportedOperationException("Could not encode the value: " + value);
             }

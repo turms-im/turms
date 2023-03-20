@@ -139,7 +139,11 @@ public class TurmsRedisClientManager {
     // Scripting
 
     public <T> Mono<T> eval(Long shardKey, RedisScript script, Object... keys) {
-        ByteBuf[] buffers = ByteBufUtil.objs2Buffers(keys);
+        ByteBuf[] buffers = ByteBufUtil.writeObjects(keys);
+        return getClient(shardKey).eval(script, buffers);
+    }
+
+    public <T> Mono<T> eval(Long shardKey, RedisScript script, ByteBuf[] buffers) {
         return getClient(shardKey).eval(script, buffers);
     }
 
