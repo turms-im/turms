@@ -23,12 +23,16 @@ import com.eatthepath.pushy.apns.PushNotificationResponse;
 import com.eatthepath.pushy.apns.PushType;
 import com.eatthepath.pushy.apns.auth.ApnsSigningKey;
 import com.eatthepath.pushy.apns.util.SimpleApnsPushNotification;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import im.turms.plugin.push.core.PushNotification;
 import im.turms.plugin.push.core.PushNotificationSender;
 import im.turms.plugin.push.core.SendPushNotificationResult;
 import im.turms.plugin.push.property.ApnsProperties;
 import im.turms.server.common.infra.exception.FeatureDisabledException;
-import im.turms.server.common.infra.lang.StrJoiner;
+import im.turms.server.common.infra.io.InputOutputException;
+import im.turms.server.common.infra.json.JsonCodecPool;
+import im.turms.server.common.infra.test.VisibleForTesting;
 import lombok.Getter;
 import reactor.core.publisher.Mono;
 
@@ -43,6 +47,7 @@ public class ApnsSender implements PushNotificationSender {
 
     private static final Instant MAX_EXPIRATION = Instant.ofEpochMilli(Integer.MAX_VALUE * 1000L);
     private static final String COLLAPSE_ID = "0";
+    private static final ObjectWriter APNS_PAYLOAD_WRITER = JsonCodecPool.MAPPER.writerFor(ApnsPayload.class);
 
     private final boolean isEnabled;
     private final String bundleId;
@@ -84,39 +89,36 @@ public class ApnsSender implements PushNotificationSender {
         }
     }
 
+    @VisibleForTesting
+    public static String buildPayload(PushNotification notification) {
+        ApnsPayload apnsPayload = new ApnsPayload(
+                new ApnsPayload.Aps(
+                        new ApnsPayload.Alert(notification.title(),
+                                notification.body()),
+                        notification.badgeNumber(),
+                        1));
+        try {
+            return APNS_PAYLOAD_WRITER.writeValueAsString(apnsPayload);
+        } catch (JsonProcessingException e) {
+            throw new InputOutputException("Failed to encode payload", e);
+        }
+    }
+
     @Override
     public Mono<SendPushNotificationResult> sendNotification(PushNotification notification) {
         if (!isEnabled) {
             return Mono.error(new FeatureDisabledException("APNs is disabled"));
         }
-        String title = notification.title();
-        Integer badgeNumber = notification.badgeNumber();
-        int count = 3;
-        boolean hasTitle = title != null;
-        boolean hasBadgeNumber = badgeNumber != null;
-        if (hasTitle) {
-            count++;
+        String payload;
+        try {
+            payload = buildPayload(notification);
+        } catch (Exception e) {
+            return Mono.error(e);
         }
-        if (hasBadgeNumber) {
-            count++;
-        }
-        StrJoiner joiner = new StrJoiner(count);
-        joiner.add("""
-                {"aps":{"mutable-content":1,"alert":{"loc-key":"APN_Message"}}""");
-        if (hasTitle) {
-            // TODO: sanitize
-            joiner.add(",\"title\":\"" + title + "\"");
-        }
-        // TODO: sanitize
-        joiner.add(",\"body\":\"" + notification.body() + "\"");
-        if (hasBadgeNumber) {
-            joiner.add(",\"badge\":" + badgeNumber);
-        }
-        joiner.add("}");
         SimpleApnsPushNotification pushNotification = new SimpleApnsPushNotification(
                 notification.deviceToken(),
                 bundleId,
-                joiner.toString(),
+                payload,
                 MAX_EXPIRATION,
                 DeliveryPriority.IMMEDIATE,
                 PushType.ALERT,
