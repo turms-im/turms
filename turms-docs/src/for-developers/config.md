@@ -111,7 +111,12 @@ turms-service的JVM默认配置文件为：`turms-service/dist/config/jvm.option
 
 ### Turms服务端配置
 
-Turms配置分为三大类：Turms Service配置、Turms Gateway配置，以及Common通用配置。Turms Service配置对应turms服务端独有的配置，Turms Gateway配置对应turms-gateway服务端独有的配置，而Common通用配置可以被turms和turms-gateway服务端共用。
+Turms配置分为四大类：
+
+* Turms Gateway配置：对应turms-gateway服务端独有的配置
+* Turms Service配置：对应turms-service服务端独有的配置。
+* Common通用配置：Common通用配置可以被turms-gateway和turms-service服务端共用。
+* 插件自身的配置：Turms服务端插件自身提供的配置。
 
 #### 配置方法
 
@@ -119,6 +124,9 @@ Turms配置分为三大类：Turms Service配置、Turms Gateway配置，以及C
 2. 修改`application.yaml`下的配置文件。具体方法：
    1. 直接修改仓库内服务端下的`application.yaml`文件。因为如果修改了配置源文件，那用户就不能使用Turms官方提供的Docker镜像了，并且还需要自行打包成JAR包并制作镜像，因此这种方式一般只用于本地开发测试用，不用于线上环境。
    2. 使用前文提到的Docker挂载的方式，将自定义的服务端配置文件挂载到`/opt/turms/turms-gateway/config/application.yaml`路径上。
+3. 调用Admin HTTP API进行修改，其路径为：`PUT /cluster/settings`。
+
+提醒：对于插件自身的配置，其配置方法跟Turms服务端的配置方法一样，除了暂时不支持使用Admin HTTP API动态修改外，同样可以基于上述的①②两个方法进行配置。举例来说，如果一个插件是给turms-gateway服务端使用的插件，那么用户可以将插件自身的配置放到turms-gateway服务端的`TURMS_GATEWAY_JVM_OPTS`环境变量当中。
 
 #### 配置集（Profiles）
 
@@ -183,6 +191,10 @@ Turms配置分为三大类：Turms Service配置、Turms Gateway配置，以及C
 | SecurityProperties    | security    | 用户与管理员密码加密相关配置                                 |
 | UserStatusProperties  | userStatus  | 用户会话（连接）状态相关配置                                 |
 
+##### 插件自身的配置
+
+如果用户想查阅Turms服务端官方插件的配置项，可以阅读对应的插件文档，这些文档都会罗列该插件所提供的配置项。
+
 #### 服务端端口号配置
 
 | 服务端                      | 配置项                               | 端口               | 作用                                                         |
@@ -196,6 +208,8 @@ Turms配置分为三大类：Turms Service配置、Turms Gateway配置，以及C
 | turms-gateway               | turms.gateway.udp.port               | 12510（UDP）       | 与客户端交互（客户端均暂不支持）。<br />注意：UDP服务端为实验性功能，并不在第一版发布计划中 |
 
 ## 配置项
+
+注意：下表不包括Turms服务端插件的配置。
 
 |配置项|全局属性|可变属性|数据类型|默认值|说明|
 |----|----|----|----|----|----|
