@@ -20,7 +20,6 @@ package im.turms.plugin.push;
 import im.turms.plugin.push.core.PushNotification;
 import im.turms.plugin.push.core.PushNotificationManager;
 import im.turms.plugin.push.core.PushNotificationServiceProvider;
-import im.turms.plugin.push.core.SendPushNotificationResult;
 import im.turms.plugin.push.property.PushNotificationProperties;
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.request.TurmsRequest;
@@ -36,6 +35,7 @@ import im.turms.service.access.servicerequest.dto.RequestHandlerResult;
 import im.turms.service.domain.user.service.UserService;
 import im.turms.service.infra.plugin.extension.RequestHandlerResultHandler;
 import reactor.core.publisher.Mono;
+import reactor.util.context.ContextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -104,35 +104,42 @@ public class NotificationPusher extends TurmsExtension implements RequestHandler
                                 }
                                 return true;
                             })
-                            .doOnNext(recipientIdToDetails -> {
-                                Set<Map.Entry<Long, Map<String, String>>> entries = recipientIdToDetails.entrySet();
-                                int count = entries.size() << 2;
-                                List<Mono<SendPushNotificationResult>> monos = new ArrayList<>(count);
-                                for (Map.Entry<Long, Map<String, String>> recipientToDetail : entries) {
-                                    for (Map.Entry<String, String> providerToToken : recipientToDetail.getValue().entrySet()) {
-                                        String providerStr = providerToToken.getKey();
-                                        PushNotificationServiceProvider provider = PushNotificationServiceProvider.get(providerStr);
-                                        if (provider != null) {
-                                            PushNotification notification = new PushNotification(provider, providerToToken.getValue(), name, text, null);
-                                            Mono<SendPushNotificationResult> mono = manager
-                                                    .sendNotification(notification)
-                                                    .onErrorComplete(t -> {
-                                                        try (TracingCloseableContext ignored = TracingContext.getCloseableContext(context)) {
-                                                            LOGGER.error("Caught an error while delivering the push notification: {}",
-                                                                    notification.toStringWithoutDate(), t);
-                                                        }
-                                                        return true;
-                                                    });
-                                            monos.add(mono);
-                                        }
-                                    }
-                                }
-                                Mono.whenDelayError(monos)
-                                        .subscribe();
-                            })
+                            .doOnNext(recipientIdToDetails -> sendNotification(context, recipientIdToDetails, text, name))
                             .subscribe())
                     .subscribe();
             return Mono.empty();
         });
     }
+
+    private void sendNotification(ContextView context,
+                                  Map<Long, Map<String, String>> recipientIdToDetails,
+                                  String text,
+                                  String requesterName) {
+        Set<Map.Entry<Long, Map<String, String>>> entries = recipientIdToDetails.entrySet();
+        int count = entries.size() << 2;
+        List<Mono<Void>> monos = new ArrayList<>(count);
+        for (Map.Entry<Long, Map<String, String>> recipientToDetail : entries) {
+            for (Map.Entry<String, String> providerToToken : recipientToDetail.getValue().entrySet()) {
+                String providerStr = providerToToken.getKey();
+                PushNotificationServiceProvider provider = PushNotificationServiceProvider.get(providerStr);
+                if (provider == null) {
+                    continue;
+                }
+                PushNotification notification = new PushNotification(provider, providerToToken.getValue(), requesterName, text, null);
+                Mono<Void> mono = manager
+                        .sendNotification(notification)
+                        .onErrorComplete(t -> {
+                            try (TracingCloseableContext ignored = TracingContext.getCloseableContext(context)) {
+                                LOGGER.error("Caught an error while delivering the push notification: {}",
+                                        notification.toStringWithoutDate(), t);
+                            }
+                            return true;
+                        });
+                monos.add(mono);
+            }
+        }
+        Mono.whenDelayError(monos)
+                .subscribe();
+    }
+
 }

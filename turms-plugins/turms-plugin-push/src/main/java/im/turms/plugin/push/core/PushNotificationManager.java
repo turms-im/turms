@@ -19,13 +19,18 @@ package im.turms.plugin.push.core;
 
 import im.turms.plugin.push.core.sender.apns.ApnsSender;
 import im.turms.plugin.push.core.sender.fcm.FcmSender;
+import im.turms.plugin.push.property.ApnsProperties;
+import im.turms.plugin.push.property.FcmProperties;
 import im.turms.plugin.push.property.PushNotificationProperties;
+import im.turms.server.common.infra.exception.FeatureDisabledException;
 import io.micrometer.core.instrument.Metrics;
 import io.micrometer.core.instrument.Tags;
 import lombok.Getter;
-import org.apache.commons.lang3.StringUtils;
 import reactor.core.publisher.Mono;
+import reactor.util.retry.Retry;
+import reactor.util.retry.RetryBackoffSpec;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,52 +46,112 @@ public class PushNotificationManager {
     private final FcmSender fcmSender;
     @Getter
     private final List<String> deviceTokenFieldNames;
+    private final boolean isApnsEnabled;
+    private final boolean isFcmEnabled;
+
+    private volatile boolean isClosed;
+
+    // TODO: make configurable
+    private final RetryBackoffSpec retrySpec = Retry.backoff(2, Duration.ofMillis(1))
+            .filter(throwable -> throwable instanceof SendPushNotificationException exception
+                    && exception.getErrorCode().isRetryable()
+                    && !isClosed);
 
     public PushNotificationManager(PushNotificationProperties properties) {
-        apnsSender = new ApnsSender(properties.getApns());
-        fcmSender = new FcmSender(properties.getFcm());
+        ApnsProperties apnsProperties = properties.getApns();
+        FcmProperties fcmProperties = properties.getFcm();
+        isApnsEnabled = apnsProperties.isEnabled();
+        isFcmEnabled = fcmProperties.isEnabled();
+        apnsSender = isApnsEnabled
+                ? new ApnsSender(apnsProperties)
+                : null;
+        fcmSender = isFcmEnabled
+                ? new FcmSender(fcmProperties)
+                : null;
 
-        String apnsDeviceTokenFieldName = apnsSender.getDeviceTokenFieldName();
-        String fcmDeviceTokenFieldName = fcmSender.getDeviceTokenFieldName();
         List<String> names = new ArrayList<>(2);
-        if (apnsDeviceTokenFieldName != null) {
-            names.add(apnsDeviceTokenFieldName);
+        if (isApnsEnabled) {
+            names.add(apnsSender.getDeviceTokenFieldName());
         }
-        if (fcmDeviceTokenFieldName != null) {
-            names.add(fcmDeviceTokenFieldName);
+        if (isFcmEnabled) {
+            names.add(fcmSender.getDeviceTokenFieldName());
         }
         deviceTokenFieldNames = names;
     }
 
-    // TODO: retry
-    public Mono<SendPushNotificationResult> sendNotification(PushNotification pushNotification) {
-        PushNotificationSender sender = switch (pushNotification.serviceProvider()) {
-            case FCM -> fcmSender;
-            case APN -> apnsSender;
-        };
+    public Mono<Void> sendNotification(PushNotification pushNotification) {
+        PushNotificationSender sender;
+        switch (pushNotification.serviceProvider()) {
+            case FCM -> {
+                if (isFcmEnabled) {
+                    sender = fcmSender;
+                } else {
+                    return Mono.error(new FeatureDisabledException("FCM is disabled"));
+                }
+            }
+            case APN -> {
+                if (isApnsEnabled) {
+                    sender = apnsSender;
+                } else {
+                    return Mono.error(new FeatureDisabledException("APNs is disabled"));
+                }
+            }
+            default -> {
+                return Mono.error(new RuntimeException("Unknown push service provider: " + pushNotification.serviceProvider()));
+            }
+        }
         return sender.sendNotification(pushNotification)
-                .doOnNext(result -> {
-                    Tags tags = Tags.of("token.type", pushNotification.serviceProvider().name(),
+                .doOnSuccess(unused -> {
+                    Tags tags = Tags.of("provider", pushNotification.serviceProvider().name(),
                             // We only have this type currently
-                            "notification.type", "message",
-                            "accepted", String.valueOf(result.accepted()),
-                            "unregistered", String.valueOf(result.unregistered()));
-                    if (StringUtils.isNotBlank(result.errorCode())) {
-                        tags = tags.and("error", result.errorCode());
-                    }
+                            "type", "SEND_MESSAGE",
+                            "accepted", "true");
                     Metrics.counter(PUSH_NOTIFICATION_REQUEST, tags).increment();
                 })
                 .doOnError(throwable -> {
-                    Metrics.counter(PUSH_NOTIFICATION_REQUEST,
-                                    "token.type", pushNotification.serviceProvider().name(),
-                                    "notification.type", "message",
-                                    "cause", throwable.getClass().getSimpleName())
-                            .increment();
-                });
+                    PushNotificationErrorCode errorCode = null;
+                    String serviceErrorCode = null;
+                    String cause = null;
+                    if (throwable instanceof SendPushNotificationException exception) {
+                        errorCode = exception.getErrorCode();
+                        serviceErrorCode = exception.getServiceErrorCode();
+                        Throwable unwrappedCause = exception.getCause();
+                        if (unwrappedCause != null) {
+                            cause = unwrappedCause.getClass().getSimpleName();
+                        }
+                    } else {
+                        cause = throwable.getClass().getSimpleName();
+                    }
+                    Tags tags = Tags.of("provider", pushNotification.serviceProvider().name(),
+                            "type", "SEND_MESSAGE",
+                            "accepted", "false");
+                    if (errorCode != null) {
+                        tags = tags.and("code", String.valueOf(errorCode.getCode()));
+                    }
+                    if (serviceErrorCode != null) {
+                        tags = tags.and("service_code", serviceErrorCode);
+                    }
+                    if (cause != null) {
+                        tags = tags.and("cause", cause);
+                    }
+                    Metrics.counter(PUSH_NOTIFICATION_REQUEST, tags).increment();
+                })
+                .retryWhen(retrySpec);
     }
 
+    /**
+     * TODO: Shutdown gracefully
+     */
     public Mono<Void> close() {
-        return Mono.whenDelayError(apnsSender.close(), fcmSender.close());
+        isClosed = true;
+        List<Mono<Void>> monos = new ArrayList<>(2);
+        if (isApnsEnabled) {
+            monos.add(apnsSender.close());
+        }
+        if (isFcmEnabled) {
+            monos.add(fcmSender.close());
+        }
+        return Mono.whenDelayError(monos);
     }
 
 }

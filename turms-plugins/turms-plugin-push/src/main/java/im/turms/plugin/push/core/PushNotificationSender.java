@@ -24,7 +24,11 @@ import reactor.core.publisher.Mono;
  */
 public interface PushNotificationSender {
 
-    Mono<SendPushNotificationResult> sendNotification(PushNotification notification);
+    /**
+     * @return {@link SendPushNotificationException} if the sender
+     * failed to send notifications no matter what reason
+     */
+    Mono<Void> sendNotification(PushNotification notification);
 
     Mono<Void> close();
 

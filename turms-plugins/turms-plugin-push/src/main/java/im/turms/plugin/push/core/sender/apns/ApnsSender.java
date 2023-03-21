@@ -26,10 +26,10 @@ import com.eatthepath.pushy.apns.util.SimpleApnsPushNotification;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import im.turms.plugin.push.core.PushNotification;
+import im.turms.plugin.push.core.PushNotificationErrorCode;
 import im.turms.plugin.push.core.PushNotificationSender;
-import im.turms.plugin.push.core.SendPushNotificationResult;
+import im.turms.plugin.push.core.SendPushNotificationException;
 import im.turms.plugin.push.property.ApnsProperties;
-import im.turms.server.common.infra.exception.FeatureDisabledException;
 import im.turms.server.common.infra.io.InputOutputException;
 import im.turms.server.common.infra.json.JsonCodecPool;
 import im.turms.server.common.infra.test.VisibleForTesting;
@@ -49,7 +49,6 @@ public class ApnsSender implements PushNotificationSender {
     private static final String COLLAPSE_ID = "0";
     private static final ObjectWriter APNS_PAYLOAD_WRITER = JsonCodecPool.MAPPER.writerFor(ApnsPayload.class);
 
-    private final boolean isEnabled;
     private final String bundleId;
     @Getter
     private final String deviceTokenFieldName;
@@ -57,13 +56,6 @@ public class ApnsSender implements PushNotificationSender {
     private final ApnsClient apnsClient;
 
     public ApnsSender(ApnsProperties apnsProperties) {
-        isEnabled = apnsProperties.isEnabled();
-        if (!isEnabled) {
-            bundleId = null;
-            deviceTokenFieldName = null;
-            apnsClient = null;
-            return;
-        }
         bundleId = apnsProperties.getBundleId();
         deviceTokenFieldName = apnsProperties.getDeviceTokenFieldName();
         byte[] signingKeyBytes = apnsProperties.getSigningKey().getBytes();
@@ -105,10 +97,7 @@ public class ApnsSender implements PushNotificationSender {
     }
 
     @Override
-    public Mono<SendPushNotificationResult> sendNotification(PushNotification notification) {
-        if (!isEnabled) {
-            return Mono.error(new FeatureDisabledException("APNs is disabled"));
-        }
+    public Mono<Void> sendNotification(PushNotification notification) {
         String payload;
         try {
             payload = buildPayload(notification);
@@ -126,19 +115,23 @@ public class ApnsSender implements PushNotificationSender {
         return Mono.create(sink -> {
             BiConsumer<PushNotificationResponse<SimpleApnsPushNotification>, Throwable> consumer = (response, throwable) -> {
                 if (throwable != null) {
-                    sink.error(throwable);
+                    sink.error(SendPushNotificationException.internalError(throwable));
                     return;
                 }
                 if (response == null) {
-                    sink.error(new NullPointerException("The send notification response is null"));
+                    NullPointerException cause = new NullPointerException("The send notification response is null");
+                    sink.error(SendPushNotificationException.internalError(cause));
                     return;
                 }
                 if (response.isAccepted()) {
-                    sink.success(new SendPushNotificationResult(true, null, false));
+                    sink.success();
                 } else {
                     String rejectionReason = response.getRejectionReason().orElse(null);
-                    boolean unregistered = "Unregistered".equals(rejectionReason) || "BadDeviceToken".equals(rejectionReason);
-                    sink.success(new SendPushNotificationResult(false, rejectionReason, unregistered));
+                    if (rejectionReason == null) {
+                        sink.error(new SendPushNotificationException(PushNotificationErrorCode.UNKNOWN));
+                    } else {
+                        sink.error(new SendPushNotificationException(ApnsErrorCodeUtil.toCode(rejectionReason), rejectionReason));
+                    }
                 }
             };
             apnsClient.sendNotification(pushNotification)
@@ -148,10 +141,7 @@ public class ApnsSender implements PushNotificationSender {
 
     @Override
     public Mono<Void> close() {
-        if (!isEnabled) {
-            return Mono.empty();
-        }
-        return Mono.fromFuture(apnsClient.close());
+        return Mono.fromFuture(apnsClient::close);
     }
 
 }

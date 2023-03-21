@@ -29,10 +29,10 @@ import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.MessagingErrorCode;
 import com.google.firebase.messaging.Notification;
 import im.turms.plugin.push.core.PushNotification;
+import im.turms.plugin.push.core.PushNotificationErrorCode;
 import im.turms.plugin.push.core.PushNotificationSender;
-import im.turms.plugin.push.core.SendPushNotificationResult;
+import im.turms.plugin.push.core.SendPushNotificationException;
 import im.turms.plugin.push.property.FcmProperties;
-import im.turms.server.common.infra.exception.FeatureDisabledException;
 import im.turms.server.common.infra.io.InputOutputException;
 import lombok.Getter;
 import reactor.core.publisher.Mono;
@@ -41,7 +41,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ExecutionException;
-import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen
@@ -52,18 +51,11 @@ public class FcmSender implements PushNotificationSender {
             .setPriority(AndroidConfig.Priority.HIGH)
             .build();
 
-    private final boolean isEnabled;
     @Getter
     private final String deviceTokenFieldName;
     private final FirebaseMessaging firebaseMessagingClient;
 
     public FcmSender(FcmProperties fcmProperties) {
-        isEnabled = fcmProperties.isEnabled();
-        if (!isEnabled) {
-            deviceTokenFieldName = null;
-            firebaseMessagingClient = null;
-            return;
-        }
         deviceTokenFieldName = fcmProperties.getDeviceTokenFieldName();
         byte[] credentialsBytes = fcmProperties.getCredentials().getBytes(StandardCharsets.UTF_8);
         ByteArrayInputStream credentialInputStream = new ByteArrayInputStream(credentialsBytes);
@@ -103,10 +95,7 @@ public class FcmSender implements PushNotificationSender {
     }
 
     @Override
-    public Mono<SendPushNotificationResult> sendNotification(PushNotification notification) {
-        if (!isEnabled) {
-            return Mono.error(new FeatureDisabledException("FCM is disabled"));
-        }
+    public Mono<Void> sendNotification(PushNotification notification) {
         String body = notification.body();
         Notification.Builder notificationBuilder = Notification.builder()
                 .setBody(body);
@@ -134,19 +123,27 @@ public class FcmSender implements PushNotificationSender {
                 try {
                     // `get()` should return immediately in the listener
                     sendFuture.get();
-                    sink.success(new SendPushNotificationResult(true, null, false));
+                    sink.success();
                 } catch (ExecutionException e) {
-                    if (e.getCause() instanceof FirebaseMessagingException messagingException) {
-                        MessagingErrorCode messagingErrorCode = messagingException.getMessagingErrorCode();
-                        String errorCode = messagingErrorCode == null ? null : messagingErrorCode.name();
-                        sink.success(new SendPushNotificationResult(
-                                false, errorCode, messagingErrorCode == MessagingErrorCode.UNREGISTERED));
+                    Throwable cause = e.getCause();
+                    if (cause instanceof FirebaseMessagingException messagingException) {
+                        PushNotificationErrorCode errorCode;
+                        String serviceErrorCode;
+                        MessagingErrorCode code = messagingException.getMessagingErrorCode();
+                        if (code == null) {
+                            errorCode = PushNotificationErrorCode.UNKNOWN;
+                            serviceErrorCode = null;
+                        } else {
+                            errorCode = FcmErrorCodeUtil.toCode(code);
+                            serviceErrorCode = code.name();
+                        }
+                        sink.error(new SendPushNotificationException(errorCode, serviceErrorCode));
                     } else {
-                        sink.error(e.getCause());
+                        sink.error(new SendPushNotificationException(cause, PushNotificationErrorCode.UNKNOWN));
                     }
                 } catch (InterruptedException e) {
                     // This should never happen
-                    sink.error(e);
+                    sink.error(SendPushNotificationException.internalError(e));
                 }
             };
             sendFuture.addListener(listener, MoreExecutors.directExecutor());

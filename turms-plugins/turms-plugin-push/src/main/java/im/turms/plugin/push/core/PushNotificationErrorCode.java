@@ -17,14 +17,42 @@
 
 package im.turms.plugin.push.core;
 
-import jakarta.annotation.Nullable;
+import lombok.Getter;
 
 /**
  * @author James Chen
  */
-public record SendPushNotificationResult(
-        boolean accepted,
-        @Nullable String errorCode,
-        boolean unregistered
-) {
+public enum PushNotificationErrorCode {
+    // Server
+    INVALID_REQUEST(100, false),
+
+    INVALID_AUTH(110, false),
+    AUTH_MISMATCH(111, false),
+
+    INTERNAL_ERROR(120, true),
+
+    // Client
+    INACTIVE_TOKEN(200, false),
+
+    // Service - Status
+    SERVICE_ERROR(300, true),
+    SERVICE_UNAVAILABLE(301, true),
+
+    // Service - limit
+    TOO_MANY_REQUESTS(400, true),
+    QUOTA_EXCEEDED(401, false),
+
+    // Unknown
+    UNKNOWN(500, false);
+
+    @Getter
+    private final int code;
+
+    @Getter
+    private final boolean retryable;
+
+    PushNotificationErrorCode(int code, boolean retryable) {
+        this.code = code;
+        this.retryable = retryable;
+    }
 }
