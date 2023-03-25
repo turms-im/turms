@@ -33,6 +33,11 @@
             <artifactId>lombok</artifactId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.freemarker</groupId>
+            <artifactId>freemarker</artifactId>
+            <version>${freemarker.version}</version>
+        </dependency>
         <!-- Push Notification -->
         <dependency>
             <groupId>com.google.firebase</groupId>

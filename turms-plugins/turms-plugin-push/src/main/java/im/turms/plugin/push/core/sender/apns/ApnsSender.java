@@ -25,11 +25,13 @@ import com.eatthepath.pushy.apns.auth.ApnsSigningKey;
 import com.eatthepath.pushy.apns.util.SimpleApnsPushNotification;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import im.turms.plugin.push.core.Message;
 import im.turms.plugin.push.core.PushNotification;
 import im.turms.plugin.push.core.PushNotificationErrorCode;
 import im.turms.plugin.push.core.PushNotificationSender;
 import im.turms.plugin.push.core.SendPushNotificationException;
 import im.turms.plugin.push.property.ApnsProperties;
+import im.turms.plugin.push.property.TemplateProperties;
 import im.turms.server.common.infra.io.InputOutputException;
 import im.turms.server.common.infra.json.JsonCodecPool;
 import im.turms.server.common.infra.test.VisibleForTesting;
@@ -38,12 +40,14 @@ import reactor.core.publisher.Mono;
 
 import java.io.ByteArrayInputStream;
 import java.time.Instant;
+import java.util.Map;
 import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 
 /**
  * @author James Chen
  */
-public class ApnsSender implements PushNotificationSender {
+public class ApnsSender extends PushNotificationSender {
 
     private static final Instant MAX_EXPIRATION = Instant.ofEpochMilli(Integer.MAX_VALUE * 1000L);
     private static final String COLLAPSE_ID = "0";
@@ -55,7 +59,9 @@ public class ApnsSender implements PushNotificationSender {
 
     private final ApnsClient apnsClient;
 
-    public ApnsSender(ApnsProperties apnsProperties) {
+    public ApnsSender(Map<String, TemplateProperties> templates,
+                      ApnsProperties apnsProperties) {
+        super(templates, apnsProperties.getTemplate());
         bundleId = apnsProperties.getBundleId();
         deviceTokenFieldName = apnsProperties.getDeviceTokenFieldName();
         byte[] signingKeyBytes = apnsProperties.getSigningKey().getBytes();
@@ -82,11 +88,18 @@ public class ApnsSender implements PushNotificationSender {
     }
 
     @VisibleForTesting
-    public static String buildPayload(PushNotification notification) {
+    public String buildPayload(PushNotification notification,
+                               String locale,
+                               Supplier<Object> dataModelSupplier) {
+        Message message = buildMessage(locale,
+                notification.type(),
+                notification.title(),
+                notification.body(),
+                dataModelSupplier);
         ApnsPayload apnsPayload = new ApnsPayload(
                 new ApnsPayload.Aps(
-                        new ApnsPayload.Alert(notification.title(),
-                                notification.body()),
+                        new ApnsPayload.Alert(message.title(),
+                                message.body()),
                         notification.badgeNumber(),
                         1));
         try {
@@ -97,10 +110,12 @@ public class ApnsSender implements PushNotificationSender {
     }
 
     @Override
-    public Mono<Void> sendNotification(PushNotification notification) {
+    public Mono<Void> sendNotification(PushNotification notification,
+                                       String locale,
+                                       Supplier<Object> dataModelSupplier) {
         String payload;
         try {
-            payload = buildPayload(notification);
+            payload = buildPayload(notification, locale, dataModelSupplier);
         } catch (Exception e) {
             return Mono.error(e);
         }

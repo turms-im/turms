@@ -15,32 +15,15 @@
  * limitations under the License.
  */
 
-package im.turms.plugin.push.property;
+package im.turms.plugin.push.core;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen
  */
-@AllArgsConstructor
-@Data
-@NoArgsConstructor
-@SuperBuilder(toBuilder = true)
-public class ApnsProperties extends ServiceProviderProperties {
-
-    private String bundleId = "";
-
-    private String signingKey = "";
-
-    private String teamId = "";
-
-    private String keyId = "";
-
-    private boolean sandboxEnabled;
-
-    private String deviceTokenFieldName = "f";
-
+public record Message(
+        @Nullable String title,
+        @Nullable String body
+) {
 }

@@ -21,7 +21,11 @@ import im.turms.plugin.push.core.sender.apns.ApnsSender;
 import im.turms.plugin.push.core.sender.fcm.FcmSender;
 import im.turms.plugin.push.property.ApnsProperties;
 import im.turms.plugin.push.property.FcmProperties;
+import im.turms.plugin.push.property.LocaleProperties;
 import im.turms.plugin.push.property.PushNotificationProperties;
+import im.turms.plugin.push.property.TemplateProperties;
+import im.turms.server.common.access.client.dto.constant.DeviceType;
+import im.turms.server.common.access.client.dto.request.TurmsRequest;
 import im.turms.server.common.infra.exception.FeatureDisabledException;
 import io.micrometer.core.instrument.Metrics;
 import io.micrometer.core.instrument.Tags;
@@ -33,6 +37,8 @@ import reactor.util.retry.RetryBackoffSpec;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Supplier;
 
 /**
  * @author James Chen
@@ -46,6 +52,8 @@ public class PushNotificationManager {
     private final FcmSender fcmSender;
     @Getter
     private final List<String> deviceTokenFieldNames;
+    private final String localeFieldName;
+    private final String fallbackLocale;
     private final boolean isApnsEnabled;
     private final boolean isFcmEnabled;
 
@@ -58,15 +66,19 @@ public class PushNotificationManager {
                     && !isClosed);
 
     public PushNotificationManager(PushNotificationProperties properties) {
+        LocaleProperties localeProperties = properties.getLocale();
+        Map<String, TemplateProperties> templates = properties.getTemplates();
         ApnsProperties apnsProperties = properties.getApns();
         FcmProperties fcmProperties = properties.getFcm();
+        localeFieldName = localeProperties.getFieldName();
+        fallbackLocale = localeProperties.getFallback();
         isApnsEnabled = apnsProperties.isEnabled();
         isFcmEnabled = fcmProperties.isEnabled();
         apnsSender = isApnsEnabled
-                ? new ApnsSender(apnsProperties)
+                ? new ApnsSender(templates, apnsProperties)
                 : null;
         fcmSender = isFcmEnabled
-                ? new FcmSender(fcmProperties)
+                ? new FcmSender(templates, fcmProperties)
                 : null;
 
         List<String> names = new ArrayList<>(2);
@@ -79,7 +91,12 @@ public class PushNotificationManager {
         deviceTokenFieldNames = names;
     }
 
-    public Mono<Void> sendNotification(PushNotification pushNotification) {
+    public Mono<Void> sendNotification(PushNotification pushNotification,
+                                       TurmsRequest request,
+                                       Long requesterId,
+                                       DeviceType requesterDevice,
+                                       String requesterName,
+                                       Map<String, String> deviceDetails) {
         PushNotificationSender sender;
         switch (pushNotification.serviceProvider()) {
             case FCM -> {
@@ -100,7 +117,31 @@ public class PushNotificationManager {
                 return Mono.error(new RuntimeException("Unknown push service provider: " + pushNotification.serviceProvider()));
             }
         }
-        return sender.sendNotification(pushNotification)
+        String locale = deviceDetails.getOrDefault(localeFieldName, fallbackLocale);
+        Supplier<Object> dataModelSupplier = new Supplier<>() {
+            private Map<String, Object> map;
+
+            @Override
+            public Object get() {
+                if (map == null) {
+                    map = Map.of(
+                            "serviceProvider", pushNotification.serviceProvider(),
+                            "locale", locale,
+                            "request", request,
+                            "requester", Map.of(
+                                    "id", requesterId,
+                                    "device", requesterDevice,
+                                    "name", requesterName
+                            ),
+                            "recipient", Map.of(
+                                    "deviceDetails", deviceDetails
+                            )
+                    );
+                }
+                return map;
+            }
+        };
+        return sender.sendNotification(pushNotification, locale, dataModelSupplier)
                 .doOnSuccess(unused -> {
                     Tags tags = Tags.of("provider", pushNotification.serviceProvider().name(),
                             // We only have this type currently

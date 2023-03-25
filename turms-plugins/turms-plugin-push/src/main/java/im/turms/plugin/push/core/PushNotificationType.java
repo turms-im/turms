@@ -15,32 +15,11 @@
  * limitations under the License.
  */
 
-package im.turms.plugin.push.property;
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
+package im.turms.plugin.push.core;
 
 /**
  * @author James Chen
  */
-@AllArgsConstructor
-@Data
-@NoArgsConstructor
-@SuperBuilder(toBuilder = true)
-public class ApnsProperties extends ServiceProviderProperties {
-
-    private String bundleId = "";
-
-    private String signingKey = "";
-
-    private String teamId = "";
-
-    private String keyId = "";
-
-    private boolean sandboxEnabled;
-
-    private String deviceTokenFieldName = "f";
-
+public enum PushNotificationType {
+    SEND_MESSAGE
 }

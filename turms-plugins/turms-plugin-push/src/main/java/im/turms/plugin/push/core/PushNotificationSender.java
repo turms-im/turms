@@ -17,19 +17,159 @@
 
 package im.turms.plugin.push.core;
 
+import freemarker.template.Template;
+import im.turms.plugin.push.core.template.TemplateEngine;
+import im.turms.plugin.push.property.TemplateMappingProperties;
+import im.turms.plugin.push.property.TemplateProperties;
+import im.turms.server.common.infra.collection.CollectionUtil;
+import im.turms.server.common.infra.lang.ClassUtil;
+import im.turms.server.common.infra.lang.StringBuilderPool;
+import im.turms.server.common.infra.lang.StringBuilderWriter;
+import im.turms.server.common.infra.lang.StringUtil;
+import lombok.NoArgsConstructor;
 import reactor.core.publisher.Mono;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.BiConsumer;
+import java.util.function.Supplier;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen
  */
-public interface PushNotificationSender {
+public abstract class PushNotificationSender {
+
+    private static final TemplateEngine TEMPLATE_ENGINE = new TemplateEngine();
+
+    private final Map<String, Map<PushNotificationType, TemplateGroup>> localeToTypeToTemplate;
+
+    protected PushNotificationSender(
+            Map<String, TemplateProperties> nameToTemplate,
+            Map<String, Map<PushNotificationType, TemplateMappingProperties>> localeToTypeToProperties) {
+        Map<String, Map<PushNotificationType, TemplateGroup>> map = new HashMap<>(localeToTypeToProperties.size() << 2);
+        for (Map.Entry<String, Map<PushNotificationType, TemplateMappingProperties>> localeToTypeToPropertiesEntry : localeToTypeToProperties.entrySet()) {
+            for (Map.Entry<PushNotificationType, TemplateMappingProperties> typeToPropertiesEntry : localeToTypeToPropertiesEntry.getValue().entrySet()) {
+                TemplateMappingProperties properties = typeToPropertiesEntry.getValue();
+                addTemplate(map,
+                        properties.getTitleTemplateName(),
+                        nameToTemplate,
+                        localeToTypeToPropertiesEntry,
+                        typeToPropertiesEntry,
+                        (templateGroup, template) -> templateGroup.titleTemplate = template);
+                addTemplate(map,
+                        properties.getBodyTemplateName(),
+                        nameToTemplate,
+                        localeToTypeToPropertiesEntry,
+                        typeToPropertiesEntry,
+                        (templateGroup, template) -> templateGroup.bodyTemplate = template);
+            }
+        }
+        CollectionUtil.transformValues(map, Map::copyOf);
+        localeToTypeToTemplate = Map.copyOf(map);
+    }
 
     /**
      * @return {@link SendPushNotificationException} if the sender
      * failed to send notifications no matter what reason
      */
-    Mono<Void> sendNotification(PushNotification notification);
+    public abstract Mono<Void> sendNotification(PushNotification notification,
+                                                String locale,
+                                                Supplier<Object> dataModelSupplier);
 
-    Mono<Void> close();
+    public abstract Mono<Void> close();
+
+    private void addTemplate(Map<String, Map<PushNotificationType, TemplateGroup>> output,
+                             String templateName,
+                             Map<String, TemplateProperties> nameToTemplate,
+                             Map.Entry<String, Map<PushNotificationType, TemplateMappingProperties>> localeToTypeToPropertiesEntry,
+                             Map.Entry<PushNotificationType, TemplateMappingProperties> typeToPropertiesEntry,
+                             BiConsumer<TemplateGroup, Template> consumer) {
+        if (!StringUtil.isNotBlank(templateName)) {
+            return;
+        }
+        TemplateProperties templateProperties = nameToTemplate.get(templateName);
+        if (templateProperties == null) {
+            throw new IllegalArgumentException("Could not find a template with the name: \"" + templateName + "\"");
+        }
+        String template = templateProperties.getTemplate();
+        if (!StringUtil.isNotBlank(template)) {
+            return;
+        }
+        Template t = TEMPLATE_ENGINE.buildTemplate(template);
+        output.compute(localeToTypeToPropertiesEntry.getKey(), (key, typeToTemplateGroup) -> {
+            if (typeToTemplateGroup == null) {
+                int length = ClassUtil.getSharedEnumConstants(PushNotificationType.class).length;
+                typeToTemplateGroup = CollectionUtil.newMapWithExpectedSize(length);
+            }
+            typeToTemplateGroup.compute(typeToPropertiesEntry.getKey(), (type, templateGroup) -> {
+                if (templateGroup == null) {
+                    templateGroup = new TemplateGroup();
+                }
+                consumer.accept(templateGroup, t);
+                return templateGroup;
+            });
+            return typeToTemplateGroup;
+        });
+    }
+
+    public Message buildMessage(
+            String locale,
+            PushNotificationType type,
+            @Nullable String title,
+            @Nullable String body,
+            Supplier<Object> dataModelSupplier) {
+        Map<PushNotificationType, TemplateGroup> typeToTemplate = localeToTypeToTemplate.get(locale);
+        if (typeToTemplate == null) {
+            return new Message(title, body);
+        }
+        TemplateGroup group = typeToTemplate.get(type);
+        if (group == null) {
+            return new Message(title, body);
+        }
+        Object dataModel = null;
+        StringBuilderWriter writer = null;
+        Template template = group.titleTemplate;
+        String titleOutput;
+        if (template == null) {
+            titleOutput = title;
+        } else {
+            dataModel = dataModelSupplier.get();
+            writer = StringBuilderPool.getWriter();
+            try {
+                template.process(dataModel, writer);
+            } catch (Exception e) {
+                throw new RuntimeException("Failed to generate the title output", e);
+            } finally {
+                writer.close();
+            }
+            titleOutput = writer.toString();
+        }
+        template = group.bodyTemplate;
+        String bodyOutput;
+        if (template == null) {
+            bodyOutput = body;
+        } else {
+            if (writer == null) {
+                dataModel = dataModelSupplier.get();
+                writer = StringBuilderPool.getWriter();
+            }
+            try {
+                template.process(dataModel, writer);
+            } catch (Exception e) {
+                throw new RuntimeException("Failed to generate the body output", e);
+            } finally {
+                writer.close();
+            }
+            bodyOutput = writer.toString();
+        }
+        return new Message(titleOutput, bodyOutput);
+    }
+
+    @NoArgsConstructor
+    private static class TemplateGroup {
+        Template titleTemplate;
+        Template bodyTemplate;
+    }
 
 }

@@ -17,12 +17,11 @@
 
 package im.turms.plugin.push.property;
 
+import im.turms.plugin.push.core.PushNotificationType;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.NestedConfigurationProperty;
+import lombok.experimental.SuperBuilder;
 
 import java.util.Collections;
 import java.util.Map;
@@ -31,22 +30,13 @@ import java.util.Map;
  * @author James Chen
  */
 @AllArgsConstructor
-@Builder(toBuilder = true)
-@ConfigurationProperties("turms-plugin.push")
 @Data
 @NoArgsConstructor
-public class PushNotificationProperties {
+@SuperBuilder(toBuilder = true)
+public abstract class ServiceProviderProperties {
 
-    @NestedConfigurationProperty
-    private LocaleProperties locale = new LocaleProperties();
+    private boolean enabled;
 
-    @NestedConfigurationProperty
-    private Map<String, TemplateProperties> templates = Collections.emptyMap();
-
-    @NestedConfigurationProperty
-    private ApnsProperties apns = new ApnsProperties();
-
-    @NestedConfigurationProperty
-    private FcmProperties fcm = new FcmProperties();
+    private Map<String, Map<PushNotificationType, TemplateMappingProperties>> template = Collections.emptyMap();
 
 }

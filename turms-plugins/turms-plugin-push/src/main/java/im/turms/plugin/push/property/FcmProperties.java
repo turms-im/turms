@@ -18,20 +18,18 @@
 package im.turms.plugin.push.property;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 /**
  * @author James Chen
  */
 @AllArgsConstructor
-@Builder(toBuilder = true)
 @Data
 @NoArgsConstructor
-public class FcmProperties {
-
-    private boolean enabled;
+@SuperBuilder(toBuilder = true)
+public class FcmProperties extends ServiceProviderProperties {
 
     private String credentials = "";
 

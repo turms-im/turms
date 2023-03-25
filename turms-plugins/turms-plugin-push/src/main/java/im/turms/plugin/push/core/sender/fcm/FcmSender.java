@@ -33,6 +33,7 @@ import im.turms.plugin.push.core.PushNotificationErrorCode;
 import im.turms.plugin.push.core.PushNotificationSender;
 import im.turms.plugin.push.core.SendPushNotificationException;
 import im.turms.plugin.push.property.FcmProperties;
+import im.turms.plugin.push.property.TemplateProperties;
 import im.turms.server.common.infra.io.InputOutputException;
 import lombok.Getter;
 import reactor.core.publisher.Mono;
@@ -40,12 +41,14 @@ import reactor.core.publisher.Mono;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
+import java.util.function.Supplier;
 
 /**
  * @author James Chen
  */
-public class FcmSender implements PushNotificationSender {
+public class FcmSender extends PushNotificationSender {
 
     private static final AndroidConfig ANDROID_CONFIG = AndroidConfig.builder()
             .setPriority(AndroidConfig.Priority.HIGH)
@@ -55,7 +58,9 @@ public class FcmSender implements PushNotificationSender {
     private final String deviceTokenFieldName;
     private final FirebaseMessaging firebaseMessagingClient;
 
-    public FcmSender(FcmProperties fcmProperties) {
+    public FcmSender(Map<String, TemplateProperties> templates,
+                     FcmProperties fcmProperties) {
+        super(templates, fcmProperties.getTemplate());
         deviceTokenFieldName = fcmProperties.getDeviceTokenFieldName();
         byte[] credentialsBytes = fcmProperties.getCredentials().getBytes(StandardCharsets.UTF_8);
         ByteArrayInputStream credentialInputStream = new ByteArrayInputStream(credentialsBytes);
@@ -95,11 +100,18 @@ public class FcmSender implements PushNotificationSender {
     }
 
     @Override
-    public Mono<Void> sendNotification(PushNotification notification) {
+    public Mono<Void> sendNotification(PushNotification notification,
+                                       String locale,
+                                       Supplier<Object> dataModelSupplier) {
+        var message = buildMessage(locale,
+                notification.type(),
+                notification.title(),
+                notification.body(),
+                dataModelSupplier);
         String body = notification.body();
         Notification.Builder notificationBuilder = Notification.builder()
-                .setBody(body);
-        String title = notification.title();
+                .setBody(message.body());
+        String title = message.title();
         boolean hasTitle = title != null;
         if (hasTitle) {
             notificationBuilder.setTitle(title);

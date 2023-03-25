@@ -23,6 +23,7 @@ import jakarta.annotation.Nullable;
  * @author James Chen
  */
 public record PushNotification(
+        PushNotificationType type,
         PushNotificationServiceProvider serviceProvider,
         String deviceToken,
         @Nullable String title,
@@ -32,12 +33,13 @@ public record PushNotification(
 
     public String toStringWithoutDate() {
         return "PushNotification{" +
-               "serviceProvider=" + serviceProvider +
-               ", deviceToken=\"" + deviceToken + '\"' +
-               ", title=\"" + title + '\"' +
-               ", body=\"" + body + '\"' +
-               ", badgeNumber=" + badgeNumber +
-               '}';
+                "type=" + type +
+                ", serviceProvider=" + serviceProvider +
+                ", deviceToken=\"" + deviceToken + '\"' +
+                ", title=\"" + title + '\"' +
+                ", body=\"" + body + '\"' +
+                ", badgeNumber=" + badgeNumber +
+                '}';
     }
 
 }

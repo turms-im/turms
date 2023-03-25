@@ -20,6 +20,7 @@ package im.turms.plugin.push;
 import im.turms.plugin.push.core.PushNotification;
 import im.turms.plugin.push.core.PushNotificationManager;
 import im.turms.plugin.push.core.PushNotificationServiceProvider;
+import im.turms.plugin.push.core.PushNotificationType;
 import im.turms.plugin.push.property.PushNotificationProperties;
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.request.TurmsRequest;
@@ -104,7 +105,13 @@ public class NotificationPusher extends TurmsExtension implements RequestHandler
                                 }
                                 return true;
                             })
-                            .doOnNext(recipientIdToDetails -> sendNotification(context, recipientIdToDetails, text, name))
+                            .doOnNext(recipientIdToDetails -> sendNotification(context,
+                                    recipientIdToDetails,
+                                    text,
+                                    request,
+                                    requesterId,
+                                    requesterDevice,
+                                    name))
                             .subscribe())
                     .subscribe();
             return Mono.empty();
@@ -114,20 +121,36 @@ public class NotificationPusher extends TurmsExtension implements RequestHandler
     private void sendNotification(ContextView context,
                                   Map<Long, Map<String, String>> recipientIdToDetails,
                                   String text,
+                                  TurmsRequest request,
+                                  Long requesterId,
+                                  DeviceType requesterDevice,
                                   String requesterName) {
         Set<Map.Entry<Long, Map<String, String>>> entries = recipientIdToDetails.entrySet();
         int count = entries.size() << 2;
         List<Mono<Void>> monos = new ArrayList<>(count);
         for (Map.Entry<Long, Map<String, String>> recipientToDetail : entries) {
-            for (Map.Entry<String, String> providerToToken : recipientToDetail.getValue().entrySet()) {
-                String providerStr = providerToToken.getKey();
+            Map<String, String> deviceDetails = recipientToDetail.getValue();
+            for (Map.Entry<String, String> detail : deviceDetails.entrySet()) {
+                String providerStr = detail.getKey();
                 PushNotificationServiceProvider provider = PushNotificationServiceProvider.get(providerStr);
                 if (provider == null) {
                     continue;
                 }
-                PushNotification notification = new PushNotification(provider, providerToToken.getValue(), requesterName, text, null);
+                PushNotification notification = new PushNotification(
+                        // TODO: We have only this type currently
+                        PushNotificationType.SEND_MESSAGE,
+                        provider,
+                        detail.getValue(),
+                        requesterName,
+                        text,
+                        null);
                 Mono<Void> mono = manager
-                        .sendNotification(notification)
+                        .sendNotification(notification,
+                                request,
+                                requesterId,
+                                requesterDevice,
+                                requesterName,
+                                deviceDetails)
                         .onErrorComplete(t -> {
                             try (TracingCloseableContext ignored = TracingContext.getCloseableContext(context)) {
                                 LOGGER.error("Caught an error while delivering the push notification: {}",
