@@ -1,21 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  ~ Copyright (C) 2019 The Turms Project
-  ~ https://github.com/turms-im/turms
-  ~
-  ~ Licensed under the Apache License, Version 2.0 (the "License");
-  ~ you may not use this file except in compliance with the License.
-  ~ You may obtain a copy of the License at
-  ~
-  ~      http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
-  -->
-
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -43,6 +26,8 @@
 
         <maven-antrun-plugin.version>3.1.0</maven-antrun-plugin.version>
         <maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
+        <spotless-maven-plugin.version>2.35.0</spotless-maven-plugin.version>
+        <spotless-maven-plugin.eclipse.version>4.26</spotless-maven-plugin.eclipse.version>
     </properties>
 
     <build>
@@ -107,6 +92,32 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.diffplug.spotless</groupId>
+                <artifactId>spotless-maven-plugin</artifactId>
+                <version>${spotless-maven-plugin.version}</version>
+                <configuration>
+                    <java>
+                        <includes>
+                            <include>src/main/java/**/*.java</include>
+                            <include>src/test/java/**/*.java</include>
+                        </includes>
+                        <eclipse>
+                            <version>${spotless-maven-plugin.eclipse.version}</version>
+                            <file>./codequality/eclipse.xml</file>
+                        </eclipse>
+                        <importOrder>
+                            <!-- 1. An empty string for all the imports that didn't specify explicitly,
+                            2. '|' for joining a group without blank line,
+                            3. '\#' prefix for static imports. -->
+                            <order>java|javax|jakarta,,im.turms,\#java|\#javax|\#jakarta,\#,\#im.turms</order>
+                        </importOrder>
+                        <licenseHeader>
+                            <file>./codequality/java-license-header.txt</file>
+                        </licenseHeader>
+                    </java>
+                </configuration>
             </plugin>
         </plugins>
     </build>
