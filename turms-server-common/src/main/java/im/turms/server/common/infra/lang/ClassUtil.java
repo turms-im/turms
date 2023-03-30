@@ -17,10 +17,6 @@
 
 package im.turms.server.common.infra.lang;
 
-import im.turms.server.common.infra.collection.CollectionUtil;
-import im.turms.server.common.infra.exception.IncompatibleJvmException;
-import im.turms.server.common.infra.reflect.ReflectionUtil;
-
 import java.lang.invoke.MethodHandle;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -35,6 +31,10 @@ import java.util.StringJoiner;
 import java.util.function.Predicate;
 import jakarta.annotation.Nullable;
 
+import im.turms.server.common.infra.collection.CollectionUtil;
+import im.turms.server.common.infra.exception.IncompatibleJvmException;
+import im.turms.server.common.infra.reflect.ReflectionUtil;
+
 /**
  * @author James Chen
  */
@@ -47,16 +47,23 @@ public final class ClassUtil {
             GET_ENUM_CONSTANTS = ReflectionUtil
                     .method2Handle(Class.class.getDeclaredMethod("getEnumConstantsShared"));
         } catch (NoSuchMethodException e) {
-            throw new IncompatibleJvmException("Could not find the method: java.lang.Class#getEnumConstantsShared", e);
+            throw new IncompatibleJvmException(
+                    "Could not find the method: java.lang.Class#getEnumConstantsShared",
+                    e);
         }
-        enum TestEnum {A, B, C}
+        enum TestEnum {
+            A,
+            B,
+            C
+        }
         TestEnum[] actual = getSharedEnumConstants(TestEnum.class);
         TestEnum[] expected = TestEnum.values();
         if (!Arrays.equals(actual, expected)) {
-            throw new IncompatibleJvmException("Expecting the enum constants " +
-                    Arrays.toString(actual) +
-                    " to be: " +
-                    Arrays.toString(expected));
+            throw new IncompatibleJvmException(
+                    "Expecting the enum constants "
+                            + Arrays.toString(actual)
+                            + " to be: "
+                            + Arrays.toString(expected));
         }
     }
 
@@ -146,7 +153,10 @@ public final class ClassUtil {
         try {
             return (T[]) (Object[]) GET_ENUM_CONSTANTS.invokeExact(clazz);
         } catch (Throwable e) {
-            throw new IllegalArgumentException("Failed to get the enum constants of the class: " + clazz.getName(), e);
+            throw new IllegalArgumentException(
+                    "Failed to get the enum constants of the class: "
+                            + clazz.getName(),
+                    e);
         }
     }
 
@@ -155,27 +165,33 @@ public final class ClassUtil {
     }
 
     public static boolean isListOf(Type type, Class<?> elementClass) {
-        if (!(type instanceof ParameterizedType parameterizedType &&
-                parameterizedType.getRawType() instanceof Class<?> rawType &&
-                List.class.isAssignableFrom(rawType))) {
+        if (!(type instanceof ParameterizedType parameterizedType
+                && parameterizedType.getRawType() instanceof Class<?> rawType
+                && List.class.isAssignableFrom(rawType))) {
             return false;
         }
         Type[] arguments = parameterizedType.getActualTypeArguments();
-        return arguments.length == 1 &&
-                arguments[0] instanceof Class<?> argClass &&
-                elementClass.isAssignableFrom(argClass);
+        return arguments.length == 1
+                && arguments[0] instanceof Class<?> argClass
+                && elementClass.isAssignableFrom(argClass);
     }
 
     public static String getReference(Field field) {
-        return field.getDeclaringClass().getTypeName() + '#' + field.getName();
+        return field.getDeclaringClass()
+                .getTypeName() + '#' + field.getName();
     }
 
     public static String getReference(Method method) {
-        StringJoiner signature = new StringJoiner(",", method.getName() + "(", ")");
+        StringJoiner signature = new StringJoiner(
+                ",",
+                method.getName()
+                        + "(",
+                ")");
         for (Class<?> parameterType : method.getParameterTypes()) {
             signature.add(parameterType.getTypeName());
         }
-        return method.getDeclaringClass().getTypeName() + '#' + signature;
+        return method.getDeclaringClass()
+                .getTypeName() + '#' + signature;
     }
 
 }

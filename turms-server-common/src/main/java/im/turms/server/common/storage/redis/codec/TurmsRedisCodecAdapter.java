@@ -17,18 +17,19 @@
 
 package im.turms.server.common.storage.redis.codec;
 
+import java.nio.ByteBuffer;
+
 import io.lettuce.core.codec.RedisCodec;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-
-import java.nio.ByteBuffer;
 
 /**
  * @author James Chen
  */
 public final class TurmsRedisCodecAdapter<K, V> implements RedisCodec<K, V> {
 
-    public static final TurmsRedisCodecAdapter<ByteBuf, ByteBuf> DEFAULT = new TurmsRedisCodecAdapter<>();
+    public static final TurmsRedisCodecAdapter<ByteBuf, ByteBuf> DEFAULT =
+            new TurmsRedisCodecAdapter<>();
     private final TurmsRedisCodec keyDecoder;
     private final TurmsRedisCodec valueDecoder;
 
@@ -43,9 +44,9 @@ public final class TurmsRedisCodecAdapter<K, V> implements RedisCodec<K, V> {
     }
 
     /**
-     * @implNote We don't use Unpooled.wrappedBuffer(buffer) to wrap ByteBuffer to ByteBuf
-     * because the internal buffer is shared with the buffer of value by Lettuce. So the
-     * internal buffer will change and we must parse them when the buffer is passed
+     * @implNote We don't use Unpooled.wrappedBuffer(buffer) to wrap ByteBuffer to ByteBuf because
+     *           the internal buffer is shared with the buffer of value by Lettuce. So the internal
+     *           buffer will change and we must parse them when the buffer is passed
      * @see io.lettuce.core.protocol.RedisStateMachine#readBytes0(io.netty.buffer.ByteBuf, int)
      */
     @Override
@@ -59,7 +60,9 @@ public final class TurmsRedisCodecAdapter<K, V> implements RedisCodec<K, V> {
                 buffer.get(bytes);
                 return (K) Unpooled.wrappedBuffer(bytes);
             } catch (Exception e) {
-                throw new UnsupportedOperationException("No key decoder to decode the key: " + buffer);
+                throw new UnsupportedOperationException(
+                        "No key decoder to decode the key: "
+                                + buffer);
             }
         }
         return (K) keyDecoder.decode(buffer);
@@ -76,7 +79,9 @@ public final class TurmsRedisCodecAdapter<K, V> implements RedisCodec<K, V> {
                 buffer.get(bytes);
                 return (V) Unpooled.wrappedBuffer(bytes);
             } catch (Exception e) {
-                throw new UnsupportedOperationException("No value decoder to decode the key buffer: " + buffer);
+                throw new UnsupportedOperationException(
+                        "No value decoder to decode the key buffer: "
+                                + buffer);
             }
         }
         return (V) valueDecoder.decode(buffer);
@@ -84,12 +89,14 @@ public final class TurmsRedisCodecAdapter<K, V> implements RedisCodec<K, V> {
 
     @Override
     public ByteBuffer encodeKey(K key) {
-        throw new UnsupportedOperationException("TurmsRedisCodecAdapter#encodeKey should not be called");
+        throw new UnsupportedOperationException(
+                "TurmsRedisCodecAdapter#encodeKey should not be called");
     }
 
     @Override
     public ByteBuffer encodeValue(V value) {
-        throw new UnsupportedOperationException("TurmsRedisCodecAdapter#encodeValue should not be called");
+        throw new UnsupportedOperationException(
+                "TurmsRedisCodecAdapter#encodeValue should not be called");
     }
 
 }

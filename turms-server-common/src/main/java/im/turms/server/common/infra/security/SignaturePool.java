@@ -17,11 +17,11 @@
 
 package im.turms.server.common.infra.security;
 
-import io.netty.util.concurrent.FastThreadLocal;
-
 import java.security.NoSuchAlgorithmException;
 import java.security.Signature;
 import java.util.Map;
+
+import io.netty.util.concurrent.FastThreadLocal;
 
 /**
  * @author James Chen
@@ -73,27 +73,39 @@ public final class SignaturePool {
         }
     };
 
-    private static final Map<String, FastThreadLocal<Signature>> NAME_TO_ALGORITHM = Map.of(
-            "SHA256withRSA", SHA_256_WITH_RSA,
-            "SHA384withRSA", SHA_384_WITH_RSA,
-            "SHA512withRSA", SHA_512_WITH_RSA,
-            "SHA256withECDSA", SHA_256_WITH_ECDSA,
-            "SHA384withECDSA", SHA_384_WITH_ECDSA,
-            "SHA512withECDSA", SHA_512_WITH_ECDSA
-    );
+    private static final Map<String, FastThreadLocal<Signature>> NAME_TO_ALGORITHM =
+            Map.of("SHA256withRSA",
+                    SHA_256_WITH_RSA,
+                    "SHA384withRSA",
+                    SHA_384_WITH_RSA,
+                    "SHA512withRSA",
+                    SHA_512_WITH_RSA,
+                    "SHA256withECDSA",
+                    SHA_256_WITH_ECDSA,
+                    "SHA384withECDSA",
+                    SHA_384_WITH_ECDSA,
+                    "SHA512withECDSA",
+                    SHA_512_WITH_ECDSA);
 
     public static void ensureAvailability(String algorithm) {
         try {
             Signature.getInstance(algorithm);
         } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("Unavailable algorithm: \"" + algorithm + "\"", e);
+            throw new RuntimeException(
+                    "Unavailable algorithm: \""
+                            + algorithm
+                            + "\"",
+                    e);
         }
     }
 
     public static Signature get(String algorithm) {
         FastThreadLocal<Signature> threadLocal = NAME_TO_ALGORITHM.get(algorithm);
         if (threadLocal == null) {
-            throw new IllegalArgumentException("Unknown algorithm: \"" + algorithm + "\"");
+            throw new IllegalArgumentException(
+                    "Unknown algorithm: \""
+                            + algorithm
+                            + "\"");
         }
         return threadLocal.get();
     }

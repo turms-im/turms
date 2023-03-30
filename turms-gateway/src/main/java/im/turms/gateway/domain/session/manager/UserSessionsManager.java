@@ -17,6 +17,14 @@
 
 package im.turms.gateway.domain.session.manager;
 
+import java.util.Map;
+import java.util.Set;
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotNull;
+
+import lombok.Data;
+import org.springframework.util.Assert;
+
 import im.turms.gateway.access.client.common.UserSession;
 import im.turms.server.common.access.client.dto.ClientMessageEncoder;
 import im.turms.server.common.access.client.dto.constant.DeviceType;
@@ -27,13 +35,6 @@ import im.turms.server.common.domain.session.bo.CloseReason;
 import im.turms.server.common.infra.collection.ConcurrentEnumMap;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
-import lombok.Data;
-import org.springframework.util.Assert;
-
-import java.util.Map;
-import java.util.Set;
-import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.NotNull;
 
 /**
  * @author James Chen
@@ -48,7 +49,8 @@ public final class UserSessionsManager {
     /**
      * The online session map of a user
      */
-    private final Map<DeviceType, UserSession> deviceTypeToSession = new ConcurrentEnumMap<>(DeviceType.class);
+    private final Map<DeviceType, UserSession> deviceTypeToSession =
+            new ConcurrentEnumMap<>(DeviceType.class);
 
     public UserSessionsManager(Long userId, UserStatus userStatus) {
         Assert.notNull(userId, "userId must not be null");
@@ -61,11 +63,12 @@ public final class UserSessionsManager {
      * @return new session if added
      */
     @Nullable
-    public UserSession addSessionIfAbsent(int version,
-                                          Set<TurmsRequest.KindCase> permissions,
-                                          DeviceType loggingInDeviceType,
-                                          Map<String, String> deviceDetails,
-                                          @Nullable Location location) {
+    public UserSession addSessionIfAbsent(
+            int version,
+            Set<TurmsRequest.KindCase> permissions,
+            DeviceType loggingInDeviceType,
+            Map<String, String> deviceDetails,
+            @Nullable Location location) {
         Assert.notNull(loggingInDeviceType, "loggingInDeviceType must not be null");
         UserSession userSession = new UserSession(
                 version,
@@ -75,15 +78,15 @@ public final class UserSessionsManager {
                 deviceDetails,
                 location);
         boolean added = deviceTypeToSession.putIfAbsent(loggingInDeviceType, userSession) == null;
-        return added ? userSession : null;
+        return added
+                ? userSession
+                : null;
     }
 
     /**
      * @return true if the session was online
      */
-    public boolean closeSession(
-            @NotNull DeviceType deviceType,
-            @NotNull CloseReason closeReason) {
+    public boolean closeSession(@NotNull DeviceType deviceType, @NotNull CloseReason closeReason) {
         UserSession session = deviceTypeToSession.remove(deviceType);
         if (session != null) {
             return session.close(closeReason);
@@ -101,12 +104,17 @@ public final class UserSessionsManager {
         }
         try {
             userSession
-                    .sendNotification(ClientMessageEncoder
-                            .encodeUserSessionNotification(System.currentTimeMillis(), Integer.toString(userSession.getId()), serverId))
-                    .subscribe(null, t -> LOGGER.error("Failed to send the session notification to the user session: " + userSession, t));
+                    .sendNotification(ClientMessageEncoder.encodeUserSessionNotification(System
+                            .currentTimeMillis(), Integer.toString(userSession.getId()), serverId))
+                    .subscribe(null,
+                            t -> LOGGER.error(
+                                    "Failed to send the session notification to the user session: "
+                                            + userSession,
+                                    t));
             return true;
         } catch (Exception e) {
-            LOGGER.error("Failed to send the session notification to the user session: " + userSession, e);
+            LOGGER.error("Failed to send the session notification to the user session: "
+                    + userSession, e);
             return false;
         }
     }

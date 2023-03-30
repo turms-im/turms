@@ -26,16 +26,14 @@ public class LongUtil {
     }
 
     public static byte[] toBytes(long v) {
-        return new byte[]{
-                (byte) v,
+        return new byte[]{(byte) v,
                 (byte) (v >>> 8),
                 (byte) (v >>> 16),
                 (byte) (v >>> 24),
                 (byte) (v >>> 32),
                 (byte) (v >>> 40),
                 (byte) (v >>> 48),
-                (byte) (v >>> 56)
-        };
+                (byte) (v >>> 56)};
     }
 
 }

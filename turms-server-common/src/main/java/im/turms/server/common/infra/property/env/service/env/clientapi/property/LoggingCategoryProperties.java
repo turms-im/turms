@@ -17,12 +17,13 @@
 
 package im.turms.server.common.infra.property.env.service.env.clientapi.property;
 
-import im.turms.server.common.infra.property.constant.LoggingRequestCategory;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+
+import im.turms.server.common.infra.property.constant.LoggingRequestCategory;
 
 /**
  * @author James Chen

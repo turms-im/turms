@@ -17,9 +17,6 @@
 
 package im.turms.server.common.infra.collection;
 
-import im.turms.server.common.infra.exception.NotImplementedException;
-import im.turms.server.common.infra.thread.ThreadSafe;
-
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.VarHandle;
 import java.util.Collection;
@@ -28,14 +25,17 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
 
+import im.turms.server.common.infra.exception.NotImplementedException;
+import im.turms.server.common.infra.thread.ThreadSafe;
+
 /**
  * @author James Chen
  */
 @ThreadSafe
 public final class ConcurrentEnumMap<K extends Enum<K>, V> implements Map<K, V> {
 
-    private static final VarHandle VALUES_HANDLE
-            = MethodHandles.arrayElementVarHandle(Object[].class);
+    private static final VarHandle VALUES_HANDLE =
+            MethodHandles.arrayElementVarHandle(Object[].class);
     private static final AtomicIntegerFieldUpdater<ConcurrentEnumMap<?, ?>> SIZE_UPDATER;
 
     private final K[] keys;
@@ -43,8 +43,8 @@ public final class ConcurrentEnumMap<K extends Enum<K>, V> implements Map<K, V> 
     private volatile int size;
 
     static {
-        AtomicIntegerFieldUpdater<?> newUpdater = AtomicIntegerFieldUpdater
-                .newUpdater(ConcurrentEnumMap.class, "size");
+        AtomicIntegerFieldUpdater<?> newUpdater =
+                AtomicIntegerFieldUpdater.newUpdater(ConcurrentEnumMap.class, "size");
         SIZE_UPDATER = (AtomicIntegerFieldUpdater<ConcurrentEnumMap<?, ?>>) newUpdater;
     }
 

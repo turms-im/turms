@@ -17,19 +17,20 @@
 
 package im.turms.server.common.infra.cluster.service.config.entity.property;
 
-import im.turms.server.common.infra.property.TurmsProperties;
-import im.turms.server.common.infra.property.env.gateway.GatewayProperties;
-import im.turms.server.common.infra.property.env.service.ServiceProperties;
-import im.turms.server.common.storage.mongo.entity.annotation.Document;
-import im.turms.server.common.storage.mongo.entity.annotation.Id;
-import im.turms.server.common.storage.mongo.entity.annotation.PropertySetter;
+import java.util.Date;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldNameConstants;
 
-import java.util.Date;
+import im.turms.server.common.infra.property.TurmsProperties;
+import im.turms.server.common.infra.property.env.gateway.GatewayProperties;
+import im.turms.server.common.infra.property.env.service.ServiceProperties;
+import im.turms.server.common.storage.mongo.entity.annotation.Document;
+import im.turms.server.common.storage.mongo.entity.annotation.Id;
+import im.turms.server.common.storage.mongo.entity.annotation.PropertySetter;
 
 /**
  * @author James Chen
@@ -57,10 +58,11 @@ public class SharedClusterProperties {
 
     private transient TurmsProperties turmsProperties;
 
-    public SharedClusterProperties(String clusterId,
-                                   int schemaVersion,
-                                   TurmsProperties localProperties,
-                                   Date lastUpdatedTime) {
+    public SharedClusterProperties(
+            String clusterId,
+            int schemaVersion,
+            TurmsProperties localProperties,
+            Date lastUpdatedTime) {
         this.clusterId = clusterId;
         this.schemaVersion = schemaVersion;
         this.turmsProperties = localProperties;

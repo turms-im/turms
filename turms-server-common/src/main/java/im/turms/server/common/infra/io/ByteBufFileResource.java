@@ -17,11 +17,12 @@
 
 package im.turms.server.common.infra.io;
 
-import im.turms.server.common.infra.netty.ReferenceCountUtil;
+import jakarta.annotation.Nullable;
+
 import io.netty.buffer.ByteBuf;
 import lombok.Getter;
 
-import jakarta.annotation.Nullable;
+import im.turms.server.common.infra.netty.ReferenceCountUtil;
 
 /**
  * @author James Chen
@@ -31,8 +32,7 @@ public class ByteBufFileResource extends BaseFileResource {
     @Getter
     private final ByteBuf buffer;
 
-    public ByteBufFileResource(String fileName,
-                               ByteBuf buffer) {
+    public ByteBufFileResource(String fileName, ByteBuf buffer) {
         super(fileName, buffer.readableBytes());
         this.buffer = buffer;
     }

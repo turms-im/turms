@@ -17,6 +17,20 @@
 
 package im.turms.plugin.push.core;
 
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Supplier;
+
+import io.micrometer.core.instrument.Metrics;
+import io.micrometer.core.instrument.Tags;
+import lombok.Getter;
+import reactor.core.publisher.Mono;
+import reactor.util.retry.Retry;
+import reactor.util.retry.RetryBackoffSpec;
+
 import im.turms.plugin.push.core.sender.apns.ApnsSender;
 import im.turms.plugin.push.core.sender.fcm.FcmSender;
 import im.turms.plugin.push.property.ApnsProperties;
@@ -27,18 +41,7 @@ import im.turms.plugin.push.property.TemplateProperties;
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.request.TurmsRequest;
 import im.turms.server.common.infra.exception.FeatureDisabledException;
-import io.micrometer.core.instrument.Metrics;
-import io.micrometer.core.instrument.Tags;
-import lombok.Getter;
-import reactor.core.publisher.Mono;
-import reactor.util.retry.Retry;
-import reactor.util.retry.RetryBackoffSpec;
-
-import java.time.Duration;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Supplier;
+import im.turms.server.common.infra.lang.StringUtil;
 
 /**
  * @author James Chen
@@ -62,7 +65,8 @@ public class PushNotificationManager {
     // TODO: make configurable
     private final RetryBackoffSpec retrySpec = Retry.backoff(2, Duration.ofMillis(1))
             .filter(throwable -> throwable instanceof SendPushNotificationException exception
-                    && exception.getErrorCode().isRetryable()
+                    && exception.getErrorCode()
+                            .isRetryable()
                     && !isClosed);
 
     public PushNotificationManager(PushNotificationProperties properties) {
@@ -72,6 +76,12 @@ public class PushNotificationManager {
         FcmProperties fcmProperties = properties.getFcm();
         localeFieldName = localeProperties.getFieldName();
         fallbackLocale = localeProperties.getFallback();
+        if (StringUtil.isBlank(localeFieldName)) {
+            throw new IllegalArgumentException("The locale field name must not be blank");
+        }
+        if (StringUtil.isBlank(fallbackLocale)) {
+            throw new IllegalArgumentException("The fallback locale must not be blank");
+        }
         isApnsEnabled = apnsProperties.isEnabled();
         isFcmEnabled = fcmProperties.isEnabled();
         apnsSender = isApnsEnabled
@@ -91,12 +101,13 @@ public class PushNotificationManager {
         deviceTokenFieldNames = names;
     }
 
-    public Mono<Void> sendNotification(PushNotification pushNotification,
-                                       TurmsRequest request,
-                                       Long requesterId,
-                                       DeviceType requesterDevice,
-                                       String requesterName,
-                                       Map<String, String> deviceDetails) {
+    public Mono<Void> sendNotification(
+            PushNotification pushNotification,
+            TurmsRequest request,
+            Long requesterId,
+            DeviceType requesterDevice,
+            String requesterName,
+            Map<String, String> deviceDetails) {
         PushNotificationSender sender;
         switch (pushNotification.serviceProvider()) {
             case FCM -> {
@@ -114,7 +125,9 @@ public class PushNotificationManager {
                 }
             }
             default -> {
-                return Mono.error(new RuntimeException("Unknown push service provider: " + pushNotification.serviceProvider()));
+                return Mono.error(new RuntimeException(
+                        "Unknown push service provider: "
+                                + pushNotification.serviceProvider()));
             }
         }
         String locale = deviceDetails.getOrDefault(localeFieldName, fallbackLocale);
@@ -123,31 +136,48 @@ public class PushNotificationManager {
 
             @Override
             public Object get() {
-                if (map == null) {
-                    map = Map.of(
-                            "serviceProvider", pushNotification.serviceProvider(),
-                            "locale", locale,
-                            "request", request,
-                            "requester", Map.of(
-                                    "id", requesterId,
-                                    "device", requesterDevice,
-                                    "name", requesterName
-                            ),
-                            "recipient", Map.of(
-                                    "deviceDetails", deviceDetails
-                            )
-                    );
+                if (map != null) {
+                    return map;
+                }
+                String title = pushNotification.title();
+                String body = pushNotification.body();
+                Integer badgeNumber = pushNotification.badgeNumber();
+                map = new HashMap<>(16);
+                map.put("serviceProvider", pushNotification.serviceProvider());
+                map.put("locale", locale);
+                map.put("request", request);
+                map.put("requester",
+                        Map.of("id",
+                                requesterId,
+                                "device",
+                                requesterDevice,
+                                "name",
+                                requesterName));
+                map.put("recipient", Map.of("deviceDetails", deviceDetails));
+                if (badgeNumber != null) {
+                    map.put("badgeNumber", badgeNumber);
+                }
+                if (title != null) {
+                    map.put("title", title);
+                }
+                if (body != null) {
+                    map.put("body", body);
                 }
                 return map;
             }
         };
         return sender.sendNotification(pushNotification, locale, dataModelSupplier)
                 .doOnSuccess(unused -> {
-                    Tags tags = Tags.of("provider", pushNotification.serviceProvider().name(),
+                    Tags tags = Tags.of("provider",
+                            pushNotification.serviceProvider()
+                                    .name(),
                             // We only have this type currently
-                            "type", "SEND_MESSAGE",
-                            "accepted", "true");
-                    Metrics.counter(PUSH_NOTIFICATION_REQUEST, tags).increment();
+                            "type",
+                            "SEND_MESSAGE",
+                            "accepted",
+                            "true");
+                    Metrics.counter(PUSH_NOTIFICATION_REQUEST, tags)
+                            .increment();
                 })
                 .doOnError(throwable -> {
                     PushNotificationErrorCode errorCode = null;
@@ -158,14 +188,20 @@ public class PushNotificationManager {
                         serviceErrorCode = exception.getServiceErrorCode();
                         Throwable unwrappedCause = exception.getCause();
                         if (unwrappedCause != null) {
-                            cause = unwrappedCause.getClass().getSimpleName();
+                            cause = unwrappedCause.getClass()
+                                    .getSimpleName();
                         }
                     } else {
-                        cause = throwable.getClass().getSimpleName();
+                        cause = throwable.getClass()
+                                .getSimpleName();
                     }
-                    Tags tags = Tags.of("provider", pushNotification.serviceProvider().name(),
-                            "type", "SEND_MESSAGE",
-                            "accepted", "false");
+                    Tags tags = Tags.of("provider",
+                            pushNotification.serviceProvider()
+                                    .name(),
+                            "type",
+                            "SEND_MESSAGE",
+                            "accepted",
+                            "false");
                     if (errorCode != null) {
                         tags = tags.and("code", String.valueOf(errorCode.getCode()));
                     }
@@ -175,7 +211,8 @@ public class PushNotificationManager {
                     if (cause != null) {
                         tags = tags.and("cause", cause);
                     }
-                    Metrics.counter(PUSH_NOTIFICATION_REQUEST, tags).increment();
+                    Metrics.counter(PUSH_NOTIFICATION_REQUEST, tags)
+                            .increment();
                 })
                 .retryWhen(retrySpec);
     }

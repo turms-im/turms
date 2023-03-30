@@ -17,15 +17,15 @@
 
 package im.turms.plugin.antispam.ac;
 
+import java.util.Collection;
+import jakarta.annotation.Nullable;
+
 import lombok.ToString;
 import org.eclipse.collections.api.iterator.MutableCharIterator;
 import org.eclipse.collections.api.iterator.MutableIntIterator;
 import org.eclipse.collections.api.map.primitive.MutableCharObjectMap;
 import org.eclipse.collections.impl.factory.primitive.CharObjectMaps;
 import org.eclipse.collections.impl.set.mutable.primitive.IntHashSet;
-
-import java.util.Collection;
-import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen
@@ -36,8 +36,8 @@ public class State {
     final int depth;
     final MutableCharObjectMap<State> success;
     /**
-     * points to the state that its prefix has the longest common subsequence
-     * with the suffix of the current state
+     * points to the state that its prefix has the longest common subsequence with the suffix of the
+     * current state
      */
     State failure;
     /**
@@ -103,7 +103,8 @@ public class State {
     }
 
     MutableCharIterator getTransitions() {
-        return success.keySet().charIterator();
+        return success.keySet()
+                .charIterator();
     }
 
 }

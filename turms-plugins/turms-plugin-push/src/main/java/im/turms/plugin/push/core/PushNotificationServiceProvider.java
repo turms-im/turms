@@ -17,10 +17,10 @@
 
 package im.turms.plugin.push.core;
 
-import im.turms.server.common.infra.lang.ClassUtil;
-
 import java.util.Map;
 import jakarta.annotation.Nullable;
+
+import im.turms.server.common.infra.lang.ClassUtil;
 
 /**
  * @author James Chen
@@ -32,11 +32,13 @@ public enum PushNotificationServiceProvider {
     private static final Map<String, PushNotificationServiceProvider> NAME_TO_PROVIDER;
 
     static {
-        PushNotificationServiceProvider[] providers = ClassUtil.getSharedEnumConstants(PushNotificationServiceProvider.class);
+        PushNotificationServiceProvider[] providers =
+                ClassUtil.getSharedEnumConstants(PushNotificationServiceProvider.class);
         Map.Entry[] entries = new Map.Entry[providers.length];
         for (int i = 0, length = providers.length; i < length; i++) {
             PushNotificationServiceProvider provider = providers[i];
-            entries[i] = Map.entry(provider.name().toLowerCase(), provider);
+            entries[i] = Map.entry(provider.name()
+                    .toLowerCase(), provider);
         }
         NAME_TO_PROVIDER = Map.ofEntries(entries);
     }

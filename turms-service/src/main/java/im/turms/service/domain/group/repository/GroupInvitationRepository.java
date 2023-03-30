@@ -17,7 +17,16 @@
 
 package im.turms.service.domain.group.repository;
 
+import java.util.Date;
+import java.util.Set;
+import jakarta.annotation.Nullable;
+
 import com.mongodb.client.result.UpdateResult;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.access.client.dto.constant.RequestStatus;
 import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
@@ -29,14 +38,6 @@ import im.turms.server.common.storage.mongo.operation.option.QueryOptions;
 import im.turms.server.common.storage.mongo.operation.option.Update;
 import im.turms.service.domain.common.repository.ExpirableEntityRepository;
 import im.turms.service.domain.group.po.GroupInvitation;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Repository;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
-import java.util.Date;
-import java.util.Set;
-import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen
@@ -46,15 +47,15 @@ public class GroupInvitationRepository extends ExpirableEntityRepository<GroupIn
 
     private int expireAfterSeconds;
 
-    public GroupInvitationRepository(TurmsPropertiesManager propertiesManager,
-                                     @Qualifier("groupMongoClient") TurmsMongoClient mongoClient) {
+    public GroupInvitationRepository(
+            TurmsPropertiesManager propertiesManager,
+            @Qualifier("groupMongoClient") TurmsMongoClient mongoClient) {
         super(mongoClient, GroupInvitation.class);
         propertiesManager.notifyAndAddGlobalPropertiesChangeListener(this::updateProperties);
     }
 
     private void updateProperties(TurmsProperties properties) {
-        expireAfterSeconds = properties
-                .getService()
+        expireAfterSeconds = properties.getService()
                 .getGroup()
                 .getInvitation()
                 .getExpireAfterSeconds();
@@ -65,7 +66,9 @@ public class GroupInvitationRepository extends ExpirableEntityRepository<GroupIn
         return expireAfterSeconds;
     }
 
-    public Mono<UpdateResult> updateStatusIfPending(Long invitationId, RequestStatus requestStatus) {
+    public Mono<UpdateResult> updateStatusIfPending(
+            Long invitationId,
+            RequestStatus requestStatus) {
         Filter filter = Filter.newBuilder(2)
                 .eq(DomainFieldName.ID, invitationId)
                 .eq(GroupInvitation.Fields.STATUS, RequestStatus.PENDING);
@@ -74,17 +77,17 @@ public class GroupInvitationRepository extends ExpirableEntityRepository<GroupIn
         return mongoClient.updateOne(entityClass, filter, update);
     }
 
-    public Mono<UpdateResult> updateInvitations(Set<Long> invitationIds,
-                                                @Nullable Long inviterId,
-                                                @Nullable Long inviteeId,
-                                                @Nullable String content,
-                                                @Nullable RequestStatus status,
-                                                @Nullable Date creationDate,
-                                                @Nullable Date responseDate) {
+    public Mono<UpdateResult> updateInvitations(
+            Set<Long> invitationIds,
+            @Nullable Long inviterId,
+            @Nullable Long inviteeId,
+            @Nullable String content,
+            @Nullable RequestStatus status,
+            @Nullable Date creationDate,
+            @Nullable Date responseDate) {
         Filter filter = Filter.newBuilder(1)
                 .in(DomainFieldName.ID, invitationIds);
-        Update update = Update
-                .newBuilder(5)
+        Update update = Update.newBuilder(5)
                 .setIfNotNull(GroupInvitation.Fields.INVITER_ID, inviterId)
                 .setIfNotNull(GroupInvitation.Fields.INVITEE_ID, inviteeId)
                 .setIfNotNull(GroupInvitation.Fields.CONTENT, content)
@@ -109,9 +112,12 @@ public class GroupInvitationRepository extends ExpirableEntityRepository<GroupIn
                 .inIfNotNull(GroupInvitation.Fields.INVITER_ID, inviterIds)
                 .inIfNotNull(GroupInvitation.Fields.INVITEE_ID, inviteeIds)
                 .inIfNotNull(GroupInvitation.Fields.STATUS, statuses)
-                .addBetweenIfNotNull(GroupInvitation.Fields.CREATION_DATE, getCreationDateRange(creationDateRange, expirationDateRange))
+                .addBetweenIfNotNull(GroupInvitation.Fields.CREATION_DATE,
+                        getCreationDateRange(creationDateRange, expirationDateRange))
                 .addBetweenIfNotNull(GroupInvitation.Fields.RESPONSE_DATE, responseDateRange)
-                .isExpiredOrNot(statuses, GroupInvitation.Fields.CREATION_DATE, getEntityExpirationDate());
+                .isExpiredOrNot(statuses,
+                        GroupInvitation.Fields.CREATION_DATE,
+                        getEntityExpirationDate());
         return mongoClient.count(entityClass, filter);
     }
 
@@ -167,9 +173,12 @@ public class GroupInvitationRepository extends ExpirableEntityRepository<GroupIn
                 .inIfNotNull(GroupInvitation.Fields.INVITER_ID, inviterIds)
                 .inIfNotNull(GroupInvitation.Fields.INVITEE_ID, inviteeIds)
                 .inIfNotNull(GroupInvitation.Fields.STATUS, statuses)
-                .addBetweenIfNotNull(GroupInvitation.Fields.CREATION_DATE, getCreationDateRange(creationDateRange, expirationDateRange))
+                .addBetweenIfNotNull(GroupInvitation.Fields.CREATION_DATE,
+                        getCreationDateRange(creationDateRange, expirationDateRange))
                 .addBetweenIfNotNull(GroupInvitation.Fields.RESPONSE_DATE, responseDateRange)
-                .isExpiredOrNot(statuses, GroupInvitation.Fields.CREATION_DATE, getEntityExpirationDate());
+                .isExpiredOrNot(statuses,
+                        GroupInvitation.Fields.CREATION_DATE,
+                        getEntityExpirationDate());
         QueryOptions options = QueryOptions.newBuilder(2)
                 .paginateIfNotNull(page, size);
         return findExpirableDocs(filter, options);

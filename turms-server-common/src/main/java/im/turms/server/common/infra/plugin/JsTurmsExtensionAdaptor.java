@@ -17,11 +17,12 @@
 
 package im.turms.server.common.infra.plugin;
 
-import im.turms.server.common.infra.plugin.script.ValueInspector;
+import java.util.List;
+
 import lombok.Getter;
 import org.graalvm.polyglot.Value;
 
-import java.util.List;
+import im.turms.server.common.infra.plugin.script.ValueInspector;
 
 /**
  * @author James Chen
@@ -37,9 +38,10 @@ public class JsTurmsExtensionAdaptor extends TurmsExtension {
     private final Value onResumed;
     private final Value onPaused;
 
-    public JsTurmsExtensionAdaptor(ExtensionPoint proxy,
-                                   List<Class<? extends ExtensionPoint>> extensionPointClasses,
-                                   Value extension) {
+    public JsTurmsExtensionAdaptor(
+            ExtensionPoint proxy,
+            List<Class<? extends ExtensionPoint>> extensionPointClasses,
+            Value extension) {
         this.proxy = proxy;
         this.extensionPointClasses = extensionPointClasses;
         onStarted = ValueInspector.returnIfFunction(extension.getMember("onStarted"));

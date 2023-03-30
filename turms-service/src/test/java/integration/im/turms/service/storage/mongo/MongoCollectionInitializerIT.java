@@ -17,8 +17,17 @@
 
 package integration.im.turms.service.storage.mongo;
 
+import java.time.Duration;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
 import com.google.common.base.CaseFormat;
 import helper.SpringAwareIntegrationTest;
+import org.bson.Document;
+import org.junit.jupiter.api.Test;
+import reactor.test.StepVerifier;
+
 import im.turms.server.common.domain.admin.po.Admin;
 import im.turms.server.common.domain.admin.po.AdminRole;
 import im.turms.server.common.domain.user.po.User;
@@ -42,14 +51,6 @@ import im.turms.service.domain.user.po.UserRelationship;
 import im.turms.service.domain.user.po.UserRelationshipGroup;
 import im.turms.service.domain.user.po.UserRelationshipGroupMember;
 import im.turms.service.domain.user.po.UserVersion;
-import org.bson.Document;
-import org.junit.jupiter.api.Test;
-import reactor.test.StepVerifier;
-
-import java.time.Duration;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -97,10 +98,14 @@ class MongoCollectionInitializerIT extends SpringAwareIntegrationTest {
     void validateSchemas() {
         for (Class<?> modelClass : MODEL_CLASSES) {
             String schemaFileName = getFileName(modelClass);
-            String jsonSchema = readText("schema/" + schemaFileName + ".json");
+            String jsonSchema = readText("schema/"
+                    + schemaFileName
+                    + ".json");
             StepVerifier.create(MONGO_CLIENT.validate(modelClass, jsonSchema))
                     .expectNext(true)
-                    .as("Entity (" + modelClass.getName() + ") must have a valid schema")
+                    .as("Entity ("
+                            + modelClass.getName()
+                            + ") must have a valid schema")
                     .expectComplete()
                     .verify(DEFAULT_IO_TIMEOUT);
         }
@@ -109,21 +114,31 @@ class MongoCollectionInitializerIT extends SpringAwareIntegrationTest {
     @Test
     void validateIndexes() {
         for (Class<?> modelClass : MODEL_CLASSES) {
-            StepVerifier.create(MONGO_CLIENT.listIndexes(modelClass).collect(CollectorUtil.toList(8)))
+            StepVerifier.create(MONGO_CLIENT.listIndexes(modelClass)
+                    .collect(CollectorUtil.toList(8)))
                     .assertNext(indexes -> {
                         String schemaFileName = getFileName(modelClass);
-                        String json = readText("index/" + schemaFileName + ".json");
-                        List<Document> expectedIndexes = (List<Document>) Document.parse("{\"json\":" + json + "}").get("json");
-                        assertThat(indexes)
-                                .as("Entity (" + modelClass.getName() + ") must have the expected size")
+                        String json = readText("index/"
+                                + schemaFileName
+                                + ".json");
+                        List<Document> expectedIndexes = (List<Document>) Document
+                                .parse("{\"json\":"
+                                        + json
+                                        + "}")
+                                .get("json");
+                        assertThat(indexes).as("Entity ("
+                                + modelClass.getName()
+                                + ") must have the expected size")
                                 .hasSize(expectedIndexes.size());
                         expectedIndexes.forEach(expectedIndex -> {
                             Object expectedIndexName = expectedIndex.get("name");
                             Optional<Document> found = indexes.stream()
-                                    .filter(document -> document.get("name").equals(expectedIndexName))
+                                    .filter(document -> document.get("name")
+                                            .equals(expectedIndexName))
                                     .findFirst();
-                            assertThat(found)
-                                    .as("Must contain the index: \"" + expectedIndexName + "\"")
+                            assertThat(found).as("Must contain the index: \""
+                                    + expectedIndexName
+                                    + "\"")
                                     .isPresent();
                             Document index = found.get();
                             for (Map.Entry<String, Object> entry : expectedIndex.entrySet()) {
@@ -131,7 +146,9 @@ class MongoCollectionInitializerIT extends SpringAwareIntegrationTest {
                             }
                         });
                     })
-                    .as("Entity (" + modelClass.getName() + ") must have valid index models")
+                    .as("Entity ("
+                            + modelClass.getName()
+                            + ") must have valid index models")
                     .expectComplete()
                     .verify(DEFAULT_IO_TIMEOUT);
         }

@@ -17,12 +17,12 @@
 
 package im.turms.plugin.antispam;
 
+import java.util.Arrays;
+import jakarta.annotation.Nullable;
+
 import im.turms.plugin.antispam.ac.AhoCorasickDoubleArrayTrie;
 import im.turms.server.common.infra.lang.FastStringBuilder;
 import im.turms.server.common.infra.lang.StringUtil;
-
-import java.util.Arrays;
-import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen
@@ -166,7 +166,9 @@ public class SpamDetector extends AhoCorasickDoubleArrayTrie {
             code = text.charAt(i);
             newChars = textPreprocessor.process(code);
             if (currentState == ROOT_STATUS) {
-                firstByteIndex = isLatin1 ? i : i * 2;
+                firstByteIndex = isLatin1
+                        ? i
+                        : i * 2;
             }
             if (newChars instanceof char[] chars) {
                 for (char c : chars) {
@@ -174,7 +176,9 @@ public class SpamDetector extends AhoCorasickDoubleArrayTrie {
                     while (nextState == STATUS_NOT_FOUND) {
                         currentState = fail[currentState];
                         if (currentState == ROOT_STATUS) {
-                            firstByteIndex = isLatin1 ? i : i * 2;
+                            firstByteIndex = isLatin1
+                                    ? i
+                                    : i * 2;
                         }
                         nextState = transition(currentState, c);
                     }
@@ -185,9 +189,13 @@ public class SpamDetector extends AhoCorasickDoubleArrayTrie {
                             textInternalBytes = StringUtil.getBytes(text);
                         }
                         if (isLatin1) {
-                            builder.append(textInternalBytes, firstByteIndex, i + 1 - firstByteIndex);
+                            builder.append(textInternalBytes,
+                                    firstByteIndex,
+                                    i + 1 - firstByteIndex);
                         } else {
-                            builder.append(textInternalBytes, firstByteIndex, (i + 1) * 2 - firstByteIndex);
+                            builder.append(textInternalBytes,
+                                    firstByteIndex,
+                                    (i + 1) * 2 - firstByteIndex);
                         }
                         if (builder.entryCount() >= maxNumberOfUnwantedWordsToReturn) {
                             return builder.build(coder, UNWANTED_WORD_DELIMITER);
@@ -199,7 +207,9 @@ public class SpamDetector extends AhoCorasickDoubleArrayTrie {
                 while (nextState == STATUS_NOT_FOUND) {
                     currentState = fail[currentState];
                     if (currentState == ROOT_STATUS) {
-                        firstByteIndex = isLatin1 ? i : i * 2;
+                        firstByteIndex = isLatin1
+                                ? i
+                                : i * 2;
                     }
                     nextState = transition(currentState, c);
                 }
@@ -212,7 +222,9 @@ public class SpamDetector extends AhoCorasickDoubleArrayTrie {
                     if (isLatin1) {
                         builder.append(textInternalBytes, firstByteIndex, i + 1 - firstByteIndex);
                     } else {
-                        builder.append(textInternalBytes, firstByteIndex, (i + 1) * 2 - firstByteIndex);
+                        builder.append(textInternalBytes,
+                                firstByteIndex,
+                                (i + 1) * 2 - firstByteIndex);
                     }
                     if (builder.entryCount() >= maxNumberOfUnwantedWordsToReturn) {
                         return builder.build(coder, UNWANTED_WORD_DELIMITER);

@@ -28,7 +28,9 @@ public final class NotificationUtil {
 
     public static long getLongOrThrow(TurmsNotification.Data data) {
         if (!data.hasLong()) {
-            throw new IllegalArgumentException("Could not get a long value from the data: " + data);
+            throw new IllegalArgumentException(
+                    "Could not get a long value from the data: "
+                            + data);
         }
         return data.getLong();
     }

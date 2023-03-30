@@ -17,14 +17,14 @@
 
 package im.turms.server.common.infra.property.env.common;
 
-
-import im.turms.server.common.infra.property.constant.AdvertiseStrategy;
-import im.turms.server.common.infra.property.metadata.Description;
-import im.turms.server.common.infra.property.metadata.MutableProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import im.turms.server.common.infra.property.constant.AdvertiseStrategy;
+import im.turms.server.common.infra.property.metadata.Description;
+import im.turms.server.common.infra.property.metadata.MutableProperty;
 
 /**
  * @author James Chen
@@ -36,19 +36,19 @@ import lombok.NoArgsConstructor;
 public class AddressProperties {
 
     @MutableProperty
-    @Description("The advertise strategy is used to decide which type of address should be used" +
-            " so that admins can access admin APIs and metrics APIs")
+    @Description("The advertise strategy is used to decide which type of address should be used"
+            + " so that admins can access admin APIs and metrics APIs")
     private AdvertiseStrategy advertiseStrategy = AdvertiseStrategy.PRIVATE_ADDRESS;
 
     @MutableProperty
-    @Description("The advertise address of the local node exposed to admins. " +
-            "(e.g. 100.131.251.96)")
+    @Description("The advertise address of the local node exposed to admins. "
+            + "(e.g. 100.131.251.96)")
     private String advertiseHost = "";
 
     @MutableProperty
-    @Description("Whether to attach the local port to the host.\n" +
-            "e.g. The local host is 100.131.251.96, and the port is 9510" +
-            " so the service address will be 100.131.251.96:9510")
+    @Description("Whether to attach the local port to the host.\n"
+            + "e.g. The local host is 100.131.251.96, and the port is 9510"
+            + " so the service address will be 100.131.251.96:9510")
     private boolean attachPortToHost = true;
 
 }

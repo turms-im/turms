@@ -17,7 +17,17 @@
 
 package im.turms.service.domain.user.repository;
 
+import java.util.Collection;
+import java.util.Date;
+import java.util.Set;
+import jakarta.annotation.Nullable;
+
 import com.mongodb.client.result.UpdateResult;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.access.client.dto.constant.ProfileAccessStrategy;
 import im.turms.server.common.domain.common.repository.BaseRepository;
 import im.turms.server.common.domain.user.po.User;
@@ -27,15 +37,6 @@ import im.turms.server.common.storage.mongo.TurmsMongoClient;
 import im.turms.server.common.storage.mongo.operation.option.Filter;
 import im.turms.server.common.storage.mongo.operation.option.QueryOptions;
 import im.turms.server.common.storage.mongo.operation.option.Update;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Repository;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
-import java.util.Collection;
-import java.util.Date;
-import java.util.Set;
-import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen
@@ -89,7 +90,9 @@ public class UserRepository extends BaseRepository<User, Long> {
         return mongoClient.exists(entityClass, filter);
     }
 
-    public Mono<Long> countRegisteredUsers(@Nullable DateRange dateRange, boolean queryDeletedRecords) {
+    public Mono<Long> countRegisteredUsers(
+            @Nullable DateRange dateRange,
+            boolean queryDeletedRecords) {
         Filter filter = Filter.newBuilder(3)
                 .addBetweenIfNotNull(User.Fields.REGISTRATION_DATE, dateRange)
                 .eqIfFalse(User.Fields.DELETION_DATE, null, queryDeletedRecords);
@@ -159,7 +162,9 @@ public class UserRepository extends BaseRepository<User, Long> {
         return mongoClient.findMany(entityClass, filter, options);
     }
 
-    public Flux<User> findNotDeletedUserProfiles(Collection<Long> userIds, @Nullable Date lastUpdatedDate) {
+    public Flux<User> findNotDeletedUserProfiles(
+            Collection<Long> userIds,
+            @Nullable Date lastUpdatedDate) {
         Filter filter = Filter.newBuilder(3)
                 .in(DomainFieldName.ID, userIds)
                 .eq(User.Fields.DELETION_DATE, null)

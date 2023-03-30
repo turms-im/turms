@@ -17,10 +17,15 @@
 
 package im.turms.server.common.infra.cluster.service.config;
 
+import java.util.List;
+
 import com.mongodb.client.model.changestream.ChangeStreamDocument;
 import com.mongodb.client.model.changestream.FullDocument;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.infra.cluster.service.ClusterService;
 import im.turms.server.common.infra.cluster.service.config.entity.discovery.Leader;
 import im.turms.server.common.infra.cluster.service.config.entity.discovery.Member;
@@ -32,10 +37,6 @@ import im.turms.server.common.storage.mongo.TurmsMongoClient;
 import im.turms.server.common.storage.mongo.exception.DuplicateKeyException;
 import im.turms.server.common.storage.mongo.operation.option.Filter;
 import im.turms.server.common.storage.mongo.operation.option.Update;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
-import java.util.List;
 
 /**
  * @author James Chen
@@ -59,25 +60,33 @@ public class SharedConfigService implements ClusterService {
         mongoClient.registerEntitiesByClasses(classes);
         for (Class<?> entityClass : classes) {
             try {
-                mongoClient.createCollectionIfNotExists(entityClass).block(DurationConst.ONE_MINUTE);
+                mongoClient.createCollectionIfNotExists(entityClass)
+                        .block(DurationConst.ONE_MINUTE);
             } catch (Exception e) {
-                throw new RuntimeException("Failed to create the collection for the class: " +
-                        entityClass.getName(), e);
+                throw new RuntimeException(
+                        "Failed to create the collection for the class: "
+                                + entityClass.getName(),
+                        e);
             }
         }
         try {
-            mongoClient.ensureIndexesAndShards(classes).block(DurationConst.ONE_MINUTE);
+            mongoClient.ensureIndexesAndShards(classes)
+                    .block(DurationConst.ONE_MINUTE);
         } catch (Exception e) {
             List<String> classNames = CollectionUtil.transformAsList(classes, Class::getName);
-            throw new RuntimeException("Failed to ensure the indexes are created for the classes: " +
-                    classNames, e);
+            throw new RuntimeException(
+                    "Failed to ensure the indexes are created for the classes: "
+                            + classNames,
+                    e);
         }
     }
 
     /**
      * Note that only listen to the change in the same cluster
      */
-    public <T> Flux<ChangeStreamDocument<T>> subscribe(Class<T> collectionClass, FullDocument fullDocument) {
+    public <T> Flux<ChangeStreamDocument<T>> subscribe(
+            Class<T> collectionClass,
+            FullDocument fullDocument) {
         // Don't use the filter of watch because the code like
         // "filter(Criteria.where(clusterIdFieldName).is(clusterId))"
         // cannot work if it is a delete operation
@@ -104,9 +113,9 @@ public class SharedConfigService implements ClusterService {
     public <T> Mono<T> insertOrGet(T record) {
         return mongoClient.insert(record)
                 .thenReturn(record)
-                .onErrorResume(DuplicateKeyException.class, e -> mongoClient
-                        .findOne(record.getClass())
-                        .switchIfEmpty((Mono) insertOrGet(record)));
+                .onErrorResume(DuplicateKeyException.class,
+                        e -> mongoClient.findOne(record.getClass())
+                                .switchIfEmpty((Mono) insertOrGet(record)));
     }
 
     public Mono<UpdateResult> updateOne(Class<?> entityClass, Filter filter, Update update) {
@@ -121,7 +130,8 @@ public class SharedConfigService implements ClusterService {
         return mongoClient.updateOne(entity.getClass(), filter, update)
                 .flatMap(updateResult -> updateResult.getMatchedCount() == 0
                         ? mongoClient.insert(entity)
-                        .onErrorResume(DuplicateKeyException.class, e -> this.upsert(filter, update, entity))
+                                .onErrorResume(DuplicateKeyException.class,
+                                        e -> this.upsert(filter, update, entity))
                         : Mono.empty());
     }
 

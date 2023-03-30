@@ -17,7 +17,16 @@
 
 package im.turms.service.domain.group.repository;
 
+import java.util.Date;
+import java.util.Set;
+import jakarta.annotation.Nullable;
+
 import com.mongodb.client.result.UpdateResult;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.domain.common.repository.BaseRepository;
 import im.turms.server.common.infra.time.DateRange;
 import im.turms.server.common.storage.mongo.DomainFieldName;
@@ -26,20 +35,13 @@ import im.turms.server.common.storage.mongo.operation.option.Filter;
 import im.turms.server.common.storage.mongo.operation.option.QueryOptions;
 import im.turms.server.common.storage.mongo.operation.option.Update;
 import im.turms.service.domain.group.po.GroupBlockedUser;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Repository;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
-import java.util.Date;
-import java.util.Set;
-import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen
  */
 @Repository
-public class GroupBlocklistRepository extends BaseRepository<GroupBlockedUser, GroupBlockedUser.Key> {
+public class GroupBlocklistRepository
+        extends BaseRepository<GroupBlockedUser, GroupBlockedUser.Key> {
 
     public GroupBlocklistRepository(@Qualifier("groupMongoClient") TurmsMongoClient mongoClient) {
         super(mongoClient, GroupBlockedUser.class);
@@ -75,9 +77,9 @@ public class GroupBlocklistRepository extends BaseRepository<GroupBlockedUser, G
                 .eq(GroupBlockedUser.Fields.ID_GROUP_ID, groupId);
         QueryOptions options = QueryOptions.newBuilder(1)
                 .include(GroupBlockedUser.Fields.ID_USER_ID);
-        return mongoClient
-                .findMany(entityClass, filter, options)
-                .map(groupBlockedUser -> groupBlockedUser.getKey().getUserId());
+        return mongoClient.findMany(entityClass, filter, options)
+                .map(groupBlockedUser -> groupBlockedUser.getKey()
+                        .getUserId());
     }
 
     public Flux<GroupBlockedUser> findBlockedUsers(

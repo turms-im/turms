@@ -17,9 +17,10 @@
 
 package unit.im.turms.server.common.infra.throttle;
 
+import org.junit.jupiter.api.Test;
+
 import im.turms.server.common.infra.throttle.TokenBucket;
 import im.turms.server.common.infra.throttle.TokenBucketContext;
-import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

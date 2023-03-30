@@ -17,8 +17,9 @@
 
 package im.turms.server.common.storage.redis;
 
-import im.turms.server.common.infra.netty.ByteBufUtil;
 import io.netty.buffer.ByteBuf;
+
+import im.turms.server.common.infra.netty.ByteBufUtil;
 
 /**
  * @author James Chen
@@ -29,6 +30,7 @@ public final class RedisEntryId {
     }
 
     public static final byte SESSIONS_STATUS = 's';
-    public static final ByteBuf LOCATION_BUFFER = ByteBufUtil.getUnreleasableDirectBuffer(new byte[]{'l'});
+    public static final ByteBuf LOCATION_BUFFER =
+            ByteBufUtil.getUnreleasableDirectBuffer(new byte[]{'l'});
 
 }

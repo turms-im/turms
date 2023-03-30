@@ -17,17 +17,18 @@
 
 package im.turms.server.common.storage.redis;
 
+import java.util.LinkedList;
+import java.util.List;
+
+import org.springframework.context.annotation.Bean;
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.context.JobShutdownOrder;
 import im.turms.server.common.infra.context.TurmsApplicationContext;
 import im.turms.server.common.infra.property.env.common.CommonRedisProperties;
 import im.turms.server.common.storage.redis.codec.context.RedisCodecContext;
 import im.turms.server.common.storage.redis.codec.context.RedisCodecContextPool;
-import org.springframework.context.annotation.Bean;
-import reactor.core.publisher.Mono;
-
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * @author James Chen
@@ -47,23 +48,31 @@ public abstract class CommonRedisConfig {
     private final List<TurmsRedisClientManager> registeredClientManagers = new LinkedList<>();
     private final List<TurmsRedisClient> registeredClients = new LinkedList<>();
 
-    protected CommonRedisConfig(TurmsApplicationContext context,
-                                CommonRedisProperties redisProperties,
-                                boolean treatUserIdAndDeviceTypeAsUniqueUser) {
+    protected CommonRedisConfig(
+            TurmsApplicationContext context,
+            CommonRedisProperties redisProperties,
+            boolean treatUserIdAndDeviceTypeAsUniqueUser) {
         sessionRedisClientManager = newSessionRedisClientManager(redisProperties.getSession());
-        locationRedisClientManager = newLocationRedisClientManager(redisProperties.getLocation(), treatUserIdAndDeviceTypeAsUniqueUser);
-        ipBlocklistRedisClient = newIpBlocklistRedisClient(redisProperties.getIpBlocklist().getUri());
-        userIdBlocklistRedisClient = newUserIdBlocklistRedisClient(redisProperties.getUserIdBlocklist().getUri());
+        locationRedisClientManager = newLocationRedisClientManager(redisProperties.getLocation(),
+                treatUserIdAndDeviceTypeAsUniqueUser);
+        ipBlocklistRedisClient = newIpBlocklistRedisClient(redisProperties.getIpBlocklist()
+                .getUri());
+        userIdBlocklistRedisClient =
+                newUserIdBlocklistRedisClient(redisProperties.getUserIdBlocklist()
+                        .getUri());
 
         context.addShutdownHook(JobShutdownOrder.CLOSE_REDIS_CONNECTIONS, this::destroy);
     }
 
     public static TurmsRedisClientManager newSessionRedisClientManager(RedisProperties properties) {
-        return new TurmsRedisClientManager(properties, RedisCodecContextPool.USER_SESSIONS_STATUS_CODEC_CONTEXT);
+        return new TurmsRedisClientManager(
+                properties,
+                RedisCodecContextPool.USER_SESSIONS_STATUS_CODEC_CONTEXT);
     }
 
-    public static TurmsRedisClientManager newLocationRedisClientManager(RedisProperties properties,
-                                                                        boolean treatUserIdAndDeviceTypeAsUniqueUser) {
+    public static TurmsRedisClientManager newLocationRedisClientManager(
+            RedisProperties properties,
+            boolean treatUserIdAndDeviceTypeAsUniqueUser) {
         RedisCodecContext codecContext = treatUserIdAndDeviceTypeAsUniqueUser
                 ? RedisCodecContextPool.GEO_USER_SESSION_ID_CODEC_CONTEXT
                 : RedisCodecContextPool.GEO_USER_ID_CODEC_CONTEXT;
@@ -71,11 +80,17 @@ public abstract class CommonRedisConfig {
     }
 
     public static TurmsRedisClient newIpBlocklistRedisClient(String uri) {
-        return new TurmsRedisClient(uri, RedisCodecContext.builder().build());
+        return new TurmsRedisClient(
+                uri,
+                RedisCodecContext.builder()
+                        .build());
     }
 
     public static TurmsRedisClient newUserIdBlocklistRedisClient(String uri) {
-        return new TurmsRedisClient(uri, RedisCodecContext.builder().build());
+        return new TurmsRedisClient(
+                uri,
+                RedisCodecContext.builder()
+                        .build());
     }
 
     public void registerClientManagers(List<TurmsRedisClientManager> clientManagers) {
@@ -88,10 +103,12 @@ public abstract class CommonRedisConfig {
 
     public Mono<Void> destroy(long timeoutMillis) {
         List<Mono<Void>> monos = new LinkedList<>();
-        for (TurmsRedisClientManager manager : CollectionUtil.union(registeredClientManagers, List.of(sessionRedisClientManager, locationRedisClientManager))) {
+        for (TurmsRedisClientManager manager : CollectionUtil.union(registeredClientManagers,
+                List.of(sessionRedisClientManager, locationRedisClientManager))) {
             monos.add(manager.destroy(timeoutMillis));
         }
-        for (TurmsRedisClient client : CollectionUtil.union(registeredClients, List.of(ipBlocklistRedisClient, userIdBlocklistRedisClient))) {
+        for (TurmsRedisClient client : CollectionUtil.union(registeredClients,
+                List.of(ipBlocklistRedisClient, userIdBlocklistRedisClient))) {
             monos.add(client.destroy(timeoutMillis));
         }
         return Mono.whenDelayError(monos);

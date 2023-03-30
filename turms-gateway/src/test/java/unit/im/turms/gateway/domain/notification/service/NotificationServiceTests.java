@@ -17,6 +17,17 @@
 
 package unit.im.turms.gateway.domain.notification.service;
 
+import java.time.Duration;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Set;
+
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.UnpooledByteBufAllocator;
+import org.junit.jupiter.api.Test;
+import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
+
 import im.turms.gateway.access.client.common.UserSession;
 import im.turms.gateway.access.client.tcp.TcpConnection;
 import im.turms.gateway.domain.notification.service.NotificationService;
@@ -32,16 +43,6 @@ import im.turms.server.common.infra.plugin.PluginManager;
 import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.tracing.TracingContext;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.UnpooledByteBufAllocator;
-import org.junit.jupiter.api.Test;
-import reactor.core.publisher.Mono;
-import reactor.test.StepVerifier;
-
-import java.time.Duration;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -58,7 +59,8 @@ class NotificationServiceTests {
         TurmsPropertiesManager propertiesManager = mock(TurmsPropertiesManager.class);
         when(propertiesManager.getLocalProperties()).thenReturn(new TurmsProperties());
 
-        NotificationService notificationService = new NotificationService(null, null, null, propertiesManager);
+        NotificationService notificationService =
+                new NotificationService(null, null, null, propertiesManager);
         assertThat(notificationService).isNotNull();
     }
 
@@ -66,22 +68,30 @@ class NotificationServiceTests {
     void sendNotificationToLocalClients_shouldReleaseAndReturnTrue_ifRecipientsAreOnline() {
         UserSessionsManager sessionsManager = mock(UserSessionsManager.class);
         TcpConnection connection = mock(TcpConnection.class);
-        UserSession session = new UserSession(1, TurmsRequestTypePool.ALL, 1L, DeviceType.ANDROID, null, new Location(1F, 1F));
+        UserSession session = new UserSession(
+                1,
+                TurmsRequestTypePool.ALL,
+                1L,
+                DeviceType.ANDROID,
+                null,
+                new Location(1F, 1F));
         session.setConnection(connection, new ByteArrayWrapper(new byte[]{}));
         session.setNotificationConsumer((notification, tracingContext) ->
-                // Wait 1s to simulate the async process
-                Mono.delay(Duration.ofSeconds(1)).then(Mono.fromRunnable(notification::release)));
+        // Wait 1s to simulate the async process
+        Mono.delay(Duration.ofSeconds(1))
+                .then(Mono.fromRunnable(notification::release)));
         when(sessionsManager.getDeviceTypeToSession())
                 .thenReturn(Map.of(DeviceType.ANDROID, session));
         NotificationService notificationService = newOutboundMessageService(sessionsManager);
 
         ByteBuf byteBuf = UnpooledByteBufAllocator.DEFAULT.directBuffer();
         Set<Long> recipientIds = Set.of(1L);
-        Mono<Set<Long>> offlineRecipientIdsMono = notificationService.sendNotificationToLocalClients(TracingContext.NOOP,
-                byteBuf,
-                recipientIds,
-                Collections.emptySet(),
-                null);
+        Mono<Set<Long>> offlineRecipientIdsMono =
+                notificationService.sendNotificationToLocalClients(TracingContext.NOOP,
+                        byteBuf,
+                        recipientIds,
+                        Collections.emptySet(),
+                        null);
 
         assertThat(byteBuf.refCnt())
                 .as("Buffer should not be released if the notification has not been sent")
@@ -90,8 +100,7 @@ class NotificationServiceTests {
                 .expectNextMatches(Set::isEmpty)
                 .as("Should not have offline recipient")
                 .verifyComplete();
-        assertThat(byteBuf.refCnt())
-                .as("Buffer should be released if the notification is sent")
+        assertThat(byteBuf.refCnt()).as("Buffer should be released if the notification is sent")
                 .isZero();
     }
 
@@ -101,29 +110,27 @@ class NotificationServiceTests {
 
         ByteBuf byteBuf = UnpooledByteBufAllocator.DEFAULT.directBuffer();
         Set<Long> recipientIds = Set.of(1L);
-        Mono<Set<Long>> offlineRecipientIdsMono = notificationService.sendNotificationToLocalClients(TracingContext.NOOP,
-                byteBuf,
-                recipientIds,
-                Collections.emptySet(),
-                null);
+        Mono<Set<Long>> offlineRecipientIdsMono =
+                notificationService.sendNotificationToLocalClients(TracingContext.NOOP,
+                        byteBuf,
+                        recipientIds,
+                        Collections.emptySet(),
+                        null);
 
         StepVerifier.create(offlineRecipientIdsMono)
                 .expectNextMatches(ids -> !ids.isEmpty())
                 .as("Should have offline recipient")
                 .verifyComplete();
-        assertThat(byteBuf.refCnt())
-                .as("Buffer should be released if recipients are offline")
+        assertThat(byteBuf.refCnt()).as("Buffer should be released if recipients are offline")
                 .isZero();
     }
 
     private NotificationService newOutboundMessageService(UserSessionsManager userSessionsManager) {
         NotificationHandler handler = mock(NotificationHandler.class);
-        when(handler.handle(any(), any(), any()))
-                .thenReturn(Mono.empty());
+        when(handler.handle(any(), any(), any())).thenReturn(Mono.empty());
 
         ApiLoggingContext apiLoggingContext = mock(ApiLoggingContext.class);
-        when(apiLoggingContext.shouldLogNotification(any()))
-                .thenReturn(true);
+        when(apiLoggingContext.shouldLogNotification(any())).thenReturn(true);
 
         PluginManager pluginManager = mock(PluginManager.class);
 
@@ -131,9 +138,12 @@ class NotificationServiceTests {
         when(propertiesManager.getLocalProperties()).thenReturn(new TurmsProperties());
 
         SessionService sessionService = mock(SessionService.class);
-        when(sessionService.getUserSessionsManager(any()))
-                .thenReturn(userSessionsManager);
-        return new NotificationService(apiLoggingContext, sessionService, pluginManager, propertiesManager);
+        when(sessionService.getUserSessionsManager(any())).thenReturn(userSessionsManager);
+        return new NotificationService(
+                apiLoggingContext,
+                sessionService,
+                pluginManager,
+                propertiesManager);
     }
 
 }

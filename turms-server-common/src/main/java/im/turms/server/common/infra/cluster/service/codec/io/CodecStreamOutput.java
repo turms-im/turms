@@ -17,10 +17,10 @@
 
 package im.turms.server.common.infra.cluster.service.codec.io;
 
-import im.turms.server.common.infra.io.StreamOutput;
-
 import java.util.Map;
 import jakarta.annotation.Nullable;
+
+import im.turms.server.common.infra.io.StreamOutput;
 
 /**
  * @author James Chen

@@ -56,13 +56,16 @@ public class UserMongoProperties extends TurmsMongoProperties {
     @Data
     public static class OptionalIndexProperties {
         @NestedConfigurationProperty
-        private UserFriendRequestOptionalIndexProperties userFriendRequest = new UserFriendRequestOptionalIndexProperties();
+        private UserFriendRequestOptionalIndexProperties userFriendRequest =
+                new UserFriendRequestOptionalIndexProperties();
 
         @NestedConfigurationProperty
-        private UserRelationshipOptionalIndexProperties userRelationship = new UserRelationshipOptionalIndexProperties();
+        private UserRelationshipOptionalIndexProperties userRelationship =
+                new UserRelationshipOptionalIndexProperties();
 
         @NestedConfigurationProperty
-        private UserRelationshipGroupMemberOptionalIndexProperties userRelationshipGroupMember = new UserRelationshipGroupMemberOptionalIndexProperties();
+        private UserRelationshipGroupMemberOptionalIndexProperties userRelationshipGroupMember =
+                new UserRelationshipGroupMemberOptionalIndexProperties();
     }
 
     @Data

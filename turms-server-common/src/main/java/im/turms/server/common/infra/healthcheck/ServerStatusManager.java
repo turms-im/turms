@@ -17,9 +17,10 @@
 
 package im.turms.server.common.infra.healthcheck;
 
+import org.springframework.stereotype.Component;
+
 import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.context.TurmsApplicationContext;
-import org.springframework.stereotype.Component;
 
 /**
  * @author James Chen
@@ -31,7 +32,10 @@ public class ServerStatusManager {
     private final Node node;
     private final HealthCheckManager healthCheckManager;
 
-    public ServerStatusManager(TurmsApplicationContext context, Node node, HealthCheckManager healthCheckManager) {
+    public ServerStatusManager(
+            TurmsApplicationContext context,
+            Node node,
+            HealthCheckManager healthCheckManager) {
         this.context = context;
         this.node = node;
         this.healthCheckManager = healthCheckManager;

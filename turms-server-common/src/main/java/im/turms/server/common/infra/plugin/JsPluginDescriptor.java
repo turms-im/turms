@@ -24,12 +24,13 @@ import jakarta.annotation.Nullable;
  * @author James Chen
  */
 public class JsPluginDescriptor extends PluginDescriptor {
-    public JsPluginDescriptor(String id,
-                              String version,
-                              String provider,
-                              String license,
-                              String description,
-                              @Nullable Path path) {
+    public JsPluginDescriptor(
+            String id,
+            String version,
+            String provider,
+            String license,
+            String description,
+            @Nullable Path path) {
         super(id, version, provider, license, description, path);
     }
 }

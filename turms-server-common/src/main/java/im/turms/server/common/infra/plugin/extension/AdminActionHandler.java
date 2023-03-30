@@ -17,11 +17,12 @@
 
 package im.turms.server.common.infra.plugin.extension;
 
-import im.turms.server.common.domain.admin.bo.AdminAction;
-import im.turms.server.common.infra.plugin.ExtensionPoint;
+import jakarta.validation.constraints.NotNull;
+
 import reactor.core.publisher.Mono;
 
-import jakarta.validation.constraints.NotNull;
+import im.turms.server.common.domain.admin.bo.AdminAction;
+import im.turms.server.common.infra.plugin.ExtensionPoint;
 
 /**
  * @author James Chen

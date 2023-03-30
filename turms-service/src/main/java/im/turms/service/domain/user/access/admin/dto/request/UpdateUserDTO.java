@@ -17,19 +17,18 @@
 
 package im.turms.service.domain.user.access.admin.dto.request;
 
+import java.util.Date;
+
 import im.turms.server.common.access.client.dto.constant.ProfileAccessStrategy;
 import im.turms.server.common.domain.common.access.dto.ControllerDTO;
 import im.turms.server.common.infra.security.SecurityValueConst;
 import im.turms.server.common.infra.security.SensitiveProperty;
 
-import java.util.Date;
-
 /**
  * @author James Chen
  */
 public record UpdateUserDTO(
-        @SensitiveProperty(SensitiveProperty.Access.ALLOW_DESERIALIZATION)
-        String password,
+        @SensitiveProperty(SensitiveProperty.Access.ALLOW_DESERIALIZATION) String password,
         String name,
         String intro,
         String profilePicture,
@@ -40,15 +39,23 @@ public record UpdateUserDTO(
 ) implements ControllerDTO {
     @Override
     public String toString() {
-        return "UpdateUserDTO[" +
-                "password=" + SecurityValueConst.SENSITIVE_VALUE +
-                ", name=" + name +
-                ", intro=" + intro +
-                ", profilePicture=" + profilePicture +
-                ", profileAccessStrategy=" + profileAccessStrategy +
-                ", permissionGroupId=" + permissionGroupId +
-                ", registrationDate=" + registrationDate +
-                ", isActive=" + isActive +
-                ']';
+        return "UpdateUserDTO["
+                + "password="
+                + SecurityValueConst.SENSITIVE_VALUE
+                + ", name="
+                + name
+                + ", intro="
+                + intro
+                + ", profilePicture="
+                + profilePicture
+                + ", profileAccessStrategy="
+                + profileAccessStrategy
+                + ", permissionGroupId="
+                + permissionGroupId
+                + ", registrationDate="
+                + registrationDate
+                + ", isActive="
+                + isActive
+                + ']';
     }
 }

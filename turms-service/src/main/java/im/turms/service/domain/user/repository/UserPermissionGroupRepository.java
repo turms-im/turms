@@ -17,20 +17,21 @@
 
 package im.turms.service.domain.user.repository;
 
+import java.util.Map;
+import java.util.Set;
+import jakarta.annotation.Nullable;
+
 import com.mongodb.client.result.UpdateResult;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.domain.common.repository.BaseRepository;
 import im.turms.server.common.storage.mongo.DomainFieldName;
 import im.turms.server.common.storage.mongo.TurmsMongoClient;
 import im.turms.server.common.storage.mongo.operation.option.Filter;
 import im.turms.server.common.storage.mongo.operation.option.Update;
 import im.turms.service.domain.user.po.UserPermissionGroup;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Repository;
-import reactor.core.publisher.Mono;
-
-import java.util.Map;
-import java.util.Set;
-import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen
@@ -38,7 +39,8 @@ import jakarta.annotation.Nullable;
 @Repository
 public class UserPermissionGroupRepository extends BaseRepository<UserPermissionGroup, Long> {
 
-    public UserPermissionGroupRepository(@Qualifier("userMongoClient") TurmsMongoClient mongoClient) {
+    public UserPermissionGroupRepository(
+            @Qualifier("userMongoClient") TurmsMongoClient mongoClient) {
         super(mongoClient, UserPermissionGroup.class);
     }
 
@@ -51,9 +53,11 @@ public class UserPermissionGroupRepository extends BaseRepository<UserPermission
         Filter filter = Filter.newBuilder(1)
                 .in(DomainFieldName.ID, groupIds);
         Update update = Update.newBuilder(4)
-                .setIfNotNull(UserPermissionGroup.Fields.CREATABLE_GROUP_TYPE_IDS, creatableGroupTypeIds)
+                .setIfNotNull(UserPermissionGroup.Fields.CREATABLE_GROUP_TYPE_IDS,
+                        creatableGroupTypeIds)
                 .setIfNotNull(UserPermissionGroup.Fields.OWNED_GROUP_LIMIT, ownedGroupLimit)
-                .setIfNotNull(UserPermissionGroup.Fields.OWNED_GROUP_LIMIT_FOR_EACH_GROUP_TYPE, ownedGroupLimitForEachGroupType)
+                .setIfNotNull(UserPermissionGroup.Fields.OWNED_GROUP_LIMIT_FOR_EACH_GROUP_TYPE,
+                        ownedGroupLimitForEachGroupType)
                 .setIfNotNull(UserPermissionGroup.Fields.GROUP_TYPE_TO_LIMIT, groupTypeIdToLimit);
         return mongoClient.updateMany(entityClass, filter, update);
     }

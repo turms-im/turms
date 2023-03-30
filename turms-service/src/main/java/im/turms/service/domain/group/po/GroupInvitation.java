@@ -17,6 +17,11 @@
 
 package im.turms.service.domain.group.po;
 
+import java.util.Date;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
 import im.turms.server.common.access.client.dto.constant.RequestStatus;
 import im.turms.server.common.domain.common.po.BaseEntity;
 import im.turms.server.common.storage.mongo.entity.annotation.CompoundIndex;
@@ -27,21 +32,17 @@ import im.turms.server.common.storage.mongo.entity.annotation.Id;
 import im.turms.server.common.storage.mongo.entity.annotation.Indexed;
 import im.turms.server.common.storage.mongo.entity.annotation.Sharded;
 import im.turms.service.domain.common.po.Expirable;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-
-import java.util.Date;
 
 import static im.turms.server.common.storage.mongo.entity.IndexType.HASH;
 import static im.turms.server.common.storage.mongo.entity.annotation.IndexedReason.EXTENDED_FEATURE;
 
 /**
  * @author James Chen
- * @implNote Sharded by inviteeId and createDate because it is common for users to
- * query whether they have received any group invitation at application startup.
- * <p>
- * Note that the query for the invitations of a group sent by a group admin
- * isn't a targeted query, but a scatter query with indexes supported.
+ * @implNote Sharded by inviteeId and createDate because it is common for users to query whether
+ *           they have received any group invitation at application startup.
+ *           <p>
+ *           Note that the query for the invitations of a group sent by a group admin isn't a
+ *           targeted query, but a scatter query with indexes supported.
  */
 @Data
 @AllArgsConstructor
@@ -76,8 +77,8 @@ public class GroupInvitation extends BaseEntity implements Expirable {
     private final String content;
 
     /**
-     * @implNote 1. Not indexed because of its low index selectivity.
-     * 2. Not final so that we can change it without using a builder (bad performance)
+     * @implNote 1. Not indexed because of its low index selectivity. 2. Not final so that we can
+     *           change it without using a builder (bad performance)
      */
     @Field(Fields.STATUS)
     @EnumNumber
@@ -87,7 +88,12 @@ public class GroupInvitation extends BaseEntity implements Expirable {
     private final Date creationDate;
 
     @Field(Fields.RESPONSE_DATE)
-    @Indexed(optional = true, reason = EXTENDED_FEATURE, partialFilter = "{" + Fields.RESPONSE_DATE + ":{$exists:true}}")
+    @Indexed(
+            optional = true,
+            reason = EXTENDED_FEATURE,
+            partialFilter = "{"
+                    + Fields.RESPONSE_DATE
+                    + ":{$exists:true}}")
     private final Date responseDate;
 
     public static final class Fields {

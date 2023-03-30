@@ -17,14 +17,16 @@
 
 package im.turms.server.common.infra.openapi;
 
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import jakarta.annotation.Nullable;
+
 import com.fasterxml.jackson.databind.ObjectWriter;
-import im.turms.server.common.access.admin.dto.response.HttpHandlerResult;
-import im.turms.server.common.access.admin.web.ApiEndpoint;
-import im.turms.server.common.access.admin.web.ApiEndpointKey;
-import im.turms.server.common.access.admin.web.MediaTypeConst;
-import im.turms.server.common.access.admin.web.MethodParameterInfo;
-import im.turms.server.common.infra.lang.StringUtil;
-import im.turms.server.common.infra.serialization.SerializationException;
 import io.netty.buffer.ByteBuf;
 import io.netty.handler.codec.http.HttpMethod;
 import io.swagger.v3.core.converter.AnnotatedType;
@@ -57,14 +59,13 @@ import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.servers.Server;
 import reactor.core.publisher.Mono;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-import jakarta.annotation.Nullable;
+import im.turms.server.common.access.admin.dto.response.HttpHandlerResult;
+import im.turms.server.common.access.admin.web.ApiEndpoint;
+import im.turms.server.common.access.admin.web.ApiEndpointKey;
+import im.turms.server.common.access.admin.web.MediaTypeConst;
+import im.turms.server.common.access.admin.web.MethodParameterInfo;
+import im.turms.server.common.infra.lang.StringUtil;
+import im.turms.server.common.infra.serialization.SerializationException;
 
 import static im.turms.server.common.access.admin.web.MediaTypeConst.APPLICATION_JAVASCRIPT;
 import static im.turms.server.common.access.admin.web.MediaTypeConst.APPLICATION_OCTET_STREAM;
@@ -87,22 +88,21 @@ public class OpenApiBuilder {
     private OpenApiBuilder() {
     }
 
-    public static byte[] build(String version,
-                               String nodeType,
-                               String serverUrl,
-                               Map<ApiEndpointKey, ApiEndpoint> keyToEndpoint) {
-        OpenAPI api = new OpenAPI()
-                .info(new Info()
-                        .title(TITLE + " - " + nodeType)
-                        .version(version))
-                .addServersItem(new Server()
-                        .url(serverUrl))
-                .externalDocs(new ExternalDocumentation()
-                        .description(EXTERNAL_DOCUMENTATION_DESCRIPTION)
-                        .url(EXTERNAL_DOCUMENTATION_URL))
-                .components(new Components()
-                        .addSecuritySchemes("BasicAuth", new SecurityScheme()
-                                .type(SecurityScheme.Type.HTTP)
+    public static byte[] build(
+            String version,
+            String nodeType,
+            String serverUrl,
+            Map<ApiEndpointKey, ApiEndpoint> keyToEndpoint) {
+        OpenAPI api = new OpenAPI().info(new Info().title(TITLE
+                + " - "
+                + nodeType)
+                .version(version))
+                .addServersItem(new Server().url(serverUrl))
+                .externalDocs(
+                        new ExternalDocumentation().description(EXTERNAL_DOCUMENTATION_DESCRIPTION)
+                                .url(EXTERNAL_DOCUMENTATION_URL))
+                .components(new Components().addSecuritySchemes("BasicAuth",
+                        new SecurityScheme().type(SecurityScheme.Type.HTTP)
                                 .scheme("basic")));
         TreeMap<String, Schema> schemas = new TreeMap<>();
         TreeMap<String, PathItem> paths = new TreeMap<>();
@@ -113,11 +113,14 @@ public class OpenApiBuilder {
                 schemas.putAll(responseSchema.referencedSchemas);
             }
             OperationItem operationItem = getOperation(endpoint,
-                    responseSchema == null ? null : responseSchema.schema);
+                    responseSchema == null
+                            ? null
+                            : responseSchema.schema);
             for (ResolvedSchema paramSchema : operationItem.paramSchemas()) {
                 schemas.putAll(paramSchema.referencedSchemas);
             }
-            paths.computeIfAbsent(entry.getKey().path(), path -> new PathItem())
+            paths.computeIfAbsent(entry.getKey()
+                    .path(), path -> new PathItem())
                     .operation(operationItem.method(), operationItem.operation());
         }
         for (Map.Entry<String, Schema> entry : schemas.entrySet()) {
@@ -126,8 +129,7 @@ public class OpenApiBuilder {
         for (Map.Entry<String, PathItem> entry : paths.entrySet()) {
             api.path(entry.getKey(), entry.getValue());
         }
-        ObjectWriter writer = ObjectMapperFactory
-                .buildStrictGenericObjectMapper()
+        ObjectWriter writer = ObjectMapperFactory.buildStrictGenericObjectMapper()
                 .writerWithDefaultPrettyPrinter();
         try {
             return writer.writeValueAsBytes(api);
@@ -138,8 +140,9 @@ public class OpenApiBuilder {
 
     @Nullable
     private static ResolvedSchema getResponseSchema(Method method) {
-        Type schemaType = AnnotationsUtils
-                .getSchemaType(method.getAnnotation(io.swagger.v3.oas.annotations.media.Schema.class), true);
+        Type schemaType = AnnotationsUtils.getSchemaType(
+                method.getAnnotation(io.swagger.v3.oas.annotations.media.Schema.class),
+                true);
         if (schemaType == null) {
             schemaType = unwrapType(method.getGenericReturnType());
             if (schemaType instanceof Class<?> clazz && ByteBuf.class.isAssignableFrom(clazz)) {
@@ -148,55 +151,52 @@ public class OpenApiBuilder {
         } else {
             schemaType = unwrapType(schemaType);
         }
-        return ModelConverters.getInstance().resolveAsResolvedSchema(new AnnotatedType(schemaType));
+        return ModelConverters.getInstance()
+                .resolveAsResolvedSchema(new AnnotatedType(schemaType));
     }
 
     public static Type unwrapType(Type type) {
         if (type instanceof ParameterizedType parameterizedType
                 && parameterizedType.getRawType() instanceof Class<?> rawType
-                && (Mono.class.isAssignableFrom(rawType) || HttpHandlerResult.class.isAssignableFrom(rawType))) {
+                && (Mono.class.isAssignableFrom(rawType)
+                        || HttpHandlerResult.class.isAssignableFrom(rawType))) {
             return unwrapType(parameterizedType.getActualTypeArguments()[0]);
         }
         return type;
     }
 
-    private static OperationItem getOperation(ApiEndpoint endpoint, @Nullable Schema<?> responseSchema) {
+    private static OperationItem getOperation(
+            ApiEndpoint endpoint,
+            @Nullable Schema<?> responseSchema) {
         HttpMethod httpMethod = endpoint.httpMethod();
         PathItem.HttpMethod httpMethodEnum = PathItem.HttpMethod.valueOf(httpMethod.name());
         Method method = endpoint.method();
         responseSchema = switch (endpoint.mediaType()) {
-            case APPLICATION_OCTET_STREAM,
-                    TEXT_CSV_UTF_8,
-                    APPLICATION_JAVASCRIPT,
-                    TEXT_CSS,
-                    TEXT_HTML,
-                    IMAGE_PNG -> new FileSchema();
+            case APPLICATION_OCTET_STREAM, TEXT_CSV_UTF_8, APPLICATION_JAVASCRIPT, TEXT_CSS,
+                    TEXT_HTML, IMAGE_PNG ->
+                new FileSchema();
             default -> responseSchema == null
                     ? new ObjectSchema()
                     : new Schema<>().$ref(responseSchema.getName());
         };
 
-        Operation operation = new Operation()
-                .operationId(method.getName())
-                .addTagsItem(StringUtil.upperCamelToLowerHyphenLatin1(endpoint.controller().getClass().getSimpleName()))
+        Operation operation = new Operation().operationId(method.getName())
+                .addTagsItem(StringUtil.upperCamelToLowerHyphenLatin1(endpoint.controller()
+                        .getClass()
+                        .getSimpleName()))
                 .responses(new ApiResponses()
-                        .addApiResponse("200", new ApiResponse()
-                                .description("OK")
-                                .content(new Content()
-                                        .addMediaType(endpoint.mediaType(), new MediaType()
-                                                .schema(responseSchema))))
-                        .addApiResponse("400", new ApiResponse()
-                                .description("Bad Request"))
-                        .addApiResponse("401", new ApiResponse()
-                                .description("Unauthorized"))
-                        .addApiResponse("403", new ApiResponse()
-                                .description("Forbidden"))
-                        .addApiResponse("404", new ApiResponse()
-                                .description("Not Found"))
-                        .addApiResponse("500", new ApiResponse()
-                                .description("Internal Server Error"))
-                        .addApiResponse("503", new ApiResponse()
-                                .description("Service Unavailable")));
+                        .addApiResponse("200",
+                                new ApiResponse().description("OK")
+                                        .content(new Content().addMediaType(endpoint.mediaType(),
+                                                new MediaType().schema(responseSchema))))
+                        .addApiResponse("400", new ApiResponse().description("Bad Request"))
+                        .addApiResponse("401", new ApiResponse().description("Unauthorized"))
+                        .addApiResponse("403", new ApiResponse().description("Forbidden"))
+                        .addApiResponse("404", new ApiResponse().description("Not Found"))
+                        .addApiResponse("500",
+                                new ApiResponse().description("Internal Server Error"))
+                        .addApiResponse("503",
+                                new ApiResponse().description("Service Unavailable")));
         MethodParameterInfo[] parameters = endpoint.parameters();
         List<ResolvedSchema> paramSchemas = new ArrayList<>(parameters.length);
         ModelConverters converters = ModelConverters.getInstance();
@@ -207,44 +207,45 @@ public class OpenApiBuilder {
             Class<?> elementType = parameter.elementType();
             ResolvedSchema paramSchema = null;
             if (!parameter.isFormData()) {
-                paramSchema = converters.resolveAsResolvedSchema(new AnnotatedType(unwrapType(
-                        elementType == null ? parameter.type() : elementType)));
+                paramSchema = converters.resolveAsResolvedSchema(new AnnotatedType(
+                        unwrapType(elementType == null
+                                ? parameter.type()
+                                : elementType)));
                 paramSchemas.add(paramSchema);
             }
             if (parameter.isBody() || parameter.isFormData()) {
                 Content content = new Content();
                 if (parameter.isBody()) {
-                    content.addMediaType(MediaTypeConst.APPLICATION_JSON, new MediaType()
-                            .schema(elementType == null
+                    content.addMediaType(MediaTypeConst.APPLICATION_JSON,
+                            new MediaType().schema(elementType == null
                                     ? paramSchema.schema
                                     : new ArraySchema().items(paramSchema.schema)));
                 } else {
                     MediaType mediaType = new MediaType();
-                    content.addMediaType(MediaTypeConst.MULTIPART_FORM_DATA, mediaType
-                            .schema(new ObjectSchema()
-                                    .addProperty(FORM_DATA_PROPERTY_FILE, new ArraySchema()
-                                            .items(new BinarySchema()))));
+                    content.addMediaType(MediaTypeConst.MULTIPART_FORM_DATA,
+                            mediaType.schema(new ObjectSchema().addProperty(FORM_DATA_PROPERTY_FILE,
+                                    new ArraySchema().items(new BinarySchema()))));
                     String contentType = parameter.contentType();
                     if (contentType != null) {
-                        mediaType.addEncoding(FORM_DATA_PROPERTY_FILE, new Encoding()
-                                .contentType(contentType));
+                        mediaType.addEncoding(FORM_DATA_PROPERTY_FILE,
+                                new Encoding().contentType(contentType));
                     }
                 }
-                operation.requestBody(new RequestBody()
-                        .required(parameter.isRequired())
+                operation.requestBody(new RequestBody().required(parameter.isRequired())
                         .content(content));
             } else {
-                Parameter parameterItem = parameter.isHeader() ? new HeaderParameter() : new QueryParameter();
-                operation.addParametersItem(parameterItem
-                        .name(parameter.name())
+                Parameter parameterItem = parameter.isHeader()
+                        ? new HeaderParameter()
+                        : new QueryParameter();
+                operation.addParametersItem(parameterItem.name(parameter.name())
                         .required(parameter.isRequired())
-                        .schema(elementType == null ? paramSchema.schema : new ArraySchema()
-                                .items(paramSchema.schema)));
+                        .schema(elementType == null
+                                ? paramSchema.schema
+                                : new ArraySchema().items(paramSchema.schema)));
             }
         }
         if (endpoint.permission() != null) {
-            operation.addSecurityItem(new SecurityRequirement()
-                    .addList("BasicAuth"));
+            operation.addSecurityItem(new SecurityRequirement().addList("BasicAuth"));
         }
         return new OperationItem(httpMethodEnum, operation, paramSchemas);
     }

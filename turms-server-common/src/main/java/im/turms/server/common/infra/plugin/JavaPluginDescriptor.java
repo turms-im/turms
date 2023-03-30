@@ -17,13 +17,13 @@
 
 package im.turms.server.common.infra.plugin;
 
-import lombok.EqualsAndHashCode;
-import lombok.Value;
-
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.nio.file.Path;
+
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 
 /**
  * @author James Chen
@@ -48,7 +48,10 @@ public class JavaPluginDescriptor extends PluginDescriptor {
         try {
             jarUrl = uri.toURL();
         } catch (MalformedURLException e) {
-            throw new RuntimeException("Malformed URL: " + uri, e);
+            throw new RuntimeException(
+                    "Malformed URL: "
+                            + uri,
+                    e);
         }
     }
 }

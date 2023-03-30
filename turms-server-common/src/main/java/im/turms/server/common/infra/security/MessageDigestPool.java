@@ -17,9 +17,9 @@
 
 package im.turms.server.common.infra.security;
 
-import io.netty.util.concurrent.FastThreadLocal;
-
 import java.security.MessageDigest;
+
+import io.netty.util.concurrent.FastThreadLocal;
 
 /**
  * @author James Chen
@@ -30,8 +30,8 @@ public class MessageDigestPool {
     }
 
     /**
-     * We don't need to call "remove()" because we assume all caller threads won't die
-     * until the application is shutdown.
+     * We don't need to call "remove()" because we assume all caller threads won't die until the
+     * application is shutdown.
      */
     private static final FastThreadLocal<MessageDigest> SHA1 = new FastThreadLocal<>() {
         @Override

@@ -17,16 +17,17 @@
 
 package im.turms.gateway.infra.proto;
 
+import java.io.IOException;
+
 import com.google.protobuf.CodedInputStream;
 import com.google.protobuf.ExtensionRegistry;
 import com.google.protobuf.WireFormat;
+import org.springframework.util.Assert;
+
 import im.turms.server.common.access.client.dto.request.TurmsRequest;
 import im.turms.server.common.access.client.dto.request.user.CreateSessionRequest;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.exception.ResponseException;
-import org.springframework.util.Assert;
-
-import java.io.IOException;
 
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.CREATE_SESSION_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.KIND_NOT_SET;
@@ -72,16 +73,19 @@ public final class TurmsRequestParser {
             }
             if (type == null || type == KIND_NOT_SET) {
                 throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
-                        "Not a valid request: Unknown request type: " + type);
+                        "Not a valid request: Unknown request type: "
+                                + type);
             }
             CreateSessionRequest createSessionRequest = null;
             if (type == CREATE_SESSION_REQUEST) {
-                createSessionRequest = turmsRequestInputStream.readMessage(CreateSessionRequest.parser(), REGISTRY);
+                createSessionRequest = turmsRequestInputStream
+                        .readMessage(CreateSessionRequest.parser(), REGISTRY);
             }
             return new SimpleTurmsRequest(requestId, type, createSessionRequest);
         } catch (IOException e) {
             throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
-                    "Not a valid request: " + e.getMessage());
+                    "Not a valid request: "
+                            + e.getMessage());
         }
     }
 

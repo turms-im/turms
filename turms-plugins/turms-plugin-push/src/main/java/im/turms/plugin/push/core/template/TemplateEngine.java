@@ -17,12 +17,12 @@
 
 package im.turms.plugin.push.core.template;
 
+import java.io.IOException;
+import java.util.Locale;
+
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateExceptionHandler;
-
-import java.io.IOException;
-import java.util.Locale;
 
 /**
  * @author James Chen

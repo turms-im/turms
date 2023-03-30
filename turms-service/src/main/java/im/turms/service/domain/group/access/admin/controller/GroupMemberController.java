@@ -17,7 +17,13 @@
 
 package im.turms.service.domain.group.access.admin.controller;
 
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
+
 import com.mongodb.client.result.DeleteResult;
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.access.admin.dto.response.DeleteResultDTO;
 import im.turms.server.common.access.admin.dto.response.HttpHandlerResult;
 import im.turms.server.common.access.admin.dto.response.PaginationDTO;
@@ -41,11 +47,6 @@ import im.turms.service.domain.group.access.admin.dto.request.AddGroupMemberDTO;
 import im.turms.service.domain.group.access.admin.dto.request.UpdateGroupMemberDTO;
 import im.turms.service.domain.group.po.GroupMember;
 import im.turms.service.domain.group.service.GroupMemberService;
-import reactor.core.publisher.Mono;
-
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
 
 /**
  * @author James Chen
@@ -55,22 +56,25 @@ public class GroupMemberController extends BaseController {
 
     private final GroupMemberService groupMemberService;
 
-    public GroupMemberController(TurmsPropertiesManager propertiesManager, GroupMemberService groupMemberService) {
+    public GroupMemberController(
+            TurmsPropertiesManager propertiesManager,
+            GroupMemberService groupMemberService) {
         super(propertiesManager);
         this.groupMemberService = groupMemberService;
     }
 
     @PostMapping
     @RequiredPermission(AdminPermission.GROUP_MEMBER_CREATE)
-    public Mono<HttpHandlerResult<ResponseDTO<GroupMember>>> addGroupMember(@RequestBody AddGroupMemberDTO addGroupMemberDTO) {
-        Mono<GroupMember> createMono = groupMemberService.addGroupMember(
-                addGroupMemberDTO.groupId(),
-                addGroupMemberDTO.userId(),
-                addGroupMemberDTO.role(),
-                addGroupMemberDTO.name(),
-                addGroupMemberDTO.joinDate(),
-                addGroupMemberDTO.muteEndDate(),
-                null);
+    public Mono<HttpHandlerResult<ResponseDTO<GroupMember>>> addGroupMember(
+            @RequestBody AddGroupMemberDTO addGroupMemberDTO) {
+        Mono<GroupMember> createMono =
+                groupMemberService.addGroupMember(addGroupMemberDTO.groupId(),
+                        addGroupMemberDTO.userId(),
+                        addGroupMemberDTO.role(),
+                        addGroupMemberDTO.name(),
+                        addGroupMemberDTO.joinDate(),
+                        addGroupMemberDTO.muteEndDate(),
+                        null);
         return HttpHandlerResult.okIfTruthy(createMono);
     }
 
@@ -86,8 +90,7 @@ public class GroupMemberController extends BaseController {
             @QueryParam(required = false) Date muteEndDateEnd,
             @QueryParam(required = false) Integer size) {
         size = getPageSize(size);
-        Mono<List<GroupMember>> groupMemberFlux = groupMemberService.queryGroupMembers(
-                groupIds,
+        Mono<List<GroupMember>> groupMemberFlux = groupMemberService.queryGroupMembers(groupIds,
                 userIds,
                 roles,
                 DateRange.of(joinDateStart, joinDateEnd),
@@ -110,14 +113,12 @@ public class GroupMemberController extends BaseController {
             int page,
             @QueryParam(required = false) Integer size) {
         size = getPageSize(size);
-        Mono<Long> count = groupMemberService.countMembers(
-                groupIds,
+        Mono<Long> count = groupMemberService.countMembers(groupIds,
                 userIds,
                 roles,
                 DateRange.of(joinDateStart, joinDateEnd),
                 DateRange.of(muteEndDateStart, muteEndDateEnd));
-        Mono<List<GroupMember>> userFlux = groupMemberService.queryGroupMembers(
-                groupIds,
+        Mono<List<GroupMember>> userFlux = groupMemberService.queryGroupMembers(groupIds,
                 userIds,
                 roles,
                 DateRange.of(joinDateStart, joinDateEnd),
@@ -132,8 +133,8 @@ public class GroupMemberController extends BaseController {
     public Mono<HttpHandlerResult<ResponseDTO<UpdateResultDTO>>> updateGroupMembers(
             List<GroupMember.Key> keys,
             @RequestBody UpdateGroupMemberDTO updateGroupMemberDTO) {
-        Mono<UpdateResultDTO> updateMono = groupMemberService.updateGroupMembers(
-                        CollectionUtil.newSet(keys),
+        Mono<UpdateResultDTO> updateMono = groupMemberService
+                .updateGroupMembers(CollectionUtil.newSet(keys),
                         updateGroupMemberDTO.name(),
                         updateGroupMemberDTO.role(),
                         updateGroupMemberDTO.joinDate(),

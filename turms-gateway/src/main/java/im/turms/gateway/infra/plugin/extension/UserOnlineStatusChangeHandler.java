@@ -17,13 +17,14 @@
 
 package im.turms.gateway.infra.plugin.extension;
 
+import jakarta.validation.constraints.NotNull;
+
+import reactor.core.publisher.Mono;
+
 import im.turms.gateway.access.client.common.UserSession;
 import im.turms.gateway.domain.session.manager.UserSessionsManager;
 import im.turms.server.common.domain.session.bo.CloseReason;
 import im.turms.server.common.infra.plugin.ExtensionPoint;
-import reactor.core.publisher.Mono;
-
-import jakarta.validation.constraints.NotNull;
 
 /**
  * UserOnlineStatusChangeHandler notifies when user goes online or offline.
@@ -32,8 +33,12 @@ import jakarta.validation.constraints.NotNull;
  */
 public interface UserOnlineStatusChangeHandler extends ExtensionPoint {
 
-    Mono<Void> goOnline(@NotNull UserSessionsManager userSessionsManager, @NotNull UserSession userSession);
+    Mono<Void> goOnline(
+            @NotNull UserSessionsManager userSessionsManager,
+            @NotNull UserSession userSession);
 
-    Mono<Void> goOffline(@NotNull UserSessionsManager userSessionsManager, @NotNull CloseReason closeReason);
+    Mono<Void> goOffline(
+            @NotNull UserSessionsManager userSessionsManager,
+            @NotNull CloseReason closeReason);
 
 }

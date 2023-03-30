@@ -17,12 +17,8 @@
 
 package im.turms.server.common.infra.cluster.service.rpc.dto;
 
-import im.turms.server.common.infra.cluster.node.NodeType;
-import im.turms.server.common.infra.cluster.service.connection.TurmsConnection;
-import im.turms.server.common.infra.cluster.service.rpc.NodeTypeToHandleRpc;
-import im.turms.server.common.infra.exception.NotImplementedException;
-import im.turms.server.common.infra.exception.ThrowableUtil;
-import im.turms.server.common.infra.tracing.TracingContext;
+import jakarta.annotation.Nullable;
+
 import io.micrometer.core.instrument.Tag;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -33,23 +29,27 @@ import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import reactor.core.publisher.Mono;
 
-import jakarta.annotation.Nullable;
+import im.turms.server.common.infra.cluster.node.NodeType;
+import im.turms.server.common.infra.cluster.service.connection.TurmsConnection;
+import im.turms.server.common.infra.cluster.service.rpc.NodeTypeToHandleRpc;
+import im.turms.server.common.infra.exception.NotImplementedException;
+import im.turms.server.common.infra.exception.ThrowableUtil;
+import im.turms.server.common.infra.tracing.TracingContext;
 
 /**
  * @param <T> The data type of the response
  * @author James Chen
- * @implNote 1. We use inheritance instead of composition because:
- * Some properties are only provided for request impls (e.g. fromNodeId),
- * if we use composition, we need to pass RpcRequest to request impls,
- * which brings circular references (bad practice), or extract these
- * properties into an independent class like RequestContext, which brings redundant overhead.
- * So we still use inheritance to keep the code simple (flat classes)
- * <p>
- * 2. We implement {@link ReferenceCounted} so that RpcRequest can be released correctly by the
- * middle {@link io.netty.channel.ChannelInboundHandler} that we cannot control when decoding.
- * For example, the following method will try to release RpcRequest and just return
- * without calling our own downstream RPC acceptor if the connection has been closed
- * {@link reactor.netty.channel.FluxReceive#onInboundNext(java.lang.Object)}
+ * @implNote 1. We use inheritance instead of composition because: Some properties are only provided
+ *           for request impls (e.g. fromNodeId), if we use composition, we need to pass RpcRequest
+ *           to request impls, which brings circular references (bad practice), or extract these
+ *           properties into an independent class like RequestContext, which brings redundant
+ *           overhead. So we still use inheritance to keep the code simple (flat classes)
+ *           <p>
+ *           2. We implement {@link ReferenceCounted} so that RpcRequest can be released correctly
+ *           by the middle {@link io.netty.channel.ChannelInboundHandler} that we cannot control
+ *           when decoding. For example, the following method will try to release RpcRequest and
+ *           just return without calling our own downstream RPC acceptor if the connection has been
+ *           closed {@link reactor.netty.channel.FluxReceive#onInboundNext(java.lang.Object)}
  */
 public abstract class RpcRequest<T> implements ReferenceCounted {
 
@@ -85,17 +85,28 @@ public abstract class RpcRequest<T> implements ReferenceCounted {
 
     @Override
     public String toString() {
-        return "RpcRequest{" +
-                "name='" + name() + "'" +
-                ", tag=" + tag() +
-                ", fromNodeId='" + fromNodeId + "'" +
-                ", requestId=" + requestId +
-                ", requestTime=" + requestTime +
-                ", tracingContext=" + tracingContext +
-                '}';
+        return "RpcRequest{"
+                + "name='"
+                + name()
+                + "'"
+                + ", tag="
+                + tag()
+                + ", fromNodeId='"
+                + fromNodeId
+                + "'"
+                + ", requestId="
+                + requestId
+                + ", requestTime="
+                + requestTime
+                + ", tracingContext="
+                + tracingContext
+                + '}';
     }
 
-    public void init(ApplicationContext context, @Nullable TurmsConnection connection, String fromNodeId) {
+    public void init(
+            ApplicationContext context,
+            @Nullable TurmsConnection connection,
+            String fromNodeId) {
         setApplicationContext(context);
         setConnection(connection);
         setFromNodeId(fromNodeId);
@@ -108,11 +119,12 @@ public abstract class RpcRequest<T> implements ReferenceCounted {
         try {
             return applicationContext.getBean(clazz);
         } catch (NoSuchBeanDefinitionException e) {
-            NodeType nodeType = ThrowableUtil.suppress(() -> applicationContext.getBean(NodeType.class));
-            String message = "Failed to get the bean. The request type \"" +
-                    name() +
-                    "\" may be sent to the wrong server with the node type: " +
-                    nodeType;
+            NodeType nodeType =
+                    ThrowableUtil.suppress(() -> applicationContext.getBean(NodeType.class));
+            String message = "Failed to get the bean. The request type \""
+                    + name()
+                    + "\" may be sent to the wrong server with the node type: "
+                    + nodeType;
             throw new RuntimeException(message, e);
         }
     }

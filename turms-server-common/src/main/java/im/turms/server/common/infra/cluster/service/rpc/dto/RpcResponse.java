@@ -17,9 +17,9 @@
 
 package im.turms.server.common.infra.cluster.service.rpc.dto;
 
-import im.turms.server.common.infra.cluster.service.rpc.exception.RpcException;
-
 import jakarta.annotation.Nullable;
+
+import im.turms.server.common.infra.cluster.service.rpc.exception.RpcException;
 
 /**
  * @author James Chen

@@ -17,20 +17,6 @@
 
 package im.turms.server.common.infra.json;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import im.turms.server.common.infra.lang.StringUtil;
-import im.turms.server.common.infra.logging.core.logger.Logger;
-import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
-import im.turms.server.common.infra.netty.ReferenceCountUtil;
-import im.turms.server.common.infra.time.DateUtil;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufOutputStream;
-import io.netty.buffer.PooledByteBufAllocator;
-import org.jctools.maps.NonBlockingIdentityHashMap;
-
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
@@ -40,6 +26,21 @@ import java.util.HashMap;
 import java.util.Map;
 import jakarta.annotation.Nullable;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufOutputStream;
+import io.netty.buffer.PooledByteBufAllocator;
+import org.jctools.maps.NonBlockingIdentityHashMap;
+
+import im.turms.server.common.infra.lang.StringUtil;
+import im.turms.server.common.infra.logging.core.logger.Logger;
+import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
+import im.turms.server.common.infra.netty.ReferenceCountUtil;
+import im.turms.server.common.infra.time.DateUtil;
+
 /**
  * @author James Chen
  */
@@ -48,10 +49,12 @@ public final class JsonUtil {
     private static final Logger LOGGER = LoggerFactory.getLogger(JsonUtil.class);
 
     private static final ObjectMapper MAPPER = JsonCodecPool.MAPPER;
-    private static final JavaType JAVA_TYPE_STRING_OBJECT_MAP = constructJavaType(new TypeReference<HashMap<String, Object>>() {
-    });
-    private static final JavaType JAVA_TYPE_STRING_STRING_MAP = constructJavaType(new TypeReference<HashMap<String, String>>() {
-    });
+    private static final JavaType JAVA_TYPE_STRING_OBJECT_MAP =
+            constructJavaType(new TypeReference<HashMap<String, Object>>() {
+            });
+    private static final JavaType JAVA_TYPE_STRING_STRING_MAP =
+            constructJavaType(new TypeReference<HashMap<String, String>>() {
+            });
 
     private static final int ESTIMATED_JSON_FIELD_METADATA_SIZE = 8;
 
@@ -109,7 +112,9 @@ public final class JsonUtil {
             return buffer;
         } catch (Exception e) {
             ReferenceCountUtil.ensureReleased(buffer);
-            throw new IllegalArgumentException("Failed to write the input object as a byte buffer", e);
+            throw new IllegalArgumentException(
+                    "Failed to write the input object as a byte buffer",
+                    e);
         }
     }
 
@@ -125,9 +130,10 @@ public final class JsonUtil {
         if (value == null) {
             return 0;
         }
-        return value.getClass().isRecord()
-                ? estimateRecordSize(value)
-                : estimateNonRecordSize(value);
+        return value.getClass()
+                .isRecord()
+                        ? estimateRecordSize(value)
+                        : estimateNonRecordSize(value);
     }
 
     private static int estimateRecordSize(Object value) {
@@ -153,7 +159,8 @@ public final class JsonUtil {
             for (Object element : iterable) {
                 size += estimateSize(element);
             }
-        } else if (value.getClass().isArray()) {
+        } else if (value.getClass()
+                .isArray()) {
             if (value instanceof byte[] array) {
                 size += array.length;
             } else if (value instanceof Object[] array) {
@@ -162,11 +169,15 @@ public final class JsonUtil {
                 }
             } else {
                 // We don't support other array types now because we don't use them
-                LOGGER.warn("Unknown array type: " + value.getClass().getName());
+                LOGGER.warn("Unknown array type: "
+                        + value.getClass()
+                                .getName());
             }
         } else if (value instanceof Map<?, ?> map) {
             for (Map.Entry<?, ?> entry : map.entrySet()) {
-                size += entry.getKey() instanceof String str ? StringUtil.getLength(str) : 16;
+                size += entry.getKey() instanceof String str
+                        ? StringUtil.getLength(str)
+                        : 16;
                 Object entryValue = entry.getValue();
                 size += estimateSize(entryValue);
                 size += ESTIMATED_JSON_FIELD_METADATA_SIZE;
@@ -191,14 +202,18 @@ public final class JsonUtil {
             Component[] components = new Component[recordComponents.length];
             for (int i = 0, length = recordComponents.length; i < length; i++) {
                 RecordComponent component = recordComponents[i];
-                components[i] = new Component(component.getName().length(),
+                components[i] = new Component(
+                        component.getName()
+                                .length(),
                         component.getAccessor());
             }
             return new RecordMetadata(components);
         });
     }
 
-    private static record RecordMetadata(Component[] components) {
+    private static record RecordMetadata(
+            Component[] components
+    ) {
         static final RecordMetadata EMPTY = new RecordMetadata(new Component[0]);
     }
 

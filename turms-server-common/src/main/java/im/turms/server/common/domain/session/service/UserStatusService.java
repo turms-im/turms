@@ -17,8 +17,27 @@
 
 package im.turms.server.common.domain.session.service;
 
+import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import io.lettuce.core.ScriptOutputType;
+import io.lettuce.core.protocol.LongKeyGenerator;
+import io.netty.buffer.ByteBuf;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.constant.UserStatus;
 import im.turms.server.common.domain.common.util.DeviceTypeUtil;
@@ -39,24 +58,6 @@ import im.turms.server.common.infra.validation.Validator;
 import im.turms.server.common.storage.redis.RedisEntryId;
 import im.turms.server.common.storage.redis.TurmsRedisClientManager;
 import im.turms.server.common.storage.redis.script.RedisScript;
-import io.lettuce.core.ScriptOutputType;
-import io.lettuce.core.protocol.LongKeyGenerator;
-import io.netty.buffer.ByteBuf;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
-import java.nio.charset.StandardCharsets;
-import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 
 /**
  * @author James Chen
@@ -66,11 +67,14 @@ public class UserStatusService {
 
     private final RedisScript addOnlineUserScript;
     private final RedisScript getUsersDeviceDetailsScript =
-            RedisScript.get(new ClassPathResource("redis/session/get_users_device_details.lua"), ScriptOutputType.MULTI);
+            RedisScript.get(new ClassPathResource("redis/session/get_users_device_details.lua"),
+                    ScriptOutputType.MULTI);
     private final RedisScript updateUsersTtlScript =
-            RedisScript.get(new ClassPathResource("redis/session/update_users_ttl.lua"), ScriptOutputType.BOOLEAN);
-    private final RedisScript updateOnlineUserStatusIfPresent =
-            RedisScript.get(new ClassPathResource("redis/session/update_online_user_status_if_present.lua"), ScriptOutputType.BOOLEAN);
+            RedisScript.get(new ClassPathResource("redis/session/update_users_ttl.lua"),
+                    ScriptOutputType.BOOLEAN);
+    private final RedisScript updateOnlineUserStatusIfPresent = RedisScript.get(
+            new ClassPathResource("redis/session/update_online_user_status_if_present.lua"),
+            ScriptOutputType.BOOLEAN);
 
     /**
      * <pre>
@@ -88,11 +92,12 @@ public class UserStatusService {
      * |             |           ...           |           ...           |
      * +-------------+-------------------------+-------------------------+
      * </pre>
-     * "s" is the fixed hash key of the user status value,
-     * and its value is the user status value represented in number.
+     * 
+     * "s" is the fixed hash key of the user status value, and its value is the user status value
+     * represented in number.
      * <p>
-     * The number (e.g. 1,2,3) represents the online device type,
-     * and its value is the node ID that the client connects to.
+     * The number (e.g. 1,2,3) represents the online device type, and its value is the node ID that
+     * the client connects to.
      */
     private final TurmsRedisClientManager sessionRedisClientManager;
 
@@ -110,18 +115,27 @@ public class UserStatusService {
             Node node,
             TurmsPropertiesManager propertiesManager,
             TurmsRedisClientManager sessionRedisClientManager) {
-        localNodeId = ByteBufUtil.getUnreleasableDirectBuffer(node.getLocalMemberId().getBytes(StandardCharsets.US_ASCII));
+        localNodeId = ByteBufUtil.getUnreleasableDirectBuffer(node.getLocalMemberId()
+                .getBytes(StandardCharsets.US_ASCII));
         TurmsProperties turmsProperties = propertiesManager.getLocalProperties();
-        addOnlineUserScript = RedisScript.get(new ClassPathResource("redis/session/try_add_online_user_with_ttl.lua"),
+        addOnlineUserScript = RedisScript.get(
+                new ClassPathResource("redis/session/try_add_online_user_with_ttl.lua"),
                 ScriptOutputType.BOOLEAN,
-                Map.of("DEVICE_DETAILS_TTL", turmsProperties.getGateway().getSession().getDeviceDetails().getExpireAfterSeconds()));
-        cacheUserSessionsStatus = turmsProperties.getUserStatus().isCacheUserSessionsStatus();
+                Map.of("DEVICE_DETAILS_TTL",
+                        turmsProperties.getGateway()
+                                .getSession()
+                                .getDeviceDetails()
+                                .getExpireAfterSeconds()));
+        cacheUserSessionsStatus = turmsProperties.getUserStatus()
+                .isCacheUserSessionsStatus();
         operationTimeout = Duration.ofSeconds(10);
         this.sessionRedisClientManager = sessionRedisClientManager;
         if (cacheUserSessionsStatus) {
             Caffeine<Object, Object> builder = Caffeine.newBuilder();
-            int maxSize = turmsProperties.getUserStatus().getUserSessionsStatusCacheMaxSize();
-            int expireAfter = turmsProperties.getUserStatus().getUserSessionsStatusExpireAfter();
+            int maxSize = turmsProperties.getUserStatus()
+                    .getUserSessionsStatusCacheMaxSize();
+            int expireAfter = turmsProperties.getUserStatus()
+                    .getUserSessionsStatusExpireAfter();
             if (maxSize > -1) {
                 builder.maximumSize(maxSize);
             }
@@ -134,7 +148,9 @@ public class UserStatusService {
         }
     }
 
-    public Mono<String> getNodeIdByUserIdAndDeviceType(@NotNull Long userId, @NotNull @ValidDeviceType DeviceType deviceType) {
+    public Mono<String> getNodeIdByUserIdAndDeviceType(
+            @NotNull Long userId,
+            @NotNull @ValidDeviceType DeviceType deviceType) {
         try {
             Validator.notNull(userId, "userId");
             Validator.notNull(deviceType, "deviceType");
@@ -142,11 +158,13 @@ public class UserStatusService {
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        return getUserSessionsStatus(userId)
-                .flatMap(sessionsStatus -> {
-                    String nodeId = sessionsStatus.deviceTypeToNodeId().get(deviceType);
-                    return nodeId == null ? Mono.empty() : Mono.just(nodeId);
-                });
+        return getUserSessionsStatus(userId).flatMap(sessionsStatus -> {
+            String nodeId = sessionsStatus.deviceTypeToNodeId()
+                    .get(deviceType);
+            return nodeId == null
+                    ? Mono.empty()
+                    : Mono.just(nodeId);
+        });
     }
 
     /**
@@ -167,39 +185,47 @@ public class UserStatusService {
                         : Mono.just(deviceTypeToNodeId);
             }
         }
-        return fetchUserSessionsStatus(userId)
-                .flatMap(sessionsStatus -> {
-                    Map<DeviceType, String> deviceTypeToNodeId = sessionsStatus.deviceTypeToNodeId();
-                    return deviceTypeToNodeId == null || deviceTypeToNodeId.isEmpty()
-                            ? Mono.empty()
-                            : Mono.just(deviceTypeToNodeId);
-                });
+        return fetchUserSessionsStatus(userId).flatMap(sessionsStatus -> {
+            Map<DeviceType, String> deviceTypeToNodeId = sessionsStatus.deviceTypeToNodeId();
+            return deviceTypeToNodeId == null || deviceTypeToNodeId.isEmpty()
+                    ? Mono.empty()
+                    : Mono.just(deviceTypeToNodeId);
+        });
     }
 
-    public Mono<Map<String, Set<DeviceType>>> getNodeIdToDeviceTypeMapByUserId(@NotNull Long userId) {
-        return getDeviceTypeToNodeIdMapByUserId(userId)
-                .map(deviceTypeToNodeId -> CollectionUtil.reverseAsSetValues(deviceTypeToNodeId, 2));
+    public Mono<Map<String, Set<DeviceType>>> getNodeIdToDeviceTypeMapByUserId(
+            @NotNull Long userId) {
+        return getDeviceTypeToNodeIdMapByUserId(userId).map(
+                deviceTypeToNodeId -> CollectionUtil.reverseAsSetValues(deviceTypeToNodeId, 2));
     }
 
-    public Mono<Boolean> updateOnlineUsersStatus(@NotEmpty Set<Long> userIds, @NotNull UserStatus userStatus) {
+    public Mono<Boolean> updateOnlineUsersStatus(
+            @NotEmpty Set<Long> userIds,
+            @NotNull UserStatus userStatus) {
         try {
             Validator.notEmpty(userIds, "userIds");
             Validator.notNull(userStatus, "userStatus");
-            Validator.notEquals(userStatus, UserStatus.UNRECOGNIZED, "The user status must not be UNRECOGNIZED");
-            Validator.notEquals(userStatus, UserStatus.OFFLINE, "The user status must not be OFFLINE");
+            Validator.notEquals(userStatus,
+                    UserStatus.UNRECOGNIZED,
+                    "The user status must not be UNRECOGNIZED");
+            Validator.notEquals(userStatus,
+                    UserStatus.OFFLINE,
+                    "The user status must not be OFFLINE");
         } catch (ResponseException e) {
             return Mono.error(e);
         }
         int size = userIds.size();
         return switch (size) {
             case 0 -> PublisherPool.TRUE;
-            case 1 -> updateOnlineUserStatusIfPresent(userIds.iterator().next(), userStatus);
+            case 1 -> updateOnlineUserStatusIfPresent(userIds.iterator()
+                    .next(), userStatus);
             default -> {
                 List<Mono<Boolean>> monos = new ArrayList<>(userIds.size());
                 for (Long userId : userIds) {
                     monos.add(updateOnlineUserStatusIfPresent(userId, userStatus));
                 }
-                yield Flux.merge(monos).all(value -> value);
+                yield Flux.merge(monos)
+                        .all(value -> value);
             }
         };
     }
@@ -207,28 +233,38 @@ public class UserStatusService {
     /**
      * @return true if updated
      */
-    public Mono<Boolean> updateOnlineUserStatusIfPresent(@NotNull Long userId, @NotNull UserStatus userStatus) {
+    public Mono<Boolean> updateOnlineUserStatusIfPresent(
+            @NotNull Long userId,
+            @NotNull UserStatus userStatus) {
         try {
             Validator.notNull(userId, "userId");
             Validator.notNull(userStatus, "userStatus");
-            Validator.notEquals(userStatus, UserStatus.UNRECOGNIZED, "The user status must not be UNRECOGNIZED");
-            Validator.notEquals(userStatus, UserStatus.OFFLINE, "The user status must not be OFFLINE");
+            Validator.notEquals(userStatus,
+                    UserStatus.UNRECOGNIZED,
+                    "The user status must not be UNRECOGNIZED");
+            Validator.notEquals(userStatus,
+                    UserStatus.OFFLINE,
+                    "The user status must not be OFFLINE");
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        Mono<Boolean> result = sessionRedisClientManager
-                .eval(userId, updateOnlineUserStatusIfPresent, userId, (byte) userStatus.getNumber());
-        return result
-                .timeout(operationTimeout);
+        Mono<Boolean> result = sessionRedisClientManager.eval(userId,
+                updateOnlineUserStatusIfPresent,
+                userId,
+                (byte) userStatus.getNumber());
+        return result.timeout(operationTimeout);
     }
 
-    public Mono<Void> updateOnlineUsersTtl(@NotNull LongKeyGenerator userIdGenerator, int timeoutSeconds) {
+    public Mono<Void> updateOnlineUsersTtl(
+            @NotNull LongKeyGenerator userIdGenerator,
+            int timeoutSeconds) {
         try {
             Validator.notNull(userIdGenerator, "userIdGenerator");
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        return sessionRedisClientManager.eval(updateUsersTtlScript, (short) timeoutSeconds, userIdGenerator);
+        return sessionRedisClientManager
+                .eval(updateUsersTtlScript, (short) timeoutSeconds, userIdGenerator);
     }
 
     /**
@@ -265,14 +301,14 @@ public class UserStatusService {
                     UserStatus userStatus = null;
                     Map<DeviceType, String> onlineDeviceTypeToNodeId = null;
                     for (Map.Entry<Object, Object> entry : entries) {
-                        if (entry.getKey().equals(RedisEntryId.SESSIONS_STATUS)) {
+                        if (entry.getKey()
+                                .equals(RedisEntryId.SESSIONS_STATUS)) {
                             userStatus = (UserStatus) entry.getValue();
                         } else {
                             if (onlineDeviceTypeToNodeId == null) {
                                 onlineDeviceTypeToNodeId = new FastEnumMap<>(DeviceType.class);
                             }
-                            onlineDeviceTypeToNodeId.put(
-                                    (DeviceType) entry.getKey(),
+                            onlineDeviceTypeToNodeId.put((DeviceType) entry.getKey(),
                                     (String) entry.getValue());
                         }
                     }
@@ -282,7 +318,8 @@ public class UserStatusService {
                     } else if (userStatus == null || userStatus == UserStatus.OFFLINE) {
                         userStatus = UserStatus.AVAILABLE;
                     }
-                    UserSessionsStatus userSessionsStatus = new UserSessionsStatus(userId, userStatus, onlineDeviceTypeToNodeId);
+                    UserSessionsStatus userSessionsStatus =
+                            new UserSessionsStatus(userId, userStatus, onlineDeviceTypeToNodeId);
                     if (cacheUserSessionsStatus) {
                         userIdToStatusCache.put(userId, userSessionsStatus);
                     }
@@ -302,29 +339,29 @@ public class UserStatusService {
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        return sessionRedisClientManager
-                .execute(userIds, (client, ids) -> {
-                    int fieldCount = fields.size();
-                    int count = 1 + fieldCount + ids.size();
-                    ByteBuf[] args = new ByteBuf[count];
-                    int index = 0;
-                    try {
-                        args[index++] = ByteBufUtil.writeByte((byte) fieldCount);
-                        for (String field : fields) {
-                            args[index++] = ByteBufUtil.writeString(field);
-                        }
-                        for (Long userId : ids) {
-                            args[index++] = ByteBufUtil.writeLong(userId);
-                        }
-                    } catch (Exception e) {
-                        ReferenceCountUtil.ensureReleased(args, 0, index);
-                        return Mono.error(new InputOutputException("Failed to encode arguments", e));
-                    }
-                    return client.eval(getUsersDeviceDetailsScript, args);
-                })
+        return sessionRedisClientManager.execute(userIds, (client, ids) -> {
+            int fieldCount = fields.size();
+            int count = 1 + fieldCount + ids.size();
+            ByteBuf[] args = new ByteBuf[count];
+            int index = 0;
+            try {
+                args[index++] = ByteBufUtil.writeByte((byte) fieldCount);
+                for (String field : fields) {
+                    args[index++] = ByteBufUtil.writeString(field);
+                }
+                for (Long userId : ids) {
+                    args[index++] = ByteBufUtil.writeLong(userId);
+                }
+            } catch (Exception e) {
+                ReferenceCountUtil.ensureReleased(args, 0, index);
+                return Mono.error(new InputOutputException("Failed to encode arguments", e));
+            }
+            return client.eval(getUsersDeviceDetailsScript, args);
+        })
                 .collect(CollectorUtil.toList(4))
                 .map(results -> {
-                    Map<Long, Map<String, String>> userIdToDetails = CollectionUtil.newMapWithExpectedSize(userIds.size());
+                    Map<Long, Map<String, String>> userIdToDetails =
+                            CollectionUtil.newMapWithExpectedSize(userIds.size());
                     for (Object rawElements : results) {
                         List<Object> elements = (List<Object>) rawElements;
                         int elementCount = elements.size();
@@ -335,10 +372,13 @@ public class UserStatusService {
                         do {
                             Long userId = ((ByteBuf) elements.get(index++)).readLong();
                             int fieldCount = ((int) (long) elements.get(index++));
-                            Map<String, String> details = CollectionUtil.newMapWithExpectedSize(fieldCount);
+                            Map<String, String> details =
+                                    CollectionUtil.newMapWithExpectedSize(fieldCount);
                             for (int i = 0; i < fieldCount; i++) {
-                                String key = ByteBufUtil.readString((ByteBuf) elements.get(index++));
-                                String value = ByteBufUtil.readString((ByteBuf) elements.get(index++));
+                                String key =
+                                        ByteBufUtil.readString((ByteBuf) elements.get(index++));
+                                String value =
+                                        ByteBufUtil.readString((ByteBuf) elements.get(index++));
                                 details.put(key, value);
                             }
                             userIdToDetails.put(userId, details);
@@ -349,16 +389,17 @@ public class UserStatusService {
     }
 
     /**
-     * Note that the method only removes the device information of a user
-     * and doesn't remove the online status information to avoid querying and removing one more time.
-     * The status will be removed when the TTL has been reached
-     * and turms won't respond an incorrect user status to clients
-     * because turms will check both the "status" and the online devices.
+     * Note that the method only removes the device information of a user and doesn't remove the
+     * online status information to avoid querying and removing one more time. The status will be
+     * removed when the TTL has been reached and turms won't respond an incorrect user status to
+     * clients because turms will check both the "status" and the online devices.
      *
      * @return ture if at least one device type was present (online)
      * @see UserStatusService#fetchUserSessionsStatus(java.lang.Long)
      */
-    public Mono<Boolean> removeStatusByUserIdAndDeviceTypes(@NotNull Long userId, @NotEmpty Set<DeviceType> deviceTypes) {
+    public Mono<Boolean> removeStatusByUserIdAndDeviceTypes(
+            @NotNull Long userId,
+            @NotEmpty Set<DeviceType> deviceTypes) {
         try {
             Validator.notNull(userId, "userId");
             Validator.notEmpty(deviceTypes, "deviceTypes");
@@ -374,24 +415,31 @@ public class UserStatusService {
     /**
      * @return true if the userId:deviceType was absent (offline)
      */
-    public Mono<Boolean> addOnlineDeviceIfAbsent(@NotNull Long userId,
-                                                 @NotNull @ValidDeviceType DeviceType deviceType,
-                                                 @Nullable Map<String, String> deviceDetails,
-                                                 @Nullable UserStatus userStatus,
-                                                 int heartbeatSeconds) {
+    public Mono<Boolean> addOnlineDeviceIfAbsent(
+            @NotNull Long userId,
+            @NotNull @ValidDeviceType DeviceType deviceType,
+            @Nullable Map<String, String> deviceDetails,
+            @Nullable UserStatus userStatus,
+            int heartbeatSeconds) {
         try {
             Validator.notNull(userId, "userId");
             Validator.notNull(deviceType, "deviceType");
             DeviceTypeUtil.validDeviceType(deviceType);
-            Validator.notEquals(userStatus, UserStatus.UNRECOGNIZED, "The user status must not be UNRECOGNIZED");
-            Validator.notEquals(userStatus, UserStatus.OFFLINE, "The user status must not be OFFLINE");
+            Validator.notEquals(userStatus,
+                    UserStatus.UNRECOGNIZED,
+                    "The user status must not be UNRECOGNIZED");
+            Validator.notEquals(userStatus,
+                    UserStatus.OFFLINE,
+                    "The user status must not be OFFLINE");
         } catch (ResponseException e) {
             return Mono.error(e);
         }
         int deviceDetailCount = CollectionUtil.getSize(deviceDetails);
         boolean hasDeviceDetails = deviceDetailCount > 0;
         boolean hasUserStatus = userStatus != null;
-        int count = hasUserStatus ? 5 : 4;
+        int count = hasUserStatus
+                ? 5
+                : 4;
         if (hasDeviceDetails) {
             count += 2 * deviceDetailCount;
         }

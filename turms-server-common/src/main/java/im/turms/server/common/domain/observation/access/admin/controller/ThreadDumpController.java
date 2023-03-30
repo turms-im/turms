@@ -17,17 +17,17 @@
 
 package im.turms.server.common.domain.observation.access.admin.controller;
 
-import im.turms.server.common.access.admin.web.annotation.GetMapping;
-import im.turms.server.common.access.admin.web.annotation.RestController;
-import im.turms.server.common.infra.thread.ThreadDumpFormatter;
-import io.netty.buffer.ByteBuf;
-
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadInfo;
 import java.lang.management.ThreadMXBean;
 
-import static im.turms.server.common.access.admin.web.MediaTypeConst.TEXT_PLAIN_UTF_8;
+import io.netty.buffer.ByteBuf;
 
+import im.turms.server.common.access.admin.web.annotation.GetMapping;
+import im.turms.server.common.access.admin.web.annotation.RestController;
+import im.turms.server.common.infra.thread.ThreadDumpFormatter;
+
+import static im.turms.server.common.access.admin.web.MediaTypeConst.TEXT_PLAIN_UTF_8;
 
 /**
  * @author James Chen

@@ -17,11 +17,11 @@
 
 package im.turms.server.common.domain.session.bo;
 
+import jakarta.annotation.Nullable;
+
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.collection.FastEnumMap;
 import im.turms.server.common.infra.exception.ThrowableInfo;
-
-import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen
@@ -32,7 +32,8 @@ public record CloseReason(
         @Nullable String reason
 ) {
 
-    private static final FastEnumMap<SessionCloseStatus, CloseReason> POOL = new FastEnumMap<>(SessionCloseStatus.class);
+    private static final FastEnumMap<SessionCloseStatus, CloseReason> POOL =
+            new FastEnumMap<>(SessionCloseStatus.class);
 
     static {
         for (SessionCloseStatus closeStatus : SessionCloseStatus.VALUES) {

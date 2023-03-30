@@ -17,17 +17,18 @@
 
 package im.turms.server.common.infra.fake;
 
+import java.util.Random;
+import java.util.Set;
+
 import com.google.protobuf.AbstractMessage;
 import com.google.protobuf.Message;
+
 import im.turms.server.common.access.client.dto.ClientMessagePool;
 import im.turms.server.common.access.client.dto.constant.UserStatus;
 import im.turms.server.common.access.client.dto.request.TurmsRequest;
 import im.turms.server.common.access.client.dto.request.user.UpdateUserOnlineStatusRequest;
 import im.turms.server.common.infra.lang.Pair;
 import im.turms.server.common.infra.random.RandomUtil;
-
-import java.util.Random;
-import java.util.Set;
 
 import static com.google.protobuf.Descriptors.FieldDescriptor;
 import static com.google.protobuf.Descriptors.OneofDescriptor;
@@ -38,9 +39,11 @@ import static com.google.protobuf.Descriptors.OneofDescriptor;
 public final class RandomRequestFactory {
 
     public static final String CREATE_SESSION_REQUEST_FILED_NAME = TurmsRequest.getDescriptor()
-            .findFieldByNumber(TurmsRequest.CREATE_SESSION_REQUEST_FIELD_NUMBER).getName();
+            .findFieldByNumber(TurmsRequest.CREATE_SESSION_REQUEST_FIELD_NUMBER)
+            .getName();
     public static final String DELETE_SESSION_REQUEST_FILED_NAME = TurmsRequest.getDescriptor()
-            .findFieldByNumber(TurmsRequest.DELETE_SESSION_REQUEST_FIELD_NUMBER).getName();
+            .findFieldByNumber(TurmsRequest.DELETE_SESSION_REQUEST_FIELD_NUMBER)
+            .getName();
 
     private static final Random RANDOM = new Random();
     private static final String REQUEST_TYPE_FILED_NAME = "kind";
@@ -61,7 +64,8 @@ public final class RandomRequestFactory {
             FieldDescriptor descriptor = REQUEST_TYPE_DESC.getField(i);
             Message defaultRequestType = builder.newBuilderForField(descriptor)
                     .getDefaultInstanceForType();
-            RandomProtobufGenerator<AbstractMessage> generator = new RandomProtobufGenerator<>(RANDOM, defaultRequestType);
+            RandomProtobufGenerator<AbstractMessage> generator =
+                    new RandomProtobufGenerator<>(RANDOM, defaultRequestType);
             REQUEST_GENERATORS[i] = Pair.of(descriptor, generator);
         }
     }
@@ -69,15 +73,19 @@ public final class RandomRequestFactory {
     private RandomRequestFactory() {
     }
 
-    public static TurmsRequest create(Set<String> excludedRequestNames,
-                                      RandomProtobufGenerator.GeneratorOptions options) {
-        Pair<FieldDescriptor, RandomProtobufGenerator<AbstractMessage>> entry = pickRandomRequestGenerator(excludedRequestNames);
-        TurmsRequest.Builder builder = ClientMessagePool
-                .getTurmsRequestBuilder()
+    public static TurmsRequest create(
+            Set<String> excludedRequestNames,
+            RandomProtobufGenerator.GeneratorOptions options) {
+        Pair<FieldDescriptor, RandomProtobufGenerator<AbstractMessage>> entry =
+                pickRandomRequestGenerator(excludedRequestNames);
+        TurmsRequest.Builder builder = ClientMessagePool.getTurmsRequestBuilder()
                 .setRequestId(RandomUtil.nextPositiveLong())
-                .setField(entry.first(), entry.second().generate(options));
+                .setField(entry.first(),
+                        entry.second()
+                                .generate(options));
         if (builder.hasUpdateUserOnlineStatusRequest()) {
-            UpdateUserOnlineStatusRequest updateStatusRequest = builder.getUpdateUserOnlineStatusRequest();
+            UpdateUserOnlineStatusRequest updateStatusRequest =
+                    builder.getUpdateUserOnlineStatusRequest();
             if (updateStatusRequest.getUserStatus() == UserStatus.OFFLINE) {
                 builder.setUpdateUserOnlineStatusRequest(updateStatusRequest.toBuilder()
                         .setUserStatus(UserStatus.INVISIBLE));
@@ -93,7 +101,8 @@ public final class RandomRequestFactory {
                     REQUEST_GENERATORS[RANDOM.nextInt(REQUEST_TYPE_DESC.getFieldCount())];
             if (excludedRequestNames == null
                     || excludedRequestNames.isEmpty()
-                    || !excludedRequestNames.contains(pair.first().getName())) {
+                    || !excludedRequestNames.contains(pair.first()
+                            .getName())) {
                 return pair;
             }
         }

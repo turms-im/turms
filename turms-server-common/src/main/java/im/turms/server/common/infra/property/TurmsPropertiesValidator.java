@@ -17,10 +17,6 @@
 
 package im.turms.server.common.infra.property;
 
-import im.turms.server.common.infra.lang.ClassUtil;
-import im.turms.server.common.infra.validation.ValidCron;
-import org.springframework.scheduling.support.CronExpression;
-
 import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -28,6 +24,11 @@ import java.util.List;
 import java.util.Map;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.Size;
+
+import org.springframework.scheduling.support.CronExpression;
+
+import im.turms.server.common.infra.lang.ClassUtil;
+import im.turms.server.common.infra.validation.ValidCron;
 
 import static im.turms.server.common.infra.property.TurmsPropertiesInspector.getFieldInfo;
 import static im.turms.server.common.infra.property.TurmsPropertiesInspector.getFieldInfos;
@@ -49,7 +50,8 @@ public class TurmsPropertiesValidator {
         if (errorMessages.isEmpty()) {
             return null;
         }
-        InvalidPropertyException root = new InvalidPropertyException("The properties contain invalid properties");
+        InvalidPropertyException root =
+                new InvalidPropertyException("The properties contain invalid properties");
         for (String message : errorMessages) {
             root.addSuppressed(new InvalidPropertyException(message));
         }
@@ -74,14 +76,21 @@ public class TurmsPropertiesValidator {
         }
     }
 
-    private static void validateProperty(Object properties, PropertyFieldInfo fieldInfo, List<String> errorMessages) {
+    private static void validateProperty(
+            Object properties,
+            PropertyFieldInfo fieldInfo,
+            List<String> errorMessages) {
         PropertyConstraints constraints = fieldInfo.constraints();
         long min = constraints.min();
         long max = constraints.max();
         String lessThanOrEqualTo = constraints.lessThanOrEqualTo();
         Size size = constraints.size();
         ValidCron cron = constraints.validCron();
-        if (min == Long.MIN_VALUE && max == Long.MAX_VALUE && lessThanOrEqualTo == null && size == null && cron == null) {
+        if (min == Long.MIN_VALUE
+                && max == Long.MAX_VALUE
+                && lessThanOrEqualTo == null
+                && size == null
+                && cron == null) {
             return;
         }
         Object value = fieldInfo.get(properties);
@@ -100,59 +109,80 @@ public class TurmsPropertiesValidator {
         }
     }
 
-    private static void validateMinMaxProperty(long min, long max, Object value, Field field, List<String> errorMessages) {
+    private static void validateMinMaxProperty(
+            long min,
+            long max,
+            Object value,
+            Field field,
+            List<String> errorMessages) {
         if (!(value instanceof Number number)) {
-            throw new IllegalArgumentException("The value of the field (" +
-                    ClassUtil.getReference(field) +
-                    ") must be a number for min and max validation");
+            throw new IllegalArgumentException(
+                    "The value of the field ("
+                            + ClassUtil.getReference(field)
+                            + ") must be a number for min and max validation");
         }
         long val = number.longValue();
         if (min > val) {
-            String message = "The property \"" + field.getName() + "\" must be greater than or equal to " + min;
+            String message = "The property \""
+                    + field.getName()
+                    + "\" must be greater than or equal to "
+                    + min;
             errorMessages.add(message);
         }
         if (max < val) {
-            String message = "The property \"" + field.getName() + "\" must be less than or equal to " + max;
+            String message = "The property \""
+                    + field.getName()
+                    + "\" must be less than or equal to "
+                    + max;
             errorMessages.add(message);
         }
     }
 
-    private static void validateLessThanOrEqualTo(String lessThanOrEqualTo,
-                                                  Object properties,
-                                                  Object value,
-                                                  Field field,
-                                                  List<String> errorMessages) {
+    private static void validateLessThanOrEqualTo(
+            String lessThanOrEqualTo,
+            Object properties,
+            Object value,
+            Field field,
+            List<String> errorMessages) {
         PropertyFieldInfo info = getFieldInfo(field.getDeclaringClass(), lessThanOrEqualTo);
         if (info == null) {
-            throw new IllegalArgumentException("The field (" +
-                    field.getDeclaringClass().getName() +
-                    "#" +
-                    lessThanOrEqualTo +
-                    ") does not exist");
+            throw new IllegalArgumentException(
+                    "The field ("
+                            + field.getDeclaringClass()
+                                    .getName()
+                            + "#"
+                            + lessThanOrEqualTo
+                            + ") does not exist");
         }
         if (!(value instanceof Number number)) {
-            throw new IllegalArgumentException("The value of the field (" +
-                    ClassUtil.getReference(field) +
-                    ") must be a number for min and max validation");
+            throw new IllegalArgumentException(
+                    "The value of the field ("
+                            + ClassUtil.getReference(field)
+                            + ") must be a number for min and max validation");
         }
         Object valueToCompare = info.get(properties);
         Field fieldToCompare = info.field();
         if (!(valueToCompare instanceof Number numberToCompare)) {
-            throw new IllegalArgumentException("The value of the field (" +
-                    ClassUtil.getReference(fieldToCompare) +
-                    ") must be a number for min and max validation");
+            throw new IllegalArgumentException(
+                    "The value of the field ("
+                            + ClassUtil.getReference(fieldToCompare)
+                            + ") must be a number for min and max validation");
         }
         if (number.longValue() > numberToCompare.longValue()) {
-            String message = "The property \"" +
-                    field.getName() +
-                    "\" must be less than or equal to the value of the property \"" +
-                    fieldToCompare.getName() +
-                    "\"";
+            String message = "The property \""
+                    + field.getName()
+                    + "\" must be less than or equal to the value of the property \""
+                    + fieldToCompare.getName()
+                    + "\"";
             errorMessages.add(message);
         }
     }
 
-    private static void validateSizeProperty(Size size, Object value, Field field, List<String> errorMessages) {
+    private static void validateSizeProperty(
+            Size size,
+            Object value,
+            Field field,
+            List<String> errorMessages) {
         int min = size.min();
         int max = size.max();
         int count = -1;
@@ -168,28 +198,47 @@ public class TurmsPropertiesValidator {
             propertyLengthName = "size";
         }
         if (count == -1) {
-            throw new IllegalArgumentException("The field \"" +
-                    field +
-                    "\" must be a string, collection, or map for size validation");
+            throw new IllegalArgumentException(
+                    "The field \""
+                            + field
+                            + "\" must be a string, collection, or map for size validation");
         }
         if (min > count) {
-            String message = "The " + propertyLengthName + " of property \"" + field.getName()
-                    + "\" must be greater than or equal to " + min;
+            String message = "The "
+                    + propertyLengthName
+                    + " of property \""
+                    + field.getName()
+                    + "\" must be greater than or equal to "
+                    + min;
             errorMessages.add(message);
         }
         if (max < count) {
-            String message = "The " + propertyLengthName + " of property \"" + field.getName()
-                    + "\" must be less than or equal to " + max;
+            String message = "The "
+                    + propertyLengthName
+                    + " of property \""
+                    + field.getName()
+                    + "\" must be less than or equal to "
+                    + max;
             errorMessages.add(message);
         }
     }
 
-    private static void validateCronProperty(Object value, Field field, List<String> errorMessages) {
+    private static void validateCronProperty(
+            Object value,
+            Field field,
+            List<String> errorMessages) {
         if (!(value instanceof String str)) {
-            throw new IllegalArgumentException("The value of the field (" + ClassUtil.getReference(field) + ") must be a string for cron validation");
+            throw new IllegalArgumentException(
+                    "The value of the field ("
+                            + ClassUtil.getReference(field)
+                            + ") must be a string for cron validation");
         }
         if (!CronExpression.isValidExpression(str)) {
-            String message = "The property \"" + field.getName() + "\" has an invalid cron \"" + str + "\"";
+            String message = "The property \""
+                    + field.getName()
+                    + "\" has an invalid cron \""
+                    + str
+                    + "\"";
             errorMessages.add(message);
         }
     }

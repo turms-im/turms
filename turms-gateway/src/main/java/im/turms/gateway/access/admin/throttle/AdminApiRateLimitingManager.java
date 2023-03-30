@@ -17,10 +17,11 @@
 
 package im.turms.gateway.access.admin.throttle;
 
+import org.springframework.stereotype.Component;
+
 import im.turms.server.common.access.admin.throttle.BaseAdminApiRateLimitingManager;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.task.TaskManager;
-import org.springframework.stereotype.Component;
 
 /**
  * @author James Chen
@@ -28,8 +29,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class AdminApiRateLimitingManager extends BaseAdminApiRateLimitingManager {
 
-    public AdminApiRateLimitingManager(TaskManager taskManager, TurmsPropertiesManager propertiesManager) {
-        super(taskManager, propertiesManager.getGlobalProperties().getGateway().getAdminApi().getRateLimiting());
+    public AdminApiRateLimitingManager(
+            TaskManager taskManager,
+            TurmsPropertiesManager propertiesManager) {
+        super(taskManager,
+                propertiesManager.getGlobalProperties()
+                        .getGateway()
+                        .getAdminApi()
+                        .getRateLimiting());
     }
 
 }

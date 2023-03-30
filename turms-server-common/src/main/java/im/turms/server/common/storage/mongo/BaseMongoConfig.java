@@ -17,19 +17,20 @@
 
 package im.turms.server.common.storage.mongo;
 
-import com.mongodb.connection.ClusterType;
-import im.turms.server.common.infra.context.JobShutdownOrder;
-import im.turms.server.common.infra.context.TurmsApplicationContext;
-import im.turms.server.common.infra.property.env.service.env.database.TurmsMongoProperties;
-import im.turms.server.common.infra.time.DurationConst;
-import reactor.core.publisher.Mono;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import com.mongodb.connection.ClusterType;
+import reactor.core.publisher.Mono;
+
+import im.turms.server.common.infra.context.JobShutdownOrder;
+import im.turms.server.common.infra.context.TurmsApplicationContext;
+import im.turms.server.common.infra.property.env.service.env.database.TurmsMongoProperties;
+import im.turms.server.common.infra.time.DurationConst;
 
 /**
  * @author James Chen
@@ -39,7 +40,8 @@ public abstract class BaseMongoConfig {
     private final Map<String, TurmsMongoClient> uriToClient = new HashMap<>(8);
 
     protected BaseMongoConfig(TurmsApplicationContext applicationContext) {
-        applicationContext.addShutdownHook(JobShutdownOrder.CLOSE_MONGODB_CONNECTIONS, this::destroy);
+        applicationContext.addShutdownHook(JobShutdownOrder.CLOSE_MONGODB_CONNECTIONS,
+                this::destroy);
     }
 
     public Mono<Void> destroy(long timeoutMillis) {
@@ -55,9 +57,10 @@ public abstract class BaseMongoConfig {
         return Mono.whenDelayError(monos);
     }
 
-    protected synchronized TurmsMongoClient getMongoClient(TurmsMongoProperties properties,
-                                                           String name,
-                                                           Set<ClusterType> requiredClusterTypes) {
+    protected synchronized TurmsMongoClient getMongoClient(
+            TurmsMongoProperties properties,
+            String name,
+            Set<ClusterType> requiredClusterTypes) {
         return uriToClient.compute(properties.getUri(), (key, mongoClient) -> {
             if (mongoClient == null) {
                 try {

@@ -17,6 +17,12 @@
 
 package im.turms.server.common.domain.observation.access.admin.controller;
 
+import java.util.Map;
+import jakarta.annotation.Nullable;
+
+import io.netty.buffer.ByteBuf;
+import org.springframework.context.ApplicationContext;
+
 import im.turms.server.common.access.admin.web.ApiEndpoint;
 import im.turms.server.common.access.admin.web.ApiEndpointKey;
 import im.turms.server.common.access.admin.web.HttpRequestDispatcher;
@@ -28,11 +34,6 @@ import im.turms.server.common.infra.context.TurmsApplicationContext;
 import im.turms.server.common.infra.io.FileUtil;
 import im.turms.server.common.infra.netty.ByteBufUtil;
 import im.turms.server.common.infra.openapi.OpenApiBuilder;
-import io.netty.buffer.ByteBuf;
-import org.springframework.context.ApplicationContext;
-
-import java.util.Map;
-import jakarta.annotation.Nullable;
 
 import static im.turms.server.common.access.admin.web.ContentEncodingConst.GZIP;
 import static im.turms.server.common.access.admin.web.MediaTypeConst.APPLICATION_JAVASCRIPT;
@@ -56,36 +57,39 @@ public class OpenApiController {
 
     static {
         FAVICON_32_32 = FileUtil.getWebJarAssetAsBuffer("swagger-ui/*/favicon-32x32.png");
-        INDEX_HTML = ByteBufUtil.getUnreleasableDirectBuffer("""
-                <!DOCTYPE html>
-                <html lang="en">
-                  <head>
-                    <meta charset="UTF-8">
-                    <title>Swagger UI</title>
-                    <link rel="stylesheet" type="text/css" href="/openapi/ui/swagger-ui.css" />
-                    <link rel="stylesheet" type="text/css" href="/openapi/ui/index.css" />
-                    <link rel="icon" type="image/png" href="/openapi/ui/favicon-32x32.png" sizes="32x32" />
-                  </head>
-                  <body>
-                    <div id="swagger-ui"></div>
-                    <script src="/openapi/ui/swagger-ui-bundle.js" charset="UTF-8"> </script>
-                    <script src="/openapi/ui/swagger-ui-standalone-preset.js" charset="UTF-8"> </script>
-                    <script src="/openapi/ui/swagger-initializer.js" charset="UTF-8"> </script>
-                  </body>
-                </html>
-                """);
+        INDEX_HTML = ByteBufUtil.getUnreleasableDirectBuffer(
+                """
+                        <!DOCTYPE html>
+                        <html lang="en">
+                          <head>
+                            <meta charset="UTF-8">
+                            <title>Swagger UI</title>
+                            <link rel="stylesheet" type="text/css" href="/openapi/ui/swagger-ui.css" />
+                            <link rel="stylesheet" type="text/css" href="/openapi/ui/index.css" />
+                            <link rel="icon" type="image/png" href="/openapi/ui/favicon-32x32.png" sizes="32x32" />
+                          </head>
+                          <body>
+                            <div id="swagger-ui"></div>
+                            <script src="/openapi/ui/swagger-ui-bundle.js" charset="UTF-8"> </script>
+                            <script src="/openapi/ui/swagger-ui-standalone-preset.js" charset="UTF-8"> </script>
+                            <script src="/openapi/ui/swagger-initializer.js" charset="UTF-8"> </script>
+                          </body>
+                        </html>
+                        """);
         INDEX_CSS = FileUtil.getWebJarAssetAsBuffer("swagger-ui/*/index.css");
         SWAGGER_UI_CSS = FileUtil.getWebJarAssetAsBuffer("swagger-ui/*/swagger-ui.css");
         SWAGGER_UI_BUNDLE = FileUtil.getWebJarAssetAsBuffer("swagger-ui/*/swagger-ui-bundle.js.gz");
-        SWAGGER_UI_STANDALONE_PRESET = FileUtil.getWebJarAssetAsBuffer("swagger-ui/*/swagger-ui-standalone-preset.js.gz");
+        SWAGGER_UI_STANDALONE_PRESET =
+                FileUtil.getWebJarAssetAsBuffer("swagger-ui/*/swagger-ui-standalone-preset.js.gz");
     }
 
     private final ApplicationContext context;
     private volatile ByteBuf apiBuffer;
     private final ByteBuf swaggerInitializer;
 
-    public OpenApiController(ApplicationContext context,
-                             BaseServiceAddressManager serviceAddressManager) {
+    public OpenApiController(
+            ApplicationContext context,
+            BaseServiceAddressManager serviceAddressManager) {
         this.context = context;
         swaggerInitializer = ByteBufUtil.getUnreleasableDirectBuffer("""
                 window.onload = function() {
@@ -138,12 +142,18 @@ public class OpenApiController {
         return SWAGGER_UI_CSS;
     }
 
-    @GetMapping(value = "ui/swagger-ui-bundle.js", produces = APPLICATION_JAVASCRIPT, encoding = GZIP)
+    @GetMapping(
+            value = "ui/swagger-ui-bundle.js",
+            produces = APPLICATION_JAVASCRIPT,
+            encoding = GZIP)
     public ByteBuf getSwaggerUiBundle() {
         return SWAGGER_UI_BUNDLE;
     }
 
-    @GetMapping(value = "ui/swagger-ui-standalone-preset.js", produces = APPLICATION_JAVASCRIPT, encoding = GZIP)
+    @GetMapping(
+            value = "ui/swagger-ui-standalone-preset.js",
+            produces = APPLICATION_JAVASCRIPT,
+            encoding = GZIP)
     public ByteBuf getSwaggerUiStandalonePreset() {
         return SWAGGER_UI_STANDALONE_PRESET;
     }
@@ -153,19 +163,26 @@ public class OpenApiController {
         return swaggerInitializer;
     }
 
-    private synchronized void updateApiBuffer(@Nullable Map<ApiEndpointKey, ApiEndpoint> keyToEndpoint) {
+    private synchronized void updateApiBuffer(
+            @Nullable Map<ApiEndpointKey, ApiEndpoint> keyToEndpoint) {
         HttpRequestDispatcher dispatcher = context.getBean(HttpRequestDispatcher.class);
         if (apiBuffer == null) {
             dispatcher.addEndpointChangeListener(this::updateApiBuffer);
         } else {
-            apiBuffer.unwrap().release();
+            apiBuffer.unwrap()
+                    .release();
         }
         if (keyToEndpoint == null) {
             keyToEndpoint = dispatcher.getKeyToEndpoint();
         }
-        byte[] bytes = OpenApiBuilder.build(context.getBean(TurmsApplicationContext.class).getBuildProperties().version(),
-                context.getBean(Node.class).getNodeType().getDisplayName(),
-                context.getBean(BaseServiceAddressManager.class).getAdminApiAddress(),
+        byte[] bytes = OpenApiBuilder.build(context.getBean(TurmsApplicationContext.class)
+                .getBuildProperties()
+                .version(),
+                context.getBean(Node.class)
+                        .getNodeType()
+                        .getDisplayName(),
+                context.getBean(BaseServiceAddressManager.class)
+                        .getAdminApiAddress(),
                 keyToEndpoint);
         apiBuffer = ByteBufUtil.getUnreleasableDirectBuffer(bytes);
     }

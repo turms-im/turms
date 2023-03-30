@@ -17,11 +17,11 @@
 
 package im.turms.server.common.access.client.dto.request;
 
+import java.util.Set;
+
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.lang.ClassUtil;
 import im.turms.server.common.infra.lang.StringUtil;
-
-import java.util.Set;
 
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.CHECK_GROUP_JOIN_QUESTIONS_ANSWERS_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.CREATE_FRIEND_REQUEST_REQUEST;
@@ -95,13 +95,13 @@ public final class TurmsRequestTypePool {
             QUERY_RESOURCE_DOWNLOAD_INFO_REQUEST,
             QUERY_RESOURCE_UPLOAD_INFO_REQUEST);
 
-    public static final Set<TurmsRequest.KindCase> CONVERSATION = Set.of(QUERY_CONVERSATIONS_REQUEST,
-            UPDATE_CONVERSATION_REQUEST,
-            UPDATE_TYPING_STATUS_REQUEST);
+    public static final Set<TurmsRequest.KindCase> CONVERSATION =
+            Set.of(QUERY_CONVERSATIONS_REQUEST,
+                    UPDATE_CONVERSATION_REQUEST,
+                    UPDATE_TYPING_STATUS_REQUEST);
 
-    public static final Set<TurmsRequest.KindCase> MESSAGE = Set.of(CREATE_MESSAGE_REQUEST,
-            QUERY_MESSAGES_REQUEST,
-            UPDATE_MESSAGE_REQUEST);
+    public static final Set<TurmsRequest.KindCase> MESSAGE =
+            Set.of(CREATE_MESSAGE_REQUEST, QUERY_MESSAGES_REQUEST, UPDATE_MESSAGE_REQUEST);
 
     public static final Set<TurmsRequest.KindCase> USER = Set.of(QUERY_USER_PROFILES_REQUEST,
             QUERY_NEARBY_USERS_REQUEST,
@@ -110,18 +110,19 @@ public final class TurmsRequestTypePool {
             UPDATE_USER_ONLINE_STATUS_REQUEST,
             UPDATE_USER_REQUEST);
 
-    public static final Set<TurmsRequest.KindCase> USER_RELATIONSHIP = Set.of(CREATE_FRIEND_REQUEST_REQUEST,
-            CREATE_RELATIONSHIP_GROUP_REQUEST,
-            CREATE_RELATIONSHIP_REQUEST,
-            DELETE_RELATIONSHIP_GROUP_REQUEST,
-            DELETE_RELATIONSHIP_REQUEST,
-            QUERY_FRIEND_REQUESTS_REQUEST,
-            QUERY_RELATED_USER_IDS_REQUEST,
-            QUERY_RELATIONSHIP_GROUPS_REQUEST,
-            QUERY_RELATIONSHIPS_REQUEST,
-            UPDATE_FRIEND_REQUEST_REQUEST,
-            UPDATE_RELATIONSHIP_GROUP_REQUEST,
-            UPDATE_RELATIONSHIP_REQUEST);
+    public static final Set<TurmsRequest.KindCase> USER_RELATIONSHIP =
+            Set.of(CREATE_FRIEND_REQUEST_REQUEST,
+                    CREATE_RELATIONSHIP_GROUP_REQUEST,
+                    CREATE_RELATIONSHIP_REQUEST,
+                    DELETE_RELATIONSHIP_GROUP_REQUEST,
+                    DELETE_RELATIONSHIP_REQUEST,
+                    QUERY_FRIEND_REQUESTS_REQUEST,
+                    QUERY_RELATED_USER_IDS_REQUEST,
+                    QUERY_RELATIONSHIP_GROUPS_REQUEST,
+                    QUERY_RELATIONSHIPS_REQUEST,
+                    UPDATE_FRIEND_REQUEST_REQUEST,
+                    UPDATE_RELATIONSHIP_GROUP_REQUEST,
+                    UPDATE_RELATIONSHIP_REQUEST);
 
     public static final Set<TurmsRequest.KindCase> GROUP = Set.of(CREATE_GROUP_REQUEST,
             DELETE_GROUP_REQUEST,
@@ -130,35 +131,40 @@ public final class TurmsRequestTypePool {
             QUERY_JOINED_GROUP_INFOS_REQUEST,
             UPDATE_GROUP_REQUEST);
 
-    public static final Set<TurmsRequest.KindCase> GROUP_BLOCKLIST = Set.of(CREATE_GROUP_BLOCKED_USER_REQUEST,
-            DELETE_GROUP_BLOCKED_USER_REQUEST,
-            QUERY_GROUP_BLOCKED_USER_IDS_REQUEST,
-            QUERY_GROUP_BLOCKED_USER_INFOS_REQUEST);
+    public static final Set<TurmsRequest.KindCase> GROUP_BLOCKLIST =
+            Set.of(CREATE_GROUP_BLOCKED_USER_REQUEST,
+                    DELETE_GROUP_BLOCKED_USER_REQUEST,
+                    QUERY_GROUP_BLOCKED_USER_IDS_REQUEST,
+                    QUERY_GROUP_BLOCKED_USER_INFOS_REQUEST);
 
-    public static final Set<TurmsRequest.KindCase> GROUP_ENROLLMENT = Set.of(CHECK_GROUP_JOIN_QUESTIONS_ANSWERS_REQUEST,
-            CREATE_GROUP_INVITATION_REQUEST,
-            CREATE_GROUP_JOIN_REQUEST_REQUEST,
-            CREATE_GROUP_JOIN_QUESTIONS_REQUEST,
-            DELETE_GROUP_INVITATION_REQUEST,
-            DELETE_GROUP_JOIN_REQUEST_REQUEST,
-            DELETE_GROUP_JOIN_QUESTIONS_REQUEST,
-            QUERY_GROUP_INVITATIONS_REQUEST,
-            QUERY_GROUP_JOIN_REQUESTS_REQUEST,
-            QUERY_GROUP_JOIN_QUESTIONS_REQUEST,
-            UPDATE_GROUP_JOIN_QUESTION_REQUEST);
+    public static final Set<TurmsRequest.KindCase> GROUP_ENROLLMENT =
+            Set.of(CHECK_GROUP_JOIN_QUESTIONS_ANSWERS_REQUEST,
+                    CREATE_GROUP_INVITATION_REQUEST,
+                    CREATE_GROUP_JOIN_REQUEST_REQUEST,
+                    CREATE_GROUP_JOIN_QUESTIONS_REQUEST,
+                    DELETE_GROUP_INVITATION_REQUEST,
+                    DELETE_GROUP_JOIN_REQUEST_REQUEST,
+                    DELETE_GROUP_JOIN_QUESTIONS_REQUEST,
+                    QUERY_GROUP_INVITATIONS_REQUEST,
+                    QUERY_GROUP_JOIN_REQUESTS_REQUEST,
+                    QUERY_GROUP_JOIN_QUESTIONS_REQUEST,
+                    UPDATE_GROUP_JOIN_QUESTION_REQUEST);
 
-    public static final Set<TurmsRequest.KindCase> GROUP_MEMBER = Set.of(CREATE_GROUP_MEMBERS_REQUEST,
-            DELETE_GROUP_MEMBERS_REQUEST,
-            QUERY_GROUP_MEMBERS_REQUEST,
-            UPDATE_GROUP_MEMBER_REQUEST);
+    public static final Set<TurmsRequest.KindCase> GROUP_MEMBER =
+            Set.of(CREATE_GROUP_MEMBERS_REQUEST,
+                    DELETE_GROUP_MEMBERS_REQUEST,
+                    QUERY_GROUP_MEMBERS_REQUEST,
+                    UPDATE_GROUP_MEMBER_REQUEST);
 
     static {
-        TurmsRequest.KindCase[] values = ClassUtil.getSharedEnumConstants(TurmsRequest.KindCase.class);
+        TurmsRequest.KindCase[] values =
+                ClassUtil.getSharedEnumConstants(TurmsRequest.KindCase.class);
         CREATE = CollectionUtil.toImmutableSet(StringUtil.findMatchesLatin1(values, "CREATE_*"));
         DELETE = CollectionUtil.toImmutableSet(StringUtil.findMatchesLatin1(values, "DELETE_*"));
         UPDATE = CollectionUtil.toImmutableSet(StringUtil.findMatchesLatin1(values, "UPDATE_*"));
-        QUERY = CollectionUtil.toImmutableSet(CollectionUtil.newSet(StringUtil.findMatchesLatin1(values, "QUERY_*"),
-                StringUtil.findMatchesLatin1(values, "CHECK_*")));
+        QUERY = CollectionUtil.toImmutableSet(
+                CollectionUtil.newSet(StringUtil.findMatchesLatin1(values, "QUERY_*"),
+                        StringUtil.findMatchesLatin1(values, "CHECK_*")));
         ALL = CollectionUtil.newSet(CREATE, DELETE, UPDATE, QUERY);
     }
 

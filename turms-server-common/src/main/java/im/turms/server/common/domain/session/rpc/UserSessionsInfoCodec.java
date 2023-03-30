@@ -17,6 +17,11 @@
 
 package im.turms.server.common.domain.session.rpc;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.constant.UserStatus;
 import im.turms.server.common.domain.location.bo.Location;
@@ -27,11 +32,6 @@ import im.turms.server.common.infra.cluster.service.codec.codec.CodecId;
 import im.turms.server.common.infra.cluster.service.codec.io.CodecStreamInput;
 import im.turms.server.common.infra.cluster.service.codec.io.CodecStreamOutput;
 import im.turms.server.common.infra.io.Stream;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author James Chen
@@ -46,18 +46,23 @@ public class UserSessionsInfoCodec implements Codec<UserSessionsInfo> {
     @Override
     public void write(CodecStreamOutput output, UserSessionsInfo data) {
         output.writeLong(data.userId());
-        output.writeByte(data.status().getNumber());
+        output.writeByte(data.status()
+                .getNumber());
         List<UserSessionInfo> sessions = data.sessions();
         output.writeVarint32(sessions.size());
         for (UserSessionInfo session : sessions) {
             Location location = session.loginLocation();
             output.writeInt(session.id());
             output.writeByte(session.version());
-            output.writeByte(session.deviceType().getNumber());
+            output.writeByte(session.deviceType()
+                    .getNumber());
             output.writeStringMap(session.deviceDetails());
-            output.writeLong(session.loginDate().getTime());
-            output.writeLong(session.lastHeartbeatRequestDate().getTime());
-            output.writeLong(session.lastRequestDate().getTime());
+            output.writeLong(session.loginDate()
+                    .getTime());
+            output.writeLong(session.lastHeartbeatRequestDate()
+                    .getTime());
+            output.writeLong(session.lastRequestDate()
+                    .getTime());
             output.writeBoolean(session.isSessionOpen());
             output.writeIp(session.ipBytes());
             if (location == null) {
@@ -67,7 +72,9 @@ public class UserSessionsInfoCodec implements Codec<UserSessionsInfo> {
                 output.writeFloat(location.longitude());
                 output.writeFloat(location.latitude());
                 Date timestamp = location.timestamp();
-                output.writeLong(timestamp == null ? Long.MIN_VALUE : timestamp.getTime());
+                output.writeLong(timestamp == null
+                        ? Long.MIN_VALUE
+                        : timestamp.getTime());
                 output.writeStringMap(location.details());
             }
         }
@@ -94,12 +101,16 @@ public class UserSessionsInfoCodec implements Codec<UserSessionsInfo> {
                 float longitude = input.readFloat();
                 float latitude = input.readFloat();
                 long timestamp = input.readLong();
-                loginLocation = new Location(longitude,
+                loginLocation = new Location(
+                        longitude,
                         latitude,
-                        timestamp == Long.MIN_VALUE ? null : new Date(timestamp),
+                        timestamp == Long.MIN_VALUE
+                                ? null
+                                : new Date(timestamp),
                         input.readStringMap());
             }
-            sessions.add(new UserSessionInfo(sessionId,
+            sessions.add(new UserSessionInfo(
+                    sessionId,
                     version,
                     deviceType,
                     deviceDetails,
@@ -116,7 +127,8 @@ public class UserSessionsInfoCodec implements Codec<UserSessionsInfo> {
 
     @Override
     public int initialCapacity(UserSessionsInfo data) {
-        int size = data.sessions().size();
+        int size = data.sessions()
+                .size();
         return Long.BYTES + Byte.BYTES + Stream.computeVarint32Size(size) + 64 * size;
     }
 

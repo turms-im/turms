@@ -17,6 +17,10 @@
 
 package im.turms.server.common.infra.logging.core.processor;
 
+import java.util.List;
+
+import org.jctools.queues.MpscUnboundedArrayQueue;
+
 import im.turms.server.common.infra.logging.core.appender.Appender;
 import im.turms.server.common.infra.logging.core.idle.BackoffIdleStrategy;
 import im.turms.server.common.infra.logging.core.logger.InternalLogger;
@@ -24,13 +28,10 @@ import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.logging.core.model.LogRecord;
 import im.turms.server.common.infra.netty.ReferenceCountUtil;
 import im.turms.server.common.infra.thread.ThreadNameConst;
-import org.jctools.queues.MpscUnboundedArrayQueue;
-
-import java.util.List;
 
 /**
- * Note that we only use one thread to process logs,
- * which means that we don't need to consider the scenarios of concurrent modifications
+ * Note that we only use one thread to process logs, which means that we don't need to consider the
+ * scenarios of concurrent modifications
  *
  * @author James Chen
  */
@@ -40,8 +41,7 @@ public final class LogProcessor {
     private volatile boolean active;
 
     public LogProcessor(MpscUnboundedArrayQueue<LogRecord> recordQueue) {
-        thread = new Thread(() -> drainLogsForever(recordQueue),
-                ThreadNameConst.LOG_PROCESSOR);
+        thread = new Thread(() -> drainLogsForever(recordQueue), ThreadNameConst.LOG_PROCESSOR);
         active = true;
     }
 
@@ -56,20 +56,20 @@ public final class LogProcessor {
         try {
             thread.join(timeoutMillis);
         } catch (InterruptedException e) {
-            throw new RuntimeException("Caught an error while waiting the log processor to close", e);
+            throw new RuntimeException(
+                    "Caught an error while waiting the log processor to close",
+                    e);
         }
     }
 
     private void drainLogsForever(MpscUnboundedArrayQueue<LogRecord> recordQueue) {
-        BackoffIdleStrategy idleStrategy = new BackoffIdleStrategy(128,
-                128,
-                1024000,
-                1024000);
+        BackoffIdleStrategy idleStrategy = new BackoffIdleStrategy(128, 128, 1024000, 1024000);
         LogRecord logRecord;
         while (true) {
             while ((logRecord = recordQueue.relaxedPoll()) != null) {
                 idleStrategy.reset();
-                List<Appender> appenders = logRecord.logger().getAppenders();
+                List<Appender> appenders = logRecord.logger()
+                        .getAppenders();
                 for (Appender appender : appenders) {
                     try {
                         appender.append(logRecord);

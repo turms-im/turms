@@ -17,28 +17,29 @@
 
 package im.turms.server.common.storage.mongo.operation;
 
-import com.mongodb.client.model.IndexModel;
-import com.mongodb.client.model.changestream.ChangeStreamDocument;
-import com.mongodb.client.model.changestream.FullDocument;
-import com.mongodb.client.result.DeleteResult;
-import com.mongodb.client.result.UpdateResult;
-import com.mongodb.reactivestreams.client.ClientSession;
-import im.turms.server.common.storage.mongo.entity.MongoEntity;
-import im.turms.server.common.storage.mongo.entity.annotation.CompoundIndex;
-import im.turms.server.common.storage.mongo.model.Tag;
-import im.turms.server.common.storage.mongo.operation.option.Filter;
-import im.turms.server.common.storage.mongo.operation.option.QueryOptions;
-import im.turms.server.common.storage.mongo.operation.option.Update;
-import org.bson.Document;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
 import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
 import jakarta.annotation.Nullable;
+
+import com.mongodb.client.model.IndexModel;
+import com.mongodb.client.model.changestream.ChangeStreamDocument;
+import com.mongodb.client.model.changestream.FullDocument;
+import com.mongodb.client.result.DeleteResult;
+import com.mongodb.client.result.UpdateResult;
+import com.mongodb.reactivestreams.client.ClientSession;
+import org.bson.Document;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
+import im.turms.server.common.storage.mongo.entity.MongoEntity;
+import im.turms.server.common.storage.mongo.entity.annotation.CompoundIndex;
+import im.turms.server.common.storage.mongo.model.Tag;
+import im.turms.server.common.storage.mongo.operation.option.Filter;
+import im.turms.server.common.storage.mongo.operation.option.QueryOptions;
+import im.turms.server.common.storage.mongo.operation.option.Update;
 
 /**
  * @author James Chen
@@ -87,17 +88,31 @@ public interface MongoOperationsSupport {
 
     <T> Mono<UpdateResult> updateOne(Class<T> clazz, Filter filter, Update update);
 
-    <T> Mono<UpdateResult> updateOne(@Nullable ClientSession session, Class<T> clazz, Filter filter, Update update);
+    <T> Mono<UpdateResult> updateOne(
+            @Nullable ClientSession session,
+            Class<T> clazz,
+            Filter filter,
+            Update update);
 
     <T> Mono<UpdateResult> updateMany(Class<T> clazz, Filter filter, Update update);
 
-    <T> Mono<UpdateResult> updateMany(@Nullable ClientSession session, Class<T> clazz, Filter filter, Update update);
+    <T> Mono<UpdateResult> updateMany(
+            @Nullable ClientSession session,
+            Class<T> clazz,
+            Filter filter,
+            Update update);
 
-    <T> Mono<DeleteResult> deleteOne(@Nullable ClientSession session, Class<T> clazz, Filter filter);
+    <T> Mono<DeleteResult> deleteOne(
+            @Nullable ClientSession session,
+            Class<T> clazz,
+            Filter filter);
 
     <T> Mono<DeleteResult> deleteOne(Class<T> clazz, Filter filter);
 
-    <T> Mono<DeleteResult> deleteMany(@Nullable ClientSession session, Class<T> clazz, Filter filter);
+    <T> Mono<DeleteResult> deleteMany(
+            @Nullable ClientSession session,
+            Class<T> clazz,
+            Filter filter);
 
     <T> Mono<DeleteResult> deleteMany(Class<T> clazz, Filter filter);
 
@@ -121,16 +136,18 @@ public interface MongoOperationsSupport {
 
     Mono<Void> ensureIndexesAndShards(Collection<Class<?>> classes);
 
-    Mono<Void> ensureIndexesAndShards(Collection<Class<?>> classes,
-                                      @Nullable BiPredicate<Class<?>, CompoundIndex> customCompoundIndexFilter,
-                                      @Nullable BiPredicate<Class<?>, Field> customIndexFilter);
+    Mono<Void> ensureIndexesAndShards(
+            Collection<Class<?>> classes,
+            @Nullable BiPredicate<Class<?>, CompoundIndex> customCompoundIndexFilter,
+            @Nullable BiPredicate<Class<?>, Field> customIndexFilter);
 
     Mono<Void> addShardToZone(String shardName, String zoneName);
 
-    Mono<Void> updateZoneKeyRange(String collectionName,
-                                  String zoneName,
-                                  Document minimum,
-                                  Document maximum);
+    Mono<Void> updateZoneKeyRange(
+            String collectionName,
+            String zoneName,
+            Document minimum,
+            Document maximum);
 
     /**
      * @return whether the collection has already existed

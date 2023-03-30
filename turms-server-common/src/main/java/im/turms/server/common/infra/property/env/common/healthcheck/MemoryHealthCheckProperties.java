@@ -17,14 +17,15 @@
 
 package im.turms.server.common.infra.property.env.common.healthcheck;
 
-import im.turms.server.common.infra.property.metadata.Description;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
+import im.turms.server.common.infra.property.metadata.Description;
 
 import static im.turms.server.common.infra.unit.ByteSizeUnit.MB;
 
@@ -39,20 +40,20 @@ public class MemoryHealthCheckProperties {
 
     // Memory Usage
 
-    @Description("The server will refuse to serve when the used memory (heap memory + JVM internal non-heap memory + direct buffer pool) " +
-            "exceeds the physical memory of the percentage. " +
-            "The server will try to reserve max(maxAvailableMemoryPercentage of the physical memory, minFreeSystemMemoryBytes) " +
-            "for kernel and other processes. " +
-            "Note that the max available memory percentage does not conflict with " +
-            "the usage of limiting memory in docker because docker limits the " +
-            "memory of the container, while this memory percentage only limits " +
-            "the available memory for JVM")
+    @Description("The server will refuse to serve when the used memory (heap memory + JVM internal non-heap memory + direct buffer pool) "
+            + "exceeds the physical memory of the percentage. "
+            + "The server will try to reserve max(maxAvailableMemoryPercentage of the physical memory, minFreeSystemMemoryBytes) "
+            + "for kernel and other processes. "
+            + "Note that the max available memory percentage does not conflict with "
+            + "the usage of limiting memory in docker because docker limits the "
+            + "memory of the container, while this memory percentage only limits "
+            + "the available memory for JVM")
     @Max(100)
     @Min(1)
     private int maxAvailableMemoryPercentage = 95;
 
-    @Description("The server will refuse to serve when the used direct memory exceeds the max direct memory of the percentage " +
-            "to try to avoid OutOfMemoryError")
+    @Description("The server will refuse to serve when the used direct memory exceeds the max direct memory of the percentage "
+            + "to try to avoid OutOfMemoryError")
     @Max(100)
     @Min(1)
     private int maxAvailableDirectMemoryPercentage = 95;
@@ -76,8 +77,8 @@ public class MemoryHealthCheckProperties {
 
     // GC
 
-    @Description("If the used memory has used the reserved memory specified by maxAvailableMemoryPercentage and minFreeSystemMemoryBytes, " +
-            "try to start GC when the used heap memory exceeds the max heap memory of the percentage")
+    @Description("If the used memory has used the reserved memory specified by maxAvailableMemoryPercentage and minFreeSystemMemoryBytes, "
+            + "try to start GC when the used heap memory exceeds the max heap memory of the percentage")
     @Max(100)
     @Min(0)
     private int heapMemoryGcThresholdPercentage = 60;

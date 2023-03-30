@@ -17,25 +17,25 @@
 
 package im.turms.server.common.infra.plugin;
 
-import im.turms.server.common.infra.exception.ThrowableUtil;
-import im.turms.server.common.infra.logging.core.logger.Logger;
-import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
-import lombok.Data;
-import lombok.experimental.Accessors;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.Data;
+import lombok.experimental.Accessors;
+
+import im.turms.server.common.infra.exception.ThrowableUtil;
+import im.turms.server.common.infra.logging.core.logger.Logger;
+import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
+
 /**
- * {@link TurmsPlugin} is the plugin class for plugin developers,
- * while {@link Plugin} is the plugin class for us and internal development.
+ * {@link TurmsPlugin} is the plugin class for plugin developers, while {@link Plugin} is the plugin
+ * class for us and internal development.
  * <p>
- * From the perspective of Turms developers,
- * it is more accurate to call {@link TurmsPlugin} "CustomPlugin" or "JavaPlugin",
- * but from the perspective of Java plugin developers, both "JavaPlugin" and "CustomPlugin" are fluffy
- * because it is obvious that they are developing a java custom plugin while "TurmsPlugin" can ensure developers
- * know that they are developing a plugin for Turms to distinguish with other plugin classes
- * in their classpath.
+ * From the perspective of Turms developers, it is more accurate to call {@link TurmsPlugin}
+ * "CustomPlugin" or "JavaPlugin", but from the perspective of Java plugin developers, both
+ * "JavaPlugin" and "CustomPlugin" are fluffy because it is obvious that they are developing a java
+ * custom plugin while "TurmsPlugin" can ensure developers know that they are developing a plugin
+ * for Turms to distinguish with other plugin classes in their classpath.
  *
  * @author James Chen
  */
@@ -55,15 +55,18 @@ public abstract sealed class Plugin permits JavaPlugin, JsPlugin {
                 try {
                     extension.start();
                 } catch (Exception | LinkageError e) {
-                    throw new RuntimeException("Caught an error while starting the extension: " +
-                            extension.getClass().getName(), e);
+                    throw new RuntimeException(
+                            "Caught an error while starting the extension: "
+                                    + extension.getClass()
+                                            .getName(),
+                            e);
                 }
             });
         }
-        ThrowableUtil.delayError(runnables, "Caught errors while starting extensions of the plugin: " +
-                descriptor.getId());
-        LOGGER.info("The plugin ({}) has been started",
-                descriptor.getId());
+        ThrowableUtil.delayError(runnables,
+                "Caught errors while starting extensions of the plugin: "
+                        + descriptor.getId());
+        LOGGER.info("The plugin ({}) has been started", descriptor.getId());
     }
 
     void stop() {
@@ -73,8 +76,11 @@ public abstract sealed class Plugin permits JavaPlugin, JsPlugin {
                 try {
                     extension.stop();
                 } catch (Exception | LinkageError e) {
-                    throw new RuntimeException("Caught an error while stopping the extension: " +
-                            extension.getClass().getName(), e);
+                    throw new RuntimeException(
+                            "Caught an error while stopping the extension: "
+                                    + extension.getClass()
+                                            .getName(),
+                            e);
                 }
             });
         }
@@ -91,8 +97,9 @@ public abstract sealed class Plugin permits JavaPlugin, JsPlugin {
             closeContextException = e;
         }
         if (stopExtensionsException != null || closeContextException != null) {
-            RuntimeException e = new RuntimeException("Caught errors while stopping the plugin: " +
-                    descriptor.getId());
+            RuntimeException e = new RuntimeException(
+                    "Caught errors while stopping the plugin: "
+                            + descriptor.getId());
             if (stopExtensionsException != null) {
                 e.addSuppressed(stopExtensionsException);
             }
@@ -101,8 +108,7 @@ public abstract sealed class Plugin permits JavaPlugin, JsPlugin {
             }
             throw e;
         }
-        LOGGER.info("The plugin ({}) has been stopped",
-                descriptor.getId());
+        LOGGER.info("The plugin ({}) has been stopped", descriptor.getId());
     }
 
     void resume() {
@@ -112,15 +118,18 @@ public abstract sealed class Plugin permits JavaPlugin, JsPlugin {
                 try {
                     extension.resume();
                 } catch (Exception | LinkageError e) {
-                    throw new RuntimeException("Caught an error while resuming the extension: " +
-                            extension.getClass().getName(), e);
+                    throw new RuntimeException(
+                            "Caught an error while resuming the extension: "
+                                    + extension.getClass()
+                                            .getName(),
+                            e);
                 }
             });
         }
-        ThrowableUtil.delayError(runnables, "Caught errors while resuming extensions of the plugin: " +
-                descriptor.getId());
-        LOGGER.info("The plugin ({}) has been resumed",
-                descriptor.getId());
+        ThrowableUtil.delayError(runnables,
+                "Caught errors while resuming extensions of the plugin: "
+                        + descriptor.getId());
+        LOGGER.info("The plugin ({}) has been resumed", descriptor.getId());
     }
 
     void pause() {
@@ -130,15 +139,18 @@ public abstract sealed class Plugin permits JavaPlugin, JsPlugin {
                 try {
                     extension.pause();
                 } catch (Exception | LinkageError e) {
-                    throw new RuntimeException("Caught an error while pausing the extension: " +
-                            extension.getClass().getName(), e);
+                    throw new RuntimeException(
+                            "Caught an error while pausing the extension: "
+                                    + extension.getClass()
+                                            .getName(),
+                            e);
                 }
             });
         }
-        ThrowableUtil.delayError(runnables, "Caught errors while pausing extensions of the plugin: " +
-                descriptor.getId());
-        LOGGER.info("The plugin ({}) has been paused",
-                descriptor.getId());
+        ThrowableUtil.delayError(runnables,
+                "Caught errors while pausing extensions of the plugin: "
+                        + descriptor.getId());
+        LOGGER.info("The plugin ({}) has been paused", descriptor.getId());
     }
 
     abstract void closeContext();

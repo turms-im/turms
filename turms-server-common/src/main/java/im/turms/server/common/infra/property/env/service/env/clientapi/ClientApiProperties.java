@@ -17,16 +17,17 @@
 
 package im.turms.server.common.infra.property.env.service.env.clientapi;
 
-import im.turms.server.common.access.client.dto.request.TurmsRequest;
-import im.turms.server.common.infra.property.metadata.Description;
+import java.util.Collections;
+import java.util.Set;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
-import java.util.Collections;
-import java.util.Set;
+import im.turms.server.common.access.client.dto.request.TurmsRequest;
+import im.turms.server.common.infra.property.metadata.Description;
 
 /**
  * @author James Chen

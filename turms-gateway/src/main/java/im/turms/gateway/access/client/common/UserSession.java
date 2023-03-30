@@ -17,6 +17,21 @@
 
 package im.turms.gateway.access.client.common;
 
+import java.util.Collections;
+import java.util.Date;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
+import java.util.function.BiFunction;
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotNull;
+
+import io.netty.buffer.ByteBuf;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.Getter;
+import reactor.core.publisher.Mono;
+
 import im.turms.gateway.access.client.common.connection.NetConnection;
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
@@ -28,20 +43,6 @@ import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.random.RandomUtil;
 import im.turms.server.common.infra.tracing.TracingContext;
-import io.netty.buffer.ByteBuf;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.Getter;
-import reactor.core.publisher.Mono;
-
-import java.util.Collections;
-import java.util.Date;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
-import java.util.function.BiFunction;
-import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.NotNull;
 
 /**
  * @author James Chen
@@ -49,9 +50,8 @@ import jakarta.validation.constraints.NotNull;
 @Data
 public final class UserSession {
 
-    private static final AtomicIntegerFieldUpdater<UserSession>
-            IS_DELETE_SESSION_LOCK_ACQUIRED_UPDATER = AtomicIntegerFieldUpdater
-            .newUpdater(UserSession.class, "isDeleteSessionLockAcquired");
+    private static final AtomicIntegerFieldUpdater<UserSession> IS_DELETE_SESSION_LOCK_ACQUIRED_UPDATER =
+            AtomicIntegerFieldUpdater.newUpdater(UserSession.class, "isDeleteSessionLockAcquired");
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserSession.class);
 
@@ -63,28 +63,26 @@ public final class UserSession {
     private final Long userId;
     private final DeviceType deviceType;
     /**
-     * Mainly used for push notification and statistics.
-     * e.g. "deviceToken" and "registrationId".
+     * Mainly used for push notification and statistics. e.g. "deviceToken" and "registrationId".
      */
     private final Map<String, String> deviceDetails;
     private final Date loginDate;
     @Nullable
     private Location loginLocation;
     /**
-     * 1. Use {@link ByteBuf} instead of {@link TurmsNotification}
-     * so that turms-gateway can:
-     * a. Transfer data through zero copy without parsing (if SSL is disabled)
-     * b. Send the same ByteBuf without duplicating to multiple clients
-     * c. Decouple business logic from turms-service servers
-     * d. {@link ByteBuf} isn't {@link TurmsNotification} if the connection is UDP (will be supported in the future)
+     * 1. Use {@link ByteBuf} instead of {@link TurmsNotification} so that turms-gateway can: a.
+     * Transfer data through zero copy without parsing (if SSL is disabled) b. Send the same ByteBuf
+     * without duplicating to multiple clients c. Decouple business logic from turms-service servers
+     * d. {@link ByteBuf} isn't {@link TurmsNotification} if the connection is UDP (will be
+     * supported in the future)
      * <p>
      * 2. The ByteBuf (TurmsNotification) comes from turms-services servers in most scenarios.
      */
     @Getter(AccessLevel.PRIVATE)
     private BiFunction<ByteBuf, TracingContext, Mono<Void>> notificationConsumer;
     /**
-     * Only record the timestamp of the last heartbeat request,
-     * and do NOT record the timestamp of other types of requests
+     * Only record the timestamp of the last heartbeat request, and do NOT record the timestamp of
+     * other types of requests
      */
     private volatile long lastHeartbeatRequestTimestampMillis;
     /**
@@ -99,7 +97,8 @@ public final class UserSession {
      * Note that it is acceptable that the session is still open even if the connection is closed
      * because the client can send heartbeats over UDP to keep the session open
      *
-     * @implNote For better performance, it is acceptable for our scenarios to not update isSessionOpen atomically.
+     * @implNote For better performance, it is acceptable for our scenarios to not update
+     *           isSessionOpen atomically.
      */
     private volatile boolean isSessionOpen = true;
     /**
@@ -111,18 +110,21 @@ public final class UserSession {
     @Nullable
     private ByteArrayWrapper ip;
 
-    public UserSession(int version,
-                       Set<TurmsRequest.KindCase> permissions,
-                       Long userId,
-                       DeviceType loggingInDeviceType,
-                       @Nullable Map<String, String> deviceDetails,
-                       @Nullable Location loginLocation) {
+    public UserSession(
+            int version,
+            Set<TurmsRequest.KindCase> permissions,
+            Long userId,
+            DeviceType loggingInDeviceType,
+            @Nullable Map<String, String> deviceDetails,
+            @Nullable Location loginLocation) {
         Date now = new Date();
         this.version = version;
         this.permissions = permissions;
         this.userId = userId;
         this.deviceType = loggingInDeviceType;
-        this.deviceDetails = deviceDetails == null ? Collections.emptyMap() : deviceDetails;
+        this.deviceDetails = deviceDetails == null
+                ? Collections.emptyMap()
+                : deviceDetails;
         this.loginLocation = loginLocation;
         this.loginDate = now;
         this.lastHeartbeatRequestTimestampMillis = now.getTime();
@@ -186,16 +188,24 @@ public final class UserSession {
 
     @Override
     public String toString() {
-        return "UserSession{" +
-                "id=" + id +
-                ", version=" + version +
-                ", userId=" + userId +
-                ", deviceType=" + deviceType +
-                ", loginDate=" + loginDate +
-                ", loginLocation=" + loginLocation +
-                ", isSessionOpen=" + isSessionOpen +
-                ", connection=" + connection +
-                '}';
+        return "UserSession{"
+                + "id="
+                + id
+                + ", version="
+                + version
+                + ", userId="
+                + userId
+                + ", deviceType="
+                + deviceType
+                + ", loginDate="
+                + loginDate
+                + ", loginLocation="
+                + loginLocation
+                + ", isSessionOpen="
+                + isSessionOpen
+                + ", connection="
+                + connection
+                + '}';
     }
 
 }

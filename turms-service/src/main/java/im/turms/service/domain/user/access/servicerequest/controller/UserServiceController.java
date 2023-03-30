@@ -17,6 +17,16 @@
 
 package im.turms.service.domain.user.access.servicerequest.controller;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Controller;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.access.client.dto.ClientMessagePool;
 import im.turms.server.common.access.client.dto.constant.ProfileAccessStrategy;
 import im.turms.server.common.access.client.dto.constant.UserStatus;
@@ -54,15 +64,6 @@ import im.turms.service.domain.user.service.UserService;
 import im.turms.service.domain.user.service.onlineuser.NearbyUserService;
 import im.turms.service.domain.user.service.onlineuser.SessionService;
 import im.turms.service.infra.proto.ProtoModelConvertor;
-import org.springframework.stereotype.Controller;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_NEARBY_USERS_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_USER_ONLINE_STATUSES_REQUEST;
@@ -111,34 +112,44 @@ public class UserServiceController extends BaseServiceController {
     }
 
     private void updateProperties(TurmsProperties properties) {
-        notifyMembersAfterOtherMemberOnlineStatusUpdated = properties.getService().getNotification()
+        notifyMembersAfterOtherMemberOnlineStatusUpdated = properties.getService()
+                .getNotification()
                 .isNotifyMembersAfterOtherMemberOnlineStatusUpdated();
-        notifyRelatedUsersAfterOtherRelatedUserOnlineStatusUpdated = properties.getService().getNotification()
+        notifyRelatedUsersAfterOtherRelatedUserOnlineStatusUpdated = properties.getService()
+                .getNotification()
                 .isNotifyRelatedUsersAfterOtherRelatedUserOnlineStatusUpdated();
-        notifyRelatedUsersAfterOtherRelatedUserInfoUpdated = properties.getService().getNotification()
+        notifyRelatedUsersAfterOtherRelatedUserInfoUpdated = properties.getService()
+                .getNotification()
                 .isNotifyRelatedUsersAfterOtherRelatedUserInfoUpdated();
-        respondOfflineIfInvisible = properties.getService().getUser().isRespondOfflineIfInvisible();
+        respondOfflineIfInvisible = properties.getService()
+                .getUser()
+                .isRespondOfflineIfInvisible();
     }
 
     @ServiceRequestMapping(QUERY_USER_PROFILES_REQUEST)
     public ClientRequestHandler handleQueryUserProfilesRequest() {
         return clientRequest -> {
-            QueryUserProfilesRequest request = clientRequest.turmsRequest().getQueryUserProfilesRequest();
-            return userService.authAndQueryUsersProfile(
-                            clientRequest.userId(),
+            QueryUserProfilesRequest request = clientRequest.turmsRequest()
+                    .getQueryUserProfilesRequest();
+            return userService
+                    .authAndQueryUsersProfile(clientRequest.userId(),
                             CollectionUtil.toSet(request.getUserIdsList()),
                             request.hasLastUpdatedDate()
                                     ? new Date(request.getLastUpdatedDate())
                                     : null)
                     .map(users -> {
-                        UserInfosWithVersion.Builder userInfosWithVersionBuilder = ClientMessagePool.getUserInfosWithVersionBuilder();
+                        UserInfosWithVersion.Builder userInfosWithVersionBuilder =
+                                ClientMessagePool.getUserInfosWithVersionBuilder();
                         for (User user : users) {
-                            userInfosWithVersionBuilder.addUserInfos(ProtoModelConvertor.userProfile2proto(user).build());
+                            userInfosWithVersionBuilder
+                                    .addUserInfos(ProtoModelConvertor.userProfile2proto(user)
+                                            .build());
                         }
-                        return RequestHandlerResultFactory.get(ClientMessagePool
-                                .getTurmsNotificationDataBuilder()
-                                .setUserInfosWithVersion(userInfosWithVersionBuilder.build())
-                                .build());
+                        return RequestHandlerResultFactory
+                                .get(ClientMessagePool.getTurmsNotificationDataBuilder()
+                                        .setUserInfosWithVersion(
+                                                userInfosWithVersionBuilder.build())
+                                        .build());
                     });
         };
     }
@@ -146,11 +157,16 @@ public class UserServiceController extends BaseServiceController {
     @ServiceRequestMapping(QUERY_NEARBY_USERS_REQUEST)
     public ClientRequestHandler handleQueryNearbyUsersRequest() {
         return clientRequest -> {
-            QueryNearbyUsersRequest request = clientRequest.turmsRequest().getQueryNearbyUsersRequest();
-            Short maxCount = request.hasMaxCount() ? (short) request.getMaxCount() : null;
-            Integer maxDistance = request.hasMaxDistance() ? request.getMaxDistance() : null;
-            return nearbyUserService.queryNearbyUsers(
-                            clientRequest.userId(),
+            QueryNearbyUsersRequest request = clientRequest.turmsRequest()
+                    .getQueryNearbyUsersRequest();
+            Short maxCount = request.hasMaxCount()
+                    ? (short) request.getMaxCount()
+                    : null;
+            Integer maxDistance = request.hasMaxDistance()
+                    ? request.getMaxDistance()
+                    : null;
+            return nearbyUserService
+                    .queryNearbyUsers(clientRequest.userId(),
                             clientRequest.deviceType(),
                             request.getLongitude(),
                             request.getLatitude(),
@@ -165,12 +181,13 @@ public class UserServiceController extends BaseServiceController {
                         }
                         NearbyUsers.Builder builder = ClientMessagePool.getNearbyUsersBuilder();
                         for (NearbyUser nearbyUser : nearbyUsers) {
-                            builder.addNearbyUsers(ProtoModelConvertor.nearbyUser2proto(nearbyUser));
+                            builder.addNearbyUsers(
+                                    ProtoModelConvertor.nearbyUser2proto(nearbyUser));
                         }
-                        return RequestHandlerResultFactory.get(ClientMessagePool
-                                .getTurmsNotificationDataBuilder()
-                                .setNearbyUsers(builder.build())
-                                .build());
+                        return RequestHandlerResultFactory
+                                .get(ClientMessagePool.getTurmsNotificationDataBuilder()
+                                        .setNearbyUsers(builder.build())
+                                        .build());
                     });
         };
     }
@@ -178,11 +195,12 @@ public class UserServiceController extends BaseServiceController {
     @ServiceRequestMapping(QUERY_USER_ONLINE_STATUSES_REQUEST)
     public ClientRequestHandler handleQueryUserOnlineStatusesRequest() {
         return clientRequest -> {
-            QueryUserOnlineStatusesRequest request = clientRequest.turmsRequest().getQueryUserOnlineStatusesRequest();
+            QueryUserOnlineStatusesRequest request = clientRequest.turmsRequest()
+                    .getQueryUserOnlineStatusesRequest();
             if (request.getUserIdsCount() == 0) {
                 return Mono.empty();
             }
-            //TODO : Access Control
+            // TODO : Access Control
             List<Long> userIds = request.getUserIdsList();
             int size = userIds.size();
             List<Mono<Pair<Long, UserSessionsStatus>>> monos = new ArrayList<>(size);
@@ -193,18 +211,18 @@ public class UserServiceController extends BaseServiceController {
             return Flux.merge(monos)
                     .collect(CollectorUtil.toList(size))
                     .map(userIdAndSessionsStatusList -> {
-                        UserOnlineStatuses.Builder statusesBuilder = ClientMessagePool.getUsersOnlineStatusesBuilder();
+                        UserOnlineStatuses.Builder statusesBuilder =
+                                ClientMessagePool.getUsersOnlineStatusesBuilder();
                         for (Pair<Long, UserSessionsStatus> userIdAndSessionsStatus : userIdAndSessionsStatusList) {
                             statusesBuilder.addStatuses(ProtoModelConvertor
-                                    .userSessionsStatus2proto(
-                                            userIdAndSessionsStatus.first(),
+                                    .userSessionsStatus2proto(userIdAndSessionsStatus.first(),
                                             userIdAndSessionsStatus.second(),
                                             respondOfflineIfInvisible));
                         }
-                        return RequestHandlerResultFactory.get(ClientMessagePool
-                                .getTurmsNotificationDataBuilder()
-                                .setUserOnlineStatuses(statusesBuilder)
-                                .build());
+                        return RequestHandlerResultFactory
+                                .get(ClientMessagePool.getTurmsNotificationDataBuilder()
+                                        .setUserOnlineStatuses(statusesBuilder)
+                                        .build());
                     });
         };
     }
@@ -212,40 +230,45 @@ public class UserServiceController extends BaseServiceController {
     @ServiceRequestMapping(UPDATE_USER_LOCATION_REQUEST)
     public ClientRequestHandler handleUpdateUserLocationRequest() {
         return clientRequest -> {
-            UpdateUserLocationRequest request = clientRequest.turmsRequest().getUpdateUserLocationRequest();
-            Mono<Void> updateMono = sessionLocationService.upsertUserLocation(
-                    clientRequest.userId(),
-                    clientRequest.deviceType(),
-                    new Date(),
-                    request.getLongitude(),
-                    request.getLatitude());
+            UpdateUserLocationRequest request = clientRequest.turmsRequest()
+                    .getUpdateUserLocationRequest();
+            Mono<Void> updateMono =
+                    sessionLocationService.upsertUserLocation(clientRequest.userId(),
+                            clientRequest.deviceType(),
+                            new Date(),
+                            request.getLongitude(),
+                            request.getLatitude());
             return updateMono.thenReturn(RequestHandlerResultFactory.OK);
         };
     }
 
     /**
-     * Do not notify the user status change to somebodies like her/his related users.
-     * The client itself should query whether there is any user status changes according to your own
-     * business scenarios.
+     * Do not notify the user status change to somebodies like her/his related users. The client
+     * itself should query whether there is any user status changes according to your own business
+     * scenarios.
      */
     @ServiceRequestMapping(UPDATE_USER_ONLINE_STATUS_REQUEST)
     public ClientRequestHandler handleUpdateUserOnlineStatusRequest() {
         return clientRequest -> {
-            UpdateUserOnlineStatusRequest request = clientRequest.turmsRequest().getUpdateUserOnlineStatusRequest();
+            UpdateUserOnlineStatusRequest request = clientRequest.turmsRequest()
+                    .getUpdateUserOnlineStatusRequest();
             UserStatus userStatus = request.getUserStatus();
             if (userStatus == UserStatus.UNRECOGNIZED) {
-                return Mono.just(RequestHandlerResultFactory
-                        .get(ResponseStatusCode.ILLEGAL_ARGUMENT, "The user status must not be UNRECOGNIZED"));
+                return Mono
+                        .just(RequestHandlerResultFactory.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
+                                "The user status must not be UNRECOGNIZED"));
             }
             Mono<Boolean> updateMono;
             if (userStatus == UserStatus.OFFLINE) {
                 updateMono = request.getDeviceTypesCount() > 0
                         ? sessionService.disconnect(clientRequest.userId(),
-                        CollectionUtil.newSet(request.getDeviceTypesList()),
-                        SessionCloseStatus.DISCONNECTED_BY_OTHER_DEVICE)
-                        : sessionService.disconnect(clientRequest.userId(), SessionCloseStatus.DISCONNECTED_BY_OTHER_DEVICE);
+                                CollectionUtil.newSet(request.getDeviceTypesList()),
+                                SessionCloseStatus.DISCONNECTED_BY_OTHER_DEVICE)
+                        : sessionService.disconnect(clientRequest.userId(),
+                                SessionCloseStatus.DISCONNECTED_BY_OTHER_DEVICE);
             } else {
-                updateMono = userStatusService.updateOnlineUserStatusIfPresent(clientRequest.userId(), userStatus);
+                updateMono = userStatusService
+                        .updateOnlineUserStatusIfPresent(clientRequest.userId(), userStatus);
             }
             boolean notifyMembers = notifyMembersAfterOtherMemberOnlineStatusUpdated;
             boolean notifyRelatedUser = notifyRelatedUsersAfterOtherRelatedUserOnlineStatusUpdated;
@@ -253,14 +276,16 @@ public class UserServiceController extends BaseServiceController {
                 return updateMono.thenReturn(RequestHandlerResultFactory.OK);
             }
             Mono<Set<Long>> queryMemberIds = notifyMembers
-                    ? groupMemberService.queryMemberIdsInUsersJoinedGroups(Set.of(clientRequest.userId()), true)
+                    ? groupMemberService
+                            .queryMemberIdsInUsersJoinedGroups(Set.of(clientRequest.userId()), true)
                     : PublisherPool.emptySet();
             Mono<List<Long>> queryRelatedUserIds;
 
             Recyclable<List<Long>> recyclableList;
             if (notifyRelatedUser) {
                 recyclableList = ListRecycler.obtain();
-                queryRelatedUserIds = userRelationshipService.queryRelatedUserIds(Set.of(clientRequest.userId()), false)
+                queryRelatedUserIds = userRelationshipService
+                        .queryRelatedUserIds(Set.of(clientRequest.userId()), false)
                         .collect(Collectors.toCollection(recyclableList::getValue));
             } else {
                 recyclableList = null;
@@ -271,7 +296,8 @@ public class UserServiceController extends BaseServiceController {
                         Set<Long> recipients = CollectionUtil.add(results.getT1(), results.getT2());
                         return recipients.isEmpty()
                                 ? RequestHandlerResultFactory.OK
-                                : RequestHandlerResultFactory.get(recipients, clientRequest.turmsRequest());
+                                : RequestHandlerResultFactory.get(recipients,
+                                        clientRequest.turmsRequest());
                     })
                     .doFinally(signalType -> {
                         if (recyclableList != null) {
@@ -284,14 +310,23 @@ public class UserServiceController extends BaseServiceController {
     @ServiceRequestMapping(UPDATE_USER_REQUEST)
     public ClientRequestHandler handleUpdateUserRequest() {
         return clientRequest -> {
-            UpdateUserRequest request = clientRequest.turmsRequest().getUpdateUserRequest();
-            String password = request.hasPassword() ? request.getPassword() : null;
-            String name = request.hasName() ? request.getName() : null;
-            String intro = request.hasIntro() ? request.getIntro() : null;
-            String profilePicture = request.hasProfilePicture() ? request.getProfilePicture() : null;
+            UpdateUserRequest request = clientRequest.turmsRequest()
+                    .getUpdateUserRequest();
+            String password = request.hasPassword()
+                    ? request.getPassword()
+                    : null;
+            String name = request.hasName()
+                    ? request.getName()
+                    : null;
+            String intro = request.hasIntro()
+                    ? request.getIntro()
+                    : null;
+            String profilePicture = request.hasProfilePicture()
+                    ? request.getProfilePicture()
+                    : null;
             ProfileAccessStrategy profileAccessStrategy = request.getProfileAccessStrategy();
-            return userService.updateUser(
-                            clientRequest.userId(),
+            return userService
+                    .updateUser(clientRequest.userId(),
                             password,
                             name,
                             intro,
@@ -303,11 +338,14 @@ public class UserServiceController extends BaseServiceController {
                     .then(Mono.defer(() -> {
                         if (notifyRelatedUsersAfterOtherRelatedUserInfoUpdated) {
                             Recyclable<List<Long>> recyclableList = ListRecycler.obtain();
-                            return userRelationshipService.queryRelatedUserIds(Set.of(clientRequest.userId()), false)
+                            return userRelationshipService
+                                    .queryRelatedUserIds(Set.of(clientRequest.userId()), false)
                                     .collect(Collectors.toCollection(recyclableList::getValue))
                                     .map(relatedUserIds -> relatedUserIds.isEmpty()
                                             ? RequestHandlerResultFactory.OK
-                                            : RequestHandlerResultFactory.get(CollectionUtil.newSet(relatedUserIds), clientRequest.turmsRequest()))
+                                            : RequestHandlerResultFactory.get(
+                                                    CollectionUtil.newSet(relatedUserIds),
+                                                    clientRequest.turmsRequest()))
                                     .doFinally(signalType -> recyclableList.recycle());
                         }
                         return Mono.just(RequestHandlerResultFactory.OK);

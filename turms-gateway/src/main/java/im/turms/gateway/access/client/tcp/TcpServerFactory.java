@@ -17,6 +17,12 @@
 
 package im.turms.gateway.access.client.tcp;
 
+import jakarta.annotation.Nullable;
+
+import reactor.netty.Connection;
+import reactor.netty.DisposableServer;
+import reactor.netty.tcp.TcpServer;
+
 import im.turms.gateway.access.client.common.channel.ServiceAvailabilityHandler;
 import im.turms.gateway.access.client.common.connection.ConnectionListener;
 import im.turms.gateway.domain.session.service.SessionService;
@@ -31,11 +37,6 @@ import im.turms.server.common.infra.net.BindException;
 import im.turms.server.common.infra.net.SslUtil;
 import im.turms.server.common.infra.property.env.common.SslProperties;
 import im.turms.server.common.infra.property.env.gateway.TcpProperties;
-import reactor.netty.Connection;
-import reactor.netty.DisposableServer;
-import reactor.netty.tcp.TcpServer;
-
-import jakarta.annotation.Nullable;
 
 import static io.netty.channel.ChannelOption.CONNECT_TIMEOUT_MILLIS;
 import static io.netty.channel.ChannelOption.SO_BACKLOG;
@@ -52,13 +53,17 @@ public final class TcpServerFactory {
     }
 
     @Nullable
-    public static DisposableServer create(TcpProperties tcpProperties,
-                                          BlocklistService blocklistService,
-                                          ServerStatusManager serverStatusManager,
-                                          SessionService sessionService,
-                                          ConnectionListener connectionListener,
-                                          int maxFrameLength) {
-        ServiceAvailabilityHandler serviceAvailabilityHandler = new ServiceAvailabilityHandler(blocklistService, serverStatusManager, sessionService);
+    public static DisposableServer create(
+            TcpProperties tcpProperties,
+            BlocklistService blocklistService,
+            ServerStatusManager serverStatusManager,
+            SessionService sessionService,
+            ConnectionListener connectionListener,
+            int maxFrameLength) {
+        ServiceAvailabilityHandler serviceAvailabilityHandler = new ServiceAvailabilityHandler(
+                blocklistService,
+                serverStatusManager,
+                sessionService);
         String host = tcpProperties.getHost();
         int port = tcpProperties.getPort();
         TcpServer server = TcpServer.create()
@@ -74,33 +79,46 @@ public final class TcpServerFactory {
                 .childOption(TCP_NODELAY, true)
                 .wiretap(tcpProperties.isWiretap())
                 .runOn(LoopResourcesFactory.createForServer(ThreadNameConst.GATEWAY_TCP_PREFIX))
-                .metrics(true, () -> new TurmsMicrometerChannelMetricsRecorder(MetricNameConst.CLIENT_NETWORK, "tcp"))
+                .metrics(true,
+                        () -> new TurmsMicrometerChannelMetricsRecorder(
+                                MetricNameConst.CLIENT_NETWORK,
+                                "tcp"))
                 // Note that the elements from "in.receive()" is emitted by FluxReceive,
                 // which will release buffer after "onNext" returns
-                .handle((in, out) -> connectionListener.onAdded((Connection) in, false, in.receive(), out, ((Connection) in).onDispose()))
-                .doOnChannelInit((connectionObserver, channel, remoteAddress) ->
-                        channel.pipeline().addFirst("serviceAvailabilityHandler", serviceAvailabilityHandler))
+                .handle((in, out) -> connectionListener.onAdded((Connection) in,
+                        false,
+                        in.receive(),
+                        out,
+                        ((Connection) in).onDispose()))
+                .doOnChannelInit((connectionObserver, channel, remoteAddress) -> channel.pipeline()
+                        .addFirst("serviceAvailabilityHandler", serviceAvailabilityHandler))
                 .doOnConnection(connection -> {
                     // Inbound
-                    connection.addHandlerLast("varintLengthBasedFrameDecoder", CodecFactory.getExtendedVarintLengthBasedFrameDecoder(maxFrameLength));
+                    connection.addHandlerLast("varintLengthBasedFrameDecoder",
+                            CodecFactory.getExtendedVarintLengthBasedFrameDecoder(maxFrameLength));
 
                     // Outbound
-                    connection.addHandlerLast("varintLengthFieldPrepender", CodecFactory.getVarintLengthFieldPrepender());
+                    connection.addHandlerLast("varintLengthFieldPrepender",
+                            CodecFactory.getVarintLengthFieldPrepender());
                     // For advanced operations, they encode objects to buffers themselves,
                     // "protobufFrameEncoder" will just ignore them. But some simple
-                    // operations will pass TurmsNotification instances down, so we still need to encode them.
-                    connection.addHandlerLast("protobufFrameEncoder", CodecFactory.getProtobufFrameEncoder());
+                    // operations will pass TurmsNotification instances down, so we still need to
+                    // encode them.
+                    connection.addHandlerLast("protobufFrameEncoder",
+                            CodecFactory.getProtobufFrameEncoder());
                 });
         SslProperties ssl = tcpProperties.getSsl();
         if (ssl.isEnabled()) {
             server.secure(spec -> SslUtil.configureSslContextSpec(spec, ssl, true));
         }
         try {
-            return server
-                    .bind()
+            return server.bind()
                     .block();
         } catch (Exception e) {
-            String message = "Failed to bind the TCP server on: " + host + ":" + port;
+            String message = "Failed to bind the TCP server on: "
+                    + host
+                    + ":"
+                    + port;
             throw new BindException(message, e);
         }
     }

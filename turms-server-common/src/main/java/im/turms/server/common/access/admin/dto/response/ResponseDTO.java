@@ -17,11 +17,10 @@
 
 package im.turms.server.common.access.admin.dto.response;
 
-
-import im.turms.server.common.access.common.ResponseStatusCode;
-
 import java.util.Date;
 import jakarta.annotation.Nullable;
+
+import im.turms.server.common.access.common.ResponseStatusCode;
 
 /**
  * @author James Chen
@@ -35,35 +34,38 @@ public record ResponseDTO<T>(
 ) {
 
     public ResponseDTO(ResponseStatusCode responseStatusCode) {
-        this(responseStatusCode.getBusinessCode(),
-                responseStatusCode.getReason(),
-                null,
-                new Date(),
-                null);
+        this(responseStatusCode
+                .getBusinessCode(), responseStatusCode.getReason(), null, new Date(), null);
     }
 
     public ResponseDTO(ResponseStatusCode responseStatusCode, @Nullable String reason) {
         this(responseStatusCode.getBusinessCode(),
-                reason == null ? responseStatusCode.getReason() : reason,
+                reason == null
+                        ? responseStatusCode.getReason()
+                        : reason,
                 null,
                 new Date(),
                 null);
     }
 
-    public ResponseDTO(ResponseStatusCode responseStatusCode, @Nullable String reason, @Nullable Throwable throwable) {
+    public ResponseDTO(
+            ResponseStatusCode responseStatusCode,
+            @Nullable String reason,
+            @Nullable Throwable throwable) {
         this(responseStatusCode.getBusinessCode(),
-                reason == null ? responseStatusCode.getReason() : reason,
-                throwable == null ? null : throwable.toString(),
+                reason == null
+                        ? responseStatusCode.getReason()
+                        : reason,
+                throwable == null
+                        ? null
+                        : throwable.toString(),
                 new Date(),
                 null);
     }
 
     public ResponseDTO(ResponseStatusCode responseStatusCode, @Nullable T data) {
-        this(responseStatusCode.getBusinessCode(),
-                responseStatusCode.getReason(),
-                null,
-                new Date(),
-                data);
+        this(responseStatusCode
+                .getBusinessCode(), responseStatusCode.getReason(), null, new Date(), data);
     }
 
 }

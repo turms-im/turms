@@ -17,19 +17,20 @@
 
 package im.turms.server.common.infra.cluster.service.config.entity.discovery;
 
+import java.util.Date;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.FieldNameConstants;
+
 import im.turms.server.common.infra.cluster.node.NodeType;
 import im.turms.server.common.infra.cluster.node.NodeVersion;
 import im.turms.server.common.storage.mongo.entity.annotation.Document;
 import im.turms.server.common.storage.mongo.entity.annotation.Id;
 import im.turms.server.common.storage.mongo.entity.annotation.Indexed;
 import im.turms.server.common.storage.mongo.entity.annotation.PersistenceConstructor;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.experimental.FieldNameConstants;
-
-import java.util.Date;
 
 /**
  * @author James Chen
@@ -40,12 +41,22 @@ import java.util.Date;
 @FieldNameConstants
 public final class Member {
 
-    public static final String ID_CLUSTER_ID = "_id." + Key.Fields.clusterId;
-    public static final String ID_NODE_ID = "_id." + Key.Fields.nodeId;
-    public static final String STATUS_HAS_JOINED_CLUSTER = Fields.status + "." + MemberStatus.Fields.hasJoinedCluster;
-    public static final String STATUS_IS_ACTIVE = Fields.status + "." + MemberStatus.Fields.isActive;
-    public static final String STATUS_IS_HEALTHY = Fields.status + "." + MemberStatus.Fields.isHealthy;
-    public static final String STATUS_LAST_HEARTBEAT_DATE = Fields.status + "." + MemberStatus.Fields.lastHeartbeatDate;
+    public static final String ID_CLUSTER_ID = "_id."
+            + Key.Fields.clusterId;
+    public static final String ID_NODE_ID = "_id."
+            + Key.Fields.nodeId;
+    public static final String STATUS_HAS_JOINED_CLUSTER = Fields.status
+            + "."
+            + MemberStatus.Fields.hasJoinedCluster;
+    public static final String STATUS_IS_ACTIVE = Fields.status
+            + "."
+            + MemberStatus.Fields.isActive;
+    public static final String STATUS_IS_HEALTHY = Fields.status
+            + "."
+            + MemberStatus.Fields.isHealthy;
+    public static final String STATUS_LAST_HEARTBEAT_DATE = Fields.status
+            + "."
+            + MemberStatus.Fields.lastHeartbeatDate;
 
     @Id
     @EqualsAndHashCode.Include
@@ -58,9 +69,9 @@ public final class Member {
     private final NodeType nodeType;
 
     /**
-     * For a seed member, it won't be removed from the config server when the TTL (60s) expires
-     * (TTL should be always longer than the heartbeat timeout).
-     * Otherwise, the record will be removed automatically when the TTL expires.
+     * For a seed member, it won't be removed from the config server when the TTL (60s) expires (TTL
+     * should be always longer than the heartbeat timeout). Otherwise, the record will be removed
+     * automatically when the TTL expires.
      */
     private boolean isSeed;
 
@@ -72,12 +83,11 @@ public final class Member {
     private boolean isLeaderEligible;
 
     /**
-     * The priority to be a leader.
-     * 1. When there is no leader, a qualified (active, leader-eligible, and nodeType=SERVICE) member
-     * with the highest priority will be selected as a leader.
-     * 2. When there is a leader, even if a new qualified member with a higher priority joins,
-     * the new member will NOT be elected as a new leader immediately until the existing leader dies,
-     * or a developer triggers a new leader election manually via admin API.
+     * The priority to be a leader. 1. When there is no leader, a qualified (active,
+     * leader-eligible, and nodeType=SERVICE) member with the highest priority will be selected as a
+     * leader. 2. When there is a leader, even if a new qualified member with a higher priority
+     * joins, the new member will NOT be elected as a new leader immediately until the existing
+     * leader dies, or a developer triggers a new leader election manually via admin API.
      */
     private int priority;
 
@@ -258,9 +268,8 @@ public final class Member {
     public static class MemberStatus {
 
         /**
-         * True if the last heartbeat has not timed out.
-         * hasJoinedCluster only works as an indicator for node status,
-         * and it can still handle client requests even if it is false.
+         * True if the last heartbeat has not timed out. hasJoinedCluster only works as an indicator
+         * for node status, and it can still handle client requests even if it is false.
          */
         private boolean hasJoinedCluster;
 
@@ -270,17 +279,20 @@ public final class Member {
         private boolean isHealthy;
 
         /**
-         * If a node isn't active, it cannot handle client requests.
-         * Developer can update the value via admin API.
-         * Useful for blue-green deployment.
+         * If a node isn't active, it cannot handle client requests. Developer can update the value
+         * via admin API. Useful for blue-green deployment.
          */
         private boolean isActive;
 
         /**
-         * Note that the TTL index isn't the heartbeat timeout but is only used to make sure
-         * the record can be removed automatically even if the turms server crashes
+         * Note that the TTL index isn't the heartbeat timeout but is only used to make sure the
+         * record can be removed automatically even if the turms server crashes
          */
-        @Indexed(partialFilter = "{" + Member.Fields.isSeed + ":{$eq:false}}", expireAfterSeconds = 60)
+        @Indexed(
+                partialFilter = "{"
+                        + Member.Fields.isSeed
+                        + ":{$eq:false}}",
+                expireAfterSeconds = 60)
         private volatile Date lastHeartbeatDate;
     }
 

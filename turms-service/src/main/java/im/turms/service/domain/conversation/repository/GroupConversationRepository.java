@@ -17,20 +17,21 @@
 
 package im.turms.service.domain.conversation.repository;
 
+import java.util.Collection;
+import java.util.Date;
+
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.reactivestreams.client.ClientSession;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.domain.common.repository.BaseRepository;
 import im.turms.server.common.storage.mongo.DomainFieldName;
 import im.turms.server.common.storage.mongo.TurmsMongoClient;
 import im.turms.server.common.storage.mongo.operation.option.Filter;
 import im.turms.server.common.storage.mongo.operation.option.Update;
 import im.turms.service.domain.conversation.po.GroupConversation;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Repository;
-import reactor.core.publisher.Mono;
-
-import java.util.Collection;
-import java.util.Date;
 
 /**
  * @author James Chen
@@ -38,14 +39,23 @@ import java.util.Date;
 @Repository
 public class GroupConversationRepository extends BaseRepository<GroupConversation, Long> {
 
-    public GroupConversationRepository(@Qualifier("conversationMongoClient") TurmsMongoClient mongoClient) {
+    public GroupConversationRepository(
+            @Qualifier("conversationMongoClient") TurmsMongoClient mongoClient) {
         super(mongoClient, GroupConversation.class);
     }
 
-    public Mono<Void> upsert(Long groupId, Long memberId, Date readDate, boolean allowMoveReadDateForward) {
-        Filter filter = Filter.newBuilder(allowMoveReadDateForward ? 1 : 2)
+    public Mono<Void> upsert(
+            Long groupId,
+            Long memberId,
+            Date readDate,
+            boolean allowMoveReadDateForward) {
+        Filter filter = Filter.newBuilder(allowMoveReadDateForward
+                ? 1
+                : 2)
                 .eq(DomainFieldName.ID, groupId);
-        String fieldKey = GroupConversation.Fields.MEMBER_ID_TO_READ_DATE + "." + memberId;
+        String fieldKey = GroupConversation.Fields.MEMBER_ID_TO_READ_DATE
+                + "."
+                + memberId;
         if (!allowMoveReadDateForward) {
             // Only update if no existing date or the existing date is before readDate
             filter.ltOrNull(fieldKey, readDate);
@@ -60,18 +70,25 @@ public class GroupConversationRepository extends BaseRepository<GroupConversatio
                 .eq(DomainFieldName.ID, groupId);
         Update update = Update.newBuilder(memberIds.size());
         for (long memberId : memberIds) {
-            String fieldKey = GroupConversation.Fields.MEMBER_ID_TO_READ_DATE + "." + memberId;
+            String fieldKey = GroupConversation.Fields.MEMBER_ID_TO_READ_DATE
+                    + "."
+                    + memberId;
             // Ignore isAllowMoveReadDateForward()
             update.set(fieldKey, readDate);
         }
         return mongoClient.upsert(entityClass, filter, update);
     }
 
-    public Mono<UpdateResult> deleteMemberConversations(Collection<Long> groupIds, Long memberId, ClientSession session) {
+    public Mono<UpdateResult> deleteMemberConversations(
+            Collection<Long> groupIds,
+            Long memberId,
+            ClientSession session) {
         Filter filter = Filter.newBuilder(1)
                 .in(DomainFieldName.ID, groupIds);
         Update update = Update.newBuilder(1)
-                .unset(GroupConversation.Fields.MEMBER_ID_TO_READ_DATE + "." + memberId);
+                .unset(GroupConversation.Fields.MEMBER_ID_TO_READ_DATE
+                        + "."
+                        + memberId);
         return mongoClient.updateMany(session, entityClass, filter, update);
     }
 

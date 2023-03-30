@@ -17,9 +17,23 @@
 
 package im.turms.service.domain.user.service;
 
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
+
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.reactivestreams.client.ClientSession;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.access.client.dto.ClientMessagePool;
 import im.turms.server.common.access.client.dto.model.common.LongsWithVersion;
 import im.turms.server.common.access.client.dto.model.user.UserRelationshipsWithVersion;
@@ -45,19 +59,6 @@ import im.turms.service.domain.user.repository.UserRelationshipRepository;
 import im.turms.service.infra.proto.ProtoModelConvertor;
 import im.turms.service.infra.validation.ValidUserRelationshipKey;
 import im.turms.service.storage.mongo.OperationResultPublisherPool;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PastOrPresent;
 
 import static im.turms.server.common.domain.user.constant.UserConst.DEFAULT_RELATIONSHIP_GROUP_INDEX;
 import static im.turms.service.storage.mongo.MongoOperationConst.TRANSACTION_RETRY;
@@ -97,19 +98,28 @@ public class UserRelationshipService {
         if (updateRelationshipsVersion) {
             if (session == null) {
                 return userRelationshipRepository
-                        .inTransaction(newSession -> userRelationshipRepository.deleteAllRelationships(userIds, newSession)
-                                .flatMap(result -> userVersionService.updateRelationshipsVersion(userIds, newSession)
+                        .inTransaction(newSession -> userRelationshipRepository
+                                .deleteAllRelationships(userIds, newSession)
+                                .flatMap(result -> userVersionService
+                                        .updateRelationshipsVersion(userIds, newSession)
                                         .onErrorResume(t -> {
-                                            LOGGER.error("Caught an error while updating the relationships version of the users {} after deleting all relationships", userIds, t);
+                                            LOGGER.error(
+                                                    "Caught an error while updating the relationships version of the users {} after deleting all relationships",
+                                                    userIds,
+                                                    t);
                                             return Mono.empty();
                                         })
                                         .thenReturn(result)))
                         .retryWhen(TRANSACTION_RETRY);
             }
             return userRelationshipRepository.deleteAllRelationships(userIds, session)
-                    .flatMap(result -> userVersionService.updateRelationshipsVersion(userIds, session)
+                    .flatMap(result -> userVersionService
+                            .updateRelationshipsVersion(userIds, session)
                             .onErrorResume(t -> {
-                                LOGGER.error("Caught an error while updating the relationships version of the users {} after deleting all relationships", userIds, t);
+                                LOGGER.error(
+                                        "Caught an error while updating the relationships version of the users {} after deleting all relationships",
+                                        userIds,
+                                        t);
                                 return Mono.empty();
                             })
                             .thenReturn(result));
@@ -117,7 +127,8 @@ public class UserRelationshipService {
         return userRelationshipRepository.deleteAllRelationships(userIds, session);
     }
 
-    public Mono<DeleteResult> deleteOneSidedRelationships(@NotEmpty Set<UserRelationship.@ValidUserRelationshipKey Key> keys) {
+    public Mono<DeleteResult> deleteOneSidedRelationships(
+            @NotEmpty Set<UserRelationship.@ValidUserRelationshipKey Key> keys) {
         try {
             Validator.notEmpty(keys, "keys");
             for (UserRelationship.Key key : keys) {
@@ -132,11 +143,14 @@ public class UserRelationshipService {
         }
         return userRelationshipRepository
                 .inTransaction(session -> userRelationshipRepository.deleteByIds(keys, session)
-                        .flatMap(result -> userRelationshipGroupService.deleteRelatedUsersFromAllRelationshipGroups(keys, session, true)
+                        .flatMap(result -> userRelationshipGroupService
+                                .deleteRelatedUsersFromAllRelationshipGroups(keys, session, true)
                                 .then(userVersionService.updateRelationshipsVersion(ownerIds, null)
                                         .onErrorResume(t -> {
-                                            LOGGER.error("Caught an error while updating relationships version of the group owners {} after deleting their relationships",
-                                                    ownerIds, t);
+                                            LOGGER.error(
+                                                    "Caught an error while updating relationships version of the group owners {} after deleting their relationships",
+                                                    ownerIds,
+                                                    t);
                                             return Mono.empty();
                                         }))
                                 .thenReturn(result)))
@@ -154,22 +168,27 @@ public class UserRelationshipService {
             return Mono.error(e);
         }
         if (session == null) {
-            return userRelationshipRepository
-                    .inTransaction(newSession -> deleteOneSidedRelationship(ownerId, relatedUserId, newSession))
+            return userRelationshipRepository.inTransaction(
+                    newSession -> deleteOneSidedRelationship(ownerId, relatedUserId, newSession))
                     .retryWhen(TRANSACTION_RETRY);
         }
         UserRelationship.Key key = new UserRelationship.Key(ownerId, relatedUserId);
         return userRelationshipRepository.deleteById(key)
                 .then(userRelationshipGroupService.deleteRelatedUserFromAllRelationshipGroups(
-                        ownerId, relatedUserId, session, false))
-                .then(userVersionService.updateSpecificVersion(
-                                ownerId,
+                        ownerId,
+                        relatedUserId,
+                        session,
+                        false))
+                .then(userVersionService
+                        .updateSpecificVersion(ownerId,
                                 session,
                                 UserVersion.Fields.RELATIONSHIP_GROUP_MEMBERS,
                                 UserVersion.Fields.RELATIONSHIPS)
                         .onErrorResume(t -> {
-                            LOGGER.error("Caught an error while updating the relationships version and relationships group members version of the owner ({}) after deleting a relationship",
-                                    ownerId, t);
+                            LOGGER.error(
+                                    "Caught an error while updating the relationships version and relationships group members version of the owner ({}) after deleting a relationship",
+                                    ownerId,
+                                    t);
                             return Mono.empty();
                         }))
                 .then();
@@ -184,7 +203,8 @@ public class UserRelationshipService {
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        return userRelationshipRepository.inTransaction(session -> deleteOneSidedRelationship(userOneId, userTwoId, session)
+        return userRelationshipRepository
+                .inTransaction(session -> deleteOneSidedRelationship(userOneId, userTwoId, session)
                         .then(deleteOneSidedRelationship(userTwoId, userOneId, session))
                         .then())
                 .retryWhen(TRANSACTION_RETRY);
@@ -207,8 +227,7 @@ public class UserRelationshipService {
                                 if (ids.isEmpty()) {
                                     throw ResponseException.get(ResponseStatusCode.NO_CONTENT);
                                 }
-                                return ClientMessagePool
-                                        .getLongsWithVersionBuilder()
+                                return ClientMessagePool.getLongsWithVersionBuilder()
                                         .setLastUpdatedDate(date.getTime())
                                         .addAllLongs(ids)
                                         .build();
@@ -230,24 +249,19 @@ public class UserRelationshipService {
                         return ResponseExceptionPublisherPool.alreadyUpToUpdate();
                     }
                     Recyclable<Set<UserRelationship>> recyclableSet = SetRecycler.obtain();
-                    return queryRelationships(
-                            Set.of(ownerId),
-                            relatedUserIds,
-                            groupIndexes,
-                            isBlocked,
-                            null,
-                            null,
-                            null)
+                    return queryRelationships(Set
+                            .of(ownerId), relatedUserIds, groupIndexes, isBlocked, null, null, null)
                             .collect(Collectors.toCollection(recyclableSet::getValue))
                             .map(relationships -> {
                                 if (relationships.isEmpty()) {
                                     throw ResponseException.get(ResponseStatusCode.NO_CONTENT);
                                 }
-                                UserRelationshipsWithVersion.Builder builder = ClientMessagePool
-                                        .getUserRelationshipsWithVersionBuilder()
-                                        .setLastUpdatedDate(date.getTime());
+                                UserRelationshipsWithVersion.Builder builder =
+                                        ClientMessagePool.getUserRelationshipsWithVersionBuilder()
+                                                .setLastUpdatedDate(date.getTime());
                                 for (UserRelationship relationship : relationships) {
-                                    builder.addUserRelationships(ProtoModelConvertor.relationship2proto(relationship));
+                                    builder.addUserRelationships(
+                                            ProtoModelConvertor.relationship2proto(relationship));
                                 }
                                 return builder.build();
                             })
@@ -274,9 +288,9 @@ public class UserRelationshipService {
                     .collect(Collectors.toCollection(recyclableList1::getValue));
             Mono<List<Long>> queryRelatedUserIds = queryRelatedUserIds(ownerIds, isBlocked)
                     .collect(Collectors.toCollection(recyclableList2::getValue));
-            return Mono
-                    .zip(queryRelationshipGroupMemberIds, queryRelatedUserIds)
-                    .flatMapMany(tuple -> Flux.fromIterable(CollectionUtil.newSet(tuple.getT1(), tuple.getT2())))
+            return Mono.zip(queryRelationshipGroupMemberIds, queryRelatedUserIds)
+                    .flatMapMany(tuple -> Flux
+                            .fromIterable(CollectionUtil.newSet(tuple.getT1(), tuple.getT2())))
                     .doFinally(signalType -> {
                         recyclableList1.recycle();
                         recyclableList2.recycle();
@@ -285,7 +299,8 @@ public class UserRelationshipService {
         if (groupIndexes == null) {
             return queryRelatedUserIds(ownerIds, isBlocked);
         }
-        return userRelationshipGroupService.queryRelationshipGroupMemberIds(ownerIds, groupIndexes, null, null);
+        return userRelationshipGroupService
+                .queryRelationshipGroupMemberIds(ownerIds, groupIndexes, null, null);
     }
 
     private Flux<UserRelationship> queryRelationships(
@@ -312,25 +327,37 @@ public class UserRelationshipService {
             @Nullable Integer page,
             @Nullable Integer size) {
         boolean queryByGroupIndexes = groupIndexes != null;
-        boolean queryByRelationshipInfo = relatedUserIds != null || isBlocked != null || establishmentDateRange != null;
+        boolean queryByRelationshipInfo =
+                relatedUserIds != null || isBlocked != null || establishmentDateRange != null;
         if (queryByGroupIndexes && queryByRelationshipInfo) {
             if (relatedUserIds != null && relatedUserIds.isEmpty()) {
                 return Flux.empty();
             }
             Recyclable<Set<Long>> recyclableSet = SetRecycler.obtain();
-            return userRelationshipGroupService.queryRelationshipGroupMemberIds(ownerIds, groupIndexes, null, null)
+            return userRelationshipGroupService
+                    .queryRelationshipGroupMemberIds(ownerIds, groupIndexes, null, null)
                     .collect(Collectors.toCollection(recyclableSet::getValue))
                     .flatMapMany(userIds -> {
                         if (relatedUserIds != null) {
                             userIds.retainAll(relatedUserIds);
                         }
-                        return queryRelationships(ownerIds, userIds, isBlocked, establishmentDateRange, page, size);
+                        return queryRelationships(ownerIds,
+                                userIds,
+                                isBlocked,
+                                establishmentDateRange,
+                                page,
+                                size);
                     })
                     .doFinally(signalType -> recyclableSet.recycle());
         } else if (queryByGroupIndexes) {
             return queryMembersRelationships(ownerIds, groupIndexes, page, size);
         }
-        return queryRelationships(ownerIds, relatedUserIds, isBlocked, establishmentDateRange, page, size);
+        return queryRelationships(ownerIds,
+                relatedUserIds,
+                isBlocked,
+                establishmentDateRange,
+                page,
+                size);
     }
 
     public Flux<UserRelationship> queryMembersRelationships(
@@ -345,7 +372,8 @@ public class UserRelationshipService {
                     if (relatedUserIds.isEmpty()) {
                         return Flux.empty();
                     }
-                    return userRelationshipRepository.findRelationships(ownerIds, relatedUserIds, page, size);
+                    return userRelationshipRepository
+                            .findRelationships(ownerIds, relatedUserIds, page, size);
                 })
                 .doFinally(signalType -> recyclableSet.recycle());
     }
@@ -362,7 +390,8 @@ public class UserRelationshipService {
                 return Mono.just(0L);
             }
             Recyclable<Set<Long>> recyclableSet = SetRecycler.obtain();
-            return userRelationshipGroupService.queryRelationshipGroupMemberIds(ownerIds, groupIndexes, null, null)
+            return userRelationshipGroupService
+                    .queryRelationshipGroupMemberIds(ownerIds, groupIndexes, null, null)
                     .collect(Collectors.toCollection(recyclableSet::getValue))
                     .flatMap(userIds -> {
                         if (relatedUserIds != null) {
@@ -372,7 +401,8 @@ public class UserRelationshipService {
                     })
                     .doFinally(signalType -> recyclableSet.recycle());
         } else if (queryByGroupIndexes) {
-            return userRelationshipGroupService.countRelationshipGroupMembers(ownerIds, groupIndexes);
+            return userRelationshipGroupService.countRelationshipGroupMembers(ownerIds,
+                    groupIndexes);
         }
         return countRelationships(ownerIds, relatedUserIds, isBlocked);
     }
@@ -391,20 +421,34 @@ public class UserRelationshipService {
         try {
             Validator.notNull(userOneId, "userOneId");
             Validator.notNull(userTwoId, "userTwoId");
-            Validator.notEquals(userOneId, userTwoId, "The ID of user one must not equal to the ID of user two");
+            Validator.notEquals(userOneId,
+                    userTwoId,
+                    "The ID of user one must not equal to the ID of user two");
         } catch (ResponseException e) {
             return Mono.error(e);
         }
         Date now = new Date();
         if (session == null) {
-            return userRelationshipRepository.inTransaction(newSession -> friendTwoUsers(userOneId, userTwoId, newSession))
+            return userRelationshipRepository
+                    .inTransaction(newSession -> friendTwoUsers(userOneId, userTwoId, newSession))
                     .retryWhen(TRANSACTION_RETRY);
         }
-        return upsertOneSidedRelationship(
-                userOneId, userTwoId, null,
-                DEFAULT_RELATIONSHIP_GROUP_INDEX, null, now, true, session)
-                .then(upsertOneSidedRelationship(userTwoId, userOneId, null,
-                        DEFAULT_RELATIONSHIP_GROUP_INDEX, null, now, true, session))
+        return upsertOneSidedRelationship(userOneId,
+                userTwoId,
+                null,
+                DEFAULT_RELATIONSHIP_GROUP_INDEX,
+                null,
+                now,
+                true,
+                session)
+                .then(upsertOneSidedRelationship(userTwoId,
+                        userOneId,
+                        null,
+                        DEFAULT_RELATIONSHIP_GROUP_INDEX,
+                        null,
+                        now,
+                        true,
+                        session))
                 .then(PublisherPool.TRUE);
     }
 
@@ -423,16 +467,29 @@ public class UserRelationshipService {
             Validator.pastOrPresent(blockDate, "blockDate");
             Validator.pastOrPresent(establishmentDate, "establishmentDate");
             Validator.notNull(upsert, "upsert");
-            Validator.notEquals(ownerId, relatedUserId, "The owner ID must not equal to the related user ID");
+            Validator.notEquals(ownerId,
+                    relatedUserId,
+                    "The owner ID must not equal to the related user ID");
         } catch (ResponseException e) {
             return Mono.error(e);
         }
         // Notes:
-        // 1. It is unnecessary to check whether the requester is in the blocklist of the related user
+        // 1. It is unnecessary to check whether the requester is in the blocklist of the related
+        // user
         // because only a one-sided relationship will be created here
-        // 2. Upsert relationship first to ensure that the relationship exists before "upsertRelationshipGroupMember"
-        return upsertOneSidedRelationship(ownerId, relatedUserId, blockDate, establishmentDate, upsert, session)
-                .then(userRelationshipGroupService.upsertRelationshipGroupMember(ownerId, relatedUserId, newGroupIndex, deleteGroupIndex, session));
+        // 2. Upsert relationship first to ensure that the relationship exists before
+        // "upsertRelationshipGroupMember"
+        return upsertOneSidedRelationship(ownerId,
+                relatedUserId,
+                blockDate,
+                establishmentDate,
+                upsert,
+                session)
+                .then(userRelationshipGroupService.upsertRelationshipGroupMember(ownerId,
+                        relatedUserId,
+                        newGroupIndex,
+                        deleteGroupIndex,
+                        session));
     }
 
     private Mono<Void> upsertOneSidedRelationship(
@@ -445,12 +502,14 @@ public class UserRelationshipService {
         if (establishmentDate == null) {
             establishmentDate = new Date();
         }
-        UserRelationship userRelationship = new UserRelationship(ownerId, relatedUserId, blockDate, establishmentDate);
+        UserRelationship userRelationship =
+                new UserRelationship(ownerId, relatedUserId, blockDate, establishmentDate);
         return upsert
                 ? userRelationshipRepository.upsert(userRelationship, session)
                 : userRelationshipRepository.insert(userRelationship, session)
-                .onErrorMap(DuplicateKeyException.class,
-                        e -> ResponseException.get(ResponseStatusCode.CREATE_EXISTING_RELATIONSHIP));
+                        .onErrorMap(DuplicateKeyException.class,
+                                e -> ResponseException
+                                        .get(ResponseStatusCode.CREATE_EXISTING_RELATIONSHIP));
     }
 
     public Mono<Boolean> isBlocked(@NotNull Long ownerId, @NotNull Long relatedUserId) {
@@ -463,12 +522,15 @@ public class UserRelationshipService {
         return userRelationshipRepository.isBlocked(ownerId, relatedUserId);
     }
 
-    public Mono<Boolean> hasNoRelationshipOrNotBlocked(@NotNull Long ownerId, @NotNull Long relatedUserId) {
-        return isBlocked(ownerId, relatedUserId)
-                .map(isBlocked -> !isBlocked);
+    public Mono<Boolean> hasNoRelationshipOrNotBlocked(
+            @NotNull Long ownerId,
+            @NotNull Long relatedUserId) {
+        return isBlocked(ownerId, relatedUserId).map(isBlocked -> !isBlocked);
     }
 
-    public Mono<Boolean> hasRelationshipAndNotBlocked(@NotNull Long ownerId, @NotNull Long relatedUserId) {
+    public Mono<Boolean> hasRelationshipAndNotBlocked(
+            @NotNull Long ownerId,
+            @NotNull Long relatedUserId) {
         try {
             Validator.notNull(ownerId, "ownerId");
             Validator.notNull(relatedUserId, "relatedUserId");
@@ -498,13 +560,16 @@ public class UserRelationshipService {
         if (Validator.areAllNull(blockDate, establishmentDate)) {
             return OperationResultPublisherPool.ACKNOWLEDGED_UPDATE_RESULT;
         }
-        return userRelationshipRepository.updateUserOneSidedRelationships(keys, blockDate, establishmentDate)
+        return userRelationshipRepository
+                .updateUserOneSidedRelationships(keys, blockDate, establishmentDate)
                 .flatMap(result -> {
                     if (result.getModifiedCount() > 0) {
                         return userVersionService.updateRelationshipsVersion(ownerIds, null)
                                 .onErrorResume(t -> {
-                                    LOGGER.error("Caught an error while updating the relationships version of the owners {} after updating their relationships",
-                                            ownerIds, t);
+                                    LOGGER.error(
+                                            "Caught an error while updating the relationships version of the owners {} after updating their relationships",
+                                            ownerIds,
+                                            t);
                                     return Mono.empty();
                                 })
                                 .thenReturn(result);
@@ -519,7 +584,9 @@ public class UserRelationshipService {
         try {
             Validator.notNull(ownerId, "ownerId");
             Validator.notNull(relatedUserId, "relatedUserId");
-            Validator.notEquals(ownerId, relatedUserId, "The owner ID must not equal to the related user ID");
+            Validator.notEquals(ownerId,
+                    relatedUserId,
+                    "The owner ID must not equal to the related user ID");
         } catch (ResponseException e) {
             return Mono.error(e);
         }

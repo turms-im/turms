@@ -17,15 +17,16 @@
 
 package im.turms.server.common.infra.property;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectReader;
-import im.turms.server.common.infra.collection.CollectionUtil;
-import im.turms.server.common.infra.logging.core.logger.Logger;
-import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
-
 import java.io.IOException;
 import java.util.Map;
 import jakarta.annotation.Nullable;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectReader;
+
+import im.turms.server.common.infra.collection.CollectionUtil;
+import im.turms.server.common.infra.logging.core.logger.Logger;
+import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 
 import static im.turms.server.common.infra.json.JsonCodecPool.MAPPER;
 import static im.turms.server.common.infra.property.TurmsPropertiesInspector.MUTABLE_PROPERTIES_WRITER;
@@ -44,31 +45,42 @@ public class TurmsPropertiesConvertor {
     // Validate
 
     @Nullable
-    public static InvalidPropertyException validatePropertiesForUpdating(Object properties,
-                                                                         Map<String, Object> propertiesForUpdating) {
+    public static InvalidPropertyException validatePropertiesForUpdating(
+            Object properties,
+            Map<String, Object> propertiesForUpdating) {
         return validatePropertiesForUpdating(properties, propertiesForUpdating, null);
     }
 
     @Nullable
-    private static InvalidPropertyException validatePropertiesForUpdating(Object properties,
-                                                                          Map<String, Object> propertiesForUpdating,
-                                                                          @Nullable String parentFieldPath) {
+    private static InvalidPropertyException validatePropertiesForUpdating(
+            Object properties,
+            Map<String, Object> propertiesForUpdating,
+            @Nullable String parentFieldPath) {
         for (Map.Entry<String, Object> entry : propertiesForUpdating.entrySet()) {
             String fieldName = entry.getKey();
-            String fieldPath = parentFieldPath == null ? fieldName : parentFieldPath + "." + fieldName;
+            String fieldPath = parentFieldPath == null
+                    ? fieldName
+                    : parentFieldPath
+                            + "."
+                            + fieldName;
             PropertyFieldInfo fieldInfo = getFieldInfo(properties.getClass(), fieldName);
             if (fieldInfo == null) {
-                return new InvalidPropertyException("Nonexistent property: " + fieldPath);
+                return new InvalidPropertyException(
+                        "Nonexistent property: "
+                                + fieldPath);
             }
             if (!fieldInfo.isMutableProperty() && !fieldInfo.isNestedProperty()) {
-                return new InvalidPropertyException("Immutable property: " + fieldPath);
+                return new InvalidPropertyException(
+                        "Immutable property: "
+                                + fieldPath);
             }
             Object value = entry.getValue();
             if (value instanceof Map nestedPropertiesForUpdating) {
                 try {
-                    InvalidPropertyException exception = validatePropertiesForUpdating(fieldInfo.get(properties),
-                            nestedPropertiesForUpdating,
-                            fieldPath);
+                    InvalidPropertyException exception =
+                            validatePropertiesForUpdating(fieldInfo.get(properties),
+                                    nestedPropertiesForUpdating,
+                                    fieldPath);
                     if (exception != null) {
                         return exception;
                     }
@@ -93,10 +105,9 @@ public class TurmsPropertiesConvertor {
             JsonNode propertiesForUpdating) {
         try {
             // Note that this is a deep clone
-            TurmsProperties newProperties = MAPPER
-                    .convertValue(propertiesToUpdate, TurmsProperties.class);
-            ObjectReader objectReader = MAPPER
-                    .readerForUpdating(newProperties)
+            TurmsProperties newProperties =
+                    MAPPER.convertValue(propertiesToUpdate, TurmsProperties.class);
+            ObjectReader objectReader = MAPPER.readerForUpdating(newProperties)
                     .forType(TurmsProperties.class);
             return objectReader.readValue(propertiesForUpdating);
         } catch (Exception e) {
@@ -110,25 +121,28 @@ public class TurmsPropertiesConvertor {
         return mergeMetadataWithPropertyValue0(metadata, properties);
     }
 
-    private static Map<String, Object> mergeMetadataWithPropertyValue0(Map<String, Object> metadata,
-                                                                       Object properties) {
+    private static Map<String, Object> mergeMetadataWithPropertyValue0(
+            Map<String, Object> metadata,
+            Object properties) {
         Class<?> propertiesClass = properties.getClass();
-        Map<String, Object> metadataWithValue = CollectionUtil.newMapWithExpectedSize(metadata.size() + 1);
+        Map<String, Object> metadataWithValue =
+                CollectionUtil.newMapWithExpectedSize(metadata.size() + 1);
         for (Map.Entry<String, Object> entry : metadata.entrySet()) {
             String key = entry.getKey();
             PropertyFieldInfo propertyFieldInfo = getFieldInfo(propertiesClass, key);
             Object value;
             if (propertyFieldInfo == null || (value = propertyFieldInfo.get(properties)) == null) {
-                LOGGER.warn("Skip the unknown property \"" +
-                        key +
-                        "\" in the properties class: " +
-                        propertiesClass.getName() +
-                        ". This may happen if the property schema have changed");
+                LOGGER.warn("Skip the unknown property \""
+                        + key
+                        + "\" in the properties class: "
+                        + propertiesClass.getName()
+                        + ". This may happen if the property schema have changed");
                 continue;
             }
             if (propertyFieldInfo.isNestedProperty()) {
                 Map<String, Object> originalValueMetadata = (Map<String, Object>) entry.getValue();
-                metadataWithValue.put(key, mergeMetadataWithPropertyValue0(originalValueMetadata, value));
+                metadataWithValue.put(key,
+                        mergeMetadataWithPropertyValue0(originalValueMetadata, value));
             } else {
                 FieldMetadata fieldMetadata = (FieldMetadata) entry.getValue();
                 int entryCount = 6;
@@ -146,8 +160,12 @@ public class TurmsPropertiesConvertor {
                 }
                 Map.Entry<String, Object>[] entries = new Map.Entry[entryCount];
                 int i = 0;
-                entries[i++] = Map.entry("value", fieldMetadata.sensitive() ? "" : value);
-                entries[i++] = Map.entry(FieldMetadata.Fields.deprecated, fieldMetadata.deprecated());
+                entries[i++] = Map.entry("value",
+                        fieldMetadata.sensitive()
+                                ? ""
+                                : value);
+                entries[i++] =
+                        Map.entry(FieldMetadata.Fields.deprecated, fieldMetadata.deprecated());
                 entries[i++] = Map.entry(FieldMetadata.Fields.global, fieldMetadata.global());
                 entries[i++] = Map.entry(FieldMetadata.Fields.mutable, fieldMetadata.mutable());
                 entries[i++] = Map.entry(FieldMetadata.Fields.sensitive, fieldMetadata.sensitive());
@@ -171,7 +189,8 @@ public class TurmsPropertiesConvertor {
 
     public static JsonNode toMutablePropertiesJsonNode(TurmsProperties propertiesForUpdating) {
         try {
-            return MAPPER.readTree(MUTABLE_PROPERTIES_WRITER.writeValueAsBytes(propertiesForUpdating));
+            return MAPPER
+                    .readTree(MUTABLE_PROPERTIES_WRITER.writeValueAsBytes(propertiesForUpdating));
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }

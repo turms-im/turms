@@ -29,8 +29,10 @@ public final class OperationResultPublisherPool {
     private OperationResultPublisherPool() {
     }
 
-    public static final Mono<UpdateResult> ACKNOWLEDGED_UPDATE_RESULT = Mono.just(UpdateResult.acknowledged(0L, 0L, null));
+    public static final Mono<UpdateResult> ACKNOWLEDGED_UPDATE_RESULT =
+            Mono.just(UpdateResult.acknowledged(0L, 0L, null));
 
-    public static final Mono<DeleteResult> ACKNOWLEDGED_DELETE_RESULT = Mono.just(DeleteResult.acknowledged(0L));
+    public static final Mono<DeleteResult> ACKNOWLEDGED_DELETE_RESULT =
+            Mono.just(DeleteResult.acknowledged(0L));
 
 }

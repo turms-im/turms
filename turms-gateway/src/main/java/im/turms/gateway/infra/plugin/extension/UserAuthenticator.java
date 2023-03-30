@@ -17,11 +17,12 @@
 
 package im.turms.gateway.infra.plugin.extension;
 
-import im.turms.gateway.domain.session.bo.UserLoginInfo;
-import im.turms.server.common.infra.plugin.ExtensionPoint;
+import jakarta.validation.constraints.NotNull;
+
 import reactor.core.publisher.Mono;
 
-import jakarta.validation.constraints.NotNull;
+import im.turms.gateway.domain.session.bo.UserLoginInfo;
+import im.turms.server.common.infra.plugin.ExtensionPoint;
 
 /**
  * @author James Chen
@@ -30,10 +31,10 @@ public interface UserAuthenticator extends ExtensionPoint {
 
     /**
      * @return 1. Return Mono.just(true) if the user is authenticated.
-     * <p>
-     * 2. Return Mono.just(false) if the user is unauthenticated.
-     * <p>
-     * 3. Return Mono.empty() if the authentication should be processed by the next handler.
+     *         <p>
+     *         2. Return Mono.just(false) if the user is unauthenticated.
+     *         <p>
+     *         3. Return Mono.empty() if the authentication should be processed by the next handler.
      */
     Mono<Boolean> authenticate(@NotNull UserLoginInfo userLoginInfo);
 

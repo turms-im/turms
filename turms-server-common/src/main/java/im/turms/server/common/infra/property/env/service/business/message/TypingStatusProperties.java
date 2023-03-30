@@ -17,13 +17,14 @@
 
 package im.turms.server.common.infra.property.env.service.business.message;
 
-import im.turms.server.common.infra.property.metadata.Description;
-import im.turms.server.common.infra.property.metadata.GlobalProperty;
-import im.turms.server.common.infra.property.metadata.MutableProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import im.turms.server.common.infra.property.metadata.Description;
+import im.turms.server.common.infra.property.metadata.GlobalProperty;
+import im.turms.server.common.infra.property.metadata.MutableProperty;
 
 /**
  * @author James Chen

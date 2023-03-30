@@ -17,18 +17,19 @@
 
 package im.turms.server.common.infra.throttle;
 
-import im.turms.server.common.infra.lang.MathUtil;
+import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
+
 import lombok.Getter;
 
-import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
+import im.turms.server.common.infra.lang.MathUtil;
 
 /**
  * @author James Chen
  */
 public class TokenBucket {
 
-    private static final AtomicIntegerFieldUpdater<TokenBucket>
-            TOKENS_UPDATER = AtomicIntegerFieldUpdater.newUpdater(TokenBucket.class, "tokens");
+    private static final AtomicIntegerFieldUpdater<TokenBucket> TOKENS_UPDATER =
+            AtomicIntegerFieldUpdater.newUpdater(TokenBucket.class, "tokens");
 
     private final TokenBucketContext context;
 
@@ -38,8 +39,8 @@ public class TokenBucket {
     private volatile long lastRefillTime;
 
     /**
-     * @implNote We don't validate properties here,
-     * and it should be validated when the properties are updated
+     * @implNote We don't validate properties here, and it should be validated when the properties
+     *           are updated
      */
     public TokenBucket(TokenBucketContext context) {
         this.context = context;
@@ -89,7 +90,9 @@ public class TokenBucket {
         }
         int tokenCount = tokens;
         int capacity = context.capacity;
-        int newTokenCount = MathUtil.add(tokenCount, MathUtil.multiply(periods, context.tokensPerPeriod, capacity), capacity);
+        int newTokenCount = MathUtil.add(tokenCount,
+                MathUtil.multiply(periods, context.tokensPerPeriod, capacity),
+                capacity);
         if (newTokenCount > capacity) {
             newTokenCount = capacity;
         }

@@ -17,10 +17,6 @@
 
 package im.turms.server.common.infra.logging.core.appender.file;
 
-import im.turms.server.common.infra.io.InputOutputException;
-import im.turms.server.common.infra.logging.core.logger.InternalLogger;
-import im.turms.server.common.infra.time.TimeZoneConst;
-
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -36,6 +32,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Deque;
 import java.util.TreeSet;
+
+import im.turms.server.common.infra.io.InputOutputException;
+import im.turms.server.common.infra.logging.core.logger.InternalLogger;
+import im.turms.server.common.infra.time.TimeZoneConst;
 
 /**
  * @author James Chen
@@ -53,11 +53,12 @@ public class LogDirectoryVisitor extends SimpleFileVisitor<Path> {
     private final int maxFilesToKeep;
     private final boolean deleteExceedFiles;
 
-    public LogDirectoryVisitor(String filePrefix,
-                               String fileSuffix,
-                               String fileMiddle,
-                               DateTimeFormatter fileDateTimeFormatter,
-                               int maxFiles) {
+    public LogDirectoryVisitor(
+            String filePrefix,
+            String fileSuffix,
+            String fileMiddle,
+            DateTimeFormatter fileDateTimeFormatter,
+            int maxFiles) {
         this.filePrefix = filePrefix;
         this.fileSuffix = fileSuffix;
         this.fileMiddle = fileMiddle;
@@ -69,7 +70,8 @@ public class LogDirectoryVisitor extends SimpleFileVisitor<Path> {
     @Override
     public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) {
         try {
-            String name = path.getFileName().toString();
+            String name = path.getFileName()
+                    .toString();
             if (!isLogFile(name)) {
                 return FileVisitResult.CONTINUE;
             }
@@ -84,7 +86,8 @@ public class LogDirectoryVisitor extends SimpleFileVisitor<Path> {
                 handleNewLogFile(path, timestamp, index);
             }
         } catch (Exception e) {
-            InternalLogger.INSTANCE.warn("Could not figure out if a file matches the template: " + path, e);
+            InternalLogger.INSTANCE.warn("Could not figure out if a file matches the template: "
+                    + path, e);
         }
         return FileVisitResult.CONTINUE;
     }
@@ -96,13 +99,14 @@ public class LogDirectoryVisitor extends SimpleFileVisitor<Path> {
     }
 
     private void handleNewLogFile(Path path, ZonedDateTime timestamp, long index) {
-        String fileName = path.getFileName().toString();
+        String fileName = path.getFileName()
+                .toString();
         boolean isArchive = fileName.endsWith(RollingFileAppender.ARCHIVE_FILE_SUFFIX);
         Path filePath;
         Path archivePath;
         if (isArchive) {
-            filePath = path.resolveSibling(fileName
-                    .substring(0, fileName.length() - RollingFileAppender.ARCHIVE_FILE_SUFFIX.length()));
+            filePath = path.resolveSibling(fileName.substring(0,
+                    fileName.length() - RollingFileAppender.ARCHIVE_FILE_SUFFIX.length()));
             archivePath = path;
         } else {
             filePath = path;
@@ -129,17 +133,22 @@ public class LogDirectoryVisitor extends SimpleFileVisitor<Path> {
         }
     }
 
-    public static Deque<LogFile> visit(Path directory,
-                                       String prefix,
-                                       String suffix,
-                                       String middle,
-                                       DateTimeFormatter template,
-                                       int maxFiles) {
-        LogDirectoryVisitor visitor = new LogDirectoryVisitor(prefix, suffix, middle, template, maxFiles);
+    public static Deque<LogFile> visit(
+            Path directory,
+            String prefix,
+            String suffix,
+            String middle,
+            DateTimeFormatter template,
+            int maxFiles) {
+        LogDirectoryVisitor visitor =
+                new LogDirectoryVisitor(prefix, suffix, middle, template, maxFiles);
         try {
             Files.walkFileTree(directory, Collections.emptySet(), 1, visitor);
         } catch (IOException e) {
-            throw new InputOutputException("Failed to visit the directory: " + directory, e);
+            throw new InputOutputException(
+                    "Failed to visit the directory: "
+                            + directory,
+                    e);
         }
         return new ArrayDeque<>(visitor.files);
     }

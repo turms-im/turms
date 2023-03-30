@@ -17,6 +17,11 @@
 
 package im.turms.server.common.infra.property.env.gateway.identityaccessmanagement;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 import im.turms.server.common.infra.property.constant.IdentityAccessManagementType;
 import im.turms.server.common.infra.property.env.gateway.identityaccessmanagement.http.HttpIdentityAccessManagementProperties;
@@ -24,11 +29,6 @@ import im.turms.server.common.infra.property.env.gateway.identityaccessmanagemen
 import im.turms.server.common.infra.property.metadata.Description;
 import im.turms.server.common.infra.property.metadata.GlobalProperty;
 import im.turms.server.common.infra.property.metadata.MutableProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 /**
  * @author James Chen
@@ -39,21 +39,22 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
 @NoArgsConstructor
 public class IdentityAccessManagementProperties {
 
-    @Description("Whether to authenticate and authorize users when logging in. " +
-            "Note that user ID is always required even if enabled is false. " +
-            "If false at startup, turms-gateway will not connect to the MongoDB server for user records")
+    @Description("Whether to authenticate and authorize users when logging in. "
+            + "Note that user ID is always required even if enabled is false. "
+            + "If false at startup, turms-gateway will not connect to the MongoDB server for user records")
     @GlobalProperty
     @MutableProperty
     private boolean enabled = true;
 
-    @Description("Note that if the type is not PASSWORD, " +
-            "turms-gateway will not connect to the MongoDB server for user records")
+    @Description("Note that if the type is not PASSWORD, "
+            + "turms-gateway will not connect to the MongoDB server for user records")
     private IdentityAccessManagementType type = IdentityAccessManagementType.PASSWORD;
 
     @NestedConfigurationProperty
     private JwtIdentityAccessManagementProperties jwt = new JwtIdentityAccessManagementProperties();
 
     @NestedConfigurationProperty
-    private HttpIdentityAccessManagementProperties http = new HttpIdentityAccessManagementProperties();
+    private HttpIdentityAccessManagementProperties http =
+            new HttpIdentityAccessManagementProperties();
 
 }

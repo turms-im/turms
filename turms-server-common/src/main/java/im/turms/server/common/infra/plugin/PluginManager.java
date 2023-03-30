@@ -17,6 +17,37 @@
 
 package im.turms.server.common.infra.plugin;
 
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.net.URI;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+import java.util.zip.ZipFile;
+import jakarta.annotation.Nullable;
+
+import io.netty.handler.codec.http.HttpStatusClass;
+import lombok.Getter;
+import org.graalvm.polyglot.Engine;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.stereotype.Component;
+import reactor.core.publisher.Mono;
+import reactor.netty.http.client.HttpClient;
+import reactor.netty.resources.ConnectionProvider;
+import reactor.netty.transport.ProxyProvider;
+
 import im.turms.server.common.access.admin.web.MultipartFile;
 import im.turms.server.common.infra.codec.Base16Util;
 import im.turms.server.common.infra.collection.CollectionUtil;
@@ -43,36 +74,6 @@ import im.turms.server.common.infra.property.env.common.plugin.NetworkProperties
 import im.turms.server.common.infra.property.env.common.plugin.PluginProperties;
 import im.turms.server.common.infra.property.env.common.plugin.ProxyProperties;
 import im.turms.server.common.infra.security.MessageDigestPool;
-import io.netty.handler.codec.http.HttpStatusClass;
-import lombok.Getter;
-import org.graalvm.polyglot.Engine;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationListener;
-import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.stereotype.Component;
-import reactor.core.publisher.Mono;
-import reactor.netty.http.client.HttpClient;
-import reactor.netty.resources.ConnectionProvider;
-import reactor.netty.transport.ProxyProvider;
-
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.Method;
-import java.net.URI;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
-import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-import java.util.zip.ZipFile;
-import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen
@@ -99,28 +100,32 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
     private final PluginRepository pluginRepository;
     private final ApplicationContext context;
     /**
-     * The object is {@link Engine} in fact,
-     * but we don't declare it as {@link Engine} because it is an optional class
-     * and Spring will throw when creating the bean when it cannot find the class
+     * The object is {@link Engine} in fact, but we don't declare it as {@link Engine} because it is
+     * an optional class and Spring will throw when creating the bean when it cannot find the class
      */
     @Nullable
     private Object engine;
 
-    public PluginManager(ApplicationContext context,
-                         TurmsApplicationContext applicationContext,
-                         TurmsPropertiesManager propertiesManager,
-                         @Autowired(required = false) Set<Class<? extends ExtensionPoint>> singletonExtensionPoints) {
+    public PluginManager(
+            ApplicationContext context,
+            TurmsApplicationContext applicationContext,
+            TurmsPropertiesManager propertiesManager,
+            @Autowired(
+                    required = false) Set<Class<? extends ExtensionPoint>> singletonExtensionPoints) {
         this.context = context;
-        PluginProperties pluginProperties = propertiesManager.getLocalProperties().getPlugin();
+        PluginProperties pluginProperties = propertiesManager.getLocalProperties()
+                .getPlugin();
         enabled = pluginProperties.isEnabled();
-        pluginRepository = new PluginRepository(singletonExtensionPoints == null
-                ? Collections.emptySet()
-                : singletonExtensionPoints);
+        pluginRepository = new PluginRepository(
+                singletonExtensionPoints == null
+                        ? Collections.emptySet()
+                        : singletonExtensionPoints);
         pluginDir = getPluginDir(applicationContext.getHome(), pluginProperties.getDir());
         isJsScriptEnabled = ClassUtil.exists("org.graalvm.polyglot.Engine");
         PluginFinder.FindResult findResult = PluginFinder.find(pluginDir, isJsScriptEnabled);
         loadJavaPlugins(findResult.zipFiles());
-        allowSaveJavaPlugins = pluginProperties.getJava().isAllowSave();
+        allowSaveJavaPlugins = pluginProperties.getJava()
+                .isAllowSave();
         if (isJsScriptEnabled) {
             JsPluginProperties jsPluginProperties = pluginProperties.getJs();
             JsPluginDebugProperties debugProperties = jsPluginProperties.getDebug();
@@ -139,12 +144,13 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
             jsInspectPort = 0;
         }
         loadNetworkPlugins(pluginProperties.getNetwork());
-        applicationContext.addShutdownHook(JobShutdownOrder.CLOSE_PLUGINS, timeoutMillis -> destroy());
+        applicationContext.addShutdownHook(JobShutdownOrder.CLOSE_PLUGINS,
+                timeoutMillis -> destroy());
     }
 
     /**
-     * @implNote Start plugins after all beans are ready
-     * so that plugins can get any bean when starting
+     * @implNote Start plugins after all beans are ready so that plugins can get any bean when
+     *           starting
      */
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
@@ -154,7 +160,8 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
     }
 
     private Path getPluginDir(Path home, String pluginsDir) {
-        return home.resolve(pluginsDir).toAbsolutePath();
+        return home.resolve(pluginsDir)
+                .toAbsolutePath();
     }
 
     private Mono<Void> destroy() {
@@ -194,35 +201,33 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
         HttpClient client = HttpClient.create(connectionProvider);
         ProxyProperties proxy = properties.getProxy();
         if (proxy.isEnabled()) {
-            client = client
-                .proxy(spec -> {
-                    String host = proxy.getHost();
-                    if (StringUtil.isBlank(host)) {
-                        throw new IllegalArgumentException("The host cannot be blank");
-                    }
-                    ProxyProvider.Builder builder = spec
-                        .type(ProxyProvider.Proxy.HTTP)
+            client = client.proxy(spec -> {
+                String host = proxy.getHost();
+                if (StringUtil.isBlank(host)) {
+                    throw new IllegalArgumentException("The host cannot be blank");
+                }
+                ProxyProvider.Builder builder = spec.type(ProxyProvider.Proxy.HTTP)
                         .host(host)
                         .port(proxy.getPort())
                         .connectTimeoutMillis(proxy.getConnectTimeoutMillis());
-                    String username = proxy.getUsername();
-                    String password = proxy.getPassword();
-                    if (StringUtil.isNotBlank(username)) {
-                        builder.username(username);
-                    }
-                    if (StringUtil.isNotBlank(password)) {
-                        builder.password(s -> password);
-                    }
-                });
+                String username = proxy.getUsername();
+                String password = proxy.getPassword();
+                if (StringUtil.isNotBlank(username)) {
+                    builder.username(username);
+                }
+                if (StringUtil.isNotBlank(password)) {
+                    builder.password(s -> password);
+                }
+            });
         }
         List<Mono<?>> monos = new ArrayList<>(propertiesList.size());
         for (NetworkPluginProperties pluginProperties : propertiesList) {
             monos.add(loadNetworkPlugin(client, pluginProperties));
         }
         Mono.when(monos)
-            .doFinally(type -> connectionProvider.dispose())
-            // No need timeout here because we use the request timeout
-            .block();
+                .doFinally(type -> connectionProvider.dispose())
+                // No need timeout here because we use the request timeout
+                .block();
     }
 
     private Mono<Void> loadNetworkPlugin(HttpClient client, NetworkPluginProperties properties) {
@@ -234,9 +239,13 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
         try {
             uri = URI.create(url);
         } catch (Exception e) {
-            return Mono.error(new IllegalArgumentException("Invalid plugin URL: " + url));
+            return Mono.error(new IllegalArgumentException(
+                    "Invalid plugin URL: "
+                            + url));
         }
-        String fileName = Paths.get(uri.getPath()).getFileName().toString();
+        String fileName = Paths.get(uri.getPath())
+                .getFileName()
+                .toString();
         boolean isJavaPlugin;
         PluginType type = properties.getType();
         String newFileName;
@@ -244,16 +253,19 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
             isJavaPlugin = fileName.endsWith(".jar");
             boolean isJsPlugin = !isJavaPlugin && fileName.endsWith(".js");
             if (!isJavaPlugin && !isJsPlugin) {
-                return Mono.error(new IllegalArgumentException("Cannot detect the plugin type from the URL: "
-                                                               + url
-                                                               + ". The URL must end with \".jar\" for Java plugins or \".js\" for JavaScript plugins"));
+                return Mono.error(new IllegalArgumentException(
+                        "Cannot detect the plugin type from the URL: "
+                                + url
+                                + ". The URL must end with \".jar\" for Java plugins or \".js\" for JavaScript plugins"));
             }
             newFileName = EXTERNAL_PLUGIN_ARCHIVE_NAME_PREFIX + fileName;
         } else {
             isJavaPlugin = type == PluginType.JAVA;
             newFileName = fileName.endsWith(".jar") || fileName.endsWith(".js")
-                ? EXTERNAL_PLUGIN_ARCHIVE_NAME_PREFIX + fileName
-                : EXTERNAL_PLUGIN_ARCHIVE_NAME_PREFIX + fileName + (isJavaPlugin ? ".jar" : ".js");
+                    ? EXTERNAL_PLUGIN_ARCHIVE_NAME_PREFIX + fileName
+                    : EXTERNAL_PLUGIN_ARCHIVE_NAME_PREFIX + fileName + (isJavaPlugin
+                            ? ".jar"
+                            : ".js");
         }
         Path path = pluginDir.resolve(newFileName);
         File file = path.toFile();
@@ -267,86 +279,105 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
             }
         }
         NetworkPluginProperties.DownloadProperties downloadProperties = properties.getDownload();
-        return client
-            .followRedirect(true)
-            .responseTimeout(Duration.ofMillis(downloadProperties.getTimeoutMillis()))
-            .request(downloadProperties.getHttpMethod().getMethod())
-            .uri(uri)
-            .responseSingle((response, bodyMono) -> {
-                int code = response.status().code();
-                return HttpStatusClass.SUCCESS.contains(code)
-                    ? bodyMono
-                    : Mono.error(new RuntimeException("Expected a success code, but got: " + code));
-            })
-            .doOnError(t -> LOGGER.error("Failed to download the plugin with the URL: " + url, t))
-            .doOnSuccess(buffer -> {
-                LOGGER.info("Downloaded the plugin with the URL: " + url);
-                if (isJavaPlugin) {
-                    if (!allowSaveJavaPlugins) {
+        return client.followRedirect(true)
+                .responseTimeout(Duration.ofMillis(downloadProperties.getTimeoutMillis()))
+                .request(downloadProperties.getHttpMethod()
+                        .getMethod())
+                .uri(uri)
+                .responseSingle((response, bodyMono) -> {
+                    int code = response.status()
+                            .code();
+                    return HttpStatusClass.SUCCESS.contains(code)
+                            ? bodyMono
+                            : Mono.error(new RuntimeException(
+                                    "Expected a success code, but got: "
+                                            + code));
+                })
+                .doOnError(t -> LOGGER.error("Failed to download the plugin with the URL: "
+                        + url, t))
+                .doOnSuccess(buffer -> {
+                    LOGGER.info("Downloaded the plugin with the URL: "
+                            + url);
+                    if (isJavaPlugin) {
+                        if (!allowSaveJavaPlugins) {
+                            file.deleteOnExit();
+                        }
+                    } else if (isJsScriptEnabled && !allowSaveJsPlugins) {
                         file.deleteOnExit();
                     }
-                } else if (isJsScriptEnabled && !allowSaveJsPlugins) {
-                    file.deleteOnExit();
-                }
-                try {
-                    Files.createDirectories(pluginDir);
-                } catch (IOException e) {
-                    throw new InputOutputException("Failed to create the plugin directory: " +
-                                                   pluginDir, e);
-                }
-                FileUtil.write(file, buffer);
-                if (isJavaPlugin) {
-                    ZipFile zipFile;
                     try {
-                        zipFile = new ZipFile(file);
+                        Files.createDirectories(pluginDir);
                     } catch (IOException e) {
-                        throw new InputOutputException("Failed to new a zip file from the file: " + path, e);
+                        throw new InputOutputException(
+                                "Failed to create the plugin directory: "
+                                        + pluginDir,
+                                e);
                     }
-                    loadJavaPlugin(zipFile);
-                } else {
-                    if (isJsScriptEnabled) {
-                        String script = ByteBufUtil.readString(buffer);
-                        loadJsPlugin(script, path);
+                    FileUtil.write(file, buffer);
+                    if (isJavaPlugin) {
+                        ZipFile zipFile;
+                        try {
+                            zipFile = new ZipFile(file);
+                        } catch (IOException e) {
+                            throw new InputOutputException(
+                                    "Failed to new a zip file from the file: "
+                                            + path,
+                                    e);
+                        }
+                        loadJavaPlugin(zipFile);
+                    } else {
+                        if (isJsScriptEnabled) {
+                            String script = ByteBufUtil.readString(buffer);
+                            loadJsPlugin(script, path);
+                        }
                     }
-                }
-            })
-            .doOnSubscribe(subscription -> LOGGER.info("Downloading the plugin with the URL: " + url))
-            .then();
+                })
+                .doOnSubscribe(subscription -> LOGGER.info("Downloading the plugin with the URL: "
+                        + url))
+                .then();
     }
 
     public void loadJavaPlugins(List<MultipartFile> files, boolean save) {
         if (!allowSaveJavaPlugins && save) {
-            throw new FeatureDisabledException("Cannot save Java plugins since it has been disabled");
+            throw new FeatureDisabledException(
+                    "Cannot save Java plugins since it has been disabled");
         }
         for (MultipartFile file : files) {
             String fileName = file.name();
             ZipFile zipFile;
             File jarFile;
             if (save) {
-                fileName = file.basename() + ".jar";
+                fileName = file.basename()
+                        + ".jar";
                 Path target = pluginDir.resolve(EXTERNAL_PLUGIN_ARCHIVE_NAME_PREFIX + fileName);
                 if (Files.exists(target)) {
-                    throw new IllegalArgumentException("The plugin jar file (" +
-                            fileName +
-                            ") already exists");
+                    throw new IllegalArgumentException(
+                            "The plugin jar file ("
+                                    + fileName
+                                    + ") already exists");
                 }
                 // Ensure the plugin directory exists every time
                 // because it may be removed by users unexpectedly
                 try {
                     Files.createDirectories(pluginDir);
                 } catch (IOException e) {
-                    throw new InputOutputException("Failed to create the plugin directory: " +
-                            pluginDir, e);
+                    throw new InputOutputException(
+                            "Failed to create the plugin directory: "
+                                    + pluginDir,
+                            e);
                 }
-                Path source = file.file().toPath();
+                Path source = file.file()
+                        .toPath();
                 try {
                     Files.move(source, target);
                 } catch (IOException e) {
-                    throw new InputOutputException("Failed to move the plugin JAR file from (" +
-                            source +
-                            ") to (" +
-                            target +
-                            ")", e);
+                    throw new InputOutputException(
+                            "Failed to move the plugin JAR file from ("
+                                    + source
+                                    + ") to ("
+                                    + target
+                                    + ")",
+                            e);
                 }
                 jarFile = target.toFile();
             } else {
@@ -359,12 +390,17 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
             try {
                 zipFile = new ZipFile(jarFile);
             } catch (IOException e) {
-                throw new MalformedPluginArchiveException("Failed to load the jar file: " + fileName, e);
+                throw new MalformedPluginArchiveException(
+                        "Failed to load the jar file: "
+                                + fileName,
+                        e);
             }
             JavaPluginDescriptor descriptor = JavaPluginDescriptorFactory.load(zipFile);
             if (descriptor == null) {
-                throw new MalformedPluginArchiveException("Could not load a Java plugin from the file (" +
-                        fileName + ") because it is not a Java plugin JAR file");
+                throw new MalformedPluginArchiveException(
+                        "Could not load a Java plugin from the file ("
+                                + fileName
+                                + ") because it is not a Java plugin JAR file");
             }
             Plugin plugin = JavaPluginFactory.create(descriptor, context);
             pluginRepository.register(plugin);
@@ -400,10 +436,12 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
 
     public void loadJsPlugins(Collection<JsPluginScript> scripts, boolean save) {
         if (!isJsScriptEnabled) {
-            throw new UnsupportedOperationException("JavaScript plugins are disabled because the classes of GraalJS are not loaded");
+            throw new UnsupportedOperationException(
+                    "JavaScript plugins are disabled because the classes of GraalJS are not loaded");
         }
         if (!allowSaveJsPlugins && save) {
-            throw new FeatureDisabledException("Cannot not save JavaScript plugins since it has been disabled");
+            throw new FeatureDisabledException(
+                    "Cannot not save JavaScript plugins since it has been disabled");
         }
         if (CollectionUtil.isEmpty(scripts)) {
             return;
@@ -413,14 +451,16 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
             Plugin plugin = loadJsPlugin(code, null);
             if (save) {
                 Path path = saveJsPlugin(script.fileName(), code);
-                plugin.descriptor().setPath(path);
+                plugin.descriptor()
+                        .setPath(path);
             }
         }
     }
 
     public JsPlugin loadJsPlugin(String script, @Nullable Path path) {
         if (!isJsScriptEnabled) {
-            throw new UnsupportedOperationException("JavaScript plugins are disabled because the classes of GraalJS are not loaded");
+            throw new UnsupportedOperationException(
+                    "JavaScript plugins are disabled because the classes of GraalJS are not loaded");
         }
         if (script.isBlank()) {
             throw new IllegalArgumentException("The JavaScript plugin script must not be blank");
@@ -440,21 +480,33 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
         byte[] bytes = code.getBytes(StandardCharsets.UTF_8);
         boolean isCustomFileName = fileName != null;
         if (fileName == null) {
-            byte[] digest = MessageDigestPool.getSha1().digest(bytes);
+            byte[] digest = MessageDigestPool.getSha1()
+                    .digest(bytes);
             fileName = Base16Util.encodeAsString(digest, false);
         }
-        Path path = pluginDir.resolve(EXTERNAL_PLUGIN_ARCHIVE_NAME_PREFIX + fileName + ".js");
+        Path path = pluginDir.resolve(EXTERNAL_PLUGIN_ARCHIVE_NAME_PREFIX
+                + fileName
+                + ".js");
         if (Files.exists(path)) {
             if (isCustomFileName) {
-                throw new IllegalArgumentException("The JavaScript plugin file (" + fileName + ") already exists");
+                throw new IllegalArgumentException(
+                        "The JavaScript plugin file ("
+                                + fileName
+                                + ") already exists");
             } else {
                 return path;
             }
         }
         try {
-            Files.write(path, bytes, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+            Files.write(path,
+                    bytes,
+                    StandardOpenOption.CREATE,
+                    StandardOpenOption.TRUNCATE_EXISTING);
         } catch (Exception e) {
-            throw new InputOutputException("Failed to write the JavaScript plugin to the path: " + path, e);
+            throw new InputOutputException(
+                    "Failed to write the JavaScript plugin to the path: "
+                            + path,
+                    e);
         }
         return path;
     }
@@ -539,7 +591,8 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
         if (deleteLocalFiles) {
             for (Plugin plugin : plugins) {
                 try {
-                    Path path = plugin.descriptor().getPath();
+                    Path path = plugin.descriptor()
+                            .getPath();
                     if (path != null) {
                         Files.deleteIfExists(path);
                     }
@@ -554,19 +607,24 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
         return pluginRepository.hasRunningExtensions(extensionPointClass);
     }
 
-    public <T extends ExtensionPoint, R> Mono<R> invokeFirstExtensionPoint(Class<T> extensionPointClass,
-                                                                           Method method,
-                                                                           @Nullable Mono<R> defaultValue,
-                                                                           FirstExtensionPointInvoker<T, R> invoker) {
+    public <T extends ExtensionPoint, R> Mono<R> invokeFirstExtensionPoint(
+            Class<T> extensionPointClass,
+            Method method,
+            @Nullable Mono<R> defaultValue,
+            FirstExtensionPointInvoker<T, R> invoker) {
         List<T> extensionPoints = pluginRepository.getExtensionPoints(extensionPointClass);
         int size = extensionPoints.size();
         if (size == 0) {
-            return defaultValue == null ? Mono.empty() : defaultValue;
+            return defaultValue == null
+                    ? Mono.empty()
+                    : defaultValue;
         }
         T extensionPoint = extensionPoints.get(0);
         TurmsExtension extension = (TurmsExtension) extensionPoint;
         if (!extension.isRunning()) {
-            return defaultValue == null ? Mono.empty() : defaultValue;
+            return defaultValue == null
+                    ? Mono.empty()
+                    : defaultValue;
         }
         try {
             return invoker.invoke(extensionPoint)
@@ -576,22 +634,28 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
         }
     }
 
-    public <T extends ExtensionPoint, R> Mono<R> invokeExtensionPointsSequentially(Class<T> extensionPointClass,
-                                                                                   Method method,
-                                                                                   SequentialExtensionPointInvoker<T, R> invoker) {
+    public <T extends ExtensionPoint, R> Mono<R> invokeExtensionPointsSequentially(
+            Class<T> extensionPointClass,
+            Method method,
+            SequentialExtensionPointInvoker<T, R> invoker) {
         return invokeExtensionPointsSequentially(extensionPointClass, method, null, invoker);
     }
 
-    public <T extends ExtensionPoint, R> Mono<R> invokeExtensionPointsSequentially(Class<T> extensionPointClass,
-                                                                                   Method method,
-                                                                                   @Nullable R initialValue,
-                                                                                   SequentialExtensionPointInvoker<T, R> invoker) {
+    public <T extends ExtensionPoint, R> Mono<R> invokeExtensionPointsSequentially(
+            Class<T> extensionPointClass,
+            Method method,
+            @Nullable R initialValue,
+            SequentialExtensionPointInvoker<T, R> invoker) {
         List<T> extensionPoints = pluginRepository.getExtensionPoints(extensionPointClass);
         int size = extensionPoints.size();
         if (size == 0) {
-            return initialValue == null ? Mono.empty() : Mono.just(initialValue);
+            return initialValue == null
+                    ? Mono.empty()
+                    : Mono.just(initialValue);
         }
-        Mono<R> result = initialValue == null ? Mono.empty() : Mono.just(initialValue);
+        Mono<R> result = initialValue == null
+                ? Mono.empty()
+                : Mono.just(initialValue);
         for (ExtensionPoint extensionPoint : extensionPoints) {
             TurmsExtension extension = (TurmsExtension) extensionPoint;
             if (!extension.isRunning()) {
@@ -608,9 +672,10 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
         return result;
     }
 
-    public <T extends ExtensionPoint> Mono<Void> invokeExtensionPointsSimultaneously(Class<T> extensionPointClass,
-                                                                                     Method method,
-                                                                                     SimultaneousExtensionPointInvoker<T> invoker) {
+    public <T extends ExtensionPoint> Mono<Void> invokeExtensionPointsSimultaneously(
+            Class<T> extensionPointClass,
+            Method method,
+            SimultaneousExtensionPointInvoker<T> invoker) {
         List<T> extensionPoints = pluginRepository.getExtensionPoints(extensionPointClass);
         int size = extensionPoints.size();
         if (size == 0) {
@@ -636,12 +701,15 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
     }
 
     private Exception translateException(Throwable t, Method method, TurmsExtension extension) {
-        String message = "Failed to invoke the method \"" +
-                method.getName() +
-                "\" of the extension (" +
-                extension.getClass().getName() +
-                ") of the plugin: " +
-                extension.getPlugin().descriptor().getId();
+        String message = "Failed to invoke the method \""
+                + method.getName()
+                + "\" of the extension ("
+                + extension.getClass()
+                        .getName()
+                + ") of the plugin: "
+                + extension.getPlugin()
+                        .descriptor()
+                        .getId();
         return new ExtensionPointExecutionException(message, t);
     }
 

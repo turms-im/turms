@@ -1,11 +1,21 @@
-package im.turms.server.common.testing;
+/*
+ * Copyright (C) 2019 The Turms Project
+ * https://github.com/turms-im/turms
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
-import lombok.extern.slf4j.Slf4j;
-import org.testcontainers.containers.ContainerState;
-import org.testcontainers.containers.DockerComposeContainer;
-import org.testcontainers.containers.wait.strategy.Wait;
-import org.testcontainers.shaded.org.apache.commons.io.FileUtils;
-import org.yaml.snakeyaml.Yaml;
+package im.turms.server.common.testing;
 
 import java.io.Closeable;
 import java.io.File;
@@ -16,11 +26,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import lombok.extern.slf4j.Slf4j;
+import org.testcontainers.containers.ContainerState;
+import org.testcontainers.containers.DockerComposeContainer;
+import org.testcontainers.containers.wait.strategy.Wait;
+import org.testcontainers.shaded.org.apache.commons.io.FileUtils;
+import org.yaml.snakeyaml.Yaml;
+
 /**
  * @author James Chen
  */
 @Slf4j
-public class TestingEnvContainer extends DockerComposeContainer<TestingEnvContainer> implements Closeable {
+public class TestingEnvContainer extends DockerComposeContainer<TestingEnvContainer>
+        implements Closeable {
 
     private static final String DOCKER_COMPOSE_TEST_FILE = "docker-compose.test.yml";
 
@@ -54,13 +72,15 @@ public class TestingEnvContainer extends DockerComposeContainer<TestingEnvContai
         if (options.isSetupTurmsGateway()) {
             withExposedService(TURMS_GATEWAY_SERVICE_NAME, TURMS_GATEWAY_SERVICE_ADMIN_PORT);
             withExposedService(TURMS_GATEWAY_SERVICE_NAME, TURMS_GATEWAY_SERVICE_WS_PORT);
-            withLogConsumer(TURMS_GATEWAY_SERVICE_NAME, new ServiceLogConsumer(TURMS_GATEWAY_SERVICE_NAME));
+            withLogConsumer(TURMS_GATEWAY_SERVICE_NAME,
+                    new ServiceLogConsumer(TURMS_GATEWAY_SERVICE_NAME));
             waitingFor(TURMS_GATEWAY_SERVICE_NAME, Wait.forHealthcheck());
         }
 
         if (options.isSetupTurmsService()) {
             withExposedService(TURMS_SERVICE_SERVICE_NAME, TURMS_SERVICE_ADMIN_PORT);
-            withLogConsumer(TURMS_SERVICE_SERVICE_NAME, new ServiceLogConsumer(TURMS_SERVICE_SERVICE_NAME));
+            withLogConsumer(TURMS_SERVICE_SERVICE_NAME,
+                    new ServiceLogConsumer(TURMS_SERVICE_SERVICE_NAME));
             waitingFor(TURMS_SERVICE_SERVICE_NAME, Wait.forHealthcheck());
         }
     }
@@ -85,7 +105,9 @@ public class TestingEnvContainer extends DockerComposeContainer<TestingEnvContai
         InputStream resource = TestingEnvContainer.class.getClassLoader()
                 .getResourceAsStream(DOCKER_COMPOSE_TEST_FILE);
         if (resource == null) {
-            throw new RuntimeException("Could not find the resource: " + DOCKER_COMPOSE_TEST_FILE);
+            throw new RuntimeException(
+                    "Could not find the resource: "
+                            + DOCKER_COMPOSE_TEST_FILE);
         }
         try {
             File tempFile = File.createTempFile("docker-compose", "yml");
@@ -93,7 +115,10 @@ public class TestingEnvContainer extends DockerComposeContainer<TestingEnvContai
             Map<String, Object> config = yaml.load(resource);
             Map<String, Object> services = (Map<String, Object>) config.get("services");
             if (options.isSetupTurmsGateway()) {
-                appendCustomJvmOptions(options.getTurmsGatewayJvmOptions(), services, TURMS_GATEWAY, "TURMS_GATEWAY_JVM_OPTS");
+                appendCustomJvmOptions(options.getTurmsGatewayJvmOptions(),
+                        services,
+                        TURMS_GATEWAY,
+                        "TURMS_GATEWAY_JVM_OPTS");
                 if (!options.isSetupTurmsService()) {
                     removeDependency(services, TURMS_GATEWAY, TURMS_SERVICE);
                 }
@@ -101,7 +126,10 @@ public class TestingEnvContainer extends DockerComposeContainer<TestingEnvContai
                 services.remove(TURMS_GATEWAY);
             }
             if (options.isSetupTurmsService()) {
-                appendCustomJvmOptions(options.getTurmsGatewayJvmOptions(), services, TURMS_SERVICE, "TURMS_SERVICE_JVM_OPTS");
+                appendCustomJvmOptions(options.getTurmsGatewayJvmOptions(),
+                        services,
+                        TURMS_SERVICE,
+                        "TURMS_SERVICE_JVM_OPTS");
             } else {
                 services.remove(TURMS_SERVICE);
             }
@@ -116,10 +144,11 @@ public class TestingEnvContainer extends DockerComposeContainer<TestingEnvContai
         }
     }
 
-    private static void appendCustomJvmOptions(List<String> customJvmOptions,
-                                               Map<String, Object> services,
-                                               String serviceName,
-                                               String variableName) {
+    private static void appendCustomJvmOptions(
+            List<String> customJvmOptions,
+            Map<String, Object> services,
+            String serviceName,
+            String variableName) {
         String jvmOptions = parseJvmOptions(customJvmOptions);
         if (jvmOptions.isBlank()) {
             return;
@@ -139,15 +168,20 @@ public class TestingEnvContainer extends DockerComposeContainer<TestingEnvContai
         for (String option : jvmOptions) {
             option = option.trim();
             if (option.startsWith("-")) {
-                builder.append(" ").append(option);
+                builder.append(" ")
+                        .append(option);
             } else {
-                builder.append(" -D").append(option);
+                builder.append(" -D")
+                        .append(option);
             }
         }
         return builder.toString();
     }
 
-    private static void removeDependency(Map<String, Object> services, String serviceName, String dependencyName) {
+    private static void removeDependency(
+            Map<String, Object> services,
+            String serviceName,
+            String dependencyName) {
         Map<String, Object> service = (Map<String, Object>) services.get(serviceName);
         Map<String, Object> dependencies = (Map<String, Object>) service.get("depends_on");
         dependencies.remove(dependencyName);
@@ -160,7 +194,10 @@ public class TestingEnvContainer extends DockerComposeContainer<TestingEnvContai
         if (container.isPresent()) {
             return container.get();
         }
-        throw new RuntimeException("Could not find the mongo container with the service name: \"" + MONGO_SERVICE_NAME + "\"");
+        throw new RuntimeException(
+                "Could not find the mongo container with the service name: \""
+                        + MONGO_SERVICE_NAME
+                        + "\"");
     }
 
     public String getMongoHost() {
@@ -176,15 +213,15 @@ public class TestingEnvContainer extends DockerComposeContainer<TestingEnvContai
     }
 
     public String getMongoUri(String dbName) {
-        return "mongodb://root:" +
-                getMongoPassword() +
-                "@" +
-                getMongoHost() +
-                ":" +
-                getMongoPort() +
-                "/" +
-                dbName +
-                "?authSource=admin";
+        return "mongodb://root:"
+                + getMongoPassword()
+                + "@"
+                + getMongoHost()
+                + ":"
+                + getMongoPort()
+                + "/"
+                + dbName
+                + "?authSource=admin";
     }
 
     // Redis
@@ -194,7 +231,10 @@ public class TestingEnvContainer extends DockerComposeContainer<TestingEnvContai
         if (container.isPresent()) {
             return container.get();
         }
-        throw new RuntimeException("Could not find the redis container with the service name: \"" + REDIS_SERVICE_NAME + "\"");
+        throw new RuntimeException(
+                "Could not find the redis container with the service name: \""
+                        + REDIS_SERVICE_NAME
+                        + "\"");
     }
 
     public String getRedisHost() {
@@ -206,10 +246,10 @@ public class TestingEnvContainer extends DockerComposeContainer<TestingEnvContai
     }
 
     public String getRedisUri() {
-        return "redis://" +
-                getRedisHost() +
-                ":" +
-                getRedisPort();
+        return "redis://"
+                + getRedisHost()
+                + ":"
+                + getRedisPort();
     }
 
     // turms-service

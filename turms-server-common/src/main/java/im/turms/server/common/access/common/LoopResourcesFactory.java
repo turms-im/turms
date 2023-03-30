@@ -17,12 +17,12 @@
 
 package im.turms.server.common.access.common;
 
+import java.util.concurrent.ThreadFactory;
+
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.util.concurrent.DefaultThreadFactory;
 import reactor.netty.resources.LoopResources;
-
-import java.util.concurrent.ThreadFactory;
 
 /**
  * @author James Chen
@@ -30,7 +30,8 @@ import java.util.concurrent.ThreadFactory;
 public final class LoopResourcesFactory {
 
     private static final int DEFAULT_ACCEPTOR_THREADS = 1;
-    private static final int DEFAULT_WORKER_THREADS = Math.max(Runtime.getRuntime().availableProcessors(), 1);
+    private static final int DEFAULT_WORKER_THREADS = Math.max(Runtime.getRuntime()
+            .availableProcessors(), 1);
 
     private LoopResourcesFactory() {
     }
@@ -39,13 +40,19 @@ public final class LoopResourcesFactory {
         return new LoopResources() {
             @Override
             public EventLoopGroup onServerSelect(boolean useNative) {
-                ThreadFactory threadFactory = new DefaultThreadFactory(prefix + "-acceptor", false);
+                ThreadFactory threadFactory = new DefaultThreadFactory(
+                        prefix
+                                + "-acceptor",
+                        false);
                 return new NioEventLoopGroup(DEFAULT_ACCEPTOR_THREADS, threadFactory);
             }
 
             @Override
             public EventLoopGroup onServer(boolean useNative) {
-                ThreadFactory threadFactory = new DefaultThreadFactory(prefix + "-worker", false);
+                ThreadFactory threadFactory = new DefaultThreadFactory(
+                        prefix
+                                + "-worker",
+                        false);
                 return new NioEventLoopGroup(DEFAULT_WORKER_THREADS, threadFactory);
             }
         };

@@ -17,11 +17,12 @@
 
 package im.turms.server.common.infra.property.env.common.cluster;
 
-import im.turms.server.common.infra.property.metadata.Description;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import im.turms.server.common.infra.property.metadata.Description;
 
 /**
  * @author James Chen
@@ -34,9 +35,9 @@ public class NodeProperties {
 
     public static final int NODE_ID_MAX_LENGTH = 32;
 
-    @Description("The node ID must start with a letter or underscore, " +
-            "and matches zero or more of characters [a-zA-Z0-9_] after the beginning. " +
-            "e.g. \"turms001\", \"turms_002\"")
+    @Description("The node ID must start with a letter or underscore, "
+            + "and matches zero or more of characters [a-zA-Z0-9_] after the beginning. "
+            + "e.g. \"turms001\", \"turms_002\"")
     private String id = "";
 
     @Description("e.g. \"us-east-1\" and \"ap-east-1\"")

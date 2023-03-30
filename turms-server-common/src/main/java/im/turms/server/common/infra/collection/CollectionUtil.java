@@ -17,13 +17,6 @@
 
 package im.turms.server.common.infra.collection;
 
-import im.turms.server.common.infra.exception.IncompatibleJvmException;
-import im.turms.server.common.infra.lang.PrimitiveUtil;
-import im.turms.server.common.infra.lang.StrJoiner;
-import org.eclipse.collections.api.collection.ImmutableCollection;
-import org.eclipse.collections.api.map.ImmutableMap;
-import org.eclipse.collections.impl.set.mutable.UnifiedSet;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -39,6 +32,14 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import jakarta.annotation.Nullable;
 
+import org.eclipse.collections.api.collection.ImmutableCollection;
+import org.eclipse.collections.api.map.ImmutableMap;
+import org.eclipse.collections.impl.set.mutable.UnifiedSet;
+
+import im.turms.server.common.infra.exception.IncompatibleJvmException;
+import im.turms.server.common.infra.lang.PrimitiveUtil;
+import im.turms.server.common.infra.lang.StrJoiner;
+
 /**
  * @author James Chen
  */
@@ -50,24 +51,34 @@ public final class CollectionUtil {
     private static final Class<?> IMMUTABLE_MAP_CLASS;
 
     static {
-        IMMUTABLE_SET_CLASS = Set.of().getClass().getSuperclass();
-        if (!IMMUTABLE_SET_CLASS.getName().equals("java.util.ImmutableCollections$AbstractImmutableSet")) {
-            throw new IncompatibleJvmException("Could not find the class: java.util.ImmutableCollections$AbstractImmutableSet");
+        IMMUTABLE_SET_CLASS = Set.of()
+                .getClass()
+                .getSuperclass();
+        if (!IMMUTABLE_SET_CLASS.getName()
+                .equals("java.util.ImmutableCollections$AbstractImmutableSet")) {
+            throw new IncompatibleJvmException(
+                    "Could not find the class: java.util.ImmutableCollections$AbstractImmutableSet");
         }
         IMMUTABLE_COLLECTION_CLASS = IMMUTABLE_SET_CLASS.getSuperclass();
-        if (!IMMUTABLE_COLLECTION_CLASS.getName().equals("java.util.ImmutableCollections$AbstractImmutableCollection")) {
-            throw new IncompatibleJvmException("Could not find the class: java.util.ImmutableCollections$AbstractImmutableCollection");
+        if (!IMMUTABLE_COLLECTION_CLASS.getName()
+                .equals("java.util.ImmutableCollections$AbstractImmutableCollection")) {
+            throw new IncompatibleJvmException(
+                    "Could not find the class: java.util.ImmutableCollections$AbstractImmutableCollection");
         }
-        IMMUTABLE_MAP_CLASS = Map.of().getClass().getSuperclass();
-        if (!IMMUTABLE_MAP_CLASS.getName().equals("java.util.ImmutableCollections$AbstractImmutableMap")) {
-            throw new IncompatibleJvmException("Could not find the class: java.util.ImmutableCollections$AbstractImmutableMap");
+        IMMUTABLE_MAP_CLASS = Map.of()
+                .getClass()
+                .getSuperclass();
+        if (!IMMUTABLE_MAP_CLASS.getName()
+                .equals("java.util.ImmutableCollections$AbstractImmutableMap")) {
+            throw new IncompatibleJvmException(
+                    "Could not find the class: java.util.ImmutableCollections$AbstractImmutableMap");
         }
     }
 
     private CollectionUtil() {
     }
 
-    //region new instance
+    // region new instance
     public static int getMapCapability(int expectedSize) {
         return (int) (expectedSize / 0.75F + 1.0F);
     }
@@ -145,9 +156,9 @@ public final class CollectionUtil {
         return Map.ofEntries(entries.toArray(EMPTY_ENTRY_ARRAY));
     }
 
-    //endregion
+    // endregion
 
-    //region introspection
+    // region introspection
     public static int getSize(@Nullable Collection<?> collection) {
         if (collection == null) {
             return 0;
@@ -195,7 +206,8 @@ public final class CollectionUtil {
     }
 
     public static boolean isImmutable(Iterable<?> iterable) {
-        return IMMUTABLE_COLLECTION_CLASS.isInstance(iterable) || iterable instanceof ImmutableCollection;
+        return IMMUTABLE_COLLECTION_CLASS.isInstance(iterable)
+                || iterable instanceof ImmutableCollection;
     }
 
     public static boolean isImmutable(Map<?, ?> map) {
@@ -205,9 +217,9 @@ public final class CollectionUtil {
     public static boolean isImmutableSet(Iterable<?> iterable) {
         return IMMUTABLE_SET_CLASS.isInstance(iterable);
     }
-    //endregion
+    // endregion
 
-    //region contains
+    // region contains
     public static boolean containsAll(Map<?, ?> map1, Map<?, ?> map2) {
         for (Map.Entry<?, ?> entry : map2.entrySet()) {
             if (!Objects.equals(entry.getValue(), map1.get(entry.getKey()))) {
@@ -230,7 +242,9 @@ public final class CollectionUtil {
         return collection.size() == 1 && collection.contains(value);
     }
 
-    private static boolean areTwoObjectsLooselyEqual(@Nullable Object actualValue, @Nullable Object expectedValue) {
+    private static boolean areTwoObjectsLooselyEqual(
+            @Nullable Object actualValue,
+            @Nullable Object expectedValue) {
         if (actualValue == null) {
             return null == expectedValue;
         } else if (expectedValue == null) {
@@ -240,11 +254,15 @@ public final class CollectionUtil {
             return true;
         }
         // For strings and primitives, check if their strings are equal
-        if (expectedValue instanceof String || PrimitiveUtil.isPrimitiveOrWrapperClass(expectedValue.getClass())) {
-            return (actualValue instanceof String || PrimitiveUtil.isPrimitiveOrWrapperClass(actualValue.getClass())) &&
-                    expectedValue.toString().equals(actualValue.toString());
+        if (expectedValue instanceof String
+                || PrimitiveUtil.isPrimitiveOrWrapperClass(expectedValue.getClass())) {
+            return (actualValue instanceof String
+                    || PrimitiveUtil.isPrimitiveOrWrapperClass(actualValue.getClass()))
+                    && expectedValue.toString()
+                            .equals(actualValue.toString());
         }
-        if (expectedValue.getClass().isArray()) {
+        if (expectedValue.getClass()
+                .isArray()) {
             // Compare for arrays and collections
             return areCollectionsLooselyEqual(ArrayUtil.getArray(expectedValue), actualValue);
         } else if (expectedValue instanceof Collection<?> expectedValueCollection) {
@@ -259,7 +277,8 @@ public final class CollectionUtil {
     }
 
     private static boolean areCollectionsLooselyEqual(Object[] value1, Object value2) {
-        if (value2.getClass().isArray()) {
+        if (value2.getClass()
+                .isArray()) {
             Object[] values = ArrayUtil.getArray(value2);
             return areArraysLooselyEqual(value1, values);
         } else if (value2 instanceof Collection<?> values) {
@@ -269,7 +288,8 @@ public final class CollectionUtil {
     }
 
     private static boolean areCollectionsLooselyEqual(Collection<?> values1, Object values2) {
-        if (values2.getClass().isArray()) {
+        if (values2.getClass()
+                .isArray()) {
             return areCollectionLooselyEqual(values1, (Object[]) values2);
         } else if (values2 instanceof Collection<?> values) {
             if (values1.size() != values.size()) {
@@ -312,9 +332,9 @@ public final class CollectionUtil {
         }
         return true;
     }
-    //endregion
+    // endregion
 
-    //region conversion
+    // region conversion
 
     public static <T> List<T> toList(Collection<T> collection) {
         if (collection instanceof List<T> list) {
@@ -360,14 +380,16 @@ public final class CollectionUtil {
         }
         return joiner.toStringWithBrackets();
     }
-    //endregion
+    // endregion
 
-    //region transform
-    public static <K, V> Map<V, Set<K>> reverseAsSetValues(Map<K, V> map, int expectedValuesPerKey) {
+    // region transform
+    public static <K, V> Map<V, Set<K>> reverseAsSetValues(
+            Map<K, V> map,
+            int expectedValuesPerKey) {
         Map<V, Set<K>> result = newMapWithExpectedSize(map.size());
         for (Map.Entry<K, V> keyAndValue : map.entrySet()) {
             result.computeIfAbsent(keyAndValue.getValue(),
-                            key -> CollectionUtil.newSetWithExpectedSize(expectedValuesPerKey))
+                    key -> CollectionUtil.newSetWithExpectedSize(expectedValuesPerKey))
                     .add(keyAndValue.getKey());
         }
         return result;
@@ -396,9 +418,9 @@ public final class CollectionUtil {
         }
         return result;
     }
-    //endregion
+    // endregion
 
-    //region add/remove
+    // region add/remove
     public static <T> List<T> add(List<T> list, Collection<T> values) {
         if (isImmutable(list)) {
             List<T> newList = new ArrayList<>(list.size() + values.size());
@@ -468,9 +490,9 @@ public final class CollectionUtil {
         map.put(key, value);
         return map;
     }
-    //endregion
+    // endregion
 
-    //region merge
+    // region merge
 
     public static <K, V> Map<K, V> merge(Map<K, V> map1, Map<K, V> map2) {
         Map<K, V> result = newMapWithExpectedSize(map1.size() + map2.size());
@@ -479,9 +501,10 @@ public final class CollectionUtil {
         return result;
     }
 
-    public static <K, V> Map<K, V> deepMerge(Map<K, V> baseMap,
-                                             Map<? extends K, ? extends V> mapToMerge,
-                                             boolean appendCollectionElements) {
+    public static <K, V> Map<K, V> deepMerge(
+            Map<K, V> baseMap,
+            Map<? extends K, ? extends V> mapToMerge,
+            boolean appendCollectionElements) {
         for (Map.Entry<? extends K, ? extends V> entry : mapToMerge.entrySet()) {
             K key = entry.getKey();
             V existingValue = baseMap.get(key);
@@ -502,9 +525,9 @@ public final class CollectionUtil {
         }
         return baseMap;
     }
-    //endregion
+    // endregion
 
-    //region intersection/union
+    // region intersection/union
     public static <T> Set<T> intersection(Set<T> c1, Collection<T> c2) {
         Set<T> result = newSetWithExpectedSize(Math.min(c1.size(), c2.size()));
         for (T value : c2) {
@@ -543,6 +566,6 @@ public final class CollectionUtil {
         }
         return list.contains(value);
     }
-    //endregion
+    // endregion
 
 }

@@ -17,11 +17,6 @@
 
 package im.turms.server.common.infra.exception;
 
-import com.mongodb.internal.connection.tlschannel.impl.TlsChannelImpl;
-import im.turms.server.common.access.common.ResponseStatusCode;
-import org.apache.commons.lang3.StringUtils;
-import reactor.netty.channel.AbortedException;
-
 import java.io.EOFException;
 import java.io.IOException;
 import java.nio.channels.ClosedChannelException;
@@ -31,17 +26,22 @@ import java.util.Set;
 import java.util.function.Supplier;
 import jakarta.annotation.Nullable;
 
+import com.mongodb.internal.connection.tlschannel.impl.TlsChannelImpl;
+import org.apache.commons.lang3.StringUtils;
+import reactor.netty.channel.AbortedException;
+
+import im.turms.server.common.access.common.ResponseStatusCode;
+
 /**
  * @author James Chen
  */
 public final class ThrowableUtil {
 
-    private static final Set<Class<?>> DISCONNECTED_CLIENT_EXCEPTIONS = Set.of(
-            AbortedException.class,
-            ClosedChannelException.class,
-            EOFException.class,
-            TlsChannelImpl.EofException.class
-    );
+    private static final Set<Class<?>> DISCONNECTED_CLIENT_EXCEPTIONS =
+            Set.of(AbortedException.class,
+                    ClosedChannelException.class,
+                    EOFException.class,
+                    TlsChannelImpl.EofException.class);
 
     private ThrowableUtil() {
     }
@@ -73,7 +73,8 @@ public final class ThrowableUtil {
             if (message == null) {
                 return false;
             }
-            return StringUtils.containsIgnoreCase(message, "An existing connection was forcibly closed")
+            return StringUtils.containsIgnoreCase(message,
+                    "An existing connection was forcibly closed")
                     || StringUtils.containsIgnoreCase(message, "Connection reset")
                     || StringUtils.containsIgnoreCase(message, "Broken pipe");
         }
@@ -81,8 +82,7 @@ public final class ThrowableUtil {
     }
 
     public static boolean isStatusCode(Throwable throwable, ResponseStatusCode statusCode) {
-        return throwable instanceof ResponseException e
-                && e.getCode() == statusCode;
+        return throwable instanceof ResponseException e && e.getCode() == statusCode;
     }
 
     public static void delayError(List<Runnable> runnables, String message) {

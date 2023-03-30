@@ -17,7 +17,6 @@
 
 package im.turms.server.common.infra.property.env.gateway.identityaccessmanagement.jwt;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -40,6 +39,7 @@ public class JwtIdentityAccessManagementProperties {
     private JwtAuthenticationProperties authentication = new JwtAuthenticationProperties();
 
     @NestedConfigurationProperty
-    private JwtIdentityAccessManagementVerificationProperties verification = new JwtIdentityAccessManagementVerificationProperties();
+    private JwtIdentityAccessManagementVerificationProperties verification =
+            new JwtIdentityAccessManagementVerificationProperties();
 
 }

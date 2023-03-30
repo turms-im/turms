@@ -33,11 +33,15 @@ public class CharNormalizer {
         if (data == null) {
             String className = "im.turms.plugin.antispam.character.data.U%02X".formatted(high);
             try {
-                data = (char[][]) Class.forName(className).getField("DATA").get(null);
+                data = (char[][]) Class.forName(className)
+                        .getField("DATA")
+                        .get(null);
             } catch (IllegalAccessException e) {
                 throw new RuntimeException("Failed to access the dictionary data", e);
             } catch (ClassNotFoundException | NoSuchFieldException e) {
-                String message = "Could not find the dictionary data: " + className + "#DATA";
+                String message = "Could not find the dictionary data: "
+                        + className
+                        + "#DATA";
                 throw new ResourceNotFoundException(message, e);
             }
             cache[high] = data;

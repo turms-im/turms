@@ -18,7 +18,6 @@
 package im.turms.server.common.storage.mongo;
 
 import com.mongodb.MongoClientSettings;
-import im.turms.server.common.storage.mongo.codec.MongoCodecProvider;
 import org.bson.codecs.BsonCodecProvider;
 import org.bson.codecs.BsonValueCodecProvider;
 import org.bson.codecs.DocumentCodecProvider;
@@ -30,6 +29,8 @@ import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.jsr310.Jsr310CodecProvider;
 
+import im.turms.server.common.storage.mongo.codec.MongoCodecProvider;
+
 /**
  * @author James Chen
  */
@@ -38,21 +39,23 @@ public final class CodecPool {
     private CodecPool() {
     }
 
-    public static final EncoderContext DEFAULT_ENCODER_CONTEXT = EncoderContext.builder().build();
-    public static final BsonValueCodecProvider BSON_VALUE_CODEC_PROVIDER = new BsonValueCodecProvider();
+    public static final EncoderContext DEFAULT_ENCODER_CONTEXT = EncoderContext.builder()
+            .build();
+    public static final BsonValueCodecProvider BSON_VALUE_CODEC_PROVIDER =
+            new BsonValueCodecProvider();
     private static final MongoCodecProvider MONGO_CODEC_PROVIDER = new MongoCodecProvider();
     /**
      * {@link MongoClientSettings#DEFAULT_CODEC_REGISTRY}
      */
-    public static final CodecRegistry CODEC_REGISTRY = CodecRegistries.fromProviders(
-            new ValueCodecProvider(),
-            BSON_VALUE_CODEC_PROVIDER,
-            new DocumentCodecProvider(),
-            new MapCodecProvider(),
-            new IterableCodecProvider(),
-            new Jsr310CodecProvider(),
-            new BsonCodecProvider(),
-            MONGO_CODEC_PROVIDER);
+    public static final CodecRegistry CODEC_REGISTRY =
+            CodecRegistries.fromProviders(new ValueCodecProvider(),
+                    BSON_VALUE_CODEC_PROVIDER,
+                    new DocumentCodecProvider(),
+                    new MapCodecProvider(),
+                    new IterableCodecProvider(),
+                    new Jsr310CodecProvider(),
+                    new BsonCodecProvider(),
+                    MONGO_CODEC_PROVIDER);
 
     static {
         MONGO_CODEC_PROVIDER.setRegistry(CODEC_REGISTRY);

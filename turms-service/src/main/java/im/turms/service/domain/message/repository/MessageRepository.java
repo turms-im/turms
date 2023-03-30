@@ -17,8 +17,19 @@
 
 package im.turms.service.domain.message.repository;
 
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
+import jakarta.annotation.Nullable;
+
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.reactivestreams.client.ClientSession;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.domain.common.repository.BaseRepository;
 import im.turms.server.common.infra.lang.LongUtil;
 import im.turms.server.common.infra.time.DateRange;
@@ -28,16 +39,6 @@ import im.turms.server.common.storage.mongo.operation.option.Filter;
 import im.turms.server.common.storage.mongo.operation.option.QueryOptions;
 import im.turms.server.common.storage.mongo.operation.option.Update;
 import im.turms.service.domain.message.po.Message;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Repository;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen
@@ -49,13 +50,14 @@ public class MessageRepository extends BaseRepository<Message, Long> {
         super(mongoClient, Message.class);
     }
 
-    public Mono<UpdateResult> updateMessages(Set<Long> messageIds,
-                                             @Nullable Boolean isSystemMessage,
-                                             @Nullable Integer senderIp,
-                                             @Nullable String text,
-                                             @Nullable List<byte[]> records,
-                                             @Nullable Integer burnAfter,
-                                             @Nullable ClientSession session) {
+    public Mono<UpdateResult> updateMessages(
+            Set<Long> messageIds,
+            @Nullable Boolean isSystemMessage,
+            @Nullable Integer senderIp,
+            @Nullable String text,
+            @Nullable List<byte[]> records,
+            @Nullable Integer burnAfter,
+            @Nullable ClientSession session) {
         Filter filter = Filter.newBuilder(1)
                 .in(DomainFieldName.ID, messageIds);
         Update update = Update.newBuilder(5)
@@ -103,20 +105,14 @@ public class MessageRepository extends BaseRepository<Message, Long> {
                 .addBetweenIfNotNull(Message.Fields.DELIVERY_DATE, dateRange)
                 .eqIfNotNull(Message.Fields.IS_GROUP_MESSAGE, areGroupMessages)
                 .eqIfNotNull(Message.Fields.IS_SYSTEM_MESSAGE, areSystemMessages);
-        return mongoClient.countDistinct(
-                entityClass,
-                filter,
-                Message.Fields.SENDER_ID);
+        return mongoClient.countDistinct(entityClass, filter, Message.Fields.SENDER_ID);
     }
 
     public Mono<Long> countGroupsThatSentMessages(@Nullable DateRange dateRange) {
         Filter filter = Filter.newBuilder(3)
                 .addBetweenIfNotNull(Message.Fields.DELIVERY_DATE, dateRange)
                 .eq(Message.Fields.IS_GROUP_MESSAGE, true);
-        return mongoClient.countDistinct(
-                entityClass,
-                filter,
-                Message.Fields.TARGET_ID);
+        return mongoClient.countDistinct(entityClass, filter, Message.Fields.TARGET_ID);
     }
 
     public Mono<Long> countSentMessages(
@@ -223,8 +219,7 @@ public class MessageRepository extends BaseRepository<Message, Long> {
     }
 
     private static byte[] toPrivateConversationId(long lowerId, long higherId) {
-        return new byte[]{
-                (byte) (lowerId >> 56),
+        return new byte[]{(byte) (lowerId >> 56),
                 (byte) (lowerId >> 48),
                 (byte) (lowerId >> 40),
                 (byte) (lowerId >> 32),
@@ -240,7 +235,6 @@ public class MessageRepository extends BaseRepository<Message, Long> {
                 (byte) (higherId >> 24),
                 (byte) (higherId >> 16),
                 (byte) (higherId >> 8),
-                (byte) higherId
-        };
+                (byte) higherId};
     }
 }

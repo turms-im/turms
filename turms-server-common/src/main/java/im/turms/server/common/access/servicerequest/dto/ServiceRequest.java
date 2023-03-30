@@ -17,15 +17,16 @@
 
 package im.turms.server.common.access.servicerequest.dto;
 
-import im.turms.server.common.access.client.dto.constant.DeviceType;
-import im.turms.server.common.access.client.dto.request.TurmsRequest;
-import im.turms.server.common.infra.net.InetAddressUtil;
+import java.util.Arrays;
+import jakarta.annotation.Nullable;
+
 import io.netty.buffer.ByteBuf;
 import io.netty.util.NetUtil;
 import lombok.Data;
 
-import java.util.Arrays;
-import jakarta.annotation.Nullable;
+import im.turms.server.common.access.client.dto.constant.DeviceType;
+import im.turms.server.common.access.client.dto.request.TurmsRequest;
+import im.turms.server.common.infra.net.InetAddressUtil;
 
 /**
  * @author James Chen
@@ -51,25 +52,27 @@ public final class ServiceRequest {
     private final TurmsRequest.KindCase type;
 
     /**
-     * @implNote Note that turms-gateway doesn't parse and validate the request because
-     * 1. For better performance (zero copy)
-     * 2. Decouple the business logic so that turms-service servers can change the structure of DTOs
-     * without the need to upgrade and restart turms-gateway servers
-     * turms-service servers should validate it by themselves
+     * @implNote Note that turms-gateway doesn't parse and validate the request because 1. For
+     *           better performance (zero copy) 2. Decouple the business logic so that turms-service
+     *           servers can change the structure of DTOs without the need to upgrade and restart
+     *           turms-gateway servers turms-service servers should validate it by themselves
      */
     private final ByteBuf turmsRequestBuffer;
 
     // computed properties
     private String ipStr;
 
-    public ServiceRequest(byte[] ip,
-                          Long userId,
-                          DeviceType deviceType,
-                          @Nullable Long requestId,
-                          @Nullable TurmsRequest.KindCase type,
-                          ByteBuf turmsRequestBuffer) {
+    public ServiceRequest(
+            byte[] ip,
+            Long userId,
+            DeviceType deviceType,
+            @Nullable Long requestId,
+            @Nullable TurmsRequest.KindCase type,
+            ByteBuf turmsRequestBuffer) {
         if (!InetAddressUtil.isIpV4OrV6(ip)) {
-            throw new IllegalArgumentException("Illegal IP bytes: " + Arrays.toString(ip));
+            throw new IllegalArgumentException(
+                    "Illegal IP bytes: "
+                            + Arrays.toString(ip));
         }
         this.ip = ip;
         this.userId = userId;
@@ -88,14 +91,20 @@ public final class ServiceRequest {
 
     @Override
     public String toString() {
-        return "ServiceRequest{" +
-                "ip=" + getIpStr() +
-                ", userId=" + userId +
-                ", deviceType=" + deviceType +
-                ", requestId=" + requestId +
-                ", type=" + type +
-                ", turmsRequestBuffer=" + turmsRequestBuffer +
-                '}';
+        return "ServiceRequest{"
+                + "ip="
+                + getIpStr()
+                + ", userId="
+                + userId
+                + ", deviceType="
+                + deviceType
+                + ", requestId="
+                + requestId
+                + ", type="
+                + type
+                + ", turmsRequestBuffer="
+                + turmsRequestBuffer
+                + '}';
     }
 
 }

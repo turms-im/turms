@@ -17,11 +17,12 @@
 
 package im.turms.server.common.domain.observation.rpc;
 
+import lombok.Data;
+import org.springframework.context.ApplicationContext;
+
 import im.turms.server.common.domain.observation.service.IStatisticsService;
 import im.turms.server.common.infra.cluster.service.rpc.NodeTypeToHandleRpc;
 import im.turms.server.common.infra.cluster.service.rpc.dto.RpcRequest;
-import lombok.Data;
-import org.springframework.context.ApplicationContext;
 
 /**
  * @author James Chen

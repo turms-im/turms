@@ -17,11 +17,12 @@
 
 package unit.im.turms.service;
 
-import im.turms.service.TurmsServiceApplication;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.springframework.boot.SpringApplication;
+
+import im.turms.service.TurmsServiceApplication;
 
 import static org.assertj.core.api.Assertions.assertThatNoException;
 
@@ -35,10 +36,10 @@ class TurmsServiceApplicationTests {
     void contextLoads() {
         String[] args = {};
         MockedStatic<SpringApplication> application = Mockito.mockStatic(SpringApplication.class);
-        application.when(() -> SpringApplication.run(TurmsServiceApplication.class, args)).thenReturn(null);
+        application.when(() -> SpringApplication.run(TurmsServiceApplication.class, args))
+                .thenReturn(null);
 
-        assertThatNoException()
-                .isThrownBy(() -> TurmsServiceApplication.main(args));
+        assertThatNoException().isThrownBy(() -> TurmsServiceApplication.main(args));
     }
 
 }

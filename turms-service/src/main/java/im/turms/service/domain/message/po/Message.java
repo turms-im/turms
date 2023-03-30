@@ -17,6 +17,12 @@
 
 package im.turms.service.domain.message.po;
 
+import java.util.Date;
+import java.util.List;
+import jakarta.annotation.Nullable;
+
+import lombok.Data;
+
 import im.turms.server.common.domain.common.po.BaseEntity;
 import im.turms.server.common.storage.mongo.entity.annotation.CompoundIndex;
 import im.turms.server.common.storage.mongo.entity.annotation.Document;
@@ -25,11 +31,6 @@ import im.turms.server.common.storage.mongo.entity.annotation.Id;
 import im.turms.server.common.storage.mongo.entity.annotation.Indexed;
 import im.turms.server.common.storage.mongo.entity.annotation.Sharded;
 import im.turms.server.common.storage.mongo.entity.annotation.TieredStorage;
-import lombok.Data;
-
-import java.util.Date;
-import java.util.List;
-import jakarta.annotation.Nullable;
 
 import static im.turms.server.common.storage.mongo.entity.IndexType.HASH;
 import static im.turms.server.common.storage.mongo.entity.annotation.IndexedReason.EXPIRABLE;
@@ -37,18 +38,19 @@ import static im.turms.server.common.storage.mongo.entity.annotation.IndexedReas
 
 /**
  * @author James Chen
- * @implNote The shard key is {@link Fields#DELIVERY_DATE} instead of
- * {@link Fields#TARGET_ID} or {@link Fields#CONVERSATION_ID}.
- * Being sharded by {@link Fields#TARGET_ID} or {@link Fields#CONVERSATION_ID},
- * most CRUD operations are efficient for small scale applications,
- * but Turms is designed for medium and large scale applications,
- * so we use {@link Fields#DELIVERY_DATE} as the shard key to support tiered storage.
+ * @implNote The shard key is {@link Fields#DELIVERY_DATE} instead of {@link Fields#TARGET_ID} or
+ *           {@link Fields#CONVERSATION_ID}. Being sharded by {@link Fields#TARGET_ID} or
+ *           {@link Fields#CONVERSATION_ID}, most CRUD operations are efficient for small scale
+ *           applications, but Turms is designed for medium and large scale applications, so we use
+ *           {@link Fields#DELIVERY_DATE} as the shard key to support tiered storage.
  */
 @Data
 @Document(Message.COLLECTION_NAME)
-@CompoundIndex(value = {Message.Fields.DELIVERY_DATE, Message.Fields.TARGET_ID},
+@CompoundIndex(
+        value = {Message.Fields.DELIVERY_DATE, Message.Fields.TARGET_ID},
         ifNotExist = Message.Fields.CONVERSATION_ID)
-@CompoundIndex(value = {Message.Fields.DELIVERY_DATE, Message.Fields.CONVERSATION_ID},
+@CompoundIndex(
+        value = {Message.Fields.DELIVERY_DATE, Message.Fields.CONVERSATION_ID},
         ifExist = Message.Fields.CONVERSATION_ID)
 @Sharded(shardKey = Message.Fields.DELIVERY_DATE)
 @TieredStorage(creationDateFieldName = Message.Fields.DELIVERY_DATE)
@@ -57,38 +59,37 @@ public final class Message extends BaseEntity {
     public static final String COLLECTION_NAME = "message";
 
     /**
-     * Note that because it is uncommon for most instant messaging scenarios to
-     * query messages by ID only. Currently, the only scenario that needs to query
-     * a message by ID is that a user forwards (copies) a message to another recipient/group.
-     * Because it is not frequently used feature, we don't use ID as a part of the shard key.
+     * Note that because it is uncommon for most instant messaging scenarios to query messages by ID
+     * only. Currently, the only scenario that needs to query a message by ID is that a user
+     * forwards (copies) a message to another recipient/group. Because it is not frequently used
+     * feature, we don't use ID as a part of the shard key.
      */
     @Id
     private final Long id;
 
     /**
-     * For private conversations, the ID (16 bytes) consisting of the sender ID and the target ID
-     * is used to query messages in a conversation quickly so that a user can query the messages sent by
-     * themselves instead of only the messages sent by the sender quickly (using index).
+     * For private conversations, the ID (16 bytes) consisting of the sender ID and the target ID is
+     * used to query messages in a conversation quickly so that a user can query the messages sent
+     * by themselves instead of only the messages sent by the sender quickly (using index).
      * <p>
-     * For group conversations, the ID (8 bytes) is just the target/group ID.
-     * Because private conversation IDs need to work with the compound index of
-     * {@link Fields#DELIVERY_DATE} and {@link Fields#CONVERSATION_ID},
-     * group conversations also need the conversation ID to work with the compound index.
-     * Though we can add another compound index {@link Fields#DELIVERY_DATE} and {@link Fields#TARGET_ID},
-     * the index is useless for private conversations.
+     * For group conversations, the ID (8 bytes) is just the target/group ID. Because private
+     * conversation IDs need to work with the compound index of {@link Fields#DELIVERY_DATE} and
+     * {@link Fields#CONVERSATION_ID}, group conversations also need the conversation ID to work
+     * with the compound index. Though we can add another compound index
+     * {@link Fields#DELIVERY_DATE} and {@link Fields#TARGET_ID}, the index is useless for private
+     * conversations.
      * <p>
-     * And we don't use two independent collections for private messages and group messages,
-     * because we have many CRUD operations that need to work with private and group messages
-     * at the same time, and if they are in a collection, we can just use and send one command to MongoDB
+     * And we don't use two independent collections for private messages and group messages, because
+     * we have many CRUD operations that need to work with private and group messages at the same
+     * time, and if they are in a collection, we can just use and send one command to MongoDB
      * instead of two commands.
      */
     @Field(Fields.CONVERSATION_ID)
     private final byte[] conversationId;
 
     /**
-     * Not indexed because it has a low index selectivity
-     * and the clients cannot/shouldn't just query messages by isGroupMessage
-     * (it must come with other conditions)
+     * Not indexed because it has a low index selectivity and the clients cannot/shouldn't just
+     * query messages by isGroupMessage (it must come with other conditions)
      * https://github.com/turms-im/turms/issues/336
      */
     @Field(Fields.IS_GROUP_MESSAGE)
@@ -104,7 +105,12 @@ public final class Message extends BaseEntity {
     private final Date modificationDate;
 
     @Field(Fields.DELETION_DATE)
-    @Indexed(optional = true, reason = EXPIRABLE, partialFilter = "{" + Fields.DELETION_DATE + ":{$exists:true}}")
+    @Indexed(
+            optional = true,
+            reason = EXPIRABLE,
+            partialFilter = "{"
+                    + Fields.DELETION_DATE
+                    + ":{$exists:true}}")
     private final Date deletionDate;
 
     @Field(Fields.RECALL_DATE)
@@ -118,9 +124,8 @@ public final class Message extends BaseEntity {
     private final Long senderId;
 
     /**
-     * Use {@link Integer} instead of {@link byte[]} to support IP range query
-     * in an efficient way at the cost of not supporting IPv6.
-     * TODO: DTO model conversion
+     * Use {@link Integer} instead of {@link byte[]} to support IP range query in an efficient way
+     * at the cost of not supporting IPv6. TODO: DTO model conversion
      */
     @Field(Fields.SENDER_IP)
     @Indexed(optional = true, reason = EXTENDED_FEATURE)
@@ -142,7 +147,13 @@ public final class Message extends BaseEntity {
     private final Integer burnAfter;
 
     @Field(Fields.REFERENCE_ID)
-    @Indexed(optional = true, value = HASH, reason = EXTENDED_FEATURE, partialFilter = "{" + Fields.REFERENCE_ID + ":{$exists:true}}")
+    @Indexed(
+            optional = true,
+            value = HASH,
+            reason = EXTENDED_FEATURE,
+            partialFilter = "{"
+                    + Fields.REFERENCE_ID
+                    + ":{$exists:true}}")
     private final Long referenceId;
 
     @Field(Fields.SEQUENCE_ID)
@@ -153,7 +164,9 @@ public final class Message extends BaseEntity {
 
     @Nullable
     public Long groupId() {
-        return isGroupMessage != null && isGroupMessage ? targetId : null;
+        return isGroupMessage != null && isGroupMessage
+                ? targetId
+                : null;
     }
 
     public static final class Fields {

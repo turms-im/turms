@@ -17,6 +17,8 @@
 
 package im.turms.service.domain.group.po;
 
+import lombok.Data;
+
 import im.turms.server.common.domain.common.po.BaseEntity;
 import im.turms.server.common.storage.mongo.entity.annotation.Document;
 import im.turms.server.common.storage.mongo.entity.annotation.EnumNumber;
@@ -25,12 +27,12 @@ import im.turms.server.common.storage.mongo.entity.annotation.Id;
 import im.turms.service.domain.group.bo.GroupInvitationStrategy;
 import im.turms.service.domain.group.bo.GroupJoinStrategy;
 import im.turms.service.domain.group.bo.GroupUpdateStrategy;
-import lombok.Data;
 
 /**
  * No need to shard because there are only a few (or some) group types.
  * <p>
  * Note that there is a built-in immutable group type:
+ * 
  * <pre>
  * { id: 0, name: "DEFAULT" }
  * </pre>

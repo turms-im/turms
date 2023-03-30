@@ -17,14 +17,15 @@
 
 package im.turms.server.common.infra.property.env.common.security;
 
-import im.turms.server.common.infra.property.metadata.Description;
+import java.util.List;
+import jakarta.validation.constraints.Min;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-import jakarta.validation.constraints.Min;
+import im.turms.server.common.infra.property.metadata.Description;
 
 /**
  * @author James Chen
@@ -35,11 +36,10 @@ import jakarta.validation.constraints.Min;
 @NoArgsConstructor
 public class AutoBlockItemProperties {
 
-    public static final List<BlockLevel> DEFAULT_BLOCK_LEVELS = List.of(
-            new BlockLevel(10, 60 * 1000, 1),
-            new BlockLevel(30, 60 * 1000, 1),
-            new BlockLevel(60, 60 * 1000, 0)
-    );
+    public static final List<BlockLevel> DEFAULT_BLOCK_LEVELS =
+            List.of(new BlockLevel(10, 60 * 1000, 1),
+                    new BlockLevel(30, 60 * 1000, 1),
+                    new BlockLevel(60, 60 * 1000, 0));
 
     private boolean enabled;
 
@@ -59,9 +59,9 @@ public class AutoBlockItemProperties {
         @Min(1)
         private int blockMinutes = 10;
 
-        @Description("Reduce the trigger time by 1 when the time passes. " +
-                "If 0, never reduce the trigger times and " +
-                "the block status will remain in the memory until the server is closed")
+        @Description("Reduce the trigger time by 1 when the time passes. "
+                + "If 0, never reduce the trigger times and "
+                + "the block status will remain in the memory until the server is closed")
         @Min(0)
         private int reduceOneTriggerTimeIntervalMillis = 60 * 1000;
 

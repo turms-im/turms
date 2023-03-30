@@ -17,21 +17,26 @@
 
 package im.turms.server.common.storage.mongo.entity;
 
-import org.bson.BsonDocument;
-
 import java.util.List;
+
+import org.bson.BsonDocument;
 
 /**
  * @author James Chen
  */
-public record ShardKey(BsonDocument document, List<Path> paths) {
+public record ShardKey(
+        BsonDocument document,
+        List<Path> paths
+) {
 
     /**
-     * e.g. "_id.whatever" =>
-     * fullPath: "_id.whatever"
-     * path: ["_id", "whatever"]
+     * e.g. "_id.whatever" => fullPath: "_id.whatever" path: ["_id", "whatever"]
      */
-    public record Path(boolean isIdField, String fullPath, String[] path) {
+    public record Path(
+            boolean isIdField,
+            String fullPath,
+            String[] path
+    ) {
     }
 
 }

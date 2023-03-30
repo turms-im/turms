@@ -17,40 +17,39 @@
 
 package im.turms.plugin.antispam.ac;
 
-import im.turms.plugin.antispam.dictionary.Word;
-
 import java.util.List;
 import java.util.stream.Stream;
+
+import im.turms.plugin.antispam.dictionary.Word;
 
 /**
  * @author James Chen
  */
 public final class Store {
 
-    public static final List<Word> UNWANTED_WORDS = Stream.of(
-                    "123",
+    public static final List<Word> UNWANTED_WORDS = Stream.of("123",
 
-                    "敏感词",
-                    "敏感词句",
+            "敏感词",
+            "敏感词句",
 
-                    "薬指",
-                    "リング",
-                    "人目忍ぶ恋",
-                    "選んだ",
-                    "強い",
-                    "女",
-                    "見えて",
-                    "心",
-                    "中",
-                    "切なさ",
-                    "揺れて",
+            "薬指",
+            "リング",
+            "人目忍ぶ恋",
+            "選んだ",
+            "強い",
+            "女",
+            "見えて",
+            "心",
+            "中",
+            "切なさ",
+            "揺れて",
 
-                    "oh no",
-                    "oh yes",
-                    "but no",
-                    "loving you is not right",
+            "oh no",
+            "oh yes",
+            "but no",
+            "loving you is not right",
 
-                    "𤳵")
+            "𤳵")
             .map(s -> new Word(s.toCharArray()))
             .toList();
 

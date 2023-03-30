@@ -17,19 +17,17 @@
 
 package im.turms.plugin.minio.core;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
-
-import java.util.List;
 
 /**
  * @author James Chen
  */
 @Builder
 public record BucketPolicy(
-        @JsonProperty("Version")
-        String version,
-        @JsonProperty("Statement")
-        List<BucketPolicyStatement> statement
+        @JsonProperty("Version") String version,
+        @JsonProperty("Statement") List<BucketPolicyStatement> statement
 ) {
 }

@@ -17,6 +17,11 @@
 
 package im.turms.service.storage.redis;
 
+import java.util.List;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
 import im.turms.server.common.infra.context.TurmsApplicationContext;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.service.ServiceProperties;
@@ -25,10 +30,6 @@ import im.turms.server.common.storage.redis.CommonRedisConfig;
 import im.turms.server.common.storage.redis.RedisProperties;
 import im.turms.server.common.storage.redis.TurmsRedisClientManager;
 import im.turms.server.common.storage.redis.codec.context.RedisCodecContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-
-import java.util.List;
 
 /**
  * @author James Chen
@@ -38,23 +39,36 @@ public class RedisConfig extends CommonRedisConfig {
 
     private final TurmsRedisClientManager sequenceIdRedisClientManager;
 
-    protected RedisConfig(TurmsApplicationContext context, TurmsPropertiesManager propertiesManager) {
+    protected RedisConfig(
+            TurmsApplicationContext context,
+            TurmsPropertiesManager propertiesManager) {
         super(context,
-                propertiesManager.getLocalProperties().getService().getRedis(),
-                propertiesManager.getLocalProperties().getLocation().isTreatUserIdAndDeviceTypeAsUniqueUser());
-        ServiceProperties serviceProperties = propertiesManager.getLocalProperties().getService();
-        SequenceIdProperties sequenceIdProperties = serviceProperties.getMessage().getSequenceId();
+                propertiesManager.getLocalProperties()
+                        .getService()
+                        .getRedis(),
+                propertiesManager.getLocalProperties()
+                        .getLocation()
+                        .isTreatUserIdAndDeviceTypeAsUniqueUser());
+        ServiceProperties serviceProperties = propertiesManager.getLocalProperties()
+                .getService();
+        SequenceIdProperties sequenceIdProperties = serviceProperties.getMessage()
+                .getSequenceId();
         sequenceIdRedisClientManager = sequenceIdProperties.isUseSequenceIdForGroupConversation()
                 || sequenceIdProperties.isUseSequenceIdForPrivateConversation()
-                ? newSequenceIdRedisClientManager(serviceProperties.getRedis().getSequenceId())
-                : null;
+                        ? newSequenceIdRedisClientManager(serviceProperties.getRedis()
+                                .getSequenceId())
+                        : null;
         if (sequenceIdRedisClientManager != null) {
             registerClientManagers(List.of(sequenceIdRedisClientManager));
         }
     }
 
-    public static TurmsRedisClientManager newSequenceIdRedisClientManager(RedisProperties properties) {
-        return new TurmsRedisClientManager(properties, RedisCodecContext.builder().build());
+    public static TurmsRedisClientManager newSequenceIdRedisClientManager(
+            RedisProperties properties) {
+        return new TurmsRedisClientManager(
+                properties,
+                RedisCodecContext.builder()
+                        .build());
     }
 
     @Bean

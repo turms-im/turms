@@ -17,12 +17,12 @@
 
 package im.turms.server.common.infra.metrics;
 
+import java.lang.management.ManagementFactory;
+
 import com.sun.management.OperatingSystemMXBean;
 import io.micrometer.core.instrument.Gauge;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.binder.MeterBinder;
-
-import java.lang.management.ManagementFactory;
 
 /**
  * @author James Chen
@@ -31,7 +31,8 @@ public class ProcessorMetrics implements MeterBinder {
 
     @Override
     public void bindTo(MeterRegistry registry) {
-        OperatingSystemMXBean operatingSystemBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
+        OperatingSystemMXBean operatingSystemBean =
+                ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
         Runtime runtime = Runtime.getRuntime();
 
         Gauge.builder("system.cpu.count", runtime, Runtime::availableProcessors)
@@ -39,19 +40,26 @@ public class ProcessorMetrics implements MeterBinder {
                 .register(registry);
 
         if (operatingSystemBean.getSystemLoadAverage() >= 0) {
-            Gauge.builder("system.load.average.1m", operatingSystemBean, OperatingSystemMXBean::getSystemLoadAverage)
-                    .description("The sum of the number of runnable entities queued to available processors and the number " +
-                            "of runnable entities running on the available processors averaged over a period of time")
+            Gauge.builder("system.load.average.1m",
+                    operatingSystemBean,
+                    OperatingSystemMXBean::getSystemLoadAverage)
+                    .description(
+                            "The sum of the number of runnable entities queued to available processors and the number "
+                                    + "of runnable entities running on the available processors averaged over a period of time")
                     .baseUnit("‱")
                     .register(registry);
         }
 
-        Gauge.builder("system.cpu.usage", operatingSystemBean, x -> operatingSystemBean.getCpuLoad())
+        Gauge.builder("system.cpu.usage",
+                operatingSystemBean,
+                x -> operatingSystemBean.getCpuLoad())
                 .description("The \"recent cpu usage\" for the whole system")
                 .baseUnit("‱")
                 .register(registry);
 
-        Gauge.builder("process.cpu.usage", operatingSystemBean, x -> operatingSystemBean.getProcessCpuLoad())
+        Gauge.builder("process.cpu.usage",
+                operatingSystemBean,
+                x -> operatingSystemBean.getProcessCpuLoad())
                 .description("The \"recent cpu usage\" for the Java Virtual Machine process")
                 .baseUnit("‱")
                 .register(registry);

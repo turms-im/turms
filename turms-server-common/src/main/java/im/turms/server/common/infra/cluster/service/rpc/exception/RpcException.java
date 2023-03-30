@@ -17,17 +17,18 @@
 
 package im.turms.server.common.infra.cluster.service.rpc.exception;
 
-import im.turms.server.common.access.common.ResponseStatusCode;
-import im.turms.server.common.infra.cluster.service.rpc.RpcErrorCode;
-import im.turms.server.common.infra.exception.StacklessException;
-import im.turms.server.common.infra.lang.Pair;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
+
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+
+import im.turms.server.common.access.common.ResponseStatusCode;
+import im.turms.server.common.infra.cluster.service.rpc.RpcErrorCode;
+import im.turms.server.common.infra.exception.StacklessException;
+import im.turms.server.common.infra.lang.Pair;
 
 import static im.turms.server.common.access.common.ResponseStatusCode.STATUS_CODE_LENGTH;
 import static im.turms.server.common.infra.cluster.service.rpc.RpcErrorCode.ERROR_CODE_LENGTH;
@@ -56,10 +57,11 @@ public final class RpcException extends StacklessException {
     @Nullable
     private final String description;
 
-    private RpcException(RpcErrorCode errorCode,
-                         ResponseStatusCode statusCode,
-                         @Nullable String description,
-                         @Nullable Throwable cause) {
+    private RpcException(
+            RpcErrorCode errorCode,
+            ResponseStatusCode statusCode,
+            @Nullable String description,
+            @Nullable Throwable cause) {
         super(getErrorMessage(errorCode, statusCode, description), cause);
         this.errorCode = errorCode;
         this.statusCode = statusCode;
@@ -71,14 +73,21 @@ public final class RpcException extends StacklessException {
                 key -> new RpcException(errorCode, statusCode, null, null));
     }
 
-    public static RpcException get(RpcErrorCode errorCode, ResponseStatusCode statusCode, String description) {
+    public static RpcException get(
+            RpcErrorCode errorCode,
+            ResponseStatusCode statusCode,
+            String description) {
         if (description != null) {
             return new RpcException(errorCode, statusCode, description, null);
         }
         return get(errorCode, statusCode);
     }
 
-    public static RpcException get(RpcErrorCode errorCode, ResponseStatusCode statusCode, String description, Throwable cause) {
+    public static RpcException get(
+            RpcErrorCode errorCode,
+            ResponseStatusCode statusCode,
+            String description,
+            Throwable cause) {
         if (cause != null) {
             return new RpcException(errorCode, statusCode, description, cause);
         }
@@ -87,15 +96,24 @@ public final class RpcException extends StacklessException {
 
     public static boolean isErrorCode(Throwable throwable, RpcErrorCode code) {
         if (throwable instanceof RpcException e) {
-            return e.getErrorCode().equals(code);
+            return e.getErrorCode()
+                    .equals(code);
         }
         return false;
     }
 
-    private static String getErrorMessage(RpcErrorCode errorCode, ResponseStatusCode statusCode, @Nullable String description) {
-        String base = (errorCode.getErrorCode() + ":" + statusCode.getBusinessCode())
-                .intern();
-        return description == null ? base : base + ":" + description;
+    private static String getErrorMessage(
+            RpcErrorCode errorCode,
+            ResponseStatusCode statusCode,
+            @Nullable String description) {
+        String base = (errorCode.getErrorCode()
+                + ":"
+                + statusCode.getBusinessCode()).intern();
+        return description == null
+                ? base
+                : base
+                        + ":"
+                        + description;
     }
 
 }

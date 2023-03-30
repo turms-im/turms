@@ -17,32 +17,33 @@
 
 package im.turms.gateway.access.client.common;
 
+import java.net.InetSocketAddress;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
+import jakarta.annotation.Nullable;
+
+import io.netty.util.HashedWheelTimer;
+import io.netty.util.Timeout;
+import lombok.Data;
+
 import im.turms.gateway.access.client.common.connection.NetConnection;
 import im.turms.gateway.infra.thread.ThreadNameConst;
 import im.turms.server.common.domain.session.bo.CloseReason;
 import im.turms.server.common.domain.session.bo.SessionCloseStatus;
 import im.turms.server.common.infra.lang.ByteArrayWrapper;
 import im.turms.server.common.infra.thread.NamedThreadFactory;
-import io.netty.util.HashedWheelTimer;
-import io.netty.util.Timeout;
-import lombok.Data;
-
-import java.net.InetSocketAddress;
-import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
-import jakarta.annotation.Nullable;
 
 /**
- * Bind the network connection and the user session together
- * from the perspective of the access layer
+ * Bind the network connection and the user session together from the perspective of the access
+ * layer
  *
  * @author James Chen
  */
 @Data
 public class UserSessionWrapper {
 
-    private static final HashedWheelTimer IDLE_CONNECTION_TIMEOUT_TIMER =
-            new HashedWheelTimer(new NamedThreadFactory(ThreadNameConst.GATEWAY_IDLE_CONNECTION_TIMEOUT_TIMER, true));
+    private static final HashedWheelTimer IDLE_CONNECTION_TIMEOUT_TIMER = new HashedWheelTimer(
+            new NamedThreadFactory(ThreadNameConst.GATEWAY_IDLE_CONNECTION_TIMEOUT_TIMER, true));
 
     private final InetSocketAddress address;
     private final Timeout connectionTimeoutTask;
@@ -52,18 +53,19 @@ public class UserSessionWrapper {
     private UserSession userSession;
 
     /**
-     * Use {@link ByteArrayWrapper} instead of {@code byte[]} because
-     * {@link ByteArrayWrapper} will be used as the key of Map in multiple places
+     * Use {@link ByteArrayWrapper} instead of {@code byte[]} because {@link ByteArrayWrapper} will
+     * be used as the key of Map in multiple places
      */
     @Nullable
     private ByteArrayWrapper ip;
     @Nullable
     private String ipStr;
 
-    public UserSessionWrapper(NetConnection connection,
-                              InetSocketAddress address,
-                              int closeAfterSeconds,
-                              Consumer<UserSession> onSessionEstablished) {
+    public UserSessionWrapper(
+            NetConnection connection,
+            InetSocketAddress address,
+            int closeAfterSeconds,
+            Consumer<UserSession> onSessionEstablished) {
         this.connection = connection;
         this.address = address;
         this.onSessionEstablished = onSessionEstablished;
@@ -74,7 +76,9 @@ public class UserSessionWrapper {
 
     public ByteArrayWrapper getIp() {
         if (ip == null) {
-            ip = new ByteArrayWrapper(address.getAddress().getAddress());
+            ip = new ByteArrayWrapper(
+                    address.getAddress()
+                            .getAddress());
         }
         return ip;
     }
@@ -82,7 +86,8 @@ public class UserSessionWrapper {
     public String getIpStr() {
         if (ipStr == null) {
             // Don't use "getHostString()" to avoid getting a hostname
-            ipStr = address.getAddress().getHostAddress();
+            ipStr = address.getAddress()
+                    .getHostAddress();
         }
         return ipStr;
     }

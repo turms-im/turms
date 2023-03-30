@@ -25,7 +25,9 @@ import java.util.TreeMap;
  */
 public class BucketPolicyConditionCriteria extends TreeMap<BucketPolicyConditionKey, List<String>> {
 
-    public BucketPolicyConditionCriteria withCondition(BucketPolicyConditionKey key, List<String> values) {
+    public BucketPolicyConditionCriteria withCondition(
+            BucketPolicyConditionKey key,
+            List<String> values) {
         put(key, values);
         return this;
     }

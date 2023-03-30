@@ -17,10 +17,11 @@
 
 package im.turms.server.common.domain.admin.bo;
 
-import im.turms.server.common.domain.admin.po.Admin;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+
+import im.turms.server.common.domain.admin.po.Admin;
 
 /**
  * @author James Chen

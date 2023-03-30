@@ -17,12 +17,13 @@
 
 package im.turms.server.common.infra.healthcheck;
 
+import java.lang.management.ManagementFactory;
+
 import com.sun.management.OperatingSystemMXBean;
+
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.property.env.common.healthcheck.CpuHealthCheckProperties;
-
-import java.lang.management.ManagementFactory;
 
 /**
  * @author James Chen
@@ -48,7 +49,8 @@ public final class CpuHealthChecker extends HealthChecker {
 
         boolean isCpuHealthCheckAvailable = true;
         if (cpuLoad < 0) {
-            LOGGER.warn("The CPU health checker cannot work because the recent cpu usage for the whole operating environment is unavailable");
+            LOGGER.warn(
+                    "The CPU health checker cannot work because the recent cpu usage for the whole operating environment is unavailable");
             isCpuHealthCheckAvailable = false;
             isCpuHealthy = true;
         }

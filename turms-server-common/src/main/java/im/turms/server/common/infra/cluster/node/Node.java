@@ -17,6 +17,17 @@
 
 package im.turms.server.common.infra.cluster.node;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Function;
+
+import lombok.Getter;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.ApplicationContext;
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.infra.address.BaseServiceAddressManager;
 import im.turms.server.common.infra.cluster.service.ClusterService;
 import im.turms.server.common.infra.cluster.service.codec.CodecService;
@@ -40,20 +51,10 @@ import im.turms.server.common.infra.property.env.common.cluster.NodeProperties;
 import im.turms.server.common.infra.property.env.common.cluster.RpcProperties;
 import im.turms.server.common.infra.property.env.common.cluster.SharedConfigProperties;
 import im.turms.server.common.infra.property.env.common.cluster.connection.ConnectionProperties;
-import lombok.Getter;
-import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.context.ApplicationContext;
-import reactor.core.publisher.Mono;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Consumer;
-import java.util.function.Function;
 
 /**
- * The lifecycle of the local node is roughly the same with
- * the local TCP/UDP/HTTP/WebSocket server that communicates with clients/admins
+ * The lifecycle of the local node is roughly the same with the local TCP/UDP/HTTP/WebSocket server
+ * that communicates with clients/admins
  *
  * @author James Chen
  */
@@ -63,11 +64,11 @@ public class Node {
     private static final Logger LOGGER = LoggerFactory.getLogger(Node.class);
 
     /**
-     * We use static because:
-     * 1. The logger {@link ApplicationEnvironmentEventListener#configureContextForLogging}
-     * needs the node ID to initialize for logging before the node instance is created.
-     * 2. To avoid initializing the node ID twice, one for logger, another for the node instance
-     * because there is a risk that the logger and the node uses different node IDs.
+     * We use static because: 1. The logger
+     * {@link ApplicationEnvironmentEventListener#configureContextForLogging} needs the node ID to
+     * initialize for logging before the node instance is created. 2. To avoid initializing the node
+     * ID twice, one for logger, another for the node instance because there is a risk that the
+     * logger and the node uses different node IDs.
      */
     @Getter
     private static String nodeId;
@@ -111,7 +112,8 @@ public class Node {
         DiscoveryProperties discoveryProperties = clusterProperties.getDiscovery();
         RpcProperties rpcProperties = clusterProperties.getRpc();
 
-        String version = turmsContext.getBuildProperties().version();
+        String version = turmsContext.getBuildProperties()
+                .version();
         NodeVersion nodeVersion = NodeVersion.parse(version);
         LOGGER.info("The local node version is: {}", version);
 
@@ -129,7 +131,8 @@ public class Node {
         connectionService = new ConnectionService(connectionProperties);
         rpcService = new RpcService(context, nodeType, rpcProperties);
         sharedConfigService = new SharedConfigService(sharedConfigProperties.getMongo());
-        discoveryService = new DiscoveryService(clusterId,
+        discoveryService = new DiscoveryService(
+                clusterId,
                 nodeId,
                 zone,
                 nodeType,
@@ -137,15 +140,15 @@ public class Node {
                 nodeType == NodeType.SERVICE && nodeProperties.isLeaderEligible(),
                 nodeProperties.isActiveByDefault(),
                 healthCheckManager.isHealthy(),
-                connectionService.getServer().getPort(),
+                connectionService.getServer()
+                        .getPort(),
                 discoveryProperties,
                 serviceAddressManager,
                 sharedConfigService);
         sharedPropertyService = new SharedPropertyService(clusterId, nodeType, propertiesManager);
         idService = new IdService(discoveryService);
 
-        List<ClusterService> allServices = List.of(
-                connectionService,
+        List<ClusterService> allServices = List.of(connectionService,
                 discoveryService,
                 sharedConfigService,
                 sharedPropertyService,
@@ -167,17 +170,21 @@ public class Node {
             return nodeId;
         }
         if (StringUtils.isBlank(id)) {
-            id = RandomStringUtils.randomAlphabetic(8).toLowerCase();
-            LOGGER.warn("A random node ID ({}) has been used. You should better set a node ID manually in production",
+            id = RandomStringUtils.randomAlphabetic(8)
+                    .toLowerCase();
+            LOGGER.warn(
+                    "A random node ID ({}) has been used. You should better set a node ID manually in production",
                     id);
         } else {
             if (id.length() > NodeProperties.NODE_ID_MAX_LENGTH) {
                 throw new IllegalArgumentException(
-                        "The length of node ID must be less than or equal to " + NodeProperties.NODE_ID_MAX_LENGTH);
+                        "The length of node ID must be less than or equal to "
+                                + NodeProperties.NODE_ID_MAX_LENGTH);
             }
             if (!id.matches("^[a-zA-Z_]\\w*$")) {
-                throw new IllegalArgumentException("The node ID must start with a letter or underscore, " +
-                        "and matches zero or more of characters [a-zA-Z0-9_] after the beginning");
+                throw new IllegalArgumentException(
+                        "The node ID must start with a letter or underscore, "
+                                + "and matches zero or more of characters [a-zA-Z0-9_] after the beginning");
             }
         }
         nodeId = id;
@@ -197,7 +204,8 @@ public class Node {
     public Mono<Void> stop(long timeoutMillis) {
         List<ClusterService> services = List.of(
                 // Note that discoveryService should be stopped before sharedConfigService
-                // because discoveryService needs to unregister the local member info in the shared config
+                // because discoveryService needs to unregister the local member info in the shared
+                // config
                 discoveryService,
                 sharedConfigService,
                 sharedPropertyService,
@@ -211,11 +219,14 @@ public class Node {
                 Mono<Void> stop = service.stop(timeoutMillis);
                 monos.add(stop);
             } catch (Exception e) {
-                monos.add(Mono.error(new RuntimeException("Caught an error while stopping the service: " + service.getClass().getName(), e)));
+                monos.add(Mono.error(new RuntimeException(
+                        "Caught an error while stopping the service: "
+                                + service.getClass()
+                                        .getName(),
+                        e)));
             }
         }
-        return Mono
-                .zipDelayError(monos, Function.identity())
+        return Mono.zipDelayError(monos, Function.identity())
                 .then();
     }
 
@@ -234,7 +245,10 @@ public class Node {
     }
 
     public boolean isActive() {
-        return discoveryService.getLocalNodeStatusManager().getLocalMember().getStatus().isActive();
+        return discoveryService.getLocalNodeStatusManager()
+                .getLocalMember()
+                .getStatus()
+                .isActive();
     }
 
     public long nextIncreasingId(ServiceType serviceType) {
@@ -246,11 +260,13 @@ public class Node {
     }
 
     public boolean isLocalNodeLeader() {
-        return discoveryService.getLocalNodeStatusManager().isLocalNodeLeader();
+        return discoveryService.getLocalNodeStatusManager()
+                .isLocalNodeLeader();
     }
 
     public String getLocalMemberId() {
-        return discoveryService.getLocalMember().getNodeId();
+        return discoveryService.getLocalMember()
+                .getNodeId();
     }
 
 }

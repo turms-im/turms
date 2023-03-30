@@ -17,13 +17,14 @@
 
 package im.turms.server.common.infra.property.env.service.business;
 
-import im.turms.server.common.infra.property.metadata.Description;
-import im.turms.server.common.infra.property.metadata.GlobalProperty;
-import im.turms.server.common.infra.property.metadata.MutableProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import im.turms.server.common.infra.property.metadata.Description;
+import im.turms.server.common.infra.property.metadata.GlobalProperty;
+import im.turms.server.common.infra.property.metadata.MutableProperty;
 
 /**
  * @author James Chen
@@ -145,14 +146,14 @@ public class NotificationProperties {
 
     // Conversation
 
-    @Description("Whether to notify the private conversation participant " +
-            "after the read receipt of a conversation has been updated by the recipient")
+    @Description("Whether to notify the private conversation participant "
+            + "after the read receipt of a conversation has been updated by the recipient")
     @GlobalProperty
     @MutableProperty
     private boolean notifyPrivateConversationParticipantAfterReadDateUpdated;
 
-    @Description("Whether to notify the group conversation participants " +
-            "after the read receipt of a conversation has been updated by recipients")
+    @Description("Whether to notify the group conversation participants "
+            + "after the read receipt of a conversation has been updated by recipients")
     @GlobalProperty
     @MutableProperty
     private boolean notifyGroupConversationParticipantsAfterReadDateUpdated;

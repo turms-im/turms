@@ -17,11 +17,22 @@
 
 package im.turms.server.common.storage.mongo;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+
 import com.mongodb.connection.ClusterType;
 import com.mongodb.connection.ServerConnectionState;
 import com.mongodb.connection.ServerDescription;
 import com.mongodb.internal.operation.ServerVersionHelper;
 import com.mongodb.reactivestreams.client.MongoCollection;
+import lombok.experimental.Delegate;
+import org.eclipse.collections.impl.set.mutable.UnifiedSet;
+import reactor.core.publisher.Mono;
+import reactor.core.publisher.Sinks;
+
 import im.turms.server.common.infra.collection.CollectorUtil;
 import im.turms.server.common.infra.lang.Pair;
 import im.turms.server.common.infra.logging.core.logger.Logger;
@@ -32,16 +43,6 @@ import im.turms.server.common.storage.mongo.exception.IncompatibleMongoException
 import im.turms.server.common.storage.mongo.operation.MongoCollectionOptions;
 import im.turms.server.common.storage.mongo.operation.MongoOperationsSupport;
 import im.turms.server.common.storage.mongo.operation.TurmsMongoOperations;
-import lombok.experimental.Delegate;
-import org.eclipse.collections.impl.set.mutable.UnifiedSet;
-import reactor.core.publisher.Mono;
-import reactor.core.publisher.Sinks;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
 
 /**
  * @author James Chen
@@ -61,23 +62,26 @@ public final class TurmsMongoClient implements MongoOperationsSupport {
         return context.getEntities();
     }
 
-    public static Mono<TurmsMongoClient> of(TurmsMongoProperties properties,
-                                            String name) {
+    public static Mono<TurmsMongoClient> of(TurmsMongoProperties properties, String name) {
         return of(properties, name, Collections.emptySet());
     }
 
-    public static Mono<TurmsMongoClient> of(TurmsMongoProperties properties,
-                                            String name,
-                                            Set<ClusterType> requiredClusterTypes) {
+    public static Mono<TurmsMongoClient> of(
+            TurmsMongoProperties properties,
+            String name,
+            Set<ClusterType> requiredClusterTypes) {
         Sinks.One<Void> connect = Sinks.one();
-        TurmsMongoClient client = new TurmsMongoClient(properties, name, requiredClusterTypes, connect);
-        return connect.asMono().thenReturn(client);
+        TurmsMongoClient client =
+                new TurmsMongoClient(properties, name, requiredClusterTypes, connect);
+        return connect.asMono()
+                .thenReturn(client);
     }
 
-    private TurmsMongoClient(TurmsMongoProperties properties,
-                             String name,
-                             Set<ClusterType> requiredClusterTypes,
-                             Sinks.One<Void> connect) {
+    private TurmsMongoClient(
+            TurmsMongoProperties properties,
+            String name,
+            Set<ClusterType> requiredClusterTypes,
+            Sinks.One<Void> connect) {
         names.add(name);
         context = new MongoContext(properties.getUri(), descriptions -> {
             for (ServerDescription description : descriptions) {
@@ -108,8 +112,10 @@ public final class TurmsMongoClient implements MongoOperationsSupport {
                 .collect(CollectorUtil.toList(optionsList.length)));
     }
 
-    public List<MongoEntity<?>> registerEntitiesByOptions(Collection<MongoCollectionOptions> optionsList) {
-        List<Pair<MongoEntity<?>, MongoCollection<?>>> pairs = context.registerEntitiesByOptions(optionsList);
+    public List<MongoEntity<?>> registerEntitiesByOptions(
+            Collection<MongoCollectionOptions> optionsList) {
+        List<Pair<MongoEntity<?>, MongoCollection<?>>> pairs =
+                context.registerEntitiesByOptions(optionsList);
         return pairs.stream()
                 .map(Pair::first)
                 .collect(CollectorUtil.toList(pairs.size()));
@@ -121,7 +127,8 @@ public final class TurmsMongoClient implements MongoOperationsSupport {
     }
 
     public List<MongoEntity<?>> registerEntitiesByClasses(Collection<Class<?>> classes) {
-        List<Pair<MongoEntity<?>, MongoCollection<?>>> pairs = context.registerEntitiesByClasses(classes);
+        List<Pair<MongoEntity<?>, MongoCollection<?>>> pairs =
+                context.registerEntitiesByClasses(classes);
         return pairs.stream()
                 .map(Pair::first)
                 .collect(CollectorUtil.toList(pairs.size()));
@@ -129,7 +136,8 @@ public final class TurmsMongoClient implements MongoOperationsSupport {
 
     public void verifyClusterTypes(String name, Set<ClusterType> requiredClusterTypes) {
         if (descriptions == null) {
-            throw new IllegalStateException("Verification can only work after the mongo client has been initialized");
+            throw new IllegalStateException(
+                    "Verification can only work after the mongo client has been initialized");
         }
         names.add(name);
         if (requiredClusterTypes.isEmpty()) {
@@ -137,28 +145,34 @@ public final class TurmsMongoClient implements MongoOperationsSupport {
         }
         for (ServerDescription description : descriptions) {
             if (!requiredClusterTypes.contains(description.getClusterType())) {
-                throw new IncompatibleMongoException("The cluster types for the mongo clients " +
-                        names +
-                        " must be one of the types: " +
-                        requiredClusterTypes);
+                throw new IncompatibleMongoException(
+                        "The cluster types for the mongo clients "
+                                + names
+                                + " must be one of the types: "
+                                + requiredClusterTypes);
             }
         }
     }
 
-    private void verifyServers(List<ServerDescription> descriptions,
-                               String name,
-                               Set<ClusterType> requiredClusterTypes) {
+    private void verifyServers(
+            List<ServerDescription> descriptions,
+            String name,
+            Set<ClusterType> requiredClusterTypes) {
         for (ServerDescription description : descriptions) {
             if (description.getMaxWireVersion() < ServerVersionHelper.FOUR_DOT_TWO_WIRE_VERSION) {
-                throw new IncompatibleMongoException("The version of MongoDB server should be at least 4.2. " +
-                        "Note that Turms cannot work with Amazon DocumentDB. " +
-                        "The description of the unsupported server: " + description.getShortDescription());
+                throw new IncompatibleMongoException(
+                        "The version of MongoDB server should be at least 4.2. "
+                                + "Note that Turms cannot work with Amazon DocumentDB. "
+                                + "The description of the unsupported server: "
+                                + description.getShortDescription());
             }
-            if (!requiredClusterTypes.isEmpty() && !requiredClusterTypes.contains(description.getClusterType())) {
-                throw new IncompatibleMongoException("The cluster types for the mongo client \"" +
-                        name +
-                        "\" must be one of the types: " +
-                        requiredClusterTypes);
+            if (!requiredClusterTypes.isEmpty()
+                    && !requiredClusterTypes.contains(description.getClusterType())) {
+                throw new IncompatibleMongoException(
+                        "The cluster types for the mongo client \""
+                                + name
+                                + "\" must be one of the types: "
+                                + requiredClusterTypes);
             }
         }
     }

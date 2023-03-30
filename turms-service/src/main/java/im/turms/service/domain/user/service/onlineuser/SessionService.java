@@ -17,6 +17,20 @@
 
 package im.turms.service.domain.user.service.onlineuser;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotNull;
+
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.constant.UserStatus;
 import im.turms.server.common.domain.session.bo.SessionCloseStatus;
@@ -36,19 +50,6 @@ import im.turms.server.common.infra.reactor.PublisherUtil;
 import im.turms.server.common.infra.validation.ValidDeviceType;
 import im.turms.server.common.infra.validation.Validator;
 import im.turms.service.domain.common.validation.DataValidator;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.NotNull;
 
 /**
  * @author James Chen
@@ -60,9 +61,7 @@ public class SessionService {
     private final UserStatusService userStatusService;
     private final RpcService rpcService;
 
-    public SessionService(
-            Node node,
-            UserStatusService userStatusService) {
+    public SessionService(Node node, UserStatusService userStatusService) {
         this.node = node;
         this.userStatusService = userStatusService;
         rpcService = node.getRpcService();
@@ -79,11 +78,14 @@ public class SessionService {
         }
         return userStatusService.getNodeIdToDeviceTypeMapByUserId(userId)
                 .flatMap(nodeIdAndDeviceTypeMap -> {
-                    Set<Map.Entry<String, Set<DeviceType>>> entries = nodeIdAndDeviceTypeMap.entrySet();
+                    Set<Map.Entry<String, Set<DeviceType>>> entries =
+                            nodeIdAndDeviceTypeMap.entrySet();
                     List<Mono<Boolean>> monos = new ArrayList<>(entries.size());
                     for (Map.Entry<String, Set<DeviceType>> entry : entries) {
-                        SetUserOfflineRequest request = new SetUserOfflineRequest(userId, entry.getValue(), closeStatus);
-                        monos.add(node.getRpcService().requestResponse(entry.getKey(), request));
+                        SetUserOfflineRequest request =
+                                new SetUserOfflineRequest(userId, entry.getValue(), closeStatus);
+                        monos.add(node.getRpcService()
+                                .requestResponse(entry.getKey(), request));
                     }
                     return PublisherUtil.atLeastOneTrue(monos);
                 })
@@ -93,9 +95,10 @@ public class SessionService {
     /**
      * @return true if was online
      */
-    public Mono<Boolean> disconnect(@NotNull Long userId,
-                                    @NotNull Set<@ValidDeviceType DeviceType> deviceTypes,
-                                    @NotNull SessionCloseStatus closeStatus) {
+    public Mono<Boolean> disconnect(
+            @NotNull Long userId,
+            @NotNull Set<@ValidDeviceType DeviceType> deviceTypes,
+            @NotNull SessionCloseStatus closeStatus) {
         try {
             Validator.notNull(userId, "userId");
             Validator.notNull(deviceTypes, "deviceTypes");
@@ -111,17 +114,24 @@ public class SessionService {
         }
         int size = deviceTypes.size();
         if (size == 1) {
-            return disconnect(userId, deviceTypes.iterator().next(), closeStatus);
+            return disconnect(userId,
+                    deviceTypes.iterator()
+                            .next(),
+                    closeStatus);
         }
         return userStatusService.getNodeIdToDeviceTypeMapByUserId(userId)
                 .flatMap(nodeIdAndDeviceTypeMap -> {
-                    Set<Map.Entry<String, Set<DeviceType>>> entries = nodeIdAndDeviceTypeMap.entrySet();
+                    Set<Map.Entry<String, Set<DeviceType>>> entries =
+                            nodeIdAndDeviceTypeMap.entrySet();
                     List<Mono<Boolean>> monos = new ArrayList<>(entries.size());
                     for (Map.Entry<String, Set<DeviceType>> entry : entries) {
-                        Set<DeviceType> types = CollectionUtil.intersection(deviceTypes, entry.getValue());
+                        Set<DeviceType> types =
+                                CollectionUtil.intersection(deviceTypes, entry.getValue());
                         if (!types.isEmpty()) {
-                            SetUserOfflineRequest request = new SetUserOfflineRequest(userId, types, closeStatus);
-                            monos.add(node.getRpcService().requestResponse(entry.getKey(), request));
+                            SetUserOfflineRequest request =
+                                    new SetUserOfflineRequest(userId, types, closeStatus);
+                            monos.add(node.getRpcService()
+                                    .requestResponse(entry.getKey(), request));
                         }
                     }
                     return PublisherUtil.atLeastOneTrue(monos);
@@ -132,9 +142,10 @@ public class SessionService {
     /**
      * @return true if was online
      */
-    public Mono<Boolean> disconnect(@NotNull Long userId,
-                                    @NotNull @ValidDeviceType DeviceType deviceType,
-                                    @NotNull SessionCloseStatus closeStatus) {
+    public Mono<Boolean> disconnect(
+            @NotNull Long userId,
+            @NotNull @ValidDeviceType DeviceType deviceType,
+            @NotNull SessionCloseStatus closeStatus) {
         try {
             Validator.notNull(closeStatus, "closeStatus");
         } catch (ResponseException e) {
@@ -142,13 +153,17 @@ public class SessionService {
         }
         return userStatusService.getNodeIdByUserIdAndDeviceType(userId, deviceType)
                 .flatMap(nodeId -> {
-                    SetUserOfflineRequest request = new SetUserOfflineRequest(userId, Set.of(deviceType), closeStatus);
-                    return node.getRpcService().requestResponse(nodeId, request);
+                    SetUserOfflineRequest request =
+                            new SetUserOfflineRequest(userId, Set.of(deviceType), closeStatus);
+                    return node.getRpcService()
+                            .requestResponse(nodeId, request);
                 })
                 .defaultIfEmpty(false);
     }
 
-    public Mono<Boolean> disconnect(@NotNull Set<Long> userIds, @NotNull SessionCloseStatus closeStatus) {
+    public Mono<Boolean> disconnect(
+            @NotNull Set<Long> userIds,
+            @NotNull SessionCloseStatus closeStatus) {
         try {
             Validator.notNull(userIds, "userIds");
             Validator.notNull(closeStatus, "closeStatus");
@@ -157,7 +172,8 @@ public class SessionService {
         }
         return switch (userIds.size()) {
             case 0 -> PublisherPool.TRUE;
-            case 1 -> disconnect(userIds.iterator().next(), closeStatus);
+            case 1 -> disconnect(userIds.iterator()
+                    .next(), closeStatus);
             default -> {
                 List<Mono<Boolean>> monos = new ArrayList<>(userIds.size());
                 for (Long userId : userIds) {
@@ -168,9 +184,10 @@ public class SessionService {
         };
     }
 
-    public Mono<Boolean> disconnect(@NotNull Set<Long> userIds,
-                                    @Nullable Set<@ValidDeviceType DeviceType> deviceTypes,
-                                    @NotNull SessionCloseStatus closeStatus) {
+    public Mono<Boolean> disconnect(
+            @NotNull Set<Long> userIds,
+            @Nullable Set<@ValidDeviceType DeviceType> deviceTypes,
+            @NotNull SessionCloseStatus closeStatus) {
         try {
             Validator.notNull(userIds, "userIds");
             Validator.notNull(closeStatus, "closeStatus");
@@ -183,7 +200,8 @@ public class SessionService {
         int size = userIds.size();
         return switch (size) {
             case 0 -> PublisherPool.TRUE;
-            case 1 -> disconnect(userIds.iterator().next(), deviceTypes, closeStatus);
+            case 1 -> disconnect(userIds.iterator()
+                    .next(), deviceTypes, closeStatus);
             default -> {
                 List<Mono<Boolean>> monos = new ArrayList<>(size);
                 for (Long userId : userIds) {
@@ -218,10 +236,16 @@ public class SessionService {
                             if (offlineUserSessions == null) {
                                 offlineUserSessions = new ArrayList<>(userCount);
                             }
-                            offlineUserSessions.add(new UserSessionsInfo(status.userId(), UserStatus.OFFLINE, null));
+                            offlineUserSessions.add(new UserSessionsInfo(
+                                    status.userId(),
+                                    UserStatus.OFFLINE,
+                                    null));
                         } else {
                             for (String nodeId : deviceTypeToNodeId.values()) {
-                                nodeIdToUserIds.computeIfAbsent(nodeId, key -> CollectionUtil.newSetWithExpectedSize(userCount))
+                                nodeIdToUserIds
+                                        .computeIfAbsent(nodeId,
+                                                key -> CollectionUtil
+                                                        .newSetWithExpectedSize(userCount))
                                         .add(status.userId());
                             }
                         }
@@ -232,22 +256,28 @@ public class SessionService {
                                 ? PublisherPool.emptyList()
                                 : Mono.just(offlineUserSessions);
                     }
-                    List<Mono<List<UserSessionsInfo>>> querySessionsRequests = new ArrayList<>(nodeIdCount);
+                    List<Mono<List<UserSessionsInfo>>> querySessionsRequests =
+                            new ArrayList<>(nodeIdCount);
                     // Send RPC to the nodes to query sessions
-                    for (Map.Entry<String, Set<Long>> nodeIdAndUserIds : nodeIdToUserIds.entrySet()) {
-                        querySessionsRequests.add(rpcService
-                                .requestResponse(nodeIdAndUserIds.getKey(), new QueryUserSessionsRequest(nodeIdAndUserIds.getValue())));
+                    for (Map.Entry<String, Set<Long>> nodeIdAndUserIds : nodeIdToUserIds
+                            .entrySet()) {
+                        querySessionsRequests
+                                .add(rpcService.requestResponse(nodeIdAndUserIds.getKey(),
+                                        new QueryUserSessionsRequest(nodeIdAndUserIds.getValue())));
                     }
                     List<UserSessionsInfo> finalOfflineUserSessions = offlineUserSessions;
                     return Flux.merge(querySessionsRequests)
                             .collect(CollectorUtil.toList(nodeIdCount))
-                            .map(sessionsFromNodes -> mergeUserSessions(sessionsFromNodes, finalOfflineUserSessions, userCount));
+                            .map(sessionsFromNodes -> mergeUserSessions(sessionsFromNodes,
+                                    finalOfflineUserSessions,
+                                    userCount));
                 });
     }
 
-    private Collection<UserSessionsInfo> mergeUserSessions(List<List<UserSessionsInfo>> sessionsFromNodes,
-                                                           @Nullable List<UserSessionsInfo> offlineUserSessions,
-                                                           int userCount) {
+    private Collection<UserSessionsInfo> mergeUserSessions(
+            List<List<UserSessionsInfo>> sessionsFromNodes,
+            @Nullable List<UserSessionsInfo> offlineUserSessions,
+            int userCount) {
         int nodeCount = sessionsFromNodes.size();
         // fast path
         if (nodeCount == 1) {
@@ -261,7 +291,8 @@ public class SessionService {
         // slow path
         // A user may have multiple sessions in different nodes,
         // so we need to merge them together
-        Map<Long, UserSessionsInfo> userIdToSessions = CollectionUtil.newMapWithExpectedSize(userCount);
+        Map<Long, UserSessionsInfo> userIdToSessions =
+                CollectionUtil.newMapWithExpectedSize(userCount);
         for (List<UserSessionsInfo> sessionsFromNode : sessionsFromNodes) {
             for (UserSessionsInfo sessions : sessionsFromNode) {
                 userIdToSessions.compute(sessions.userId(), (userId, existing) -> {

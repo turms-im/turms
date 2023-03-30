@@ -17,10 +17,10 @@
 
 package im.turms.server.common.storage.mongo.codec;
 
+import java.time.Duration;
+
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
-
-import java.time.Duration;
 
 /**
  * @author James Chen

@@ -17,19 +17,20 @@
 
 package im.turms.server.common.domain.session.rpc;
 
+import java.util.Set;
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotNull;
+
+import lombok.Data;
+import org.springframework.context.ApplicationContext;
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.domain.session.bo.CloseReason;
 import im.turms.server.common.domain.session.bo.SessionCloseStatus;
 import im.turms.server.common.domain.session.service.ISessionService;
 import im.turms.server.common.infra.cluster.service.rpc.NodeTypeToHandleRpc;
 import im.turms.server.common.infra.cluster.service.rpc.dto.RpcRequest;
-import lombok.Data;
-import org.springframework.context.ApplicationContext;
-import reactor.core.publisher.Mono;
-
-import java.util.Set;
-import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.NotNull;
 
 /**
  * @author James Chen
@@ -85,8 +86,7 @@ public class SetUserOfflineRequest extends RpcRequest<Boolean> {
         Mono<Integer> mono = deviceTypes == null || deviceTypes.isEmpty()
                 ? sessionService.closeLocalSession(userId, reason)
                 : sessionService.closeLocalSession(userId, deviceTypes, reason);
-        return mono
-                .map(count -> count > 0);
+        return mono.map(count -> count > 0);
     }
 
 }

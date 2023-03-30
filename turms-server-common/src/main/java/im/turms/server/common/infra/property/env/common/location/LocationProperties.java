@@ -17,13 +17,13 @@
 
 package im.turms.server.common.infra.property.env.common.location;
 
-
-import im.turms.server.common.infra.property.metadata.Description;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
+
+import im.turms.server.common.infra.property.metadata.Description;
 
 /**
  * @author James Chen
@@ -37,8 +37,8 @@ public class LocationProperties {
     @Description("Whether to handle users' locations")
     private boolean enabled = true;
 
-    @Description("Whether to treat the pair of user ID and device type as a unique user when querying users nearby. " +
-            "If false, only the user ID is used to identify a unique user")
+    @Description("Whether to treat the pair of user ID and device type as a unique user when querying users nearby. "
+            + "If false, only the user ID is used to identify a unique user")
     private boolean treatUserIdAndDeviceTypeAsUniqueUser;
 
     @NestedConfigurationProperty

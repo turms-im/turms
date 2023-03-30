@@ -23,8 +23,8 @@ package im.turms.server.common.storage.redis.sharding;
 public class ModShardingAlgorithm extends ShardingAlgorithm {
 
     /**
-     * @implNote Don't use "(int) (userId & (serverCount - 1))" because it requires that
-     * the serverCount should be a power of 2.
+     * @implNote Don't use "(int) (userId & (serverCount - 1))" because it requires that the
+     *           serverCount should be a power of 2.
      */
     @Override
     public int doSharding(long userId, int serverCount) {

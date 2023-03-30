@@ -17,7 +17,14 @@
 
 package im.turms.server.common.domain.admin.service;
 
+import java.util.Collection;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import jakarta.validation.constraints.NotNull;
+
 import com.mongodb.client.model.changestream.FullDocument;
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.access.admin.permission.AdminPermission;
 import im.turms.server.common.access.admin.web.MethodParameterInfo;
 import im.turms.server.common.domain.admin.bo.AdminInfo;
@@ -32,12 +39,6 @@ import im.turms.server.common.infra.reactor.PublisherPool;
 import im.turms.server.common.infra.security.password.PasswordManager;
 import im.turms.server.common.infra.validation.NoWhitespace;
 import im.turms.server.common.infra.validation.Validator;
-import reactor.core.publisher.Mono;
-
-import java.util.Collection;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import jakarta.validation.constraints.NotNull;
 
 import static im.turms.server.common.domain.admin.constant.AdminConst.ADMIN_ROLE_ROOT_ID;
 
@@ -69,21 +70,24 @@ public abstract class BaseAdminService {
                 .doOnNext(event -> {
                     Admin admin = event.getFullDocument();
                     switch (event.getOperationType()) {
-                        case INSERT, UPDATE, REPLACE -> accountToAdmin.put(admin.getAccount(), new AdminInfo(admin, null));
+                        case INSERT, UPDATE, REPLACE ->
+                            accountToAdmin.put(admin.getAccount(), new AdminInfo(admin, null));
                         case DELETE -> {
                             String account = ChangeStreamUtil.getIdAsString(event.getDocumentKey());
                             accountToAdmin.remove(account);
                         }
                         case INVALIDATE -> accountToAdmin.clear();
-                        default -> LOGGER.fatal("Detected an illegal operation on the collection \"" +
-                                Admin.COLLECTION_NAME +
-                                "\" in the change stream event: {}", event);
+                        default -> LOGGER.fatal("Detected an illegal operation on the collection \""
+                                + Admin.COLLECTION_NAME
+                                + "\" in the change stream event: {}", event);
                     }
                 })
-                .onErrorContinue((throwable, o) -> LOGGER
-                        .error("Caught an error while processing the change stream event ({}) of the collection: \"" +
-                                Admin.COLLECTION_NAME +
-                                "\"", o, throwable))
+                .onErrorContinue((throwable, o) -> LOGGER.error(
+                        "Caught an error while processing the change stream event ({}) of the collection: \""
+                                + Admin.COLLECTION_NAME
+                                + "\"",
+                        o,
+                        throwable))
                 .subscribe();
 
         // Load
@@ -94,12 +98,13 @@ public abstract class BaseAdminService {
                         accountToAdmin.put(admin.getAccount(), new AdminInfo(admin, null));
                     }
                     for (Admin admin : admins) {
-                        if (admin.getRoleId().equals(ADMIN_ROLE_ROOT_ID)) {
+                        if (admin.getRoleId()
+                                .equals(ADMIN_ROLE_ROOT_ID)) {
                             break;
                         }
                     }
-                    addRootAdmin()
-                            .subscribe(null, t -> LOGGER.error("Caught an error while adding the root admin", t));
+                    addRootAdmin().subscribe(null,
+                            t -> LOGGER.error("Caught an error while adding the root admin", t));
                 })
                 .subscribe(null, t -> LOGGER.error("Caught an error while finding all admins", t));
     }
@@ -145,9 +150,14 @@ public abstract class BaseAdminService {
         if (permission == AdminPermission.ADMIN_QUERY) {
             for (int i = 0, length = params.length; i < length; i++) {
                 MethodParameterInfo param = params[i];
-                if (param.name().equals("accounts")) {
+                if (param.name()
+                        .equals("accounts")) {
                     Object value = paramValues[i];
-                    if (value instanceof Collection<?> collection && collection.size() == 1 && collection.iterator().next().equals(account)) {
+                    if (value instanceof Collection<?> collection
+                            && collection.size() == 1
+                            && collection.iterator()
+                                    .next()
+                                    .equals(account)) {
                         isQueryingSelfInfo = true;
                     }
                     break;
@@ -172,19 +182,20 @@ public abstract class BaseAdminService {
         }
         AdminInfo adminInfo = accountToAdmin.get(account);
         if (adminInfo != null && adminInfo.getRawPassword() != null) {
-            return Mono.just(adminInfo.getRawPassword().equals(rawPassword));
+            return Mono.just(adminInfo.getRawPassword()
+                    .equals(rawPassword));
         }
-        return queryAdmin(account)
-                .map(admin -> {
-                    boolean isValidPassword = passwordManager.matchesAdminPassword(rawPassword, admin.getPassword());
-                    if (isValidPassword) {
-                        AdminInfo info = accountToAdmin.get(admin.getAccount());
-                        if (info != null) {
-                            info.setRawPassword(rawPassword);
-                        }
-                    }
-                    return isValidPassword;
-                })
+        return queryAdmin(account).map(admin -> {
+            boolean isValidPassword =
+                    passwordManager.matchesAdminPassword(rawPassword, admin.getPassword());
+            if (isValidPassword) {
+                AdminInfo info = accountToAdmin.get(admin.getAccount());
+                if (info != null) {
+                    info.setRawPassword(rawPassword);
+                }
+            }
+            return isValidPassword;
+        })
                 .switchIfEmpty(PublisherPool.FALSE);
     }
 

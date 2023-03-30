@@ -17,6 +17,11 @@
 
 package im.turms.server.common.domain.notification.rpc;
 
+import java.util.Collections;
+import java.util.Set;
+
+import io.netty.buffer.ByteBuf;
+
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.domain.common.util.DeviceTypeUtil;
 import im.turms.server.common.domain.session.bo.UserSessionId;
@@ -26,10 +31,6 @@ import im.turms.server.common.infra.cluster.service.codec.io.CodecStreamOutput;
 import im.turms.server.common.infra.cluster.service.rpc.codec.RpcRequestCodec;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.io.Stream;
-import io.netty.buffer.ByteBuf;
-
-import java.util.Collections;
-import java.util.Set;
 
 /**
  * @author James Chen
@@ -73,7 +74,8 @@ public class SendNotificationRequestCodec extends RpcRequestCodec<SendNotificati
         int excludedUserSessionIdCount = in.readVarint32();
         Set<UserSessionId> excludedUserSessionIds;
         if (excludedUserSessionIdCount > 0) {
-            excludedUserSessionIds = CollectionUtil.newSetWithExpectedSize(excludedUserSessionIdCount);
+            excludedUserSessionIds =
+                    CollectionUtil.newSetWithExpectedSize(excludedUserSessionIdCount);
             for (int i = 0; i < excludedUserSessionIdCount; i++) {
                 long userId = in.readLong();
                 DeviceType deviceType = DeviceTypeUtil.byte2DeviceType(in.readByte());
@@ -90,7 +92,8 @@ public class SendNotificationRequestCodec extends RpcRequestCodec<SendNotificati
 
         // read "notificationBuffer"
         ByteBuf notificationBuffer = in.readRetainedSlice(in.readableBytes());
-        return new SendNotificationRequest(notificationBuffer,
+        return new SendNotificationRequest(
+                notificationBuffer,
                 recipientIds,
                 excludedUserSessionIds,
                 excludedDeviceType);
@@ -98,11 +101,13 @@ public class SendNotificationRequestCodec extends RpcRequestCodec<SendNotificati
 
     @Override
     public int initialCapacityForRequest(SendNotificationRequest data) {
-        int recipientCount = data.getRecipientIds().size();
-        int excludedUserSessionIdCount = data.getExcludedUserSessionIds().size();
+        int recipientCount = data.getRecipientIds()
+                .size();
+        int excludedUserSessionIdCount = data.getExcludedUserSessionIds()
+                .size();
         return Stream.computeVarint32Size(recipientCount) + recipientCount * Long.BYTES
-                + Stream.computeVarint32Size(excludedUserSessionIdCount) + excludedUserSessionIdCount * (Long.BYTES + Byte.SIZE)
-                + Byte.BYTES;
+                + Stream.computeVarint32Size(excludedUserSessionIdCount)
+                + excludedUserSessionIdCount * (Long.BYTES + Byte.SIZE) + Byte.BYTES;
     }
 
     @Override

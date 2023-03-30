@@ -17,10 +17,23 @@
 
 package im.turms.service.domain.group.service;
 
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+
 import com.mongodb.client.model.changestream.FullDocument;
 import com.mongodb.client.model.changestream.OperationType;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.cluster.service.config.ChangeStreamUtil;
@@ -37,18 +50,6 @@ import im.turms.service.domain.group.bo.GroupUpdateStrategy;
 import im.turms.service.domain.group.po.GroupType;
 import im.turms.service.domain.group.repository.GroupTypeRepository;
 import im.turms.service.storage.mongo.OperationResultPublisherPool;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 
 import static im.turms.server.common.domain.group.constant.GroupConst.DEFAULT_GROUP_TYPE_ID;
 import static im.turms.server.common.domain.group.constant.GroupConst.DEFAULT_GROUP_TYPE_NAME;
@@ -66,17 +67,14 @@ public class GroupTypeService {
     private final Map<Long, GroupType> idToGroupType = new ConcurrentHashMap<>(16);
     private final GroupTypeRepository groupTypeRepository;
 
-    public GroupTypeService(
-            Node node,
-            GroupTypeRepository groupTypeRepository) {
+    public GroupTypeService(Node node, GroupTypeRepository groupTypeRepository) {
         this.node = node;
         this.groupTypeRepository = groupTypeRepository;
         initGroupTypes();
     }
 
     public void initGroupTypes() {
-        idToGroupType.putIfAbsent(
-                DEFAULT_GROUP_TYPE_ID,
+        idToGroupType.putIfAbsent(DEFAULT_GROUP_TYPE_ID,
                 new GroupType(
                         DEFAULT_GROUP_TYPE_ID,
                         DEFAULT_GROUP_TYPE_NAME,
@@ -94,34 +92,37 @@ public class GroupTypeService {
                     OperationType operationType = event.getOperationType();
                     GroupType groupType = event.getFullDocument();
                     switch (operationType) {
-                        case INSERT, UPDATE, REPLACE -> idToGroupType.put(groupType.getId(), groupType);
+                        case INSERT, UPDATE, REPLACE ->
+                            idToGroupType.put(groupType.getId(), groupType);
                         case DELETE -> {
                             long groupTypeId = ChangeStreamUtil.getIdAsLong(event.getDocumentKey());
                             idToGroupType.remove(groupTypeId);
                         }
-                        case INVALIDATE -> idToGroupType.keySet().removeIf(id -> !id.equals(DEFAULT_GROUP_TYPE_ID));
-                        default -> LOGGER.fatal("Detected an illegal operation on the collection \"" +
-                                GroupType.COLLECTION_NAME +
-                                "\" in the change stream event: {}", event);
+                        case INVALIDATE -> idToGroupType.keySet()
+                                .removeIf(id -> !id.equals(DEFAULT_GROUP_TYPE_ID));
+                        default -> LOGGER.fatal("Detected an illegal operation on the collection \""
+                                + GroupType.COLLECTION_NAME
+                                + "\" in the change stream event: {}", event);
                     }
                 })
-                .onErrorContinue((throwable, o) -> LOGGER
-                        .error("Caught an error while processing the change stream event ({}) of the collection: \"" +
-                                GroupType.COLLECTION_NAME +
-                                "\"", o, throwable))
+                .onErrorContinue((throwable, o) -> LOGGER.error(
+                        "Caught an error while processing the change stream event ({}) of the collection: \""
+                                + GroupType.COLLECTION_NAME
+                                + "\"",
+                        o,
+                        throwable))
                 .subscribe();
         groupTypeRepository.findAll()
                 .doOnNext(groupType -> idToGroupType.put(groupType.getId(), groupType))
-                .subscribe(null, t -> LOGGER.error("Caught an error while finding all group types", t));
+                .subscribe(null,
+                        t -> LOGGER.error("Caught an error while finding all group types", t));
     }
 
     public GroupType getDefaultGroupType() {
         return idToGroupType.get(DEFAULT_GROUP_TYPE_ID);
     }
 
-    public Flux<GroupType> queryGroupTypes(
-            @Nullable Integer page,
-            @Nullable Integer size) {
+    public Flux<GroupType> queryGroupTypes(@Nullable Integer page, @Nullable Integer size) {
         return groupTypeRepository.findAll(page, size)
                 // TODO: respect page and size
                 .concatWithValues(getDefaultGroupType());
@@ -168,7 +169,8 @@ public class GroupTypeService {
                 enableReadReceipt,
                 messageEditable);
         idToGroupType.put(id, groupType);
-        return groupTypeRepository.insert(groupType).thenReturn(groupType);
+        return groupTypeRepository.insert(groupType)
+                .thenReturn(groupType);
     }
 
     public Mono<UpdateResult> updateGroupTypes(
@@ -217,7 +219,8 @@ public class GroupTypeService {
 
     public Mono<DeleteResult> deleteGroupTypes(@Nullable Set<Long> groupTypeIds) {
         if (groupTypeIds != null && groupTypeIds.contains(DEFAULT_GROUP_TYPE_ID)) {
-            return Mono.error(ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT, "The default group type cannot be deleted"));
+            return Mono.error(ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
+                    "The default group type cannot be deleted"));
         }
         return groupTypeRepository.deleteByIds(groupTypeIds)
                 .doOnNext(result -> {
@@ -226,7 +229,8 @@ public class GroupTypeService {
                             idToGroupType.remove(id);
                         }
                     } else {
-                        idToGroupType.keySet().removeIf(id -> !id.equals(DEFAULT_GROUP_TYPE_ID));
+                        idToGroupType.keySet()
+                                .removeIf(id -> !id.equals(DEFAULT_GROUP_TYPE_ID));
                     }
                 });
     }
@@ -239,13 +243,13 @@ public class GroupTypeService {
         }
         GroupType groupType = idToGroupType.get(groupTypeId);
         return groupType == null
-                ? groupTypeRepository.findById(groupTypeId).doOnNext(type -> idToGroupType.put(groupTypeId, type))
+                ? groupTypeRepository.findById(groupTypeId)
+                        .doOnNext(type -> idToGroupType.put(groupTypeId, type))
                 : Mono.just(groupType);
     }
 
     public Mono<Boolean> groupTypeExists(@NotNull Long groupTypeId) {
-        return queryGroupType(groupTypeId)
-                .map(type -> true)
+        return queryGroupType(groupTypeId).map(type -> true)
                 .defaultIfEmpty(false);
     }
 

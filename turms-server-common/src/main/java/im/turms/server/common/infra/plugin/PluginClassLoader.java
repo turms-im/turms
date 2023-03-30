@@ -17,15 +17,15 @@
 
 package im.turms.server.common.infra.plugin;
 
-import im.turms.server.common.BaseTurmsApplication;
-import im.turms.server.common.infra.collection.CollectionUtil;
-import im.turms.server.common.infra.lang.PackageConst;
-
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Collections;
 import java.util.Enumeration;
+
+import im.turms.server.common.BaseTurmsApplication;
+import im.turms.server.common.infra.collection.CollectionUtil;
+import im.turms.server.common.infra.lang.PackageConst;
 
 /**
  * @author James Chen
@@ -33,11 +33,12 @@ import java.util.Enumeration;
 public class PluginClassLoader extends URLClassLoader {
 
     /**
-     * @implNote The parent class loader isn't always the system class loader:
-     * When running in IDE or as a thin jar, the main class is the concrete class of {@link BaseTurmsApplication},
-     * the plugin parent class loader is the system class loader.
-     * But when running in a fat jar, the main class is {@link org.springframework.boot.loader.JarLauncher},
-     * the plugin parent class loader is {@link org.springframework.boot.loader.LaunchedURLClassLoader}.
+     * @implNote The parent class loader isn't always the system class loader: When running in IDE
+     *           or as a thin jar, the main class is the concrete class of
+     *           {@link BaseTurmsApplication}, the plugin parent class loader is the system class
+     *           loader. But when running in a fat jar, the main class is
+     *           {@link org.springframework.boot.loader.JarLauncher}, the plugin parent class loader
+     *           is {@link org.springframework.boot.loader.LaunchedURLClassLoader}.
      */
     private static final ClassLoader PARENT_CLASS_LOADER = PluginClassLoader.class.getClassLoader();
 
@@ -51,9 +52,11 @@ public class PluginClassLoader extends URLClassLoader {
             return super.loadClass(name);
         } catch (ClassNotFoundException | NoClassDefFoundError e) {
             if (name.startsWith(PackageConst.PREFIX_TURMS_BASE)) {
-                throw new ClassNotFoundException("Could not find the class (" +
-                        name
-                        + ") of Turms. This may happen if the plugin is loaded by a wrong Turms server", e);
+                throw new ClassNotFoundException(
+                        "Could not find the class ("
+                                + name
+                                + ") of Turms. This may happen if the plugin is loaded by a wrong Turms server",
+                        e);
             }
             throw e;
         }
@@ -70,10 +73,9 @@ public class PluginClassLoader extends URLClassLoader {
 
     @Override
     public Enumeration<URL> getResources(String name) throws IOException {
-        return Collections.enumeration(CollectionUtil.newList(
-                findResources(name).asIterator(),
-                PARENT_CLASS_LOADER.getResources(name).asIterator()
-        ));
+        return Collections.enumeration(CollectionUtil.newList(findResources(name).asIterator(),
+                PARENT_CLASS_LOADER.getResources(name)
+                        .asIterator()));
     }
 
 }

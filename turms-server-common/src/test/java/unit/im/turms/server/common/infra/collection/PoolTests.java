@@ -17,13 +17,14 @@
 
 package unit.im.turms.server.common.infra.collection;
 
-import im.turms.server.common.infra.collection.Pool;
-import org.junit.jupiter.api.Test;
-
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+
+import org.junit.jupiter.api.Test;
+
+import im.turms.server.common.infra.collection.Pool;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -37,7 +38,9 @@ class PoolTests {
         Pool<Collection<String>> pool = new Pool<>(Integer.MAX_VALUE, 64);
         Set<String> emptySet = Collections.emptySet();
         if (emptySet.hashCode() != Pool.RESERVED_KEY) {
-            throw new IllegalArgumentException("The hashcode of an empty set must be " + Pool.RESERVED_KEY);
+            throw new IllegalArgumentException(
+                    "The hashcode of an empty set must be "
+                            + Pool.RESERVED_KEY);
         }
         pool.poolIfAbsent(emptySet);
 
@@ -54,15 +57,13 @@ class PoolTests {
         pool.poolIfAbsent(List.of("123", "abc"));
 
         assertThat(pool.size()).isEqualTo(7);
-        assertThat(pool.values()).containsExactlyInAnyOrder(
-                Collections.emptySet(),
+        assertThat(pool.values()).containsExactlyInAnyOrder(Collections.emptySet(),
                 Set.of("123"),
                 Set.of("abc"),
                 Set.of("123", "abc"),
                 List.of("123"),
                 List.of("abc"),
-                List.of("123", "abc")
-        );
+                List.of("123", "abc"));
     }
 
 }

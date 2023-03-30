@@ -17,23 +17,23 @@
 
 package im.turms.server.common.infra.cluster.service.codec;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.PooledByteBufAllocator;
+import io.netty.util.IllegalReferenceCountException;
 
 import im.turms.server.common.infra.cluster.service.ClusterService;
 import im.turms.server.common.infra.cluster.service.codec.codec.Codec;
 import im.turms.server.common.infra.cluster.service.codec.codec.CodecPool;
 import im.turms.server.common.infra.cluster.service.codec.exception.CodecNotFoundException;
 import im.turms.server.common.infra.cluster.service.codec.io.CodecStream;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.PooledByteBufAllocator;
-import io.netty.util.IllegalReferenceCountException;
 
 /**
- * Note that to get a better performance and serialize data with the least bytes,
- * do NOT use reflection to serialize/deserialize data.
+ * Note that to get a better performance and serialize data with the least bytes, do NOT use
+ * reflection to serialize/deserialize data.
  * <p>
- * The reason to use codec (Use independent codec to serialize data)
- * instead of something like Writeable interface (The code used to (de)serialize data is included in the data class)
- * is to separate the (de)serialization logic from the business logic or the code will tend to be messy.
+ * The reason to use codec (Use independent codec to serialize data) instead of something like
+ * Writeable interface (The code used to (de)serialize data is included in the data class) is to
+ * separate the (de)serialization logic from the business logic or the code will tend to be messy.
  *
  * @author James Chen
  */
@@ -48,23 +48,26 @@ public class CodecService implements ClusterService {
         Class<T> clazz = (Class<T>) data.getClass();
         Codec<T> codec = CodecPool.getCodec(clazz);
         if (codec == null) {
-            throw new CodecNotFoundException("Could not find a codec for the class: " + clazz.getName());
+            throw new CodecNotFoundException(
+                    "Could not find a codec for the class: "
+                            + clazz.getName());
         }
         ByteBuf byteBufToComposite = codec.byteBufToComposite(data);
         if (byteBufToComposite != null && byteBufToComposite.refCnt() == 0) {
-            throw new IllegalReferenceCountException("The buffer (" +
-                    byteBufToComposite +
-                    ") to composite for the data (" +
-                    data +
-                    ") has been released");
+            throw new IllegalReferenceCountException(
+                    "The buffer ("
+                            + byteBufToComposite
+                            + ") to composite for the data ("
+                            + data
+                            + ") has been released");
         }
         int initialCapacity = codec.initialCapacity(data);
-        ByteBuf output = PooledByteBufAllocator.DEFAULT
-                .directBuffer(initialCapacity > -1 ? initialCapacity : 128);
+        ByteBuf output = PooledByteBufAllocator.DEFAULT.directBuffer(initialCapacity > -1
+                ? initialCapacity
+                : 128);
         codec.write(new CodecStream(output), data);
         if (byteBufToComposite != null) {
-            output = PooledByteBufAllocator.DEFAULT
-                    .compositeDirectBuffer(2)
+            output = PooledByteBufAllocator.DEFAULT.compositeDirectBuffer(2)
                     .addComponents(true, output, byteBufToComposite);
         }
         return output;

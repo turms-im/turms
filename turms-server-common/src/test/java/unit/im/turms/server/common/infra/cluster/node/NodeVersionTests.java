@@ -17,8 +17,9 @@
 
 package unit.im.turms.server.common.infra.cluster.node;
 
-import im.turms.server.common.infra.cluster.node.NodeVersion;
 import org.junit.jupiter.api.Test;
+
+import im.turms.server.common.infra.cluster.node.NodeVersion;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
@@ -44,14 +45,18 @@ class NodeVersionTests {
 
     @Test
     void parse_shouldThrow_forWrongVersionWithoutQualifier() {
-        assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() -> NodeVersion.parse("1.2.3.4"));
-        assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() -> NodeVersion.parse("1.2"));
+        assertThatExceptionOfType(IllegalArgumentException.class)
+                .isThrownBy(() -> NodeVersion.parse("1.2.3.4"));
+        assertThatExceptionOfType(IllegalArgumentException.class)
+                .isThrownBy(() -> NodeVersion.parse("1.2"));
     }
 
     @Test
     void parse_shouldThrow_forWrongVersionWithQualifier() {
-        assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() -> NodeVersion.parse("1.2.3-SNAP"));
-        assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() -> NodeVersion.parse("1.2-SNAP"));
+        assertThatExceptionOfType(IllegalArgumentException.class)
+                .isThrownBy(() -> NodeVersion.parse("1.2.3-SNAP"));
+        assertThatExceptionOfType(IllegalArgumentException.class)
+                .isThrownBy(() -> NodeVersion.parse("1.2-SNAP"));
     }
 
 }

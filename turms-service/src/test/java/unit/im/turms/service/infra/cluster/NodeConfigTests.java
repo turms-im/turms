@@ -17,9 +17,10 @@
 
 package unit.im.turms.service.infra.cluster;
 
+import org.junit.jupiter.api.Test;
+
 import im.turms.server.common.infra.cluster.node.NodeType;
 import im.turms.service.infra.cluster.NodeConfig;
-import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

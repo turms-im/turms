@@ -17,8 +17,9 @@
 
 package im.turms.server.common.infra.plugin.script;
 
-import im.turms.server.common.infra.plugin.PluginExecutionException;
 import lombok.Getter;
+
+import im.turms.server.common.infra.plugin.PluginExecutionException;
 
 /**
  * @author James Chen

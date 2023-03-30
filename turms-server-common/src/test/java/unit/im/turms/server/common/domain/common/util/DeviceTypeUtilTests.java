@@ -17,12 +17,13 @@
 
 package unit.im.turms.server.common.domain.common.util;
 
-import im.turms.server.common.access.client.dto.constant.DeviceType;
-import im.turms.server.common.domain.common.util.DeviceTypeUtil;
-import org.junit.jupiter.api.Test;
-
 import java.util.Collections;
 import java.util.Set;
+
+import org.junit.jupiter.api.Test;
+
+import im.turms.server.common.access.client.dto.constant.DeviceType;
+import im.turms.server.common.domain.common.util.DeviceTypeUtil;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -31,7 +32,8 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 class DeviceTypeUtilTests {
 
-    private static final Set<DeviceType> DEVICE_TYPES = Set.of(DeviceType.ANDROID, DeviceType.DESKTOP);
+    private static final Set<DeviceType> DEVICE_TYPES =
+            Set.of(DeviceType.ANDROID, DeviceType.DESKTOP);
     private static final byte DEVICE_TYPES_BYTES = 9;
 
     @Test

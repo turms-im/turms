@@ -17,16 +17,17 @@
 
 package im.turms.server.common.access.servicerequest.rpc;
 
+import io.micrometer.core.instrument.Tag;
+import lombok.Data;
+import org.springframework.context.ApplicationContext;
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.access.client.dto.request.TurmsRequest;
 import im.turms.server.common.access.servicerequest.dispatcher.IServiceRequestDispatcher;
 import im.turms.server.common.access.servicerequest.dto.ServiceRequest;
 import im.turms.server.common.access.servicerequest.dto.ServiceResponse;
 import im.turms.server.common.infra.cluster.service.rpc.NodeTypeToHandleRpc;
 import im.turms.server.common.infra.cluster.service.rpc.dto.RpcRequest;
-import io.micrometer.core.instrument.Tag;
-import lombok.Data;
-import org.springframework.context.ApplicationContext;
-import reactor.core.publisher.Mono;
 
 /**
  * @author James Chen
@@ -47,13 +48,19 @@ public class HandleServiceRequest extends RpcRequest<ServiceResponse> {
 
     @Override
     public String toString() {
-        return "HandleServiceRequest{" +
-                "name='" + name() + "'" +
-                ", tag=" + tag() +
-                ", requestTime=" + getRequestTime() +
-                ", tracingContext=" + getTracingContext() +
-                ", serviceRequest=" + serviceRequest +
-                '}';
+        return "HandleServiceRequest{"
+                + "name='"
+                + name()
+                + "'"
+                + ", tag="
+                + tag()
+                + ", requestTime="
+                + getRequestTime()
+                + ", tracingContext="
+                + getTracingContext()
+                + ", serviceRequest="
+                + serviceRequest
+                + '}';
     }
 
     @Override

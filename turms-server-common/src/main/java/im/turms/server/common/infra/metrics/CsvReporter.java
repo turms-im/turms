@@ -17,17 +17,6 @@
 
 package im.turms.server.common.infra.metrics;
 
-import im.turms.server.common.infra.collection.CollectionUtil;
-import im.turms.server.common.infra.lang.StrJoiner;
-import im.turms.server.common.infra.lang.StringUtil;
-import im.turms.server.common.infra.netty.ReferenceCountUtil;
-import io.micrometer.core.instrument.Measurement;
-import io.micrometer.core.instrument.Meter;
-import io.micrometer.core.instrument.Tag;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.PooledByteBufAllocator;
-
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -37,22 +26,36 @@ import java.util.List;
 import java.util.Set;
 import jakarta.annotation.Nullable;
 
+import io.micrometer.core.instrument.Measurement;
+import io.micrometer.core.instrument.Meter;
+import io.micrometer.core.instrument.Tag;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.PooledByteBufAllocator;
+
+import im.turms.server.common.infra.collection.CollectionUtil;
+import im.turms.server.common.infra.lang.StrJoiner;
+import im.turms.server.common.infra.lang.StringUtil;
+import im.turms.server.common.infra.netty.ReferenceCountUtil;
+
 /**
  * @author James Chen
  */
 public final class CsvReporter {
 
-    private static final byte[] TITLE = "Name,Tags,Type,Value,Unit\n".getBytes(StandardCharsets.US_ASCII);
+    private static final byte[] TITLE = StringUtil.getBytes("Name,Tags,Type,Value,Unit\n");
 
     private static final Comparator<IdAndMeasure> MEASUREMENT_COMPARATOR = (o1, o2) -> {
         Meter.Id id1 = o1.id;
         Meter.Id id2 = o2.id;
-        int result = id1.getName().compareTo(id2.getName());
+        int result = id1.getName()
+                .compareTo(id2.getName());
         if (result != 0) {
             return result;
         }
-        Iterator<Tag> tagIterator1 = id1.getTagsAsIterable().iterator();
-        Iterator<Tag> tagIterator2 = id2.getTagsAsIterable().iterator();
+        Iterator<Tag> tagIterator1 = id1.getTagsAsIterable()
+                .iterator();
+        Iterator<Tag> tagIterator2 = id2.getTagsAsIterable()
+                .iterator();
         while (tagIterator1.hasNext()) {
             Tag tag1 = tagIterator1.next();
             if (tagIterator2.hasNext()) {
@@ -76,7 +79,7 @@ public final class CsvReporter {
         try {
             buffer = PooledByteBufAllocator.DEFAULT.directBuffer(measures.size() * 64);
             buffer.writeBytes(TITLE);
-            for (Iterator<IdAndMeasure> iterator = measures.iterator(); iterator.hasNext(); ) {
+            for (Iterator<IdAndMeasure> iterator = measures.iterator(); iterator.hasNext();) {
                 IdAndMeasure entry = iterator.next();
                 Meter.Id meterId = entry.id;
                 String tags = getTagsAsString(meterId);
@@ -85,11 +88,13 @@ public final class CsvReporter {
                         .writeByte(',')
                         .writeBytes(StringUtil.getBytes(tags))
                         .writeByte(',')
-                        .writeBytes(StringUtil.getBytes(meterId.getType().name()))
+                        .writeBytes(StringUtil.getBytes(meterId.getType()
+                                .name()))
                         .writeByte(',')
                         .writeBytes(StringUtil.getBytes(String.valueOf(measurement.getValue())))
                         .writeByte(',')
-                        .writeBytes(StringUtil.getBytes(StringUtil.toString(meterId.getBaseUnit())));
+                        .writeBytes(
+                                StringUtil.getBytes(StringUtil.toString(meterId.getBaseUnit())));
                 if (iterator.hasNext()) {
                     buffer.writeByte('\n');
                 }
@@ -103,10 +108,14 @@ public final class CsvReporter {
         return buffer;
     }
 
-    private static List<IdAndMeasure> getSortedMeasurements(Collection<Meter> meters, @Nullable Set<String> names) {
+    private static List<IdAndMeasure> getSortedMeasurements(
+            Collection<Meter> meters,
+            @Nullable Set<String> names) {
         int size = 0;
         for (Meter meter : meters) {
-            if (names != null && !names.contains(meter.getId().getName())) {
+            if (names != null
+                    && !names.contains(meter.getId()
+                            .getName())) {
                 continue;
             }
             size = CollectionUtil.getSize(meter.measure());
@@ -116,7 +125,9 @@ public final class CsvReporter {
         }
         List<IdAndMeasure> measures = new ArrayList<>(size);
         for (Meter meter : meters) {
-            if (names != null && !names.contains(meter.getId().getName())) {
+            if (names != null
+                    && !names.contains(meter.getId()
+                            .getName())) {
                 continue;
             }
             for (Measurement measurement : meter.measure()) {
@@ -146,7 +157,10 @@ public final class CsvReporter {
         return tagJoiner.toString();
     }
 
-    private static record IdAndMeasure(Meter.Id id, Measurement measurement) {
+    private static record IdAndMeasure(
+            Meter.Id id,
+            Measurement measurement
+    ) {
     }
 
 }

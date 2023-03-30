@@ -17,6 +17,21 @@
 
 package im.turms.gateway.infra.fake;
 
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import jakarta.annotation.PostConstruct;
+
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
+import org.springframework.stereotype.Component;
+import reactor.core.publisher.Mono;
+import reactor.netty.resources.LoopResources;
+import reactor.util.retry.Retry;
+
 import im.turms.gateway.access.client.tcp.TcpUserSessionAssembler;
 import im.turms.gateway.infra.thread.ThreadNameConst;
 import im.turms.server.common.access.client.dto.constant.DeviceType;
@@ -38,20 +53,6 @@ import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.gateway.FakeProperties;
 import im.turms.server.common.infra.proto.ProtoFormatter;
 import im.turms.server.common.infra.thread.NamedThreadFactory;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
-import org.springframework.stereotype.Component;
-import reactor.core.publisher.Mono;
-import reactor.netty.resources.LoopResources;
-import reactor.util.retry.Retry;
-
-import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import jakarta.annotation.PostConstruct;
 
 /**
  * @author James Chen
@@ -67,9 +68,10 @@ public class ClientFakingManager {
     private final TcpUserSessionAssembler tcpUserSessionDispatcher;
     private Thread thread;
 
-    public ClientFakingManager(TcpUserSessionAssembler tcpUserSessionDispatcher,
-                               TurmsApplicationContext context,
-                               TurmsPropertiesManager propertiesManager) {
+    public ClientFakingManager(
+            TcpUserSessionAssembler tcpUserSessionDispatcher,
+            TurmsApplicationContext context,
+            TurmsPropertiesManager propertiesManager) {
         this.tcpUserSessionDispatcher = tcpUserSessionDispatcher;
         fakeProperties = propertiesManager.getLocalProperties()
                 .getGateway()
@@ -79,7 +81,8 @@ public class ClientFakingManager {
                 && fakeProperties.getUserCount() > 0
                 && fakeProperties.getRequestCountPerInterval() > 0;
         if (!tcpUserSessionDispatcher.isEnabled()) {
-            throw new FeatureDisabledException("Cannot run clients because the TCP server is disabled");
+            throw new FeatureDisabledException(
+                    "Cannot run clients because the TCP server is disabled");
         }
         context.addShutdownHook(JobShutdownOrder.CLOSE_FAKE_CLIENTS, timeoutMillis -> {
             shutdown(timeoutMillis);
@@ -91,7 +94,8 @@ public class ClientFakingManager {
     private void init() {
         if (enabled) {
             prepareClients(fakeProperties.getFirstUserId(), fakeProperties.getUserCount())
-                    .subscribe(clients -> startSendingRandomRequests(clients,
+                    .subscribe(
+                            clients -> startSendingRandomRequests(clients,
                                     fakeProperties.getFirstUserId(),
                                     fakeProperties.getUserCount(),
                                     fakeProperties.getRequestIntervalMillis(),
@@ -112,9 +116,8 @@ public class ClientFakingManager {
     }
 
     /**
-     * The main reason to prepare clients in an async way is
-     * to recover from "Connection reset" to retry to connect
-     * without blocking the server
+     * The main reason to prepare clients in an async way is to recover from "Connection reset" to
+     * retry to connect without blocking the server
      */
     private Mono<List<TurmsClient>> prepareClients(long firstUserId, int userCount) {
         LOGGER.info("Preparing clients");
@@ -124,7 +127,10 @@ public class ClientFakingManager {
         for (int i = 0; i < userCount; i++) {
             TurmsClient client = TurmsClient.tcp();
             long userId = firstUserId + i;
-            Mono<TurmsNotification> loginResult = client.connect(tcpUserSessionDispatcher.getHost(), tcpUserSessionDispatcher.getPort(), loopResources)
+            Mono<TurmsNotification> loginResult = client
+                    .connect(tcpUserSessionDispatcher.getHost(),
+                            tcpUserSessionDispatcher.getPort(),
+                            loopResources)
                     .retryWhen(Retry.backoff(5, Duration.ofSeconds(15))
                             // e.g. "Connection reset"
                             .filter(ThrowableUtil::isDisconnectedClientError))
@@ -133,13 +139,15 @@ public class ClientFakingManager {
                         if (ResponseStatusCode.isSuccessCode(notification.getCode())) {
                             clients.add(client);
                         } else {
-                            LOGGER.error("Failed to establish the session: {}. The login response is: {}",
+                            LOGGER.error(
+                                    "Failed to establish the session: {}. The login response is: {}",
                                     client.getSessionIdDesc(),
                                     ProtoFormatter.toJSON5(notification, 128));
                         }
                     })
                     .onErrorResume(t -> {
-                        LOGGER.error("Failed to establish the session: " + client.getSessionIdDesc(), t);
+                        LOGGER.error("Failed to establish the session: "
+                                + client.getSessionIdDesc(), t);
                         return Mono.empty();
                     });
             results.add(loginResult);
@@ -147,31 +155,33 @@ public class ClientFakingManager {
         return Mono.when(results)
                 .then(Mono.fromCallable(() -> {
                     ArrayList<TurmsClient> list = new ArrayList<>(clients);
-                    LOGGER.info("Prepared clients. Expected: {}. Prepared: {}", userCount, list.size());
+                    LOGGER.info("Prepared clients. Expected: {}. Prepared: {}",
+                            userCount,
+                            list.size());
                     return list;
                 }));
     }
 
-    private void startSendingRandomRequests(List<TurmsClient> clients,
-                                            long firstUserId,
-                                            int userCount,
-                                            int requestIntervalMillis,
-                                            int requestCountPerInterval) {
+    private void startSendingRandomRequests(
+            List<TurmsClient> clients,
+            long firstUserId,
+            int userCount,
+            int requestIntervalMillis,
+            int requestCountPerInterval) {
         if (clients.isEmpty()) {
             LOGGER.info("No available client to send random requests");
             return;
         }
         LOGGER.info("Start sending random requests from clients");
         int jitter = userCount / 10;
-        Range<Long> fakedNumberRange = Range.between(
-                Math.max(0, firstUserId - jitter),
-                firstUserId + userCount + jitter
-        );
+        Range<Long> fakedNumberRange =
+                Range.between(Math.max(0, firstUserId - jitter), firstUserId + userCount + jitter);
         GeneratorOptions generatorOptions = new GeneratorOptions(0.8F, 0.8F, fakedNumberRange);
         thread = NamedThreadFactory.newThread(ThreadNameConst.FAKE_CLIENT_MANAGER, true, () -> {
             CyclicIterator<TurmsClient> clientIterator = new CyclicIterator<>(clients);
-            Set<String> excludedRequestNames = Set.of(RandomRequestFactory.CREATE_SESSION_REQUEST_FILED_NAME,
-                    RandomRequestFactory.DELETE_SESSION_REQUEST_FILED_NAME);
+            Set<String> excludedRequestNames =
+                    Set.of(RandomRequestFactory.CREATE_SESSION_REQUEST_FILED_NAME,
+                            RandomRequestFactory.DELETE_SESSION_REQUEST_FILED_NAME);
             Thread currentThread = Thread.currentThread();
             while (!currentThread.isInterrupted()) {
                 int sentRequestCount = 0;
@@ -182,11 +192,13 @@ public class ClientFakingManager {
                             removeCurrentClient(clientIterator, client);
                             continue;
                         }
-                        TurmsRequest request = RandomRequestFactory.create(excludedRequestNames, generatorOptions);
+                        TurmsRequest request =
+                                RandomRequestFactory.create(excludedRequestNames, generatorOptions);
                         client.sendRequest(request)
                                 .subscribe(null, t -> {
                                     LOGGER.error("Caught an error while sending the request: {}",
-                                            ProtoFormatter.toLogString(request), t);
+                                            ProtoFormatter.toLogString(request),
+                                            t);
                                     if (ThrowableUtil.isDisconnectedClientError(t)) {
                                         removeCurrentClient(clientIterator, client);
                                     }
@@ -201,8 +213,11 @@ public class ClientFakingManager {
                 } catch (InterruptedException e) {
                     for (TurmsClient client : clients) {
                         client.logout()
-                                .subscribe(null, t -> LOGGER.error("Caught an error while closing the session: {}",
-                                        client.getSessionIdDesc(), t));
+                                .subscribe(null,
+                                        t -> LOGGER.error(
+                                                "Caught an error while closing the session: {}",
+                                                client.getSessionIdDesc(),
+                                                t));
                     }
                     break;
                 }

@@ -17,7 +17,6 @@
 
 package im.turms.service.domain.admin.access.admin.dto.request;
 
-
 import im.turms.server.common.domain.common.access.dto.ControllerDTO;
 import im.turms.server.common.infra.security.SecurityValueConst;
 import im.turms.server.common.infra.security.SensitiveProperty;
@@ -26,17 +25,19 @@ import im.turms.server.common.infra.security.SensitiveProperty;
  * @author James Chen
  */
 public record UpdateAdminDTO(
-        @SensitiveProperty(SensitiveProperty.Access.ALLOW_DESERIALIZATION)
-        String password,
+        @SensitiveProperty(SensitiveProperty.Access.ALLOW_DESERIALIZATION) String password,
         String name,
         Long roleId
 ) implements ControllerDTO {
     @Override
     public String toString() {
-        return "UpdateAdminDTO[" +
-                "password=" + SecurityValueConst.SENSITIVE_VALUE +
-                ", name=" + name +
-                ", roleId=" + roleId +
-                ']';
+        return "UpdateAdminDTO["
+                + "password="
+                + SecurityValueConst.SENSITIVE_VALUE
+                + ", name="
+                + name
+                + ", roleId="
+                + roleId
+                + ']';
     }
 }

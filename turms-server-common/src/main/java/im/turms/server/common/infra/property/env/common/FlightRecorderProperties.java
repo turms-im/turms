@@ -17,14 +17,14 @@
 
 package im.turms.server.common.infra.property.env.common;
 
+import jakarta.validation.constraints.Min;
 
-import im.turms.server.common.infra.property.metadata.Description;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import jakarta.validation.constraints.Min;
+import im.turms.server.common.infra.property.metadata.Description;
 
 /**
  * @author James Chen
@@ -35,8 +35,8 @@ import jakarta.validation.constraints.Min;
 @NoArgsConstructor
 public class FlightRecorderProperties {
 
-    @Description("A closed recording will be retained for the given period and will be removed from the file system after the retention period. " +
-            "0 means no retention. -1 means unlimited retention.")
+    @Description("A closed recording will be retained for the given period and will be removed from the file system after the retention period. "
+            + "0 means no retention. -1 means unlimited retention.")
     @Min(-1)
     private int closedRecordingRetentionPeriod = 0;
 

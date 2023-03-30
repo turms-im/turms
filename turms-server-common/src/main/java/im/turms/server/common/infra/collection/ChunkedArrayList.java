@@ -17,14 +17,16 @@
 
 package im.turms.server.common.infra.collection;
 
-import im.turms.server.common.infra.thread.NotThreadSafe;
-import org.jctools.util.Pow2;
-
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.RandomAccess;
+import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
+
+import org.jctools.util.Pow2;
+
+import im.turms.server.common.infra.thread.NotThreadSafe;
 
 /**
  * @author James Chen
@@ -87,7 +89,8 @@ public class ChunkedArrayList<E> extends AbstractList<E> implements RandomAccess
     public boolean remove(Object element) {
         List<E> chunk;
         List<E> nextChunk;
-        for (int chunkIndex = 0, chunkCount = chunks.size(); chunkIndex < chunkCount; chunkIndex++) {
+        for (int chunkIndex = 0,
+                chunkCount = chunks.size(); chunkIndex < chunkCount; chunkIndex++) {
             chunk = chunks.get(chunkIndex);
             if (chunk.remove(element)) {
                 if (chunk.isEmpty()) {
@@ -121,7 +124,8 @@ public class ChunkedArrayList<E> extends AbstractList<E> implements RandomAccess
 
     @Override
     public E get(int index) {
-        return chunks.get(index / elementSizePerChunk).get(index & elementSizePerChunkMask);
+        return chunks.get(index / elementSizePerChunk)
+                .get(index & elementSizePerChunkMask);
     }
 
     @Override
@@ -160,6 +164,7 @@ public class ChunkedArrayList<E> extends AbstractList<E> implements RandomAccess
         elementCount++;
     }
 
+    @Nullable
     @Override
     public E remove(int index) {
         int chunkIndex = index / elementSizePerChunk;

@@ -17,10 +17,10 @@
 
 package im.turms.server.common.infra.property.env.gateway;
 
-
-import im.turms.server.common.infra.property.env.common.SslProperties;
 import lombok.Data;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
+
+import im.turms.server.common.infra.property.env.common.SslProperties;
 
 /**
  * @author James Chen

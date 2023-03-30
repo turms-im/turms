@@ -17,8 +17,11 @@
 
 package im.turms.server.common.infra.plugin.script;
 
-import im.turms.server.common.infra.lang.Pair;
-import im.turms.server.common.infra.time.DurationConst;
+import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+import java.util.Map;
+import java.util.function.BiFunction;
+
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.handler.codec.http.HttpHeaders;
@@ -35,20 +38,18 @@ import reactor.netty.http.client.HttpClientRequest;
 import reactor.netty.http.client.HttpClientResponse;
 import reactor.netty.resources.ConnectionProvider;
 
-import java.nio.charset.StandardCharsets;
-import java.time.Duration;
-import java.util.Map;
-import java.util.function.BiFunction;
+import im.turms.server.common.infra.lang.Pair;
+import im.turms.server.common.infra.time.DurationConst;
 
 /**
  * @author James Chen
  */
 public class JsHttp {
 
-    private static final ConnectionProvider CONNECTION_PROVIDER = ConnectionProvider
-            .builder("turms-js-http")
-            .maxConnections(100)
-            .build();
+    private static final ConnectionProvider CONNECTION_PROVIDER =
+            ConnectionProvider.builder("turms-js-http")
+                    .maxConnections(100)
+                    .build();
     private static final FetchOptions DEFAULT_OPTIONS = new FetchOptions();
     private static final FastThreadLocal<HttpClient> HTTP_CLIENT_POOL = new FastThreadLocal<>() {
         @Override
@@ -97,8 +98,7 @@ public class JsHttp {
                 }
             });
         }
-        HttpClient.RequestSender sender = httpClient
-                .request(httpMethod)
+        HttpClient.RequestSender sender = httpClient.request(httpMethod)
                 .uri(uri);
         BiFunction<HttpClientRequest, NettyOutbound, Publisher<Void>> sendConfigurer;
         String body = options.body;
@@ -118,17 +118,17 @@ public class JsHttp {
             };
         }
         sender.send(sendConfigurer)
-                .responseSingle((response, buffer) -> buffer
-                        .asString()
+                .responseSingle((response, buffer) -> buffer.asString()
                         .map(data -> Pair.of(response, data)))
                 .subscribe(pair -> {
-                            HttpClientResponse response = pair.first();
-                            FetchResponse fetchResponse = new FetchResponse(response.status().code(),
-                                    response.responseHeaders(),
-                                    pair.second());
-                            resolve.execute(fetchResponse);
-                        },
-                        reject::execute);
+                    HttpClientResponse response = pair.first();
+                    FetchResponse fetchResponse = new FetchResponse(
+                            response.status()
+                                    .code(),
+                            response.responseHeaders(),
+                            pair.second());
+                    resolve.execute(fetchResponse);
+                }, reject::execute);
     }
 
     @AllArgsConstructor

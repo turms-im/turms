@@ -17,8 +17,8 @@
 
 package io.lettuce.core;
 
-import im.turms.server.common.storage.redis.codec.TurmsRedisCodecAdapter;
-import im.turms.server.common.storage.redis.codec.context.RedisCodecContext;
+import java.util.List;
+
 import io.lettuce.core.codec.RedisCodec;
 import io.lettuce.core.output.CommandOutput;
 import io.lettuce.core.output.GeoWithinListOutput;
@@ -28,7 +28,8 @@ import io.lettuce.core.protocol.CommandArgs;
 import io.lettuce.core.protocol.CommandType;
 import io.netty.buffer.ByteBuf;
 
-import java.util.List;
+import im.turms.server.common.storage.redis.codec.TurmsRedisCodecAdapter;
+import im.turms.server.common.storage.redis.codec.context.RedisCodecContext;
 
 import static io.lettuce.core.protocol.CommandType.EVAL;
 import static io.lettuce.core.protocol.CommandType.EVALSHA;
@@ -44,7 +45,9 @@ public class TurmsRedisCommandBuilder extends RedisCommandBuilder {
 
     public TurmsRedisCommandBuilder(RedisCodecContext context) {
         super(TurmsRedisCodecAdapter.DEFAULT);
-        this.hashFieldAndValueCodec = new TurmsRedisCodecAdapter(context.getHashFieldCodec(), context.getHashValueCodec());
+        this.hashFieldAndValueCodec = new TurmsRedisCodecAdapter(
+                context.getHashFieldCodec(),
+                context.getHashValueCodec());
         this.memberCodec = new TurmsRedisCodecAdapter(null, context.getGeoMemberCodec());
     }
 
@@ -56,41 +59,50 @@ public class TurmsRedisCommandBuilder extends RedisCommandBuilder {
 
     // Geo
 
-    public <T> Command<ByteBuf, ByteBuf, List<GeoWithin<T>>> georadiusbymember(CommandType commandType,
-                                                                               ByteBuf key,
-                                                                               ByteBuf member,
-                                                                               double distance,
-                                                                               String unit,
-                                                                               GeoArgs geoArgs) {
-        CommandArgs<ByteBuf, ByteBuf> args = new CommandArgs<>(memberCodec)
-                .addKey(key)
+    public <T> Command<ByteBuf, ByteBuf, List<GeoWithin<T>>> georadiusbymember(
+            CommandType commandType,
+            ByteBuf key,
+            ByteBuf member,
+            double distance,
+            String unit,
+            GeoArgs geoArgs) {
+        CommandArgs<ByteBuf, ByteBuf> args = new CommandArgs<>(memberCodec).addKey(key)
                 .addValue(member)
                 .add(distance)
                 .add(unit);
         geoArgs.build(args);
-        GeoWithinListOutput output =
-                new GeoWithinListOutput<>(memberCodec, geoArgs.isWithDistance(), geoArgs.isWithHash(), geoArgs.isWithCoordinates());
+        GeoWithinListOutput output = new GeoWithinListOutput<>(
+                memberCodec,
+                geoArgs.isWithDistance(),
+                geoArgs.isWithHash(),
+                geoArgs.isWithCoordinates());
         return createCommand(commandType, output, args);
     }
 
     // Scripting
 
-    public <T> Command<ByteBuf, ByteBuf, T> evalsha(ByteBuf digest,
-                                                    ScriptOutputType type,
-                                                    ByteBuf[] keys,
-                                                    int keyLength) {
+    public <T> Command<ByteBuf, ByteBuf, T> evalsha(
+            ByteBuf digest,
+            ScriptOutputType type,
+            ByteBuf[] keys,
+            int keyLength) {
         CommandArgs<ByteBuf, ByteBuf> args = new CommandArgs<>(codec);
-        args.addKey(digest).add(keyLength).addKeys(keys);
+        args.addKey(digest)
+                .add(keyLength)
+                .addKeys(keys);
         CommandOutput<ByteBuf, ByteBuf, T> output = newScriptOutput(codec, type);
         return createCommand(EVALSHA, output, args);
     }
 
-    public <T> Command<ByteBuf, ByteBuf, T> eval(ByteBuf script,
-                                                 ScriptOutputType type,
-                                                 ByteBuf[] keys,
-                                                 int keyLength) {
+    public <T> Command<ByteBuf, ByteBuf, T> eval(
+            ByteBuf script,
+            ScriptOutputType type,
+            ByteBuf[] keys,
+            int keyLength) {
         CommandArgs<ByteBuf, ByteBuf> args = new CommandArgs<>(codec);
-        args.addKey(script).add(keyLength).addKeys(keys);
+        args.addKey(script)
+                .add(keyLength)
+                .addKeys(keys);
         CommandOutput<ByteBuf, ByteBuf, T> output = newScriptOutput(codec, type);
         return createCommand(EVAL, output, args);
     }

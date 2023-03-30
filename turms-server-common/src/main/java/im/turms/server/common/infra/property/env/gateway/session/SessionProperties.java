@@ -17,17 +17,18 @@
 
 package im.turms.server.common.infra.property.env.gateway.session;
 
-import im.turms.server.common.infra.property.env.gateway.identityaccessmanagement.IdentityAccessManagementProperties;
-import im.turms.server.common.infra.property.metadata.Description;
-import im.turms.server.common.infra.property.metadata.GlobalProperty;
-import im.turms.server.common.infra.property.metadata.MutableProperty;
+import jakarta.validation.constraints.Min;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
-import jakarta.validation.constraints.Min;
+import im.turms.server.common.infra.property.env.gateway.identityaccessmanagement.IdentityAccessManagementProperties;
+import im.turms.server.common.infra.property.metadata.Description;
+import im.turms.server.common.infra.property.metadata.GlobalProperty;
+import im.turms.server.common.infra.property.metadata.MutableProperty;
 
 /**
  * @author James Chen
@@ -38,33 +39,33 @@ import jakarta.validation.constraints.Min;
 @NoArgsConstructor
 public class SessionProperties {
 
-    @Description("A session will be closed if turms server does not receive any request " +
-            "(including heartbeat request) from the client during closeIdleSessionAfterSeconds. References: " +
-            "https://mp.weixin.qq.com/s?__biz=MzAwNDY1ODY2OQ==&mid=207243549&idx=1&sn=4ebe4beb8123f1b5ab58810ac8bc5994&scene=0#rd")
+    @Description("A session will be closed if turms server does not receive any request "
+            + "(including heartbeat request) from the client during closeIdleSessionAfterSeconds. References: "
+            + "https://mp.weixin.qq.com/s?__biz=MzAwNDY1ODY2OQ==&mid=207243549&idx=1&sn=4ebe4beb8123f1b5ab58810ac8bc5994&scene=0#rd")
     @GlobalProperty
     @MutableProperty
     @Min(0)
     private int closeIdleSessionAfterSeconds = 180;
 
-    @Description("If the turms server only receives heartbeat requests from the client during switchProtocolAfterSeconds, " +
-            "the TCP/WebSocket connection will be closed with the close status \"SWITCH\" to indicate the client " +
-            "should keep sending heartbeat requests over UDP if they want to keep online. " +
-            "Note: 1. The property only works if UDP is enabled; 2. For browser clients, UDP is not supported")
+    @Description("If the turms server only receives heartbeat requests from the client during switchProtocolAfterSeconds, "
+            + "the TCP/WebSocket connection will be closed with the close status \"SWITCH\" to indicate the client "
+            + "should keep sending heartbeat requests over UDP if they want to keep online. "
+            + "Note: 1. The property only works if UDP is enabled; 2. For browser clients, UDP is not supported")
     @GlobalProperty
     @MutableProperty
     @Min(0)
     private int switchProtocolAfterSeconds = closeIdleSessionAfterSeconds * 3;
 
-    @Description("The minimum interval to refresh the heartbeat status by client requests " +
-            "to avoid refreshing the heartbeat status frequently")
+    @Description("The minimum interval to refresh the heartbeat status by client requests "
+            + "to avoid refreshing the heartbeat status frequently")
     @GlobalProperty
     @MutableProperty
     @Min(0)
     private int minHeartbeatIntervalSeconds = closeIdleSessionAfterSeconds / 10;
 
-    @Description("The client heartbeat interval. " +
-            "Note that the value will NOT change the actual heartbeat behavior of clients, " +
-            "and the value is only used to facilitate related operations of turms-gateway")
+    @Description("The client heartbeat interval. "
+            + "Note that the value will NOT change the actual heartbeat behavior of clients, "
+            + "and the value is only used to facilitate related operations of turms-gateway")
     @GlobalProperty
     @MutableProperty
     @Min(0)
@@ -76,7 +77,8 @@ public class SessionProperties {
     private boolean notifyClientsOfSessionInfoAfterConnected = true;
 
     @NestedConfigurationProperty
-    private IdentityAccessManagementProperties identityAccessManagement = new IdentityAccessManagementProperties();
+    private IdentityAccessManagementProperties identityAccessManagement =
+            new IdentityAccessManagementProperties();
 
     @NestedConfigurationProperty
     private DeviceDetailsProperties deviceDetails = new DeviceDetailsProperties();

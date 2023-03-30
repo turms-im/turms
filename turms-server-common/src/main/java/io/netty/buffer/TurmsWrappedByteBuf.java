@@ -17,9 +17,9 @@
 
 package io.netty.buffer;
 
-import io.netty.util.internal.ObjectUtil;
-
 import java.nio.ByteOrder;
+
+import io.netty.util.internal.ObjectUtil;
 
 /**
  * @author James Chen
@@ -46,7 +46,9 @@ public class TurmsWrappedByteBuf extends WrappedByteBuf {
 
     @Override
     public ByteBuf asReadOnly() {
-        return buf.isReadOnly() ? this : new TurmsWrappedByteBuf(buf.asReadOnly());
+        return buf.isReadOnly()
+                ? this
+                : new TurmsWrappedByteBuf(buf.asReadOnly());
     }
 
     @Override

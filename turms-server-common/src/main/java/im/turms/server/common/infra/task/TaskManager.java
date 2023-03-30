@@ -17,20 +17,21 @@
 
 package im.turms.server.common.infra.task;
 
-import im.turms.server.common.infra.logging.core.logger.Logger;
-import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
-import im.turms.server.common.infra.thread.NamedThreadFactory;
-import im.turms.server.common.infra.thread.ThreadNameConst;
-import org.springframework.scheduling.TaskScheduler;
-import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
-import org.springframework.scheduling.support.CronTrigger;
-import org.springframework.stereotype.Component;
-
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
+
+import org.springframework.scheduling.TaskScheduler;
+import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
+import org.springframework.scheduling.support.CronTrigger;
+import org.springframework.stereotype.Component;
+
+import im.turms.server.common.infra.logging.core.logger.Logger;
+import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
+import im.turms.server.common.infra.thread.NamedThreadFactory;
+import im.turms.server.common.infra.thread.ThreadNameConst;
 
 /**
  * Handle tasks in a thread
@@ -49,8 +50,10 @@ public class TaskManager {
 
     public TaskManager() {
         scheduledTaskMap = new ConcurrentHashMap<>(32);
-        NamedThreadFactory threadFactory = new NamedThreadFactory(ThreadNameConst.TASK_MANAGER, true);
-        ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor(threadFactory);
+        NamedThreadFactory threadFactory =
+                new NamedThreadFactory(ThreadNameConst.TASK_MANAGER, true);
+        ScheduledExecutorService executor =
+                Executors.newSingleThreadScheduledExecutor(threadFactory);
         taskScheduler = new ConcurrentTaskScheduler(executor);
     }
 
@@ -79,21 +82,24 @@ public class TaskManager {
             try {
                 runnable.run();
             } catch (Exception e) {
-                LOGGER.error("Caught an error while running the task \"" +
-                        taskName +
-                        "\" defined in the class: " +
-                        runnable.getClass().getName(), e);
+                LOGGER.error("Caught an error while running the task \""
+                        + taskName
+                        + "\" defined in the class: "
+                        + runnable.getClass()
+                                .getName(),
+                        e);
             }
             long endTime = System.currentTimeMillis();
             long diff = endTime - startTime;
             if (diff > SLOW_LOG_THRESHOLD_MILLIS) {
-                LOGGER.warn("The task \"" +
-                        taskName +
-                        "\" defined in the class (" +
-                        runnable.getClass().getName() +
-                        ") was slow and took (" +
-                        diff +
-                        ") millis to execute");
+                LOGGER.warn("The task \""
+                        + taskName
+                        + "\" defined in the class ("
+                        + runnable.getClass()
+                                .getName()
+                        + ") was slow and took ("
+                        + diff
+                        + ") millis to execute");
             }
         }
     }

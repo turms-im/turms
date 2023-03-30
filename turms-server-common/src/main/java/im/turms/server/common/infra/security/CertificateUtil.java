@@ -17,8 +17,6 @@
 
 package im.turms.server.common.infra.security;
 
-import im.turms.server.common.infra.lang.FastStringBuilder;
-
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -35,6 +33,8 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 import java.util.Enumeration;
 import jakarta.annotation.Nullable;
+
+import im.turms.server.common.infra.lang.FastStringBuilder;
 
 /**
  * @author James Chen
@@ -59,14 +59,18 @@ public final class CertificateUtil {
         try {
             return getPublicKeyFromPem0(file, algorithm);
         } catch (Exception e) {
-            throw new RuntimeException("Failed to get the public key from the PEM file: " + file, e);
+            throw new RuntimeException(
+                    "Failed to get the public key from the PEM file: "
+                            + file,
+                    e);
         }
     }
 
     private static PublicKey getPublicKeyFromPem0(File file, String algorithm) throws Exception {
         boolean isCertificate = false;
         FastStringBuilder builder = new FastStringBuilder();
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file)))) {
+        try (BufferedReader reader =
+                new BufferedReader(new InputStreamReader(new FileInputStream(file)))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 if (line.startsWith("-----")) {
@@ -82,27 +86,37 @@ public final class CertificateUtil {
         if (isCertificate) {
             CertificateFactory factory = CertificateFactory.getInstance("X.509");
             try (ByteArrayInputStream stream = new ByteArrayInputStream(publicKeyPem)) {
-                X509Certificate certificate = (X509Certificate) factory.generateCertificates(stream);
+                X509Certificate certificate =
+                        (X509Certificate) factory.generateCertificates(stream);
                 return certificate.getPublicKey();
             }
         } else {
-            byte[] decoded = Base64.getDecoder().decode(publicKeyPem);
+            byte[] decoded = Base64.getDecoder()
+                    .decode(publicKeyPem);
             X509EncodedKeySpec spec = new X509EncodedKeySpec(decoded);
             KeyFactory keyFactory = KeyFactory.getInstance(algorithm);
             return keyFactory.generatePublic(spec);
         }
     }
 
-    public static PublicKey getPublicKeyFromP12File(File file, String password, @Nullable String keyAlias) {
+    public static PublicKey getPublicKeyFromP12File(
+            File file,
+            String password,
+            @Nullable String keyAlias) {
         try {
             return getPublicKeyFromP12File0(file, password, keyAlias);
         } catch (Exception e) {
-            throw new RuntimeException("Failed to get the public key from the P12 file: " + file, e);
+            throw new RuntimeException(
+                    "Failed to get the public key from the P12 file: "
+                            + file,
+                    e);
         }
     }
 
-    private static PublicKey getPublicKeyFromP12File0(File file, String password, @Nullable String keyAlias)
-            throws Exception {
+    private static PublicKey getPublicKeyFromP12File0(
+            File file,
+            String password,
+            @Nullable String keyAlias) throws Exception {
         KeyStore keystore = KeyStore.getInstance("PKCS12");
         try (FileInputStream stream = new FileInputStream(file)) {
             keystore.load(stream, password.toCharArray());
@@ -117,16 +131,24 @@ public final class CertificateUtil {
         return certificate.getPublicKey();
     }
 
-    public static byte[] getSecretKeyFromP12File(File file, String keyStorePassword, @Nullable String keyAlias) {
+    public static byte[] getSecretKeyFromP12File(
+            File file,
+            String keyStorePassword,
+            @Nullable String keyAlias) {
         try {
             return getSecretKeyFromP12File0(file, keyStorePassword, keyAlias);
         } catch (Exception e) {
-            throw new RuntimeException("Failed to get the secret key from the P12 file: " + file, e);
+            throw new RuntimeException(
+                    "Failed to get the secret key from the P12 file: "
+                            + file,
+                    e);
         }
     }
 
-    private static byte[] getSecretKeyFromP12File0(File file, String keyStorePassword, @Nullable String keyAlias)
-            throws Exception {
+    private static byte[] getSecretKeyFromP12File0(
+            File file,
+            String keyStorePassword,
+            @Nullable String keyAlias) throws Exception {
         KeyStore keystore = KeyStore.getInstance("PKCS12");
         char[] password = keyStorePassword.toCharArray();
         try (FileInputStream stream = new FileInputStream(file)) {
@@ -138,7 +160,8 @@ public final class CertificateUtil {
                 keyAlias = aliases.nextElement();
             }
         }
-        return keystore.getKey(keyAlias, password).getEncoded();
+        return keystore.getKey(keyAlias, password)
+                .getEncoded();
     }
 
 }

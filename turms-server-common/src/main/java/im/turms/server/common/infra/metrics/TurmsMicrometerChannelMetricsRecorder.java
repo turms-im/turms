@@ -14,15 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package im.turms.server.common.infra.metrics;
+
+import java.net.SocketAddress;
+import java.time.Duration;
 
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.DistributionSummary;
 import io.micrometer.core.instrument.Timer;
 import reactor.netty.channel.ChannelMetricsRecorder;
-
-import java.net.SocketAddress;
-import java.time.Duration;
 
 import static reactor.netty.Metrics.ADDRESS_RESOLVER;
 import static reactor.netty.Metrics.CONNECT_TIME;
@@ -49,38 +50,32 @@ public class TurmsMicrometerChannelMetricsRecorder implements ChannelMetricsReco
     private final Timer addressResolverTime;
 
     public TurmsMicrometerChannelMetricsRecorder(String name, String protocol) {
-        dataReceived = DistributionSummary
-                .builder(name + DATA_RECEIVED)
+        dataReceived = DistributionSummary.builder(name + DATA_RECEIVED)
                 .baseUnit("bytes")
                 .description("Amount of the data received, in bytes")
                 .tag(URI, protocol)
                 .register(REGISTRY);
 
-        dataSent = DistributionSummary
-                .builder(name + DATA_SENT)
+        dataSent = DistributionSummary.builder(name + DATA_SENT)
                 .baseUnit("bytes")
                 .description("Amount of the data sent, in bytes")
                 .tag(URI, protocol)
                 .register(REGISTRY);
 
-        errorCount = Counter
-                .builder(name + ERRORS)
+        errorCount = Counter.builder(name + ERRORS)
                 .description("Number of errors that occurred")
                 .tag(URI, protocol)
                 .register(REGISTRY);
 
-        connectTime = Timer
-                .builder(name + CONNECT_TIME)
+        connectTime = Timer.builder(name + CONNECT_TIME)
                 .description("Time spent for connecting to the remote address")
                 .register(REGISTRY);
 
-        tlsHandshakeTime = Timer
-                .builder(name + TLS_HANDSHAKE_TIME)
+        tlsHandshakeTime = Timer.builder(name + TLS_HANDSHAKE_TIME)
                 .description("Time spent for TLS handshake")
                 .register(REGISTRY);
 
-        addressResolverTime = Timer
-                .builder(name + ADDRESS_RESOLVER)
+        addressResolverTime = Timer.builder(name + ADDRESS_RESOLVER)
                 .description("Time spent for resolving the address")
                 .register(REGISTRY);
     }
@@ -111,7 +106,10 @@ public class TurmsMicrometerChannelMetricsRecorder implements ChannelMetricsReco
     }
 
     @Override
-    public void recordResolveAddressTime(SocketAddress remoteAddress, Duration time, String status) {
+    public void recordResolveAddressTime(
+            SocketAddress remoteAddress,
+            Duration time,
+            String status) {
         addressResolverTime.record(time);
     }
 

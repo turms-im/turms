@@ -17,15 +17,16 @@
 
 package im.turms.gateway.access.client.tcp;
 
+import java.net.InetSocketAddress;
+
+import reactor.netty.channel.ChannelOperations;
+
 import im.turms.gateway.access.client.common.NotificationFactory;
 import im.turms.gateway.access.client.common.connection.NetConnection;
 import im.turms.server.common.domain.session.bo.CloseReason;
 import im.turms.server.common.infra.exception.ThrowableUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
-import reactor.netty.channel.ChannelOperations;
-
-import java.net.InetSocketAddress;
 
 /**
  * @author James Chen
@@ -55,8 +56,7 @@ public class TcpConnection extends NetConnection {
             return;
         }
         super.close(closeReason);
-        connection
-                .sendObject(NotificationFactory.createBuffer(closeReason))
+        connection.sendObject(NotificationFactory.createBuffer(closeReason))
                 .then()
                 .doOnError(throwable -> {
                     if (!ThrowableUtil.isDisconnectedClientError(throwable)) {
@@ -67,9 +67,9 @@ public class TcpConnection extends NetConnection {
                 .doFinally(signal -> close())
                 .subscribe(null, t -> {
                     if (!ThrowableUtil.isDisconnectedClientError(t)) {
-                        LOGGER.error("Failed to send the close notification after (" +
-                                RETRY_SEND_CLOSE_NOTIFICATION.maxAttempts +
-                                ") attempts", t);
+                        LOGGER.error("Failed to send the close notification after ("
+                                + RETRY_SEND_CLOSE_NOTIFICATION.maxAttempts
+                                + ") attempts", t);
                     }
                 });
     }
@@ -80,7 +80,10 @@ public class TcpConnection extends NetConnection {
             connection.dispose();
         } catch (Exception e) {
             if (!ThrowableUtil.isDisconnectedClientError(e)) {
-                LOGGER.error("Failed to close the TCP connection: " + getAddress().getAddress().getHostAddress(), e);
+                LOGGER.error("Failed to close the TCP connection: "
+                        + getAddress().getAddress()
+                                .getHostAddress(),
+                        e);
             }
         }
     }

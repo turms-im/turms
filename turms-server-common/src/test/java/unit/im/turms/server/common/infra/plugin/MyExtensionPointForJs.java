@@ -17,11 +17,12 @@
 
 package unit.im.turms.server.common.infra.plugin;
 
-import im.turms.server.common.access.client.dto.notification.TurmsNotification;
-import im.turms.server.common.infra.plugin.ExtensionPoint;
+import java.util.List;
+
 import reactor.core.publisher.Mono;
 
-import java.util.List;
+import im.turms.server.common.access.client.dto.notification.TurmsNotification;
+import im.turms.server.common.infra.plugin.ExtensionPoint;
 
 /**
  * @author James Chen

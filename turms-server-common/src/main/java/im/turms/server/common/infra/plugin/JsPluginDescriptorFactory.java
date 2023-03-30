@@ -17,12 +17,13 @@
 
 package im.turms.server.common.infra.plugin;
 
-import im.turms.server.common.infra.plugin.script.CorruptedScriptException;
-import org.graalvm.polyglot.Value;
-
 import java.nio.file.Path;
 import java.util.Map;
 import jakarta.annotation.Nullable;
+
+import org.graalvm.polyglot.Value;
+
+import im.turms.server.common.infra.plugin.script.CorruptedScriptException;
 
 /**
  * @author James Chen
@@ -42,46 +43,53 @@ public class JsPluginDescriptorFactory extends PluginDescriptorFactory {
     public static Map<String, String> executeGetPluginDescriptor(Value plugin) {
         Value getDescriptor = plugin.getMember(GET_DESCRIPTOR);
         if (getDescriptor == null) {
-            String message = "The plugin must have a function named: \"" + GET_DESCRIPTOR + "\"";
+            String message = "The plugin must have a function named: \""
+                    + GET_DESCRIPTOR
+                    + "\"";
             throw new CorruptedScriptException(message);
         }
         if (!getDescriptor.canExecute()) {
-            String message = "The member \"" +
-                    GET_DESCRIPTOR +
-                    "\" must be a function, but got: " +
-                    getDescriptor;
+            String message = "The member \""
+                    + GET_DESCRIPTOR
+                    + "\" must be a function, but got: "
+                    + getDescriptor;
             throw new CorruptedScriptException(message);
         }
         Value descriptor;
         try {
             descriptor = getDescriptor.execute();
         } catch (Exception e) {
-            String message = "Failed to run the function: \"" + GET_DESCRIPTOR + "\"";
+            String message = "Failed to run the function: \""
+                    + GET_DESCRIPTOR
+                    + "\"";
             throw new CorruptedScriptException(message, e);
         }
         Map<String, String> map;
         try {
             map = descriptor.as(Map.class);
         } catch (Exception e) {
-            String message = "The function \"" +
-                    GET_DESCRIPTOR +
-                    "\" must return a plugin descriptor object, but got: " +
-                    descriptor;
+            String message = "The function \""
+                    + GET_DESCRIPTOR
+                    + "\" must return a plugin descriptor object, but got: "
+                    + descriptor;
             throw new CorruptedScriptException(message, e);
         }
         if (map == null) {
-            String message = "The function \"" +
-                    GET_DESCRIPTOR +
-                    "\" must return a plugin descriptor object, but got: " +
-                    descriptor;
+            String message = "The function \""
+                    + GET_DESCRIPTOR
+                    + "\" must return a plugin descriptor object, but got: "
+                    + descriptor;
             throw new CorruptedScriptException(message);
         }
         return map;
     }
 
-    private static JsPluginDescriptor createJsPluginDescriptor(Map<String, String> properties, @Nullable Path path) {
+    private static JsPluginDescriptor createJsPluginDescriptor(
+            Map<String, String> properties,
+            @Nullable Path path) {
         PluginDescriptor descriptor = createPluginDescriptor(properties);
-        return new JsPluginDescriptor(descriptor.getId(),
+        return new JsPluginDescriptor(
+                descriptor.getId(),
                 descriptor.getVersion(),
                 descriptor.getProvider(),
                 descriptor.getLicense(),

@@ -17,6 +17,11 @@
 
 package im.turms.server.common.domain.plugin.access.admin.controller;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
+
 import im.turms.server.common.access.admin.dto.response.HttpHandlerResult;
 import im.turms.server.common.access.admin.dto.response.ResponseDTO;
 import im.turms.server.common.access.admin.dto.response.UpdateResultDTO;
@@ -49,11 +54,6 @@ import im.turms.server.common.infra.plugin.PluginManager;
 import im.turms.server.common.infra.plugin.TurmsExtension;
 import im.turms.server.common.infra.plugin.UnsupportedSaveOperationException;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
-
 /**
  * @author James Chen
  */
@@ -68,7 +68,8 @@ public class PluginController {
 
     @GetMapping
     @RequiredPermission(AdminPermission.PLUGIN_QUERY)
-    public HttpHandlerResult<ResponseDTO<Collection<PluginDTO>>> getPlugins(@QueryParam(required = false) Set<String> ids) {
+    public HttpHandlerResult<ResponseDTO<Collection<PluginDTO>>> getPlugins(
+            @QueryParam(required = false) Set<String> ids) {
         Collection<Plugin> plugins = CollectionUtil.isEmpty(ids)
                 ? pluginManager.getPlugins()
                 : pluginManager.getPlugins(ids);
@@ -77,12 +78,15 @@ public class PluginController {
             List<TurmsExtension> extensions = plugin.extensions();
             List<ExtensionDTO> extensionDTOs = new ArrayList<>(extensions.size());
             for (TurmsExtension extension : extensions) {
-                List<Class<? extends ExtensionPoint>> classes = pluginManager.getExtensionPoints(extension);
+                List<Class<? extends ExtensionPoint>> classes =
+                        pluginManager.getExtensionPoints(extension);
                 List<String> classNames = new ArrayList<>(classes.size());
                 for (Class<? extends ExtensionPoint> clazz : classes) {
                     classNames.add(clazz.getName());
                 }
-                extensionDTOs.add(new ExtensionDTO(extension.getClass().getName(),
+                extensionDTOs.add(new ExtensionDTO(
+                        extension.getClass()
+                                .getName(),
                         extension.isStarted(),
                         extension.isRunning(),
                         classNames));
@@ -121,7 +125,8 @@ public class PluginController {
     @RequiredPermission(AdminPermission.PLUGIN_CREATE)
     public HttpHandlerResult<ResponseDTO<Void>> createJavaPlugins(
             boolean save,
-            @FormData(contentType = MediaTypeConst.APPLICATION_JAVA_ARCHIVE) List<MultipartFile> files) {
+            @FormData(
+                    contentType = MediaTypeConst.APPLICATION_JAVA_ARCHIVE) List<MultipartFile> files) {
         try {
             pluginManager.loadJavaPlugins(files, save);
         } catch (InvalidPluginSourceException | InvalidPluginException e) {
@@ -143,7 +148,9 @@ public class PluginController {
         } catch (InvalidPluginSourceException | InvalidPluginException e) {
             throw new HttpResponseException(ResponseStatusCode.ILLEGAL_ARGUMENT, e);
         } catch (UnsupportedSaveOperationException e) {
-            throw new HttpResponseException(ResponseStatusCode.SAVING_JAVASCRIPT_PLUGIN_IS_DISABLED, e);
+            throw new HttpResponseException(
+                    ResponseStatusCode.SAVING_JAVASCRIPT_PLUGIN_IS_DISABLED,
+                    e);
         } catch (UnsupportedOperationException e) {
             throw new HttpResponseException(ResponseStatusCode.JAVASCRIPT_PLUGIN_IS_DISABLED, e);
         }

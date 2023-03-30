@@ -17,8 +17,25 @@
 
 package im.turms.service.domain.admin.service;
 
+import java.util.Date;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
+import org.apache.commons.lang3.tuple.Triple;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.access.admin.permission.AdminPermission;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.domain.admin.po.AdminRole;
@@ -32,22 +49,6 @@ import im.turms.server.common.infra.validation.Validator;
 import im.turms.server.common.storage.mongo.IMongoCollectionInitializer;
 import im.turms.service.domain.admin.repository.AdminRoleRepository;
 import im.turms.service.storage.mongo.OperationResultPublisherPool;
-import org.apache.commons.lang3.tuple.Triple;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
-import java.util.Date;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
-import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 
 import static im.turms.server.common.domain.admin.constant.AdminConst.ADMIN_ROLE_ROOT_ID;
 
@@ -72,8 +73,9 @@ public class AdminRoleService extends BaseAdminRoleService {
     /**
      * @param adminService is lazy because: AdminService -> AdminRoleService -> AdminService
      */
-    public AdminRoleService(AdminRoleRepository adminRoleRepository,
-                            @Lazy AdminService adminService) {
+    public AdminRoleService(
+            AdminRoleRepository adminRoleRepository,
+            @Lazy AdminService adminService) {
         super(adminRoleRepository);
         this.adminRoleRepository = adminRoleRepository;
         this.adminService = adminService;
@@ -82,7 +84,9 @@ public class AdminRoleService extends BaseAdminRoleService {
     public Mono<AdminRole> authAndAddAdminRole(
             @NotNull String requesterAccount,
             @NotNull Long roleId,
-            @NotNull @NoWhitespace @Size(min = MIN_ROLE_NAME_LIMIT, max = MAX_ROLE_NAME_LIMIT) String name,
+            @NotNull @NoWhitespace @Size(
+                    min = MIN_ROLE_NAME_LIMIT,
+                    max = MAX_ROLE_NAME_LIMIT) String name,
             @NotEmpty Set<AdminPermission> permissions,
             @NotNull Integer rank) {
         try {
@@ -94,21 +98,24 @@ public class AdminRoleService extends BaseAdminRoleService {
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        return isAdminHigherThanRank(requesterAccount, rank)
-                .flatMap(isHigher -> {
-                    if (isHigher) {
-                        return adminHasPermissions(requesterAccount, permissions)
-                                .flatMap(hasPermissions -> hasPermissions
-                                        ? addAdminRole(roleId, name, permissions, rank)
-                                        : Mono.error(ResponseException.get(ResponseStatusCode.UNAUTHORIZED, ERROR_NO_PERMISSION)));
-                    }
-                    return Mono.error(ResponseException.get(ResponseStatusCode.UNAUTHORIZED, ERROR_UPDATE_ROLE_WITH_HIGHER_RANK));
-                });
+        return isAdminHigherThanRank(requesterAccount, rank).flatMap(isHigher -> {
+            if (isHigher) {
+                return adminHasPermissions(requesterAccount, permissions)
+                        .flatMap(hasPermissions -> hasPermissions
+                                ? addAdminRole(roleId, name, permissions, rank)
+                                : Mono.error(ResponseException.get(ResponseStatusCode.UNAUTHORIZED,
+                                        ERROR_NO_PERMISSION)));
+            }
+            return Mono.error(ResponseException.get(ResponseStatusCode.UNAUTHORIZED,
+                    ERROR_UPDATE_ROLE_WITH_HIGHER_RANK));
+        });
     }
 
     public Mono<AdminRole> addAdminRole(
             @NotNull Long roleId,
-            @NotNull @NoWhitespace @Size(min = MIN_ROLE_NAME_LIMIT, max = MAX_ROLE_NAME_LIMIT) String name,
+            @NotNull @NoWhitespace @Size(
+                    min = MIN_ROLE_NAME_LIMIT,
+                    max = MAX_ROLE_NAME_LIMIT) String name,
             @NotEmpty Set<AdminPermission> permissions,
             @NotNull Integer rank) {
         try {
@@ -122,7 +129,8 @@ public class AdminRoleService extends BaseAdminRoleService {
             return Mono.error(e);
         }
         if (roleId.equals(ADMIN_ROLE_ROOT_ID)) {
-            return Mono.error(ResponseException.get(ResponseStatusCode.UNAUTHORIZED, "The new role ID cannot be the root role ID"));
+            return Mono.error(ResponseException.get(ResponseStatusCode.UNAUTHORIZED,
+                    "The new role ID cannot be the root role ID"));
         }
         AdminRole adminRole = new AdminRole(roleId, name, permissions, rank, new Date());
         return adminRoleRepository.insert(adminRole)
@@ -146,16 +154,18 @@ public class AdminRoleService extends BaseAdminRoleService {
                 highestRoleId = roleId;
             }
         }
-        return isAdminHigherThanRole(requesterAccount, highestRoleId)
-                .flatMap(isHigher -> isHigher
-                        ? deleteAdminRoles(roleIds)
-                        : Mono.error(ResponseException.get(ResponseStatusCode.UNAUTHORIZED, ERROR_UPDATE_ROLE_WITH_HIGHER_RANK)));
+        return isAdminHigherThanRole(requesterAccount, highestRoleId).flatMap(isHigher -> isHigher
+                ? deleteAdminRoles(roleIds)
+                : Mono.error(ResponseException.get(ResponseStatusCode.UNAUTHORIZED,
+                        ERROR_UPDATE_ROLE_WITH_HIGHER_RANK)));
     }
 
     public Mono<DeleteResult> deleteAdminRoles(@NotEmpty Set<Long> roleIds) {
         try {
             Validator.notEmpty(roleIds, "roleIds");
-            Validator.notContains(roleIds, ADMIN_ROLE_ROOT_ID, "The root admin is reserved and cannot be deleted");
+            Validator.notContains(roleIds,
+                    ADMIN_ROLE_ROOT_ID,
+                    "The root admin is reserved and cannot be deleted");
         } catch (ResponseException e) {
             return Mono.error(e);
         }
@@ -171,7 +181,9 @@ public class AdminRoleService extends BaseAdminRoleService {
     public Mono<UpdateResult> authAndUpdateAdminRole(
             @NotNull String requesterAccount,
             @NotEmpty Set<Long> roleIds,
-            @Nullable @NoWhitespace @Size(min = MIN_ROLE_NAME_LIMIT, max = MAX_ROLE_NAME_LIMIT) String newName,
+            @Nullable @NoWhitespace @Size(
+                    min = MIN_ROLE_NAME_LIMIT,
+                    max = MAX_ROLE_NAME_LIMIT) String newName,
             @Nullable Set<AdminPermission> permissions,
             @Nullable Integer rank) {
         try {
@@ -187,29 +199,34 @@ public class AdminRoleService extends BaseAdminRoleService {
                 highestRoleId = roleId;
             }
         }
-        return isAdminHigherThanRole(requesterAccount, highestRoleId)
-                .flatMap(isHigher -> {
-                    if (isHigher) {
-                        if (permissions == null) {
-                            return updateAdminRole(roleIds, newName, null, rank);
-                        }
-                        return adminHasPermissions(requesterAccount, permissions)
-                                .flatMap(hasPermissions -> hasPermissions
-                                        ? updateAdminRole(roleIds, newName, permissions, rank)
-                                        : Mono.error(ResponseException.get(ResponseStatusCode.UNAUTHORIZED, ERROR_NO_PERMISSION)));
-                    }
-                    return Mono.error(ResponseException.get(ResponseStatusCode.UNAUTHORIZED, ERROR_UPDATE_ROLE_WITH_HIGHER_RANK));
-                });
+        return isAdminHigherThanRole(requesterAccount, highestRoleId).flatMap(isHigher -> {
+            if (isHigher) {
+                if (permissions == null) {
+                    return updateAdminRole(roleIds, newName, null, rank);
+                }
+                return adminHasPermissions(requesterAccount, permissions)
+                        .flatMap(hasPermissions -> hasPermissions
+                                ? updateAdminRole(roleIds, newName, permissions, rank)
+                                : Mono.error(ResponseException.get(ResponseStatusCode.UNAUTHORIZED,
+                                        ERROR_NO_PERMISSION)));
+            }
+            return Mono.error(ResponseException.get(ResponseStatusCode.UNAUTHORIZED,
+                    ERROR_UPDATE_ROLE_WITH_HIGHER_RANK));
+        });
     }
 
     public Mono<UpdateResult> updateAdminRole(
             @NotEmpty Set<Long> roleIds,
-            @Nullable @NoWhitespace @Size(min = MIN_ROLE_NAME_LIMIT, max = MAX_ROLE_NAME_LIMIT) String newName,
+            @Nullable @NoWhitespace @Size(
+                    min = MIN_ROLE_NAME_LIMIT,
+                    max = MAX_ROLE_NAME_LIMIT) String newName,
             @Nullable Set<AdminPermission> permissions,
             @Nullable Integer rank) {
         try {
             Validator.notEmpty(roleIds, "roleIds");
-            Validator.notContains(roleIds, ADMIN_ROLE_ROOT_ID, "The root admin is reserved and cannot be updated");
+            Validator.notContains(roleIds,
+                    ADMIN_ROLE_ROOT_ID,
+                    "The root admin is reserved and cannot be updated");
             Validator.noWhitespace(newName, "newName");
             Validator.length(newName, "newName", MIN_ROLE_NAME_LIMIT, MAX_ROLE_NAME_LIMIT);
         } catch (ResponseException e) {
@@ -228,7 +245,8 @@ public class AdminRoleService extends BaseAdminRoleService {
             @Nullable Set<Integer> ranks,
             @Nullable Integer page,
             @Nullable Integer size) {
-        Flux<AdminRole> roleFlux = adminRoleRepository.findAdminRoles(ids, names, includedPermissions, ranks, page, size);
+        Flux<AdminRole> roleFlux = adminRoleRepository
+                .findAdminRoles(ids, names, includedPermissions, ranks, page, size);
         if (isRootRoleQualified(ids, names, includedPermissions, ranks)) {
             // TODO: respect the page and the size
             return roleFlux.concatWithValues(getRootRole());
@@ -298,28 +316,25 @@ public class AdminRoleService extends BaseAdminRoleService {
         return roleFlux.map(AdminRole::getRank);
     }
 
-    public Mono<Boolean> isAdminHigherThanRole(
-            @NotNull String account,
-            @NotNull Long roleId) {
+    public Mono<Boolean> isAdminHigherThanRole(@NotNull String account, @NotNull Long roleId) {
         return Mono.zip(queryRankByAccount(account), queryRankByRole(roleId))
                 .map(tuple -> tuple.getT1() > tuple.getT2())
                 .defaultIfEmpty(false);
     }
 
-    public Mono<Boolean> isAdminHigherThanRank(
-            @NotNull String account,
-            @NotNull Integer rank) {
+    public Mono<Boolean> isAdminHigherThanRank(@NotNull String account, @NotNull Integer rank) {
         try {
             Validator.notNull(rank, "rank");
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        return queryRankByAccount(account)
-                .map(adminRank -> adminRank > rank)
+        return queryRankByAccount(account).map(adminRank -> adminRank > rank)
                 .defaultIfEmpty(false);
     }
 
-    private Mono<Boolean> adminHasPermissions(@NotNull String account, @NotNull Set<AdminPermission> permissions) {
+    private Mono<Boolean> adminHasPermissions(
+            @NotNull String account,
+            @NotNull Set<AdminPermission> permissions) {
         try {
             Validator.notNull(account, "account");
             Validator.notNull(permissions, "permissions");
@@ -329,8 +344,8 @@ public class AdminRoleService extends BaseAdminRoleService {
         return permissions.isEmpty()
                 ? PublisherPool.TRUE
                 : queryPermissions(account)
-                .map(adminPermissions -> adminPermissions.containsAll(permissions))
-                .defaultIfEmpty(false);
+                        .map(adminPermissions -> adminPermissions.containsAll(permissions))
+                        .defaultIfEmpty(false);
     }
 
     /**
@@ -345,21 +360,20 @@ public class AdminRoleService extends BaseAdminRoleService {
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        return queryRankByAccount(account)
-                .flatMap(rank -> {
-                    Recyclable<Set<Integer>> recyclableSet = SetRecycler.obtain();
-                    return queryRanksByAccounts(accounts)
-                            .collect(Collectors.toCollection(recyclableSet::getValue))
-                            .map(ranks -> {
-                                for (int targetRank : ranks) {
-                                    if (targetRank >= rank) {
-                                        return Triple.of(false, rank, ranks);
-                                    }
-                                }
-                                return Triple.of(true, rank, ranks);
-                            })
-                            .doFinally(signalType -> recyclableSet.recycle());
-                });
+        return queryRankByAccount(account).flatMap(rank -> {
+            Recyclable<Set<Integer>> recyclableSet = SetRecycler.obtain();
+            return queryRanksByAccounts(accounts)
+                    .collect(Collectors.toCollection(recyclableSet::getValue))
+                    .map(ranks -> {
+                        for (int targetRank : ranks) {
+                            if (targetRank >= rank) {
+                                return Triple.of(false, rank, ranks);
+                            }
+                        }
+                        return Triple.of(true, rank, ranks);
+                    })
+                    .doFinally(signalType -> recyclableSet.recycle());
+        });
     }
 
     public Mono<AdminRole> queryAndCacheRole(@NotNull Long roleId) {
@@ -371,7 +385,7 @@ public class AdminRoleService extends BaseAdminRoleService {
         return roleId.equals(ADMIN_ROLE_ROOT_ID)
                 ? Mono.just(getRootRole())
                 : adminRoleRepository.findById(roleId)
-                .doOnNext(role -> idToRole.put(roleId, role));
+                        .doOnNext(role -> idToRole.put(roleId, role));
     }
 
     public Mono<Set<AdminPermission>> queryPermissions(@NotNull String account) {
@@ -403,8 +417,7 @@ public class AdminRoleService extends BaseAdminRoleService {
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        return queryPermissions(roleId)
-                .map(permissions -> permissions.contains(permission))
+        return queryPermissions(roleId).map(permissions -> permissions.contains(permission))
                 .defaultIfEmpty(false);
     }
 
@@ -420,7 +433,8 @@ public class AdminRoleService extends BaseAdminRoleService {
         if (names != null && !names.contains(rootRole.getName())) {
             return false;
         }
-        if (includedPermissions != null && !includedPermissions.containsAll(rootRole.getPermissions())) {
+        if (includedPermissions != null
+                && !includedPermissions.containsAll(rootRole.getPermissions())) {
             return false;
         }
         return ranks == null || ranks.contains(rootRole.getRank());

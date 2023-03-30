@@ -17,12 +17,13 @@
 
 package im.turms.server.common.infra.property.env.service.env.redis;
 
-import im.turms.server.common.storage.redis.sharding.ConsistentHashingShardingAlgorithm;
-import im.turms.server.common.storage.redis.sharding.ShardingAlgorithm;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import im.turms.server.common.storage.redis.sharding.ConsistentHashingShardingAlgorithm;
+import im.turms.server.common.storage.redis.sharding.ShardingAlgorithm;
 
 /**
  * @author James Chen
@@ -33,7 +34,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class RedisShardingProperties {
 
-    private static final ShardingAlgorithm DEFAULT_SHARDING_ALGORITHM = new ConsistentHashingShardingAlgorithm();
+    private static final ShardingAlgorithm DEFAULT_SHARDING_ALGORITHM =
+            new ConsistentHashingShardingAlgorithm();
 
     private ShardingAlgorithm algorithmForSession = DEFAULT_SHARDING_ALGORITHM;
 

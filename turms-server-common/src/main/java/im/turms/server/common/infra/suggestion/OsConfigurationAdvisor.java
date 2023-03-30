@@ -17,9 +17,6 @@
 
 package im.turms.server.common.infra.suggestion;
 
-import com.sun.management.UnixOperatingSystemMXBean;
-import org.apache.commons.lang3.SystemUtils;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
@@ -32,6 +29,9 @@ import java.util.Collections;
 import java.util.List;
 import jakarta.annotation.Nullable;
 
+import com.sun.management.UnixOperatingSystemMXBean;
+import org.apache.commons.lang3.SystemUtils;
+
 public class OsConfigurationAdvisor {
 
     private static final String SYS = "/proc/sys/";
@@ -43,23 +43,22 @@ public class OsConfigurationAdvisor {
         if (!SystemUtils.IS_OS_LINUX) {
             return Collections.emptyList();
         }
-        Suggestion[] suggestionList = new Suggestion[]{
-                Suggestion.newRange("fs.file-max", 10_000, 1_629_424, 1_629_424),
+        Suggestion[] suggestionList =
+                new Suggestion[]{Suggestion.newRange("fs.file-max", 10_000, 1_629_424, 1_629_424),
 
-                Suggestion.newRange("vm.swappiness", 1, 10, 10),
+                        Suggestion.newRange("vm.swappiness", 1, 10, 10),
 
-                Suggestion.newRange("net.core.somaxconn", 4096, 65536, 65536),
+                        Suggestion.newRange("net.core.somaxconn", 4096, 65536, 65536),
 
-                Suggestion.newRange("net.ipv4.tcp_max_syn_backlog", 4096, 65536, 65536),
-                Suggestion.newOption("net.ipv4.tcp_syncookies", 1),
-                Suggestion.newOption("net.ipv4.tcp_no_metrics_save", 1),
-                Suggestion.newRange("net.ipv4.tcp_retries2", 8, 15, 10),
-                Suggestion.newOption("net.ipv4.tcp_sack", 1),
-                Suggestion.newOption("net.ipv4.tcp_abort_on_overflow", 0),
-                Suggestion.newOption("net.ipv4.tcp_fastopen", 3),
-                Suggestion.newOption("net.ipv4.tcp_moderate_rcvbuf", 1),
-                Suggestion.newOption("net.ipv4.tcp_window_scaling", 1)
-        };
+                        Suggestion.newRange("net.ipv4.tcp_max_syn_backlog", 4096, 65536, 65536),
+                        Suggestion.newOption("net.ipv4.tcp_syncookies", 1),
+                        Suggestion.newOption("net.ipv4.tcp_no_metrics_save", 1),
+                        Suggestion.newRange("net.ipv4.tcp_retries2", 8, 15, 10),
+                        Suggestion.newOption("net.ipv4.tcp_sack", 1),
+                        Suggestion.newOption("net.ipv4.tcp_abort_on_overflow", 0),
+                        Suggestion.newOption("net.ipv4.tcp_fastopen", 3),
+                        Suggestion.newOption("net.ipv4.tcp_moderate_rcvbuf", 1),
+                        Suggestion.newOption("net.ipv4.tcp_window_scaling", 1)};
         List<String> suggestions = new ArrayList<>(suggestionList.length + 1);
         Integer value;
         for (Suggestion suggestion : suggestionList) {
@@ -70,19 +69,32 @@ public class OsConfigurationAdvisor {
             if (suggestion.isOption()) {
                 Integer option = suggestion.option;
                 if (!option.equals(value)) {
-                    suggestions.add("The kernel parameter \"%s\" is suggested to be \"%d\" but it is \"%d\" actually. You can update it via \"sudo sysctl -w %s=%d\""
-                            .formatted(suggestion.name, option, value, suggestion.name, suggestion.defaultValue));
+                    suggestions.add(
+                            "The kernel parameter \"%s\" is suggested to be \"%d\" but it is \"%d\" actually. You can update it via \"sudo sysctl -w %s=%d\""
+                                    .formatted(suggestion.name,
+                                            option,
+                                            value,
+                                            suggestion.name,
+                                            suggestion.defaultValue));
                 }
             } else if (suggestion.min > value && suggestion.max < value) {
-                suggestions.add("The kernel parameter \"%s\" is suggested to be a value in the range of [%d, %d] but it is \"%d\" actually. You can update it via \"sudo sysctl -w %s=%d\""
-                        .formatted(suggestion.name, suggestion.min, suggestion.max, value, suggestion.name, suggestion.defaultValue));
+                suggestions.add(
+                        "The kernel parameter \"%s\" is suggested to be a value in the range of [%d, %d] but it is \"%d\" actually. You can update it via \"sudo sysctl -w %s=%d\""
+                                .formatted(suggestion.name,
+                                        suggestion.min,
+                                        suggestion.max,
+                                        value,
+                                        suggestion.name,
+                                        suggestion.defaultValue));
             }
         }
-        UnixOperatingSystemMXBean bean = ManagementFactory.getPlatformMXBean(UnixOperatingSystemMXBean.class);
+        UnixOperatingSystemMXBean bean =
+                ManagementFactory.getPlatformMXBean(UnixOperatingSystemMXBean.class);
         long maxFileDescriptorCount = bean.getMaxFileDescriptorCount();
         if (maxFileDescriptorCount < 10_000) {
-            suggestions.add("The max file descriptor count is suggested to be a value in the range of [10000, 1048576] but it is \"%d\" actually"
-                    .formatted(maxFileDescriptorCount));
+            suggestions.add(
+                    "The max file descriptor count is suggested to be a value in the range of [10000, 1048576] but it is \"%d\" actually"
+                            .formatted(maxFileDescriptorCount));
         }
         return suggestions;
     }

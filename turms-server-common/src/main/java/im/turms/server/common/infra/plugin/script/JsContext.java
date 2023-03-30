@@ -26,7 +26,7 @@ import org.graalvm.polyglot.Value;
  */
 public class JsContext {
 
-    //language=JS
+    // language=JS
     private static final String PLUGIN_CONTEXT_PATCH_STR = """
             class TurmsPlugin {
                 static get isTurmsPlugin() {
@@ -41,17 +41,17 @@ public class JsContext {
             globalThis.TurmsPlugin = TurmsPlugin;
             globalThis.TurmsExtension = TurmsExtension;
             """;
-    //language=JS
+    // language=JS
     private static final String FETCH_PATCH_STR = "globalThis.fetch = turms.http.fetch;";
 
-    private static final Source PLUGIN_CONTEXT_PATCH = Source
-            .newBuilder("js", PLUGIN_CONTEXT_PATCH_STR, "plugin-context-patch")
-            .cached(true)
-            .buildLiteral();
-    private static final Source FETCH_PATCH = Source
-            .newBuilder("js", FETCH_PATCH_STR, "fetch-patch")
-            .cached(true)
-            .buildLiteral();
+    private static final Source PLUGIN_CONTEXT_PATCH =
+            Source.newBuilder("js", PLUGIN_CONTEXT_PATCH_STR, "plugin-context-patch")
+                    .cached(true)
+                    .buildLiteral();
+    private static final Source FETCH_PATCH =
+            Source.newBuilder("js", FETCH_PATCH_STR, "fetch-patch")
+                    .cached(true)
+                    .buildLiteral();
 
     public final JsLogger log;
     public final JsHttp http;

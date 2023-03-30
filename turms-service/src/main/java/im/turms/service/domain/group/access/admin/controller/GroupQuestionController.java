@@ -17,6 +17,13 @@
 
 package im.turms.service.domain.group.access.admin.controller;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
+
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.access.admin.dto.response.DeleteResultDTO;
 import im.turms.server.common.access.admin.dto.response.HttpHandlerResult;
 import im.turms.server.common.access.admin.dto.response.PaginationDTO;
@@ -38,12 +45,6 @@ import im.turms.service.domain.group.access.admin.dto.request.UpdateGroupJoinQue
 import im.turms.service.domain.group.bo.NewGroupQuestion;
 import im.turms.service.domain.group.po.GroupJoinQuestion;
 import im.turms.service.domain.group.service.GroupQuestionService;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
 
 /**
  * @author James Chen
@@ -53,7 +54,9 @@ public class GroupQuestionController extends BaseController {
 
     private final GroupQuestionService groupQuestionService;
 
-    public GroupQuestionController(TurmsPropertiesManager propertiesManager, GroupQuestionService groupQuestionService) {
+    public GroupQuestionController(
+            TurmsPropertiesManager propertiesManager,
+            GroupQuestionService groupQuestionService) {
         super(propertiesManager);
         this.groupQuestionService = groupQuestionService;
     }
@@ -65,8 +68,8 @@ public class GroupQuestionController extends BaseController {
             @QueryParam(required = false) Set<Long> groupIds,
             @QueryParam(required = false) Integer size) {
         size = getPageSize(size);
-        Flux<GroupJoinQuestion> groupJoinQuestionFlux = groupQuestionService
-                .queryGroupJoinQuestions(ids, groupIds, 0, size, true);
+        Flux<GroupJoinQuestion> groupJoinQuestionFlux =
+                groupQuestionService.queryGroupJoinQuestions(ids, groupIds, 0, size, true);
         return HttpHandlerResult.okIfTruthy(groupJoinQuestionFlux);
     }
 
@@ -79,8 +82,8 @@ public class GroupQuestionController extends BaseController {
             @QueryParam(required = false) Integer size) {
         size = getPageSize(size);
         Mono<Long> count = groupQuestionService.countGroupJoinQuestions(ids, groupIds);
-        Flux<GroupJoinQuestion> groupJoinQuestionFlux = groupQuestionService
-                .queryGroupJoinQuestions(ids, groupIds, page, size, true);
+        Flux<GroupJoinQuestion> groupJoinQuestionFlux =
+                groupQuestionService.queryGroupJoinQuestions(ids, groupIds, page, size, true);
         return HttpHandlerResult.page(count, groupJoinQuestionFlux);
     }
 
@@ -88,9 +91,10 @@ public class GroupQuestionController extends BaseController {
     @RequiredPermission(AdminPermission.GROUP_QUESTION_CREATE)
     public Mono<HttpHandlerResult<ResponseDTO<GroupJoinQuestion>>> addGroupJoinQuestion(
             @RequestBody AddGroupJoinQuestionDTO addGroupJoinQuestionDTO) {
-        Mono<GroupJoinQuestion> createMono = groupQuestionService.createGroupJoinQuestions(
-                        addGroupJoinQuestionDTO.groupId(),
-                        List.of(new NewGroupQuestion(addGroupJoinQuestionDTO.question(),
+        Mono<GroupJoinQuestion> createMono = groupQuestionService
+                .createGroupJoinQuestions(addGroupJoinQuestionDTO.groupId(),
+                        List.of(new NewGroupQuestion(
+                                addGroupJoinQuestionDTO.question(),
                                 addGroupJoinQuestionDTO.answers(),
                                 addGroupJoinQuestionDTO.score())))
                 .map(questions -> questions.get(0));
@@ -102,8 +106,8 @@ public class GroupQuestionController extends BaseController {
     public Mono<HttpHandlerResult<ResponseDTO<UpdateResultDTO>>> updateGroupJoinQuestions(
             Set<Long> ids,
             @RequestBody UpdateGroupJoinQuestionDTO updateGroupJoinQuestionDTO) {
-        Mono<UpdateResultDTO> updateMono = groupQuestionService.updateGroupJoinQuestions(
-                        ids,
+        Mono<UpdateResultDTO> updateMono = groupQuestionService
+                .updateGroupJoinQuestions(ids,
                         updateGroupJoinQuestionDTO.groupId(),
                         updateGroupJoinQuestionDTO.question(),
                         updateGroupJoinQuestionDTO.answers(),
@@ -116,8 +120,7 @@ public class GroupQuestionController extends BaseController {
     @RequiredPermission(AdminPermission.GROUP_QUESTION_DELETE)
     public Mono<HttpHandlerResult<ResponseDTO<DeleteResultDTO>>> deleteGroupJoinQuestions(
             @QueryParam(required = false) Set<Long> ids) {
-        Mono<DeleteResultDTO> deleteMono = groupQuestionService
-                .deleteGroupJoinQuestions(ids)
+        Mono<DeleteResultDTO> deleteMono = groupQuestionService.deleteGroupJoinQuestions(ids)
                 .map(DeleteResultDTO::get);
         return HttpHandlerResult.okIfTruthy(deleteMono);
     }

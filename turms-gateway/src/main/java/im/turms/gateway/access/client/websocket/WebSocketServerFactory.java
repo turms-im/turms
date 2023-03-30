@@ -17,19 +17,9 @@
 
 package im.turms.gateway.access.client.websocket;
 
-import im.turms.gateway.access.client.common.channel.ServiceAvailabilityHandler;
-import im.turms.gateway.access.client.common.connection.ConnectionListener;
-import im.turms.gateway.domain.session.service.SessionService;
-import im.turms.gateway.infra.metrics.MetricNameConst;
-import im.turms.gateway.infra.thread.ThreadNameConst;
-import im.turms.server.common.access.common.LoopResourcesFactory;
-import im.turms.server.common.domain.blocklist.service.BlocklistService;
-import im.turms.server.common.infra.healthcheck.ServerStatusManager;
-import im.turms.server.common.infra.metrics.TurmsMicrometerChannelMetricsRecorder;
-import im.turms.server.common.infra.net.BindException;
-import im.turms.server.common.infra.net.SslUtil;
-import im.turms.server.common.infra.property.env.common.SslProperties;
-import im.turms.server.common.infra.property.env.gateway.WebSocketProperties;
+import java.util.List;
+import java.util.function.BiFunction;
+
 import io.netty.buffer.ByteBuf;
 import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpMethod;
@@ -45,10 +35,20 @@ import reactor.netty.http.server.HttpServerRequest;
 import reactor.netty.http.server.HttpServerResponse;
 import reactor.netty.http.server.WebsocketServerSpec;
 
-import java.util.List;
-import java.util.function.BiFunction;
+import im.turms.gateway.access.client.common.channel.ServiceAvailabilityHandler;
+import im.turms.gateway.access.client.common.connection.ConnectionListener;
+import im.turms.gateway.domain.session.service.SessionService;
+import im.turms.gateway.infra.metrics.MetricNameConst;
+import im.turms.gateway.infra.thread.ThreadNameConst;
+import im.turms.server.common.access.common.LoopResourcesFactory;
+import im.turms.server.common.domain.blocklist.service.BlocklistService;
+import im.turms.server.common.infra.healthcheck.ServerStatusManager;
+import im.turms.server.common.infra.metrics.TurmsMicrometerChannelMetricsRecorder;
+import im.turms.server.common.infra.net.BindException;
+import im.turms.server.common.infra.net.SslUtil;
+import im.turms.server.common.infra.property.env.common.SslProperties;
+import im.turms.server.common.infra.property.env.gateway.WebSocketProperties;
 
-import static im.turms.server.common.access.admin.web.HttpUtil.isPreFlightRequest;
 import static io.netty.channel.ChannelOption.CONNECT_TIMEOUT_MILLIS;
 import static io.netty.channel.ChannelOption.SO_BACKLOG;
 import static io.netty.channel.ChannelOption.SO_LINGER;
@@ -62,6 +62,8 @@ import static io.netty.handler.codec.http.HttpHeaderNames.CONNECTION;
 import static io.netty.handler.codec.http.HttpHeaderNames.SEC_WEBSOCKET_KEY;
 import static io.netty.handler.codec.http.HttpHeaderNames.UPGRADE;
 
+import static im.turms.server.common.access.admin.web.HttpUtil.isPreFlightRequest;
+
 /**
  * @author James Chen
  */
@@ -70,13 +72,17 @@ public final class WebSocketServerFactory {
     private WebSocketServerFactory() {
     }
 
-    public static DisposableServer create(WebSocketProperties webSocketProperties,
-                                          BlocklistService blocklistService,
-                                          ServerStatusManager serverStatusManager,
-                                          SessionService sessionService,
-                                          ConnectionListener connectionListener,
-                                          int maxFramePayloadLength) {
-        ServiceAvailabilityHandler serviceAvailabilityHandler = new ServiceAvailabilityHandler(blocklistService, serverStatusManager, sessionService);
+    public static DisposableServer create(
+            WebSocketProperties webSocketProperties,
+            BlocklistService blocklistService,
+            ServerStatusManager serverStatusManager,
+            SessionService sessionService,
+            ConnectionListener connectionListener,
+            int maxFramePayloadLength) {
+        ServiceAvailabilityHandler serviceAvailabilityHandler = new ServiceAvailabilityHandler(
+                blocklistService,
+                serverStatusManager,
+                sessionService);
         WebsocketServerSpec serverSpec = WebsocketServerSpec.builder()
                 .maxFramePayloadLength(maxFramePayloadLength)
                 .build();
@@ -94,20 +100,25 @@ public final class WebSocketServerFactory {
                 .childOption(SO_LINGER, 0)
                 .childOption(TCP_NODELAY, true)
                 .runOn(LoopResourcesFactory.createForServer(ThreadNameConst.GATEWAY_WS_PREFIX))
-                .metrics(true, () -> new TurmsMicrometerChannelMetricsRecorder(MetricNameConst.CLIENT_NETWORK, "websocket"))
+                .metrics(true,
+                        () -> new TurmsMicrometerChannelMetricsRecorder(
+                                MetricNameConst.CLIENT_NETWORK,
+                                "websocket"))
                 .handle(getHttpRequestHandler(connectionListener, serverSpec))
-                .doOnChannelInit((connectionObserver, channel, remoteAddress) ->
-                        channel.pipeline().addFirst("serviceAvailabilityHandler", serviceAvailabilityHandler));
+                .doOnChannelInit((connectionObserver, channel, remoteAddress) -> channel.pipeline()
+                        .addFirst("serviceAvailabilityHandler", serviceAvailabilityHandler));
         SslProperties ssl = webSocketProperties.getSsl();
         if (ssl.isEnabled()) {
             server.secure(spec -> SslUtil.configureSslContextSpec(spec, ssl, true), true);
         }
         try {
-            return server
-                    .bind()
+            return server.bind()
                     .block();
         } catch (Exception e) {
-            String message = "Failed to bind the WebSocket server on: " + host + ":" + port;
+            String message = "Failed to bind the WebSocket server on: "
+                    + host
+                    + ":"
+                    + port;
             throw new BindException(message, e);
         }
     }
@@ -131,8 +142,7 @@ public final class WebSocketServerFactory {
             // 2. Validate handshake request
             HttpResponseStatus errorStatus = validateHandshakeRequest(request);
             if (errorStatus != null) {
-                return response
-                        .status(errorStatus)
+                return response.status(errorStatus)
                         .send()
                         // Close the TCP connection
                         .then();
@@ -145,12 +155,15 @@ public final class WebSocketServerFactory {
                         .receiveFrames()
                         // Note that:
                         // 1. PingWebSocketFrame will be handled by Netty itself
-                        // 2. The flatMap is called by FluxReceive, which will release buffer after "onNext" returns
+                        // 2. The flatMap is called by FluxReceive, which will release buffer after
+                        // "onNext" returns
                         .flatMap(frame -> frame instanceof BinaryWebSocketFrame
                                 ? Mono.just(frame.content())
                                 : Mono.empty());
-                Mono<Void> onClose = in.receiveCloseStatus().then();
-                // BinaryWebSocketFrame will be created by reactor.netty.http.server.WebsocketServerOperations.send
+                Mono<Void> onClose = in.receiveCloseStatus()
+                        .then();
+                // BinaryWebSocketFrame will be created by
+                // reactor.netty.http.server.WebsocketServerOperations.send
                 return connectionListener.onAdded((Connection) in, true, inbound, out, onClose);
             }, serverSpec);
         };
@@ -160,18 +173,30 @@ public final class WebSocketServerFactory {
         HttpMethod method = request.method();
         HttpHeaders headers = request.requestHeaders();
         if (HttpMethod.GET != method) {
-            return new HttpResponseStatus(HttpResponseStatus.METHOD_NOT_ALLOWED.code(), "Request method '" + method + "' not supported");
+            return new HttpResponseStatus(
+                    HttpResponseStatus.METHOD_NOT_ALLOWED.code(),
+                    "Request method '"
+                            + method
+                            + "' not supported");
         }
         if (!"WebSocket".equalsIgnoreCase(headers.get(UPGRADE))) {
-            return new HttpResponseStatus(HttpResponseStatus.BAD_REQUEST.code(), "Invalid 'Upgrade' header: " + headers);
+            return new HttpResponseStatus(
+                    HttpResponseStatus.BAD_REQUEST.code(),
+                    "Invalid 'Upgrade' header: "
+                            + headers);
         }
         List<String> connectionValue = headers.getAll(CONNECTION);
         if (!connectionValue.contains("Upgrade") && !connectionValue.contains("upgrade")) {
-            return new HttpResponseStatus(HttpResponseStatus.BAD_REQUEST.code(), "Invalid 'Connection' header: " + headers);
+            return new HttpResponseStatus(
+                    HttpResponseStatus.BAD_REQUEST.code(),
+                    "Invalid 'Connection' header: "
+                            + headers);
         }
         String key = headers.get(SEC_WEBSOCKET_KEY);
         if (key == null) {
-            return new HttpResponseStatus(HttpResponseStatus.BAD_REQUEST.code(), "Missing \"Sec-WebSocket-Key\" header");
+            return new HttpResponseStatus(
+                    HttpResponseStatus.BAD_REQUEST.code(),
+                    "Missing \"Sec-WebSocket-Key\" header");
         }
         return null;
     }

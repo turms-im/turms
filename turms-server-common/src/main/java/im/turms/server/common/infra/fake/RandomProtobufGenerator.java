@@ -17,20 +17,21 @@
 
 package im.turms.server.common.infra.fake;
 
-import com.google.protobuf.AbstractMessage;
-import com.google.protobuf.ByteString;
-import com.google.protobuf.ByteStringUtil;
-import com.google.protobuf.Message;
-import im.turms.server.common.infra.lang.Range;
-import im.turms.server.common.infra.thread.ThreadSafe;
-import org.apache.commons.lang3.RandomStringUtils;
-import org.jctools.maps.NonBlockingHashMapLong;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
+
+import com.google.protobuf.AbstractMessage;
+import com.google.protobuf.ByteString;
+import com.google.protobuf.ByteStringUtil;
+import com.google.protobuf.Message;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.jctools.maps.NonBlockingHashMapLong;
+
+import im.turms.server.common.infra.lang.Range;
+import im.turms.server.common.infra.thread.ThreadSafe;
 
 import static com.google.protobuf.Descriptors.EnumDescriptor;
 import static com.google.protobuf.Descriptors.EnumValueDescriptor;
@@ -53,17 +54,20 @@ public class RandomProtobufGenerator<T extends AbstractMessage> {
     public RandomProtobufGenerator(Random random, Message instance) {
         this.random = random;
         this.instance = instance;
-        fieldDescriptors = instance.getDescriptorForType().getFields();
+        fieldDescriptors = instance.getDescriptorForType()
+                .getFields();
     }
 
     public T generate() {
         return generate(1, 1, POSITIVE_NUMBER_RANGE);
     }
 
-    public T generate(float possibilityToFillOptionalFields,
-                      float possibilityToHaveNotEmptyRepeatedFields,
-                      Range<Long> numberRange) {
-        GeneratorOptions options = new GeneratorOptions(possibilityToFillOptionalFields,
+    public T generate(
+            float possibilityToFillOptionalFields,
+            float possibilityToHaveNotEmptyRepeatedFields,
+            Range<Long> numberRange) {
+        GeneratorOptions options = new GeneratorOptions(
+                possibilityToFillOptionalFields,
                 possibilityToHaveNotEmptyRepeatedFields,
                 numberRange);
         return generate(options);
@@ -80,18 +84,20 @@ public class RandomProtobufGenerator<T extends AbstractMessage> {
             try {
                 builder.setField(field, value);
             } catch (Exception e) {
-                throw new RuntimeException("Failed to set the field (" +
-                        field.getFullName() +
-                        ") to the value: " +
-                        value);
+                throw new RuntimeException(
+                        "Failed to set the field ("
+                                + field.getFullName()
+                                + ") to the value: "
+                                + value);
             }
         }
         return (T) builder.build();
     }
 
-    private Object getRandomValue(Message.Builder builder,
-                                  FieldDescriptor field,
-                                  GeneratorOptions options) {
+    private Object getRandomValue(
+            Message.Builder builder,
+            FieldDescriptor field,
+            GeneratorOptions options) {
         if (field.isRepeated()) {
             float possibility = options.possibilityToHaveNotEmptyRepeatedFields;
             if (possibility < 1 && random.nextFloat() > possibility) {
@@ -107,9 +113,10 @@ public class RandomProtobufGenerator<T extends AbstractMessage> {
         return getRandomSingleValue(builder, field, options);
     }
 
-    private Object getRandomSingleValue(Message.Builder builder,
-                                        FieldDescriptor field,
-                                        GeneratorOptions options) {
+    private Object getRandomSingleValue(
+            Message.Builder builder,
+            FieldDescriptor field,
+            GeneratorOptions options) {
         Range<Long> numberRange = options.numberRange;
         return switch (field.getJavaType()) {
             case BOOLEAN -> random.nextBoolean();
@@ -121,7 +128,9 @@ public class RandomProtobufGenerator<T extends AbstractMessage> {
             case LONG -> getRandomNumberFromRange(numberRange);
             case MESSAGE -> getRandomMessage(builder, field, options);
             case STRING -> RandomStringUtils.randomAlphabetic(8, 64);
-            default -> new IllegalArgumentException("Failed to generate random single value for the unknown type: " + field.getJavaType());
+            default -> new IllegalArgumentException(
+                    "Failed to generate random single value for the unknown type: "
+                            + field.getJavaType());
         };
     }
 
@@ -137,9 +146,10 @@ public class RandomProtobufGenerator<T extends AbstractMessage> {
         return values.get(random.nextInt(values.size()));
     }
 
-    private AbstractMessage getRandomMessage(Message.Builder builder,
-                                             FieldDescriptor field,
-                                             GeneratorOptions options) {
+    private AbstractMessage getRandomMessage(
+            Message.Builder builder,
+            FieldDescriptor field,
+            GeneratorOptions options) {
         if (fieldMessageGenerators == null) {
             synchronized (this) {
                 if (fieldMessageGenerators == null) {
@@ -150,7 +160,8 @@ public class RandomProtobufGenerator<T extends AbstractMessage> {
         return fieldMessageGenerators.computeIfAbsent((long) field.getIndex(), index -> {
             Message.Builder fieldBuilder = builder.newBuilderForField(field);
             return new RandomProtobufGenerator<>(random, fieldBuilder.getDefaultInstanceForType());
-        }).generate(options);
+        })
+                .generate(options);
     }
 
     private Long getRandomNumberFromRange(Range<Long> numberRange) {
@@ -161,7 +172,8 @@ public class RandomProtobufGenerator<T extends AbstractMessage> {
     public static record GeneratorOptions(
             float possibilityToFillOptionalFields,
             float possibilityToHaveNotEmptyRepeatedFields,
-            Range<Long> numberRange) {
+            Range<Long> numberRange
+    ) {
     }
 
 }

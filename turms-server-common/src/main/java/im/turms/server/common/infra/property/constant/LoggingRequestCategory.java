@@ -17,12 +17,13 @@
 
 package im.turms.server.common.infra.property.constant;
 
-import im.turms.server.common.access.client.dto.request.TurmsRequest;
-import im.turms.server.common.access.client.dto.request.TurmsRequestTypePool;
-import lombok.Getter;
-
 import java.util.Collections;
 import java.util.Set;
+
+import lombok.Getter;
+
+import im.turms.server.common.access.client.dto.request.TurmsRequest;
+import im.turms.server.common.access.client.dto.request.TurmsRequestTypePool;
 
 /**
  * @author James Chen

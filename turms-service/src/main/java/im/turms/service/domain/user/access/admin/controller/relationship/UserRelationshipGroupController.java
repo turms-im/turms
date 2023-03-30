@@ -17,7 +17,15 @@
 
 package im.turms.service.domain.user.access.admin.controller.relationship;
 
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
+
 import com.mongodb.client.result.DeleteResult;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.access.admin.dto.response.DeleteResultDTO;
 import im.turms.server.common.access.admin.dto.response.HttpHandlerResult;
 import im.turms.server.common.access.admin.dto.response.PaginationDTO;
@@ -39,13 +47,6 @@ import im.turms.service.domain.user.access.admin.dto.request.AddRelationshipGrou
 import im.turms.service.domain.user.access.admin.dto.request.UpdateRelationshipGroupDTO;
 import im.turms.service.domain.user.po.UserRelationshipGroup;
 import im.turms.service.domain.user.service.UserRelationshipGroupService;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
 
 import static im.turms.server.common.access.admin.permission.AdminPermission.USER_RELATIONSHIP_GROUP_CREATE;
 import static im.turms.server.common.access.admin.permission.AdminPermission.USER_RELATIONSHIP_GROUP_DELETE;
@@ -59,8 +60,9 @@ import static im.turms.server.common.access.admin.permission.AdminPermission.USE
 public class UserRelationshipGroupController extends BaseController {
     private final UserRelationshipGroupService userRelationshipGroupService;
 
-    public UserRelationshipGroupController(TurmsPropertiesManager propertiesManager,
-                                           UserRelationshipGroupService userRelationshipGroupService) {
+    public UserRelationshipGroupController(
+            TurmsPropertiesManager propertiesManager,
+            UserRelationshipGroupService userRelationshipGroupService) {
         super(propertiesManager);
         this.userRelationshipGroupService = userRelationshipGroupService;
     }
@@ -69,12 +71,12 @@ public class UserRelationshipGroupController extends BaseController {
     @RequiredPermission(USER_RELATIONSHIP_GROUP_CREATE)
     public Mono<HttpHandlerResult<ResponseDTO<UserRelationshipGroup>>> addRelationshipGroup(
             @RequestBody AddRelationshipGroupDTO addRelationshipGroupDTO) {
-        Mono<UserRelationshipGroup> createMono = userRelationshipGroupService.createRelationshipGroup(
-                addRelationshipGroupDTO.ownerId(),
-                addRelationshipGroupDTO.index(),
-                addRelationshipGroupDTO.name(),
-                addRelationshipGroupDTO.creationDate(),
-                null);
+        Mono<UserRelationshipGroup> createMono = userRelationshipGroupService
+                .createRelationshipGroup(addRelationshipGroupDTO.ownerId(),
+                        addRelationshipGroupDTO.index(),
+                        addRelationshipGroupDTO.name(),
+                        addRelationshipGroupDTO.creationDate(),
+                        null);
         return HttpHandlerResult.okIfTruthy(createMono);
     }
 
@@ -84,7 +86,8 @@ public class UserRelationshipGroupController extends BaseController {
             @QueryParam(required = false) List<UserRelationshipGroup.Key> keys) {
         Mono<DeleteResult> deleteMono = CollectionUtil.isEmpty(keys)
                 ? userRelationshipGroupService.deleteRelationshipGroups()
-                : userRelationshipGroupService.deleteRelationshipGroups(CollectionUtil.newSet(keys));
+                : userRelationshipGroupService
+                        .deleteRelationshipGroups(CollectionUtil.newSet(keys));
         return HttpHandlerResult.okIfTruthy(deleteMono.map(DeleteResultDTO::get));
     }
 
@@ -93,8 +96,8 @@ public class UserRelationshipGroupController extends BaseController {
     public Mono<HttpHandlerResult<ResponseDTO<UpdateResultDTO>>> updateRelationshipGroups(
             List<UserRelationshipGroup.Key> keys,
             @RequestBody UpdateRelationshipGroupDTO updateRelationshipGroupDTO) {
-        Mono<UpdateResultDTO> updateMono = userRelationshipGroupService.updateRelationshipGroups(
-                        CollectionUtil.newSet(keys),
+        Mono<UpdateResultDTO> updateMono = userRelationshipGroupService
+                .updateRelationshipGroups(CollectionUtil.newSet(keys),
                         updateRelationshipGroupDTO.name(),
                         updateRelationshipGroupDTO.creationDate())
                 .map(UpdateResultDTO::get);
@@ -111,8 +114,13 @@ public class UserRelationshipGroupController extends BaseController {
             @QueryParam(required = false) Date creationDateEnd,
             @QueryParam(required = false) Integer size) {
         size = getPageSize(size);
-        Flux<UserRelationshipGroup> queryFlux = userRelationshipGroupService.queryRelationshipGroups(
-                ownerIds, indexes, names, DateRange.of(creationDateStart, creationDateEnd), 0, size);
+        Flux<UserRelationshipGroup> queryFlux =
+                userRelationshipGroupService.queryRelationshipGroups(ownerIds,
+                        indexes,
+                        names,
+                        DateRange.of(creationDateStart, creationDateEnd),
+                        0,
+                        size);
         return HttpHandlerResult.okIfTruthy(queryFlux);
     }
 
@@ -127,10 +135,17 @@ public class UserRelationshipGroupController extends BaseController {
             int page,
             @QueryParam(required = false) Integer size) {
         size = getPageSize(size);
-        Mono<Long> count = userRelationshipGroupService.countRelationshipGroups(
-                ownerIds, indexes, names, DateRange.of(creationDateStart, creationDateEnd));
-        Flux<UserRelationshipGroup> queryFlux = userRelationshipGroupService.queryRelationshipGroups(
-                ownerIds, indexes, names, DateRange.of(creationDateStart, creationDateEnd), page, size);
+        Mono<Long> count = userRelationshipGroupService.countRelationshipGroups(ownerIds,
+                indexes,
+                names,
+                DateRange.of(creationDateStart, creationDateEnd));
+        Flux<UserRelationshipGroup> queryFlux =
+                userRelationshipGroupService.queryRelationshipGroups(ownerIds,
+                        indexes,
+                        names,
+                        DateRange.of(creationDateStart, creationDateEnd),
+                        page,
+                        size);
         return HttpHandlerResult.page(count, queryFlux);
     }
 

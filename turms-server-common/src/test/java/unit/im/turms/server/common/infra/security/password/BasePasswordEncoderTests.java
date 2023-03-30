@@ -17,9 +17,9 @@
 
 package unit.im.turms.server.common.infra.security.password;
 
-import im.turms.server.common.infra.security.password.PasswordEncoder;
-
 import java.nio.charset.StandardCharsets;
+
+import im.turms.server.common.infra.security.password.PasswordEncoder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

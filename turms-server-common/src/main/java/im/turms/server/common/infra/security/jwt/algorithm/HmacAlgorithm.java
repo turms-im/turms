@@ -17,9 +17,9 @@
 
 package im.turms.server.common.infra.security.jwt.algorithm;
 
-import im.turms.server.common.infra.security.jwt.Jwt;
-
 import javax.crypto.spec.SecretKeySpec;
+
+import im.turms.server.common.infra.security.jwt.Jwt;
 
 /**
  * @author James Chen
@@ -34,10 +34,15 @@ public class HmacAlgorithm extends SymmetricAlgorithm {
             case HS256 -> 256 / 8;
             case HS384 -> 384 / 8;
             case HS512 -> 512 / 8;
-            default -> throw new IllegalArgumentException("Unknown HMAC algorithm: " + definition.getJwtAlgorithmName());
+            default -> throw new IllegalArgumentException(
+                    "Unknown HMAC algorithm: "
+                            + definition.getJwtAlgorithmName());
         };
         if (secretBytes.length < minLength) {
-            throw new IllegalArgumentException("The length of secret must be at least " + minLength + " bytes long");
+            throw new IllegalArgumentException(
+                    "The length of secret must be at least "
+                            + minLength
+                            + " bytes long");
         }
         secretKeySpec = new SecretKeySpec(secretBytes, definition.getJavaAlgorithmName());
     }

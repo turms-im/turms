@@ -17,16 +17,17 @@
 
 package system.im.turms.service.domain.common.access.servicerequest.controller;
 
-import helper.SpringAwareIntegrationTest;
-import im.turms.server.common.access.common.ResponseStatusCode;
-import im.turms.server.common.infra.exception.ResponseException;
-import im.turms.service.access.servicerequest.dto.RequestHandlerResult;
-import reactor.core.publisher.Mono;
-import reactor.test.StepVerifier;
-
 import java.lang.reflect.ParameterizedType;
 import java.util.function.Consumer;
 import jakarta.annotation.Nullable;
+
+import helper.SpringAwareIntegrationTest;
+import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
+
+import im.turms.server.common.access.common.ResponseStatusCode;
+import im.turms.server.common.infra.exception.ResponseException;
+import im.turms.service.access.servicerequest.dto.RequestHandlerResult;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -38,15 +39,15 @@ public class BaseServiceControllerTest<T> extends SpringAwareIntegrationTest {
     private final Class<T> controllerClass;
 
     public BaseServiceControllerTest() {
-        controllerClass = (Class<T>) ((ParameterizedType) getClass()
-                .getGenericSuperclass()).getActualTypeArguments()[0];
+        controllerClass = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass())
+                .getActualTypeArguments()[0];
     }
 
-    protected void assertResult(Mono<RequestHandlerResult> resultMono,
-                                @Nullable Consumer<RequestHandlerResult> resultConsumer,
-                                @Nullable ResponseStatusCode... expectedCodes) {
-        Mono<?> mono = resultMono
-                .switchIfEmpty(Mono.error(new RuntimeException("No result")))
+    protected void assertResult(
+            Mono<RequestHandlerResult> resultMono,
+            @Nullable Consumer<RequestHandlerResult> resultConsumer,
+            @Nullable ResponseStatusCode... expectedCodes) {
+        Mono<?> mono = resultMono.switchIfEmpty(Mono.error(new RuntimeException("No result")))
                 .onErrorResume(ResponseException.class, e -> {
                     assertThat(e.getCode()).isIn((Object[]) expectedCodes);
                     return Mono.empty();
@@ -60,16 +61,19 @@ public class BaseServiceControllerTest<T> extends SpringAwareIntegrationTest {
                     }
                     return Mono.empty();
                 });
-        StepVerifier
-                .create(mono)
+        StepVerifier.create(mono)
                 .verifyComplete();
     }
 
-    protected void assertResultCodes(Mono<RequestHandlerResult> resultMono, ResponseStatusCode... expectedCodes) {
+    protected void assertResultCodes(
+            Mono<RequestHandlerResult> resultMono,
+            ResponseStatusCode... expectedCodes) {
         assertResult(resultMono, null, expectedCodes);
     }
 
-    protected void assertResultIsOk(Mono<RequestHandlerResult> resultMono, @Nullable Consumer<RequestHandlerResult> resultConsumer) {
+    protected void assertResultIsOk(
+            Mono<RequestHandlerResult> resultMono,
+            @Nullable Consumer<RequestHandlerResult> resultConsumer) {
         assertResult(resultMono, resultConsumer);
     }
 
@@ -77,14 +81,14 @@ public class BaseServiceControllerTest<T> extends SpringAwareIntegrationTest {
         assertResult(resultMono, null, ResponseStatusCode.OK);
     }
 
-    protected void assertResultIsOkAndRecipients(Mono<RequestHandlerResult> resultMono,
-                                                 @Nullable Consumer<RequestHandlerResult> resultConsumer,
-                                                 @Nullable Long... recipients) {
-        StepVerifier
-                .create(resultMono)
+    protected void assertResultIsOkAndRecipients(
+            Mono<RequestHandlerResult> resultMono,
+            @Nullable Consumer<RequestHandlerResult> resultConsumer,
+            @Nullable Long... recipients) {
+        StepVerifier.create(resultMono)
                 .expectNextMatches(result -> {
-                    assertThat(result.code())
-                            .as("The status code should be " + ResponseStatusCode.OK)
+                    assertThat(result.code()).as("The status code should be "
+                            + ResponseStatusCode.OK)
                             .isEqualTo(ResponseStatusCode.OK);
                     if (resultConsumer != null) {
                         resultConsumer.accept(result);

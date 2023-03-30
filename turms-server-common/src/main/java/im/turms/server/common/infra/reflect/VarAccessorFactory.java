@@ -17,10 +17,10 @@
 
 package im.turms.server.common.infra.reflect;
 
-import lombok.SneakyThrows;
-
 import java.lang.invoke.MethodHandle;
 import java.lang.reflect.Field;
+
+import lombok.SneakyThrows;
 
 /**
  * @author James Chen
@@ -31,15 +31,20 @@ public final class VarAccessorFactory {
     }
 
     public static <T, V> VarAccessor<T, V> get(Field field) {
-        if (field.getType().isPrimitive() || field.getDeclaringClass().isRecord()) {
+        if (field.getType()
+                .isPrimitive()
+                || field.getDeclaringClass()
+                        .isRecord()) {
             return new FieldBasedVarAccessor<>(field);
         }
         return new UnsafeBasedVarAccessor<>(field);
     }
 
     public static <T, V> VarAccessor<T, V> get(Field fieldForGetter, MethodHandle setter) {
-        if (fieldForGetter.getType().isPrimitive() ||
-                fieldForGetter.getDeclaringClass().isRecord()) {
+        if (fieldForGetter.getType()
+                .isPrimitive()
+                || fieldForGetter.getDeclaringClass()
+                        .isRecord()) {
             return new FieldAndMethodHandledBasedVarAccessor<>(fieldForGetter, setter);
         }
         return new UnsafeAndMethodHandledBasedVarAccessor<>(fieldForGetter, setter);

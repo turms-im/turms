@@ -38,13 +38,18 @@ public class ConfigurableAliasKeyManager extends X509ExtendedKeyManager {
     }
 
     @Override
-    public String chooseEngineClientAlias(String[] strings, Principal[] principals, SSLEngine sslEngine) {
+    public String chooseEngineClientAlias(
+            String[] strings,
+            Principal[] principals,
+            SSLEngine sslEngine) {
         return delegate.chooseEngineClientAlias(strings, principals, sslEngine);
     }
 
     @Override
     public String chooseEngineServerAlias(String s, Principal[] principals, SSLEngine sslEngine) {
-        return alias == null ? delegate.chooseEngineServerAlias(s, principals, sslEngine) : alias;
+        return alias == null
+                ? delegate.chooseEngineServerAlias(s, principals, sslEngine)
+                : alias;
     }
 
     @Override

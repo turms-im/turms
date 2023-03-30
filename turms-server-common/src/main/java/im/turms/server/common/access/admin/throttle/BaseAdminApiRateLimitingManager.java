@@ -17,15 +17,15 @@
 
 package im.turms.server.common.access.admin.throttle;
 
+import java.util.Iterator;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 import im.turms.server.common.infra.property.env.common.adminapi.AdminApiRateLimitingProperties;
 import im.turms.server.common.infra.task.CronConst;
 import im.turms.server.common.infra.task.TaskManager;
 import im.turms.server.common.infra.throttle.TokenBucket;
 import im.turms.server.common.infra.throttle.TokenBucketContext;
-
-import java.util.Iterator;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author James Chen
@@ -35,16 +35,21 @@ public abstract class BaseAdminApiRateLimitingManager {
     private final Map<String, TokenBucket> ipToTokenBucket = new ConcurrentHashMap<>(32);
     private final TokenBucketContext tokenBucketContext;
 
-    protected BaseAdminApiRateLimitingManager(TaskManager taskManager, AdminApiRateLimitingProperties properties) {
+    protected BaseAdminApiRateLimitingManager(
+            TaskManager taskManager,
+            AdminApiRateLimitingProperties properties) {
         tokenBucketContext = new TokenBucketContext(properties);
-        taskManager.reschedule("expiredAdminApiAccessInfoCleaner", CronConst.EXPIRED_ADMIN_API_ACCESS_INFO_CLEANUP_CRON,
+        taskManager.reschedule("expiredAdminApiAccessInfoCleaner",
+                CronConst.EXPIRED_ADMIN_API_ACCESS_INFO_CLEANUP_CRON,
                 () -> {
-                    Iterator<TokenBucket> iterator = ipToTokenBucket.values().iterator();
+                    Iterator<TokenBucket> iterator = ipToTokenBucket.values()
+                            .iterator();
                     long now = System.currentTimeMillis();
                     while (iterator.hasNext()) {
                         TokenBucket bucket = iterator.next();
                         bucket.refill(now);
-                        // We assume idle sessions will have the max number of tokens "capacity" finally
+                        // We assume idle sessions will have the max number of tokens "capacity"
+                        // finally
                         if (bucket.getTokens() >= tokenBucketContext.getCapacity()) {
                             iterator.remove();
                         }
@@ -53,7 +58,8 @@ public abstract class BaseAdminApiRateLimitingManager {
     }
 
     public boolean tryAcquireTokenByIp(String ip) {
-        TokenBucket bucket = ipToTokenBucket.computeIfAbsent(ip, key -> new TokenBucket(tokenBucketContext));
+        TokenBucket bucket =
+                ipToTokenBucket.computeIfAbsent(ip, key -> new TokenBucket(tokenBucketContext));
         return bucket.tryAcquire(System.currentTimeMillis());
     }
 

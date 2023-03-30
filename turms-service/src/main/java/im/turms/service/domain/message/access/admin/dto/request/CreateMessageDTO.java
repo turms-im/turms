@@ -17,10 +17,10 @@
 
 package im.turms.service.domain.message.access.admin.dto.request;
 
+import java.util.List;
+
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.domain.common.access.dto.ControllerDTO;
-
-import java.util.List;
 
 /**
  * @author James Chen

@@ -17,12 +17,6 @@
 
 package im.turms.server.common.infra.time;
 
-import im.turms.server.common.infra.collection.ArrayUtil;
-import im.turms.server.common.infra.lang.NumberFormatter;
-import im.turms.server.common.infra.lang.StringUtil;
-import io.netty.util.concurrent.FastThreadLocal;
-import org.apache.commons.lang3.tuple.Pair;
-
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
@@ -30,6 +24,13 @@ import java.util.GregorianCalendar;
 import java.util.LinkedList;
 import java.util.List;
 import jakarta.annotation.Nullable;
+
+import io.netty.util.concurrent.FastThreadLocal;
+import org.apache.commons.lang3.tuple.Pair;
+
+import im.turms.server.common.infra.collection.ArrayUtil;
+import im.turms.server.common.infra.lang.NumberFormatter;
+import im.turms.server.common.infra.lang.StringUtil;
 
 /**
  * @author James Chen
@@ -96,8 +97,7 @@ public final class DateUtil {
         byte[] minute = twoDigitBytes(calendar.get(Calendar.MINUTE));
         byte[] second = twoDigitBytes(calendar.get(Calendar.SECOND));
         byte[] millis = threeDigitBytes(calendar.get(Calendar.MILLISECOND));
-        return new byte[]{
-                year[0],
+        return new byte[]{year[0],
                 year[1],
                 year[2],
                 year[3],
@@ -119,8 +119,7 @@ public final class DateUtil {
                 '.',
                 millis[0],
                 millis[1],
-                millis[2]
-        };
+                millis[2]};
     }
 
     public static Date max(@Nullable Date date1, @Nullable Date date2) {
@@ -149,7 +148,10 @@ public final class DateUtil {
         return d1 != null && !d1.before(d2);
     }
 
-    public static List<Pair<Date, Date>> divideDuration(Date startDate, Date endDate, DivideBy divideBy) {
+    public static List<Pair<Date, Date>> divideDuration(
+            Date startDate,
+            Date endDate,
+            DivideBy divideBy) {
         if (!endDate.after(startDate)) {
             return Collections.emptyList();
         }
@@ -157,7 +159,9 @@ public final class DateUtil {
             case HOUR -> Calendar.HOUR_OF_DAY;
             case DAY -> Calendar.DAY_OF_YEAR;
             case MONTH -> Calendar.MONTH;
-            default -> throw new IllegalArgumentException("Unexpected DivideBy value: " + divideBy);
+            default -> throw new IllegalArgumentException(
+                    "Unexpected DivideBy value: "
+                            + divideBy);
         };
         List<Pair<Date, Date>> lists = new LinkedList<>();
         while (true) {

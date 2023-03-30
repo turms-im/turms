@@ -17,12 +17,8 @@
 
 package integration.access;
 
-import im.turms.gateway.access.client.common.connection.ConnectionListener;
-import im.turms.gateway.access.client.tcp.TcpServerFactory;
-import im.turms.gateway.domain.session.service.SessionService;
-import im.turms.server.common.domain.blocklist.service.BlocklistService;
-import im.turms.server.common.infra.healthcheck.ServerStatusManager;
-import im.turms.server.common.infra.property.env.gateway.TcpProperties;
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 import org.mockito.stubbing.OngoingStubbing;
 import reactor.core.publisher.Mono;
@@ -30,28 +26,36 @@ import reactor.netty.Connection;
 import reactor.netty.DisposableServer;
 import reactor.netty.tcp.TcpClient;
 
-import java.util.List;
+import im.turms.gateway.access.client.common.connection.ConnectionListener;
+import im.turms.gateway.access.client.tcp.TcpServerFactory;
+import im.turms.gateway.domain.session.service.SessionService;
+import im.turms.server.common.domain.blocklist.service.BlocklistService;
+import im.turms.server.common.infra.healthcheck.ServerStatusManager;
+import im.turms.server.common.infra.property.env.gateway.TcpProperties;
 
-import static im.turms.server.common.infra.unit.ByteSizeUnit.KB;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import static im.turms.server.common.infra.unit.ByteSizeUnit.KB;
+
 class TcpServerIT {
 
-    private static final ConnectionListener NEVER_CLOSE = (connection, isWebSocketConnection, in, out, onClose) -> Mono.never();
+    private static final ConnectionListener NEVER_CLOSE =
+            (connection, isWebSocketConnection, in, out, onClose) -> Mono.never();
 
     @Test
-    void shouldCloseOrAcceptConnection_accordingTo_ServerStatusManager_isActive() throws InterruptedException {
+    void shouldCloseOrAcceptConnection_accordingTo_ServerStatusManager_isActive()
+            throws InterruptedException {
         TcpProperties tcpProperties = new TcpProperties();
-        tcpProperties.getSsl().setEnabled(false);
+        tcpProperties.getSsl()
+                .setEnabled(false);
         tcpProperties.setPort(0);
         tcpProperties.setWiretap(true);
 
         BlocklistService blocklistService = mock(BlocklistService.class);
-        when(blocklistService.isIpBlocked(any(byte[].class)))
-                .thenReturn(false);
+        when(blocklistService.isIpBlocked(any(byte[].class))).thenReturn(false);
 
         ServerStatusManager serverStatusManager = mock(ServerStatusManager.class);
         List<Boolean> isActiveReturnValues = List.of(true, false, true, false);
@@ -78,15 +82,16 @@ class TcpServerIT {
                     .connectNow();
             // Must try to read data from the channel,
             // or the socket channel will reflect an outdated connection state.
-            // It will throw "java.io.IOException: An existing connection was forcibly closed by the remote host"
+            // It will throw "java.io.IOException: An existing connection was forcibly closed by the
+            // remote host"
             // if the connection is closed.
-            connection.inbound().receive().subscribe();
+            connection.inbound()
+                    .receive()
+                    .subscribe();
             // Wait for the server to close the connection
             Thread.sleep(200);
-            boolean isConnected = !connection
-                    .isDisposed();
-            assertThat(isConnected)
-                    .isEqualTo(isActive);
+            boolean isConnected = !connection.isDisposed();
+            assertThat(isConnected).isEqualTo(isActive);
             i++;
         }
     }

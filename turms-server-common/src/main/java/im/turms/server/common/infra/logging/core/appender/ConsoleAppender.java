@@ -17,10 +17,10 @@
 
 package im.turms.server.common.infra.logging.core.appender;
 
-import im.turms.server.common.infra.logging.core.model.LogLevel;
-
 import java.io.FileDescriptor;
 import java.io.FileOutputStream;
+
+import im.turms.server.common.infra.logging.core.model.LogLevel;
 
 /**
  * @author James Chen

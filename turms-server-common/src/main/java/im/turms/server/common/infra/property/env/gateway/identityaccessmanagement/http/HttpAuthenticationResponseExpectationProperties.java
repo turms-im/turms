@@ -17,15 +17,15 @@
 
 package im.turms.server.common.infra.property.env.gateway.identityaccessmanagement.http;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import jakarta.validation.constraints.Size;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @author James Chen
@@ -41,8 +41,6 @@ public class HttpAuthenticationResponseExpectationProperties {
 
     private Map<String, String> headers = Collections.emptyMap();
 
-    private Map<String, Object> bodyFields = Map.of(
-            "authenticated", true
-    );
+    private Map<String, Object> bodyFields = Map.of("authenticated", true);
 
 }

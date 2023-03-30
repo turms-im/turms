@@ -17,12 +17,12 @@
 
 package im.turms.service.access.servicerequest.dto;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.request.TurmsRequest;
 import im.turms.server.common.infra.proto.ProtoFormatter;
-
-import java.util.Arrays;
-import java.util.Objects;
 
 /**
  * @author James Chen
@@ -66,13 +66,18 @@ public final class ClientRequest {
 
     @Override
     public String toString() {
-        return "ClientRequest[" +
-                "userId=" + userId +
-                ", deviceType=" + deviceType +
-                ", clientIp=" + Arrays.toString(clientIp) +
-                ", requestId=" + requestId +
-                ", turmsRequest=" + ProtoFormatter.toLogString(turmsRequest()) +
-                ']';
+        return "ClientRequest["
+                + "userId="
+                + userId
+                + ", deviceType="
+                + deviceType
+                + ", clientIp="
+                + Arrays.toString(clientIp)
+                + ", requestId="
+                + requestId
+                + ", turmsRequest="
+                + ProtoFormatter.toLogString(turmsRequest())
+                + ']';
     }
 
     public TurmsRequest turmsRequest() {
@@ -111,17 +116,18 @@ public final class ClientRequest {
             return false;
         }
         var that = (ClientRequest) obj;
-        return Objects.equals(this.userId, that.userId) &&
-                Objects.equals(this.deviceType, that.deviceType) &&
-                Arrays.equals(this.clientIp, that.clientIp) &&
-                Objects.equals(this.requestId, that.requestId) &&
-                Objects.equals(this.turmsRequestBuilder, that.turmsRequestBuilder) &&
-                Objects.equals(this.turmsRequest, that.turmsRequest);
+        return Objects.equals(this.userId, that.userId)
+                && Objects.equals(this.deviceType, that.deviceType)
+                && Arrays.equals(this.clientIp, that.clientIp)
+                && Objects.equals(this.requestId, that.requestId)
+                && Objects.equals(this.turmsRequestBuilder, that.turmsRequestBuilder)
+                && Objects.equals(this.turmsRequest, that.turmsRequest);
     }
 
     @Override
     public int hashCode() {
-        return 31 * Objects.hash(userId, deviceType, requestId, turmsRequestBuilder, turmsRequest) + Arrays.hashCode(clientIp);
+        return 31 * Objects.hash(userId, deviceType, requestId, turmsRequestBuilder, turmsRequest)
+                + Arrays.hashCode(clientIp);
     }
 
 }

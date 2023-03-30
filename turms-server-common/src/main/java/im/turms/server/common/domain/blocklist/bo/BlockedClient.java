@@ -23,7 +23,10 @@ import java.util.Objects;
  * @param blockEndTime in millis
  * @author James Chen
  */
-public record BlockedClient(Object id, long blockEndTime) {
+public record BlockedClient(
+        Object id,
+        long blockEndTime
+) {
 
     @Override
     public boolean equals(Object o) {

@@ -17,14 +17,15 @@
 
 package im.turms.service.domain.group.po;
 
+import java.util.Date;
+
+import lombok.Data;
+
 import im.turms.server.common.domain.common.po.BaseEntity;
 import im.turms.server.common.storage.mongo.entity.annotation.Document;
 import im.turms.server.common.storage.mongo.entity.annotation.Field;
 import im.turms.server.common.storage.mongo.entity.annotation.Id;
 import im.turms.server.common.storage.mongo.entity.annotation.Sharded;
-import lombok.Data;
-
-import java.util.Date;
 
 /**
  * @author James Chen

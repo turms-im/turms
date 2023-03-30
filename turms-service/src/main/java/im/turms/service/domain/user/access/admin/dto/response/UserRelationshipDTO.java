@@ -17,13 +17,13 @@
 
 package im.turms.service.domain.user.access.admin.dto.response;
 
-import im.turms.server.common.domain.common.access.dto.ControllerDTO;
-import im.turms.service.domain.user.po.UserRelationship;
-
 import java.util.Date;
 import java.util.Set;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
+
+import im.turms.server.common.domain.common.access.dto.ControllerDTO;
+import im.turms.service.domain.user.po.UserRelationship;
 
 /**
  * @author James Chen
@@ -35,7 +35,12 @@ public record UserRelationshipDTO(
         Set<Integer> groupIndexes
 ) implements ControllerDTO {
 
-    public UserRelationshipDTO(Long ownerId, Long relatedUserId, Date blockDate, Date establishmentDate, Set<Integer> groupIndexes) {
+    public UserRelationshipDTO(
+            Long ownerId,
+            Long relatedUserId,
+            Date blockDate,
+            Date establishmentDate,
+            Set<Integer> groupIndexes) {
         this(new Key(ownerId, relatedUserId), blockDate, establishmentDate, groupIndexes);
     }
 
@@ -43,15 +48,22 @@ public record UserRelationshipDTO(
         return fromDomain(relationship, null);
     }
 
-    public static UserRelationshipDTO fromDomain(@NotNull UserRelationship relationship, @Nullable Set<Integer> groupIndexes) {
+    public static UserRelationshipDTO fromDomain(
+            @NotNull UserRelationship relationship,
+            @Nullable Set<Integer> groupIndexes) {
         return new UserRelationshipDTO(
-                relationship.getKey().getOwnerId(),
-                relationship.getKey().getRelatedUserId(),
+                relationship.getKey()
+                        .getOwnerId(),
+                relationship.getKey()
+                        .getRelatedUserId(),
                 relationship.getBlockDate(),
                 relationship.getEstablishmentDate(),
                 groupIndexes);
     }
 
-    public static record Key(Long ownerId, Long relatedUserId) {
+    public static record Key(
+            Long ownerId,
+            Long relatedUserId
+    ) {
     }
 }

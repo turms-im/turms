@@ -17,13 +17,14 @@
 
 package im.turms.server.common.infra.property.env.common;
 
-import im.turms.server.common.infra.property.metadata.Description;
+import jakarta.validation.constraints.Min;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import jakarta.validation.constraints.Min;
+import im.turms.server.common.infra.property.metadata.Description;
 
 /**
  * @author James Chen
@@ -41,8 +42,8 @@ public class UserStatusProperties {
     @Min(-1)
     private int userSessionsStatusCacheMaxSize = -1;
 
-    @Description("The life duration of each remote user's sessions status in the cache. " +
-            "Note that the cache will make the presentation of users' sessions status inconsistent during the time")
+    @Description("The life duration of each remote user's sessions status in the cache. "
+            + "Note that the cache will make the presentation of users' sessions status inconsistent during the time")
     @Min(1)
     private int userSessionsStatusExpireAfter = 60;
 

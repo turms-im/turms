@@ -17,9 +17,10 @@
 
 package im.turms.server.common.infra.logging.slf4j;
 
+import org.slf4j.helpers.MarkerIgnoringBase;
+
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.model.LogLevel;
-import org.slf4j.helpers.MarkerIgnoringBase;
 
 /**
  * @author James Chen

@@ -17,10 +17,11 @@
 
 package unit.im.turms.server.common.domain.observation.rpc;
 
-import im.turms.server.common.domain.observation.rpc.CountOnlineUsersRequest;
-import im.turms.server.common.domain.observation.rpc.CountOnlineUsersRequestCodec;
 import org.junit.jupiter.api.Test;
 import unit.im.turms.server.common.infra.cluster.service.rpc.codec.BaseCodecTest;
+
+import im.turms.server.common.domain.observation.rpc.CountOnlineUsersRequest;
+import im.turms.server.common.domain.observation.rpc.CountOnlineUsersRequestCodec;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -29,8 +30,8 @@ class CountOnlineUsersRequestCodecTests extends BaseCodecTest {
     @Test
     void shouldGetTheSameRequest_afterWriteAndRead_forLegalRequest() {
         CountOnlineUsersRequest expectedRequest = new CountOnlineUsersRequest();
-        CountOnlineUsersRequest actualRequest = writeRequestAndReadBuffer(new CountOnlineUsersRequestCodec(),
-                expectedRequest);
+        CountOnlineUsersRequest actualRequest =
+                writeRequestAndReadBuffer(new CountOnlineUsersRequestCodec(), expectedRequest);
 
         assertThat(actualRequest).isNotNull();
     }

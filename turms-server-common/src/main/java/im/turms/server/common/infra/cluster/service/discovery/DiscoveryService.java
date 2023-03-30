@@ -17,8 +17,32 @@
 
 package im.turms.server.common.infra.cluster.service.discovery;
 
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotNull;
+
 import com.mongodb.client.model.changestream.FullDocument;
 import com.mongodb.client.model.changestream.UpdateDescription;
+import lombok.Getter;
+import org.bson.BsonValue;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.address.BaseServiceAddressManager;
 import im.turms.server.common.infra.cluster.node.NodeType;
@@ -44,35 +68,11 @@ import im.turms.server.common.infra.thread.ThreadNameConst;
 import im.turms.server.common.infra.time.DurationConst;
 import im.turms.server.common.storage.mongo.operation.option.Filter;
 import im.turms.server.common.storage.mongo.operation.option.Update;
-import lombok.Getter;
-import org.bson.BsonValue;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
-import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.TimeUnit;
-import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.NotNull;
 
 /**
- * Responsibilities:
- * 1. Ensure the local node is registered even if it is unregistered unexpectedly
- * 2. Listen to the changes (added/removed/updated) of members and notify ConnectionService to connect (TCP) or disconnect
- * 3. Select a leader
+ * Responsibilities: 1. Ensure the local node is registered even if it is unregistered unexpectedly
+ * 2. Listen to the changes (added/removed/updated) of members and notify ConnectionService to
+ * connect (TCP) or disconnect 3. Select a leader
  *
  * @author James Chen
  */
@@ -81,9 +81,11 @@ public class DiscoveryService implements ClusterService {
     private static final Logger LOGGER = LoggerFactory.getLogger(DiscoveryService.class);
 
     private static final Duration CRUD_TIMEOUT_DURATION = DurationConst.ONE_MINUTE;
-    private static final Comparator<Member> MEMBER_PRIORITY_COMPARATOR = DiscoveryService::compareMemberPriority;
+    private static final Comparator<Member> MEMBER_PRIORITY_COMPARATOR =
+            DiscoveryService::compareMemberPriority;
 
-    private final ScheduledExecutorService scheduler = new ScheduledThreadPoolExecutor(1,
+    private final ScheduledExecutorService scheduler = new ScheduledThreadPoolExecutor(
+            1,
             new NamedThreadFactory(ThreadNameConst.NODE_DISCOVERY_CHANGE_NOTIFIER, false));
     private ScheduledFuture<?> notifyMembersChangeFuture;
 
@@ -136,7 +138,8 @@ public class DiscoveryService implements ClusterService {
             BaseServiceAddressManager serviceAddressManager,
             SharedConfigService sharedConfigService) {
         Date now = new Date();
-        Member localMember = new Member(clusterId,
+        Member localMember = new Member(
+                clusterId,
                 nodeId,
                 zone,
                 nodeType,
@@ -175,13 +178,15 @@ public class DiscoveryService implements ClusterService {
                     .setIfNotNull(Member.Fields.tcpAddress, tcpAddress)
                     .setIfNotNull(Member.Fields.udpAddress, udpAddress);
             localNodeStatusManager.upsertLocalNodeInfo(update)
-                    .subscribe(null, t -> LOGGER.error("Caught an error while upserting the local node info", t));
+                    .subscribe(null,
+                            t -> LOGGER.error("Caught an error while upserting the local node info",
+                                    t));
         });
     }
 
     /**
-     * @return a positive or negative number, and never 0
-     * to ensure that the order is consistent in every node.
+     * @return a positive or negative number, and never 0 to ensure that the order is consistent in
+     *         every node.
      */
     private static int compareMemberPriority(Member m1, Member m2) {
         int m1Priority = m1.getPriority();
@@ -189,9 +194,15 @@ public class DiscoveryService implements ClusterService {
         if (m1Priority == m2Priority) {
             // Don't use 0 to make sure that the order is consistent in every node
             // and it should never happen
-            return m1.getNodeId().hashCode() < m2.getNodeId().hashCode() ? -1 : 1;
+            return m1.getNodeId()
+                    .hashCode() < m2.getNodeId()
+                            .hashCode()
+                                    ? -1
+                                    : 1;
         }
-        return m1Priority < m2Priority ? -1 : 1;
+        return m1Priority < m2Priority
+                ? -1
+                : 1;
     }
 
     @Override
@@ -202,8 +213,7 @@ public class DiscoveryService implements ClusterService {
         listenMembersChangeEvent();
         List<Member> memberList;
         try {
-            memberList = queryMembers()
-                    .collect(CollectorUtil.toList())
+            memberList = queryMembers().collect(CollectorUtil.toList())
                     .block(CRUD_TIMEOUT_DURATION);
         } catch (Exception e) {
             throw new RuntimeException("Failed to find members", e);
@@ -211,9 +221,13 @@ public class DiscoveryService implements ClusterService {
         Member localMember = localNodeStatusManager.getLocalMember();
         for (Member member : memberList) {
             if (localMember.isSameNode(member)) {
-                String message = "Failed to bootstrap the local node because the local node has been registered. "
-                        + "Local Node: " + localMember + ". "
-                        + "Registered Node: " + member;
+                String message =
+                        "Failed to bootstrap the local node because the local node has been registered. "
+                                + "Local Node: "
+                                + localMember
+                                + ". "
+                                + "Registered Node: "
+                                + member;
                 throw new RuntimeException(message);
             }
             onMemberAddedOrReplaced(member);
@@ -222,42 +236,50 @@ public class DiscoveryService implements ClusterService {
         updateActiveMembers(allKnownMembers.values());
 
         try {
-            localNodeStatusManager.registerLocalNodeAsMember(false).block(CRUD_TIMEOUT_DURATION);
+            localNodeStatusManager.registerLocalNodeAsMember(false)
+                    .block(CRUD_TIMEOUT_DURATION);
         } catch (Exception e) {
-            throw new RuntimeException("Caught an error while registering the local node as a member", e);
+            throw new RuntimeException(
+                    "Caught an error while registering the local node as a member",
+                    e);
         }
         try {
-            localNodeStatusManager.tryBecomeFirstLeader().block();
+            localNodeStatusManager.tryBecomeFirstLeader()
+                    .block();
         } catch (Exception e) {
-            throw new RuntimeException("Caught an error while trying to become the first leader", e);
+            throw new RuntimeException(
+                    "Caught an error while trying to become the first leader",
+                    e);
         }
         localNodeStatusManager.startHeartbeat();
     }
 
     @Override
-    public void lazyInit(CodecService codecService,
-                         ConnectionService connectionService,
-                         DiscoveryService discoveryService,
-                         IdService idService,
-                         RpcService rpcService,
-                         SharedConfigService sharedConfigService) {
+    public void lazyInit(
+            CodecService codecService,
+            ConnectionService connectionService,
+            DiscoveryService discoveryService,
+            IdService idService,
+            RpcService rpcService,
+            SharedConfigService sharedConfigService) {
         this.connectionService = connectionService;
-        this.connectionService.addMemberConnectionListenerSupplier(() -> new MemberConnectionListener() {
-            private Member member;
+        this.connectionService
+                .addMemberConnectionListenerSupplier(() -> new MemberConnectionListener() {
+                    private Member member;
 
-            @Override
-            public void onOpeningHandshakeCompleted(Member member) {
-                this.member = member;
-                updateOtherActiveConnectedMemberList(true, member);
-            }
+                    @Override
+                    public void onOpeningHandshakeCompleted(Member member) {
+                        this.member = member;
+                        updateOtherActiveConnectedMemberList(true, member);
+                    }
 
-            @Override
-            public void onConnectionClosed() {
-                if (member != null) {
-                    updateOtherActiveConnectedMemberList(false, member);
-                }
-            }
-        });
+                    @Override
+                    public void onConnectionClosed() {
+                        if (member != null) {
+                            updateOtherActiveConnectedMemberList(false, member);
+                        }
+                    }
+                });
     }
 
     public Member getMember(String nodeId) {
@@ -266,7 +288,9 @@ public class DiscoveryService implements ClusterService {
 
     private Flux<Member> queryMembers() {
         Filter filter = Filter.newBuilder(1)
-                .eq(Member.ID_CLUSTER_ID, localNodeStatusManager.getLocalMember().getClusterId());
+                .eq(Member.ID_CLUSTER_ID,
+                        localNodeStatusManager.getLocalMember()
+                                .getClusterId());
         return sharedConfigService.find(Member.class, filter);
     }
 
@@ -277,25 +301,32 @@ public class DiscoveryService implements ClusterService {
                     String clusterId = changedLeader != null
                             ? changedLeader.getClusterId()
                             : ChangeStreamUtil.getIdAsString(event.getDocumentKey());
-                    if (clusterId.equals(localNodeStatusManager.getLocalMember().getClusterId())) {
+                    if (clusterId.equals(localNodeStatusManager.getLocalMember()
+                            .getClusterId())) {
                         switch (event.getOperationType()) {
                             case INSERT, REPLACE, UPDATE -> leader = changedLeader;
                             case INVALIDATE -> {
                                 leader = null;
-                                int delay = (int) (5 * ThreadLocalRandom.current().nextFloat());
+                                int delay = (int) (5 * ThreadLocalRandom.current()
+                                        .nextFloat());
                                 Mono.delay(Duration.ofSeconds(delay))
                                         .subscribe(ignored -> {
                                             if (leader == null) {
                                                 localNodeStatusManager.tryBecomeFirstLeader()
-                                                        .subscribe(null, t -> LOGGER.error("Caught an error while trying to become the first leader", t));
+                                                        .subscribe(null,
+                                                                t -> LOGGER.error(
+                                                                        "Caught an error while trying to become the first leader",
+                                                                        t));
                                             }
                                         });
                             }
                         }
                     }
                 })
-                .onErrorContinue((throwable, o) -> LOGGER
-                        .error("Caught an error while processing the change stream event of Leader: {}", o, throwable))
+                .onErrorContinue((throwable, o) -> LOGGER.error(
+                        "Caught an error while processing the change stream event of Leader: {}",
+                        o,
+                        throwable))
                 .subscribe();
     }
 
@@ -306,10 +337,13 @@ public class DiscoveryService implements ClusterService {
                 .doOnNext(event -> {
                     Member changedMember = event.getFullDocument();
                     String clusterId = changedMember == null
-                            ? ChangeStreamUtil.getStringFromId(event.getDocumentKey(), Member.Key.Fields.clusterId)
+                            ? ChangeStreamUtil.getStringFromId(event.getDocumentKey(),
+                                    Member.Key.Fields.clusterId)
                             : changedMember.getClusterId();
-                    String nodeId = ChangeStreamUtil.getStringFromId(event.getDocumentKey(), Member.Key.Fields.nodeId);
-                    if (!clusterId.equals(localNodeStatusManager.getLocalMember().getClusterId())) {
+                    String nodeId = ChangeStreamUtil.getStringFromId(event.getDocumentKey(),
+                            Member.Key.Fields.nodeId);
+                    if (!clusterId.equals(localNodeStatusManager.getLocalMember()
+                            .getClusterId())) {
                         return;
                     }
                     switch (event.getOperationType()) {
@@ -323,13 +357,18 @@ public class DiscoveryService implements ClusterService {
                             updateOtherActiveConnectedMemberList(false, deletedMember);
                             // Note that we assume that there is no the case:
                             // a node is running but has just been unregistered in the registry
-                            // because the node may lose the connection with the registry and TTL has passed.
+                            // because the node may lose the connection with the registry and TTL
+                            // has
+                            // passed.
                             // During the time, another node with the SAME node ID registers itself.
                             // If the lost node recovers again, there is a potential bug.
-                            if (nodeId.equals(localNodeStatusManager.getLocalMember().getNodeId())) {
+                            if (nodeId.equals(localNodeStatusManager.getLocalMember()
+                                    .getNodeId())) {
                                 localNodeStatusManager.setLocalNodeRegistered(false);
                                 if (!localNodeStatusManager.isClosing()) {
-                                    // Ignore the error because the node may have been registered by its heartbeat timer
+                                    // Ignore the error because the node may have been registered by
+                                    // its
+                                    // heartbeat timer
                                     localNodeStatusManager.registerLocalNodeAsMember(true)
                                             .subscribe();
                                 }
@@ -339,19 +378,23 @@ public class DiscoveryService implements ClusterService {
                     updateActiveMembers(allKnownMembers.values());
                     connectionService.updateHasConnectedToAllMembers(allKnownMembers.keySet());
                 })
-                .onErrorContinue((throwable, o) -> LOGGER
-                        .error("Caught an error while processing the change stream event of Member: {}", o, throwable))
+                .onErrorContinue((throwable, o) -> LOGGER.error(
+                        "Caught an error while processing the change stream event of Member: {}",
+                        o,
+                        throwable))
                 .subscribe();
     }
 
     private void onMemberUpdated(String nodeId, UpdateDescription updateDescription) {
         Member memberToUpdate = allKnownMembers.get(nodeId);
         if (memberToUpdate == null) {
-            LOGGER.error("Could not update the information of the unknown member: " + nodeId);
+            LOGGER.error("Could not update the information of the unknown member: "
+                    + nodeId);
             return;
         }
         // Info
-        Set<Map.Entry<String, BsonValue>> entries = updateDescription.getUpdatedFields().entrySet();
+        Set<Map.Entry<String, BsonValue>> entries = updateDescription.getUpdatedFields()
+                .entrySet();
         for (Map.Entry<String, BsonValue> entry : entries) {
             // We don't use reflection to update fields for clarity and
             // better maintainability considering possible field changes
@@ -360,35 +403,57 @@ public class DiscoveryService implements ClusterService {
             // TODO: pattern matching
             // Check status change
             if (fieldName.endsWith(Member.MemberStatus.Fields.lastHeartbeatDate)) {
-                memberToUpdate.getStatus().setLastHeartbeatDate(new Date(value.asDateTime().getValue()));
+                memberToUpdate.getStatus()
+                        .setLastHeartbeatDate(new Date(
+                                value.asDateTime()
+                                        .getValue()));
             } else if (fieldName.endsWith(Member.MemberStatus.Fields.hasJoinedCluster)) {
-                memberToUpdate.getStatus().setHasJoinedCluster(value.asBoolean().getValue());
+                memberToUpdate.getStatus()
+                        .setHasJoinedCluster(value.asBoolean()
+                                .getValue());
             } else if (fieldName.endsWith(Member.MemberStatus.Fields.isActive)) {
-                memberToUpdate.getStatus().setActive(value.asBoolean().getValue());
+                memberToUpdate.getStatus()
+                        .setActive(value.asBoolean()
+                                .getValue());
             } else if (fieldName.endsWith(Member.MemberStatus.Fields.isHealthy)) {
-                memberToUpdate.getStatus().setHealthy(value.asBoolean().getValue());
+                memberToUpdate.getStatus()
+                        .setHealthy(value.asBoolean()
+                                .getValue());
                 // Check info
             } else if (fieldName.equals(Member.Fields.zone)) {
-                memberToUpdate.setZone(value.asString().getValue());
+                memberToUpdate.setZone(value.asString()
+                        .getValue());
             } else if (fieldName.equals(Member.Fields.isSeed)) {
                 // TODO: RENAME
-                memberToUpdate.setSeed(value.asBoolean().getValue());
+                memberToUpdate.setSeed(value.asBoolean()
+                        .getValue());
             } else if (fieldName.equals(Member.Fields.isLeaderEligible)) {
-                memberToUpdate.setLeaderEligible(value.asBoolean().getValue());
+                memberToUpdate.setLeaderEligible(value.asBoolean()
+                        .getValue());
             } else if (fieldName.equals(Member.Fields.priority)) {
-                memberToUpdate.setPriority(value.asInt32().getValue());
+                memberToUpdate.setPriority(value.asInt32()
+                        .getValue());
             } else if (fieldName.equals(Member.Fields.memberHost)) {
-                memberToUpdate.setMemberHost(value.asString().getValue());
+                memberToUpdate.setMemberHost(value.asString()
+                        .getValue());
             } else if (fieldName.equals(Member.Fields.adminApiAddress)) {
-                memberToUpdate.setAdminApiAddress(value.asString().getValue());
+                memberToUpdate.setAdminApiAddress(value.asString()
+                        .getValue());
             } else if (fieldName.equals(Member.Fields.wsAddress)) {
-                memberToUpdate.setWsAddress(value.asString().getValue());
+                memberToUpdate.setWsAddress(value.asString()
+                        .getValue());
             } else if (fieldName.equals(Member.Fields.tcpAddress)) {
-                memberToUpdate.setTcpAddress(value.asString().getValue());
+                memberToUpdate.setTcpAddress(value.asString()
+                        .getValue());
             } else if (fieldName.equals(Member.Fields.udpAddress)) {
-                memberToUpdate.setUdpAddress(value.asString().getValue());
+                memberToUpdate.setUdpAddress(value.asString()
+                        .getValue());
             } else {
-                LOGGER.warn("Could not update the unknown field \"{}\" with the value ({}) for the member: {}", fieldName, value, memberToUpdate);
+                LOGGER.warn(
+                        "Could not update the unknown field \"{}\" with the value ({}) for the member: {}",
+                        fieldName,
+                        value,
+                        memberToUpdate);
             }
         }
     }
@@ -405,14 +470,14 @@ public class DiscoveryService implements ClusterService {
             if (isLocalNode) {
                 localNodeStatusManager.updateInfo(newMember);
             }
-            if (newMember.getStatus().isActive()
+            if (newMember.getStatus()
+                    .isActive()
                     && connectionService.isMemberConnected(nodeId)) {
                 updateOtherActiveConnectedMemberList(true, newMember);
                 if (notifyMembersChangeFuture != null) {
                     notifyMembersChangeFuture.cancel(false);
                 }
-                notifyMembersChangeFuture = scheduler.schedule(
-                        this::notifyMembersChangeListeners,
+                notifyMembersChangeFuture = scheduler.schedule(this::notifyMembersChangeListeners,
                         discoveryProperties.getDelayToNotifyMembersChangeSeconds(),
                         TimeUnit.SECONDS);
             }
@@ -432,7 +497,8 @@ public class DiscoveryService implements ClusterService {
         List<Member> tempActiveSortedServiceMembers = new ArrayList<>(size);
         List<Member> tempActiveSortedGatewayMembers = new ArrayList<>(size);
         for (Member member : knownMembers) {
-            if (member.getStatus().isActive()) {
+            if (member.getStatus()
+                    .isActive()) {
                 if (member.getNodeType() == NodeType.SERVICE) {
                     tempActiveSortedServiceMembers.add(member);
                 } else {
@@ -478,7 +544,9 @@ public class DiscoveryService implements ClusterService {
     @Nullable
     public Integer getLocalServiceMemberIndex() {
         int index = activeSortedServiceMembers.indexOf(getLocalMember());
-        return index != -1 ? index : null;
+        return index != -1
+                ? index
+                : null;
     }
 
     @Override
@@ -492,7 +560,9 @@ public class DiscoveryService implements ClusterService {
         }
         if (localNodeStatusManager.isLocalNodeRegistered()) {
             return localNodeStatusManager.unregisterLocalNodeMembership()
-                    .onErrorMap(t -> new RuntimeException("Caught an error while unregistering the membership of the local node", t));
+                    .onErrorMap(t -> new RuntimeException(
+                            "Caught an error while unregistering the membership of the local node",
+                            t));
         }
         return Mono.empty();
     }
@@ -506,37 +576,40 @@ public class DiscoveryService implements ClusterService {
             String message;
             if (noClusterId) {
                 if (noNodeId) {
-                    message = "Failed to register the member (" +
-                            member +
-                            ") because both the cluster ID and the node ID are missing";
+                    message = "Failed to register the member ("
+                            + member
+                            + ") because both the cluster ID and the node ID are missing";
                 } else {
-                    message = "Failed to register the member (" +
-                            member +
-                            ") because the cluster ID is missing";
+                    message = "Failed to register the member ("
+                            + member
+                            + ") because the cluster ID is missing";
                 }
             } else {
-                message = "Failed to register the member (" +
-                        member +
-                        ") because the node ID is missing";
+                message = "Failed to register the member ("
+                        + member
+                        + ") because the node ID is missing";
             }
             throw new IllegalArgumentException(message);
         }
-        return sharedConfigService.insert(member).then();
+        return sharedConfigService.insert(member)
+                .then();
     }
 
     public Mono<Void> unregisterMembers(Set<String> nodeIds) {
         Filter filter = Filter.newBuilder(2)
                 .eq(Member.ID_CLUSTER_ID, getLocalMember().getClusterId())
                 .in(Member.ID_NODE_ID, nodeIds);
-        return sharedConfigService.remove(Member.class, filter).then();
+        return sharedConfigService.remove(Member.class, filter)
+                .then();
     }
 
-    public Mono<Void> updateMemberInfo(@NotNull String id,
-                                       @Nullable String zone,
-                                       @Nullable Boolean isSeed,
-                                       @Nullable Boolean isLeaderEligible,
-                                       @Nullable Boolean isActive,
-                                       @Nullable Integer priority) {
+    public Mono<Void> updateMemberInfo(
+            @NotNull String id,
+            @Nullable String zone,
+            @Nullable Boolean isSeed,
+            @Nullable Boolean isLeaderEligible,
+            @Nullable Boolean isActive,
+            @Nullable Integer priority) {
         Member member = allKnownMembers.get(id);
         if (member == null) {
             return ResponseExceptionPublisherPool.noContent();
@@ -603,16 +676,20 @@ public class DiscoveryService implements ClusterService {
     public boolean isQualifiedToBeLeader(Member member) {
         return member.getNodeType() == NodeType.SERVICE
                 && member.isLeaderEligible()
-                && member.getStatus().isActive();
+                && member.getStatus()
+                        .isActive();
     }
 
     public Mono<Member> electNewLeaderByMember(Member member) {
         String clusterId = member.getClusterId();
         String nodeId = member.getNodeId();
         if (!isQualifiedToBeLeader(member)) {
-            return Mono.error(ResponseException.get(ResponseStatusCode.NOT_QUALIFIED_MEMBER_TO_BE_LEADER));
+            return Mono.error(
+                    ResponseException.get(ResponseStatusCode.NOT_QUALIFIED_MEMBER_TO_BE_LEADER));
         }
-        int generation = leader == null ? 1 : leader.getGeneration() + 1;
+        int generation = leader == null
+                ? 1
+                : leader.getGeneration() + 1;
         Filter filter = Filter.newBuilder(2)
                 .eq(Leader.Fields.clusterId, clusterId)
                 .ltOrNull(Leader.Fields.generation, generation);
@@ -621,13 +698,15 @@ public class DiscoveryService implements ClusterService {
                 .set(Leader.Fields.nodeId, nodeId)
                 .set(Leader.Fields.renewDate, now);
         Leader localLeader = new Leader(clusterId, nodeId, now, generation);
-        return sharedConfigService.upsert(filter, update, localLeader).thenReturn(member);
+        return sharedConfigService.upsert(filter, update, localLeader)
+                .thenReturn(member);
     }
 
     public Mono<Member> electNewLeaderByNodeId(String nodeId) {
         Member member = allKnownMembers.get(nodeId);
         if (member == null) {
-            return Mono.error(ResponseException.get(ResponseStatusCode.NON_EXISTING_MEMBER_TO_BE_LEADER));
+            return Mono.error(
+                    ResponseException.get(ResponseStatusCode.NON_EXISTING_MEMBER_TO_BE_LEADER));
         }
         return electNewLeaderByMember(member);
     }
@@ -635,16 +714,19 @@ public class DiscoveryService implements ClusterService {
     public Mono<Member> electNewLeaderByPriority() {
         List<Member> qualifiedMembers = findQualifiedMembersToBeLeader();
         if (qualifiedMembers.isEmpty()) {
-            return Mono.error(ResponseException.get(ResponseStatusCode.NO_QUALIFIED_MEMBER_TO_BE_LEADER));
+            return Mono.error(
+                    ResponseException.get(ResponseStatusCode.NO_QUALIFIED_MEMBER_TO_BE_LEADER));
         }
         if (leader != null) {
             for (Member qualifiedMember : qualifiedMembers) {
-                if (qualifiedMember.getNodeId().equals(leader.getNodeId())) {
+                if (qualifiedMember.getNodeId()
+                        .equals(leader.getNodeId())) {
                     return Mono.just(qualifiedMember);
                 }
             }
         }
-        return electNewLeaderByNodeId(qualifiedMembers.get(0).getNodeId());
+        return electNewLeaderByNodeId(qualifiedMembers.get(0)
+                .getNodeId());
     }
 
 }

@@ -17,14 +17,15 @@
 
 package im.turms.server.common.domain.session.bo;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import im.turms.server.common.access.client.dto.constant.DeviceType;
-import im.turms.server.common.domain.location.bo.Location;
-import im.turms.server.common.infra.net.InetAddressUtil;
-
 import java.util.Date;
 import java.util.Map;
 import jakarta.annotation.Nullable;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import im.turms.server.common.access.client.dto.constant.DeviceType;
+import im.turms.server.common.domain.location.bo.Location;
+import im.turms.server.common.infra.net.InetAddressUtil;
 
 /**
  * @author James Chen

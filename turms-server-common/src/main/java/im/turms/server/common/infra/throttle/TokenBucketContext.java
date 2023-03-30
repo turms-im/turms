@@ -17,9 +17,10 @@
 
 package im.turms.server.common.infra.throttle;
 
-import im.turms.server.common.infra.property.env.common.CommonRateLimitingProperties;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import im.turms.server.common.infra.property.env.common.CommonRateLimitingProperties;
 
 /**
  * @author James Chen

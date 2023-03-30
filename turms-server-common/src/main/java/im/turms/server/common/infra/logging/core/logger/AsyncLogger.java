@@ -17,17 +17,18 @@
 
 package im.turms.server.common.infra.logging.core.logger;
 
+import java.util.List;
+import jakarta.annotation.Nullable;
+
+import io.netty.buffer.ByteBuf;
+import lombok.Data;
+import org.jctools.queues.MpscUnboundedArrayQueue;
+
 import im.turms.server.common.infra.logging.core.appender.Appender;
 import im.turms.server.common.infra.logging.core.layout.TurmsTemplateLayout;
 import im.turms.server.common.infra.logging.core.model.LogLevel;
 import im.turms.server.common.infra.logging.core.model.LogRecord;
 import im.turms.server.common.infra.netty.ReferenceCountUtil;
-import io.netty.buffer.ByteBuf;
-import lombok.Data;
-import org.jctools.queues.MpscUnboundedArrayQueue;
-
-import java.util.List;
-import jakarta.annotation.Nullable;
 
 import static im.turms.server.common.infra.logging.core.model.LogLevel.DEBUG_VALUE;
 import static im.turms.server.common.infra.logging.core.model.LogLevel.ERROR_VALUE;
@@ -51,17 +52,20 @@ public final class AsyncLogger implements Logger {
     private final byte[] nameForLog;
     private final boolean shouldParse;
 
-    public AsyncLogger(@Nullable String name,
-                       boolean shouldParse,
-                       List<Appender> appenders,
-                       TurmsTemplateLayout layout,
-                       MpscUnboundedArrayQueue<LogRecord> queue) {
+    public AsyncLogger(
+            @Nullable String name,
+            boolean shouldParse,
+            List<Appender> appenders,
+            TurmsTemplateLayout layout,
+            MpscUnboundedArrayQueue<LogRecord> queue) {
         this.name = name;
         this.shouldParse = shouldParse;
         this.appenders = appenders;
         this.layout = layout;
         this.queue = queue;
-        nameForLog = name == null ? null : TurmsTemplateLayout.formatClassName(name);
+        nameForLog = name == null
+                ? null
+                : TurmsTemplateLayout.formatClassName(name);
 
         int level;
         if (appenders.isEmpty()) {
@@ -69,7 +73,9 @@ public final class AsyncLogger implements Logger {
         } else {
             level = -1;
             for (Appender appender : appenders) {
-                level = Math.max(level, appender.getLevel().ordinal());
+                level = Math.max(level,
+                        appender.getLevel()
+                                .ordinal());
             }
         }
         this.level = level;
@@ -124,7 +130,9 @@ public final class AsyncLogger implements Logger {
             return;
         }
         Throwable throwable = null;
-        if (objects != null && objects.length > 0 && objects[objects.length - 1] instanceof Throwable t) {
+        if (objects != null
+                && objects.length > 0
+                && objects[objects.length - 1] instanceof Throwable t) {
             throwable = t;
         }
         doLog(level, message, objects, throwable);
@@ -198,11 +206,16 @@ public final class AsyncLogger implements Logger {
         doLog(LogLevel.FATAL, message, null, null);
     }
 
-    private void doLog(LogLevel level, CharSequence message, @Nullable Object[] args, @Nullable Throwable throwable) {
+    private void doLog(
+            LogLevel level,
+            CharSequence message,
+            @Nullable Object[] args,
+            @Nullable Throwable throwable) {
         ByteBuf buffer = null;
         try {
             buffer = layout.format(shouldParse, nameForLog, level, message, args, throwable);
-            boolean offer = queue.offer(new LogRecord(this, level, System.currentTimeMillis(), buffer));
+            boolean offer =
+                    queue.offer(new LogRecord(this, level, System.currentTimeMillis(), buffer));
             // Should never happen because the queue is unlimited
             if (!offer) {
                 buffer.release();
@@ -219,7 +232,8 @@ public final class AsyncLogger implements Logger {
         ByteBuf buffer = null;
         try {
             buffer = layout.format(nameForLog, level, message);
-            boolean offer = queue.offer(new LogRecord(this, level, System.currentTimeMillis(), buffer));
+            boolean offer =
+                    queue.offer(new LogRecord(this, level, System.currentTimeMillis(), buffer));
             // Should never happen because the queue is unlimited
             if (!offer) {
                 buffer.release();

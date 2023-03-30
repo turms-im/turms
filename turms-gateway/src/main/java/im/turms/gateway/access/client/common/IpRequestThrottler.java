@@ -17,6 +17,11 @@
 
 package im.turms.gateway.access.client.common;
 
+import java.util.Iterator;
+import java.util.concurrent.ConcurrentHashMap;
+
+import org.springframework.stereotype.Component;
+
 import im.turms.gateway.domain.session.service.SessionService;
 import im.turms.gateway.infra.thread.ThreadNameConst;
 import im.turms.server.common.infra.lang.ByteArrayWrapper;
@@ -27,10 +32,6 @@ import im.turms.server.common.infra.property.env.gateway.clientapi.ClientApiProp
 import im.turms.server.common.infra.thread.NamedThreadFactory;
 import im.turms.server.common.infra.throttle.TokenBucket;
 import im.turms.server.common.infra.throttle.TokenBucketContext;
-import org.springframework.stereotype.Component;
-
-import java.util.Iterator;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author James Chen
@@ -47,60 +48,71 @@ public class IpRequestThrottler {
     private static final long SLEEP_MILLIS = 1000;
 
     /**
-     * Share the context with all instances of token buckets
-     * so that we can apply new properties easily
+     * Share the context with all instances of token buckets so that we can apply new properties
+     * easily
      */
     private final TokenBucketContext requestTokenBucketContext;
     /**
-     * We don't add a skip list of access time for a fast iterate
-     * because it requires inserting a new item to update the access time
-     * for each client request and needs to store a lot of items.
+     * We don't add a skip list of access time for a fast iterate because it requires inserting a
+     * new item to update the access time for each client request and needs to store a lot of items.
      * So just using and iterating ConcurrentHashMap is enough
      */
-    private final ConcurrentHashMap<ByteArrayWrapper, TokenBucket> ipToRequestTokenBucket = new ConcurrentHashMap<>(256);
+    private final ConcurrentHashMap<ByteArrayWrapper, TokenBucket> ipToRequestTokenBucket =
+            new ConcurrentHashMap<>(256);
 
-    public IpRequestThrottler(TurmsPropertiesManager propertiesManager, SessionService sessionService) {
+    public IpRequestThrottler(
+            TurmsPropertiesManager propertiesManager,
+            SessionService sessionService) {
         sessionService.addOnSessionClosedListeners(session ->
-                // Try to remove the buckets with enough tokens
-                // because most clients won't log in again once they have gone offline,
-                // so it is a good time to remove unused buckets
-                ipToRequestTokenBucket.computeIfPresent(session.getIp(), (key, bucket) ->
-                        bucket.isTokensMoreThanOrEqualsToInitialTokens() ? null : bucket));
+        // Try to remove the buckets with enough tokens
+        // because most clients won't log in again once they have gone offline,
+        // so it is a good time to remove unused buckets
+        ipToRequestTokenBucket.computeIfPresent(session.getIp(),
+                (key, bucket) -> bucket.isTokensMoreThanOrEqualsToInitialTokens()
+                        ? null
+                        : bucket));
 
-        ClientApiProperties clientApiProperties = propertiesManager.getGlobalProperties().getGateway().getClientApi();
+        ClientApiProperties clientApiProperties = propertiesManager.getGlobalProperties()
+                .getGateway()
+                .getClientApi();
         requestTokenBucketContext = new TokenBucketContext(clientApiProperties.getRateLimiting());
 
-        propertiesManager.addGlobalPropertiesChangeListener(newProperties -> requestTokenBucketContext
-                .updateRequestTokenBucket(newProperties.getGateway().getClientApi().getRateLimiting()));
+        propertiesManager
+                .addGlobalPropertiesChangeListener(newProperties -> requestTokenBucketContext
+                        .updateRequestTokenBucket(newProperties.getGateway()
+                                .getClientApi()
+                                .getRateLimiting()));
 
         NamedThreadFactory.newThread(ThreadNameConst.IP_REQUEST_TOKEN_BUCKET_CLEANER, true, () -> {
-                    Thread thread = Thread.currentThread();
-                    while (!thread.isInterrupted()) {
-                        try {
-                            removeExpiredRequestTokenBuckets();
-                        } catch (InterruptedException e) {
-                            return;
-                        } catch (Exception e) {
-                            LOGGER.error("Failed to remove expired request token buckets", e);
-                        }
-                        try {
-                            Thread.sleep(INTERVAL_TO_CHECK);
-                        } catch (InterruptedException e) {
-                            break;
-                        }
-                    }
-                })
+            Thread thread = Thread.currentThread();
+            while (!thread.isInterrupted()) {
+                try {
+                    removeExpiredRequestTokenBuckets();
+                } catch (InterruptedException e) {
+                    return;
+                } catch (Exception e) {
+                    LOGGER.error("Failed to remove expired request token buckets", e);
+                }
+                try {
+                    Thread.sleep(INTERVAL_TO_CHECK);
+                } catch (InterruptedException e) {
+                    break;
+                }
+            }
+        })
                 .start();
     }
 
     private void removeExpiredRequestTokenBuckets() throws InterruptedException {
-        Iterator<TokenBucket> iterator = ipToRequestTokenBucket.values().iterator();
+        Iterator<TokenBucket> iterator = ipToRequestTokenBucket.values()
+                .iterator();
         int processed = 0;
         long startTime = System.currentTimeMillis();
         while (iterator.hasNext()) {
             TokenBucket bucket = iterator.next();
             long lastAccessTime = bucket.getLastRefillTime();
-            if ((startTime - lastAccessTime) > IDLE_ENTRY_TTL && bucket.isTokensMoreThanOrEqualsToInitialTokens()) {
+            if ((startTime - lastAccessTime) > IDLE_ENTRY_TTL
+                    && bucket.isTokensMoreThanOrEqualsToInitialTokens()) {
                 iterator.remove();
             }
             processed++;

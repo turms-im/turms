@@ -17,8 +17,18 @@
 
 package im.turms.service.domain.group.repository;
 
+import java.util.Collection;
+import java.util.Date;
+import java.util.Set;
+import jakarta.annotation.Nullable;
+
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.reactivestreams.client.ClientSession;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.domain.common.repository.BaseRepository;
 import im.turms.server.common.infra.time.DateRange;
 import im.turms.server.common.storage.mongo.DomainFieldName;
@@ -27,15 +37,6 @@ import im.turms.server.common.storage.mongo.operation.option.Filter;
 import im.turms.server.common.storage.mongo.operation.option.QueryOptions;
 import im.turms.server.common.storage.mongo.operation.option.Update;
 import im.turms.service.domain.group.po.Group;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Repository;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
-import java.util.Collection;
-import java.util.Date;
-import java.util.Set;
-import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen
@@ -47,8 +48,9 @@ public class GroupRepository extends BaseRepository<Group, Long> {
         super(mongoClient, Group.class);
     }
 
-    public Mono<UpdateResult> updateGroupsDeletionDate(@Nullable Collection<Long> groupIds,
-                                                       @Nullable ClientSession session) {
+    public Mono<UpdateResult> updateGroupsDeletionDate(
+            @Nullable Collection<Long> groupIds,
+            @Nullable ClientSession session) {
         Filter filter = Filter.newBuilder(1)
                 .inIfNotNull(DomainFieldName.ID, groupIds);
         Update update = Update.newBuilder(1)

@@ -17,6 +17,33 @@
 
 package im.turms.server.common.access.admin.web;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.Consumer;
+import jakarta.annotation.Nullable;
+import jakarta.validation.ConstraintViolationException;
+
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.PooledByteBufAllocator;
+import io.netty.handler.codec.http.HttpHeaderNames;
+import io.netty.handler.codec.http.HttpHeaderValues;
+import io.netty.handler.codec.http.HttpResponseStatus;
+import lombok.Getter;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.stereotype.Component;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+import reactor.netty.DisposableServer;
+import reactor.netty.NettyOutbound;
+import reactor.netty.http.server.HttpServerRequest;
+import reactor.netty.http.server.HttpServerResponse;
+
 import im.turms.server.common.access.admin.dto.response.HttpHandlerResult;
 import im.turms.server.common.access.admin.dto.response.ResponseDTO;
 import im.turms.server.common.access.admin.throttle.BaseAdminApiRateLimitingManager;
@@ -53,32 +80,6 @@ import im.turms.server.common.infra.tracing.TracingCloseableContext;
 import im.turms.server.common.infra.tracing.TracingContext;
 import im.turms.server.common.infra.validation.Validator;
 import im.turms.server.common.storage.mongo.exception.DuplicateKeyException;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.PooledByteBufAllocator;
-import io.netty.handler.codec.http.HttpHeaderNames;
-import io.netty.handler.codec.http.HttpHeaderValues;
-import io.netty.handler.codec.http.HttpResponseStatus;
-import lombok.Getter;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.stereotype.Component;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-import reactor.netty.DisposableServer;
-import reactor.netty.NettyOutbound;
-import reactor.netty.http.server.HttpServerRequest;
-import reactor.netty.http.server.HttpServerResponse;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.function.Consumer;
-import jakarta.annotation.Nullable;
-import jakarta.validation.ConstraintViolationException;
 
 import static im.turms.server.common.access.admin.web.HttpUtil.isPreFlightRequest;
 import static im.turms.server.common.access.admin.web.MediaTypeConst.APPLICATION_JSON;
@@ -124,43 +125,53 @@ public class HttpRequestDispatcher {
         }
     }
 
-    public HttpRequestDispatcher(Node node,
-                                 ApplicationContext context,
-                                 TurmsApplicationContext applicationContext,
-                                 TurmsPropertiesManager propertiesManager,
-                                 PluginManager pluginManager,
-                                 BaseAdminApiRateLimitingManager adminApiRateLimitingManager,
-                                 BaseAdminService adminService) {
+    public HttpRequestDispatcher(
+            Node node,
+            ApplicationContext context,
+            TurmsApplicationContext applicationContext,
+            TurmsPropertiesManager propertiesManager,
+            PluginManager pluginManager,
+            BaseAdminApiRateLimitingManager adminApiRateLimitingManager,
+            BaseAdminService adminService) {
         this.node = node;
         this.pluginManager = pluginManager;
         this.adminApiRateLimitingManager = adminApiRateLimitingManager;
         authenticator = new HttpRequestAuthenticator(adminService);
 
         CommonAdminApiProperties apiProperties = node.getNodeType() == NodeType.GATEWAY
-                ? propertiesManager.getLocalProperties().getGateway().getAdminApi()
-                : propertiesManager.getLocalProperties().getService().getAdminApi();
+                ? propertiesManager.getLocalProperties()
+                        .getGateway()
+                        .getAdminApi()
+                : propertiesManager.getLocalProperties()
+                        .getService()
+                        .getAdminApi();
         useAuthentication = apiProperties.isUseAuthentication();
         isApiEnabled = apiProperties.isEnabled();
         if (isApiEnabled) {
-            propertiesManager.notifyAndAddGlobalPropertiesChangeListener(this::updateGlobalProperties);
+            propertiesManager
+                    .notifyAndAddGlobalPropertiesChangeListener(this::updateGlobalProperties);
             AdminHttpProperties httpProperties = apiProperties.getHttp();
-            this.requestParamParser = new HttpRequestParamParser(httpProperties.getMaxRequestBodySizeBytes());
+            this.requestParamParser =
+                    new HttpRequestParamParser(httpProperties.getMaxRequestBodySizeBytes());
             endpointCollector = new HttpEndpointCollector(requestParamParser);
-            keyToEndpoint = endpointCollector
-                    .collectEndpoints((ConfigurableApplicationContext) context);
+            keyToEndpoint =
+                    endpointCollector.collectEndpoints((ConfigurableApplicationContext) context);
             endpointChangeListeners = new CopyOnWriteArrayList<>();
             server = HttpServerFactory.createHttpServer(httpProperties)
                     .handle((request, response) -> {
-                        handle(request, response)
-                                .subscribe(null, t ->
-                                        LOGGER.error("Caught an error while handling the HTTP request: {}", request, t));
+                        handle(request, response).subscribe(null,
+                                t -> LOGGER.error(
+                                        "Caught an error while handling the HTTP request: {}",
+                                        request,
+                                        t));
                         return Mono.never();
                     })
                     .bindNow(DurationConst.ONE_MINUTE);
-            applicationContext.addShutdownHook(JobShutdownOrder.CLOSE_ADMIN_SERVER, timeoutMillis -> {
-                server.dispose();
-                return server.onDispose();
-            });
+            applicationContext.addShutdownHook(JobShutdownOrder.CLOSE_ADMIN_SERVER,
+                    timeoutMillis -> {
+                        server.dispose();
+                        return server.onDispose();
+                    });
         } else {
             requestParamParser = null;
             endpointCollector = null;
@@ -170,18 +181,24 @@ public class HttpRequestDispatcher {
         }
     }
 
-    //region Properties
+    // region Properties
     private void updateGlobalProperties(TurmsProperties properties) {
         boolean isGateway = node.getNodeType() == NodeType.GATEWAY;
         CommonAdminApiProperties apiProperties = isGateway
-                ? properties.getGateway().getAdminApi()
-                : properties.getService().getAdminApi();
-        allowDeleteWithoutFilter = !isGateway && properties.getService().getAdminApi().isAllowDeleteWithoutFilter();
-        isLogEnabled = apiProperties.getLog().isEnabled();
+                ? properties.getGateway()
+                        .getAdminApi()
+                : properties.getService()
+                        .getAdminApi();
+        allowDeleteWithoutFilter = !isGateway
+                && properties.getService()
+                        .getAdminApi()
+                        .isAllowDeleteWithoutFilter();
+        isLogEnabled = apiProperties.getLog()
+                .isEnabled();
     }
-    //endregion
+    // endregion
 
-    //region Endpoint
+    // region Endpoint
     public void registerControllers(List<Object> controllers) {
         if (controllers.isEmpty() || !isApiEnabled) {
             return;
@@ -212,13 +229,14 @@ public class HttpRequestDispatcher {
                 listener.accept(keyToEndpoint);
             } catch (Exception e) {
                 LOGGER.error("Caught an error while notifying the endpoint change listener: "
-                        + listener.getClass().getName());
+                        + listener.getClass()
+                                .getName());
             }
         }
     }
-    //endregion
+    // endregion
 
-    //region Dispatch
+    // region Dispatch
     private Mono<Void> handle(HttpServerRequest request, HttpServerResponse response) {
         // 1. We don't expose configs for developers to customize the CORS config
         // because it is better for the firewall to manage access.
@@ -226,44 +244,46 @@ public class HttpRequestDispatcher {
         HttpUtil.allowAnyRequest(response.responseHeaders()
                 .set(X_REQUEST_ID, request.requestId()));
         if (isPreFlightRequest(request)) {
-            return response
-                    .status(HttpResponseStatus.OK)
+            return response.status(HttpResponseStatus.OK)
                     .send();
         }
         long requestTime = System.currentTimeMillis();
         TracingContext tracingContext = new TracingContext();
         RequestContext requestContext = new RequestContext();
-        String ip = request.remoteAddress().getAddress().getHostAddress();
+        String ip = request.remoteAddress()
+                .getAddress()
+                .getHostAddress();
         Mono<HttpHandlerResult<?>> handleRequest;
         try {
             handleRequest = handleRequest(request, ip, requestContext);
         } catch (Exception e) {
             handleRequest = Mono.error(e);
         }
-        return handleRequest
-                .doOnEach(signal -> {
-                    if (!signal.isOnComplete() && !signal.isOnError()) {
-                        return;
-                    }
-                    if (!isLogEnabled && !pluginManager.hasRunningExtensions(AdminActionHandler.class)) {
-                        return;
-                    }
-                    tryLogAndInvokeHandlers(requestContext.getParams(),
-                            tracingContext,
-                            requestContext.getAccount(),
-                            ip,
-                            request.requestId(),
-                            requestTime,
-                            requestContext.getAction(),
-                            requestContext.getParamValues(),
-                            (int) (System.currentTimeMillis() - requestTime),
-                            signal.getThrowable());
-                })
+        return handleRequest.doOnEach(signal -> {
+            if (!signal.isOnComplete() && !signal.isOnError()) {
+                return;
+            }
+            if (!isLogEnabled && !pluginManager.hasRunningExtensions(AdminActionHandler.class)) {
+                return;
+            }
+            tryLogAndInvokeHandlers(requestContext.getParams(),
+                    tracingContext,
+                    requestContext.getAccount(),
+                    ip,
+                    request.requestId(),
+                    requestTime,
+                    requestContext.getAction(),
+                    requestContext.getParamValues(),
+                    (int) (System.currentTimeMillis() - requestTime),
+                    signal.getThrowable());
+        })
                 .onErrorResume(t -> {
                     HttpHandlerResult<ResponseDTO<?>> httpResponse = translateThrowable(t);
                     if (HttpUtil.isServerError(httpResponse.status())) {
                         try (TracingCloseableContext ignored = tracingContext.asCloseable()) {
-                            LOGGER.error("Caught an error while handling the HTTP request: {}", request, t);
+                            LOGGER.error("Caught an error while handling the HTTP request: {}",
+                                    request,
+                                    t);
                         }
                     }
                     return Mono.just(httpResponse);
@@ -271,29 +291,38 @@ public class HttpRequestDispatcher {
                 .flatMap(result -> sendResponse(requestContext.getEndpoint(), result, response))
                 .onErrorResume(t -> {
                     try (TracingCloseableContext ignored = tracingContext.asCloseable()) {
-                        LOGGER.error("Caught an error while responding to the HTTP request: {}", request, t);
+                        LOGGER.error("Caught an error while responding to the HTTP request: {}",
+                                request,
+                                t);
                     }
                     return Mono.empty();
                 })
                 .contextWrite(context -> context.put(TracingContext.CTX_KEY_NAME, tracingContext));
     }
-    //endregion
+    // endregion
 
-    //region Request processing
-    private Mono<HttpHandlerResult<?>> handleRequest(HttpServerRequest request,
-                                                     String ip,
-                                                     RequestContext requestContext) {
+    // region Request processing
+    private Mono<HttpHandlerResult<?>> handleRequest(
+            HttpServerRequest request,
+            String ip,
+            RequestContext requestContext) {
         // 1. parse URI
         String uri = request.uri();
-        Pair<String, Map<String, List<Object>>> pathAndQueryParams = FastUriParser.parsePathAndQueryParams(uri);
-        ApiEndpoint endpoint = keyToEndpoint.get(new ApiEndpointKey(pathAndQueryParams.first(), request.method()));
+        Pair<String, Map<String, List<Object>>> pathAndQueryParams =
+                FastUriParser.parsePathAndQueryParams(uri);
+        ApiEndpoint endpoint =
+                keyToEndpoint.get(new ApiEndpointKey(pathAndQueryParams.first(), request.method()));
         if (endpoint == null) {
             return Mono.just(HttpHandlerResult.create(HttpResponseStatus.BAD_REQUEST,
-                    new ResponseDTO<>(ResponseStatusCode.ILLEGAL_ARGUMENT, "There is no any resources matched to request path: " + uri)));
+                    new ResponseDTO<>(
+                            ResponseStatusCode.ILLEGAL_ARGUMENT,
+                            "There is no any resources matched to request path: "
+                                    + uri)));
         }
         // 2. prepare request context
         requestContext.setEndpoint(endpoint);
-        requestContext.setAction(endpoint.method().getName());
+        requestContext.setAction(endpoint.method()
+                .getName());
         requestContext.setParams(endpoint.parameters());
         // 3. check frequency
         return checkFrequency(ip)
@@ -303,34 +332,40 @@ public class HttpRequestDispatcher {
                         pathAndQueryParams.second(),
                         endpoint.parameters())))
                 .flatMap(collection -> Mono.defer(() -> {
-                            Object[] params = collection.paramValues();
-                            requestContext.setParamValues(params);
-                            // 5. validate request
-                            if (endpoint.method().isAnnotationPresent(DeleteMapping.class) && !isValidDeleteRequest(params)) {
-                                return Mono.error(new HttpResponseException(HttpHandlerResult.create(HttpResponseStatus.BAD_REQUEST,
-                                        new ResponseDTO<>(ResponseStatusCode.NO_FILTER_FOR_DELETE_OPERATION))));
-                            }
-                            // 6. authenticate + authorize
-                            Mono<Credentials> authenticate = useAuthentication
-                                    ? authenticator.authenticate(endpoint.parameters(),
+                    Object[] params = collection.paramValues();
+                    requestContext.setParamValues(params);
+                    // 5. validate request
+                    if (endpoint.method()
+                            .isAnnotationPresent(DeleteMapping.class)
+                            && !isValidDeleteRequest(params)) {
+                        return Mono.error(new HttpResponseException(
+                                HttpHandlerResult.create(HttpResponseStatus.BAD_REQUEST,
+                                        new ResponseDTO<>(
+                                                ResponseStatusCode.NO_FILTER_FOR_DELETE_OPERATION))));
+                    }
+                    // 6. authenticate + authorize
+                    Mono<Credentials> authenticate = useAuthentication
+                            ? authenticator.authenticate(endpoint.parameters(),
                                     params,
                                     request.requestHeaders(),
                                     endpoint.permission())
-                                    : CREDENTIALS_ROOT;
-                            return authenticate
-                                    .flatMap(credentials -> {
-                                        requestContext.setAccount(credentials.account());
-                                        // 7. pass to handler
-                                        return invokeHandler(endpoint, params);
-                                    });
-                        })
+                            : CREDENTIALS_ROOT;
+                    return authenticate.flatMap(credentials -> {
+                        requestContext.setAccount(credentials.account());
+                        // 7. pass to handler
+                        return invokeHandler(endpoint, params);
+                    });
+                })
                         .doFinally(signalType -> {
                             // 8. release
                             for (MultipartFile file : collection.tempFiles()) {
                                 try {
                                     file.release();
                                 } catch (Exception e) {
-                                    LOGGER.error("Caught an error while releasing the multipart file: {}", file.name(), e);
+                                    LOGGER.error(
+                                            "Caught an error while releasing the multipart file: {}",
+                                            file.name(),
+                                            e);
                                 }
                             }
                         }));
@@ -340,9 +375,12 @@ public class HttpRequestDispatcher {
         if (adminApiRateLimitingManager.tryAcquireTokenByIp(ip)) {
             return Mono.empty();
         }
-        HttpHandlerResult<ResponseDTO<?>> response = HttpHandlerResult.create(HttpResponseStatus.TOO_MANY_REQUESTS,
-                new ResponseDTO<>(ResponseStatusCode.CLIENT_REQUESTS_TOO_FREQUENT,
-                        "Too many requests from the IP address: " + ip));
+        HttpHandlerResult<ResponseDTO<?>> response =
+                HttpHandlerResult.create(HttpResponseStatus.TOO_MANY_REQUESTS,
+                        new ResponseDTO<>(
+                                ResponseStatusCode.CLIENT_REQUESTS_TOO_FREQUENT,
+                                "Too many requests from the IP address: "
+                                        + ip));
         return Mono.error(new HttpResponseException(response));
     }
 
@@ -353,7 +391,8 @@ public class HttpRequestDispatcher {
     private Mono<HttpHandlerResult<?>> invokeHandler(ApiEndpoint endpoint, Object[] params) {
         Object returnValue;
         try {
-            returnValue = endpoint.method().invoke(endpoint.controller(), params);
+            returnValue = endpoint.method()
+                    .invoke(endpoint.controller(), params);
         } catch (InvocationTargetException e) {
             return Mono.error(e.getCause());
         } catch (Exception e) {
@@ -372,10 +411,13 @@ public class HttpRequestDispatcher {
                 ? result
                 : HttpHandlerResult.create(HttpResponseStatus.OK, value));
     }
-    //endregion
+    // endregion
 
-    //region Response processing
-    private Mono<Void> sendResponse(@Nullable ApiEndpoint endpoint, HttpHandlerResult<?> result, HttpServerResponse response) {
+    // region Response processing
+    private Mono<Void> sendResponse(
+            @Nullable ApiEndpoint endpoint,
+            HttpHandlerResult<?> result,
+            HttpServerResponse response) {
         response.status(result.status());
         Map<String, String> headers = result.headers();
         if (headers != null && !headers.isEmpty()) {
@@ -386,14 +428,15 @@ public class HttpRequestDispatcher {
         Object body = result.body();
         if (body instanceof BaseFileResource resource) {
             HttpServerResponse preparedResponse = response
-                    .header(HttpHeaderNames.CONTENT_DISPOSITION, "attachment; filename=" + resource.getFileName())
+                    .header(HttpHeaderNames.CONTENT_DISPOSITION,
+                            "attachment; filename="
+                                    + resource.getFileName())
                     .header(HttpHeaderNames.CONTENT_TYPE, HttpHeaderValues.APPLICATION_OCTET_STREAM)
                     .header(HttpHeaderNames.CONTENT_LENGTH, String.valueOf(resource.getSize()));
             NettyOutbound outbound = body instanceof FileResource fileResource
                     ? preparedResponse.sendFile(fileResource.getFile())
                     : preparedResponse.sendObject(((ByteBufFileResource) resource).getBuffer());
-            return outbound
-                    .then()
+            return outbound.then()
                     .doOnEach(signal -> {
                         if (signal.isOnComplete() || signal.isOnError()) {
                             resource.cleanup(signal.getThrowable());
@@ -412,9 +455,11 @@ public class HttpRequestDispatcher {
         return response
                 // Duplicate the buffer to use an independent reader index
                 // because we don't want to modify the reader index of the original buffer
-                // if it is an unreleasable buffer internally, or it may be sent to multiple endpoints.
+                // if it is an unreleasable buffer internally, or it may be sent to multiple
+                // endpoints.
                 // Note that the content of the buffer is not copied, so "duplicate()" is efficient.
-                .sendObject(mediaTypeAndBuffer.second().duplicate())
+                .sendObject(mediaTypeAndBuffer.second()
+                        .duplicate())
                 .then();
     }
 
@@ -424,7 +469,8 @@ public class HttpRequestDispatcher {
         } else if (body instanceof CharSequence sequence) {
             byte[] bytes = StringUtil.getUtf8Bytes(sequence.toString());
             return Pair.of(TEXT_PLAIN_UTF_8,
-                    PooledByteBufAllocator.DEFAULT.buffer(bytes.length).writeBytes(bytes));
+                    PooledByteBufAllocator.DEFAULT.buffer(bytes.length)
+                            .writeBytes(bytes));
         }
         return Pair.of(APPLICATION_JSON, JsonUtil.write(body));
     }
@@ -438,10 +484,12 @@ public class HttpRequestDispatcher {
             if (reason == null) {
                 reason = statusCode.getReason();
             }
-            return HttpHandlerResult.create(statusCode.getHttpStatusCode(), new ResponseDTO<>(statusCode, reason));
+            return HttpHandlerResult.create(statusCode.getHttpStatusCode(),
+                    new ResponseDTO<>(statusCode, reason));
         } else {
             ResponseStatusCode statusCode;
-            if (throwable instanceof IllegalArgumentException || throwable instanceof ConstraintViolationException) {
+            if (throwable instanceof IllegalArgumentException
+                    || throwable instanceof ConstraintViolationException) {
                 statusCode = ResponseStatusCode.ILLEGAL_ARGUMENT;
             } else if (throwable instanceof DuplicateKeyException) {
                 statusCode = ResponseStatusCode.RECORD_CONTAINS_DUPLICATE_KEY;
@@ -453,12 +501,13 @@ public class HttpRequestDispatcher {
                 statusCode = ResponseStatusCode.SERVER_INTERNAL_ERROR;
             }
             String reason = throwable.getMessage();
-            return HttpHandlerResult.create(statusCode.getHttpStatusCode(), new ResponseDTO<>(statusCode, reason));
+            return HttpHandlerResult.create(statusCode.getHttpStatusCode(),
+                    new ResponseDTO<>(statusCode, reason));
         }
     }
-    //endregion
+    // endregion
 
-    //region Logging
+    // region Logging
     private void tryLogAndInvokeHandlers(
             @Nullable MethodParameterInfo[] parameters,
             TracingContext context,
@@ -485,21 +534,16 @@ public class HttpRequestDispatcher {
                 params.put(parameter.name(), arg);
             }
         }
-        AdminAction adminAction = new AdminAction(
-                account,
-                ip,
-                new Date(requestTime),
-                action,
-                params,
-                processingTime);
-        pluginManager.invokeExtensionPointsSimultaneously(AdminActionHandler.class,
+        AdminAction adminAction =
+                new AdminAction(account, ip, new Date(requestTime), action, params, processingTime);
+        pluginManager
+                .invokeExtensionPointsSimultaneously(AdminActionHandler.class,
                         HANDLE_ADMIN_ACTION_METHOD,
                         handler -> handler.handleAdminAction(adminAction))
                 .subscribe(null, LOGGER::error);
         if (isLogEnabled) {
             try (TracingCloseableContext ignored = context.asCloseable()) {
-                AdminApiLogging.log(
-                        account,
+                AdminApiLogging.log(account,
                         ip,
                         requestId,
                         requestTime,
@@ -510,6 +554,6 @@ public class HttpRequestDispatcher {
             }
         }
     }
-    //endregion
+    // endregion
 
 }

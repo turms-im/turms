@@ -17,15 +17,16 @@
 
 package im.turms.service.storage.mongo;
 
+import java.time.Duration;
+import java.util.List;
+
 import com.mongodb.MongoCommandException;
+import reactor.util.retry.Retry;
+
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.storage.mongo.MongoErrorCodes;
 import im.turms.server.common.storage.mongo.exception.DocumentValidationFailureException;
 import im.turms.server.common.storage.mongo.exception.DuplicateKeyException;
-import reactor.util.retry.Retry;
-
-import java.time.Duration;
-import java.util.List;
 
 /**
  * @author James Chen
@@ -42,22 +43,23 @@ public final class MongoOperationConst {
             List.of(DocumentValidationFailureException.class,
                     DuplicateKeyException.class,
                     ResponseException.class);
-    public static final Retry TRANSACTION_RETRY = Retry
-            .fixedDelay(MONGO_TRANSACTION_RETRIES_NUMBER, MONGO_TRANSACTION_BACKOFF)
-            .filter(throwable -> {
-                if (throwable == null) {
-                    return true;
-                }
-                for (Class<? extends Throwable> clazz : NON_RETRYABLE_EXCEPTIONS) {
-                    if (clazz.isInstance(throwable)) {
-                        return false;
-                    }
-                }
-                if (throwable instanceof MongoCommandException e
-                        && MongoErrorCodes.TRANSLATION_RELATED_ERROR_CODES.contains(e.getErrorCode())) {
-                    return false;
-                }
-                return true;
-            });
+    public static final Retry TRANSACTION_RETRY =
+            Retry.fixedDelay(MONGO_TRANSACTION_RETRIES_NUMBER, MONGO_TRANSACTION_BACKOFF)
+                    .filter(throwable -> {
+                        if (throwable == null) {
+                            return true;
+                        }
+                        for (Class<? extends Throwable> clazz : NON_RETRYABLE_EXCEPTIONS) {
+                            if (clazz.isInstance(throwable)) {
+                                return false;
+                            }
+                        }
+                        if (throwable instanceof MongoCommandException e
+                                && MongoErrorCodes.TRANSLATION_RELATED_ERROR_CODES
+                                        .contains(e.getErrorCode())) {
+                            return false;
+                        }
+                        return true;
+                    });
 
 }

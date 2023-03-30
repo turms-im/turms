@@ -25,10 +25,10 @@ import im.turms.server.common.infra.tracing.TracingContext;
 
 /**
  * @author James Chen
- * @implNote RpcRequestCodec and its impls are special codecs, because they only serialize
- * a part of the data (e.g. without requestId), this is because we want to decouple the header
- * and body so that we can reuse and flush the same buffer of body to multiple peers without duplicating
- * while using different headers according to different peers
+ * @implNote RpcRequestCodec and its impls are special codecs, because they only serialize a part of
+ *           the data (e.g. without requestId), this is because we want to decouple the header and
+ *           body so that we can reuse and flush the same buffer of body to multiple peers without
+ *           duplicating while using different headers according to different peers
  */
 public abstract class RpcRequestCodec<T extends RpcRequest<?>> implements Codec<T> {
 
@@ -44,7 +44,9 @@ public abstract class RpcRequestCodec<T extends RpcRequest<?>> implements Codec<
         TracingContext tracingContext = data.getTracingContext();
         long traceId = tracingContext.getTraceId();
         if (traceId == TracingContext.UNSET_TRACE_ID) {
-            throw new IllegalArgumentException("The trace ID is missing in the request: " + data);
+            throw new IllegalArgumentException(
+                    "The trace ID is missing in the request: "
+                            + data);
         }
         output.writeLong(traceId);
         writeRequestData(output, data);

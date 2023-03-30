@@ -17,6 +17,12 @@
 
 package unit.im.turms.gateway.access.client.common.accesscontrol.policy;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.junit.jupiter.api.Test;
+
 import im.turms.gateway.access.client.common.authorization.policy.Policy;
 import im.turms.gateway.access.client.common.authorization.policy.PolicyManager;
 import im.turms.gateway.access.client.common.authorization.policy.PolicyStatement;
@@ -24,11 +30,6 @@ import im.turms.gateway.access.client.common.authorization.policy.PolicyStatemen
 import im.turms.gateway.access.client.common.authorization.policy.PolicyStatementEffect;
 import im.turms.gateway.access.client.common.authorization.policy.PolicyStatementResource;
 import im.turms.server.common.access.client.dto.request.TurmsRequest;
-import org.junit.jupiter.api.Test;
-
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -41,25 +42,24 @@ class PolicyManagerTests {
     void test() {
         PolicyManager manager = new PolicyManager();
 
-        Set<TurmsRequest.KindCase> allowedRequestTypes = manager.findAllowedRequestTypes(new Policy(List.of(
-                new PolicyStatement(PolicyStatementEffect.ALLOW,
+        Set<TurmsRequest.KindCase> allowedRequestTypes = manager.findAllowedRequestTypes(new Policy(
+                List.of(new PolicyStatement(
+                        PolicyStatementEffect.ALLOW,
                         Set.of(PolicyStatementAction.ALL),
-                        Set.of(PolicyStatementResource.values()))
-        )));
+                        Set.of(PolicyStatementResource.values())))));
         Set<TurmsRequest.KindCase> types = new HashSet<>(Set.of(TurmsRequest.KindCase.values()));
         types.removeAll(Set.of(TurmsRequest.KindCase.KIND_NOT_SET,
                 TurmsRequest.KindCase.CREATE_SESSION_REQUEST,
                 TurmsRequest.KindCase.DELETE_SESSION_REQUEST));
         assertThat(allowedRequestTypes).containsExactlyInAnyOrderElementsOf(types);
 
-        allowedRequestTypes = manager.findAllowedRequestTypes(new Policy(List.of(
-                new PolicyStatement(PolicyStatementEffect.ALLOW,
+        allowedRequestTypes = manager.findAllowedRequestTypes(new Policy(
+                List.of(new PolicyStatement(
+                        PolicyStatementEffect.ALLOW,
                         Set.of(PolicyStatementAction.ALL),
-                        Set.of(PolicyStatementResource.USER))
-        )));
-        assertThat(allowedRequestTypes).containsExactlyInAnyOrder(
-                TurmsRequest.KindCase.UPDATE_USER_REQUEST
-        );
+                        Set.of(PolicyStatementResource.USER)))));
+        assertThat(allowedRequestTypes)
+                .containsExactlyInAnyOrder(TurmsRequest.KindCase.UPDATE_USER_REQUEST);
     }
 
 }

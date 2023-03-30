@@ -17,16 +17,16 @@
 
 package im.turms.gateway.access.client.common.authorization.policy;
 
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+
 import im.turms.server.common.access.client.dto.request.TurmsRequest;
 import im.turms.server.common.infra.collection.CloseableCollection;
 import im.turms.server.common.infra.collection.CollectionPool;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.collection.Pool;
-
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
 
 /**
  * @author James Chen
@@ -46,7 +46,9 @@ public class PolicyManager {
         }
         int statementCount = statements.size();
         if (statementCount > MAX_ALLOWED_STATEMENTS) {
-            throw new IllegalArgumentException("The policy must not have statements more than " + MAX_ALLOWED_STATEMENTS);
+            throw new IllegalArgumentException(
+                    "The policy must not have statements more than "
+                            + MAX_ALLOWED_STATEMENTS);
         }
         if (statementCount == 1) {
             PolicyStatement statement = statements.get(0);
@@ -61,13 +63,17 @@ public class PolicyManager {
             Set<PolicyStatementAction> actions = statement.actions();
             if (resourceCount == 1) {
                 if (actions.size() == 1) {
-                    return findMatchedRequestTypes(actions.iterator().next(),
-                            resources.iterator().next());
+                    return findMatchedRequestTypes(actions.iterator()
+                            .next(),
+                            resources.iterator()
+                                    .next());
                 }
-                try (CloseableCollection<Set<TurmsRequest.KindCase>> closeableCollection = CollectionPool.getSet()) {
+                try (CloseableCollection<Set<TurmsRequest.KindCase>> closeableCollection =
+                        CollectionPool.getSet()) {
                     return pool(findMatchedRequestTypes(closeableCollection.value(),
                             actions,
-                            resources.iterator().next()));
+                            resources.iterator()
+                                    .next()));
                 }
             }
             if (resourceCount == RESOURCE_COUNT) {
@@ -77,7 +83,8 @@ public class PolicyManager {
                     }
                 }
             }
-            try (CloseableCollection<Set<TurmsRequest.KindCase>> closeableCollection = CollectionPool.getSet()) {
+            try (CloseableCollection<Set<TurmsRequest.KindCase>> closeableCollection =
+                    CollectionPool.getSet()) {
                 Set<TurmsRequest.KindCase> matchedRequestTypesBuilder = closeableCollection.value();
                 for (PolicyStatementResource resource : resources) {
                     findMatchedRequestTypes(matchedRequestTypesBuilder, actions, resource);
@@ -85,7 +92,8 @@ public class PolicyManager {
                 return pool(matchedRequestTypesBuilder);
             }
         }
-        try (CloseableCollection<Set<TurmsRequest.KindCase>> closeableCollection = CollectionPool.getSet()) {
+        try (CloseableCollection<Set<TurmsRequest.KindCase>> closeableCollection =
+                CollectionPool.getSet()) {
             Set<TurmsRequest.KindCase> allowedRequestTypesBuilder = closeableCollection.value();
             List<PolicyStatement> denyStatements = null;
             for (PolicyStatement statement : statements) {
@@ -98,7 +106,8 @@ public class PolicyManager {
                 }
                 for (PolicyStatementResource resource : statement.resources()) {
                     for (PolicyStatementAction action : statement.actions()) {
-                        allowedRequestTypesBuilder.addAll(findMatchedRequestTypes(action, resource));
+                        allowedRequestTypesBuilder
+                                .addAll(findMatchedRequestTypes(action, resource));
                     }
                 }
             }
@@ -106,7 +115,8 @@ public class PolicyManager {
                 for (PolicyStatement statement : denyStatements) {
                     for (PolicyStatementResource resource : statement.resources()) {
                         for (PolicyStatementAction action : statement.actions()) {
-                            allowedRequestTypesBuilder.removeAll(findMatchedRequestTypes(action, resource));
+                            allowedRequestTypesBuilder
+                                    .removeAll(findMatchedRequestTypes(action, resource));
                         }
                     }
                 }

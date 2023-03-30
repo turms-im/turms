@@ -24,51 +24,52 @@ import org.eclipse.collections.impl.map.mutable.primitive.IntObjectHashMap;
  */
 public enum SessionCloseStatus {
 
-    //**********************************************************
-    //* Closed due to client misbehavior
-    //**********************************************************
+    // **********************************************************
+    // * Closed due to client misbehavior
+    // **********************************************************
     ILLEGAL_REQUEST(100),
     // Closed due to the timeout of user operations
     HEARTBEAT_TIMEOUT(110),
     LOGIN_TIMEOUT(111),
     SWITCH(112),
 
-    //**********************************************************
-    //* Closed due to server behavior
-    //**********************************************************
+    // **********************************************************
+    // * Closed due to server behavior
+    // **********************************************************
     SERVER_ERROR(200),
     SERVER_CLOSED(201),
-    SERVER_UNAVAILABLE(202), //TODO: reserved
+    SERVER_UNAVAILABLE(202), // TODO: reserved
 
-    //**********************************************************
-    //* Closed due to network error
-    //**********************************************************
+    // **********************************************************
+    // * Closed due to network error
+    // **********************************************************
     CONNECTION_CLOSED(300),
 
-    //**********************************************************
-    //* Closed due to unknown error
-    //**********************************************************
+    // **********************************************************
+    // * Closed due to unknown error
+    // **********************************************************
     UNKNOWN_ERROR(400),
 
-    //**********************************************************
-    //* Closed by user actively
-    //**********************************************************
+    // **********************************************************
+    // * Closed by user actively
+    // **********************************************************
     DISCONNECTED_BY_CLIENT(500),
     DISCONNECTED_BY_OTHER_DEVICE(501),
 
-    //**********************************************************
-    //* Closed by admin actively
-    //**********************************************************
+    // **********************************************************
+    // * Closed by admin actively
+    // **********************************************************
     DISCONNECTED_BY_ADMIN(600),
 
-    //**********************************************************
-    //* Closed due to the change of user status
-    //**********************************************************
+    // **********************************************************
+    // * Closed due to the change of user status
+    // **********************************************************
     USER_IS_DELETED_OR_INACTIVATED(700),
     USER_IS_BLOCKED(701);
 
     public static final SessionCloseStatus[] VALUES = values();
-    private static final IntObjectHashMap<SessionCloseStatus> CODE_POOL = new IntObjectHashMap<>(VALUES.length);
+    private static final IntObjectHashMap<SessionCloseStatus> CODE_POOL =
+            new IntObjectHashMap<>(VALUES.length);
 
     static {
         for (SessionCloseStatus status : VALUES) {

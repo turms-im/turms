@@ -17,10 +17,11 @@
 
 package unit.im.turms.service.infra.time;
 
-import im.turms.server.common.infra.time.DateRange;
+import java.util.Date;
+
 import org.junit.jupiter.api.Test;
 
-import java.util.Date;
+import im.turms.server.common.infra.time.DateRange;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;

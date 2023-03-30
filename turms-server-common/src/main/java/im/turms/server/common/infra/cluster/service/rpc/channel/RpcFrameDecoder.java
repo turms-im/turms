@@ -17,6 +17,14 @@
 
 package im.turms.server.common.infra.cluster.service.rpc.channel;
 
+import java.util.List;
+
+import io.netty.buffer.ByteBuf;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.handler.codec.CorruptedFrameException;
+import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
+import reactor.netty.ReactorNetty;
+
 import im.turms.server.common.infra.cluster.service.codec.codec.Codec;
 import im.turms.server.common.infra.cluster.service.codec.codec.CodecPool;
 import im.turms.server.common.infra.cluster.service.codec.exception.CodecNotFoundException;
@@ -25,13 +33,6 @@ import im.turms.server.common.infra.cluster.service.rpc.codec.RpcRequestCodec;
 import im.turms.server.common.infra.cluster.service.rpc.dto.RpcRequest;
 import im.turms.server.common.infra.cluster.service.rpc.dto.RpcResponse;
 import im.turms.server.common.infra.cluster.service.rpc.exception.RpcException;
-import io.netty.buffer.ByteBuf;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.handler.codec.CorruptedFrameException;
-import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
-import reactor.netty.ReactorNetty;
-
-import java.util.List;
 
 /**
  * @author James Chen
@@ -43,7 +44,8 @@ public class RpcFrameDecoder extends ProtobufVarint32FrameDecoder {
     private static final int UNSET_CODEC_ID = Integer.MIN_VALUE;
 
     @Override
-    protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
+    protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out)
+            throws Exception {
         super.decode(ctx, in, out);
         int size = out.size();
         for (int i = 0; i < size; i++) {
@@ -68,10 +70,11 @@ public class RpcFrameDecoder extends ProtobufVarint32FrameDecoder {
             int length = frame.readableBytes();
             if (length < HEADER_LENGTH) {
                 String reason = ReactorNetty.format(ctx.channel(),
-                        "The buffer is too small to parse the header. " +
-                                "Expecting the buffer length (" +
-                                length +
-                                ") to be greater than or equal to " + HEADER_LENGTH);
+                        "The buffer is too small to parse the header. "
+                                + "Expecting the buffer length ("
+                                + length
+                                + ") to be greater than or equal to "
+                                + HEADER_LENGTH);
                 throw new CorruptedFrameException(reason);
             }
             return decodePayload(ctx, frame);
@@ -91,13 +94,16 @@ public class RpcFrameDecoder extends ProtobufVarint32FrameDecoder {
             Codec<?> codec = CodecPool.getCodec(codecId);
             if (codec == null) {
                 String reason = ReactorNetty.format(ctx.channel(),
-                        "The codec with the ID (" + codecId + ") does not exist");
+                        "The codec with the ID ("
+                                + codecId
+                                + ") does not exist");
                 throw new CodecNotFoundException(reason);
             }
             int requestId = frame.readInt();
             if (requestId < 0) {
                 String reason = ReactorNetty.format(ctx.channel(),
-                        "Expected the request ID to be greater than 0, but got: " + requestId);
+                        "Expected the request ID to be greater than 0, but got: "
+                                + requestId);
                 throw new CorruptedFrameException(reason);
             }
             if (codec instanceof RpcRequestCodec<?> requestCodec) {
@@ -111,8 +117,12 @@ public class RpcFrameDecoder extends ProtobufVarint32FrameDecoder {
                     : new RpcResponse(requestId, responseValue, null);
         } catch (Exception e) {
             String msg = codecId == UNSET_CODEC_ID
-                    ? "Failed to parse the buffer: " + frame
-                    : "Failed to parse the buffer (" + frame + ") by the codec with the ID: " + codecId;
+                    ? "Failed to parse the buffer: "
+                            + frame
+                    : "Failed to parse the buffer ("
+                            + frame
+                            + ") by the codec with the ID: "
+                            + codecId;
             String reason = ReactorNetty.format(ctx.channel(), msg);
             throw new CorruptedFrameException(reason, e);
         }

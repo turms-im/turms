@@ -17,13 +17,13 @@
 
 package im.turms.server.common.infra.property.env.common.cluster.connection;
 
-
-import im.turms.server.common.infra.property.env.common.SslProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
+
+import im.turms.server.common.infra.property.env.common.SslProperties;
 
 /**
  * @author James Chen

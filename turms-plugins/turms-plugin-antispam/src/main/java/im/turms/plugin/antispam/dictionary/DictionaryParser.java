@@ -17,13 +17,6 @@
 
 package im.turms.plugin.antispam.dictionary;
 
-import im.turms.plugin.antispam.TextPreprocessor;
-import im.turms.server.common.infra.collection.ChunkedArrayList;
-import im.turms.server.common.infra.exception.IncompatibleInternalChangeException;
-import im.turms.server.common.infra.io.InputOutputException;
-import im.turms.server.common.infra.lang.CharArrayBuffer;
-import im.turms.server.common.infra.lang.ClassUtil;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,6 +29,13 @@ import java.time.ZoneOffset;
 import java.util.List;
 import java.util.TimeZone;
 
+import im.turms.plugin.antispam.TextPreprocessor;
+import im.turms.server.common.infra.collection.ChunkedArrayList;
+import im.turms.server.common.infra.exception.IncompatibleInternalChangeException;
+import im.turms.server.common.infra.io.InputOutputException;
+import im.turms.server.common.infra.lang.CharArrayBuffer;
+import im.turms.server.common.infra.lang.ClassUtil;
+
 /**
  * @author James Chen
  */
@@ -45,8 +45,8 @@ public class DictionaryParser {
 
     static {
         try {
-            VALID_CODE_POINT_RANGES_REF = ClassUtil
-                    .getReference(TextPreprocessor.class.getDeclaredField("VALID_CODE_POINT_RANGES"));
+            VALID_CODE_POINT_RANGES_REF = ClassUtil.getReference(
+                    TextPreprocessor.class.getDeclaredField("VALID_CODE_POINT_RANGES"));
         } catch (NoSuchFieldException e) {
             throw new IncompatibleInternalChangeException(e);
         }
@@ -58,17 +58,22 @@ public class DictionaryParser {
         this.textPreprocessor = textPreprocessor;
     }
 
-    public List<Word> parse(Path dictPath,
-                            String charsetName,
-                            boolean skipInvalidCharacter,
-                            boolean enableExtendedWord) {
+    public List<Word> parse(
+            Path dictPath,
+            String charsetName,
+            boolean skipInvalidCharacter,
+            boolean enableExtendedWord) {
         try (InputStream stream = Files.newInputStream(dictPath);
-             BufferedReader reader = new BufferedReader(new InputStreamReader(stream, charsetName))) {
+                BufferedReader reader =
+                        new BufferedReader(new InputStreamReader(stream, charsetName))) {
             return enableExtendedWord
                     ? parseExtendedWords(reader, skipInvalidCharacter)
                     : parseSimpleWords(reader, skipInvalidCharacter);
         } catch (IOException e) {
-            throw new InputOutputException("Failed to read the dictionary: " + dictPath, e);
+            throw new InputOutputException(
+                    "Failed to read the dictionary: "
+                            + dictPath,
+                    e);
         }
     }
 
@@ -163,10 +168,11 @@ public class DictionaryParser {
         return words;
     }
 
-    private void parseExtendedWord(ExtendedWord.Builder builder,
-                                   int columnIndex,
-                                   CharArrayBuffer buffer,
-                                   SimpleDateFormat dateFormat) {
+    private void parseExtendedWord(
+            ExtendedWord.Builder builder,
+            int columnIndex,
+            CharArrayBuffer buffer,
+            SimpleDateFormat dateFormat) {
         if (buffer.isEmpty()) {
             return;
         }
@@ -186,13 +192,16 @@ public class DictionaryParser {
                 case 7 -> builder.setEnableTime(dateFormat.parse(string));
                 case 8 -> builder.setUpdateTime(dateFormat.parse(string));
                 case 9 -> builder.setComment(string);
-                default -> throw new IllegalArgumentException("Unexpected column index: " + columnIndex);
+                default -> throw new IllegalArgumentException(
+                        "Unexpected column index: "
+                                + columnIndex);
             }
         } catch (ParseException e) {
-            throw new IllegalArgumentException("The date string \"" +
-                    string +
-                    "\" must follow the date format pattern: " +
-                    dateFormat.toPattern());
+            throw new IllegalArgumentException(
+                    "The date string \""
+                            + string
+                            + "\" must follow the date format pattern: "
+                            + dateFormat.toPattern());
         }
     }
 
@@ -201,8 +210,7 @@ public class DictionaryParser {
     }
 
     /**
-     * "Hello,./" -> "hello"
-     * "⑩*&(元Ⅰ[]二角" -> ["10元12角", "10yuan12jiao"]
+     * "Hello,./" -> "hello" "⑩*&(元Ⅰ[]二角" -> ["10元12角", "10yuan12jiao"]
      */
     public char[] parseWord(char[] word, boolean skipInvalidCharacter) {
         CharArrayBuffer newWord = new CharArrayBuffer(word.length);
@@ -212,19 +220,23 @@ public class DictionaryParser {
         return newWord.toCharArray();
     }
 
-    private void normalizeChar(boolean skipInvalidCharacter, CharArrayBuffer newWord, char character) {
+    private void normalizeChar(
+            boolean skipInvalidCharacter,
+            CharArrayBuffer newWord,
+            char character) {
         Object newChars = textPreprocessor.process(character);
         if (newChars == null) {
             if (!skipInvalidCharacter) {
-                throw new IllegalArgumentException("The character \"" +
-                        character +
-                        "\" of the unicode block \"" +
-                        Character.UnicodeBlock.of(character) +
-                        "\" is invalid. " +
-                        "Please delete the character in the dictionary, " +
-                        "or update the field (" +
-                        VALID_CODE_POINT_RANGES_REF +
-                        ") to support the character");
+                throw new IllegalArgumentException(
+                        "The character \""
+                                + character
+                                + "\" of the unicode block \""
+                                + Character.UnicodeBlock.of(character)
+                                + "\" is invalid. "
+                                + "Please delete the character in the dictionary, "
+                                + "or update the field ("
+                                + VALID_CODE_POINT_RANGES_REF
+                                + ") to support the character");
             }
         } else if (newChars instanceof char[] chars) {
             newWord.append(chars);

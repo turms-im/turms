@@ -17,6 +17,11 @@
 
 package im.turms.service.domain.group.po;
 
+import java.util.Date;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
 import im.turms.server.common.domain.common.po.BaseEntity;
 import im.turms.server.common.storage.mongo.entity.annotation.CompoundIndex;
 import im.turms.server.common.storage.mongo.entity.annotation.Document;
@@ -25,10 +30,6 @@ import im.turms.server.common.storage.mongo.entity.annotation.Id;
 import im.turms.server.common.storage.mongo.entity.annotation.Indexed;
 import im.turms.server.common.storage.mongo.entity.annotation.PersistenceConstructor;
 import im.turms.server.common.storage.mongo.entity.annotation.Sharded;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-
-import java.util.Date;
 
 import static im.turms.server.common.storage.mongo.entity.IndexType.HASH;
 import static im.turms.server.common.storage.mongo.entity.annotation.IndexedReason.EXTENDED_FEATURE;
@@ -82,8 +83,10 @@ public final class GroupBlockedUser extends BaseEntity {
     }
 
     public static final class Fields {
-        public static final String ID_GROUP_ID = "_id." + Key.Fields.GROUP_ID;
-        public static final String ID_USER_ID = "_id." + Key.Fields.USER_ID;
+        public static final String ID_GROUP_ID = "_id."
+                + Key.Fields.GROUP_ID;
+        public static final String ID_USER_ID = "_id."
+                + Key.Fields.USER_ID;
         public static final String BLOCK_DATE = "bd";
         public static final String REQUESTER_ID = "rid";
 

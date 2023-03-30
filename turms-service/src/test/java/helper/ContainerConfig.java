@@ -17,14 +17,14 @@
 
 package helper;
 
+import java.util.List;
+
 import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.service.ServiceProperties;
 import im.turms.server.common.infra.property.env.service.env.database.MongoProperties;
 import im.turms.server.common.infra.property.env.service.env.redis.TurmsRedisProperties;
 import im.turms.server.common.testing.BaseIntegrationTest;
-
-import java.util.List;
 
 /**
  * @author James Chen
@@ -38,21 +38,34 @@ public class ContainerConfig {
         TurmsProperties localProperties = propertiesManager.getLocalProperties();
         ServiceProperties service = localProperties.getService();
 
-        localProperties.getCluster().getSharedConfig().getMongo().setUri(mongoUri);
+        localProperties.getCluster()
+                .getSharedConfig()
+                .getMongo()
+                .setUri(mongoUri);
 
         MongoProperties serviceMongo = service.getMongo();
-        serviceMongo.getAdmin().setUri(mongoUri);
-        serviceMongo.getUser().setUri(mongoUri);
-        serviceMongo.getGroup().setUri(mongoUri);
-        serviceMongo.getConversation().setUri(mongoUri);
-        serviceMongo.getMessage().setUri(mongoUri);
+        serviceMongo.getAdmin()
+                .setUri(mongoUri);
+        serviceMongo.getUser()
+                .setUri(mongoUri);
+        serviceMongo.getGroup()
+                .setUri(mongoUri);
+        serviceMongo.getConversation()
+                .setUri(mongoUri);
+        serviceMongo.getMessage()
+                .setUri(mongoUri);
 
         TurmsRedisProperties redis = service.getRedis();
-        redis.getSequenceId().setUriList(List.of(redisUri));
-        redis.getSession().setUriList(List.of(redisUri));
-        redis.getLocation().setUriList(List.of(redisUri));
-        redis.getIpBlocklist().setUri(redisUri);
-        redis.getUserIdBlocklist().setUri(redisUri);
+        redis.getSequenceId()
+                .setUriList(List.of(redisUri));
+        redis.getSession()
+                .setUriList(List.of(redisUri));
+        redis.getLocation()
+                .setUriList(List.of(redisUri));
+        redis.getIpBlocklist()
+                .setUri(redisUri);
+        redis.getUserIdBlocklist()
+                .setUri(redisUri);
     }
 
 }

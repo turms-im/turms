@@ -17,8 +17,15 @@
 
 package im.turms.plugin.minio.repository;
 
+import java.util.List;
+import java.util.Set;
+import jakarta.annotation.Nullable;
+
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
 import im.turms.plugin.minio.po.MessageAttachment;
 import im.turms.server.common.domain.common.repository.BaseRepository;
 import im.turms.server.common.infra.time.DateRange;
@@ -27,24 +34,16 @@ import im.turms.server.common.storage.mongo.TurmsMongoClient;
 import im.turms.server.common.storage.mongo.operation.option.Filter;
 import im.turms.server.common.storage.mongo.operation.option.QueryOptions;
 import im.turms.server.common.storage.mongo.operation.option.Update;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
-import java.util.List;
-import java.util.Set;
-import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen
  */
 public class MessageAttachmentRepository extends BaseRepository<MessageAttachment, Long> {
 
-    private static final String[] INCLUDE_SIMPLE_ATTACHMENT = {
-            MessageAttachment.Fields.NAME,
+    private static final String[] INCLUDE_SIMPLE_ATTACHMENT = {MessageAttachment.Fields.NAME,
             MessageAttachment.Fields.MEDIA_TYPE,
             MessageAttachment.Fields.UPLOADER_ID,
-            MessageAttachment.Fields.CREATION_DATE
-    };
+            MessageAttachment.Fields.CREATION_DATE};
 
     public MessageAttachmentRepository(TurmsMongoClient mongoClient) {
         super(mongoClient, MessageAttachment.class);
@@ -103,9 +102,10 @@ public class MessageAttachmentRepository extends BaseRepository<MessageAttachmen
         return mongoClient.updateOne(entityClass, filter, update);
     }
 
-    public Flux<MessageAttachment> findSimpleAttachmentsBySharedWithGroupId(Long groupId,
-                                                                            @Nullable Set<Long> userIds,
-                                                                            @Nullable DateRange creationDateRange) {
+    public Flux<MessageAttachment> findSimpleAttachmentsBySharedWithGroupId(
+            Long groupId,
+            @Nullable Set<Long> userIds,
+            @Nullable DateRange creationDateRange) {
         Filter filter = Filter.newBuilder(1)
                 .eq(MessageAttachment.Fields.SHARED_WITH_GROUP_IDS, groupId)
                 .inIfNotNull(MessageAttachment.Fields.UPLOADER_ID, userIds)
@@ -115,8 +115,9 @@ public class MessageAttachmentRepository extends BaseRepository<MessageAttachmen
         return mongoClient.findMany(entityClass, filter, queryOptions);
     }
 
-    public Flux<MessageAttachment> findSimpleAttachmentsBySharedWithUserIdAndUploaderId(Long sharedWithUserId,
-                                                                                        Long uploaderId) {
+    public Flux<MessageAttachment> findSimpleAttachmentsBySharedWithUserIdAndUploaderId(
+            Long sharedWithUserId,
+            Long uploaderId) {
         Filter filter = Filter.newBuilder(2)
                 .eq(MessageAttachment.Fields.SHARED_WITH_USER_IDS, sharedWithUserId)
                 .eq(MessageAttachment.Fields.UPLOADER_ID, uploaderId);
@@ -125,8 +126,9 @@ public class MessageAttachmentRepository extends BaseRepository<MessageAttachmen
         return mongoClient.findMany(entityClass, filter, queryOptions);
     }
 
-    public Flux<MessageAttachment> findSimpleAttachmentsByUploaderId(Long userId,
-                                                                     @Nullable DateRange creationDateRange) {
+    public Flux<MessageAttachment> findSimpleAttachmentsByUploaderId(
+            Long userId,
+            @Nullable DateRange creationDateRange) {
         Filter filter = Filter.newBuilder(2)
                 .eq(MessageAttachment.Fields.UPLOADER_ID, userId)
                 .addBetweenIfNotNull(MessageAttachment.Fields.CREATION_DATE, creationDateRange);
@@ -135,8 +137,9 @@ public class MessageAttachmentRepository extends BaseRepository<MessageAttachmen
         return mongoClient.findMany(entityClass, filter, queryOptions);
     }
 
-    public Flux<MessageAttachment> findSimpleAttachmentsInPrivateConversation(Long userId,
-                                                                              @Nullable DateRange creationDateRange) {
+    public Flux<MessageAttachment> findSimpleAttachmentsInPrivateConversation(
+            Long userId,
+            @Nullable DateRange creationDateRange) {
         Filter filter = Filter.newBuilder(3)
                 .eq(MessageAttachment.Fields.UPLOADER_ID, userId)
                 .eq(MessageAttachment.Fields.SHARED_WITH_USER_IDS, userId)
@@ -146,16 +149,17 @@ public class MessageAttachmentRepository extends BaseRepository<MessageAttachmen
         return mongoClient.findMany(entityClass, filter, queryOptions);
     }
 
-    public Flux<MessageAttachment> findSimpleAttachmentsInPrivateConversation(Long requesterId,
-                                                                              Long userId,
-                                                                              @Nullable DateRange creationDateRange,
-                                                                              @Nullable Boolean areSharedByRequester) {
+    public Flux<MessageAttachment> findSimpleAttachmentsInPrivateConversation(
+            Long requesterId,
+            Long userId,
+            @Nullable DateRange creationDateRange,
+            @Nullable Boolean areSharedByRequester) {
         Filter filter;
         if (areSharedByRequester == null) {
             filter = Filter.newBuilder(2)
                     .or(Filter.newBuilder(2)
-                                    .eq(MessageAttachment.Fields.UPLOADER_ID, requesterId)
-                                    .eq(MessageAttachment.Fields.SHARED_WITH_USER_IDS, userId),
+                            .eq(MessageAttachment.Fields.UPLOADER_ID, requesterId)
+                            .eq(MessageAttachment.Fields.SHARED_WITH_USER_IDS, userId),
                             Filter.newBuilder(2)
                                     .eq(MessageAttachment.Fields.UPLOADER_ID, userId)
                                     .eq(MessageAttachment.Fields.SHARED_WITH_USER_IDS, requesterId))
@@ -176,7 +180,8 @@ public class MessageAttachmentRepository extends BaseRepository<MessageAttachmen
         return mongoClient.findMany(entityClass, filter, queryOptions);
     }
 
-    public Mono<MessageAttachment> findUploaderIdAndSharedWithUserIdsAndGroupIds(Long messageAttachmentId) {
+    public Mono<MessageAttachment> findUploaderIdAndSharedWithUserIdsAndGroupIds(
+            Long messageAttachmentId) {
         Filter filter = Filter.newBuilder(1)
                 .eq(DomainFieldName.ID, messageAttachmentId);
         QueryOptions queryOptions = QueryOptions.newBuilder(1)

@@ -17,19 +17,6 @@
 
 package im.turms.server.common.infra.property;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import im.turms.server.common.access.common.ResponseStatusCode;
-import im.turms.server.common.infra.cluster.node.Node;
-import im.turms.server.common.infra.context.TurmsApplicationContext;
-import im.turms.server.common.infra.exception.ResponseException;
-import im.turms.server.common.infra.logging.core.logger.Logger;
-import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
-import org.springframework.boot.context.properties.ConfigurationPropertiesBindingPostProcessor;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.stereotype.Component;
-import reactor.core.publisher.Mono;
-
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.nio.file.Path;
@@ -38,6 +25,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Consumer;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import org.springframework.boot.context.properties.ConfigurationPropertiesBindingPostProcessor;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+import reactor.core.publisher.Mono;
+
+import im.turms.server.common.access.common.ResponseStatusCode;
+import im.turms.server.common.infra.cluster.node.Node;
+import im.turms.server.common.infra.context.TurmsApplicationContext;
+import im.turms.server.common.infra.exception.ResponseException;
+import im.turms.server.common.infra.logging.core.logger.Logger;
+import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 
 import static im.turms.server.common.infra.property.TurmsPropertiesConvertor.mergeProperties;
 import static im.turms.server.common.infra.property.TurmsPropertiesConvertor.toJsonNode;
@@ -54,10 +55,12 @@ public class TurmsPropertiesManager {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TurmsPropertiesManager.class);
 
-    public final List<Consumer<TurmsProperties>> localPropertiesChangeListeners = new LinkedList<>();
+    public final List<Consumer<TurmsProperties>> localPropertiesChangeListeners =
+            new LinkedList<>();
 
     private static final TurmsProperties DEFAULT_PROPERTIES = new TurmsProperties();
-    private static final JsonNode DEFAULT_PROPERTIES_JSON_NODE = toMutablePropertiesJsonNode(DEFAULT_PROPERTIES);
+    private static final JsonNode DEFAULT_PROPERTIES_JSON_NODE =
+            toMutablePropertiesJsonNode(DEFAULT_PROPERTIES);
 
     private final Path latestConfigFilePath;
     private final Node node;
@@ -67,10 +70,11 @@ public class TurmsPropertiesManager {
     /**
      * @param node is lazy because: Node -> TurmsPropertiesManager -> Node
      */
-    public TurmsPropertiesManager(@Lazy Node node,
-                                  ApplicationContext context,
-                                  TurmsProperties localTurmsProperties,
-                                  TurmsApplicationContext applicationContext) {
+    public TurmsPropertiesManager(
+            @Lazy Node node,
+            ApplicationContext context,
+            TurmsProperties localTurmsProperties,
+            TurmsApplicationContext applicationContext) {
         this.node = node;
         this.context = context;
         this.localTurmsProperties = localTurmsProperties;
@@ -78,8 +82,12 @@ public class TurmsPropertiesManager {
         String activeProfile = applicationContext.getActiveEnvProfile();
         String latestConfigFileName = activeProfile == null
                 ? "application-latest.yaml"
-                : "application-" + activeProfile + "-latest.yaml";
-        latestConfigFilePath = Path.of(applicationContext.getConfigDir() + "/" + latestConfigFileName);
+                : "application-"
+                        + activeProfile
+                        + "-latest.yaml";
+        latestConfigFilePath = Path.of(applicationContext.getConfigDir()
+                + "/"
+                + latestConfigFileName);
         InvalidPropertyException exception = validate(localTurmsProperties);
         if (exception != null) {
             throw exception;
@@ -91,8 +99,8 @@ public class TurmsPropertiesManager {
     }
 
     /**
-     * Use the instance of TurmsPropertiesManager instead of TurmsProperties instance
-     * so that we can update the global TurmsProperties instance easily by replacing its reference
+     * Use the instance of TurmsPropertiesManager instead of TurmsProperties instance so that we can
+     * update the global TurmsProperties instance easily by replacing its reference
      */
     public TurmsProperties getLocalProperties() {
         return localTurmsProperties;
@@ -105,16 +113,20 @@ public class TurmsPropertiesManager {
         try {
             constructor = propertiesClass.getDeclaredConstructor();
         } catch (Exception e) {
-            throw new IllegalArgumentException("The properties class (" +
-                    propertiesClass.getName() +
-                    ") must have a public no-arg constructor", e);
+            throw new IllegalArgumentException(
+                    "The properties class ("
+                            + propertiesClass.getName()
+                            + ") must have a public no-arg constructor",
+                    e);
         }
         T properties;
         try {
             properties = constructor.newInstance();
         } catch (Exception e) {
-            throw new RuntimeException("Failed to initialize the properties class: " +
-                    propertiesClass.getName(), e);
+            throw new RuntimeException(
+                    "Failed to initialize the properties class: "
+                            + propertiesClass.getName(),
+                    e);
         }
         String s = propertiesClass.getName() + UUID.randomUUID();
         return (T) context.getBean(ConfigurationPropertiesBindingPostProcessor.class)
@@ -132,7 +144,8 @@ public class TurmsPropertiesManager {
         if (propertiesForUpdating == null || propertiesForUpdating.isEmpty()) {
             return Mono.empty();
         }
-        InvalidPropertyException exception = validatePropertiesForUpdating(DEFAULT_PROPERTIES, propertiesForUpdating);
+        InvalidPropertyException exception =
+                validatePropertiesForUpdating(DEFAULT_PROPERTIES, propertiesForUpdating);
         if (exception != null) {
             throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT, exception);
         }
@@ -144,9 +157,7 @@ public class TurmsPropertiesManager {
         return node.updateSharedProperties(properties);
     }
 
-    public void updateLocalProperties(
-            boolean reset,
-            Map<String, Object> propertiesForUpdating) {
+    public void updateLocalProperties(boolean reset, Map<String, Object> propertiesForUpdating) {
         TurmsProperties newLocalProperties;
         JsonNode newPropertiesJsonNode;
         if (reset) {
@@ -156,8 +167,8 @@ public class TurmsPropertiesManager {
             if (propertiesForUpdating == null || propertiesForUpdating.isEmpty()) {
                 return;
             }
-            InvalidPropertyException exception = validatePropertiesForUpdating(DEFAULT_PROPERTIES,
-                    propertiesForUpdating);
+            InvalidPropertyException exception =
+                    validatePropertiesForUpdating(DEFAULT_PROPERTIES, propertiesForUpdating);
             if (exception != null) {
                 throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT, exception);
             }
@@ -202,8 +213,11 @@ public class TurmsPropertiesManager {
             try {
                 listener.accept(properties);
             } catch (Exception e) {
-                LOGGER.error("Caught an error while notifying the local properties listener ({}) to handle new properties",
-                        listener.getClass().getName(), e);
+                LOGGER.error(
+                        "Caught an error while notifying the local properties listener ({}) to handle new properties",
+                        listener.getClass()
+                                .getName(),
+                        e);
             }
         }
     }

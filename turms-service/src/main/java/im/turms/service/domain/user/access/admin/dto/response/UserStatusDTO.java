@@ -17,13 +17,13 @@
 
 package im.turms.service.domain.user.access.admin.dto.response;
 
+import java.util.Date;
+import java.util.Map;
+
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.constant.UserStatus;
 import im.turms.server.common.domain.common.access.dto.ControllerDTO;
 import im.turms.server.common.domain.location.bo.Location;
-
-import java.util.Date;
-import java.util.Map;
 
 /**
  * @author James Chen

@@ -17,13 +17,13 @@
 
 package im.turms.server.common.access.admin.permission;
 
-import im.turms.server.common.infra.collection.CollectionUtil;
-import im.turms.server.common.infra.lang.ClassUtil;
-import im.turms.server.common.infra.lang.StringUtil;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+
+import im.turms.server.common.infra.collection.CollectionUtil;
+import im.turms.server.common.infra.lang.ClassUtil;
+import im.turms.server.common.infra.lang.StringUtil;
 
 /**
  * @author James Chen
@@ -34,7 +34,7 @@ public enum AdminPermission {
     FLIGHT_RECORDING_UPDATE,
     FLIGHT_RECORDING_QUERY,
 
-    //region business
+    // region business
     USER_CREATE,
     USER_DELETE,
     USER_UPDATE,
@@ -106,19 +106,19 @@ public enum AdminPermission {
     MESSAGE_DELETE,
     MESSAGE_UPDATE,
     MESSAGE_QUERY,
-    //endregion
+    // endregion
 
-    //region session
+    // region session
     SESSION_DELETE,
-    //endregion
+    // endregion
 
-    //region business - statistics
+    // region business - statistics
     STATISTICS_USER_QUERY,
     STATISTICS_GROUP_QUERY,
     STATISTICS_MESSAGE_QUERY,
-    //endregion
+    // endregion
 
-    //region admin
+    // region admin
     ADMIN_CREATE,
     ADMIN_DELETE,
     ADMIN_UPDATE,
@@ -128,19 +128,19 @@ public enum AdminPermission {
     ADMIN_ROLE_DELETE,
     ADMIN_ROLE_UPDATE,
     ADMIN_ROLE_QUERY,
-    //endregion
+    // endregion
 
-    //region client - blocklist
+    // region client - blocklist
     CLIENT_BLOCKLIST_CREATE,
     CLIENT_BLOCKLIST_DELETE,
     CLIENT_BLOCKLIST_QUERY,
-    //endregion
+    // endregion
 
-    //region client - request
+    // region client - request
     CLIENT_REQUEST_CREATE,
-    //endregion
+    // endregion
 
-    //region cluster
+    // region cluster
     CLUSTER_MEMBER_CREATE,
     CLUSTER_MEMBER_DELETE,
     CLUSTER_MEMBER_UPDATE,
@@ -151,25 +151,26 @@ public enum AdminPermission {
 
     CLUSTER_SETTING_UPDATE,
     CLUSTER_SETTING_QUERY,
-    //endregion
+    // endregion
 
-    //region node - plugin
+    // region node - plugin
     PLUGIN_CREATE,
     PLUGIN_DELETE,
     PLUGIN_UPDATE,
     PLUGIN_QUERY,
-    //endregion
+    // endregion
 
-    //region node - others
+    // region node - others
     SHUTDOWN;
-    //endregion
+    // endregion
 
     public static final String SUFFIX_CREATE = "_CREATE";
     public static final String SUFFIX_DELETE = "_DELETE";
     public static final String SUFFIX_UPDATE = "_UPDATE";
     public static final String SUFFIX_QUERY = "_QUERY";
 
-    public static final Set<AdminPermission> ALL = Set.of(ClassUtil.getSharedEnumConstants(AdminPermission.class));
+    public static final Set<AdminPermission> ALL =
+            Set.of(ClassUtil.getSharedEnumConstants(AdminPermission.class));
 
     private static final List<String> NAMES = CollectionUtil.transformAsList(ALL, Enum::name);
 

@@ -17,13 +17,14 @@
 
 package unit.im.turms.server.common.infra.collection;
 
-import im.turms.server.common.infra.collection.CollectionUtil;
-import org.junit.jupiter.api.Test;
-
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
+
+import org.junit.jupiter.api.Test;
+
+import im.turms.server.common.infra.collection.CollectionUtil;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -34,125 +35,88 @@ class CollectionUtilTests {
 
     @Test
     void containsAllLooseComparison() {
-        Map<String, Object> map1 = Map.of(
-                "bool1", true,
-                "bool2", true,
-                "int1", 123,
-                "int2", 123,
-                "double1", 123321.123D,
-                "double2", 123321.123D,
-                "map", Map.of(
-                        "bool1", true,
-                        "bool2", true,
-                        "int1", 123,
-                        "int2", 123,
-                        "double1", 123321.123D,
-                        "double2", 123321.123D
-                ),
-                "list", List.of(
+        Map<String, Object> map1 = Map.of("bool1",
+                true,
+                "bool2",
+                true,
+                "int1",
+                123,
+                "int2",
+                123,
+                "double1",
+                123321.123D,
+                "double2",
+                123321.123D,
+                "map",
+                Map.of("bool1",
                         true,
-                        123,
-                        123.123F
-                ),
-                "array", new Object[]{
+                        "bool2",
                         true,
+                        "int1",
                         123,
-                        123.123F
-                }
-        );
-        Map<String, Object> map2 = Map.of(
-                "bool1", true,
-                "bool2", "true",
-                "int1", 123,
-                "int2", "123",
-                "double1", 123321.123D,
-                "double2", "123321.123",
-                "map", Map.of(
-                        "bool1", true,
-                        "bool2", "true",
-                        "int1", 123,
-                        "int2", "123",
-                        "double1", 123321.123D,
-                        "double2", "123321.123"
-                ),
-                "list", List.of(
+                        "int2",
+                        123,
+                        "double1",
+                        123321.123D,
+                        "double2",
+                        123321.123D),
+                "list",
+                List.of(true, 123, 123.123F),
+                "array",
+                new Object[]{true, 123, 123.123F});
+        Map<String, Object> map2 = Map.of("bool1",
+                true,
+                "bool2",
+                "true",
+                "int1",
+                123,
+                "int2",
+                "123",
+                "double1",
+                123321.123D,
+                "double2",
+                "123321.123",
+                "map",
+                Map.of("bool1",
+                        true,
+                        "bool2",
                         "true",
+                        "int1",
+                        123,
+                        "int2",
                         "123",
-                        "123.123"
-                ),
-                "array", new Object[]{
-                        "true",
-                        "123",
-                        "123.123"
-                }
-        );
-        assertThat(CollectionUtil.containsAllLooseComparison(map1, map2))
-                .isTrue();
-        assertThat(CollectionUtil.containsAllLooseComparison(map2, map1))
-                .isTrue();
+                        "double1",
+                        123321.123D,
+                        "double2",
+                        "123321.123"),
+                "list",
+                List.of("true", "123", "123.123"),
+                "array",
+                new Object[]{"true", "123", "123.123"});
+        assertThat(CollectionUtil.containsAllLooseComparison(map1, map2)).isTrue();
+        assertThat(CollectionUtil.containsAllLooseComparison(map2, map1)).isTrue();
 
-        map1 = Map.of(
-                "map", Map.of(
-                        "key1", "value1",
-                        "key2", "value2",
-                        "key3", "value3"
-                )
-        );
-        map2 = Map.of(
-                "map", Map.of(
-                        "key1", "value1"
-                )
-        );
-        assertThat(CollectionUtil.containsAllLooseComparison(map1, map2))
-                .isTrue();
-        assertThat(CollectionUtil.containsAllLooseComparison(map2, map1))
-                .isFalse();
+        map1 = Map.of("map", Map.of("key1", "value1", "key2", "value2", "key3", "value3"));
+        map2 = Map.of("map", Map.of("key1", "value1"));
+        assertThat(CollectionUtil.containsAllLooseComparison(map1, map2)).isTrue();
+        assertThat(CollectionUtil.containsAllLooseComparison(map2, map1)).isFalse();
 
-        map2 = Map.of(
-                "map", Map.of(
-                        "key1", "value2"
-                )
-        );
-        assertThat(CollectionUtil.containsAllLooseComparison(map1, map2))
-                .isFalse();
-        assertThat(CollectionUtil.containsAllLooseComparison(map2, map1))
-                .isFalse();
+        map2 = Map.of("map", Map.of("key1", "value2"));
+        assertThat(CollectionUtil.containsAllLooseComparison(map1, map2)).isFalse();
+        assertThat(CollectionUtil.containsAllLooseComparison(map2, map1)).isFalse();
 
-        map1 = Map.of(
-                "list", List.of(
-                        "value1",
-                        "value2",
-                        "value3"
-                )
-        );
-        map2 = Map.of(
-                "list", List.of(
-                        "value1",
-                        "value2"
-                )
-        );
-        assertThat(CollectionUtil.containsAllLooseComparison(map1, map2))
-                .isFalse();
-        assertThat(CollectionUtil.containsAllLooseComparison(map2, map1))
-                .isFalse();
+        map1 = Map.of("list", List.of("value1", "value2", "value3"));
+        map2 = Map.of("list", List.of("value1", "value2"));
+        assertThat(CollectionUtil.containsAllLooseComparison(map1, map2)).isFalse();
+        assertThat(CollectionUtil.containsAllLooseComparison(map2, map1)).isFalse();
 
-        map1 = Map.of(
-                "key", Duration.ofSeconds(123)
-        );
-        map2 = Map.of(
-                "key", Instant.ofEpochMilli(123)
-        );
-        assertThat(CollectionUtil.containsAllLooseComparison(map1, map2))
-                .isFalse();
-        assertThat(CollectionUtil.containsAllLooseComparison(map2, map1))
-                .isFalse();
+        map1 = Map.of("key", Duration.ofSeconds(123));
+        map2 = Map.of("key", Instant.ofEpochMilli(123));
+        assertThat(CollectionUtil.containsAllLooseComparison(map1, map2)).isFalse();
+        assertThat(CollectionUtil.containsAllLooseComparison(map2, map1)).isFalse();
 
-        map2 = Map.of(
-                "key", Duration.ofSeconds(123)
-        );
-        assertThat(CollectionUtil.containsAllLooseComparison(map1, map2))
-                .isTrue();
-        assertThat(CollectionUtil.containsAllLooseComparison(map2, map1))
-                .isTrue();
+        map2 = Map.of("key", Duration.ofSeconds(123));
+        assertThat(CollectionUtil.containsAllLooseComparison(map1, map2)).isTrue();
+        assertThat(CollectionUtil.containsAllLooseComparison(map2, map1)).isTrue();
     }
 }

@@ -17,11 +17,12 @@
 
 package im.turms.server.common.storage.mongo.operation.option;
 
-import im.turms.server.common.storage.mongo.BsonJsonUtil;
 import org.bson.BsonDocument;
 import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.conversions.Bson;
+
+import im.turms.server.common.storage.mongo.BsonJsonUtil;
 
 /**
  * @author James Chen
@@ -29,9 +30,9 @@ import org.bson.conversions.Bson;
 public abstract class BaseBson implements Bson {
 
     /**
-     * Use {@link BsonDocument} instead of {@link Document}
-     * because {@link Document} will be converted to {@link BsonDocument} by mongo-java-driver finally,
-     * which is a huge waste of system resources because both documents are heavy
+     * Use {@link BsonDocument} instead of {@link Document} because {@link Document} will be
+     * converted to {@link BsonDocument} by mongo-java-driver finally, which is a huge waste of
+     * system resources because both documents are heavy
      */
     final BsonDocument document;
 

@@ -17,12 +17,13 @@
 
 package im.turms.server.common.infra.cluster.service.connection.request;
 
+import lombok.Data;
+import org.springframework.context.ApplicationContext;
+
 import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.cluster.service.rpc.NodeTypeToHandleRpc;
 import im.turms.server.common.infra.cluster.service.rpc.dto.RpcRequest;
 import im.turms.server.common.infra.lang.Null;
-import lombok.Data;
-import org.springframework.context.ApplicationContext;
 
 /**
  * @author James Chen
@@ -64,7 +65,8 @@ public class KeepaliveRequest extends RpcRequest<Null> {
 
     @Override
     public Null call() {
-        node.getConnectionService().keepalive(getFromNodeId());
+        node.getConnectionService()
+                .keepalive(getFromNodeId());
         return null;
     }
 

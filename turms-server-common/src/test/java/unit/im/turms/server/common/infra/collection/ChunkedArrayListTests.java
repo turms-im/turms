@@ -17,11 +17,12 @@
 
 package unit.im.turms.server.common.infra.collection;
 
-import im.turms.server.common.infra.collection.ChunkedArrayList;
-import org.junit.jupiter.api.Test;
-
 import java.util.ArrayList;
 import java.util.Iterator;
+
+import org.junit.jupiter.api.Test;
+
+import im.turms.server.common.infra.collection.ChunkedArrayList;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -39,28 +40,24 @@ class ChunkedArrayListTests {
             expectedList.add(i);
             list.add(i);
         }
-        assertThat(list)
-                .hasSize(expectedList.size())
+        assertThat(list).hasSize(expectedList.size())
                 .containsExactlyElementsOf(expectedList);
 
         expectedList.add(0);
         list.add(0);
-        assertThat(list)
-                .hasSize(expectedList.size())
+        assertThat(list).hasSize(expectedList.size())
                 .containsExactlyElementsOf(expectedList);
 
         for (int i = 0; i < elementSizePerChunk - 1; i++) {
             list.add(i);
             expectedList.add(i);
         }
-        assertThat(list)
-                .hasSize(expectedList.size())
+        assertThat(list).hasSize(expectedList.size())
                 .containsExactlyElementsOf(expectedList);
 
         expectedList.add(0);
         list.add(0);
-        assertThat(list)
-                .hasSize(expectedList.size())
+        assertThat(list).hasSize(expectedList.size())
                 .containsExactlyElementsOf(expectedList);
     }
 
@@ -77,14 +74,12 @@ class ChunkedArrayListTests {
             expectedList.remove(i);
             list.remove(i);
         }
-        assertThat(list)
-                .hasSize(expectedList.size())
+        assertThat(list).hasSize(expectedList.size())
                 .containsExactlyElementsOf(expectedList);
 
         expectedList.remove(0);
         list.remove(0);
-        assertThat(list)
-                .hasSize(expectedList.size())
+        assertThat(list).hasSize(expectedList.size())
                 .containsExactlyElementsOf(expectedList);
     }
 
@@ -101,14 +96,12 @@ class ChunkedArrayListTests {
             expectedList.remove(0);
             list.remove(0);
         }
-        assertThat(list)
-                .hasSize(expectedList.size())
+        assertThat(list).hasSize(expectedList.size())
                 .containsExactlyElementsOf(expectedList);
 
         expectedList.remove(0);
         list.remove(0);
-        assertThat(list)
-                .hasSize(expectedList.size())
+        assertThat(list).hasSize(expectedList.size())
                 .containsExactlyElementsOf(expectedList);
     }
 
@@ -122,8 +115,7 @@ class ChunkedArrayListTests {
             list.add(i);
         }
         Iterator<Object> iterator = list.iterator();
-        assertThat(iterator)
-                .toIterable()
+        assertThat(iterator).toIterable()
                 .containsExactlyElementsOf(expectedList);
     }
 }

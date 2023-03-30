@@ -17,16 +17,17 @@
 
 package unit.im.turms.gateway.infra.proto;
 
+import java.nio.ByteBuffer;
+
 import com.google.protobuf.CodedInputStream;
+import org.junit.jupiter.api.Test;
+
 import im.turms.gateway.infra.proto.SimpleTurmsNotification;
 import im.turms.gateway.infra.proto.TurmsNotificationParser;
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.access.client.dto.request.TurmsRequest;
 import im.turms.server.common.access.client.dto.request.message.CreateMessageRequest;
 import im.turms.server.common.infra.exception.ResponseException;
-import org.junit.jupiter.api.Test;
-
-import java.nio.ByteBuffer;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
@@ -49,23 +50,24 @@ class TurmsNotificationParserTests {
                 .toByteString()
                 .asReadOnlyByteBuffer();
 
-        assertThatExceptionOfType(ResponseException.class)
-                .isThrownBy(() -> TurmsNotificationParser
-                        .parseSimpleNotification(CodedInputStream.newInstance(emptyRequest)));
+        assertThatExceptionOfType(ResponseException.class).isThrownBy(() -> TurmsNotificationParser
+                .parseSimpleNotification(CodedInputStream.newInstance(emptyRequest)));
     }
 
     @Test
     void parseSimpleNotification_shouldThrow_forPartialNotificationWithoutRequesterId() {
         ByteBuffer partialRequestWithoutRequestId = TurmsNotification.newBuilder()
                 .setCloseStatus(1)
-                .setRelayedRequest(TurmsRequest.newBuilder().setCreateMessageRequest(CreateMessageRequest.newBuilder().build()))
+                .setRelayedRequest(TurmsRequest.newBuilder()
+                        .setCreateMessageRequest(CreateMessageRequest.newBuilder()
+                                .build()))
                 .build()
                 .toByteString()
                 .asReadOnlyByteBuffer();
 
         assertThatExceptionOfType(ResponseException.class)
-                .isThrownBy(() -> TurmsNotificationParser
-                        .parseSimpleNotification(CodedInputStream.newInstance(partialRequestWithoutRequestId)));
+                .isThrownBy(() -> TurmsNotificationParser.parseSimpleNotification(
+                        CodedInputStream.newInstance(partialRequestWithoutRequestId)));
     }
 
     @Test
@@ -73,7 +75,9 @@ class TurmsNotificationParserTests {
         long requesterId = 1000L;
         ByteBuffer requestWithRequestId = TurmsNotification.newBuilder()
                 .setRequesterId(requesterId)
-                .setRelayedRequest(TurmsRequest.newBuilder().setCreateMessageRequest(CreateMessageRequest.newBuilder().build()))
+                .setRelayedRequest(TurmsRequest.newBuilder()
+                        .setCreateMessageRequest(CreateMessageRequest.newBuilder()
+                                .build()))
                 .build()
                 .toByteString()
                 .asReadOnlyByteBuffer();
@@ -81,7 +85,8 @@ class TurmsNotificationParserTests {
         SimpleTurmsNotification notification = TurmsNotificationParser
                 .parseSimpleNotification(CodedInputStream.newInstance(requestWithRequestId));
         assertThat(notification.requesterId()).isEqualTo(requesterId);
-        assertThat(notification.relayedRequestType()).isEqualTo(TurmsRequest.KindCase.CREATE_MESSAGE_REQUEST);
+        assertThat(notification.relayedRequestType())
+                .isEqualTo(TurmsRequest.KindCase.CREATE_MESSAGE_REQUEST);
     }
 
     @Test
@@ -91,7 +96,9 @@ class TurmsNotificationParserTests {
         ByteBuffer requestWithRequestId = TurmsNotification.newBuilder()
                 .setRequesterId(requesterId)
                 .setCloseStatus(closeStatus)
-                .setRelayedRequest(TurmsRequest.newBuilder().setCreateMessageRequest(CreateMessageRequest.newBuilder().build()))
+                .setRelayedRequest(TurmsRequest.newBuilder()
+                        .setCreateMessageRequest(CreateMessageRequest.newBuilder()
+                                .build()))
                 .build()
                 .toByteString()
                 .asReadOnlyByteBuffer();
@@ -100,7 +107,8 @@ class TurmsNotificationParserTests {
                 .parseSimpleNotification(CodedInputStream.newInstance(requestWithRequestId));
         assertThat(notification.requesterId()).isEqualTo(requesterId);
         assertThat(notification.closeStatus()).isEqualTo(closeStatus);
-        assertThat(notification.relayedRequestType()).isEqualTo(TurmsRequest.KindCase.CREATE_MESSAGE_REQUEST);
+        assertThat(notification.relayedRequestType())
+                .isEqualTo(TurmsRequest.KindCase.CREATE_MESSAGE_REQUEST);
     }
 
 }

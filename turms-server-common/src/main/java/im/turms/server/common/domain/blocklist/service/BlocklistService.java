@@ -17,6 +17,19 @@
 
 package im.turms.server.common.domain.blocklist.service;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
+import io.lettuce.core.ScriptOutputType;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.domain.blocklist.bo.BlockedClient;
 import im.turms.server.common.domain.blocklist.manager.AutoBlockManager;
@@ -44,18 +57,6 @@ import im.turms.server.common.infra.thread.NamedThreadFactory;
 import im.turms.server.common.infra.thread.ThreadNameConst;
 import im.turms.server.common.storage.redis.TurmsRedisClient;
 import im.turms.server.common.storage.redis.script.RedisScript;
-import io.lettuce.core.ScriptOutputType;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.stereotype.Service;
-import reactor.core.publisher.Mono;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author James Chen
@@ -83,18 +84,24 @@ public class BlocklistService {
 
     private final ScheduledThreadPoolExecutor threadPoolExecutor;
 
-    public BlocklistService(Node node,
-                            TaskManager taskManager,
-                            TurmsApplicationContext context,
-                            TurmsRedisClient ipBlocklistRedisClient,
-                            TurmsRedisClient userIdBlocklistRedisClient,
-                            TurmsPropertiesManager propertiesManager,
-                            @Autowired(required = false) ISessionService sessionService) {
-        BlocklistProperties blocklistProperties = propertiesManager.getLocalProperties().getSecurity().getBlocklist();
-        BlocklistProperties.IpBlocklistTypeProperties ipBlocklistProperties = blocklistProperties.getIp();
-        BlocklistProperties.UserIdBlocklistTypeProperties userIdBlocklistProperties = blocklistProperties.getUserId();
+    public BlocklistService(
+            Node node,
+            TaskManager taskManager,
+            TurmsApplicationContext context,
+            TurmsRedisClient ipBlocklistRedisClient,
+            TurmsRedisClient userIdBlocklistRedisClient,
+            TurmsPropertiesManager propertiesManager,
+            @Autowired(required = false) ISessionService sessionService) {
+        BlocklistProperties blocklistProperties = propertiesManager.getLocalProperties()
+                .getSecurity()
+                .getBlocklist();
+        BlocklistProperties.IpBlocklistTypeProperties ipBlocklistProperties =
+                blocklistProperties.getIp();
+        BlocklistProperties.UserIdBlocklistTypeProperties userIdBlocklistProperties =
+                blocklistProperties.getUserId();
 
-        threadPoolExecutor = new ScheduledThreadPoolExecutor(1,
+        threadPoolExecutor = new ScheduledThreadPoolExecutor(
+                1,
                 new NamedThreadFactory(ThreadNameConst.CLIENT_BLOCKLIST_SYNC, true));
 
         isIpBlocklistEnabled = ipBlocklistProperties.isEnabled();
@@ -103,40 +110,65 @@ public class BlocklistService {
 
         Map<String, Object> params = Map.of("MAX_LOG_QUEUE_SIZE", maxLogQueueSize);
 
-        RedisScript blockClientsScript = RedisScript
-                .get(new ClassPathResource("redis/blocklist/block_clients.lua"), ScriptOutputType.MULTI, params);
-        RedisScript unblockClientsScript = RedisScript
-                .get(new ClassPathResource("redis/blocklist/unblock_clients.lua"), ScriptOutputType.MULTI, params);
-        RedisScript getBlockedClientsScript = RedisScript
-                .get(new ClassPathResource("redis/blocklist/get_blocked_clients.lua"), ScriptOutputType.MULTI);
-        RedisScript evictAllBlockedClients = RedisScript
-                .get(new ClassPathResource("redis/blocklist/evict_all_blocked_clients.lua"), ScriptOutputType.BOOLEAN);
-        RedisScript evictExpiredBlockedClients = RedisScript
-                .get(new ClassPathResource("redis/blocklist/evict_expired_blocked_clients.lua"), ScriptOutputType.BOOLEAN);
-        RedisScript getBlocklistLogsScript = RedisScript
-                .get(new ClassPathResource("redis/blocklist/get_blocklist_logs.lua"), ScriptOutputType.MULTI, params);
+        RedisScript blockClientsScript =
+                RedisScript.get(new ClassPathResource("redis/blocklist/block_clients.lua"),
+                        ScriptOutputType.MULTI,
+                        params);
+        RedisScript unblockClientsScript =
+                RedisScript.get(new ClassPathResource("redis/blocklist/unblock_clients.lua"),
+                        ScriptOutputType.MULTI,
+                        params);
+        RedisScript getBlockedClientsScript =
+                RedisScript.get(new ClassPathResource("redis/blocklist/get_blocked_clients.lua"),
+                        ScriptOutputType.MULTI);
+        RedisScript evictAllBlockedClients = RedisScript.get(
+                new ClassPathResource("redis/blocklist/evict_all_blocked_clients.lua"),
+                ScriptOutputType.BOOLEAN);
+        RedisScript evictExpiredBlockedClients = RedisScript.get(
+                new ClassPathResource("redis/blocklist/evict_expired_blocked_clients.lua"),
+                ScriptOutputType.BOOLEAN);
+        RedisScript getBlocklistLogsScript =
+                RedisScript.get(new ClassPathResource("redis/blocklist/get_blocklist_logs.lua"),
+                        ScriptOutputType.MULTI,
+                        params);
 
         if (isIpBlocklistEnabled) {
-            BlocklistProperties.IpAutoBlockProperties autoBlock = ipBlocklistProperties.getAutoBlock();
-            ipAutoBlockManagerForCorruptedRequest = new AutoBlockManager<>(autoBlock.getCorruptedRequest(), this::blockIp);
+            BlocklistProperties.IpAutoBlockProperties autoBlock =
+                    ipBlocklistProperties.getAutoBlock();
+            ipAutoBlockManagerForCorruptedRequest =
+                    new AutoBlockManager<>(autoBlock.getCorruptedRequest(), this::blockIp);
             if (isGateway) {
-                ipAutoBlockManagerForCorruptedFrame = new AutoBlockManager<>(autoBlock.getCorruptedFrame(), this::blockIp);
-                ipAutoBlockManagerForFrequentRequest = new AutoBlockManager<>(autoBlock.getFrequentRequest(), this::blockIp);
+                ipAutoBlockManagerForCorruptedFrame =
+                        new AutoBlockManager<>(autoBlock.getCorruptedFrame(), this::blockIp);
+                ipAutoBlockManagerForFrequentRequest =
+                        new AutoBlockManager<>(autoBlock.getFrequentRequest(), this::blockIp);
             } else {
                 ipAutoBlockManagerForCorruptedFrame = null;
                 ipAutoBlockManagerForFrequentRequest = null;
             }
-            ipBlocklistServiceManager = new BlocklistServiceManager<>(true, maxLogQueueSize,
-                    ipBlocklistProperties.getSyncBlocklistIntervalMillis(), node,
-                    ipBlocklistRedisClient, threadPoolExecutor,
-                    blockClientsScript, unblockClientsScript, getBlockedClientsScript,
-                    evictAllBlockedClients, evictExpiredBlockedClients, getBlocklistLogsScript,
+            ipBlocklistServiceManager = new BlocklistServiceManager<>(
+                    true,
+                    maxLogQueueSize,
+                    ipBlocklistProperties.getSyncBlocklistIntervalMillis(),
+                    node,
+                    ipBlocklistRedisClient,
+                    threadPoolExecutor,
+                    blockClientsScript,
+                    unblockClientsScript,
+                    getBlockedClientsScript,
+                    evictAllBlockedClients,
+                    evictExpiredBlockedClients,
+                    getBlocklistLogsScript,
                     ip -> {
                         if (sessionService != null) {
-                            sessionService.closeLocalSessions(ip.getBytes(), CloseReason.get(SessionCloseStatus.USER_IS_BLOCKED))
-                                    .subscribe(null, throwable ->
-                                            LOGGER.error("Caught an error while closing local user sessions with the IP: {}",
-                                                    InetAddressUtil.ipBytesToString(ip.getBytes()), throwable));
+                            sessionService
+                                    .closeLocalSessions(ip.getBytes(),
+                                            CloseReason.get(SessionCloseStatus.USER_IS_BLOCKED))
+                                    .subscribe(null,
+                                            throwable -> LOGGER.error(
+                                                    "Caught an error while closing local user sessions with the IP: {}",
+                                                    InetAddressUtil.ipBytesToString(ip.getBytes()),
+                                                    throwable));
                         }
                         ipAutoBlockManagerForCorruptedRequest.unblockClient(ip);
                         if (isGateway) {
@@ -151,16 +183,21 @@ public class BlocklistService {
             ipAutoBlockManagerForFrequentRequest = null;
         }
         if (isUserIdBlocklistEnabled) {
-            BlocklistProperties.UserIdAutoBlockProperties autoBlock = userIdBlocklistProperties.getAutoBlock();
-            userIdAutoBlockManagerForCorruptedRequest = new AutoBlockManager<>(autoBlock.getCorruptedRequest(), this::blockUserId);
+            BlocklistProperties.UserIdAutoBlockProperties autoBlock =
+                    userIdBlocklistProperties.getAutoBlock();
+            userIdAutoBlockManagerForCorruptedRequest =
+                    new AutoBlockManager<>(autoBlock.getCorruptedRequest(), this::blockUserId);
             if (isGateway) {
-                userIdAutoBlockManagerForCorruptedFrame = new AutoBlockManager<>(autoBlock.getCorruptedFrame(), this::blockUserId);
-                userIdAutoBlockManagerForFrequentRequest = new AutoBlockManager<>(autoBlock.getFrequentRequest(), this::blockUserId);
+                userIdAutoBlockManagerForCorruptedFrame =
+                        new AutoBlockManager<>(autoBlock.getCorruptedFrame(), this::blockUserId);
+                userIdAutoBlockManagerForFrequentRequest =
+                        new AutoBlockManager<>(autoBlock.getFrequentRequest(), this::blockUserId);
             } else {
                 userIdAutoBlockManagerForCorruptedFrame = null;
                 userIdAutoBlockManagerForFrequentRequest = null;
             }
-            userIdBlocklistServiceManager = new BlocklistServiceManager<>(false,
+            userIdBlocklistServiceManager = new BlocklistServiceManager<>(
+                    false,
                     maxLogQueueSize,
                     userIdBlocklistProperties.getSyncBlocklistIntervalMillis(),
                     node,
@@ -174,10 +211,14 @@ public class BlocklistService {
                     getBlocklistLogsScript,
                     userId -> {
                         if (sessionService != null) {
-                            sessionService.closeLocalSession(userId, CloseReason.get(SessionCloseStatus.USER_IS_BLOCKED))
-                                    .subscribe(null, throwable ->
-                                            LOGGER.error("Caught an error while closing the user sessions with the user ID: {}",
-                                                    userId, throwable));
+                            sessionService
+                                    .closeLocalSession(userId,
+                                            CloseReason.get(SessionCloseStatus.USER_IS_BLOCKED))
+                                    .subscribe(null,
+                                            throwable -> LOGGER.error(
+                                                    "Caught an error while closing the user sessions with the user ID: {}",
+                                                    userId,
+                                                    throwable));
                         }
                         userIdAutoBlockManagerForCorruptedRequest.unblockClient(userId);
                         if (isGateway) {
@@ -191,21 +232,23 @@ public class BlocklistService {
             userIdAutoBlockManagerForCorruptedRequest = null;
             userIdAutoBlockManagerForFrequentRequest = null;
         }
-        taskManager.reschedule("expiredBlockedClientCleanup", CronConst.EXPIRED_BLOCKED_CLIENT_CLEANUP_CRON, () -> {
-            if (isIpBlocklistEnabled) {
-                ipAutoBlockManagerForCorruptedRequest.evictExpiredBlockedClients();
-                if (isGateway) {
-                    ipAutoBlockManagerForCorruptedFrame.evictExpiredBlockedClients();
-                    ipAutoBlockManagerForFrequentRequest.evictExpiredBlockedClients();
-                }
-            }
-            if (isUserIdBlocklistEnabled) {
-                userIdAutoBlockManagerForCorruptedRequest.evictExpiredBlockedClients();
-                if (isGateway) {
-                    userIdAutoBlockManagerForFrequentRequest.evictExpiredBlockedClients();
-                }
-            }
-        });
+        taskManager.reschedule("expiredBlockedClientCleanup",
+                CronConst.EXPIRED_BLOCKED_CLIENT_CLEANUP_CRON,
+                () -> {
+                    if (isIpBlocklistEnabled) {
+                        ipAutoBlockManagerForCorruptedRequest.evictExpiredBlockedClients();
+                        if (isGateway) {
+                            ipAutoBlockManagerForCorruptedFrame.evictExpiredBlockedClients();
+                            ipAutoBlockManagerForFrequentRequest.evictExpiredBlockedClients();
+                        }
+                    }
+                    if (isUserIdBlocklistEnabled) {
+                        userIdAutoBlockManagerForCorruptedRequest.evictExpiredBlockedClients();
+                        if (isGateway) {
+                            userIdAutoBlockManagerForFrequentRequest.evictExpiredBlockedClients();
+                        }
+                    }
+                });
         context.addShutdownHook(JobShutdownOrder.CLOSE_BLOCKLIST, this::destroy);
     }
 
@@ -248,7 +291,10 @@ public class BlocklistService {
             throw ResponseException.get(ResponseStatusCode.USER_ID_BLOCKLIST_IS_DISABLED);
         }
         userIdBlocklistServiceManager.blockClients(Set.of(userId), blockMinutes)
-                .subscribe(null, t -> LOGGER.error("Caught an error while deleting expired group invitations", t));
+                .subscribe(null,
+                        t -> LOGGER.error(
+                                "Caught an error while deleting expired group invitations",
+                                t));
     }
 
     public Mono<Void> blockUserIds(Set<Long> userIds, int blockMinutes) {
@@ -399,7 +445,8 @@ public class BlocklistService {
         if (!isIpBlocklistEnabled) {
             return false;
         }
-        return ipBlocklistServiceManager.isTargetBlocked(new ByteArrayWrapper(InetAddressUtil.ipStringToBytes(ip)));
+        return ipBlocklistServiceManager
+                .isTargetBlocked(new ByteArrayWrapper(InetAddressUtil.ipStringToBytes(ip)));
     }
 
     public boolean isIpBlocked(byte[] ip) {

@@ -17,6 +17,8 @@
 
 package im.turms.server.common.infra.jackson;
 
+import java.io.IOException;
+
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.BeanProperty;
@@ -26,9 +28,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.ContextualDeserializer;
 import com.fasterxml.jackson.databind.deser.std.StringDeserializer;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import im.turms.server.common.domain.common.access.dto.ControllerDTO;
 
-import java.io.IOException;
+import im.turms.server.common.domain.common.access.dto.ControllerDTO;
 
 /**
  * @author James Chen
@@ -44,17 +45,23 @@ public class RawStringModule extends SimpleModule {
         addDeserializer(String.class, DESERIALIZER);
     }
 
-    private static class TurmsStringDeserializer extends JsonDeserializer<String> implements ContextualDeserializer {
+    private static class TurmsStringDeserializer extends JsonDeserializer<String>
+            implements ContextualDeserializer {
         @Override
         public String deserialize(JsonParser parser, DeserializationContext ctxt) {
             throw new UnsupportedOperationException("The method should not be called");
         }
 
         @Override
-        public JsonDeserializer<?> createContextual(DeserializationContext ctxt, BeanProperty property) {
-            boolean toRawString = property != null && ControllerDTO.class
-                    .isAssignableFrom(property.getMember().getDeclaringClass());
-            return toRawString ? RawStringDeserializer.INSTANCE : StringDeserializer.instance;
+        public JsonDeserializer<?> createContextual(
+                DeserializationContext ctxt,
+                BeanProperty property) {
+            boolean toRawString = property != null
+                    && ControllerDTO.class.isAssignableFrom(property.getMember()
+                            .getDeclaringClass());
+            return toRawString
+                    ? RawStringDeserializer.INSTANCE
+                    : StringDeserializer.instance;
         }
     }
 
@@ -62,7 +69,8 @@ public class RawStringModule extends SimpleModule {
         static final RawStringDeserializer INSTANCE = new RawStringDeserializer();
 
         @Override
-        public String deserialize(JsonParser parser, DeserializationContext ctxt) throws IOException {
+        public String deserialize(JsonParser parser, DeserializationContext ctxt)
+                throws IOException {
             if (parser.hasToken(JsonToken.VALUE_STRING)) {
                 return parser.getText();
             }

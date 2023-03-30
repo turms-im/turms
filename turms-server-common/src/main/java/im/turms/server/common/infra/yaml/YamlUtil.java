@@ -17,29 +17,27 @@
 
 package im.turms.server.common.infra.yaml;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-
 /**
  * @author James Chen
  */
 public final class YamlUtil {
 
-    private static final YAMLMapper MAPPER = new YAMLMapper()
-            .disable(YAMLGenerator.Feature.WRITE_DOC_START_MARKER);
+    private static final YAMLMapper MAPPER =
+            new YAMLMapper().disable(YAMLGenerator.Feature.WRITE_DOC_START_MARKER);
 
-    private static final ObjectWriter WRITER = MAPPER
-            .writerWithDefaultPrettyPrinter();
+    private static final ObjectWriter WRITER = MAPPER.writerWithDefaultPrettyPrinter();
 
-    private static final ObjectReader READER = MAPPER
-            .reader();
+    private static final ObjectReader READER = MAPPER.reader();
 
     private YamlUtil() {
     }

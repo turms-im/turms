@@ -17,7 +17,10 @@
 
 package im.turms.server.common.storage.mongo.codec;
 
-import im.turms.server.common.infra.collection.ChunkedArrayList;
+import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 import org.bson.BsonReader;
 import org.bson.BsonType;
 import org.bson.BsonWriter;
@@ -27,9 +30,7 @@ import org.bson.codecs.EncoderContext;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 
-import java.util.Collection;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import im.turms.server.common.infra.collection.ChunkedArrayList;
 
 /**
  * @author James Chen
@@ -75,7 +76,10 @@ public class TurmsIterableCodec<I, E> extends MongoCodec<Iterable<E>> {
     }
 
     @Override
-    public void encode(final BsonWriter writer, final Iterable<E> values, final EncoderContext encoderContext) {
+    public void encode(
+            final BsonWriter writer,
+            final Iterable<E> values,
+            final EncoderContext encoderContext) {
         writer.writeStartArray();
         for (E value : values) {
             if (value != null) {

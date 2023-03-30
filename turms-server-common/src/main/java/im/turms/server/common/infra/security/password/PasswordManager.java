@@ -17,15 +17,16 @@
 
 package im.turms.server.common.infra.security.password;
 
+import java.util.Arrays;
+import jakarta.annotation.Nullable;
+
+import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
+
 import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.constant.PasswordEncodingAlgorithm;
-import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
-
-import java.util.Arrays;
-import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen
@@ -40,14 +41,21 @@ public class PasswordManager {
 
     public PasswordManager(TurmsPropertiesManager propertiesManager) {
         TurmsProperties turmsProperties = propertiesManager.getLocalProperties();
-        adminPasswordEncodingAlgorithm = turmsProperties.getSecurity().getPassword().getAdminPasswordEncodingAlgorithm();
-        userPasswordEncodingAlgorithm = turmsProperties.getSecurity().getPassword().getUserPasswordEncodingAlgorithm();
+        adminPasswordEncodingAlgorithm = turmsProperties.getSecurity()
+                .getPassword()
+                .getAdminPasswordEncodingAlgorithm();
+        userPasswordEncodingAlgorithm = turmsProperties.getSecurity()
+                .getPassword()
+                .getUserPasswordEncodingAlgorithm();
         bCryptPasswordEncoder = adminPasswordEncodingAlgorithm == PasswordEncodingAlgorithm.BCRYPT
                 || userPasswordEncodingAlgorithm == PasswordEncodingAlgorithm.BCRYPT
-                ? new BCryptPasswordEncoder() : null;
-        sha256PasswordEncoder = adminPasswordEncodingAlgorithm == PasswordEncodingAlgorithm.SALTED_SHA256
-                || userPasswordEncodingAlgorithm == PasswordEncodingAlgorithm.SALTED_SHA256
-                ? new SaltedSha256PasswordEncoder() : null;
+                        ? new BCryptPasswordEncoder()
+                        : null;
+        sha256PasswordEncoder =
+                adminPasswordEncodingAlgorithm == PasswordEncodingAlgorithm.SALTED_SHA256
+                        || userPasswordEncodingAlgorithm == PasswordEncodingAlgorithm.SALTED_SHA256
+                                ? new SaltedSha256PasswordEncoder()
+                                : null;
     }
 
     public byte[] encodePassword(PasswordEncodingAlgorithm strategy, byte[] rawPassword) {
@@ -68,17 +76,21 @@ public class PasswordManager {
         return encodePassword(userPasswordEncodingAlgorithm, StringUtil.getBytes(rawPassword));
     }
 
-    public boolean matchesAdminPassword(@Nullable String rawPassword, @Nullable byte[] encodedPassword) {
+    public boolean matchesAdminPassword(
+            @Nullable String rawPassword,
+            @Nullable byte[] encodedPassword) {
         return matchesPassword(adminPasswordEncodingAlgorithm, rawPassword, encodedPassword);
     }
 
-    public boolean matchesUserPassword(@Nullable String rawPassword, @Nullable byte[] encodedPassword) {
+    public boolean matchesUserPassword(
+            @Nullable String rawPassword,
+            @Nullable byte[] encodedPassword) {
         return matchesPassword(userPasswordEncodingAlgorithm, rawPassword, encodedPassword);
     }
 
     /**
-     * @return true if the passwords match.
-     * Note that the method returns true if both passwords are null
+     * @return true if the passwords match. Note that the method returns true if both passwords are
+     *         null
      */
     public boolean matchesPassword(
             PasswordEncodingAlgorithm strategy,

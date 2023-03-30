@@ -17,14 +17,15 @@
 
 package unit.im.turms.service.infra.time;
 
-import im.turms.server.common.infra.time.DateUtil;
-import im.turms.server.common.infra.time.DivideBy;
-import org.apache.commons.lang3.tuple.Pair;
-import org.junit.jupiter.api.Test;
-
 import java.time.Instant;
 import java.util.Date;
 import java.util.List;
+
+import org.apache.commons.lang3.tuple.Pair;
+import org.junit.jupiter.api.Test;
+
+import im.turms.server.common.infra.time.DateUtil;
+import im.turms.server.common.infra.time.DivideBy;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -37,9 +38,11 @@ class DateUtilTests {
     void divideDuration() {
         Date earlierDate = Date.from(Instant.parse("2011-12-03T10:15:30Z"));
         Date laterDate = Date.from(Instant.parse("2012-06-03T10:15:30Z"));
-        List<Pair<Date, Date>> hours = DateUtil.divideDuration(earlierDate, laterDate, DivideBy.HOUR);
+        List<Pair<Date, Date>> hours =
+                DateUtil.divideDuration(earlierDate, laterDate, DivideBy.HOUR);
         List<Pair<Date, Date>> days = DateUtil.divideDuration(earlierDate, laterDate, DivideBy.DAY);
-        List<Pair<Date, Date>> months = DateUtil.divideDuration(earlierDate, laterDate, DivideBy.MONTH);
+        List<Pair<Date, Date>> months =
+                DateUtil.divideDuration(earlierDate, laterDate, DivideBy.MONTH);
 
         assertThat(hours).hasSize(4392);
         assertThat(days).hasSize(183);

@@ -17,19 +17,20 @@
 
 package unit.im.turms.server.common.infra.openapi;
 
+import java.lang.reflect.Method;
+import java.util.Map;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.netty.handler.codec.http.HttpMethod;
+import lombok.SneakyThrows;
+import org.junit.jupiter.api.Test;
+
 import im.turms.server.common.access.admin.dto.response.ResponseDTO;
 import im.turms.server.common.access.admin.web.ApiEndpoint;
 import im.turms.server.common.access.admin.web.ApiEndpointKey;
 import im.turms.server.common.access.admin.web.MethodParameterInfo;
 import im.turms.server.common.infra.openapi.OpenApiBuilder;
-import io.netty.handler.codec.http.HttpMethod;
-import lombok.SneakyThrows;
-import org.junit.jupiter.api.Test;
-
-import java.lang.reflect.Method;
-import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -48,18 +49,46 @@ class OpenApiBuilderTests {
         String serverUrl = "my-url";
         String path = "/my-path";
         ApiEndpointKey endpointKey = new ApiEndpointKey(path, HttpMethod.GET);
-        MethodParameterInfo parameterInfo = new MethodParameterInfo("method-name", ResponseDTO.class, null, null, null,
-                true, false, true, false, null, "json", true);
+        MethodParameterInfo parameterInfo = new MethodParameterInfo(
+                "method-name",
+                ResponseDTO.class,
+                null,
+                null,
+                null,
+                true,
+                false,
+                true,
+                false,
+                null,
+                "json",
+                true);
         Method method = mock(Method.class);
         when(method.getGenericReturnType()).thenReturn(ResponseDTO.class);
-        ApiEndpoint endpoint = new ApiEndpoint(new Object(), method, HttpMethod.GET, new MethodParameterInfo[]{parameterInfo}, "media", null, null);
-        byte[] bytes = OpenApiBuilder.build(version, nodeType, serverUrl, Map.of(endpointKey, endpoint));
+        ApiEndpoint endpoint = new ApiEndpoint(
+                new Object(),
+                method,
+                HttpMethod.GET,
+                new MethodParameterInfo[]{parameterInfo},
+                "media",
+                null,
+                null);
+        byte[] bytes =
+                OpenApiBuilder.build(version, nodeType, serverUrl, Map.of(endpointKey, endpoint));
         JsonNode node = new ObjectMapper().readTree(bytes);
 
-        assertThat(node.get("info").get("title").textValue()).contains(nodeType);
-        assertThat(node.get("info").get("version").textValue()).hasToString(version);
-        assertThat(node.get("servers").get(0).get("url").textValue()).hasToString(serverUrl);
-        assertThat(node.get("paths").get(path).get("get")).isNotNull();
+        assertThat(node.get("info")
+                .get("title")
+                .textValue()).contains(nodeType);
+        assertThat(node.get("info")
+                .get("version")
+                .textValue()).hasToString(version);
+        assertThat(node.get("servers")
+                .get(0)
+                .get("url")
+                .textValue()).hasToString(serverUrl);
+        assertThat(node.get("paths")
+                .get(path)
+                .get("get")).isNotNull();
     }
 
 }

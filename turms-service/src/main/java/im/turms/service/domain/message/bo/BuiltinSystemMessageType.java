@@ -26,9 +26,8 @@ public class BuiltinSystemMessageType {
     }
 
     /**
-     * NORMAL is only used as a placeholder and won't be set for normal messages
-     * because the client implementations consider a system message as a normal message
-     * if no message type specified
+     * NORMAL is only used as a placeholder and won't be set for normal messages because the client
+     * implementations consider a system message as a normal message if no message type specified
      */
     public static final int NORMAL = 0;
     public static final int RECALL_MESSAGE = 1;

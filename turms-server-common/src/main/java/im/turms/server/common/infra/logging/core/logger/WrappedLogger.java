@@ -17,11 +17,12 @@
 
 package im.turms.server.common.infra.logging.core.logger;
 
-import im.turms.server.common.infra.logging.core.model.LogLevel;
+import jakarta.annotation.Nullable;
+
 import io.netty.buffer.ByteBuf;
 import lombok.Setter;
 
-import jakarta.annotation.Nullable;
+import im.turms.server.common.infra.logging.core.model.LogLevel;
 
 /**
  * @author James Chen

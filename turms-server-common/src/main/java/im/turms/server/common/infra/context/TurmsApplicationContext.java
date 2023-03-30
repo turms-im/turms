@@ -17,27 +17,6 @@
 
 package im.turms.server.common.infra.context;
 
-import im.turms.server.common.infra.cluster.node.NodeType;
-import im.turms.server.common.infra.io.InputOutputException;
-import im.turms.server.common.infra.io.ResourceNotFoundException;
-import im.turms.server.common.infra.lang.StringUtil;
-import im.turms.server.common.infra.logging.core.logger.Logger;
-import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
-import im.turms.server.common.infra.property.TurmsPropertiesManager;
-import im.turms.server.common.infra.property.env.common.ShutdownProperties;
-import im.turms.server.common.infra.suggestion.OsConfigurationAdvisor;
-import im.turms.server.common.infra.thread.NamedThreadFactory;
-import im.turms.server.common.infra.thread.ThreadNameConst;
-import io.lettuce.core.RedisException;
-import lombok.Getter;
-import org.springframework.context.event.ContextClosedEvent;
-import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.context.event.EventListener;
-import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Component;
-import reactor.core.publisher.Hooks;
-import reactor.core.publisher.Mono;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
@@ -52,6 +31,28 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import jakarta.annotation.Nullable;
+
+import io.lettuce.core.RedisException;
+import lombok.Getter;
+import org.springframework.context.event.ContextClosedEvent;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.context.event.EventListener;
+import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Component;
+import reactor.core.publisher.Hooks;
+import reactor.core.publisher.Mono;
+
+import im.turms.server.common.infra.cluster.node.NodeType;
+import im.turms.server.common.infra.io.InputOutputException;
+import im.turms.server.common.infra.io.ResourceNotFoundException;
+import im.turms.server.common.infra.lang.StringUtil;
+import im.turms.server.common.infra.logging.core.logger.Logger;
+import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
+import im.turms.server.common.infra.property.TurmsPropertiesManager;
+import im.turms.server.common.infra.property.env.common.ShutdownProperties;
+import im.turms.server.common.infra.suggestion.OsConfigurationAdvisor;
+import im.turms.server.common.infra.thread.NamedThreadFactory;
+import im.turms.server.common.infra.thread.ThreadNameConst;
 
 /**
  * @author James Chen
@@ -80,16 +81,17 @@ public class TurmsApplicationContext {
     private long shutdownJobTimeoutMillis;
     private final TreeMap<JobShutdownOrder, ShutdownHook> shutdownHooks = new TreeMap<>();
 
-    public TurmsApplicationContext(Environment environment,
-                                   NodeType nodeType) {
+    public TurmsApplicationContext(Environment environment, NodeType nodeType) {
         LoggerFactory.bindContext(this);
 
         String homeDir = nodeType == NodeType.SERVICE
                 ? System.getenv("TURMS_SERVICE_HOME")
                 : System.getenv("TURMS_GATEWAY_HOME");
         home = homeDir == null
-                ? Path.of("").toAbsolutePath()
-                : Path.of(homeDir).toAbsolutePath();
+                ? Path.of("")
+                        .toAbsolutePath()
+                : Path.of(homeDir)
+                        .toAbsolutePath();
 
         // The property should be passed from "bin/run.sh"
         String configDir = System.getProperty("spring.config.location");
@@ -99,38 +101,45 @@ public class TurmsApplicationContext {
         }
         this.configDir = configDir;
 
-        List<String> devEnvs = List.of("dev", "development",
-                "local");
+        List<String> devEnvs = List.of("dev", "development", "local");
         List<String> localTestEnvs = List.of("test", "testing");
-        List<String> testEnvs = List.of("qa", "stg", "uat",
-                "quality", "staging",
-                "demo");
+        List<String> testEnvs = List.of("qa", "stg", "uat", "quality", "staging", "demo");
         List<String> prodEnvs = List.of("prod", "production");
         String[] activeProfiles = environment.getActiveProfiles();
 
-        activeEnvProfile = getActiveEnvProfile(activeProfiles, devEnvs, localTestEnvs, testEnvs, prodEnvs);
-        isDevOrLocalTest = isInProfiles(devEnvs, activeProfiles) || isInProfiles(localTestEnvs, activeProfiles);
+        activeEnvProfile =
+                getActiveEnvProfile(activeProfiles, devEnvs, localTestEnvs, testEnvs, prodEnvs);
+        isDevOrLocalTest = isInProfiles(devEnvs, activeProfiles)
+                || isInProfiles(localTestEnvs, activeProfiles);
         // Prefer "isProduction" to be true to avoid getting trouble in production
         isProduction = !isDevOrLocalTest && !isInProfiles(testEnvs, activeProfiles);
         BuildProperties tempBuildProperties = getGitBuildProperties();
         if (tempBuildProperties == null) {
             if (isProduction) {
-                throw new ResourceNotFoundException("The file (" + BUILD_INFO_PROPS_PATH + ") must exist in production");
+                throw new ResourceNotFoundException(
+                        "The file ("
+                                + BUILD_INFO_PROPS_PATH
+                                + ") must exist in production");
             }
             // We allow "git.properties" not exist in non-production
             // environments for a better development experience
-            LOGGER.warn("Could not find the file (" + BUILD_INFO_PROPS_PATH +
-                    "), fall back to the default version " + DEFAULT_VERSION +
-                    " in non-production environments. Fix it by running \"mvn compile\"");
+            LOGGER.warn("Could not find the file ("
+                    + BUILD_INFO_PROPS_PATH
+                    + "), fall back to the default version "
+                    + DEFAULT_VERSION
+                    + " in non-production environments. Fix it by running \"mvn compile\"");
             tempBuildProperties = new BuildProperties(DEFAULT_VERSION, "", "");
         }
         buildProperties = tempBuildProperties;
 
-        LOGGER.info("The local node with the build properties {version={}, commitId={}, buildTime={}} is running in a {} environment",
+        LOGGER.info(
+                "The local node with the build properties {version={}, commitId={}, buildTime={}} is running in a {} environment",
                 buildProperties.version(),
                 buildProperties.commitId(),
                 buildProperties.buildTime(),
-                isProduction ? "production" : "non-production");
+                isProduction
+                        ? "production"
+                        : "non-production");
 
         setupErrorHandlerContext();
         printOsConfigurationSuggestions();
@@ -138,8 +147,10 @@ public class TurmsApplicationContext {
 
     @EventListener(classes = ContextRefreshedEvent.class)
     public void handleContextRefreshedEvent(ContextRefreshedEvent event) {
-        TurmsPropertiesManager propertiesManager = event.getApplicationContext().getBean(TurmsPropertiesManager.class);
-        ShutdownProperties properties = propertiesManager.getLocalProperties().getShutdown();
+        TurmsPropertiesManager propertiesManager = event.getApplicationContext()
+                .getBean(TurmsPropertiesManager.class);
+        ShutdownProperties properties = propertiesManager.getLocalProperties()
+                .getShutdown();
         shutdownJobTimeoutMillis = properties.getJobTimeoutMillis();
     }
 
@@ -152,14 +163,17 @@ public class TurmsApplicationContext {
             JobShutdownOrder key = orderAndJob.getKey();
             String jobName = key.name();
             boolean isClosingLogProcessor = key == JobShutdownOrder.CLOSE_LOG_PROCESSOR;
-            Future<Mono<Void>> shutdownFuture = executor.submit(() -> orderAndJob.getValue().run(shutdownJobTimeoutMillis));
+            Future<Mono<Void>> shutdownFuture = executor.submit(() -> orderAndJob.getValue()
+                    .run(shutdownJobTimeoutMillis));
             try {
                 long time = System.currentTimeMillis();
-                Mono<Void> mono = shutdownFuture.get(shutdownJobTimeoutMillis, TimeUnit.MILLISECONDS);
+                Mono<Void> mono =
+                        shutdownFuture.get(shutdownJobTimeoutMillis, TimeUnit.MILLISECONDS);
                 if (mono == null) {
-                    throw new IllegalArgumentException("The result of the job \"" +
-                            jobName +
-                            "\" must not be null");
+                    throw new IllegalArgumentException(
+                            "The result of the job \""
+                                    + jobName
+                                    + "\" must not be null");
                 }
                 time = shutdownJobTimeoutMillis - (System.currentTimeMillis() - time);
                 if (time <= 0) {
@@ -169,15 +183,15 @@ public class TurmsApplicationContext {
             } catch (TimeoutException e) {
                 shutdownFuture.cancel(true);
                 if (!isClosingLogProcessor) {
-                    LOGGER.error("Failed to run the shutdown job \"" +
-                            jobName +
-                            "\" in time");
+                    LOGGER.error("Failed to run the shutdown job \""
+                            + jobName
+                            + "\" in time");
                 }
             } catch (Exception e) {
                 if (!isClosingLogProcessor) {
-                    LOGGER.error("Caught an error while running the shutdown job: \"" +
-                            jobName +
-                            "\"", e);
+                    LOGGER.error("Caught an error while running the shutdown job: \""
+                            + jobName
+                            + "\"", e);
                 }
             }
         }
@@ -186,9 +200,9 @@ public class TurmsApplicationContext {
 
     public synchronized void addShutdownHook(JobShutdownOrder order, ShutdownHook job) {
         if (shutdownHooks.putIfAbsent(order, job) != null) {
-            String formatted = "Failed to add a shutdown hook for the job \"" +
-                    order.name() +
-                    "\" because it has been registered";
+            String formatted = "Failed to add a shutdown hook for the job \""
+                    + order.name()
+                    + "\" because it has been registered";
             throw new IllegalStateException(formatted);
         }
     }
@@ -222,7 +236,8 @@ public class TurmsApplicationContext {
 
     @Nullable
     private BuildProperties getGitBuildProperties() {
-        InputStream resourceAsStream = TurmsApplicationContext.class.getClassLoader().getResourceAsStream(BUILD_INFO_PROPS_PATH);
+        InputStream resourceAsStream = TurmsApplicationContext.class.getClassLoader()
+                .getResourceAsStream(BUILD_INFO_PROPS_PATH);
         if (resourceAsStream == null) {
             return null;
         }
@@ -230,19 +245,31 @@ public class TurmsApplicationContext {
         try {
             properties.load(resourceAsStream);
         } catch (IOException e) {
-            throw new InputOutputException("Failed to load properties: " + BUILD_INFO_PROPS_PATH, e);
+            throw new InputOutputException(
+                    "Failed to load properties: "
+                            + BUILD_INFO_PROPS_PATH,
+                    e);
         }
         String version = properties.getProperty(PROPERTY_BUILD_VERSION);
         String buildTime = properties.getProperty(PROPERTY_BUILD_TIME);
         String commitId = properties.getProperty(PROPERTY_COMMIT_ID);
         if (StringUtil.isBlank(version)) {
-            throw new IllegalArgumentException("The property \"" + PROPERTY_BUILD_VERSION + "\" must exist and not be blank");
+            throw new IllegalArgumentException(
+                    "The property \""
+                            + PROPERTY_BUILD_VERSION
+                            + "\" must exist and not be blank");
         }
         if (StringUtil.isBlank(buildTime)) {
-            throw new IllegalArgumentException("The property \"" + PROPERTY_BUILD_TIME + "\" must exist and not be blank");
+            throw new IllegalArgumentException(
+                    "The property \""
+                            + PROPERTY_BUILD_TIME
+                            + "\" must exist and not be blank");
         }
         if (StringUtil.isBlank(commitId)) {
-            throw new IllegalArgumentException("The property \"" + PROPERTY_COMMIT_ID + "\" must exist and not be blank");
+            throw new IllegalArgumentException(
+                    "The property \""
+                            + PROPERTY_COMMIT_ID
+                            + "\" must exist and not be blank");
         }
         return new BuildProperties(version, commitId, buildTime);
     }
@@ -254,14 +281,16 @@ public class TurmsApplicationContext {
             if (isReadFromForciblyClosedConnectionException(cause)) {
                 // Ignore the exception in production because it should not have side effects,
                 // and we cannot avoid the exception completely because of its root cause.
-                // Log the exception only in non-production env, so we can try to optimize the code of
+                // Log the exception only in non-production env, so we can try to optimize the code
+                // of
                 // client to close the connection with a 4-way handshake on the client side
                 if (!this.isProduction) {
                     LOGGER.warn("Failed to read from a forcibly closed connection", t);
                 }
             } else {
                 if (isClosing) {
-                    if (isRedisConnectionClosedException(t) || isMongoConnectionClosedException(t)) {
+                    if (isRedisConnectionClosedException(t)
+                            || isMongoConnectionClosedException(t)) {
                         return;
                     }
                 }
@@ -271,14 +300,18 @@ public class TurmsApplicationContext {
     }
 
     /**
-     * The exception occurs when a socket tries to read from a closed connection without a 4-way handshake
+     * The exception occurs when a socket tries to read from a closed connection without a 4-way
+     * handshake
      */
     private boolean isReadFromForciblyClosedConnectionException(Throwable throwable) {
         if (throwable instanceof IOException) {
             StackTraceElement[] stackTrace = throwable.getStackTrace();
             if (stackTrace.length > 0) {
                 StackTraceElement traceElement = stackTrace[0];
-                return traceElement.getClassName().endsWith("SocketDispatcher") && traceElement.getMethodName().startsWith("read");
+                return traceElement.getClassName()
+                        .endsWith("SocketDispatcher")
+                        && traceElement.getMethodName()
+                                .startsWith("read");
             }
         }
         return false;
@@ -288,7 +321,8 @@ public class TurmsApplicationContext {
         Throwable cause = throwable.getCause();
         if (cause instanceof IllegalStateException) {
             String message = cause.getMessage();
-            return "state should be: open".equals(message) || "state should be: server session pool is open".equals(message);
+            return "state should be: open".equals(message)
+                    || "state should be: server session pool is open".equals(message);
         }
         return false;
     }

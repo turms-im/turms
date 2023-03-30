@@ -17,9 +17,10 @@
 
 package im.turms.gateway.infra.cluster;
 
-import im.turms.server.common.infra.cluster.node.NodeType;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import im.turms.server.common.infra.cluster.node.NodeType;
 
 /**
  * @author James Chen

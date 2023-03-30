@@ -17,17 +17,18 @@
 
 package im.turms.server.common.infra.property.env.service.business.group;
 
-import im.turms.server.common.infra.property.metadata.Description;
-import im.turms.server.common.infra.property.metadata.GlobalProperty;
-import im.turms.server.common.infra.property.metadata.MutableProperty;
-import im.turms.server.common.infra.task.CronConst;
-import im.turms.server.common.infra.validation.ValidCron;
+import jakarta.validation.constraints.Min;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import jakarta.validation.constraints.Min;
+import im.turms.server.common.infra.property.metadata.Description;
+import im.turms.server.common.infra.property.metadata.GlobalProperty;
+import im.turms.server.common.infra.property.metadata.MutableProperty;
+import im.turms.server.common.infra.task.CronConst;
+import im.turms.server.common.infra.validation.ValidCron;
 
 /**
  * @author James Chen
@@ -60,9 +61,10 @@ public class GroupInvitationProperties {
     @MutableProperty
     private boolean deleteExpiredInvitationsWhenCronTriggered;
 
-    @Description("Clean the expired group invitations when the cron expression is triggered" +
-            " if \"deleteExpiredInvitationsWhenCronTriggered\" is true")
+    @Description("Clean the expired group invitations when the cron expression is triggered"
+            + " if \"deleteExpiredInvitationsWhenCronTriggered\" is true")
     @ValidCron
-    private String expiredInvitationsCleanupCron = CronConst.DEFAULT_EXPIRED_GROUP_INVITATIONS_CLEANUP_CRON;
+    private String expiredInvitationsCleanupCron =
+            CronConst.DEFAULT_EXPIRED_GROUP_INVITATIONS_CLEANUP_CRON;
 
 }

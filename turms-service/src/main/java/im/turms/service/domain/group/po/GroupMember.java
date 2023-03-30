@@ -17,6 +17,13 @@
 
 package im.turms.service.domain.group.po;
 
+import java.util.Date;
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotNull;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
 import im.turms.server.common.access.client.dto.constant.GroupMemberRole;
 import im.turms.server.common.domain.common.po.BaseEntity;
 import im.turms.server.common.storage.mongo.entity.IndexType;
@@ -28,12 +35,6 @@ import im.turms.server.common.storage.mongo.entity.annotation.Id;
 import im.turms.server.common.storage.mongo.entity.annotation.Indexed;
 import im.turms.server.common.storage.mongo.entity.annotation.PersistenceConstructor;
 import im.turms.server.common.storage.mongo.entity.annotation.Sharded;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-
-import java.util.Date;
-import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.NotNull;
 
 import static im.turms.server.common.storage.mongo.entity.annotation.IndexedReason.EXTENDED_FEATURE;
 
@@ -64,7 +65,12 @@ public final class GroupMember extends BaseEntity {
     private Date joinDate;
 
     @Field(Fields.MUTE_END_DATE)
-    @Indexed(optional = true, reason = EXTENDED_FEATURE, partialFilter = "{" + Fields.MUTE_END_DATE + ":{$exists:true}}")
+    @Indexed(
+            optional = true,
+            reason = EXTENDED_FEATURE,
+            partialFilter = "{"
+                    + Fields.MUTE_END_DATE
+                    + ":{$exists:true}}")
     private Date muteEndDate;
 
     public GroupMember(
@@ -106,8 +112,10 @@ public final class GroupMember extends BaseEntity {
     }
 
     public static final class Fields {
-        public static final String ID_GROUP_ID = "_id." + Key.Fields.GROUP_ID;
-        public static final String ID_USER_ID = "_id." + Key.Fields.USER_ID;
+        public static final String ID_GROUP_ID = "_id."
+                + Key.Fields.GROUP_ID;
+        public static final String ID_USER_ID = "_id."
+                + Key.Fields.USER_ID;
         public static final String NAME = "n";
         public static final String ROLE = "role";
         public static final String JOIN_DATE = "jd";

@@ -17,15 +17,16 @@
 
 package unit.im.turms.gateway.infra.proto;
 
+import java.nio.ByteBuffer;
+
 import com.google.protobuf.CodedInputStream;
+import org.junit.jupiter.api.Test;
+
 import im.turms.gateway.infra.proto.SimpleTurmsRequest;
 import im.turms.gateway.infra.proto.TurmsRequestParser;
 import im.turms.server.common.access.client.dto.request.TurmsRequest;
 import im.turms.server.common.access.client.dto.request.message.CreateMessageRequest;
 import im.turms.server.common.infra.exception.ResponseException;
-import org.junit.jupiter.api.Test;
-
-import java.nio.ByteBuffer;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
@@ -48,22 +49,21 @@ class TurmsRequestParserTests {
                 .toByteString()
                 .asReadOnlyByteBuffer();
 
-        assertThatExceptionOfType(ResponseException.class)
-                .isThrownBy(() -> TurmsRequestParser
-                        .parseSimpleRequest(CodedInputStream.newInstance(emptyRequest)));
+        assertThatExceptionOfType(ResponseException.class).isThrownBy(() -> TurmsRequestParser
+                .parseSimpleRequest(CodedInputStream.newInstance(emptyRequest)));
     }
 
     @Test
     void parseSimpleRequest_shouldThrow_forPartialRequestWithoutRequestId() {
         ByteBuffer partialRequestWithoutRequestId = TurmsRequest.newBuilder()
-                .setCreateMessageRequest(CreateMessageRequest.newBuilder().buildPartial())
+                .setCreateMessageRequest(CreateMessageRequest.newBuilder()
+                        .buildPartial())
                 .build()
                 .toByteString()
                 .asReadOnlyByteBuffer();
 
-        assertThatExceptionOfType(ResponseException.class)
-                .isThrownBy(() -> TurmsRequestParser
-                        .parseSimpleRequest(CodedInputStream.newInstance(partialRequestWithoutRequestId)));
+        assertThatExceptionOfType(ResponseException.class).isThrownBy(() -> TurmsRequestParser
+                .parseSimpleRequest(CodedInputStream.newInstance(partialRequestWithoutRequestId)));
     }
 
     @Test
@@ -71,7 +71,8 @@ class TurmsRequestParserTests {
         long requestId = 1000L;
         ByteBuffer requestWithRequestId = TurmsRequest.newBuilder()
                 .setRequestId(requestId)
-                .setCreateMessageRequest(CreateMessageRequest.newBuilder().buildPartial())
+                .setCreateMessageRequest(CreateMessageRequest.newBuilder()
+                        .buildPartial())
                 .build()
                 .toByteString()
                 .asReadOnlyByteBuffer();

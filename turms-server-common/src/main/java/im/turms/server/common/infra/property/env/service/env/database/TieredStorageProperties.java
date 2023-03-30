@@ -17,17 +17,18 @@
 
 package im.turms.server.common.infra.property.env.service.env.database;
 
+import java.util.LinkedHashMap;
+import java.util.List;
+
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
+
 import im.turms.server.common.infra.property.metadata.Description;
 import im.turms.server.common.infra.property.metadata.GlobalProperty;
 import im.turms.server.common.infra.property.metadata.MutableProperty;
 import im.turms.server.common.infra.task.CronConst;
 import im.turms.server.common.infra.validation.ValidCron;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.boot.context.properties.NestedConfigurationProperty;
-
-import java.util.LinkedHashMap;
-import java.util.List;
 
 /**
  * @author James Chen
@@ -37,8 +38,8 @@ public class TieredStorageProperties {
 
     private boolean enabled = true;
 
-    @Description("The storage properties for tiers from hot to cold. " +
-            "Note that the order of the tiers is important")
+    @Description("The storage properties for tiers from hot to cold. "
+            + "Note that the order of the tiers is important")
     private LinkedHashMap<String, StorageTierProperties> tiers = new LinkedHashMap<>();
 
     @NestedConfigurationProperty

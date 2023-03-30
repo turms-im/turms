@@ -17,11 +17,11 @@
 
 package im.turms.server.common.infra.openapi;
 
+import java.util.List;
+
 import io.swagger.v3.core.converter.ResolvedSchema;
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.PathItem;
-
-import java.util.List;
 
 /**
  * @author James Chen

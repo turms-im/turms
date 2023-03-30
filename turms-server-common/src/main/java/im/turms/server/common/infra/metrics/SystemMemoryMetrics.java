@@ -17,12 +17,12 @@
 
 package im.turms.server.common.infra.metrics;
 
+import java.lang.management.ManagementFactory;
+
 import com.sun.management.OperatingSystemMXBean;
 import io.micrometer.core.instrument.Gauge;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.binder.MeterBinder;
-
-import java.lang.management.ManagementFactory;
 
 /**
  * @author James Chen

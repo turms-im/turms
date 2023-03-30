@@ -17,14 +17,15 @@
 
 package im.turms.service.infra.logging;
 
+import java.util.Map;
+
+import org.springframework.context.annotation.Configuration;
+
 import im.turms.server.common.access.client.dto.request.TurmsRequest;
 import im.turms.server.common.infra.logging.CommonApiLoggingContext;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.service.env.clientapi.ClientApiLoggingProperties;
 import im.turms.server.common.infra.property.env.service.env.clientapi.property.LoggingRequestProperties;
-import org.springframework.context.annotation.Configuration;
-
-import java.util.Map;
 
 /**
  * @author James Chen

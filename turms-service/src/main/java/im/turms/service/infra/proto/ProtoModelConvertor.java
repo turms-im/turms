@@ -17,7 +17,17 @@
 
 package im.turms.service.infra.proto;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotNull;
+
 import com.google.protobuf.ByteStringUtil;
+
 import im.turms.server.common.access.client.dto.ClientMessagePool;
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.constant.GroupMemberRole;
@@ -44,15 +54,6 @@ import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.service.domain.message.po.Message;
 import im.turms.service.domain.storage.bo.StorageResourceInfo;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.NotNull;
-
 /**
  * @author James Chen
  */
@@ -76,7 +77,8 @@ public final class ProtoModelConvertor {
         return list;
     }
 
-    public static im.turms.server.common.access.client.dto.model.message.Message.Builder message2proto(Message message) {
+    public static im.turms.server.common.access.client.dto.model.message.Message.Builder message2proto(
+            Message message) {
         var builder = ClientMessagePool.getMessageBuilder();
         Long messageId = message.getId();
         Boolean isSystemMessage = message.getIsSystemMessage();
@@ -168,8 +170,7 @@ public final class ProtoModelConvertor {
             @NotNull Long userId,
             @Nullable UserSessionsStatus userSessionsStatus,
             boolean convertInvisibleToOffline) {
-        UserOnlineStatus.Builder builder = ClientMessagePool
-                .getUserOnlineStatusBuilder()
+        UserOnlineStatus.Builder builder = ClientMessagePool.getUserOnlineStatusBuilder()
                 .setUserId(userId);
         if (userSessionsStatus == null) {
             builder.setUserStatus(UserStatus.OFFLINE);
@@ -184,8 +185,7 @@ public final class ProtoModelConvertor {
             @NotNull Long userId,
             @Nullable UserSessionsStatus userSessionsStatus,
             boolean convertInvisibleToOffline) {
-        GroupMember.Builder builder = ClientMessagePool
-                .getGroupMemberBuilder()
+        GroupMember.Builder builder = ClientMessagePool.getGroupMemberBuilder()
                 .setUserId(userId);
         if (userSessionsStatus == null) {
             builder.setUserStatus(UserStatus.OFFLINE);
@@ -196,7 +196,8 @@ public final class ProtoModelConvertor {
         return builder;
     }
 
-    public static NearbyUser.Builder nearbyUser2proto(@NotNull im.turms.server.common.domain.location.bo.NearbyUser nearbyUser) {
+    public static NearbyUser.Builder nearbyUser2proto(
+            @NotNull im.turms.server.common.domain.location.bo.NearbyUser nearbyUser) {
         NearbyUser.Builder builder = ClientMessagePool.getNearbyUserBuilder();
         Long userId = nearbyUser.userId();
         DeviceType deviceType = nearbyUser.deviceType();
@@ -211,8 +212,7 @@ public final class ProtoModelConvertor {
             builder.setDeviceType(deviceType);
         }
         if (longitude != null && latitude != null) {
-            builder.setLocation(ClientMessagePool
-                    .getUserLocationBuilder()
+            builder.setLocation(ClientMessagePool.getUserLocationBuilder()
                     .setLongitude(longitude)
                     .setLatitude(latitude)
                     .build());
@@ -446,13 +446,16 @@ public final class ProtoModelConvertor {
         if (content != null) {
             builder.setQuestion(content);
         }
-        if (question.getAnswers() != null && !question.getAnswers().isEmpty()) {
+        if (question.getAnswers() != null
+                && !question.getAnswers()
+                        .isEmpty()) {
             builder.addAllAnswers(question.getAnswers());
         }
         return builder;
     }
 
-    public static GroupMember.Builder groupMember2proto(@NotNull im.turms.service.domain.group.po.GroupMember groupMember) {
+    public static GroupMember.Builder groupMember2proto(
+            @NotNull im.turms.service.domain.group.po.GroupMember groupMember) {
         GroupMember.Builder builder = ClientMessagePool.getGroupMemberBuilder();
         im.turms.service.domain.group.po.GroupMember.Key key = groupMember.getKey();
         if (key != null) {
@@ -489,7 +492,8 @@ public final class ProtoModelConvertor {
     public static PrivateConversation.Builder privateConversation2proto(
             im.turms.service.domain.conversation.po.PrivateConversation privateConversation) {
         PrivateConversation.Builder builder = ClientMessagePool.getPrivateConversationBuilder();
-        im.turms.service.domain.conversation.po.PrivateConversation.Key key = privateConversation.getKey();
+        im.turms.service.domain.conversation.po.PrivateConversation.Key key =
+                privateConversation.getKey();
         if (key != null) {
             Long ownerId = key.getOwnerId();
             Long targetId = key.getTargetId();
@@ -568,8 +572,7 @@ public final class ProtoModelConvertor {
     public static CreateMessageRequest.Builder cloneAndFillMessageRequest(
             @NotNull CreateMessageRequest request,
             @NotNull Message message) {
-        CreateMessageRequest.Builder builder = ClientMessagePool
-                .getCreateMessageRequestBuilder()
+        CreateMessageRequest.Builder builder = ClientMessagePool.getCreateMessageRequestBuilder()
                 .mergeFrom(request);
         Long messageId = message.getId();
         Boolean isSystemMessage = message.getIsSystemMessage();
@@ -599,7 +602,8 @@ public final class ProtoModelConvertor {
         return builder;
     }
 
-    public static im.turms.server.common.access.client.dto.model.storage.StorageResourceInfo storageResourceInfo2proto(StorageResourceInfo info) {
+    public static im.turms.server.common.access.client.dto.model.storage.StorageResourceInfo storageResourceInfo2proto(
+            StorageResourceInfo info) {
         var builder = ClientMessagePool.getStorageResourceInfoBuilder();
         Long idNum = info.idNum();
         String idStr = info.idStr();
@@ -609,10 +613,10 @@ public final class ProtoModelConvertor {
         if (idStr != null) {
             builder.setIdStr(idStr);
         }
-        return builder
-                .setMediaType(info.mediaType())
+        return builder.setMediaType(info.mediaType())
                 .setUploaderId(info.uploaderId())
-                .setCreationDate(info.creationDate().getTime())
+                .setCreationDate(info.creationDate()
+                        .getTime())
                 .build();
     }
 

@@ -17,6 +17,15 @@
 
 package im.turms.service.domain.blocklist.access.admin.controller;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
+
+import org.springframework.util.CollectionUtils;
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.access.admin.dto.response.HttpHandlerResult;
 import im.turms.server.common.access.admin.dto.response.PaginationDTO;
 import im.turms.server.common.access.admin.dto.response.ResponseDTO;
@@ -33,14 +42,6 @@ import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.service.domain.blocklist.access.admin.dto.request.AddBlockedUserIdsDTO;
 import im.turms.service.domain.blocklist.access.admin.dto.response.BlockedUserDTO;
 import im.turms.service.domain.common.access.admin.controller.BaseController;
-import org.springframework.util.CollectionUtils;
-import reactor.core.publisher.Mono;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
 
 import static im.turms.server.common.access.admin.permission.AdminPermission.CLIENT_BLOCKLIST_CREATE;
 import static im.turms.server.common.access.admin.permission.AdminPermission.CLIENT_BLOCKLIST_DELETE;
@@ -54,7 +55,9 @@ public class UserBlocklistController extends BaseController {
 
     private final BlocklistService blocklistService;
 
-    public UserBlocklistController(TurmsPropertiesManager propertiesManager, BlocklistService blocklistService) {
+    public UserBlocklistController(
+            TurmsPropertiesManager propertiesManager,
+            BlocklistService blocklistService) {
         super(propertiesManager);
         this.blocklistService = blocklistService;
     }
@@ -96,8 +99,7 @@ public class UserBlocklistController extends BaseController {
         if (deleteAll) {
             result = blocklistService.unblockAllUserIds();
         } else if (!CollectionUtils.isEmpty(ids)) {
-            result = result
-                    .then(blocklistService.unblockUserIds(ids));
+            result = result.then(blocklistService.unblockUserIds(ids));
         }
         return HttpHandlerResult.okIfTruthy(result);
     }
@@ -105,7 +107,8 @@ public class UserBlocklistController extends BaseController {
     private List<BlockedUserDTO> clients2users(Collection<BlockedClient> blockedClients) {
         List<BlockedUserDTO> items = new ArrayList<>(blockedClients.size());
         for (BlockedClient blockedClient : blockedClients) {
-            items.add(new BlockedUserDTO((Long) blockedClient.id(),
+            items.add(new BlockedUserDTO(
+                    (Long) blockedClient.id(),
                     new Date(blockedClient.blockEndTime())));
         }
         return items;

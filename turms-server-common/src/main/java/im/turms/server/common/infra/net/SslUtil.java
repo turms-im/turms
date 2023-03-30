@@ -17,7 +17,14 @@
 
 package im.turms.server.common.infra.net;
 
-import im.turms.server.common.infra.property.env.common.SslProperties;
+import java.io.InputStream;
+import java.net.URL;
+import java.security.KeyStore;
+import java.util.Arrays;
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.TrustManagerFactory;
+import jakarta.annotation.Nullable;
+
 import lombok.SneakyThrows;
 import org.springframework.boot.web.server.SslConfigurationValidator;
 import org.springframework.boot.web.server.SslStoreProvider;
@@ -28,13 +35,7 @@ import reactor.netty.tcp.AbstractProtocolSslContextSpec;
 import reactor.netty.tcp.DefaultSslContextSpec;
 import reactor.netty.tcp.SslProvider;
 
-import java.io.InputStream;
-import java.net.URL;
-import java.security.KeyStore;
-import java.util.Arrays;
-import javax.net.ssl.KeyManagerFactory;
-import javax.net.ssl.TrustManagerFactory;
-import jakarta.annotation.Nullable;
+import im.turms.server.common.infra.property.env.common.SslProperties;
 
 /**
  * @author James Chen
@@ -44,9 +45,10 @@ public final class SslUtil {
     private SslUtil() {
     }
 
-    public static void configureSslContextSpec(SslProvider.SslContextSpec sslContextSpec,
-                                               SslProperties ssl,
-                                               boolean forServer) {
+    public static void configureSslContextSpec(
+            SslProvider.SslContextSpec sslContextSpec,
+            SslProperties ssl,
+            boolean forServer) {
         if (ssl.isEnabled()) {
             SslProvider.ProtocolSslContextSpec spec = forServer
                     ? createSslContextSpec(ssl, null)
@@ -55,18 +57,19 @@ public final class SslUtil {
         }
     }
 
-    public static HttpServer apply(HttpServer server,
-                                   SslProperties ssl,
-                                   @Nullable SslStoreProvider sslStoreProvider) {
+    public static HttpServer apply(
+            HttpServer server,
+            SslProperties ssl,
+            @Nullable SslStoreProvider sslStoreProvider) {
         if (ssl.isEnabled()) {
-            return server.secure(spec -> spec.sslContext(createSslContextSpec(ssl, sslStoreProvider)));
+            return server
+                    .secure(spec -> spec.sslContext(createSslContextSpec(ssl, sslStoreProvider)));
         }
         return server;
     }
 
     private static SslProvider.ProtocolSslContextSpec getClientContextBuilder(SslProperties ssl) {
-        return DefaultSslContextSpec
-                .forClient()
+        return DefaultSslContextSpec.forClient()
                 .configure(builder -> {
                     builder.keyManager(getKeyManagerFactory(ssl, null))
                             .trustManager(getTrustManagerFactory(ssl, null));
@@ -79,9 +82,10 @@ public final class SslUtil {
                 });
     }
 
-    private static AbstractProtocolSslContextSpec<?> createSslContextSpec(SslProperties ssl, SslStoreProvider sslStoreProvider) {
-        return Http11SslContextSpec
-                .forServer(getKeyManagerFactory(ssl, sslStoreProvider))
+    private static AbstractProtocolSslContextSpec<?> createSslContextSpec(
+            SslProperties ssl,
+            SslStoreProvider sslStoreProvider) {
+        return Http11SslContextSpec.forServer(getKeyManagerFactory(ssl, sslStoreProvider))
                 .configure(builder -> {
                     builder.trustManager(getTrustManagerFactory(ssl, sslStoreProvider));
                     if (ssl.getEnabledProtocols() != null) {
@@ -96,17 +100,24 @@ public final class SslUtil {
                 });
     }
 
-    private static KeyManagerFactory getKeyManagerFactory(SslProperties ssl, @Nullable SslStoreProvider sslStoreProvider) {
+    private static KeyManagerFactory getKeyManagerFactory(
+            SslProperties ssl,
+            @Nullable SslStoreProvider sslStoreProvider) {
         try {
             KeyStore keyStore = getKeyStore(ssl, sslStoreProvider);
             SslConfigurationValidator.validateKeyAlias(keyStore, ssl.getKeyAlias());
             KeyManagerFactory keyManagerFactory = ssl.getKeyAlias() == null
                     ? KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm())
-                    : new ConfigurableAliasKeyManagerFactory(ssl.getKeyAlias(),
-                    KeyManagerFactory.getDefaultAlgorithm());
-            char[] keyPassword = ssl.getKeyPassword() == null ? null : ssl.getKeyPassword().toCharArray();
+                    : new ConfigurableAliasKeyManagerFactory(
+                            ssl.getKeyAlias(),
+                            KeyManagerFactory.getDefaultAlgorithm());
+            char[] keyPassword = ssl.getKeyPassword() == null
+                    ? null
+                    : ssl.getKeyPassword()
+                            .toCharArray();
             if (keyPassword == null && ssl.getKeyStorePassword() != null) {
-                keyPassword = ssl.getKeyStorePassword().toCharArray();
+                keyPassword = ssl.getKeyStorePassword()
+                        .toCharArray();
             }
             keyManagerFactory.init(keyStore, keyPassword);
             return keyManagerFactory;
@@ -115,20 +126,25 @@ public final class SslUtil {
         }
     }
 
-    private static KeyStore getKeyStore(SslProperties ssl,
-                                        @Nullable SslStoreProvider sslStoreProvider) throws Exception {
+    private static KeyStore getKeyStore(
+            SslProperties ssl,
+            @Nullable SslStoreProvider sslStoreProvider) throws Exception {
         if (sslStoreProvider != null) {
             return sslStoreProvider.getKeyStore();
         }
-        return loadStore(ssl.getKeyStoreType(), ssl.getKeyStoreProvider(), ssl.getKeyStore(),
+        return loadStore(ssl.getKeyStoreType(),
+                ssl.getKeyStoreProvider(),
+                ssl.getKeyStore(),
                 ssl.getKeyStorePassword());
     }
 
-    private static TrustManagerFactory getTrustManagerFactory(SslProperties ssl, SslStoreProvider sslStoreProvider) {
+    private static TrustManagerFactory getTrustManagerFactory(
+            SslProperties ssl,
+            SslStoreProvider sslStoreProvider) {
         try {
             KeyStore store = getTrustStore(ssl, sslStoreProvider);
-            TrustManagerFactory trustManagerFactory = TrustManagerFactory
-                    .getInstance(TrustManagerFactory.getDefaultAlgorithm());
+            TrustManagerFactory trustManagerFactory =
+                    TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
             trustManagerFactory.init(store);
             return trustManagerFactory;
         } catch (Exception ex) {
@@ -136,7 +152,9 @@ public final class SslUtil {
         }
     }
 
-    private static KeyStore getTrustStore(SslProperties ssl, @Nullable SslStoreProvider sslStoreProvider) {
+    private static KeyStore getTrustStore(
+            SslProperties ssl,
+            @Nullable SslStoreProvider sslStoreProvider) {
         if (sslStoreProvider != null) {
             try {
                 return sslStoreProvider.getTrustStore();
@@ -148,26 +166,35 @@ public final class SslUtil {
         if (trustStore == null) {
             return null;
         }
-        return loadStore(ssl.getTrustStoreType(), ssl.getTrustStoreProvider(), trustStore,
+        return loadStore(ssl.getTrustStoreType(),
+                ssl.getTrustStoreProvider(),
+                trustStore,
                 ssl.getTrustStorePassword());
     }
 
     @SneakyThrows
-    private static KeyStore loadStore(String type,
-                                      @Nullable String provider,
-                                      String resource,
-                                      @Nullable String password) {
+    private static KeyStore loadStore(
+            String type,
+            @Nullable String provider,
+            String resource,
+            @Nullable String password) {
         KeyStore store = provider == null
                 ? KeyStore.getInstance(type)
                 : KeyStore.getInstance(type, provider);
         try {
             URL url = ResourceUtils.getURL(resource);
             try (InputStream stream = url.openStream()) {
-                store.load(stream, password == null ? null : password.toCharArray());
+                store.load(stream,
+                        password == null
+                                ? null
+                                : password.toCharArray());
             }
             return store;
         } catch (Exception ex) {
-            throw new RuntimeException("Failed to load key store from the resource: " + resource, ex);
+            throw new RuntimeException(
+                    "Failed to load key store from the resource: "
+                            + resource,
+                    ex);
         }
     }
 

@@ -17,12 +17,14 @@
 
 package unit.im.turms.server.common.infra.property;
 
-import im.turms.server.common.infra.property.InvalidPropertyException;
-import im.turms.server.common.infra.property.TurmsProperties;
 import org.junit.jupiter.api.Test;
 
-import static im.turms.server.common.infra.property.TurmsPropertiesValidator.validate;
+import im.turms.server.common.infra.property.InvalidPropertyException;
+import im.turms.server.common.infra.property.TurmsProperties;
+
 import static org.assertj.core.api.Assertions.assertThat;
+
+import static im.turms.server.common.infra.property.TurmsPropertiesValidator.validate;
 
 /**
  * @author James Chen
@@ -38,16 +40,20 @@ class TurmsPropertiesValidatorTests {
     @Test
     void test_min() {
         TurmsProperties properties = new TurmsProperties();
-        properties.getUserStatus().setUserSessionsStatusExpireAfter(0);
+        properties.getUserStatus()
+                .setUserSessionsStatusExpireAfter(0);
         InvalidPropertyException exception = validate(properties);
-        InvalidPropertyException expected = new InvalidPropertyException("The property \"userSessionsStatusExpireAfter\" must be greater than or equal to 1");
+        InvalidPropertyException expected = new InvalidPropertyException(
+                "The property \"userSessionsStatusExpireAfter\" must be greater than or equal to 1");
         assertThat(exception).hasSuppressedException(expected);
 
-        properties.getUserStatus().setUserSessionsStatusExpireAfter(1);
+        properties.getUserStatus()
+                .setUserSessionsStatusExpireAfter(1);
         exception = validate(properties);
         assertThat(exception).isNull();
 
-        properties.getUserStatus().setUserSessionsStatusExpireAfter(2);
+        properties.getUserStatus()
+                .setUserSessionsStatusExpireAfter(2);
         exception = validate(properties);
         assertThat(exception).isNull();
     }
@@ -55,16 +61,23 @@ class TurmsPropertiesValidatorTests {
     @Test
     void test_max() {
         TurmsProperties properties = new TurmsProperties();
-        properties.getHealthCheck().getCpu().setUnhealthyLoadThresholdPercentage(100);
+        properties.getHealthCheck()
+                .getCpu()
+                .setUnhealthyLoadThresholdPercentage(100);
         InvalidPropertyException exception = validate(properties);
         assertThat(exception).isNull();
 
-        properties.getHealthCheck().getCpu().setUnhealthyLoadThresholdPercentage(101);
+        properties.getHealthCheck()
+                .getCpu()
+                .setUnhealthyLoadThresholdPercentage(101);
         exception = validate(properties);
-        InvalidPropertyException expected = new InvalidPropertyException("The property \"unhealthyLoadThresholdPercentage\" must be less than or equal to 100");
+        InvalidPropertyException expected = new InvalidPropertyException(
+                "The property \"unhealthyLoadThresholdPercentage\" must be less than or equal to 100");
         assertThat(exception).hasSuppressedException(expected);
 
-        properties.getHealthCheck().getCpu().setUnhealthyLoadThresholdPercentage(99);
+        properties.getHealthCheck()
+                .getCpu()
+                .setUnhealthyLoadThresholdPercentage(99);
         exception = validate(properties);
         assertThat(exception).isNull();
     }
@@ -72,12 +85,17 @@ class TurmsPropertiesValidatorTests {
     @Test
     void test_validCron() {
         TurmsProperties properties = new TurmsProperties();
-        properties.getService().getMessage().setExpiredMessagesCleanupCron("");
+        properties.getService()
+                .getMessage()
+                .setExpiredMessagesCleanupCron("");
         InvalidPropertyException exception = validate(properties);
-        InvalidPropertyException expected = new InvalidPropertyException("The property \"expiredMessagesCleanupCron\" has an invalid cron \"\"");
+        InvalidPropertyException expected = new InvalidPropertyException(
+                "The property \"expiredMessagesCleanupCron\" has an invalid cron \"\"");
         assertThat(exception).hasSuppressedException(expected);
 
-        properties.getService().getMessage().setExpiredMessagesCleanupCron("0 45 2 * * *");
+        properties.getService()
+                .getMessage()
+                .setExpiredMessagesCleanupCron("0 45 2 * * *");
         exception = validate(properties);
         assertThat(exception).isNull();
     }

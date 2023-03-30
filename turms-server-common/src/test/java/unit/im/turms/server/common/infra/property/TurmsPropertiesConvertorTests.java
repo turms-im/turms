@@ -17,22 +17,24 @@
 
 package unit.im.turms.server.common.infra.property;
 
-import im.turms.server.common.infra.property.InvalidPropertyException;
-import im.turms.server.common.infra.property.TurmsProperties;
-import im.turms.server.common.infra.property.TurmsPropertiesConvertor;
-import im.turms.server.common.testing.JsonUtil;
-import org.junit.jupiter.api.Test;
-
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.jupiter.api.Test;
+
+import im.turms.server.common.infra.property.InvalidPropertyException;
+import im.turms.server.common.infra.property.TurmsProperties;
+import im.turms.server.common.infra.property.TurmsPropertiesConvertor;
+import im.turms.server.common.testing.JsonUtil;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
 import static im.turms.server.common.infra.property.TurmsPropertiesConvertor.mergeProperties;
 import static im.turms.server.common.infra.property.TurmsPropertiesConvertor.validatePropertiesForUpdating;
 import static im.turms.server.common.infra.property.TurmsPropertiesInspector.METADATA;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
  * @author James Chen
@@ -41,36 +43,23 @@ class TurmsPropertiesConvertorTests {
 
     @Test
     void validatePropertiesForUpdating_shouldNotReturnException_whenUpdatingMutableProperties() {
-        InvalidPropertyException exception = validatePropertiesForUpdating(new TurmsProperties(), Map.of(
-                "gateway", Map.of(
-                        "adminApi", Map.of(
-                                "rateLimiting", Map.of(
-                                        "capacity", "9513"
-                                )
-                        )
-                )
-        ));
+        InvalidPropertyException exception = validatePropertiesForUpdating(new TurmsProperties(),
+                Map.of("gateway",
+                        Map.of("adminApi", Map.of("rateLimiting", Map.of("capacity", "9513")))));
         assertThat(exception).isNull();
     }
 
     @Test
     void validatePropertiesForUpdating_shouldReturnException_forNonExistingProperties() {
-        InvalidPropertyException exception = validatePropertiesForUpdating(new TurmsProperties(), Map.of(
-                "gateway", Map.of(
-                        "rateLimiting", Map.of(
-                                "capacity", "9513"
-                        )
-                )
-        ));
+        InvalidPropertyException exception = validatePropertiesForUpdating(new TurmsProperties(),
+                Map.of("gateway", Map.of("rateLimiting", Map.of("capacity", "9513"))));
         assertThat(exception).isNotNull();
     }
 
     @Test
     void validatePropertiesForUpdating_shouldReturnException_forImmutableProperties() {
-        InvalidPropertyException exception = validatePropertiesForUpdating(new TurmsProperties(), Map.of(
-                "userStatus", Map.of(
-                        "userSessionsStatusCacheMaxSize", "95175328"
-                )));
+        InvalidPropertyException exception = validatePropertiesForUpdating(new TurmsProperties(),
+                Map.of("userStatus", Map.of("userSessionsStatusCacheMaxSize", "95175328")));
         assertThat(exception).isNotNull();
     }
 
@@ -78,94 +67,91 @@ class TurmsPropertiesConvertorTests {
     void mergeProperties_shouldReturnNewProperties_whenMergingEmptyProperties() {
         TurmsProperties properties = new TurmsProperties();
         TurmsProperties newProperties = mergeProperties(properties, Map.of());
-        assertThat(newProperties)
-                .isNotSameAs(properties);
-        assertThat(newProperties.getIp())
-                .isNotSameAs(properties.getIp());
-        assertThat(newProperties.getIp().getPublicIpDetectorAddresses())
-                .isNotSameAs(properties.getIp().getPublicIpDetectorAddresses());
+        assertThat(newProperties).isNotSameAs(properties);
+        assertThat(newProperties.getIp()).isNotSameAs(properties.getIp());
+        assertThat(newProperties.getIp()
+                .getPublicIpDetectorAddresses()).isNotSameAs(properties.getIp()
+                        .getPublicIpDetectorAddresses());
     }
 
     @Test
     void mergeProperties_shouldOnlyUpdateNewProperties_whenMeringValidProperties() {
         TurmsProperties properties = new TurmsProperties();
-        List<String> originalIpAddresses = new ArrayList<>(properties.getIp().getPublicIpDetectorAddresses());
+        List<String> originalIpAddresses = new ArrayList<>(
+                properties.getIp()
+                        .getPublicIpDetectorAddresses());
         int expectedUserSessionsStatusCacheMaxSize = 654132;
-        TurmsProperties newProperties = mergeProperties(properties, Map.of(
-                "ip", Map.of(
-                        "publicIpDetectorAddresses", List.of("123")
-                ),
-                "userStatus", Map.of(
-                        "cacheUserSessionsStatus", false,
-                        "userSessionsStatusCacheMaxSize", expectedUserSessionsStatusCacheMaxSize
-                )
-        ));
+        TurmsProperties newProperties = mergeProperties(properties,
+                Map.of("ip",
+                        Map.of("publicIpDetectorAddresses", List.of("123")),
+                        "userStatus",
+                        Map.of("cacheUserSessionsStatus",
+                                false,
+                                "userSessionsStatusCacheMaxSize",
+                                expectedUserSessionsStatusCacheMaxSize)));
 
-        assertThat(properties.getIp().getPublicIpDetectorAddresses()).containsExactlyElementsOf(originalIpAddresses);
+        assertThat(properties.getIp()
+                .getPublicIpDetectorAddresses()).containsExactlyElementsOf(originalIpAddresses);
 
         assertThat(newProperties).isNotSameAs(properties);
-        assertThat(newProperties.getIp().getPublicIpDetectorAddresses()).containsExactly("123");
-        assertThat(newProperties.getUserStatus().isCacheUserSessionsStatus()).isFalse();
-        assertThat(newProperties.getUserStatus().getUserSessionsStatusCacheMaxSize())
+        assertThat(newProperties.getIp()
+                .getPublicIpDetectorAddresses()).containsExactly("123");
+        assertThat(newProperties.getUserStatus()
+                .isCacheUserSessionsStatus()).isFalse();
+        assertThat(newProperties.getUserStatus()
+                .getUserSessionsStatusCacheMaxSize())
                 .isEqualTo(expectedUserSessionsStatusCacheMaxSize);
     }
 
     @Test
     void mergeProperties_shouldUpdate_whenMeringValidEmptyPropertyValues() {
         TurmsProperties properties = new TurmsProperties();
-        List<String> originalIpAddresses = new ArrayList<>(properties.getIp().getPublicIpDetectorAddresses());
-        TurmsProperties newProperties = mergeProperties(properties, Map.of(
-                "ip", Map.of(
-                        "publicIpDetectorAddresses", List.of()
-                )
-        ));
+        List<String> originalIpAddresses = new ArrayList<>(
+                properties.getIp()
+                        .getPublicIpDetectorAddresses());
+        TurmsProperties newProperties = mergeProperties(properties,
+                Map.of("ip", Map.of("publicIpDetectorAddresses", List.of())));
 
-        assertThat(properties.getIp().getPublicIpDetectorAddresses()).containsExactlyElementsOf(originalIpAddresses);
+        assertThat(properties.getIp()
+                .getPublicIpDetectorAddresses()).containsExactlyElementsOf(originalIpAddresses);
         assertThat(newProperties).isNotSameAs(properties);
-        assertThat(newProperties.getIp().getPublicIpDetectorAddresses()).isEmpty();
+        assertThat(newProperties.getIp()
+                .getPublicIpDetectorAddresses()).isEmpty();
     }
 
     @Test
     void mergeProperties_shouldNotUpdate_whenMeringValidEmptyProperties() {
         TurmsProperties properties = new TurmsProperties();
-        TurmsProperties newProperties = mergeProperties(properties, Map.of(
-                "userStatus", Map.of()
-        ));
+        TurmsProperties newProperties = mergeProperties(properties, Map.of("userStatus", Map.of()));
 
         assertThat(newProperties).isNotSameAs(properties);
-        assertThat(newProperties.getUserStatus().isCacheUserSessionsStatus())
-                .isEqualTo(properties.getUserStatus().isCacheUserSessionsStatus());
-        assertThat(newProperties.getUserStatus().getUserSessionsStatusCacheMaxSize())
-                .isEqualTo(properties.getUserStatus().getUserSessionsStatusCacheMaxSize());
+        assertThat(newProperties.getUserStatus()
+                .isCacheUserSessionsStatus()).isEqualTo(properties.getUserStatus()
+                        .isCacheUserSessionsStatus());
+        assertThat(newProperties.getUserStatus()
+                .getUserSessionsStatusCacheMaxSize()).isEqualTo(properties.getUserStatus()
+                        .getUserSessionsStatusCacheMaxSize());
     }
 
     @Test
     void mergeProperties_shouldThrow_whenMergingPropertiesWithWrongType() {
-        assertThatThrownBy(() -> mergeProperties(new TurmsProperties(), Map.of(
-                "ip", Map.of(
-                        "publicIpDetectorAddresses", Map.of(123, 321)
-                ))))
+        assertThatThrownBy(() -> mergeProperties(new TurmsProperties(),
+                Map.of("ip", Map.of("publicIpDetectorAddresses", Map.of(123, 321)))))
                 .isInstanceOf(InvalidPropertyException.class);
 
-        assertThatThrownBy(() -> mergeProperties(new TurmsProperties(), Map.of(
-                "userStatus", Map.of(
-                        "cacheUserSessionsStatus", "Wrong Value Type"
-                ))))
+        assertThatThrownBy(() -> mergeProperties(new TurmsProperties(),
+                Map.of("userStatus", Map.of("cacheUserSessionsStatus", "Wrong Value Type"))))
                 .isInstanceOf(InvalidPropertyException.class);
 
-        assertThatThrownBy(() -> mergeProperties(new TurmsProperties(), Map.of(
-                "userStatus", Map.of(
-                        "userSessionsStatusCacheMaxSize", "Wrong Value Type"
-                ))))
+        assertThatThrownBy(() -> mergeProperties(new TurmsProperties(),
+                Map.of("userStatus", Map.of("userSessionsStatusCacheMaxSize", "Wrong Value Type"))))
                 .isInstanceOf(InvalidPropertyException.class);
     }
 
     @Test
     void mergeProperties_shouldThrow_whenMergingNonExistingProperties() {
-        assertThatThrownBy(() -> mergeProperties(new TurmsProperties(), Map.of(
-                "<>?:L>", Map.of(
-                        "publicIpDetectorAddresses", "Wrong Value Type"
-                ))))
+        assertThatThrownBy(() -> mergeProperties(new TurmsProperties(),
+                Map.of("<>?:L>", Map.of("publicIpDetectorAddresses", "Wrong Value Type"))))
                 .isInstanceOf(InvalidPropertyException.class);
     }
 
@@ -173,7 +159,8 @@ class TurmsPropertiesConvertorTests {
     void mergeMetadataWithPropertyValue() {
         Map<String, Object> actual = TurmsPropertiesConvertor
                 .mergeMetadataWithPropertyValue(METADATA, new TurmsProperties());
-        InputStream expected = getClass().getClassLoader().getResourceAsStream("turms-properties-metadata-with-property-value.json");
+        InputStream expected = getClass().getClassLoader()
+                .getResourceAsStream("turms-properties-metadata-with-property-value.json");
         JsonUtil.assertEqual(actual, expected);
     }
 

@@ -17,13 +17,14 @@
 
 package unit.im.turms.server.common.infra.proto;
 
+import java.util.List;
+
 import com.google.protobuf.ByteString;
+import org.junit.jupiter.api.Test;
+
 import im.turms.server.common.access.client.dto.request.TurmsRequest;
 import im.turms.server.common.access.client.dto.request.message.CreateMessageRequest;
 import im.turms.server.common.infra.proto.ProtoFormatter;
-import org.junit.jupiter.api.Test;
-
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -38,13 +39,15 @@ class ProtoFormatterTests {
                 .setRequestId(123L)
                 .setCreateMessageRequest(CreateMessageRequest.newBuilder()
                         .setText("Hello World")
-                        .addAllRecords(List.of(ByteString.copyFromUtf8("test record 1"), ByteString.copyFromUtf8("test record 2")))
+                        .addAllRecords(List.of(ByteString.copyFromUtf8("test record 1"),
+                                ByteString.copyFromUtf8("test record 2")))
                         .setGroupId(2)
                         .setDeliveryDate(123456789)
                         .build());
         String text = ProtoFormatter.toJSON5(request, 128);
 
-        String expected = "{request_id:123,create_message_request:{group_id:2,delivery_date:123456789,text:'*',records:'*'}}";
+        String expected =
+                "{request_id:123,create_message_request:{group_id:2,delivery_date:123456789,text:'*',records:'*'}}";
         assertThat(text).isEqualTo(expected);
     }
 

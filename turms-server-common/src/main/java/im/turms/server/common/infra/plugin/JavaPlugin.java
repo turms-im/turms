@@ -17,11 +17,11 @@
 
 package im.turms.server.common.infra.plugin;
 
+import java.util.List;
+
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 import lombok.experimental.Accessors;
-
-import java.util.List;
 
 /**
  * @author James Chen
@@ -32,9 +32,10 @@ import java.util.List;
 public class JavaPlugin extends Plugin {
     PluginClassLoader pluginClassLoader;
 
-    public JavaPlugin(PluginDescriptor descriptor,
-                      List<TurmsExtension> extensions,
-                      PluginClassLoader pluginClassLoader) {
+    public JavaPlugin(
+            PluginDescriptor descriptor,
+            List<TurmsExtension> extensions,
+            PluginClassLoader pluginClassLoader) {
         super(descriptor, extensions);
         this.pluginClassLoader = pluginClassLoader;
     }

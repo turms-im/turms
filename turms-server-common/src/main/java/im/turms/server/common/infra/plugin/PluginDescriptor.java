@@ -17,10 +17,10 @@
 
 package im.turms.server.common.infra.plugin;
 
+import java.nio.file.Path;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
-
-import java.nio.file.Path;
 
 /**
  * @author James Chen

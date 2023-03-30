@@ -17,6 +17,14 @@
 
 package im.turms.server.common.infra.logging.core.layout;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import jakarta.annotation.Nullable;
+
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.PooledByteBufAllocator;
+import org.springframework.util.StringUtils;
+
 import im.turms.server.common.infra.cluster.node.NodeType;
 import im.turms.server.common.infra.exception.IncompatibleInternalChangeException;
 import im.turms.server.common.infra.exception.ThrowableUtil;
@@ -29,24 +37,16 @@ import im.turms.server.common.infra.logging.core.model.LogLevel;
 import im.turms.server.common.infra.netty.ReferenceCountUtil;
 import im.turms.server.common.infra.time.DateUtil;
 import im.turms.server.common.infra.tracing.TracingContext;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.PooledByteBufAllocator;
-import org.springframework.util.StringUtils;
-
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen
- * @implNote 1. Note that we do NOT escape or remove non-printable characters for logging
- * because it has an impact on performance. The caller of logger should ensure
- * won't pass malicious texts especially the user input texts.
- * 2. The template is designed for ascii-only text because:
- * a. We won't convert String to the consistent UTF-8 bytes because it needs to copy memory
- * b. We encourage caller to pass ascii-only texts only.
- * In other words, if the message, args, or exception includes non-ascii text,
- * the logger will just print error codes
+ * @implNote 1. Note that we do NOT escape or remove non-printable characters for logging because it
+ *           has an impact on performance. The caller of logger should ensure won't pass malicious
+ *           texts especially the user input texts. 2. The template is designed for ascii-only text
+ *           because: a. We won't convert String to the consistent UTF-8 bytes because it needs to
+ *           copy memory b. We encourage caller to pass ascii-only texts only. In other words, if
+ *           the message, args, or exception includes non-ascii text, the logger will just print
+ *           error codes
  */
 public class TurmsTemplateLayout extends TemplateLayout {
 
@@ -67,7 +67,8 @@ public class TurmsTemplateLayout extends TemplateLayout {
         LEVELS = new byte[levelCount][];
         int maxLength = 0;
         for (LogLevel level : levels) {
-            maxLength = Math.max(level.name().length(), maxLength);
+            maxLength = Math.max(level.name()
+                    .length(), maxLength);
         }
         for (int i = 0; i < levelCount; i++) {
             String level = StringUtil.padStartLatin1(levels[i].name(), maxLength, AsciiCode.SPACE)
@@ -87,7 +88,9 @@ public class TurmsTemplateLayout extends TemplateLayout {
             type = switch (nodeType) {
                 case GATEWAY -> NODE_TYPE_GATEWAY;
                 case SERVICE -> NODE_TYPE_SERVICE;
-                default -> throw new IncompatibleInternalChangeException("Unknown node type: " + nodeType);
+                default -> throw new IncompatibleInternalChangeException(
+                        "Unknown node type: "
+                                + nodeType);
             };
         }
         this.nodeType = type;
@@ -108,18 +111,23 @@ public class TurmsTemplateLayout extends TemplateLayout {
     /**
      * @implNote Note that we do NOT escape or remove non-printable characters
      */
-    public ByteBuf format(boolean shouldParse,
-                          @Nullable byte[] className,
-                          LogLevel level,
-                          @Nullable CharSequence msg,
-                          @Nullable Object[] args,
-                          @Nullable Throwable throwable) {
+    public ByteBuf format(
+            boolean shouldParse,
+            @Nullable byte[] className,
+            LogLevel level,
+            @Nullable CharSequence msg,
+            @Nullable Object[] args,
+            @Nullable Throwable throwable) {
         int estimatedThrowableLength = 0;
         if (throwable != null) {
             int causes = ThrowableUtil.countCauses(throwable);
-            estimatedThrowableLength = causes == 0 ? 64 : causes * 1024;
+            estimatedThrowableLength = causes == 0
+                    ? 64
+                    : causes * 1024;
         }
-        int estimatedLength = (msg == null ? 0 : msg.length()) + ESTIMATED_PATTERN_TEXT_LENGTH + estimatedThrowableLength;
+        int estimatedLength = (msg == null
+                ? 0
+                : msg.length()) + ESTIMATED_PATTERN_TEXT_LENGTH + estimatedThrowableLength;
         if (args != null && shouldParse) {
             estimatedLength += args.length * 16;
         }
@@ -132,16 +140,18 @@ public class TurmsTemplateLayout extends TemplateLayout {
         }
     }
 
-    private ByteBuf format0(ByteBuf buffer,
-                            boolean shouldParse,
-                            @Nullable byte[] className,
-                            LogLevel level,
-                            CharSequence msg,
-                            Object[] args,
-                            Throwable throwable) {
+    private ByteBuf format0(
+            ByteBuf buffer,
+            boolean shouldParse,
+            @Nullable byte[] className,
+            LogLevel level,
+            CharSequence msg,
+            Object[] args,
+            Throwable throwable) {
         byte[] timestamp = DateUtil.toBytes(System.currentTimeMillis());
 
-        String threadName = Thread.currentThread().getName();
+        String threadName = Thread.currentThread()
+                .getName();
 
         // Write template text
 
@@ -183,13 +193,15 @@ public class TurmsTemplateLayout extends TemplateLayout {
         return buffer;
     }
 
-    private ByteBuf format0(ByteBuf buffer,
-                            @Nullable byte[] className,
-                            LogLevel level,
-                            ByteBuf msg) {
+    private ByteBuf format0(
+            ByteBuf buffer,
+            @Nullable byte[] className,
+            LogLevel level,
+            ByteBuf msg) {
         byte[] timestamp = DateUtil.toBytes(System.currentTimeMillis());
 
-        String threadName = Thread.currentThread().getName();
+        String threadName = Thread.currentThread()
+                .getName();
 
         // Write template text
 
@@ -228,13 +240,19 @@ public class TurmsTemplateLayout extends TemplateLayout {
                 .addComponent(true, msg);
     }
 
-    private void appendMessage(boolean shouldParse, CharSequence msg, Object[] args, ByteBuf buffer) {
+    private void appendMessage(
+            boolean shouldParse,
+            CharSequence msg,
+            Object[] args,
+            ByteBuf buffer) {
         String message = msg.toString();
         if (!shouldParse) {
             buffer.writeBytes(StringUtil.getBytes(message));
             return;
         }
-        int argCount = args == null ? 0 : args.length;
+        int argCount = args == null
+                ? 0
+                : args.length;
         if (argCount == 0) {
             buffer.writeBytes(StringUtil.getBytes(message));
             return;
@@ -291,7 +309,8 @@ public class TurmsTemplateLayout extends TemplateLayout {
             Arrays.fill(result, 0, writeIndex, (byte) ' ');
             return result;
         }
-        return StringUtil.getBytes(StringUtil.padStartLatin1(name, CLASS_NAME_LENGTH, AsciiCode.SPACE));
+        return StringUtil
+                .getBytes(StringUtil.padStartLatin1(name, CLASS_NAME_LENGTH, AsciiCode.SPACE));
     }
 
 }

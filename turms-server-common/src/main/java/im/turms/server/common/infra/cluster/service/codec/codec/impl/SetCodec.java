@@ -17,6 +17,14 @@
 
 package im.turms.server.common.infra.cluster.service.codec.codec.impl;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.eclipse.collections.impl.set.mutable.UnifiedSet;
+
 import im.turms.server.common.infra.cluster.service.codec.codec.Codec;
 import im.turms.server.common.infra.cluster.service.codec.codec.CodecId;
 import im.turms.server.common.infra.cluster.service.codec.codec.CodecPool;
@@ -24,13 +32,6 @@ import im.turms.server.common.infra.cluster.service.codec.io.CodecStreamInput;
 import im.turms.server.common.infra.cluster.service.codec.io.CodecStreamOutput;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.io.Stream;
-import org.eclipse.collections.impl.set.mutable.UnifiedSet;
-
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
 
 /**
  * @author James Chen
@@ -44,12 +45,7 @@ public class SetCodec implements Codec<Set<?>> {
 
     @Override
     public List<Class<?>> getEncodableClasses() {
-        return List.of(
-                Set.class,
-                UnifiedSet.class,
-                HashSet.class,
-                LinkedHashSet.class
-        );
+        return List.of(Set.class, UnifiedSet.class, HashSet.class, LinkedHashSet.class);
     }
 
     @Override
@@ -64,9 +60,12 @@ public class SetCodec implements Codec<Set<?>> {
         if (size == 0) {
             return;
         }
-        Class<?> elementClass = data.iterator().next().getClass();
+        Class<?> elementClass = data.iterator()
+                .next()
+                .getClass();
         Codec<Object> codec = CodecPool.getCodec(elementClass);
-        output.writeShort(codec.getCodecId().getId());
+        output.writeShort(codec.getCodecId()
+                .getId());
         for (Object element : data) {
             codec.write(output, element);
         }
@@ -93,10 +92,14 @@ public class SetCodec implements Codec<Set<?>> {
             // 1 byte for size
             return 1;
         }
-        Object item = items.iterator().next();
+        Object item = items.iterator()
+                .next();
         Codec<Object> codec = CodecPool.getCodec(item.getClass());
         if (codec == null) {
-            throw new IllegalArgumentException("Cannot find a codec for the unknown class: " + item.getClass().getName());
+            throw new IllegalArgumentException(
+                    "Cannot find a codec for the unknown class: "
+                            + item.getClass()
+                                    .getName());
         }
         return Stream.computeVarint32Size(size) + codec.initialCapacity(item) * size;
     }

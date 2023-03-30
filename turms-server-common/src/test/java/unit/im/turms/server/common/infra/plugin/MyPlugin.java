@@ -17,10 +17,10 @@
 
 package unit.im.turms.server.common.infra.plugin;
 
+import java.util.Set;
+
 import im.turms.server.common.infra.plugin.TurmsExtension;
 import im.turms.server.common.infra.plugin.TurmsPlugin;
-
-import java.util.Set;
 
 /**
  * @author James Chen

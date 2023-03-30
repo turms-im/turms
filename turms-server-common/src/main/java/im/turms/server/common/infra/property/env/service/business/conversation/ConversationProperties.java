@@ -17,12 +17,13 @@
 
 package im.turms.server.common.infra.property.env.service.business.conversation;
 
-import im.turms.server.common.infra.property.env.service.business.message.TypingStatusProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
+
+import im.turms.server.common.infra.property.env.service.business.message.TypingStatusProperties;
 
 /**
  * @author James Chen

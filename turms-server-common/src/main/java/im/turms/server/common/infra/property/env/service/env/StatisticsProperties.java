@@ -17,15 +17,16 @@
 
 package im.turms.server.common.infra.property.env.service.env;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import im.turms.server.common.infra.property.metadata.Description;
 import im.turms.server.common.infra.property.metadata.GlobalProperty;
 import im.turms.server.common.infra.property.metadata.MutableProperty;
 import im.turms.server.common.infra.task.CronConst;
 import im.turms.server.common.infra.validation.ValidCron;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 /**
  * @author James Chen
@@ -38,7 +39,8 @@ public class StatisticsProperties {
 
     @Description("The cron expression to specify the time to log online users' number")
     @ValidCron
-    private String onlineUsersNumberLoggingCron = CronConst.DEFAULT_ONLINE_USERS_NUMBER_LOGGING_CRON;
+    private String onlineUsersNumberLoggingCron =
+            CronConst.DEFAULT_ONLINE_USERS_NUMBER_LOGGING_CRON;
 
     @Description("Whether to log online users number")
     @GlobalProperty

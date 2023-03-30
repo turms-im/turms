@@ -17,12 +17,13 @@
 
 package im.turms.server.common.infra.reflect;
 
-import im.turms.server.common.infra.unsafe.UnsafeUtil;
+import java.lang.invoke.MethodHandle;
+import java.lang.reflect.Field;
+
 import lombok.Data;
 import sun.misc.Unsafe;
 
-import java.lang.invoke.MethodHandle;
-import java.lang.reflect.Field;
+import im.turms.server.common.infra.unsafe.UnsafeUtil;
 
 /**
  * @author James Chen
@@ -38,7 +39,8 @@ public class UnsafeAndMethodHandledBasedVarAccessor<T, V> implements VarAccessor
 
     public UnsafeAndMethodHandledBasedVarAccessor(Field field, MethodHandle setter) {
         declaringClass = field.getDeclaringClass();
-        if (field.getType().isPrimitive()) {
+        if (field.getType()
+                .isPrimitive()) {
             throw new IllegalArgumentException("The field type cannot be primitive");
         }
         if (declaringClass.isRecord()) {
@@ -51,10 +53,12 @@ public class UnsafeAndMethodHandledBasedVarAccessor<T, V> implements VarAccessor
     @Override
     public V get(T object) {
         if (!declaringClass.isAssignableFrom(object.getClass())) {
-            throw new IllegalArgumentException("Expecting the object class (" +
-                    declaringClass.getName() +
-                    ") to be the class or the subclass of: " +
-                    object.getClass().getName());
+            throw new IllegalArgumentException(
+                    "Expecting the object class ("
+                            + declaringClass.getName()
+                            + ") to be the class or the subclass of: "
+                            + object.getClass()
+                                    .getName());
         }
         return (V) UNSAFE.getObject(object, fieldOffset);
     }
@@ -64,7 +68,10 @@ public class UnsafeAndMethodHandledBasedVarAccessor<T, V> implements VarAccessor
         try {
             setter.invoke(object, value);
         } catch (Throwable t) {
-            throw new RuntimeException("Failed to set the value: " + value, t);
+            throw new RuntimeException(
+                    "Failed to set the value: "
+                            + value,
+                    t);
         }
     }
 

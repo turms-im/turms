@@ -17,10 +17,11 @@
 
 package im.turms.server.common.storage.mongo.entity;
 
-import com.mongodb.client.model.IndexModel;
-import im.turms.server.common.storage.mongo.entity.annotation.Indexed;
-
 import java.lang.reflect.Field;
+
+import com.mongodb.client.model.IndexModel;
+
+import im.turms.server.common.storage.mongo.entity.annotation.Indexed;
 
 /**
  * @author James Chen

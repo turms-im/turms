@@ -18,13 +18,14 @@
 package im.turms.server.common.access.admin.dto.response;
 
 import com.mongodb.client.result.UpdateResult;
+
 import im.turms.server.common.domain.common.access.dto.ControllerDTO;
 
 /**
  * @author James Chen
- * @implNote In most cases,
- * it's meaningful to use UpdateResultDTO instead of ResponseStatusCode.OK for the result of update operations
- * because an update operation is usually considered as successful even if the no documents changed (no documents matched)
+ * @implNote In most cases, it is meaningful to use UpdateResultDTO instead of ResponseStatusCode.OK
+ *           for the result of update operations because an update operation is usually considered
+ *           as successful even if the no documents changed (no documents matched)
  */
 public record UpdateResultDTO(
         Long matchedCount,

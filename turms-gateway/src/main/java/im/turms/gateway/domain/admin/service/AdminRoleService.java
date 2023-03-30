@@ -17,11 +17,12 @@
 
 package im.turms.gateway.domain.admin.service;
 
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.stereotype.Service;
+
 import im.turms.gateway.domain.admin.repository.AdminRoleRepository;
 import im.turms.server.common.domain.admin.service.BaseAdminRoleService;
 import im.turms.server.common.storage.mongo.IMongoCollectionInitializer;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.stereotype.Service;
 
 /**
  * @author James Chen

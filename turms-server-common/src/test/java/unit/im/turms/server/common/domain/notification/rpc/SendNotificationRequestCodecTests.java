@@ -17,16 +17,17 @@
 
 package unit.im.turms.server.common.domain.notification.rpc;
 
-import im.turms.server.common.access.client.dto.constant.DeviceType;
-import im.turms.server.common.domain.notification.rpc.SendNotificationRequest;
-import im.turms.server.common.domain.notification.rpc.SendNotificationRequestCodec;
+import java.util.Collections;
+import java.util.Set;
+
 import io.netty.buffer.ByteBufUtil;
 import io.netty.buffer.Unpooled;
 import org.junit.jupiter.api.Test;
 import unit.im.turms.server.common.infra.cluster.service.rpc.codec.BaseCodecTest;
 
-import java.util.Collections;
-import java.util.Set;
+import im.turms.server.common.access.client.dto.constant.DeviceType;
+import im.turms.server.common.domain.notification.rpc.SendNotificationRequest;
+import im.turms.server.common.domain.notification.rpc.SendNotificationRequestCodec;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -40,11 +41,13 @@ class SendNotificationRequestCodecTests extends BaseCodecTest {
                 Set.of(1L, 2L, 3L),
                 Collections.emptySet(),
                 DeviceType.ANDROID);
-        SendNotificationRequest actualRequest = writeRequestAndReadBuffer(new SendNotificationRequestCodec(),
-                expectedRequest);
+        SendNotificationRequest actualRequest =
+                writeRequestAndReadBuffer(new SendNotificationRequestCodec(), expectedRequest);
 
-        assertThat(ByteBufUtil.getBytes(actualRequest.getNotificationBuffer())).isEqualTo(expectedNotificationBytes);
-        assertThat(actualRequest.getRecipientIds()).containsExactlyInAnyOrderElementsOf(expectedRequest.getRecipientIds());
+        assertThat(ByteBufUtil.getBytes(actualRequest.getNotificationBuffer()))
+                .isEqualTo(expectedNotificationBytes);
+        assertThat(actualRequest.getRecipientIds())
+                .containsExactlyInAnyOrderElementsOf(expectedRequest.getRecipientIds());
     }
 
 }

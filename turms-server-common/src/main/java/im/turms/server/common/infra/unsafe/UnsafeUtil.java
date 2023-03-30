@@ -17,10 +17,11 @@
 
 package im.turms.server.common.infra.unsafe;
 
-import im.turms.server.common.infra.exception.IncompatibleJvmException;
+import java.lang.reflect.Field;
+
 import sun.misc.Unsafe;
 
-import java.lang.reflect.Field;
+import im.turms.server.common.infra.exception.IncompatibleJvmException;
 
 /**
  * @author James Chen
@@ -28,8 +29,8 @@ import java.lang.reflect.Field;
 public class UnsafeUtil {
 
     /**
-     * Though {@link jdk.internal.misc.Unsafe} is more powerful,
-     * we don't want to "add-exports" everywhere, which causes a bad development experience
+     * Though {@link jdk.internal.misc.Unsafe} is more powerful, we don't want to "add-exports"
+     * everywhere, which causes a bad development experience
      */
     public static final Unsafe UNSAFE;
 
@@ -44,7 +45,9 @@ public class UnsafeUtil {
         try {
             UNSAFE = (Unsafe) field.get(null);
         } catch (IllegalAccessException e) {
-            throw new IncompatibleJvmException("The field (sun.misc.Unsafe#theUnsafe) should be accessible", e);
+            throw new IncompatibleJvmException(
+                    "The field (sun.misc.Unsafe#theUnsafe) should be accessible",
+                    e);
         }
     }
 

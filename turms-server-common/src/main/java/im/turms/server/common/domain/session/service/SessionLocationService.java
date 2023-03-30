@@ -17,6 +17,17 @@
 
 package im.turms.server.common.domain.session.service;
 
+import java.util.Date;
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotNull;
+
+import io.lettuce.core.GeoArgs;
+import io.lettuce.core.GeoCoordinates;
+import io.lettuce.core.GeoWithin;
+import lombok.Getter;
+import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.common.ResponseStatusCode;
@@ -32,17 +43,6 @@ import im.turms.server.common.infra.validation.ValidDeviceType;
 import im.turms.server.common.infra.validation.Validator;
 import im.turms.server.common.storage.redis.RedisEntryId;
 import im.turms.server.common.storage.redis.TurmsRedisClientManager;
-import io.lettuce.core.GeoArgs;
-import io.lettuce.core.GeoCoordinates;
-import io.lettuce.core.GeoWithin;
-import lombok.Getter;
-import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
-import java.util.Date;
-import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.NotNull;
 
 /**
  * @author James Chen
@@ -65,15 +65,18 @@ public class SessionLocationService {
             TurmsPropertiesManager propertiesManager,
             TurmsRedisClientManager locationRedisClientManager) {
         this.locationRedisClientManager = locationRedisClientManager;
-        LocationProperties locationProperties = propertiesManager.getLocalProperties().getLocation();
+        LocationProperties locationProperties = propertiesManager.getLocalProperties()
+                .getLocation();
         locationEnabled = locationProperties.isEnabled();
-        treatUserIdAndDeviceTypeAsUniqueUser = locationProperties.isTreatUserIdAndDeviceTypeAsUniqueUser();
+        treatUserIdAndDeviceTypeAsUniqueUser =
+                locationProperties.isTreatUserIdAndDeviceTypeAsUniqueUser();
 
         propertiesManager.notifyAndAddGlobalPropertiesChangeListener(this::updateProperties);
     }
 
     private void updateProperties(TurmsProperties properties) {
-        NearbyUserRequestProperties requestProperties = properties.getLocation().getNearbyUserRequest();
+        NearbyUserRequestProperties requestProperties = properties.getLocation()
+                .getNearbyUserRequest();
         short localDefaultMaxNearbyUserCount = requestProperties.getDefaultMaxNearbyUserCount();
         int localDefaultMaxDistanceMeters = requestProperties.getDefaultMaxDistanceMeters();
         short localMaxNearbyUserCount = requestProperties.getMaxNearbyUserCount();
@@ -95,32 +98,40 @@ public class SessionLocationService {
     /**
      * Usually used when a user just go online.
      */
-    public Mono<Void> upsertUserLocation(@NotNull Long userId,
-                                         @NotNull @ValidDeviceType DeviceType deviceType,
-                                         @NotNull Date timestamp,
-                                         float longitude,
-                                         float latitude) {
+    public Mono<Void> upsertUserLocation(
+            @NotNull Long userId,
+            @NotNull @ValidDeviceType DeviceType deviceType,
+            @NotNull Date timestamp,
+            float longitude,
+            float latitude) {
         try {
             Validator.notNull(userId, "userId");
             Validator.notNull(deviceType, "deviceType");
             DeviceTypeUtil.validDeviceType(deviceType);
             Validator.notNull(timestamp, "timestamp");
-            Validator.inRange(longitude, "longitude", Location.LONGITUDE_MIN, Location.LONGITUDE_MAX);
+            Validator.inRange(longitude,
+                    "longitude",
+                    Location.LONGITUDE_MIN,
+                    Location.LONGITUDE_MAX);
             Validator.inRange(latitude, "latitude", Location.LATITUDE_MIN, Location.LATITUDE_MAX);
         } catch (ResponseException e) {
             return Mono.error(e);
         }
         if (!locationEnabled) {
-            return Mono.error(ResponseException.get(ResponseStatusCode.USER_LOCATION_RELATED_FEATURES_ARE_DISABLED));
+            return Mono.error(ResponseException
+                    .get(ResponseStatusCode.USER_LOCATION_RELATED_FEATURES_ARE_DISABLED));
         }
         Object member = treatUserIdAndDeviceTypeAsUniqueUser
                 ? new UserSessionId(userId, deviceType)
                 : userId;
-        return locationRedisClientManager.geoadd(userId, RedisEntryId.LOCATION_BUFFER, longitude, latitude, member)
+        return locationRedisClientManager
+                .geoadd(userId, RedisEntryId.LOCATION_BUFFER, longitude, latitude, member)
                 .then();
     }
 
-    public Mono<Void> removeUserLocation(@NotNull Long userId, @NotNull @ValidDeviceType DeviceType deviceType) {
+    public Mono<Void> removeUserLocation(
+            @NotNull Long userId,
+            @NotNull @ValidDeviceType DeviceType deviceType) {
         try {
             Validator.notNull(userId, "userId");
             Validator.notNull(deviceType, "deviceType");
@@ -129,7 +140,8 @@ public class SessionLocationService {
             return Mono.error(e);
         }
         if (!locationEnabled) {
-            return Mono.error(ResponseException.get(ResponseStatusCode.USER_LOCATION_RELATED_FEATURES_ARE_DISABLED));
+            return Mono.error(ResponseException
+                    .get(ResponseStatusCode.USER_LOCATION_RELATED_FEATURES_ARE_DISABLED));
         }
         Object member = treatUserIdAndDeviceTypeAsUniqueUser
                 ? new UserSessionId(userId, deviceType)
@@ -158,7 +170,8 @@ public class SessionLocationService {
             return Flux.error(e);
         }
         if (!locationEnabled) {
-            return Flux.error(ResponseException.get(ResponseStatusCode.USER_LOCATION_RELATED_FEATURES_ARE_DISABLED));
+            return Flux.error(ResponseException
+                    .get(ResponseStatusCode.USER_LOCATION_RELATED_FEATURES_ARE_DISABLED));
         }
         if (maxCount == null) {
             maxCount = (short) Math.min(defaultMaxNearbyUserCount, maxNearbyUserCount);
@@ -176,16 +189,19 @@ public class SessionLocationService {
         if (withDistance) {
             geoArgs.withDistance();
         }
-        Flux<GeoWithin<Object>> georadiusbymember = locationRedisClientManager.georadiusbymember(userId,
-                RedisEntryId.LOCATION_BUFFER,
-                currentUserSessionId,
-                maxDistance,
-                geoArgs);
-        return georadiusbymember
-                .filter(geo -> !geo.getMember().equals(currentUserSessionId));
+        Flux<GeoWithin<Object>> georadiusbymember =
+                locationRedisClientManager.georadiusbymember(userId,
+                        RedisEntryId.LOCATION_BUFFER,
+                        currentUserSessionId,
+                        maxDistance,
+                        geoArgs);
+        return georadiusbymember.filter(geo -> !geo.getMember()
+                .equals(currentUserSessionId));
     }
 
-    public Mono<GeoCoordinates> getUserLocation(@NotNull Long userId, @NotNull @ValidDeviceType DeviceType deviceType) {
+    public Mono<GeoCoordinates> getUserLocation(
+            @NotNull Long userId,
+            @NotNull @ValidDeviceType DeviceType deviceType) {
         try {
             Validator.notNull(userId, "userId");
             Validator.notNull(deviceType, "deviceType");
@@ -194,7 +210,8 @@ public class SessionLocationService {
             return Mono.error(e);
         }
         if (!locationEnabled) {
-            return Mono.error(ResponseException.get(ResponseStatusCode.USER_LOCATION_RELATED_FEATURES_ARE_DISABLED));
+            return Mono.error(ResponseException
+                    .get(ResponseStatusCode.USER_LOCATION_RELATED_FEATURES_ARE_DISABLED));
         }
         Object member = treatUserIdAndDeviceTypeAsUniqueUser
                 ? new UserSessionId(userId, deviceType)

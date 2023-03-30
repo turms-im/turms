@@ -45,31 +45,32 @@ public final class DataValidator {
     private static final ResponseException UNRECOGNIZED_DEVICE_TYPE =
             ResponseException.get(ILLEGAL_ARGUMENT, "The device type must not be UNRECOGNIZED");
     // user
-    private static final ResponseException UNRECOGNIZED_PROFILE_ACCESS_STRATEGY =
-            ResponseException.get(ILLEGAL_ARGUMENT, "The profile access strategy must not be UNRECOGNIZED");
+    private static final ResponseException UNRECOGNIZED_PROFILE_ACCESS_STRATEGY = ResponseException
+            .get(ILLEGAL_ARGUMENT, "The profile access strategy must not be UNRECOGNIZED");
     // user - relationship
     private static final ResponseException NULL_USER_RELATIONSHIP_KEY =
             ResponseException.get(ILLEGAL_ARGUMENT, "The user relationship key must not be null");
-    private static final ResponseException NULL_USER_RELATIONSHIP_GROUP_KEY =
-            ResponseException.get(ILLEGAL_ARGUMENT, "The user relationship group key must not be null");
+    private static final ResponseException NULL_USER_RELATIONSHIP_GROUP_KEY = ResponseException
+            .get(ILLEGAL_ARGUMENT, "The user relationship group key must not be null");
     // group
     private static final ResponseException NULL_GROUP_MEMBER_KEY =
             ResponseException.get(ILLEGAL_ARGUMENT, "The group member key must not be null");
-    private static final ResponseException UNRECOGNIZED_GROUP_MEMBER_ROLE =
-            ResponseException.get(ILLEGAL_ARGUMENT, "The group member role must not be UNRECOGNIZED");
+    private static final ResponseException UNRECOGNIZED_GROUP_MEMBER_ROLE = ResponseException
+            .get(ILLEGAL_ARGUMENT, "The group member role must not be UNRECOGNIZED");
     private static final ResponseException NULL_GROUP_BLOCKED_USER_KEY =
             ResponseException.get(ILLEGAL_ARGUMENT, "The group blocked user key must not be null");
-    private static final ResponseException EMPTY_GROUP_QUESTION_ANSWERS =
-            ResponseException.get(ILLEGAL_ARGUMENT, "The answers of a new group question should not be empty");
-    private static final ResponseException ILLEGAL_GROUP_QUESTION_SCORE =
-            ResponseException.get(ILLEGAL_ARGUMENT, "The score of a new group question should not be null and must be greater than or equal to 0");
+    private static final ResponseException EMPTY_GROUP_QUESTION_ANSWERS = ResponseException
+            .get(ILLEGAL_ARGUMENT, "The answers of a new group question should not be empty");
+    private static final ResponseException ILLEGAL_GROUP_QUESTION_SCORE = ResponseException.get(
+            ILLEGAL_ARGUMENT,
+            "The score of a new group question should not be null and must be greater than or equal to 0");
     private static final ResponseException ILLEGAL_GROUP_QUESTION_ID_AND_ANSWER =
             ResponseException.get(ILLEGAL_ARGUMENT, "The question ID and answer must not be null");
 
     private DataValidator() {
     }
 
-    //region common
+    // region common
     public static void validRequestStatus(RequestStatus status) {
         if (status == RequestStatus.UNRECOGNIZED) {
             throw UNRECOGNIZED_REQUEST_STATUS;
@@ -88,17 +89,17 @@ public final class DataValidator {
         }
     }
 
-    //endregion
+    // endregion
 
-    //region user
+    // region user
     public static void validProfileAccess(ProfileAccessStrategy value) {
         if (value == ProfileAccessStrategy.UNRECOGNIZED) {
             throw UNRECOGNIZED_PROFILE_ACCESS_STRATEGY;
         }
     }
-    //endregion
+    // endregion
 
-    //region user - relationship
+    // region user - relationship
     public static void validRelationshipKey(UserRelationship.Key key) {
         if (key == null || key.getOwnerId() == null || key.getRelatedUserId() == null) {
             throw NULL_USER_RELATIONSHIP_KEY;
@@ -110,9 +111,9 @@ public final class DataValidator {
             throw NULL_USER_RELATIONSHIP_GROUP_KEY;
         }
     }
-    //endregion
+    // endregion
 
-    //region group
+    // region group
     public static void validGroupMemberKey(GroupMember.Key key) {
         if (key == null || key.getGroupId() == null || key.getUserId() == null) {
             throw NULL_GROUP_MEMBER_KEY;
@@ -132,7 +133,8 @@ public final class DataValidator {
     }
 
     public static void validNewGroupQuestion(NewGroupQuestion question) {
-        if (question.answers().isEmpty()) {
+        if (question.answers()
+                .isEmpty()) {
             throw EMPTY_GROUP_QUESTION_ANSWERS;
         }
         Integer score = question.score();
@@ -146,6 +148,6 @@ public final class DataValidator {
             throw ILLEGAL_GROUP_QUESTION_ID_AND_ANSWER;
         }
     }
-    //endregion
+    // endregion
 
 }

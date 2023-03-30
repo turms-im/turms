@@ -37,8 +37,8 @@ public enum GroupInvitationStrategy {
     }
 
     /**
-     * If requiring approval, the group admin needs to send an invitation to the invitee.
-     * Otherwise, the group admin can add any user to the group without their approval.
+     * If requiring approval, the group admin needs to send an invitation to the invitee. Otherwise,
+     * the group admin can add any user to the group without their approval.
      */
     public boolean requiresApproval() {
         return requiresApproval;

@@ -17,7 +17,6 @@
 
 package im.turms.server.common.infra.property.env.gateway.identityaccessmanagement.http;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -34,7 +33,8 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
 public class HttpIdentityAccessManagementProperties {
 
     @NestedConfigurationProperty
-    private HttpIdentityAccessManagementRequestProperties request = new HttpIdentityAccessManagementRequestProperties();
+    private HttpIdentityAccessManagementRequestProperties request =
+            new HttpIdentityAccessManagementRequestProperties();
 
     @NestedConfigurationProperty
     private HttpAuthenticationProperties authentication = new HttpAuthenticationProperties();

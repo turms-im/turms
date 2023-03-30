@@ -17,6 +17,11 @@
 
 package im.turms.gateway.domain.session.access.admin.controller;
 
+import java.util.List;
+import java.util.Set;
+
+import reactor.core.publisher.Mono;
+
 import im.turms.gateway.domain.session.service.SessionService;
 import im.turms.server.common.access.admin.dto.response.DeleteResultDTO;
 import im.turms.server.common.access.admin.dto.response.HttpHandlerResult;
@@ -30,10 +35,6 @@ import im.turms.server.common.domain.session.bo.CloseReason;
 import im.turms.server.common.domain.session.bo.SessionCloseStatus;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.net.InetAddressUtil;
-import reactor.core.publisher.Mono;
-
-import java.util.List;
-import java.util.Set;
 
 /**
  * @author James Chen
@@ -56,26 +57,25 @@ public class SessionController {
         Mono<Integer> mono;
         if (CollectionUtil.isEmpty(ids)) {
             if (CollectionUtil.isEmpty(ips)) {
-                mono = sessionService
-                        .closeAllLocalSessions(closeReason);
+                mono = sessionService.closeAllLocalSessions(closeReason);
             } else {
-                List<byte[]> ipList = CollectionUtil
-                        .transformAsList(ips, InetAddressUtil::ipStringToBytes);
+                List<byte[]> ipList =
+                        CollectionUtil.transformAsList(ips, InetAddressUtil::ipStringToBytes);
                 mono = sessionService.closeLocalSessions(ipList, closeReason);
             }
         } else {
             if (CollectionUtil.isEmpty(ips)) {
-                mono = sessionService
-                        .closeLocalSessions(ids, closeReason);
+                mono = sessionService.closeLocalSessions(ids, closeReason);
             } else {
-                List<byte[]> ipList = CollectionUtil
-                        .transformAsList(ips, InetAddressUtil::ipStringToBytes);
+                List<byte[]> ipList =
+                        CollectionUtil.transformAsList(ips, InetAddressUtil::ipStringToBytes);
                 mono = Mono.zip(sessionService.closeLocalSessions(ids, closeReason),
                         Mono.defer(() -> sessionService.closeLocalSessions(ipList, closeReason)),
                         Integer::sum);
             }
         }
-        return HttpHandlerResult.okIfTruthy(mono.map(count -> new DeleteResultDTO(count.longValue())));
+        return HttpHandlerResult
+                .okIfTruthy(mono.map(count -> new DeleteResultDTO(count.longValue())));
     }
 
 }

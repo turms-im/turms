@@ -23,7 +23,10 @@ import jakarta.annotation.Nullable;
 /**
  * @author James Chen
  */
-public record DateRange(Date start, Date end) {
+public record DateRange(
+        Date start,
+        Date end
+) {
 
     public static final DateRange NULL = new DateRange(null, null);
 

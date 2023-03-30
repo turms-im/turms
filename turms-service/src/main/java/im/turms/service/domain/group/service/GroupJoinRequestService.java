@@ -17,8 +17,20 @@
 
 package im.turms.service.domain.group.service;
 
+import java.util.Date;
+import java.util.Set;
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
+
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.access.client.dto.ClientMessagePool;
 import im.turms.server.common.access.client.dto.constant.RequestStatus;
 import im.turms.server.common.access.client.dto.model.group.GroupJoinRequestsWithVersion;
@@ -46,25 +58,14 @@ import im.turms.service.domain.user.service.UserVersionService;
 import im.turms.service.infra.proto.ProtoModelConvertor;
 import im.turms.service.infra.validation.ValidRequestStatus;
 import im.turms.service.storage.mongo.OperationResultPublisherPool;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
-import java.util.Date;
-import java.util.Set;
-import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PastOrPresent;
 
 /**
  * @author James Chen
- * @implNote The status of group join requests never become EXPIRED in MongoDB automatically
- * (admins can specify them to expired manually though) even if there is an expireAfter
- * property because Turms will not create a cron job to scan and expire requests in
- * MongoDB. Instead, Turms transforms the status of requests when returning them to users
- * or admins for less resource consumption and better performance to expire requests.
+ * @implNote The status of group join requests never become EXPIRED in MongoDB automatically (admins
+ *           can specify them to expired manually though) even if there is an expireAfter property
+ *           because Turms will not create a cron job to scan and expire requests in MongoDB.
+ *           Instead, Turms transforms the status of requests when returning them to users or admins
+ *           for less resource consumption and better performance to expire requests.
  */
 @Service
 @DependsOn(IMongoCollectionInitializer.BEAN_NAME)
@@ -109,25 +110,41 @@ public class GroupJoinRequestService extends ExpirableEntityService<GroupJoinReq
         propertiesManager.notifyAndAddGlobalPropertiesChangeListener(this::updateProperties);
 
         // Set up a cron job to remove requests if deleting expired docs is enabled
-        taskManager.reschedule(
-                "expiredGroupJoinRequestsCleanup",
-                propertiesManager.getLocalProperties().getService().getGroup().getJoinRequest().getExpiredJoinRequestsCleanupCron(),
+        taskManager.reschedule("expiredGroupJoinRequestsCleanup",
+                propertiesManager.getLocalProperties()
+                        .getService()
+                        .getGroup()
+                        .getJoinRequest()
+                        .getExpiredJoinRequestsCleanupCron(),
                 () -> {
                     boolean isLocalNodeLeader = node.isLocalNodeLeader();
                     Date expirationDate = getEntityExpirationDate();
-                    if (isLocalNodeLeader && deleteExpiredJoinRequestsWhenCronTriggered && expirationDate != null) {
-                        groupJoinRequestRepository.deleteExpiredData(GroupJoinRequest.Fields.CREATION_DATE, expirationDate)
-                                .subscribe(null, t -> LOGGER.error("Caught an error while deleting expired messages", t));
+                    if (isLocalNodeLeader
+                            && deleteExpiredJoinRequestsWhenCronTriggered
+                            && expirationDate != null) {
+                        groupJoinRequestRepository
+                                .deleteExpiredData(GroupJoinRequest.Fields.CREATION_DATE,
+                                        expirationDate)
+                                .subscribe(null,
+                                        t -> LOGGER.error(
+                                                "Caught an error while deleting expired messages",
+                                                t));
                     }
                 });
     }
 
     private void updateProperties(TurmsProperties properties) {
-        GroupJoinRequestProperties joinRequestProperties = properties.getService().getGroup().getJoinRequest();
-        allowRecallJoinRequestSentByOneself = joinRequestProperties.isAllowRecallJoinRequestSentByOneself();
+        GroupJoinRequestProperties joinRequestProperties = properties.getService()
+                .getGroup()
+                .getJoinRequest();
+        allowRecallJoinRequestSentByOneself =
+                joinRequestProperties.isAllowRecallJoinRequestSentByOneself();
         int localMaxContentLength = joinRequestProperties.getMaxContentLength();
-        maxContentLength = localMaxContentLength > 0 ? localMaxContentLength : Integer.MAX_VALUE;
-        deleteExpiredJoinRequestsWhenCronTriggered = joinRequestProperties.isDeleteExpiredJoinRequestsWhenCronTriggered();
+        maxContentLength = localMaxContentLength > 0
+                ? localMaxContentLength
+                : Integer.MAX_VALUE;
+        deleteExpiredJoinRequestsWhenCronTriggered =
+                joinRequestProperties.isDeleteExpiredJoinRequestsWhenCronTriggered();
     }
 
     public Mono<GroupJoinRequest> authAndCreateGroupJoinRequest(
@@ -143,20 +160,24 @@ public class GroupJoinRequestService extends ExpirableEntityService<GroupJoinReq
         }
         return groupBlocklistService.isBlocked(groupId, requesterId)
                 .flatMap(isBlocked -> isBlocked
-                        ? Mono.error(ResponseException.get(ResponseStatusCode.GROUP_JOIN_REQUEST_SENDER_HAS_BEEN_BLOCKED))
+                        ? Mono.error(ResponseException
+                                .get(ResponseStatusCode.GROUP_JOIN_REQUEST_SENDER_HAS_BEEN_BLOCKED))
                         : groupService.queryGroupTypeIdIfActiveAndNotDeleted(groupId))
-                .switchIfEmpty(Mono.error(ResponseException.get(ResponseStatusCode.SEND_JOIN_REQUEST_TO_INACTIVE_GROUP)))
+                .switchIfEmpty(Mono.error(ResponseException
+                        .get(ResponseStatusCode.SEND_JOIN_REQUEST_TO_INACTIVE_GROUP)))
                 .flatMap(groupTypeService::queryGroupType)
                 .flatMap(type -> switch (type.getJoinStrategy()) {
-                    case MEMBERSHIP_REQUEST ->
-                            Mono.error(ResponseException.get(ResponseStatusCode.SEND_JOIN_REQUEST_TO_GROUP_USING_MEMBERSHIP_REQUEST));
-                    case INVITATION ->
-                            Mono.error(ResponseException.get(ResponseStatusCode.SEND_JOIN_REQUEST_TO_GROUP_USING_INVITATION));
-                    case QUESTION ->
-                            Mono.error(ResponseException.get(ResponseStatusCode.SEND_JOIN_REQUEST_TO_GROUP_USING_QUESTION));
+                    case MEMBERSHIP_REQUEST -> Mono.error(ResponseException.get(
+                            ResponseStatusCode.SEND_JOIN_REQUEST_TO_GROUP_USING_MEMBERSHIP_REQUEST));
+                    case INVITATION -> Mono.error(ResponseException
+                            .get(ResponseStatusCode.SEND_JOIN_REQUEST_TO_GROUP_USING_INVITATION));
+                    case QUESTION -> Mono.error(ResponseException
+                            .get(ResponseStatusCode.SEND_JOIN_REQUEST_TO_GROUP_USING_QUESTION));
                     case JOIN_REQUEST -> {
                         long id = node.nextLargeGapId(ServiceType.GROUP_JOIN_REQUEST);
-                        String finalContent = content == null ? "" : content;
+                        String finalContent = content == null
+                                ? ""
+                                : content;
                         GroupJoinRequest groupJoinRequest = new GroupJoinRequest(
                                 id,
                                 finalContent,
@@ -170,17 +191,21 @@ public class GroupJoinRequestService extends ExpirableEntityService<GroupJoinReq
                                 .then(Mono.whenDelayError(
                                         groupVersionService.updateJoinRequestsVersion(groupId)
                                                 .onErrorResume(t -> {
-                                                    LOGGER.error("Caught an error while updating the join requests version of the group ({}) after creating a join request",
-                                                            groupId, t);
+                                                    LOGGER.error(
+                                                            "Caught an error while updating the join requests version of the group ({}) after creating a join request",
+                                                            groupId,
+                                                            t);
                                                     return Mono.empty();
                                                 }),
-                                        userVersionService.updateSentGroupJoinRequestsVersion(requesterId)
+                                        userVersionService
+                                                .updateSentGroupJoinRequestsVersion(requesterId)
                                                 .onErrorResume(t -> {
-                                                    LOGGER.error("Caught an error while updating the sent group join requests version of the requester ({}) after creating a join request",
-                                                            requesterId, t);
+                                                    LOGGER.error(
+                                                            "Caught an error while updating the sent group join requests version of the requester ({}) after creating a join request",
+                                                            requesterId,
+                                                            t);
                                                     return Mono.empty();
-                                                })
-                                ))
+                                                })))
                                 .thenReturn(groupJoinRequest);
                     }
                 });
@@ -205,7 +230,8 @@ public class GroupJoinRequestService extends ExpirableEntityService<GroupJoinReq
             return Mono.error(e);
         }
         if (!allowRecallJoinRequestSentByOneself) {
-            return Mono.error(ResponseException.get(ResponseStatusCode.RECALLING_GROUP_JOIN_REQUEST_IS_DISABLED));
+            return Mono.error(ResponseException
+                    .get(ResponseStatusCode.RECALLING_GROUP_JOIN_REQUEST_IS_DISABLED));
         }
         return queryRequesterIdAndStatusAndGroupId(requestId)
                 .switchIfEmpty(ResponseExceptionPublisherPool.resourceNotFound())
@@ -214,33 +240,47 @@ public class GroupJoinRequestService extends ExpirableEntityService<GroupJoinReq
                     // If the requester is not authorized to the request,
                     // it should not know the status of request from the error code.
                     // So we check whether the requester is authorized first.
-                    if (!request.getRequesterId().equals(requesterId)) {
-                        return Mono.error(ResponseException.get(ResponseStatusCode.NOT_JOIN_REQUEST_SENDER_TO_RECALL_REQUEST));
+                    if (!request.getRequesterId()
+                            .equals(requesterId)) {
+                        return Mono.error(ResponseException
+                                .get(ResponseStatusCode.NOT_JOIN_REQUEST_SENDER_TO_RECALL_REQUEST));
                     }
                     if (status != RequestStatus.PENDING) {
-                        String reason = "The request is under the status " + status;
-                        return Mono.error(ResponseException.get(ResponseStatusCode.RECALL_NOT_PENDING_GROUP_JOIN_REQUEST, reason));
+                        String reason = "The request is under the status "
+                                + status;
+                        return Mono.error(ResponseException.get(
+                                ResponseStatusCode.RECALL_NOT_PENDING_GROUP_JOIN_REQUEST,
+                                reason));
                     }
-                    return groupJoinRequestRepository.updateStatusIfPending(requestId, RequestStatus.CANCELED, requesterId)
+                    return groupJoinRequestRepository
+                            .updateStatusIfPending(requestId, RequestStatus.CANCELED, requesterId)
                             .flatMap(result -> result.getModifiedCount() == 0
-                                    // Though it may return empty because the request had been deleted between the status check,
+                                    // Though it may return empty because the request had been
+                                    // deleted between the status check,
                                     // but only admins can delete them, and it is really rare.
-                                    // So we handle these cases as if the status of the request has changed.
-                                    ? Mono.error(ResponseException.get(ResponseStatusCode.RECALL_NOT_PENDING_GROUP_JOIN_REQUEST))
-                                    : Mono.whenDelayError(
-                                            groupVersionService.updateJoinRequestsVersion(request.getGroupId())
+                                    // So we handle these cases as if the status of the request has
+                                    // changed.
+                                    ? Mono.error(ResponseException.get(
+                                            ResponseStatusCode.RECALL_NOT_PENDING_GROUP_JOIN_REQUEST))
+                                    : Mono.whenDelayError(groupVersionService
+                                            .updateJoinRequestsVersion(request.getGroupId())
+                                            .onErrorResume(t -> {
+                                                LOGGER.error(
+                                                        "Caught an error while updating the join requests version of the group ({}) after recalling a pending join request",
+                                                        request.getGroupId(),
+                                                        t);
+                                                return Mono.empty();
+                                            }),
+                                            userVersionService
+                                                    .updateSentGroupJoinRequestsVersion(requesterId)
                                                     .onErrorResume(t -> {
-                                                        LOGGER.error("Caught an error while updating the join requests version of the group ({}) after recalling a pending join request",
-                                                                request.getGroupId(), t);
-                                                        return Mono.empty();
-                                                    }),
-                                            userVersionService.updateSentGroupJoinRequestsVersion(requesterId)
-                                                    .onErrorResume(t -> {
-                                                        LOGGER.error("Caught an error while updating the sent join requests version of the requester ({}) after recalling a pending join request",
-                                                                requesterId, t);
+                                                        LOGGER.error(
+                                                                "Caught an error while updating the sent join requests version of the requester ({}) after recalling a pending join request",
+                                                                requesterId,
+                                                                t);
                                                         return Mono.empty();
                                                     }))
-                                    .then());
+                                            .then());
                 });
     }
 
@@ -258,37 +298,37 @@ public class GroupJoinRequestService extends ExpirableEntityService<GroupJoinReq
                 ? groupMemberService.isOwnerOrManager(requesterId, groupId, false)
                         .flatMap(authenticated -> {
                             if (!authenticated) {
-                                return Mono.error(ResponseException.get(ResponseStatusCode.NOT_OWNER_OR_MANAGER_TO_ACCESS_GROUP_REQUEST));
+                                return Mono.error(ResponseException.get(
+                                        ResponseStatusCode.NOT_OWNER_OR_MANAGER_TO_ACCESS_GROUP_REQUEST));
                             }
                             return groupVersionService.queryGroupJoinRequestsVersion(groupId);
                         })
                 : userVersionService.queryGroupJoinRequestsVersion(requesterId);
-        return versionMono
-                .flatMap(version -> {
-                    if (DateUtil.isAfterOrSame(lastUpdatedDate, version)) {
-                        return ResponseExceptionPublisherPool.alreadyUpToUpdate();
-                    }
-                    Flux<GroupJoinRequest> requestFlux = searchRequestsByGroupId
-                            ? queryGroupJoinRequestsByGroupId(groupId)
-                            : queryGroupJoinRequestsByRequesterId(requesterId);
-                    return requestFlux
-                            .collect(CollectorUtil.toChunkedList())
-                            .map(groupJoinRequests -> {
-                                if (groupJoinRequests.isEmpty()) {
-                                    throw ResponseException.get(ResponseStatusCode.NO_CONTENT);
-                                }
-                                GroupJoinRequestsWithVersion.Builder builder = ClientMessagePool
-                                        .getGroupJoinRequestsWithVersionBuilder();
-                                int expireAfterSeconds = groupJoinRequestRepository.getEntityExpireAfterSeconds();
-                                for (GroupJoinRequest groupJoinRequest : groupJoinRequests) {
-                                    builder.addGroupJoinRequests(
-                                            ProtoModelConvertor.groupJoinRequest2proto(groupJoinRequest, expireAfterSeconds).build());
-                                }
-                                return builder
-                                        .setLastUpdatedDate(version.getTime())
-                                        .build();
-                            });
-                })
+        return versionMono.flatMap(version -> {
+            if (DateUtil.isAfterOrSame(lastUpdatedDate, version)) {
+                return ResponseExceptionPublisherPool.alreadyUpToUpdate();
+            }
+            Flux<GroupJoinRequest> requestFlux = searchRequestsByGroupId
+                    ? queryGroupJoinRequestsByGroupId(groupId)
+                    : queryGroupJoinRequestsByRequesterId(requesterId);
+            return requestFlux.collect(CollectorUtil.toChunkedList())
+                    .map(groupJoinRequests -> {
+                        if (groupJoinRequests.isEmpty()) {
+                            throw ResponseException.get(ResponseStatusCode.NO_CONTENT);
+                        }
+                        GroupJoinRequestsWithVersion.Builder builder =
+                                ClientMessagePool.getGroupJoinRequestsWithVersionBuilder();
+                        int expireAfterSeconds =
+                                groupJoinRequestRepository.getEntityExpireAfterSeconds();
+                        for (GroupJoinRequest groupJoinRequest : groupJoinRequests) {
+                            builder.addGroupJoinRequests(ProtoModelConvertor
+                                    .groupJoinRequest2proto(groupJoinRequest, expireAfterSeconds)
+                                    .build());
+                        }
+                        return builder.setLastUpdatedDate(version.getTime())
+                                .build();
+                    });
+        })
                 .switchIfEmpty(ResponseExceptionPublisherPool.alreadyUpToUpdate());
     }
 
@@ -415,7 +455,9 @@ public class GroupJoinRequestService extends ExpirableEntityService<GroupJoinReq
             return Mono.error(e);
         }
         Date now = new Date();
-        id = id == null ? node.nextLargeGapId(ServiceType.GROUP_JOIN_REQUEST) : id;
+        id = id == null
+                ? node.nextLargeGapId(ServiceType.GROUP_JOIN_REQUEST)
+                : id;
         if (content == null) {
             content = "";
         }
@@ -426,23 +468,32 @@ public class GroupJoinRequestService extends ExpirableEntityService<GroupJoinReq
             status = RequestStatus.PENDING;
         }
         responseDate = getResponseDateBasedOnStatusForNewRecord(now, status, responseDate);
-        GroupJoinRequest groupJoinRequest = new GroupJoinRequest(id, content, status, creationDate,
-                responseDate, groupId, requesterId, responderId);
+        GroupJoinRequest groupJoinRequest = new GroupJoinRequest(
+                id,
+                content,
+                status,
+                creationDate,
+                responseDate,
+                groupId,
+                requesterId,
+                responderId);
         return groupJoinRequestRepository.insert(groupJoinRequest)
-                .then(Mono.whenDelayError(
-                        groupVersionService.updateJoinRequestsVersion(groupId)
-                                .onErrorResume(t -> {
-                                    LOGGER.error("Caught an error while updating the join requests version of the group ({}) after creating a join request",
-                                            groupId, t);
-                                    return Mono.empty();
-                                }),
+                .then(Mono.whenDelayError(groupVersionService.updateJoinRequestsVersion(groupId)
+                        .onErrorResume(t -> {
+                            LOGGER.error(
+                                    "Caught an error while updating the join requests version of the group ({}) after creating a join request",
+                                    groupId,
+                                    t);
+                            return Mono.empty();
+                        }),
                         userVersionService.updateSentGroupJoinRequestsVersion(requesterId)
                                 .onErrorResume(t -> {
-                                    LOGGER.error("Caught an error while updating the sent join requests version of the requester ({}) after creating a join request",
-                                            requesterId, t);
+                                    LOGGER.error(
+                                            "Caught an error while updating the sent join requests version of the requester ({}) after creating a join request",
+                                            requesterId,
+                                            t);
                                     return Mono.empty();
-                                })
-                ))
+                                })))
                 .thenReturn(groupJoinRequest);
     }
 

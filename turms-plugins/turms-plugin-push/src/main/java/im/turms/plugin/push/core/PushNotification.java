@@ -32,14 +32,23 @@ public record PushNotification(
 ) {
 
     public String toStringWithoutDate() {
-        return "PushNotification{" +
-                "type=" + type +
-                ", serviceProvider=" + serviceProvider +
-                ", deviceToken=\"" + deviceToken + '\"' +
-                ", title=\"" + title + '\"' +
-                ", body=\"" + body + '\"' +
-                ", badgeNumber=" + badgeNumber +
-                '}';
+        return "PushNotification{"
+                + "type="
+                + type
+                + ", serviceProvider="
+                + serviceProvider
+                + ", deviceToken=\""
+                + deviceToken
+                + '\"'
+                + ", title=\""
+                + title
+                + '\"'
+                + ", body=\""
+                + body
+                + '\"'
+                + ", badgeNumber="
+                + badgeNumber
+                + '}';
     }
 
 }

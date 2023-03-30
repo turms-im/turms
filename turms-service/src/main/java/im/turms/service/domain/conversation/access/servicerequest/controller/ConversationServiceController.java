@@ -17,6 +17,12 @@
 
 package im.turms.service.domain.conversation.access.servicerequest.controller;
 
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.stereotype.Controller;
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.access.client.dto.ClientMessagePool;
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.access.client.dto.request.conversation.QueryConversationsRequest;
@@ -33,11 +39,6 @@ import im.turms.service.domain.common.access.servicerequest.controller.BaseServi
 import im.turms.service.domain.conversation.service.ConversationService;
 import im.turms.service.domain.group.service.GroupMemberService;
 import im.turms.service.infra.proto.ProtoModelConvertor;
-import org.springframework.stereotype.Controller;
-import reactor.core.publisher.Mono;
-
-import java.util.Date;
-import java.util.List;
 
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_CONVERSATIONS_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.UPDATE_CONVERSATION_REQUEST;
@@ -67,10 +68,15 @@ public class ConversationServiceController extends BaseServiceController {
     }
 
     private void updateProperties(TurmsProperties properties) {
-        isTypingStatusEnabled = properties.getService().getConversation().getTypingStatus().isEnabled();
-        notifyPrivateConversationParticipantAfterReadDateUpdated = properties.getService().getNotification()
+        isTypingStatusEnabled = properties.getService()
+                .getConversation()
+                .getTypingStatus()
+                .isEnabled();
+        notifyPrivateConversationParticipantAfterReadDateUpdated = properties.getService()
+                .getNotification()
                 .isNotifyPrivateConversationParticipantAfterReadDateUpdated();
-        notifyGroupConversationParticipantsAfterReadDateUpdated = properties.getService().getNotification()
+        notifyGroupConversationParticipantsAfterReadDateUpdated = properties.getService()
+                .getNotification()
                 .isNotifyGroupConversationParticipantsAfterReadDateUpdated();
     }
 
@@ -87,22 +93,23 @@ public class ConversationServiceController extends BaseServiceController {
                     return Mono.just(RequestHandlerResultFactory.NO_CONTENT);
                 }
                 dataFlux = conversationService.queryGroupConversations(groupIds)
-                        .map(conversation -> ProtoModelConvertor.groupConversations2proto(conversation).build())
+                        .map(conversation -> ProtoModelConvertor
+                                .groupConversations2proto(conversation)
+                                .build())
                         .collect(CollectorUtil.toList(targetIds.size()))
-                        .map(conversations -> ClientMessagePool
-                                .getTurmsNotificationDataBuilder()
-                                .setConversations(ClientMessagePool
-                                        .getConversationsBuilder()
+                        .map(conversations -> ClientMessagePool.getTurmsNotificationDataBuilder()
+                                .setConversations(ClientMessagePool.getConversationsBuilder()
                                         .addAllGroupConversations(conversations))
                                 .build());
             } else {
-                dataFlux = conversationService.queryPrivateConversations(targetIds, clientRequest.userId())
-                        .map(conversation -> ProtoModelConvertor.privateConversation2proto(conversation).build())
+                dataFlux = conversationService
+                        .queryPrivateConversations(targetIds, clientRequest.userId())
+                        .map(conversation -> ProtoModelConvertor
+                                .privateConversation2proto(conversation)
+                                .build())
                         .collect(CollectorUtil.toList(targetIds.size()))
-                        .map(conversations -> ClientMessagePool
-                                .getTurmsNotificationDataBuilder()
-                                .setConversations(ClientMessagePool
-                                        .getConversationsBuilder()
+                        .map(conversations -> ClientMessagePool.getTurmsNotificationDataBuilder()
+                                .setConversations(ClientMessagePool.getConversationsBuilder()
                                         .addAllPrivateConversations(conversations))
                                 .build());
             }
@@ -111,26 +118,25 @@ public class ConversationServiceController extends BaseServiceController {
     }
 
     /**
-     * Allow sending typing status to recipients without checking their relationships for better performance.
-     * The application itself should check their relationships on the client side.
+     * Allow sending typing status to recipients without checking their relationships for better
+     * performance. The application itself should check their relationships on the client side.
      *
-     * @implNote No need to authenticate because:
-     * 1. Most requests are authenticated indeed, so avoid frequent authentication to improve the performance greatly;
-     * 2. For unauthenticated requests, it is easy for the client to ignore it according to its local data,
-     * and the user won't be aware of these requests.
+     * @implNote No need to authenticate because: 1. Most requests are authenticated indeed, so
+     *           avoid frequent authentication to improve the performance greatly; 2. For
+     *           unauthenticated requests, it is easy for the client to ignore it according to its
+     *           local data, and the user won't be aware of these requests.
      */
     @ServiceRequestMapping(UPDATE_TYPING_STATUS_REQUEST)
     public ClientRequestHandler handleUpdateTypingStatusRequest() {
         return clientRequest -> {
             if (!isTypingStatusEnabled) {
-                return Mono.just(RequestHandlerResultFactory.get(ResponseStatusCode.UPDATING_TYPING_STATUS_IS_DISABLED));
+                return Mono.just(RequestHandlerResultFactory
+                        .get(ResponseStatusCode.UPDATING_TYPING_STATUS_IS_DISABLED));
             }
             UpdateTypingStatusRequest request = clientRequest.turmsRequest()
                     .getUpdateTypingStatusRequest();
-            return Mono.just(RequestHandlerResultFactory.get(
-                    request.getToId(),
-                    clientRequest.turmsRequest(),
-                    ResponseStatusCode.OK));
+            return Mono.just(RequestHandlerResultFactory
+                    .get(request.getToId(), clientRequest.turmsRequest(), ResponseStatusCode.OK));
         };
     }
 
@@ -140,8 +146,9 @@ public class ConversationServiceController extends BaseServiceController {
             UpdateConversationRequest request = clientRequest.turmsRequest()
                     .getUpdateConversationRequest();
             if (!request.hasTargetId() && !request.hasGroupId()) {
-                return Mono.just(RequestHandlerResultFactory
-                        .get(ResponseStatusCode.ILLEGAL_ARGUMENT, "The targetId and groupId must not all null"));
+                return Mono
+                        .just(RequestHandlerResultFactory.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
+                                "The targetId and groupId must not all null"));
             }
             Long requesterId = clientRequest.userId();
             Date readDate = new Date(request.getReadDate());
@@ -150,23 +157,23 @@ public class ConversationServiceController extends BaseServiceController {
             Mono<Void> mono;
             if (isUpdatePrivateConversationRequest) {
                 targetId = request.getTargetId();
-                mono = conversationService.authAndUpsertPrivateConversationReadDate(requesterId, targetId, readDate);
+                mono = conversationService
+                        .authAndUpsertPrivateConversationReadDate(requesterId, targetId, readDate);
             } else {
                 targetId = request.getGroupId();
-                mono = conversationService.authAndUpsertGroupConversationReadDate(targetId, requesterId, readDate);
+                mono = conversationService
+                        .authAndUpsertGroupConversationReadDate(targetId, requesterId, readDate);
             }
             return mono.then(Mono.defer(() -> {
                 if (isUpdatePrivateConversationRequest) {
                     if (notifyPrivateConversationParticipantAfterReadDateUpdated) {
-                        return Mono.just(RequestHandlerResultFactory.get(
-                                targetId,
+                        return Mono.just(RequestHandlerResultFactory.get(targetId,
                                 clientRequest.turmsRequest(),
                                 ResponseStatusCode.OK));
                     }
                 } else if (notifyGroupConversationParticipantsAfterReadDateUpdated) {
                     return groupMemberService.queryGroupMemberIds(targetId, true)
-                            .map(memberIds -> RequestHandlerResultFactory.get(
-                                    memberIds,
+                            .map(memberIds -> RequestHandlerResultFactory.get(memberIds,
                                     clientRequest.turmsRequest()));
                 }
                 return Mono.just(RequestHandlerResultFactory.OK);

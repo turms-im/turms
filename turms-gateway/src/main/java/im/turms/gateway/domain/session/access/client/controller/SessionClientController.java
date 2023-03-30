@@ -17,6 +17,14 @@
 
 package im.turms.gateway.domain.session.access.client.controller;
 
+import java.lang.reflect.Method;
+import java.util.Date;
+import java.util.Map;
+
+import io.netty.util.Timeout;
+import org.springframework.stereotype.Controller;
+import reactor.core.publisher.Mono;
+
 import im.turms.gateway.access.client.common.RequestHandlerResult;
 import im.turms.gateway.access.client.common.UserSession;
 import im.turms.gateway.access.client.common.UserSessionWrapper;
@@ -35,13 +43,6 @@ import im.turms.server.common.infra.exception.IncompatibleInternalChangeExceptio
 import im.turms.server.common.infra.lang.ClassUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
-import io.netty.util.Timeout;
-import org.springframework.stereotype.Controller;
-import reactor.core.publisher.Mono;
-
-import java.lang.reflect.Method;
-import java.util.Date;
-import java.util.Map;
 
 /**
  * @author James Chen
@@ -56,8 +57,9 @@ public class SessionClientController {
         try {
             Method method = UserOnlineStatusChangeHandler.class
                     .getDeclaredMethod("goOnline", UserSessionsManager.class, UserSession.class);
-            ERROR_INVOKE_GO_ONLINE = "Caught an error while invoking the extension point handlers for: " +
-                    ClassUtil.getReference(method);
+            ERROR_INVOKE_GO_ONLINE =
+                    "Caught an error while invoking the extension point handlers for: "
+                            + ClassUtil.getReference(method);
         } catch (NoSuchMethodException e) {
             throw new IncompatibleInternalChangeException(e);
         }
@@ -76,13 +78,20 @@ public class SessionClientController {
         }
         Long userId = session.getUserId();
         sessionService
-                .closeLocalSession(userId, session.getDeviceType(), SessionCloseStatus.DISCONNECTED_BY_CLIENT)
-                .subscribe(null, t -> LOGGER.error("Caught an error while closing the session with the user ID: " + userId, t));
+                .closeLocalSession(userId,
+                        session.getDeviceType(),
+                        SessionCloseStatus.DISCONNECTED_BY_CLIENT)
+                .subscribe(null,
+                        t -> LOGGER.error(
+                                "Caught an error while closing the session with the user ID: "
+                                        + userId,
+                                t));
         return Mono.empty();
     }
 
-    public Mono<RequestHandlerResult> handleCreateSessionRequest(UserSessionWrapper sessionWrapper,
-                                                                 CreateSessionRequest createSessionRequest) {
+    public Mono<RequestHandlerResult> handleCreateSessionRequest(
+            UserSessionWrapper sessionWrapper,
+            CreateSessionRequest createSessionRequest) {
         if (sessionWrapper.hasUserSession()) {
             return Mono.just(new RequestHandlerResult(ResponseStatusCode.CREATE_EXISTING_SESSION));
         }
@@ -103,37 +112,50 @@ public class SessionClientController {
         Location location = null;
         if (createSessionRequest.hasLocation()) {
             UserLocation userLocation = createSessionRequest.getLocation();
-            location = new Location(userLocation.getLongitude(),
+            location = new Location(
+                    userLocation.getLongitude(),
                     userLocation.getLatitude(),
-                    userLocation.hasTimestamp() ? new Date(userLocation.getTimestamp()) : null,
+                    userLocation.hasTimestamp()
+                            ? new Date(userLocation.getTimestamp())
+                            : null,
                     userLocation.getDetailsMap());
         }
-        Mono<UserSession> handleLoginRequestMono = sessionService.handleLoginRequest(createSessionRequest.getVersion(),
-                sessionWrapper.getIp(),
-                userId,
-                password,
-                deviceType,
-                deviceDetails,
-                userStatus,
-                location,
-                sessionWrapper.getIpStr());
+        Mono<UserSession> handleLoginRequestMono =
+                sessionService.handleLoginRequest(createSessionRequest.getVersion(),
+                        sessionWrapper.getIp(),
+                        userId,
+                        password,
+                        deviceType,
+                        deviceDetails,
+                        userStatus,
+                        location,
+                        sessionWrapper.getIpStr());
         Timeout idleConnectionTimeout = sessionWrapper.getConnectionTimeoutTask();
         DeviceType finalDeviceType = deviceType;
         return handleLoginRequestMono.flatMap(session -> {
             if (idleConnectionTimeout == null || idleConnectionTimeout.cancel()) {
-                if (sessionWrapper.getConnection().isConnected()) {
+                if (sessionWrapper.getConnection()
+                        .isConnected()) {
                     sessionWrapper.setUserSession(session);
-                    UserSessionsManager userSessionsManager = sessionService.getUserSessionsManager(userId);
-                    sessionService.onSessionEstablished(userSessionsManager, session.getDeviceType());
+                    UserSessionsManager userSessionsManager =
+                            sessionService.getUserSessionsManager(userId);
+                    sessionService.onSessionEstablished(userSessionsManager,
+                            session.getDeviceType());
                     sessionService.invokeGoOnlineHandlers(userSessionsManager, session)
                             .subscribe(null, t -> LOGGER.error(ERROR_INVOKE_GO_ONLINE, t));
                     return Mono.just(new RequestHandlerResult(ResponseStatusCode.OK));
                 } else {
-                    return sessionService.closeLocalSession(userId, finalDeviceType, SessionCloseStatus.LOGIN_TIMEOUT)
+                    return sessionService
+                            .closeLocalSession(userId,
+                                    finalDeviceType,
+                                    SessionCloseStatus.LOGIN_TIMEOUT)
                             .then(Mono.empty());
                 }
             } else {
-                return sessionService.closeLocalSession(userId, finalDeviceType, SessionCloseStatus.LOGIN_TIMEOUT)
+                return sessionService
+                        .closeLocalSession(userId,
+                                finalDeviceType,
+                                SessionCloseStatus.LOGIN_TIMEOUT)
                         .map(ignored -> new RequestHandlerResult(ResponseStatusCode.LOGIN_TIMEOUT));
             }
         });

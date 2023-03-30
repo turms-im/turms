@@ -17,6 +17,10 @@
 
 package im.turms.service.domain.group.po;
 
+import java.util.LinkedHashSet;
+
+import lombok.Data;
+
 import im.turms.server.common.domain.common.po.BaseEntity;
 import im.turms.server.common.storage.mongo.entity.IndexType;
 import im.turms.server.common.storage.mongo.entity.ShardingStrategy;
@@ -25,9 +29,6 @@ import im.turms.server.common.storage.mongo.entity.annotation.Field;
 import im.turms.server.common.storage.mongo.entity.annotation.Id;
 import im.turms.server.common.storage.mongo.entity.annotation.Indexed;
 import im.turms.server.common.storage.mongo.entity.annotation.Sharded;
-import lombok.Data;
-
-import java.util.LinkedHashSet;
 
 /**
  * @author James Chen

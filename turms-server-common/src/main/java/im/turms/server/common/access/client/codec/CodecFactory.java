@@ -24,7 +24,8 @@ import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
  * @author James Chen
  */
 public final class CodecFactory {
-    private static final ProtobufVarint32LengthFieldPrepender VARINT_LENGTH_FIELD_PREPENDER = new ProtobufVarint32LengthFieldPrepender();
+    private static final ProtobufVarint32LengthFieldPrepender VARINT_LENGTH_FIELD_PREPENDER =
+            new ProtobufVarint32LengthFieldPrepender();
     private static final ProtobufFrameEncoder PROTOBUF_FRAME_ENCODER = new ProtobufFrameEncoder();
 
     private CodecFactory() {
@@ -34,7 +35,8 @@ public final class CodecFactory {
         return new ProtobufVarint32FrameDecoder();
     }
 
-    public static ExtendedProtobufVarint32FrameDecoder getExtendedVarintLengthBasedFrameDecoder(int maxFrameLength) {
+    public static ExtendedProtobufVarint32FrameDecoder getExtendedVarintLengthBasedFrameDecoder(
+            int maxFrameLength) {
         return new ExtendedProtobufVarint32FrameDecoder(maxFrameLength);
     }
 

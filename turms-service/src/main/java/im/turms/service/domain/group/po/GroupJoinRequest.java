@@ -17,6 +17,11 @@
 
 package im.turms.service.domain.group.po;
 
+import java.util.Date;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
 import im.turms.server.common.access.client.dto.constant.RequestStatus;
 import im.turms.server.common.domain.common.po.BaseEntity;
 import im.turms.server.common.storage.mongo.entity.annotation.CompoundIndex;
@@ -27,30 +32,25 @@ import im.turms.server.common.storage.mongo.entity.annotation.Id;
 import im.turms.server.common.storage.mongo.entity.annotation.Indexed;
 import im.turms.server.common.storage.mongo.entity.annotation.Sharded;
 import im.turms.service.domain.common.po.Expirable;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-
-import java.util.Date;
 
 import static im.turms.server.common.storage.mongo.entity.IndexType.HASH;
 import static im.turms.server.common.storage.mongo.entity.annotation.IndexedReason.EXTENDED_FEATURE;
 
 /**
  * @author James Chen
- * @implNote Don't use the "groupId" and "requesterId" as the key because
- * a requester can send multiple requests (no matter it is pending, handled or etc) to the same group.
- * <p>
- * Sharded by requesterId and createDate because it is common for users to
- * query the status of member requests sent by them at application startup.
- * <p>
- * Note that the query for the member requests of a group sent by a group admin
- * isn't targeted query but scatter query with indexes supported.
+ * @implNote Don't use the "groupId" and "requesterId" as the key because a requester can send
+ *           multiple requests (no matter it is pending, handled or etc) to the same group.
+ *           <p>
+ *           Sharded by requesterId and createDate because it is common for users to query the
+ *           status of member requests sent by them at application startup.
+ *           <p>
+ *           Note that the query for the member requests of a group sent by a group admin isn't
+ *           targeted query but scatter query with indexes supported.
  */
 @Data
 @AllArgsConstructor
 @Document(GroupJoinRequest.COLLECTION_NAME)
-@CompoundIndex({GroupJoinRequest.Fields.REQUESTER_ID,
-        GroupJoinRequest.Fields.CREATION_DATE})
+@CompoundIndex({GroupJoinRequest.Fields.REQUESTER_ID, GroupJoinRequest.Fields.CREATION_DATE})
 @Sharded(shardKey = GroupJoinRequest.Fields.REQUESTER_ID)
 public class GroupJoinRequest extends BaseEntity implements Expirable {
 
@@ -63,8 +63,8 @@ public class GroupJoinRequest extends BaseEntity implements Expirable {
     private final String content;
 
     /**
-     * @implNote 1. Not indexed because of its low index selectivity.
-     * 2. Not final so that we can change it without using a builder (bad performance)
+     * @implNote 1. Not indexed because of its low index selectivity. 2. Not final so that we can
+     *           change it without using a builder (bad performance)
      */
     @Field(Fields.STATUS)
     @EnumNumber
@@ -75,7 +75,12 @@ public class GroupJoinRequest extends BaseEntity implements Expirable {
     private final Date creationDate;
 
     @Field(Fields.RESPONSE_DATE)
-    @Indexed(optional = true, reason = EXTENDED_FEATURE, partialFilter = "{" + Fields.RESPONSE_DATE + ":{$exists:true}}")
+    @Indexed(
+            optional = true,
+            reason = EXTENDED_FEATURE,
+            partialFilter = "{"
+                    + Fields.RESPONSE_DATE
+                    + ":{$exists:true}}")
     private final Date responseDate;
 
     /**
@@ -89,7 +94,13 @@ public class GroupJoinRequest extends BaseEntity implements Expirable {
     private final Long requesterId;
 
     @Field(Fields.RESPONDER_ID)
-    @Indexed(optional = true, value = HASH, reason = EXTENDED_FEATURE, partialFilter = "{" + Fields.RESPONDER_ID + ":{$exists:true}}")
+    @Indexed(
+            optional = true,
+            value = HASH,
+            reason = EXTENDED_FEATURE,
+            partialFilter = "{"
+                    + Fields.RESPONDER_ID
+                    + ":{$exists:true}}")
     private final Long responderId;
 
     public static final class Fields {

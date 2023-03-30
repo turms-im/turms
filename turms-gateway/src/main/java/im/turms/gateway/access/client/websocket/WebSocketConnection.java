@@ -17,18 +17,19 @@
 
 package im.turms.gateway.access.client.websocket;
 
+import java.net.InetSocketAddress;
+
+import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
+import io.netty.handler.codec.http.websocketx.WebSocketCloseStatus;
+import reactor.netty.Connection;
+import reactor.netty.http.websocket.WebsocketOutbound;
+
 import im.turms.gateway.access.client.common.NotificationFactory;
 import im.turms.gateway.access.client.common.connection.NetConnection;
 import im.turms.server.common.domain.session.bo.CloseReason;
 import im.turms.server.common.infra.exception.ThrowableUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
-import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
-import io.netty.handler.codec.http.websocketx.WebSocketCloseStatus;
-import reactor.netty.Connection;
-import reactor.netty.http.websocket.WebsocketOutbound;
-
-import java.net.InetSocketAddress;
 
 /**
  * @author James Chen
@@ -71,9 +72,9 @@ public class WebSocketConnection extends NetConnection {
                 .doFinally(signal -> close())
                 .subscribe(null, t -> {
                     if (!ThrowableUtil.isDisconnectedClientError(t)) {
-                        LOGGER.error("Failed to send the close notification after (" +
-                                RETRY_SEND_CLOSE_NOTIFICATION.maxAttempts +
-                                ") attempts", t);
+                        LOGGER.error("Failed to send the close notification after ("
+                                + RETRY_SEND_CLOSE_NOTIFICATION.maxAttempts
+                                + ") attempts", t);
                     }
                 });
     }
@@ -83,7 +84,10 @@ public class WebSocketConnection extends NetConnection {
         out.sendClose(WebSocketCloseStatus.NORMAL_CLOSURE.code(), null)
                 .subscribe(null, t -> {
                     if (!ThrowableUtil.isDisconnectedClientError(t)) {
-                        LOGGER.error("Failed to close the connection: " + getAddress().getAddress().getHostAddress(), t);
+                        LOGGER.error("Failed to close the connection: "
+                                + getAddress().getAddress()
+                                        .getHostAddress(),
+                                t);
                     }
                 });
     }

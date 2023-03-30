@@ -17,23 +17,23 @@
 
 package im.turms.plugin.push.core;
 
-import freemarker.template.Template;
-import im.turms.plugin.push.core.template.TemplateEngine;
-import im.turms.plugin.push.property.TemplateMappingProperties;
-import im.turms.plugin.push.property.TemplateProperties;
-import im.turms.server.common.infra.collection.CollectionUtil;
-import im.turms.server.common.infra.lang.ClassUtil;
-import im.turms.server.common.infra.lang.StringBuilderPool;
-import im.turms.server.common.infra.lang.StringBuilderWriter;
-import im.turms.server.common.infra.lang.StringUtil;
-import lombok.NoArgsConstructor;
-import reactor.core.publisher.Mono;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 import jakarta.annotation.Nullable;
+
+import freemarker.template.Template;
+import lombok.NoArgsConstructor;
+import reactor.core.publisher.Mono;
+
+import im.turms.plugin.push.core.template.TemplateEngine;
+import im.turms.plugin.push.property.TemplateMappingProperties;
+import im.turms.plugin.push.property.TemplateProperties;
+import im.turms.server.common.infra.collection.FastEnumMap;
+import im.turms.server.common.infra.lang.StringBuilderPool;
+import im.turms.server.common.infra.lang.StringBuilderWriter;
+import im.turms.server.common.infra.lang.StringUtil;
 
 /**
  * @author James Chen
@@ -47,9 +47,13 @@ public abstract class PushNotificationSender {
     protected PushNotificationSender(
             Map<String, TemplateProperties> nameToTemplate,
             Map<String, Map<PushNotificationType, TemplateMappingProperties>> localeToTypeToProperties) {
-        Map<String, Map<PushNotificationType, TemplateGroup>> map = new HashMap<>(localeToTypeToProperties.size() << 2);
-        for (Map.Entry<String, Map<PushNotificationType, TemplateMappingProperties>> localeToTypeToPropertiesEntry : localeToTypeToProperties.entrySet()) {
-            for (Map.Entry<PushNotificationType, TemplateMappingProperties> typeToPropertiesEntry : localeToTypeToPropertiesEntry.getValue().entrySet()) {
+        Map<String, Map<PushNotificationType, TemplateGroup>> map =
+                new HashMap<>(localeToTypeToProperties.size() << 2);
+        for (Map.Entry<String, Map<PushNotificationType, TemplateMappingProperties>> localeToTypeToPropertiesEntry : localeToTypeToProperties
+                .entrySet()) {
+            for (Map.Entry<PushNotificationType, TemplateMappingProperties> typeToPropertiesEntry : localeToTypeToPropertiesEntry
+                    .getValue()
+                    .entrySet()) {
                 TemplateMappingProperties properties = typeToPropertiesEntry.getValue();
                 addTemplate(map,
                         properties.getTitleTemplateName(),
@@ -65,42 +69,45 @@ public abstract class PushNotificationSender {
                         (templateGroup, template) -> templateGroup.bodyTemplate = template);
             }
         }
-        CollectionUtil.transformValues(map, Map::copyOf);
         localeToTypeToTemplate = Map.copyOf(map);
     }
 
     /**
-     * @return {@link SendPushNotificationException} if the sender
-     * failed to send notifications no matter what reason
+     * @return {@link SendPushNotificationException} if the sender failed to send notifications no
+     *         matter what reason
      */
-    public abstract Mono<Void> sendNotification(PushNotification notification,
-                                                String locale,
-                                                Supplier<Object> dataModelSupplier);
+    public abstract Mono<Void> sendNotification(
+            PushNotification notification,
+            String locale,
+            Supplier<Object> dataModelSupplier);
 
     public abstract Mono<Void> close();
 
-    private void addTemplate(Map<String, Map<PushNotificationType, TemplateGroup>> output,
-                             String templateName,
-                             Map<String, TemplateProperties> nameToTemplate,
-                             Map.Entry<String, Map<PushNotificationType, TemplateMappingProperties>> localeToTypeToPropertiesEntry,
-                             Map.Entry<PushNotificationType, TemplateMappingProperties> typeToPropertiesEntry,
-                             BiConsumer<TemplateGroup, Template> consumer) {
-        if (!StringUtil.isNotBlank(templateName)) {
+    private void addTemplate(
+            Map<String, Map<PushNotificationType, TemplateGroup>> output,
+            String templateName,
+            Map<String, TemplateProperties> nameToTemplate,
+            Map.Entry<String, Map<PushNotificationType, TemplateMappingProperties>> localeToTypeToPropertiesEntry,
+            Map.Entry<PushNotificationType, TemplateMappingProperties> typeToPropertiesEntry,
+            BiConsumer<TemplateGroup, Template> consumer) {
+        if (StringUtil.isBlank(templateName)) {
             return;
         }
         TemplateProperties templateProperties = nameToTemplate.get(templateName);
         if (templateProperties == null) {
-            throw new IllegalArgumentException("Could not find a template with the name: \"" + templateName + "\"");
+            throw new IllegalArgumentException(
+                    "Could not find a template with the name: \""
+                            + templateName
+                            + "\"");
         }
         String template = templateProperties.getTemplate();
-        if (!StringUtil.isNotBlank(template)) {
+        if (StringUtil.isBlank(template)) {
             return;
         }
         Template t = TEMPLATE_ENGINE.buildTemplate(template);
         output.compute(localeToTypeToPropertiesEntry.getKey(), (key, typeToTemplateGroup) -> {
             if (typeToTemplateGroup == null) {
-                int length = ClassUtil.getSharedEnumConstants(PushNotificationType.class).length;
-                typeToTemplateGroup = CollectionUtil.newMapWithExpectedSize(length);
+                typeToTemplateGroup = new FastEnumMap<>(PushNotificationType.class);
             }
             typeToTemplateGroup.compute(typeToPropertiesEntry.getKey(), (type, templateGroup) -> {
                 if (templateGroup == null) {
@@ -119,7 +126,8 @@ public abstract class PushNotificationSender {
             @Nullable String title,
             @Nullable String body,
             Supplier<Object> dataModelSupplier) {
-        Map<PushNotificationType, TemplateGroup> typeToTemplate = localeToTypeToTemplate.get(locale);
+        Map<PushNotificationType, TemplateGroup> typeToTemplate =
+                localeToTypeToTemplate.get(locale);
         if (typeToTemplate == null) {
             return new Message(title, body);
         }

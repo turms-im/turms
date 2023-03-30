@@ -17,13 +17,14 @@
 
 package im.turms.server.common.infra.property.env.common;
 
-import im.turms.server.common.storage.redis.RedisProperties;
-import im.turms.server.common.storage.redis.SimpleRedisProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
+
+import im.turms.server.common.storage.redis.RedisProperties;
+import im.turms.server.common.storage.redis.SimpleRedisProperties;
 
 /**
  * @author James Chen

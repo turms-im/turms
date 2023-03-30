@@ -17,12 +17,13 @@
 
 package im.turms.server.common.infra.property.env.common.plugin;
 
-import im.turms.server.common.infra.property.metadata.Description;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
+
+import im.turms.server.common.infra.property.metadata.Description;
 
 /**
  * @author James Chen

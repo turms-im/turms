@@ -17,6 +17,12 @@
 
 package im.turms.server.common;
 
+import java.lang.management.ManagementFactory;
+import java.lang.management.RuntimeMXBean;
+import java.util.TimeZone;
+
+import org.springframework.boot.SpringApplication;
+
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.exception.IncompatibleJvmException;
 import im.turms.server.common.infra.lang.ClassUtil;
@@ -24,11 +30,6 @@ import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.time.TimeZoneConst;
-import org.springframework.boot.SpringApplication;
-
-import java.lang.management.ManagementFactory;
-import java.lang.management.RuntimeMXBean;
-import java.util.TimeZone;
 
 /**
  * @author James Chen
@@ -40,7 +41,8 @@ public abstract class BaseTurmsApplication {
 
         TimeZone.setDefault(TimeZoneConst.ZONE);
         // Disable the max direct memory limit and buffer counters of Netty
-        // so that we can get the used direct memory via BufferPoolMXBean without depending on ByteBufAllocator of Netty
+        // so that we can get the used direct memory via BufferPoolMXBean without depending on
+        // ByteBufAllocator of Netty
         System.setProperty("io.netty.maxDirectMemory", "0");
         System.setProperty("spring.main.banner-mode", "off");
         System.setProperty("spring.main.web-application-type", "none");
@@ -81,13 +83,13 @@ public abstract class BaseTurmsApplication {
             StringUtil.class.getClassLoader();
         } catch (Exception e) {
             RuntimeMXBean bean = ManagementFactory.getRuntimeMXBean();
-            String message = "The current JVM {name=" +
-                    bean.getVmName() +
-                    ", version=" +
-                    bean.getVmVersion() +
-                    ", vendor=" +
-                    bean.getVmVendor() +
-                    "} cannot work with turms server";
+            String message = "The current JVM {name="
+                    + bean.getVmName()
+                    + ", version="
+                    + bean.getVmVersion()
+                    + ", vendor="
+                    + bean.getVmVendor()
+                    + "} cannot work with turms server";
             throw new IncompatibleJvmException(message, e);
         }
     }

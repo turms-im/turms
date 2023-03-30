@@ -17,12 +17,13 @@
 
 package unit.im.turms.server.common.infra.net;
 
-import im.turms.server.common.infra.net.InetAddressUtil;
-import org.junit.jupiter.api.Test;
-
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.List;
+
+import org.junit.jupiter.api.Test;
+
+import im.turms.server.common.infra.net.InetAddressUtil;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -33,8 +34,7 @@ class InetAddressUtilTests {
 
     @Test
     void ipIntBytesConversion() throws UnknownHostException {
-        List<String> ips = List.of(
-                "1.1.1.1",
+        List<String> ips = List.of("1.1.1.1",
                 "1.0.0.1",
                 "1.2.3.4",
                 "8.8.8.8",
@@ -44,7 +44,8 @@ class InetAddressUtilTests {
         for (String ip : ips) {
             InetAddress inetAddress = InetAddress.getByName(ip);
             byte[] address = inetAddress.getAddress();
-            byte[] actual = InetAddressUtil.ipIntToBytes(InetAddressUtil.ipBytesToInt(inetAddress.getAddress()));
+            byte[] actual = InetAddressUtil
+                    .ipIntToBytes(InetAddressUtil.ipBytesToInt(inetAddress.getAddress()));
             assertThat(actual).isEqualTo(address);
         }
     }

@@ -17,12 +17,12 @@
 
 package im.turms.server.common.storage.mongo.entity;
 
-import org.bson.BsonDocument;
-
 import java.lang.reflect.Constructor;
 import java.util.List;
 import java.util.Map;
 import jakarta.annotation.Nullable;
+
+import org.bson.BsonDocument;
 
 /**
  * @author James Chen

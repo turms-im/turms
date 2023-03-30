@@ -17,17 +17,18 @@
 
 package im.turms.server.common.infra.reflect;
 
-import im.turms.server.common.infra.exception.IncompatibleJvmException;
-import im.turms.server.common.infra.lang.ClassUtil;
-import im.turms.server.common.infra.unsafe.UnsafeUtil;
-import sun.misc.Unsafe;
-
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+
+import sun.misc.Unsafe;
+
+import im.turms.server.common.infra.exception.IncompatibleJvmException;
+import im.turms.server.common.infra.lang.ClassUtil;
+import im.turms.server.common.infra.unsafe.UnsafeUtil;
 
 /**
  * @author James Chen
@@ -41,10 +42,10 @@ public final class ReflectionUtil {
      * "UNSAFE.objectFieldOffset(AccessibleObject.class.getDeclaredField("override"))" won't work
      * because Java hides {@link java.lang.reflect.AccessibleObject#override} in
      * https://bugs.openjdk.java.net/browse/JDK-8210522
-     * https://github.com/openjdk/jdk/commit/9c70e26c146ae4c5a2e2311948efec9bf662bb8c
-     * Though we get the offset via:
-     * "jdk.internal.misc.Unsafe#objectFieldOffset(AccessibleObject.class, "override")",
-     * we don't want to "add-exports" everywhere, which causes a bad development experience
+     * https://github.com/openjdk/jdk/commit/9c70e26c146ae4c5a2e2311948efec9bf662bb8c Though we get
+     * the offset via: "jdk.internal.misc.Unsafe#objectFieldOffset(AccessibleObject.class,
+     * "override")", we don't want to "add-exports" everywhere, which causes a bad development
+     * experience
      */
     private static final long OVERRIDE_OFFSET;
 
@@ -62,11 +63,13 @@ public final class ReflectionUtil {
         // so their object offset should be the same
         OVERRIDE_OFFSET = UNSAFE.objectFieldOffset(field);
         if (field.isAccessible()) {
-            throw new IncompatibleJvmException("The private field should be inaccessible by default");
+            throw new IncompatibleJvmException(
+                    "The private field should be inaccessible by default");
         }
         setAccessible(field);
         if (!field.isAccessible()) {
-            throw new IncompatibleJvmException("The private field should be accessible after updating \"override\" to true");
+            throw new IncompatibleJvmException(
+                    "The private field should be accessible after updating \"override\" to true");
         }
     }
 
@@ -78,8 +81,10 @@ public final class ReflectionUtil {
         try {
             return LOOKUP.unreflectConstructor(constructor);
         } catch (IllegalAccessException e) {
-            throw new RuntimeException("Failed to unreflect the constructor: " +
-                    constructor.getName(), e);
+            throw new RuntimeException(
+                    "Failed to unreflect the constructor: "
+                            + constructor.getName(),
+                    e);
         }
     }
 
@@ -90,14 +95,18 @@ public final class ReflectionUtil {
             setAccessible(field);
             return LOOKUP.unreflectGetter(field);
         } catch (NoSuchFieldException e) {
-            throw new IllegalArgumentException("The class (" +
-                    clazz.getName() +
-                    ") does not have the field: \"" +
-                    fieldName +
-                    "\"", e);
+            throw new IllegalArgumentException(
+                    "The class ("
+                            + clazz.getName()
+                            + ") does not have the field: \""
+                            + fieldName
+                            + "\"",
+                    e);
         } catch (IllegalAccessException e) {
-            throw new RuntimeException("Failed to reflect the getter for the field: " +
-                    ClassUtil.getReference(field), e);
+            throw new RuntimeException(
+                    "Failed to reflect the getter for the field: "
+                            + ClassUtil.getReference(field),
+                    e);
         }
     }
 
@@ -106,14 +115,16 @@ public final class ReflectionUtil {
             setAccessible(method);
             return LOOKUP.unreflect(method);
         } catch (IllegalAccessException e) {
-            throw new RuntimeException("Failed to reflect the method: " +
-                    ClassUtil.getReference(method), e);
+            throw new RuntimeException(
+                    "Failed to reflect the method: "
+                            + ClassUtil.getReference(method),
+                    e);
         }
     }
 
     /**
-     * 1. Ignore the access control of the module system
-     * 2. Better performance than {@link AccessibleObject#setAccessible(boolean)}:
+     * 1. Ignore the access control of the module system 2. Better performance than
+     * {@link AccessibleObject#setAccessible(boolean)}:
      * {@link benchmark.im.turms.server.common.infra.reflect.SetAccessible}
      */
     public static void setAccessible(AccessibleObject object) {

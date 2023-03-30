@@ -17,16 +17,17 @@
 
 package im.turms.server.common.infra.property.env.service.business.group;
 
-import im.turms.server.common.infra.property.metadata.Description;
-import im.turms.server.common.infra.property.metadata.GlobalProperty;
-import im.turms.server.common.infra.property.metadata.MutableProperty;
+import jakarta.validation.constraints.Min;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
-import jakarta.validation.constraints.Min;
+import im.turms.server.common.infra.property.metadata.Description;
+import im.turms.server.common.infra.property.metadata.GlobalProperty;
+import im.turms.server.common.infra.property.metadata.MutableProperty;
 
 /**
  * @author James Chen
@@ -47,8 +48,8 @@ public class GroupProperties {
     @MutableProperty
     private boolean activateGroupWhenCreated = true;
 
-    @Description("The group member cache will expire after the specified seconds. " +
-            "If 0, no group member cache")
+    @Description("The group member cache will expire after the specified seconds. "
+            + "If 0, no group member cache")
     @GlobalProperty
     @Min(0)
     private int memberCacheExpireAfterSeconds = 15;

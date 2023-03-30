@@ -45,7 +45,9 @@ public class CyclicIterator<T> implements Iterator<T> {
          * one, we can optimistically store the new Iterator and then be willing to throw it out if
          * the user calls remove().)
          */
-        return iterator.hasNext() || iterable.iterator().hasNext();
+        return iterator.hasNext()
+                || iterable.iterator()
+                        .hasNext();
     }
 
     @Override

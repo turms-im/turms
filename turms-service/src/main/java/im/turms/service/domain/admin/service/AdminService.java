@@ -17,8 +17,25 @@
 
 package im.turms.service.domain.admin.service;
 
+import java.util.Date;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.Size;
+
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.domain.admin.bo.AdminInfo;
 import im.turms.server.common.domain.admin.po.Admin;
@@ -33,22 +50,6 @@ import im.turms.server.common.storage.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.storage.mongo.exception.DuplicateKeyException;
 import im.turms.service.domain.admin.repository.AdminRepository;
 import im.turms.service.storage.mongo.OperationResultPublisherPool;
-import org.apache.commons.lang3.RandomStringUtils;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
-import java.util.Date;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PastOrPresent;
-import jakarta.validation.constraints.Size;
 
 import static im.turms.server.common.domain.admin.constant.AdminConst.ADMIN_ROLE_ROOT_ID;
 import static im.turms.server.common.domain.admin.constant.AdminConst.ROOT_ADMIN_ACCOUNT;
@@ -98,7 +99,8 @@ public class AdminService extends BaseAdminService {
         for (String account : accounts) {
             AdminInfo adminInfo = accountToAdmin.get(account);
             if (adminInfo != null) {
-                roleIds.add(adminInfo.getAdmin().getRoleId());
+                roleIds.add(adminInfo.getAdmin()
+                        .getRoleId());
             }
         }
         return roleIds.size() == accounts.size()
@@ -108,8 +110,12 @@ public class AdminService extends BaseAdminService {
 
     public Mono<Admin> authAndAddAdmin(
             @NotNull String requesterAccount,
-            @Nullable @NoWhitespace @Size(min = MIN_ACCOUNT_LIMIT, max = MAX_ACCOUNT_LIMIT) String account,
-            @Nullable @NoWhitespace @Size(min = MIN_PASSWORD_LIMIT, max = MAX_PASSWORD_LIMIT) String rawPassword,
+            @Nullable @NoWhitespace @Size(
+                    min = MIN_ACCOUNT_LIMIT,
+                    max = MAX_ACCOUNT_LIMIT) String account,
+            @Nullable @NoWhitespace @Size(
+                    min = MIN_PASSWORD_LIMIT,
+                    max = MAX_PASSWORD_LIMIT) String rawPassword,
             @NotNull Long roleId,
             @Nullable @NoWhitespace @Size(min = MIN_NAME_LIMIT, max = MAX_NAME_LIMIT) String name,
             @Nullable @PastOrPresent Date registrationDate,
@@ -124,20 +130,27 @@ public class AdminService extends BaseAdminService {
             Validator.length(name, "name", MIN_NAME_LIMIT, MAX_NAME_LIMIT);
             Validator.pastOrPresent(registrationDate, "registrationDate");
             Validator.notNull(roleId, "roleId");
-            Validator.notEquals(roleId, ADMIN_ROLE_ROOT_ID,
-                    "The role ID cannot be the root role ID: " + ADMIN_ROLE_ROOT_ID);
+            Validator.notEquals(roleId,
+                    ADMIN_ROLE_ROOT_ID,
+                    "The role ID cannot be the root role ID: "
+                            + ADMIN_ROLE_ROOT_ID);
         } catch (ResponseException e) {
             return Mono.error(e);
         }
         return adminRoleService.isAdminHigherThanRole(requesterAccount, roleId)
                 .flatMap(isHigher -> isHigher
                         ? addAdmin(account, rawPassword, roleId, name, registrationDate, upsert)
-                        : Mono.error(ResponseException.get(ResponseStatusCode.UNAUTHORIZED, ERROR_UPDATE_ADMIN_WITH_HIGHER_RANK)));
+                        : Mono.error(ResponseException.get(ResponseStatusCode.UNAUTHORIZED,
+                                ERROR_UPDATE_ADMIN_WITH_HIGHER_RANK)));
     }
 
     public Mono<Admin> addAdmin(
-            @Nullable @NoWhitespace @Size(min = MIN_ACCOUNT_LIMIT, max = MAX_ACCOUNT_LIMIT) String account,
-            @Nullable @NoWhitespace @Size(min = MIN_PASSWORD_LIMIT, max = MAX_PASSWORD_LIMIT) String rawPassword,
+            @Nullable @NoWhitespace @Size(
+                    min = MIN_ACCOUNT_LIMIT,
+                    max = MAX_ACCOUNT_LIMIT) String account,
+            @Nullable @NoWhitespace @Size(
+                    min = MIN_PASSWORD_LIMIT,
+                    max = MAX_PASSWORD_LIMIT) String rawPassword,
             @NotNull Long roleId,
             @Nullable @NoWhitespace @Size(min = MIN_NAME_LIMIT, max = MAX_NAME_LIMIT) String name,
             @Nullable @PastOrPresent Date registrationDate,
@@ -180,12 +193,14 @@ public class AdminService extends BaseAdminService {
 
     protected Mono<Admin> addRootAdmin() {
         return addAdmin(ROOT_ADMIN_ACCOUNT,
-                propertiesManager.getLocalProperties().getSecurity().getPassword().getInitialRootPassword(),
+                propertiesManager.getLocalProperties()
+                        .getSecurity()
+                        .getPassword()
+                        .getInitialRootPassword(),
                 ADMIN_ROLE_ROOT_ID,
                 ROOT_ADMIN_ACCOUNT,
                 new Date(),
-                false)
-                .onErrorComplete(DuplicateKeyException.class);
+                false).onErrorComplete(DuplicateKeyException.class);
     }
 
     public Flux<Admin> queryAdmins(
@@ -202,14 +217,17 @@ public class AdminService extends BaseAdminService {
         try {
             Validator.notNull(requesterAccount, "requesterAccount");
             Validator.notEmpty(accounts, "accounts");
-            Validator.notContains(accounts, ROOT_ADMIN_ACCOUNT, "The root admin is reserved and cannot be deleted");
+            Validator.notContains(accounts,
+                    ROOT_ADMIN_ACCOUNT,
+                    "The root admin is reserved and cannot be deleted");
         } catch (ResponseException e) {
             return Mono.error(e);
         }
         return adminRoleService.isAdminHigherThanAdmins(requesterAccount, accounts)
                 .flatMap(triple -> triple.getLeft()
                         ? deleteAdmins(accounts)
-                        : Mono.error(ResponseException.get(ResponseStatusCode.UNAUTHORIZED, ERROR_UPDATE_ADMIN_WITH_HIGHER_RANK)));
+                        : Mono.error(ResponseException.get(ResponseStatusCode.UNAUTHORIZED,
+                                ERROR_UPDATE_ADMIN_WITH_HIGHER_RANK)));
     }
 
     private Mono<DeleteResult> deleteAdmins(@NotEmpty Set<String> accounts) {
@@ -230,7 +248,9 @@ public class AdminService extends BaseAdminService {
     public Mono<UpdateResult> authAndUpdateAdmins(
             @NotNull String requesterAccount,
             @NotEmpty Set<String> targetAccounts,
-            @Nullable @NoWhitespace @Size(min = MIN_PASSWORD_LIMIT, max = MAX_PASSWORD_LIMIT) String rawPassword,
+            @Nullable @NoWhitespace @Size(
+                    min = MIN_PASSWORD_LIMIT,
+                    max = MAX_PASSWORD_LIMIT) String rawPassword,
             @Nullable @NoWhitespace @Size(min = MIN_NAME_LIMIT, max = MAX_NAME_LIMIT) String name,
             @Nullable Long roleId) {
         try {
@@ -246,17 +266,21 @@ public class AdminService extends BaseAdminService {
         if (Validator.areAllNull(rawPassword, name, roleId)) {
             return OperationResultPublisherPool.ACKNOWLEDGED_UPDATE_RESULT;
         }
-        boolean onlyUpdateRequesterInfo = targetAccounts.size() == 1 && targetAccounts.iterator().next().equals(requesterAccount);
+        boolean onlyUpdateRequesterInfo = targetAccounts.size() == 1
+                && targetAccounts.iterator()
+                        .next()
+                        .equals(requesterAccount);
         if (onlyUpdateRequesterInfo) {
             return roleId == null
                     ? updateAdmins(targetAccounts, rawPassword, name, null)
-                    : Mono.error(ResponseException.get(ResponseStatusCode.UNAUTHORIZED, "It is forbidden to update one's own role ID"));
+                    : Mono.error(ResponseException.get(ResponseStatusCode.UNAUTHORIZED,
+                            "It is forbidden to update one's own role ID"));
         }
         return adminRoleService.isAdminHigherThanAdmins(requesterAccount, targetAccounts)
                 .flatMap(triple -> {
                     if (!triple.getLeft()) {
-                        return Mono
-                                .error(ResponseException.get(ResponseStatusCode.UNAUTHORIZED, ERROR_UPDATE_ADMIN_WITH_HIGHER_RANK));
+                        return Mono.error(ResponseException.get(ResponseStatusCode.UNAUTHORIZED,
+                                ERROR_UPDATE_ADMIN_WITH_HIGHER_RANK));
                     }
                     if (roleId == null) {
                         return updateAdmins(targetAccounts, rawPassword, name, null);
@@ -264,14 +288,17 @@ public class AdminService extends BaseAdminService {
                     return adminRoleService.queryRankByRole(roleId)
                             .flatMap(targetRoleRank -> triple.getMiddle() > targetRoleRank
                                     ? updateAdmins(targetAccounts, rawPassword, name, roleId)
-                                    : Mono.error(ResponseException
-                                    .get(ResponseStatusCode.UNAUTHORIZED, ERROR_UPDATE_ADMIN_WITH_HIGHER_RANK)));
+                                    : Mono.error(
+                                            ResponseException.get(ResponseStatusCode.UNAUTHORIZED,
+                                                    ERROR_UPDATE_ADMIN_WITH_HIGHER_RANK)));
                 });
     }
 
     public Mono<UpdateResult> updateAdmins(
             @NotEmpty Set<String> targetAccounts,
-            @Nullable @NoWhitespace @Size(min = MIN_PASSWORD_LIMIT, max = MAX_PASSWORD_LIMIT) String rawPassword,
+            @Nullable @NoWhitespace @Size(
+                    min = MIN_PASSWORD_LIMIT,
+                    max = MAX_PASSWORD_LIMIT) String rawPassword,
             @Nullable @NoWhitespace @Size(min = MIN_NAME_LIMIT, max = MAX_NAME_LIMIT) String name,
             @Nullable Long roleId) {
         try {

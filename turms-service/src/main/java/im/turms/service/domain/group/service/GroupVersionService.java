@@ -17,23 +17,24 @@
 
 package im.turms.service.domain.group.service;
 
-import com.mongodb.client.result.DeleteResult;
-import com.mongodb.client.result.UpdateResult;
-import com.mongodb.reactivestreams.client.ClientSession;
-import im.turms.server.common.infra.exception.ResponseException;
-import im.turms.server.common.infra.validation.Validator;
-import im.turms.server.common.storage.mongo.IMongoCollectionInitializer;
-import im.turms.service.domain.group.po.GroupVersion;
-import im.turms.service.domain.group.repository.GroupVersionRepository;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.stereotype.Service;
-import reactor.core.publisher.Mono;
-
 import java.util.Date;
 import java.util.Set;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+
+import com.mongodb.client.result.DeleteResult;
+import com.mongodb.client.result.UpdateResult;
+import com.mongodb.reactivestreams.client.ClientSession;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
+
+import im.turms.server.common.infra.exception.ResponseException;
+import im.turms.server.common.infra.validation.Validator;
+import im.turms.server.common.storage.mongo.IMongoCollectionInitializer;
+import im.turms.service.domain.group.po.GroupVersion;
+import im.turms.service.domain.group.repository.GroupVersionRepository;
 
 /**
  * @author James Chen
@@ -103,7 +104,8 @@ public class GroupVersionService {
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        return groupVersionRepository.updateVersion(groupId, updateMembers, updateBlocklist, joinRequests, joinQuestions)
+        return groupVersionRepository
+                .updateVersion(groupId, updateMembers, updateBlocklist, joinRequests, joinQuestions)
                 .map(result -> result.getModifiedCount() > 0);
     }
 
@@ -155,7 +157,9 @@ public class GroupVersionService {
         return groupVersionRepository.updateVersions(field);
     }
 
-    public Mono<UpdateResult> updateSpecificVersion(@Nullable Set<Long> groupIds, @NotNull String field) {
+    public Mono<UpdateResult> updateSpecificVersion(
+            @Nullable Set<Long> groupIds,
+            @NotNull String field) {
         try {
             Validator.notNull(field, "field");
         } catch (ResponseException e) {
@@ -171,12 +175,15 @@ public class GroupVersionService {
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        GroupVersion version = new GroupVersion(groupId, timestamp, timestamp, timestamp, timestamp, timestamp);
+        GroupVersion version =
+                new GroupVersion(groupId, timestamp, timestamp, timestamp, timestamp, timestamp);
         return groupVersionRepository.insert(version)
                 .thenReturn(version);
     }
 
-    public Mono<DeleteResult> delete(@NotEmpty Set<Long> groupIds, @Nullable ClientSession session) {
+    public Mono<DeleteResult> delete(
+            @NotEmpty Set<Long> groupIds,
+            @Nullable ClientSession session) {
         try {
             Validator.notEmpty(groupIds, "groupIds");
         } catch (ResponseException e) {

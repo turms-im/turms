@@ -17,9 +17,6 @@
 
 package generator;
 
-import im.turms.server.common.access.client.dto.ClientMessagePool;
-import im.turms.server.common.infra.lang.StringUtil;
-
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -32,6 +29,9 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import im.turms.server.common.access.client.dto.ClientMessagePool;
+import im.turms.server.common.infra.lang.StringUtil;
+
 /**
  * @author James Chen
  * @see ClientMessagePool
@@ -39,35 +39,38 @@ import java.util.regex.Pattern;
 class ClientMessagePoolGenerator {
 
     public static void main(String[] args) throws IOException {
-        String packageName = ClientMessagePool.class.getPackage().getName().replace('.', '/');
-        Path path = Paths.get("src/main/java/" + packageName);
+        String packageName = ClientMessagePool.class.getPackage()
+                .getName()
+                .replace('.', '/');
+        Path path = Paths.get("src/main/java/"
+                + packageName);
         Set<String> names = new HashSet<>(256);
         Pattern pattern = Pattern.compile("\\{@code im\\.turms\\.proto\\.(.*)\\}");
-        Files.find(path, Integer.MAX_VALUE,
-                        (p, basicFileAttributes) -> {
-                            String file = p.getFileName().toString();
-                            boolean isValid = file.endsWith(".java")
-                                    && !file.endsWith("OrBuilder.java")
-                                    && !file.endsWith("OuterClass.java");
-                            if (!isValid) {
-                                return false;
-                            }
-                            try {
-                                for (String line : Files.readAllLines(p, StandardCharsets.UTF_8)) {
-                                    // " * Protobuf type {@code im.turms.proto.TurmsNotification.Data}"
-                                    if (line.contains("* Protobuf type {@code")) {
-                                        Matcher matcher = pattern.matcher(line);
-                                        if (matcher.find()) {
-                                            String group = matcher.group(1);
-                                            names.add(group);
-                                        }
-                                    }
-                                }
-                            } catch (IOException e) {
-                                throw new RuntimeException(e);
-                            }
-                            return false;
-                        })
+        Files.find(path, Integer.MAX_VALUE, (p, basicFileAttributes) -> {
+            String file = p.getFileName()
+                    .toString();
+            boolean isValid = file.endsWith(".java")
+                    && !file.endsWith("OrBuilder.java")
+                    && !file.endsWith("OuterClass.java");
+            if (!isValid) {
+                return false;
+            }
+            try {
+                for (String line : Files.readAllLines(p, StandardCharsets.UTF_8)) {
+                    // " * Protobuf type {@code im.turms.proto.TurmsNotification.Data}"
+                    if (line.contains("* Protobuf type {@code")) {
+                        Matcher matcher = pattern.matcher(line);
+                        if (matcher.find()) {
+                            String group = matcher.group(1);
+                            names.add(group);
+                        }
+                    }
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            return false;
+        })
                 .count();
         List<String> modelNames = new ArrayList<>(names);
         modelNames.sort(String::compareTo);
@@ -75,30 +78,28 @@ class ClientMessagePoolGenerator {
         for (String name : modelNames) {
             String nameWithoutDot = name.replace(".", "");
             builder.append("""
-                                        
+
                     private static final FastThreadLocal<%s.Builder> %s = new FastThreadLocal<>() {
                         @Override
                         protected %s.Builder initialValue() {
                             return %s.newBuilder();
                         }
                     };
-                    """
-                    .formatted(name,
-                            StringUtil.upperCamelToUpperUnderscoreLatin1(nameWithoutDot),
-                            name,
-                            name));
+                    """.formatted(name,
+                    StringUtil.upperCamelToUpperUnderscoreLatin1(nameWithoutDot),
+                    name,
+                    name));
         }
         for (String name : modelNames) {
             String nameWithoutDot = name.replace(".", "");
             builder.append("""
-                                        
+
                     public static %s.Builder get%sBuilder() {
                         return %s.get().clear();
                     }
-                    """
-                    .formatted(name,
-                            nameWithoutDot,
-                            StringUtil.upperCamelToUpperUnderscoreLatin1(nameWithoutDot)));
+                    """.formatted(name,
+                    nameWithoutDot,
+                    StringUtil.upperCamelToUpperUnderscoreLatin1(nameWithoutDot)));
         }
         String output = builder.toString();
 

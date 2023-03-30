@@ -17,30 +17,30 @@
 
 package im.turms.server.common.infra.plugin;
 
-import im.turms.server.common.infra.plugin.script.ScriptExceptionSource;
-import im.turms.server.common.infra.plugin.script.ScriptExecutionException;
-import im.turms.server.common.infra.plugin.script.ValueDecoder;
-import org.graalvm.polyglot.Value;
-import reactor.core.publisher.Mono;
-
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 
+import org.graalvm.polyglot.Value;
+import reactor.core.publisher.Mono;
+
+import im.turms.server.common.infra.plugin.script.ScriptExceptionSource;
+import im.turms.server.common.infra.plugin.script.ScriptExecutionException;
+import im.turms.server.common.infra.plugin.script.ValueDecoder;
+
 /**
  * @author James Chen
  */
 public class JsExtensionPointInvocationHandler implements InvocationHandler {
 
-    private static final Set<String> OBJECT_METHODS = Set.of("equals",
-            "hashCode",
-            "toString");
+    private static final Set<String> OBJECT_METHODS = Set.of("equals", "hashCode", "toString");
 
     private final Map<Class<? extends ExtensionPoint>, Map<String, Value>> extensionPointToFunction;
 
-    public JsExtensionPointInvocationHandler(Map<Class<? extends ExtensionPoint>, Map<String, Value>> extensionPointToFunction) {
+    public JsExtensionPointInvocationHandler(
+            Map<Class<? extends ExtensionPoint>, Map<String, Value>> extensionPointToFunction) {
         this.extensionPointToFunction = extensionPointToFunction;
     }
 
@@ -49,13 +49,16 @@ public class JsExtensionPointInvocationHandler implements InvocationHandler {
         if (OBJECT_METHODS.contains(method.getName())) {
             return method.invoke(proxy, args);
         }
-        Map<String, Value> nameToFunction = extensionPointToFunction.get(method.getDeclaringClass());
+        Map<String, Value> nameToFunction =
+                extensionPointToFunction.get(method.getDeclaringClass());
         Class<?> returnType = method.getReturnType();
         // We only check Mono because we never use Flux
         // for the interfaces of extension points
         boolean isAsync = returnType.isAssignableFrom(Mono.class);
         if (nameToFunction == null) {
-            return isAsync ? Mono.empty() : null;
+            return isAsync
+                    ? Mono.empty()
+                    : null;
         }
         Value function = nameToFunction.get(method.getName());
         if (function == null) {
@@ -66,7 +69,8 @@ public class JsExtensionPointInvocationHandler implements InvocationHandler {
             } else if (void.class == returnType) {
                 return null;
             } else {
-                String message = "Could not find a default return value for the return type: " + returnType.getName();
+                String message = "Could not find a default return value for the return type: "
+                        + returnType.getName();
                 throw new ScriptExecutionException(message, ScriptExceptionSource.HOST);
             }
         }
@@ -76,11 +80,13 @@ public class JsExtensionPointInvocationHandler implements InvocationHandler {
                     ? function.execute()
                     : function.execute(args);
         } catch (Exception e) {
-            String message = "Failed to execute the function \"" +
-                    method.getName() +
-                    "\" in the class: " +
-                    method.getDeclaringClass().getName();
-            ScriptExecutionException exception = new ScriptExecutionException(message, e, ScriptExceptionSource.SCRIPT);
+            String message = "Failed to execute the function \""
+                    + method.getName()
+                    + "\" in the class: "
+                    + method.getDeclaringClass()
+                            .getName();
+            ScriptExecutionException exception =
+                    new ScriptExecutionException(message, e, ScriptExceptionSource.SCRIPT);
             if (isAsync) {
                 return Mono.error(exception);
             } else {
@@ -91,7 +97,9 @@ public class JsExtensionPointInvocationHandler implements InvocationHandler {
     }
 
     private Object parseReturnValue(boolean isAsync, Value returnValue) {
-        if (returnValue.getMetaObject().getMetaSimpleName().equals("Promise")) {
+        if (returnValue.getMetaObject()
+                .getMetaSimpleName()
+                .equals("Promise")) {
             return Mono.create(sink -> {
                 try {
                     Consumer<Object> resolve = o -> {
@@ -103,12 +111,15 @@ public class JsExtensionPointInvocationHandler implements InvocationHandler {
                             sink.success(o);
                         }
                     };
-                    Consumer<Object> reject = error -> sink.error(ValueDecoder.translateException(error));
-                    returnValue
-                            .invokeMember("then", resolve)
+                    Consumer<Object> reject =
+                            error -> sink.error(ValueDecoder.translateException(error));
+                    returnValue.invokeMember("then", resolve)
                             .invokeMember("catch", reject);
                 } catch (Exception e) {
-                    sink.error(new ScriptExecutionException("Failed to run the promise", e, ScriptExceptionSource.HOST));
+                    sink.error(new ScriptExecutionException(
+                            "Failed to run the promise",
+                            e,
+                            ScriptExceptionSource.HOST));
                 }
             });
         }

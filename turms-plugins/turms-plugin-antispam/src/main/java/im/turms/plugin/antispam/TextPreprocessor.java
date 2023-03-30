@@ -25,11 +25,9 @@ import im.turms.plugin.antispam.property.TextParsingStrategy;
  */
 public class TextPreprocessor {
 
-    private static final char[][] VALID_CODE_POINT_RANGES = {
-            {'a', 'z'},
-            {'0', '9'},
-            {'\u4E00', '\u9FFF'} // CJK Unified Ideographs
-    };
+    private static final char[][] VALID_CODE_POINT_RANGES =
+            {{'a', 'z'}, {'0', '9'}, {'\u4E00', '\u9FFF'} // CJK Unified Ideographs
+            };
 
     private final TextParsingStrategy parsingStrategy;
 

@@ -17,6 +17,17 @@
 
 package im.turms.gateway.domain.notification.service;
 
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotNull;
+
+import io.netty.buffer.ByteBuf;
+import org.springframework.stereotype.Component;
+import reactor.core.publisher.Mono;
+
 import im.turms.gateway.access.client.common.UserSession;
 import im.turms.gateway.domain.session.manager.UserSessionsManager;
 import im.turms.gateway.domain.session.service.SessionService;
@@ -40,16 +51,6 @@ import im.turms.server.common.infra.proto.ProtoDecoder;
 import im.turms.server.common.infra.tracing.TracingCloseableContext;
 import im.turms.server.common.infra.tracing.TracingContext;
 import im.turms.server.common.infra.validation.Validator;
-import io.netty.buffer.ByteBuf;
-import org.springframework.stereotype.Component;
-import reactor.core.publisher.Mono;
-
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.NotNull;
 
 /**
  * @author James Chen
@@ -84,17 +85,19 @@ public class NotificationService implements INotificationService {
         this.apiLoggingContext = apiLoggingContext;
         this.sessionService = sessionService;
         this.pluginManager = pluginManager;
-        isNotificationLoggingEnabled = propertiesManager
-                .getLocalProperties().getGateway().getNotificationLogging().isEnabled();
+        isNotificationLoggingEnabled = propertiesManager.getLocalProperties()
+                .getGateway()
+                .getNotificationLogging()
+                .isEnabled();
     }
 
     /**
-     * @param notificationData should be a buffer of TurmsNotification, and it is
-     *                         always a "notification" instead of "response" in fact
+     * @param notificationData should be a buffer of TurmsNotification, and it is always a
+     *                         "notification" instead of "response" in fact
      * @return offline recipient IDs
-     * @implNote 1. The method ensures notificationData will be released by 1
-     * 2. No need to updateMdc for trace ID here
-     * because we know sendNotificationToLocalClients() is in the tracing scope
+     * @implNote 1. The method ensures notificationData will be released by 1 2. No need to
+     *           updateMdc for trace ID here because we know sendNotificationToLocalClients() is in
+     *           the tracing scope
      */
     @Override
     public Mono<Set<Long>> sendNotificationToLocalClients(
@@ -113,37 +116,46 @@ public class NotificationService implements INotificationService {
         // Prepare data
         int recipientCount = recipientIds.size();
         int halfRecipientCount = recipientCount >> 1;
-        Set<Long> offlineRecipientIds = CollectionUtil
-                .newConcurrentSetWithExpectedSize(halfRecipientCount);
+        Set<Long> offlineRecipientIds =
+                CollectionUtil.newConcurrentSetWithExpectedSize(halfRecipientCount);
 
         List<Mono<Void>> monos = new ArrayList<>(halfRecipientCount);
 
         // Send notification
         boolean hasExcludedUserSessionIds = !excludedUserSessionIds.isEmpty();
         for (Long recipientId : recipientIds) {
-            UserSessionsManager userSessionsManager = sessionService.getUserSessionsManager(recipientId);
+            UserSessionsManager userSessionsManager =
+                    sessionService.getUserSessionsManager(recipientId);
             if (userSessionsManager == null) {
                 offlineRecipientIds.add(recipientId);
             } else {
-                for (UserSession userSession : userSessionsManager.getDeviceTypeToSession().values()) {
+                for (UserSession userSession : userSessionsManager.getDeviceTypeToSession()
+                        .values()) {
                     if (excludedDeviceType == userSession.getDeviceType()
-                            || (hasExcludedUserSessionIds && excludedUserSessionIds.contains(new UserSessionId(
-                            userSession.getUserId(), userSession.getDeviceType())))) {
+                            || (hasExcludedUserSessionIds
+                                    && excludedUserSessionIds.contains(new UserSessionId(
+                                            userSession.getUserId(),
+                                            userSession.getDeviceType())))) {
                         continue;
                     }
                     notificationData.retain();
-                    // It is the responsibility of the downstream to decrease the reference count of the notification by 1
-                    // when the notification is queued successfully and released by Netty, or fails to be queued.
+                    // It is the responsibility of the downstream to decrease the reference count of
+                    // the notification by 1
+                    // when the notification is queued successfully and released by Netty, or fails
+                    // to be queued.
                     // Otherwise, a memory leak will occur.
                     monos.add(userSession.sendNotification(notificationData, tracingContext)
                             .onErrorResume(t -> {
                                 offlineRecipientIds.add(recipientId);
                                 if (userSession.isSessionOpen()) {
-                                    return Mono.error(new RuntimeException("Failed to send a notification to the user session: " + userSession));
+                                    return Mono.error(new RuntimeException(
+                                            "Failed to send a notification to the user session: "
+                                                    + userSession));
                                 }
                                 return Mono.empty();
                             }));
-                    userSession.getConnection().tryNotifyClientToRecover();
+                    userSession.getConnection()
+                            .tryNotifyClientToRecover();
                 }
             }
         }
@@ -154,28 +166,38 @@ public class NotificationService implements INotificationService {
                         return;
                     }
                     if (pluginManager.hasRunningExtensions(NotificationHandler.class)) {
-                        invokeExtensionPointHandlers(notificationData, recipientIds, offlineRecipientIds);
+                        invokeExtensionPointHandlers(notificationData,
+                                recipientIds,
+                                offlineRecipientIds);
                     }
                     SimpleTurmsNotification notification = isNotificationLoggingEnabled
-                            ? TurmsNotificationParser.parseSimpleNotification(ProtoDecoder.newInputStream(notificationData))
+                            ? TurmsNotificationParser.parseSimpleNotification(
+                                    ProtoDecoder.newInputStream(notificationData))
                             : null;
                     Throwable t = signal.getThrowable();
                     if (isNotificationLoggingEnabled
-                            && apiLoggingContext.shouldLogNotification(notification.relayedRequestType())) {
+                            && apiLoggingContext
+                                    .shouldLogNotification(notification.relayedRequestType())) {
                         int offlineRecipientCount = offlineRecipientIds.size();
                         int notificationBytes = notificationData.readableBytes();
-                        try (TracingCloseableContext ignored = TracingContext.getCloseableContext(context)) {
+                        try (TracingCloseableContext ignored =
+                                TracingContext.getCloseableContext(context)) {
                             NotificationLogging.log(notification,
                                     notificationBytes,
                                     recipientCount,
                                     recipientCount - offlineRecipientCount);
                             if (t != null) {
-                                LOGGER.error("Caught an error while sending a notification to user sessions", t);
+                                LOGGER.error(
+                                        "Caught an error while sending a notification to user sessions",
+                                        t);
                             }
                         }
                     } else if (t != null) {
-                        try (TracingCloseableContext ignored = TracingContext.getCloseableContext(context)) {
-                            LOGGER.error("Caught an error while sending a notification to user sessions", t);
+                        try (TracingCloseableContext ignored =
+                                TracingContext.getCloseableContext(context)) {
+                            LOGGER.error(
+                                    "Caught an error while sending a notification to user sessions",
+                                    t);
                         }
                     }
                 })
@@ -191,13 +213,18 @@ public class NotificationService implements INotificationService {
         TurmsNotification notification;
         try {
             // Note that "parseFrom" won't block because the buffer is fully read
-            notification = TurmsNotification.parseFrom(ProtoDecoder.newInputStream(notificationData));
+            notification =
+                    TurmsNotification.parseFrom(ProtoDecoder.newInputStream(notificationData));
         } catch (Exception e) {
-            LOGGER.error("Failed to parse TurmsNotification. All recipients' ID: {}. Offline recipients' ID: {}",
-                    recipientIds, offlineRecipientIds, e);
+            LOGGER.error(
+                    "Failed to parse TurmsNotification. All recipients' ID: {}. Offline recipients' ID: {}",
+                    recipientIds,
+                    offlineRecipientIds,
+                    e);
             return;
         }
-        pluginManager.invokeExtensionPointsSimultaneously(NotificationHandler.class,
+        pluginManager
+                .invokeExtensionPointsSimultaneously(NotificationHandler.class,
                         HANDLE_METHOD,
                         handler -> handler.handle(notification, recipientIds, offlineRecipientIds))
                 .subscribe(null, LOGGER::error);

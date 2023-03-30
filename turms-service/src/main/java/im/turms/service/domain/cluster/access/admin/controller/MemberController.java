@@ -17,6 +17,11 @@
 
 package im.turms.service.domain.cluster.access.admin.controller;
 
+import java.util.Collection;
+import java.util.List;
+
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.access.admin.dto.response.HttpHandlerResult;
 import im.turms.server.common.access.admin.dto.response.ResponseDTO;
 import im.turms.server.common.access.admin.permission.RequiredPermission;
@@ -40,10 +45,6 @@ import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.service.domain.cluster.access.admin.dto.request.AddMemberDTO;
 import im.turms.service.domain.cluster.access.admin.dto.request.UpdateMemberDTO;
 import im.turms.service.domain.common.access.admin.controller.BaseController;
-import reactor.core.publisher.Mono;
-
-import java.util.Collection;
-import java.util.List;
 
 import static im.turms.server.common.access.admin.permission.AdminPermission.CLUSTER_LEADER_QUERY;
 import static im.turms.server.common.access.admin.permission.AdminPermission.CLUSTER_LEADER_UPDATE;
@@ -51,7 +52,6 @@ import static im.turms.server.common.access.admin.permission.AdminPermission.CLU
 import static im.turms.server.common.access.admin.permission.AdminPermission.CLUSTER_MEMBER_DELETE;
 import static im.turms.server.common.access.admin.permission.AdminPermission.CLUSTER_MEMBER_QUERY;
 import static im.turms.server.common.access.admin.permission.AdminPermission.CLUSTER_MEMBER_UPDATE;
-
 
 /**
  * @author James Chen
@@ -69,23 +69,28 @@ public class MemberController extends BaseController {
     @GetMapping
     @RequiredPermission(CLUSTER_MEMBER_QUERY)
     public HttpHandlerResult<ResponseDTO<Collection<Member>>> queryMembers() {
-        return HttpHandlerResult.okIfTruthy(discoveryService.getAllKnownMembers().values());
+        return HttpHandlerResult.okIfTruthy(discoveryService.getAllKnownMembers()
+                .values());
     }
 
     @DeleteMapping
     @RequiredPermission(CLUSTER_MEMBER_DELETE)
     public Mono<HttpHandlerResult<ResponseDTO<Void>>> removeMembers(List<String> ids) {
-        Mono<Void> unregisterMembers = discoveryService.unregisterMembers(CollectionUtil.newSet(ids));
+        Mono<Void> unregisterMembers =
+                discoveryService.unregisterMembers(CollectionUtil.newSet(ids));
         return unregisterMembers.thenReturn(HttpHandlerResult.RESPONSE_OK);
     }
 
     @PostMapping
     @RequiredPermission(CLUSTER_MEMBER_CREATE)
-    public Mono<HttpHandlerResult<ResponseDTO<Void>>> addMember(@RequestBody AddMemberDTO addMemberDTO) {
-        String clusterId = discoveryService.getLocalMember().getClusterId();
+    public Mono<HttpHandlerResult<ResponseDTO<Void>>> addMember(
+            @RequestBody AddMemberDTO addMemberDTO) {
+        String clusterId = discoveryService.getLocalMember()
+                .getClusterId();
         NodeType nodeType = addMemberDTO.nodeType();
         if (nodeType != NodeType.SERVICE && addMemberDTO.isLeaderEligible()) {
-            return Mono.error(ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT, "Only turms-service servers can be the leader"));
+            return Mono.error(ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
+                    "Only turms-service servers can be the leader"));
         }
         Member member = new Member(
                 clusterId,
@@ -106,8 +111,7 @@ public class MemberController extends BaseController {
                 false,
                 addMemberDTO.isActive(),
                 addMemberDTO.isHealthy());
-        return discoveryService
-                .registerMember(member)
+        return discoveryService.registerMember(member)
                 .thenReturn(HttpHandlerResult.RESPONSE_OK);
     }
 
@@ -116,8 +120,7 @@ public class MemberController extends BaseController {
     public Mono<HttpHandlerResult<ResponseDTO<Void>>> updateMember(
             String id,
             @RequestBody UpdateMemberDTO updateMemberDTO) {
-        Mono<Void> addMemberMono = discoveryService.updateMemberInfo(
-                id,
+        Mono<Void> addMemberMono = discoveryService.updateMemberInfo(id,
                 updateMemberDTO.zone(),
                 updateMemberDTO.isSeed(),
                 updateMemberDTO.isLeaderEligible(),
@@ -136,13 +139,15 @@ public class MemberController extends BaseController {
             throw ResponseException.get(ResponseStatusCode.NO_CONTENT);
         }
         String nodeId = leader.getNodeId();
-        Member member = discoveryService.getAllKnownMembers().get(nodeId);
+        Member member = discoveryService.getAllKnownMembers()
+                .get(nodeId);
         return HttpHandlerResult.okIfTruthy(member);
     }
 
     @PostMapping("leader")
     @RequiredPermission(CLUSTER_LEADER_UPDATE)
-    public Mono<HttpHandlerResult<ResponseDTO<Member>>> electNewLeader(@QueryParam(required = false) String id) {
+    public Mono<HttpHandlerResult<ResponseDTO<Member>>> electNewLeader(
+            @QueryParam(required = false) String id) {
         Mono<Member> leader = id == null
                 ? discoveryService.electNewLeaderByPriority()
                 : discoveryService.electNewLeaderByNodeId(id);

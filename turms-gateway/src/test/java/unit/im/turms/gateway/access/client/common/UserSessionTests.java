@@ -17,14 +17,15 @@
 
 package unit.im.turms.gateway.access.client.common;
 
+import java.util.Collections;
+import java.util.Map;
+
+import org.junit.jupiter.api.Test;
+
 import im.turms.gateway.access.client.common.UserSession;
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.request.TurmsRequestTypePool;
 import im.turms.server.common.domain.location.bo.Location;
-import org.junit.jupiter.api.Test;
-
-import java.util.Collections;
-import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

@@ -17,8 +17,9 @@
 
 package im.turms.server.common.infra.property.env.gateway.clientapi;
 
-import im.turms.server.common.infra.property.env.common.CommonRateLimitingProperties;
 import lombok.NoArgsConstructor;
+
+import im.turms.server.common.infra.property.env.common.CommonRateLimitingProperties;
 
 /**
  * @author James Chen

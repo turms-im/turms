@@ -17,10 +17,11 @@
 
 package im.turms.server.common.infra.logging.core.context;
 
-import im.turms.server.common.infra.tracing.TracingContext;
+import jakarta.annotation.Nullable;
+
 import io.netty.util.concurrent.FastThreadLocal;
 
-import jakarta.annotation.Nullable;
+import im.turms.server.common.infra.tracing.TracingContext;
 
 /**
  * @author James Chen

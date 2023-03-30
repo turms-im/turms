@@ -17,25 +17,6 @@
 
 package im.turms.server.common.infra.security.jwt;
 
-import com.fasterxml.jackson.databind.ObjectReader;
-import im.turms.server.common.infra.collection.CollectionUtil;
-import im.turms.server.common.infra.json.JsonCodecPool;
-import im.turms.server.common.infra.lang.AsciiCode;
-import im.turms.server.common.infra.lang.StringUtil;
-import im.turms.server.common.infra.property.env.gateway.identityaccessmanagement.jwt.JwtIdentityAccessManagementVerificationProperties;
-import im.turms.server.common.infra.property.env.gateway.identityaccessmanagement.jwt.JwtKeyAlgorithmProperties;
-import im.turms.server.common.infra.property.env.gateway.identityaccessmanagement.jwt.JwtP12KeyStoreProperties;
-import im.turms.server.common.infra.property.env.gateway.identityaccessmanagement.jwt.JwtSecretKeyAlgorithmProperties;
-import im.turms.server.common.infra.security.CertificateUtil;
-import im.turms.server.common.infra.security.jwt.algorithm.EcdsaAlgorithm;
-import im.turms.server.common.infra.security.jwt.algorithm.HmacAlgorithm;
-import im.turms.server.common.infra.security.jwt.algorithm.JwtAlgorithm;
-import im.turms.server.common.infra.security.jwt.algorithm.JwtAlgorithmDefinition;
-import im.turms.server.common.infra.security.jwt.algorithm.RsaAlgorithm;
-import im.turms.server.common.infra.security.jwt.algorithm.RsaPssAlgorithm;
-import im.turms.server.common.infra.security.jwt.exception.InvalidJwtException;
-import im.turms.server.common.infra.security.jwt.exception.JwtSignatureVerificationException;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -54,6 +35,26 @@ import java.util.Set;
 import java.util.function.Predicate;
 import jakarta.annotation.Nullable;
 
+import com.fasterxml.jackson.databind.ObjectReader;
+
+import im.turms.server.common.infra.collection.CollectionUtil;
+import im.turms.server.common.infra.json.JsonCodecPool;
+import im.turms.server.common.infra.lang.AsciiCode;
+import im.turms.server.common.infra.lang.StringUtil;
+import im.turms.server.common.infra.property.env.gateway.identityaccessmanagement.jwt.JwtIdentityAccessManagementVerificationProperties;
+import im.turms.server.common.infra.property.env.gateway.identityaccessmanagement.jwt.JwtKeyAlgorithmProperties;
+import im.turms.server.common.infra.property.env.gateway.identityaccessmanagement.jwt.JwtP12KeyStoreProperties;
+import im.turms.server.common.infra.property.env.gateway.identityaccessmanagement.jwt.JwtSecretKeyAlgorithmProperties;
+import im.turms.server.common.infra.security.CertificateUtil;
+import im.turms.server.common.infra.security.jwt.algorithm.EcdsaAlgorithm;
+import im.turms.server.common.infra.security.jwt.algorithm.HmacAlgorithm;
+import im.turms.server.common.infra.security.jwt.algorithm.JwtAlgorithm;
+import im.turms.server.common.infra.security.jwt.algorithm.JwtAlgorithmDefinition;
+import im.turms.server.common.infra.security.jwt.algorithm.RsaAlgorithm;
+import im.turms.server.common.infra.security.jwt.algorithm.RsaPssAlgorithm;
+import im.turms.server.common.infra.security.jwt.exception.InvalidJwtException;
+import im.turms.server.common.infra.security.jwt.exception.JwtSignatureVerificationException;
+
 /**
  * @author James Chen
  */
@@ -71,19 +72,20 @@ public class JwtManager {
         HEADER_READER = JsonCodecPool.MAPPER.readerFor(JwtHeader.class);
     }
 
-    public JwtManager(JwtIdentityAccessManagementVerificationProperties verificationProperties,
-                      JwtKeyAlgorithmProperties rsa256,
-                      JwtKeyAlgorithmProperties rsa384,
-                      JwtKeyAlgorithmProperties rsa512,
-                      JwtKeyAlgorithmProperties ps256,
-                      JwtKeyAlgorithmProperties ps384,
-                      JwtKeyAlgorithmProperties ps512,
-                      JwtKeyAlgorithmProperties ecdsa256,
-                      JwtKeyAlgorithmProperties ecdsa384,
-                      JwtKeyAlgorithmProperties ecdsa512,
-                      JwtSecretKeyAlgorithmProperties hmac256,
-                      JwtSecretKeyAlgorithmProperties hmac384,
-                      JwtSecretKeyAlgorithmProperties hmac512) {
+    public JwtManager(
+            JwtIdentityAccessManagementVerificationProperties verificationProperties,
+            JwtKeyAlgorithmProperties rsa256,
+            JwtKeyAlgorithmProperties rsa384,
+            JwtKeyAlgorithmProperties rsa512,
+            JwtKeyAlgorithmProperties ps256,
+            JwtKeyAlgorithmProperties ps384,
+            JwtKeyAlgorithmProperties ps512,
+            JwtKeyAlgorithmProperties ecdsa256,
+            JwtKeyAlgorithmProperties ecdsa384,
+            JwtKeyAlgorithmProperties ecdsa512,
+            JwtSecretKeyAlgorithmProperties hmac256,
+            JwtSecretKeyAlgorithmProperties hmac384,
+            JwtSecretKeyAlgorithmProperties hmac512) {
         String issuer = verificationProperties.getIssuer();
         if (StringUtil.isNotBlank(issuer)) {
             verifications.add(payload -> issuer.equals(payload.issuer()));
@@ -91,7 +93,8 @@ public class JwtManager {
         String audience = verificationProperties.getAudience();
         if (StringUtil.isNotBlank(audience)) {
             verifications.add(payload -> CollectionUtil.isNotEmpty(payload.audiences())
-                    && payload.audiences().contains(audience));
+                    && payload.audiences()
+                            .contains(audience));
         }
         Map<String, String> customPayloadClaims = verificationProperties.getCustomPayloadClaims();
         if (CollectionUtil.isNotEmpty(customPayloadClaims)) {
@@ -121,35 +124,41 @@ public class JwtManager {
         if ((publicKey = getRsaPublicKey(ps256)) != null) {
             definition = JwtAlgorithmDefinition.PS256;
             algorithms.add(Map.entry(definition.getJwtAlgorithmName(),
-                    new RsaPssAlgorithm(definition, (RSAPublicKey) publicKey,
+                    new RsaPssAlgorithm(
+                            definition,
+                            (RSAPublicKey) publicKey,
                             new PSSParameterSpec(
                                     MGF1ParameterSpec.SHA256.getDigestAlgorithm(),
                                     "MGF1",
                                     MGF1ParameterSpec.SHA256,
-                                    32, 1
-                            ))));
+                                    32,
+                                    1))));
         }
         if ((publicKey = getRsaPublicKey(ps384)) != null) {
             definition = JwtAlgorithmDefinition.PS384;
             algorithms.add(Map.entry(definition.getJwtAlgorithmName(),
-                    new RsaPssAlgorithm(definition, (RSAPublicKey) publicKey,
+                    new RsaPssAlgorithm(
+                            definition,
+                            (RSAPublicKey) publicKey,
                             new PSSParameterSpec(
                                     MGF1ParameterSpec.SHA384.getDigestAlgorithm(),
                                     "MGF1",
                                     MGF1ParameterSpec.SHA384,
-                                    48, 1
-                            ))));
+                                    48,
+                                    1))));
         }
         if ((publicKey = getRsaPublicKey(ps512)) != null) {
             definition = JwtAlgorithmDefinition.PS512;
             algorithms.add(Map.entry(definition.getJwtAlgorithmName(),
-                    new RsaPssAlgorithm(definition, (RSAPublicKey) publicKey,
+                    new RsaPssAlgorithm(
+                            definition,
+                            (RSAPublicKey) publicKey,
                             new PSSParameterSpec(
                                     MGF1ParameterSpec.SHA512.getDigestAlgorithm(),
                                     "MGF1",
                                     MGF1ParameterSpec.SHA512,
-                                    64, 1
-                            ))));
+                                    64,
+                                    1))));
         }
         if ((publicKey = getEcPublicKey(ecdsa256)) != null) {
             definition = JwtAlgorithmDefinition.ES256;
@@ -200,22 +209,28 @@ public class JwtManager {
             try {
                 return Files.readAllBytes(Path.of(properties.getFilePath()));
             } catch (IOException e) {
-                throw new RuntimeException("Failed to read the secret key from the file path (" +
-                        properties.getFilePath() +
-                        ") for the algorithm: " +
-                        algorithmName, e);
+                throw new RuntimeException(
+                        "Failed to read the secret key from the file path ("
+                                + properties.getFilePath()
+                                + ") for the algorithm: "
+                                + algorithmName,
+                        e);
             }
         }
         JwtP12KeyStoreProperties p12 = properties.getP12();
         String filePath = p12.getFilePath();
         if (StringUtil.isNotBlank(filePath)) {
-            return CertificateUtil.getSecretKeyFromP12File(new File(filePath), p12.getPassword(), p12.getKeyAlias());
+            return CertificateUtil.getSecretKeyFromP12File(new File(filePath),
+                    p12.getPassword(),
+                    p12.getKeyAlias());
         }
         return null;
     }
 
     @Nullable
-    private <T extends PublicKey> T getPublicKey(String algorithm, JwtKeyAlgorithmProperties properties) {
+    private <T extends PublicKey> T getPublicKey(
+            String algorithm,
+            JwtKeyAlgorithmProperties properties) {
         String pemFilePath = properties.getPemFilePath();
         if (StringUtil.isNotBlank(pemFilePath)) {
             return (T) CertificateUtil.getPublicKeyFromPem(new File(pemFilePath), algorithm);
@@ -223,7 +238,9 @@ public class JwtManager {
         JwtP12KeyStoreProperties p12 = properties.getP12();
         String filePath = p12.getFilePath();
         if (StringUtil.isNotBlank(filePath)) {
-            return (T) CertificateUtil.getPublicKeyFromP12File(new File(filePath), p12.getPassword(), p12.getKeyAlias());
+            return (T) CertificateUtil.getPublicKeyFromP12File(new File(filePath),
+                    p12.getPassword(),
+                    p12.getKeyAlias());
         }
         return null;
     }
@@ -232,8 +249,8 @@ public class JwtManager {
         return nameToAlgorithm.keySet();
     }
 
-    public Jwt decode(String jwt)
-            throws InvalidJwtException, NoSuchAlgorithmException, JwtSignatureVerificationException {
+    public Jwt decode(String jwt) throws InvalidJwtException, NoSuchAlgorithmException,
+            JwtSignatureVerificationException {
         List<String> parts = StringUtil.splitMultipleLatin1(jwt, AsciiCode.PERIOD);
         if (parts == null || parts.size() != 3) {
             throw new InvalidJwtException("The input JWT must have three parts");
@@ -245,14 +262,18 @@ public class JwtManager {
         String algorithmName = header.algorithm();
         JwtAlgorithm algorithm = nameToAlgorithm.get(algorithmName);
         if (algorithm == null) {
-            throw new NoSuchAlgorithmException("Unknown algorithm: \"" + algorithmName + "\"");
+            throw new NoSuchAlgorithmException(
+                    "Unknown algorithm: \""
+                            + algorithmName
+                            + "\"");
         }
         for (Predicate<JwtPayload> verification : verifications) {
             if (!verification.test(payload)) {
                 throw new JwtSignatureVerificationException("The input JWT signature is invalid");
             }
         }
-        Jwt jwtEntity = new Jwt(header,
+        Jwt jwtEntity = new Jwt(
+                header,
                 payload,
                 encodedHeaderBytes,
                 encodedPayloadBytes,
@@ -268,7 +289,9 @@ public class JwtManager {
         try {
             decodedHeaderBytes = URL_DECODER.decode(encodedHeaderBytes);
         } catch (Exception e) {
-            throw new InvalidJwtException("The input JWT header is not a valid Base64-encoded string", e);
+            throw new InvalidJwtException(
+                    "The input JWT header is not a valid Base64-encoded string",
+                    e);
         }
         try {
             return HEADER_READER.readValue(decodedHeaderBytes);
@@ -282,7 +305,9 @@ public class JwtManager {
         try {
             decodedPayloadBytes = URL_DECODER.decode(encodedPayloadBytes);
         } catch (Exception e) {
-            throw new InvalidJwtException("The input JWT payload is not a valid Base64-encoded string", e);
+            throw new InvalidJwtException(
+                    "The input JWT payload is not a valid Base64-encoded string",
+                    e);
         }
         try {
             return PAYLOAD_READER.readValue(decodedPayloadBytes);

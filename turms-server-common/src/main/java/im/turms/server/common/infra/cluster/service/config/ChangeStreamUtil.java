@@ -17,8 +17,9 @@
 
 package im.turms.server.common.infra.cluster.service.config;
 
-import im.turms.server.common.storage.mongo.DomainFieldName;
 import org.bson.BsonDocument;
+
+import im.turms.server.common.storage.mongo.DomainFieldName;
 
 /**
  * @author James Chen
@@ -29,21 +30,18 @@ public final class ChangeStreamUtil {
     }
 
     public static String getStringFromId(BsonDocument key, String keyField) {
-        return key
-                .getDocument(DomainFieldName.ID)
+        return key.getDocument(DomainFieldName.ID)
                 .getString(keyField)
                 .getValue();
     }
 
     public static long getIdAsLong(BsonDocument key) {
-        return key
-                .getInt64(DomainFieldName.ID)
+        return key.getInt64(DomainFieldName.ID)
                 .getValue();
     }
 
     public static String getIdAsString(BsonDocument key) {
-        return key
-                .getString(DomainFieldName.ID)
+        return key.getString(DomainFieldName.ID)
                 .getValue();
     }
 

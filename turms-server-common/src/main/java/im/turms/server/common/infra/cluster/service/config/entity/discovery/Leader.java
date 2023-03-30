@@ -17,13 +17,14 @@
 
 package im.turms.server.common.infra.cluster.service.config.entity.discovery;
 
-import im.turms.server.common.storage.mongo.entity.annotation.Document;
-import im.turms.server.common.storage.mongo.entity.annotation.Id;
-import im.turms.server.common.storage.mongo.entity.annotation.Indexed;
+import java.util.Date;
+
 import lombok.Data;
 import lombok.experimental.FieldNameConstants;
 
-import java.util.Date;
+import im.turms.server.common.storage.mongo.entity.annotation.Document;
+import im.turms.server.common.storage.mongo.entity.annotation.Id;
+import im.turms.server.common.storage.mongo.entity.annotation.Indexed;
 
 /**
  * @author James Chen
@@ -44,9 +45,8 @@ public final class Leader {
     private final Date renewDate;
 
     /**
-     * Start from 1.
-     * Used to prevent the previous leader tries to renew itself
-     * if it hasn't detected the leader change.
+     * Start from 1. Used to prevent the previous leader tries to renew itself if it hasn't detected
+     * the leader change.
      */
     private final int generation;
 

@@ -17,6 +17,21 @@
 
 package im.turms.service.domain.message.service;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotNull;
+
+import io.netty.buffer.ByteBuf;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.domain.notification.rpc.SendNotificationRequest;
@@ -32,28 +47,13 @@ import im.turms.server.common.infra.tracing.TracingContext;
 import im.turms.server.common.storage.mongo.IMongoCollectionInitializer;
 import im.turms.service.infra.logging.ApiLoggingContext;
 import im.turms.service.infra.logging.NotificationLogging;
-import io.netty.buffer.ByteBuf;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.NotNull;
 
 /**
  * @author James Chen
- * @implNote 1. All operations that send the outbound message buffer to other servers
- * need to ensure that the buffer will be released by 1.
- * 2. To keep operations as simple as possible,
- * all operations doesn't support the cancellation operation.
- * In other words, it will leak memory if cancellation occurs.
+ * @implNote 1. All operations that send the outbound message buffer to other servers need to ensure
+ *           that the buffer will be released by 1. 2. To keep operations as simple as possible, all
+ *           operations doesn't support the cancellation operation. In other words, it will leak
+ *           memory if cancellation occurs.
  */
 @Service
 @DependsOn(IMongoCollectionInitializer.BEAN_NAME)
@@ -63,7 +63,10 @@ public class OutboundMessageService {
     private final ApiLoggingContext apiLoggingContext;
     private final UserStatusService userStatusService;
 
-    public OutboundMessageService(Node node, ApiLoggingContext apiLoggingContext, UserStatusService userStatusService) {
+    public OutboundMessageService(
+            Node node,
+            ApiLoggingContext apiLoggingContext,
+            UserStatusService userStatusService) {
         this.node = node;
         this.apiLoggingContext = apiLoggingContext;
         this.userStatusService = userStatusService;
@@ -94,8 +97,13 @@ public class OutboundMessageService {
         ByteBuf notificationData = ProtoEncoder.getDirectByteBuffer(notification);
         int recipientCount = recipientIds.size();
         Mono<Set<Long>> mono = recipientCount == 1
-                ? forwardClientMessageByRecipientId(notificationData, recipientIds.iterator().next(), excludedUserSessionIds)
-                : forwardClientMessageByRecipientIds(notificationData, recipientIds, excludedUserSessionIds);
+                ? forwardClientMessageByRecipientId(notificationData,
+                        recipientIds.iterator()
+                                .next(),
+                        excludedUserSessionIds)
+                : forwardClientMessageByRecipientIds(notificationData,
+                        recipientIds,
+                        excludedUserSessionIds);
         return tryLogNotification(mono, notification, recipientCount);
     }
 
@@ -123,8 +131,13 @@ public class OutboundMessageService {
         }
         int recipientCount = recipientIds.size();
         Mono<Set<Long>> mono = recipientCount == 1
-                ? forwardClientMessageByRecipientId(notificationData, recipientIds.iterator().next(), excludedUserSessionIds)
-                : forwardClientMessageByRecipientIds(notificationData, recipientIds, excludedUserSessionIds);
+                ? forwardClientMessageByRecipientId(notificationData,
+                        recipientIds.iterator()
+                                .next(),
+                        excludedUserSessionIds)
+                : forwardClientMessageByRecipientIds(notificationData,
+                        recipientIds,
+                        excludedUserSessionIds);
         return tryLogNotification(mono, notificationForLogging, recipientCount);
     }
 
@@ -139,7 +152,8 @@ public class OutboundMessageService {
         return userStatusService.getDeviceTypeToNodeIdMapByUserId(recipientId)
                 .doOnError(t -> notificationData.release())
                 .flatMap(deviceTypeAndNodeIdMap -> {
-                    Set<String> nodeIds = CollectionUtil.newSetWithExpectedSize(deviceTypeAndNodeIdMap.size());
+                    Set<String> nodeIds =
+                            CollectionUtil.newSetWithExpectedSize(deviceTypeAndNodeIdMap.size());
                     for (Map.Entry<DeviceType, String> entry : deviceTypeAndNodeIdMap.entrySet()) {
                         DeviceType deviceType = entry.getKey();
                         if (deviceType != excludedDeviceType) {
@@ -177,7 +191,8 @@ public class OutboundMessageService {
         int recipientIdCount = recipientIds.size();
         if (recipientIdCount == 1) {
             return forwardClientMessageByRecipientId(messageData,
-                    recipientIds.iterator().next(),
+                    recipientIds.iterator()
+                            .next(),
                     excludedUserSessionIds);
         }
         List<Mono<RecipientAndNodeIds>> monos = new ArrayList<>(recipientIdCount);
@@ -193,22 +208,30 @@ public class OutboundMessageService {
                         messageData.release();
                         return PublisherPool.emptySet();
                     }
-                    int gatewayMemberCount = node.getDiscoveryService().getActiveSortedGatewayMembers().size();
+                    int gatewayMemberCount = node.getDiscoveryService()
+                            .getActiveSortedGatewayMembers()
+                            .size();
                     if (gatewayMemberCount == 0) {
                         messageData.release();
                         return PublisherPool.emptySet();
                     }
                     int expectedMembersCount = Math.min(gatewayMemberCount, recipientIdCount);
-                    int expectedRecipientCountPerMember = Math.max(1, recipientIdCount / expectedMembersCount);
-                    Map<String, Set<Long>> nodeIdToUserIds = CollectionUtil.newMapWithExpectedSize(expectedMembersCount);
+                    int expectedRecipientCountPerMember =
+                            Math.max(1, recipientIdCount / expectedMembersCount);
+                    Map<String, Set<Long>> nodeIdToUserIds =
+                            CollectionUtil.newMapWithExpectedSize(expectedMembersCount);
                     for (RecipientAndNodeIds pair : pairs) {
                         for (String nodeId : pair.nodeIds) {
-                            nodeIdToUserIds.computeIfAbsent(nodeId, key ->
-                                            CollectionUtil.newSetWithExpectedSize(expectedRecipientCountPerMember))
+                            nodeIdToUserIds
+                                    .computeIfAbsent(nodeId,
+                                            key -> CollectionUtil.newSetWithExpectedSize(
+                                                    expectedRecipientCountPerMember))
                                     .add(pair.recipientId);
                         }
                     }
-                    return forwardClientMessageToNodes(messageData, nodeIdToUserIds, excludedUserSessionIds);
+                    return forwardClientMessageToNodes(messageData,
+                            nodeIdToUserIds,
+                            excludedUserSessionIds);
                 });
     }
 
@@ -252,7 +275,8 @@ public class OutboundMessageService {
             return PublisherPool.emptySet();
         }
         if (size == 1) {
-            String nodeId = nodeIds.iterator().next();
+            String nodeId = nodeIds.iterator()
+                    .next();
             return forwardClientMessageToNode(messageData,
                     nodeId,
                     nodeIdToRecipientIds.get(nodeId),
@@ -268,8 +292,7 @@ public class OutboundMessageService {
                     excludedUserSessionIds,
                     null));
         }
-        return collectOfflineRecipientIds(monos)
-                .doFinally(signal -> messageData.release());
+        return collectOfflineRecipientIds(monos).doFinally(signal -> messageData.release());
     }
 
     private Mono<Set<Long>> collectOfflineRecipientIds(List<Mono<Set<Long>>> monos) {
@@ -291,7 +314,8 @@ public class OutboundMessageService {
         }
         if (size == 1) {
             return forwardClientMessageToNode(messageData,
-                    nodeIds.iterator().next(),
+                    nodeIds.iterator()
+                            .next(),
                     Set.of(recipientId),
                     excludedUserSessionIds,
                     excludedDeviceType);
@@ -304,10 +328,10 @@ public class OutboundMessageService {
         messageData.retain(size);
         List<Mono<Set<Long>>> monos = new ArrayList<>(size);
         for (String nodeId : nodeIds) {
-            monos.add(node.getRpcService().requestResponse(nodeId, request));
+            monos.add(node.getRpcService()
+                    .requestResponse(nodeId, request));
         }
-        return collectOfflineRecipientIds(monos)
-                .doFinally(signal -> messageData.release());
+        return collectOfflineRecipientIds(monos).doFinally(signal -> messageData.release());
     }
 
     private Mono<Set<Long>> forwardClientMessageToNode(
@@ -326,28 +350,37 @@ public class OutboundMessageService {
                 recipients,
                 excludedUserSessionIds,
                 excludedDeviceType);
-        return node.getRpcService().requestResponse(nodeId, request);
+        return node.getRpcService()
+                .requestResponse(nodeId, request);
     }
 
     // Logging
 
-    private Mono<Set<Long>> tryLogNotification(Mono<Set<Long>> mono, TurmsNotification notification, int recipientCount) {
-        if (!apiLoggingContext.shouldLogNotification(notification.getRelayedRequest().getKindCase())) {
+    private Mono<Set<Long>> tryLogNotification(
+            Mono<Set<Long>> mono,
+            TurmsNotification notification,
+            int recipientCount) {
+        if (!apiLoggingContext.shouldLogNotification(notification.getRelayedRequest()
+                .getKindCase())) {
             return mono;
         }
-        return mono
-                .doOnEach(signal -> {
-                    if (!signal.isOnNext()) {
-                        return;
-                    }
-                    int offlineRecipientCount = CollectionUtil.getSize(signal.get());
-                    try (TracingCloseableContext ignored = TracingContext.getCloseableContext(signal.getContextView())) {
-                        NotificationLogging.log(recipientCount, recipientCount - offlineRecipientCount, notification);
-                    }
-                });
+        return mono.doOnEach(signal -> {
+            if (!signal.isOnNext()) {
+                return;
+            }
+            int offlineRecipientCount = CollectionUtil.getSize(signal.get());
+            try (TracingCloseableContext ignored =
+                    TracingContext.getCloseableContext(signal.getContextView())) {
+                NotificationLogging
+                        .log(recipientCount, recipientCount - offlineRecipientCount, notification);
+            }
+        });
     }
 
-    private record RecipientAndNodeIds(Long recipientId, Collection<String> nodeIds) {
+    private record RecipientAndNodeIds(
+            Long recipientId,
+            Collection<String> nodeIds
+    ) {
     }
 
 }

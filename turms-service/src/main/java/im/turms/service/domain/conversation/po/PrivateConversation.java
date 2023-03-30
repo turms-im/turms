@@ -17,6 +17,11 @@
 
 package im.turms.service.domain.conversation.po;
 
+import java.util.Date;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
 import im.turms.server.common.domain.common.po.BaseEntity;
 import im.turms.server.common.storage.mongo.entity.IndexType;
 import im.turms.server.common.storage.mongo.entity.ShardingStrategy;
@@ -25,17 +30,15 @@ import im.turms.server.common.storage.mongo.entity.annotation.Field;
 import im.turms.server.common.storage.mongo.entity.annotation.Id;
 import im.turms.server.common.storage.mongo.entity.annotation.Indexed;
 import im.turms.server.common.storage.mongo.entity.annotation.Sharded;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-
-import java.util.Date;
 
 /**
  * @author James Chen
  */
 @Data
 @Document(PrivateConversation.COLLECTION_NAME)
-@Sharded(shardKey = PrivateConversation.Fields.ID_OWNER_ID, shardingStrategy = ShardingStrategy.HASH)
+@Sharded(
+        shardKey = PrivateConversation.Fields.ID_OWNER_ID,
+        shardingStrategy = ShardingStrategy.HASH)
 public final class PrivateConversation extends BaseEntity {
 
     public static final String COLLECTION_NAME = "privateConversation";
@@ -70,8 +73,10 @@ public final class PrivateConversation extends BaseEntity {
     }
 
     public static final class Fields {
-        public static final String ID_OWNER_ID = "_id." + Key.Fields.OWNER_ID;
-        public static final String ID_TARGET_ID = "_id." + Key.Fields.TARGET_ID;
+        public static final String ID_OWNER_ID = "_id."
+                + Key.Fields.OWNER_ID;
+        public static final String ID_TARGET_ID = "_id."
+                + Key.Fields.TARGET_ID;
         public static final String READ_DATE = "rd";
 
         private Fields() {

@@ -52,7 +52,8 @@ import static com.mongodb.internal.operation.ServerVersionHelper.MIN_WIRE_VERSIO
  * @author James Chen
  * @see FindOperation
  */
-public class TurmsFindOperation<T> implements AsyncExplainableReadOperation<AsyncBatchCursor<T>>, ExplainableReadOperation<BatchCursor<T>> {
+public class TurmsFindOperation<T> implements AsyncExplainableReadOperation<AsyncBatchCursor<T>>,
+        ExplainableReadOperation<BatchCursor<T>> {
     private static final String FIRST_BATCH = "firstBatch";
 
     private final MongoNamespace namespace;
@@ -60,7 +61,10 @@ public class TurmsFindOperation<T> implements AsyncExplainableReadOperation<Asyn
     private final BsonDocument command;
     private boolean retryReads;
 
-    public TurmsFindOperation(final MongoNamespace namespace, final Decoder<T> decoder, final BsonDocument command) {
+    public TurmsFindOperation(
+            final MongoNamespace namespace,
+            final Decoder<T> decoder,
+            final BsonDocument command) {
         this.namespace = notNull("namespace", namespace);
         this.decoder = notNull("decoder", decoder);
         this.command = notNull("command", command);
@@ -81,32 +85,49 @@ public class TurmsFindOperation<T> implements AsyncExplainableReadOperation<Asyn
     }
 
     @Override
-    public void executeAsync(final AsyncReadBinding binding, final SingleResultCallback<AsyncBatchCursor<T>> callback) {
+    public void executeAsync(
+            final AsyncReadBinding binding,
+            final SingleResultCallback<AsyncBatchCursor<T>> callback) {
         RetryState retryState = initialRetryState(retryReads);
         binding.retain();
-        AsyncCallbackSupplier<AsyncBatchCursor<T>> asyncRead = CommandOperationHelper.<AsyncBatchCursor<T>>decorateReadWithRetries(
-                retryState, funcCallback -> {
+        AsyncCallbackSupplier<AsyncBatchCursor<T>> asyncRead = CommandOperationHelper
+                .<AsyncBatchCursor<T>>decorateReadWithRetries(retryState, funcCallback -> {
                     logRetryExecute(retryState);
-                    withAsyncSourceAndConnection(binding::getReadConnectionSource, false, funcCallback,
+                    withAsyncSourceAndConnection(binding::getReadConnectionSource,
+                            false,
+                            funcCallback,
                             (source, connection, releasingCallback) -> {
-                                if (retryState.breakAndCompleteIfRetryAnd(() -> !canRetryRead(source.getServerDescription(),
-                                        binding.getSessionContext()), releasingCallback)) {
+                                if (retryState
+                                        .breakAndCompleteIfRetryAnd(
+                                                () -> !canRetryRead(source.getServerDescription(),
+                                                        binding.getSessionContext()),
+                                                releasingCallback)) {
                                     return;
                                 }
-                                final SingleResultCallback<AsyncBatchCursor<T>> wrappedCallback = exceptionTransformingCallback(releasingCallback);
-                                createReadCommandAndExecuteAsync(retryState, binding, source, namespace.getDatabaseName(),
-                                        getCommandCreator(binding.getSessionContext()), CommandResultDocumentCodec.create(decoder, FIRST_BATCH),
-                                        asyncTransformer(), connection, wrappedCallback);
+                                final SingleResultCallback<AsyncBatchCursor<T>> wrappedCallback =
+                                        exceptionTransformingCallback(releasingCallback);
+                                createReadCommandAndExecuteAsync(retryState,
+                                        binding,
+                                        source,
+                                        namespace.getDatabaseName(),
+                                        getCommandCreator(binding.getSessionContext()),
+                                        CommandResultDocumentCodec.create(decoder, FIRST_BATCH),
+                                        asyncTransformer(),
+                                        connection,
+                                        wrappedCallback);
                             });
-                }).whenComplete(binding::release);
+                })
+                .whenComplete(binding::release);
         asyncRead.get(errorHandlingCallback(callback, LOGGER));
     }
 
-    private static <T> SingleResultCallback<T> exceptionTransformingCallback(final SingleResultCallback<T> callback) {
+    private static <T> SingleResultCallback<T> exceptionTransformingCallback(
+            final SingleResultCallback<T> callback) {
         return (result, t) -> {
             if (t != null) {
                 if (t instanceof MongoCommandException e) {
-                    MongoQueryException exception = new MongoQueryException(e.getResponse(), e.getServerAddress());
+                    MongoQueryException exception =
+                            new MongoQueryException(e.getResponse(), e.getServerAddress());
                     callback.onResult(result, exception);
                 } else {
                     callback.onResult(result, t);
@@ -118,26 +139,33 @@ public class TurmsFindOperation<T> implements AsyncExplainableReadOperation<Asyn
     }
 
     @Override
-    public <R> ReadOperation<R> asExplainableOperation(@Nullable final ExplainVerbosity verbosity,
-                                                       final Decoder<R> resultDecoder) {
+    public <R> ReadOperation<R> asExplainableOperation(
+            @Nullable final ExplainVerbosity verbosity,
+            final Decoder<R> resultDecoder) {
         appendReadConcernToCommand(NoOpSessionContext.INSTANCE, MIN_WIRE_VERSION, command);
-        return new CommandReadOperation<>(getNamespace().getDatabaseName(),
+        return new CommandReadOperation<>(
+                getNamespace().getDatabaseName(),
                 asExplainCommand(command, verbosity),
                 resultDecoder);
     }
 
     @Override
-    public <R> AsyncReadOperation<R> asAsyncExplainableOperation(@Nullable final ExplainVerbosity verbosity,
-                                                                 final Decoder<R> resultDecoder) {
+    public <R> AsyncReadOperation<R> asAsyncExplainableOperation(
+            @Nullable final ExplainVerbosity verbosity,
+            final Decoder<R> resultDecoder) {
         appendReadConcernToCommand(NoOpSessionContext.INSTANCE, MIN_WIRE_VERSION, command);
-        return new CommandReadOperation<>(getNamespace().getDatabaseName(),
+        return new CommandReadOperation<>(
+                getNamespace().getDatabaseName(),
                 asExplainCommand(command, verbosity),
                 resultDecoder);
     }
 
-    private CommandOperationHelper.CommandCreator getCommandCreator(final SessionContext sessionContext) {
+    private CommandOperationHelper.CommandCreator getCommandCreator(
+            final SessionContext sessionContext) {
         return (serverDescription, connectionDescription) -> {
-            appendReadConcernToCommand(sessionContext, connectionDescription.getMaxWireVersion(), command);
+            appendReadConcernToCommand(sessionContext,
+                    connectionDescription.getMaxWireVersion(),
+                    command);
             return command;
         };
     }
@@ -145,8 +173,17 @@ public class TurmsFindOperation<T> implements AsyncExplainableReadOperation<Asyn
     private CommandOperationHelper.CommandReadTransformerAsync<BsonDocument, AsyncBatchCursor<T>> asyncTransformer() {
         return (result, source, connection) -> {
             QueryResult<T> queryResult = cursorDocumentToQueryResult(result.getDocument("cursor"),
-                    connection.getDescription().getServerAddress());
-            return new AsyncQueryBatchCursor<>(queryResult, getLimit(), getBatchSize(), 0, decoder, null, source, connection,
+                    connection.getDescription()
+                            .getServerAddress());
+            return new AsyncQueryBatchCursor<>(
+                    queryResult,
+                    getLimit(),
+                    getBatchSize(),
+                    0,
+                    decoder,
+                    null,
+                    source,
+                    connection,
                     result);
         };
     }
@@ -156,7 +193,8 @@ public class TurmsFindOperation<T> implements AsyncExplainableReadOperation<Asyn
         if (batchSize == null) {
             return 0;
         }
-        return batchSize.asInt32().getValue();
+        return batchSize.asInt32()
+                .getValue();
     }
 
     private int getLimit() {
@@ -164,6 +202,7 @@ public class TurmsFindOperation<T> implements AsyncExplainableReadOperation<Asyn
         if (limit == null) {
             return 0;
         }
-        return limit.asInt32().getValue();
+        return limit.asInt32()
+                .getValue();
     }
 }

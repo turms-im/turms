@@ -17,21 +17,22 @@
 
 package im.turms.server.common.domain.common.repository;
 
-import com.mongodb.client.model.changestream.ChangeStreamDocument;
-import com.mongodb.client.model.changestream.FullDocument;
-import com.mongodb.client.result.DeleteResult;
-import com.mongodb.reactivestreams.client.ClientSession;
-import im.turms.server.common.storage.mongo.DomainFieldName;
-import im.turms.server.common.storage.mongo.TurmsMongoClient;
-import im.turms.server.common.storage.mongo.operation.option.Filter;
-import im.turms.server.common.storage.mongo.operation.option.QueryOptions;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 import jakarta.annotation.Nullable;
+
+import com.mongodb.client.model.changestream.ChangeStreamDocument;
+import com.mongodb.client.model.changestream.FullDocument;
+import com.mongodb.client.result.DeleteResult;
+import com.mongodb.reactivestreams.client.ClientSession;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
+import im.turms.server.common.storage.mongo.DomainFieldName;
+import im.turms.server.common.storage.mongo.TurmsMongoClient;
+import im.turms.server.common.storage.mongo.operation.option.Filter;
+import im.turms.server.common.storage.mongo.operation.option.QueryOptions;
 
 /**
  * @author James Chen
@@ -92,7 +93,9 @@ public abstract class BaseRepository<T, K> {
         return mongoClient.deleteMany(entityClass, filter);
     }
 
-    public Mono<DeleteResult> deleteByIds(@Nullable Collection<K> ids, @Nullable ClientSession session) {
+    public Mono<DeleteResult> deleteByIds(
+            @Nullable Collection<K> ids,
+            @Nullable ClientSession session) {
         Filter filter = Filter.newBuilder(1)
                 .inIfNotNull(DomainFieldName.ID, ids);
         return mongoClient.deleteMany(session, entityClass, filter);

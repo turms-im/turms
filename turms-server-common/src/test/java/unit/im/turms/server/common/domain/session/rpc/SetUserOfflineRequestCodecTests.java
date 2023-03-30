@@ -17,14 +17,15 @@
 
 package unit.im.turms.server.common.domain.session.rpc;
 
+import java.util.Set;
+
+import org.junit.jupiter.api.Test;
+import unit.im.turms.server.common.infra.cluster.service.rpc.codec.BaseCodecTest;
+
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.domain.session.bo.SessionCloseStatus;
 import im.turms.server.common.domain.session.rpc.SetUserOfflineRequest;
 import im.turms.server.common.domain.session.rpc.SetUserOfflineRequestCodec;
-import org.junit.jupiter.api.Test;
-import unit.im.turms.server.common.infra.cluster.service.rpc.codec.BaseCodecTest;
-
-import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -32,14 +33,16 @@ class SetUserOfflineRequestCodecTests extends BaseCodecTest {
 
     @Test
     void shouldGetTheSameRequest_afterWriteAndRead_forLegalRequest() {
-        SetUserOfflineRequest expectedRequest = new SetUserOfflineRequest(1L,
+        SetUserOfflineRequest expectedRequest = new SetUserOfflineRequest(
+                1L,
                 Set.of(DeviceType.ANDROID, DeviceType.IOS, DeviceType.DESKTOP),
                 SessionCloseStatus.ILLEGAL_REQUEST);
-        SetUserOfflineRequest actualRequest = writeRequestAndReadBuffer(new SetUserOfflineRequestCodec(),
-                expectedRequest);
+        SetUserOfflineRequest actualRequest =
+                writeRequestAndReadBuffer(new SetUserOfflineRequestCodec(), expectedRequest);
 
         assertThat(actualRequest.getUserId()).isEqualTo(expectedRequest.getUserId());
-        assertThat(actualRequest.getDeviceTypes()).containsExactlyInAnyOrderElementsOf(expectedRequest.getDeviceTypes());
+        assertThat(actualRequest.getDeviceTypes())
+                .containsExactlyInAnyOrderElementsOf(expectedRequest.getDeviceTypes());
         assertThat(actualRequest.getCloseStatus()).isEqualTo(expectedRequest.getCloseStatus());
     }
 

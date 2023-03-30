@@ -17,16 +17,16 @@
 
 package im.turms.server.common.infra.proto;
 
-import com.google.protobuf.Descriptors;
-import com.google.protobuf.Message;
-import com.google.protobuf.MessageOrBuilder;
-import com.google.protobuf.TextFormat;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import jakarta.annotation.Nullable;
+
+import com.google.protobuf.Descriptors;
+import com.google.protobuf.Message;
+import com.google.protobuf.MessageOrBuilder;
+import com.google.protobuf.TextFormat;
 
 /**
  * @author James Chen
@@ -37,8 +37,8 @@ public class ProtoFormatter {
     }
 
     private static final char[] SENSITIVE_VALUE = "'*'".toCharArray();
-    private static final Map<Descriptors.Descriptor, List<Map.Entry<Descriptors.FieldDescriptor, Object>>> FIELD_CACHE
-            = new ConcurrentHashMap<>();
+    private static final Map<Descriptors.Descriptor, List<Map.Entry<Descriptors.FieldDescriptor, Object>>> FIELD_CACHE =
+            new ConcurrentHashMap<>();
 
     public static String toJSON5(MessageOrBuilder message, int initialCapacity) {
         StringBuilder builder = new StringBuilder(initialCapacity);
@@ -49,7 +49,7 @@ public class ProtoFormatter {
     }
 
     @Nullable
-    public static String toLogString(MessageOrBuilder message) {
+    public static String toLogString(@Nullable MessageOrBuilder message) {
         if (message == null) {
             return null;
         }
@@ -57,14 +57,18 @@ public class ProtoFormatter {
     }
 
     private static void print(MessageOrBuilder message, StringBuilder builder) {
-        if (message.getDescriptorForType().getFullName().equals("google.protobuf.Any")) {
+        if (message.getDescriptorForType()
+                .getFullName()
+                .equals("google.protobuf.Any")) {
             return;
         }
         printMessage(message, builder);
     }
 
     private static void printField(
-            Descriptors.FieldDescriptor field, Object value, StringBuilder builder) {
+            Descriptors.FieldDescriptor field,
+            Object value,
+            StringBuilder builder) {
         if (field.isMapField() || field.isRepeated()) {
             builder.append(field.getName());
             builder.append(':');
@@ -75,7 +79,9 @@ public class ProtoFormatter {
     }
 
     private static void printFieldValue(
-            Descriptors.FieldDescriptor field, Object value, StringBuilder builder) {
+            Descriptors.FieldDescriptor field,
+            Object value,
+            StringBuilder builder) {
         switch (field.getType()) {
             case INT32, SINT32, SFIXED32 -> builder.append((int) value);
             case INT64, SINT64, SFIXED64 -> builder.append((long) value);
@@ -86,7 +92,9 @@ public class ProtoFormatter {
             case STRING, BYTES -> builder.append(SENSITIVE_VALUE);
             case ENUM -> builder.append(((Descriptors.EnumValueDescriptor) value).getName());
             case MESSAGE, GROUP -> print((Message) value, builder);
-            default -> throw new IllegalArgumentException("Unexpected field type: " + field.getType());
+            default -> throw new IllegalArgumentException(
+                    "Unexpected field type: "
+                            + field.getType());
         }
     }
 
@@ -94,7 +102,9 @@ public class ProtoFormatter {
         Descriptors.Descriptor descriptor = message.getDescriptorForType();
         List<Map.Entry<Descriptors.FieldDescriptor, Object>> fields = FIELD_CACHE.get(descriptor);
         if (fields == null) {
-            fields = new ArrayList<>(message.getAllFields().entrySet());
+            fields = new ArrayList<>(
+                    message.getAllFields()
+                            .entrySet());
             FIELD_CACHE.put(descriptor, fields);
         }
         int count = fields.size();
@@ -108,16 +118,18 @@ public class ProtoFormatter {
     }
 
     private static void printSingleField(
-            Descriptors.FieldDescriptor field, Object value, StringBuilder builder) {
+            Descriptors.FieldDescriptor field,
+            Object value,
+            StringBuilder builder) {
         if (field.isExtension()) {
-            builder
-                    .append("\"")
+            builder.append("\"")
                     .append(field.getFullName())
                     .append("\"");
         } else {
             if (field.getType() == Descriptors.FieldDescriptor.Type.GROUP) {
                 // Groups must be serialized with their original capitalization.
-                builder.append(field.getMessageType().getName());
+                builder.append(field.getMessageType()
+                        .getName());
             } else {
                 builder.append(field.getName());
             }

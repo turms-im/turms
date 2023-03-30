@@ -17,7 +17,6 @@
 
 package im.turms.server.common.infra.property.env.common.security;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

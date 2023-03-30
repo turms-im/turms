@@ -17,26 +17,30 @@
 
 package im.turms.gateway.access.client.udp;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
+
 import im.turms.gateway.access.client.udp.dto.UdpNotificationType;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.collection.FastEnumMap;
 import im.turms.server.common.infra.lang.ClassUtil;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 
 /**
  * @author James Chen
  */
 public final class UdpSignalResponseBufferPool {
 
-    private static final FastEnumMap<ResponseStatusCode, ByteBuf> CODE_POOL = new FastEnumMap<>(ResponseStatusCode.class);
-    private static final FastEnumMap<UdpNotificationType, ByteBuf> NOTIFICATION_POOL = new FastEnumMap<>(UdpNotificationType.class);
+    private static final FastEnumMap<ResponseStatusCode, ByteBuf> CODE_POOL =
+            new FastEnumMap<>(ResponseStatusCode.class);
+    private static final FastEnumMap<UdpNotificationType, ByteBuf> NOTIFICATION_POOL =
+            new FastEnumMap<>(UdpNotificationType.class);
 
     static {
-        for (UdpNotificationType type : ClassUtil.getSharedEnumConstants(UdpNotificationType.class)) {
-            NOTIFICATION_POOL.put(type, Unpooled.unreleasableBuffer(Unpooled
-                    .directBuffer(Byte.BYTES)
-                    .writeByte(type.ordinal() + 1)));
+        for (UdpNotificationType type : ClassUtil
+                .getSharedEnumConstants(UdpNotificationType.class)) {
+            NOTIFICATION_POOL.put(type,
+                    Unpooled.unreleasableBuffer(Unpooled.directBuffer(Byte.BYTES)
+                            .writeByte(type.ordinal() + 1)));
         }
     }
 
@@ -56,8 +60,7 @@ public final class UdpSignalResponseBufferPool {
             if (code == ResponseStatusCode.OK) {
                 buf = Unpooled.EMPTY_BUFFER;
             } else {
-                buf = Unpooled.unreleasableBuffer(Unpooled
-                        .directBuffer(Short.BYTES)
+                buf = Unpooled.unreleasableBuffer(Unpooled.directBuffer(Short.BYTES)
                         .writeShort(code.getBusinessCode()));
             }
             CODE_POOL.put(code, buf);

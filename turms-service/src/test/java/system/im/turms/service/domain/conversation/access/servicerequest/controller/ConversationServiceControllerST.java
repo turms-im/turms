@@ -14,7 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package system.im.turms.service.domain.conversation.access.servicerequest.controller;
+
+import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
+import reactor.core.publisher.Mono;
+import system.im.turms.service.domain.common.access.servicerequest.controller.BaseServiceControllerTest;
 
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.request.TurmsRequest;
@@ -24,19 +32,15 @@ import im.turms.server.common.access.client.dto.request.conversation.UpdateTypin
 import im.turms.service.access.servicerequest.dto.ClientRequest;
 import im.turms.service.access.servicerequest.dto.RequestHandlerResult;
 import im.turms.service.domain.conversation.access.servicerequest.controller.ConversationServiceController;
-import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
-import reactor.core.publisher.Mono;
-import system.im.turms.service.domain.common.access.servicerequest.controller.BaseServiceControllerTest;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 import static im.turms.server.common.testing.Constants.ORDER_LOW_PRIORITY;
 import static im.turms.server.common.testing.Constants.ORDER_MIDDLE_PRIORITY;
-import static org.assertj.core.api.Assertions.assertThat;
 
 @TestMethodOrder(OrderAnnotation.class)
-class ConversationServiceControllerST extends BaseServiceControllerTest<ConversationServiceController> {
+class ConversationServiceControllerST
+        extends BaseServiceControllerTest<ConversationServiceController> {
 
     private static final long USER_ID = 1;
     private static final DeviceType USER_DEVICE = DeviceType.DESKTOP;
@@ -55,7 +59,8 @@ class ConversationServiceControllerST extends BaseServiceControllerTest<Conversa
                         .setReadDate(System.currentTimeMillis())
                         .setTargetId(RELATED_USER_ID))
                 .build();
-        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, USER_IP, REQUEST_ID, request);
+        ClientRequest clientRequest =
+                new ClientRequest(USER_ID, USER_DEVICE, USER_IP, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleUpdateConversationRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono);
@@ -69,7 +74,8 @@ class ConversationServiceControllerST extends BaseServiceControllerTest<Conversa
                         .setReadDate(System.currentTimeMillis())
                         .setGroupId(GROUP_ID))
                 .build();
-        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, USER_IP, REQUEST_ID, request);
+        ClientRequest clientRequest =
+                new ClientRequest(USER_ID, USER_DEVICE, USER_IP, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleUpdateConversationRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono);
@@ -83,7 +89,8 @@ class ConversationServiceControllerST extends BaseServiceControllerTest<Conversa
                         .setIsGroupMessage(false)
                         .setToId(RELATED_USER_ID))
                 .build();
-        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, USER_IP, REQUEST_ID, request);
+        ClientRequest clientRequest =
+                new ClientRequest(USER_ID, USER_DEVICE, USER_IP, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleUpdateTypingStatusRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono);
@@ -97,7 +104,8 @@ class ConversationServiceControllerST extends BaseServiceControllerTest<Conversa
                         .setIsGroupMessage(true)
                         .setToId(GROUP_ID))
                 .build();
-        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, USER_IP, REQUEST_ID, request);
+        ClientRequest clientRequest =
+                new ClientRequest(USER_ID, USER_DEVICE, USER_IP, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleUpdateTypingStatusRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono);
@@ -112,21 +120,27 @@ class ConversationServiceControllerST extends BaseServiceControllerTest<Conversa
                 .setQueryConversationsRequest(QueryConversationsRequest.newBuilder()
                         .addTargetIds(RELATED_USER_ID))
                 .build();
-        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, USER_IP, REQUEST_ID, request);
+        ClientRequest clientRequest =
+                new ClientRequest(USER_ID, USER_DEVICE, USER_IP, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleQueryConversationsRequest()
                 .handle(clientRequest);
-        assertResultIsOk(resultMono, result ->
-                assertThat(result.dataForRequester().getConversations().getPrivateConversationsCount()).isZero());
+        assertResultIsOk(resultMono,
+                result -> assertThat(result.dataForRequester()
+                        .getConversations()
+                        .getPrivateConversationsCount()).isZero());
 
         request = TurmsRequest.newBuilder()
                 .setQueryConversationsRequest(QueryConversationsRequest.newBuilder()
                         .addTargetIds(USER_ID))
                 .build();
-        clientRequest = new ClientRequest(RELATED_USER_ID, USER_DEVICE, USER_IP, REQUEST_ID, request);
+        clientRequest =
+                new ClientRequest(RELATED_USER_ID, USER_DEVICE, USER_IP, REQUEST_ID, request);
         resultMono = getController().handleQueryConversationsRequest()
                 .handle(clientRequest);
-        assertResultIsOk(resultMono, result ->
-                assertThat(result.dataForRequester().getConversations().getPrivateConversationsCount()).isPositive());
+        assertResultIsOk(resultMono,
+                result -> assertThat(result.dataForRequester()
+                        .getConversations()
+                        .getPrivateConversationsCount()).isPositive());
     }
 
     @Test
@@ -136,11 +150,14 @@ class ConversationServiceControllerST extends BaseServiceControllerTest<Conversa
                 .setQueryConversationsRequest(QueryConversationsRequest.newBuilder()
                         .addGroupIds(GROUP_ID))
                 .build();
-        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, USER_IP, REQUEST_ID, request);
+        ClientRequest clientRequest =
+                new ClientRequest(USER_ID, USER_DEVICE, USER_IP, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleQueryConversationsRequest()
                 .handle(clientRequest);
-        assertResultIsOk(resultMono, result ->
-                assertThat(result.dataForRequester().getConversations().getGroupConversationsCount()).isPositive());
+        assertResultIsOk(resultMono,
+                result -> assertThat(result.dataForRequester()
+                        .getConversations()
+                        .getGroupConversationsCount()).isPositive());
     }
 
 }

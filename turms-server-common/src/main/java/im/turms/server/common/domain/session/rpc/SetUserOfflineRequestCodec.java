@@ -17,6 +17,8 @@
 
 package im.turms.server.common.domain.session.rpc;
 
+import java.util.Set;
+
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.domain.common.util.DeviceTypeUtil;
 import im.turms.server.common.domain.session.bo.SessionCloseStatus;
@@ -24,8 +26,6 @@ import im.turms.server.common.infra.cluster.service.codec.codec.CodecId;
 import im.turms.server.common.infra.cluster.service.codec.io.CodecStreamInput;
 import im.turms.server.common.infra.cluster.service.codec.io.CodecStreamOutput;
 import im.turms.server.common.infra.cluster.service.rpc.codec.RpcRequestCodec;
-
-import java.util.Set;
 
 /**
  * @author James Chen
@@ -65,7 +65,10 @@ public class SetUserOfflineRequestCodec extends RpcRequestCodec<SetUserOfflineRe
 
     @Override
     public int initialCapacityForRequest(SetUserOfflineRequest data) {
-        int capacityForDeviceTypes = data.getDeviceTypes().isEmpty() ? 0 : 1;
+        int capacityForDeviceTypes = data.getDeviceTypes()
+                .isEmpty()
+                        ? 0
+                        : 1;
         return Long.BYTES + Short.BYTES + capacityForDeviceTypes;
     }
 

@@ -17,20 +17,21 @@
 
 package im.turms.service.access.servicerequest.dto;
 
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotNull;
+
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.access.servicerequest.dto.ServiceResponse;
 import im.turms.server.common.infra.collection.FastEnumMap;
-
-import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.NotNull;
 
 /**
  * @author James Chen
  */
 public final class ServiceResponseFactory {
 
-    private static final FastEnumMap<ResponseStatusCode, ServiceResponse> POOL = new FastEnumMap<>(ResponseStatusCode.class);
+    private static final FastEnumMap<ResponseStatusCode, ServiceResponse> POOL =
+            new FastEnumMap<>(ResponseStatusCode.class);
     public static final ServiceResponse NO_CONTENT;
 
     static {

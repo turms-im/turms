@@ -17,15 +17,15 @@
 
 package im.turms.plugin.antispam.property;
 
+import java.util.Collections;
+import java.util.Set;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
-
-import java.util.Collections;
-import java.util.Set;
 
 import static im.turms.plugin.antispam.property.TextParsingStrategy.NORMALIZATION_TRANSLITERATION;
 import static im.turms.plugin.antispam.property.UnwantedWordHandleStrategy.REJECT_REQUEST;

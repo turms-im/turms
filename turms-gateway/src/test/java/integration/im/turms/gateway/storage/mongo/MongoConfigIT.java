@@ -17,6 +17,8 @@
 
 package integration.im.turms.gateway.storage.mongo;
 
+import org.junit.jupiter.api.Test;
+
 import im.turms.gateway.storage.mongo.MongoConfig;
 import im.turms.server.common.infra.context.TurmsApplicationContext;
 import im.turms.server.common.infra.property.TurmsProperties;
@@ -24,12 +26,11 @@ import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.constant.IdentityAccessManagementType;
 import im.turms.server.common.infra.property.env.gateway.GatewayProperties;
 import im.turms.server.common.infra.property.env.gateway.MongoProperties;
-import im.turms.server.common.infra.property.env.gateway.session.SessionProperties;
 import im.turms.server.common.infra.property.env.gateway.identityaccessmanagement.IdentityAccessManagementProperties;
+import im.turms.server.common.infra.property.env.gateway.session.SessionProperties;
 import im.turms.server.common.infra.property.env.service.env.database.TurmsMongoProperties;
 import im.turms.server.common.storage.mongo.TurmsMongoClient;
 import im.turms.server.common.testing.BaseIntegrationTest;
-import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -49,16 +50,16 @@ class MongoConfigIT extends BaseIntegrationTest {
                                 .user(new TurmsMongoProperties(getMongoUri()))
                                 .build())
                         .session(new SessionProperties().toBuilder()
-                                .identityAccessManagement(new IdentityAccessManagementProperties().toBuilder()
-                                        .enabled(true)
-                                        .type(IdentityAccessManagementType.PASSWORD)
-                                        .build())
+                                .identityAccessManagement(
+                                        new IdentityAccessManagementProperties().toBuilder()
+                                                .enabled(true)
+                                                .type(IdentityAccessManagementType.PASSWORD)
+                                                .build())
                                 .build())
                         .build())
                 .build();
         TurmsPropertiesManager propertiesManager = mock(TurmsPropertiesManager.class);
-        when(propertiesManager.getLocalProperties())
-                .thenReturn(properties);
+        when(propertiesManager.getLocalProperties()).thenReturn(properties);
         TurmsMongoClient mongoClient = mongoConfig.userMongoClient(propertiesManager);
 
         assertThat(mongoClient).isNotNull();

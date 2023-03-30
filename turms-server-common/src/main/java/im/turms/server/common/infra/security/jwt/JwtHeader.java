@@ -23,13 +23,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author James Chen
  */
 public record JwtHeader(
-        @JsonProperty("alg")
-        String algorithm,
-        @JsonProperty("typ")
-        String type,
-        @JsonProperty("cty")
-        String contentType,
-        @JsonProperty("kid")
-        String keyId
+        @JsonProperty("alg") String algorithm,
+        @JsonProperty("typ") String type,
+        @JsonProperty("cty") String contentType,
+        @JsonProperty("kid") String keyId
 ) {
 }

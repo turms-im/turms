@@ -17,6 +17,12 @@
 
 package im.turms.service.domain.user.po;
 
+import java.util.Date;
+import jakarta.validation.constraints.NotNull;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
 import im.turms.server.common.domain.common.po.BaseEntity;
 import im.turms.server.common.storage.mongo.entity.IndexType;
 import im.turms.server.common.storage.mongo.entity.ShardingStrategy;
@@ -26,25 +32,21 @@ import im.turms.server.common.storage.mongo.entity.annotation.Id;
 import im.turms.server.common.storage.mongo.entity.annotation.Indexed;
 import im.turms.server.common.storage.mongo.entity.annotation.PersistenceConstructor;
 import im.turms.server.common.storage.mongo.entity.annotation.Sharded;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-
-import java.util.Date;
-import jakarta.validation.constraints.NotNull;
 
 import static im.turms.server.common.storage.mongo.entity.IndexType.HASH;
 import static im.turms.server.common.storage.mongo.entity.annotation.IndexedReason.EXTENDED_FEATURE;
 
 /**
  * @author James Chen
- * @implNote Shard by "_id.ownerId" instead of ID so that we can query all
- * related users according to the owner ID in the same shard efficiently.
- * And the chunk size is acceptable.
+ * @implNote Shard by "_id.ownerId" instead of ID so that we can query all related users according
+ *           to the owner ID in the same shard efficiently. And the chunk size is acceptable.
  */
 @Data
 @AllArgsConstructor(onConstructor = @__(@PersistenceConstructor))
 @Document(UserRelationshipGroupMember.COLLECTION_NAME)
-@Sharded(shardKey = UserRelationshipGroupMember.Fields.ID_OWNER_ID, shardingStrategy = ShardingStrategy.HASH)
+@Sharded(
+        shardKey = UserRelationshipGroupMember.Fields.ID_OWNER_ID,
+        shardingStrategy = ShardingStrategy.HASH)
 public final class UserRelationshipGroupMember extends BaseEntity {
 
     public static final String COLLECTION_NAME = "userRelationshipGroupMember";
@@ -94,9 +96,12 @@ public final class UserRelationshipGroupMember extends BaseEntity {
     }
 
     public static final class Fields {
-        public static final String ID_OWNER_ID = "_id." + Key.Fields.OWNER_ID;
-        public static final String ID_GROUP_INDEX = "_id." + Key.Fields.GROUP_INDEX;
-        public static final String ID_RELATED_USER_ID = "_id." + Key.Fields.RELATED_USER_ID;
+        public static final String ID_OWNER_ID = "_id."
+                + Key.Fields.OWNER_ID;
+        public static final String ID_GROUP_INDEX = "_id."
+                + Key.Fields.GROUP_INDEX;
+        public static final String ID_RELATED_USER_ID = "_id."
+                + Key.Fields.RELATED_USER_ID;
         public static final String JOIN_DATE = "jd";
 
         private Fields() {

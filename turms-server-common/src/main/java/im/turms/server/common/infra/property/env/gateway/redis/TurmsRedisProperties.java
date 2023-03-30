@@ -17,10 +17,11 @@
 
 package im.turms.server.common.infra.property.env.gateway.redis;
 
-import im.turms.server.common.infra.property.env.common.CommonRedisProperties;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+
+import im.turms.server.common.infra.property.env.common.CommonRedisProperties;
 
 /**
  * @author James Chen

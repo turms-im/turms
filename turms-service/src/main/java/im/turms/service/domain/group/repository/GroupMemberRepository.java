@@ -17,9 +17,19 @@
 
 package im.turms.service.domain.group.repository;
 
+import java.util.Date;
+import java.util.Set;
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotEmpty;
+
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.reactivestreams.client.ClientSession;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.access.client.dto.constant.GroupMemberRole;
 import im.turms.server.common.domain.common.repository.BaseRepository;
 import im.turms.server.common.infra.time.DateRange;
@@ -30,15 +40,6 @@ import im.turms.server.common.storage.mongo.operation.option.QueryOptions;
 import im.turms.server.common.storage.mongo.operation.option.Update;
 import im.turms.service.domain.group.po.GroupMember;
 import im.turms.service.infra.validation.ValidGroupMemberRole;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Repository;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
-import java.util.Date;
-import java.util.Set;
-import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.NotEmpty;
 
 /**
  * @author James Chen
@@ -67,7 +68,9 @@ public class GroupMemberRepository extends BaseRepository<GroupMember, GroupMemb
             @Nullable ClientSession session) {
         Filter filter = Filter.newBuilder(1)
                 .in(DomainFieldName.ID, keys);
-        Update update = Update.newBuilder(muteEndDate == null ? 3 : 4)
+        Update update = Update.newBuilder(muteEndDate == null
+                ? 3
+                : 4)
                 .setIfNotNull(GroupMember.Fields.NAME, name)
                 .setIfNotNull(GroupMember.Fields.ROLE, role)
                 .setIfNotNull(GroupMember.Fields.JOIN_DATE, joinDate);
@@ -135,7 +138,8 @@ public class GroupMemberRepository extends BaseRepository<GroupMember, GroupMemb
         QueryOptions options = QueryOptions.newBuilder(1)
                 .include(GroupMember.Fields.ID_USER_ID);
         return mongoClient.findMany(entityClass, filter, options)
-                .map(member -> member.getKey().getUserId());
+                .map(member -> member.getKey()
+                        .getUserId());
     }
 
     public Flux<Long> findGroupMemberIds(Set<Long> groupIds) {
@@ -144,7 +148,8 @@ public class GroupMemberRepository extends BaseRepository<GroupMember, GroupMemb
         QueryOptions options = QueryOptions.newBuilder(1)
                 .include(GroupMember.Fields.ID_USER_ID);
         return mongoClient.findMany(entityClass, filter, options)
-                .map(member -> member.getKey().getUserId());
+                .map(member -> member.getKey()
+                        .getUserId());
     }
 
     public Flux<GroupMember> findGroupMemberKeyAndRoleParis(Set<Long> userIds, Long groupId) {
@@ -172,7 +177,8 @@ public class GroupMemberRepository extends BaseRepository<GroupMember, GroupMemb
         QueryOptions options = QueryOptions.newBuilder(1)
                 .include(GroupMember.Fields.ID_USER_ID);
         return mongoClient.findMany(entityClass, filter, options)
-                .map(groupMember -> groupMember.getKey().getUserId());
+                .map(groupMember -> groupMember.getKey()
+                        .getUserId());
     }
 
     public Flux<Long> findUserJoinedGroupIds(Long userId) {
@@ -180,9 +186,9 @@ public class GroupMemberRepository extends BaseRepository<GroupMember, GroupMemb
                 .eq(GroupMember.Fields.ID_USER_ID, userId);
         QueryOptions options = QueryOptions.newBuilder(1)
                 .include(GroupMember.Fields.ID_GROUP_ID);
-        return mongoClient
-                .findMany(entityClass, filter, options)
-                .map(groupMember -> groupMember.getKey().getGroupId());
+        return mongoClient.findMany(entityClass, filter, options)
+                .map(groupMember -> groupMember.getKey()
+                        .getGroupId());
     }
 
     public Flux<Long> findUsersJoinedGroupIds(
@@ -195,7 +201,8 @@ public class GroupMemberRepository extends BaseRepository<GroupMember, GroupMemb
                 .paginateIfNotNull(page, size)
                 .include(GroupMember.Fields.ID_GROUP_ID);
         return mongoClient.findMany(entityClass, filter, options)
-                .map(groupMember -> groupMember.getKey().getGroupId());
+                .map(groupMember -> groupMember.getKey()
+                        .getGroupId());
     }
 
     public Mono<Boolean> isMemberMuted(Long groupId, Long userId) {

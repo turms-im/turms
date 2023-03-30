@@ -17,12 +17,15 @@
 
 package im.turms.server.common.storage.redis;
 
-import im.turms.server.common.domain.session.service.UserStatusService;
-import im.turms.server.common.infra.netty.ByteBufUtil;
-import im.turms.server.common.infra.netty.ReferenceCountUtil;
-import im.turms.server.common.storage.redis.codec.context.RedisCodecContext;
-import im.turms.server.common.storage.redis.script.RedisScript;
-import im.turms.server.common.storage.redis.sharding.ShardingAlgorithm;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.IdentityHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.BiFunction;
+
 import io.lettuce.core.GeoArgs;
 import io.lettuce.core.GeoCoordinates;
 import io.lettuce.core.GeoWithin;
@@ -35,14 +38,12 @@ import lombok.AllArgsConstructor;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.IdentityHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.BiFunction;
+import im.turms.server.common.domain.session.service.UserStatusService;
+import im.turms.server.common.infra.netty.ByteBufUtil;
+import im.turms.server.common.infra.netty.ReferenceCountUtil;
+import im.turms.server.common.storage.redis.codec.context.RedisCodecContext;
+import im.turms.server.common.storage.redis.script.RedisScript;
+import im.turms.server.common.storage.redis.sharding.ShardingAlgorithm;
 
 /**
  * @author James Chen
@@ -52,8 +53,9 @@ public class TurmsRedisClientManager {
     private final List<TurmsRedisClient> clients;
     private final ShardingAlgorithm shardingAlgorithm;
 
-    public TurmsRedisClientManager(RedisProperties properties,
-                                   RedisCodecContext serializationContext) {
+    public TurmsRedisClientManager(
+            RedisProperties properties,
+            RedisCodecContext serializationContext) {
         shardingAlgorithm = properties.getShardingAlgorithm();
         List<String> uriList = properties.getUriList();
         clients = new ArrayList<>(uriList.size());
@@ -74,12 +76,15 @@ public class TurmsRedisClientManager {
         return Mono.whenDelayError(monos);
     }
 
-    public <T> Flux<T> execute(Set<Long> shardKeys, BiFunction<TurmsRedisClient, Collection<Long>, Mono<T>> execute) {
+    public <T> Flux<T> execute(
+            Set<Long> shardKeys,
+            BiFunction<TurmsRedisClient, Collection<Long>, Mono<T>> execute) {
         int size = shardKeys.size();
         if (size == 0) {
             return Flux.empty();
         } else if (size == 1) {
-            return Flux.from(execute.apply(getClient(shardKeys.iterator().next()), shardKeys));
+            return Flux.from(execute.apply(getClient(shardKeys.iterator()
+                    .next()), shardKeys));
         }
         Map<TurmsRedisClient, Collection<Long>> clients = new IdentityHashMap<>();
         for (Long shardKey : shardKeys) {
@@ -116,7 +121,12 @@ public class TurmsRedisClientManager {
 
     // Geo
 
-    public Mono<Long> geoadd(Long shardKey, Object key, double longitude, double latitude, Object member) {
+    public Mono<Long> geoadd(
+            Long shardKey,
+            Object key,
+            double longitude,
+            double latitude,
+            Object member) {
         return getClient(shardKey).geoadd(key, longitude, latitude, member);
     }
 
@@ -124,11 +134,12 @@ public class TurmsRedisClientManager {
         return getClient(shardKey).geopos(key, members);
     }
 
-    public <T> Flux<GeoWithin<T>> georadiusbymember(Long shardKey,
-                                                    Object key,
-                                                    Object member,
-                                                    double distanceMeters,
-                                                    GeoArgs args) {
+    public <T> Flux<GeoWithin<T>> georadiusbymember(
+            Long shardKey,
+            Object key,
+            Object member,
+            double distanceMeters,
+            GeoArgs args) {
         return getClient(shardKey).georadiusbymember(key, member, distanceMeters, args);
     }
 
@@ -150,7 +161,8 @@ public class TurmsRedisClientManager {
     /**
      * In fact, the method is designed for {@link UserStatusService#updateOnlineUsersTtl} currently
      *
-     * @param keyGenerator The size of keys should not be larger than 1,048,576(1024*1024), or Redis will throw
+     * @param keyGenerator The size of keys should not be larger than 1,048,576(1024*1024), or Redis
+     *                     will throw
      */
     public Mono<Void> eval(RedisScript script, short firstKey, LongKeyGenerator keyGenerator) {
         int estimatedKeySize = Math.max(keyGenerator.estimatedSize(), 1);

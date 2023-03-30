@@ -17,8 +17,6 @@
 
 package im.turms.server.common.infra.plugin;
 
-import im.turms.server.common.infra.io.InputOutputException;
-
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -30,6 +28,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 import java.util.zip.ZipFile;
+
+import im.turms.server.common.infra.io.InputOutputException;
 
 /**
  * @author James Chen
@@ -61,10 +61,15 @@ public class PluginFinder {
                             zipFile.close();
                         } catch (IOException ex) {
                             e.addSuppressed(new InputOutputException(
-                                    "Caught an error while closing the zip file: " + pathStr, ex));
+                                    "Caught an error while closing the zip file: "
+                                            + pathStr,
+                                    ex));
                         }
                     }
-                    throw new InputOutputException("Failed to load the JAR file: " + path.toAbsolutePath(), e);
+                    throw new InputOutputException(
+                            "Failed to load the JAR file: "
+                                    + path.toAbsolutePath(),
+                            e);
                 }
                 zipFiles.add(file);
             } else if (isJsScriptEnabled && pathStr.endsWith(".js")) {
@@ -77,11 +82,15 @@ public class PluginFinder {
                             zipFile.close();
                         } catch (IOException ex) {
                             e.addSuppressed(new InputOutputException(
-                                    "Caught an error while closing the zip file: " + pathStr, ex));
+                                    "Caught an error while closing the zip file: "
+                                            + pathStr,
+                                    ex));
                         }
                     }
                     throw new InputOutputException(
-                            "Failed to load the JavaScript file: " + path.toAbsolutePath(), e);
+                            "Failed to load the JavaScript file: "
+                                    + path.toAbsolutePath(),
+                            e);
                 }
             }
         }
@@ -94,7 +103,10 @@ public class PluginFinder {
         } catch (NoSuchFileException e) {
             return Collections.emptyList();
         } catch (IOException e) {
-            throw new InputOutputException("Failed to list files in the dir: " + dir, e);
+            throw new InputOutputException(
+                    "Failed to list files in the dir: "
+                            + dir,
+                    e);
         }
     }
 

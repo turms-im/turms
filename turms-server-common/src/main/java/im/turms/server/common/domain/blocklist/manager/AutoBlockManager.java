@@ -17,15 +17,16 @@
 
 package im.turms.server.common.domain.blocklist.manager;
 
-import im.turms.server.common.infra.collection.CollectionUtil;
-import im.turms.server.common.infra.property.env.common.security.AutoBlockItemProperties;
-import im.turms.server.common.infra.property.env.common.security.AutoBlockItemProperties.BlockLevel;
-import lombok.AllArgsConstructor;
-
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiConsumer;
+
+import lombok.AllArgsConstructor;
+
+import im.turms.server.common.infra.collection.CollectionUtil;
+import im.turms.server.common.infra.property.env.common.security.AutoBlockItemProperties;
+import im.turms.server.common.infra.property.env.common.security.AutoBlockItemProperties.BlockLevel;
 
 /**
  * @author James Chen
@@ -43,7 +44,9 @@ public class AutoBlockManager<T> {
 
     private final ConcurrentHashMap<T, BlockStatus> blockedClientIdToStatus;
 
-    public AutoBlockManager(AutoBlockItemProperties autoBlockProperties, BiConsumer<T, Integer> onClientBlocked) {
+    public AutoBlockManager(
+            AutoBlockItemProperties autoBlockProperties,
+            BiConsumer<T, Integer> onClientBlocked) {
         this.onClientBlocked = onClientBlocked;
         levels = CollectionUtil.toListSupportRandomAccess(autoBlockProperties.getBlockLevels());
         maxLevel = levels.size() - 1;
@@ -68,10 +71,12 @@ public class AutoBlockManager<T> {
             // Update status
             long previousBlockTriggerTime = status.lastBlockTriggerTime;
             status.lastBlockTriggerTime = now;
-            int reduceOneTriggerTimeInterval = status.currentLevelProperties.getReduceOneTriggerTimeIntervalMillis();
+            int reduceOneTriggerTimeInterval =
+                    status.currentLevelProperties.getReduceOneTriggerTimeIntervalMillis();
             int times = status.triggerTimes;
             if (reduceOneTriggerTimeInterval > 0) {
-                times -= (int) (status.lastBlockTriggerTime - previousBlockTriggerTime) / reduceOneTriggerTimeInterval;
+                times -= (int) (status.lastBlockTriggerTime - previousBlockTriggerTime)
+                        / reduceOneTriggerTimeInterval;
                 if (times < 0) {
                     times = 0;
                 }
@@ -79,7 +84,8 @@ public class AutoBlockManager<T> {
             status.triggerTimes = times + 1;
             boolean isBlocked = status.currentLevel != UNSET_BLOCK_LEVEL;
             if (isBlocked) {
-                if (status.triggerTimes >= status.currentLevelProperties.getGoNextLevelTriggerTimes() && status.currentLevel < maxLevel) {
+                if (status.triggerTimes >= status.currentLevelProperties
+                        .getGoNextLevelTriggerTimes() && status.currentLevel < maxLevel) {
                     status.currentLevel++;
                     status.currentLevelProperties = levels.get(status.currentLevel);
                     status.triggerTimes = 0;
@@ -103,12 +109,15 @@ public class AutoBlockManager<T> {
 
     public void evictExpiredBlockedClients() {
         long now = System.currentTimeMillis();
-        Iterator<BlockStatus> iterator = blockedClientIdToStatus.values().iterator();
+        Iterator<BlockStatus> iterator = blockedClientIdToStatus.values()
+                .iterator();
         while (iterator.hasNext()) {
             BlockStatus status = iterator.next();
-            int reduceOneTriggerTimeInterval = status.currentLevelProperties.getReduceOneTriggerTimeIntervalMillis();
+            int reduceOneTriggerTimeInterval =
+                    status.currentLevelProperties.getReduceOneTriggerTimeIntervalMillis();
             if (reduceOneTriggerTimeInterval > 0) {
-                int times = status.triggerTimes - (int) (now - status.lastBlockTriggerTime) / reduceOneTriggerTimeInterval;
+                int times = status.triggerTimes
+                        - (int) (now - status.lastBlockTriggerTime) / reduceOneTriggerTimeInterval;
                 if (times <= 0) {
                     iterator.remove();
                 }

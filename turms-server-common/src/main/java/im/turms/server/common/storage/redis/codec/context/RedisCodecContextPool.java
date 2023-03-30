@@ -17,7 +17,6 @@
 
 package im.turms.server.common.storage.redis.codec.context;
 
-
 import im.turms.server.common.storage.redis.codec.GeoUserIdCodec;
 import im.turms.server.common.storage.redis.codec.GeoUserSessionIdCodec;
 import im.turms.server.common.storage.redis.codec.SessionHashFieldCodec;
@@ -37,18 +36,15 @@ public final class RedisCodecContextPool {
     public static final RedisCodecContext USER_SESSIONS_STATUS_CODEC_CONTEXT;
 
     static {
-        GEO_USER_SESSION_ID_CODEC_CONTEXT = RedisCodecContext
-                .builder()
+        GEO_USER_SESSION_ID_CODEC_CONTEXT = RedisCodecContext.builder()
                 .geoMemberCodec(new GeoUserSessionIdCodec())
                 .build();
 
-        GEO_USER_ID_CODEC_CONTEXT = RedisCodecContext
-                .builder()
+        GEO_USER_ID_CODEC_CONTEXT = RedisCodecContext.builder()
                 .geoMemberCodec(new GeoUserIdCodec())
                 .build();
 
-        USER_SESSIONS_STATUS_CODEC_CONTEXT = RedisCodecContext
-                .builder()
+        USER_SESSIONS_STATUS_CODEC_CONTEXT = RedisCodecContext.builder()
                 .hashKeyCodec(new SessionKeyCodec())
                 .hashFieldCodec(new SessionHashFieldCodec())
                 .hashValueCodec(new SessionHashValueCodec())

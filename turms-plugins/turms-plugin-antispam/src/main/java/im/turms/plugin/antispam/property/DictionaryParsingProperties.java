@@ -17,9 +17,10 @@
 
 package im.turms.plugin.antispam.property;
 
-import im.turms.server.common.infra.property.metadata.Description;
 import lombok.Data;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
+
+import im.turms.server.common.infra.property.metadata.Description;
 
 /**
  * @author James Chen
@@ -32,8 +33,8 @@ public class DictionaryParsingProperties {
 
     private String textFileCharset = "UTF-8";
 
-    @Description("Whether to skip invalid characters in the dictionary file. e.g. '/', '?'. " +
-            "If false, the plugin will throw if encounters an invalid character when parsing")
+    @Description("Whether to skip invalid characters in the dictionary file. e.g. '/', '?'. "
+            + "If false, the plugin will throw if encounters an invalid character when parsing")
     private boolean skipInvalidCharacter = true;
 
     @Description("Path to the binary dictionary file. "

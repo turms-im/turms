@@ -17,12 +17,13 @@
 
 package im.turms.server.common.infra.tracing;
 
-import im.turms.server.common.infra.logging.core.context.LogThreadContext;
-import im.turms.server.common.infra.random.RandomUtil;
 import lombok.Getter;
 import lombok.Setter;
 import reactor.core.scheduler.Schedulers;
 import reactor.util.context.ContextView;
+
+import im.turms.server.common.infra.logging.core.context.LogThreadContext;
+import im.turms.server.common.infra.random.RandomUtil;
 
 /**
  * @author James Chen
@@ -57,7 +58,8 @@ public class TracingContext {
         Schedulers.onScheduleHook(SCHEDULE_HOOK_NAME, task -> {
             TracingContext context = LogThreadContext.removeAndGet();
             // Make sure the request context is removed on the current thread
-            // because the request context will be misused if the current thread is scheduled to handle other requests
+            // because the request context will be misused if the current thread is scheduled to
+            // handle other requests
             return () -> {
                 if (context == null) {
                     task.run();
@@ -92,12 +94,16 @@ public class TracingContext {
 
     public static TracingContext getContext(ContextView context) {
         TracingContext ctx = context.getOrDefault(CTX_KEY_NAME, null);
-        return ctx == null ? NOOP : ctx;
+        return ctx == null
+                ? NOOP
+                : ctx;
     }
 
     public static TracingCloseableContext getCloseableContext(ContextView context) {
         TracingContext ctx = context.getOrDefault(CTX_KEY_NAME, null);
-        return ctx == null ? CLOSEABLE_CONTEXT_NOOP : ctx.asCloseable();
+        return ctx == null
+                ? CLOSEABLE_CONTEXT_NOOP
+                : ctx.asCloseable();
     }
 
     public static long getTraceId(ContextView context) {

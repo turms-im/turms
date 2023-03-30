@@ -17,6 +17,17 @@
 
 package im.turms.service.domain.common.access.admin.controller;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.function.Function;
+import jakarta.annotation.Nullable;
+
+import org.apache.commons.lang3.tuple.Pair;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+import reactor.function.Function3;
+
 import im.turms.server.common.access.admin.web.HttpResponseException;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.property.TurmsProperties;
@@ -26,16 +37,6 @@ import im.turms.server.common.infra.time.DateRange;
 import im.turms.server.common.infra.time.DateUtil;
 import im.turms.server.common.infra.time.DivideBy;
 import im.turms.service.domain.common.access.admin.dto.response.StatisticsRecordDTO;
-import org.apache.commons.lang3.tuple.Pair;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-import reactor.function.Function3;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.function.Function;
-import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen
@@ -56,7 +57,8 @@ public abstract class BaseController {
     }
 
     private void updateProperties(TurmsProperties properties) {
-        AdminApiProperties apiProperties = properties.getService().getAdminApi();
+        AdminApiProperties apiProperties = properties.getService()
+                .getAdminApi();
         defaultAvailableRecordsPerRequest = apiProperties.getDefaultAvailableRecordsPerRequest();
         maxAvailableRecordsPerRequest = apiProperties.getMaxAvailableRecordsPerRequest();
         maxHourDifferencePerCountRequest = apiProperties.getMaxHourDifferencePerCountRequest();
@@ -77,16 +79,15 @@ public abstract class BaseController {
             Function3<DateRange, Boolean, Boolean, Mono<Long>> function,
             @Nullable Boolean areGroupMessages,
             @Nullable Boolean areSystemMessages) {
-        List<Pair<Date, Date>> dates = DateUtil.divideDuration(dateRange.start(), dateRange.end(), divideBy);
+        List<Pair<Date, Date>> dates =
+                DateUtil.divideDuration(dateRange.start(), dateRange.end(), divideBy);
         List<Mono<StatisticsRecordDTO>> monos = new ArrayList<>(dates.size());
         for (Pair<Date, Date> datePair : dates) {
-            Mono<Long> result = function.apply(
-                    DateRange.of(datePair.getLeft(), datePair.getRight()),
-                    areGroupMessages,
-                    areSystemMessages);
-            monos.add(result.map(total -> new StatisticsRecordDTO(
-                    datePair.getLeft(),
-                    total)));
+            Mono<Long> result =
+                    function.apply(DateRange.of(datePair.getLeft(), datePair.getRight()),
+                            areGroupMessages,
+                            areSystemMessages);
+            monos.add(result.map(total -> new StatisticsRecordDTO(datePair.getLeft(), total)));
         }
         return mergeStaticsRecords(monos);
     }
@@ -95,7 +96,8 @@ public abstract class BaseController {
             DateRange dateRange,
             DivideBy divideBy,
             Function<DateRange, Mono<Long>> function) {
-        List<Pair<Date, Date>> dates = DateUtil.divideDuration(dateRange.start(), dateRange.end(), divideBy);
+        List<Pair<Date, Date>> dates =
+                DateUtil.divideDuration(dateRange.start(), dateRange.end(), divideBy);
         List<Mono<StatisticsRecordDTO>> monos = new ArrayList<>(dates.size());
         for (Pair<Date, Date> datePair : dates) {
             DateRange range = DateRange.of(datePair.getLeft(), datePair.getRight());
@@ -112,25 +114,38 @@ public abstract class BaseController {
             Function3<DateRange, Boolean, Boolean, Mono<Long>> function,
             @Nullable Boolean areGroupMessages,
             @Nullable Boolean areSystemMessages) {
-        if (isDurationNotGreaterThanMax(dateRange, divideBy,
-                maxHourDifferencePerCountRequest, maxDayDifferencePerCountRequest, maxMonthDifferencePerCountRequest)) {
-            return queryBetweenDate(dateRange, divideBy, function, areGroupMessages, areSystemMessages);
+        if (isDurationNotGreaterThanMax(dateRange,
+                divideBy,
+                maxHourDifferencePerCountRequest,
+                maxDayDifferencePerCountRequest,
+                maxMonthDifferencePerCountRequest)) {
+            return queryBetweenDate(dateRange,
+                    divideBy,
+                    function,
+                    areGroupMessages,
+                    areSystemMessages);
         }
-        return Mono.error(new HttpResponseException(ResponseStatusCode.ADMIN_REQUESTS_TOO_FREQUENT));
+        return Mono
+                .error(new HttpResponseException(ResponseStatusCode.ADMIN_REQUESTS_TOO_FREQUENT));
     }
 
     public Mono<List<StatisticsRecordDTO>> checkAndQueryBetweenDate(
             DateRange dateRange,
             DivideBy divideBy,
             Function<DateRange, Mono<Long>> function) {
-        if (isDurationNotGreaterThanMax(dateRange, divideBy,
-                maxHourDifferencePerCountRequest, maxDayDifferencePerCountRequest, maxMonthDifferencePerCountRequest)) {
+        if (isDurationNotGreaterThanMax(dateRange,
+                divideBy,
+                maxHourDifferencePerCountRequest,
+                maxDayDifferencePerCountRequest,
+                maxMonthDifferencePerCountRequest)) {
             return queryBetweenDate(dateRange, divideBy, function);
         }
-        return Mono.error(new HttpResponseException(ResponseStatusCode.ADMIN_REQUESTS_TOO_FREQUENT));
+        return Mono
+                .error(new HttpResponseException(ResponseStatusCode.ADMIN_REQUESTS_TOO_FREQUENT));
     }
 
-    private Mono<List<StatisticsRecordDTO>> mergeStaticsRecords(List<Mono<StatisticsRecordDTO>> recordMonos) {
+    private Mono<List<StatisticsRecordDTO>> mergeStaticsRecords(
+            List<Mono<StatisticsRecordDTO>> recordMonos) {
         return Flux.merge(recordMonos)
                 .collectSortedList((o1, o2) -> {
                     Date date1 = o1.date();
@@ -148,9 +163,12 @@ public abstract class BaseController {
         Date startDate = dateRange.start();
         Date endDate = dateRange.end();
         return switch (divideBy) {
-            case HOUR -> maxHourRanges == null || calculateDuration(startDate, endDate, divideBy) <= maxHourRanges;
-            case DAY -> maxDayRanges == null || calculateDuration(startDate, endDate, divideBy) <= maxDayRanges;
-            case MONTH -> maxMonthRanges == null || calculateDuration(startDate, endDate, divideBy) <= maxMonthRanges;
+            case HOUR -> maxHourRanges == null
+                    || calculateDuration(startDate, endDate, divideBy) <= maxHourRanges;
+            case DAY -> maxDayRanges == null
+                    || calculateDuration(startDate, endDate, divideBy) <= maxDayRanges;
+            case MONTH -> maxMonthRanges == null
+                    || calculateDuration(startDate, endDate, divideBy) <= maxMonthRanges;
             case NOOP -> true;
         };
     }

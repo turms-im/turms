@@ -17,13 +17,14 @@
 
 package im.turms.server.common.infra.cluster.service;
 
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.infra.cluster.service.codec.CodecService;
 import im.turms.server.common.infra.cluster.service.config.SharedConfigService;
 import im.turms.server.common.infra.cluster.service.connection.ConnectionService;
 import im.turms.server.common.infra.cluster.service.discovery.DiscoveryService;
 import im.turms.server.common.infra.cluster.service.idgen.IdService;
 import im.turms.server.common.infra.cluster.service.rpc.RpcService;
-import reactor.core.publisher.Mono;
 
 /**
  * @author James Chen
@@ -37,12 +38,13 @@ public interface ClusterService {
         return Mono.empty();
     }
 
-    default void lazyInit(CodecService codecService,
-                          ConnectionService connectionService,
-                          DiscoveryService discoveryService,
-                          IdService idService,
-                          RpcService rpcService,
-                          SharedConfigService sharedConfigService) {
+    default void lazyInit(
+            CodecService codecService,
+            ConnectionService connectionService,
+            DiscoveryService discoveryService,
+            IdService idService,
+            RpcService rpcService,
+            SharedConfigService sharedConfigService) {
     }
 
 }

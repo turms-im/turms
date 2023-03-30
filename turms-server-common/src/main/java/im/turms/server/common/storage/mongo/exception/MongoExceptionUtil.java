@@ -23,6 +23,7 @@ import com.mongodb.MongoException;
 import com.mongodb.MongoWriteException;
 import com.mongodb.WriteError;
 import com.mongodb.bulk.BulkWriteError;
+
 import im.turms.server.common.storage.mongo.MongoErrorCodes;
 
 /**
@@ -43,7 +44,8 @@ public final class MongoExceptionUtil {
     public static Throwable translate(Throwable t) {
         if (t instanceof MongoWriteException e) {
             WriteError error = e.getError();
-            if (error.getCategory().equals(ErrorCategory.DUPLICATE_KEY)) {
+            if (error.getCategory()
+                    .equals(ErrorCategory.DUPLICATE_KEY)) {
                 return new DuplicateKeyException(t.getMessage(), t);
             }
             if (error.getCode() == MongoErrorCodes.DOCUMENT_VALIDATION_FAILURE) {
@@ -53,7 +55,8 @@ public final class MongoExceptionUtil {
             boolean areAllDuplicateKeyErrors = true;
             boolean areAllValidationFailureErrors = true;
             for (BulkWriteError error : e.getWriteErrors()) {
-                if (!error.getCategory().equals(ErrorCategory.DUPLICATE_KEY)) {
+                if (!error.getCategory()
+                        .equals(ErrorCategory.DUPLICATE_KEY)) {
                     areAllDuplicateKeyErrors = false;
                     if (!areAllValidationFailureErrors) {
                         break;

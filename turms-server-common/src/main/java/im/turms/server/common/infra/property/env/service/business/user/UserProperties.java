@@ -17,17 +17,18 @@
 
 package im.turms.server.common.infra.property.env.service.business.user;
 
-import im.turms.server.common.infra.property.metadata.Description;
-import im.turms.server.common.infra.property.metadata.GlobalProperty;
-import im.turms.server.common.infra.property.metadata.MutableProperty;
-import im.turms.server.common.infra.validation.LessThanOrEqualTo;
+import jakarta.validation.constraints.Min;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
-import jakarta.validation.constraints.Min;
+import im.turms.server.common.infra.property.metadata.Description;
+import im.turms.server.common.infra.property.metadata.GlobalProperty;
+import im.turms.server.common.infra.property.metadata.MutableProperty;
+import im.turms.server.common.infra.validation.LessThanOrEqualTo;
 
 /**
  * @author James Chen
@@ -61,9 +62,9 @@ public class UserProperties {
     @MutableProperty
     private boolean activateUserWhenAdded = true;
 
-    @Description("The minimum allowed length for a user's password. " +
-            "If 0, it means the password can be an empty string \"\". " +
-            "If -1, it means the password can be null")
+    @Description("The minimum allowed length for a user's password. "
+            + "If 0, it means the password can be an empty string \"\". "
+            + "If -1, it means the password can be null")
     @GlobalProperty
     @MutableProperty
     @Min(-1)

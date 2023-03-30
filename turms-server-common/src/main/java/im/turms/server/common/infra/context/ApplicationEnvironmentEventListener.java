@@ -17,6 +17,13 @@
 
 package im.turms.server.common.infra.context;
 
+import org.springframework.boot.context.event.ApplicationContextInitializedEvent;
+import org.springframework.boot.context.event.ApplicationEnvironmentPreparedEvent;
+import org.springframework.boot.context.logging.LoggingApplicationListener;
+import org.springframework.context.ApplicationListener;
+import org.springframework.core.annotation.Order;
+import org.springframework.core.env.ConfigurableEnvironment;
+
 import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.cluster.node.NodeType;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
@@ -25,21 +32,17 @@ import im.turms.server.common.infra.property.env.common.logging.ConsoleLoggingPr
 import im.turms.server.common.infra.property.env.common.logging.FileLoggingCompressionProperties;
 import im.turms.server.common.infra.property.env.common.logging.FileLoggingProperties;
 import im.turms.server.common.infra.property.env.common.logging.LoggingProperties;
-import org.springframework.boot.context.event.ApplicationContextInitializedEvent;
-import org.springframework.boot.context.event.ApplicationEnvironmentPreparedEvent;
-import org.springframework.boot.context.logging.LoggingApplicationListener;
-import org.springframework.context.ApplicationListener;
-import org.springframework.core.annotation.Order;
-import org.springframework.core.env.ConfigurableEnvironment;
 
 /**
  * @author James Chen
  */
 @Order(LoggingApplicationListener.DEFAULT_ORDER + 1)
-public class ApplicationEnvironmentEventListener implements ApplicationListener<ApplicationEnvironmentPreparedEvent> {
+public class ApplicationEnvironmentEventListener
+        implements ApplicationListener<ApplicationEnvironmentPreparedEvent> {
 
     /**
-     * @implNote We don't use {@link ApplicationContextInitializedEvent} because it's still too late for logging
+     * @implNote We don't use {@link ApplicationContextInitializedEvent} because it's still too late
+     *           for logging
      */
     @Override
     public void onApplicationEvent(ApplicationEnvironmentPreparedEvent event) {
@@ -48,10 +51,14 @@ public class ApplicationEnvironmentEventListener implements ApplicationListener<
 
     private void configureContextForLogging(ApplicationEnvironmentPreparedEvent event) {
         ConfigurableEnvironment env = event.getEnvironment();
-        // Though it is more reasonable to init the node type/ID in "im.turms.server.common.infra.cluster.node.Node",
-        // we need to ensure the local node info is logged even if the local node hasn't been inited.
+        // Though it is more reasonable to init the node type/ID in
+        // "im.turms.server.common.infra.cluster.node.Node",
+        // we need to ensure the local node info is logged even if the local node hasn't been
+        // inited.
         // So we initialize the node info here.
-        String applicationClassName = event.getSpringApplication().getMainApplicationClass().getSimpleName();
+        String applicationClassName = event.getSpringApplication()
+                .getMainApplicationClass()
+                .getSimpleName();
         NodeType nodeType = applicationClassName.equals("TurmsGatewayApplication")
                 ? NodeType.GATEWAY
                 : NodeType.SERVICE;
@@ -81,9 +88,10 @@ public class ApplicationEnvironmentEventListener implements ApplicationListener<
                 .maxFileSizeMb(env.getProperty("turms.logging.file.maxFileSizeMb",
                         Integer.class,
                         FileLoggingProperties.DEFAULT_VALUE_FILE_SIZE_MB))
-                .compression(new FileLoggingCompressionProperties(env.getProperty("turms.logging.file.compression.enabled",
-                        Boolean.class,
-                        FileLoggingCompressionProperties.DEFAULT_VALUE_ENABLED)))
+                .compression(new FileLoggingCompressionProperties(
+                        env.getProperty("turms.logging.file.compression.enabled",
+                                Boolean.class,
+                                FileLoggingCompressionProperties.DEFAULT_VALUE_ENABLED)))
                 .build();
         LoggingProperties loggingProperties = new LoggingProperties().toBuilder()
                 .console(consoleLoggingProperties)

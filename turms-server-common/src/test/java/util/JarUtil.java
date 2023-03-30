@@ -17,9 +17,6 @@
 
 package util;
 
-import im.turms.server.common.infra.io.ResourceNotFoundException;
-import lombok.SneakyThrows;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -33,6 +30,10 @@ import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
 import java.util.zip.ZipEntry;
 
+import lombok.SneakyThrows;
+
+import im.turms.server.common.infra.io.ResourceNotFoundException;
+
 /**
  * @author James Chen
  */
@@ -42,16 +43,25 @@ public final class JarUtil {
     }
 
     @SneakyThrows
-    public static Path createJarFile(String outputFile, List<Class<?>> classEntries, List<String> resources) {
+    public static Path createJarFile(
+            String outputFile,
+            List<Class<?>> classEntries,
+            List<String> resources) {
         ClassLoader loader = JarUtil.class.getClassLoader();
-        URI jarFileUri = loader.getResource(".").toURI().resolve(outputFile);
-        File jarFile = Paths.get(jarFileUri).toFile();
+        URI jarFileUri = loader.getResource(".")
+                .toURI()
+                .resolve(outputFile);
+        File jarFile = Paths.get(jarFileUri)
+                .toFile();
         Manifest manifest = new Manifest();
-        manifest.getMainAttributes().put(Attributes.Name.MANIFEST_VERSION, "1.0");
+        manifest.getMainAttributes()
+                .put(Attributes.Name.MANIFEST_VERSION, "1.0");
         try (FileOutputStream fos = new FileOutputStream(jarFile, false);
-             JarOutputStream output = new JarOutputStream(fos, manifest)) {
+                JarOutputStream output = new JarOutputStream(fos, manifest)) {
             for (Class<?> classEntry : classEntries) {
-                String classFileName = classEntry.getName().replace('.', '/') + ".class";
+                String classFileName = classEntry.getName()
+                        .replace('.', '/')
+                        + ".class";
                 addZipEntry(loader, classFileName, output);
             }
             for (String resource : resources) {
@@ -61,10 +71,13 @@ public final class JarUtil {
         return Path.of(jarFile.toURI());
     }
 
-    private static void addZipEntry(ClassLoader loader, String resource, JarOutputStream output) throws IOException {
+    private static void addZipEntry(ClassLoader loader, String resource, JarOutputStream output)
+            throws IOException {
         InputStream source = loader.getResourceAsStream(resource);
         if (source == null) {
-            throw new ResourceNotFoundException("Could not find the resource: " + resource);
+            throw new ResourceNotFoundException(
+                    "Could not find the resource: "
+                            + resource);
         }
         ZipEntry entry = new ZipEntry(resource);
         output.putNextEntry(entry);

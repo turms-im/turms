@@ -17,11 +17,12 @@
 
 package im.turms.server.common.storage.redis.codec;
 
-import im.turms.server.common.access.client.dto.constant.DeviceType;
-import im.turms.server.common.domain.session.bo.UserSessionId;
+import java.nio.ByteBuffer;
+
 import io.netty.buffer.ByteBuf;
 
-import java.nio.ByteBuffer;
+import im.turms.server.common.access.client.dto.constant.DeviceType;
+import im.turms.server.common.domain.session.bo.UserSessionId;
 
 /**
  * @author James Chen
@@ -32,7 +33,8 @@ public class GeoUserSessionIdCodec implements TurmsRedisCodec<UserSessionId> {
     public ByteBuf encode(UserSessionId sessionId) {
         return BUFFER_ALLOCATOR.directBuffer(Long.BYTES + Byte.BYTES)
                 .writeLong(sessionId.userId())
-                .writeByte(sessionId.deviceType().getNumber());
+                .writeByte(sessionId.deviceType()
+                        .getNumber());
     }
 
     @Override
@@ -41,7 +43,9 @@ public class GeoUserSessionIdCodec implements TurmsRedisCodec<UserSessionId> {
         byte value = in.get();
         DeviceType deviceType = DeviceType.forNumber(value);
         if (deviceType == null) {
-            throw new IllegalArgumentException("Could not find the device type for the number: " + value);
+            throw new IllegalArgumentException(
+                    "Could not find the device type for the number: "
+                            + value);
         }
         return new UserSessionId(userId, deviceType);
     }

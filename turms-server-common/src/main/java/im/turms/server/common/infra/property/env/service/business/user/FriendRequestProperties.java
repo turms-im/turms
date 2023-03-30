@@ -17,17 +17,18 @@
 
 package im.turms.server.common.infra.property.env.service.business.user;
 
-import im.turms.server.common.infra.property.metadata.Description;
-import im.turms.server.common.infra.property.metadata.GlobalProperty;
-import im.turms.server.common.infra.property.metadata.MutableProperty;
-import im.turms.server.common.infra.task.CronConst;
-import im.turms.server.common.infra.validation.ValidCron;
+import jakarta.validation.constraints.Min;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import jakarta.validation.constraints.Min;
+import im.turms.server.common.infra.property.metadata.Description;
+import im.turms.server.common.infra.property.metadata.GlobalProperty;
+import im.turms.server.common.infra.property.metadata.MutableProperty;
+import im.turms.server.common.infra.task.CronConst;
+import im.turms.server.common.infra.validation.ValidCron;
 
 /**
  * @author James Chen
@@ -55,10 +56,11 @@ public class FriendRequestProperties {
     @Min(0)
     private int friendRequestExpireAfterSeconds = 30 * 24 * 3600;
 
-    @Description("Clean expired friend requests when the cron expression is triggered" +
-            " if deleteExpiredRequestsWhenCronTriggered is true")
+    @Description("Clean expired friend requests when the cron expression is triggered"
+            + " if deleteExpiredRequestsWhenCronTriggered is true")
     @ValidCron
-    private String expiredUserFriendRequestsCleanupCron = CronConst.DEFAULT_EXPIRED_USER_FRIEND_REQUESTS_CLEANUP_CRON;
+    private String expiredUserFriendRequestsCleanupCron =
+            CronConst.DEFAULT_EXPIRED_USER_FRIEND_REQUESTS_CLEANUP_CRON;
 
     @Description("Whether to delete expired when the cron expression is triggered")
     @GlobalProperty

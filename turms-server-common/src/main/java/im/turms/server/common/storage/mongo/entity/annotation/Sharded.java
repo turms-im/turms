@@ -17,12 +17,12 @@
 
 package im.turms.server.common.storage.mongo.entity.annotation;
 
-import im.turms.server.common.storage.mongo.entity.ShardingStrategy;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
+import im.turms.server.common.storage.mongo.entity.ShardingStrategy;
 
 /**
  * @author James Chen

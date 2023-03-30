@@ -17,6 +17,8 @@
 
 package com.mongodb.reactivestreams.client.internal;
 
+import java.util.concurrent.TimeUnit;
+
 import com.mongodb.CursorType;
 import com.mongodb.ExplainVerbosity;
 import com.mongodb.MongoNamespace;
@@ -30,8 +32,6 @@ import com.mongodb.internal.operation.TurmsFindOperation;
 import com.mongodb.lang.Nullable;
 import com.mongodb.reactivestreams.client.ClientSession;
 import com.mongodb.reactivestreams.client.FindPublisher;
-import im.turms.server.common.infra.exception.NotImplementedException;
-import im.turms.server.common.storage.mongo.operation.option.QueryOptions;
 import org.bson.BsonDocument;
 import org.bson.BsonValue;
 import org.bson.Document;
@@ -40,16 +40,16 @@ import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.conversions.Bson;
 import org.reactivestreams.Publisher;
 
-import java.util.concurrent.TimeUnit;
+import im.turms.server.common.infra.exception.NotImplementedException;
+import im.turms.server.common.storage.mongo.operation.option.QueryOptions;
 
 import static com.mongodb.assertions.Assertions.notNull;
 
 /**
  * @author James Chen
- * @implNote The heavy objects that we have eliminated:
- * 1. {@link FindOptions} and {@link FindOperation}
- * 3. A lot of intermediate operations
- * 4. A lot of intermediate objects (especially documents)
+ * @implNote The heavy objects that we have eliminated: 1. {@link FindOptions} and
+ *           {@link FindOperation} 3. A lot of intermediate operations 4. A lot of intermediate
+ *           objects (especially documents)
  * @see FindPublisherImpl
  */
 public class TurmsFindPublisherImpl<T> extends BatchCursorPublisher<T> implements FindPublisher<T> {
@@ -57,10 +57,11 @@ public class TurmsFindPublisherImpl<T> extends BatchCursorPublisher<T> implement
     private final Bson filter;
     private final QueryOptions queryOptions;
 
-    public TurmsFindPublisherImpl(@Nullable final ClientSession clientSession,
-                                  final MongoOperationPublisher<T> mongoOperationPublisher,
-                                  final Bson filter,
-                                  @Nullable final QueryOptions queryOptions) {
+    public TurmsFindPublisherImpl(
+            @Nullable final ClientSession clientSession,
+            final MongoOperationPublisher<T> mongoOperationPublisher,
+            final Bson filter,
+            @Nullable final QueryOptions queryOptions) {
         super(clientSession, mongoOperationPublisher);
         this.filter = notNull("filter", filter);
         this.queryOptions = queryOptions == null
@@ -200,28 +201,30 @@ public class TurmsFindPublisherImpl<T> extends BatchCursorPublisher<T> implement
     }
 
     @Override
-    public <E> Publisher<E> explain(final Class<E> explainResultClass, final ExplainVerbosity verbosity) {
+    public <E> Publisher<E> explain(
+            final Class<E> explainResultClass,
+            final ExplainVerbosity verbosity) {
         return publishExplain(explainResultClass, notNull("verbosity", verbosity));
     }
 
-    private <E> Publisher<E> publishExplain(final Class<E> explainResultClass, @Nullable final ExplainVerbosity verbosity) {
+    private <E> Publisher<E> publishExplain(
+            final Class<E> explainResultClass,
+            @Nullable final ExplainVerbosity verbosity) {
         notNull("explainDocumentClass", explainResultClass);
-        return getMongoOperationPublisher().createReadOperationMono(() ->
-                        asAsyncReadOperation(0).asAsyncExplainableOperation(verbosity,
-                                getCodecRegistry().get(explainResultClass)),
+        return getMongoOperationPublisher().createReadOperationMono(() -> asAsyncReadOperation(0)
+                .asAsyncExplainableOperation(verbosity, getCodecRegistry().get(explainResultClass)),
                 getClientSession());
     }
 
     @Override
-    AsyncExplainableReadOperation<AsyncBatchCursor<T>> asAsyncReadOperation(final int initialBatchSize) {
-        return getFindOperation(queryOptions
-                .batchSize(initialBatchSize));
+    AsyncExplainableReadOperation<AsyncBatchCursor<T>> asAsyncReadOperation(
+            final int initialBatchSize) {
+        return getFindOperation(queryOptions.batchSize(initialBatchSize));
     }
 
     @Override
     AsyncReadOperation<AsyncBatchCursor<T>> asAsyncFirstReadOperation() {
-        return getFindOperation(queryOptions
-                .limit(1)
+        return getFindOperation(queryOptions.limit(1)
                 .singleBatch());
     }
 
@@ -232,8 +235,7 @@ public class TurmsFindPublisherImpl<T> extends BatchCursorPublisher<T> implement
         Codec<T> codec = codecRegistry.get(documentClass);
         BsonDocument filterDoc = filter.toBsonDocument(documentClass, codecRegistry);
         BsonDocument command = options.asDocument(namespace.getCollectionName(), filterDoc);
-        return new TurmsFindOperation<>(namespace, codec, command)
-                .retryReads(getRetryReads());
+        return new TurmsFindOperation<>(namespace, codec, command).retryReads(getRetryReads());
     }
 
 }

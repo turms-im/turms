@@ -17,9 +17,9 @@
 
 package im.turms.service.domain.message.bo;
 
-import im.turms.service.domain.message.po.Message;
-
 import java.util.Set;
+
+import im.turms.service.domain.message.po.Message;
 
 /**
  * @author James Chen

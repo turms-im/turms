@@ -17,11 +17,11 @@
 
 package im.turms.server.common.infra.security;
 
-import io.netty.util.concurrent.FastThreadLocal;
-
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 import javax.crypto.Mac;
+
+import io.netty.util.concurrent.FastThreadLocal;
 
 /**
  * @author James Chen
@@ -59,24 +59,28 @@ public final class MacPool {
         }
     };
 
-    private static final Map<String, FastThreadLocal<Mac>> NAME_TO_ALGORITHM = Map.of(
-            "HmacSHA256", HMAC_SHA_256,
-            "HmacSHA384", HMAC_SHA_384,
-            "HmacSHA512", HMAC_SHA_512
-    );
+    private static final Map<String, FastThreadLocal<Mac>> NAME_TO_ALGORITHM = Map
+            .of("HmacSHA256", HMAC_SHA_256, "HmacSHA384", HMAC_SHA_384, "HmacSHA512", HMAC_SHA_512);
 
     public static void ensureAvailability(String algorithm) {
         try {
             Mac.getInstance(algorithm);
         } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("Unavailable algorithm: \"" + algorithm + "\"", e);
+            throw new RuntimeException(
+                    "Unavailable algorithm: \""
+                            + algorithm
+                            + "\"",
+                    e);
         }
     }
 
     public static Mac get(String algorithm) {
         FastThreadLocal<Mac> threadLocal = NAME_TO_ALGORITHM.get(algorithm);
         if (threadLocal == null) {
-            throw new IllegalArgumentException("Unknown algorithm: \"" + algorithm + "\"");
+            throw new IllegalArgumentException(
+                    "Unknown algorithm: \""
+                            + algorithm
+                            + "\"");
         }
         Mac mac = threadLocal.get();
         mac.reset();

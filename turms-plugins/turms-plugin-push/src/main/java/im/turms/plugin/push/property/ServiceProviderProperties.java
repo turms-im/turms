@@ -17,14 +17,15 @@
 
 package im.turms.plugin.push.property;
 
-import im.turms.plugin.push.core.PushNotificationType;
+import java.util.Collections;
+import java.util.Map;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import java.util.Collections;
-import java.util.Map;
+import im.turms.plugin.push.core.PushNotificationType;
 
 /**
  * @author James Chen
@@ -37,6 +38,7 @@ public abstract class ServiceProviderProperties {
 
     private boolean enabled;
 
-    private Map<String, Map<PushNotificationType, TemplateMappingProperties>> template = Collections.emptyMap();
+    private Map<String, Map<PushNotificationType, TemplateMappingProperties>> template =
+            Collections.emptyMap();
 
 }

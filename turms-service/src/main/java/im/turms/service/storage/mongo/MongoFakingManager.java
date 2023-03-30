@@ -17,6 +17,20 @@
 
 package im.turms.service.storage.mongo;
 
+import java.util.Date;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import lombok.Getter;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.time.DateUtils;
+import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Scheduler;
+import reactor.core.scheduler.Schedulers;
+
 import im.turms.server.common.access.admin.permission.AdminPermission;
 import im.turms.server.common.access.client.dto.constant.GroupMemberRole;
 import im.turms.server.common.access.client.dto.constant.ProfileAccessStrategy;
@@ -52,19 +66,6 @@ import im.turms.service.domain.user.po.UserRelationship;
 import im.turms.service.domain.user.po.UserRelationshipGroup;
 import im.turms.service.domain.user.po.UserRelationshipGroupMember;
 import im.turms.service.domain.user.po.UserVersion;
-import lombok.Getter;
-import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.time.DateUtils;
-import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Scheduler;
-import reactor.core.scheduler.Schedulers;
-
-import java.util.Date;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import static im.turms.server.common.domain.group.constant.GroupConst.DEFAULT_GROUP_TYPE_ID;
 import static im.turms.server.common.domain.user.constant.UserConst.DEFAULT_USER_PERMISSION_GROUP_ID;
@@ -109,13 +110,14 @@ public final class MongoFakingManager {
 
     private long currentId = 1L;
 
-    public MongoFakingManager(FakeProperties properties,
-                              PasswordManager passwordManager,
-                              TurmsMongoClient adminMongoClient,
-                              TurmsMongoClient userMongoClient,
-                              TurmsMongoClient groupMongoClient,
-                              TurmsMongoClient conversationMongoClient,
-                              TurmsMongoClient messageMongoClient) {
+    public MongoFakingManager(
+            FakeProperties properties,
+            PasswordManager passwordManager,
+            TurmsMongoClient adminMongoClient,
+            TurmsMongoClient userMongoClient,
+            TurmsMongoClient groupMongoClient,
+            TurmsMongoClient conversationMongoClient,
+            TurmsMongoClient messageMongoClient) {
         this.passwordManager = passwordManager;
         this.adminMongoClient = adminMongoClient;
         this.userMongoClient = userMongoClient;
@@ -168,24 +170,22 @@ public final class MongoFakingManager {
         adminRelatedObjs.add(guest);
         for (int i = 1; i <= adminCount; i++) {
             Admin admin = new Admin(
-                    "account" + i,
+                    "account"
+                            + i,
                     passwordManager.encodeAdminPassword("123"),
                     "my-name",
                     1L,
                     DateUtils.addDays(epoch, i));
             adminRelatedObjs.add(admin);
         }
-        AdminRole adminRole = new AdminRole(
-                1L,
-                "ADMIN",
-                AdminPermission.ALL,
-                0,
-                epoch);
+        AdminRole adminRole = new AdminRole(1L, "ADMIN", AdminPermission.ALL, 0, epoch);
         AdminRole guestRole = new AdminRole(
                 guestRoleId,
                 "GUEST",
-                CollectionUtil.newSet(AdminPermission.matchPermission("*" + AdminPermission.SUFFIX_QUERY),
-                        AdminPermission.matchPermission("*" + AdminPermission.SUFFIX_CREATE)),
+                CollectionUtil.newSet(AdminPermission.matchPermission("*"
+                        + AdminPermission.SUFFIX_QUERY),
+                        AdminPermission.matchPermission("*"
+                                + AdminPermission.SUFFIX_CREATE)),
                 0,
                 epoch);
         adminRelatedObjs.add(adminRole);
@@ -210,11 +210,7 @@ public final class MongoFakingManager {
         GroupVersion groupVersion = new GroupVersion(1L, epoch, epoch, epoch, epoch, epoch);
         groupRelatedObjs.add(groupVersion);
         for (int i = targetUserToBlockInGroupStart; i <= targetUserToBlockInGroupEnd; i++) {
-            GroupBlockedUser groupBlockedUser = new GroupBlockedUser(
-                    1L,
-                    (long) i,
-                    epoch,
-                    1L);
+            GroupBlockedUser groupBlockedUser = new GroupBlockedUser(1L, (long) i, epoch, 1L);
             groupRelatedObjs.add(groupBlockedUser);
         }
         for (int i = targetUserForGroupInvitationStart; i <= targetUserForGroupInvitationEnd; i++) {
@@ -236,7 +232,8 @@ public final class MongoFakingManager {
                 new LinkedHashSet<>(List.of("a", "b", "c")),
                 20);
         groupRelatedObjs.add(groupJoinQuestion);
-        for (int i = targetUserForGroupJoinRequestStart; i <= targetUserForGroupJoinRequestEnd; i++) {
+        for (int i =
+                targetUserForGroupJoinRequestStart; i <= targetUserForGroupJoinRequestEnd; i++) {
             GroupJoinRequest groupJoinRequest = new GroupJoinRequest(
                     nextId(),
                     "test-content",
@@ -248,7 +245,8 @@ public final class MongoFakingManager {
                     null);
             groupRelatedObjs.add(groupJoinRequest);
         }
-        Set<Long> groupMemberIds = CollectionUtil.newSetWithExpectedSize(targetUserToBeGroupMemberEnd - targetUserToBeGroupMemberStart);
+        Set<Long> groupMemberIds = CollectionUtil.newSetWithExpectedSize(
+                targetUserToBeGroupMemberEnd - targetUserToBeGroupMemberStart);
         for (int i = targetUserToBeGroupMemberStart; i <= targetUserToBeGroupMemberEnd; i++) {
             long groupMemberId = i;
             groupMemberIds.add(groupMemberId);
@@ -256,13 +254,18 @@ public final class MongoFakingManager {
                     1L,
                     groupMemberId,
                     "test-name",
-                    i == 1 ? GroupMemberRole.OWNER : GroupMemberRole.MEMBER,
+                    i == 1
+                            ? GroupMemberRole.OWNER
+                            : GroupMemberRole.MEMBER,
                     epoch,
-                    i > userCount / 10 / 2 ? new Date(9999999999999L) : null);
+                    i > userCount / 10 / 2
+                            ? new Date(9999999999999L)
+                            : null);
             groupRelatedObjs.add(groupMember);
         }
 
-        groupRelatedObjs.add(new GroupType(1L,
+        groupRelatedObjs.add(new GroupType(
+                1L,
                 "test",
                 1000,
                 GroupInvitationStrategy.ALL,
@@ -282,7 +285,8 @@ public final class MongoFakingManager {
         for (int i = 1; i <= 100; i++) {
             long targetId = (long) 2 + (i % 9);
             targetIds.add(targetId);
-            byte[] privateConversationId = MessageRepository.getPrivateConversationId(senderId, targetId);
+            byte[] privateConversationId =
+                    MessageRepository.getPrivateConversationId(senderId, targetId);
             Date deliveryDate = DateUtils.addHours(epoch, i);
             Message privateMessage1 = new Message(
                     nextId(),
@@ -293,7 +297,8 @@ public final class MongoFakingManager {
                     null,
                     null,
                     null,
-                    "private-message-text" + RandomStringUtils.randomAlphanumeric(16),
+                    "private-message-text"
+                            + RandomStringUtils.randomAlphanumeric(16),
                     senderId,
                     ipBytes,
                     targetId,
@@ -311,7 +316,8 @@ public final class MongoFakingManager {
                     null,
                     null,
                     null,
-                    "private-message-text" + RandomStringUtils.randomAlphanumeric(16),
+                    "private-message-text"
+                            + RandomStringUtils.randomAlphanumeric(16),
                     targetId,
                     ipBytes,
                     senderId,
@@ -330,7 +336,8 @@ public final class MongoFakingManager {
                     null,
                     null,
                     null,
-                    "group-message-text" + RandomStringUtils.randomAlphanumeric(16),
+                    "group-message-text"
+                            + RandomStringUtils.randomAlphanumeric(16),
                     1L,
                     ipBytes,
                     groupId,
@@ -346,13 +353,12 @@ public final class MongoFakingManager {
 
         // Conversation
         for (Long targetId : targetIds) {
-            PrivateConversation privateConversation = new PrivateConversation(
-                    new PrivateConversation.Key(senderId, targetId),
-                    epoch);
+            PrivateConversation privateConversation =
+                    new PrivateConversation(new PrivateConversation.Key(senderId, targetId), epoch);
             conversationRelatedObjs.add(privateConversation);
         }
-        GroupConversation groupConversation = new GroupConversation(1L,
-                CollectionUtil.newMap(groupMemberIds, id -> epoch));
+        GroupConversation groupConversation =
+                new GroupConversation(1L, CollectionUtil.newMap(groupMemberIds, id -> epoch));
         conversationRelatedObjs.add(groupConversation);
 
         // User
@@ -371,15 +377,25 @@ public final class MongoFakingManager {
                     userDate,
                     true);
             UserVersion userVersion = new UserVersion(
-                    (long) i, userDate, userDate, userDate, userDate,
-                    userDate, userDate, userDate, userDate, userDate);
-            UserRelationshipGroup relationshipGroup = new UserRelationshipGroup((long) i, 0, "", userDate);
+                    (long) i,
+                    userDate,
+                    userDate,
+                    userDate,
+                    userDate,
+                    userDate,
+                    userDate,
+                    userDate,
+                    userDate,
+                    userDate);
+            UserRelationshipGroup relationshipGroup =
+                    new UserRelationshipGroup((long) i, 0, "", userDate);
             userRelatedObjs.add(user);
             userRelatedObjs.add(userVersion);
             userRelatedObjs.add(relationshipGroup);
         }
 
-        for (int i = targetUserToRequestFriendRequestStart; i <= targetUserToRequestFriendRequestEnd; i++) {
+        for (int i =
+                targetUserToRequestFriendRequestStart; i <= targetUserToRequestFriendRequestEnd; i++) {
             UserFriendRequest userFriendRequest = new UserFriendRequest(
                     nextId(),
                     "test-request",
@@ -394,29 +410,28 @@ public final class MongoFakingManager {
 
         userRelatedObjs.add(new UserPermissionGroup(1L, Set.of(1L), 10, 10, Map.of(1L, 1, 2L, 1)));
 
-        for (int i = targetUserToBeFriendRelationshipStart; i <= targetUserToBeFriendRelationshipEnd; i++) {
-            UserRelationship userRelationship1 = new UserRelationship(
-                    new UserRelationship.Key(1L, (long) i),
-                    null,
-                    epoch);
-            UserRelationship userRelationship2 = new UserRelationship(
-                    new UserRelationship.Key((long) i, 1L),
-                    null,
-                    epoch);
-            UserRelationshipGroupMember relationshipGroupMember1 = new UserRelationshipGroupMember(
-                    1L, 0, (long) i, epoch);
-            UserRelationshipGroupMember relationshipGroupMember2 = new UserRelationshipGroupMember(
-                    (long) i, 0, 1L, epoch);
+        for (int i =
+                targetUserToBeFriendRelationshipStart; i <= targetUserToBeFriendRelationshipEnd; i++) {
+            UserRelationship userRelationship1 =
+                    new UserRelationship(new UserRelationship.Key(1L, (long) i), null, epoch);
+            UserRelationship userRelationship2 =
+                    new UserRelationship(new UserRelationship.Key((long) i, 1L), null, epoch);
+            UserRelationshipGroupMember relationshipGroupMember1 =
+                    new UserRelationshipGroupMember(1L, 0, (long) i, epoch);
+            UserRelationshipGroupMember relationshipGroupMember2 =
+                    new UserRelationshipGroupMember((long) i, 0, 1L, epoch);
             userRelatedObjs.add(userRelationship1);
             userRelatedObjs.add(userRelationship2);
             userRelatedObjs.add(relationshipGroupMember1);
             userRelatedObjs.add(relationshipGroupMember2);
         }
 
-        // FIXME: Use "subscribeOn(Schedulers.boundedElastic())" for now because of a weired behaviour
+        // FIXME: Use "subscribeOn(Schedulers.boundedElastic())" for now because of a weired
+        // behaviour
         // that TurmsMongoClient#insertAll seems blocking when running in debug mode
         // but it won't block when running in non-debug mode
-        // and there is no blocking method after reviewing the workflow of TurmsMongoClient#insertAll
+        // and there is no blocking method after reviewing the workflow of
+        // TurmsMongoClient#insertAll
         Scheduler scheduler = Schedulers.boundedElastic();
         Mono<Void> adminMono = adminMongoClient.insertAll(adminRelatedObjs)
                 .doOnSubscribe(s -> LOGGER.info("Start faking admin-related data"))

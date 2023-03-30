@@ -6,7 +6,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -18,8 +18,9 @@
 package im.turms.plugin.antispam.property;
 
 import com.google.protobuf.Descriptors;
-import im.turms.server.common.access.client.dto.request.TurmsRequest;
 import lombok.Getter;
+
+import im.turms.server.common.access.client.dto.request.TurmsRequest;
 
 /**
  * @author James Chen
@@ -34,7 +35,8 @@ public enum TextType {
 
     CREATE_GROUP_INVITATION_REQUEST_CONTENT("create_group_invitation_request", "content"),
 
-    CREATE_GROUP_JOIN_QUESTION_REQUEST_QUESTION("create_group_join_questions_request", "questions", "question"),
+    CREATE_GROUP_JOIN_QUESTION_REQUEST_QUESTION("create_group_join_questions_request", "questions",
+            "question"),
 
     CREATE_GROUP_JOIN_REQUEST_REQUEST_CONTENT("create_group_join_request_request", "content"),
     UPDATE_GROUP_JOIN_QUESTION_REQUEST_QUESTION("update_group_join_question_request", "question"),
@@ -70,60 +72,74 @@ public enum TextType {
     private final Descriptors.FieldDescriptor subfieldDescriptor;
 
     TextType(String requestFieldName, String fieldName, String subfieldName) {
-        requestFieldDescriptor = TurmsRequest.getDescriptor().findFieldByName(requestFieldName);
+        requestFieldDescriptor = TurmsRequest.getDescriptor()
+                .findFieldByName(requestFieldName);
         if (requestFieldDescriptor == null) {
-            throw new IllegalArgumentException("Could not find the request \"" +
-                    requestFieldName +
-                    "\" in the request: " +
-                    TurmsRequest.getDescriptor().getFullName());
+            throw new IllegalArgumentException(
+                    "Could not find the request \""
+                            + requestFieldName
+                            + "\" in the request: "
+                            + TurmsRequest.getDescriptor()
+                                    .getFullName());
         }
-        fieldDescriptor = requestFieldDescriptor.getMessageType().findFieldByName(fieldName);
+        fieldDescriptor = requestFieldDescriptor.getMessageType()
+                .findFieldByName(fieldName);
         if (fieldDescriptor == null) {
-            throw new IllegalArgumentException("Could not find the field \"" +
-                    fieldName +
-                    "\" in the request: " +
-                    requestFieldDescriptor.getFullName());
+            throw new IllegalArgumentException(
+                    "Could not find the field \""
+                            + fieldName
+                            + "\" in the request: "
+                            + requestFieldDescriptor.getFullName());
         }
         Descriptors.FieldDescriptor.JavaType javaType = fieldDescriptor.getJavaType();
         Descriptors.FieldDescriptor subfieldDescriptor = null;
         if (subfieldName == null) {
             if (javaType != Descriptors.FieldDescriptor.JavaType.STRING) {
-                throw new IllegalArgumentException("Expecting the field \"" +
-                        fieldName +
-                        "\" to be a string in the request: " +
-                        requestFieldDescriptor.getFullName() +
-                        ", but got: " +
-                        javaType);
+                throw new IllegalArgumentException(
+                        "Expecting the field \""
+                                + fieldName
+                                + "\" to be a string in the request: "
+                                + requestFieldDescriptor.getFullName()
+                                + ", but got: "
+                                + javaType);
             }
         } else {
             if (fieldDescriptor.isRepeated()) {
-                subfieldDescriptor = fieldDescriptor.getMessageType().findFieldByName(subfieldName);
+                subfieldDescriptor = fieldDescriptor.getMessageType()
+                        .findFieldByName(subfieldName);
                 if (subfieldDescriptor == null) {
-                    throw new IllegalArgumentException("Could not find the subfield \"" +
-                            subfieldName +
-                            "\" in the field (" +
-                            fieldDescriptor.getMessageType().getFullName() +
-                            ") in the request: " +
-                            requestFieldDescriptor.getFullName());
-                } else if (subfieldDescriptor.getJavaType() != Descriptors.FieldDescriptor.JavaType.STRING) {
-                    throw new IllegalArgumentException("Expecting the field \"" +
-                            fieldName +
-                            "\" in the field (" +
-                            fieldDescriptor.getMessageType().getFullName() +
-                            ") in the request (" +
-                            requestFieldDescriptor.getFullName() +
-                            ") to be a List<String>, but got: " +
-                            javaType);
+                    throw new IllegalArgumentException(
+                            "Could not find the subfield \""
+                                    + subfieldName
+                                    + "\" in the field ("
+                                    + fieldDescriptor.getMessageType()
+                                            .getFullName()
+                                    + ") in the request: "
+                                    + requestFieldDescriptor.getFullName());
+                } else if (subfieldDescriptor
+                        .getJavaType() != Descriptors.FieldDescriptor.JavaType.STRING) {
+                    throw new IllegalArgumentException(
+                            "Expecting the field \""
+                                    + fieldName
+                                    + "\" in the field ("
+                                    + fieldDescriptor.getMessageType()
+                                            .getFullName()
+                                    + ") in the request ("
+                                    + requestFieldDescriptor.getFullName()
+                                    + ") to be a List<String>, but got: "
+                                    + javaType);
                 }
             } else {
-                throw new IllegalArgumentException("Expecting the field \"" +
-                        fieldName +
-                        "\" in the field (" +
-                        fieldDescriptor.getMessageType().getFullName() +
-                        ") in the request (" +
-                        requestFieldDescriptor.getFullName() +
-                        ") to be a List<String>, but got: " +
-                        javaType);
+                throw new IllegalArgumentException(
+                        "Expecting the field \""
+                                + fieldName
+                                + "\" in the field ("
+                                + fieldDescriptor.getMessageType()
+                                        .getFullName()
+                                + ") in the request ("
+                                + requestFieldDescriptor.getFullName()
+                                + ") to be a List<String>, but got: "
+                                + javaType);
             }
         }
         this.subfieldDescriptor = subfieldDescriptor;

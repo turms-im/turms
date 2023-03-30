@@ -17,15 +17,15 @@
 
 package im.turms.plugin.push.property;
 
+import java.util.Collections;
+import java.util.Map;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
-
-import java.util.Collections;
-import java.util.Map;
 
 /**
  * @author James Chen

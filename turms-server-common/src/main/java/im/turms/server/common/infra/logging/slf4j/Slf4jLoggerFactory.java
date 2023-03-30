@@ -17,18 +17,20 @@
 
 package im.turms.server.common.infra.logging.slf4j;
 
-import im.turms.server.common.infra.logging.core.logger.Logger;
-import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.slf4j.ILoggerFactory;
 
-import java.util.concurrent.ConcurrentHashMap;
+import im.turms.server.common.infra.logging.core.logger.Logger;
+import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 
 /**
  * @author James Chen
  */
 public final class Slf4jLoggerFactory implements ILoggerFactory {
 
-    private final ConcurrentHashMap<String, Slf4jLogger> nameToLogger = new ConcurrentHashMap<>(128);
+    private final ConcurrentHashMap<String, Slf4jLogger> nameToLogger =
+            new ConcurrentHashMap<>(128);
 
     @Override
     public org.slf4j.Logger getLogger(String name) {

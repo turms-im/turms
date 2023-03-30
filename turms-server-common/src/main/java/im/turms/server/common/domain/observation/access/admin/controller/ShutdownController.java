@@ -17,12 +17,13 @@
 
 package im.turms.server.common.domain.observation.access.admin.controller;
 
+import org.springframework.context.ConfigurableApplicationContext;
+
 import im.turms.server.common.access.admin.dto.response.HttpHandlerResult;
 import im.turms.server.common.access.admin.permission.AdminPermission;
 import im.turms.server.common.access.admin.permission.RequiredPermission;
 import im.turms.server.common.access.admin.web.annotation.PutMapping;
 import im.turms.server.common.access.admin.web.annotation.RestController;
-import org.springframework.context.ConfigurableApplicationContext;
 
 /**
  * @author James Chen

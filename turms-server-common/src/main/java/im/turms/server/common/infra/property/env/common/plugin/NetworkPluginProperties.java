@@ -17,16 +17,17 @@
 
 package im.turms.server.common.infra.property.env.common.plugin;
 
-import im.turms.server.common.infra.property.constant.HttpMethod;
-import im.turms.server.common.infra.property.constant.PluginType;
-import im.turms.server.common.infra.property.metadata.Description;
+import jakarta.validation.constraints.Min;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
-import jakarta.validation.constraints.Min;
+import im.turms.server.common.infra.property.constant.HttpMethod;
+import im.turms.server.common.infra.property.constant.PluginType;
+import im.turms.server.common.infra.property.metadata.Description;
 
 /**
  * @author James Chen
@@ -40,13 +41,13 @@ public class NetworkPluginProperties {
     @Description("The plugin download URL")
     private String url = "";
 
-    @Description("The plugin type. If \"AUTO\", " +
-                 "the URL must end with \".jar\" for Java plugins, " +
-                 "or \".js\" for JavaScript plugins")
+    @Description("The plugin type. If \"AUTO\", "
+            + "the URL must end with \".jar\" for Java plugins, "
+            + "or \".js\" for JavaScript plugins")
     private PluginType type = PluginType.AUTO;
 
-    @Description("Whether to use the local cache. If false, turms will download the plugin every time at startup " +
-                 "even if the plugin has been downloaded on the local machine")
+    @Description("Whether to use the local cache. If false, turms will download the plugin every time at startup "
+            + "even if the plugin has been downloaded on the local machine")
     private boolean useLocalCache;
 
     @NestedConfigurationProperty

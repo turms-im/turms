@@ -17,13 +17,13 @@
 
 package im.turms.server.common.infra.property.env.gateway.clientapi;
 
-
-import im.turms.server.common.infra.property.metadata.Description;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
+
+import im.turms.server.common.infra.property.metadata.Description;
 
 import static im.turms.server.common.infra.unit.ByteSizeUnit.KB;
 
@@ -36,14 +36,14 @@ import static im.turms.server.common.infra.unit.ByteSizeUnit.KB;
 @NoArgsConstructor
 public class ClientApiProperties {
 
-    @Description("Whether to return the reason for the server error to the client. " +
-            "Note: 1. It may reveal sensitive data like the IP of internal servers if true; " +
-            "2. turms-gateway never return the information of stack traces no matter it is true or false.")
+    @Description("Whether to return the reason for the server error to the client. "
+            + "Note: 1. It may reveal sensitive data like the IP of internal servers if true; "
+            + "2. turms-gateway never return the information of stack traces no matter it is true or false.")
     private boolean returnReasonForServerError;
 
-    @Description("The client session will be closed and may be blocked if it tries " +
-            "to send a request larger than the size. " +
-            "Note: The average size of turms requests is 16~64 bytes")
+    @Description("The client session will be closed and may be blocked if it tries "
+            + "to send a request larger than the size. "
+            + "Note: The average size of turms requests is 16~64 bytes")
     private int maxRequestSizeBytes = 16 * KB;
 
     @NestedConfigurationProperty

@@ -17,9 +17,9 @@
 
 package system;
 
-import reactor.netty.http.client.HttpClient;
-
 import java.time.Duration;
+
+import reactor.netty.http.client.HttpClient;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -32,8 +32,7 @@ public abstract class BaseSystemTest {
 
     protected void assertTurmsGatewayAvailable(String host, int port) {
         String uri = "http://%s:%d/health".formatted(host, port);
-        String response = HttpClient
-                .create()
+        String response = HttpClient.create()
                 .get()
                 .uri(uri)
                 .responseContent()
@@ -44,7 +43,8 @@ public abstract class BaseSystemTest {
     }
 
     static {
-        System.setProperty("log4j2.contextSelector", "org.apache.logging.log4j.core.async.AsyncLoggerContextSelector");
+        System.setProperty("log4j2.contextSelector",
+                "org.apache.logging.log4j.core.async.AsyncLoggerContextSelector");
     }
 
 }

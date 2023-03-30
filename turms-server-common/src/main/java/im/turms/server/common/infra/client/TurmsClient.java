@@ -17,22 +17,24 @@
 
 package im.turms.server.common.infra.client;
 
-import im.turms.server.common.access.client.dto.constant.DeviceType;
-import im.turms.server.common.access.client.dto.notification.TurmsNotification;
-import im.turms.server.common.access.client.dto.request.TurmsRequest;
+import jakarta.annotation.Nullable;
+
 import org.jctools.maps.NonBlockingHashMapLong;
 import reactor.core.publisher.Mono;
 import reactor.core.publisher.Sinks;
 import reactor.netty.resources.LoopResources;
 
-import jakarta.annotation.Nullable;
+import im.turms.server.common.access.client.dto.constant.DeviceType;
+import im.turms.server.common.access.client.dto.notification.TurmsNotification;
+import im.turms.server.common.access.client.dto.request.TurmsRequest;
 
 /**
  * @author James Chen
  */
 public abstract class TurmsClient {
 
-    private final NonBlockingHashMapLong<Sinks.One<TurmsNotification>> pendingRequestMap = new NonBlockingHashMapLong<>(128);
+    private final NonBlockingHashMapLong<Sinks.One<TurmsNotification>> pendingRequestMap =
+            new NonBlockingHashMapLong<>(128);
 
     public static TurmsTcpClient tcp() {
         return new TurmsTcpClient();
@@ -46,7 +48,10 @@ public abstract class TurmsClient {
 
     public abstract Mono<Void> connect(String host, int port, LoopResources loopResources);
 
-    public abstract Mono<TurmsNotification> login(long userId, DeviceType deviceType, @Nullable String password);
+    public abstract Mono<TurmsNotification> login(
+            long userId,
+            DeviceType deviceType,
+            @Nullable String password);
 
     public abstract Mono<Void> logout();
 
@@ -56,11 +61,15 @@ public abstract class TurmsClient {
 
     public String getSessionIdDesc() {
         DeviceType deviceType = getDeviceType();
-        String desc = "{user=" + getUserId();
+        String desc = "{user="
+                + getUserId();
         if (deviceType == null) {
-            return desc + "}";
+            return desc
+                    + "}";
         }
-        desc += ", device=" + deviceType.name() + "}";
+        desc += ", device="
+                + deviceType.name()
+                + "}";
         return desc;
     }
 

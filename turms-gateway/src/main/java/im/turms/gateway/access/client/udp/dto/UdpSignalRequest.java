@@ -22,5 +22,10 @@ import im.turms.server.common.access.client.dto.constant.DeviceType;
 /**
  * @author James Chen
  */
-public record UdpSignalRequest(UdpRequestType type, long userId, DeviceType deviceType, int sessionId) {
+public record UdpSignalRequest(
+        UdpRequestType type,
+        long userId,
+        DeviceType deviceType,
+        int sessionId
+) {
 }

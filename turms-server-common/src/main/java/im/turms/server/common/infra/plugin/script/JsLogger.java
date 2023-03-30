@@ -28,7 +28,9 @@ public class JsLogger {
     private final Logger logger;
 
     public JsLogger(String name) {
-        String loggerName = JsLogger.class.getName() + "." + name;
+        String loggerName = JsLogger.class.getName()
+                + "."
+                + name;
         logger = LoggerFactory.getLogger(loggerName);
     }
 

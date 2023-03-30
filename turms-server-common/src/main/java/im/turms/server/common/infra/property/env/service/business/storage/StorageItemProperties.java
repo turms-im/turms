@@ -17,17 +17,18 @@
 
 package im.turms.server.common.infra.property.env.service.business.storage;
 
-import im.turms.server.common.access.admin.web.MediaTypeConst;
-import im.turms.server.common.infra.property.metadata.Description;
+import java.util.Collections;
+import java.util.List;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Collections;
-import java.util.List;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
+import im.turms.server.common.access.admin.web.MediaTypeConst;
+import im.turms.server.common.infra.property.metadata.Description;
 
 import static im.turms.server.common.infra.unit.ByteSizeUnit.MB;
 
@@ -42,8 +43,8 @@ import static im.turms.server.common.infra.unit.ByteSizeUnit.MB;
 @NoArgsConstructor
 public class StorageItemProperties {
 
-    @Description("Delete the resource the specific days after creation. " +
-            "0 means no expiration")
+    @Description("Delete the resource the specific days after creation. "
+            + "0 means no expiration")
     @Min(0)
     private int expireAfterDays;
 
@@ -53,24 +54,24 @@ public class StorageItemProperties {
     @Description("The allowed \"Content-Type\" of the resource that the client can upload")
     private String allowedContentType = MediaTypeConst.ALL_VALUE;
 
-    @Description("The minimum size of the resource that the client can upload. " +
-            "0 means no limit")
+    @Description("The minimum size of the resource that the client can upload. "
+            + "0 means no limit")
     @Min(0)
     private int minSizeBytes;
 
-    @Description("The maximum size of the resource that the client can upload. " +
-            "0 means no limit")
+    @Description("The maximum size of the resource that the client can upload. "
+            + "0 means no limit")
     @Min(0)
     private int maxSizeBytes = MB;
 
-    @Description("The presigned URLs are valid only for the specified duration. " +
-            "0 means no expiration")
+    @Description("The presigned URLs are valid only for the specified duration. "
+            + "0 means no expiration")
     @Max(7 * 24 * 60 * 60)
     @Min(0)
     private int downloadUrlExpireAfterSeconds = 5 * 60;
 
-    @Description("The presigned URLs are valid only for the specified duration. " +
-            "0 means no expiration")
+    @Description("The presigned URLs are valid only for the specified duration. "
+            + "0 means no expiration")
     @Max(7 * 24 * 60 * 60)
     @Min(0)
     private int uploadUrlExpireAfterSeconds = 5 * 60;

@@ -17,15 +17,16 @@
 
 package im.turms.gateway.domain.session.service;
 
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotNull;
+
+import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
+
 import im.turms.gateway.domain.session.repository.UserRepository;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.security.password.PasswordManager;
 import im.turms.server.common.infra.validation.Validator;
-import org.springframework.stereotype.Service;
-import reactor.core.publisher.Mono;
-
-import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.NotNull;
 
 /**
  * @author James Chen
@@ -36,16 +37,12 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordManager passwordManager;
 
-    public UserService(
-            UserRepository userRepository,
-            PasswordManager passwordManager) {
+    public UserService(UserRepository userRepository, PasswordManager passwordManager) {
         this.userRepository = userRepository;
         this.passwordManager = passwordManager;
     }
 
-    public Mono<Boolean> authenticate(
-            @NotNull Long userId,
-            @Nullable String rawPassword) {
+    public Mono<Boolean> authenticate(@NotNull Long userId, @Nullable String rawPassword) {
         try {
             Validator.notNull(userId, "userId");
         } catch (ResponseException e) {
@@ -67,4 +64,3 @@ public class UserService {
     }
 
 }
-

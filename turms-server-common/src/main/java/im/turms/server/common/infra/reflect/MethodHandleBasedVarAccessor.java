@@ -37,7 +37,10 @@ public class MethodHandleBasedVarAccessor<T, V> implements VarAccessor<T, V> {
         try {
             return (V) getter.invoke(object);
         } catch (Throwable e) {
-            throw new RuntimeException("Failed to get the value from the object: " + object, e);
+            throw new RuntimeException(
+                    "Failed to get the value from the object: "
+                            + object,
+                    e);
         }
     }
 
@@ -46,7 +49,12 @@ public class MethodHandleBasedVarAccessor<T, V> implements VarAccessor<T, V> {
         try {
             setter.invoke(object, value);
         } catch (Throwable e) {
-            throw new RuntimeException("Failed to set the value to (" + value + ") on the object: " + object, e);
+            throw new RuntimeException(
+                    "Failed to set the value to ("
+                            + value
+                            + ") on the object: "
+                            + object,
+                    e);
         }
     }
 }

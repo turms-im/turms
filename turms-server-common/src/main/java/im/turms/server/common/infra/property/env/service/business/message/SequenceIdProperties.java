@@ -17,12 +17,13 @@
 
 package im.turms.server.common.infra.property.env.service.business.message;
 
-import im.turms.server.common.infra.property.metadata.Description;
-import im.turms.server.common.infra.property.metadata.GlobalProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import im.turms.server.common.infra.property.metadata.Description;
+import im.turms.server.common.infra.property.metadata.GlobalProperty;
 
 /**
  * @author James Chen
@@ -33,13 +34,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class SequenceIdProperties {
 
-    @Description("Whether to use the sequence ID for group conversations so that the client can be aware of the loss of messages. " +
-            "Note that the property has a significant impact on performance")
+    @Description("Whether to use the sequence ID for group conversations so that the client can be aware of the loss of messages. "
+            + "Note that the property has a significant impact on performance")
     @GlobalProperty
     boolean useSequenceIdForGroupConversation;
 
-    @Description("Whether to use the sequence ID for private conversations so that the client can be aware of the loss of messages. " +
-            "Note that the property has a significant impact on performance")
+    @Description("Whether to use the sequence ID for private conversations so that the client can be aware of the loss of messages. "
+            + "Note that the property has a significant impact on performance")
     @GlobalProperty
     boolean useSequenceIdForPrivateConversation;
 

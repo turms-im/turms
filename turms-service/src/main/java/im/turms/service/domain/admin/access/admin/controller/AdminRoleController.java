@@ -17,8 +17,14 @@
 
 package im.turms.service.domain.admin.access.admin.controller;
 
+import java.util.Collection;
+import java.util.Set;
+
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.access.admin.dto.response.DeleteResultDTO;
 import im.turms.server.common.access.admin.dto.response.HttpHandlerResult;
 import im.turms.server.common.access.admin.dto.response.PaginationDTO;
@@ -40,11 +46,6 @@ import im.turms.service.domain.admin.access.admin.dto.request.AddAdminRoleDTO;
 import im.turms.service.domain.admin.access.admin.dto.request.UpdateAdminRoleDTO;
 import im.turms.service.domain.admin.service.AdminRoleService;
 import im.turms.service.domain.common.access.admin.controller.BaseController;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
-import java.util.Collection;
-import java.util.Set;
 
 /**
  * @author James Chen
@@ -54,7 +55,9 @@ public class AdminRoleController extends BaseController {
 
     private final AdminRoleService adminRoleService;
 
-    public AdminRoleController(TurmsPropertiesManager propertiesManager, AdminRoleService adminRoleService) {
+    public AdminRoleController(
+            TurmsPropertiesManager propertiesManager,
+            AdminRoleService adminRoleService) {
         super(propertiesManager);
         this.adminRoleService = adminRoleService;
     }
@@ -64,12 +67,14 @@ public class AdminRoleController extends BaseController {
     public Mono<HttpHandlerResult<ResponseDTO<AdminRole>>> addAdminRole(
             RequestContext requestContext,
             @RequestBody AddAdminRoleDTO addAdminRoleDTO) {
-        Mono<AdminRole> adminRoleMono = adminRoleService.authAndAddAdminRole(
-                requestContext.getAccount(),
-                addAdminRoleDTO.id(),
-                addAdminRoleDTO.name(),
-                addAdminRoleDTO.permissions() == null ? null : AdminPermission.matchPermissions(addAdminRoleDTO.permissions()),
-                addAdminRoleDTO.rank());
+        Mono<AdminRole> adminRoleMono =
+                adminRoleService.authAndAddAdminRole(requestContext.getAccount(),
+                        addAdminRoleDTO.id(),
+                        addAdminRoleDTO.name(),
+                        addAdminRoleDTO.permissions() == null
+                                ? null
+                                : AdminPermission.matchPermissions(addAdminRoleDTO.permissions()),
+                        addAdminRoleDTO.rank());
         return HttpHandlerResult.okIfTruthy(adminRoleMono);
     }
 
@@ -82,13 +87,8 @@ public class AdminRoleController extends BaseController {
             @QueryParam(required = false) Set<Integer> ranks,
             @QueryParam(required = false) Integer size) {
         size = getPageSize(size);
-        Flux<AdminRole> adminRolesFlux = adminRoleService.queryAdminRoles(
-                ids,
-                names,
-                includedPermissions,
-                ranks,
-                0,
-                size);
+        Flux<AdminRole> adminRolesFlux =
+                adminRoleService.queryAdminRoles(ids, names, includedPermissions, ranks, 0, size);
         return HttpHandlerResult.okIfTruthy(adminRolesFlux);
     }
 
@@ -102,18 +102,9 @@ public class AdminRoleController extends BaseController {
             int page,
             @QueryParam(required = false) Integer size) {
         size = getPageSize(size);
-        Mono<Long> count = adminRoleService.countAdminRoles(
-                ids,
-                names,
-                includedPermissions,
-                ranks);
-        Flux<AdminRole> adminRolesFlux = adminRoleService.queryAdminRoles(
-                ids,
-                names,
-                includedPermissions,
-                ranks,
-                page,
-                size);
+        Mono<Long> count = adminRoleService.countAdminRoles(ids, names, includedPermissions, ranks);
+        Flux<AdminRole> adminRolesFlux = adminRoleService
+                .queryAdminRoles(ids, names, includedPermissions, ranks, page, size);
         return HttpHandlerResult.page(count, adminRolesFlux);
     }
 
@@ -127,7 +118,9 @@ public class AdminRoleController extends BaseController {
                 requestContext.getAccount(),
                 ids,
                 updateAdminRoleDTO.name(),
-                updateAdminRoleDTO.permissions() == null ? null : AdminPermission.matchPermissions(updateAdminRoleDTO.permissions()),
+                updateAdminRoleDTO.permissions() == null
+                        ? null
+                        : AdminPermission.matchPermissions(updateAdminRoleDTO.permissions()),
                 updateAdminRoleDTO.rank());
         return HttpHandlerResult.updateResult(updateMono);
     }
@@ -137,7 +130,8 @@ public class AdminRoleController extends BaseController {
     public Mono<HttpHandlerResult<ResponseDTO<DeleteResultDTO>>> deleteAdminRoles(
             RequestContext requestContext,
             Set<Long> ids) {
-        Mono<DeleteResult> deleteMono = adminRoleService.authAndDeleteAdminRoles(requestContext.getAccount(), ids);
+        Mono<DeleteResult> deleteMono =
+                adminRoleService.authAndDeleteAdminRoles(requestContext.getAccount(), ids);
         return HttpHandlerResult.deleteResult(deleteMono);
     }
 

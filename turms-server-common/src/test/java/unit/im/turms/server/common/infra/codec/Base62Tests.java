@@ -17,11 +17,12 @@
 
 package unit.im.turms.server.common.infra.codec;
 
-import im.turms.server.common.infra.codec.Base62;
-import org.junit.jupiter.api.Test;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import org.junit.jupiter.api.Test;
+
+import im.turms.server.common.infra.codec.Base62;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -68,14 +69,12 @@ class Base62Tests {
 
     @Test
     void testAlphaNumericStrings() {
-        byte[][] messages = {
-                createIncreasingByteArray(),
+        byte[][] messages = {createIncreasingByteArray(),
                 createZeroesByteArray(1),
                 createZeroesByteArray(512),
                 createPseudoRandomByteArray(0xAB, 40),
                 createPseudoRandomByteArray(0x1C, 40),
-                createPseudoRandomByteArray(0xF2, 40)
-        };
+                createPseudoRandomByteArray(0xF2, 40)};
         for (byte[] message : messages) {
             byte[] encoded = ENCODER.encode(message);
             String encodedStr = new String(encoded);
@@ -85,19 +84,28 @@ class Base62Tests {
 
     @Test
     void testAlphaOrNumberOnlyStrings() {
-        Map<String, String> testSet = Map.of(
-                "", "",
-                "a", "1Z",
-                "Hello", "5TP3P3v",
-                "Hello world!", "T8dgcjRGuYUueWht",
-                "Just a test", "7G0iTmJjQFG2t6K",
-                "!!!!!!!!!!!!!!!!!", "4A7f43EVXQoS6Am897ZKbAn",
-                "0123456789", "18XU2xYejWO9d3",
-                "The quick brown fox jumps over the lazy dog", "83UM8dOjD4xrzASgmqLOXTgTagvV1jPegUJ39mcYnwHwTlzpdfKXvpp4RL",
-                "Sphinx of black quartz, judge my vow", "1Ul5yQGNM8YFBp3sz19dYj1kTp95OW7jI8pTcTP5JhYjIaFmx"
-        );
+        Map<String, String> testSet = Map.of("",
+                "",
+                "a",
+                "1Z",
+                "Hello",
+                "5TP3P3v",
+                "Hello world!",
+                "T8dgcjRGuYUueWht",
+                "Just a test",
+                "7G0iTmJjQFG2t6K",
+                "!!!!!!!!!!!!!!!!!",
+                "4A7f43EVXQoS6Am897ZKbAn",
+                "0123456789",
+                "18XU2xYejWO9d3",
+                "The quick brown fox jumps over the lazy dog",
+                "83UM8dOjD4xrzASgmqLOXTgTagvV1jPegUJ39mcYnwHwTlzpdfKXvpp4RL",
+                "Sphinx of black quartz, judge my vow",
+                "1Ul5yQGNM8YFBp3sz19dYj1kTp95OW7jI8pTcTP5JhYjIaFmx");
         for (Map.Entry<String, String> testSetEntry : testSet.entrySet()) {
-            String s = new String(ENCODER.encode(testSetEntry.getKey().getBytes()));
+            String s = new String(
+                    ENCODER.encode(testSetEntry.getKey()
+                            .getBytes()));
             assertThat(s).isEqualTo(testSetEntry.getValue());
         }
     }

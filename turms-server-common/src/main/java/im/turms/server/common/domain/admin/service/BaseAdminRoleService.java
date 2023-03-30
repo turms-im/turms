@@ -17,7 +17,14 @@
 
 package im.turms.server.common.domain.admin.service;
 
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import jakarta.validation.constraints.NotNull;
+
 import com.mongodb.client.model.changestream.FullDocument;
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.access.admin.permission.AdminPermission;
 import im.turms.server.common.domain.admin.po.AdminRole;
 import im.turms.server.common.domain.common.repository.BaseRepository;
@@ -27,12 +34,6 @@ import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.time.DateConst;
 import im.turms.server.common.infra.validation.Validator;
-import reactor.core.publisher.Mono;
-
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import jakarta.validation.constraints.NotNull;
 
 import static im.turms.server.common.domain.admin.constant.AdminConst.ADMIN_ROLE_ROOT_ID;
 
@@ -43,8 +44,12 @@ public abstract class BaseAdminRoleService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BaseAdminRoleService.class);
 
-    private static final AdminRole ROOT_ROLE =
-            new AdminRole(ADMIN_ROLE_ROOT_ID, "ROOT", AdminPermission.ALL, Integer.MAX_VALUE, DateConst.EPOCH);
+    private static final AdminRole ROOT_ROLE = new AdminRole(
+            ADMIN_ROLE_ROOT_ID,
+            "ROOT",
+            AdminPermission.ALL,
+            Integer.MAX_VALUE,
+            DateConst.EPOCH);
 
     private final Map<Long, AdminRole> idToRole = new ConcurrentHashMap<>(16);
     private final BaseRepository<AdminRole, Long> adminRoleRepository;
@@ -66,22 +71,25 @@ public abstract class BaseAdminRoleService {
                             idToRole.remove(roleId);
                         }
                         case INVALIDATE -> resetRoles();
-                        default -> LOGGER.fatal("Detected an illegal operation on the collection \"" +
-                                AdminRole.COLLECTION_NAME +
-                                "\" in the event: {}", event);
+                        default -> LOGGER.fatal("Detected an illegal operation on the collection \""
+                                + AdminRole.COLLECTION_NAME
+                                + "\" in the event: {}", event);
                     }
                 })
-                .onErrorContinue((throwable, o) -> LOGGER
-                        .error("Caught an error while processing the change stream event ({}) of the collection: \"" +
-                                AdminRole.COLLECTION_NAME +
-                                "\"", o, throwable))
+                .onErrorContinue((throwable, o) -> LOGGER.error(
+                        "Caught an error while processing the change stream event ({}) of the collection: \""
+                                + AdminRole.COLLECTION_NAME
+                                + "\"",
+                        o,
+                        throwable))
                 .subscribe();
 
         // Load
         resetRoles();
         adminRoleRepository.findAll()
                 .doOnNext(role -> idToRole.put(role.getId(), role))
-                .subscribe(null, t -> LOGGER.error("Caught an error while finding all admin roles", t));
+                .subscribe(null,
+                        t -> LOGGER.error("Caught an error while finding all admin roles", t));
     }
 
     public AdminRole getRootRole() {
@@ -97,7 +105,7 @@ public abstract class BaseAdminRoleService {
         return roleId.equals(ADMIN_ROLE_ROOT_ID)
                 ? Mono.just(getRootRole())
                 : adminRoleRepository.findById(roleId)
-                .doOnNext(role -> idToRole.put(roleId, role));
+                        .doOnNext(role -> idToRole.put(roleId, role));
     }
 
     public Mono<Set<AdminPermission>> queryPermissions(@NotNull Long roleId) {
@@ -119,13 +127,13 @@ public abstract class BaseAdminRoleService {
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        return queryPermissions(roleId)
-                .map(permissions -> permissions.contains(permission))
+        return queryPermissions(roleId).map(permissions -> permissions.contains(permission))
                 .defaultIfEmpty(false);
     }
 
     private void resetRoles() {
-        idToRole.keySet().removeIf(id -> !id.equals(ADMIN_ROLE_ROOT_ID));
+        idToRole.keySet()
+                .removeIf(id -> !id.equals(ADMIN_ROLE_ROOT_ID));
         idToRole.put(ADMIN_ROLE_ROOT_ID, ROOT_ROLE);
     }
 

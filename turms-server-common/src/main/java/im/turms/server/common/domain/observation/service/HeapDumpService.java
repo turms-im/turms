@@ -17,7 +17,15 @@
 
 package im.turms.server.common.domain.observation.service;
 
+import java.io.File;
+import java.io.IOException;
+import java.lang.management.ManagementFactory;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 import com.sun.management.HotSpotDiagnosticMXBean;
+import org.springframework.stereotype.Service;
+
 import im.turms.server.common.access.admin.web.HttpResponseException;
 import im.turms.server.common.access.admin.web.annotation.GetMapping;
 import im.turms.server.common.access.common.ResponseStatusCode;
@@ -28,13 +36,6 @@ import im.turms.server.common.infra.io.InputOutputException;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.random.RandomUtil;
-import org.springframework.stereotype.Service;
-
-import java.io.File;
-import java.io.IOException;
-import java.lang.management.ManagementFactory;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 /**
  * @author James Chen
@@ -49,7 +50,9 @@ public class HeapDumpService {
     private FileResource exportingFile;
 
     public HeapDumpService(TurmsApplicationContext context) {
-        dir = context.getHome().resolve("hprof").normalize();
+        dir = context.getHome()
+                .resolve("hprof")
+                .normalize();
         bean = ManagementFactory.getPlatformMXBean(HotSpotDiagnosticMXBean.class);
     }
 
@@ -59,7 +62,8 @@ public class HeapDumpService {
         synchronized (this) {
             if (exportingFile != null) {
                 // We limit the concurrent exporting heapdump file to 1
-                throw new HttpResponseException(ResponseStatusCode.CLIENT_REQUESTS_TOO_FREQUENT,
+                throw new HttpResponseException(
+                        ResponseStatusCode.CLIENT_REQUESTS_TOO_FREQUENT,
                         "A heap dump file is being exported");
             }
             heap = dumpHeap(live);
@@ -69,23 +73,31 @@ public class HeapDumpService {
     }
 
     private FileResource dumpHeap(boolean live) {
-        File tempFile = FileUtil.createTempFile("temp-" + RandomUtil.nextPositiveInt(), ".hprof", dir.toFile());
+        File tempFile = FileUtil.createTempFile("temp-"
+                + RandomUtil.nextPositiveInt(), ".hprof", dir.toFile());
         tempFile.delete();
         String filePathStr = tempFile.getAbsolutePath();
         Path filePath = tempFile.toPath();
         try {
             bean.dumpHeap(filePathStr, live);
         } catch (IOException e) {
-            throw new InputOutputException("Failed to dump the heap from the HotSpotDiagnosticMXBean bean", e);
+            throw new InputOutputException(
+                    "Failed to dump the heap from the HotSpotDiagnosticMXBean bean",
+                    e);
         }
-        return new FileResource(System.currentTimeMillis() + ".hprof", filePath, throwable -> {
-            try {
-                Files.deleteIfExists(filePath);
-            } catch (IOException e) {
-                LOGGER.warn("Failed to delete the temporary heap dump file: " + filePathStr, e);
-            }
-            exportingFile = null;
-        });
+        return new FileResource(
+                System.currentTimeMillis()
+                        + ".hprof",
+                filePath,
+                throwable -> {
+                    try {
+                        Files.deleteIfExists(filePath);
+                    } catch (IOException e) {
+                        LOGGER.warn("Failed to delete the temporary heap dump file: "
+                                + filePathStr, e);
+                    }
+                    exportingFile = null;
+                });
     }
 
 }

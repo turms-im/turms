@@ -17,13 +17,13 @@
 
 package im.turms.server.common.infra.property.env.gateway.identityaccessmanagement.jwt;
 
+import java.util.Map;
+import jakarta.validation.constraints.Size;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.Map;
-import jakarta.validation.constraints.Size;
 
 /**
  * @author James Chen
@@ -35,8 +35,6 @@ import jakarta.validation.constraints.Size;
 public class JwtAuthenticationExpectationProperties {
 
     @Size(min = 1)
-    private Map<String, Object> customPayloadClaims = Map.of(
-            "authenticated", true
-    );
+    private Map<String, Object> customPayloadClaims = Map.of("authenticated", true);
 
 }

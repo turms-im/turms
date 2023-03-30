@@ -17,15 +17,16 @@
 
 package im.turms.server.common.domain.admin.po;
 
+import java.util.Date;
+import java.util.Set;
+
+import lombok.Data;
+
 import im.turms.server.common.access.admin.permission.AdminPermission;
 import im.turms.server.common.domain.common.po.BaseEntity;
 import im.turms.server.common.storage.mongo.entity.annotation.Document;
 import im.turms.server.common.storage.mongo.entity.annotation.Field;
 import im.turms.server.common.storage.mongo.entity.annotation.Id;
-import lombok.Data;
-
-import java.util.Date;
-import java.util.Set;
 
 /**
  * <pre>

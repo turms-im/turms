@@ -17,12 +17,13 @@
 
 package unit.im.turms.server.common.infra.memory;
 
-import im.turms.server.common.infra.memory.ByteBufferUtil;
-import org.junit.jupiter.api.Test;
-
 import java.lang.management.BufferPoolMXBean;
 import java.lang.management.ManagementFactory;
 import java.nio.ByteBuffer;
+
+import org.junit.jupiter.api.Test;
+
+import im.turms.server.common.infra.memory.ByteBufferUtil;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -33,8 +34,7 @@ class ByteBufferUtilTests {
 
     @Test
     void freeDirectBuffer() {
-        BufferPoolMXBean pool = ManagementFactory
-                .getPlatformMXBeans(BufferPoolMXBean.class)
+        BufferPoolMXBean pool = ManagementFactory.getPlatformMXBeans(BufferPoolMXBean.class)
                 .stream()
                 .filter(bean -> "direct".equals(bean.getName()))
                 .findFirst()

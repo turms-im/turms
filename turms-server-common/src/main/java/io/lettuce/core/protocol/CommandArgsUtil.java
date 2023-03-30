@@ -17,13 +17,14 @@
 
 package io.lettuce.core.protocol;
 
-import im.turms.server.common.infra.lang.NumberFormatter;
-import im.turms.server.common.infra.lang.StringUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.CompositeByteBuf;
 import io.netty.buffer.TurmsWrappedByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.buffer.UnpooledByteBufAllocator;
+
+import im.turms.server.common.infra.lang.NumberFormatter;
+import im.turms.server.common.infra.lang.StringUtil;
 
 /**
  * @author James Chen
@@ -45,13 +46,17 @@ public final class CommandArgsUtil {
     private static final ByteBuf[] ARGUMENT_LENGTH_CACHE;
 
     static {
-        BULK_STRINGS_FLAG = Unpooled.unreleasableBuffer(Unpooled.directBuffer(1).writeByte(BULK_STRINGS_FLAG_BYTE));
-        COMMAND_TYPE_FLAG = Unpooled.unreleasableBuffer(Unpooled.directBuffer(1).writeByte(COMMAND_TYPE_FLAG_BYTE));
-        CRLF = Unpooled.unreleasableBuffer(Unpooled.directBuffer(CRLF_BYTES.length).writeBytes(CRLF_BYTES));
+        BULK_STRINGS_FLAG = Unpooled.unreleasableBuffer(Unpooled.directBuffer(1)
+                .writeByte(BULK_STRINGS_FLAG_BYTE));
+        COMMAND_TYPE_FLAG = Unpooled.unreleasableBuffer(Unpooled.directBuffer(1)
+                .writeByte(COMMAND_TYPE_FLAG_BYTE));
+        CRLF = Unpooled.unreleasableBuffer(Unpooled.directBuffer(CRLF_BYTES.length)
+                .writeBytes(CRLF_BYTES));
 
         ARGUMENT_LENGTH_CACHE = new ByteBuf[ARGUMENT_LENGTH_CACHE_SIZE];
         for (int i = 0; i < ARGUMENT_LENGTH_CACHE_SIZE; i++) {
-            ARGUMENT_LENGTH_CACHE[i] = Unpooled.unreleasableBuffer(CommandArgsUtil.writeArgLength(i));
+            ARGUMENT_LENGTH_CACHE[i] =
+                    Unpooled.unreleasableBuffer(CommandArgsUtil.writeArgLength(i));
         }
     }
 
@@ -67,7 +72,8 @@ public final class CommandArgsUtil {
                 writeBytesArg(out, NumberFormatter.toCharBytes(argument.val));
             } else if (arg instanceof CommandArgs.KeyArgument<?, ?> argument) {
                 ByteBuf key = (ByteBuf) argument.key;
-                if (key instanceof TurmsWrappedByteBuf buf && buf.unwrap() instanceof CustomKeyBuffer) {
+                if (key instanceof TurmsWrappedByteBuf buf
+                        && buf.unwrap() instanceof CustomKeyBuffer) {
                     out.addComponent(true, key);
                 } else {
                     writeByteBuf(out, key);
@@ -88,7 +94,8 @@ public final class CommandArgsUtil {
     }
 
     public static long getLongArgument(CommandArgs<?, ?> args, int i) {
-        CommandArgs.IntegerArgument argument = (CommandArgs.IntegerArgument) args.singularArguments.get(i);
+        CommandArgs.IntegerArgument argument =
+                (CommandArgs.IntegerArgument) args.singularArguments.get(i);
         return argument.val;
     }
 
@@ -107,7 +114,8 @@ public final class CommandArgsUtil {
                     .writeByte((byte) ('0' + value));
         }
         byte[] bytes = NumberFormatter.toCharBytes(value);
-        return Unpooled.directBuffer(bytes.length).writeBytes(bytes);
+        return Unpooled.directBuffer(bytes.length)
+                .writeBytes(bytes);
     }
 
     // Argument Encoding
@@ -133,7 +141,9 @@ public final class CommandArgsUtil {
         out.addComponent(true, BULK_STRINGS_FLAG)
                 .addComponent(true, getArgLength(charLength))
                 .addComponent(true, CRLF)
-                .addComponent(true, Unpooled.directBuffer(charLength).writeBytes(value))
+                .addComponent(true,
+                        Unpooled.directBuffer(charLength)
+                                .writeBytes(value))
                 .addComponent(true, CRLF);
     }
 
@@ -146,7 +156,9 @@ public final class CommandArgsUtil {
                 .addComponent(true, BULK_STRINGS_FLAG)
                 .addComponent(true, getArgLength(charLength))
                 .addComponent(true, CRLF)
-                .addComponent(true, Unpooled.directBuffer(charLength).writeBytes(value))
+                .addComponent(true,
+                        Unpooled.directBuffer(charLength)
+                                .writeBytes(value))
                 .addComponent(true, CRLF);
     }
 

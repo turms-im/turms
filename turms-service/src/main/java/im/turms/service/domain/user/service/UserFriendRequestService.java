@@ -17,9 +17,21 @@
 
 package im.turms.service.domain.user.service;
 
+import java.util.Date;
+import java.util.Set;
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
+
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.reactivestreams.client.ClientSession;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.access.client.dto.ClientMessagePool;
 import im.turms.server.common.access.client.dto.constant.RequestStatus;
 import im.turms.server.common.access.client.dto.constant.ResponseAction;
@@ -48,27 +60,16 @@ import im.turms.service.infra.proto.ProtoModelConvertor;
 import im.turms.service.infra.validation.ValidRequestStatus;
 import im.turms.service.infra.validation.ValidResponseAction;
 import im.turms.service.storage.mongo.OperationResultPublisherPool;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
-import java.util.Date;
-import java.util.Set;
-import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PastOrPresent;
 
 import static im.turms.service.storage.mongo.MongoOperationConst.TRANSACTION_RETRY;
 
 /**
  * @author James Chen
- * @implNote The status of friend requests never become EXPIRED in MongoDB automatically
- * (admins can specify them to expired manually though) even if there is an expireAfter
- * property because Turms will not create a cron job to scan and expire requests in
- * MongoDB. Instead, Turms transforms the status of requests when returning them to users
- * or admins for less resource consumption and better performance to expire requests.
+ * @implNote The status of friend requests never become EXPIRED in MongoDB automatically (admins can
+ *           specify them to expired manually though) even if there is an expireAfter property
+ *           because Turms will not create a cron job to scan and expire requests in MongoDB.
+ *           Instead, Turms transforms the status of requests when returning them to users or admins
+ *           for less resource consumption and better performance to expire requests.
  */
 @Service
 @DependsOn(IMongoCollectionInitializer.BEAN_NAME)
@@ -100,32 +101,47 @@ public class UserFriendRequestService extends ExpirableEntityService<UserFriendR
 
         propertiesManager.notifyAndAddGlobalPropertiesChangeListener(this::updateProperties);
         // Set up a cron job to remove requests if deleting expired docs is enabled
-        taskManager.reschedule(
-                "expiredUserFriendRequestsCleanup",
-                propertiesManager.getLocalProperties().getService().getUser().getFriendRequest()
+        taskManager.reschedule("expiredUserFriendRequestsCleanup",
+                propertiesManager.getLocalProperties()
+                        .getService()
+                        .getUser()
+                        .getFriendRequest()
                         .getExpiredUserFriendRequestsCleanupCron(),
                 () -> {
                     boolean isLocalNodeLeader = node.isLocalNodeLeader();
                     Date expirationDate = getEntityExpirationDate();
-                    if (isLocalNodeLeader && deleteExpiredRequestsWhenCronTriggered && expirationDate != null) {
-                        removeAllExpiredFriendRequests(expirationDate)
-                                .subscribe(null, t -> LOGGER.error("Caught an error while removing expired friend requests", t));
+                    if (isLocalNodeLeader
+                            && deleteExpiredRequestsWhenCronTriggered
+                            && expirationDate != null) {
+                        removeAllExpiredFriendRequests(expirationDate).subscribe(null,
+                                t -> LOGGER.error(
+                                        "Caught an error while removing expired friend requests",
+                                        t));
                     }
                 });
     }
 
     private void updateProperties(TurmsProperties properties) {
-        allowSendRequestAfterDeclinedOrIgnoredOrExpired = properties.getService().getUser().getFriendRequest()
+        allowSendRequestAfterDeclinedOrIgnoredOrExpired = properties.getService()
+                .getUser()
+                .getFriendRequest()
                 .isAllowSendRequestAfterDeclinedOrIgnoredOrExpired();
-        int localMaxContentLength = properties.getService().getUser().getFriendRequest().getMaxContentLength();
-        maxContentLength = localMaxContentLength > 0 ? localMaxContentLength : Integer.MAX_VALUE;
-        deleteExpiredRequestsWhenCronTriggered = properties.getService().getUser().getFriendRequest()
+        int localMaxContentLength = properties.getService()
+                .getUser()
+                .getFriendRequest()
+                .getMaxContentLength();
+        maxContentLength = localMaxContentLength > 0
+                ? localMaxContentLength
+                : Integer.MAX_VALUE;
+        deleteExpiredRequestsWhenCronTriggered = properties.getService()
+                .getUser()
+                .getFriendRequest()
                 .isDeleteExpiredRequestsWhenCronTriggered();
     }
 
     public Mono<Void> removeAllExpiredFriendRequests(Date expirationDate) {
-        return userFriendRequestRepository
-                .deleteExpiredData(UserFriendRequest.Fields.CREATION_DATE, expirationDate);
+        return userFriendRequestRepository.deleteExpiredData(UserFriendRequest.Fields.CREATION_DATE,
+                expirationDate);
     }
 
     public Mono<Boolean> hasPendingFriendRequest(
@@ -170,38 +186,54 @@ public class UserFriendRequestService extends ExpirableEntityService<UserFriendR
             DataValidator.validRequestStatus(status);
             Validator.pastOrPresent(creationDate, "creationDate");
             Validator.pastOrPresent(responseDate, "responseDate");
-            Validator.notEquals(requesterId, recipientId, "The requester ID must not equal to the recipient ID");
+            Validator.notEquals(requesterId,
+                    recipientId,
+                    "The requester ID must not equal to the recipient ID");
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        id = id == null ? node.nextLargeGapId(ServiceType.USER_FRIEND_REQUEST) : id;
+        id = id == null
+                ? node.nextLargeGapId(ServiceType.USER_FRIEND_REQUEST)
+                : id;
         Date now = new Date();
         if (creationDate == null) {
             creationDate = now;
         } else {
-            creationDate = creationDate.before(now) ? creationDate : now;
+            creationDate = creationDate.before(now)
+                    ? creationDate
+                    : now;
         }
         responseDate = getResponseDateBasedOnStatusForNewRecord(now, status, responseDate);
         if (status == null) {
             status = RequestStatus.PENDING;
         }
-        UserFriendRequest userFriendRequest = new UserFriendRequest(id, content, status, reason,
-                creationDate, responseDate, requesterId, recipientId);
+        UserFriendRequest userFriendRequest = new UserFriendRequest(
+                id,
+                content,
+                status,
+                reason,
+                creationDate,
+                responseDate,
+                requesterId,
+                recipientId);
         return userFriendRequestRepository.insert(userFriendRequest)
                 .then(Mono.whenDelayError(
                         userVersionService.updateReceivedFriendRequestsVersion(recipientId)
                                 .onErrorResume(t -> {
-                                    LOGGER.error("Caught an error while updating the received friend requests version of the recipient ({}) after creating a friend request",
-                                            recipientId, t);
+                                    LOGGER.error(
+                                            "Caught an error while updating the received friend requests version of the recipient ({}) after creating a friend request",
+                                            recipientId,
+                                            t);
                                     return Mono.empty();
                                 }),
                         userVersionService.updateSentFriendRequestsVersion(requesterId)
                                 .onErrorResume(t -> {
-                                    LOGGER.error("Caught an error while updating the sent friend requests version of the requester ({}) after creating a friend request",
-                                            requesterId, t);
+                                    LOGGER.error(
+                                            "Caught an error while updating the sent friend requests version of the requester ({}) after creating a friend request",
+                                            requesterId,
+                                            t);
                                     return Mono.empty();
-                                })
-                ))
+                                })))
                 .thenReturn(userFriendRequest);
     }
 
@@ -216,26 +248,40 @@ public class UserFriendRequestService extends ExpirableEntityService<UserFriendR
             Validator.maxLength(content, "content", maxContentLength);
             Validator.notNull(creationDate, "creationDate");
             Validator.pastOrPresent(creationDate, "creationDate");
-            Validator.notEquals(requesterId, recipientId, "The requester ID must not equal to the recipient ID");
+            Validator.notEquals(requesterId,
+                    recipientId,
+                    "The requester ID must not equal to the recipient ID");
         } catch (ResponseException e) {
             return Mono.error(e);
         }
         return userRelationshipService.hasNoRelationshipOrNotBlocked(recipientId, requesterId)
                 .flatMap(isNotBlocked -> {
                     if (!isNotBlocked) {
-                        return Mono.error(ResponseException.get(ResponseStatusCode.FRIEND_REQUEST_SENDER_HAS_BEEN_BLOCKED));
+                        return Mono.error(ResponseException
+                                .get(ResponseStatusCode.FRIEND_REQUEST_SENDER_HAS_BEEN_BLOCKED));
                     }
                     // Allow to create a friend request even there is already an accepted request
                     // because the relationships can be deleted and rebuilt
-                    Mono<Boolean> requestExistsMono = allowSendRequestAfterDeclinedOrIgnoredOrExpired
-                            ? hasPendingFriendRequest(requesterId, recipientId)
-                            : hasPendingOrDeclinedOrIgnoredOrExpiredRequest(requesterId, recipientId);
+                    Mono<Boolean> requestExistsMono =
+                            allowSendRequestAfterDeclinedOrIgnoredOrExpired
+                                    ? hasPendingFriendRequest(requesterId, recipientId)
+                                    : hasPendingOrDeclinedOrIgnoredOrExpiredRequest(requesterId,
+                                            recipientId);
                     return requestExistsMono.flatMap(requestExists -> {
-                        String finalContent = content == null ? "" : content;
+                        String finalContent = content == null
+                                ? ""
+                                : content;
                         return requestExists
-                                ? Mono.error(ResponseException.get(ResponseStatusCode.CREATE_EXISTING_FRIEND_REQUEST))
-                                : createFriendRequest(null, requesterId, recipientId, finalContent,
-                                RequestStatus.PENDING, creationDate, null, null);
+                                ? Mono.error(ResponseException
+                                        .get(ResponseStatusCode.CREATE_EXISTING_FRIEND_REQUEST))
+                                : createFriendRequest(null,
+                                        requesterId,
+                                        recipientId,
+                                        finalContent,
+                                        RequestStatus.PENDING,
+                                        creationDate,
+                                        null,
+                                        null);
                     });
                 });
     }
@@ -249,20 +295,22 @@ public class UserFriendRequestService extends ExpirableEntityService<UserFriendR
             Validator.notNull(requestId, "requestId");
             Validator.notNull(requestStatus, "requestStatus");
             DataValidator.validRequestStatus(requestStatus);
-            Validator.notEquals(requestStatus, RequestStatus.PENDING, "The request status must not be PENDING");
+            Validator.notEquals(requestStatus,
+                    RequestStatus.PENDING,
+                    "The request status must not be PENDING");
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        return userFriendRequestRepository.updatePendingFriendRequestStatus(requestId,
-                        requestStatus,
-                        reason,
-                        session)
+        return userFriendRequestRepository
+                .updatePendingFriendRequestStatus(requestId, requestStatus, reason, session)
                 .flatMap(result -> result.getModifiedCount() > 0
-                        ? queryRecipientId(requestId)
-                        .flatMap(recipientId -> userVersionService.updateReceivedFriendRequestsVersion(recipientId)
+                        ? queryRecipientId(requestId).flatMap(recipientId -> userVersionService
+                                .updateReceivedFriendRequestsVersion(recipientId)
                                 .onErrorResume(t -> {
-                                    LOGGER.error("Caught an error while updating the received friend requests version of the recipient ({}) after updating a pending friend request",
-                                            recipientId, t);
+                                    LOGGER.error(
+                                            "Caught an error while updating the received friend requests version of the recipient ({}) after updating a pending friend request",
+                                            recipientId,
+                                            t);
                                     return Mono.empty();
                                 })
                                 .thenReturn(result))
@@ -284,11 +332,18 @@ public class UserFriendRequestService extends ExpirableEntityService<UserFriendR
             DataValidator.validRequestStatus(status);
             Validator.pastOrPresent(creationDate, "creationDate");
             Validator.pastOrPresent(responseDate, "responseDate");
-            Validator.shouldTrue(requesterId == null || !requesterId.equals(recipientId), "The requester ID must not equal the recipient ID");
+            Validator.shouldTrue(requesterId == null || !requesterId.equals(recipientId),
+                    "The requester ID must not equal the recipient ID");
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        if (Validator.areAllNull(requesterId, recipientId, content, status, reason, creationDate, responseDate)) {
+        if (Validator.areAllNull(requesterId,
+                recipientId,
+                content,
+                status,
+                reason,
+                creationDate,
+                responseDate)) {
             return OperationResultPublisherPool.ACKNOWLEDGED_UPDATE_RESULT;
         }
         return userFriendRequestRepository.updateFriendRequests(requestIds,
@@ -331,22 +386,33 @@ public class UserFriendRequestService extends ExpirableEntityService<UserFriendR
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        return queryRequesterAndRecipient(friendRequestId)
-                .flatMap(request -> {
-                    if (!request.getRecipientId().equals(requesterId)) {
-                        return Mono.error(ResponseException.get(ResponseStatusCode.REQUESTER_NOT_FRIEND_REQUEST_RECIPIENT));
-                    }
-                    return switch (action) {
-                        case ACCEPT -> userFriendRequestRepository
-                                .inTransaction(session -> updatePendingFriendRequestStatus(friendRequestId, RequestStatus.ACCEPTED, reason, session)
-                                        .then(userRelationshipService.friendTwoUsers(request.getRequesterId(), requesterId, session)))
-                                .retryWhen(TRANSACTION_RETRY);
-                        case IGNORE -> updatePendingFriendRequestStatus(friendRequestId, RequestStatus.IGNORED, reason, null);
-                        case DECLINE -> updatePendingFriendRequestStatus(friendRequestId, RequestStatus.DECLINED, reason, null);
-                        default -> Mono.error(ResponseException
-                                .get(ResponseStatusCode.ILLEGAL_ARGUMENT, "The response action must not be UNRECOGNIZED"));
-                    };
-                })
+        return queryRequesterAndRecipient(friendRequestId).flatMap(request -> {
+            if (!request.getRecipientId()
+                    .equals(requesterId)) {
+                return Mono.error(ResponseException
+                        .get(ResponseStatusCode.REQUESTER_NOT_FRIEND_REQUEST_RECIPIENT));
+            }
+            return switch (action) {
+                case ACCEPT -> userFriendRequestRepository
+                        .inTransaction(session -> updatePendingFriendRequestStatus(friendRequestId,
+                                RequestStatus.ACCEPTED,
+                                reason,
+                                session)
+                                .then(userRelationshipService.friendTwoUsers(request
+                                        .getRequesterId(), requesterId, session)))
+                        .retryWhen(TRANSACTION_RETRY);
+                case IGNORE -> updatePendingFriendRequestStatus(friendRequestId,
+                        RequestStatus.IGNORED,
+                        reason,
+                        null);
+                case DECLINE -> updatePendingFriendRequestStatus(friendRequestId,
+                        RequestStatus.DECLINED,
+                        reason,
+                        null);
+                default -> Mono.error(ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
+                        "The response action must not be UNRECOGNIZED"));
+            };
+        })
                 .then();
     }
 
@@ -357,31 +423,30 @@ public class UserFriendRequestService extends ExpirableEntityService<UserFriendR
         Mono<Date> versionMono = areSentByUser
                 ? userVersionService.querySentFriendRequestsVersion(userId)
                 : userVersionService.queryReceivedFriendRequestsVersion(userId);
-        return versionMono
-                .flatMap(version -> {
-                    if (DateUtil.isAfterOrSame(lastUpdatedDate, version)) {
-                        return ResponseExceptionPublisherPool.alreadyUpToUpdate();
-                    }
-                    Flux<UserFriendRequest> requestFlux = areSentByUser
-                            ? queryFriendRequestsByRequesterId(userId)
-                            : queryFriendRequestsByRecipientId(userId);
-                    return requestFlux
-                            .collect(CollectorUtil.toChunkedList())
-                            .map(requests -> {
-                                if (requests.isEmpty()) {
-                                    throw ResponseException.get(ResponseStatusCode.NO_CONTENT);
-                                }
-                                UserFriendRequestsWithVersion.Builder builder = ClientMessagePool
-                                        .getUserFriendRequestsWithVersionBuilder();
-                                int expireAfterSeconds = userFriendRequestRepository.getEntityExpireAfterSeconds();
-                                for (UserFriendRequest request : requests) {
-                                    builder.addUserFriendRequests(ProtoModelConvertor.friendRequest2proto(request, expireAfterSeconds));
-                                }
-                                return builder
-                                        .setLastUpdatedDate(version.getTime())
-                                        .build();
-                            });
-                })
+        return versionMono.flatMap(version -> {
+            if (DateUtil.isAfterOrSame(lastUpdatedDate, version)) {
+                return ResponseExceptionPublisherPool.alreadyUpToUpdate();
+            }
+            Flux<UserFriendRequest> requestFlux = areSentByUser
+                    ? queryFriendRequestsByRequesterId(userId)
+                    : queryFriendRequestsByRecipientId(userId);
+            return requestFlux.collect(CollectorUtil.toChunkedList())
+                    .map(requests -> {
+                        if (requests.isEmpty()) {
+                            throw ResponseException.get(ResponseStatusCode.NO_CONTENT);
+                        }
+                        UserFriendRequestsWithVersion.Builder builder =
+                                ClientMessagePool.getUserFriendRequestsWithVersionBuilder();
+                        int expireAfterSeconds =
+                                userFriendRequestRepository.getEntityExpireAfterSeconds();
+                        for (UserFriendRequest request : requests) {
+                            builder.addUserFriendRequests(ProtoModelConvertor
+                                    .friendRequest2proto(request, expireAfterSeconds));
+                        }
+                        return builder.setLastUpdatedDate(version.getTime())
+                                .build();
+                    });
+        })
                 .switchIfEmpty(ResponseExceptionPublisherPool.alreadyUpToUpdate());
     }
 

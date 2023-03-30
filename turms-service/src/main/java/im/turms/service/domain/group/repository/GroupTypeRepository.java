@@ -17,7 +17,14 @@
 
 package im.turms.service.domain.group.repository;
 
+import java.util.Set;
+import jakarta.annotation.Nullable;
+
 import com.mongodb.client.result.UpdateResult;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.domain.common.repository.BaseRepository;
 import im.turms.server.common.storage.mongo.DomainFieldName;
 import im.turms.server.common.storage.mongo.TurmsMongoClient;
@@ -27,12 +34,6 @@ import im.turms.service.domain.group.bo.GroupInvitationStrategy;
 import im.turms.service.domain.group.bo.GroupJoinStrategy;
 import im.turms.service.domain.group.bo.GroupUpdateStrategy;
 import im.turms.service.domain.group.po.GroupType;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Repository;
-import reactor.core.publisher.Mono;
-
-import java.util.Set;
-import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen
@@ -64,7 +65,8 @@ public class GroupTypeRepository extends BaseRepository<GroupType, Long> {
                 .setIfNotNull(GroupType.Fields.INVITATION_STRATEGY, groupInvitationStrategy)
                 .setIfNotNull(GroupType.Fields.JOIN_STRATEGY, groupJoinStrategy)
                 .setIfNotNull(GroupType.Fields.GROUP_INFO_UPDATE_STRATEGY, groupInfoUpdateStrategy)
-                .setIfNotNull(GroupType.Fields.MEMBER_INFO_UPDATE_STRATEGY, memberInfoUpdateStrategy)
+                .setIfNotNull(GroupType.Fields.MEMBER_INFO_UPDATE_STRATEGY,
+                        memberInfoUpdateStrategy)
                 .setIfNotNull(GroupType.Fields.GUEST_SPEAKABLE, guestSpeakable)
                 .setIfNotNull(GroupType.Fields.SELF_INFO_UPDATABLE, selfInfoUpdatable)
                 .setIfNotNull(GroupType.Fields.ENABLE_READ_RECEIPT, enableReadReceipt)

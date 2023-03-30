@@ -17,29 +17,32 @@
 
 package im.turms.service.infra.plugin.extension;
 
+import java.util.Set;
+import jakarta.validation.constraints.NotNull;
+
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.infra.plugin.ExtensionPoint;
 import im.turms.service.access.servicerequest.dto.RequestHandlerResult;
-import reactor.core.publisher.Mono;
-
-import java.util.Set;
-import jakarta.validation.constraints.NotNull;
 
 /**
  * @author James Chen
  */
 public interface RequestHandlerResultHandler extends ExtensionPoint {
 
-    default Mono<RequestHandlerResult> beforeNotify(@NotNull RequestHandlerResult result,
-                                                    @NotNull Long requesterId,
-                                                    @NotNull DeviceType requesterDevice) {
+    default Mono<RequestHandlerResult> beforeNotify(
+            @NotNull RequestHandlerResult result,
+            @NotNull Long requesterId,
+            @NotNull DeviceType requesterDevice) {
         return Mono.empty();
     }
 
-    default Mono<Void> afterNotify(@NotNull RequestHandlerResult result,
-                                   @NotNull Long requesterId,
-                                   @NotNull DeviceType requesterDevice,
-                                   @NotNull Set<Long> offlineRecipientIds) {
+    default Mono<Void> afterNotify(
+            @NotNull RequestHandlerResult result,
+            @NotNull Long requesterId,
+            @NotNull DeviceType requesterDevice,
+            @NotNull Set<Long> offlineRecipientIds) {
         return Mono.empty();
     }
 

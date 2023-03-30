@@ -17,11 +17,11 @@
 
 package im.turms.server.common.storage.redis.codec;
 
+import java.nio.ByteBuffer;
+
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.PooledByteBufAllocator;
-
-import java.nio.ByteBuffer;
 
 /**
  * @author James Chen

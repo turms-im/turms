@@ -17,6 +17,10 @@
 
 package im.turms.server.common.access.servicerequest.rpc;
 
+import java.io.IOException;
+
+import io.netty.buffer.ByteBuf;
+
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.access.servicerequest.dto.ServiceResponse;
@@ -27,9 +31,6 @@ import im.turms.server.common.infra.cluster.service.codec.io.CodecStreamOutput;
 import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.proto.ProtoDecoder;
 import im.turms.server.common.infra.proto.ProtoEncoder;
-import io.netty.buffer.ByteBuf;
-
-import java.io.IOException;
 
 /**
  * @author James Chen
@@ -38,7 +39,8 @@ public class ServiceResponseCodec implements Codec<ServiceResponse> {
 
     @Override
     public void write(CodecStreamOutput output, ServiceResponse data) {
-        output.writeShort((short) data.code().getBusinessCode());
+        output.writeShort((short) data.code()
+                .getBusinessCode());
         output.writeString(data.reason());
     }
 
@@ -64,7 +66,9 @@ public class ServiceResponseCodec implements Codec<ServiceResponse> {
     @Override
     public int initialCapacity(ServiceResponse data) {
         String reason = data.reason();
-        int reasonLength = reason == null ? 0 : StringUtil.getLength(reason) + 1;
+        int reasonLength = reason == null
+                ? 0
+                : StringUtil.getLength(reason) + 1;
         return Short.BYTES * 2 + reasonLength;
     }
 

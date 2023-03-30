@@ -17,19 +17,20 @@
 
 package im.turms.server.common.infra.property.env.service.business.message;
 
-import im.turms.server.common.infra.property.constant.TimeType;
-import im.turms.server.common.infra.property.metadata.Description;
-import im.turms.server.common.infra.property.metadata.GlobalProperty;
-import im.turms.server.common.infra.property.metadata.MutableProperty;
-import im.turms.server.common.infra.task.CronConst;
-import im.turms.server.common.infra.validation.ValidCron;
+import jakarta.validation.constraints.Min;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
-import jakarta.validation.constraints.Min;
+import im.turms.server.common.infra.property.constant.TimeType;
+import im.turms.server.common.infra.property.metadata.Description;
+import im.turms.server.common.infra.property.metadata.GlobalProperty;
+import im.turms.server.common.infra.property.metadata.MutableProperty;
+import im.turms.server.common.infra.task.CronConst;
+import im.turms.server.common.infra.validation.ValidCron;
 
 import static im.turms.server.common.infra.unit.ByteSizeUnit.MB;
 
@@ -42,8 +43,8 @@ import static im.turms.server.common.infra.unit.ByteSizeUnit.MB;
 @NoArgsConstructor
 public class MessageProperties {
 
-    @Description("Whether to use conversation ID so that " +
-            "a user can query the messages sent by themselves in a conversation quickly")
+    @Description("Whether to use conversation ID so that "
+            + "a user can query the messages sent by themselves in a conversation quickly")
     @GlobalProperty
     private boolean useConversationId;
 
@@ -72,8 +73,8 @@ public class MessageProperties {
     @Min(0)
     private int maxRecordsSizeBytes = 15 * MB;
 
-    @Description("Whether to persist messages in databases.\n" +
-            "Note: If false, senders will not get the message ID after the message has sent and cannot edit it")
+    @Description("Whether to persist messages in databases.\n"
+            + "Note: If false, senders will not get the message ID after the message has sent and cannot edit it")
     @GlobalProperty
     @MutableProperty
     private boolean persistMessage = true;
@@ -130,8 +131,8 @@ public class MessageProperties {
     @MutableProperty
     private boolean allowSendMessagesToOneself;
 
-    @Description("Whether to allow users to recall messages.\n" +
-            "Note: To recall messages, more system resources are needed")
+    @Description("Whether to allow users to recall messages.\n"
+            + "Note: To recall messages, more system resources are needed")
     @GlobalProperty
     @MutableProperty
     private boolean allowRecallMessage = true;
@@ -171,8 +172,8 @@ public class MessageProperties {
         @Min(0)
         private int sentMessageCacheMaxSize = 10240;
 
-        @Description("The retention period of sent messages in the cache. " +
-                "For a better performance, it is a good practice to keep the value greater than the allowed recall duration")
+        @Description("The retention period of sent messages in the cache. "
+                + "For a better performance, it is a good practice to keep the value greater than the allowed recall duration")
         @Min(1)
         private int sentMessageExpireAfter = 30;
 

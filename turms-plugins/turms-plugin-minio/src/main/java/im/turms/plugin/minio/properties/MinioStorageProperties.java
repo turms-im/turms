@@ -17,10 +17,11 @@
 
 package im.turms.plugin.minio.properties;
 
-import im.turms.server.common.infra.property.env.service.env.database.TurmsMongoProperties;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
+
+import im.turms.server.common.infra.property.env.service.env.database.TurmsMongoProperties;
 
 /**
  * @author James Chen

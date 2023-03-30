@@ -17,14 +17,15 @@
 
 package im.turms.service.domain.user.po;
 
+import java.util.Map;
+import java.util.Set;
+
+import lombok.Data;
+
 import im.turms.server.common.domain.common.po.BaseEntity;
 import im.turms.server.common.storage.mongo.entity.annotation.Document;
 import im.turms.server.common.storage.mongo.entity.annotation.Field;
 import im.turms.server.common.storage.mongo.entity.annotation.Id;
-import lombok.Data;
-
-import java.util.Map;
-import java.util.Set;
 
 /**
  * No need to shard because there should be only a few user permission groups.

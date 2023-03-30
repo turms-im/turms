@@ -17,35 +17,42 @@
 
 package im.turms.server.common.domain.common.util;
 
-import im.turms.server.common.access.client.dto.constant.DeviceType;
-import im.turms.server.common.infra.lang.BitUtil;
-import im.turms.server.common.infra.lang.ClassUtil;
+import java.util.EnumSet;
+import java.util.Set;
+import jakarta.annotation.Nullable;
+
 import org.eclipse.collections.api.map.primitive.ByteObjectMap;
 import org.eclipse.collections.api.map.primitive.MutableByteObjectMap;
 import org.eclipse.collections.impl.factory.primitive.ByteObjectMaps;
 
-import java.util.EnumSet;
-import java.util.Set;
-import jakarta.annotation.Nullable;
+import im.turms.server.common.access.client.dto.constant.DeviceType;
+import im.turms.server.common.infra.lang.BitUtil;
+import im.turms.server.common.infra.lang.ClassUtil;
 
 /**
  * @author James Chen
  */
 public final class DeviceTypeUtil {
 
-    public static final DeviceType[] ALL_DEVICE_TYPES = ClassUtil.getSharedEnumConstants(DeviceType.class);
+    public static final DeviceType[] ALL_DEVICE_TYPES =
+            ClassUtil.getSharedEnumConstants(DeviceType.class);
     public static final DeviceType[] ALL_AVAILABLE_DEVICE_TYPES;
     public static final Set<DeviceType> ALL_AVAILABLE_DEVICE_TYPES_SET;
 
     private static final int DEVICE_TYPE_COUNT;
 
     // No need to use volatile or CAS
-    private static ByteObjectMap<Set<DeviceType>> byteToDeviceTypes = ByteObjectMaps.immutable.empty();
+    private static ByteObjectMap<Set<DeviceType>> byteToDeviceTypes =
+            ByteObjectMaps.immutable.empty();
 
     static {
         DEVICE_TYPE_COUNT = ALL_DEVICE_TYPES.length - 1;
         if (DEVICE_TYPE_COUNT > Byte.SIZE) {
-            throw new RuntimeException("The device types to support must not exceed: " + Byte.SIZE + ", but got: " + DEVICE_TYPE_COUNT);
+            throw new RuntimeException(
+                    "The device types to support must not exceed: "
+                            + Byte.SIZE
+                            + ", but got: "
+                            + DEVICE_TYPE_COUNT);
         }
         DeviceType[] allAvailableDeviceTypes = new DeviceType[DEVICE_TYPE_COUNT];
         int i = 0;
@@ -77,7 +84,8 @@ public final class DeviceTypeUtil {
             return deviceTypes;
         }
         deviceTypes = byte2DeviceTypes0(deviceTypesByte);
-        MutableByteObjectMap<Set<DeviceType>> map = ByteObjectMaps.mutable.withAll(byteToDeviceTypes);
+        MutableByteObjectMap<Set<DeviceType>> map =
+                ByteObjectMaps.mutable.withAll(byteToDeviceTypes);
         map.put(deviceTypesByte, deviceTypes);
         byteToDeviceTypes = map;
         return deviceTypes;

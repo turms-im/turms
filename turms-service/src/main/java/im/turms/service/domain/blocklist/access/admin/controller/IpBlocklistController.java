@@ -17,6 +17,15 @@
 
 package im.turms.service.domain.blocklist.access.admin.controller;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
+
+import org.springframework.util.CollectionUtils;
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.access.admin.dto.response.HttpHandlerResult;
 import im.turms.server.common.access.admin.dto.response.PaginationDTO;
 import im.turms.server.common.access.admin.dto.response.ResponseDTO;
@@ -35,14 +44,6 @@ import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.service.domain.blocklist.access.admin.dto.request.AddBlockedIpsDTO;
 import im.turms.service.domain.blocklist.access.admin.dto.response.BlockedIpDTO;
 import im.turms.service.domain.common.access.admin.controller.BaseController;
-import org.springframework.util.CollectionUtils;
-import reactor.core.publisher.Mono;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
 
 import static im.turms.server.common.access.admin.permission.AdminPermission.CLIENT_BLOCKLIST_CREATE;
 import static im.turms.server.common.access.admin.permission.AdminPermission.CLIENT_BLOCKLIST_DELETE;
@@ -56,7 +57,9 @@ public class IpBlocklistController extends BaseController {
 
     private final BlocklistService blocklistService;
 
-    public IpBlocklistController(TurmsPropertiesManager propertiesManager, BlocklistService blocklistService) {
+    public IpBlocklistController(
+            TurmsPropertiesManager propertiesManager,
+            BlocklistService blocklistService) {
         super(propertiesManager);
         this.blocklistService = blocklistService;
     }
@@ -98,8 +101,7 @@ public class IpBlocklistController extends BaseController {
         if (deleteAll) {
             result = blocklistService.unblockAllIps();
         } else if (!CollectionUtils.isEmpty(ids)) {
-            result = result
-                    .then(blocklistService.unblockIpStrings(ids));
+            result = result.then(blocklistService.unblockIpStrings(ids));
         }
         return HttpHandlerResult.okIfTruthy(result);
     }
@@ -107,7 +109,9 @@ public class IpBlocklistController extends BaseController {
     private List<BlockedIpDTO> clients2ips(Collection<BlockedClient> blockedClients) {
         List<BlockedIpDTO> items = new ArrayList<>(blockedClients.size());
         for (BlockedClient blockedClient : blockedClients) {
-            items.add(new BlockedIpDTO(InetAddressUtil.ipBytesToString(((ByteArrayWrapper) blockedClient.id()).getBytes()),
+            items.add(new BlockedIpDTO(
+                    InetAddressUtil
+                            .ipBytesToString(((ByteArrayWrapper) blockedClient.id()).getBytes()),
                     new Date(blockedClient.blockEndTime())));
         }
         return items;

@@ -17,11 +17,11 @@
 
 package im.turms.plugin.rasa.property;
 
-import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-
 import java.util.List;
 import jakarta.validation.constraints.Min;
+
+import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
  * @author James Chen
@@ -33,9 +33,7 @@ public class RasaProperties {
 
     private InstanceFindStrategy instanceFindStrategy = InstanceFindStrategy.PROPERTY;
 
-    private List<InstanceProperties> instances = List.of(
-            new InstanceProperties()
-    );
+    private List<InstanceProperties> instances = List.of(new InstanceProperties());
 
     @Data
     public static class InstanceProperties {

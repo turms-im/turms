@@ -17,8 +17,23 @@
 
 package im.turms.service.domain.conversation.service;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
+
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.reactivestreams.client.ClientSession;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.collection.CollectorUtil;
@@ -35,20 +50,6 @@ import im.turms.service.domain.conversation.repository.GroupConversationReposito
 import im.turms.service.domain.conversation.repository.PrivateConversationRepository;
 import im.turms.service.domain.group.service.GroupMemberService;
 import im.turms.service.storage.mongo.OperationResultPublisherPool;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PastOrPresent;
 
 /**
  * @author James Chen
@@ -79,18 +80,22 @@ public class ConversationService {
     }
 
     private void updateProperties(TurmsProperties properties) {
-        ReadReceiptProperties readReceiptProperties = properties.getService().getConversation().getReadReceipt();
+        ReadReceiptProperties readReceiptProperties = properties.getService()
+                .getConversation()
+                .getReadReceipt();
         allowMoveReadDateForward = readReceiptProperties.isAllowMoveReadDateForward();
         isReadReceiptEnabled = readReceiptProperties.isEnabled();
         useServerTime = readReceiptProperties.isUseServerTime();
     }
 
     // TODO: authenticate
-    public Mono<Void> authAndUpsertGroupConversationReadDate(@NotNull Long groupId,
-                                                             @NotNull Long memberId,
-                                                             @Nullable @PastOrPresent Date readDate) {
+    public Mono<Void> authAndUpsertGroupConversationReadDate(
+            @NotNull Long groupId,
+            @NotNull Long memberId,
+            @Nullable @PastOrPresent Date readDate) {
         if (!isReadReceiptEnabled) {
-            return Mono.error(ResponseException.get(ResponseStatusCode.UPDATING_READ_DATE_IS_DISABLED));
+            return Mono.error(
+                    ResponseException.get(ResponseStatusCode.UPDATING_READ_DATE_IS_DISABLED));
         }
         if (useServerTime) {
             readDate = new Date();
@@ -99,11 +104,13 @@ public class ConversationService {
     }
 
     // TODO: authenticate
-    public Mono<Void> authAndUpsertPrivateConversationReadDate(@NotNull Long ownerId,
-                                                               @NotNull Long targetId,
-                                                               @Nullable @PastOrPresent Date readDate) {
+    public Mono<Void> authAndUpsertPrivateConversationReadDate(
+            @NotNull Long ownerId,
+            @NotNull Long targetId,
+            @Nullable @PastOrPresent Date readDate) {
         if (!isReadReceiptEnabled) {
-            return Mono.error(ResponseException.get(ResponseStatusCode.UPDATING_READ_DATE_IS_DISABLED));
+            return Mono.error(
+                    ResponseException.get(ResponseStatusCode.UPDATING_READ_DATE_IS_DISABLED));
         }
         if (useServerTime) {
             readDate = new Date();
@@ -111,9 +118,10 @@ public class ConversationService {
         return upsertPrivateConversationReadDate(ownerId, targetId, readDate);
     }
 
-    public Mono<Void> upsertGroupConversationReadDate(@NotNull Long groupId,
-                                                      @NotNull Long memberId,
-                                                      @Nullable @PastOrPresent Date readDate) {
+    public Mono<Void> upsertGroupConversationReadDate(
+            @NotNull Long groupId,
+            @NotNull Long memberId,
+            @Nullable @PastOrPresent Date readDate) {
         try {
             Validator.notNull(groupId, "groupId");
             Validator.notNull(memberId, "memberId");
@@ -121,16 +129,21 @@ public class ConversationService {
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        Date finalReadDate = readDate == null ? new Date() : readDate;
-        return groupConversationRepository.upsert(groupId, memberId, finalReadDate, allowMoveReadDateForward)
+        Date finalReadDate = readDate == null
+                ? new Date()
+                : readDate;
+        return groupConversationRepository
+                .upsert(groupId, memberId, finalReadDate, allowMoveReadDateForward)
                 .onErrorResume(DuplicateKeyException.class,
                         e -> readDate == null
                                 ? Mono.empty()
-                                : Mono.error(ResponseException.get(ResponseStatusCode.MOVING_READ_DATE_FORWARD_IS_DISABLED)));
+                                : Mono.error(ResponseException.get(
+                                        ResponseStatusCode.MOVING_READ_DATE_FORWARD_IS_DISABLED)));
     }
 
-    public Mono<Void> upsertGroupConversationsReadDate(@NotNull Set<GroupConversation.GroupConversionMemberKey> keys,
-                                                       @Nullable @PastOrPresent Date readDate) {
+    public Mono<Void> upsertGroupConversationsReadDate(
+            @NotNull Set<GroupConversation.GroupConversionMemberKey> keys,
+            @Nullable @PastOrPresent Date readDate) {
         try {
             Validator.notNull(keys, "keys");
             Validator.pastOrPresent(readDate, "readDate");
@@ -159,24 +172,28 @@ public class ConversationService {
         return Mono.whenDelayError(upsertMonos);
     }
 
-    public Mono<Void> upsertPrivateConversationReadDate(@NotNull Long ownerId,
-                                                        @NotNull Long targetId,
-                                                        @Nullable @PastOrPresent Date readDate) {
+    public Mono<Void> upsertPrivateConversationReadDate(
+            @NotNull Long ownerId,
+            @NotNull Long targetId,
+            @Nullable @PastOrPresent Date readDate) {
         try {
             Validator.notNull(ownerId, "ownerId");
             Validator.notNull(targetId, "targetId");
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        return upsertPrivateConversationsReadDate(Set.of(new PrivateConversation.Key(ownerId, targetId)), readDate);
+        return upsertPrivateConversationsReadDate(
+                Set.of(new PrivateConversation.Key(ownerId, targetId)),
+                readDate);
     }
 
     /**
      * @throws com.mongodb.DuplicateKeyException if {@code readDate} isn't after the read date in DB
      *                                           when "isAllowMoveReadDateForward" is enabled
      */
-    public Mono<Void> upsertPrivateConversationsReadDate(@NotNull Set<PrivateConversation.Key> keys,
-                                                         @Nullable @PastOrPresent Date readDate) {
+    public Mono<Void> upsertPrivateConversationsReadDate(
+            @NotNull Set<PrivateConversation.Key> keys,
+            @Nullable @PastOrPresent Date readDate) {
         try {
             Validator.notNull(keys, "keys");
             Validator.pastOrPresent(readDate, "readDate");
@@ -186,12 +203,15 @@ public class ConversationService {
         if (keys.isEmpty()) {
             return Mono.empty();
         }
-        Date finalReadDate = readDate == null ? new Date() : readDate;
+        Date finalReadDate = readDate == null
+                ? new Date()
+                : readDate;
         return privateConversationRepository.upsert(keys, finalReadDate, allowMoveReadDateForward)
                 .onErrorResume(DuplicateKeyException.class,
                         e -> readDate == null
                                 ? Mono.empty()
-                                : Mono.error(ResponseException.get(ResponseStatusCode.MOVING_READ_DATE_FORWARD_IS_DISABLED)));
+                                : Mono.error(ResponseException.get(
+                                        ResponseStatusCode.MOVING_READ_DATE_FORWARD_IS_DISABLED)));
     }
 
     public Flux<GroupConversation> queryGroupConversations(@NotNull Collection<Long> groupIds) {
@@ -239,7 +259,8 @@ public class ConversationService {
         return queryPrivateConversations(keys);
     }
 
-    public Flux<PrivateConversation> queryPrivateConversations(@NotNull Set<PrivateConversation.Key> keys) {
+    public Flux<PrivateConversation> queryPrivateConversations(
+            @NotNull Set<PrivateConversation.Key> keys) {
         try {
             Validator.notNull(keys, "keys");
         } catch (ResponseException e) {
@@ -251,7 +272,8 @@ public class ConversationService {
         return privateConversationRepository.findByIds(keys);
     }
 
-    public Mono<DeleteResult> deletePrivateConversations(@NotNull Set<PrivateConversation.Key> keys) {
+    public Mono<DeleteResult> deletePrivateConversations(
+            @NotNull Set<PrivateConversation.Key> keys) {
         try {
             Validator.notNull(keys, "keys");
         } catch (ResponseException e) {
@@ -263,7 +285,9 @@ public class ConversationService {
         return privateConversationRepository.deleteByIds(keys);
     }
 
-    public Mono<DeleteResult> deletePrivateConversations(@NotNull Set<Long> userIds, @Nullable ClientSession session) {
+    public Mono<DeleteResult> deletePrivateConversations(
+            @NotNull Set<Long> userIds,
+            @Nullable ClientSession session) {
         try {
             Validator.notNull(userIds, "userIds");
         } catch (ResponseException e) {
@@ -275,7 +299,9 @@ public class ConversationService {
         return privateConversationRepository.deleteConversationsByOwnerIds(userIds, session);
     }
 
-    public Mono<DeleteResult> deleteGroupConversations(@NotNull Set<Long> groupIds, @Nullable ClientSession session) {
+    public Mono<DeleteResult> deleteGroupConversations(
+            @NotNull Set<Long> groupIds,
+            @Nullable ClientSession session) {
         try {
             Validator.notNull(groupIds, "groupIds");
         } catch (ResponseException e) {
@@ -287,7 +313,9 @@ public class ConversationService {
         return groupConversationRepository.deleteByIds(groupIds, session);
     }
 
-    public Mono<Void> deleteGroupMemberConversations(@NotNull Collection<Long> userIds, @Nullable ClientSession session) {
+    public Mono<Void> deleteGroupMemberConversations(
+            @NotNull Collection<Long> userIds,
+            @Nullable ClientSession session) {
         try {
             Validator.notNull(userIds, "userIds");
         } catch (ResponseException e) {
@@ -296,13 +324,15 @@ public class ConversationService {
         Mono<Void> delete = Mono.empty();
         for (Long userId : userIds) {
             delete = delete.then(groupMemberService.queryUserJoinedGroupIds(userId)
-                            .collect(CollectorUtil.toChunkedList())
-                            // it is expected there are some cases that the user just joined a group,
-                            // and sent a message to the group after "queryUserJoinedGroupIds", meaning
-                            // there may some deleted members' conversations that should be deleted
-                            // but not deleted in the following "deleteGroupConversations".
-                            // TODO: support detecting deleted members' conversations when querying conversations in a efficient way.
-                            .flatMap(groupIds -> groupConversationRepository.deleteMemberConversations(groupIds, userId, session)))
+                    .collect(CollectorUtil.toChunkedList())
+                    // it is expected there are some cases that the user just joined a group,
+                    // and sent a message to the group after "queryUserJoinedGroupIds", meaning
+                    // there may some deleted members' conversations that should be deleted
+                    // but not deleted in the following "deleteGroupConversations".
+                    // TODO: support detecting deleted members' conversations when querying
+                    // conversations in a efficient way.
+                    .flatMap(groupIds -> groupConversationRepository
+                            .deleteMemberConversations(groupIds, userId, session)))
                     .then();
         }
         return delete;

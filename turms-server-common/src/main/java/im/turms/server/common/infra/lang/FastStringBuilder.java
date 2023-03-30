@@ -30,7 +30,9 @@ public class FastStringBuilder {
 
     public String build(byte coder, byte delimiter) {
         boolean isLatin1 = StringUtil.isLatin1(coder);
-        int delimiterLength = isLatin1 ? 1 : 2;
+        int delimiterLength = isLatin1
+                ? 1
+                : 2;
         int entryCount = cache.size();
         byte[] value = new byte[length + delimiterLength * (entryCount - 1)];
         int destPos = 0;
@@ -78,7 +80,11 @@ public class FastStringBuilder {
         return cache.size();
     }
 
-    public record Entry(byte[] bytes, int from, int length) {
+    public record Entry(
+            byte[] bytes,
+            int from,
+            int length
+    ) {
     }
 
 }

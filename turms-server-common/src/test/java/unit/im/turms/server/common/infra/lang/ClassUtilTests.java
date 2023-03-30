@@ -17,10 +17,11 @@
 
 package unit.im.turms.server.common.infra.lang;
 
-import im.turms.server.common.infra.lang.ClassUtil;
+import java.util.Set;
+
 import org.junit.jupiter.api.Test;
 
-import java.util.Set;
+import im.turms.server.common.infra.lang.ClassUtil;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -58,7 +59,8 @@ class ClassUtilTests {
         Class<?> firstInterface = ClassUtil.getFirstInterface(Class2.class, clazz -> true);
         assertThat(firstInterface).isEqualTo(Interface3.class);
 
-        firstInterface = ClassUtil.getFirstInterface(Class2.class, clazz -> clazz == Interface2.class);
+        firstInterface =
+                ClassUtil.getFirstInterface(Class2.class, clazz -> clazz == Interface2.class);
         assertThat(firstInterface).isEqualTo(Interface2.class);
     }
 

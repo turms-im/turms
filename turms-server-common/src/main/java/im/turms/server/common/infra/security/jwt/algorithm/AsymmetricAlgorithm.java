@@ -17,14 +17,14 @@
 
 package im.turms.server.common.infra.security.jwt.algorithm;
 
-import im.turms.server.common.infra.security.SignaturePool;
-
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.PublicKey;
 import java.security.Signature;
 import java.security.SignatureException;
 import java.security.spec.AlgorithmParameterSpec;
+
+import im.turms.server.common.infra.security.SignaturePool;
 
 /**
  * @author James Chen
@@ -41,13 +41,15 @@ public abstract non-sealed class AsymmetricAlgorithm extends JwtAlgorithm {
             PublicKey publicKey,
             byte[] headerBytes,
             byte[] payloadBytes,
-            byte[] signatureBytes
-    ) {
+            byte[] signatureBytes) {
         Signature signature = SignaturePool.get(algorithm);
         try {
             signature.initVerify(publicKey);
         } catch (InvalidKeyException e) {
-            throw new IllegalArgumentException("Invalid public key: " + publicKey, e);
+            throw new IllegalArgumentException(
+                    "Invalid public key: "
+                            + publicKey,
+                    e);
         }
         try {
             signature.update(headerBytes);
@@ -57,7 +59,9 @@ public abstract non-sealed class AsymmetricAlgorithm extends JwtAlgorithm {
         try {
             signature.update(JWT_PART_SEPARATOR);
         } catch (SignatureException e) {
-            throw new IllegalStateException("Failed to update the JWT part separator to be verified", e);
+            throw new IllegalStateException(
+                    "Failed to update the JWT part separator to be verified",
+                    e);
         }
         try {
             signature.update(payloadBytes);
@@ -77,18 +81,23 @@ public abstract non-sealed class AsymmetricAlgorithm extends JwtAlgorithm {
             PublicKey publicKey,
             byte[] headerBytes,
             byte[] payloadBytes,
-            byte[] signatureBytes
-    ) {
+            byte[] signatureBytes) {
         Signature signature = SignaturePool.get(algorithm);
         try {
             signature.setParameter(parameterSpec);
         } catch (InvalidAlgorithmParameterException e) {
-            throw new IllegalArgumentException("Invalid algorithm parameter: " + parameterSpec, e);
+            throw new IllegalArgumentException(
+                    "Invalid algorithm parameter: "
+                            + parameterSpec,
+                    e);
         }
         try {
             signature.initVerify(publicKey);
         } catch (InvalidKeyException e) {
-            throw new IllegalArgumentException("Invalid public key: " + publicKey, e);
+            throw new IllegalArgumentException(
+                    "Invalid public key: "
+                            + publicKey,
+                    e);
         }
         try {
             signature.update(headerBytes);
@@ -98,7 +107,9 @@ public abstract non-sealed class AsymmetricAlgorithm extends JwtAlgorithm {
         try {
             signature.update(JWT_PART_SEPARATOR);
         } catch (SignatureException e) {
-            throw new IllegalStateException("Failed to update the JWT part separator to be verified", e);
+            throw new IllegalStateException(
+                    "Failed to update the JWT part separator to be verified",
+                    e);
         }
         try {
             signature.update(payloadBytes);

@@ -17,16 +17,17 @@
 
 package im.turms.server.common.infra.property.env.gateway.session;
 
-import im.turms.server.common.infra.property.metadata.Description;
-import im.turms.server.common.infra.property.metadata.GlobalProperty;
-import im.turms.server.common.infra.property.metadata.MutableProperty;
+import java.util.List;
+import jakarta.validation.constraints.Min;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-import jakarta.validation.constraints.Min;
+import im.turms.server.common.infra.property.metadata.Description;
+import im.turms.server.common.infra.property.metadata.GlobalProperty;
+import im.turms.server.common.infra.property.metadata.MutableProperty;
 
 /**
  * @author James Chen
@@ -38,15 +39,14 @@ import jakarta.validation.constraints.Min;
 public class DeviceDetailsProperties {
 
     @Description("Device details information will expire after the specified time has elapsed. 0 means never expire")
-    //TODO: Support @GlobalProperty
+    // TODO: Support @GlobalProperty
     @Min(0)
     private int expireAfterSeconds = 30 * 24 * 3600;
 
     @GlobalProperty
     @MutableProperty
-    private List<DeviceDetailsItemProperties> items = List.of(
-            new DeviceDetailsItemProperties("apns", "a"),
-            new DeviceDetailsItemProperties("fcm", "f")
-    );
+    private List<DeviceDetailsItemProperties> items =
+            List.of(new DeviceDetailsItemProperties("apns", "a"),
+                    new DeviceDetailsItemProperties("fcm", "f"));
 
 }

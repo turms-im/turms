@@ -17,9 +17,9 @@
 
 package im.turms.server.common.infra.property;
 
-import im.turms.server.common.infra.reflect.VarAccessor;
-
 import java.lang.reflect.Field;
+
+import im.turms.server.common.infra.reflect.VarAccessor;
 
 /**
  * @author James Chen

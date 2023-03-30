@@ -17,9 +17,18 @@
 
 package im.turms.service.domain.user.repository;
 
+import java.util.Date;
+import java.util.Set;
+import jakarta.annotation.Nullable;
+
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.reactivestreams.client.ClientSession;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.domain.common.repository.BaseRepository;
 import im.turms.server.common.infra.time.DateRange;
 import im.turms.server.common.storage.mongo.DomainFieldName;
@@ -28,29 +37,26 @@ import im.turms.server.common.storage.mongo.operation.option.Filter;
 import im.turms.server.common.storage.mongo.operation.option.QueryOptions;
 import im.turms.server.common.storage.mongo.operation.option.Update;
 import im.turms.service.domain.user.po.UserRelationship;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Repository;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
-import java.util.Date;
-import java.util.Set;
-import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen
  */
 @Repository
-public class UserRelationshipRepository extends BaseRepository<UserRelationship, UserRelationship.Key> {
+public class UserRelationshipRepository
+        extends BaseRepository<UserRelationship, UserRelationship.Key> {
 
     public UserRelationshipRepository(@Qualifier("userMongoClient") TurmsMongoClient mongoClient) {
         super(mongoClient, UserRelationship.class);
     }
 
-    public Mono<DeleteResult> deleteAllRelationships(Set<Long> userIds, @Nullable ClientSession session) {
+    public Mono<DeleteResult> deleteAllRelationships(
+            Set<Long> userIds,
+            @Nullable ClientSession session) {
         Filter filter = Filter.newBuilder(1)
-                .or(Filter.newBuilder(1).in(UserRelationship.Fields.ID_OWNER_ID, userIds),
-                        Filter.newBuilder(1).in(UserRelationship.Fields.ID_RELATED_USER_ID, userIds));
+                .or(Filter.newBuilder(1)
+                        .in(UserRelationship.Fields.ID_OWNER_ID, userIds),
+                        Filter.newBuilder(1)
+                                .in(UserRelationship.Fields.ID_RELATED_USER_ID, userIds));
         return mongoClient.deleteMany(session, entityClass, filter);
     }
 
@@ -77,14 +83,17 @@ public class UserRelationshipRepository extends BaseRepository<UserRelationship,
         return mongoClient.count(entityClass, filter);
     }
 
-    public Flux<Long> findRelatedUserIds(@Nullable Set<Long> ownerIds, @Nullable Boolean isBlocked) {
+    public Flux<Long> findRelatedUserIds(
+            @Nullable Set<Long> ownerIds,
+            @Nullable Boolean isBlocked) {
         Filter filter = Filter.newBuilder(2)
                 .inIfNotNull(UserRelationship.Fields.ID_OWNER_ID, ownerIds)
                 .neNullIfTrueOrEqNullIfFalse(UserRelationship.Fields.BLOCK_DATE, isBlocked);
         QueryOptions options = QueryOptions.newBuilder(1)
                 .include(UserRelationship.Fields.ID_RELATED_USER_ID);
         return mongoClient.findMany(entityClass, filter, options)
-                .map(userRelationship -> userRelationship.getKey().getRelatedUserId());
+                .map(userRelationship -> userRelationship.getKey()
+                        .getRelatedUserId());
     }
 
     public Flux<UserRelationship> findRelationships(
@@ -97,7 +106,8 @@ public class UserRelationshipRepository extends BaseRepository<UserRelationship,
         Filter filter = Filter.newBuilder(5)
                 .inIfNotNull(UserRelationship.Fields.ID_OWNER_ID, ownerIds)
                 .inIfNotNull(UserRelationship.Fields.ID_RELATED_USER_ID, relatedUserIds)
-                .addBetweenIfNotNull(UserRelationship.Fields.ESTABLISHMENT_DATE, establishmentDateRange)
+                .addBetweenIfNotNull(UserRelationship.Fields.ESTABLISHMENT_DATE,
+                        establishmentDateRange)
                 .neNullIfTrueOrEqNullIfFalse(UserRelationship.Fields.BLOCK_DATE, isBlocked);
         QueryOptions options = QueryOptions.newBuilder(2)
                 .paginateIfNotNull(page, size);

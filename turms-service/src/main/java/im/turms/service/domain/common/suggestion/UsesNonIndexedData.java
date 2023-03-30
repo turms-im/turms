@@ -23,9 +23,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * If developers really need these features with efficient implementations,
- * they should implement the features according to their requirements and the solutions mentioned
- * in <a href="https://turms-im.github.io/docs/for-developers/schema.html">Schema Design</a>
+ * If developers really need these features with efficient implementations, they should implement
+ * the features according to their requirements and the solutions mentioned in
+ * <a href="https://turms-im.github.io/docs/for-developers/schema.html">Schema Design</a>
  *
  * @author James Chen
  */

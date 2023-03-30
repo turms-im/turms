@@ -17,14 +17,15 @@
 
 package im.turms.gateway.infra.proto;
 
+import java.io.IOException;
+
 import com.google.protobuf.CodedInputStream;
 import com.google.protobuf.WireFormat;
+import org.springframework.util.Assert;
+
 import im.turms.server.common.access.client.dto.request.TurmsRequest;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.exception.ResponseException;
-import org.springframework.util.Assert;
-
-import java.io.IOException;
 
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.KIND_NOT_SET;
 
@@ -45,7 +46,8 @@ public final class TurmsNotificationParser {
     private TurmsNotificationParser() {
     }
 
-    public static SimpleTurmsNotification parseSimpleNotification(CodedInputStream turmsRequestInputStream) {
+    public static SimpleTurmsNotification parseSimpleNotification(
+            CodedInputStream turmsRequestInputStream) {
         Assert.notNull(turmsRequestInputStream, "The input stream must not be null");
         // The CodedInputStream.newInstance is efficient because it reuses the direct buffer
         try {
@@ -88,12 +90,14 @@ public final class TurmsNotificationParser {
             }
             if (type == null || type == KIND_NOT_SET) {
                 throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
-                        "Not a valid notification: Unknown request type: " + type);
+                        "Not a valid notification: Unknown request type: "
+                                + type);
             }
             return new SimpleTurmsNotification(requesterId, closeStatus, type);
         } catch (IOException e) {
             throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
-                    "Not a valid notification: " + e.getMessage());
+                    "Not a valid notification: "
+                            + e.getMessage());
         }
     }
 

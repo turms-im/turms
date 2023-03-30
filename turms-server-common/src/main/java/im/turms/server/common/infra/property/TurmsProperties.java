@@ -17,6 +17,14 @@
 
 package im.turms.server.common.infra.property;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
+import org.springframework.stereotype.Component;
+
 import im.turms.server.common.infra.property.env.common.FlightRecorderProperties;
 import im.turms.server.common.infra.property.env.common.IpProperties;
 import im.turms.server.common.infra.property.env.common.ShutdownProperties;
@@ -29,18 +37,10 @@ import im.turms.server.common.infra.property.env.common.plugin.PluginProperties;
 import im.turms.server.common.infra.property.env.common.security.SecurityProperties;
 import im.turms.server.common.infra.property.env.gateway.GatewayProperties;
 import im.turms.server.common.infra.property.env.service.ServiceProperties;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.NestedConfigurationProperty;
-import org.springframework.stereotype.Component;
 
 /**
- * Don't use @Validated and hibernate-validator because it has a
- * noticeable impact on performance (CglibAopProxy + Reflection)
- * so we validate properties manually.
+ * Don't use @Validated and hibernate-validator because it has a noticeable impact on performance
+ * (CglibAopProxy + Reflection) so we validate properties manually.
  *
  * @author James Chen
  */

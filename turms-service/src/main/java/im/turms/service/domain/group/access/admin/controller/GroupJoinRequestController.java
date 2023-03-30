@@ -17,6 +17,13 @@
 
 package im.turms.service.domain.group.access.admin.controller;
 
+import java.util.Collection;
+import java.util.Date;
+import java.util.Set;
+
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.access.admin.dto.response.DeleteResultDTO;
 import im.turms.server.common.access.admin.dto.response.HttpHandlerResult;
 import im.turms.server.common.access.admin.dto.response.PaginationDTO;
@@ -38,12 +45,6 @@ import im.turms.service.domain.group.access.admin.dto.request.AddGroupJoinReques
 import im.turms.service.domain.group.access.admin.dto.request.UpdateGroupJoinRequestDTO;
 import im.turms.service.domain.group.access.admin.dto.response.GroupJoinRequestDTO;
 import im.turms.service.domain.group.service.GroupJoinRequestService;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
-import java.util.Collection;
-import java.util.Date;
-import java.util.Set;
 
 import static im.turms.server.common.access.admin.permission.AdminPermission.GROUP_JOIN_REQUEST_CREATE;
 import static im.turms.server.common.access.admin.permission.AdminPermission.GROUP_JOIN_REQUEST_DELETE;
@@ -58,7 +59,9 @@ public class GroupJoinRequestController extends BaseController {
 
     private final GroupJoinRequestService groupJoinRequestService;
 
-    public GroupJoinRequestController(TurmsPropertiesManager propertiesManager, GroupJoinRequestService groupJoinRequestService) {
+    public GroupJoinRequestController(
+            TurmsPropertiesManager propertiesManager,
+            GroupJoinRequestService groupJoinRequestService) {
         super(propertiesManager);
         this.groupJoinRequestService = groupJoinRequestService;
     }
@@ -67,8 +70,8 @@ public class GroupJoinRequestController extends BaseController {
     @RequiredPermission(GROUP_JOIN_REQUEST_CREATE)
     public Mono<HttpHandlerResult<ResponseDTO<GroupJoinRequestDTO>>> addGroupJoinRequest(
             @RequestBody AddGroupJoinRequestDTO addGroupJoinRequestDTO) {
-        Mono<GroupJoinRequestDTO> createMono = groupJoinRequestService.createGroupJoinRequest(
-                        addGroupJoinRequestDTO.id(),
+        Mono<GroupJoinRequestDTO> createMono = groupJoinRequestService
+                .createGroupJoinRequest(addGroupJoinRequestDTO.id(),
                         addGroupJoinRequestDTO.groupId(),
                         addGroupJoinRequestDTO.requesterId(),
                         addGroupJoinRequestDTO.responderId(),
@@ -76,7 +79,9 @@ public class GroupJoinRequestController extends BaseController {
                         addGroupJoinRequestDTO.status(),
                         addGroupJoinRequestDTO.creationDate(),
                         addGroupJoinRequestDTO.responseDate())
-                .map(request -> new GroupJoinRequestDTO(request, groupJoinRequestService.getEntityExpirationDate()));
+                .map(request -> new GroupJoinRequestDTO(
+                        request,
+                        groupJoinRequestService.getEntityExpirationDate()));
         return HttpHandlerResult.okIfTruthy(createMono);
     }
 
@@ -96,8 +101,8 @@ public class GroupJoinRequestController extends BaseController {
             @QueryParam(required = false) Date expirationDateEnd,
             @QueryParam(required = false) Integer size) {
         size = getPageSize(size);
-        Flux<GroupJoinRequestDTO> joinRequestFlux = groupJoinRequestService.queryJoinRequests(
-                        ids,
+        Flux<GroupJoinRequestDTO> joinRequestFlux = groupJoinRequestService
+                .queryJoinRequests(ids,
                         groupIds,
                         requesterIds,
                         responderIds,
@@ -107,7 +112,9 @@ public class GroupJoinRequestController extends BaseController {
                         DateRange.of(expirationDateStart, expirationDateEnd),
                         0,
                         size)
-                .map(request -> new GroupJoinRequestDTO(request, groupJoinRequestService.getEntityExpirationDate()));
+                .map(request -> new GroupJoinRequestDTO(
+                        request,
+                        groupJoinRequestService.getEntityExpirationDate()));
         return HttpHandlerResult.okIfTruthy(joinRequestFlux);
     }
 
@@ -128,8 +135,7 @@ public class GroupJoinRequestController extends BaseController {
             int page,
             @QueryParam(required = false) Integer size) {
         size = getPageSize(size);
-        Mono<Long> count = groupJoinRequestService.countJoinRequests(
-                ids,
+        Mono<Long> count = groupJoinRequestService.countJoinRequests(ids,
                 groupIds,
                 requesterIds,
                 responderIds,
@@ -137,8 +143,8 @@ public class GroupJoinRequestController extends BaseController {
                 DateRange.of(creationDateStart, creationDateEnd),
                 DateRange.of(responseDateStart, responseDateEnd),
                 DateRange.of(expirationDateStart, expirationDateEnd));
-        Flux<GroupJoinRequestDTO> joinRequestFlux = groupJoinRequestService.queryJoinRequests(
-                        ids,
+        Flux<GroupJoinRequestDTO> joinRequestFlux = groupJoinRequestService
+                .queryJoinRequests(ids,
                         groupIds,
                         requesterIds,
                         responderIds,
@@ -148,7 +154,9 @@ public class GroupJoinRequestController extends BaseController {
                         DateRange.of(expirationDateStart, expirationDateEnd),
                         page,
                         size)
-                .map(request -> new GroupJoinRequestDTO(request, groupJoinRequestService.getEntityExpirationDate()));
+                .map(request -> new GroupJoinRequestDTO(
+                        request,
+                        groupJoinRequestService.getEntityExpirationDate()));
         return HttpHandlerResult.page(count, joinRequestFlux);
     }
 
@@ -157,8 +165,8 @@ public class GroupJoinRequestController extends BaseController {
     public Mono<HttpHandlerResult<ResponseDTO<UpdateResultDTO>>> updateGroupJoinRequests(
             Set<Long> ids,
             @RequestBody UpdateGroupJoinRequestDTO updateGroupJoinRequestDTO) {
-        Mono<UpdateResultDTO> updateMono = groupJoinRequestService.updateJoinRequests(
-                        ids,
+        Mono<UpdateResultDTO> updateMono = groupJoinRequestService
+                .updateJoinRequests(ids,
                         updateGroupJoinRequestDTO.requesterId(),
                         updateGroupJoinRequestDTO.responderId(),
                         updateGroupJoinRequestDTO.content(),
@@ -173,8 +181,7 @@ public class GroupJoinRequestController extends BaseController {
     @RequiredPermission(GROUP_JOIN_REQUEST_DELETE)
     public Mono<HttpHandlerResult<ResponseDTO<DeleteResultDTO>>> deleteGroupJoinRequests(
             @QueryParam(required = false) Set<Long> ids) {
-        Mono<DeleteResultDTO> deleteMono = groupJoinRequestService
-                .deleteJoinRequests(ids)
+        Mono<DeleteResultDTO> deleteMono = groupJoinRequestService.deleteJoinRequests(ids)
                 .map(DeleteResultDTO::get);
         return HttpHandlerResult.okIfTruthy(deleteMono);
     }

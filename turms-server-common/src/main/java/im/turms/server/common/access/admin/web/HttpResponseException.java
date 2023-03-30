@@ -17,12 +17,13 @@
 
 package im.turms.server.common.access.admin.web;
 
+import jakarta.annotation.Nullable;
+
+import lombok.Getter;
+
 import im.turms.server.common.access.admin.dto.response.HttpHandlerResult;
 import im.turms.server.common.access.admin.dto.response.ResponseDTO;
 import im.turms.server.common.access.common.ResponseStatusCode;
-import lombok.Getter;
-
-import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen
@@ -37,10 +38,13 @@ public class HttpResponseException extends RuntimeException {
     }
 
     public HttpResponseException(ResponseStatusCode status) {
-        this.response = HttpHandlerResult.create(status.getHttpStatusCode(), null, new ResponseDTO<>(status));
+        this.response = HttpHandlerResult
+                .create(status.getHttpStatusCode(), null, new ResponseDTO<>(status));
     }
 
-    public HttpResponseException(HttpHandlerResult<ResponseDTO<?>> response, @Nullable Throwable cause) {
+    public HttpResponseException(
+            HttpHandlerResult<ResponseDTO<?>> response,
+            @Nullable Throwable cause) {
         super(cause);
         this.response = response;
     }
@@ -49,11 +53,17 @@ public class HttpResponseException extends RuntimeException {
         super(cause);
         this.response = HttpHandlerResult.create(status.getHttpStatusCode(),
                 null,
-                new ResponseDTO<>(status, cause == null ? null : cause.getMessage(), cause));
+                new ResponseDTO<>(
+                        status,
+                        cause == null
+                                ? null
+                                : cause.getMessage(),
+                        cause));
     }
 
     public HttpResponseException(ResponseStatusCode status, @Nullable String reason) {
-        this.response = HttpHandlerResult.create(status.getHttpStatusCode(), null, new ResponseDTO<>(status, reason));
+        this.response = HttpHandlerResult
+                .create(status.getHttpStatusCode(), null, new ResponseDTO<>(status, reason));
     }
 
 }

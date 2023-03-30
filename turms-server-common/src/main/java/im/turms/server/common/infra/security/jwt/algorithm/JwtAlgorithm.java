@@ -17,9 +17,10 @@
 
 package im.turms.server.common.infra.security.jwt.algorithm;
 
+import lombok.Data;
+
 import im.turms.server.common.infra.lang.AsciiCode;
 import im.turms.server.common.infra.security.jwt.Jwt;
-import lombok.Data;
 
 /**
  * @author James Chen

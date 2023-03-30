@@ -17,10 +17,11 @@
 
 package im.turms.gateway.infra.logging;
 
+import io.netty.buffer.ByteBuf;
+
 import im.turms.gateway.infra.proto.SimpleTurmsNotification;
 import im.turms.server.common.infra.lang.NumberFormatter;
 import im.turms.server.common.infra.netty.ByteBufUtil;
-import io.netty.buffer.ByteBuf;
 
 import static im.turms.server.common.infra.logging.CommonLogger.LOG_FIELD_DELIMITER;
 import static im.turms.server.common.infra.logging.CommonLogger.NOTIFICATION_LOGGER;
@@ -33,12 +34,14 @@ public final class NotificationLogging {
     private NotificationLogging() {
     }
 
-    public static void log(SimpleTurmsNotification notification,
-                           int notificationBytes,
-                           int recipientCount,
-                           int onlineRecipientCount) {
+    public static void log(
+            SimpleTurmsNotification notification,
+            int notificationBytes,
+            int recipientCount,
+            int onlineRecipientCount) {
         Integer closeStatus = notification.closeStatus();
-        ByteBuf buffer = ByteBufUtil.join(64, LOG_FIELD_DELIMITER,
+        ByteBuf buffer = ByteBufUtil.join(64,
+                LOG_FIELD_DELIMITER,
                 // Requester info
                 NumberFormatter.toCharBytes(notification.requesterId()),
                 // Recipient info
@@ -48,7 +51,8 @@ public final class NotificationLogging {
                 closeStatus,
                 NumberFormatter.toCharBytes(notificationBytes),
                 // Relayed request info
-                notification.relayedRequestType().name());
+                notification.relayedRequestType()
+                        .name());
         NOTIFICATION_LOGGER.info(buffer);
     }
 

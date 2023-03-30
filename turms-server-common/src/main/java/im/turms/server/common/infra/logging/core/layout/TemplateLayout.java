@@ -17,9 +17,10 @@
 
 package im.turms.server.common.infra.logging.core.layout;
 
+import io.netty.buffer.ByteBuf;
+
 import im.turms.server.common.infra.lang.NumberFormatter;
 import im.turms.server.common.infra.lang.StringUtil;
-import io.netty.buffer.ByteBuf;
 
 /**
  * @author James Chen
@@ -56,16 +57,14 @@ public class TemplateLayout {
         appendException(e, buffer, 1, 1);
     }
 
-    private void appendException(Throwable e,
-                                 ByteBuf buffer,
-                                 int indent,
-                                 int depth) {
+    private void appendException(Throwable e, ByteBuf buffer, int indent, int depth) {
         if (depth > DEPTH_LIMIT) {
             buffer.writeBytes(CYCLIC_EXCEPTION);
             return;
         }
 
-        buffer.writeBytes(StringUtil.getBytes(e.getClass().getName()));
+        buffer.writeBytes(StringUtil.getBytes(e.getClass()
+                .getName()));
 
         String message = e.getMessage();
         if (message != null) {
@@ -100,9 +99,7 @@ public class TemplateLayout {
         }
     }
 
-    private void appendStack(StackTraceElement[] stack,
-                             ByteBuf buffer,
-                             int indent) {
+    private void appendStack(StackTraceElement[] stack, ByteBuf buffer, int indent) {
         for (StackTraceElement element : stack) {
             appendTabs(indent, buffer);
 
@@ -132,10 +129,7 @@ public class TemplateLayout {
         }
     }
 
-    public void appendSuppresses(Throwable[] suppresses,
-                                 ByteBuf buffer,
-                                 int indent,
-                                 int depth) {
+    public void appendSuppresses(Throwable[] suppresses, ByteBuf buffer, int indent, int depth) {
         for (Throwable suppress : suppresses) {
             buffer.writeByte('\n');
             appendTabs(indent, buffer);
@@ -144,10 +138,7 @@ public class TemplateLayout {
         }
     }
 
-    public void appendCause(Throwable cause,
-                            ByteBuf buffer,
-                            int indent,
-                            int depth) {
+    public void appendCause(Throwable cause, ByteBuf buffer, int indent, int depth) {
         buffer.writeByte('\n');
         appendTabs(indent - 1, buffer);
         buffer.writeBytes(CAUSED_BY);

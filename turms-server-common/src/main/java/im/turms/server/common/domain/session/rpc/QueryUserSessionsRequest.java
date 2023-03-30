@@ -17,15 +17,16 @@
 
 package im.turms.server.common.domain.session.rpc;
 
+import java.util.List;
+import java.util.Set;
+
+import lombok.Data;
+import org.springframework.context.ApplicationContext;
+
 import im.turms.server.common.domain.session.bo.UserSessionsInfo;
 import im.turms.server.common.domain.session.service.ISessionService;
 import im.turms.server.common.infra.cluster.service.rpc.NodeTypeToHandleRpc;
 import im.turms.server.common.infra.cluster.service.rpc.dto.RpcRequest;
-import lombok.Data;
-import org.springframework.context.ApplicationContext;
-
-import java.util.List;
-import java.util.Set;
 
 /**
  * @author James Chen

@@ -17,13 +17,14 @@
 
 package unit.im.turms.server.common.infra.reflect;
 
-import im.turms.server.common.infra.reflect.ReflectionUtil;
-import lombok.SneakyThrows;
-import org.junit.jupiter.api.Test;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+
+import lombok.SneakyThrows;
+import org.junit.jupiter.api.Test;
+
+import im.turms.server.common.infra.reflect.ReflectionUtil;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

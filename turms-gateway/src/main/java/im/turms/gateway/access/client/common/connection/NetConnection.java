@@ -17,28 +17,29 @@
 
 package im.turms.gateway.access.client.common.connection;
 
+import java.net.InetSocketAddress;
+import java.time.Duration;
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotNull;
+
+import lombok.Data;
+import reactor.util.retry.Retry;
+import reactor.util.retry.RetryBackoffSpec;
+
 import im.turms.gateway.access.client.udp.UdpRequestDispatcher;
 import im.turms.gateway.access.client.udp.dto.UdpNotificationType;
 import im.turms.server.common.domain.session.bo.CloseReason;
 import im.turms.server.common.domain.session.bo.SessionCloseStatus;
 import im.turms.server.common.infra.exception.ThrowableUtil;
-import lombok.Data;
-import reactor.util.retry.Retry;
-import reactor.util.retry.RetryBackoffSpec;
-
-import java.net.InetSocketAddress;
-import java.time.Duration;
-import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.NotNull;
 
 /**
  * @author James Chen
  */
 @Data
 public abstract class NetConnection {
-    protected static final RetryBackoffSpec RETRY_SEND_CLOSE_NOTIFICATION = Retry
-            .backoff(2, Duration.ofSeconds(3))
-            .filter(throwable -> !ThrowableUtil.isDisconnectedClientError(throwable));
+    protected static final RetryBackoffSpec RETRY_SEND_CLOSE_NOTIFICATION =
+            Retry.backoff(2, Duration.ofSeconds(3))
+                    .filter(throwable -> !ThrowableUtil.isDisconnectedClientError(throwable));
 
     @Nullable
     private InetSocketAddress udpAddress;
@@ -58,7 +59,8 @@ public abstract class NetConnection {
     public void close(@NotNull CloseReason closeReason) {
         isConnected = false;
         isConnectionRecovering = false;
-        isSwitchingToUdp = closeReason.closeStatus().equals(SessionCloseStatus.SWITCH);
+        isSwitchingToUdp = closeReason.closeStatus()
+                .equals(SessionCloseStatus.SWITCH);
     }
 
     public void close() {
@@ -73,7 +75,8 @@ public abstract class NetConnection {
 
     public void tryNotifyClientToRecover() {
         if (!isConnected && !isConnectionRecovering && udpAddress != null) {
-            UdpRequestDispatcher.instance.sendSignal(udpAddress, UdpNotificationType.OPEN_CONNECTION);
+            UdpRequestDispatcher.instance.sendSignal(udpAddress,
+                    UdpNotificationType.OPEN_CONNECTION);
             isConnectionRecovering = true;
         }
     }

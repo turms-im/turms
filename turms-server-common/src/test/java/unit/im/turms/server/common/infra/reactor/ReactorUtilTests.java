@@ -17,13 +17,14 @@
 
 package unit.im.turms.server.common.infra.reactor;
 
-import im.turms.server.common.infra.reactor.PublisherUtil;
+import java.util.Collections;
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-import java.util.Collections;
-import java.util.List;
+import im.turms.server.common.infra.reactor.PublisherUtil;
 
 /**
  * @author James Chen
@@ -32,8 +33,10 @@ class ReactorUtilTests {
 
     @Test
     void areAllTrue_shouldPass() {
-        List<Mono<Boolean>> allFalse = List.of(Mono.just(false), Mono.just(false), Mono.just(false));
-        List<Mono<Boolean>> notAllTrue = List.of(Mono.just(false), Mono.just(false), Mono.just(true));
+        List<Mono<Boolean>> allFalse =
+                List.of(Mono.just(false), Mono.just(false), Mono.just(false));
+        List<Mono<Boolean>> notAllTrue =
+                List.of(Mono.just(false), Mono.just(false), Mono.just(true));
         List<Mono<Boolean>> allTrue = List.of(Mono.just(true), Mono.just(true), Mono.just(true));
         List<Mono<Boolean>> empty = Collections.emptyList();
 
@@ -53,8 +56,10 @@ class ReactorUtilTests {
 
     @Test
     void atLeastOneTrue_shouldPass() {
-        List<Mono<Boolean>> allFalse = List.of(Mono.just(false), Mono.just(false), Mono.just(false));
-        List<Mono<Boolean>> notAllTrue = List.of(Mono.just(false), Mono.just(false), Mono.just(true));
+        List<Mono<Boolean>> allFalse =
+                List.of(Mono.just(false), Mono.just(false), Mono.just(false));
+        List<Mono<Boolean>> notAllTrue =
+                List.of(Mono.just(false), Mono.just(false), Mono.just(true));
         List<Mono<Boolean>> allTrue = List.of(Mono.just(true), Mono.just(true), Mono.just(true));
         List<Mono<Boolean>> empty = Collections.emptyList();
 

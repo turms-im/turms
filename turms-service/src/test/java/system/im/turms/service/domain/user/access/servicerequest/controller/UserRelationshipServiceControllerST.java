@@ -18,6 +18,13 @@
 package system.im.turms.service.domain.user.access.servicerequest.controller;
 
 import helper.NotificationUtil;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
+import reactor.core.publisher.Mono;
+import system.im.turms.service.domain.common.access.servicerequest.controller.BaseServiceControllerTest;
+
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.constant.ResponseAction;
 import im.turms.server.common.access.client.dto.request.TurmsRequest;
@@ -36,24 +43,20 @@ import im.turms.server.common.access.client.dto.request.user.relationship.Update
 import im.turms.service.access.servicerequest.dto.ClientRequest;
 import im.turms.service.access.servicerequest.dto.RequestHandlerResult;
 import im.turms.service.domain.user.access.servicerequest.controller.UserRelationshipServiceController;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
-import reactor.core.publisher.Mono;
-import system.im.turms.service.domain.common.access.servicerequest.controller.BaseServiceControllerTest;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 import static im.turms.server.common.testing.Constants.ORDER_HIGHEST_PRIORITY;
 import static im.turms.server.common.testing.Constants.ORDER_HIGH_PRIORITY;
 import static im.turms.server.common.testing.Constants.ORDER_LOW_PRIORITY;
 import static im.turms.server.common.testing.Constants.ORDER_MIDDLE_PRIORITY;
-import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author James Chen
  */
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class UserRelationshipServiceControllerST extends BaseServiceControllerTest<UserRelationshipServiceController> {
+class UserRelationshipServiceControllerST
+        extends BaseServiceControllerTest<UserRelationshipServiceController> {
 
     private static final long USER_ID = 1;
     private static final DeviceType USER_DEVICE_TYPE = DeviceType.DESKTOP;
@@ -74,7 +77,8 @@ class UserRelationshipServiceControllerST extends BaseServiceControllerTest<User
                         .setUserId(BLOCKED_USER_ID)
                         .setBlocked(true))
                 .build();
-        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE_TYPE, USER_IP, REQUEST_ID, request);
+        ClientRequest clientRequest =
+                new ClientRequest(USER_ID, USER_DEVICE_TYPE, USER_IP, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleCreateRelationshipRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono);
@@ -88,7 +92,8 @@ class UserRelationshipServiceControllerST extends BaseServiceControllerTest<User
                         .setUserId(FRIENDED_USER_ID)
                         .setBlocked(false))
                 .build();
-        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE_TYPE, USER_IP, REQUEST_ID, request);
+        ClientRequest clientRequest =
+                new ClientRequest(USER_ID, USER_DEVICE_TYPE, USER_IP, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleCreateRelationshipRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono);
@@ -101,11 +106,14 @@ class UserRelationshipServiceControllerST extends BaseServiceControllerTest<User
                 .setCreateRelationshipGroupRequest(CreateRelationshipGroupRequest.newBuilder()
                         .setName("newGroup"))
                 .build();
-        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE_TYPE, USER_IP, REQUEST_ID, request);
-        Mono<RequestHandlerResult> resultMono = getController().handleCreateRelationshipGroupRequest()
-                .handle(clientRequest);
+        ClientRequest clientRequest =
+                new ClientRequest(USER_ID, USER_DEVICE_TYPE, USER_IP, REQUEST_ID, request);
+        Mono<RequestHandlerResult> resultMono =
+                getController().handleCreateRelationshipGroupRequest()
+                        .handle(clientRequest);
         assertResultIsOk(resultMono, result -> {
-            relationshipGroupIndex = (int) NotificationUtil.getLongOrThrow(result.dataForRequester());
+            relationshipGroupIndex =
+                    (int) NotificationUtil.getLongOrThrow(result.dataForRequester());
         });
     }
 
@@ -117,11 +125,13 @@ class UserRelationshipServiceControllerST extends BaseServiceControllerTest<User
                         .setRecipientId(USER_ID_FOR_FRIEND_REQUEST)
                         .setContent("content"))
                 .build();
-        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE_TYPE, USER_IP, REQUEST_ID, request);
+        ClientRequest clientRequest =
+                new ClientRequest(USER_ID, USER_DEVICE_TYPE, USER_IP, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleCreateFriendRequestRequest()
                 .handle(clientRequest);
-        assertResultIsOk(resultMono, result ->
-                assertThat(result.dataForRequester().hasLong()).isTrue());
+        assertResultIsOk(resultMono,
+                result -> assertThat(result.dataForRequester()
+                        .hasLong()).isTrue());
     }
 
     @Test
@@ -133,7 +143,12 @@ class UserRelationshipServiceControllerST extends BaseServiceControllerTest<User
                         .setResponseAction(ResponseAction.ACCEPT)
                         .setReason("reason"))
                 .build();
-        ClientRequest clientRequest = new ClientRequest(USER_ID_FOR_FRIEND_REQUEST, USER_DEVICE_TYPE, USER_IP, REQUEST_ID, request);
+        ClientRequest clientRequest = new ClientRequest(
+                USER_ID_FOR_FRIEND_REQUEST,
+                USER_DEVICE_TYPE,
+                USER_IP,
+                REQUEST_ID,
+                request);
         Mono<RequestHandlerResult> resultMono = getController().handleUpdateFriendRequestRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono);
@@ -147,9 +162,11 @@ class UserRelationshipServiceControllerST extends BaseServiceControllerTest<User
                         .setGroupIndex(relationshipGroupIndex)
                         .setNewName("newGroupName"))
                 .build();
-        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE_TYPE, USER_IP, REQUEST_ID, request);
-        Mono<RequestHandlerResult> resultMono = getController().handleUpdateRelationshipGroupRequest()
-                .handle(clientRequest);
+        ClientRequest clientRequest =
+                new ClientRequest(USER_ID, USER_DEVICE_TYPE, USER_IP, REQUEST_ID, request);
+        Mono<RequestHandlerResult> resultMono =
+                getController().handleUpdateRelationshipGroupRequest()
+                        .handle(clientRequest);
         assertResultIsOk(resultMono);
     }
 
@@ -161,7 +178,8 @@ class UserRelationshipServiceControllerST extends BaseServiceControllerTest<User
                         .setNewGroupIndex(1)
                         .setUserId(FRIENDED_USER_ID))
                 .build();
-        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE_TYPE, USER_IP, REQUEST_ID, request);
+        ClientRequest clientRequest =
+                new ClientRequest(USER_ID, USER_DEVICE_TYPE, USER_IP, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleUpdateRelationshipRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono);
@@ -184,12 +202,14 @@ class UserRelationshipServiceControllerST extends BaseServiceControllerTest<User
                 .setQueryRelationshipsRequest(QueryRelationshipsRequest.newBuilder()
                         .addUserIds(FRIENDED_USER_ID))
                 .build();
-        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE_TYPE, USER_IP, REQUEST_ID, request);
+        ClientRequest clientRequest =
+                new ClientRequest(USER_ID, USER_DEVICE_TYPE, USER_IP, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleQueryRelationshipsRequest()
                 .handle(clientRequest);
-        assertResultIsOk(resultMono, result ->
-                assertThat(result.dataForRequester().getUserRelationshipsWithVersion().getUserRelationshipsCount())
-                        .isPositive());
+        assertResultIsOk(resultMono,
+                result -> assertThat(result.dataForRequester()
+                        .getUserRelationshipsWithVersion()
+                        .getUserRelationshipsCount()).isPositive());
     }
 
     @Test
@@ -198,11 +218,14 @@ class UserRelationshipServiceControllerST extends BaseServiceControllerTest<User
         TurmsRequest request = TurmsRequest.newBuilder()
                 .setQueryRelatedUserIdsRequest(QueryRelatedUserIdsRequest.newBuilder())
                 .build();
-        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE_TYPE, USER_IP, REQUEST_ID, request);
+        ClientRequest clientRequest =
+                new ClientRequest(USER_ID, USER_DEVICE_TYPE, USER_IP, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleQueryRelatedUserIdsRequest()
                 .handle(clientRequest);
-        assertResultIsOk(resultMono, result ->
-                assertThat(result.dataForRequester().getLongsWithVersion().getLongsCount()).isPositive());
+        assertResultIsOk(resultMono,
+                result -> assertThat(result.dataForRequester()
+                        .getLongsWithVersion()
+                        .getLongsCount()).isPositive());
     }
 
     @Test
@@ -212,11 +235,14 @@ class UserRelationshipServiceControllerST extends BaseServiceControllerTest<User
                 .setQueryRelationshipsRequest(QueryRelationshipsRequest.newBuilder()
                         .setBlocked(false))
                 .build();
-        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE_TYPE, USER_IP, REQUEST_ID, request);
+        ClientRequest clientRequest =
+                new ClientRequest(USER_ID, USER_DEVICE_TYPE, USER_IP, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleQueryRelationshipsRequest()
                 .handle(clientRequest);
-        assertResultIsOk(resultMono, result ->
-                assertThat(result.dataForRequester().getUserRelationshipsWithVersion().getUserRelationshipsCount()).isPositive());
+        assertResultIsOk(resultMono,
+                result -> assertThat(result.dataForRequester()
+                        .getUserRelationshipsWithVersion()
+                        .getUserRelationshipsCount()).isPositive());
     }
 
     @Test
@@ -226,11 +252,14 @@ class UserRelationshipServiceControllerST extends BaseServiceControllerTest<User
                 .setQueryRelationshipsRequest(QueryRelationshipsRequest.newBuilder()
                         .setBlocked(true))
                 .build();
-        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE_TYPE, USER_IP, REQUEST_ID, request);
+        ClientRequest clientRequest =
+                new ClientRequest(USER_ID, USER_DEVICE_TYPE, USER_IP, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleQueryRelationshipsRequest()
                 .handle(clientRequest);
-        assertResultIsOk(resultMono, result ->
-                assertThat(result.dataForRequester().getUserRelationshipsWithVersion().getUserRelationshipsCount()).isPositive());
+        assertResultIsOk(resultMono,
+                result -> assertThat(result.dataForRequester()
+                        .getUserRelationshipsWithVersion()
+                        .getUserRelationshipsCount()).isPositive());
     }
 
     @Test
@@ -240,11 +269,14 @@ class UserRelationshipServiceControllerST extends BaseServiceControllerTest<User
                 .setQueryFriendRequestsRequest(QueryFriendRequestsRequest.newBuilder()
                         .setAreSentByMe(true))
                 .build();
-        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE_TYPE, USER_IP, REQUEST_ID, request);
+        ClientRequest clientRequest =
+                new ClientRequest(USER_ID, USER_DEVICE_TYPE, USER_IP, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleQueryFriendRequestsRequest()
                 .handle(clientRequest);
-        assertResultIsOk(resultMono, result ->
-                assertThat(result.dataForRequester().getUserFriendRequestsWithVersion().getUserFriendRequestsCount()).isPositive());
+        assertResultIsOk(resultMono,
+                result -> assertThat(result.dataForRequester()
+                        .getUserFriendRequestsWithVersion()
+                        .getUserFriendRequestsCount()).isPositive());
     }
 
     @Test
@@ -253,11 +285,15 @@ class UserRelationshipServiceControllerST extends BaseServiceControllerTest<User
         TurmsRequest request = TurmsRequest.newBuilder()
                 .setQueryRelationshipGroupsRequest(QueryRelationshipGroupsRequest.newBuilder())
                 .build();
-        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE_TYPE, USER_IP, REQUEST_ID, request);
-        Mono<RequestHandlerResult> resultMono = getController().handleQueryRelationshipGroupsRequest()
-                .handle(clientRequest);
-        assertResultIsOk(resultMono, result ->
-                assertThat(result.dataForRequester().getUserRelationshipGroupsWithVersion().getUserRelationshipGroupsCount()).isPositive());
+        ClientRequest clientRequest =
+                new ClientRequest(USER_ID, USER_DEVICE_TYPE, USER_IP, REQUEST_ID, request);
+        Mono<RequestHandlerResult> resultMono =
+                getController().handleQueryRelationshipGroupsRequest()
+                        .handle(clientRequest);
+        assertResultIsOk(resultMono,
+                result -> assertThat(result.dataForRequester()
+                        .getUserRelationshipGroupsWithVersion()
+                        .getUserRelationshipGroupsCount()).isPositive());
     }
 
     @Test
@@ -267,7 +303,8 @@ class UserRelationshipServiceControllerST extends BaseServiceControllerTest<User
                 .setDeleteRelationshipRequest(DeleteRelationshipRequest.newBuilder()
                         .setUserId(FRIENDED_USER_ID))
                 .build();
-        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE_TYPE, USER_IP, REQUEST_ID, request);
+        ClientRequest clientRequest =
+                new ClientRequest(USER_ID, USER_DEVICE_TYPE, USER_IP, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleDeleteRelationshipRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono);
@@ -280,9 +317,11 @@ class UserRelationshipServiceControllerST extends BaseServiceControllerTest<User
                 .setDeleteRelationshipGroupRequest(DeleteRelationshipGroupRequest.newBuilder()
                         .setGroupIndex(relationshipGroupIndex))
                 .build();
-        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE_TYPE, USER_IP, REQUEST_ID, request);
-        Mono<RequestHandlerResult> resultMono = getController().handleDeleteRelationshipGroupRequest()
-                .handle(clientRequest);
+        ClientRequest clientRequest =
+                new ClientRequest(USER_ID, USER_DEVICE_TYPE, USER_IP, REQUEST_ID, request);
+        Mono<RequestHandlerResult> resultMono =
+                getController().handleDeleteRelationshipGroupRequest()
+                        .handle(clientRequest);
         assertResultIsOk(resultMono);
     }
 

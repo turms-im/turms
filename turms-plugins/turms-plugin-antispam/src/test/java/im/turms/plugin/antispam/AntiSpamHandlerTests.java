@@ -17,6 +17,16 @@
 
 package im.turms.plugin.antispam;
 
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
+
+import lombok.SneakyThrows;
+import org.junit.jupiter.api.Test;
+import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
+
 import im.turms.plugin.antispam.ac.Store;
 import im.turms.plugin.antispam.property.AntiSpamProperties;
 import im.turms.plugin.antispam.property.TextParsingStrategy;
@@ -29,15 +39,6 @@ import im.turms.server.common.access.client.dto.request.group.enrollment.CreateG
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.service.access.servicerequest.dto.ClientRequest;
-import lombok.SneakyThrows;
-import org.junit.jupiter.api.Test;
-import reactor.core.publisher.Mono;
-import reactor.test.StepVerifier;
-
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -54,27 +55,32 @@ class AntiSpamHandlerTests {
     void shouldRejectRequest() {
         // Plain field validation
         AntiSpamHandler handler = createHandler(UnwantedWordHandleStrategy.REJECT_REQUEST,
-                TextParsingStrategy.NORMALIZATION_TRANSLITERATION, false);
-        TurmsRequest.Builder builder = TurmsRequest
-                .newBuilder()
+                TextParsingStrategy.NORMALIZATION_TRANSLITERATION,
+                false);
+        TurmsRequest.Builder builder = TurmsRequest.newBuilder()
                 .setCreateGroupRequest(CreateGroupRequest.newBuilder()
-                        .setName(new String(Store.UNWANTED_WORDS.get(0).getWord()))
+                        .setName(new String(
+                                Store.UNWANTED_WORDS.get(0)
+                                        .getWord()))
                         .build());
-        ClientRequest clientRequest = new ClientRequest(1L, DeviceType.DESKTOP, CLIENT_IP, 1L, builder, null);
+        ClientRequest clientRequest =
+                new ClientRequest(1L, DeviceType.DESKTOP, CLIENT_IP, 1L, builder, null);
         Mono<ClientRequest> result = handler.transform(clientRequest);
         StepVerifier.create(result)
                 .expectErrorSatisfies(t -> {
                     assertThat(t).isInstanceOf(ResponseException.class);
-                    assertThat(((ResponseException) t).getCode()).isEqualTo(ResponseStatusCode.MESSAGE_IS_ILLEGAL);
+                    assertThat(((ResponseException) t).getCode())
+                            .isEqualTo(ResponseStatusCode.MESSAGE_IS_ILLEGAL);
                 })
                 .verify();
 
         // Nested field validation
-        builder = TurmsRequest
-                .newBuilder()
+        builder = TurmsRequest.newBuilder()
                 .setCreateGroupJoinQuestionsRequest(CreateGroupJoinQuestionsRequest.newBuilder()
                         .addQuestions(GroupJoinQuestion.newBuilder()
-                                .setQuestion(new String(Store.UNWANTED_WORDS.get(0).getWord()))
+                                .setQuestion(new String(
+                                        Store.UNWANTED_WORDS.get(0)
+                                                .getWord()))
                                 .build())
                         .build());
         clientRequest = new ClientRequest(1L, DeviceType.DESKTOP, CLIENT_IP, 1L, builder, null);
@@ -82,15 +88,18 @@ class AntiSpamHandlerTests {
         StepVerifier.create(result)
                 .expectErrorSatisfies(t -> {
                     assertThat(t).isInstanceOf(ResponseException.class);
-                    assertThat(((ResponseException) t).getCode()).isEqualTo(ResponseStatusCode.MESSAGE_IS_ILLEGAL);
+                    assertThat(((ResponseException) t).getCode())
+                            .isEqualTo(ResponseStatusCode.MESSAGE_IS_ILLEGAL);
                 })
                 .verify();
     }
 
     @Test
     void shouldMask_forLatin1Text() {
-        String original = "Oh no, loving you is not right. But no, don't take me home tonight. Oh yes, so baby won't you hold me tight";
-        String expected = "*****, ***********************. ******, don't take me home tonight. ******, so baby won't you hold me tight";
+        String original =
+                "Oh no, loving you is not right. But no, don't take me home tonight. Oh yes, so baby won't you hold me tight";
+        String expected =
+                "*****, ***********************. ******, don't take me home tonight. ******, so baby won't you hold me tight";
         testMask(original, expected, TextParsingStrategy.NORMALIZATION);
     }
 
@@ -110,56 +119,41 @@ class AntiSpamHandlerTests {
 
     @Test
     void shouldReturnUnwantedWords_forLatin1Text() {
-        String original = "Oh no, loving you is not right. But no, don't take me home tonight. Oh yes, so baby won't you hold me tight";
-        List<String> words = List.of(
-                "Oh no",
-                "loving you is not right",
-                "But no",
-                "Oh yes");
+        String original =
+                "Oh no, loving you is not right. But no, don't take me home tonight. Oh yes, so baby won't you hold me tight";
+        List<String> words = List.of("Oh no", "loving you is not right", "But no", "Oh yes");
         testReturnUnwantedWords(original, words, TextParsingStrategy.NORMALIZATION);
     }
 
     @Test
     void shouldReturnUnwantedWords_forUTF16TextWithAscii() {
         String original = "Hello敏感词句.,asd#(&𤳵/()12%&123敏gan词321";
-        List<String> words = List.of(
-                "敏感词",
-                "敏感词句",
-                "123",
-                "敏gan词");
+        List<String> words = List.of("敏感词", "敏感词句", "123", "敏gan词");
         testReturnUnwantedWords(original, words, TextParsingStrategy.NORMALIZATION_TRANSLITERATION);
     }
 
     @Test
     void shouldReturnUnwantedWords_forUTF16TextWithoutAscii() {
         String original = "薬指のリングより　人目忍ぶ恋選んだ　強い女に見えても　心の中いつも　切なさに　揺れてる";
-        List<String> words = List.of(
-                "薬指",
-                "リング",
-                "人目忍ぶ恋",
-                "選んだ",
-                "強い",
-                "女",
-                "見えて",
-                "心",
-                "中",
-                "切なさ",
-                "揺れて");
+        List<String> words =
+                List.of("薬指", "リング", "人目忍ぶ恋", "選んだ", "強い", "女", "見えて", "心", "中", "切なさ", "揺れて");
         testReturnUnwantedWords(original, words, TextParsingStrategy.NORMALIZATION);
     }
 
     void testMask(String original, String expected, TextParsingStrategy strategy) {
-        AntiSpamHandler handler = createHandler(UnwantedWordHandleStrategy.MASK_TEXT, strategy, false);
+        AntiSpamHandler handler =
+                createHandler(UnwantedWordHandleStrategy.MASK_TEXT, strategy, false);
         // Plain field validation
-        TurmsRequest.Builder builder = TurmsRequest
-                .newBuilder()
+        TurmsRequest.Builder builder = TurmsRequest.newBuilder()
                 .setCreateGroupRequest(CreateGroupRequest.newBuilder()
                         .setName(original));
-        ClientRequest clientRequest = new ClientRequest(1L, DeviceType.DESKTOP, CLIENT_IP, 1L, builder, null);
+        ClientRequest clientRequest =
+                new ClientRequest(1L, DeviceType.DESKTOP, CLIENT_IP, 1L, builder, null);
         Mono<ClientRequest> result = handler.transform(clientRequest);
         StepVerifier.create(result)
                 .expectNextMatches(request -> {
-                    CreateGroupRequest createGroupRequest = request.turmsRequest().getCreateGroupRequest();
+                    CreateGroupRequest createGroupRequest = request.turmsRequest()
+                            .getCreateGroupRequest();
                     assertThat(createGroupRequest.getName()).isEqualTo(expected);
                     return true;
                 })
@@ -168,8 +162,7 @@ class AntiSpamHandlerTests {
         // Nested field validation
         String legalQuestion1 = "ok";
         String legalQuestion2 = "ko";
-        builder = TurmsRequest
-                .newBuilder()
+        builder = TurmsRequest.newBuilder()
                 .setCreateGroupJoinQuestionsRequest(CreateGroupJoinQuestionsRequest.newBuilder()
                         .addQuestions(GroupJoinQuestion.newBuilder()
                                 .setQuestion(legalQuestion1)
@@ -185,10 +178,10 @@ class AntiSpamHandlerTests {
         result = handler.transform(clientRequest);
         StepVerifier.create(result)
                 .expectNextMatches(request -> {
-                    CreateGroupJoinQuestionsRequest createGroupJoinQuestionsRequest = request
-                            .turmsRequest().getCreateGroupJoinQuestionsRequest();
-                    List<String> questions = createGroupJoinQuestionsRequest
-                            .getQuestionsList()
+                    CreateGroupJoinQuestionsRequest createGroupJoinQuestionsRequest =
+                            request.turmsRequest()
+                                    .getCreateGroupJoinQuestionsRequest();
+                    List<String> questions = createGroupJoinQuestionsRequest.getQuestionsList()
                             .stream()
                             .map(GroupJoinQuestion::getQuestion)
                             .toList();
@@ -198,21 +191,25 @@ class AntiSpamHandlerTests {
                 .verifyComplete();
     }
 
-    void testReturnUnwantedWords(String original, List<String> words, TextParsingStrategy strategy) {
-        AntiSpamHandler handler = createHandler(UnwantedWordHandleStrategy.REJECT_REQUEST,
-                strategy,
-                true);
-        TurmsRequest.Builder builder = TurmsRequest
-                .newBuilder()
+    void testReturnUnwantedWords(
+            String original,
+            List<String> words,
+            TextParsingStrategy strategy) {
+        AntiSpamHandler handler =
+                createHandler(UnwantedWordHandleStrategy.REJECT_REQUEST, strategy, true);
+        TurmsRequest.Builder builder = TurmsRequest.newBuilder()
                 .setCreateGroupRequest(CreateGroupRequest.newBuilder()
                         .setName(original));
-        ClientRequest clientRequest = new ClientRequest(1L, DeviceType.DESKTOP, CLIENT_IP, 1L, builder, null);
+        ClientRequest clientRequest =
+                new ClientRequest(1L, DeviceType.DESKTOP, CLIENT_IP, 1L, builder, null);
         Mono<ClientRequest> result = handler.transform(clientRequest);
         StepVerifier.create(result)
                 .expectErrorMatches(throwable -> {
                     ResponseException e = (ResponseException) throwable;
                     assertThat(e.getCode()).isEqualTo(ResponseStatusCode.MESSAGE_IS_ILLEGAL);
-                    String expected = String.join(String.valueOf((char) SpamDetector.UNWANTED_WORD_DELIMITER), words);
+                    String expected =
+                            String.join(String.valueOf((char) SpamDetector.UNWANTED_WORD_DELIMITER),
+                                    words);
                     assertThat(e.getReason()).isEqualTo(expected);
                     return true;
                 })
@@ -220,18 +217,25 @@ class AntiSpamHandlerTests {
     }
 
     @SneakyThrows
-    AntiSpamHandler createHandler(UnwantedWordHandleStrategy handleStrategy, TextParsingStrategy strategy, boolean shouldReturnUnwantedWords) {
+    AntiSpamHandler createHandler(
+            UnwantedWordHandleStrategy handleStrategy,
+            TextParsingStrategy strategy,
+            boolean shouldReturnUnwantedWords) {
         try {
-            List<String> terms = Store.UNWANTED_WORDS.stream().map(word -> new String(word.getWord())).toList();
+            List<String> terms = Store.UNWANTED_WORDS.stream()
+                    .map(word -> new String(word.getWord()))
+                    .toList();
             String text = String.join("\n", terms);
             Files.writeString(path, text, StandardCharsets.UTF_8);
-            AntiSpamProperties properties = new AntiSpamProperties()
-                    .toBuilder()
+            AntiSpamProperties properties = new AntiSpamProperties().toBuilder()
                     .textParsingStrategy(strategy)
                     .unwantedWordHandleStrategy(handleStrategy)
-                    .maxNumberOfUnwantedWordsToReturn(shouldReturnUnwantedWords ? Integer.MAX_VALUE : 0)
+                    .maxNumberOfUnwantedWordsToReturn(shouldReturnUnwantedWords
+                            ? Integer.MAX_VALUE
+                            : 0)
                     .build();
-            properties.getDictParsing().setTextFilePath(path.toString());
+            properties.getDictParsing()
+                    .setTextFilePath(path.toString());
             return new AntiSpamHandler(properties);
         } finally {
             Files.delete(path);

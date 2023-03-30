@@ -17,8 +17,9 @@
 
 package unit.im.turms.server.common.infra.security.password;
 
-import im.turms.server.common.infra.security.password.BCryptPasswordEncoder;
 import org.junit.jupiter.api.Test;
+
+import im.turms.server.common.infra.security.password.BCryptPasswordEncoder;
 
 /**
  * @author James Chen
@@ -28,7 +29,8 @@ class BCryptPasswordEncoderTests extends BasePasswordEncoderTests {
     @Test
     void test() {
         int bcryptOutputLength = 24;
-        test(new BCryptPasswordEncoder(), BCryptPasswordEncoder.SALT_SIZE_BYTES + bcryptOutputLength);
+        test(new BCryptPasswordEncoder(),
+                BCryptPasswordEncoder.SALT_SIZE_BYTES + bcryptOutputLength);
     }
 
 }

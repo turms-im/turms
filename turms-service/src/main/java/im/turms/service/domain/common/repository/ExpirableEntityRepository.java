@@ -17,6 +17,13 @@
 
 package im.turms.service.domain.common.repository;
 
+import java.util.Date;
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotNull;
+
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.access.client.dto.constant.RequestStatus;
 import im.turms.server.common.domain.common.repository.BaseRepository;
 import im.turms.server.common.infra.time.DateRange;
@@ -28,17 +35,12 @@ import im.turms.service.domain.common.po.Expirable;
 import im.turms.service.domain.common.util.ExpirableRequestInspector;
 import im.turms.service.domain.group.po.GroupInvitation;
 import im.turms.service.domain.group.po.GroupJoinRequest;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
-import java.util.Date;
-import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.NotNull;
 
 /**
  * @author James Chen
  */
-public abstract class ExpirableEntityRepository<T extends Expirable, K> extends BaseRepository<T, K> {
+public abstract class ExpirableEntityRepository<T extends Expirable, K>
+        extends BaseRepository<T, K> {
 
     protected ExpirableEntityRepository(TurmsMongoClient mongoClient, Class<T> entityClass) {
         super(mongoClient, entityClass);
@@ -58,7 +60,8 @@ public abstract class ExpirableEntityRepository<T extends Expirable, K> extends 
     public Mono<Void> deleteExpiredData(String creationDateFieldName, Date expirationDate) {
         Filter filter = Filter.newBuilder(1)
                 .isExpired(creationDateFieldName, expirationDate);
-        return mongoClient.deleteMany(GroupJoinRequest.class, filter).then();
+        return mongoClient.deleteMany(GroupJoinRequest.class, filter)
+                .then();
     }
 
     protected Flux<T> findExpirableDocs(Filter filter) {
@@ -84,9 +87,10 @@ public abstract class ExpirableEntityRepository<T extends Expirable, K> extends 
         return mongoClient.findMany(entityClass, filter, options);
     }
 
-    protected void updateResponseDateBasedOnStatus(@NotNull Update update,
-                                                   @Nullable RequestStatus status,
-                                                   @Nullable Date responseDate) {
+    protected void updateResponseDateBasedOnStatus(
+            @NotNull Update update,
+            @Nullable RequestStatus status,
+            @Nullable Date responseDate) {
         if (status == null) {
             return;
         }
@@ -101,8 +105,9 @@ public abstract class ExpirableEntityRepository<T extends Expirable, K> extends 
     }
 
     @Nullable
-    protected DateRange getCreationDateRange(@Nullable DateRange creationDateRange,
-                                             @Nullable DateRange expirationDateRange) {
+    protected DateRange getCreationDateRange(
+            @Nullable DateRange creationDateRange,
+            @Nullable DateRange expirationDateRange) {
         if (expirationDateRange == null) {
             return creationDateRange;
         }
@@ -128,14 +133,16 @@ public abstract class ExpirableEntityRepository<T extends Expirable, K> extends 
         return request;
     }
 
-    private boolean isPendingRequestExpired(RequestStatus status,
-                                            Date creationDate,
-                                            int expireAfterSeconds) {
+    private boolean isPendingRequestExpired(
+            RequestStatus status,
+            Date creationDate,
+            int expireAfterSeconds) {
         if (status == RequestStatus.PENDING) {
             if (expireAfterSeconds <= 0) {
                 return false;
             }
-            return System.currentTimeMillis() - creationDate.getTime() >= expireAfterSeconds * 1000L;
+            return System.currentTimeMillis() - creationDate.getTime() >= expireAfterSeconds
+                    * 1000L;
         }
         return false;
     }

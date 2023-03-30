@@ -17,15 +17,16 @@
 
 package im.turms.server.common.infra.property.env.common;
 
-import im.turms.server.common.infra.property.metadata.Description;
-import im.turms.server.common.infra.property.metadata.MutableProperty;
+import java.util.List;
+import jakarta.validation.constraints.Min;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-import jakarta.validation.constraints.Min;
+import im.turms.server.common.infra.property.metadata.Description;
+import im.turms.server.common.infra.property.metadata.MutableProperty;
 
 /**
  * @author James Chen
@@ -38,17 +39,16 @@ public class IpProperties {
 
     /**
      * @implNote Removed addresses because they aren't available currently:
-     * bot.whatismyipaddress.com
+     *           bot.whatismyipaddress.com
      */
-    @Description("The public IP detectors will only be used to query the public IP of the local node " +
-            "if needed (e.g. If the node discovery property \"advertiseStrategy\" is \"PUBLIC_ADDRESS\". " +
-            "Note that the HTTP response body must be a string of IP instead of a JSON")
+    @Description("The public IP detectors will only be used to query the public IP of the local node "
+            + "if needed (e.g. If the node discovery property \"advertiseStrategy\" is \"PUBLIC_ADDRESS\". "
+            + "Note that the HTTP response body must be a string of IP instead of a JSON")
     @MutableProperty
-    private List<String> publicIpDetectorAddresses =
-            List.of("https://checkip.amazonaws.com",
-                    "https://whatismyip.akamai.com",
-                    "https://ifconfig.me/ip",
-                    "https://myip.dnsomatic.com");
+    private List<String> publicIpDetectorAddresses = List.of("https://checkip.amazonaws.com",
+            "https://whatismyip.akamai.com",
+            "https://ifconfig.me/ip",
+            "https://myip.dnsomatic.com");
 
     @Description("The cached private IP will expire after the specified time has elapsed. 0 means no cache")
     @MutableProperty

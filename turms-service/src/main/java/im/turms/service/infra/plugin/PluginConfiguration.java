@@ -17,12 +17,13 @@
 
 package im.turms.service.infra.plugin;
 
-import im.turms.server.common.infra.plugin.ExtensionPoint;
-import im.turms.service.infra.plugin.extension.StorageServiceProvider;
+import java.util.Set;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.Set;
+import im.turms.server.common.infra.plugin.ExtensionPoint;
+import im.turms.service.infra.plugin.extension.StorageServiceProvider;
 
 /**
  * @author James Chen

@@ -17,9 +17,9 @@
 
 package im.turms.service.domain.conversation.access.admin.dto.request;
 
-import im.turms.server.common.domain.common.access.dto.ControllerDTO;
-
 import java.util.Date;
+
+import im.turms.server.common.domain.common.access.dto.ControllerDTO;
 
 /**
  * @author James Chen

@@ -17,6 +17,14 @@
 
 package system.im.turms.service.domain.user.access.servicerequest.controller;
 
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
+import reactor.core.publisher.Mono;
+import system.im.turms.service.domain.common.access.servicerequest.controller.BaseServiceControllerTest;
+
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.constant.UserStatus;
 import im.turms.server.common.access.client.dto.request.TurmsRequest;
@@ -29,17 +37,11 @@ import im.turms.server.common.access.client.dto.request.user.UpdateUserRequest;
 import im.turms.service.access.servicerequest.dto.ClientRequest;
 import im.turms.service.access.servicerequest.dto.RequestHandlerResult;
 import im.turms.service.domain.user.access.servicerequest.controller.UserServiceController;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
-import reactor.core.publisher.Mono;
-import system.im.turms.service.domain.common.access.servicerequest.controller.BaseServiceControllerTest;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 import static im.turms.server.common.testing.Constants.ORDER_HIGH_PRIORITY;
 import static im.turms.server.common.testing.Constants.ORDER_MIDDLE_PRIORITY;
-import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author James Chen
@@ -60,9 +62,11 @@ class UserServiceControllerST extends BaseServiceControllerTest<UserServiceContr
                 .setUpdateUserOnlineStatusRequest(UpdateUserOnlineStatusRequest.newBuilder()
                         .setUserStatus(UserStatus.BUSY))
                 .build();
-        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE_TYPE, USER_IP, REQUEST_ID, request);
-        Mono<RequestHandlerResult> resultMono = getController().handleUpdateUserOnlineStatusRequest()
-                .handle(clientRequest);
+        ClientRequest clientRequest =
+                new ClientRequest(USER_ID, USER_DEVICE_TYPE, USER_IP, REQUEST_ID, request);
+        Mono<RequestHandlerResult> resultMono =
+                getController().handleUpdateUserOnlineStatusRequest()
+                        .handle(clientRequest);
         assertResultIsOk(resultMono);
     }
 
@@ -74,7 +78,8 @@ class UserServiceControllerST extends BaseServiceControllerTest<UserServiceContr
                         .setName("123")
                         .setIntro("123"))
                 .build();
-        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE_TYPE, USER_IP, REQUEST_ID, request);
+        ClientRequest clientRequest =
+                new ClientRequest(USER_ID, USER_DEVICE_TYPE, USER_IP, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleUpdateUserRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono);
@@ -88,7 +93,8 @@ class UserServiceControllerST extends BaseServiceControllerTest<UserServiceContr
                         .setLatitude(2)
                         .setLongitude(2))
                 .build();
-        ClientRequest clientRequest = new ClientRequest(USER_ID_2, USER_DEVICE_TYPE, USER_IP, REQUEST_ID, request);
+        ClientRequest clientRequest =
+                new ClientRequest(USER_ID_2, USER_DEVICE_TYPE, USER_IP, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleUpdateUserLocationRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono);
@@ -101,11 +107,14 @@ class UserServiceControllerST extends BaseServiceControllerTest<UserServiceContr
                 .setQueryUserProfilesRequest(QueryUserProfilesRequest.newBuilder()
                         .addUserIds(1))
                 .build();
-        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE_TYPE, USER_IP, REQUEST_ID, request);
+        ClientRequest clientRequest =
+                new ClientRequest(USER_ID, USER_DEVICE_TYPE, USER_IP, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleQueryUserProfilesRequest()
                 .handle(clientRequest);
-        assertResultIsOk(resultMono, result ->
-                assertThat(result.dataForRequester().getUserInfosWithVersion().getUserInfosCount()).isEqualTo(1));
+        assertResultIsOk(resultMono,
+                result -> assertThat(result.dataForRequester()
+                        .getUserInfosWithVersion()
+                        .getUserInfosCount()).isEqualTo(1));
     }
 
     @Test
@@ -118,11 +127,14 @@ class UserServiceControllerST extends BaseServiceControllerTest<UserServiceContr
                         .setLatitude(1)
                         .setLongitude(1))
                 .build();
-        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE_TYPE, USER_IP, REQUEST_ID, request);
+        ClientRequest clientRequest =
+                new ClientRequest(USER_ID, USER_DEVICE_TYPE, USER_IP, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleQueryNearbyUsersRequest()
                 .handle(clientRequest);
-        assertResultIsOk(resultMono, result ->
-                assertThat(result.dataForRequester().getNearbyUsers().getNearbyUsersCount()).isPositive());
+        assertResultIsOk(resultMono,
+                result -> assertThat(result.dataForRequester()
+                        .getNearbyUsers()
+                        .getNearbyUsersCount()).isPositive());
     }
 
     @Test
@@ -132,12 +144,16 @@ class UserServiceControllerST extends BaseServiceControllerTest<UserServiceContr
                 .setQueryUserOnlineStatusesRequest(QueryUserOnlineStatusesRequest.newBuilder()
                         .addUserIds(1))
                 .build();
-        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE_TYPE, USER_IP, REQUEST_ID, request);
-        Mono<RequestHandlerResult> resultMono = getController().handleQueryUserOnlineStatusesRequest()
-                .handle(clientRequest);
-        assertResultIsOk(resultMono, result ->
-                assertThat(result.dataForRequester().getUserOnlineStatuses().getStatuses(0).getUserStatus())
-                        .isEqualTo(UserStatus.OFFLINE));
+        ClientRequest clientRequest =
+                new ClientRequest(USER_ID, USER_DEVICE_TYPE, USER_IP, REQUEST_ID, request);
+        Mono<RequestHandlerResult> resultMono =
+                getController().handleQueryUserOnlineStatusesRequest()
+                        .handle(clientRequest);
+        assertResultIsOk(resultMono,
+                result -> assertThat(result.dataForRequester()
+                        .getUserOnlineStatuses()
+                        .getStatuses(0)
+                        .getUserStatus()).isEqualTo(UserStatus.OFFLINE));
     }
 
 }

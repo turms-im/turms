@@ -17,12 +17,13 @@
 
 package im.turms.server.common.infra.metrics;
 
-import im.turms.server.common.infra.reflect.ReflectionUtil;
+import java.lang.invoke.MethodHandle;
+
 import io.micrometer.core.instrument.Meter;
 import io.micrometer.core.instrument.Tag;
 import io.micrometer.core.instrument.Tags;
 
-import java.lang.invoke.MethodHandle;
+import im.turms.server.common.infra.reflect.ReflectionUtil;
 
 /**
  * @author James Chen

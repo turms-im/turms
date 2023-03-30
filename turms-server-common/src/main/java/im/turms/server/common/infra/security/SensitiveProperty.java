@@ -17,12 +17,12 @@
 
 package im.turms.server.common.infra.security;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * @author James Chen
@@ -32,8 +32,8 @@ import java.lang.annotation.Target;
 public @interface SensitiveProperty {
 
     /**
-     * @implNote We don't use {@link JsonProperty#access()} to not mix
-     * Jackson logic with our business logic
+     * @implNote We don't use {@link JsonProperty#access()} to not mix Jackson logic with our
+     *           business logic
      */
     Access value() default Access.DENY;
 

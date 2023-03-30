@@ -17,6 +17,17 @@
 
 package im.turms.server.common.infra.property;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Map;
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Size;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.MapperFeature;
@@ -27,6 +38,8 @@ import com.fasterxml.jackson.databind.introspect.AnnotatedMember;
 import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
+
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.json.JsonUtil;
 import im.turms.server.common.infra.lang.ClassUtil;
@@ -39,18 +52,6 @@ import im.turms.server.common.infra.security.SensitiveProperty;
 import im.turms.server.common.infra.serialization.SerializationException;
 import im.turms.server.common.infra.validation.LessThanOrEqualTo;
 import im.turms.server.common.infra.validation.ValidCron;
-import org.springframework.boot.context.properties.NestedConfigurationProperty;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.IdentityHashMap;
-import java.util.List;
-import java.util.Map;
-import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.Size;
 
 import static im.turms.server.common.infra.json.JsonCodecPool.MAPPER;
 
@@ -94,18 +95,23 @@ public class TurmsPropertiesInspector {
     private static final Map<Class<?>, Map<String, PropertyFieldInfo>> CLASS_TO_NAME_TO_FIELD_INFO;
 
     static {
-        IdentityHashMap<Class<?>, List<PropertyFieldInfo>> classToFieldInfos = new IdentityHashMap<>(128);
+        IdentityHashMap<Class<?>, List<PropertyFieldInfo>> classToFieldInfos =
+                new IdentityHashMap<>(128);
         collectFieldInfos(TurmsProperties.class, classToFieldInfos);
 
         CLASS_TO_FIELD_INFOS = classToFieldInfos;
         CLASS_TO_NAME_TO_FIELD_INFO = new IdentityHashMap<>(CLASS_TO_FIELD_INFOS.size());
-        for (Map.Entry<Class<?>, List<PropertyFieldInfo>> classAndFieldInfos : classToFieldInfos.entrySet()) {
+        for (Map.Entry<Class<?>, List<PropertyFieldInfo>> classAndFieldInfos : classToFieldInfos
+                .entrySet()) {
             List<PropertyFieldInfo> fieldInfos = classAndFieldInfos.getValue();
-            Map<String, PropertyFieldInfo> nameToFieldInfo = CollectionUtil.newMapWithExpectedSize(fieldInfos.size());
+            Map<String, PropertyFieldInfo> nameToFieldInfo =
+                    CollectionUtil.newMapWithExpectedSize(fieldInfos.size());
             for (PropertyFieldInfo fieldInfo : fieldInfos) {
-                nameToFieldInfo.put(fieldInfo.field().getName(), fieldInfo);
+                nameToFieldInfo.put(fieldInfo.field()
+                        .getName(), fieldInfo);
             }
-            CLASS_TO_NAME_TO_FIELD_INFO.put(classAndFieldInfos.getKey(), Map.copyOf(nameToFieldInfo));
+            CLASS_TO_NAME_TO_FIELD_INFO.put(classAndFieldInfos.getKey(),
+                    Map.copyOf(nameToFieldInfo));
         }
         METADATA = getMetadata(TurmsProperties.class, false);
         ONLY_MUTABLE_METADATA = getMetadata(TurmsProperties.class, true);
@@ -115,10 +121,12 @@ public class TurmsPropertiesInspector {
     }
 
     public static Map<String, Object> convertPropertiesToValueMap(
-            TurmsProperties turmsProperties, boolean returnOnlyMutableProperties) {
+            TurmsProperties turmsProperties,
+            boolean returnOnlyMutableProperties) {
         try {
             return returnOnlyMutableProperties
-                    ? JsonUtil.readStringObjectMapValue(MUTABLE_PROPERTIES_WRITER.writeValueAsBytes(turmsProperties))
+                    ? JsonUtil.readStringObjectMapValue(
+                            MUTABLE_PROPERTIES_WRITER.writeValueAsBytes(turmsProperties))
                     : JsonUtil.readStringObjectMapValue(MAPPER.writeValueAsBytes(turmsProperties));
         } catch (JsonProcessingException e) {
             throw new SerializationException("Failed to write turms properties as bytes", e);
@@ -139,8 +147,9 @@ public class TurmsPropertiesInspector {
         return CLASS_TO_FIELD_INFOS.get(propertiesClass);
     }
 
-    private static void collectFieldInfos(Class<?> propertiesClass,
-                                          Map<Class<?>, List<PropertyFieldInfo>> classToFieldInfosOutput) {
+    private static void collectFieldInfos(
+            Class<?> propertiesClass,
+            Map<Class<?>, List<PropertyFieldInfo>> classToFieldInfosOutput) {
         List<Field> fields = ClassUtil.getNonStaticFields(propertiesClass);
         List<PropertyFieldInfo> propertyFieldInfos = new ArrayList<>(fields.size());
         for (Field field : fields) {
@@ -149,14 +158,14 @@ public class TurmsPropertiesInspector {
             if (isNestedProperty) {
                 collectFieldInfos(field.getType(), classToFieldInfosOutput);
             }
-            PropertyConstraints constraints = PropertyConstraints.of(
-                    field.getDeclaredAnnotation(Min.class),
-                    field.getDeclaredAnnotation(Max.class),
-                    field.getDeclaredAnnotation(LessThanOrEqualTo.class),
-                    field.getDeclaredAnnotation(Size.class),
-                    field.getDeclaredAnnotation(ValidCron.class)
-            );
-            propertyFieldInfos.add(new PropertyFieldInfo(field,
+            PropertyConstraints constraints =
+                    PropertyConstraints.of(field.getDeclaredAnnotation(Min.class),
+                            field.getDeclaredAnnotation(Max.class),
+                            field.getDeclaredAnnotation(LessThanOrEqualTo.class),
+                            field.getDeclaredAnnotation(Size.class),
+                            field.getDeclaredAnnotation(ValidCron.class));
+            propertyFieldInfos.add(new PropertyFieldInfo(
+                    field,
                     VarAccessorFactory.get(field),
                     constraints,
                     field.isAnnotationPresent(MutableProperty.class),
@@ -171,7 +180,8 @@ public class TurmsPropertiesInspector {
         for (PropertyFieldInfo fieldInfo : fieldInfos) {
             Field field = fieldInfo.field();
             if (Modifier.isTransient(field.getModifiers())
-                    || (onlyMutable && (!fieldInfo.isMutableProperty() && !fieldInfo.isNestedProperty()))) {
+                    || (onlyMutable
+                            && (!fieldInfo.isMutableProperty() && !fieldInfo.isNestedProperty()))) {
                 continue;
             }
             Object fieldMetadata = fieldInfo.isNestedProperty()
@@ -199,14 +209,17 @@ public class TurmsPropertiesInspector {
             options = type.getEnumConstants();
         }
         Description descriptionAnnotation = field.getDeclaredAnnotation(Description.class);
-        return new FieldMetadata(field.isAnnotationPresent(Deprecated.class),
+        return new FieldMetadata(
+                field.isAnnotationPresent(Deprecated.class),
                 field.isAnnotationPresent(GlobalProperty.class),
                 fieldInfo.isMutableProperty(),
                 field.isAnnotationPresent(SensitiveProperty.class),
                 getTypeName(type),
                 elementType,
                 options,
-                descriptionAnnotation == null ? null : descriptionAnnotation.value());
+                descriptionAnnotation == null
+                        ? null
+                        : descriptionAnnotation.value());
     }
 
     private static String getTypeName(Class<?> type) {

@@ -17,15 +17,16 @@
 
 package im.turms.server.common.infra.plugin.script;
 
-import im.turms.server.common.infra.collection.CollectionUtil;
-import org.graalvm.polyglot.PolyglotException;
-import org.graalvm.polyglot.Value;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import jakarta.annotation.Nullable;
+
+import org.graalvm.polyglot.PolyglotException;
+import org.graalvm.polyglot.Value;
+
+import im.turms.server.common.infra.collection.CollectionUtil;
 
 /**
  * @author James Chen
@@ -57,7 +58,9 @@ public class ValueDecoder {
             } else if (value.fitsInDouble()) {
                 return value.asDouble();
             }
-            throw new IllegalArgumentException("Unknown number value: " + value);
+            throw new IllegalArgumentException(
+                    "Unknown number value: "
+                            + value);
         } else if (value.isHostObject()) {
             return value.asHostObject();
         } else if (value.isProxyObject()) {
@@ -86,7 +89,8 @@ public class ValueDecoder {
             return list;
         } else if (value.hasHashEntries()) {
             Value iterator = value.getHashKeysIterator();
-            Map<Object, Object> map = CollectionUtil.newMapWithExpectedSize((int) value.getHashSize());
+            Map<Object, Object> map =
+                    CollectionUtil.newMapWithExpectedSize((int) value.getHashSize());
             while (iterator.hasIteratorNextElement()) {
                 Value entry = iterator.getIteratorNextElement();
                 map.put(decode(entry), decode(value.getHashValue(entry)));
@@ -100,7 +104,9 @@ public class ValueDecoder {
             }
             return map;
         }
-        throw new IllegalArgumentException("Unknown value: " + value);
+        throw new IllegalArgumentException(
+                "Unknown value: "
+                        + value);
     }
 
     public static ScriptExecutionException translateException(Object exception) {

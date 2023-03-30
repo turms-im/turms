@@ -17,26 +17,27 @@
 
 package im.turms.server.common.infra.collection;
 
-import io.netty.util.internal.shaded.org.jctools.util.Pow2;
-import jdk.internal.vm.annotation.Contended;
-
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.VarHandle;
 import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
 import java.util.function.LongConsumer;
 
+import io.netty.util.internal.shaded.org.jctools.util.Pow2;
+import jdk.internal.vm.annotation.Contended;
+
 /**
- * The implementation has been highly optimized for the case of a single producer and a single consumer,
- * and it is far more efficient than {@link org.jctools.queues.SpscGrowableArrayQueue}
- * for long primitive values.
+ * The implementation has been highly optimized for the case of a single producer and a single
+ * consumer, and it is far more efficient than {@link org.jctools.queues.SpscGrowableArrayQueue} for
+ * long primitive values.
  *
  * @author James Chen
  */
 public class SpscGrowableLongRingBuffer implements RingBuffer {
 
-    private static final AtomicIntegerFieldUpdater<SpscGrowableLongRingBuffer> LOCK_UPDATER
-            = AtomicIntegerFieldUpdater.newUpdater(SpscGrowableLongRingBuffer.class, "lock");
-    private static final VarHandle VALUES_HANDLE = MethodHandles.arrayElementVarHandle(long[].class);
+    private static final AtomicIntegerFieldUpdater<SpscGrowableLongRingBuffer> LOCK_UPDATER =
+            AtomicIntegerFieldUpdater.newUpdater(SpscGrowableLongRingBuffer.class, "lock");
+    private static final VarHandle VALUES_HANDLE =
+            MethodHandles.arrayElementVarHandle(long[].class);
 
     @Contended
     private volatile long[] values;
@@ -45,7 +46,8 @@ public class SpscGrowableLongRingBuffer implements RingBuffer {
     @Contended
     private volatile int writeIndex = 0;
     /**
-     * The lock is used to ensure the resize operation and the drain operation won't happen simultaneously.
+     * The lock is used to ensure the resize operation and the drain operation won't happen
+     * simultaneously.
      */
     @Contended
     private volatile int lock = 0;

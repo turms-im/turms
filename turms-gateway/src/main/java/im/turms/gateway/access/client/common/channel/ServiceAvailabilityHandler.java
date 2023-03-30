@@ -17,20 +17,21 @@
 
 package im.turms.gateway.access.client.common.channel;
 
-import im.turms.gateway.access.client.common.UserSession;
-import im.turms.gateway.domain.session.service.SessionService;
-import im.turms.server.common.domain.blocklist.service.BlocklistService;
-import im.turms.server.common.infra.healthcheck.ServerStatusManager;
-import im.turms.server.common.infra.lang.ByteArrayWrapper;
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
+import java.util.Queue;
+
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.codec.CorruptedFrameException;
 import io.netty.util.internal.OutOfDirectMemoryError;
 
-import java.net.InetSocketAddress;
-import java.net.SocketAddress;
-import java.util.Queue;
+import im.turms.gateway.access.client.common.UserSession;
+import im.turms.gateway.domain.session.service.SessionService;
+import im.turms.server.common.domain.blocklist.service.BlocklistService;
+import im.turms.server.common.infra.healthcheck.ServerStatusManager;
+import im.turms.server.common.infra.lang.ByteArrayWrapper;
 
 /**
  * @author James Chen
@@ -42,9 +43,10 @@ public class ServiceAvailabilityHandler extends ChannelInboundHandlerAdapter {
     private final ServerStatusManager serverStatusManager;
     private final SessionService sessionService;
 
-    public ServiceAvailabilityHandler(BlocklistService blocklistService,
-                                      ServerStatusManager serverStatusManager,
-                                      SessionService sessionService) {
+    public ServiceAvailabilityHandler(
+            BlocklistService blocklistService,
+            ServerStatusManager serverStatusManager,
+            SessionService sessionService) {
         this.blocklistService = blocklistService;
         this.serverStatusManager = serverStatusManager;
         this.sessionService = sessionService;
@@ -53,9 +55,11 @@ public class ServiceAvailabilityHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRegistered(ChannelHandlerContext ctx) {
         if (serverStatusManager.isActive()) {
-            SocketAddress socketAddress = ctx.channel().remoteAddress();
+            SocketAddress socketAddress = ctx.channel()
+                    .remoteAddress();
             if (socketAddress instanceof InetSocketAddress address
-                    && blocklistService.isIpBlocked(address.getAddress().getAddress())) {
+                    && blocklistService.isIpBlocked(address.getAddress()
+                            .getAddress())) {
                 ctx.close();
                 return;
             }
@@ -71,8 +75,11 @@ public class ServiceAvailabilityHandler extends ChannelInboundHandlerAdapter {
         // 1. Illegal WebSocket frame or the frame is too large
         // 2. The varint-length header declares that it will send a large payload
         if (cause instanceof CorruptedFrameException) {
-            InetSocketAddress address = (InetSocketAddress) ctx.channel().remoteAddress();
-            ByteArrayWrapper ip = new ByteArrayWrapper(address.getAddress().getAddress());
+            InetSocketAddress address = (InetSocketAddress) ctx.channel()
+                    .remoteAddress();
+            ByteArrayWrapper ip = new ByteArrayWrapper(
+                    address.getAddress()
+                            .getAddress());
             blocklistService.tryBlockIpForCorruptedFrame(ip);
             Queue<UserSession> sessions = sessionService.getLocalUserSession(ip);
             if (sessions != null) {

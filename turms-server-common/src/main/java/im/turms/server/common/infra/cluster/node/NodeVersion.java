@@ -17,14 +17,15 @@
 
 package im.turms.server.common.infra.cluster.node;
 
-import im.turms.server.common.infra.lang.ClassUtil;
-import im.turms.server.common.infra.lang.IntUtil;
-import im.turms.server.common.storage.mongo.entity.annotation.PersistenceConstructor;
-import lombok.Getter;
-
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import lombok.Getter;
+
+import im.turms.server.common.infra.lang.ClassUtil;
+import im.turms.server.common.infra.lang.IntUtil;
+import im.turms.server.common.storage.mongo.entity.annotation.PersistenceConstructor;
 
 /**
  * @author James Chen
@@ -59,9 +60,22 @@ public class NodeVersion implements Comparable<NodeVersion> {
     }
 
     public NodeVersion(byte major, byte minor, byte patch, byte qualifier) {
-        this(major, minor, patch, qualifier, qualifier == 0
-                ? major + "." + minor + "." + patch
-                : major + "." + minor + "." + patch + "-SNAPSHOT");
+        this(major,
+                minor,
+                patch,
+                qualifier,
+                qualifier == 0
+                        ? major
+                                + "."
+                                + minor
+                                + "."
+                                + patch
+                        : major
+                                + "."
+                                + minor
+                                + "."
+                                + patch
+                                + "-SNAPSHOT");
     }
 
     @Override
@@ -111,7 +125,8 @@ public class NodeVersion implements Comparable<NodeVersion> {
                 case 1 -> minor = Byte.parseByte(token);
                 case 2 -> patch = Byte.parseByte(token);
                 case 3 -> {
-                    for (Qualifier qualifierValue : ClassUtil.getSharedEnumConstants(Qualifier.class)) {
+                    for (Qualifier qualifierValue : ClassUtil
+                            .getSharedEnumConstants(Qualifier.class)) {
                         if (token.endsWith(qualifierValue.name())) {
                             qualifier = qualifierValue.getId();
                             break;

@@ -17,12 +17,12 @@
 
 package im.turms.server.common.infra.security.password;
 
-import im.turms.server.common.infra.collection.ArrayUtil;
-import im.turms.server.common.infra.security.MessageDigestPool;
-
 import java.security.MessageDigest;
 import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
+
+import im.turms.server.common.infra.collection.ArrayUtil;
+import im.turms.server.common.infra.security.MessageDigestPool;
 
 /**
  * @author James Chen
@@ -34,7 +34,8 @@ public class SaltedSha256PasswordEncoder implements PasswordEncoder {
     @Override
     public byte[] encode(byte[] rawPassword) {
         byte[] salt = new byte[SALT_SIZE_BYTES];
-        ThreadLocalRandom.current().nextBytes(salt);
+        ThreadLocalRandom.current()
+                .nextBytes(salt);
 
         byte[] rawPasswordWithSalt = ArrayUtil.concat(salt, rawPassword);
         MessageDigest digest = MessageDigestPool.getSha256();
@@ -53,8 +54,12 @@ public class SaltedSha256PasswordEncoder implements PasswordEncoder {
         System.arraycopy(rawPassword, 0, rawPasswordWithSalt, SALT_SIZE_BYTES, rawPassword.length);
         MessageDigest digest = MessageDigestPool.getSha256();
         byte[] saltedPassword = digest.digest(rawPasswordWithSalt);
-        return Arrays.equals(saltedPassword, 0, saltedPassword.length,
-                saltedPasswordWithSalt, SALT_SIZE_BYTES, saltedPasswordWithSalt.length);
+        return Arrays.equals(saltedPassword,
+                0,
+                saltedPassword.length,
+                saltedPasswordWithSalt,
+                SALT_SIZE_BYTES,
+                saltedPasswordWithSalt.length);
     }
 
 }

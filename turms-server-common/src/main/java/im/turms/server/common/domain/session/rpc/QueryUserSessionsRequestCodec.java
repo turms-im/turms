@@ -45,7 +45,8 @@ public class QueryUserSessionsRequestCodec extends RpcRequestCodec<QueryUserSess
 
     @Override
     public int initialCapacityForRequest(QueryUserSessionsRequest data) {
-        int size = data.getUserIds().size();
+        int size = data.getUserIds()
+                .size();
         return Stream.computeVarint32Size(size) + size * Long.BYTES;
     }
 

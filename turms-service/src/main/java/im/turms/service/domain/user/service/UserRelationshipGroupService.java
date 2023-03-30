@@ -17,9 +17,26 @@
 
 package im.turms.service.domain.user.service;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
+
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.reactivestreams.client.ClientSession;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.access.client.dto.ClientMessagePool;
 import im.turms.server.common.access.client.dto.model.user.UserRelationshipGroupsWithVersion;
 import im.turms.server.common.access.common.ResponseStatusCode;
@@ -47,22 +64,6 @@ import im.turms.service.infra.proto.ProtoModelConvertor;
 import im.turms.service.infra.validation.ValidUserRelationshipGroupKey;
 import im.turms.service.infra.validation.ValidUserRelationshipKey;
 import im.turms.service.storage.mongo.OperationResultPublisherPool;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PastOrPresent;
 
 import static im.turms.server.common.domain.user.constant.UserConst.DEFAULT_RELATIONSHIP_GROUP_INDEX;
 
@@ -73,7 +74,8 @@ import static im.turms.server.common.domain.user.constant.UserConst.DEFAULT_RELA
 @DependsOn(IMongoCollectionInitializer.BEAN_NAME)
 public class UserRelationshipGroupService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(UserRelationshipGroupService.class);
+    private static final Logger LOGGER =
+            LoggerFactory.getLogger(UserRelationshipGroupService.class);
 
     private final UserRelationshipGroupRepository userRelationshipGroupRepository;
     private final UserRelationshipGroupMemberRepository userRelationshipGroupMemberRepository;
@@ -81,7 +83,8 @@ public class UserRelationshipGroupService {
     private final UserRelationshipService userRelationshipService;
 
     /**
-     * @param userRelationshipService is lazy because: UserRelationshipService -> UserRelationshipGroupService -> UserRelationshipService
+     * @param userRelationshipService is lazy because: UserRelationshipService ->
+     *                                UserRelationshipGroupService -> UserRelationshipService
      */
     public UserRelationshipGroupService(
             UserRelationshipGroupRepository userRelationshipGroupRepository,
@@ -113,11 +116,8 @@ public class UserRelationshipGroupService {
         if (creationDate == null) {
             creationDate = new Date();
         }
-        UserRelationshipGroup group = new UserRelationshipGroup(
-                ownerId,
-                finalGroupIndex,
-                groupName,
-                creationDate);
+        UserRelationshipGroup group =
+                new UserRelationshipGroup(ownerId, finalGroupIndex, groupName, creationDate);
         Mono<UserRelationshipGroup> result = userRelationshipGroupRepository.insert(group, session)
                 .thenReturn(group);
         // If groupIndex is null but session isn't null and DuplicateKeyException occurs,
@@ -125,9 +125,12 @@ public class UserRelationshipGroupService {
         // Luckily, we don't have the case now.
         if (groupIndex == null && session == null) {
             Date finalCreationDate = creationDate;
-            return result
-                    .onErrorResume(DuplicateKeyException.class, t ->
-                            createRelationshipGroup(ownerId, null, groupName, finalCreationDate, null));
+            return result.onErrorResume(DuplicateKeyException.class,
+                    t -> createRelationshipGroup(ownerId,
+                            null,
+                            groupName,
+                            finalCreationDate,
+                            null));
         }
         return result;
     }
@@ -154,14 +157,15 @@ public class UserRelationshipGroupService {
                     if (DateUtil.isAfterOrSame(lastUpdatedDate, date)) {
                         return ResponseExceptionPublisherPool.alreadyUpToUpdate();
                     }
-                    UserRelationshipGroupsWithVersion.Builder builder = ClientMessagePool
-                            .getUserRelationshipGroupsWithVersionBuilder()
-                            .setLastUpdatedDate(date.getTime());
+                    UserRelationshipGroupsWithVersion.Builder builder =
+                            ClientMessagePool.getUserRelationshipGroupsWithVersionBuilder()
+                                    .setLastUpdatedDate(date.getTime());
                     return queryRelationshipGroupsInfos(ownerId)
                             .collect(CollectorUtil.toChunkedList())
                             .map(groups -> {
                                 for (UserRelationshipGroup group : groups) {
-                                    builder.addUserRelationshipGroups(ProtoModelConvertor.relationshipGroup2proto(group));
+                                    builder.addUserRelationshipGroups(
+                                            ProtoModelConvertor.relationshipGroup2proto(group));
                                 }
                                 return builder.build();
                             });
@@ -170,9 +174,7 @@ public class UserRelationshipGroupService {
     }
 
     @UsesNonIndexedData
-    public Flux<Integer> queryGroupIndexes(
-            @NotNull Long ownerId,
-            @NotNull Long relatedUserId) {
+    public Flux<Integer> queryGroupIndexes(@NotNull Long ownerId, @NotNull Long relatedUserId) {
         try {
             Validator.notNull(ownerId, "ownerId");
             Validator.notNull(relatedUserId, "relatedUserId");
@@ -191,7 +193,8 @@ public class UserRelationshipGroupService {
         } catch (ResponseException e) {
             return Flux.error(e);
         }
-        return userRelationshipGroupMemberRepository.findRelationshipGroupMemberIds(ownerId, groupIndex);
+        return userRelationshipGroupMemberRepository.findRelationshipGroupMemberIds(ownerId,
+                groupIndex);
     }
 
     public Flux<Long> queryRelationshipGroupMemberIds(
@@ -214,11 +217,14 @@ public class UserRelationshipGroupService {
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        return userRelationshipGroupRepository.updateRelationshipGroupName(ownerId, groupIndex, newGroupName)
+        return userRelationshipGroupRepository
+                .updateRelationshipGroupName(ownerId, groupIndex, newGroupName)
                 .flatMap(result -> userVersionService.updateRelationshipGroupsVersion(ownerId)
                         .onErrorResume(t -> {
-                            LOGGER.error("Caught an error while updating the relationship groups version of the owner ({}) after updating a relationship group name",
-                                    ownerId, t);
+                            LOGGER.error(
+                                    "Caught an error while updating the relationship groups version of the owner ({}) after updating a relationship group name",
+                                    ownerId,
+                                    t);
                             return Mono.empty();
                         })
                         .thenReturn(result));
@@ -239,14 +245,26 @@ public class UserRelationshipGroupService {
         if (newGroupIndex != null) {
             if (deleteGroupIndex != null) {
                 if (!newGroupIndex.equals(deleteGroupIndex)) {
-                    return moveRelatedUserToNewGroup(ownerId, relatedUserId, deleteGroupIndex, newGroupIndex, false, session);
+                    return moveRelatedUserToNewGroup(ownerId,
+                            relatedUserId,
+                            deleteGroupIndex,
+                            newGroupIndex,
+                            false,
+                            session);
                 }
             } else {
-                return addRelatedUserToRelationshipGroups(ownerId, newGroupIndex, relatedUserId, session)
-                        .then();
+                return addRelatedUserToRelationshipGroups(ownerId,
+                        newGroupIndex,
+                        relatedUserId,
+                        session).then();
             }
         } else if (deleteGroupIndex != null) {
-            return moveRelatedUserToNewGroup(ownerId, relatedUserId, deleteGroupIndex, DEFAULT_RELATIONSHIP_GROUP_INDEX, true, session);
+            return moveRelatedUserToNewGroup(ownerId,
+                    relatedUserId,
+                    deleteGroupIndex,
+                    DEFAULT_RELATIONSHIP_GROUP_INDEX,
+                    true,
+                    session);
         }
         return Mono.empty();
     }
@@ -283,15 +301,22 @@ public class UserRelationshipGroupService {
         return userRelationshipService.hasOneSidedRelationship(ownerId, relatedUserId)
                 .flatMap(hasRelationship -> {
                     if (!hasRelationship) {
-                        return Mono.error(ResponseException.get(ResponseStatusCode.ADD_NOT_RELATED_USER_TO_GROUP));
+                        return Mono.error(ResponseException
+                                .get(ResponseStatusCode.ADD_NOT_RELATED_USER_TO_GROUP));
                     }
                     UserRelationshipGroupMember member = new UserRelationshipGroupMember(
-                            ownerId, groupIndex, relatedUserId, new Date());
+                            ownerId,
+                            groupIndex,
+                            relatedUserId,
+                            new Date());
                     return userRelationshipGroupMemberRepository.upsert(member, session)
-                            .flatMap(groupMember -> userVersionService.updateRelationshipGroupsVersion(ownerId)
+                            .flatMap(groupMember -> userVersionService
+                                    .updateRelationshipGroupsVersion(ownerId)
                                     .onErrorResume(t -> {
-                                        LOGGER.error("Caught an error while updating the relationship groups version of the owner ({}) after adding a user to the groups",
-                                                ownerId, t);
+                                        LOGGER.error(
+                                                "Caught an error while updating the relationship groups version of the owner ({}) after adding a user to the groups",
+                                                ownerId,
+                                                t);
                                         return Mono.empty();
                                     }))
                             .thenReturn(member);
@@ -306,7 +331,8 @@ public class UserRelationshipGroupService {
             Validator.notNull(ownerId, "ownerId");
             Validator.notNull(deleteGroupIndex, "deleteGroupIndex");
             Validator.notNull(newGroupIndex, "newGroupIndex");
-            Validator.notEquals(deleteGroupIndex, DEFAULT_RELATIONSHIP_GROUP_INDEX,
+            Validator.notEquals(deleteGroupIndex,
+                    DEFAULT_RELATIONSHIP_GROUP_INDEX,
                     "The default relationship group cannot be deleted");
         } catch (ResponseException e) {
             return Mono.error(e);
@@ -315,7 +341,8 @@ public class UserRelationshipGroupService {
             return Mono.empty();
         }
         // Don't use transaction for better performance
-        return userRelationshipGroupMemberRepository.findRelationshipGroupMembers(ownerId, deleteGroupIndex)
+        return userRelationshipGroupMemberRepository
+                .findRelationshipGroupMembers(ownerId, deleteGroupIndex)
                 .collect(CollectorUtil.toChunkedList())
                 .flatMap(members -> {
                     if (members.isEmpty()) {
@@ -325,7 +352,8 @@ public class UserRelationshipGroupService {
                     Date now = new Date();
                     for (UserRelationshipGroupMember member : members) {
                         UserRelationshipGroupMember.Key memberKey = member.getKey();
-                        UserRelationshipGroupMember groupMember = new UserRelationshipGroupMember(memberKey.getOwnerId(),
+                        UserRelationshipGroupMember groupMember = new UserRelationshipGroupMember(
+                                memberKey.getOwnerId(),
                                 newGroupIndex,
                                 memberKey.getRelatedUserId(),
                                 now);
@@ -334,11 +362,14 @@ public class UserRelationshipGroupService {
                     return userRelationshipGroupMemberRepository.insertAllOfSameType(newMembers)
                             .onErrorComplete(DuplicateKeyException.class);
                 })
-                .then(userRelationshipGroupRepository.deleteById(new UserRelationshipGroup.Key(ownerId, deleteGroupIndex)))
+                .then(userRelationshipGroupRepository
+                        .deleteById(new UserRelationshipGroup.Key(ownerId, deleteGroupIndex)))
                 .then(userVersionService.updateRelationshipGroupsVersion(ownerId)
                         .onErrorResume(t -> {
-                            LOGGER.error("Caught an error while updating the relationship groups version of the owner ({}) after deleting relationships",
-                                    ownerId, t);
+                            LOGGER.error(
+                                    "Caught an error while updating the relationship groups version of the owner ({}) after deleting relationships",
+                                    ownerId,
+                                    t);
                             return Mono.empty();
                         }))
                 .then();
@@ -353,13 +384,16 @@ public class UserRelationshipGroupService {
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        Mono<DeleteResult> deleteMono = userRelationshipGroupRepository.deleteAllRelationshipGroups(ownerIds, session);
+        Mono<DeleteResult> deleteMono =
+                userRelationshipGroupRepository.deleteAllRelationshipGroups(ownerIds, session);
         if (updateRelationshipGroupsVersion) {
             return deleteMono
                     .flatMap(result -> userVersionService.updateRelationshipGroupsVersion(ownerIds)
                             .onErrorResume(t -> {
-                                LOGGER.error("Caught an error while updating the relationship groups version of the owners {} after deleting all groups",
-                                        ownerIds, t);
+                                LOGGER.error(
+                                        "Caught an error while updating the relationship groups version of the owners {} after deleting all groups",
+                                        ownerIds,
+                                        t);
                                 return Mono.empty();
                             })
                             .thenReturn(result));
@@ -378,7 +412,9 @@ public class UserRelationshipGroupService {
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        return deleteRelatedUsersFromAllRelationshipGroups(Set.of(new UserRelationship.Key(ownerId, relatedUserId)), session,
+        return deleteRelatedUsersFromAllRelationshipGroups(
+                Set.of(new UserRelationship.Key(ownerId, relatedUserId)),
+                session,
                 updateRelationshipGroupsMembersVersion);
     }
 
@@ -397,26 +433,35 @@ public class UserRelationshipGroupService {
         Mono<DeleteResult> deleteMono;
         // fast path
         if (keys.size() == 1) {
-            UserRelationship.Key key = keys.iterator().next();
-            deleteMono = userRelationshipGroupMemberRepository.deleteRelatedUsersFromAllRelationshipGroups(key.getOwnerId(), Set.of(key.getRelatedUserId()), session);
+            UserRelationship.Key key = keys.iterator()
+                    .next();
+            deleteMono = userRelationshipGroupMemberRepository
+                    .deleteRelatedUsersFromAllRelationshipGroups(key.getOwnerId(),
+                            Set.of(key.getRelatedUserId()),
+                            session);
         } else {
             // slow path
-            Map<Long, List<Long>> ownerIdToRelatedUserIds = CollectionUtil.newMapWithExpectedSize(keys.size());
+            Map<Long, List<Long>> ownerIdToRelatedUserIds =
+                    CollectionUtil.newMapWithExpectedSize(keys.size());
             for (UserRelationship.Key key : keys) {
-                ownerIdToRelatedUserIds.computeIfAbsent(key.getOwnerId(), ignored -> new LinkedList<>())
+                ownerIdToRelatedUserIds
+                        .computeIfAbsent(key.getOwnerId(), ignored -> new LinkedList<>())
                         .add(key.getRelatedUserId());
             }
             Set<Map.Entry<Long, List<Long>>> entries = ownerIdToRelatedUserIds.entrySet();
             int size = entries.size();
             if (size == 1) {
-                Map.Entry<Long, List<Long>> ownerIdAndRelatedUserIds = entries.iterator().next();
-                deleteMono = userRelationshipGroupMemberRepository.deleteRelatedUsersFromAllRelationshipGroups(
-                        ownerIdAndRelatedUserIds.getKey(), ownerIdAndRelatedUserIds.getValue(), session);
+                Map.Entry<Long, List<Long>> ownerIdAndRelatedUserIds = entries.iterator()
+                        .next();
+                deleteMono = userRelationshipGroupMemberRepository
+                        .deleteRelatedUsersFromAllRelationshipGroups(ownerIdAndRelatedUserIds
+                                .getKey(), ownerIdAndRelatedUserIds.getValue(), session);
             } else {
                 List<Mono<DeleteResult>> deleteMonos = new ArrayList<>(size);
                 for (Map.Entry<Long, List<Long>> ownerIdAndRelatedUserIds : entries) {
-                    deleteMonos.add(userRelationshipGroupMemberRepository.deleteRelatedUsersFromAllRelationshipGroups(
-                            ownerIdAndRelatedUserIds.getKey(), ownerIdAndRelatedUserIds.getValue(), session));
+                    deleteMonos.add(userRelationshipGroupMemberRepository
+                            .deleteRelatedUsersFromAllRelationshipGroups(ownerIdAndRelatedUserIds
+                                    .getKey(), ownerIdAndRelatedUserIds.getValue(), session));
                 }
                 deleteMono = Flux.merge(deleteMonos)
                         .collect(CollectorUtil.toList(size))
@@ -424,20 +469,21 @@ public class UserRelationshipGroupService {
             }
         }
         if (updateRelationshipGroupsMembersVersion) {
-            return deleteMono
-                    .flatMap(result -> {
-                        Set<Long> ownerIds = CollectionUtil.newSetWithExpectedSize(keys.size());
-                        for (UserRelationship.Key key : keys) {
-                            ownerIds.add(key.getOwnerId());
-                        }
-                        return userVersionService.updateRelationshipGroupsVersion(ownerIds)
-                                .onErrorResume(t -> {
-                                    LOGGER.error("Caught an error while updating the relationship groups version of the owners {} after deleting users from all groups",
-                                            ownerIds, t);
-                                    return Mono.empty();
-                                })
-                                .thenReturn(result);
-                    });
+            return deleteMono.flatMap(result -> {
+                Set<Long> ownerIds = CollectionUtil.newSetWithExpectedSize(keys.size());
+                for (UserRelationship.Key key : keys) {
+                    ownerIds.add(key.getOwnerId());
+                }
+                return userVersionService.updateRelationshipGroupsVersion(ownerIds)
+                        .onErrorResume(t -> {
+                            LOGGER.error(
+                                    "Caught an error while updating the relationship groups version of the owners {} after deleting users from all groups",
+                                    ownerIds,
+                                    t);
+                            return Mono.empty();
+                        })
+                        .thenReturn(result);
+            });
         }
         return deleteMono;
     }
@@ -460,19 +506,22 @@ public class UserRelationshipGroupService {
         if (currentGroupIndex.equals(targetGroupIndex)) {
             return Mono.empty();
         }
-        UserRelationshipGroupMember.Key key = new UserRelationshipGroupMember.Key(ownerId, currentGroupIndex, relatedUserId);
-        UserRelationshipGroupMember.Key newKey = new UserRelationshipGroupMember
-                .Key(ownerId, targetGroupIndex, relatedUserId);
-        Mono<Void> insert = userRelationshipGroupMemberRepository.insert(new UserRelationshipGroupMember(newKey, new Date()), session);
+        UserRelationshipGroupMember.Key key =
+                new UserRelationshipGroupMember.Key(ownerId, currentGroupIndex, relatedUserId);
+        UserRelationshipGroupMember.Key newKey =
+                new UserRelationshipGroupMember.Key(ownerId, targetGroupIndex, relatedUserId);
+        Mono<Void> insert = userRelationshipGroupMemberRepository
+                .insert(new UserRelationshipGroupMember(newKey, new Date()), session);
         if (suppressIfAlreadyExistsInTargetGroup) {
             insert = insert.onErrorComplete(DuplicateKeyException.class);
         }
-        return insert
-                .then(userRelationshipGroupMemberRepository.deleteById(key, session))
+        return insert.then(userRelationshipGroupMemberRepository.deleteById(key, session))
                 .then(userVersionService.updateRelationshipGroupsVersion(ownerId)
                         .onErrorResume(t -> {
-                            LOGGER.error("Caught an error while updating the relationship groups version of the owner ({}) after moving a user to a new group",
-                                    ownerId, t);
+                            LOGGER.error(
+                                    "Caught an error while updating the relationship groups version of the owner ({}) after moving a user to a new group",
+                                    ownerId,
+                                    t);
                             return Mono.empty();
                         }))
                 .then();
@@ -482,7 +531,8 @@ public class UserRelationshipGroupService {
         return userRelationshipGroupRepository.deleteAll();
     }
 
-    public Mono<DeleteResult> deleteRelationshipGroups(@NotEmpty Set<UserRelationshipGroup.@ValidUserRelationshipGroupKey Key> keys) {
+    public Mono<DeleteResult> deleteRelationshipGroups(
+            @NotEmpty Set<UserRelationshipGroup.@ValidUserRelationshipGroupKey Key> keys) {
         try {
             Validator.notEmpty(keys, "keys");
             for (UserRelationshipGroup.Key key : keys) {
@@ -514,8 +564,9 @@ public class UserRelationshipGroupService {
                 .countRelationshipGroups(ownerIds, indexes, names, creationDateRange);
     }
 
-    public Mono<Long> countRelationshipGroupMembers(@Nullable Set<Long> ownerIds,
-                                                    @Nullable Set<Integer> groupIndexes) {
+    public Mono<Long> countRelationshipGroupMembers(
+            @Nullable Set<Long> ownerIds,
+            @Nullable Set<Integer> groupIndexes) {
         return userRelationshipGroupMemberRepository.countMembers(ownerIds, groupIndexes);
     }
 

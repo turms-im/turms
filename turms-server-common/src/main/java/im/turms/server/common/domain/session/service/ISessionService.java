@@ -17,34 +17,31 @@
 
 package im.turms.server.common.domain.session.service;
 
-import im.turms.server.common.access.client.dto.constant.DeviceType;
-import im.turms.server.common.domain.session.bo.CloseReason;
-import im.turms.server.common.domain.session.bo.UserSessionsInfo;
-import im.turms.server.common.infra.validation.ValidDeviceType;
-import reactor.core.publisher.Mono;
-
 import java.util.List;
 import java.util.Set;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+
+import reactor.core.publisher.Mono;
+
+import im.turms.server.common.access.client.dto.constant.DeviceType;
+import im.turms.server.common.domain.session.bo.CloseReason;
+import im.turms.server.common.domain.session.bo.UserSessionsInfo;
+import im.turms.server.common.infra.validation.ValidDeviceType;
 
 /**
  * @author James Chen
  */
 public interface ISessionService {
 
-    Mono<Integer> closeLocalSessions(
-            @NotNull byte[] ip,
-            @NotNull CloseReason closeReason);
+    Mono<Integer> closeLocalSessions(@NotNull byte[] ip, @NotNull CloseReason closeReason);
 
     Mono<Integer> closeLocalSession(
             @NotNull Long userId,
             @NotEmpty Set<@ValidDeviceType DeviceType> deviceTypes,
             @NotNull CloseReason closeReason);
 
-    Mono<Integer> closeLocalSession(
-            @NotNull Long userId,
-            @NotNull CloseReason closeReason);
+    Mono<Integer> closeLocalSession(@NotNull Long userId, @NotNull CloseReason closeReason);
 
     List<UserSessionsInfo> getSessions(@NotEmpty Set<Long> userIds);
 

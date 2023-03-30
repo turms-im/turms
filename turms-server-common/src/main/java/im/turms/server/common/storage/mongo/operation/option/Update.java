@@ -17,16 +17,17 @@
 
 package im.turms.server.common.storage.mongo.operation.option;
 
-import im.turms.server.common.infra.collection.CollectionUtil;
-import im.turms.server.common.storage.mongo.BsonPool;
-import im.turms.server.common.storage.mongo.codec.BsonValueEncoder;
-import org.bson.BsonDocument;
-
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
+
+import org.bson.BsonDocument;
+
+import im.turms.server.common.infra.collection.CollectionUtil;
+import im.turms.server.common.storage.mongo.BsonPool;
+import im.turms.server.common.storage.mongo.codec.BsonValueEncoder;
 
 /**
  * @author James Chen
@@ -105,7 +106,7 @@ public final class Update extends BaseBson {
         return this;
     }
 
-    //region array
+    // region array
     public Update addToSet(String field, Object value) {
         document.append("$addToSet",
                 new BsonDocument(field, BsonValueEncoder.encodeSingleValue(value)));
@@ -113,10 +114,9 @@ public final class Update extends BaseBson {
     }
 
     public Update pullAll(String field, List<Object> values) {
-        document.append("$pullAll",
-                new BsonDocument(field, BsonValueEncoder.encodeValue(values)));
+        document.append("$pullAll", new BsonDocument(field, BsonValueEncoder.encodeValue(values)));
         return this;
     }
-    //endregion
+    // endregion
 
 }

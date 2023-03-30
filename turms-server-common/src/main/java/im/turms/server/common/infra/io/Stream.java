@@ -17,10 +17,6 @@
 
 package im.turms.server.common.infra.io;
 
-import im.turms.server.common.infra.collection.CollectionUtil;
-import im.turms.server.common.infra.lang.StringUtil;
-import io.netty.buffer.ByteBuf;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -28,6 +24,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import jakarta.annotation.Nullable;
+
+import io.netty.buffer.ByteBuf;
+
+import im.turms.server.common.infra.collection.CollectionUtil;
+import im.turms.server.common.infra.lang.StringUtil;
 
 import static im.turms.server.common.infra.net.InetAddressUtil.IPV4_BYTE_LENGTH;
 import static im.turms.server.common.infra.net.InetAddressUtil.IPV6_BYTE_LENGTH;
@@ -335,7 +336,9 @@ public class Stream implements StreamInput, StreamOutput {
         if (ipBytes == null) {
             writeByte(-1);
         } else {
-            writeByte(ipBytes.length == IPV4_BYTE_LENGTH ? 0 : 1);
+            writeByte(ipBytes.length == IPV4_BYTE_LENGTH
+                    ? 0
+                    : 1);
         }
         writeBytes(ipBytes);
         return this;
@@ -348,7 +351,9 @@ public class Stream implements StreamInput, StreamOutput {
         if (flag == -1) {
             return null;
         }
-        return readBytes(flag == 0 ? IPV4_BYTE_LENGTH : IPV6_BYTE_LENGTH);
+        return readBytes(flag == 0
+                ? IPV4_BYTE_LENGTH
+                : IPV6_BYTE_LENGTH);
     }
 
     @Override

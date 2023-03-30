@@ -17,6 +17,10 @@
 
 package im.turms.gateway.infra.logging;
 
+import jakarta.annotation.Nullable;
+
+import io.netty.buffer.ByteBuf;
+
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.access.client.dto.request.TurmsRequest;
@@ -24,9 +28,6 @@ import im.turms.server.common.infra.lang.NumberFormatter;
 import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.netty.ByteBufUtil;
 import im.turms.server.common.infra.time.DateUtil;
-import io.netty.buffer.ByteBuf;
-
-import jakarta.annotation.Nullable;
 
 import static im.turms.server.common.infra.logging.CommonLogger.CLIENT_API_LOGGER;
 import static im.turms.server.common.infra.logging.CommonLogger.LOG_FIELD_DELIMITER;
@@ -40,23 +41,25 @@ public final class ClientApiLogging {
     }
 
     /**
-     * @implNote 1. We don't accept an object like ClientApiLoggingMessage
-     * to collect all data to avoid creating unnecessary intermediate objects.
-     * 2. We use the common log pattern (including the trace ID) so that our
-     * users don't need to write different parsers for them.
+     * @implNote 1. We don't accept an object like ClientApiLoggingMessage to collect all data to
+     *           avoid creating unnecessary intermediate objects. 2. We use the common log pattern
+     *           (including the trace ID) so that our users don't need to write different parsers
+     *           for them.
      */
-    public static void log(@Nullable Integer sessionId,
-                           @Nullable Long userId,
-                           @Nullable DeviceType deviceType,
-                           @Nullable Integer version,
-                           String ip,
-                           long requestId,
-                           TurmsRequest.KindCase requestType,
-                           int requestSize,
-                           long requestTime,
-                           TurmsNotification response,
-                           long processingTime) {
-        ByteBuf buffer = ByteBufUtil.join(64, LOG_FIELD_DELIMITER,
+    public static void log(
+            @Nullable Integer sessionId,
+            @Nullable Long userId,
+            @Nullable DeviceType deviceType,
+            @Nullable Integer version,
+            String ip,
+            long requestId,
+            TurmsRequest.KindCase requestType,
+            int requestSize,
+            long requestTime,
+            TurmsNotification response,
+            long processingTime) {
+        ByteBuf buffer = ByteBufUtil.join(64,
+                LOG_FIELD_DELIMITER,
                 // session information
                 sessionId,
                 userId,
@@ -70,24 +73,30 @@ public final class ClientApiLogging {
                 DateUtil.toBytes(requestTime),
                 // response information
                 NumberFormatter.toCharBytes(response.getCode()),
-                response.hasData() ? response.getData().getKindCase().name() : null,
+                response.hasData()
+                        ? response.getData()
+                                .getKindCase()
+                                .name()
+                        : null,
                 NumberFormatter.toCharBytes(response.getSerializedSize()),
                 NumberFormatter.toCharBytes(processingTime));
         CLIENT_API_LOGGER.info(buffer);
     }
 
-    public static void log(@Nullable Integer sessionId,
-                           @Nullable Long userId,
-                           @Nullable DeviceType deviceType,
-                           @Nullable Integer version,
-                           String ip,
-                           long requestId,
-                           TurmsRequest.KindCase requestType,
-                           int requestSize,
-                           long requestTime,
-                           int responseCode,
-                           long processingTime) {
-        ByteBuf buffer = ByteBufUtil.join(64, LOG_FIELD_DELIMITER,
+    public static void log(
+            @Nullable Integer sessionId,
+            @Nullable Long userId,
+            @Nullable DeviceType deviceType,
+            @Nullable Integer version,
+            String ip,
+            long requestId,
+            TurmsRequest.KindCase requestType,
+            int requestSize,
+            long requestTime,
+            int responseCode,
+            long processingTime) {
+        ByteBuf buffer = ByteBufUtil.join(64,
+                LOG_FIELD_DELIMITER,
                 // session information
                 sessionId,
                 userId,
@@ -107,20 +116,22 @@ public final class ClientApiLogging {
         CLIENT_API_LOGGER.info(buffer);
     }
 
-    public static void log(@Nullable Integer sessionId,
-                           @Nullable Long userId,
-                           @Nullable DeviceType deviceType,
-                           @Nullable Integer version,
-                           String ip,
-                           long requestId,
-                           String requestType,
-                           int requestSize,
-                           long requestTime,
-                           int responseCode,
-                           @Nullable String responseDataType,
-                           int responseSize,
-                           long processingTime) {
-        ByteBuf buffer = ByteBufUtil.join(64, LOG_FIELD_DELIMITER,
+    public static void log(
+            @Nullable Integer sessionId,
+            @Nullable Long userId,
+            @Nullable DeviceType deviceType,
+            @Nullable Integer version,
+            String ip,
+            long requestId,
+            String requestType,
+            int requestSize,
+            long requestTime,
+            int responseCode,
+            @Nullable String responseDataType,
+            int responseSize,
+            long processingTime) {
+        ByteBuf buffer = ByteBufUtil.join(64,
+                LOG_FIELD_DELIMITER,
                 // session information
                 sessionId,
                 userId,

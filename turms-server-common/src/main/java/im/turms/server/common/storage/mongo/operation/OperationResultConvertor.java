@@ -17,10 +17,10 @@
 
 package im.turms.server.common.storage.mongo.operation;
 
+import java.util.Collection;
+
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
-
-import java.util.Collection;
 
 /**
  * @author James Chen

@@ -17,10 +17,10 @@
 
 package im.turms.server.common.domain.plugin.access.admin.dto.request;
 
+import java.util.List;
+
 import im.turms.server.common.domain.common.access.dto.ControllerDTO;
 import im.turms.server.common.infra.plugin.JsPluginScript;
-
-import java.util.List;
 
 /**
  * @author James Chen

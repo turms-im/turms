@@ -18,8 +18,7 @@
 package im.turms.server.common.storage.mongo.entity.annotation;
 
 /**
- * The annotation has no effect and is just used
- * to tell why a field may need to be indexed or not
+ * The annotation has no effect and is just used to tell why a field may need to be indexed or not
  *
  * @author James Chen
  */
@@ -31,15 +30,15 @@ public enum IndexedReason {
      */
     EXPIRABLE,
     /**
-     * The field marked as EXTENDED_FEATURE is used to implement extended IM features.
-     * Note that if your application really has some extended features that depend on
-     * the index on these fields, you may need to create a new auxiliary collection
-     * to use the targeted queries in sharded collections.
+     * The field marked as EXTENDED_FEATURE is used to implement extended IM features. Note that if
+     * your application really has some extended features that depend on the index on these fields,
+     * you may need to create a new auxiliary collection to use the targeted queries in sharded
+     * collections.
      */
     EXTENDED_FEATURE,
     /**
-     * The field marked as SMALL_COLLECTION usually belongs to a small collection.
-     * No need to add an index on it unless you are sure your application has a lot of documents.
+     * The field marked as SMALL_COLLECTION usually belongs to a small collection. No need to add an
+     * index on it unless you are sure your application has a lot of documents.
      */
     SMALL_COLLECTION,
 //    STATISTICS

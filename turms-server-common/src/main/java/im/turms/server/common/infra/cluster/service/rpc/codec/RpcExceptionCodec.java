@@ -17,6 +17,8 @@
 
 package im.turms.server.common.infra.cluster.service.rpc.codec;
 
+import jakarta.annotation.Nullable;
+
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.cluster.service.codec.codec.Codec;
 import im.turms.server.common.infra.cluster.service.codec.codec.CodecId;
@@ -25,8 +27,6 @@ import im.turms.server.common.infra.cluster.service.codec.io.CodecStreamOutput;
 import im.turms.server.common.infra.cluster.service.rpc.RpcErrorCode;
 import im.turms.server.common.infra.cluster.service.rpc.exception.RpcException;
 import im.turms.server.common.infra.lang.StringUtil;
-
-import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen
@@ -40,8 +40,10 @@ public class RpcExceptionCodec implements Codec<RpcException> {
 
     @Override
     public void write(CodecStreamOutput out, RpcException data) {
-        out.writeShort(data.getErrorCode().getErrorCode())
-                .writeShort(data.getStatusCode().getBusinessCode());
+        out.writeShort(data.getErrorCode()
+                .getErrorCode())
+                .writeShort(data.getStatusCode()
+                        .getBusinessCode());
         String description = data.getDescription();
         if (description != null) {
             byte[] bytes = StringUtil.getBytes(description);
@@ -53,10 +55,7 @@ public class RpcExceptionCodec implements Codec<RpcException> {
 
     @Override
     public RpcException read(CodecStreamInput in) {
-        return RpcException.get(
-                parseErrorCode(in),
-                parseStatusCode(in),
-                parseDescription(in));
+        return RpcException.get(parseErrorCode(in), parseStatusCode(in), parseDescription(in));
     }
 
     @Override
@@ -74,7 +73,9 @@ public class RpcExceptionCodec implements Codec<RpcException> {
         }
         code = RpcErrorCode.from(errorCode);
         if (code == null) {
-            throw new IllegalArgumentException("Unknown error code: " + errorCode);
+            throw new IllegalArgumentException(
+                    "Unknown error code: "
+                            + errorCode);
         }
         return code;
     }
@@ -89,7 +90,9 @@ public class RpcExceptionCodec implements Codec<RpcException> {
         }
         code = ResponseStatusCode.from(statusCode);
         if (code == null) {
-            throw new IllegalArgumentException("Unknown status code: " + statusCode);
+            throw new IllegalArgumentException(
+                    "Unknown status code: "
+                            + statusCode);
         }
         return code;
     }

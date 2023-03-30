@@ -17,16 +17,17 @@
 
 package im.turms.service.infra.plugin.extension;
 
-import im.turms.server.common.infra.plugin.ExtensionPoint;
-import im.turms.service.domain.message.po.Message;
-import reactor.core.publisher.Mono;
-
 import java.util.List;
 import jakarta.validation.constraints.NotEmpty;
 
+import reactor.core.publisher.Mono;
+
+import im.turms.server.common.infra.plugin.ExtensionPoint;
+import im.turms.service.domain.message.po.Message;
+
 /**
- * The plugin is useful when developers needing to persist messages in other places
- * while deleting them in the databases for turms servers.
+ * The plugin is useful when developers needing to persist messages in other places while deleting
+ * them in the databases for turms servers.
  *
  * @author James Chen
  */

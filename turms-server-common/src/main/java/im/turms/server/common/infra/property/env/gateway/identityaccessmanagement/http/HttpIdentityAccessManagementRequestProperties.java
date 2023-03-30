@@ -17,15 +17,16 @@
 
 package im.turms.server.common.infra.property.env.gateway.identityaccessmanagement.http;
 
-import im.turms.server.common.infra.property.constant.HttpAuthenticationHttpMethod;
+import java.util.Collections;
+import java.util.Map;
+import jakarta.validation.constraints.Min;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Collections;
-import java.util.Map;
-import jakarta.validation.constraints.Min;
+import im.turms.server.common.infra.property.constant.HttpAuthenticationHttpMethod;
 
 /**
  * @author James Chen

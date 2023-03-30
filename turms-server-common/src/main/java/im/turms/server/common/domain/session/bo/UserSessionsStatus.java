@@ -17,12 +17,13 @@
 
 package im.turms.server.common.domain.session.bo;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import im.turms.server.common.access.client.dto.constant.DeviceType;
-import im.turms.server.common.access.client.dto.constant.UserStatus;
-
 import java.util.Map;
 import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import im.turms.server.common.access.client.dto.constant.DeviceType;
+import im.turms.server.common.access.client.dto.constant.UserStatus;
 
 /**
  * @author James Chen

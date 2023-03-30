@@ -17,17 +17,18 @@
 
 package im.turms.plugin.push.core.sender;
 
+import java.util.Collections;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import org.junit.jupiter.api.Test;
+
 import im.turms.plugin.push.core.PushNotification;
 import im.turms.plugin.push.core.PushNotificationServiceProvider;
 import im.turms.plugin.push.core.PushNotificationType;
 import im.turms.plugin.push.core.sender.apns.ApnsSender;
 import im.turms.plugin.push.property.ApnsProperties;
-import org.junit.jupiter.api.Test;
-
-import java.util.Collections;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -45,11 +46,13 @@ class ApnsSenderTests {
                 vFTrS6U+pN6Dk2eT/64dXO4s4Ox/Vx4N/iKd4+mjrNcBuprmYZmL34yFhIfTx60X
                 lRK0bZhH
                 -----END PRIVATE KEY-----""";
-        ApnsSender sender = new ApnsSender(Collections.emptyMap(), new ApnsProperties().toBuilder()
-                .signingKey(signingKey)
-                .build());
-        ObjectMapper objectMapper = new ObjectMapper()
-                .enable(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS);
+        ApnsSender sender = new ApnsSender(
+                Collections.emptyMap(),
+                new ApnsProperties().toBuilder()
+                        .signingKey(signingKey)
+                        .build());
+        ObjectMapper objectMapper =
+                new ObjectMapper().enable(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS);
 
         String token = "549ede2dea554e116520da773e1f6074c2688a325a47acad5f57caa8fbbd083a";
         PushNotification notification = new PushNotification(
@@ -60,10 +63,10 @@ class ApnsSenderTests {
                 "Reflection Eternal",
                 99);
         String payload = sender.buildPayload(notification, "en", Collections::emptyMap);
-        String expected = """
-                {"aps":{"mutable_content":1,"alert":{"title":"Nujabes","body":"Reflection Eternal"},"badge":99}}""";
-        assertThat(objectMapper.readTree(payload))
-                .isEqualTo(objectMapper.readTree(expected));
+        String expected =
+                """
+                        {"aps":{"mutable_content":1,"alert":{"title":"Nujabes","body":"Reflection Eternal"},"badge":99}}""";
+        assertThat(objectMapper.readTree(payload)).isEqualTo(objectMapper.readTree(expected));
 
         notification = new PushNotification(
                 PushNotificationType.SEND_MESSAGE,
@@ -73,10 +76,10 @@ class ApnsSenderTests {
                 payload,
                 null);
         payload = sender.buildPayload(notification, "en", Collections::emptyMap);
-        expected = """
-                {"aps":{"mutable_content":1,"alert":{"title":"「幻华」（城之内ミサ）","body":"{\\"aps\\":{\\"mutable_content\\":1,\\"alert\\":{\\"title\\":\\"Nujabes\\",\\"body\\":\\"Reflection Eternal\\"},\\"badge\\":99}}"}}}""";
-        assertThat(objectMapper.readTree(payload))
-                .isEqualTo(objectMapper.readTree(expected));
+        expected =
+                """
+                        {"aps":{"mutable_content":1,"alert":{"title":"「幻华」（城之内ミサ）","body":"{\\"aps\\":{\\"mutable_content\\":1,\\"alert\\":{\\"title\\":\\"Nujabes\\",\\"body\\":\\"Reflection Eternal\\"},\\"badge\\":99}}"}}}""";
+        assertThat(objectMapper.readTree(payload)).isEqualTo(objectMapper.readTree(expected));
     }
 
 }

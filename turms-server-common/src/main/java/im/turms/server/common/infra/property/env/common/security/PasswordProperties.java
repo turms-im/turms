@@ -17,16 +17,16 @@
 
 package im.turms.server.common.infra.property.env.common.security;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import im.turms.server.common.infra.property.constant.PasswordEncodingAlgorithm;
 import im.turms.server.common.infra.property.metadata.Description;
 import im.turms.server.common.infra.property.metadata.ImmutableOnceApplied;
 import im.turms.server.common.infra.security.SecurityValueConst;
 import im.turms.server.common.infra.security.SensitiveProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 /**
  * @author James Chen
@@ -43,18 +43,24 @@ public class PasswordProperties {
 
     @ImmutableOnceApplied
     @Description("The password encoding algorithm for users")
-    private PasswordEncodingAlgorithm userPasswordEncodingAlgorithm = PasswordEncodingAlgorithm.SALTED_SHA256;
+    private PasswordEncodingAlgorithm userPasswordEncodingAlgorithm =
+            PasswordEncodingAlgorithm.SALTED_SHA256;
 
     @ImmutableOnceApplied
     @Description("The password encoding algorithm for admins")
-    private PasswordEncodingAlgorithm adminPasswordEncodingAlgorithm = PasswordEncodingAlgorithm.BCRYPT;
+    private PasswordEncodingAlgorithm adminPasswordEncodingAlgorithm =
+            PasswordEncodingAlgorithm.BCRYPT;
 
     @Override
     public String toString() {
-        return "PasswordProperties{" +
-                "initialRootPassword='" + SecurityValueConst.SENSITIVE_VALUE + '\'' +
-                ", userPasswordEncodingAlgorithm=" + userPasswordEncodingAlgorithm +
-                ", adminPasswordEncodingAlgorithm=" + adminPasswordEncodingAlgorithm +
-                '}';
+        return "PasswordProperties{"
+                + "initialRootPassword='"
+                + SecurityValueConst.SENSITIVE_VALUE
+                + '\''
+                + ", userPasswordEncodingAlgorithm="
+                + userPasswordEncodingAlgorithm
+                + ", adminPasswordEncodingAlgorithm="
+                + adminPasswordEncodingAlgorithm
+                + '}';
     }
 }

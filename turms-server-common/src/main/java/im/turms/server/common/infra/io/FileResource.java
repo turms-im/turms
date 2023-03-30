@@ -17,11 +17,11 @@
 
 package im.turms.server.common.infra.io;
 
-import lombok.Getter;
-
 import java.nio.file.Path;
 import java.util.function.Consumer;
 import jakarta.annotation.Nullable;
+
+import lombok.Getter;
 
 /**
  * @author James Chen

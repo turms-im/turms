@@ -17,7 +17,16 @@
 
 package im.turms.service.domain.group.access.admin.controller;
 
+import java.util.Collection;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+
 import com.mongodb.client.result.UpdateResult;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.access.admin.dto.response.DeleteResultDTO;
 import im.turms.server.common.access.admin.dto.response.HttpHandlerResult;
 import im.turms.server.common.access.admin.dto.response.PaginationDTO;
@@ -41,14 +50,6 @@ import im.turms.service.domain.group.access.admin.dto.response.GroupStatisticsDT
 import im.turms.service.domain.group.po.Group;
 import im.turms.service.domain.group.service.GroupService;
 import im.turms.service.domain.message.service.MessageService;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
-import java.util.Collection;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
 
 import static im.turms.server.common.access.admin.permission.AdminPermission.GROUP_CREATE;
 import static im.turms.server.common.access.admin.permission.AdminPermission.GROUP_DELETE;
@@ -64,7 +65,10 @@ public class GroupController extends BaseController {
     private final GroupService groupService;
     private final MessageService messageService;
 
-    public GroupController(TurmsPropertiesManager propertiesManager, GroupService groupService, MessageService messageService) {
+    public GroupController(
+            TurmsPropertiesManager propertiesManager,
+            GroupService groupService,
+            MessageService messageService) {
         super(propertiesManager);
         this.groupService = groupService;
         this.messageService = messageService;
@@ -72,11 +76,13 @@ public class GroupController extends BaseController {
 
     @PostMapping
     @RequiredPermission(GROUP_CREATE)
-    public Mono<HttpHandlerResult<ResponseDTO<Group>>> addGroup(@RequestBody AddGroupDTO addGroupDTO) {
+    public Mono<HttpHandlerResult<ResponseDTO<Group>>> addGroup(
+            @RequestBody AddGroupDTO addGroupDTO) {
         Long ownerId = addGroupDTO.ownerId();
-        Mono<Group> createdGroup = groupService.authAndCreateGroup(
-                addGroupDTO.creatorId(),
-                ownerId == null ? addGroupDTO.creatorId() : ownerId,
+        Mono<Group> createdGroup = groupService.authAndCreateGroup(addGroupDTO.creatorId(),
+                ownerId == null
+                        ? addGroupDTO.creatorId()
+                        : ownerId,
                 addGroupDTO.name(),
                 addGroupDTO.intro(),
                 addGroupDTO.announcement(),
@@ -108,8 +114,7 @@ public class GroupController extends BaseController {
             @QueryParam(required = false) Set<Long> memberIds,
             @QueryParam(required = false) Integer size) {
         size = getPageSize(size);
-        Flux<Group> groupsFlux = groupService.queryGroups(
-                ids,
+        Flux<Group> groupsFlux = groupService.queryGroups(ids,
                 typeIds,
                 creatorIds,
                 ownerIds,
@@ -148,8 +153,7 @@ public class GroupController extends BaseController {
         DateRange deletionDateRange = DateRange.of(deletionDateStart, deletionDateEnd);
         DateRange lastUpdatedDateRange = DateRange.of(lastUpdatedDateStart, lastUpdatedDateEnd);
         DateRange muteEndDateRange = DateRange.of(muteEndDateStart, muteEndDateEnd);
-        Mono<Long> count = groupService.countGroups(
-                ids,
+        Mono<Long> count = groupService.countGroups(ids,
                 typeIds,
                 creatorIds,
                 ownerIds,
@@ -159,8 +163,7 @@ public class GroupController extends BaseController {
                 lastUpdatedDateRange,
                 muteEndDateRange,
                 memberIds);
-        Flux<Group> groupsFlux = groupService.queryGroups(
-                ids,
+        Flux<Group> groupsFlux = groupService.queryGroups(ids,
                 typeIds,
                 creatorIds,
                 ownerIds,
@@ -188,41 +191,36 @@ public class GroupController extends BaseController {
         GroupStatisticsDTO.GroupStatisticsDTOBuilder builder = GroupStatisticsDTO.builder();
         if (divideBy == null || divideBy == DivideBy.NOOP) {
             if (deletedStartDate != null || deletedEndDate != null) {
-                counts.add(groupService.countDeletedGroups(
-                                DateRange.of(deletedStartDate, deletedEndDate))
+                counts.add(groupService
+                        .countDeletedGroups(DateRange.of(deletedStartDate, deletedEndDate))
                         .doOnNext(builder::deletedGroups));
             }
             if (sentMessageStartDate != null || sentMessageEndDate != null) {
-                counts.add(messageService.countGroupsThatSentMessages(
+                counts.add(messageService
+                        .countGroupsThatSentMessages(
                                 DateRange.of(sentMessageStartDate, sentMessageEndDate))
                         .doOnNext(builder::groupsThatSentMessages));
             }
             if (counts.isEmpty() || createdStartDate != null || createdEndDate != null) {
-                counts.add(groupService.countCreatedGroups(
-                                DateRange.of(createdStartDate, createdEndDate))
+                counts.add(groupService
+                        .countCreatedGroups(DateRange.of(createdStartDate, createdEndDate))
                         .doOnNext(builder::createdGroups));
             }
         } else {
             if (deletedStartDate != null && deletedEndDate != null) {
-                counts.add(checkAndQueryBetweenDate(
-                        DateRange.of(deletedStartDate, deletedEndDate),
+                counts.add(checkAndQueryBetweenDate(DateRange.of(deletedStartDate, deletedEndDate),
                         divideBy,
-                        groupService::countDeletedGroups)
-                        .doOnNext(builder::deletedGroupsRecords));
+                        groupService::countDeletedGroups).doOnNext(builder::deletedGroupsRecords));
             }
             if (sentMessageStartDate != null && sentMessageEndDate != null) {
-                counts.add(checkAndQueryBetweenDate(
-                        DateRange.of(sentMessageStartDate, sentMessageEndDate),
-                        divideBy,
-                        messageService::countGroupsThatSentMessages)
+                counts.add(checkAndQueryBetweenDate(DateRange.of(sentMessageStartDate,
+                        sentMessageEndDate), divideBy, messageService::countGroupsThatSentMessages)
                         .doOnNext(builder::groupsThatSentMessagesRecords));
             }
             if (createdStartDate != null && createdEndDate != null) {
-                counts.add(checkAndQueryBetweenDate(
-                        DateRange.of(createdStartDate, createdEndDate),
+                counts.add(checkAndQueryBetweenDate(DateRange.of(createdStartDate, createdEndDate),
                         divideBy,
-                        groupService::countCreatedGroups)
-                        .doOnNext(builder::createdGroupsRecords));
+                        groupService::countCreatedGroups).doOnNext(builder::createdGroupsRecords));
             }
             if (counts.isEmpty()) {
                 return Mono.empty();
@@ -240,19 +238,21 @@ public class GroupController extends BaseController {
         Long successorId = updateGroupDTO.successorId();
         Mono<UpdateResult> updateMono = successorId == null
                 ? groupService.updateGroupsInformation(ids,
-                updateGroupDTO.typeId(),
-                updateGroupDTO.creatorId(),
-                updateGroupDTO.ownerId(),
-                updateGroupDTO.name(),
-                updateGroupDTO.intro(),
-                updateGroupDTO.announcement(),
-                updateGroupDTO.minimumScore(),
-                updateGroupDTO.isActive(),
-                updateGroupDTO.creationDate(),
-                updateGroupDTO.deletionDate(),
-                updateGroupDTO.muteEndDate(),
-                null)
-                : groupService.checkAndTransferGroupOwnership(ids, successorId, updateGroupDTO.quitAfterTransfer());
+                        updateGroupDTO.typeId(),
+                        updateGroupDTO.creatorId(),
+                        updateGroupDTO.ownerId(),
+                        updateGroupDTO.name(),
+                        updateGroupDTO.intro(),
+                        updateGroupDTO.announcement(),
+                        updateGroupDTO.minimumScore(),
+                        updateGroupDTO.isActive(),
+                        updateGroupDTO.creationDate(),
+                        updateGroupDTO.deletionDate(),
+                        updateGroupDTO.muteEndDate(),
+                        null)
+                : groupService.checkAndTransferGroupOwnership(ids,
+                        successorId,
+                        updateGroupDTO.quitAfterTransfer());
         return HttpHandlerResult.updateResult(updateMono);
     }
 
@@ -261,10 +261,9 @@ public class GroupController extends BaseController {
     public Mono<HttpHandlerResult<ResponseDTO<DeleteResultDTO>>> deleteGroups(
             @QueryParam(required = false) Set<Long> ids,
             @QueryParam(required = false) Boolean deleteLogically) {
-        Mono<DeleteResultDTO> deleted = groupService.deleteGroupsAndGroupMembers(
-                        ids,
-                        deleteLogically)
-                .map(DeleteResultDTO::get);
+        Mono<DeleteResultDTO> deleted =
+                groupService.deleteGroupsAndGroupMembers(ids, deleteLogically)
+                        .map(DeleteResultDTO::get);
         return HttpHandlerResult.okIfTruthy(deleted);
     }
 

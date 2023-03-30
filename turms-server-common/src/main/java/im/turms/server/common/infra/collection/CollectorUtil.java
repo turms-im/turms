@@ -17,8 +17,6 @@
 
 package im.turms.server.common.infra.collection;
 
-import org.eclipse.collections.impl.set.mutable.UnifiedSet;
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -27,6 +25,8 @@ import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
+
+import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 
 /**
  * @author James Chen

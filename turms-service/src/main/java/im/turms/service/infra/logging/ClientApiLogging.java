@@ -17,6 +17,8 @@
 
 package im.turms.service.infra.logging;
 
+import io.netty.buffer.ByteBuf;
+
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.access.servicerequest.dto.ServiceRequest;
 import im.turms.server.common.access.servicerequest.dto.ServiceResponse;
@@ -24,7 +26,6 @@ import im.turms.server.common.infra.lang.NumberFormatter;
 import im.turms.server.common.infra.netty.ByteBufUtil;
 import im.turms.server.common.infra.time.DateUtil;
 import im.turms.service.access.servicerequest.dto.ClientRequest;
-import io.netty.buffer.ByteBuf;
 
 import static im.turms.server.common.infra.logging.CommonLogger.CLIENT_API_LOGGER;
 import static im.turms.server.common.infra.logging.CommonLogger.LOG_FIELD_DELIMITER;
@@ -38,34 +39,44 @@ public final class ClientApiLogging {
     }
 
     /**
-     * @implNote 1. We don't accept an object like ServiceRequestMessage
-     * to collect all data to avoid creating unnecessary intermediate objects.
-     * 2. We use the common log pattern (including the trace ID) so that our
-     * users don't need to write different parsers for them.
+     * @implNote 1. We don't accept an object like ServiceRequestMessage to collect all data to
+     *           avoid creating unnecessary intermediate objects. 2. We use the common log pattern
+     *           (including the trace ID) so that our users don't need to write different parsers
+     *           for them.
      */
-    public static void log(ClientRequest request,
-                           ServiceRequest serviceRequest,
-                           long requestSize,
-                           long requestTime,
-                           ServiceResponse response,
-                           long processingTime) {
+    public static void log(
+            ClientRequest request,
+            ServiceRequest serviceRequest,
+            long requestSize,
+            long requestTime,
+            ServiceResponse response,
+            long processingTime) {
         TurmsNotification.Data dataForRequester = response.dataForRequester();
-        String responseType = dataForRequester == null ? "" : dataForRequester.getKindCase().name();
-        ByteBuf buffer = ByteBufUtil.join(64, LOG_FIELD_DELIMITER,
+        String responseType = dataForRequester == null
+                ? ""
+                : dataForRequester.getKindCase()
+                        .name();
+        ByteBuf buffer = ByteBufUtil.join(64,
+                LOG_FIELD_DELIMITER,
                 // session information
                 NumberFormatter.toCharBytes(request.userId()),
-                request.deviceType().name(),
+                request.deviceType()
+                        .name(),
                 serviceRequest.getIpStr(),
                 // request information
                 NumberFormatter.toCharBytes(request.requestId()),
-                request.turmsRequest().getKindCase().name(),
+                request.turmsRequest()
+                        .getKindCase()
+                        .name(),
                 NumberFormatter.toCharBytes(requestSize),
                 DateUtil.toBytes(requestTime),
                 // response information
-                NumberFormatter.toCharBytes(response.code().getBusinessCode()),
+                NumberFormatter.toCharBytes(response.code()
+                        .getBusinessCode()),
                 responseType,
                 NumberFormatter.toCharBytes(processingTime));
-        if (response.code().isServerError()) {
+        if (response.code()
+                .isServerError()) {
             CLIENT_API_LOGGER.error(buffer);
         } else {
             CLIENT_API_LOGGER.info(buffer);

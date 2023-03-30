@@ -17,11 +17,11 @@
 
 package im.turms.plugin.antispam.dictionary;
 
-import lombok.Data;
-import lombok.Getter;
-
 import java.util.Date;
 import jakarta.annotation.Nullable;
+
+import lombok.Data;
+import lombok.Getter;
 
 /**
  * @author James Chen
@@ -60,16 +60,17 @@ public class ExtendedWord extends Word {
         return new Builder();
     }
 
-    public ExtendedWord(char[] word,
-                        @Nullable String id,
-                        @Nullable Integer level,
-                        @Nullable String category,
-                        @Nullable String source,
-                        @Nullable Date createTime,
-                        @Nullable Date disableTime,
-                        @Nullable Date enableTime,
-                        @Nullable Date updateTime,
-                        @Nullable String comment) {
+    public ExtendedWord(
+            char[] word,
+            @Nullable String id,
+            @Nullable Integer level,
+            @Nullable String category,
+            @Nullable String source,
+            @Nullable Date createTime,
+            @Nullable Date disableTime,
+            @Nullable Date enableTime,
+            @Nullable Date updateTime,
+            @Nullable String comment) {
         super(word);
         this.id = id;
         this.level = level;
@@ -160,7 +161,17 @@ public class ExtendedWord extends Word {
         }
 
         public ExtendedWord build() {
-            return new ExtendedWord(word, id, level, category, source, createTime, disableTime, enableTime, updateTime, comment);
+            return new ExtendedWord(
+                    word,
+                    id,
+                    level,
+                    category,
+                    source,
+                    createTime,
+                    disableTime,
+                    enableTime,
+                    updateTime,
+                    comment);
         }
     }
 

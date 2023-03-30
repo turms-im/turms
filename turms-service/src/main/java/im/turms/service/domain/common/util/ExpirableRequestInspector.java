@@ -17,9 +17,9 @@
 
 package im.turms.service.domain.common.util;
 
-import im.turms.server.common.access.client.dto.constant.RequestStatus;
-
 import jakarta.annotation.Nullable;
+
+import im.turms.server.common.access.client.dto.constant.RequestStatus;
 
 /**
  * @author James Chen

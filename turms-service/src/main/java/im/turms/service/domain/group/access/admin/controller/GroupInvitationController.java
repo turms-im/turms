@@ -17,6 +17,13 @@
 
 package im.turms.service.domain.group.access.admin.controller;
 
+import java.util.Collection;
+import java.util.Date;
+import java.util.Set;
+
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.access.admin.dto.response.DeleteResultDTO;
 import im.turms.server.common.access.admin.dto.response.HttpHandlerResult;
 import im.turms.server.common.access.admin.dto.response.PaginationDTO;
@@ -38,12 +45,6 @@ import im.turms.service.domain.group.access.admin.dto.request.AddGroupInvitation
 import im.turms.service.domain.group.access.admin.dto.request.UpdateGroupInvitationDTO;
 import im.turms.service.domain.group.access.admin.dto.response.GroupInvitationDTO;
 import im.turms.service.domain.group.service.GroupInvitationService;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
-import java.util.Collection;
-import java.util.Date;
-import java.util.Set;
 
 import static im.turms.server.common.access.admin.permission.AdminPermission.GROUP_INVITATION_CREATE;
 import static im.turms.server.common.access.admin.permission.AdminPermission.GROUP_INVITATION_DELETE;
@@ -58,7 +59,9 @@ public class GroupInvitationController extends BaseController {
 
     private final GroupInvitationService groupInvitationService;
 
-    public GroupInvitationController(TurmsPropertiesManager propertiesManager, GroupInvitationService groupInvitationService) {
+    public GroupInvitationController(
+            TurmsPropertiesManager propertiesManager,
+            GroupInvitationService groupInvitationService) {
         super(propertiesManager);
         this.groupInvitationService = groupInvitationService;
     }
@@ -67,8 +70,8 @@ public class GroupInvitationController extends BaseController {
     @RequiredPermission(GROUP_INVITATION_CREATE)
     public Mono<HttpHandlerResult<ResponseDTO<GroupInvitationDTO>>> addGroupInvitation(
             @RequestBody AddGroupInvitationDTO addGroupInvitationDTO) {
-        Mono<GroupInvitationDTO> createMono = groupInvitationService.createGroupInvitation(
-                        addGroupInvitationDTO.id(),
+        Mono<GroupInvitationDTO> createMono = groupInvitationService
+                .createGroupInvitation(addGroupInvitationDTO.id(),
                         addGroupInvitationDTO.groupId(),
                         addGroupInvitationDTO.inviterId(),
                         addGroupInvitationDTO.inviteeId(),
@@ -76,7 +79,9 @@ public class GroupInvitationController extends BaseController {
                         addGroupInvitationDTO.status(),
                         addGroupInvitationDTO.creationDate(),
                         addGroupInvitationDTO.responseDate())
-                .map(invitation -> new GroupInvitationDTO(invitation, groupInvitationService.getEntityExpirationDate()));
+                .map(invitation -> new GroupInvitationDTO(
+                        invitation,
+                        groupInvitationService.getEntityExpirationDate()));
         return HttpHandlerResult.okIfTruthy(createMono);
     }
 
@@ -96,8 +101,8 @@ public class GroupInvitationController extends BaseController {
             @QueryParam(required = false) Date expirationDateEnd,
             @QueryParam(required = false) Integer size) {
         size = getPageSize(size);
-        Flux<GroupInvitationDTO> invitationFlux = groupInvitationService.queryInvitations(
-                        ids,
+        Flux<GroupInvitationDTO> invitationFlux = groupInvitationService
+                .queryInvitations(ids,
                         groupIds,
                         inviterIds,
                         inviteeIds,
@@ -107,7 +112,9 @@ public class GroupInvitationController extends BaseController {
                         DateRange.of(expirationDateStart, expirationDateEnd),
                         0,
                         size)
-                .map(invitation -> new GroupInvitationDTO(invitation, groupInvitationService.getEntityExpirationDate()));
+                .map(invitation -> new GroupInvitationDTO(
+                        invitation,
+                        groupInvitationService.getEntityExpirationDate()));
         return HttpHandlerResult.okIfTruthy(invitationFlux);
     }
 
@@ -128,8 +135,7 @@ public class GroupInvitationController extends BaseController {
             int page,
             @QueryParam(required = false) Integer size) {
         size = getPageSize(size);
-        Mono<Long> count = groupInvitationService.countInvitations(
-                ids,
+        Mono<Long> count = groupInvitationService.countInvitations(ids,
                 groupIds,
                 inviterIds,
                 inviteeIds,
@@ -137,8 +143,8 @@ public class GroupInvitationController extends BaseController {
                 DateRange.of(creationDateStart, creationDateEnd),
                 DateRange.of(responseDateStart, responseDateEnd),
                 DateRange.of(expirationDateStart, expirationDateEnd));
-        Flux<GroupInvitationDTO> invitationFlux = groupInvitationService.queryInvitations(
-                        ids,
+        Flux<GroupInvitationDTO> invitationFlux = groupInvitationService
+                .queryInvitations(ids,
                         groupIds,
                         inviterIds,
                         inviteeIds,
@@ -148,7 +154,9 @@ public class GroupInvitationController extends BaseController {
                         DateRange.of(expirationDateStart, expirationDateEnd),
                         page,
                         size)
-                .map(invitation -> new GroupInvitationDTO(invitation, groupInvitationService.getEntityExpirationDate()));
+                .map(invitation -> new GroupInvitationDTO(
+                        invitation,
+                        groupInvitationService.getEntityExpirationDate()));
         return HttpHandlerResult.page(count, invitationFlux);
     }
 
@@ -157,8 +165,8 @@ public class GroupInvitationController extends BaseController {
     public Mono<HttpHandlerResult<ResponseDTO<UpdateResultDTO>>> updateGroupInvitations(
             Set<Long> ids,
             @RequestBody UpdateGroupInvitationDTO updateGroupInvitationDTO) {
-        Mono<UpdateResultDTO> updateMono = groupInvitationService.updateInvitations(
-                        ids,
+        Mono<UpdateResultDTO> updateMono = groupInvitationService
+                .updateInvitations(ids,
                         updateGroupInvitationDTO.inviterId(),
                         updateGroupInvitationDTO.inviteeId(),
                         updateGroupInvitationDTO.content(),

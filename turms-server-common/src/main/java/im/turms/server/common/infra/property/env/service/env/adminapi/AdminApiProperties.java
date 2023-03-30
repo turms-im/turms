@@ -17,15 +17,16 @@
 
 package im.turms.server.common.infra.property.env.service.env.adminapi;
 
-import im.turms.server.common.infra.property.env.common.adminapi.CommonAdminApiProperties;
-import im.turms.server.common.infra.property.metadata.Description;
-import im.turms.server.common.infra.property.metadata.GlobalProperty;
-import im.turms.server.common.infra.property.metadata.MutableProperty;
+import jakarta.validation.constraints.Min;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
-import jakarta.validation.constraints.Min;
+import im.turms.server.common.infra.property.env.common.adminapi.CommonAdminApiProperties;
+import im.turms.server.common.infra.property.metadata.Description;
+import im.turms.server.common.infra.property.metadata.GlobalProperty;
+import im.turms.server.common.infra.property.metadata.MutableProperty;
 
 /**
  * @author James Chen
@@ -35,8 +36,8 @@ import jakarta.validation.constraints.Min;
 @Data
 public class AdminApiProperties extends CommonAdminApiProperties {
 
-    @Description("Whether to allow administrators to delete data without any filter. " +
-            "Better false to prevent administrators from deleting all data by accident")
+    @Description("Whether to allow administrators to delete data without any filter. "
+            + "Better false to prevent administrators from deleting all data by accident")
     @GlobalProperty
     @MutableProperty
     private boolean allowDeleteWithoutFilter;

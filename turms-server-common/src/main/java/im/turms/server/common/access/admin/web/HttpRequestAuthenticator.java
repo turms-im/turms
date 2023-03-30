@@ -17,18 +17,19 @@
 
 package im.turms.server.common.access.admin.web;
 
+import java.util.Base64;
+import jakarta.annotation.Nullable;
+
+import io.netty.handler.codec.http.HttpHeaderNames;
+import io.netty.handler.codec.http.HttpHeaders;
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.access.admin.dto.response.HttpHandlerResult;
 import im.turms.server.common.access.admin.permission.RequiredPermission;
 import im.turms.server.common.domain.admin.service.BaseAdminService;
 import im.turms.server.common.infra.lang.AsciiCode;
 import im.turms.server.common.infra.lang.Pair;
 import im.turms.server.common.infra.lang.StringUtil;
-import io.netty.handler.codec.http.HttpHeaderNames;
-import io.netty.handler.codec.http.HttpHeaders;
-import reactor.core.publisher.Mono;
-
-import java.util.Base64;
-import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen
@@ -43,32 +44,42 @@ public class HttpRequestAuthenticator {
         this.adminService = adminService;
     }
 
-    public Mono<Credentials> authenticate(MethodParameterInfo[] params,
-                                          Object[] paramValues,
-                                          HttpHeaders headers,
-                                          @Nullable RequiredPermission permission) {
+    public Mono<Credentials> authenticate(
+            MethodParameterInfo[] params,
+            Object[] paramValues,
+            HttpHeaders headers,
+            @Nullable RequiredPermission permission) {
         if (permission == null) {
             return Mono.just(Credentials.EMPTY);
         }
         Credentials credentials = parseCredentials(headers);
         if (credentials == null) {
-            return Mono.error(new HttpResponseException(HttpHandlerResult
-                    .unauthorized("Could not find valid credentials from the header: \"" + HttpHeaderNames.AUTHORIZATION + "\"")));
+            return Mono.error(new HttpResponseException(
+                    HttpHandlerResult
+                            .unauthorized("Could not find valid credentials from the header: \""
+                                    + HttpHeaderNames.AUTHORIZATION
+                                    + "\"")));
         }
         return adminService.authenticate(credentials.account(), credentials.password())
                 .flatMap(authenticated -> {
                     if (authenticated) {
-                        return adminService.isAdminAuthorized(params, paramValues, credentials.account(), permission.value())
+                        return adminService
+                                .isAdminAuthorized(params,
+                                        paramValues,
+                                        credentials.account(),
+                                        permission.value())
                                 .flatMap(authorized -> {
                                     if (authorized) {
                                         return Mono.just(credentials);
                                     }
-                                    return Mono.error(new HttpResponseException(HttpHandlerResult
-                                            .unauthorized("Unauthorized to access the resource: " + permission.value())));
+                                    return Mono.error(new HttpResponseException(
+                                            HttpHandlerResult.unauthorized(
+                                                    "Unauthorized to access the resource: "
+                                                            + permission.value())));
                                 });
                     }
-                    return Mono.error(new HttpResponseException(HttpHandlerResult
-                            .unauthorized("Unauthenticated")));
+                    return Mono.error(new HttpResponseException(
+                            HttpHandlerResult.unauthorized("Unauthenticated")));
                 });
     }
 
@@ -80,8 +91,10 @@ public class HttpRequestAuthenticator {
         }
         try {
             String encodedCredentials = authorization.substring(BASIC_AUTH_PREFIX.length());
-            byte[] decode = Base64.getDecoder().decode(StringUtil.getBytes(encodedCredentials));
-            Pair<String, String> accountAndPassword = StringUtil.splitLatin1(StringUtil.newLatin1String(decode), AsciiCode.COLON);
+            byte[] decode = Base64.getDecoder()
+                    .decode(StringUtil.getBytes(encodedCredentials));
+            Pair<String, String> accountAndPassword =
+                    StringUtil.splitLatin1(StringUtil.newLatin1String(decode), AsciiCode.COLON);
             if (accountAndPassword == null) {
                 return null;
             }

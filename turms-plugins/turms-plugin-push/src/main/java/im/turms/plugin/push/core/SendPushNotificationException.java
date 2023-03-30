@@ -17,9 +17,9 @@
 
 package im.turms.plugin.push.core;
 
-import lombok.Data;
-
 import jakarta.annotation.Nullable;
+
+import lombok.Data;
 
 /**
  * @author James Chen
@@ -31,9 +31,10 @@ public class SendPushNotificationException extends RuntimeException {
     @Nullable
     private final String serviceErrorCode;
 
-    public SendPushNotificationException(Throwable cause,
-                                         PushNotificationErrorCode errorCode,
-                                         @Nullable String serviceErrorCode) {
+    public SendPushNotificationException(
+            Throwable cause,
+            PushNotificationErrorCode errorCode,
+            @Nullable String serviceErrorCode) {
         super(cause);
         this.errorCode = errorCode;
         this.serviceErrorCode = serviceErrorCode;
@@ -50,13 +51,18 @@ public class SendPushNotificationException extends RuntimeException {
         serviceErrorCode = null;
     }
 
-    public SendPushNotificationException(PushNotificationErrorCode errorCode, @Nullable String serviceErrorCode) {
+    public SendPushNotificationException(
+            PushNotificationErrorCode errorCode,
+            @Nullable String serviceErrorCode) {
         this.errorCode = errorCode;
         this.serviceErrorCode = serviceErrorCode;
     }
 
     public static SendPushNotificationException internalError(Throwable cause) {
-        return new SendPushNotificationException(cause, PushNotificationErrorCode.INTERNAL_ERROR, null);
+        return new SendPushNotificationException(
+                cause,
+                PushNotificationErrorCode.INTERNAL_ERROR,
+                null);
     }
 
 }

@@ -17,18 +17,18 @@
 
 package im.turms.server.common.infra.property.env.common.cluster;
 
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 
-import im.turms.server.common.infra.cluster.service.config.SharedConfigService;
-import im.turms.server.common.infra.property.env.common.AddressProperties;
-import im.turms.server.common.infra.property.metadata.Description;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
+import im.turms.server.common.infra.cluster.service.config.SharedConfigService;
+import im.turms.server.common.infra.property.env.common.AddressProperties;
+import im.turms.server.common.infra.property.metadata.Description;
 
 /**
  * @author James Chen

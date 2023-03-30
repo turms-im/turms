@@ -17,6 +17,15 @@
 
 package im.turms.server.common.domain.observation.access.admin.controller;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
+
+import jdk.jfr.Recording;
+import jdk.jfr.RecordingState;
+
 import im.turms.server.common.access.admin.dto.response.DeleteResultDTO;
 import im.turms.server.common.access.admin.dto.response.HttpHandlerResult;
 import im.turms.server.common.access.admin.dto.response.ResponseDTO;
@@ -38,14 +47,6 @@ import im.turms.server.common.domain.observation.exception.DumpIllegalStateExcep
 import im.turms.server.common.domain.observation.model.RecordingSession;
 import im.turms.server.common.domain.observation.service.FlightRecordingService;
 import im.turms.server.common.infra.io.FileResource;
-import jdk.jfr.Recording;
-import jdk.jfr.RecordingState;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
 
 /**
  * @author James Chen
@@ -75,21 +76,22 @@ public class FlightRecordingController {
                     state.name(),
                     Date.from(recording.getStartTime()),
                     session.getCloseDate(),
-                    session.description()
-            ));
+                    session.description()));
         }
         return HttpHandlerResult.okIfTruthy(result);
     }
 
     @RequiredPermission(AdminPermission.FLIGHT_RECORDING_CREATE)
     @PostMapping
-    public HttpHandlerResult<ResponseDTO<Long>> startRecording(@RequestBody CreateRecordingDTO createRecording) {
-        RecordingSession session = flightRecordingService.startRecording(createRecording.durationSeconds(),
-                createRecording.maxAgeSeconds(),
-                createRecording.maxSizeBytes(),
-                createRecording.delaySeconds(),
-                createRecording.customSettings(),
-                createRecording.description());
+    public HttpHandlerResult<ResponseDTO<Long>> startRecording(
+            @RequestBody CreateRecordingDTO createRecording) {
+        RecordingSession session =
+                flightRecordingService.startRecording(createRecording.durationSeconds(),
+                        createRecording.maxAgeSeconds(),
+                        createRecording.maxSizeBytes(),
+                        createRecording.delaySeconds(),
+                        createRecording.customSettings(),
+                        createRecording.description());
         return HttpHandlerResult.okIfTruthy(session.id());
     }
 
@@ -115,9 +117,7 @@ public class FlightRecordingController {
 
     @RequiredPermission(AdminPermission.FLIGHT_RECORDING_QUERY)
     @GetMapping("jfr")
-    public FileResource downloadJfr(
-            Long id,
-            boolean close) {
+    public FileResource downloadJfr(Long id, boolean close) {
         FileResource file;
         try {
             file = flightRecordingService.getRecordingFile(id, close);
@@ -125,7 +125,9 @@ public class FlightRecordingController {
             throw new HttpResponseException(ResponseStatusCode.DUMP_JFR_IN_ILLEGAL_STATUS, e);
         }
         if (file == null) {
-            throw new HttpResponseException(ResponseStatusCode.RESOURCE_NOT_FOUND, "Recording not found");
+            throw new HttpResponseException(
+                    ResponseStatusCode.RESOURCE_NOT_FOUND,
+                    "Recording not found");
         }
         return file;
     }

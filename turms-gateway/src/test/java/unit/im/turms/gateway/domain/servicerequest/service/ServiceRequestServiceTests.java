@@ -17,6 +17,12 @@
 
 package unit.im.turms.gateway.domain.servicerequest.service;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.UnpooledByteBufAllocator;
+import org.junit.jupiter.api.Test;
+import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
+
 import im.turms.gateway.access.client.common.UserSession;
 import im.turms.gateway.domain.servicerequest.service.ServiceRequestService;
 import im.turms.server.common.access.client.dto.constant.DeviceType;
@@ -30,11 +36,6 @@ import im.turms.server.common.access.servicerequest.rpc.HandleServiceRequest;
 import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.cluster.service.rpc.RpcService;
 import im.turms.server.common.infra.net.InetAddressUtil;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.UnpooledByteBufAllocator;
-import org.junit.jupiter.api.Test;
-import reactor.core.publisher.Mono;
-import reactor.test.StepVerifier;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -46,12 +47,14 @@ import static org.mockito.Mockito.when;
  */
 class ServiceRequestServiceTests {
 
-    private static final byte[] IP_ADDRESS = InetAddressUtil.ipStringToAddress("127.0.0.1").getAddress();
+    private static final byte[] IP_ADDRESS = InetAddressUtil.ipStringToAddress("127.0.0.1")
+            .getAddress();
     private static final Throwable HANDLE_REQUEST_FAILURE_EXCEPTION =
             new RuntimeException("Mocked error for failing to handle request");
 
     private final ServiceResponse responseForSuccess = new ServiceResponse(
-            TurmsNotification.Data.newBuilder().buildPartial(),
+            TurmsNotification.Data.newBuilder()
+                    .buildPartial(),
             ResponseStatusCode.OK,
             "reason");
 
@@ -66,8 +69,8 @@ class ServiceRequestServiceTests {
     @Test
     void handleServiceRequest_shouldReturnError_ifFailedToHandleRequest() {
         ServiceRequestService serviceRequestService = newInboundRequestService(false);
-        Mono<TurmsNotification> result = serviceRequestService
-                .handleServiceRequest(newUserSession(), newServiceRequest());
+        Mono<TurmsNotification> result =
+                serviceRequestService.handleServiceRequest(newUserSession(), newServiceRequest());
 
         StepVerifier.create(result)
                 .verifyErrorMatches(t -> t == HANDLE_REQUEST_FAILURE_EXCEPTION);
@@ -76,12 +79,13 @@ class ServiceRequestServiceTests {
     @Test
     void handleServiceRequest_shouldReturnOk_ifHandleRequestSuccessfully() {
         ServiceRequestService serviceRequestService = newInboundRequestService(true);
-        Mono<TurmsNotification> result = serviceRequestService
-                .handleServiceRequest(newUserSession(), newServiceRequest());
+        Mono<TurmsNotification> result =
+                serviceRequestService.handleServiceRequest(newUserSession(), newServiceRequest());
 
         StepVerifier.create(result)
-                .expectNextMatches(notification ->
-                        notification.getCode() == responseForSuccess.code().getBusinessCode())
+                .expectNextMatches(
+                        notification -> notification.getCode() == responseForSuccess.code()
+                                .getBusinessCode())
                 .verifyComplete();
     }
 
@@ -97,7 +101,13 @@ class ServiceRequestServiceTests {
 
     private ServiceRequest newServiceRequest() {
         ByteBuf buffer = UnpooledByteBufAllocator.DEFAULT.buffer();
-        return new ServiceRequest(IP_ADDRESS, 1L, DeviceType.ANDROID, 1L, TurmsRequest.KindCase.CREATE_MESSAGE_REQUEST, buffer);
+        return new ServiceRequest(
+                IP_ADDRESS,
+                1L,
+                DeviceType.ANDROID,
+                1L,
+                TurmsRequest.KindCase.CREATE_MESSAGE_REQUEST,
+                buffer);
     }
 
     private Node mockNode(boolean handleRequestSuccessfully) {
@@ -110,8 +120,7 @@ class ServiceRequestServiceTests {
             when(rpcService.requestResponse(any(HandleServiceRequest.class)))
                     .thenReturn(Mono.error(HANDLE_REQUEST_FAILURE_EXCEPTION));
         }
-        when(node.getRpcService())
-                .thenReturn(rpcService);
+        when(node.getRpcService()).thenReturn(rpcService);
         return node;
     }
 

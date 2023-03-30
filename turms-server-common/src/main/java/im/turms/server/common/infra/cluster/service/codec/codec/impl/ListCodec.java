@@ -17,6 +17,11 @@
 
 package im.turms.server.common.infra.cluster.service.codec.codec.impl;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+
 import im.turms.server.common.infra.cluster.service.codec.codec.Codec;
 import im.turms.server.common.infra.cluster.service.codec.codec.CodecId;
 import im.turms.server.common.infra.cluster.service.codec.codec.CodecPool;
@@ -24,11 +29,6 @@ import im.turms.server.common.infra.cluster.service.codec.io.CodecStreamInput;
 import im.turms.server.common.infra.cluster.service.codec.io.CodecStreamOutput;
 import im.turms.server.common.infra.collection.ChunkedArrayList;
 import im.turms.server.common.infra.io.Stream;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * @author James Chen
@@ -42,12 +42,7 @@ public class ListCodec implements Codec<List<?>> {
 
     @Override
     public List<Class<?>> getEncodableClasses() {
-        return List.of(
-                ArrayList.class,
-                ChunkedArrayList.class,
-                List.class,
-                LinkedList.class
-        );
+        return List.of(ArrayList.class, ChunkedArrayList.class, List.class, LinkedList.class);
     }
 
     @Override
@@ -62,9 +57,11 @@ public class ListCodec implements Codec<List<?>> {
         if (size == 0) {
             return;
         }
-        Class<?> elementClass = data.get(0).getClass();
+        Class<?> elementClass = data.get(0)
+                .getClass();
         Codec<Object> codec = CodecPool.getCodec(elementClass);
-        output.writeShort(codec.getCodecId().getId());
+        output.writeShort(codec.getCodecId()
+                .getId());
         for (Object element : data) {
             codec.write(output, element);
         }
@@ -94,7 +91,10 @@ public class ListCodec implements Codec<List<?>> {
         Object item = items.get(0);
         Codec<Object> codec = CodecPool.getCodec(item.getClass());
         if (codec == null) {
-            throw new IllegalArgumentException("Cannot find a codec for the unknown class: " + item.getClass().getName());
+            throw new IllegalArgumentException(
+                    "Cannot find a codec for the unknown class: "
+                            + item.getClass()
+                                    .getName());
         }
         return Stream.computeVarint32Size(size) + codec.initialCapacity(item) * size;
     }

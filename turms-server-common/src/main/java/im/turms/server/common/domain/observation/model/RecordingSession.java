@@ -17,11 +17,6 @@
 
 package im.turms.server.common.domain.observation.model;
 
-import im.turms.server.common.domain.observation.exception.DumpIllegalStateException;
-import im.turms.server.common.infra.io.InputOutputException;
-import jdk.jfr.Recording;
-import jdk.jfr.RecordingState;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -29,21 +24,27 @@ import java.nio.file.Path;
 import java.util.Date;
 import jakarta.annotation.Nullable;
 
+import jdk.jfr.Recording;
+import jdk.jfr.RecordingState;
+
+import im.turms.server.common.domain.observation.exception.DumpIllegalStateException;
+import im.turms.server.common.infra.io.InputOutputException;
+
 /**
  * @author James Chen
  */
 public record RecordingSession(
         Long id,
         Recording recording,
-        @Nullable
-        String description
+        @Nullable String description
 ) {
 
     @Nullable
     public Date getCloseDate() {
         RecordingState state = recording.getState();
         return state == RecordingState.CLOSED || state == RecordingState.STOPPED
-                ? Date.from(recording.getStopTime()) : null;
+                ? Date.from(recording.getStopTime())
+                : null;
     }
 
     public Path getFilePath() {
@@ -58,15 +59,20 @@ public record RecordingSession(
                 try {
                     recording.dump(destination);
                 } catch (IOException e) {
-                    throw new InputOutputException("Failed to dump the recording session to the destination: " +
-                            destination, e);
+                    throw new InputOutputException(
+                            "Failed to dump the recording session to the destination: "
+                                    + destination,
+                            e);
                 }
                 return destination;
             } else if (state == RecordingState.STOPPED || state == RecordingState.CLOSED) {
                 return recording.getDestination();
             } else {
-                throw new DumpIllegalStateException("Failed to dump the recording (" +
-                        id + ") because it is in the state: " + state);
+                throw new DumpIllegalStateException(
+                        "Failed to dump the recording ("
+                                + id
+                                + ") because it is in the state: "
+                                + state);
             }
         }
     }
@@ -74,19 +80,28 @@ public record RecordingSession(
     public void deleteFile() {
         Path path;
         try {
-            path = recording.getDestination().toFile().toPath();
+            path = recording.getDestination()
+                    .toFile()
+                    .toPath();
         } catch (Exception e) {
-            throw new RuntimeException("Failed to get the path of the recording destination file", e);
+            throw new RuntimeException(
+                    "Failed to get the path of the recording destination file",
+                    e);
         }
         try {
             Files.deleteIfExists(path);
         } catch (IOException e) {
-            throw new InputOutputException("Failed to delete the recording destination file: " + path, e);
+            throw new InputOutputException(
+                    "Failed to delete the recording destination file: "
+                            + path,
+                    e);
         }
     }
 
     public boolean checkIfFileExists() {
-        return Files.exists(recording.getDestination().toFile().toPath());
+        return Files.exists(recording.getDestination()
+                .toFile()
+                .toPath());
     }
 
     public void close(boolean keepFile) {

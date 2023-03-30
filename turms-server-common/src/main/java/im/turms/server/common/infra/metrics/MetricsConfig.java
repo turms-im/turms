@@ -17,6 +17,9 @@
 
 package im.turms.server.common.infra.metrics;
 
+import java.io.File;
+import java.util.List;
+
 import io.micrometer.core.instrument.Metrics;
 import io.micrometer.core.instrument.binder.MeterBinder;
 import io.micrometer.core.instrument.binder.jvm.ClassLoaderMetrics;
@@ -31,9 +34,6 @@ import io.micrometer.prometheus.PrometheusConfig;
 import io.micrometer.prometheus.PrometheusMeterRegistry;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.io.File;
-import java.util.List;
 
 /**
  * @author James Chen
@@ -67,7 +67,7 @@ public class MetricsConfig {
                 new JvmMemoryMetrics(),
                 new JvmThreadMetrics(),
                 new ClassLoaderMetrics()
-                // org.springframework.boot.actuate.autoconfigure.metrics.web.reactive.WebFluxMetricsAutoConfiguration
+        // org.springframework.boot.actuate.autoconfigure.metrics.web.reactive.WebFluxMetricsAutoConfiguration
         );
         for (MeterBinder binder : binders) {
             binder.bindTo(registry);

@@ -17,14 +17,15 @@
 
 package im.turms.server.common.infra.logging;
 
+import java.util.Map;
+
+import io.netty.buffer.ByteBuf;
+
 import im.turms.server.common.infra.lang.AsciiCode;
 import im.turms.server.common.infra.lang.NumberFormatter;
 import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.netty.ByteBufUtil;
 import im.turms.server.common.infra.time.DateUtil;
-import io.netty.buffer.ByteBuf;
-
-import java.util.Map;
 
 /**
  * @author James Chen
@@ -34,24 +35,27 @@ public final class AdminApiLogging {
     private AdminApiLogging() {
     }
 
-    public static void log(String account,
-                           String ip,
-                           String requestId,
-                           long requestTime,
-                           String action,
-                           Map<String, Object> params,
-                           int processingTime,
-                           Throwable throwable) {
+    public static void log(
+            String account,
+            String ip,
+            String requestId,
+            long requestTime,
+            String action,
+            Map<String, Object> params,
+            int processingTime,
+            Throwable throwable) {
         boolean isSuccessful = throwable == null;
         int estimatedSize = 64;
         String reason;
         if (isSuccessful) {
             reason = "";
         } else {
-            reason = StringUtil.replaceLatin1(throwable.toString(), AsciiCode.NEW_LINE, AsciiCode.SPACE);
+            reason = StringUtil
+                    .replaceLatin1(throwable.toString(), AsciiCode.NEW_LINE, AsciiCode.SPACE);
             estimatedSize += reason.length();
         }
-        ByteBuf buffer = ByteBufUtil.join(estimatedSize, CommonLogger.LOG_FIELD_DELIMITER,
+        ByteBuf buffer = ByteBufUtil.join(estimatedSize,
+                CommonLogger.LOG_FIELD_DELIMITER,
                 // Session
                 account,
                 ip,
@@ -61,7 +65,9 @@ public final class AdminApiLogging {
                 action,
                 params.toString(),
                 // Response
-                isSuccessful ? "TRUE" : "FALSE",
+                isSuccessful
+                        ? "TRUE"
+                        : "FALSE",
                 NumberFormatter.toCharBytes(processingTime),
                 reason);
         CommonLogger.ADMIN_API_LOGGER.info(buffer);

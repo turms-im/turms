@@ -17,15 +17,16 @@
 
 package im.turms.server.common.infra.property.env.common.plugin;
 
-import im.turms.server.common.infra.property.metadata.Description;
-import im.turms.server.common.infra.security.SensitiveProperty;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
+import im.turms.server.common.infra.property.metadata.Description;
+import im.turms.server.common.infra.security.SensitiveProperty;
 
 /**
  * @author James Chen

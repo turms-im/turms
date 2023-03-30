@@ -17,6 +17,13 @@
 
 package im.turms.service.domain.observation.service;
 
+import java.util.Map;
+
+import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+import reactor.math.MathFlux;
+
 import im.turms.server.common.domain.observation.rpc.CountOnlineUsersRequest;
 import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.cluster.service.rpc.RpcErrorCode;
@@ -26,12 +33,6 @@ import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.reactor.PublisherPool;
 import im.turms.server.common.infra.task.TaskManager;
-import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-import reactor.math.MathFlux;
-
-import java.util.Map;
 
 /**
  * @author James Chen
@@ -44,42 +45,54 @@ public class StatisticsService {
 
     private final Node node;
 
-    private static final String ONLINE_USERS_NUMBER_LOGGING_FORMAT = "The current online users number is: {}";
+    private static final String ONLINE_USERS_NUMBER_LOGGING_FORMAT =
+            "The current online users number is: {}";
 
     public StatisticsService(
             Node node,
             TurmsPropertiesManager propertiesManager,
             TaskManager taskManager) {
         this.node = node;
-        taskManager.reschedule(
-                "onlineUsersNumberLogging",
-                propertiesManager.getLocalProperties().getService().getStatistics()
+        taskManager.reschedule("onlineUsersNumberLogging",
+                propertiesManager.getLocalProperties()
+                        .getService()
+                        .getStatistics()
                         .getOnlineUsersNumberLoggingCron(),
                 () -> {
-                    if (node.isLocalNodeLeader() &&
-                            propertiesManager.getGlobalProperties().getService().getStatistics().isLogOnlineUsersNumber()) {
-                        countOnlineUsers()
-                                .subscribe(count -> LOGGER.info(ONLINE_USERS_NUMBER_LOGGING_FORMAT, count),
-                                        t -> LOGGER.error("Failed to count online users", t));
+                    if (node.isLocalNodeLeader()
+                            && propertiesManager.getGlobalProperties()
+                                    .getService()
+                                    .getStatistics()
+                                    .isLogOnlineUsersNumber()) {
+                        countOnlineUsers().subscribe(
+                                count -> LOGGER.info(ONLINE_USERS_NUMBER_LOGGING_FORMAT, count),
+                                t -> LOGGER.error("Failed to count online users", t));
                     }
                 });
     }
 
     /**
-     * @implNote Note that the count requests are sent by turms but all responses should come from turms-gateway
-     * so we don't need to count the local online users like ".map(count -> count + countLocalOnlineUsers())"
+     * @implNote Note that the count requests are sent by turms but all responses should come from
+     *           turms-gateway so we don't need to count the local online users like ".map(count ->
+     *           count + countLocalOnlineUsers())"
      */
     public Mono<Map<String, Integer>> countOnlineUsersByNodes() {
         CountOnlineUsersRequest request = new CountOnlineUsersRequest();
-        return node.getRpcService().requestResponsesAsMapFromOtherMembers(request, false)
-                .onErrorResume(throwable -> RpcException.isErrorCode(throwable, RpcErrorCode.MEMBER_NOT_FOUND),
+        return node.getRpcService()
+                .requestResponsesAsMapFromOtherMembers(request, false)
+                .onErrorResume(
+                        throwable -> RpcException.isErrorCode(throwable,
+                                RpcErrorCode.MEMBER_NOT_FOUND),
                         throwable -> PublisherPool.emptyMap());
     }
 
     public Mono<Integer> countOnlineUsers() {
         CountOnlineUsersRequest request = new CountOnlineUsersRequest();
-        Flux<Integer> responses = node.getRpcService().requestResponsesFromOtherMembers(request, true)
-                .onErrorResume(throwable -> RpcException.isErrorCode(throwable, RpcErrorCode.MEMBER_NOT_FOUND),
+        Flux<Integer> responses = node.getRpcService()
+                .requestResponsesFromOtherMembers(request, true)
+                .onErrorResume(
+                        throwable -> RpcException.isErrorCode(throwable,
+                                RpcErrorCode.MEMBER_NOT_FOUND),
                         throwable -> Mono.just(0));
         return MathFlux.sumInt(responses);
     }

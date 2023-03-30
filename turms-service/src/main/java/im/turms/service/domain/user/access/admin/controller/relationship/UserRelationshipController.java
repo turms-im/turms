@@ -17,6 +17,15 @@
 
 package im.turms.service.domain.user.access.admin.controller.relationship;
 
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.access.admin.dto.response.DeleteResultDTO;
 import im.turms.server.common.access.admin.dto.response.HttpHandlerResult;
 import im.turms.server.common.access.admin.dto.response.PaginationDTO;
@@ -42,14 +51,6 @@ import im.turms.service.domain.user.access.admin.dto.response.UserRelationshipDT
 import im.turms.service.domain.user.po.UserRelationship;
 import im.turms.service.domain.user.service.UserRelationshipGroupService;
 import im.turms.service.domain.user.service.UserRelationshipService;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import static im.turms.server.common.access.admin.permission.AdminPermission.USER_RELATIONSHIP_CREATE;
 import static im.turms.server.common.access.admin.permission.AdminPermission.USER_RELATIONSHIP_DELETE;
@@ -66,9 +67,10 @@ public class UserRelationshipController extends BaseController {
     private final UserRelationshipService userRelationshipService;
     private final UserRelationshipGroupService userRelationshipGroupService;
 
-    public UserRelationshipController(TurmsPropertiesManager propertiesManager,
-                                      UserRelationshipService userRelationshipService,
-                                      UserRelationshipGroupService userRelationshipGroupService) {
+    public UserRelationshipController(
+            TurmsPropertiesManager propertiesManager,
+            UserRelationshipService userRelationshipService,
+            UserRelationshipGroupService userRelationshipGroupService) {
         super(propertiesManager);
         this.userRelationshipService = userRelationshipService;
         this.userRelationshipGroupService = userRelationshipGroupService;
@@ -76,16 +78,17 @@ public class UserRelationshipController extends BaseController {
 
     @PostMapping
     @RequiredPermission(USER_RELATIONSHIP_CREATE)
-    public Mono<HttpHandlerResult<ResponseDTO<Void>>> addRelationship(@RequestBody AddRelationshipDTO addRelationshipDTO) {
-        Mono<Void> upsertMono = userRelationshipService.upsertOneSidedRelationship(
-                addRelationshipDTO.ownerId(),
-                addRelationshipDTO.relatedUserId(),
-                addRelationshipDTO.blockDate(),
-                DEFAULT_RELATIONSHIP_GROUP_INDEX,
-                null,
-                addRelationshipDTO.establishmentDate(),
-                false,
-                null);
+    public Mono<HttpHandlerResult<ResponseDTO<Void>>> addRelationship(
+            @RequestBody AddRelationshipDTO addRelationshipDTO) {
+        Mono<Void> upsertMono =
+                userRelationshipService.upsertOneSidedRelationship(addRelationshipDTO.ownerId(),
+                        addRelationshipDTO.relatedUserId(),
+                        addRelationshipDTO.blockDate(),
+                        DEFAULT_RELATIONSHIP_GROUP_INDEX,
+                        null,
+                        addRelationshipDTO.establishmentDate(),
+                        false,
+                        null);
         return upsertMono.thenReturn(HttpHandlerResult.RESPONSE_OK);
     }
 
@@ -101,8 +104,14 @@ public class UserRelationshipController extends BaseController {
             @QueryParam(required = false) Integer size,
             boolean withGroupIndexes) {
         size = getPageSize(size);
-        Flux<UserRelationship> relationshipsFlux = userRelationshipService.queryRelationships(
-                ownerIds, relatedUserIds, groupIndexes, isBlocked, DateRange.of(establishmentDateStart, establishmentDateEnd), 0, size);
+        Flux<UserRelationship> relationshipsFlux =
+                userRelationshipService.queryRelationships(ownerIds,
+                        relatedUserIds,
+                        groupIndexes,
+                        isBlocked,
+                        DateRange.of(establishmentDateStart, establishmentDateEnd),
+                        0,
+                        size);
         Flux<UserRelationshipDTO> dtoFlux = relationship2dto(withGroupIndexes, relationshipsFlux);
         return HttpHandlerResult.okIfTruthy(dtoFlux);
     }
@@ -120,10 +129,16 @@ public class UserRelationshipController extends BaseController {
             @QueryParam(required = false) Integer size,
             boolean withGroupIndexes) {
         size = getPageSize(size);
-        Mono<Long> count = userRelationshipService.countRelationships(
-                ownerIds, relatedUserIds, groupIndexes, isBlocked);
-        Flux<UserRelationship> relationshipsFlux = userRelationshipService.queryRelationships(
-                ownerIds, relatedUserIds, groupIndexes, isBlocked, DateRange.of(establishmentDateStart, establishmentDateEnd), page, size);
+        Mono<Long> count = userRelationshipService
+                .countRelationships(ownerIds, relatedUserIds, groupIndexes, isBlocked);
+        Flux<UserRelationship> relationshipsFlux =
+                userRelationshipService.queryRelationships(ownerIds,
+                        relatedUserIds,
+                        groupIndexes,
+                        isBlocked,
+                        DateRange.of(establishmentDateStart, establishmentDateEnd),
+                        page,
+                        size);
         Flux<UserRelationshipDTO> dtoFlux = relationship2dto(withGroupIndexes, relationshipsFlux);
         return HttpHandlerResult.page(count, dtoFlux);
     }
@@ -133,8 +148,8 @@ public class UserRelationshipController extends BaseController {
     public Mono<HttpHandlerResult<ResponseDTO<UpdateResultDTO>>> updateRelationships(
             List<UserRelationship.Key> keys,
             @RequestBody UpdateRelationshipDTO updateRelationshipDTO) {
-        Mono<UpdateResultDTO> updateMono = userRelationshipService.updateUserOneSidedRelationships(
-                        CollectionUtil.newSet(keys),
+        Mono<UpdateResultDTO> updateMono = userRelationshipService
+                .updateUserOneSidedRelationships(CollectionUtil.newSet(keys),
                         updateRelationshipDTO.blockDate(),
                         updateRelationshipDTO.establishmentDate())
                 .map(UpdateResultDTO::get);
@@ -145,25 +160,29 @@ public class UserRelationshipController extends BaseController {
     @RequiredPermission(USER_RELATIONSHIP_DELETE)
     public Mono<HttpHandlerResult<ResponseDTO<DeleteResultDTO>>> deleteRelationships(
             List<UserRelationship.Key> keys) {
-        Mono<DeleteResultDTO> deleteMono = userRelationshipService
-                .deleteOneSidedRelationships(CollectionUtil.newSet(keys))
-                .map(DeleteResultDTO::get);
+        Mono<DeleteResultDTO> deleteMono =
+                userRelationshipService.deleteOneSidedRelationships(CollectionUtil.newSet(keys))
+                        .map(DeleteResultDTO::get);
         return HttpHandlerResult.okIfTruthy(deleteMono);
     }
 
-    private Flux<UserRelationshipDTO> relationship2dto(Boolean withGroupIndexes, Flux<UserRelationship> relationshipsFlux) {
-        return relationshipsFlux
-                .flatMap(relationship -> {
-                    if (withGroupIndexes) {
-                        Recyclable<List<Integer>> recyclableList = ListRecycler.obtain();
-                        return userRelationshipGroupService
-                                .queryGroupIndexes(relationship.getKey().getOwnerId(), relationship.getKey().getRelatedUserId())
-                                .collect(Collectors.toCollection(recyclableList::getValue))
-                                .map(indexes -> UserRelationshipDTO.fromDomain(relationship, CollectionUtil.newSet(indexes)))
-                                .doFinally(signalType -> recyclableList.recycle());
-                    }
-                    return Mono.just(UserRelationshipDTO.fromDomain(relationship));
-                });
+    private Flux<UserRelationshipDTO> relationship2dto(
+            Boolean withGroupIndexes,
+            Flux<UserRelationship> relationshipsFlux) {
+        return relationshipsFlux.flatMap(relationship -> {
+            if (withGroupIndexes) {
+                Recyclable<List<Integer>> recyclableList = ListRecycler.obtain();
+                return userRelationshipGroupService.queryGroupIndexes(relationship.getKey()
+                        .getOwnerId(),
+                        relationship.getKey()
+                                .getRelatedUserId())
+                        .collect(Collectors.toCollection(recyclableList::getValue))
+                        .map(indexes -> UserRelationshipDTO.fromDomain(relationship,
+                                CollectionUtil.newSet(indexes)))
+                        .doFinally(signalType -> recyclableList.recycle());
+            }
+            return Mono.just(UserRelationshipDTO.fromDomain(relationship));
+        });
     }
 
 }

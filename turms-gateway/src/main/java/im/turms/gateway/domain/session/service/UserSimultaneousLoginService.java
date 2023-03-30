@@ -17,6 +17,13 @@
 
 package im.turms.gateway.domain.session.service;
 
+import java.util.EnumSet;
+import java.util.Map;
+import java.util.Set;
+import jakarta.validation.constraints.NotNull;
+
+import org.springframework.stereotype.Service;
+
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.domain.common.util.DeviceTypeUtil;
 import im.turms.server.common.infra.collection.CollectionUtil;
@@ -27,12 +34,6 @@ import im.turms.server.common.infra.property.constant.LoginConflictStrategy;
 import im.turms.server.common.infra.property.constant.SimultaneousLoginStrategy;
 import im.turms.server.common.infra.property.env.gateway.SimultaneousLoginProperties;
 import im.turms.server.common.infra.validation.ValidDeviceType;
-import org.springframework.stereotype.Service;
-
-import java.util.EnumSet;
-import java.util.Map;
-import java.util.Set;
-import jakarta.validation.constraints.NotNull;
 
 /**
  * @author James Chen
@@ -56,17 +57,20 @@ public class UserSimultaneousLoginService {
     }
 
     private void updateProperties(TurmsProperties properties) {
-        SimultaneousLoginProperties loginProperties = properties.getGateway().getSimultaneousLogin();
+        SimultaneousLoginProperties loginProperties = properties.getGateway()
+                .getSimultaneousLogin();
         allowDeviceTypeUnknownLogin = loginProperties.isAllowDeviceTypeUnknownLogin();
         allowDeviceTypeOthersLogin = loginProperties.isAllowDeviceTypeOthersLogin();
         loginConflictStrategy = loginProperties.getLoginConflictStrategy();
 
         SimultaneousLoginStrategy simultaneousLoginStrategy = loginProperties.getStrategy();
-        deviceTypeToExclusiveDeviceTypes = newExclusiveDeviceFromStrategy(simultaneousLoginStrategy);
+        deviceTypeToExclusiveDeviceTypes =
+                newExclusiveDeviceFromStrategy(simultaneousLoginStrategy);
         forbiddenDeviceTypes = newForbiddenDeviceTypesFromStrategy(simultaneousLoginStrategy);
     }
 
-    public Set<DeviceType> getConflictedDeviceTypes(@NotNull @ValidDeviceType DeviceType deviceType) {
+    public Set<DeviceType> getConflictedDeviceTypes(
+            @NotNull @ValidDeviceType DeviceType deviceType) {
         return deviceTypeToExclusiveDeviceTypes.get(deviceType);
     }
 
@@ -78,13 +82,16 @@ public class UserSimultaneousLoginService {
         return loginConflictStrategy == LoginConflictStrategy.DISCONNECT_LOGGING_IN_DEVICE;
     }
 
-    private Map<DeviceType, Set<DeviceType>> newExclusiveDeviceFromStrategy(SimultaneousLoginStrategy strategy) {
+    private Map<DeviceType, Set<DeviceType>> newExclusiveDeviceFromStrategy(
+            SimultaneousLoginStrategy strategy) {
         Map<DeviceType, Set<DeviceType>> newDeviceTypeToExclusiveDeviceTypes = CollectionUtil
                 .newMapWithExpectedSize(DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES.length);
         for (DeviceType deviceType : DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES) {
             // Every device type conflicts with itself
-            newDeviceTypeToExclusiveDeviceTypes.computeIfAbsent(deviceType, key -> CollectionUtil
-                            .newSetWithExpectedSize(DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES.length))
+            newDeviceTypeToExclusiveDeviceTypes
+                    .computeIfAbsent(deviceType,
+                            key -> CollectionUtil.newSetWithExpectedSize(
+                                    DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES.length))
                     .add(deviceType);
         }
         switch (strategy) {
@@ -97,42 +104,74 @@ public class UserSimultaneousLoginService {
             }
             case ALLOW_ONE_DEVICE_OF_DESKTOP_AND_ONE_DEVICE_OF_MOBILE_ONLINE,
                     ALLOW_ONE_DEVICE_OF_DESKTOP_AND_ONE_DEVICE_OF_BROWSER_AND_ONE_DEVICE_OF_MOBILE_ONLINE -> {
-                addConflictedDeviceTypes(newDeviceTypeToExclusiveDeviceTypes, DeviceType.ANDROID, DeviceType.IOS);
+                addConflictedDeviceTypes(newDeviceTypeToExclusiveDeviceTypes,
+                        DeviceType.ANDROID,
+                        DeviceType.IOS);
             }
             case ALLOW_ONE_DEVICE_OF_DESKTOP_OR_BROWSER_AND_ONE_DEVICE_OF_MOBILE_ONLINE -> {
-                addConflictedDeviceTypes(newDeviceTypeToExclusiveDeviceTypes, DeviceType.DESKTOP, DeviceType.BROWSER);
-                addConflictedDeviceTypes(newDeviceTypeToExclusiveDeviceTypes, DeviceType.ANDROID, DeviceType.IOS);
+                addConflictedDeviceTypes(newDeviceTypeToExclusiveDeviceTypes,
+                        DeviceType.DESKTOP,
+                        DeviceType.BROWSER);
+                addConflictedDeviceTypes(newDeviceTypeToExclusiveDeviceTypes,
+                        DeviceType.ANDROID,
+                        DeviceType.IOS);
             }
             case ALLOW_ONE_DEVICE_OF_DESKTOP_OR_MOBILE_ONLINE -> {
-                addConflictedDeviceTypes(newDeviceTypeToExclusiveDeviceTypes, DeviceType.DESKTOP, DeviceType.ANDROID);
-                addConflictedDeviceTypes(newDeviceTypeToExclusiveDeviceTypes, DeviceType.DESKTOP, DeviceType.IOS);
-                addConflictedDeviceTypes(newDeviceTypeToExclusiveDeviceTypes, DeviceType.ANDROID, DeviceType.IOS);
+                addConflictedDeviceTypes(newDeviceTypeToExclusiveDeviceTypes,
+                        DeviceType.DESKTOP,
+                        DeviceType.ANDROID);
+                addConflictedDeviceTypes(newDeviceTypeToExclusiveDeviceTypes,
+                        DeviceType.DESKTOP,
+                        DeviceType.IOS);
+                addConflictedDeviceTypes(newDeviceTypeToExclusiveDeviceTypes,
+                        DeviceType.ANDROID,
+                        DeviceType.IOS);
             }
             case ALLOW_ONE_DEVICE_OF_DESKTOP_OR_BROWSER_OR_MOBILE_ONLINE -> {
-                addConflictedDeviceTypes(newDeviceTypeToExclusiveDeviceTypes, DeviceType.DESKTOP, DeviceType.BROWSER);
-                addConflictedDeviceTypes(newDeviceTypeToExclusiveDeviceTypes, DeviceType.DESKTOP, DeviceType.ANDROID);
-                addConflictedDeviceTypes(newDeviceTypeToExclusiveDeviceTypes, DeviceType.DESKTOP, DeviceType.IOS);
-                addConflictedDeviceTypes(newDeviceTypeToExclusiveDeviceTypes, DeviceType.BROWSER, DeviceType.ANDROID);
-                addConflictedDeviceTypes(newDeviceTypeToExclusiveDeviceTypes, DeviceType.BROWSER, DeviceType.IOS);
-                addConflictedDeviceTypes(newDeviceTypeToExclusiveDeviceTypes, DeviceType.ANDROID, DeviceType.IOS);
+                addConflictedDeviceTypes(newDeviceTypeToExclusiveDeviceTypes,
+                        DeviceType.DESKTOP,
+                        DeviceType.BROWSER);
+                addConflictedDeviceTypes(newDeviceTypeToExclusiveDeviceTypes,
+                        DeviceType.DESKTOP,
+                        DeviceType.ANDROID);
+                addConflictedDeviceTypes(newDeviceTypeToExclusiveDeviceTypes,
+                        DeviceType.DESKTOP,
+                        DeviceType.IOS);
+                addConflictedDeviceTypes(newDeviceTypeToExclusiveDeviceTypes,
+                        DeviceType.BROWSER,
+                        DeviceType.ANDROID);
+                addConflictedDeviceTypes(newDeviceTypeToExclusiveDeviceTypes,
+                        DeviceType.BROWSER,
+                        DeviceType.IOS);
+                addConflictedDeviceTypes(newDeviceTypeToExclusiveDeviceTypes,
+                        DeviceType.ANDROID,
+                        DeviceType.IOS);
             }
-            default -> throw new IncompatibleInternalChangeException("Unexpected simultaneous login strategy: " + strategy);
+            default -> throw new IncompatibleInternalChangeException(
+                    "Unexpected simultaneous login strategy: "
+                            + strategy);
         }
-        return Map.copyOf(CollectionUtil.transformValues(newDeviceTypeToExclusiveDeviceTypes, Set::copyOf));
+        return Map.copyOf(
+                CollectionUtil.transformValues(newDeviceTypeToExclusiveDeviceTypes, Set::copyOf));
     }
 
-    private Set<DeviceType> newForbiddenDeviceTypesFromStrategy(SimultaneousLoginStrategy strategy) {
+    private Set<DeviceType> newForbiddenDeviceTypesFromStrategy(
+            SimultaneousLoginStrategy strategy) {
         Set<DeviceType> newForbiddenDeviceTypes = EnumSet.noneOf(DeviceType.class);
         switch (strategy) {
             case ALLOW_ONE_DEVICE_OF_DESKTOP_AND_ONE_DEVICE_OF_MOBILE_ONLINE,
-                    ALLOW_ONE_DEVICE_OF_DESKTOP_OR_MOBILE_ONLINE -> newForbiddenDeviceTypes.add(DeviceType.BROWSER);
+                    ALLOW_ONE_DEVICE_OF_DESKTOP_OR_MOBILE_ONLINE ->
+                newForbiddenDeviceTypes.add(DeviceType.BROWSER);
             case ALLOW_ONE_DEVICE_OF_EACH_DEVICE_TYPE_ONLINE,
                     ALLOW_ONE_DEVICE_FOR_ALL_DEVICE_TYPES_ONLINE,
                     ALLOW_ONE_DEVICE_OF_DESKTOP_OR_BROWSER_AND_ONE_DEVICE_OF_MOBILE_ONLINE,
                     ALLOW_ONE_DEVICE_OF_DESKTOP_AND_ONE_DEVICE_OF_BROWSER_AND_ONE_DEVICE_OF_MOBILE_ONLINE,
-                    ALLOW_ONE_DEVICE_OF_DESKTOP_OR_BROWSER_OR_MOBILE_ONLINE -> {
-            }
-            default -> throw new IncompatibleInternalChangeException("Unexpected simultaneous login strategy: " + strategy);
+                    ALLOW_ONE_DEVICE_OF_DESKTOP_OR_BROWSER_OR_MOBILE_ONLINE ->
+                {
+                }
+            default -> throw new IncompatibleInternalChangeException(
+                    "Unexpected simultaneous login strategy: "
+                            + strategy);
         }
         if (!allowDeviceTypeUnknownLogin) {
             newForbiddenDeviceTypes.add(DeviceType.UNKNOWN);
@@ -155,11 +194,15 @@ public class UserSimultaneousLoginService {
             Map<DeviceType, Set<DeviceType>> deviceTypeToExclusiveDeviceTypes,
             @NotNull @ValidDeviceType DeviceType deviceTypeOne,
             @NotNull @ValidDeviceType DeviceType deviceTypeTwo) {
-        deviceTypeToExclusiveDeviceTypes.computeIfAbsent(deviceTypeOne, key -> CollectionUtil
-                        .newSetWithExpectedSize(DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES.length))
+        deviceTypeToExclusiveDeviceTypes
+                .computeIfAbsent(deviceTypeOne,
+                        key -> CollectionUtil.newSetWithExpectedSize(
+                                DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES.length))
                 .add(deviceTypeTwo);
-        deviceTypeToExclusiveDeviceTypes.computeIfAbsent(deviceTypeTwo, key -> CollectionUtil
-                        .newSetWithExpectedSize(DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES.length))
+        deviceTypeToExclusiveDeviceTypes
+                .computeIfAbsent(deviceTypeTwo,
+                        key -> CollectionUtil.newSetWithExpectedSize(
+                                DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES.length))
                 .add(deviceTypeOne);
     }
 

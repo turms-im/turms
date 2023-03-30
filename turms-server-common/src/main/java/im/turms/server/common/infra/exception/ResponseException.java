@@ -17,14 +17,15 @@
 
 package im.turms.server.common.infra.exception;
 
-import im.turms.server.common.access.client.dto.notification.TurmsNotification;
-import im.turms.server.common.access.common.ResponseStatusCode;
-import im.turms.server.common.infra.collection.FastEnumMap;
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotNull;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.NotNull;
+import im.turms.server.common.access.client.dto.notification.TurmsNotification;
+import im.turms.server.common.access.common.ResponseStatusCode;
+import im.turms.server.common.infra.collection.FastEnumMap;
 
 /**
  * @author James Chen
@@ -33,7 +34,8 @@ import jakarta.validation.constraints.NotNull;
 @Data
 public final class ResponseException extends StacklessException {
 
-    private static final FastEnumMap<ResponseStatusCode, ResponseException> POOL = new FastEnumMap<>(ResponseStatusCode.class);
+    private static final FastEnumMap<ResponseStatusCode, ResponseException> POOL =
+            new FastEnumMap<>(ResponseStatusCode.class);
 
     static {
         for (ResponseStatusCode code : ResponseStatusCode.VALUES) {
@@ -88,10 +90,13 @@ public final class ResponseException extends StacklessException {
                 : new ResponseException(code, reason);
     }
 
-    public static ResponseException get(@NotNull ResponseStatusCode code, @Nullable Throwable cause) {
+    public static ResponseException get(
+            @NotNull ResponseStatusCode code,
+            @Nullable Throwable cause) {
         return new ResponseException(code, cause);
     }
 
+    @Nullable
     public static ResponseException get(TurmsNotification notification) {
         int code = notification.getCode();
         return notification.hasReason()
@@ -101,8 +106,12 @@ public final class ResponseException extends StacklessException {
 
     private static String formatMessage(@NotNull ResponseStatusCode code, @Nullable String reason) {
         return reason == null
-                ? "code: " + code.getBusinessCode()
-                : "code: " + code.getBusinessCode() + ", reason: " + reason;
+                ? "code: "
+                        + code.getBusinessCode()
+                : "code: "
+                        + code.getBusinessCode()
+                        + ", reason: "
+                        + reason;
     }
 
 }

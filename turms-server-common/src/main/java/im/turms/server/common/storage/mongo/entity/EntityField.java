@@ -17,9 +17,10 @@
 
 package im.turms.server.common.storage.mongo.entity;
 
-import im.turms.server.common.infra.reflect.VarAccessor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import im.turms.server.common.infra.reflect.VarAccessor;
 
 /**
  * @author James Chen
@@ -43,9 +44,9 @@ public class EntityField<T> {
     private final String name;
     private final boolean isIdField;
     /**
-     * Don't use a map to find the parameter index in the constructor dynamically
-     * to avoid unnecessary overhead when decoding (instantiate) entity from a BSON.
-     * It is -1 if the field isn't a field in the constructor.
+     * Don't use a map to find the parameter index in the constructor dynamically to avoid
+     * unnecessary overhead when decoding (instantiate) entity from a BSON. It is -1 if the field
+     * isn't a field in the constructor.
      */
     private final int ctorParamIndex;
 

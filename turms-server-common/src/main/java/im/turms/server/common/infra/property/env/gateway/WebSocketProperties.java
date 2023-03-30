@@ -17,13 +17,13 @@
 
 package im.turms.server.common.infra.property.env.gateway;
 
-
-import im.turms.server.common.infra.property.metadata.Description;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+
+import im.turms.server.common.infra.property.metadata.Description;
 
 /**
  * @author James Chen
@@ -35,18 +35,18 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class WebSocketProperties extends BaseServerProperties {
 
-    @Description("The maximum number of connection requests waiting in the backlog queue. " +
-            "Large enough to handle bursts and GC pauses " +
-            "but do not set too large to prevent SYN-Flood attacks")
+    @Description("The maximum number of connection requests waiting in the backlog queue. "
+            + "Large enough to handle bursts and GC pauses "
+            + "but do not set too large to prevent SYN-Flood attacks")
     private int backlog = 4096;
 
     @Description("Used to mitigate the Slowloris DoS attack by lowering the timeout for the TCP connection handshake")
     private int connectTimeout = 30;
 
-    @Description("A WebSocket connection will be closed on the server side " +
-            "if a client has not established a user session in a specified time. " +
-            "Note that the developers on the client side should take the responsibility " +
-            "to close the WebSocket connection according to their business requirements")
+    @Description("A WebSocket connection will be closed on the server side "
+            + "if a client has not established a user session in a specified time. "
+            + "Note that the developers on the client side should take the responsibility "
+            + "to close the WebSocket connection according to their business requirements")
     private int closeIdleConnectionAfterSeconds = 60 * 5;
 
 }

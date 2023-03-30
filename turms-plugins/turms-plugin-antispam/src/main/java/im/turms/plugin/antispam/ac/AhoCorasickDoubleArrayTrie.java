@@ -17,13 +17,14 @@
 
 package im.turms.plugin.antispam.ac;
 
-import im.turms.plugin.antispam.dictionary.Word;
-import org.eclipse.collections.api.iterator.MutableCharIterator;
-import org.eclipse.collections.impl.set.mutable.primitive.IntHashSet;
-
 import java.util.ArrayDeque;
 import java.util.List;
 import java.util.Queue;
+
+import org.eclipse.collections.api.iterator.MutableCharIterator;
+import org.eclipse.collections.impl.set.mutable.primitive.IntHashSet;
+
+import im.turms.plugin.antispam.dictionary.Word;
 
 /**
  * @author James Chen
@@ -54,7 +55,11 @@ public class AhoCorasickDoubleArrayTrie {
         constructOutputAndFailure(trie);
     }
 
-    public AhoCorasickDoubleArrayTrie(int[] fail, int[][] output, DoubleArrayTrie dat, Word[] words) {
+    public AhoCorasickDoubleArrayTrie(
+            int[] fail,
+            int[][] output,
+            DoubleArrayTrie dat,
+            Word[] words) {
         this.fail = fail;
         this.output = output;
         this.dat = dat;
@@ -88,7 +93,9 @@ public class AhoCorasickDoubleArrayTrie {
         if (nextState < dat.capacity && offset == dat.check[nextState]) {
             return nextState;
         }
-        return indexInDat == ROOT_STATUS ? ROOT_STATUS : STATUS_NOT_FOUND;
+        return indexInDat == ROOT_STATUS
+                ? ROOT_STATUS
+                : STATUS_NOT_FOUND;
     }
 
     protected void constructOutputAndFailure(Trie trie) {

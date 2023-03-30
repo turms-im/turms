@@ -17,13 +17,14 @@
 
 package im.turms.service.access.servicerequest.dispatcher;
 
-import im.turms.server.common.access.client.dto.request.TurmsRequest;
-import org.springframework.context.annotation.Bean;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
+import org.springframework.context.annotation.Bean;
+
+import im.turms.server.common.access.client.dto.request.TurmsRequest;
 
 /**
  * @author James Chen

@@ -17,13 +17,13 @@
 
 package im.turms.plugin.antispam.ac;
 
-import org.eclipse.collections.api.RichIterable;
-import org.eclipse.collections.api.tuple.primitive.CharObjectPair;
-
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
+
+import org.eclipse.collections.api.RichIterable;
+import org.eclipse.collections.api.tuple.primitive.CharObjectPair;
 
 /**
  * @author James Chen
@@ -34,15 +34,13 @@ public class DoubleArrayTrie {
     private static final float GROW_FACTOR = 1.5f;
 
     /**
-     * nextState = base[currentState] + code
-     * value: 0 if unused; positive for termination; negative for leaf
-     * range: [0, currentMaxPos]
+     * nextState = base[currentState] + code value: 0 if unused; positive for termination; negative
+     * for leaf range: [0, currentMaxPos]
      */
     int[] base;
     /**
-     * check[nextState] = currentState
-     * value: 0 if unused; positive if used
-     * range: [0, currentMaxPos]
+     * check[nextState] = currentState value: 0 if unused; positive if used range: [0,
+     * currentMaxPos]
      */
     int[] check;
     int capacity;
@@ -89,10 +87,11 @@ public class DoubleArrayTrie {
             return;
         }
         if (minSize > MAX_CAPACITY) {
-            throw new IllegalArgumentException("The requested minimum size (" +
-                    minSize +
-                    ") must not exceed the maximum capacity " +
-                    MAX_CAPACITY);
+            throw new IllegalArgumentException(
+                    "The requested minimum size ("
+                            + minSize
+                            + ") must not exceed the maximum capacity "
+                            + MAX_CAPACITY);
         }
         int newSize = Math.max(minSize, Math.min((int) (capacity * GROW_FACTOR), MAX_CAPACITY));
         int[] newBase = new int[newSize];
@@ -136,8 +135,7 @@ public class DoubleArrayTrie {
         // Find the "checkPos" and "begin" to ensure there are
         // consecutive free positions for siblings that satisfy
         // base[begin + siblings[0].pos...siblings[n].pos]
-        findBeginLoop:
-        while (true) {
+        findBeginLoop: while (true) {
             checkPos++;
             ensureSize(checkPos + 1);
             if (check[checkPos] != 0) {
@@ -199,9 +197,15 @@ public class DoubleArrayTrie {
     /**
      * @param pos = code + 1. Add 1 to avoid occupying the position of root
      */
-    private record NodeEntry(int pos, State state) {
+    private record NodeEntry(
+            int pos,
+            State state
+    ) {
     }
 
-    private record SiblingGroup(int parentBaseIndex, List<NodeEntry> siblings) {
+    private record SiblingGroup(
+            int parentBaseIndex,
+            List<NodeEntry> siblings
+    ) {
     }
 }

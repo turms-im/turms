@@ -17,24 +17,6 @@
 
 package im.turms.server.common.domain.blocklist.manager;
 
-import im.turms.server.common.access.common.ResponseStatusCode;
-import im.turms.server.common.domain.blocklist.bo.BlockedClient;
-import im.turms.server.common.infra.cluster.node.Node;
-import im.turms.server.common.infra.collection.ChunkedArrayList;
-import im.turms.server.common.infra.exception.ResponseException;
-import im.turms.server.common.infra.lang.ByteArrayWrapper;
-import im.turms.server.common.infra.logging.core.logger.Logger;
-import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
-import im.turms.server.common.infra.netty.ByteBufUtil;
-import im.turms.server.common.storage.redis.TurmsRedisClient;
-import im.turms.server.common.storage.redis.script.RedisScript;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufAllocator;
-import io.netty.buffer.PooledByteBufAllocator;
-import io.netty.buffer.Unpooled;
-import org.springframework.util.CollectionUtils;
-import reactor.core.publisher.Mono;
-
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -49,32 +31,51 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufAllocator;
+import io.netty.buffer.PooledByteBufAllocator;
+import io.netty.buffer.Unpooled;
+import org.springframework.util.CollectionUtils;
+import reactor.core.publisher.Mono;
+
+import im.turms.server.common.access.common.ResponseStatusCode;
+import im.turms.server.common.domain.blocklist.bo.BlockedClient;
+import im.turms.server.common.infra.cluster.node.Node;
+import im.turms.server.common.infra.collection.ChunkedArrayList;
+import im.turms.server.common.infra.exception.ResponseException;
+import im.turms.server.common.infra.lang.ByteArrayWrapper;
+import im.turms.server.common.infra.logging.core.logger.Logger;
+import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
+import im.turms.server.common.infra.netty.ByteBufUtil;
+import im.turms.server.common.storage.redis.TurmsRedisClient;
+import im.turms.server.common.storage.redis.script.RedisScript;
+
 /**
  * @author James Chen
- * @implNote For block/unblock actions, they take effects on the local node once the block/unblock method returns,
- * and the actions will be pushed to Redis to share action logs for other nodes to sync.
- * <p>
- * If a push action fails, we will NOT retry to push it to keep logic simple currently,
- * so it will only take effects on the local node.
- * (To implement "retry", we need to implement "pendingActions" and
- * add "log time" for each action to distinguish which actions come first,
- * which makes thing complex, we will implement it in the future)
- * <p>
- * By comparing the latest log ID, fetching and applying the delta logs,
- * other nodes can get a weak consistent map of blocklist.
- * <p>
- * If a node just starts, or lags behind and cannot catch up,
- * it will perform a full sync (We do NOT support sync by cursor currently).
- * <p>
- * The implementation of blocklist is similar to the implementation of replicated map,
- * and both of them use a full map and logs to perform full and delta sync.
- * <p>
- * Data in Redis, taking IP blocklist as an example:
- * 1. "blocklist:ip:target": Sorted Set, sorted by the block end time. Used to perform full sync
- * 2. "blocklist:ip:timestamp": Integer. Used to detect whether the blocklist is cleared to
- * ensure the blocklist in nodes is consistent even if the Redis server crashes or the blocklist is cleared
- * 3. "blocklist:ip:log": List. Used to perform delta sync
- * 4. "blocklist:ip:log_id": Counter. Used to perform delta sync
+ * @implNote For block/unblock actions, they take effects on the local node once the block/unblock
+ *           method returns, and the actions will be pushed to Redis to share action logs for other
+ *           nodes to sync.
+ *           <p>
+ *           If a push action fails, we will NOT retry to push it to keep logic simple currently, so
+ *           it will only take effects on the local node. (To implement "retry", we need to
+ *           implement "pendingActions" and add "log time" for each action to distinguish which
+ *           actions come first, which makes thing complex, we will implement it in the future)
+ *           <p>
+ *           By comparing the latest log ID, fetching and applying the delta logs, other nodes can
+ *           get a weak consistent map of blocklist.
+ *           <p>
+ *           If a node just starts, or lags behind and cannot catch up, it will perform a full sync
+ *           (We do NOT support sync by cursor currently).
+ *           <p>
+ *           The implementation of blocklist is similar to the implementation of replicated map, and
+ *           both of them use a full map and logs to perform full and delta sync.
+ *           <p>
+ *           Data in Redis, taking IP blocklist as an example: 1. "blocklist:ip:target": Sorted Set,
+ *           sorted by the block end time. Used to perform full sync 2. "blocklist:ip:timestamp":
+ *           Integer. Used to detect whether the blocklist is cleared to ensure the blocklist in
+ *           nodes is consistent even if the Redis server crashes or the blocklist is cleared 3.
+ *           "blocklist:ip:log": List. Used to perform delta sync 4. "blocklist:ip:log_id": Counter.
+ *           Used to perform delta sync
  */
 public class BlocklistServiceManager<T> {
 
@@ -92,8 +93,10 @@ public class BlocklistServiceManager<T> {
     private static final int BLOCK_ACTION_FLAG = 1;
 
     private static final ByteBufAllocator BUFFER_ALLOCATOR = PooledByteBufAllocator.DEFAULT;
-    private static final ByteBuf BLOCKLIST_KEY_FOR_IP = ByteBufUtil.getUnreleasableDirectBuffer((byte) 'i');
-    private static final ByteBuf BLOCKLIST_KEY_FOR_USER_ID = ByteBufUtil.getUnreleasableDirectBuffer((byte) 'u');
+    private static final ByteBuf BLOCKLIST_KEY_FOR_IP =
+            ByteBufUtil.getUnreleasableDirectBuffer((byte) 'i');
+    private static final ByteBuf BLOCKLIST_KEY_FOR_USER_ID =
+            ByteBufUtil.getUnreleasableDirectBuffer((byte) 'u');
     private static final int UNINITIALIZED_TIMESTAMP = -1;
     private static final int UNINITIALIZED_LOG_ID = -1;
 
@@ -117,12 +120,11 @@ public class BlocklistServiceManager<T> {
      */
     private final ConcurrentHashMap<T, Long> blockedClientIdToBlockEndTime;
     /**
-     * Used to remove the local expired blocked clients quickly,
-     * even if there are a lot of blocked clients
-     * so that we can run eviction more frequently.
+     * Used to remove the local expired blocked clients quickly, even if there are a lot of blocked
+     * clients so that we can run eviction more frequently.
      *
-     * @implNote It is acceptable to store the same IP or the user ID with different
-     * block times in the skip list because it is how the skip list works.
+     * @implNote It is acceptable to store the same IP or the user ID with different block times in
+     *           the skip list because it is how the skip list works.
      */
     private final ConcurrentSkipListSet<BlockedClient> blockedClientSkipList;
 
@@ -170,21 +172,20 @@ public class BlocklistServiceManager<T> {
         blockedClientIdToBlockEndTime = new ConcurrentHashMap<>(1024);
 
         try {
-            resetAndSyncAllBlockedClients(false)
-                    .block(Duration.ofSeconds(60));
+            resetAndSyncAllBlockedClients(false).block(Duration.ofSeconds(60));
         } catch (Exception e) {
             throw new RuntimeException("Failed to reset and sync blocked clients", e);
         }
 
-        threadPoolExecutor
-                .scheduleAtFixedRate(() -> {
-                    try {
-                        syncLocalBlocklist()
-                                .subscribe(null, t -> LOGGER.error("Caught an error while synchronizing the client blocklist"));
-                    } catch (Exception e) {
-                        LOGGER.error("Caught an error while synchronizing the client blocklist");
-                    }
-                }, syncIntervalMillis, syncIntervalMillis, TimeUnit.MILLISECONDS);
+        threadPoolExecutor.scheduleAtFixedRate(() -> {
+            try {
+                syncLocalBlocklist().subscribe(null,
+                        t -> LOGGER
+                                .error("Caught an error while synchronizing the client blocklist"));
+            } catch (Exception e) {
+                LOGGER.error("Caught an error while synchronizing the client blocklist");
+            }
+        }, syncIntervalMillis, syncIntervalMillis, TimeUnit.MILLISECONDS);
     }
 
     // Block and Unblock
@@ -195,7 +196,8 @@ public class BlocklistServiceManager<T> {
         }
         if (blockMinutes > MAX_BLOCK_TIME_MINUTES) {
             return Mono.error(ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
-                    "The blockMinutes cannot be larger than " + MAX_BLOCK_TIME_MINUTES));
+                    "The blockMinutes cannot be larger than "
+                            + MAX_BLOCK_TIME_MINUTES));
         }
         long now = System.currentTimeMillis();
         long blockEndTimeMillis = now + blockMinutes * 60L * 1000L;
@@ -213,7 +215,8 @@ public class BlocklistServiceManager<T> {
         }
         Mono<List<Object>> blockUsers = redisClient.eval(blockClientsScript, args);
         return blockUsers.flatMap(elements -> {
-            LogVersion version = new LogVersion((int) (long) elements.get(0), (int) (long) elements.get(1));
+            LogVersion version =
+                    new LogVersion((int) (long) elements.get(0), (int) (long) elements.get(1));
             return checkVersionToSync(version, size);
         });
     }
@@ -242,11 +245,11 @@ public class BlocklistServiceManager<T> {
             i++;
         }
         Mono<List<Object>> unblockClients = redisClient.eval(unblockClientsScript, args);
-        return unblockClients
-                .flatMap(elements -> {
-                    LogVersion version = new LogVersion((int) (long) elements.get(0), (int) (long) elements.get(1));
-                    return checkVersionToSync(version, (int) (long) elements.get(2));
-                })
+        return unblockClients.flatMap(elements -> {
+            LogVersion version =
+                    new LogVersion((int) (long) elements.get(0), (int) (long) elements.get(1));
+            return checkVersionToSync(version, (int) (long) elements.get(2));
+        })
                 .then();
     }
 
@@ -316,7 +319,8 @@ public class BlocklistServiceManager<T> {
             return Collections.emptyList();
         }
         List<BlockedClient> blockedClients = new ChunkedArrayList<>();
-        Iterator<Map.Entry<T, Long>> iterator = blockedClientIdToBlockEndTime.entrySet().iterator();
+        Iterator<Map.Entry<T, Long>> iterator = blockedClientIdToBlockEndTime.entrySet()
+                .iterator();
         long now = System.currentTimeMillis();
         int i = 0;
         long blockEndTime;
@@ -354,10 +358,12 @@ public class BlocklistServiceManager<T> {
         evictLocalExpiredBlockedClients();
         if (node.isLocalNodeLeader()) {
             redisClient.eval(evictExpiredBlockedClients)
-                    .subscribe(null, t -> LOGGER.error("Caught an error while evicting expired blocked clients", t));
+                    .subscribe(null,
+                            t -> LOGGER.error(
+                                    "Caught an error while evicting expired blocked clients",
+                                    t));
         }
-        return fetchLogIdAndLogs(false)
-                .doFinally(signalType -> isSyncing.set(false));
+        return fetchLogIdAndLogs(false).doFinally(signalType -> isSyncing.set(false));
     }
 
     private Mono<Void> checkVersionToSync(LogVersion version, int size) {
@@ -387,21 +393,20 @@ public class BlocklistServiceManager<T> {
         localTimestamp = UNINITIALIZED_TIMESTAMP;
         localLogId = UNINITIALIZED_LOG_ID;
         Mono<List<Object>> result = redisClient.eval(getBlockedClientsScript, getBlocklistKey());
-        return result
-                .doOnNext(elements -> {
-                    int timestamp = (int) (long) elements.get(0);
-                    if (timestamp < 0) {
-                        return;
-                    }
-                    int logId = (int) (long) elements.get(1);
-                    localTimestamp = timestamp;
-                    localLogId = logId;
-                    List<BlockedClient> blockedUsers = parseBlockedClients(elements);
-                    long now = System.currentTimeMillis();
-                    for (BlockedClient blockedClient : blockedUsers) {
-                        addBlockedClient(blockedClient, now);
-                    }
-                })
+        return result.doOnNext(elements -> {
+            int timestamp = (int) (long) elements.get(0);
+            if (timestamp < 0) {
+                return;
+            }
+            int logId = (int) (long) elements.get(1);
+            localTimestamp = timestamp;
+            localLogId = logId;
+            List<BlockedClient> blockedUsers = parseBlockedClients(elements);
+            long now = System.currentTimeMillis();
+            for (BlockedClient blockedClient : blockedUsers) {
+                addBlockedClient(blockedClient, now);
+            }
+        })
                 .doOnSuccess(ignored -> LOGGER.info("Reset and synchronized blocked clients"))
                 .doOnError(t -> LOGGER.error("Failed to reset and synchronize blocked clients", t))
                 .doFinally(signalType -> {
@@ -413,28 +418,29 @@ public class BlocklistServiceManager<T> {
     }
 
     private Mono<Void> fetchLogIdAndLogs(boolean checkSyncStatus) {
-        Mono<List<Object>> getBlocklistLogs = redisClient
-                .eval(getBlocklistLogsScript, getBlocklistKey(), encodeLocalTimestamp(), encodeLocalLogId());
-        return getBlocklistLogs
-                .flatMap(elements -> {
-                    int timestamp = (int) (long) elements.get(0);
-                    if (timestamp < 0) {
-                        return Mono.empty();
-                    }
-                    if (timestamp != localTimestamp && localTimestamp != UNINITIALIZED_TIMESTAMP) {
-                        return resetAndSyncAllBlockedClients(checkSyncStatus);
-                    }
-                    int logId = (int) (long) elements.get(1);
-                    int diff = logId - localLogId;
-                    if (diff > maxLogQueueSize || diff < 0) {
-                        return resetAndSyncAllBlockedClients(checkSyncStatus);
-                    } else if (diff > 0) {
-                        List<BlockClientLog> logs = parseClientLogs(elements);
-                        handleBlockClientLogs(logs, diff);
-                        localLogId = logId;
-                    }
-                    return Mono.empty();
-                });
+        Mono<List<Object>> getBlocklistLogs = redisClient.eval(getBlocklistLogsScript,
+                getBlocklistKey(),
+                encodeLocalTimestamp(),
+                encodeLocalLogId());
+        return getBlocklistLogs.flatMap(elements -> {
+            int timestamp = (int) (long) elements.get(0);
+            if (timestamp < 0) {
+                return Mono.empty();
+            }
+            if (timestamp != localTimestamp && localTimestamp != UNINITIALIZED_TIMESTAMP) {
+                return resetAndSyncAllBlockedClients(checkSyncStatus);
+            }
+            int logId = (int) (long) elements.get(1);
+            int diff = logId - localLogId;
+            if (diff > maxLogQueueSize || diff < 0) {
+                return resetAndSyncAllBlockedClients(checkSyncStatus);
+            } else if (diff > 0) {
+                List<BlockClientLog> logs = parseClientLogs(elements);
+                handleBlockClientLogs(logs, diff);
+                localLogId = logId;
+            }
+            return Mono.empty();
+        });
     }
 
     private List<BlockedClient> parseBlockedClients(List<Object> elements) {
@@ -477,8 +483,12 @@ public class BlocklistServiceManager<T> {
     private void handleBlockClientLogs(List<BlockClientLog> logs, int expectedSize) {
         int size = logs.size();
         if (expectedSize != size) {
-            throw new IllegalArgumentException("Failed to handle block logs. " +
-                    "The size of delta logs must be: " + expectedSize + ", but got: " + size);
+            throw new IllegalArgumentException(
+                    "Failed to handle block logs. "
+                            + "The size of delta logs must be: "
+                            + expectedSize
+                            + ", but got: "
+                            + size);
         }
         long now = System.currentTimeMillis();
         for (BlockClientLog log : logs) {
@@ -494,38 +504,45 @@ public class BlocklistServiceManager<T> {
     // Encode/Decode
 
     private ByteBuf getBlocklistKey() {
-        return isIpBlocklist ? BLOCKLIST_KEY_FOR_IP : BLOCKLIST_KEY_FOR_USER_ID;
+        return isIpBlocklist
+                ? BLOCKLIST_KEY_FOR_IP
+                : BLOCKLIST_KEY_FOR_USER_ID;
     }
 
     /**
      * TODO: cache
      */
     private ByteBuf encodeLocalTimestamp() {
-        return BUFFER_ALLOCATOR.directBuffer(Integer.BYTES).writeInt(localTimestamp);
+        return BUFFER_ALLOCATOR.directBuffer(Integer.BYTES)
+                .writeInt(localTimestamp);
     }
 
     /**
      * TODO: cache
      */
     private ByteBuf encodeLocalLogId() {
-        return BUFFER_ALLOCATOR.directBuffer(Integer.BYTES).writeInt(localLogId);
+        return BUFFER_ALLOCATOR.directBuffer(Integer.BYTES)
+                .writeInt(localLogId);
     }
 
     private ByteBuf encodeId(T id) {
         return isIpBlocklist
                 ? Unpooled.wrappedBuffer(((ByteArrayWrapper) id).getBytes())
-                : BUFFER_ALLOCATOR.directBuffer().writeLong((long) id);
+                : BUFFER_ALLOCATOR.directBuffer()
+                        .writeLong((long) id);
     }
 
     private T decodeTargetId(ByteBuf id) {
-        T val = isIpBlocklist ? (T) new ByteArrayWrapper(id.array()) : (T) (Long) id.readLong();
+        T val = isIpBlocklist
+                ? (T) new ByteArrayWrapper(id.array())
+                : (T) (Long) id.readLong();
         id.release();
         return val;
     }
 
     /**
-     * The max date it can represent in integer is:
-     * new Date(EPOCH_MILLIS + Integer.MAX_VALUE * 1000L) => 2089 year
+     * The max date it can represent in integer is: new Date(EPOCH_MILLIS + Integer.MAX_VALUE *
+     * 1000L) => 2089 year
      */
     private ByteBuf encodeBlockEndTime(long blockEndTimeMillis) {
         return BUFFER_ALLOCATOR.directBuffer(Integer.BYTES)
@@ -542,22 +559,31 @@ public class BlocklistServiceManager<T> {
         try {
             onTargetBlocked.accept(id);
         } catch (Exception e) {
-            LOGGER.error("Caught an error while notifying the onTargetBlocked listener (" +
-                    onTargetBlocked.getClass().getName() +
-                    ") to handle the blocked target: " + id);
+            LOGGER.error("Caught an error while notifying the onTargetBlocked listener ("
+                    + onTargetBlocked.getClass()
+                            .getName()
+                    + ") to handle the blocked target: "
+                    + id);
         }
     }
 
     // Data structure
 
-    private record LogVersion(int timestamp, int logId) {
+    private record LogVersion(
+            int timestamp,
+            int logId
+    ) {
     }
 
     /**
-     * The log doesn't have a field like "recordTime" because we use
-     * the item index in Redis to distinguish which logs come first
+     * The log doesn't have a field like "recordTime" because we use the item index in Redis to
+     * distinguish which logs come first
      */
-    private record BlockClientLog(Object targetId, long blockEndTimeMillis, boolean isBlockAction) {
+    private record BlockClientLog(
+            Object targetId,
+            long blockEndTimeMillis,
+            boolean isBlockAction
+    ) {
     }
 
 }

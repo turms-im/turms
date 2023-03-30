@@ -17,12 +17,13 @@
 
 package im.turms.server.common.storage.redis.codec;
 
+import java.nio.ByteBuffer;
+
+import io.netty.buffer.ByteBuf;
+
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.infra.netty.ByteBufUtil;
 import im.turms.server.common.storage.redis.RedisEntryId;
-import io.netty.buffer.ByteBuf;
-
-import java.nio.ByteBuffer;
 
 /**
  * @author James Chen
@@ -47,7 +48,9 @@ public class SessionHashFieldCodec implements TurmsRedisCodec<Object> {
         }
         DeviceType deviceType = DeviceType.forNumber(data);
         if (deviceType == null) {
-            throw new IllegalArgumentException("Could not find the device type for the number: " + data);
+            throw new IllegalArgumentException(
+                    "Could not find the device type for the number: "
+                            + data);
         }
         return deviceType;
     }

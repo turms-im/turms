@@ -17,10 +17,11 @@
 
 package unit.im.turms.server.common.infra.property;
 
-import im.turms.server.common.infra.property.TurmsPropertiesInspector;
-import im.turms.server.common.testing.JsonUtil;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
+
+import im.turms.server.common.infra.property.TurmsPropertiesInspector;
+import im.turms.server.common.testing.JsonUtil;
 
 /**
  * @author James Chen
@@ -31,14 +32,16 @@ class TurmsPropertiesInspectorTests {
     @Test
     void metadata() {
         JsonUtil.assertEqual(TurmsPropertiesInspector.METADATA,
-                getClass().getClassLoader().getResourceAsStream("turms-properties-metadata.json"));
+                getClass().getClassLoader()
+                        .getResourceAsStream("turms-properties-metadata.json"));
     }
 
     @SneakyThrows
     @Test
     void onlyMutableMetadata() {
         JsonUtil.assertEqual(TurmsPropertiesInspector.ONLY_MUTABLE_METADATA,
-                getClass().getClassLoader().getResourceAsStream("turms-properties-only-mutable-metadata.json"));
+                getClass().getClassLoader()
+                        .getResourceAsStream("turms-properties-only-mutable-metadata.json"));
     }
 
 }

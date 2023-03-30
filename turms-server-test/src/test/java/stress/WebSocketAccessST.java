@@ -17,13 +17,15 @@
 
 package stress;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
+
 import com.google.protobuf.InvalidProtocolBufferException;
-import im.turms.server.common.access.client.dto.constant.DeviceType;
-import im.turms.server.common.access.client.dto.notification.TurmsNotification;
-import im.turms.server.common.access.client.dto.request.TurmsRequest;
-import im.turms.server.common.access.client.dto.request.user.CreateSessionRequest;
-import im.turms.server.common.testing.TestingEnvContainer;
-import im.turms.server.common.testing.TestingEnvContainerOptions;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
@@ -36,13 +38,12 @@ import reactor.netty.http.websocket.WebsocketInbound;
 import reactor.netty.http.websocket.WebsocketOutbound;
 import reactor.netty.resources.LoopResources;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
+import im.turms.server.common.access.client.dto.constant.DeviceType;
+import im.turms.server.common.access.client.dto.notification.TurmsNotification;
+import im.turms.server.common.access.client.dto.request.TurmsRequest;
+import im.turms.server.common.access.client.dto.request.user.CreateSessionRequest;
+import im.turms.server.common.testing.TestingEnvContainer;
+import im.turms.server.common.testing.TestingEnvContainerOptions;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -55,7 +56,8 @@ class WebSocketAccessST extends BasePerformanceTest {
     private static final int CONCURRENT_CLIENT_COUNT = 100_000;
 
     @Test
-    void shouldDenyServiceRatherThanCrash_whenManyUsersTryToLogin_on1gJvm() throws InterruptedException {
+    void shouldDenyServiceRatherThanCrash_whenManyUsersTryToLogin_on1gJvm()
+            throws InterruptedException {
         boolean useLocalServer = Boolean.parseBoolean(System.getProperty("USE_LOCAL_SERVER"));
 
         CountDownLatch pendingClientLatch = new CountDownLatch(CONCURRENT_CLIENT_COUNT);
@@ -73,14 +75,13 @@ class WebSocketAccessST extends BasePerformanceTest {
                     connectedButNotLoggedInClient,
                     notConnectedClient);
         } else {
-            TestingEnvContainer container = new TestingEnvContainer(TestingEnvContainerOptions.builder()
-                    .setupTurmsGateway(true)
-                    .turmsGatewayJvmOptions(List.of(
-                            "-Xms1g",
-                            "-Xmx1g",
-                            "turms.health-check.check-interval-seconds=1"
-                    ))
-                    .build());
+            TestingEnvContainer container = new TestingEnvContainer(
+                    TestingEnvContainerOptions.builder()
+                            .setupTurmsGateway(true)
+                            .turmsGatewayJvmOptions(List.of("-Xms1g",
+                                    "-Xmx1g",
+                                    "turms.health-check.check-interval-seconds=1"))
+                            .build());
             container.start();
             try (container) {
                 test(container.getTurmsGatewayAdminHost(),
@@ -94,24 +95,25 @@ class WebSocketAccessST extends BasePerformanceTest {
         }
 
         log.info("""
-                        Logged in clients: {}
-                        Connected but not logged in clients: {}
-                        Not Connected clients: {}
-                        Pending clients: {}
-                        """,
+                Logged in clients: {}
+                Connected but not logged in clients: {}
+                Not Connected clients: {}
+                Pending clients: {}
+                """,
                 loggedInClient.get(),
                 connectedButNotLoggedInClient.get(),
                 notConnectedClient.get(),
                 pendingClientLatch.getCount());
     }
 
-    private void test(String gatewayAdminHost,
-                      int gatewayAdminPort,
-                      String websocketServerUri,
-                      CountDownLatch pendingClientLatch,
-                      AtomicInteger loggedInClient,
-                      AtomicInteger connectedButNotLoggedInClient,
-                      AtomicInteger notConnectedClient) throws InterruptedException {
+    private void test(
+            String gatewayAdminHost,
+            int gatewayAdminPort,
+            String websocketServerUri,
+            CountDownLatch pendingClientLatch,
+            AtomicInteger loggedInClient,
+            AtomicInteger connectedButNotLoggedInClient,
+            AtomicInteger notConnectedClient) throws InterruptedException {
         assertTurmsGatewayAvailable(gatewayAdminHost, gatewayAdminPort);
 
         AtomicReference<Throwable> unexpectedError = new AtomicReference<>();
@@ -124,8 +126,7 @@ class WebSocketAccessST extends BasePerformanceTest {
         for (int i = 0; i < CONCURRENT_CLIENT_COUNT; i++) {
             long userId = i;
             AtomicBoolean isCurrentClientHandled = new AtomicBoolean();
-            HttpClient
-                    .newConnection()
+            HttpClient.newConnection()
                     .runOn(loopResources)
                     .websocket()
                     .uri(websocketServerUri)
@@ -137,23 +138,36 @@ class WebSocketAccessST extends BasePerformanceTest {
                                 .receive()
                                 .subscribe(byteBuf -> {
                                     try {
-                                        TurmsNotification notification = TurmsNotification.parseFrom(byteBuf.nioBuffer());
-                                        String sessionId = notification.getData().getUserSession().getSessionId();
+                                        TurmsNotification notification =
+                                                TurmsNotification.parseFrom(byteBuf.nioBuffer());
+                                        String sessionId = notification.getData()
+                                                .getUserSession()
+                                                .getSessionId();
                                         if (!sessionId.isBlank()) {
-                                            tryHandleCurrentClient(pendingClientLatch, isCurrentClientHandled, loggedInClient);
+                                            tryHandleCurrentClient(pendingClientLatch,
+                                                    isCurrentClientHandled,
+                                                    loggedInClient);
                                             loggedInClient.incrementAndGet();
                                         }
                                     } catch (InvalidProtocolBufferException e) {
                                         unexpectedError.set(e);
-                                        log.error("Failed to parse data to TurmsNotification. " +
-                                                "Make sure the client version is consistent with the server version", e);
+                                        log.error("Failed to parse data to TurmsNotification. "
+                                                + "Make sure the client version is consistent with the server version",
+                                                e);
                                     }
                                 }, t -> {
-                                    // turms-gateway should keep the websocket session even in unavailable status
-                                    // the error is mainly caused due to the problem of client itself
+                                    // turms-gateway should keep the websocket session even in
+                                    // unavailable
+                                    // status
+                                    // the error is mainly caused due to the problem of client
+                                    // itself
                                     unexpectedError.set(t);
-                                    tryHandleCurrentClient(pendingClientLatch, isCurrentClientHandled, connectedButNotLoggedInClient);
-                                    log.error("Failed to receive messages. This may be a client error", t);
+                                    tryHandleCurrentClient(pendingClientLatch,
+                                            isCurrentClientHandled,
+                                            connectedButNotLoggedInClient);
+                                    log.error(
+                                            "Failed to receive messages. This may be a client error",
+                                            t);
                                 });
                         byte[] request = TurmsRequest.newBuilder()
                                 .setRequestId(1)
@@ -169,17 +183,23 @@ class WebSocketAccessST extends BasePerformanceTest {
                                 .then()
                                 .subscribe();
                         in.receiveCloseStatus()
-                                .doFinally(signalType -> tryHandleCurrentClient(pendingClientLatch, isCurrentClientHandled, connectedButNotLoggedInClient))
+                                .doFinally(signalType -> tryHandleCurrentClient(pendingClientLatch,
+                                        isCurrentClientHandled,
+                                        connectedButNotLoggedInClient))
                                 .subscribe(null, t -> log.error("An connection error occurs", t));
                     }, t -> {
-                        tryHandleCurrentClient(pendingClientLatch, isCurrentClientHandled, notConnectedClient);
-                        // It is a WebSocketClientHandshakeException when turms-gateway is unavailable
+                        tryHandleCurrentClient(pendingClientLatch,
+                                isCurrentClientHandled,
+                                notConnectedClient);
+                        // It is a WebSocketClientHandshakeException when turms-gateway is
+                        // unavailable
                         if (t instanceof WebSocketClientHandshakeException) {
                             return;
                         }
                         unexpectedError.set(t);
                         // It is a TCP exception no matter turms-gateway is available or not
-                        // when the client or server has reached the maximum TCP connections that the system supports
+                        // when the client or server has reached the maximum TCP connections that
+                        // the system supports
                         if (t instanceof IOException) {
                             // It is an unexpected error and the client or the server should
                             // increase the maximum allowed TCP connections
@@ -196,16 +216,16 @@ class WebSocketAccessST extends BasePerformanceTest {
                 .as("turms-gateway should handle all login requests")
                 .isZero();
 
-        assertThat(unexpectedError.get())
-                .as("No unexpected error occurs")
+        assertThat(unexpectedError.get()).as("No unexpected error occurs")
                 .isNull();
 
         assertTurmsGatewayAvailable(gatewayAdminHost, gatewayAdminPort);
     }
 
-    private void tryHandleCurrentClient(CountDownLatch pendingClientLatch,
-                                        AtomicBoolean isCurrentClientHandled,
-                                        AtomicInteger count) {
+    private void tryHandleCurrentClient(
+            CountDownLatch pendingClientLatch,
+            AtomicBoolean isCurrentClientHandled,
+            AtomicInteger count) {
         if (isCurrentClientHandled.compareAndSet(false, true)) {
             pendingClientLatch.countDown();
             count.incrementAndGet();

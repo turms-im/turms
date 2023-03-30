@@ -17,19 +17,21 @@
 
 package im.turms.service.domain.user.po;
 
+import java.util.Date;
+
+import lombok.Data;
+
 import im.turms.server.common.domain.common.po.BaseEntity;
 import im.turms.server.common.storage.mongo.entity.annotation.Document;
 import im.turms.server.common.storage.mongo.entity.annotation.Field;
 import im.turms.server.common.storage.mongo.entity.annotation.Id;
 import im.turms.server.common.storage.mongo.entity.annotation.Sharded;
-import lombok.Data;
-
-import java.util.Date;
 
 /**
  * @author James Chen
- * @implNote Use the range index instead of the hashed index to avoid creating two indexes on the key
- * because MongoDB will create a default range index on the key if we use a hashed index
+ * @implNote Use the range index instead of the hashed index to avoid creating two indexes on the
+ *           key because MongoDB will create a default range index on the key if we use a hashed
+ *           index
  */
 @Data
 @Document(UserVersion.COLLECTION_NAME)

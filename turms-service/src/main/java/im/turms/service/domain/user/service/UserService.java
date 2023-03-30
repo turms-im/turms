@@ -17,8 +17,25 @@
 
 package im.turms.service.domain.user.service;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
+
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
+import io.micrometer.core.instrument.Counter;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.access.client.dto.constant.ProfileAccessStrategy;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.domain.session.bo.SessionCloseStatus;
@@ -51,22 +68,6 @@ import im.turms.service.domain.user.service.onlineuser.SessionService;
 import im.turms.service.infra.metrics.MetricNameConst;
 import im.turms.service.infra.validation.ValidProfileAccess;
 import im.turms.service.storage.mongo.OperationResultPublisherPool;
-import io.micrometer.core.instrument.Counter;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.stereotype.Component;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PastOrPresent;
 
 import static im.turms.server.common.domain.user.constant.UserConst.DEFAULT_USER_PERMISSION_GROUP_ID;
 import static im.turms.service.storage.mongo.MongoOperationConst.TRANSACTION_RETRY;
@@ -134,14 +135,17 @@ public class UserService {
         this.conversationService = conversationService;
         this.messageService = messageService;
 
-        registeredUsersCounter = metricsService.getRegistry().counter(MetricNameConst.REGISTERED_USERS_COUNTER);
-        deletedUsersCounter = metricsService.getRegistry().counter(MetricNameConst.DELETED_USERS_COUNTER);
+        registeredUsersCounter = metricsService.getRegistry()
+                .counter(MetricNameConst.REGISTERED_USERS_COUNTER);
+        deletedUsersCounter = metricsService.getRegistry()
+                .counter(MetricNameConst.DELETED_USERS_COUNTER);
 
         propertiesManager.notifyAndAddGlobalPropertiesChangeListener(this::updateProperties);
     }
 
     private void updateProperties(TurmsProperties properties) {
-        UserProperties userProperties = properties.getService().getUser();
+        UserProperties userProperties = properties.getService()
+                .getUser();
         activateUserWhenAdded = userProperties.isActivateUserWhenAdded();
         deleteUserLogically = userProperties.isDeleteUserLogically();
 
@@ -152,12 +156,21 @@ public class UserService {
         int localMaxProfilePictureLength = userProperties.getMaxProfilePictureLength();
         minPasswordLengthForCreate = localMinPasswordLength;
         minPasswordLengthForUpdate = Math.max(0, localMinPasswordLength);
-        maxPasswordLength = localMaxPasswordLength > 0 ? localMaxPasswordLength : Integer.MAX_VALUE;
-        maxIntroLength = localMaxIntroLength > 0 ? localMaxIntroLength : Integer.MAX_VALUE;
-        maxNameLength = localMaxNameLength > 0 ? localMaxNameLength : Integer.MAX_VALUE;
-        maxProfilePictureLength = localMaxProfilePictureLength > 0 ? localMaxProfilePictureLength : Integer.MAX_VALUE;
+        maxPasswordLength = localMaxPasswordLength > 0
+                ? localMaxPasswordLength
+                : Integer.MAX_VALUE;
+        maxIntroLength = localMaxIntroLength > 0
+                ? localMaxIntroLength
+                : Integer.MAX_VALUE;
+        maxNameLength = localMaxNameLength > 0
+                ? localMaxNameLength
+                : Integer.MAX_VALUE;
+        maxProfilePictureLength = localMaxProfilePictureLength > 0
+                ? localMaxProfilePictureLength
+                : Integer.MAX_VALUE;
 
-        MessageProperties messageProperties = properties.getService().getMessage();
+        MessageProperties messageProperties = properties.getService()
+                .getMessage();
         allowSendMessagesToOneself = messageProperties.isAllowSendMessagesToOneself();
         allowSendMessagesToStranger = messageProperties.isAllowSendMessagesToStranger();
         checkIfTargetActiveAndNotDeleted = messageProperties.isCheckIfTargetActiveAndNotDeleted();
@@ -185,30 +198,36 @@ public class UserService {
         } else if (requesterId.equals(targetId)) {
             return allowSendMessagesToOneself
                     ? Mono.just(ServicePermission.OK)
-                    : Mono.just(ServicePermission.get(ResponseStatusCode.SENDING_MESSAGES_TO_ONESELF_IS_DISABLED));
+                    : Mono.just(ServicePermission
+                            .get(ResponseStatusCode.SENDING_MESSAGES_TO_ONESELF_IS_DISABLED));
         }
         if (allowSendMessagesToStranger) {
             if (checkIfTargetActiveAndNotDeleted) {
                 return userRepository.isActiveAndNotDeleted(targetId)
                         .flatMap(isActiveAndNotDeleted -> {
                             if (!isActiveAndNotDeleted) {
-                                return Mono.just(ServicePermission.get(ResponseStatusCode.MESSAGE_RECIPIENT_NOT_ACTIVE));
+                                return Mono.just(ServicePermission
+                                        .get(ResponseStatusCode.MESSAGE_RECIPIENT_NOT_ACTIVE));
                             }
-                            return userRelationshipService.hasNoRelationshipOrNotBlocked(targetId, requesterId)
+                            return userRelationshipService
+                                    .hasNoRelationshipOrNotBlocked(targetId, requesterId)
                                     .map(isNotBlocked -> isNotBlocked
                                             ? ServicePermission.OK
-                                            : ServicePermission.get(ResponseStatusCode.PRIVATE_MESSAGE_SENDER_HAS_BEEN_BLOCKED));
+                                            : ServicePermission.get(
+                                                    ResponseStatusCode.PRIVATE_MESSAGE_SENDER_HAS_BEEN_BLOCKED));
                         });
             }
             return userRelationshipService.hasNoRelationshipOrNotBlocked(targetId, requesterId)
                     .map(isNotBlocked -> isNotBlocked
                             ? ServicePermission.OK
-                            : ServicePermission.get(ResponseStatusCode.PRIVATE_MESSAGE_SENDER_HAS_BEEN_BLOCKED));
+                            : ServicePermission.get(
+                                    ResponseStatusCode.PRIVATE_MESSAGE_SENDER_HAS_BEEN_BLOCKED));
         }
         return userRelationshipService.hasRelationshipAndNotBlocked(targetId, requesterId)
                 .map(isRelatedAndNotBlocked -> isRelatedAndNotBlocked
                         ? ServicePermission.OK
-                        : ServicePermission.get(ResponseStatusCode.MESSAGE_SENDER_NOT_IN_CONTACTS_OR_BLOCKED));
+                        : ServicePermission
+                                .get(ResponseStatusCode.MESSAGE_SENDER_NOT_IN_CONTACTS_OR_BLOCKED));
     }
 
     public Mono<User> addUser(
@@ -222,7 +241,10 @@ public class UserService {
             @Nullable @PastOrPresent Date registrationDate,
             @Nullable Boolean isActive) {
         try {
-            Validator.length(rawPassword, "rawPassword", minPasswordLengthForCreate, maxPasswordLength);
+            Validator.length(rawPassword,
+                    "rawPassword",
+                    minPasswordLengthForCreate,
+                    maxPasswordLength);
             Validator.maxLength(name, "name", maxNameLength);
             Validator.maxLength(intro, "intro", maxIntroLength);
             Validator.maxLength(profilePicture, "profilePicture", maxProfilePictureLength);
@@ -232,14 +254,30 @@ public class UserService {
             return Mono.error(e);
         }
         Date now = new Date();
-        id = id == null ? node.nextLargeGapId(ServiceType.USER) : id;
-        byte[] password = StringUtil.isEmpty(rawPassword) ? null : passwordManager.encodeUserPassword(rawPassword);
-        name = name == null ? "" : name;
-        intro = intro == null ? "" : intro;
-        profileAccessStrategy = profileAccessStrategy == null ? ProfileAccessStrategy.ALL : profileAccessStrategy;
-        permissionGroupId = permissionGroupId == null ? DEFAULT_USER_PERMISSION_GROUP_ID : permissionGroupId;
-        isActive = isActive == null ? activateUserWhenAdded : isActive;
-        Date date = registrationDate == null ? now : registrationDate;
+        id = id == null
+                ? node.nextLargeGapId(ServiceType.USER)
+                : id;
+        byte[] password = StringUtil.isEmpty(rawPassword)
+                ? null
+                : passwordManager.encodeUserPassword(rawPassword);
+        name = name == null
+                ? ""
+                : name;
+        intro = intro == null
+                ? ""
+                : intro;
+        profileAccessStrategy = profileAccessStrategy == null
+                ? ProfileAccessStrategy.ALL
+                : profileAccessStrategy;
+        permissionGroupId = permissionGroupId == null
+                ? DEFAULT_USER_PERMISSION_GROUP_ID
+                : permissionGroupId;
+        isActive = isActive == null
+                ? activateUserWhenAdded
+                : isActive;
+        Date date = registrationDate == null
+                ? now
+                : registrationDate;
         User user = new User(
                 id,
                 password,
@@ -254,25 +292,27 @@ public class UserService {
                 isActive);
         Long finalId = id;
         return userRepository.inTransaction(session -> userRepository.insert(user, session)
-                        .then(userRelationshipGroupService.createRelationshipGroup(finalId, 0, "", now, session))
-                        .then(userVersionService.upsertEmptyUserVersion(user.getId(), date, session)
-                                .onErrorResume(t -> {
-                                    LOGGER.error("Caught an error while upserting a version for the user ({}) after creating the user",
-                                            user.getId(), t);
-                                    return Mono.empty();
-                                }))
-                        .thenReturn(user))
+                .then(userRelationshipGroupService
+                        .createRelationshipGroup(finalId, 0, "", now, session))
+                .then(userVersionService.upsertEmptyUserVersion(user.getId(), date, session)
+                        .onErrorResume(t -> {
+                            LOGGER.error(
+                                    "Caught an error while upserting a version for the user ({}) after creating the user",
+                                    user.getId(),
+                                    t);
+                            return Mono.empty();
+                        }))
+                .thenReturn(user))
                 .retryWhen(TRANSACTION_RETRY)
                 .doOnSuccess(ignored -> registeredUsersCounter.increment());
     }
 
     /**
-     * @return Possible codes:
-     * {@link ResponseStatusCode#OK}
-     * {@link ResponseStatusCode#PROFILE_REQUESTER_NOT_IN_CONTACTS_OR_BLOCKED}
-     * {@link ResponseStatusCode#PROFILE_REQUESTER_HAS_BEEN_BLOCKED}
-     * {@link ResponseStatusCode#SERVER_INTERNAL_ERROR}
-     * {@link ResponseStatusCode#USER_PROFILE_NOT_FOUND}
+     * @return Possible codes: {@link ResponseStatusCode#OK}
+     *         {@link ResponseStatusCode#PROFILE_REQUESTER_NOT_IN_CONTACTS_OR_BLOCKED}
+     *         {@link ResponseStatusCode#PROFILE_REQUESTER_HAS_BEEN_BLOCKED}
+     *         {@link ResponseStatusCode#SERVER_INTERNAL_ERROR}
+     *         {@link ResponseStatusCode#USER_PROFILE_NOT_FOUND}
      */
     public Mono<ServicePermission> isAllowToQueryUserProfile(
             @NotNull Long requesterId,
@@ -286,17 +326,22 @@ public class UserService {
         return userRepository.findProfileAccessIfNotDeleted(targetUserId)
                 .flatMap(strategy -> switch (strategy) {
                     case ALL -> Mono.just(ServicePermission.OK);
-                    case FRIENDS -> userRelationshipService.hasRelationshipAndNotBlocked(targetUserId, requesterId)
+                    case FRIENDS -> userRelationshipService
+                            .hasRelationshipAndNotBlocked(targetUserId, requesterId)
                             .map(isRelatedAndAllowed -> isRelatedAndAllowed
                                     ? ServicePermission.OK
-                                    : ServicePermission.get(ResponseStatusCode.PROFILE_REQUESTER_NOT_IN_CONTACTS_OR_BLOCKED));
-                    case ALL_EXCEPT_BLOCKED_USERS ->
-                            userRelationshipService.hasNoRelationshipOrNotBlocked(targetUserId, requesterId)
-                                    .map(isNotBlocked -> isNotBlocked
-                                            ? ServicePermission.OK
-                                            : ServicePermission.get(ResponseStatusCode.PROFILE_REQUESTER_HAS_BEEN_BLOCKED));
-                    default -> Mono.error(ResponseException
-                            .get(ResponseStatusCode.SERVER_INTERNAL_ERROR, "Unexpected profile access strategy: " + strategy));
+                                    : ServicePermission.get(
+                                            ResponseStatusCode.PROFILE_REQUESTER_NOT_IN_CONTACTS_OR_BLOCKED));
+                    case ALL_EXCEPT_BLOCKED_USERS -> userRelationshipService
+                            .hasNoRelationshipOrNotBlocked(targetUserId, requesterId)
+                            .map(isNotBlocked -> isNotBlocked
+                                    ? ServicePermission.OK
+                                    : ServicePermission.get(
+                                            ResponseStatusCode.PROFILE_REQUESTER_HAS_BEEN_BLOCKED));
+                    default ->
+                        Mono.error(ResponseException.get(ResponseStatusCode.SERVER_INTERNAL_ERROR,
+                                "Unexpected profile access strategy: "
+                                        + strategy));
                 })
                 .defaultIfEmpty(ServicePermission.get(ResponseStatusCode.USER_PROFILE_NOT_FOUND));
     }
@@ -329,7 +374,9 @@ public class UserService {
         return userRepository.findName(userId);
     }
 
-    public Flux<User> queryUsersProfile(@NotEmpty Collection<Long> userIds, boolean queryDeletedRecords) {
+    public Flux<User> queryUsersProfile(
+            @NotEmpty Collection<Long> userIds,
+            boolean queryDeletedRecords) {
         try {
             Validator.notEmpty(userIds, "userIds");
         } catch (ResponseException e) {
@@ -371,24 +418,40 @@ public class UserService {
                                     deletedUsersCounter.increment(count);
                                 }
                                 // TODO: Remove data on Redis
-                                return userRelationshipService.deleteAllRelationships(userIds, session, false)
-                                        .then(userRelationshipGroupService.deleteAllRelationshipGroups(userIds, session, false))
-                                        .then(conversationService.deletePrivateConversations(userIds, session))
-                                        .then(conversationService.deleteGroupMemberConversations(userIds, session))
+                                return userRelationshipService
+                                        .deleteAllRelationships(userIds, session, false)
+                                        .then(userRelationshipGroupService
+                                                .deleteAllRelationshipGroups(userIds,
+                                                        session,
+                                                        false))
+                                        .then(conversationService
+                                                .deletePrivateConversations(userIds, session))
+                                        .then(conversationService
+                                                .deleteGroupMemberConversations(userIds, session))
                                         .then(userVersionService.delete(userIds, session)
                                                 .onErrorResume(t -> {
-                                                    LOGGER.error("Caught an error while deleting the version for the users {} after deleting the users", userIds, t);
+                                                    LOGGER.error(
+                                                            "Caught an error while deleting the version for the users {} after deleting the users",
+                                                            userIds,
+                                                            t);
                                                     return Mono.empty();
                                                 }))
                                         .then(messageService.deleteSequenceIds(false, userIds)
-                                                .doOnError(t -> LOGGER.error("Failed to remove the message sequence IDs of the users: " + userIds, t)))
+                                                .doOnError(t -> LOGGER.error(
+                                                        "Failed to remove the message sequence IDs of the users: "
+                                                                + userIds,
+                                                        t)))
                                         .thenReturn(result);
                             }))
                     .retryWhen(TRANSACTION_RETRY);
         }
-        return deleteOrUpdateMono
-                .doOnNext(ignored -> sessionService.disconnect(userIds, SessionCloseStatus.USER_IS_DELETED_OR_INACTIVATED)
-                        .subscribe(null, t -> LOGGER.error("Caught an error while closing the user session of the users: " + userIds, t)));
+        return deleteOrUpdateMono.doOnNext(ignored -> sessionService
+                .disconnect(userIds, SessionCloseStatus.USER_IS_DELETED_OR_INACTIVATED)
+                .subscribe(null,
+                        t -> LOGGER.error(
+                                "Caught an error while closing the user session of the users: "
+                                        + userIds,
+                                t)));
     }
 
     public Mono<Boolean> checkIfUserExists(@NotNull Long userId, boolean queryDeletedRecords) {
@@ -423,10 +486,11 @@ public class UserService {
                 profileAccessStrategy,
                 permissionGroupId,
                 registrationDate,
-                isActive)
-                .flatMap(result -> result.getMatchedCount() > 0
-                        ? Mono.empty()
-                        : Mono.error(ResponseException.get(ResponseStatusCode.UPDATE_INFO_OF_NON_EXISTING_USER)));
+                isActive).flatMap(
+                        result -> result.getMatchedCount() > 0
+                                ? Mono.empty()
+                                : Mono.error(ResponseException
+                                        .get(ResponseStatusCode.UPDATE_INFO_OF_NON_EXISTING_USER)));
     }
 
     public Flux<User> queryUsers(
@@ -446,7 +510,9 @@ public class UserService {
                 queryDeletedRecords);
     }
 
-    public Mono<Long> countRegisteredUsers(@Nullable DateRange dateRange, boolean queryDeletedRecords) {
+    public Mono<Long> countRegisteredUsers(
+            @Nullable DateRange dateRange,
+            boolean queryDeletedRecords) {
         return userRepository.countRegisteredUsers(dateRange, queryDeletedRecords);
     }
 
@@ -463,7 +529,8 @@ public class UserService {
             @Nullable DateRange registrationDateRange,
             @Nullable DateRange deletionDateRange,
             @Nullable Boolean isActive) {
-        return userRepository.countUsers(userIds, registrationDateRange, deletionDateRange, isActive);
+        return userRepository
+                .countUsers(userIds, registrationDateRange, deletionDateRange, isActive);
     }
 
     public Mono<UpdateResult> updateUsers(
@@ -478,7 +545,10 @@ public class UserService {
             @Nullable Boolean isActive) {
         try {
             Validator.notEmpty(userIds, "userIds");
-            Validator.length(rawPassword, "rawPassword", minPasswordLengthForUpdate, maxPasswordLength);
+            Validator.length(rawPassword,
+                    "rawPassword",
+                    minPasswordLengthForUpdate,
+                    maxPasswordLength);
             Validator.maxLength(name, "name", maxNameLength);
             Validator.maxLength(intro, "intro", maxIntroLength);
             Validator.maxLength(profilePicture, "profilePicture", maxProfilePictureLength);
@@ -499,7 +569,8 @@ public class UserService {
         byte[] password = rawPassword == null
                 ? null
                 : passwordManager.encodeUserPassword(rawPassword);
-        return userRepository.updateUsers(userIds,
+        return userRepository
+                .updateUsers(userIds,
                         password,
                         name,
                         intro,
@@ -509,11 +580,17 @@ public class UserService {
                         registrationDate,
                         isActive)
                 .flatMap(result -> Boolean.FALSE.equals(isActive) && result.getModifiedCount() > 0
-                        ? sessionService.disconnect(userIds, SessionCloseStatus.USER_IS_DELETED_OR_INACTIVATED)
-                        .onErrorResume(t -> {
-                            LOGGER.error("Caught an error while closing the sessions of the users {} after inactivating the users", userIds, t);
-                            return Mono.empty();
-                        }).thenReturn(result)
+                        ? sessionService
+                                .disconnect(userIds,
+                                        SessionCloseStatus.USER_IS_DELETED_OR_INACTIVATED)
+                                .onErrorResume(t -> {
+                                    LOGGER.error(
+                                            "Caught an error while closing the sessions of the users {} after inactivating the users",
+                                            userIds,
+                                            t);
+                                    return Mono.empty();
+                                })
+                                .thenReturn(result)
                         : Mono.just(result));
     }
 

@@ -17,8 +17,12 @@
 
 package benchmark.im.turms.server.common.infra.reflect;
 
-import im.turms.server.common.infra.reflect.UnsafeBasedVarAccessor;
-import im.turms.server.common.infra.reflect.VarAccessorFactory;
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.VarHandle;
+import java.lang.reflect.Field;
+import java.util.concurrent.TimeUnit;
+
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;
@@ -29,27 +33,20 @@ import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.Warmup;
 
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
-import java.lang.invoke.VarHandle;
-import java.lang.reflect.Field;
-import java.util.concurrent.TimeUnit;
+import im.turms.server.common.infra.reflect.UnsafeBasedVarAccessor;
+import im.turms.server.common.infra.reflect.VarAccessorFactory;
 
 /**
- * Reference:
- * JMH version: 1.35
- * VM version: JDK 17.0.4.1, OpenJDK 64-Bit Server VM, 17.0.4.1+1
- * GetFieldValue.plain                           avgt   10  0.377 ± 0.002  ns/op
+ * Reference: JMH version: 1.35 VM version: JDK 17.0.4.1, OpenJDK 64-Bit Server VM, 17.0.4.1+1
+ * GetFieldValue.plain avgt 10 0.377 ± 0.002 ns/op
  * <p>
- * GetFieldValue.varAccessor_get                 avgt   10  1.024 ± 0.017  ns/op
- * GetFieldValue.field_get                       avgt   10  2.761 ± 0.012  ns/op
- * GetFieldValue.methodHandle_invokeExact        avgt   10  4.141 ± 0.066  ns/op
- * GetFieldValue.varHandle_get                   avgt   10  6.234 ± 0.211  ns/op
+ * GetFieldValue.varAccessor_get avgt 10 1.024 ± 0.017 ns/op GetFieldValue.field_get avgt 10 2.761 ±
+ * 0.012 ns/op GetFieldValue.methodHandle_invokeExact avgt 10 4.141 ± 0.066 ns/op
+ * GetFieldValue.varHandle_get avgt 10 6.234 ± 0.211 ns/op
  * <p>
- * GetFieldValue.final_varAccessor_get           avgt   10  0.886 ± 0.010  ns/op
- * GetFieldValue.final_field_get                 avgt   10  2.271 ± 0.021  ns/op
- * GetFieldValue.final_methodHandle_invokeExact  avgt   10  0.378 ± 0.003  ns/op
- * GetFieldValue.final_varHandle_get             avgt   10  0.386 ± 0.006  ns/op
+ * GetFieldValue.final_varAccessor_get avgt 10 0.886 ± 0.010 ns/op GetFieldValue.final_field_get
+ * avgt 10 2.271 ± 0.021 ns/op GetFieldValue.final_methodHandle_invokeExact avgt 10 0.378 ± 0.003
+ * ns/op GetFieldValue.final_varHandle_get avgt 10 0.386 ± 0.006 ns/op
  *
  * @author James Chen
  */
@@ -80,8 +77,7 @@ public class GetFieldValue {
             field = String.class.getDeclaredField("value");
             field.setAccessible(true);
             methodHandle = lookup.unreflectGetter(field);
-            varHandle = MethodHandles
-                    .privateLookupIn(String.class, lookup)
+            varHandle = MethodHandles.privateLookupIn(String.class, lookup)
                     .unreflectVarHandle(field);
             varAccessor = (UnsafeBasedVarAccessor) VarAccessorFactory.get(field);
 

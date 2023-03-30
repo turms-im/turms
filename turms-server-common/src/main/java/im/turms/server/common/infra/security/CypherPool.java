@@ -17,9 +17,9 @@
 
 package im.turms.server.common.infra.security;
 
-import io.netty.util.concurrent.FastThreadLocal;
-
 import javax.crypto.Cipher;
+
+import io.netty.util.concurrent.FastThreadLocal;
 
 /**
  * @author James Chen

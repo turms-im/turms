@@ -17,12 +17,13 @@
 
 package im.turms.server.common.infra.security.password;
 
-import im.turms.server.common.infra.collection.ArrayUtil;
+import java.util.Arrays;
+import java.util.concurrent.ThreadLocalRandom;
+
 import io.netty.util.concurrent.FastThreadLocal;
 import org.bouncycastle.crypto.generators.BCrypt;
 
-import java.util.Arrays;
-import java.util.concurrent.ThreadLocalRandom;
+import im.turms.server.common.infra.collection.ArrayUtil;
 
 /**
  * @author James Chen
@@ -42,16 +43,23 @@ public class BCryptPasswordEncoder implements PasswordEncoder {
     @Override
     public byte[] encode(byte[] rawPassword) {
         byte[] salt = new byte[SALT_SIZE_BYTES];
-        ThreadLocalRandom.current().nextBytes(salt);
-        byte[] password = BCRYPT.get().generate(rawPassword, salt, COST);
+        ThreadLocalRandom.current()
+                .nextBytes(salt);
+        byte[] password = BCRYPT.get()
+                .generate(rawPassword, salt, COST);
         return ArrayUtil.concat(salt, password);
     }
 
     @Override
     public boolean matches(byte[] rawPassword, byte[] saltedPasswordWithSalt) {
-        byte[] saltedPassword = BCRYPT.get().generate(rawPassword, saltedPasswordWithSalt, COST);
-        return Arrays.equals(saltedPassword, 0, saltedPassword.length,
-                saltedPasswordWithSalt, SALT_SIZE_BYTES, saltedPasswordWithSalt.length);
+        byte[] saltedPassword = BCRYPT.get()
+                .generate(rawPassword, saltedPasswordWithSalt, COST);
+        return Arrays.equals(saltedPassword,
+                0,
+                saltedPassword.length,
+                saltedPasswordWithSalt,
+                SALT_SIZE_BYTES,
+                saltedPasswordWithSalt.length);
     }
 
 }

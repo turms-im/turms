@@ -17,6 +17,15 @@
 
 package im.turms.service.domain.message.access.admin.controller;
 
+import java.util.Collection;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.access.admin.dto.response.DeleteResultDTO;
 import im.turms.server.common.access.admin.dto.response.HttpHandlerResult;
 import im.turms.server.common.access.admin.dto.response.PaginationDTO;
@@ -40,14 +49,6 @@ import im.turms.service.domain.message.access.admin.dto.request.UpdateMessageDTO
 import im.turms.service.domain.message.access.admin.dto.response.MessageStatisticsDTO;
 import im.turms.service.domain.message.po.Message;
 import im.turms.service.domain.message.service.MessageService;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
-import java.util.Collection;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
 
 import static im.turms.server.common.access.admin.permission.AdminPermission.MESSAGE_CREATE;
 import static im.turms.server.common.access.admin.permission.AdminPermission.MESSAGE_DELETE;
@@ -62,7 +63,9 @@ public class MessageController extends BaseController {
 
     private final MessageService messageService;
 
-    public MessageController(TurmsPropertiesManager propertiesManager, MessageService messageService) {
+    public MessageController(
+            TurmsPropertiesManager propertiesManager,
+            MessageService messageService) {
         super(propertiesManager);
         this.messageService = messageService;
     }
@@ -73,11 +76,12 @@ public class MessageController extends BaseController {
             @QueryParam(defaultValue = "true") boolean send,
             @RequestBody CreateMessageDTO createMessageDTO) {
         String ip = createMessageDTO.senderIp();
-        Mono<Void> sendMono = messageService.authAndSaveAndSendMessage(
-                send,
+        Mono<Void> sendMono = messageService.authAndSaveAndSendMessage(send,
                 createMessageDTO.senderId(),
                 createMessageDTO.senderDeviceType(),
-                ip == null ? null : InetAddressUtil.ipStringToBytes(ip),
+                ip == null
+                        ? null
+                        : InetAddressUtil.ipStringToBytes(ip),
                 createMessageDTO.id(),
                 createMessageDTO.isGroupMessage(),
                 createMessageDTO.isSystemMessage(),
@@ -106,8 +110,7 @@ public class MessageController extends BaseController {
             @QueryParam(required = false) Date recallDateEnd,
             @QueryParam(required = false) Integer size,
             @QueryParam(required = false) Boolean ascending) {
-        Flux<Message> completeMessagesFlux = messageService.queryMessages(
-                ids,
+        Flux<Message> completeMessagesFlux = messageService.queryMessages(ids,
                 areGroupMessages,
                 areSystemMessages,
                 senderIds,
@@ -141,16 +144,14 @@ public class MessageController extends BaseController {
         DateRange deliveryDateRange = DateRange.of(deliveryDateStart, deliveryDateEnd);
         DateRange deletionDateRange = DateRange.of(deletionDateStart, deletionDateEnd);
         DateRange recallDateRange = DateRange.of(recallDateStart, recallDateEnd);
-        Mono<Long> count = messageService.countMessages(
-                ids,
+        Mono<Long> count = messageService.countMessages(ids,
                 areGroupMessages,
                 areSystemMessages,
                 senderIds,
                 targetIds,
                 deliveryDateRange,
                 deletionDateRange);
-        Flux<Message> completeMessagesFlux = messageService.queryMessages(
-                ids,
+        Flux<Message> completeMessagesFlux = messageService.queryMessages(ids,
                 areGroupMessages,
                 areSystemMessages,
                 senderIds,
@@ -182,10 +183,9 @@ public class MessageController extends BaseController {
         MessageStatisticsDTO.MessageStatisticsDTOBuilder builder = MessageStatisticsDTO.builder();
         if (divideBy == null || divideBy == DivideBy.NOOP) {
             if (sentOnAverageStartDate != null || sentOnAverageEndDate != null) {
-                counts.add(messageService.countSentMessagesOnAverage(
-                                DateRange.of(sentOnAverageStartDate, sentOnAverageEndDate),
-                                areGroupMessages,
-                                areSystemMessages)
+                counts.add(messageService
+                        .countSentMessagesOnAverage(DateRange.of(sentOnAverageStartDate,
+                                sentOnAverageEndDate), areGroupMessages, areSystemMessages)
                         .doOnNext(builder::sentMessagesOnAverage));
             }
 //            if (acknowledgedStartDate != null || acknowledgedEndDate != null) {
@@ -203,8 +203,8 @@ public class MessageController extends BaseController {
 //                        .doOnNext(builder::acknowledgedMessagesOnAverage));
 //            }
             if (counts.isEmpty() || sentStartDate != null || sentEndDate != null) {
-                counts.add(messageService.countSentMessages(
-                                DateRange.of(sentStartDate, sentEndDate),
+                counts.add(messageService
+                        .countSentMessages(DateRange.of(sentStartDate, sentEndDate),
                                 areGroupMessages,
                                 areSystemMessages)
                         .doOnNext(builder::sentMessages));
@@ -216,8 +216,7 @@ public class MessageController extends BaseController {
                         divideBy,
                         messageService::countSentMessagesOnAverage,
                         areGroupMessages,
-                        areSystemMessages)
-                        .doOnNext(builder::sentMessagesOnAverageRecords));
+                        areSystemMessages).doOnNext(builder::sentMessagesOnAverageRecords));
             }
 //            if (acknowledgedStartDate != null && acknowledgedEndDate != null) {
 //                counts.add(checkAndQueryBetweenDate(
@@ -238,13 +237,11 @@ public class MessageController extends BaseController {
 //                        .doOnNext(builder::acknowledgedMessagesOnAverageRecords));
 //            }
             if (sentStartDate != null && sentEndDate != null) {
-                counts.add(checkAndQueryBetweenDate(
-                        DateRange.of(sentStartDate, sentEndDate),
+                counts.add(checkAndQueryBetweenDate(DateRange.of(sentStartDate, sentEndDate),
                         divideBy,
                         messageService::countSentMessages,
                         areGroupMessages,
-                        areSystemMessages)
-                        .doOnNext(builder::sentMessagesRecords));
+                        areSystemMessages).doOnNext(builder::sentMessagesRecords));
             }
             if (counts.isEmpty()) {
                 return Mono.empty();
@@ -260,8 +257,8 @@ public class MessageController extends BaseController {
             Set<Long> ids,
             @RequestBody UpdateMessageDTO updateMessageDTO) {
         String ip = updateMessageDTO.senderIp();
-        Mono<UpdateResultDTO> updateMono = messageService.updateMessages(
-                        updateMessageDTO.senderId(),
+        Mono<UpdateResultDTO> updateMono = messageService
+                .updateMessages(updateMessageDTO.senderId(),
                         updateMessageDTO.senderDeviceType(),
                         ids,
                         updateMessageDTO.isSystemMessage(),
@@ -269,7 +266,9 @@ public class MessageController extends BaseController {
                         updateMessageDTO.records(),
                         updateMessageDTO.burnAfter(),
                         updateMessageDTO.recallDate(),
-                        ip == null ? null : InetAddressUtil.ipStringToBytes(ip),
+                        ip == null
+                                ? null
+                                : InetAddressUtil.ipStringToBytes(ip),
                         null)
                 .map(UpdateResultDTO::get);
         return HttpHandlerResult.okIfTruthy(updateMono);
@@ -280,8 +279,7 @@ public class MessageController extends BaseController {
     public Mono<HttpHandlerResult<ResponseDTO<DeleteResultDTO>>> deleteMessages(
             Set<Long> ids,
             @QueryParam(required = false) Boolean deleteLogically) {
-        Mono<DeleteResultDTO> deleteMono = messageService
-                .deleteMessages(ids, deleteLogically)
+        Mono<DeleteResultDTO> deleteMono = messageService.deleteMessages(ids, deleteLogically)
                 .map(DeleteResultDTO::get);
         return HttpHandlerResult.okIfTruthy(deleteMono);
     }

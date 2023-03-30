@@ -17,20 +17,21 @@
 
 package im.turms.server.common.domain.notification.rpc;
 
-import im.turms.server.common.access.client.dto.constant.DeviceType;
-import im.turms.server.common.domain.notification.service.INotificationService;
-import im.turms.server.common.domain.session.bo.UserSessionId;
-import im.turms.server.common.infra.cluster.service.rpc.NodeTypeToHandleRpc;
-import im.turms.server.common.infra.cluster.service.rpc.dto.RpcRequest;
+import java.util.Set;
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+
 import io.netty.buffer.ByteBuf;
 import lombok.Data;
 import org.springframework.context.ApplicationContext;
 import reactor.core.publisher.Mono;
 
-import java.util.Set;
-import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
+import im.turms.server.common.access.client.dto.constant.DeviceType;
+import im.turms.server.common.domain.notification.service.INotificationService;
+import im.turms.server.common.domain.session.bo.UserSessionId;
+import im.turms.server.common.infra.cluster.service.rpc.NodeTypeToHandleRpc;
+import im.turms.server.common.infra.cluster.service.rpc.dto.RpcRequest;
 
 /**
  * @author James Chen
@@ -50,10 +51,11 @@ public class SendNotificationRequest extends RpcRequest<Set<Long>> {
     /**
      * @param notificationBuffer should be a direct byte buffer of TurmsNotification
      */
-    public SendNotificationRequest(@NotNull ByteBuf notificationBuffer,
-                                   @NotEmpty Set<Long> recipientIds,
-                                   @NotNull Set<UserSessionId> excludedUserSessionIds,
-                                   @Nullable DeviceType excludedDeviceType) {
+    public SendNotificationRequest(
+            @NotNull ByteBuf notificationBuffer,
+            @NotEmpty Set<Long> recipientIds,
+            @NotNull Set<UserSessionId> excludedUserSessionIds,
+            @Nullable DeviceType excludedDeviceType) {
         this.notificationBuffer = notificationBuffer;
         this.recipientIds = recipientIds;
         this.excludedUserSessionIds = excludedUserSessionIds;

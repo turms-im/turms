@@ -17,11 +17,6 @@
 
 package im.turms.server.common.infra.io;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
-import org.springframework.util.AntPathMatcher;
-import org.webjars.WebJarAssetLocator;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -31,6 +26,11 @@ import java.nio.channels.FileChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Set;
+
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
+import org.springframework.util.AntPathMatcher;
+import org.webjars.WebJarAssetLocator;
 
 /**
  * @author James Chen
@@ -57,21 +57,22 @@ public class FileUtil {
 
     public static ByteBuf getWebJarAssetAsBuffer(String resourceNamePattern) {
         byte[] bytes = getWebJarAssetAsBytes(resourceNamePattern);
-        return Unpooled.unreleasableBuffer(Unpooled
-                .directBuffer(bytes.length).writeBytes(bytes));
+        return Unpooled.unreleasableBuffer(Unpooled.directBuffer(bytes.length)
+                .writeBytes(bytes));
     }
 
     public static byte[] getWebJarAssetAsBytes(String resourceNamePattern) {
         try {
-            return getWebJarAsset(resourceNamePattern)
-                    .readAllBytes();
+            return getWebJarAsset(resourceNamePattern).readAllBytes();
         } catch (IOException e) {
             throw new InputOutputException(e);
         }
     }
 
     public static InputStream getWebJarAsset(String resourceNamePattern) {
-        resourceNamePattern = WebJarAssetLocator.WEBJARS_PATH_PREFIX + "/" + resourceNamePattern;
+        resourceNamePattern = WebJarAssetLocator.WEBJARS_PATH_PREFIX
+                + "/"
+                + resourceNamePattern;
         String resourcePath = null;
         for (String asset : WEB_JAR_ASSETS) {
             if (ANT_PATH_MATCHER.match(resourceNamePattern, asset)) {
@@ -79,11 +80,16 @@ public class FileUtil {
             }
         }
         if (resourcePath == null) {
-            throw new ResourceNotFoundException("No resource found: " + resourceNamePattern);
+            throw new ResourceNotFoundException(
+                    "No resource found: "
+                            + resourceNamePattern);
         }
-        InputStream inputStream = FileUtil.class.getClassLoader().getResourceAsStream(resourcePath);
+        InputStream inputStream = FileUtil.class.getClassLoader()
+                .getResourceAsStream(resourcePath);
         if (inputStream == null) {
-            throw new ResourceNotFoundException("Could not find the resource: " + resourcePath);
+            throw new ResourceNotFoundException(
+                    "Could not find the resource: "
+                            + resourcePath);
         }
         return inputStream;
     }
@@ -92,13 +98,16 @@ public class FileUtil {
         try {
             return Files.size(path);
         } catch (IOException e) {
-            throw new InputOutputException("Failed to get the size of the file: " + path, e);
+            throw new InputOutputException(
+                    "Failed to get the size of the file: "
+                            + path,
+                    e);
         }
     }
 
     public static void write(File file, ByteBuf buffer) {
         try (FileOutputStream outputStream = new FileOutputStream(file);
-             FileChannel channel = outputStream.getChannel()) {
+                FileChannel channel = outputStream.getChannel()) {
             if (buffer.nioBufferCount() == 1) {
                 channel.write(buffer.nioBuffer());
             } else {

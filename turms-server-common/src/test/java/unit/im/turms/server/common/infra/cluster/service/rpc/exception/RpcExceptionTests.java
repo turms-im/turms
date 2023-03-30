@@ -17,10 +17,11 @@
 
 package unit.im.turms.server.common.infra.cluster.service.rpc.exception;
 
+import org.junit.jupiter.api.Test;
+
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.cluster.service.rpc.RpcErrorCode;
 import im.turms.server.common.infra.cluster.service.rpc.exception.RpcException;
-import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

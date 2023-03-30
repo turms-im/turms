@@ -17,21 +17,6 @@
 
 package im.turms.server.common.access.admin.web;
 
-import com.fasterxml.jackson.databind.JavaType;
-import im.turms.server.common.access.admin.dto.response.HttpHandlerResult;
-import im.turms.server.common.access.admin.dto.response.ResponseDTO;
-import im.turms.server.common.access.common.ResponseStatusCode;
-import im.turms.server.common.infra.collection.CollectionUtil;
-import im.turms.server.common.infra.json.JsonCodecPool;
-import im.turms.server.common.infra.lang.StringUtil;
-import im.turms.server.common.infra.netty.ReferenceCountUtil;
-import io.netty.buffer.ByteBufInputStream;
-import io.netty.buffer.CompositeByteBuf;
-import io.netty.buffer.Unpooled;
-import io.netty.handler.codec.http.HttpResponseStatus;
-import reactor.core.publisher.Mono;
-import reactor.netty.http.server.HttpServerRequest;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -44,48 +29,78 @@ import java.util.Map;
 import java.util.Set;
 import jakarta.annotation.Nullable;
 
+import com.fasterxml.jackson.databind.JavaType;
+import io.netty.buffer.ByteBufInputStream;
+import io.netty.buffer.CompositeByteBuf;
+import io.netty.buffer.Unpooled;
+import io.netty.handler.codec.http.HttpResponseStatus;
+import reactor.core.publisher.Mono;
+import reactor.netty.http.server.HttpServerRequest;
+
+import im.turms.server.common.access.admin.dto.response.HttpHandlerResult;
+import im.turms.server.common.access.admin.dto.response.ResponseDTO;
+import im.turms.server.common.access.common.ResponseStatusCode;
+import im.turms.server.common.infra.collection.CollectionUtil;
+import im.turms.server.common.infra.json.JsonCodecPool;
+import im.turms.server.common.infra.lang.StringUtil;
+import im.turms.server.common.infra.netty.ReferenceCountUtil;
+
 /**
  * @author James Chen
  */
 public class HttpRequestParamParser {
 
-    private static final Mono<Object[]> BODY_IS_REQUIRED = Mono
-            .error(new HttpResponseException(HttpHandlerResult.create(HttpResponseStatus.BAD_REQUEST,
-                    new ResponseDTO<>(ResponseStatusCode.ILLEGAL_ARGUMENT,
+    private static final Mono<Object[]> BODY_IS_REQUIRED = Mono.error(new HttpResponseException(
+            HttpHandlerResult.create(HttpResponseStatus.BAD_REQUEST,
+                    new ResponseDTO<>(
+                            ResponseStatusCode.ILLEGAL_ARGUMENT,
                             "The request body is required"))));
-    private static final HttpResponseException FORM_DATA_IS_REQUIRED = new HttpResponseException(HttpHandlerResult.create(HttpResponseStatus.BAD_REQUEST,
-            new ResponseDTO<>(ResponseStatusCode.ILLEGAL_ARGUMENT,
-                    "The form data is required")));
+    private static final HttpResponseException FORM_DATA_IS_REQUIRED = new HttpResponseException(
+            HttpHandlerResult.create(HttpResponseStatus.BAD_REQUEST,
+                    new ResponseDTO<>(
+                            ResponseStatusCode.ILLEGAL_ARGUMENT,
+                            "The form data is required")));
     private final HttpResponseException bodyTooLargeException;
 
     private final int maxBodySize;
 
     public HttpRequestParamParser(int maxBodySize) {
         this.maxBodySize = maxBodySize;
-        bodyTooLargeException = new HttpResponseException(HttpHandlerResult.create(HttpResponseStatus.REQUEST_ENTITY_TOO_LARGE,
-                new ResponseDTO<>(ResponseStatusCode.ILLEGAL_ARGUMENT,
-                        "The request body size must not exceed " + maxBodySize + " bytes")));
+        bodyTooLargeException = new HttpResponseException(
+                HttpHandlerResult.create(HttpResponseStatus.REQUEST_ENTITY_TOO_LARGE,
+                        new ResponseDTO<>(
+                                ResponseStatusCode.ILLEGAL_ARGUMENT,
+                                "The request body size must not exceed "
+                                        + maxBodySize
+                                        + " bytes")));
     }
 
-    public <T> T parsePlainValue(Object value, Class<T> type, JavaType typeForJackson) {
+    public <T> T parsePlainValue(Object value, Class<T> type, @Nullable JavaType typeForJackson) {
         if (type.isEnum()) {
             if (value instanceof String s) {
                 return (T) Enum.valueOf((Class<? extends Enum>) type, s);
             } else {
-                throw new IllegalArgumentException("The value of the type (" + type.getName() + ") must be string");
+                throw new IllegalArgumentException(
+                        "The value of the type ("
+                                + type.getName()
+                                + ") must be string");
             }
         }
         try {
             return JsonCodecPool.MAPPER.convertValue(value, typeForJackson);
         } catch (Exception e) {
-            throw new IllegalArgumentException("Invalid value: " + value, e);
+            throw new IllegalArgumentException(
+                    "Invalid value: "
+                            + value,
+                    e);
         }
     }
 
-    public Mono<ParsedParamCollection> parse(HttpServerRequest request,
-                                             RequestContext requestContext,
-                                             Map<String, List<Object>> params,
-                                             MethodParameterInfo[] parameters) {
+    public Mono<ParsedParamCollection> parse(
+            HttpServerRequest request,
+            RequestContext requestContext,
+            Map<String, List<Object>> params,
+            MethodParameterInfo[] parameters) {
         int length = parameters.length;
         Object[] args = new Object[length];
         MethodParameterInfo requestBodyParam = null;
@@ -124,30 +139,31 @@ public class HttpRequestParamParser {
         Mono<List<MultipartFile>> parseFormData = parseFormData(request);
         Mono<ParsedParamCollection> collectionMono;
         if (requestFormDataParam.isRequired()) {
-            collectionMono = parseFormData
-                    .map(files -> {
-                        if (files.isEmpty()) {
-                            throw FORM_DATA_IS_REQUIRED;
-                        }
-                        args[finalFormDataIndex] = files;
-                        return new ParsedParamCollection(args, files);
-                    });
+            collectionMono = parseFormData.map(files -> {
+                if (files.isEmpty()) {
+                    throw FORM_DATA_IS_REQUIRED;
+                }
+                args[finalFormDataIndex] = files;
+                return new ParsedParamCollection(args, files);
+            });
         } else {
-            collectionMono = parseFormData
-                    .map(files -> {
-                        args[finalFormDataIndex] = files;
-                        return new ParsedParamCollection(args, files);
-                    });
+            collectionMono = parseFormData.map(files -> {
+                args[finalFormDataIndex] = files;
+                return new ParsedParamCollection(args, files);
+            });
         }
         return collectionMono;
     }
 
-    private Object parseArgs(HttpServerRequest request,
-                             Map<String, List<Object>> params,
-                             MethodParameterInfo parameter) {
+    @Nullable
+    private Object parseArgs(
+            HttpServerRequest request,
+            Map<String, List<Object>> params,
+            MethodParameterInfo parameter) {
         List<Object> paramValues = null;
         if (parameter.isHeader()) {
-            String valueStr = request.requestHeaders().get(parameter.name());
+            String valueStr = request.requestHeaders()
+                    .get(parameter.name());
             // TODO: support multiple values when we need in the future
             Object value = parseSingleValue(parameter, valueStr);
             if (value != null) {
@@ -164,21 +180,25 @@ public class HttpRequestParamParser {
         } else {
             int count = paramValues.size();
             if (count > 1) {
-                throw new IllegalArgumentException("Expected the parameter \"" +
-                        parameter.name() +
-                        "\" not to be a collection, but got: " +
-                        paramValues);
+                throw new IllegalArgumentException(
+                        "Expected the parameter \""
+                                + parameter.name()
+                                + "\" not to be a collection, but got: "
+                                + paramValues);
             } else {
                 return parseSingleValue(parameter, paramValues.get(0));
             }
         }
     }
 
-    private Object parseCollection(MethodParameterInfo parameter,
-                                   @Nullable List<Object> values) {
+    @Nullable
+    private Object parseCollection(MethodParameterInfo parameter, @Nullable List<Object> values) {
         if (values == null || values.isEmpty()) {
             if (parameter.isRequired()) {
-                throw new IllegalArgumentException("Missing the required query parameter: \"" + parameter.name() + "\"");
+                throw new IllegalArgumentException(
+                        "Missing the required query parameter: \""
+                                + parameter.name()
+                                + "\"");
             }
             return null;
         }
@@ -201,11 +221,13 @@ public class HttpRequestParamParser {
             }
             return items;
         }
-        throw new IllegalArgumentException("Invalid parameter type: " + type.getName());
+        throw new IllegalArgumentException(
+                "Invalid parameter type: "
+                        + type.getName());
     }
 
-    private Object parseSingleValue(MethodParameterInfo parameter,
-                                    @Nullable Object value) {
+    @Nullable
+    private Object parseSingleValue(MethodParameterInfo parameter, @Nullable Object value) {
         if (value != null) {
             return parsePlainValue(value, parameter.type(), parameter.typeForJackson());
         }
@@ -214,10 +236,15 @@ public class HttpRequestParamParser {
             return defaultValue;
         }
         if (parameter.isRequired()) {
-            throw new HttpResponseException(HttpHandlerResult
-                    .badRequest("Missing required "
-                            + (parameter.isHeader() ? "header" : "query")
-                            + " parameter: \"" + parameter.name() + "\""));
+            String type = parameter.isHeader()
+                    ? "header"
+                    : "query";
+            throw new HttpResponseException(
+                    HttpHandlerResult.badRequest("Missing required "
+                            + type
+                            + " parameter: \""
+                            + parameter.name()
+                            + "\""));
         }
         return null;
     }
@@ -225,7 +252,7 @@ public class HttpRequestParamParser {
     /**
      * TODO: Support more charsets
      */
-    private Mono<Object> parseBody(HttpServerRequest request, JavaType parameterType) {
+    private Mono<Object> parseBody(HttpServerRequest request, @Nullable JavaType parameterType) {
         return Mono.defer(() -> {
             CompositeByteBuf body = Unpooled.compositeBuffer();
             return request.receive()
@@ -244,12 +271,15 @@ public class HttpRequestParamParser {
                         if (length == 0) {
                             return Mono.empty();
                         }
-                        try (ByteBufInputStream stream = new ByteBufInputStream(body, length, true)) {
-                            Object value = JsonCodecPool.MAPPER
-                                    .readValue((InputStream) stream, parameterType);
+                        try (ByteBufInputStream stream =
+                                new ByteBufInputStream(body, length, true)) {
+                            Object value = JsonCodecPool.MAPPER.readValue((InputStream) stream,
+                                    parameterType);
                             return Mono.just(value);
                         } catch (Exception e) {
-                            HttpHandlerResult<ResponseDTO<?>> result = HttpHandlerResult.badRequest("Illegal request body: " + e.getMessage());
+                            HttpHandlerResult<ResponseDTO<?>> result =
+                                    HttpHandlerResult.badRequest("Illegal request body: "
+                                            + e.getMessage());
                             return Mono.error(new HttpResponseException(result, e));
                         }
                     }))
@@ -259,9 +289,9 @@ public class HttpRequestParamParser {
 
     private Mono<List<MultipartFile>> parseFormData(HttpServerRequest request) {
         return request.receiveForm(builder -> builder
-                        // store on disk
-                        .maxInMemorySize(0)
-                        .maxSize(maxBodySize))
+                // store on disk
+                .maxInMemorySize(0)
+                .maxSize(maxBodySize))
                 .map(data -> {
                     File file;
                     try {
@@ -269,7 +299,10 @@ public class HttpRequestParamParser {
                     } catch (IOException e) {
                         // Should never happen because the data should be a file
                         // (DiskAttribute or DiskFileUpload)
-                        throw new IllegalArgumentException("Failed to get the file from the HTTP data: " + data, e);
+                        throw new IllegalArgumentException(
+                                "Failed to get the file from the HTTP data: "
+                                        + data,
+                                e);
                     }
                     data.retain();
                     String name = data.getName();

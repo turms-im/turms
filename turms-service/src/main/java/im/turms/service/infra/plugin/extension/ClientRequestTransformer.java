@@ -17,11 +17,12 @@
 
 package im.turms.service.infra.plugin.extension;
 
-import im.turms.server.common.infra.plugin.ExtensionPoint;
-import im.turms.service.access.servicerequest.dto.ClientRequest;
+import jakarta.validation.constraints.NotNull;
+
 import reactor.core.publisher.Mono;
 
-import jakarta.validation.constraints.NotNull;
+import im.turms.server.common.infra.plugin.ExtensionPoint;
+import im.turms.service.access.servicerequest.dto.ClientRequest;
 
 /**
  * @author James Chen

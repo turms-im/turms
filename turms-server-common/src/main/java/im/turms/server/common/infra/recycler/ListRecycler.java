@@ -17,10 +17,10 @@
 
 package im.turms.server.common.infra.recycler;
 
-import im.turms.server.common.infra.thread.ThreadSafe;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import im.turms.server.common.infra.thread.ThreadSafe;
 
 /**
  * @author James Chen
@@ -31,8 +31,8 @@ public class ListRecycler<T> extends Recycler<Recyclable<List<T>>> {
     private static final ListRecycler<?> INSTANCE = new ListRecycler<>();
     private static final int INITIAL_SIZE = 256;
     /**
-     * Use a small max size so that smaller collection can clear/recycle quickly,
-     * while larger collection don't need to grow too frequently.
+     * Use a small max size so that smaller collection can clear/recycle quickly, while larger
+     * collection don't need to grow too frequently.
      */
     private static final int MAX_SIZE = 256;
 

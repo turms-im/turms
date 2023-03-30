@@ -17,8 +17,17 @@
 
 package im.turms.service.domain.user.repository;
 
+import java.util.Date;
+import java.util.Set;
+import jakarta.annotation.Nullable;
+
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.reactivestreams.client.ClientSession;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.access.client.dto.constant.RequestStatus;
 import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
@@ -31,32 +40,25 @@ import im.turms.server.common.storage.mongo.operation.option.QueryOptions;
 import im.turms.server.common.storage.mongo.operation.option.Update;
 import im.turms.service.domain.common.repository.ExpirableEntityRepository;
 import im.turms.service.domain.user.po.UserFriendRequest;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Repository;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
-import java.util.Date;
-import java.util.Set;
-import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen
  */
 @Repository
-public class UserFriendRequestRepository extends ExpirableEntityRepository<UserFriendRequest, Long> {
+public class UserFriendRequestRepository
+        extends ExpirableEntityRepository<UserFriendRequest, Long> {
 
     private int friendRequestExpireAfterSeconds;
 
-    public UserFriendRequestRepository(TurmsPropertiesManager propertiesManager,
-                                       @Qualifier("userMongoClient") TurmsMongoClient mongoClient) {
+    public UserFriendRequestRepository(
+            TurmsPropertiesManager propertiesManager,
+            @Qualifier("userMongoClient") TurmsMongoClient mongoClient) {
         super(mongoClient, UserFriendRequest.class);
         propertiesManager.notifyAndAddGlobalPropertiesChangeListener(this::updateProperties);
     }
 
     private void updateProperties(TurmsProperties properties) {
-        friendRequestExpireAfterSeconds = properties
-                .getService()
+        friendRequestExpireAfterSeconds = properties.getService()
                 .getUser()
                 .getFriendRequest()
                 .getFriendRequestExpireAfterSeconds();
@@ -77,8 +79,7 @@ public class UserFriendRequestRepository extends ExpirableEntityRepository<UserF
             @Nullable Date creationDate) {
         Filter filter = Filter.newBuilder(1)
                 .in(DomainFieldName.ID, requestIds);
-        Update update = Update
-                .newBuilder(5)
+        Update update = Update.newBuilder(5)
                 .setIfNotNull(UserFriendRequest.Fields.REQUESTER_ID, requesterId)
                 .setIfNotNull(UserFriendRequest.Fields.RECIPIENT_ID, recipientId)
                 .setIfNotNull(UserFriendRequest.Fields.CONTENT, content)
@@ -116,9 +117,12 @@ public class UserFriendRequestRepository extends ExpirableEntityRepository<UserF
                 .inIfNotNull(UserFriendRequest.Fields.REQUESTER_ID, requesterIds)
                 .inIfNotNull(UserFriendRequest.Fields.RECIPIENT_ID, recipientIds)
                 .inIfNotNull(UserFriendRequest.Fields.STATUS, statuses)
-                .addBetweenIfNotNull(UserFriendRequest.Fields.CREATION_DATE, getCreationDateRange(creationDateRange, expirationDateRange))
+                .addBetweenIfNotNull(UserFriendRequest.Fields.CREATION_DATE,
+                        getCreationDateRange(creationDateRange, expirationDateRange))
                 .addBetweenIfNotNull(UserFriendRequest.Fields.RESPONSE_DATE, responseDateRange)
-                .isExpiredOrNot(statuses, UserFriendRequest.Fields.CREATION_DATE, getEntityExpirationDate());
+                .isExpiredOrNot(statuses,
+                        UserFriendRequest.Fields.CREATION_DATE,
+                        getEntityExpirationDate());
         return mongoClient.count(entityClass, filter);
     }
 
@@ -138,7 +142,8 @@ public class UserFriendRequestRepository extends ExpirableEntityRepository<UserF
                 .inIfNotNull(UserFriendRequest.Fields.REQUESTER_ID, requesterIds)
                 .inIfNotNull(UserFriendRequest.Fields.RECIPIENT_ID, recipientIds)
                 .inIfNotNull(UserFriendRequest.Fields.STATUS, statuses)
-                .addBetweenIfNotNull(UserFriendRequest.Fields.CREATION_DATE, getCreationDateRange(creationDateRange, expirationDateRange))
+                .addBetweenIfNotNull(UserFriendRequest.Fields.CREATION_DATE,
+                        getCreationDateRange(creationDateRange, expirationDateRange))
                 .addBetweenIfNotNull(UserFriendRequest.Fields.RESPONSE_DATE, responseDateRange)
                 .isExpiredOrNot(statuses, UserFriendRequest.Fields.CREATION_DATE, expirationDate);
         QueryOptions options = QueryOptions.newBuilder(2)
@@ -176,9 +181,7 @@ public class UserFriendRequestRepository extends ExpirableEntityRepository<UserF
         return mongoClient.findOne(entityClass, filter, options);
     }
 
-    public Mono<Boolean> hasPendingFriendRequest(
-            Long requesterId,
-            Long recipientId) {
+    public Mono<Boolean> hasPendingFriendRequest(Long requesterId, Long recipientId) {
         Date expirationDate = getEntityExpirationDate();
         Filter filter = Filter.newBuilder(4)
                 .eq(UserFriendRequest.Fields.REQUESTER_ID, requesterId)
@@ -188,20 +191,26 @@ public class UserFriendRequestRepository extends ExpirableEntityRepository<UserF
                 // 1. Make sure the pending requests are not expired actually
                 // 2. Make full use of the compound index for better performance
                 .isNotExpired(UserFriendRequest.Fields.CREATION_DATE,
-                        expirationDate == null ? DateConst.EPOCH : expirationDate);
+                        expirationDate == null
+                                ? DateConst.EPOCH
+                                : expirationDate);
         return mongoClient.exists(entityClass, filter);
     }
 
     public Mono<Boolean> hasPendingOrDeclinedOrIgnoredOrExpiredRequest(
             Long requesterId,
             Long recipientId) {
-        // Do not need to check expirationDate because both PENDING status or EXPIRED status has been used
+        // Do not need to check expirationDate because both PENDING status or EXPIRED status has
+        // been used
         Filter filter = Filter.newBuilder(4)
                 .gt(UserFriendRequest.Fields.CREATION_DATE, DateConst.EPOCH)
                 .eq(UserFriendRequest.Fields.REQUESTER_ID, requesterId)
                 .eq(UserFriendRequest.Fields.RECIPIENT_ID, recipientId)
                 .in(UserFriendRequest.Fields.STATUS,
-                        RequestStatus.PENDING, RequestStatus.DECLINED, RequestStatus.IGNORED, RequestStatus.EXPIRED);
+                        RequestStatus.PENDING,
+                        RequestStatus.DECLINED,
+                        RequestStatus.IGNORED,
+                        RequestStatus.EXPIRED);
         return mongoClient.exists(entityClass, filter);
     }
 

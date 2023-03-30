@@ -17,11 +17,12 @@
 
 package im.turms.gateway.domain.admin.repository;
 
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Repository;
+
 import im.turms.server.common.domain.admin.po.AdminRole;
 import im.turms.server.common.domain.common.repository.BaseRepository;
 import im.turms.server.common.storage.mongo.TurmsMongoClient;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Repository;
 
 /**
  * @author James Chen

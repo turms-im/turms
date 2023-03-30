@@ -17,7 +17,9 @@
 
 package benchmark.im.turms.server.common.infra.reflect;
 
-import im.turms.server.common.infra.reflect.ReflectionUtil;
+import java.lang.reflect.Field;
+import java.util.concurrent.TimeUnit;
+
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;
@@ -28,15 +30,12 @@ import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.Warmup;
 
-import java.lang.reflect.Field;
-import java.util.concurrent.TimeUnit;
+import im.turms.server.common.infra.reflect.ReflectionUtil;
 
 /**
- * Reference:
- * JMH version: 1.35
- * VM version: JDK 17.0.4.1, OpenJDK 64-Bit Server VM, 17.0.4.1+1
- * SetAccessible.field_setAccessible           avgt   10  50.175 ± 4.245  ns/op
- * SetAccessible.reflectionUtil_setAccessible  avgt   10   0.518 ± 0.009  ns/op
+ * Reference: JMH version: 1.35 VM version: JDK 17.0.4.1, OpenJDK 64-Bit Server VM, 17.0.4.1+1
+ * SetAccessible.field_setAccessible avgt 10 50.175 ± 4.245 ns/op
+ * SetAccessible.reflectionUtil_setAccessible avgt 10 0.518 ± 0.009 ns/op
  *
  * @author James Chen
  */

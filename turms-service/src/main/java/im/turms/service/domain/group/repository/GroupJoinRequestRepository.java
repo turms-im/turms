@@ -17,7 +17,16 @@
 
 package im.turms.service.domain.group.repository;
 
+import java.util.Date;
+import java.util.Set;
+import jakarta.annotation.Nullable;
+
 import com.mongodb.client.result.UpdateResult;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.access.client.dto.constant.RequestStatus;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.property.TurmsProperties;
@@ -31,14 +40,6 @@ import im.turms.server.common.storage.mongo.operation.option.QueryOptions;
 import im.turms.server.common.storage.mongo.operation.option.Update;
 import im.turms.service.domain.common.repository.ExpirableEntityRepository;
 import im.turms.service.domain.group.po.GroupJoinRequest;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Repository;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
-import java.util.Date;
-import java.util.Set;
-import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen
@@ -48,15 +49,15 @@ public class GroupJoinRequestRepository extends ExpirableEntityRepository<GroupJ
 
     private int expireAfterSeconds;
 
-    public GroupJoinRequestRepository(TurmsPropertiesManager propertiesManager,
-                                      @Qualifier("groupMongoClient") TurmsMongoClient mongoClient) {
+    public GroupJoinRequestRepository(
+            TurmsPropertiesManager propertiesManager,
+            @Qualifier("groupMongoClient") TurmsMongoClient mongoClient) {
         super(mongoClient, GroupJoinRequest.class);
         propertiesManager.notifyAndAddGlobalPropertiesChangeListener(this::updateProperties);
     }
 
     private void updateProperties(TurmsProperties properties) {
-        expireAfterSeconds = properties
-                .getService()
+        expireAfterSeconds = properties.getService()
                 .getGroup()
                 .getJoinRequest()
                 .getExpireAfterSeconds();
@@ -67,7 +68,10 @@ public class GroupJoinRequestRepository extends ExpirableEntityRepository<GroupJ
         return expireAfterSeconds;
     }
 
-    public Mono<UpdateResult> updateStatusIfPending(Long requestId, RequestStatus status, Long responderId) {
+    public Mono<UpdateResult> updateStatusIfPending(
+            Long requestId,
+            RequestStatus status,
+            Long responderId) {
         Filter filter = Filter.newBuilder(2)
                 .eq(DomainFieldName.ID, requestId)
                 .eq(GroupJoinRequest.Fields.STATUS, RequestStatus.PENDING);
@@ -87,8 +91,7 @@ public class GroupJoinRequestRepository extends ExpirableEntityRepository<GroupJ
             @Nullable Date responseDate) {
         Filter filter = Filter.newBuilder(1)
                 .in(DomainFieldName.ID, requestIds);
-        Update update = Update
-                .newBuilder(5)
+        Update update = Update.newBuilder(5)
                 .setIfNotNull(GroupJoinRequest.Fields.REQUESTER_ID, requesterId)
                 .setIfNotNull(GroupJoinRequest.Fields.RESPONDER_ID, responderId)
                 .setIfNotNull(GroupJoinRequest.Fields.CONTENT, content)
@@ -114,7 +117,8 @@ public class GroupJoinRequestRepository extends ExpirableEntityRepository<GroupJ
                 .inIfNotNull(GroupJoinRequest.Fields.REQUESTER_ID, requesterIds)
                 .inIfNotNull(GroupJoinRequest.Fields.RESPONDER_ID, responderIds)
                 .inIfNotNull(GroupJoinRequest.Fields.STATUS, statuses)
-                .addBetweenIfNotNull(GroupJoinRequest.Fields.CREATION_DATE, getCreationDateRange(creationDateRange, expirationDateRange))
+                .addBetweenIfNotNull(GroupJoinRequest.Fields.CREATION_DATE,
+                        getCreationDateRange(creationDateRange, expirationDateRange))
                 .addBetweenIfNotNull(GroupJoinRequest.Fields.RESPONSE_DATE, responseDateRange)
                 .isExpiredOrNot(statuses, GroupJoinRequest.Fields.CREATION_DATE, expirationDate);
         return mongoClient.count(entityClass, filter);
@@ -174,7 +178,8 @@ public class GroupJoinRequestRepository extends ExpirableEntityRepository<GroupJ
                 .inIfNotNull(GroupJoinRequest.Fields.REQUESTER_ID, requesterIds)
                 .inIfNotNull(GroupJoinRequest.Fields.RESPONDER_ID, responderIds)
                 .inIfNotNull(GroupJoinRequest.Fields.STATUS, statuses)
-                .addBetweenIfNotNull(GroupJoinRequest.Fields.CREATION_DATE, getCreationDateRange(creationDateRange, expirationDateRange))
+                .addBetweenIfNotNull(GroupJoinRequest.Fields.CREATION_DATE,
+                        getCreationDateRange(creationDateRange, expirationDateRange))
                 .addBetweenIfNotNull(GroupJoinRequest.Fields.RESPONSE_DATE, responseDateRange)
                 .isExpiredOrNot(statuses, GroupJoinRequest.Fields.CREATION_DATE, expirationDate);
         QueryOptions options = QueryOptions.newBuilder(2)

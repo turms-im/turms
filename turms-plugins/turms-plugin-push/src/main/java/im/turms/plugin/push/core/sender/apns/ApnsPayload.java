@@ -17,10 +17,10 @@
 
 package im.turms.plugin.push.core.sender.apns;
 
+import jakarta.annotation.Nullable;
+
 import com.eatthepath.pushy.apns.util.ApnsPayloadBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen

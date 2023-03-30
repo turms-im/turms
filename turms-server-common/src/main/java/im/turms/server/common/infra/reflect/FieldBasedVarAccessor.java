@@ -36,7 +36,10 @@ public class FieldBasedVarAccessor<T, V> implements VarAccessor<T, V> {
         try {
             return (V) field.get(object);
         } catch (Exception e) {
-            throw new RuntimeException("Failed to get the value from the object: " + object, e);
+            throw new RuntimeException(
+                    "Failed to get the value from the object: "
+                            + object,
+                    e);
         }
     }
 
@@ -45,7 +48,12 @@ public class FieldBasedVarAccessor<T, V> implements VarAccessor<T, V> {
         try {
             field.set(object, value);
         } catch (Exception e) {
-            throw new RuntimeException("Failed to set the value to (" + value + ") on the object: " + object, e);
+            throw new RuntimeException(
+                    "Failed to set the value to ("
+                            + value
+                            + ") on the object: "
+                            + object,
+                    e);
         }
     }
 

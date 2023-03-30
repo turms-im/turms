@@ -17,9 +17,9 @@
 
 package im.turms.server.common.access.admin.web;
 
-import com.fasterxml.jackson.databind.JavaType;
-
 import jakarta.annotation.Nullable;
+
+import com.fasterxml.jackson.databind.JavaType;
 
 /**
  * @author James Chen

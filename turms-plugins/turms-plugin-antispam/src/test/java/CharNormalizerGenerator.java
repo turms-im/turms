@@ -15,11 +15,6 @@
  * limitations under the License.
  */
 
-import com.ibm.icu.lang.UCharacter;
-import com.ibm.icu.text.Transliterator;
-import im.turms.server.common.infra.io.InputOutputException;
-import lombok.SneakyThrows;
-
 import java.io.IOException;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
@@ -29,6 +24,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
+import com.ibm.icu.lang.UCharacter;
+import com.ibm.icu.text.Transliterator;
+import lombok.SneakyThrows;
+
+import im.turms.server.common.infra.io.InputOutputException;
+
 /**
  * @author James Chen
  */
@@ -36,7 +37,8 @@ public class CharNormalizerGenerator {
 
     @SneakyThrows
     public static void main(String[] args) {
-        URI outputPath = CharNormalizerGenerator.class.getClassLoader().getResource(".")
+        URI outputPath = CharNormalizerGenerator.class.getClassLoader()
+                .getResource(".")
                 .toURI()
                 .resolve("../../src/main/java/im/turms/plugin/antispam/character/data");
         generate(Path.of(outputPath));
@@ -50,14 +52,16 @@ public class CharNormalizerGenerator {
         for (int high = 0; high < 256; high++) {
             generateDataFile(high, entries, common, outputDir);
         }
-        System.out.println("The data files have been generated in " + outputDir.toString());
+        System.out.println("The data files have been generated in "
+                + outputDir.toString());
     }
 
     private static DataSet generateDataSet() {
         CodePointEntry[] entries = new CodePointEntry[65536];
         Map<String, CodePointEntry> cache = new HashMap<>(16384);
         Map<String, CodePointEntry> common = new TreeMap<>();
-        Transliterator transliterator = Transliterator.getInstance("Any-Latin; NFD; [^a-zA-Z0-9-] Remove");
+        Transliterator transliterator =
+                Transliterator.getInstance("Any-Latin; NFD; [^a-zA-Z0-9-] Remove");
         for (int i = 0; i < 65536; i++) {
             char rawChar = (char) i;
             double num = UCharacter.getUnicodeNumericValue(i);
@@ -70,7 +74,8 @@ public class CharNormalizerGenerator {
             } else {
                 // TODO: support fractions
                 if (num % 1 == 0) {
-                    targetChars = String.valueOf((int) num).toCharArray();
+                    targetChars = String.valueOf((int) num)
+                            .toCharArray();
                 } else {
                     targetChars = new char[]{rawChar};
                 }
@@ -92,7 +97,8 @@ public class CharNormalizerGenerator {
         StringBuilder builder = new StringBuilder(1 + chars.length * 4);
         builder.append('$');
         for (char c : chars) {
-            builder.append(Integer.toHexString(c).toUpperCase());
+            builder.append(Integer.toHexString(c)
+                    .toUpperCase());
         }
         return builder.toString();
     }
@@ -107,25 +113,28 @@ public class CharNormalizerGenerator {
                     .append(formatCodePoints(entry.getValue().targetChars))
                     .append(";\n");
         }
-        //language=JAVA
+        // language=JAVA
         String template = """
                 // Generated Code - Do NOT edit manually
-                                
+
                 package im.turms.plugin.antispam.character.data;
-                                
+
                 public final class Common {
-                                
+
                 %s
                     private Common() {}
-                                
+
                 }
-                """
-                .formatted(builder.toString());
+                """.formatted(builder.toString());
         writeStr(outputDir.resolve("Common.java"), template);
     }
 
     @SneakyThrows
-    private static void generateDataFile(int high, CodePointEntry[] entries, Map<String, CodePointEntry> common, Path outputDir) {
+    private static void generateDataFile(
+            int high,
+            CodePointEntry[] entries,
+            Map<String, CodePointEntry> common,
+            Path outputDir) {
         StringBuilder builder = new StringBuilder(256 * 32);
         int startIndex = high << 8;
         for (int i = 0; i < 256; i++) {
@@ -133,35 +142,38 @@ public class CharNormalizerGenerator {
             builder.append("            ");
             String cacheKey = entry.cacheKey;
             if (cacheKey != null && common.containsKey(cacheKey)) {
-                builder.append("Common.%s, // '%c'(%04X) -> \"%s\"".formatted(
-                        cacheKey, getSafeCharForDisplay(entry.rawChar), (int) entry.rawChar, new String(entry.targetChars)));
+                builder.append("Common.%s, // '%c'(%04X) -> \"%s\"".formatted(cacheKey,
+                        getSafeCharForDisplay(entry.rawChar),
+                        (int) entry.rawChar,
+                        new String(entry.targetChars)));
             } else {
-                builder.append("%s, // '%c'(%04X)".formatted(
-                        formatCodePoints(entry.targetChars), getSafeCharForDisplay(entry.rawChar), (int) entry.rawChar));
+                builder.append("%s, // '%c'(%04X)".formatted(formatCodePoints(entry.targetChars),
+                        getSafeCharForDisplay(entry.rawChar),
+                        (int) entry.rawChar));
             }
             if (i < 255) {
                 builder.append('\n');
             }
         }
         String className = "U%02X".formatted(high);
-        //language=JAVA
+        // language=JAVA
         String template = """
                 // Generated Code - Do NOT edit manually
-                
+
                 package im.turms.plugin.antispam.character.data;
-                
+
                 public final class %s {
 
                     public static final char[][] DATA = {
                 %s
                     };
-                
+
                     private %s() {}
-                
+
                 }
-                """
-                .formatted(className, builder.toString(), className);
-        writeStr(outputDir.resolve(className + ".java"), template);
+                """.formatted(className, builder.toString(), className);
+        writeStr(outputDir.resolve(className
+                + ".java"), template);
     }
 
     private static char getSafeCharForDisplay(char c) {
@@ -175,7 +187,9 @@ public class CharNormalizerGenerator {
         StringBuilder builder = new StringBuilder(chars.length * 16);
         builder.append("{");
         for (int i = 0; i < chars.length; i++) {
-            builder.append("'").append(chars[i]).append("'");
+            builder.append("'")
+                    .append(chars[i])
+                    .append("'");
             if (i != chars.length - 1) {
                 builder.append(", ");
             }
@@ -188,18 +202,27 @@ public class CharNormalizerGenerator {
         try {
             Files.writeString(path, str, StandardCharsets.UTF_8);
         } catch (IOException e) {
-            throw new InputOutputException("Failed to write to the file: " +
-                    path.toAbsolutePath() +
-                    ".\n\"" +
-                    str +
-                    "\"", e);
+            throw new InputOutputException(
+                    "Failed to write to the file: "
+                            + path.toAbsolutePath()
+                            + ".\n\""
+                            + str
+                            + "\"",
+                    e);
         }
     }
 
-    private record DataSet(CodePointEntry[] entries, Map<String, CodePointEntry> common) {
+    private record DataSet(
+            CodePointEntry[] entries,
+            Map<String, CodePointEntry> common
+    ) {
     }
 
-    private record CodePointEntry(char rawChar, char[] targetChars, String cacheKey) {
+    private record CodePointEntry(
+            char rawChar,
+            char[] targetChars,
+            String cacheKey
+    ) {
     }
 
 }

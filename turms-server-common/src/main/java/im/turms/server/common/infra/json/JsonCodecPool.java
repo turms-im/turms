@@ -32,6 +32,7 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.fasterxml.jackson.databind.util.StdDateFormat;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
+
 import im.turms.server.common.infra.jackson.CaffeineLookupCache;
 import im.turms.server.common.infra.jackson.RawStringModule;
 import im.turms.server.common.infra.security.SensitiveProperty;
@@ -55,15 +56,14 @@ public class JsonCodecPool {
             .enable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
             .serializationInclusion(JsonInclude.Include.NON_NULL)
             // modules
-            .addModules(new JavaTimeModule(),
-                    new ParameterNamesModule(),
-                    new RawStringModule())
+            .addModules(new JavaTimeModule(), new ParameterNamesModule(), new RawStringModule())
             // date format
             .defaultDateFormat(new StdDateFormat().withColonInTimeZone(true))
             // time zone
             .defaultTimeZone(TimeZoneConst.ZONE)
             // type factory
-            .typeFactory(TypeFactory.defaultInstance().withCache(new CaffeineLookupCache<>()))
+            .typeFactory(TypeFactory.defaultInstance()
+                    .withCache(new CaffeineLookupCache<>()))
             .build();
 
     static {
@@ -71,8 +71,8 @@ public class JsonCodecPool {
         DeserializationConfig deserializationConfig = MAPPER.getDeserializationConfig();
         AnnotationIntrospector introspector = serializationConfig.getAnnotationIntrospector();
 
-        serializationConfig.with(AnnotationIntrospector.pair(introspector,
-                new NopAnnotationIntrospector() {
+        serializationConfig
+                .with(AnnotationIntrospector.pair(introspector, new NopAnnotationIntrospector() {
                     @Override
                     public boolean hasIgnoreMarker(AnnotatedMember m) {
                         if (super.hasIgnoreMarker(m)) {
@@ -83,8 +83,8 @@ public class JsonCodecPool {
                                 && property.value() != SensitiveProperty.Access.ALLOW_SERIALIZATION;
                     }
                 }));
-        deserializationConfig.with(AnnotationIntrospector.pair(introspector,
-                new NopAnnotationIntrospector() {
+        deserializationConfig
+                .with(AnnotationIntrospector.pair(introspector, new NopAnnotationIntrospector() {
                     @Override
                     public boolean hasIgnoreMarker(AnnotatedMember m) {
                         if (super.hasIgnoreMarker(m)) {
@@ -92,7 +92,8 @@ public class JsonCodecPool {
                         }
                         SensitiveProperty property = _findAnnotation(m, SensitiveProperty.class);
                         return property != null
-                                && property.value() != SensitiveProperty.Access.ALLOW_DESERIALIZATION;
+                                && property
+                                        .value() != SensitiveProperty.Access.ALLOW_DESERIALIZATION;
                     }
                 }));
     }

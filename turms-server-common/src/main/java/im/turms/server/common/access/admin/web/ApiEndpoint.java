@@ -17,11 +17,12 @@
 
 package im.turms.server.common.access.admin.web;
 
-import im.turms.server.common.access.admin.permission.RequiredPermission;
-import io.netty.handler.codec.http.HttpMethod;
-
 import java.lang.reflect.Method;
 import jakarta.annotation.Nullable;
+
+import io.netty.handler.codec.http.HttpMethod;
+
+import im.turms.server.common.access.admin.permission.RequiredPermission;
 
 /**
  * @author James Chen

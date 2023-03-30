@@ -17,10 +17,10 @@
 
 package im.turms.server.common.infra.plugin;
 
-import org.springframework.util.StringUtils;
-
 import java.util.Map;
 import jakarta.annotation.Nullable;
+
+import org.springframework.util.StringUtils;
 
 /**
  * @author James Chen
@@ -43,18 +43,28 @@ public abstract class PluginDescriptorFactory {
     }
 
     @Nullable
-    public static String readPropertiesString(Map<String, String> properties, String key, boolean required) {
+    public static String readPropertiesString(
+            Map<String, String> properties,
+            String key,
+            boolean required) {
         String value;
         try {
             value = properties.get(key);
         } catch (Exception e) {
-            throw new IllegalArgumentException("The value of the field \"" + key + "\" must be a string", e);
+            throw new IllegalArgumentException(
+                    "The value of the field \""
+                            + key
+                            + "\" must be a string",
+                    e);
         }
         if (StringUtils.hasText(value)) {
             return value;
         }
         if (required) {
-            throw new IllegalArgumentException("The value of the field \"" + key + "\" must not be blank");
+            throw new IllegalArgumentException(
+                    "The value of the field \""
+                            + key
+                            + "\" must not be blank");
         }
         return null;
     }

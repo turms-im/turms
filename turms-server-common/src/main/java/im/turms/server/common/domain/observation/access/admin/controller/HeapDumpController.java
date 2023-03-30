@@ -36,7 +36,8 @@ public class HeapDumpController {
     }
 
     @GetMapping
-    public FileResource heapDump(@QueryParam(required = false, defaultValue = "true") boolean live) {
+    public FileResource heapDump(
+            @QueryParam(required = false, defaultValue = "true") boolean live) {
         return heapDumpService.heapDump(live);
     }
 

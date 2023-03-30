@@ -17,11 +17,11 @@
 
 package im.turms.server.common.access.servicerequest.dto;
 
+import jakarta.annotation.Nullable;
+
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.proto.ProtoFormatter;
-
-import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen
@@ -33,10 +33,13 @@ public record ServiceResponse(
 ) {
     @Override
     public String toString() {
-        return "ServiceResponse{" +
-                "dataForRequester=" + ProtoFormatter.toLogString(dataForRequester) +
-                ", code=" + code +
-                ", reason=" + reason +
-                '}';
+        return "ServiceResponse{"
+                + "dataForRequester="
+                + ProtoFormatter.toLogString(dataForRequester)
+                + ", code="
+                + code
+                + ", reason="
+                + reason
+                + '}';
     }
 }

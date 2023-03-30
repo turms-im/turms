@@ -17,14 +17,14 @@
 
 package im.turms.server.common.infra.security.jwt.algorithm;
 
-import im.turms.server.common.infra.exception.IncompatibleJvmException;
-import im.turms.server.common.infra.security.jwt.Jwt;
-
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.Signature;
 import java.security.interfaces.ECPublicKey;
+
+import im.turms.server.common.infra.exception.IncompatibleJvmException;
+import im.turms.server.common.infra.security.jwt.Jwt;
 
 /**
  * @author James Chen
@@ -37,7 +37,8 @@ public class EcdsaAlgorithm extends AsymmetricAlgorithm {
     static {
         KeyPair keys;
         try {
-            keys = KeyPairGenerator.getInstance("EC").generateKeyPair();
+            keys = KeyPairGenerator.getInstance("EC")
+                    .generateKeyPair();
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException("Failed to validate the availability of EC algorithm", e);
         }
@@ -46,14 +47,18 @@ public class EcdsaAlgorithm extends AsymmetricAlgorithm {
             signature.initVerify(keys.getPublic());
             signature.update("CVE-2022-21449".getBytes());
             if (signature.verify(new byte[64])) {
-                throw new IncompatibleJvmException("The current JVM is vulnerable to CVE-2022-21449. Please upgrade to a patched Java version");
+                throw new IncompatibleJvmException(
+                        "The current JVM is vulnerable to CVE-2022-21449. Please upgrade to a patched Java version");
             }
         } catch (Exception e) {
             throw new RuntimeException("Failed to validate the availability of EC algorithm", e);
         }
     }
 
-    public EcdsaAlgorithm(JwtAlgorithmDefinition definition, int ecNumberSize, ECPublicKey publicKey) {
+    public EcdsaAlgorithm(
+            JwtAlgorithmDefinition definition,
+            int ecNumberSize,
+            ECPublicKey publicKey) {
         super(definition);
         this.ecNumberSize = ecNumberSize;
         this.publicKey = publicKey;
@@ -68,7 +73,6 @@ public class EcdsaAlgorithm extends AsymmetricAlgorithm {
                 jwt.encodedPayloadBytes(),
                 jose2Der(signatureBytes));
     }
-
 
     private byte[] jose2Der(byte[] joseSignature) {
         // Retrieve R and S number's length and padding.
@@ -101,7 +105,7 @@ public class EcdsaAlgorithm extends AsymmetricAlgorithm {
 
         // R number
         if (rPadding < 0) {
-            //Sign
+            // Sign
             derSignature[offset++] = (byte) 0x00;
             System.arraycopy(joseSignature, 0, derSignature, offset, ecNumberSize);
             offset += ecNumberSize;
@@ -117,11 +121,14 @@ public class EcdsaAlgorithm extends AsymmetricAlgorithm {
 
         // S number
         if (sPadding < 0) {
-            //Sign
+            // Sign
             derSignature[offset++] = (byte) 0x00;
             System.arraycopy(joseSignature, ecNumberSize, derSignature, offset, ecNumberSize);
         } else {
-            System.arraycopy(joseSignature, ecNumberSize + sPadding, derSignature, offset,
+            System.arraycopy(joseSignature,
+                    ecNumberSize + sPadding,
+                    derSignature,
+                    offset,
                     Math.min(ecNumberSize, sLength));
         }
 
@@ -133,7 +140,9 @@ public class EcdsaAlgorithm extends AsymmetricAlgorithm {
         while (fromIndex + padding < toIndex && bytes[fromIndex + padding] == 0) {
             padding++;
         }
-        return (bytes[fromIndex + padding] & 0xff) > 0x7f ? padding - 1 : padding;
+        return (bytes[fromIndex + padding] & 0xff) > 0x7f
+                ? padding - 1
+                : padding;
     }
 
 }

@@ -17,9 +17,24 @@
 
 package im.turms.service.domain.group.service;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
+
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.reactivestreams.client.ClientSession;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.access.client.dto.ClientMessagePool;
 import im.turms.server.common.access.client.dto.model.common.LongsWithVersion;
 import im.turms.server.common.access.client.dto.model.user.UserInfosWithVersion;
@@ -43,20 +58,6 @@ import im.turms.service.domain.user.service.UserService;
 import im.turms.service.infra.proto.ProtoModelConvertor;
 import im.turms.service.infra.validation.ValidGroupBlockedUserKey;
 import im.turms.service.storage.mongo.OperationResultPublisherPool;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PastOrPresent;
 
 import static im.turms.service.storage.mongo.MongoOperationConst.TRANSACTION_RETRY;
 
@@ -87,7 +88,7 @@ public class GroupBlocklistService {
 
     /**
      * @return an empty publish if the user was blocked successfully, or an error for other cases.
-     * Note that the method will throw if the user has been blocked
+     *         Note that the method will throw if the user has been blocked
      */
     public Mono<Void> authAndBlockUser(
             @NotNull Long requesterId,
@@ -102,46 +103,52 @@ public class GroupBlocklistService {
             return Mono.error(e);
         }
         if (requesterId.equals(userIdToBlock)) {
-            return Mono.error(ResponseException
-                    .get(ResponseStatusCode.ILLEGAL_ARGUMENT, "Cannot block oneself"));
+            return Mono.error(ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
+                    "Cannot block oneself"));
         }
         return groupMemberService.isOwnerOrManager(requesterId, groupId, false)
                 .flatMap(authenticated -> authenticated
                         ? groupMemberService.isGroupMember(groupId, userIdToBlock, false)
-                        : Mono.error(ResponseException.get(ResponseStatusCode.NOT_OWNER_OR_MANAGER_TO_ADD_BLOCKED_USER)))
+                        : Mono.error(ResponseException
+                                .get(ResponseStatusCode.NOT_OWNER_OR_MANAGER_TO_ADD_BLOCKED_USER)))
                 .flatMap(isGroupMember -> {
-                    GroupBlockedUser blockedUser = new GroupBlockedUser(
-                            groupId, userIdToBlock, new Date(), requesterId);
+                    GroupBlockedUser blockedUser =
+                            new GroupBlockedUser(groupId, userIdToBlock, new Date(), requesterId);
                     if (isGroupMember) {
-                        Mono<Void> updateVersion = groupVersionService.updateVersion(
-                                        groupId,
-                                        true,
-                                        true,
-                                        false,
-                                        false)
-                                .onErrorResume(t -> {
-                                    LOGGER.error("Caught an error while updating the members and blocklist version of the group ({}) after blocking a user",
-                                            groupId, t);
-                                    return Mono.empty();
-                                })
-                                .then();
+                        Mono<Void> updateVersion =
+                                groupVersionService.updateVersion(groupId, true, true, false, false)
+                                        .onErrorResume(t -> {
+                                            LOGGER.error(
+                                                    "Caught an error while updating the members and blocklist version of the group ({}) after blocking a user",
+                                                    groupId,
+                                                    t);
+                                            return Mono.empty();
+                                        })
+                                        .then();
                         if (session == null) {
                             return groupBlocklistRepository
-                                    .inTransaction(newSession ->
-                                            groupMemberService.deleteGroupMember(groupId, userIdToBlock, newSession, false)
-                                                    .then(groupBlocklistRepository.insert(blockedUser, newSession))
-                                                    .then(updateVersion)
-                                                    .retryWhen(TRANSACTION_RETRY));
+                                    .inTransaction(newSession -> groupMemberService
+                                            .deleteGroupMember(groupId,
+                                                    userIdToBlock,
+                                                    newSession,
+                                                    false)
+                                            .then(groupBlocklistRepository.insert(blockedUser,
+                                                    newSession))
+                                            .then(updateVersion)
+                                            .retryWhen(TRANSACTION_RETRY));
                         }
-                        return groupMemberService.deleteGroupMember(groupId, userIdToBlock, session, false)
+                        return groupMemberService
+                                .deleteGroupMember(groupId, userIdToBlock, session, false)
                                 .then(groupBlocklistRepository.insert(blockedUser, session))
                                 .then(updateVersion);
                     }
                     return groupBlocklistRepository.insert(blockedUser, session)
                             .then(groupVersionService.updateBlocklistVersion(groupId)
                                     .onErrorResume(t -> {
-                                        LOGGER.error("Caught an error while updating the blocklist version of the group ({}) after blocking a user",
-                                                groupId, t);
+                                        LOGGER.error(
+                                                "Caught an error while updating the blocklist version of the group ({}) after blocking a user",
+                                                groupId,
+                                                t);
                                         return Mono.empty();
                                     })
                                     .then());
@@ -161,22 +168,26 @@ public class GroupBlocklistService {
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        return groupMemberService
-                .isOwnerOrManager(requesterId, groupId, false)
+        return groupMemberService.isOwnerOrManager(requesterId, groupId, false)
                 .flatMap(authenticated -> {
                     if (!authenticated) {
-                        return Mono.error(ResponseException.get(ResponseStatusCode.NOT_OWNER_OR_MANAGER_TO_REMOVE_BLOCKED_USER));
+                        return Mono.error(ResponseException.get(
+                                ResponseStatusCode.NOT_OWNER_OR_MANAGER_TO_REMOVE_BLOCKED_USER));
                     }
                     GroupBlockedUser.Key key = new GroupBlockedUser.Key(groupId, userIdToUnblock);
-                    Mono<DeleteResult> removeMono = groupBlocklistRepository.deleteById(key, session);
+                    Mono<DeleteResult> removeMono =
+                            groupBlocklistRepository.deleteById(key, session);
                     if (updateBlocklistVersion) {
-                        return removeMono.flatMap(result -> groupVersionService.updateBlocklistVersion(groupId)
-                                .onErrorResume(t -> {
-                                    LOGGER.error("Caught an error while updating the blocklist version of the group ({}) after unblocking a user",
-                                            groupId, t);
-                                    return Mono.empty();
-                                })
-                                .then());
+                        return removeMono.flatMap(
+                                result -> groupVersionService.updateBlocklistVersion(groupId)
+                                        .onErrorResume(t -> {
+                                            LOGGER.error(
+                                                    "Caught an error while updating the blocklist version of the group ({}) after unblocking a user",
+                                                    groupId,
+                                                    t);
+                                            return Mono.empty();
+                                        })
+                                        .then());
                     }
                     return removeMono.then();
                 });
@@ -194,7 +205,8 @@ public class GroupBlocklistService {
             keys.add(new GroupBlockedUser.Key(groupId, userId));
         }
         return groupBlocklistRepository.findIdsByIds(keys)
-                .map(user -> user.getKey().getUserId());
+                .map(user -> user.getKey()
+                        .getUserId());
     }
 
     public Mono<Boolean> isBlocked(@NotNull Long groupId, @NotNull Long userId) {
@@ -224,7 +236,8 @@ public class GroupBlocklistService {
             @Nullable Set<Long> requesterIds,
             @Nullable Integer page,
             @Nullable Integer size) {
-        return groupBlocklistRepository.findBlockedUsers(groupIds, userIds, blockDateRange, requesterIds, page, size);
+        return groupBlocklistRepository
+                .findBlockedUsers(groupIds, userIds, blockDateRange, requesterIds, page, size);
     }
 
     public Mono<Long> countBlockedUsers(
@@ -243,8 +256,7 @@ public class GroupBlocklistService {
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        return groupVersionService
-                .queryBlocklistVersion(groupId)
+        return groupVersionService.queryBlocklistVersion(groupId)
                 .flatMap(version -> {
                     if (DateUtil.isAfterOrSame(lastUpdatedDate, version)) {
                         return ResponseExceptionPublisherPool.alreadyUpToUpdate();
@@ -256,8 +268,7 @@ public class GroupBlocklistService {
                                 if (ids.isEmpty()) {
                                     throw ResponseException.get(ResponseStatusCode.NO_CONTENT);
                                 }
-                                return ClientMessagePool
-                                        .getLongsWithVersionBuilder()
+                                return ClientMessagePool.getLongsWithVersionBuilder()
                                         .setLastUpdatedDate(version.getTime())
                                         .addAllLongs(ids)
                                         .build();
@@ -276,8 +287,7 @@ public class GroupBlocklistService {
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        return groupVersionService
-                .queryBlocklistVersion(groupId)
+        return groupVersionService.queryBlocklistVersion(groupId)
                 .flatMap(version -> {
                     if (DateUtil.isAfterOrSame(lastUpdatedDate, version)) {
                         return ResponseExceptionPublisherPool.alreadyUpToUpdate();
@@ -297,11 +307,12 @@ public class GroupBlocklistService {
                                 if (users.isEmpty()) {
                                     throw ResponseException.get(ResponseStatusCode.NO_CONTENT);
                                 }
-                                UserInfosWithVersion.Builder builder = ClientMessagePool
-                                        .getUserInfosWithVersionBuilder()
-                                        .setLastUpdatedDate(version.getTime());
+                                UserInfosWithVersion.Builder builder =
+                                        ClientMessagePool.getUserInfosWithVersionBuilder()
+                                                .setLastUpdatedDate(version.getTime());
                                 for (User user : users) {
-                                    builder.addUserInfos(ProtoModelConvertor.userProfile2proto(user));
+                                    builder.addUserInfos(
+                                            ProtoModelConvertor.userProfile2proto(user));
                                 }
                                 return builder.build();
                             })
@@ -331,7 +342,8 @@ public class GroupBlocklistService {
             blockDate = new Date();
         }
         GroupBlockedUser user = new GroupBlockedUser(groupId, userId, blockDate, requesterId);
-        return groupBlocklistRepository.insert(user).thenReturn(user);
+        return groupBlocklistRepository.insert(user)
+                .thenReturn(user);
     }
 
     public Mono<UpdateResult> updateBlockedUsers(
@@ -353,7 +365,8 @@ public class GroupBlocklistService {
         return groupBlocklistRepository.updateBlockedUsers(keys, blockDate, requesterId);
     }
 
-    public Mono<DeleteResult> deleteBlockedUsers(@NotEmpty Set<GroupBlockedUser.@ValidGroupBlockedUserKey Key> keys) {
+    public Mono<DeleteResult> deleteBlockedUsers(
+            @NotEmpty Set<GroupBlockedUser.@ValidGroupBlockedUserKey Key> keys) {
         try {
             Validator.notEmpty(keys, "keys");
             for (GroupBlockedUser.Key key : keys) {

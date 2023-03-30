@@ -17,17 +17,17 @@
 
 package im.turms.server.common.infra.logging;
 
+import java.util.Collections;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
+
 import im.turms.server.common.access.client.dto.request.TurmsRequest;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.collection.FastEnumMap;
 import im.turms.server.common.infra.property.constant.LoggingRequestCategory;
 import im.turms.server.common.infra.property.env.service.env.clientapi.property.LoggingCategoryProperties;
 import im.turms.server.common.infra.property.env.service.env.clientapi.property.LoggingRequestProperties;
-
-import java.util.Collections;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @author James Chen
@@ -39,11 +39,13 @@ public abstract class CommonApiLoggingContext {
             Set<LoggingRequestProperties> loggingRequests,
             Set<LoggingRequestCategory> excludedCategories,
             Set<TurmsRequest.KindCase> excludedRequestTypes) {
-        Map<TurmsRequest.KindCase, LoggingRequestProperties> result = new FastEnumMap<>(TurmsRequest.KindCase.class);
+        Map<TurmsRequest.KindCase, LoggingRequestProperties> result =
+                new FastEnumMap<>(TurmsRequest.KindCase.class);
 
         // 1. handle included categories
         for (LoggingCategoryProperties includedCategory : includedCategories) {
-            Set<LoggingRequestProperties> requestProperties = getRequestProperties(includedCategory);
+            Set<LoggingRequestProperties> requestProperties =
+                    getRequestProperties(includedCategory);
             for (LoggingRequestProperties request : requestProperties) {
                 result.put(request.getType(), request);
             }
@@ -70,8 +72,9 @@ public abstract class CommonApiLoggingContext {
         return result;
     }
 
-    protected boolean shouldLog(TurmsRequest.KindCase requestType,
-                                Map<TurmsRequest.KindCase, LoggingRequestProperties> requestPropertiesMap) {
+    protected boolean shouldLog(
+            TurmsRequest.KindCase requestType,
+            Map<TurmsRequest.KindCase, LoggingRequestProperties> requestPropertiesMap) {
         LoggingRequestProperties requestProperties = requestPropertiesMap.get(requestType);
         if (requestProperties == null) {
             return false;
@@ -85,18 +88,22 @@ public abstract class CommonApiLoggingContext {
             return false;
         }
         return sampleRate >= 1.0f
-                || ThreadLocalRandom.current().nextFloat() < sampleRate;
+                || ThreadLocalRandom.current()
+                        .nextFloat() < sampleRate;
     }
 
-    private Set<LoggingRequestProperties> getRequestProperties(LoggingCategoryProperties categoryProperties) {
+    private Set<LoggingRequestProperties> getRequestProperties(
+            LoggingCategoryProperties categoryProperties) {
         LoggingRequestCategory category = categoryProperties.getCategory();
         Set<TurmsRequest.KindCase> requestTypes = category.getRequestTypes();
         if (requestTypes.isEmpty()) {
             return Collections.emptySet();
         }
-        Set<LoggingRequestProperties> loggingRequests = CollectionUtil.newSetWithExpectedSize(requestTypes.size());
+        Set<LoggingRequestProperties> loggingRequests =
+                CollectionUtil.newSetWithExpectedSize(requestTypes.size());
         for (TurmsRequest.KindCase requestType : requestTypes) {
-            loggingRequests.add(new LoggingRequestProperties(requestType, categoryProperties.getSampleRate()));
+            loggingRequests.add(
+                    new LoggingRequestProperties(requestType, categoryProperties.getSampleRate()));
         }
         return loggingRequests;
     }

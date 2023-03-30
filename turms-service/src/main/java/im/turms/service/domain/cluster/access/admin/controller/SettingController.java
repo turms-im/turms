@@ -17,6 +17,11 @@
 
 package im.turms.service.domain.cluster.access.admin.controller;
 
+import java.util.Map;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.access.admin.dto.response.HttpHandlerResult;
 import im.turms.server.common.access.admin.dto.response.ResponseDTO;
 import im.turms.server.common.access.admin.permission.RequiredPermission;
@@ -29,10 +34,6 @@ import im.turms.server.common.infra.property.TurmsPropertiesInspector;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.service.domain.cluster.access.admin.dto.response.SettingsDTO;
 import im.turms.service.domain.common.access.admin.controller.BaseController;
-import io.swagger.v3.oas.annotations.media.Schema;
-import reactor.core.publisher.Mono;
-
-import java.util.Map;
 
 import static im.turms.server.common.access.admin.permission.AdminPermission.CLUSTER_SETTING_QUERY;
 import static im.turms.server.common.access.admin.permission.AdminPermission.CLUSTER_SETTING_UPDATE;
@@ -41,8 +42,8 @@ import static im.turms.server.common.infra.property.TurmsPropertiesInspector.con
 
 /**
  * @author James Chen
- * @implNote These APIs should be designed to work for the cluster settings
- * instead of the local node settings by default consistently because it is "cluster/settings".
+ * @implNote These APIs should be designed to work for the cluster settings instead of the local
+ *           node settings by default consistently because it is "cluster/settings".
  */
 @RestController("cluster/settings")
 public class SettingController extends BaseController {
@@ -61,12 +62,12 @@ public class SettingController extends BaseController {
                 : propertiesManager.getGlobalProperties();
         return HttpHandlerResult.okIfTruthy(new SettingsDTO(
                 TurmsProperties.SCHEMA_VERSION,
-                convertPropertiesToValueMap(properties, onlyMutable)
-        ));
+                convertPropertiesToValueMap(properties, onlyMutable)));
     }
 
     /**
-     * @implNote Do NOT declare turmsProperties as TurmsProperties because TurmsProperties has default values
+     * @implNote Do NOT declare turmsProperties as TurmsProperties because TurmsProperties has
+     *           default values
      */
     @PutMapping
     @RequiredPermission(CLUSTER_SETTING_UPDATE)
@@ -94,9 +95,13 @@ public class SettingController extends BaseController {
                 ? TurmsPropertiesInspector.ONLY_MUTABLE_METADATA
                 : TurmsPropertiesInspector.METADATA;
         Map<String, Object> settings = withValue
-                ? mergeMetadataWithPropertyValue(metadata, queryLocalSettings ? propertiesManager.getLocalProperties() : propertiesManager.getGlobalProperties())
+                ? mergeMetadataWithPropertyValue(metadata,
+                        queryLocalSettings
+                                ? propertiesManager.getLocalProperties()
+                                : propertiesManager.getGlobalProperties())
                 : metadata;
-        return HttpHandlerResult.okIfTruthy(new SettingsDTO(TurmsProperties.SCHEMA_VERSION, settings));
+        return HttpHandlerResult
+                .okIfTruthy(new SettingsDTO(TurmsProperties.SCHEMA_VERSION, settings));
     }
 
 }

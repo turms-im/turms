@@ -17,9 +17,9 @@
 
 package im.turms.server.common.infra.cluster.service.codec.io;
 
-import im.turms.server.common.infra.io.StreamInput;
-
 import java.util.Map;
+
+import im.turms.server.common.infra.io.StreamInput;
 
 /**
  * @author James Chen

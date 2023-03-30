@@ -17,10 +17,10 @@
 
 package im.turms.server.common.infra.collection;
 
-import com.oracle.truffle.api.CompilerDirectives;
-
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+
+import com.oracle.truffle.api.CompilerDirectives;
 
 /**
  * @author James Chen

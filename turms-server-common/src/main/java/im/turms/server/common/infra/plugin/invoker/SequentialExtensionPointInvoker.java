@@ -17,8 +17,9 @@
 
 package im.turms.server.common.infra.plugin.invoker;
 
-import im.turms.server.common.infra.plugin.ExtensionPoint;
 import reactor.core.publisher.Mono;
+
+import im.turms.server.common.infra.plugin.ExtensionPoint;
 
 /**
  * @author James Chen

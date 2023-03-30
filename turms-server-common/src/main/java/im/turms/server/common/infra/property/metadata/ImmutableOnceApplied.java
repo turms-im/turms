@@ -23,8 +23,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * The properties marked with this annotation should not be changed once applied,
- * or turms servers will get in trouble.
+ * The properties marked with this annotation should not be changed once applied, or turms servers
+ * will get in trouble.
  *
  * @author James Chen
  */

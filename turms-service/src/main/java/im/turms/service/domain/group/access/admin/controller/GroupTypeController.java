@@ -17,6 +17,12 @@
 
 package im.turms.service.domain.group.access.admin.controller;
 
+import java.util.Collection;
+import java.util.Set;
+
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.access.admin.dto.response.DeleteResultDTO;
 import im.turms.server.common.access.admin.dto.response.HttpHandlerResult;
 import im.turms.server.common.access.admin.dto.response.PaginationDTO;
@@ -37,11 +43,6 @@ import im.turms.service.domain.group.access.admin.dto.request.AddGroupTypeDTO;
 import im.turms.service.domain.group.access.admin.dto.request.UpdateGroupTypeDTO;
 import im.turms.service.domain.group.po.GroupType;
 import im.turms.service.domain.group.service.GroupTypeService;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
-import java.util.Collection;
-import java.util.Set;
 
 /**
  * @author James Chen
@@ -51,16 +52,18 @@ public class GroupTypeController extends BaseController {
 
     private final GroupTypeService groupTypeService;
 
-    public GroupTypeController(TurmsPropertiesManager propertiesManager, GroupTypeService groupTypeService) {
+    public GroupTypeController(
+            TurmsPropertiesManager propertiesManager,
+            GroupTypeService groupTypeService) {
         super(propertiesManager);
         this.groupTypeService = groupTypeService;
     }
 
     @PostMapping
     @RequiredPermission(AdminPermission.GROUP_TYPE_CREATE)
-    public Mono<HttpHandlerResult<ResponseDTO<GroupType>>> addGroupType(@RequestBody AddGroupTypeDTO addGroupTypeDTO) {
-        Mono<GroupType> addedGroupType = groupTypeService.addGroupType(
-                addGroupTypeDTO.name(),
+    public Mono<HttpHandlerResult<ResponseDTO<GroupType>>> addGroupType(
+            @RequestBody AddGroupTypeDTO addGroupTypeDTO) {
+        Mono<GroupType> addedGroupType = groupTypeService.addGroupType(addGroupTypeDTO.name(),
                 addGroupTypeDTO.groupSizeLimit(),
                 addGroupTypeDTO.invitationStrategy(),
                 addGroupTypeDTO.joinStrategy(),
@@ -98,8 +101,8 @@ public class GroupTypeController extends BaseController {
     public Mono<HttpHandlerResult<ResponseDTO<UpdateResultDTO>>> updateGroupType(
             Set<Long> ids,
             @RequestBody UpdateGroupTypeDTO updateGroupTypeDTO) {
-        Mono<UpdateResultDTO> updateMono = groupTypeService.updateGroupTypes(
-                        ids,
+        Mono<UpdateResultDTO> updateMono = groupTypeService
+                .updateGroupTypes(ids,
                         updateGroupTypeDTO.name(),
                         updateGroupTypeDTO.groupSizeLimit(),
                         updateGroupTypeDTO.invitationStrategy(),
@@ -117,8 +120,7 @@ public class GroupTypeController extends BaseController {
     @DeleteMapping
     @RequiredPermission(AdminPermission.GROUP_TYPE_DELETE)
     public Mono<HttpHandlerResult<ResponseDTO<DeleteResultDTO>>> deleteGroupType(Set<Long> ids) {
-        Mono<DeleteResultDTO> deleteMono = groupTypeService
-                .deleteGroupTypes(ids)
+        Mono<DeleteResultDTO> deleteMono = groupTypeService.deleteGroupTypes(ids)
                 .map(DeleteResultDTO::get);
         return HttpHandlerResult.okIfTruthy(deleteMono);
     }

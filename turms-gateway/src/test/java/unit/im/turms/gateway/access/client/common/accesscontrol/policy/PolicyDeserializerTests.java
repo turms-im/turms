@@ -17,6 +17,11 @@
 
 package unit.im.turms.gateway.access.client.common.accesscontrol.policy;
 
+import java.util.Map;
+import java.util.Set;
+
+import org.junit.jupiter.api.Test;
+
 import im.turms.gateway.access.client.common.authorization.policy.IllegalPolicyException;
 import im.turms.gateway.access.client.common.authorization.policy.Policy;
 import im.turms.gateway.access.client.common.authorization.policy.PolicyDeserializer;
@@ -25,10 +30,6 @@ import im.turms.gateway.access.client.common.authorization.policy.PolicyStatemen
 import im.turms.gateway.access.client.common.authorization.policy.PolicyStatementEffect;
 import im.turms.gateway.access.client.common.authorization.policy.PolicyStatementResource;
 import im.turms.server.common.infra.json.JsonUtil;
-import org.junit.jupiter.api.Test;
-
-import java.util.Map;
-import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -41,8 +42,7 @@ class PolicyDeserializerTests {
     @Test
     void test() {
         // language=JSON
-        String json =
-                """
+        String json = """
                 {
                     "authenticated": true,
                     "statements": [{
@@ -55,11 +55,13 @@ class PolicyDeserializerTests {
         Map<String, Object> map = JsonUtil.readStringObjectMapValue(json.getBytes());
         Policy policy = PolicyDeserializer.parse(map);
         assertThat(policy.statements()).hasSize(1);
-        assertThat(policy.statements().get(0)).isEqualTo(new PolicyStatement(
-                PolicyStatementEffect.ALLOW,
-                Set.of(PolicyStatementAction.ALL),
-                Set.of(PolicyStatementResource.USER, PolicyStatementResource.GROUP_BLOCKED_USER)
-        ));
+        assertThat(policy.statements()
+                .get(0))
+                .isEqualTo(new PolicyStatement(
+                        PolicyStatementEffect.ALLOW,
+                        Set.of(PolicyStatementAction.ALL),
+                        Set.of(PolicyStatementResource.USER,
+                                PolicyStatementResource.GROUP_BLOCKED_USER)));
 
         json = """
                 {

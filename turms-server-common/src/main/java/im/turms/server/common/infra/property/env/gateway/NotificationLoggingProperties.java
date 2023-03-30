@@ -17,12 +17,12 @@
 
 package im.turms.server.common.infra.property.env.gateway;
 
-
-import im.turms.server.common.infra.property.metadata.Description;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import im.turms.server.common.infra.property.metadata.Description;
 
 /**
  * @author James Chen
@@ -33,8 +33,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class NotificationLoggingProperties {
 
-    @Description("Whether to parse the buffer of TurmsNotification to log. " +
-            "Note that the property has an impact on performance")
+    @Description("Whether to parse the buffer of TurmsNotification to log. "
+            + "Note that the property has an impact on performance")
     private boolean enabled;
 
 }

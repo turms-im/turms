@@ -17,11 +17,12 @@
 
 package im.turms.plugin.push.core.sender.fcm;
 
+import java.util.Map;
+
 import com.google.firebase.messaging.MessagingErrorCode;
+
 import im.turms.plugin.push.core.PushNotificationErrorCode;
 import im.turms.server.common.infra.collection.FastEnumMap;
-
-import java.util.Map;
 
 /**
  * @author James Chen
@@ -31,7 +32,8 @@ public final class FcmErrorCodeUtil {
     private static final Map<MessagingErrorCode, PushNotificationErrorCode> ERROR_TO_CODE;
 
     static {
-        FastEnumMap<MessagingErrorCode, PushNotificationErrorCode> map = new FastEnumMap<>(MessagingErrorCode.class);
+        FastEnumMap<MessagingErrorCode, PushNotificationErrorCode> map =
+                new FastEnumMap<>(MessagingErrorCode.class);
         map.put(MessagingErrorCode.THIRD_PARTY_AUTH_ERROR, PushNotificationErrorCode.INVALID_AUTH);
         map.put(MessagingErrorCode.INTERNAL, PushNotificationErrorCode.SERVICE_ERROR);
         map.put(MessagingErrorCode.INVALID_ARGUMENT, PushNotificationErrorCode.INVALID_REQUEST);
@@ -47,7 +49,9 @@ public final class FcmErrorCodeUtil {
 
     public static PushNotificationErrorCode toCode(MessagingErrorCode errorCode) {
         PushNotificationErrorCode code = ERROR_TO_CODE.get(errorCode);
-        return code == null ? PushNotificationErrorCode.UNKNOWN : code;
+        return code == null
+                ? PushNotificationErrorCode.UNKNOWN
+                : code;
     }
 
 }

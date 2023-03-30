@@ -17,12 +17,13 @@
 
 package unit.im.turms.server.common.infra.recycler;
 
-import im.turms.server.common.infra.recycler.Recyclable;
-import im.turms.server.common.infra.recycler.SetRecycler;
-import org.junit.jupiter.api.Test;
-
 import java.util.List;
 import java.util.Set;
+
+import org.junit.jupiter.api.Test;
+
+import im.turms.server.common.infra.recycler.Recyclable;
+import im.turms.server.common.infra.recycler.SetRecycler;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

@@ -17,8 +17,9 @@
 
 package im.turms.server.common.infra.logging.core.model;
 
-import im.turms.server.common.infra.logging.core.logger.AsyncLogger;
 import io.netty.buffer.ByteBuf;
+
+import im.turms.server.common.infra.logging.core.logger.AsyncLogger;
 
 /**
  * @author James Chen

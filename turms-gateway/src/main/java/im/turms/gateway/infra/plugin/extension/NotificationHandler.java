@@ -17,13 +17,14 @@
 
 package im.turms.gateway.infra.plugin.extension;
 
-import im.turms.server.common.access.client.dto.notification.TurmsNotification;
-import im.turms.server.common.infra.plugin.ExtensionPoint;
-import reactor.core.publisher.Mono;
-
 import java.util.Set;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+
+import reactor.core.publisher.Mono;
+
+import im.turms.server.common.access.client.dto.notification.TurmsNotification;
+import im.turms.server.common.infra.plugin.ExtensionPoint;
 
 /**
  * Usually used to implement the custom push notification service
@@ -32,8 +33,9 @@ import jakarta.validation.constraints.NotNull;
  */
 public interface NotificationHandler extends ExtensionPoint {
 
-    Mono<Void> handle(@NotNull TurmsNotification notification,
-                      @NotEmpty Set<Long> recipientIds,
-                      @NotNull Set<Long> offlineRecipientIds);
+    Mono<Void> handle(
+            @NotNull TurmsNotification notification,
+            @NotEmpty Set<Long> recipientIds,
+            @NotNull Set<Long> offlineRecipientIds);
 
 }

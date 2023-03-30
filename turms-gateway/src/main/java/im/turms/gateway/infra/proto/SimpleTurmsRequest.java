@@ -27,13 +27,17 @@ import im.turms.server.common.infra.proto.ProtoFormatter;
 public record SimpleTurmsRequest(
         long requestId,
         TurmsRequest.KindCase type,
-        CreateSessionRequest createSessionRequest) {
+        CreateSessionRequest createSessionRequest
+) {
     @Override
     public String toString() {
-        return "SimpleTurmsRequest[" +
-                "requestId=" + requestId +
-                ", type=" + type +
-                ", createSessionRequest=" + ProtoFormatter.toLogString(createSessionRequest) +
-                ']';
+        return "SimpleTurmsRequest["
+                + "requestId="
+                + requestId
+                + ", type="
+                + type
+                + ", createSessionRequest="
+                + ProtoFormatter.toLogString(createSessionRequest)
+                + ']';
     }
 }

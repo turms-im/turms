@@ -17,6 +17,10 @@
 
 package im.turms.server.common.domain.user.po;
 
+import java.util.Date;
+
+import lombok.Data;
+
 import im.turms.server.common.access.client.dto.constant.ProfileAccessStrategy;
 import im.turms.server.common.domain.common.po.BaseEntity;
 import im.turms.server.common.storage.mongo.entity.annotation.Document;
@@ -24,9 +28,6 @@ import im.turms.server.common.storage.mongo.entity.annotation.EnumNumber;
 import im.turms.server.common.storage.mongo.entity.annotation.Field;
 import im.turms.server.common.storage.mongo.entity.annotation.Id;
 import im.turms.server.common.storage.mongo.entity.annotation.Sharded;
-import lombok.Data;
-
-import java.util.Date;
 
 /**
  * @author James Chen
@@ -54,8 +55,8 @@ public final class User extends BaseEntity {
     private final String profilePicture;
 
     /**
-     * The field is reserved for future use because
-     * there is no field needing user access control currently
+     * The field is reserved for future use because there is no field needing user access control
+     * currently
      */
     @Field(Fields.PROFILE_ACCESS_STRATEGY)
     @EnumNumber

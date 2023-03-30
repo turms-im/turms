@@ -17,6 +17,19 @@
 
 package im.turms.gateway.access.client.udp;
 
+import java.net.InetSocketAddress;
+
+import io.netty.buffer.ByteBuf;
+import io.netty.channel.ChannelOption;
+import io.netty.channel.socket.DatagramPacket;
+import lombok.Getter;
+import org.springframework.stereotype.Component;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+import reactor.core.publisher.Sinks;
+import reactor.netty.Connection;
+import reactor.netty.udp.UdpServer;
+
 import im.turms.gateway.access.client.common.UserSession;
 import im.turms.gateway.access.client.udp.dto.UdpNotification;
 import im.turms.gateway.access.client.udp.dto.UdpNotificationType;
@@ -39,18 +52,6 @@ import im.turms.server.common.infra.metrics.TurmsMicrometerChannelMetricsRecorde
 import im.turms.server.common.infra.net.BindException;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.gateway.UdpProperties;
-import io.netty.buffer.ByteBuf;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.socket.DatagramPacket;
-import lombok.Getter;
-import org.springframework.stereotype.Component;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-import reactor.core.publisher.Sinks;
-import reactor.netty.Connection;
-import reactor.netty.udp.UdpServer;
-
-import java.net.InetSocketAddress;
 
 /**
  * @author James Chen
@@ -69,49 +70,69 @@ public class UdpRequestDispatcher {
     private final Sinks.Many<UdpNotification> notificationSink;
     private final Connection connection;
 
-    public UdpRequestDispatcher(SessionService sessionService,
-                                TurmsApplicationContext applicationContext,
-                                TurmsPropertiesManager propertiesManager) {
+    public UdpRequestDispatcher(
+            SessionService sessionService,
+            TurmsApplicationContext applicationContext,
+            TurmsPropertiesManager propertiesManager) {
         instance = this;
-        UdpProperties udpProperties = propertiesManager.getLocalProperties().getGateway().getUdp();
+        UdpProperties udpProperties = propertiesManager.getLocalProperties()
+                .getGateway()
+                .getUdp();
         this.sessionService = sessionService;
         isEnabled = udpProperties.isEnabled();
         String host = udpProperties.getHost();
         int port = udpProperties.getPort();
         if (udpProperties.isEnabled()) {
-            notificationSink = Sinks.many().unicast().onBackpressureBuffer();
+            notificationSink = Sinks.many()
+                    .unicast()
+                    .onBackpressureBuffer();
             UdpServer udpServer = UdpServer.create()
                     .host(host)
                     .port(port)
                     .option(ChannelOption.SO_REUSEADDR, true)
                     .runOn(LoopResourcesFactory.createForServer(ThreadNameConst.GATEWAY_UDP_PREFIX))
-                    .metrics(true, () -> new TurmsMicrometerChannelMetricsRecorder(MetricNameConst.CLIENT_NETWORK, "udp"))
+                    .metrics(true,
+                            () -> new TurmsMicrometerChannelMetricsRecorder(
+                                    MetricNameConst.CLIENT_NETWORK,
+                                    "udp"))
                     .handle((inbound, outbound) -> {
                         Flux<DatagramPacket> responseFlux = inbound.receiveObject()
                                 .cast(DatagramPacket.class)
                                 .flatMap(packet -> handleDatagramPackage(packet)
-                                        .onErrorContinue((throwable, o) -> handleExceptionForIncomingPacket(throwable))
-                                        .map(code -> new DatagramPacket(UdpSignalResponseBufferPool.get(code), packet.sender())));
+                                        .onErrorContinue(
+                                                (throwable, o) -> handleExceptionForIncomingPacket(
+                                                        throwable))
+                                        .map(code -> new DatagramPacket(
+                                                UdpSignalResponseBufferPool.get(code),
+                                                packet.sender())));
                         Flux<DatagramPacket> notificationFlux = notificationSink.asFlux()
-                                .map(notification -> new DatagramPacket(UdpSignalResponseBufferPool.get(notification.type()),
+                                .map(notification -> new DatagramPacket(
+                                        UdpSignalResponseBufferPool.get(notification.type()),
                                         notification.recipientAddress()));
                         Flux<DatagramPacket> outputFlux = responseFlux.mergeWith(notificationFlux);
                         outbound.sendObject(outputFlux, o -> true)
                                 .then()
-                                .subscribe(null, t -> LOGGER.error("Caught an error while sending a packet", t));
+                                .subscribe(null,
+                                        t -> LOGGER.error("Caught an error while sending a packet",
+                                                t));
                         return Flux.never();
                     });
             try {
-                connection = udpServer.bind().block();
+                connection = udpServer.bind()
+                        .block();
             } catch (Exception e) {
-                String message = "Failed to bind the UDP server on: " + host + ":" + port;
+                String message = "Failed to bind the UDP server on: "
+                        + host
+                        + ":"
+                        + port;
                 throw new BindException(message, e);
             }
             LOGGER.info("UDP server started on: {}:{}", host, port);
-            applicationContext.addShutdownHook(JobShutdownOrder.CLOSE_GATEWAY_UDP_SERVER, timeoutMillis -> {
-                connection.dispose();
-                return connection.onDispose();
-            });
+            applicationContext.addShutdownHook(JobShutdownOrder.CLOSE_GATEWAY_UDP_SERVER,
+                    timeoutMillis -> {
+                        connection.dispose();
+                        return connection.onDispose();
+                    });
         } else {
             notificationSink = null;
             connection = null;
@@ -137,12 +158,14 @@ public class UdpRequestDispatcher {
         int sessionId = signalRequest.sessionId();
         return switch (signalRequest.type()) {
             case HEARTBEAT -> {
-                UserSession session = sessionService.authAndUpdateHeartbeatTimestamp(userId, deviceType, sessionId);
+                UserSession session = sessionService
+                        .authAndUpdateHeartbeatTimestamp(userId, deviceType, sessionId);
                 if (session == null) {
                     yield Mono.just(ResponseStatusCode.SEND_REQUEST_FROM_NON_EXISTING_SESSION);
                 }
                 // Update the address because it may have changed
-                session.getConnection().setUdpAddress(senderAddress);
+                session.getConnection()
+                        .setUdpAddress(senderAddress);
                 yield Mono.just(ResponseStatusCode.OK);
             }
             case GO_OFFLINE -> {

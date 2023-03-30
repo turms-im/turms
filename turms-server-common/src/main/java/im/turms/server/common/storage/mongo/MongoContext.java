@@ -17,6 +17,13 @@
 
 package im.turms.server.common.storage.mongo;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
+
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.connection.ServerDescription;
@@ -27,11 +34,6 @@ import com.mongodb.reactivestreams.client.MongoClient;
 import com.mongodb.reactivestreams.client.MongoClients;
 import com.mongodb.reactivestreams.client.MongoCollection;
 import com.mongodb.reactivestreams.client.MongoDatabase;
-import im.turms.server.common.infra.lang.Pair;
-import im.turms.server.common.infra.thread.ThreadNameConst;
-import im.turms.server.common.storage.mongo.entity.MongoEntity;
-import im.turms.server.common.storage.mongo.entity.MongoEntityFactory;
-import im.turms.server.common.storage.mongo.operation.MongoCollectionOptions;
 import io.lettuce.core.internal.Futures;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -44,12 +46,11 @@ import org.bson.codecs.configuration.CodecRegistry;
 import org.jctools.maps.NonBlockingIdentityHashMap;
 import reactor.core.publisher.Mono;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
+import im.turms.server.common.infra.lang.Pair;
+import im.turms.server.common.infra.thread.ThreadNameConst;
+import im.turms.server.common.storage.mongo.entity.MongoEntity;
+import im.turms.server.common.storage.mongo.entity.MongoEntityFactory;
+import im.turms.server.common.storage.mongo.operation.MongoCollectionOptions;
 
 /**
  * @author James Chen
@@ -66,29 +67,38 @@ public class MongoContext {
     private final MongoDatabase adminDatabase;
     @Getter
     private final MongoDatabase configDatabase;
-    private final Map<Class<?>, MongoEntity<?>> classToEntity = new NonBlockingIdentityHashMap<>(64);
-    private final Map<Class<?>, MongoCollection<?>> classToCollection = new NonBlockingIdentityHashMap<>(64);
+    private final Map<Class<?>, MongoEntity<?>> classToEntity =
+            new NonBlockingIdentityHashMap<>(64);
+    private final Map<Class<?>, MongoCollection<?>> classToCollection =
+            new NonBlockingIdentityHashMap<>(64);
     private final NioEventLoopGroup eventLoopGroup;
 
-    public MongoContext(String connectionString,
-                        Consumer<List<ServerDescription>> onServerDescriptionChange) {
+    public MongoContext(
+            String connectionString,
+            Consumer<List<ServerDescription>> onServerDescriptionChange) {
         if (connectionString == null) {
             throw new IllegalArgumentException("The connection string must not be null");
         }
         ConnectionString connectionSettings = new ConnectionString(connectionString);
-        eventLoopGroup = new NioEventLoopGroup(Runtime.getRuntime().availableProcessors(),
+        eventLoopGroup = new NioEventLoopGroup(
+                Runtime.getRuntime()
+                        .availableProcessors(),
                 // TODO: distinguish thread pool names when there are multiple contexts
                 new DefaultThreadFactory(ThreadNameConst.MONGO_EVENT_LOOP));
         MongoClientSettings settings = MongoClientSettings.builder()
                 .applyConnectionString(connectionSettings)
-                .applyToClusterSettings(builder -> builder.addClusterListener(new ClusterListener() {
-                    @Override
-                    public void clusterDescriptionChanged(ClusterDescriptionChangedEvent event) {
-                        onServerDescriptionChange.accept(event.getNewDescription().getServerDescriptions());
-                    }
-                }))
+                .applyToClusterSettings(
+                        builder -> builder.addClusterListener(new ClusterListener() {
+                            @Override
+                            public void clusterDescriptionChanged(
+                                    ClusterDescriptionChangedEvent event) {
+                                onServerDescriptionChange.accept(event.getNewDescription()
+                                        .getServerDescriptions());
+                            }
+                        }))
                 .codecRegistry(CODEC_REGISTRY)
-                // Do NOT use the default implementation of com.mongodb.connection.AsynchronousSocketChannelStreamFactory,
+                // Do NOT use the default implementation of
+                // com.mongodb.connection.AsynchronousSocketChannelStreamFactory,
                 // which use a heap buffer pool "bufferProvider" for BsonWriter for NIO.
                 // They should go back to school to learn how to code efficiently.
                 .streamFactoryFactory(NettyStreamFactoryFactory.builder()
@@ -105,9 +115,9 @@ public class MongoContext {
 
     public Mono<Void> destroy(long timeoutMillis) {
         client.close();
-        Future<?> future = eventLoopGroup.shutdownGracefully(0, timeoutMillis, TimeUnit.MILLISECONDS);
-        return Mono
-                .fromCompletionStage(Futures.toCompletionStage(future))
+        Future<?> future =
+                eventLoopGroup.shutdownGracefully(0, timeoutMillis, TimeUnit.MILLISECONDS);
+        return Mono.fromCompletionStage(Futures.toCompletionStage(future))
                 .then();
     }
 
@@ -118,8 +128,8 @@ public class MongoContext {
     public <T> MongoCollection<T> getCollection(Class<T> entityClass) {
         MongoCollection<T> collection = (MongoCollection<T>) classToCollection.get(entityClass);
         if (collection == null) {
-            return (MongoCollection<T>) registerEntitiesByClasses(List.of(entityClass))
-                    .get(0).second();
+            return (MongoCollection<T>) registerEntitiesByClasses(List.of(entityClass)).get(0)
+                    .second();
         }
         return collection;
     }
@@ -131,13 +141,14 @@ public class MongoContext {
     public <T> MongoEntity<T> getEntity(Class<T> entityClass) {
         MongoEntity<T> entity = (MongoEntity<T>) classToEntity.get(entityClass);
         if (entity == null) {
-            return (MongoEntity<T>) registerEntitiesByClasses(List.of(entityClass))
-                    .get(0).first();
+            return (MongoEntity<T>) registerEntitiesByClasses(List.of(entityClass)).get(0)
+                    .first();
         }
         return entity;
     }
 
-    public List<Pair<MongoEntity<?>, MongoCollection<?>>> registerEntitiesByClasses(Collection<Class<?>> classes) {
+    public List<Pair<MongoEntity<?>, MongoCollection<?>>> registerEntitiesByClasses(
+            Collection<Class<?>> classes) {
         List<MongoCollectionOptions> optionsList = new ArrayList<>(classes.size());
         for (Class<?> entityClass : classes) {
             MongoCollectionOptions options = MongoCollectionOptions.of(entityClass);

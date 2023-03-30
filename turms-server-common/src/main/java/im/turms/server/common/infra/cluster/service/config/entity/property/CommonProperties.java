@@ -17,6 +17,9 @@
 
 package im.turms.server.common.infra.cluster.service.config.entity.property;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
 import im.turms.server.common.infra.property.env.common.FlightRecorderProperties;
 import im.turms.server.common.infra.property.env.common.IpProperties;
 import im.turms.server.common.infra.property.env.common.ShutdownProperties;
@@ -27,8 +30,6 @@ import im.turms.server.common.infra.property.env.common.location.LocationPropert
 import im.turms.server.common.infra.property.env.common.logging.LoggingProperties;
 import im.turms.server.common.infra.property.env.common.plugin.PluginProperties;
 import im.turms.server.common.infra.property.env.common.security.SecurityProperties;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 
 /**
  * @author James Chen

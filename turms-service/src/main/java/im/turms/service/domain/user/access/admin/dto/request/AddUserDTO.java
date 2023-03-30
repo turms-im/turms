@@ -17,20 +17,19 @@
 
 package im.turms.service.domain.user.access.admin.dto.request;
 
+import java.util.Date;
+
 import im.turms.server.common.access.client.dto.constant.ProfileAccessStrategy;
 import im.turms.server.common.domain.common.access.dto.ControllerDTO;
 import im.turms.server.common.infra.security.SecurityValueConst;
 import im.turms.server.common.infra.security.SensitiveProperty;
-
-import java.util.Date;
 
 /**
  * @author James Chen
  */
 public record AddUserDTO(
         Long id,
-        @SensitiveProperty(SensitiveProperty.Access.ALLOW_DESERIALIZATION)
-        String password,
+        @SensitiveProperty(SensitiveProperty.Access.ALLOW_DESERIALIZATION) String password,
         String name,
         String intro,
         String profilePicture,
@@ -41,16 +40,25 @@ public record AddUserDTO(
 ) implements ControllerDTO {
     @Override
     public String toString() {
-        return "AddUserDTO[" +
-                "id=" + id +
-                ", password=" + SecurityValueConst.SENSITIVE_VALUE +
-                ", name=" + name +
-                ", intro=" + intro +
-                ", profilePicture=" + profilePicture +
-                ", profileAccessStrategy=" + profileAccessStrategy +
-                ", permissionGroupId=" + permissionGroupId +
-                ", registrationDate=" + registrationDate +
-                ", isActive=" + isActive +
-                ']';
+        return "AddUserDTO["
+                + "id="
+                + id
+                + ", password="
+                + SecurityValueConst.SENSITIVE_VALUE
+                + ", name="
+                + name
+                + ", intro="
+                + intro
+                + ", profilePicture="
+                + profilePicture
+                + ", profileAccessStrategy="
+                + profileAccessStrategy
+                + ", permissionGroupId="
+                + permissionGroupId
+                + ", registrationDate="
+                + registrationDate
+                + ", isActive="
+                + isActive
+                + ']';
     }
 }

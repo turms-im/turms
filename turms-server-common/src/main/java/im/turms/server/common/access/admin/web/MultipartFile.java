@@ -17,9 +17,9 @@
 
 package im.turms.server.common.access.admin.web;
 
-import io.netty.handler.codec.http.multipart.HttpData;
-
 import java.io.File;
+
+import io.netty.handler.codec.http.multipart.HttpData;
 
 /**
  * @param name     e.g. "file.123.jar"
@@ -43,10 +43,14 @@ public record MultipartFile(
 
     @Override
     public String toString() {
-        return "MultipartFile{" +
-                "name='" + name + '\'' +
-                "basename='" + basename + '\'' +
-                '}';
+        return "MultipartFile{"
+                + "name='"
+                + name
+                + '\''
+                + "basename='"
+                + basename
+                + '\''
+                + '}';
     }
 
 }

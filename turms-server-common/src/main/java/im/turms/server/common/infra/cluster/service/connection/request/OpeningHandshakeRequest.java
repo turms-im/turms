@@ -17,11 +17,12 @@
 
 package im.turms.server.common.infra.cluster.service.connection.request;
 
+import lombok.Data;
+import org.springframework.context.ApplicationContext;
+
 import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.cluster.service.rpc.NodeTypeToHandleRpc;
 import im.turms.server.common.infra.cluster.service.rpc.dto.RpcRequest;
-import lombok.Data;
-import org.springframework.context.ApplicationContext;
 
 /**
  * @author James Chen
@@ -70,7 +71,8 @@ public class OpeningHandshakeRequest extends RpcRequest<Byte> {
 
     @Override
     public Byte call() {
-        return node.getConnectionService().handleHandshakeRequest(getConnection(), nodeId);
+        return node.getConnectionService()
+                .handleHandshakeRequest(getConnection(), nodeId);
     }
 
 }

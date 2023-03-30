@@ -17,11 +17,11 @@
 
 package im.turms.plugin.antispam.ac;
 
-import lombok.SneakyThrows;
-import org.junit.jupiter.api.Test;
-
 import java.nio.file.Files;
 import java.nio.file.Path;
+
+import lombok.SneakyThrows;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

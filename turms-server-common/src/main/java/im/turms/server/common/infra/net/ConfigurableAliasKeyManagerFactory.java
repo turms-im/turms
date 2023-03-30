@@ -25,12 +25,18 @@ import javax.net.ssl.KeyManagerFactory;
  */
 public class ConfigurableAliasKeyManagerFactory extends KeyManagerFactory {
 
-    ConfigurableAliasKeyManagerFactory(String alias, String algorithm) throws NoSuchAlgorithmException {
+    ConfigurableAliasKeyManagerFactory(String alias, String algorithm)
+            throws NoSuchAlgorithmException {
         this(KeyManagerFactory.getInstance(algorithm), alias, algorithm);
     }
 
-    private ConfigurableAliasKeyManagerFactory(KeyManagerFactory delegate, String alias, String algorithm) {
-        super(new ConfigurableAliasKeyManagerFactorySpi(delegate, alias), delegate.getProvider(), algorithm);
+    private ConfigurableAliasKeyManagerFactory(
+            KeyManagerFactory delegate,
+            String alias,
+            String algorithm) {
+        super(new ConfigurableAliasKeyManagerFactorySpi(delegate, alias),
+                delegate.getProvider(),
+                algorithm);
     }
 
 }

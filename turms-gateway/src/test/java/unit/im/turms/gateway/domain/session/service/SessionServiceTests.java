@@ -17,6 +17,13 @@
 
 package unit.im.turms.gateway.domain.session.service;
 
+import java.util.HashMap;
+
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
+
 import im.turms.gateway.access.client.common.UserSession;
 import im.turms.gateway.domain.observation.service.MetricsService;
 import im.turms.gateway.domain.session.manager.UserSessionsManager;
@@ -39,14 +46,8 @@ import im.turms.server.common.infra.plugin.PluginManager;
 import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.gateway.GatewayProperties;
-import im.turms.server.common.infra.property.env.gateway.session.SessionProperties;
 import im.turms.server.common.infra.property.env.gateway.identityaccessmanagement.IdentityAccessManagementProperties;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
-import reactor.core.publisher.Mono;
-import reactor.test.StepVerifier;
-
-import java.util.HashMap;
+import im.turms.server.common.infra.property.env.gateway.session.SessionProperties;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
@@ -81,37 +82,44 @@ class SessionServiceTests {
                 null,
                 null);
         StepVerifier.create(result)
-                .expectErrorMatches(throwable -> ThrowableUtil.isStatusCode(throwable, ResponseStatusCode.UNSUPPORTED_CLIENT_VERSION))
+                .expectErrorMatches(throwable -> ThrowableUtil.isStatusCode(throwable,
+                        ResponseStatusCode.UNSUPPORTED_CLIENT_VERSION))
                 .verify();
     }
 
     @Test
     void handleLoginRequest_shouldReturnForbiddenDeviceType_ifIsForbiddenDeviceType() {
         SessionService service = newSessionService(true, true, true, true);
-        Mono<UserSession> result = service.handleLoginRequest(version, ip, userId, null, deviceType, null, null, null, null);
+        Mono<UserSession> result = service
+                .handleLoginRequest(version, ip, userId, null, deviceType, null, null, null, null);
 
         StepVerifier.create(result)
-                .expectErrorMatches(throwable -> ThrowableUtil.isStatusCode(throwable, ResponseStatusCode.LOGIN_FROM_FORBIDDEN_DEVICE_TYPE))
+                .expectErrorMatches(throwable -> ThrowableUtil.isStatusCode(throwable,
+                        ResponseStatusCode.LOGIN_FROM_FORBIDDEN_DEVICE_TYPE))
                 .verify();
     }
 
     @Test
     void handleLoginRequest_shouldReturnUnauthorized_ifIsUnauthorized() {
         SessionService service = newSessionService(true, true, false, false);
-        Mono<UserSession> result = service.handleLoginRequest(version, ip, userId, null, deviceType, null, null, null, null);
+        Mono<UserSession> result = service
+                .handleLoginRequest(version, ip, userId, null, deviceType, null, null, null, null);
 
         StepVerifier.create(result)
-                .expectErrorMatches(throwable -> ThrowableUtil.isStatusCode(throwable, ResponseStatusCode.LOGIN_AUTHENTICATION_FAILED))
+                .expectErrorMatches(throwable -> ThrowableUtil.isStatusCode(throwable,
+                        ResponseStatusCode.LOGIN_AUTHENTICATION_FAILED))
                 .verify();
     }
 
     @Test
     void handleLoginRequest_shouldReturnNotActive_ifUserIsNotActive() {
         SessionService service = newSessionService(true, false, false, false);
-        Mono<UserSession> result = service.handleLoginRequest(version, ip, userId, null, deviceType, null, null, null, null);
+        Mono<UserSession> result = service
+                .handleLoginRequest(version, ip, userId, null, deviceType, null, null, null, null);
 
         StepVerifier.create(result)
-                .expectErrorMatches(throwable -> ThrowableUtil.isStatusCode(throwable, ResponseStatusCode.LOGGING_IN_USER_NOT_ACTIVE))
+                .expectErrorMatches(throwable -> ThrowableUtil.isStatusCode(throwable,
+                        ResponseStatusCode.LOGGING_IN_USER_NOT_ACTIVE))
                 .verify();
     }
 
@@ -119,7 +127,8 @@ class SessionServiceTests {
     @Test
     void handleLoginRequest_shouldCreateSession_ifUserIsActiveAndAuthenticated() {
         SessionService service = newSessionService(true, true, true, false);
-        Mono<UserSession> result = service.handleLoginRequest(version, ip, userId, null, deviceType, null, null, null, null);
+        Mono<UserSession> result = service
+                .handleLoginRequest(version, ip, userId, null, deviceType, null, null, null, null);
 
         StepVerifier.create(result)
                 .expectNextCount(1)
@@ -130,7 +139,8 @@ class SessionServiceTests {
     @Test
     void closeLocalSession_shouldSucceed() {
         SessionService service = newSessionService();
-        Mono<Integer> result = service.closeLocalSession(userId, deviceType, SessionCloseStatus.SERVER_ERROR);
+        Mono<Integer> result =
+                service.closeLocalSession(userId, deviceType, SessionCloseStatus.SERVER_ERROR);
 
         StepVerifier.create(result)
                 .expectNext(1)
@@ -142,12 +152,11 @@ class SessionServiceTests {
     void onSessionEstablished_shouldSendSessionNotification_ifIsNotifyClientsOfSessionInfoAfterConnected() {
         SessionService service = newSessionService();
         UserSessionsManager manager = mock(UserSessionsManager.class);
-        when(manager.pushSessionNotification(any(), any()))
-                .thenReturn(true);
+        when(manager.pushSessionNotification(any(), any())).thenReturn(true);
         service.onSessionEstablished(manager, deviceType);
 
-        boolean hasBeenCalled = verify(manager, times(1))
-                .pushSessionNotification(eq(deviceType), any());
+        boolean hasBeenCalled =
+                verify(manager, times(1)).pushSessionNotification(eq(deviceType), any());
         assertThat(hasBeenCalled).isTrue();
     }
 
@@ -155,7 +164,13 @@ class SessionServiceTests {
     void handleHeartbeatRequest_shouldSucceed() {
         SessionService service = newSessionService();
         assertThatNoException()
-                .isThrownBy(() -> service.handleHeartbeatUpdateRequest(new UserSession(version, TurmsRequestTypePool.ALL, userId, deviceType, null, null)));
+                .isThrownBy(() -> service.handleHeartbeatUpdateRequest(new UserSession(
+                        version,
+                        TurmsRequestTypePool.ALL,
+                        userId,
+                        deviceType,
+                        null,
+                        null)));
     }
 
     @Test
@@ -184,17 +199,16 @@ class SessionServiceTests {
                 .gateway(new GatewayProperties().toBuilder()
                         .session(new SessionProperties().toBuilder()
                                 .notifyClientsOfSessionInfoAfterConnected(true)
-                                .identityAccessManagement(new IdentityAccessManagementProperties().toBuilder()
-                                        .enabled(enableAuthentication)
-                                        .build())
+                                .identityAccessManagement(
+                                        new IdentityAccessManagementProperties().toBuilder()
+                                                .enabled(enableAuthentication)
+                                                .build())
                                 .build())
                         .build())
                 .build();
         TurmsPropertiesManager propertiesManager = mock(TurmsPropertiesManager.class);
-        when(propertiesManager.getGlobalProperties())
-                .thenReturn(properties);
-        when(propertiesManager.getLocalProperties())
-                .thenReturn(properties);
+        when(propertiesManager.getGlobalProperties()).thenReturn(properties);
+        when(propertiesManager.getLocalProperties()).thenReturn(properties);
 
         PluginManager pluginManager = mock(PluginManager.class);
         when(pluginManager.invokeExtensionPointsSimultaneously(any(), any(), any()))
@@ -203,24 +217,23 @@ class SessionServiceTests {
         SessionLocationService locationService = mock(SessionLocationService.class);
 
         UserService userService = mock(UserService.class);
-        when(userService.isActiveAndNotDeleted(any()))
-                .thenReturn(Mono.just(isActiveAndNotDeleted));
-        when(userService.authenticate(any(), any()))
-                .thenReturn(Mono.just(isAuthenticated));
+        when(userService.isActiveAndNotDeleted(any())).thenReturn(Mono.just(isActiveAndNotDeleted));
+        when(userService.authenticate(any(), any())).thenReturn(Mono.just(isAuthenticated));
 
         UserStatusService userStatusService = mock(UserStatusService.class);
-        when(userStatusService.updateOnlineUsersTtl(any(), anyInt()))
-                .thenReturn(Mono.empty());
-        when(userStatusService.fetchUserSessionsStatus(any()))
-                .thenReturn(Mono.just(new UserSessionsStatus(userId, UserStatus.OFFLINE, new HashMap<>())));
+        when(userStatusService.updateOnlineUsersTtl(any(), anyInt())).thenReturn(Mono.empty());
+        when(userStatusService.fetchUserSessionsStatus(any())).thenReturn(
+                Mono.just(new UserSessionsStatus(userId, UserStatus.OFFLINE, new HashMap<>())));
         when(userStatusService.removeStatusByUserIdAndDeviceTypes(any(), any()))
                 .thenReturn(Mono.just(true));
 
-        UserSimultaneousLoginService userSimultaneousLoginService = mock(UserSimultaneousLoginService.class);
+        UserSimultaneousLoginService userSimultaneousLoginService =
+                mock(UserSimultaneousLoginService.class);
         when(userSimultaneousLoginService.isForbiddenDeviceType(any()))
                 .thenReturn(isForbiddenDeviceType);
 
-        return new SessionService(node,
+        return new SessionService(
+                node,
                 mock(TurmsApplicationContext.class),
                 propertiesManager,
                 pluginManager,

@@ -17,6 +17,8 @@
 
 package im.turms.server.common.infra.exception;
 
+import jakarta.annotation.Nullable;
+
 /**
  * @author James Chen
  */
@@ -34,7 +36,7 @@ public class StacklessException extends RuntimeException {
         super(cause);
     }
 
-    public StacklessException(String message, Throwable cause) {
+    public StacklessException(String message, @Nullable Throwable cause) {
         super(message, cause);
     }
 

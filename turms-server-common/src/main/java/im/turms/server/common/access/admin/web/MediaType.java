@@ -21,8 +21,7 @@ import im.turms.server.common.infra.lang.StringUtil;
 
 /**
  * @author James Chen
- * @implNote The class drop the media type parameters
- * just because we don't need it currently
+ * @implNote The class drop the media type parameters just because we don't need it currently
  * @see <a href="https://www.iana.org/assignments/media-types/media-types.xhtml">Media Types</a>
  */
 public record MediaType(
@@ -37,7 +36,9 @@ public record MediaType(
             throw new IllegalArgumentException("The media type must not be blank");
         }
         int index = mediaType.indexOf(';');
-        String fullType = (index >= 0 ? mediaType.substring(0, index) : mediaType).trim();
+        String fullType = (index >= 0
+                ? mediaType.substring(0, index)
+                : mediaType).trim();
         if (fullType.isBlank()) {
             throw new IllegalArgumentException("The media type must not be blank");
         }
@@ -46,22 +47,33 @@ public record MediaType(
         }
         int subIndex = fullType.indexOf('/');
         if (subIndex == -1) {
-            throw new IllegalArgumentException("The media type \"" + mediaType + "\" must not contain \"/\"");
+            throw new IllegalArgumentException(
+                    "The media type \""
+                            + mediaType
+                            + "\" must not contain \"/\"");
         }
         if (subIndex == fullType.length() - 1) {
-            throw new IllegalArgumentException("The media type \"" + mediaType + "\" must not contain subtype after \"/\"");
+            throw new IllegalArgumentException(
+                    "The media type \""
+                            + mediaType
+                            + "\" must not contain subtype after \"/\"");
         }
         String type = fullType.substring(0, subIndex);
         String subtype = fullType.substring(subIndex + 1);
         if (WILDCARD_TYPE.equals(type) && !WILDCARD_TYPE.equals(subtype)) {
-            throw new IllegalArgumentException("The wildcard type is legal only in \"*/*\", but got: \"" + mediaType + "\"");
+            throw new IllegalArgumentException(
+                    "The wildcard type is legal only in \"*/*\", but got: \""
+                            + mediaType
+                            + "\"");
         }
         return new MediaType(type, subtype);
     }
 
     @Override
     public String toString() {
-        return type + "/" + subtype;
+        return type
+                + "/"
+                + subtype;
     }
 
     public boolean isWildcardType() {

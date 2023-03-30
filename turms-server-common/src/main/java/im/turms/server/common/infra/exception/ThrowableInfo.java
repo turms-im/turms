@@ -40,11 +40,11 @@ public record ThrowableInfo(
             // because if it is an exception caused by the illegal args provided
             // by the server, it should recover in the upstream rather than
             // passing down DuplicateKeyException
-            return new ThrowableInfo(ResponseStatusCode.RECORD_CONTAINS_DUPLICATE_KEY,
+            return new ThrowableInfo(
+                    ResponseStatusCode.RECORD_CONTAINS_DUPLICATE_KEY,
                     e.getMessage());
         } else if (throwable instanceof ResourceNotFoundException e) {
-            return new ThrowableInfo(ResponseStatusCode.RESOURCE_NOT_FOUND,
-                    e.getMessage());
+            return new ThrowableInfo(ResponseStatusCode.RESOURCE_NOT_FOUND, e.getMessage());
         } else if (throwable instanceof ExtensionPointExecutionException e) {
             return get(e.getCause());
         }

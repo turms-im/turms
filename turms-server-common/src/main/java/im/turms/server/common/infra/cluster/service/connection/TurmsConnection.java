@@ -17,13 +17,14 @@
 
 package im.turms.server.common.infra.cluster.service.connection;
 
-import im.turms.server.common.infra.cluster.service.discovery.MemberConnectionListener;
-import lombok.Data;
-import reactor.netty.channel.ChannelOperations;
-
 import java.util.Collections;
 import java.util.List;
 import jakarta.annotation.Nullable;
+
+import lombok.Data;
+import reactor.netty.channel.ChannelOperations;
+
+import im.turms.server.common.infra.cluster.service.discovery.MemberConnectionListener;
 
 /**
  * @author James Chen
@@ -31,17 +32,16 @@ import jakarta.annotation.Nullable;
 @Data
 public class TurmsConnection {
     /**
-     * Is null when the connection is accepted on the server side
-     * but no handshake request is accepted.
-     * For the connection client, it is never null.
+     * Is null when the connection is accepted on the server side but no handshake request is
+     * accepted. For the connection client, it is never null.
      */
     @Nullable
     private String nodeId;
 
     private final ChannelOperations<?, ?> connection;
     /**
-     * True if it sent a closing handshake request on the client side,
-     * or receives a closing handshake request on the server side.
+     * True if it sent a closing handshake request on the client side, or receives a closing
+     * handshake request on the server side.
      */
     private boolean isClosing;
 
@@ -50,14 +50,17 @@ public class TurmsConnection {
 
     private final List<MemberConnectionListener> listeners;
 
-    public TurmsConnection(@Nullable String nodeId,
-                           ChannelOperations<?, ?> connection,
-                           boolean isLocalNodeClient,
-                           List<MemberConnectionListener> listeners) {
+    public TurmsConnection(
+            @Nullable String nodeId,
+            ChannelOperations<?, ?> connection,
+            boolean isLocalNodeClient,
+            List<MemberConnectionListener> listeners) {
         this.nodeId = nodeId;
         this.connection = connection;
         this.isLocalNodeClient = isLocalNodeClient;
-        this.listeners = listeners == null ? Collections.emptyList() : listeners;
+        this.listeners = listeners == null
+                ? Collections.emptyList()
+                : listeners;
 
         lastKeepaliveTimestamp = System.currentTimeMillis();
         isClosing = false;

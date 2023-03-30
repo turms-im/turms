@@ -17,12 +17,12 @@
 
 package im.turms.server.common.infra.proto;
 
+import java.nio.ByteBuffer;
+
 import com.google.protobuf.CodedOutputStream;
 import com.google.protobuf.MessageLite;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
-
-import java.nio.ByteBuffer;
 
 /**
  * @author James Chen

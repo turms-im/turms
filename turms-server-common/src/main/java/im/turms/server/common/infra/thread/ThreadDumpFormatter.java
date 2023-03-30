@@ -17,12 +17,6 @@
 
 package im.turms.server.common.infra.thread;
 
-import im.turms.server.common.infra.lang.NumberFormatter;
-import im.turms.server.common.infra.lang.StringUtil;
-import im.turms.server.common.infra.time.DateUtil;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.PooledByteBufAllocator;
-
 import java.lang.management.LockInfo;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MonitorInfo;
@@ -30,6 +24,13 @@ import java.lang.management.RuntimeMXBean;
 import java.lang.management.ThreadInfo;
 import java.util.ArrayList;
 import java.util.List;
+
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.PooledByteBufAllocator;
+
+import im.turms.server.common.infra.lang.NumberFormatter;
+import im.turms.server.common.infra.lang.StringUtil;
+import im.turms.server.common.infra.time.DateUtil;
 
 /**
  * @author James Chen
@@ -41,12 +42,15 @@ public class ThreadDumpFormatter {
     private static final byte[] LOCK_INFO_BEFORE = StringUtil.getBytes("> (a ");
     private static final byte[] LOCKED = StringUtil.getBytes("\t- Locked ");
     private static final byte[] LOCKED_FOR_MONITOR = StringUtil.getBytes("\t- locked ");
-    private static final byte[] LOCKED_OWNABLE_SYNCHRONIZERS = StringUtil.getBytes("   Locked ownable synchronizers:\n");
+    private static final byte[] LOCKED_OWNABLE_SYNCHRONIZERS =
+            StringUtil.getBytes("   Locked ownable synchronizers:\n");
     private static final byte[] NONE = StringUtil.getBytes("\t- None\n");
     private static final byte[] OWNED_BY = StringUtil.getBytes(" owned by \"");
-    private static final byte[] PARKING_TO_WAIT_FOR = StringUtil.getBytes("\t- parking to wait for %s\n");
+    private static final byte[] PARKING_TO_WAIT_FOR =
+            StringUtil.getBytes("\t- parking to wait for %s\n");
     private static final byte[] THREAD = StringUtil.getBytes(" - Thread t@");
-    private static final byte[] THREAD_STATE_CLASS_NAME = StringUtil.getBytes(Thread.State.class.getCanonicalName());
+    private static final byte[] THREAD_STATE_CLASS_NAME =
+            StringUtil.getBytes(Thread.State.class.getCanonicalName());
     private static final byte[] THREE_SPACES = StringUtil.getBytes("   ");
     private static final byte[] THREAD_T = StringUtil.getBytes("\" t@");
     private static final byte[] WAITING_ON = StringUtil.getBytes("\t- waiting on ");
@@ -68,8 +72,7 @@ public class ThreadDumpFormatter {
 
     public static ByteBuf format(ThreadInfo[] threads) {
         ByteBuf buffer = PooledByteBufAllocator.DEFAULT.directBuffer(threads.length * 512);
-        buffer
-                .writeBytes(DateUtil.toBytes(System.currentTimeMillis()))
+        buffer.writeBytes(DateUtil.toBytes(System.currentTimeMillis()))
                 .writeByte('\n')
                 .writeBytes(FULL_THREAD_DUMP)
                 .writeByte('\n');
@@ -79,8 +82,9 @@ public class ThreadDumpFormatter {
         return buffer;
     }
 
-    private static List<MonitorInfo> getLockedMonitorsForDepth(MonitorInfo[] lockedMonitors,
-                                                               int depth) {
+    private static List<MonitorInfo> getLockedMonitorsForDepth(
+            MonitorInfo[] lockedMonitors,
+            int depth) {
         List<MonitorInfo> monitors = new ArrayList<>(lockedMonitors.length);
         for (MonitorInfo monitor : lockedMonitors) {
             if (monitor.getLockedStackDepth() == depth) {
@@ -91,8 +95,7 @@ public class ThreadDumpFormatter {
     }
 
     private static void writeThread(ByteBuf buffer, ThreadInfo info) {
-        buffer
-                .writeByte('\"')
+        buffer.writeByte('\"')
                 .writeBytes(StringUtil.getBytes(info.getThreadName()))
                 .writeByte('\"')
                 .writeBytes(THREAD)
@@ -102,7 +105,8 @@ public class ThreadDumpFormatter {
                 .writeBytes(THREAD_STATE_CLASS_NAME)
                 .writeByte(':')
                 .writeByte(' ')
-                .writeBytes(StringUtil.getBytes(info.getThreadState().toString()));
+                .writeBytes(StringUtil.getBytes(info.getThreadState()
+                        .toString()));
         writeStackTrace(buffer, info, info.getLockedMonitors());
         buffer.writeByte('\n');
         writeLockedOwnableSynchronizers(buffer, info);
@@ -111,15 +115,17 @@ public class ThreadDumpFormatter {
 
     private static void writeLockInfo(ByteBuf buffer, LockInfo lockInfo) {
         buffer.writeByte('<')
-                .writeBytes(StringUtil.getBytes(Integer.toHexString(lockInfo.getIdentityHashCode())))
+                .writeBytes(
+                        StringUtil.getBytes(Integer.toHexString(lockInfo.getIdentityHashCode())))
                 .writeBytes(LOCK_INFO_BEFORE)
                 .writeBytes(StringUtil.getBytes(lockInfo.getClassName()))
                 .writeByte(')');
     }
 
-    private static void writeStackTrace(ByteBuf buffer,
-                                        ThreadInfo info,
-                                        MonitorInfo[] lockedMonitors) {
+    private static void writeStackTrace(
+            ByteBuf buffer,
+            ThreadInfo info,
+            MonitorInfo[] lockedMonitors) {
         int depth = 0;
         for (StackTraceElement element : info.getStackTrace()) {
             writeStackTraceElement(buffer,
@@ -131,17 +137,21 @@ public class ThreadDumpFormatter {
         }
     }
 
-    private static void writeStackTraceElement(ByteBuf buffer,
-                                               StackTraceElement element,
-                                               ThreadInfo info,
-                                               List<MonitorInfo> lockedMonitors,
-                                               boolean firstElement) {
+    private static void writeStackTraceElement(
+            ByteBuf buffer,
+            StackTraceElement element,
+            ThreadInfo info,
+            List<MonitorInfo> lockedMonitors,
+            boolean firstElement) {
         buffer.writeBytes(AT)
                 .writeBytes(StringUtil.getBytes(element.toString()))
                 .writeByte('\n');
         LockInfo lockInfo = info.getLockInfo();
         if (firstElement && lockInfo != null) {
-            if (element.getClassName().equals(Object.class.getName()) && element.getMethodName().equals("wait")) {
+            if (element.getClassName()
+                    .equals(Object.class.getName())
+                    && element.getMethodName()
+                            .equals("wait")) {
                 buffer.writeBytes(WAITING_ON);
                 writeLockInfo(buffer, lockInfo);
                 buffer.writeByte('\n');
@@ -164,8 +174,9 @@ public class ThreadDumpFormatter {
         writeMonitors(buffer, lockedMonitors);
     }
 
-    private static void writeMonitors(ByteBuf buffer,
-                                      List<MonitorInfo> lockedMonitorsAtCurrentDepth) {
+    private static void writeMonitors(
+            ByteBuf buffer,
+            List<MonitorInfo> lockedMonitorsAtCurrentDepth) {
         for (MonitorInfo lockedMonitor : lockedMonitorsAtCurrentDepth) {
             buffer.writeBytes(LOCKED_FOR_MONITOR);
             writeLockInfo(buffer, lockedMonitor);
@@ -173,8 +184,7 @@ public class ThreadDumpFormatter {
         }
     }
 
-    private static void writeLockedOwnableSynchronizers(ByteBuf buffer,
-                                                        ThreadInfo info) {
+    private static void writeLockedOwnableSynchronizers(ByteBuf buffer, ThreadInfo info) {
         buffer.writeBytes(LOCKED_OWNABLE_SYNCHRONIZERS);
         LockInfo[] lockedSynchronizers = info.getLockedSynchronizers();
         if (lockedSynchronizers == null || lockedSynchronizers.length == 0) {

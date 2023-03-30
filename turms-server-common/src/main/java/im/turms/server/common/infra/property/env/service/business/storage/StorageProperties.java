@@ -17,12 +17,13 @@
 
 package im.turms.server.common.infra.property.env.service.business.storage;
 
-import im.turms.server.common.access.admin.web.MediaTypeConst;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
+
+import im.turms.server.common.access.admin.web.MediaTypeConst;
 
 /**
  * There properties are "recommended" and optional for plugin providers to implement
@@ -36,14 +37,12 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
 public class StorageProperties {
 
     @NestedConfigurationProperty
-    private StorageItemProperties userProfilePicture = new StorageItemProperties()
-            .toBuilder()
+    private StorageItemProperties userProfilePicture = new StorageItemProperties().toBuilder()
             .allowedContentType(MediaTypeConst.IMAGE)
             .build();
 
     @NestedConfigurationProperty
-    private StorageItemProperties groupProfilePicture = new StorageItemProperties()
-            .toBuilder()
+    private StorageItemProperties groupProfilePicture = new StorageItemProperties().toBuilder()
             .allowedContentType(MediaTypeConst.IMAGE)
             .build();
 

@@ -17,6 +17,13 @@
 
 package im.turms.server.common.infra.client;
 
+import jakarta.annotation.Nullable;
+
+import reactor.core.publisher.Mono;
+import reactor.netty.channel.ChannelOperations;
+import reactor.netty.resources.LoopResources;
+import reactor.netty.tcp.TcpClient;
+
 import im.turms.server.common.access.client.codec.CodecFactory;
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
@@ -28,12 +35,6 @@ import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.proto.ProtoFormatter;
 import im.turms.server.common.infra.random.RandomUtil;
-import reactor.core.publisher.Mono;
-import reactor.netty.channel.ChannelOperations;
-import reactor.netty.resources.LoopResources;
-import reactor.netty.tcp.TcpClient;
-
-import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen
@@ -73,23 +74,30 @@ public class TurmsTcpClient extends TurmsClient {
 
                     connection
                             // Inbound
-                            .addHandlerLast("varintLengthBasedFrameDecoder", CodecFactory.getVarintLengthBasedFrameDecoder())
-                            .addHandlerLast("turmsNotificationDecoder", CodecFactory.getTurmsNotificationDecoder())
+                            .addHandlerLast("varintLengthBasedFrameDecoder",
+                                    CodecFactory.getVarintLengthBasedFrameDecoder())
+                            .addHandlerLast("turmsNotificationDecoder",
+                                    CodecFactory.getTurmsNotificationDecoder())
                             // Outbound
-                            .addHandlerFirst("protobufFrameEncoder", CodecFactory.getProtobufFrameEncoder())
-                            .addHandlerFirst("varintLengthFieldPrepender", CodecFactory.getVarintLengthFieldPrepender());
+                            .addHandlerFirst("protobufFrameEncoder",
+                                    CodecFactory.getProtobufFrameEncoder())
+                            .addHandlerFirst("varintLengthFieldPrepender",
+                                    CodecFactory.getVarintLengthFieldPrepender());
 
-                    connection
-                            .receiveObject()
+                    connection.receiveObject()
                             .cast(TurmsNotification.class)
                             .subscribe(this::handleResponse,
-                                    t -> LOGGER.error("The turms client is closed unexpectedly", t));
+                                    t -> LOGGER.error("The turms client is closed unexpectedly",
+                                            t));
                 })
                 .then();
     }
 
     @Override
-    public Mono<TurmsNotification> login(long userId, DeviceType deviceType, @Nullable String password) {
+    public Mono<TurmsNotification> login(
+            long userId,
+            DeviceType deviceType,
+            @Nullable String password) {
         this.userId = userId;
         this.deviceType = deviceType;
         return sendRequest(TurmsRequest.newBuilder()
@@ -101,7 +109,9 @@ public class TurmsTcpClient extends TurmsClient {
                         .build()))
                 .flatMap(n -> {
                     if (n.getCode() != ResponseStatusCode.OK.getBusinessCode()) {
-                        return Mono.error(new RuntimeException("Failed to log in: " + ProtoFormatter.toJSON5(n, 128)));
+                        return Mono.error(new RuntimeException(
+                                "Failed to log in: "
+                                        + ProtoFormatter.toJSON5(n, 128)));
                     }
                     return Mono.just(n);
                 });
@@ -138,8 +148,7 @@ public class TurmsTcpClient extends TurmsClient {
         if (connection.isDisposed()) {
             return Mono.error(new IllegalStateException("The connection has been closed"));
         }
-        return connection
-                .sendObject(request)
+        return connection.sendObject(request)
                 .then()
                 .then(Mono.defer(() -> waitForResponse(request)));
     }

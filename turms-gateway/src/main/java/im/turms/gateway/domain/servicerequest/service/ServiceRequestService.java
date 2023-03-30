@@ -17,6 +17,11 @@
 
 package im.turms.gateway.domain.servicerequest.service;
 
+import jakarta.validation.constraints.NotNull;
+
+import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
+
 import im.turms.gateway.access.client.common.UserSession;
 import im.turms.server.common.access.client.dto.ClientMessagePool;
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
@@ -25,10 +30,6 @@ import im.turms.server.common.access.servicerequest.dto.ServiceRequest;
 import im.turms.server.common.access.servicerequest.dto.ServiceResponse;
 import im.turms.server.common.access.servicerequest.rpc.HandleServiceRequest;
 import im.turms.server.common.infra.cluster.node.Node;
-import org.springframework.stereotype.Service;
-import reactor.core.publisher.Mono;
-
-import jakarta.validation.constraints.NotNull;
 
 /**
  * @author James Chen
@@ -36,7 +37,8 @@ import jakarta.validation.constraints.NotNull;
 @Service
 public class ServiceRequestService {
 
-    private static final ServiceResponse REQUEST_RESPONSE_NO_CONTENT = new ServiceResponse(null, ResponseStatusCode.NO_CONTENT, null);
+    private static final ServiceResponse REQUEST_RESPONSE_NO_CONTENT =
+            new ServiceResponse(null, ResponseStatusCode.NO_CONTENT, null);
 
     private final Node node;
 
@@ -48,27 +50,37 @@ public class ServiceRequestService {
      * @return a response to the request.
      * @implNote The method ensures turmsRequestBuffer in serviceRequest will be released by 1
      */
-    public Mono<TurmsNotification> handleServiceRequest(UserSession session, ServiceRequest serviceRequest) {
+    public Mono<TurmsNotification> handleServiceRequest(
+            UserSession session,
+            ServiceRequest serviceRequest) {
         try {
             // Update request timestamp
             session.setLastRequestTimestampMillis(System.currentTimeMillis());
             // Forward request
-            serviceRequest.getTurmsRequestBuffer().retain();
+            serviceRequest.getTurmsRequestBuffer()
+                    .retain();
             HandleServiceRequest request = new HandleServiceRequest(serviceRequest);
-            return node.getRpcService().requestResponse(request)
+            return node.getRpcService()
+                    .requestResponse(request)
                     .defaultIfEmpty(REQUEST_RESPONSE_NO_CONTENT)
-                    .map(response -> getNotificationFromResponse(response, serviceRequest.getRequestId()));
+                    .map(response -> getNotificationFromResponse(response,
+                            serviceRequest.getRequestId()));
         } catch (Exception e) {
             return Mono.error(e);
         } finally {
-            serviceRequest.getTurmsRequestBuffer().release();
+            serviceRequest.getTurmsRequestBuffer()
+                    .release();
         }
     }
 
-    private TurmsNotification getNotificationFromResponse(@NotNull ServiceResponse response, long requestId) {
+    private TurmsNotification getNotificationFromResponse(
+            @NotNull ServiceResponse response,
+            long requestId) {
         ResponseStatusCode code = response.code();
         if (code == null) {
-            throw new IllegalArgumentException("The business code should not be null in the service response: " + response);
+            throw new IllegalArgumentException(
+                    "The business code should not be null in the service response: "
+                            + response);
         }
         TurmsNotification.Builder builder = ClientMessagePool.getTurmsNotificationBuilder();
         String reason = response.reason();
@@ -79,8 +91,7 @@ public class ServiceRequestService {
         if (dataForRequester != null) {
             builder.setData(dataForRequester);
         }
-        return builder
-                .setTimestamp(System.currentTimeMillis())
+        return builder.setTimestamp(System.currentTimeMillis())
                 .setCode(code.getBusinessCode())
                 .setRequestId(requestId)
                 .build();

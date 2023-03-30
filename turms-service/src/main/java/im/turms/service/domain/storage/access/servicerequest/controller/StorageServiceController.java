@@ -17,6 +17,14 @@
 
 package im.turms.service.domain.storage.access.servicerequest.controller;
 
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.springframework.stereotype.Controller;
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.access.client.dto.ClientMessagePool;
 import im.turms.server.common.access.client.dto.constant.StorageResourceType;
 import im.turms.server.common.access.client.dto.request.storage.DeleteResourceRequest;
@@ -33,13 +41,6 @@ import im.turms.service.domain.common.access.servicerequest.controller.BaseServi
 import im.turms.service.domain.storage.bo.StorageResourceInfo;
 import im.turms.service.domain.storage.service.StorageService;
 import im.turms.service.infra.proto.ProtoModelConvertor;
-import org.springframework.stereotype.Controller;
-import reactor.core.publisher.Mono;
-
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.DELETE_RESOURCE_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_MESSAGE_ATTACHMENT_INFOS_REQUEST;
@@ -62,12 +63,19 @@ public class StorageServiceController extends BaseServiceController {
     @ServiceRequestMapping(DELETE_RESOURCE_REQUEST)
     public ClientRequestHandler handleDeleteResourceRequest() {
         return clientRequest -> {
-            DeleteResourceRequest request = clientRequest.turmsRequest().getDeleteResourceRequest();
+            DeleteResourceRequest request = clientRequest.turmsRequest()
+                    .getDeleteResourceRequest();
             StorageResourceType resourceType = request.getType();
-            Long resourceIdNum = request.hasIdNum() ? request.getIdNum() : null;
-            String resourceIdStr = request.hasIdStr() ? request.getIdStr() : null;
+            Long resourceIdNum = request.hasIdNum()
+                    ? request.getIdNum()
+                    : null;
+            String resourceIdStr = request.hasIdStr()
+                    ? request.getIdStr()
+                    : null;
             Map<String, String> extra = request.getExtraMap();
-            return storageService.deleteResource(clientRequest.userId(), resourceType, resourceIdNum, resourceIdStr, extra)
+            return storageService
+                    .deleteResource(clientRequest
+                            .userId(), resourceType, resourceIdNum, resourceIdStr, extra)
                     .thenReturn(RequestHandlerResultFactory.OK);
         };
     }
@@ -75,20 +83,24 @@ public class StorageServiceController extends BaseServiceController {
     @ServiceRequestMapping(QUERY_RESOURCE_UPLOAD_INFO_REQUEST)
     public ClientRequestHandler handleQueryResourceUploadInfoRequest() {
         return clientRequest -> {
-            QueryResourceUploadInfoRequest request = clientRequest.turmsRequest().getQueryResourceUploadInfoRequest();
+            QueryResourceUploadInfoRequest request = clientRequest.turmsRequest()
+                    .getQueryResourceUploadInfoRequest();
             StorageResourceType resourceType = request.getType();
-            Long resourceIdNum = request.hasIdNum() ? request.getIdNum() : null;
+            Long resourceIdNum = request.hasIdNum()
+                    ? request.getIdNum()
+                    : null;
             // Reserved ID
             // String resourceIdStr = request.hasIdStr() ? request.getIdStr() : null;
-            String name = request.hasName() ? request.getName() : null;
-            String mediaType = request.hasMediaType() ? request.getMediaType() : null;
+            String name = request.hasName()
+                    ? request.getName()
+                    : null;
+            String mediaType = request.hasMediaType()
+                    ? request.getMediaType()
+                    : null;
             Map<String, String> extra = request.getExtraMap();
-            return storageService.queryResourceUploadInfo(clientRequest.userId(),
-                            resourceType,
-                            resourceIdNum,
-                            name,
-                            mediaType,
-                            extra)
+            return storageService
+                    .queryResourceUploadInfo(clientRequest
+                            .userId(), resourceType, resourceIdNum, name, mediaType, extra)
                     .map(info -> RequestHandlerResultFactory.get(ClientMessagePool
                             .getTurmsNotificationDataBuilder()
                             .setStringsWithVersion(ClientMessagePool.getStringsWithVersionBuilder()
@@ -100,12 +112,19 @@ public class StorageServiceController extends BaseServiceController {
     @ServiceRequestMapping(QUERY_RESOURCE_DOWNLOAD_INFO_REQUEST)
     public ClientRequestHandler handleQueryResourceDownloadInfoRequest() {
         return clientRequest -> {
-            QueryResourceDownloadInfoRequest request = clientRequest.turmsRequest().getQueryResourceDownloadInfoRequest();
+            QueryResourceDownloadInfoRequest request = clientRequest.turmsRequest()
+                    .getQueryResourceDownloadInfoRequest();
             StorageResourceType resourceType = request.getType();
-            Long resourceIdNum = request.hasIdNum() ? request.getIdNum() : null;
-            String resourceIdStr = request.hasIdStr() ? request.getIdStr() : null;
+            Long resourceIdNum = request.hasIdNum()
+                    ? request.getIdNum()
+                    : null;
+            String resourceIdStr = request.hasIdStr()
+                    ? request.getIdStr()
+                    : null;
             Map<String, String> extra = request.getExtraMap();
-            return storageService.queryResourceDownloadInfo(clientRequest.userId(), resourceType, resourceIdNum, resourceIdStr, extra)
+            return storageService
+                    .queryResourceDownloadInfo(clientRequest
+                            .userId(), resourceType, resourceIdNum, resourceIdStr, extra)
                     .map(info -> RequestHandlerResultFactory.get(ClientMessagePool
                             .getTurmsNotificationDataBuilder()
                             .setStringsWithVersion(ClientMessagePool.getStringsWithVersionBuilder()
@@ -120,7 +139,8 @@ public class StorageServiceController extends BaseServiceController {
     @ServiceRequestMapping(UPDATE_MESSAGE_ATTACHMENT_INFO_REQUEST)
     public ClientRequestHandler handleUpdateMessageAttachmentInfoRequest() {
         return clientRequest -> {
-            UpdateMessageAttachmentInfoRequest request = clientRequest.turmsRequest().getUpdateMessageAttachmentInfoRequest();
+            UpdateMessageAttachmentInfoRequest request = clientRequest.turmsRequest()
+                    .getUpdateMessageAttachmentInfoRequest();
             Long requesterId = clientRequest.userId();
             Long attachmentIdNum = request.getAttachmentIdNum();
             String attachmentIdStr = request.getAttachmentIdStr();
@@ -148,15 +168,15 @@ public class StorageServiceController extends BaseServiceController {
             } else {
                 result = Mono.empty();
             }
-            return result
-                    .thenReturn(RequestHandlerResultFactory.OK);
+            return result.thenReturn(RequestHandlerResultFactory.OK);
         };
     }
 
     @ServiceRequestMapping(QUERY_MESSAGE_ATTACHMENT_INFOS_REQUEST)
     public ClientRequestHandler handleQueryMessageAttachmentInfosRequest() {
         return clientRequest -> {
-            QueryMessageAttachmentInfosRequest request = clientRequest.turmsRequest().getQueryMessageAttachmentInfosRequest();
+            QueryMessageAttachmentInfosRequest request = clientRequest.turmsRequest()
+                    .getQueryMessageAttachmentInfosRequest();
             Long requesterId = clientRequest.userId();
             Mono<List<StorageResourceInfo>> result;
             Date creationDateStart = request.hasCreationDateStart()
@@ -172,13 +192,19 @@ public class StorageServiceController extends BaseServiceController {
                             ? request.getAreSharedByMe()
                             : null;
                     result = storageService.queryMessageAttachmentInfosInPrivateConversations(
-                            requesterId, null, creationDateRange, areSharedByMe);
+                            requesterId,
+                            null,
+                            creationDateRange,
+                            areSharedByMe);
                 } else {
                     Set<Long> userIds = request.getUserIdsCount() > 0
                             ? CollectionUtil.newSet(request.getUserIdsList())
                             : null;
                     result = storageService.queryMessageAttachmentInfosInGroupConversations(
-                            requesterId, null, userIds, creationDateRange);
+                            requesterId,
+                            null,
+                            userIds,
+                            creationDateRange);
                 }
             } else {
                 boolean hasUserIds = request.getUserIdsCount() > 0;
@@ -188,25 +214,32 @@ public class StorageServiceController extends BaseServiceController {
                 if (request.getGroupIdsCount() > 0) {
                     Set<Long> groupIds = CollectionUtil.newSet(request.getGroupIdsList());
                     result = storageService.queryMessageAttachmentInfosInGroupConversations(
-                            requesterId, groupIds, userIds, creationDateRange);
+                            requesterId,
+                            groupIds,
+                            userIds,
+                            creationDateRange);
                 } else if (hasUserIds) {
                     Boolean areSharedByMe = request.hasAreSharedByMe()
                             ? request.getAreSharedByMe()
                             : null;
                     result = storageService.queryMessageAttachmentInfosInPrivateConversations(
-                            requesterId, userIds, creationDateRange, areSharedByMe);
+                            requesterId,
+                            userIds,
+                            creationDateRange,
+                            areSharedByMe);
                 } else {
-                    result = storageService.queryMessageAttachmentInfosUploadedByRequester(requesterId,
+                    result = storageService.queryMessageAttachmentInfosUploadedByRequester(
+                            requesterId,
                             creationDateRange);
                 }
             }
-            return result.map(infos -> RequestHandlerResultFactory
-                    .get(ClientMessagePool.getTurmsNotificationDataBuilder()
-                            .setStorageResourceInfos(ClientMessagePool.getStorageResourceInfosBuilder()
-                                    .addAllInfos(CollectionUtil
-                                            .transformAsList(infos, ProtoModelConvertor::storageResourceInfo2proto))
-                                    .build())
-                            .build()));
+            return result.map(infos -> RequestHandlerResultFactory.get(ClientMessagePool
+                    .getTurmsNotificationDataBuilder()
+                    .setStorageResourceInfos(ClientMessagePool.getStorageResourceInfosBuilder()
+                            .addAllInfos(CollectionUtil.transformAsList(infos,
+                                    ProtoModelConvertor::storageResourceInfo2proto))
+                            .build())
+                    .build()));
         };
     }
 

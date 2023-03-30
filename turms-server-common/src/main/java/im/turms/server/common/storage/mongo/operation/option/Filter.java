@@ -17,16 +17,6 @@
 
 package im.turms.server.common.storage.mongo.operation.option;
 
-import im.turms.server.common.access.client.dto.constant.RequestStatus;
-import im.turms.server.common.infra.collection.CollectionUtil;
-import im.turms.server.common.infra.time.DateRange;
-import im.turms.server.common.storage.mongo.codec.BsonValueEncoder;
-import org.bson.BsonArrayUtil;
-import org.bson.BsonDateTime;
-import org.bson.BsonDocument;
-import org.bson.BsonNull;
-import org.bson.BsonValue;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -34,6 +24,17 @@ import java.util.List;
 import java.util.Set;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
+
+import org.bson.BsonArrayUtil;
+import org.bson.BsonDateTime;
+import org.bson.BsonDocument;
+import org.bson.BsonNull;
+import org.bson.BsonValue;
+
+import im.turms.server.common.access.client.dto.constant.RequestStatus;
+import im.turms.server.common.infra.collection.CollectionUtil;
+import im.turms.server.common.infra.time.DateRange;
+import im.turms.server.common.storage.mongo.codec.BsonValueEncoder;
 
 /**
  * @author James Chen
@@ -51,9 +52,7 @@ public class Filter extends BaseBson {
     /**
      * [start, end)
      */
-    public Filter addBetweenIfNotNull(
-            @NotNull String key,
-            @Nullable DateRange dateRange) {
+    public Filter addBetweenIfNotNull(@NotNull String key, @Nullable DateRange dateRange) {
         if (dateRange != null) {
             Date start = dateRange.start();
             Date end = dateRange.end();
@@ -62,9 +61,9 @@ public class Filter extends BaseBson {
             } else if (start == null && end != null) {
                 document.append(key, new BsonDocument("$lt", new BsonDateTime(end.getTime())));
             } else if (start != null) {
-                document.append(key, new BsonDocument()
-                        .append("$gte", new BsonDateTime(start.getTime()))
-                        .append("$lt", new BsonDateTime(end.getTime())));
+                document.append(key,
+                        new BsonDocument().append("$gte", new BsonDateTime(start.getTime()))
+                                .append("$lt", new BsonDateTime(end.getTime())));
             }
         }
         return this;
@@ -77,14 +76,16 @@ public class Filter extends BaseBson {
 
     public Filter eqIfFalse(@NotNull String key, @Nullable Object value, boolean condition) {
         if (!condition) {
-            document.append(key, new BsonDocument("$eq", BsonValueEncoder.encodeSingleValue(value)));
+            document.append(key,
+                    new BsonDocument("$eq", BsonValueEncoder.encodeSingleValue(value)));
         }
         return this;
     }
 
     public Filter eqIfNotNull(@NotNull String key, @Nullable Object value) {
         if (value != null) {
-            document.append(key, new BsonDocument("$eq", BsonValueEncoder.encodeSingleValue(value)));
+            document.append(key,
+                    new BsonDocument("$eq", BsonValueEncoder.encodeSingleValue(value)));
         }
         return this;
     }
@@ -96,14 +97,17 @@ public class Filter extends BaseBson {
 
     public Filter gtIfNotNull(String key, @Nullable Object value) {
         if (value != null) {
-            document.append(key, new BsonDocument("$gt", BsonValueEncoder.encodeSingleValue(value)));
+            document.append(key,
+                    new BsonDocument("$gt", BsonValueEncoder.encodeSingleValue(value)));
         }
         return this;
     }
 
     public Filter gtOrNull(String key, Object value) {
-        or(Filter.newBuilder(1).eq(key, null),
-                Filter.newBuilder(1).gt(key, value));
+        or(Filter.newBuilder(1)
+                .eq(key, null),
+                Filter.newBuilder(1)
+                        .gt(key, value));
         return this;
     }
 
@@ -113,8 +117,10 @@ public class Filter extends BaseBson {
     }
 
     public Filter gteOrNull(String key, Object value) {
-        or(Filter.newBuilder(1).eq(key, null),
-                Filter.newBuilder(1).gte(key, value));
+        or(Filter.newBuilder(1)
+                .eq(key, null),
+                Filter.newBuilder(1)
+                        .gte(key, value));
         return this;
     }
 
@@ -141,8 +147,10 @@ public class Filter extends BaseBson {
     }
 
     public Filter ltOrNull(String key, Object value) {
-        or(Filter.newBuilder(1).eq(key, null),
-                Filter.newBuilder(1).lt(key, value));
+        or(Filter.newBuilder(1)
+                .eq(key, null),
+                Filter.newBuilder(1)
+                        .lt(key, value));
         return this;
     }
 
@@ -180,8 +188,7 @@ public class Filter extends BaseBson {
 
     // Expiration Support
 
-    public Filter isExpired(String creationDateFieldName,
-                            @Nullable Date expirationDate) {
+    public Filter isExpired(String creationDateFieldName, @Nullable Date expirationDate) {
         // If never expire
         if (expirationDate == null) {
             return this;
@@ -199,9 +206,10 @@ public class Filter extends BaseBson {
         return this;
     }
 
-    public Filter isExpiredOrNot(Set<RequestStatus> statuses,
-                                 String creationDateFieldName,
-                                 Date expirationDate) {
+    public Filter isExpiredOrNot(
+            Set<RequestStatus> statuses,
+            String creationDateFieldName,
+            Date expirationDate) {
         if (statuses == null) {
             return this;
         }
@@ -219,8 +227,7 @@ public class Filter extends BaseBson {
         return this;
     }
 
-    public Filter isNotExpired(String creationDateFieldName,
-                               @Nullable Date expirationDate) {
+    public Filter isNotExpired(String creationDateFieldName, @Nullable Date expirationDate) {
         // If never expire
         if (expirationDate == null) {
             return this;

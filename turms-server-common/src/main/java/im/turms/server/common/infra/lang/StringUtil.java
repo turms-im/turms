@@ -17,11 +17,6 @@
 
 package im.turms.server.common.infra.lang;
 
-import im.turms.server.common.infra.exception.IncompatibleJvmException;
-import im.turms.server.common.infra.reflect.ReflectionUtil;
-import im.turms.server.common.infra.unsafe.UnsafeUtil;
-import sun.misc.Unsafe;
-
 import java.lang.invoke.MethodHandle;
 import java.lang.reflect.Constructor;
 import java.nio.charset.StandardCharsets;
@@ -32,6 +27,12 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import jakarta.annotation.Nullable;
+
+import sun.misc.Unsafe;
+
+import im.turms.server.common.infra.exception.IncompatibleJvmException;
+import im.turms.server.common.infra.reflect.ReflectionUtil;
+import im.turms.server.common.infra.unsafe.UnsafeUtil;
 
 /**
  * @author James Chen
@@ -51,30 +52,38 @@ public final class StringUtil {
 
     static {
         try {
-            Constructor<String> constructor = String.class.getDeclaredConstructor(byte[].class, byte.class);
+            Constructor<String> constructor =
+                    String.class.getDeclaredConstructor(byte[].class, byte.class);
             NEW_STRING = ReflectionUtil.getConstructor(constructor);
         } catch (Exception e) {
-            throw new IncompatibleJvmException("Failed to get the constructor of the class: java.lang.String", e);
+            throw new IncompatibleJvmException(
+                    "Failed to get the constructor of the class: java.lang.String",
+                    e);
         }
         try {
             STRING_VALUE_OFFSET = UNSAFE.objectFieldOffset(String.class.getDeclaredField("value"));
         } catch (Exception e) {
-            throw new IncompatibleJvmException("Failed to get the offset of the field: java.lang.String#value", e);
+            throw new IncompatibleJvmException(
+                    "Failed to get the offset of the field: java.lang.String#value",
+                    e);
         }
         try {
             STRING_CODER_OFFSET = UNSAFE.objectFieldOffset(String.class.getDeclaredField("coder"));
         } catch (Exception e) {
-            throw new IncompatibleJvmException("Failed to get the offset of the field: java.lang.String#coder", e);
+            throw new IncompatibleJvmException(
+                    "Failed to get the offset of the field: java.lang.String#coder",
+                    e);
         }
         // Validate
         String expectedText = "abc";
         String actualText = newString(getBytes(expectedText), getCoder(expectedText));
         if (!Arrays.equals(getBytes(actualText), expectedText.getBytes())) {
-            throw new IncompatibleJvmException("Expecting the string \"" +
-                    actualText +
-                    "\" to be \"" +
-                    expectedText +
-                    "\"");
+            throw new IncompatibleJvmException(
+                    "Expecting the string \""
+                            + actualText
+                            + "\" to be \""
+                            + expectedText
+                            + "\"");
         }
     }
 
@@ -93,8 +102,8 @@ public final class StringUtil {
     }
 
     /**
-     * Get the internal bytes of String without copying,
-     * and the caller needs to ensure it won't modify the byte array
+     * Get the internal bytes of String without copying, and the caller needs to ensure it won't
+     * modify the byte array
      */
     public static byte[] getBytes(String s) {
         if (s == null) {
@@ -108,15 +117,19 @@ public final class StringUtil {
     }
 
     /**
-     * @implNote The method assumes the string does NOT contain any extended control character
-     * if it is encoded in LATIN1
+     * @implNote The method assumes the string does NOT contain any extended control character if it
+     *           is encoded in LATIN1
      * @see <a href="https://cs.stanford.edu/people/miles/iso8859.html">iso8859</a>
      */
     public static byte[] getUtf8Bytes(String s) {
         try {
-            return isLatin1(s) ? getBytes(s) : s.getBytes(StandardCharsets.UTF_8);
+            return isLatin1(s)
+                    ? getBytes(s)
+                    : s.getBytes(StandardCharsets.UTF_8);
         } catch (Exception e) {
-            throw new IncompatibleJvmException("Failed to get the UTF-8 bytes of the input string", e);
+            throw new IncompatibleJvmException(
+                    "Failed to get the UTF-8 bytes of the input string",
+                    e);
         }
     }
 
@@ -144,7 +157,8 @@ public final class StringUtil {
         if (itemCount == 1) {
             return String.valueOf(items instanceof List<?> list
                     ? list.get(0)
-                    : items.iterator().next());
+                    : items.iterator()
+                            .next());
         }
         List<String> strings = new ArrayList<>(itemCount);
         int size = 0;
@@ -165,7 +179,11 @@ public final class StringUtil {
             System.arraycopy(bytes, 0, newStringBytes, writerIndex, bytes.length);
             writerIndex += bytes.length;
             if (i < itemCount - 1) {
-                System.arraycopy(separatorBytes, 0, newStringBytes, writerIndex, separatorBytes.length);
+                System.arraycopy(separatorBytes,
+                        0,
+                        newStringBytes,
+                        writerIndex,
+                        separatorBytes.length);
                 writerIndex += separatorBytes.length;
             }
         }
@@ -184,10 +202,12 @@ public final class StringUtil {
 
         while (textReaderIndex < textLength) {
             if (patternReaderIndex < patternLength
-                    && (textBytes[textReaderIndex] == patternBytes[patternReaderIndex] || patternBytes[patternReaderIndex] == SINGLE_TOKEN)) {
+                    && (textBytes[textReaderIndex] == patternBytes[patternReaderIndex]
+                            || patternBytes[patternReaderIndex] == SINGLE_TOKEN)) {
                 textReaderIndex++;
                 patternReaderIndex++;
-            } else if (patternReaderIndex < patternLength && patternBytes[patternReaderIndex] == MULTIPLE_TOKEN) {
+            } else if (patternReaderIndex < patternLength
+                    && patternBytes[patternReaderIndex] == MULTIPLE_TOKEN) {
                 textReaderIndexForMultipleToken = textReaderIndex;
                 patternReaderIndexForMultipleToken = patternReaderIndex++;
             } else if (textReaderIndexForMultipleToken >= 0) {
@@ -324,11 +344,11 @@ public final class StringUtil {
     }
 
     /**
-     * @implNote 1. The strings must be ASCII
-     * and the method won't validate their coder for better performance.
-     * 2. The number of placeholder "{}" must the same as the number of arguments,
-     * or its will throw. We don't support mismatch to avoiding growing or shrinking the result string,
-     * or preprocess the message, which cause a bad performance while it can be avoided.
+     * @implNote 1. The strings must be ASCII and the method won't validate their coder for better
+     *           performance. 2. The number of placeholder "{}" must the same as the number of
+     *           arguments, or its will throw. We don't support mismatch to avoiding growing or
+     *           shrinking the result string, or preprocess the message, which cause a bad
+     *           performance while it can be avoided.
      */
     public static String substitute(String message, String... args) {
         byte[] bytes = getBytes(message);
@@ -337,7 +357,9 @@ public final class StringUtil {
         int argCount = args.length;
         int argBytesLength = 0;
         for (String str : args) {
-            argBytesLength += str == null ? 2 : str.length() - 2;
+            argBytesLength += str == null
+                    ? 2
+                    : str.length() - 2;
         }
         byte[] newBytes = new byte[length + argBytesLength];
         int writeIndex = 0;
@@ -347,7 +369,8 @@ public final class StringUtil {
             b = bytes[i];
             if (b == '{' && i < length - 1 && bytes[i + 1] == '}') {
                 if (argIndex >= argCount) {
-                    throw new IllegalArgumentException("The number of placeholder \"{}\" must be the same as the number of arguments");
+                    throw new IllegalArgumentException(
+                            "The number of placeholder \"{}\" must be the same as the number of arguments");
                 }
                 argBytes = getBytes(String.valueOf(args[argIndex++]));
                 System.arraycopy(argBytes, 0, newBytes, writeIndex, argBytes.length);
@@ -358,7 +381,8 @@ public final class StringUtil {
             }
         }
         if (writeIndex != newBytes.length) {
-            throw new IllegalArgumentException("The number of placeholder \"{}\" must be the same as the number of arguments");
+            throw new IllegalArgumentException(
+                    "The number of placeholder \"{}\" must be the same as the number of arguments");
         }
         return newString(newBytes, LATIN1);
     }
@@ -389,7 +413,9 @@ public final class StringUtil {
     }
 
     public static String toString(Object val) {
-        return val == null ? "" : val.toString();
+        return val == null
+                ? ""
+                : val.toString();
     }
 
     public static String toQuotedStringLatin1(String... strings) {

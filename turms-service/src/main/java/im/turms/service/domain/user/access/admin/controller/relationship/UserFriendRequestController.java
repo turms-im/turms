@@ -17,6 +17,13 @@
 
 package im.turms.service.domain.user.access.admin.controller.relationship;
 
+import java.util.Collection;
+import java.util.Date;
+import java.util.Set;
+
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.access.admin.dto.response.DeleteResultDTO;
 import im.turms.server.common.access.admin.dto.response.HttpHandlerResult;
 import im.turms.server.common.access.admin.dto.response.PaginationDTO;
@@ -38,12 +45,6 @@ import im.turms.service.domain.user.access.admin.dto.request.AddFriendRequestDTO
 import im.turms.service.domain.user.access.admin.dto.request.UpdateFriendRequestDTO;
 import im.turms.service.domain.user.access.admin.dto.response.UserFriendRequestDTO;
 import im.turms.service.domain.user.service.UserFriendRequestService;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
-import java.util.Collection;
-import java.util.Date;
-import java.util.Set;
 
 import static im.turms.server.common.access.admin.permission.AdminPermission.USER_FRIEND_REQUEST_CREATE;
 import static im.turms.server.common.access.admin.permission.AdminPermission.USER_FRIEND_REQUEST_DELETE;
@@ -58,7 +59,9 @@ public class UserFriendRequestController extends BaseController {
 
     private final UserFriendRequestService userFriendRequestService;
 
-    public UserFriendRequestController(TurmsPropertiesManager propertiesManager, UserFriendRequestService userFriendRequestService) {
+    public UserFriendRequestController(
+            TurmsPropertiesManager propertiesManager,
+            UserFriendRequestService userFriendRequestService) {
         super(propertiesManager);
         this.userFriendRequestService = userFriendRequestService;
     }
@@ -67,8 +70,8 @@ public class UserFriendRequestController extends BaseController {
     @RequiredPermission(USER_FRIEND_REQUEST_CREATE)
     public Mono<HttpHandlerResult<ResponseDTO<UserFriendRequestDTO>>> createFriendRequest(
             @RequestBody AddFriendRequestDTO addFriendRequestDTO) {
-        Mono<UserFriendRequestDTO> createMono = userFriendRequestService.createFriendRequest(
-                        addFriendRequestDTO.id(),
+        Mono<UserFriendRequestDTO> createMono = userFriendRequestService
+                .createFriendRequest(addFriendRequestDTO.id(),
                         addFriendRequestDTO.requesterId(),
                         addFriendRequestDTO.recipientId(),
                         addFriendRequestDTO.content(),
@@ -76,7 +79,9 @@ public class UserFriendRequestController extends BaseController {
                         addFriendRequestDTO.creationDate(),
                         addFriendRequestDTO.responseDate(),
                         addFriendRequestDTO.reason())
-                .map(request -> new UserFriendRequestDTO(request, userFriendRequestService.getEntityExpirationDate()));
+                .map(request -> new UserFriendRequestDTO(
+                        request,
+                        userFriendRequestService.getEntityExpirationDate()));
         return HttpHandlerResult.okIfTruthy(createMono);
     }
 
@@ -95,8 +100,8 @@ public class UserFriendRequestController extends BaseController {
             @QueryParam(required = false) Date expirationDateEnd,
             @QueryParam(required = false) Integer size) {
         size = getPageSize(size);
-        Flux<UserFriendRequestDTO> userFriendRequestFlux = userFriendRequestService.queryFriendRequests(
-                        ids,
+        Flux<UserFriendRequestDTO> userFriendRequestFlux = userFriendRequestService
+                .queryFriendRequests(ids,
                         requesterIds,
                         recipientIds,
                         statuses,
@@ -105,7 +110,9 @@ public class UserFriendRequestController extends BaseController {
                         DateRange.of(expirationDateStart, expirationDateEnd),
                         0,
                         size)
-                .map(request -> new UserFriendRequestDTO(request, userFriendRequestService.getEntityExpirationDate()));
+                .map(request -> new UserFriendRequestDTO(
+                        request,
+                        userFriendRequestService.getEntityExpirationDate()));
         return HttpHandlerResult.okIfTruthy(userFriendRequestFlux);
     }
 
@@ -125,16 +132,15 @@ public class UserFriendRequestController extends BaseController {
             int page,
             @QueryParam(required = false) Integer size) {
         size = getPageSize(size);
-        Mono<Long> count = userFriendRequestService.countFriendRequests(
-                ids,
+        Mono<Long> count = userFriendRequestService.countFriendRequests(ids,
                 requesterIds,
                 recipientIds,
                 statuses,
                 DateRange.of(creationDateStart, creationDateEnd),
                 DateRange.of(responseDateStart, responseDateEnd),
                 DateRange.of(expirationDateStart, expirationDateEnd));
-        Flux<UserFriendRequestDTO> userFriendRequestFlux = userFriendRequestService.queryFriendRequests(
-                        ids,
+        Flux<UserFriendRequestDTO> userFriendRequestFlux = userFriendRequestService
+                .queryFriendRequests(ids,
                         requesterIds,
                         recipientIds,
                         statuses,
@@ -143,7 +149,9 @@ public class UserFriendRequestController extends BaseController {
                         DateRange.of(expirationDateStart, expirationDateEnd),
                         page,
                         size)
-                .map(request -> new UserFriendRequestDTO(request, userFriendRequestService.getEntityExpirationDate()));
+                .map(request -> new UserFriendRequestDTO(
+                        request,
+                        userFriendRequestService.getEntityExpirationDate()));
         return HttpHandlerResult.page(count, userFriendRequestFlux);
     }
 
@@ -152,8 +160,8 @@ public class UserFriendRequestController extends BaseController {
     public Mono<HttpHandlerResult<ResponseDTO<UpdateResultDTO>>> updateFriendRequests(
             Set<Long> ids,
             @RequestBody UpdateFriendRequestDTO updateFriendRequestDTO) {
-        Mono<UpdateResultDTO> updateMono = userFriendRequestService.updateFriendRequests(
-                        ids,
+        Mono<UpdateResultDTO> updateMono = userFriendRequestService
+                .updateFriendRequests(ids,
                         updateFriendRequestDTO.requesterId(),
                         updateFriendRequestDTO.recipientId(),
                         updateFriendRequestDTO.content(),
@@ -167,9 +175,9 @@ public class UserFriendRequestController extends BaseController {
 
     @DeleteMapping
     @RequiredPermission(USER_FRIEND_REQUEST_DELETE)
-    public Mono<HttpHandlerResult<ResponseDTO<DeleteResultDTO>>> deleteFriendRequests(@QueryParam(required = false) Set<Long> ids) {
-        Mono<DeleteResultDTO> deleteMono = userFriendRequestService
-                .deleteFriendRequests(ids)
+    public Mono<HttpHandlerResult<ResponseDTO<DeleteResultDTO>>> deleteFriendRequests(
+            @QueryParam(required = false) Set<Long> ids) {
+        Mono<DeleteResultDTO> deleteMono = userFriendRequestService.deleteFriendRequests(ids)
                 .map(DeleteResultDTO::get);
         return HttpHandlerResult.okIfTruthy(deleteMono);
     }

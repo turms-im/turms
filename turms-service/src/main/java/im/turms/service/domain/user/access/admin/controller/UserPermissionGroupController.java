@@ -17,6 +17,14 @@
 
 package im.turms.service.domain.user.access.admin.controller;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Set;
+
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.access.admin.dto.response.DeleteResultDTO;
 import im.turms.server.common.access.admin.dto.response.HttpHandlerResult;
 import im.turms.server.common.access.admin.dto.response.PaginationDTO;
@@ -37,13 +45,6 @@ import im.turms.service.domain.user.access.admin.dto.request.AddUserPermissionGr
 import im.turms.service.domain.user.access.admin.dto.request.UpdateUserPermissionGroupDTO;
 import im.turms.service.domain.user.po.UserPermissionGroup;
 import im.turms.service.domain.user.service.UserPermissionGroupService;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * @author James Chen
@@ -53,7 +54,9 @@ public class UserPermissionGroupController extends BaseController {
 
     private final UserPermissionGroupService userPermissionGroupService;
 
-    public UserPermissionGroupController(TurmsPropertiesManager propertiesManager, UserPermissionGroupService userPermissionGroupService) {
+    public UserPermissionGroupController(
+            TurmsPropertiesManager propertiesManager,
+            UserPermissionGroupService userPermissionGroupService) {
         super(propertiesManager);
         this.userPermissionGroupService = userPermissionGroupService;
     }
@@ -63,15 +66,19 @@ public class UserPermissionGroupController extends BaseController {
     public Mono<HttpHandlerResult<ResponseDTO<UserPermissionGroup>>> addUserPermissionGroup(
             @RequestBody AddUserPermissionGroupDTO addUserPermissionGroupDTO) {
         Set<Long> creatableGroupTypesIds = addUserPermissionGroupDTO.creatableGroupTypeIds();
-        creatableGroupTypesIds = creatableGroupTypesIds == null ? Collections.emptySet() : creatableGroupTypesIds;
+        creatableGroupTypesIds = creatableGroupTypesIds == null
+                ? Collections.emptySet()
+                : creatableGroupTypesIds;
         Map<Long, Integer> groupTypeIdToLimit = addUserPermissionGroupDTO.groupTypeIdToLimit();
-        groupTypeIdToLimit = groupTypeIdToLimit == null ? Collections.emptyMap() : groupTypeIdToLimit;
-        Mono<UserPermissionGroup> userPermissionGroupMono = userPermissionGroupService.addUserPermissionGroup(
-                addUserPermissionGroupDTO.id(),
-                creatableGroupTypesIds,
-                addUserPermissionGroupDTO.ownedGroupLimit(),
-                addUserPermissionGroupDTO.ownedGroupLimitForEachGroupType(),
-                groupTypeIdToLimit);
+        groupTypeIdToLimit = groupTypeIdToLimit == null
+                ? Collections.emptyMap()
+                : groupTypeIdToLimit;
+        Mono<UserPermissionGroup> userPermissionGroupMono =
+                userPermissionGroupService.addUserPermissionGroup(addUserPermissionGroupDTO.id(),
+                        creatableGroupTypesIds,
+                        addUserPermissionGroupDTO.ownedGroupLimit(),
+                        addUserPermissionGroupDTO.ownedGroupLimitForEachGroupType(),
+                        groupTypeIdToLimit);
         return HttpHandlerResult.okIfTruthy(userPermissionGroupMono);
     }
 
@@ -80,7 +87,8 @@ public class UserPermissionGroupController extends BaseController {
     public Mono<HttpHandlerResult<ResponseDTO<Collection<UserPermissionGroup>>>> queryUserPermissionGroups(
             @QueryParam(required = false) Integer size) {
         size = getPageSize(size);
-        Flux<UserPermissionGroup> groupTypesFlux = userPermissionGroupService.queryUserPermissionGroups(0, size);
+        Flux<UserPermissionGroup> groupTypesFlux =
+                userPermissionGroupService.queryUserPermissionGroups(0, size);
         return HttpHandlerResult.okIfTruthy(groupTypesFlux);
     }
 
@@ -91,7 +99,8 @@ public class UserPermissionGroupController extends BaseController {
             @QueryParam(required = false) Integer size) {
         size = getPageSize(size);
         Mono<Long> count = userPermissionGroupService.countUserPermissionGroups();
-        Flux<UserPermissionGroup> groupTypesFlux = userPermissionGroupService.queryUserPermissionGroups(page, size);
+        Flux<UserPermissionGroup> groupTypesFlux =
+                userPermissionGroupService.queryUserPermissionGroups(page, size);
         return HttpHandlerResult.page(count, groupTypesFlux);
     }
 
@@ -100,8 +109,8 @@ public class UserPermissionGroupController extends BaseController {
     public Mono<HttpHandlerResult<ResponseDTO<UpdateResultDTO>>> updateUserPermissionGroup(
             Set<Long> ids,
             @RequestBody UpdateUserPermissionGroupDTO updateUserPermissionGroupDTO) {
-        Mono<UpdateResultDTO> updateMono = userPermissionGroupService.updateUserPermissionGroups(
-                        ids,
+        Mono<UpdateResultDTO> updateMono = userPermissionGroupService
+                .updateUserPermissionGroups(ids,
                         updateUserPermissionGroupDTO.creatableGroupTypeIds(),
                         updateUserPermissionGroupDTO.ownedGroupLimit(),
                         updateUserPermissionGroupDTO.ownedGroupLimitForEachGroupType(),
@@ -112,10 +121,11 @@ public class UserPermissionGroupController extends BaseController {
 
     @DeleteMapping
     @RequiredPermission(AdminPermission.USER_PERMISSION_GROUP_DELETE)
-    public Mono<HttpHandlerResult<ResponseDTO<DeleteResultDTO>>> deleteUserPermissionGroup(Set<Long> ids) {
-        Mono<DeleteResultDTO> deleteMono = userPermissionGroupService
-                .deleteUserPermissionGroups(ids)
-                .map(DeleteResultDTO::get);
+    public Mono<HttpHandlerResult<ResponseDTO<DeleteResultDTO>>> deleteUserPermissionGroup(
+            Set<Long> ids) {
+        Mono<DeleteResultDTO> deleteMono =
+                userPermissionGroupService.deleteUserPermissionGroups(ids)
+                        .map(DeleteResultDTO::get);
         return HttpHandlerResult.okIfTruthy(deleteMono);
     }
 

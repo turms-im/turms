@@ -17,7 +17,19 @@
 
 package im.turms.plugin.rasa;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.StringJoiner;
+import jakarta.validation.constraints.NotNull;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
+import org.springframework.context.ApplicationContext;
+import reactor.core.publisher.Mono;
+
 import im.turms.plugin.rasa.core.RasaClient;
 import im.turms.plugin.rasa.core.RasaRequest;
 import im.turms.plugin.rasa.core.RasaResponse;
@@ -39,17 +51,6 @@ import im.turms.server.common.infra.tracing.TracingContext;
 import im.turms.service.access.servicerequest.dto.RequestHandlerResult;
 import im.turms.service.domain.message.service.MessageService;
 import im.turms.service.infra.plugin.extension.RequestHandlerResultHandler;
-import org.springframework.context.ApplicationContext;
-import reactor.core.publisher.Mono;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.StringJoiner;
-import jakarta.validation.constraints.NotNull;
 
 /**
  * @author James Chen
@@ -69,7 +70,8 @@ public class RasaResponser extends TurmsExtension implements RequestHandlerResul
 
     private void setUp() {
         RasaProperties properties = loadProperties(RasaProperties.class);
-        if (!properties.isEnabled() || properties.getInstanceFindStrategy() != InstanceFindStrategy.PROPERTY) {
+        if (!properties.isEnabled()
+                || properties.getInstanceFindStrategy() != InstanceFindStrategy.PROPERTY) {
             return;
         }
         List<RasaProperties.InstanceProperties> instancePropertiesList = properties.getInstances();
@@ -77,25 +79,31 @@ public class RasaResponser extends TurmsExtension implements RequestHandlerResul
             return;
         }
         int size = instancePropertiesList.size();
-        Map<URI, RasaClientInfo> uriToClientInfo = CollectionUtil
-                .newMapWithExpectedSize(size);
-        Map<Long, RasaClientInfo> idToClientInfo = CollectionUtil
-                .newMapWithExpectedSize(size);
+        Map<URI, RasaClientInfo> uriToClientInfo = CollectionUtil.newMapWithExpectedSize(size);
+        Map<Long, RasaClientInfo> idToClientInfo = CollectionUtil.newMapWithExpectedSize(size);
         for (RasaProperties.InstanceProperties instanceProperties : instancePropertiesList) {
             String url = instanceProperties.getUrl();
             URI uri;
             try {
                 uri = new URI(url);
             } catch (URISyntaxException e) {
-                throw new IllegalArgumentException("Illegal endpoint URL: " + url, e);
+                throw new IllegalArgumentException(
+                        "Illegal endpoint URL: "
+                                + url,
+                        e);
             }
-            int requestTimeoutMillis = instanceProperties.getRequest().getTimeoutMillis();
-            RasaClientInfo newClientInfo = uriToClientInfo
-                    .computeIfAbsent(uri, key -> new RasaClientInfo(new RasaClient(key, requestTimeoutMillis), instanceProperties));
+            int requestTimeoutMillis = instanceProperties.getRequest()
+                    .getTimeoutMillis();
+            RasaClientInfo newClientInfo = uriToClientInfo.computeIfAbsent(uri,
+                    key -> new RasaClientInfo(
+                            new RasaClient(key, requestTimeoutMillis),
+                            instanceProperties));
             Long chatbotUserId = instanceProperties.getChatbotUserId();
             RasaClientInfo existingClientInfo = idToClientInfo.put(chatbotUserId, newClientInfo);
             if (existingClientInfo != null) {
-                throw new IllegalArgumentException("Found a duplicate chatbot user ID: " + chatbotUserId);
+                throw new IllegalArgumentException(
+                        "Found a duplicate chatbot user ID: "
+                                + chatbotUserId);
             }
         }
         this.idToClientInfo = Map.copyOf(idToClientInfo);
@@ -111,7 +119,8 @@ public class RasaResponser extends TurmsExtension implements RequestHandlerResul
             @NotNull DeviceType requesterDevice) {
         // 1. Validate
         TurmsRequest request = result.dataForRecipients();
-        if (request == null || request.getKindCase() != TurmsRequest.KindCase.CREATE_MESSAGE_REQUEST) {
+        if (request == null
+                || request.getKindCase() != TurmsRequest.KindCase.CREATE_MESSAGE_REQUEST) {
             return Mono.just(result);
         }
         CreateMessageRequest createMessageRequest = request.getCreateMessageRequest();
@@ -123,8 +132,7 @@ public class RasaResponser extends TurmsExtension implements RequestHandlerResul
         if (CollectionUtil.isEmpty(recipients)) {
             return Mono.just(result);
         }
-        Set<Long> specifiedChatbotUserIds = CollectionUtil
-                .intersection(recipients, chatbotUserIds);
+        Set<Long> specifiedChatbotUserIds = CollectionUtil.intersection(recipients, chatbotUserIds);
         if (specifiedChatbotUserIds.isEmpty()) {
             return Mono.just(result);
         }
@@ -136,36 +144,42 @@ public class RasaResponser extends TurmsExtension implements RequestHandlerResul
         List<Mono<Void>> sendRequests = new ArrayList<>(specifiedChatbotUserIds.size());
         for (Long chatbotUserId : specifiedChatbotUserIds) {
             RasaClientInfo clientInfo = idToClientInfo.get(chatbotUserId);
-            Mono<Void> sendRequest = clientInfo.client
-                    .sendRequest(new RasaRequest(requesterId, text))
-                    .flatMap(responses -> {
-                        if (responses.isEmpty()) {
-                            return Mono.empty();
-                        }
-                        // 3. Send rasa responses to the requester
-                        String responseText = formatResponse(clientInfo.properties.getResponse(), responses);
-                        return messageService.authAndSaveAndSendMessage(true,
-                                chatbotUserId,
-                                null,
-                                null,
-                                null,
-                                isGroupMessage,
-                                true,
-                                responseText,
-                                null,
-                                isGroupMessage ? targetId : requesterId,
-                                null,
-                                null,
-                                null);
-                    });
+            Mono<Void> sendRequest =
+                    clientInfo.client.sendRequest(new RasaRequest(requesterId, text))
+                            .flatMap(responses -> {
+                                if (responses.isEmpty()) {
+                                    return Mono.empty();
+                                }
+                                // 3. Send rasa responses to the requester
+                                String responseText =
+                                        formatResponse(clientInfo.properties.getResponse(),
+                                                responses);
+                                return messageService.authAndSaveAndSendMessage(true,
+                                        chatbotUserId,
+                                        null,
+                                        null,
+                                        null,
+                                        isGroupMessage,
+                                        true,
+                                        responseText,
+                                        null,
+                                        isGroupMessage
+                                                ? targetId
+                                                : requesterId,
+                                        null,
+                                        null,
+                                        null);
+                            });
             sendRequests.add(sendRequest);
         }
         return Mono.deferContextual(context -> {
             // Don't need to wait responses
             Mono.whenDelayError(sendRequests)
                     .subscribe(null, t -> {
-                        try (TracingCloseableContext ignored = TracingContext.getCloseableContext(context)) {
-                            LOGGER.error("Caught an error while sending requests to Rasa servers", t);
+                        try (TracingCloseableContext ignored =
+                                TracingContext.getCloseableContext(context)) {
+                            LOGGER.error("Caught an error while sending requests to Rasa servers",
+                                    t);
                         }
                     });
             // 4. Return final handler result
@@ -174,10 +188,13 @@ public class RasaResponser extends TurmsExtension implements RequestHandlerResul
         });
     }
 
-    private String formatResponse(RasaProperties.ResponseProperties properties, List<RasaResponse> responses) {
+    private String formatResponse(
+            RasaProperties.ResponseProperties properties,
+            List<RasaResponse> responses) {
         if (properties.getFormat() == RasaResponseFormat.PLAIN) {
             if (responses.size() == 1) {
-                return responses.get(0).text();
+                return responses.get(0)
+                        .text();
             } else {
                 StringJoiner joiner = new StringJoiner(properties.getDelimiter());
                 for (RasaResponse response : responses) {

@@ -17,6 +17,14 @@
 
 package im.turms.service.domain.group.access.admin.controller;
 
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
+
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.access.admin.dto.response.DeleteResultDTO;
 import im.turms.server.common.access.admin.dto.response.HttpHandlerResult;
 import im.turms.server.common.access.admin.dto.response.PaginationDTO;
@@ -38,13 +46,6 @@ import im.turms.service.domain.group.access.admin.dto.request.AddGroupBlockedUse
 import im.turms.service.domain.group.access.admin.dto.request.UpdateGroupBlockedUserDTO;
 import im.turms.service.domain.group.po.GroupBlockedUser;
 import im.turms.service.domain.group.service.GroupBlocklistService;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
 
 import static im.turms.server.common.access.admin.permission.AdminPermission.GROUP_BLOCKLIST_CREATE;
 import static im.turms.server.common.access.admin.permission.AdminPermission.GROUP_BLOCKLIST_DELETE;
@@ -59,7 +60,9 @@ public class GroupBlocklistController extends BaseController {
 
     private final GroupBlocklistService groupBlocklistService;
 
-    public GroupBlocklistController(TurmsPropertiesManager propertiesManager, GroupBlocklistService groupBlocklistService) {
+    public GroupBlocklistController(
+            TurmsPropertiesManager propertiesManager,
+            GroupBlocklistService groupBlocklistService) {
         super(propertiesManager);
         this.groupBlocklistService = groupBlocklistService;
     }
@@ -68,11 +71,11 @@ public class GroupBlocklistController extends BaseController {
     @RequiredPermission(GROUP_BLOCKLIST_CREATE)
     public Mono<HttpHandlerResult<ResponseDTO<GroupBlockedUser>>> addGroupBlockedUser(
             @RequestBody AddGroupBlockedUserDTO addGroupBlockedUserDTO) {
-        Mono<GroupBlockedUser> createMono = groupBlocklistService.addBlockedUser(
-                addGroupBlockedUserDTO.groupId(),
-                addGroupBlockedUserDTO.userId(),
-                addGroupBlockedUserDTO.requesterId(),
-                addGroupBlockedUserDTO.blockDate());
+        Mono<GroupBlockedUser> createMono =
+                groupBlocklistService.addBlockedUser(addGroupBlockedUserDTO.groupId(),
+                        addGroupBlockedUserDTO.userId(),
+                        addGroupBlockedUserDTO.requesterId(),
+                        addGroupBlockedUserDTO.blockDate());
         return HttpHandlerResult.okIfTruthy(createMono);
     }
 
@@ -86,8 +89,7 @@ public class GroupBlocklistController extends BaseController {
             @QueryParam(required = false) Set<Long> requesterIds,
             @QueryParam(required = false) Integer size) {
         size = getPageSize(size);
-        Flux<GroupBlockedUser> userFlux = groupBlocklistService.queryBlockedUsers(
-                groupIds,
+        Flux<GroupBlockedUser> userFlux = groupBlocklistService.queryBlockedUsers(groupIds,
                 userIds,
                 DateRange.of(blockDateStart, blockDateEnd),
                 requesterIds,
@@ -111,8 +113,7 @@ public class GroupBlocklistController extends BaseController {
                 userIds,
                 DateRange.of(blockDateStart, blockDateEnd),
                 requesterIds);
-        Flux<GroupBlockedUser> userFlux = groupBlocklistService.queryBlockedUsers(
-                groupIds,
+        Flux<GroupBlockedUser> userFlux = groupBlocklistService.queryBlockedUsers(groupIds,
                 userIds,
                 DateRange.of(blockDateStart, blockDateEnd),
                 requesterIds,
@@ -126,8 +127,8 @@ public class GroupBlocklistController extends BaseController {
     public Mono<HttpHandlerResult<ResponseDTO<UpdateResultDTO>>> updateGroupBlockedUsers(
             List<GroupBlockedUser.Key> keys,
             @RequestBody UpdateGroupBlockedUserDTO updateGroupBlockedUserDTO) {
-        Mono<UpdateResultDTO> updateMono = groupBlocklistService.updateBlockedUsers(
-                        CollectionUtil.newSet(keys),
+        Mono<UpdateResultDTO> updateMono = groupBlocklistService
+                .updateBlockedUsers(CollectionUtil.newSet(keys),
                         updateGroupBlockedUserDTO.blockDate(),
                         updateGroupBlockedUserDTO.requesterId())
                 .map(UpdateResultDTO::get);
@@ -138,9 +139,9 @@ public class GroupBlocklistController extends BaseController {
     @RequiredPermission(GROUP_BLOCKLIST_DELETE)
     public Mono<HttpHandlerResult<ResponseDTO<DeleteResultDTO>>> deleteGroupBlockedUsers(
             List<GroupBlockedUser.Key> keys) {
-        Mono<DeleteResultDTO> deleteMono = groupBlocklistService
-                .deleteBlockedUsers(CollectionUtil.newSet(keys))
-                .map(DeleteResultDTO::get);
+        Mono<DeleteResultDTO> deleteMono =
+                groupBlocklistService.deleteBlockedUsers(CollectionUtil.newSet(keys))
+                        .map(DeleteResultDTO::get);
         return HttpHandlerResult.okIfTruthy(deleteMono);
     }
 

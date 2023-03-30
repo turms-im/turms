@@ -47,16 +47,20 @@ public class GroupMongoProperties extends TurmsMongoProperties {
         private GroupOptionalIndexProperties group = new GroupOptionalIndexProperties();
 
         @NestedConfigurationProperty
-        private GroupBlockedUserOptionalIndexProperties groupBlockedUser = new GroupBlockedUserOptionalIndexProperties();
+        private GroupBlockedUserOptionalIndexProperties groupBlockedUser =
+                new GroupBlockedUserOptionalIndexProperties();
 
         @NestedConfigurationProperty
-        private GroupInvitationOptionalIndexProperties groupInvitation = new GroupInvitationOptionalIndexProperties();
+        private GroupInvitationOptionalIndexProperties groupInvitation =
+                new GroupInvitationOptionalIndexProperties();
 
         @NestedConfigurationProperty
-        private GroupJoinRequestOptionalIndexProperties groupJoinRequest = new GroupJoinRequestOptionalIndexProperties();
+        private GroupJoinRequestOptionalIndexProperties groupJoinRequest =
+                new GroupJoinRequestOptionalIndexProperties();
 
         @NestedConfigurationProperty
-        private GroupMemberOptionalIndexProperties groupMember = new GroupMemberOptionalIndexProperties();
+        private GroupMemberOptionalIndexProperties groupMember =
+                new GroupMemberOptionalIndexProperties();
     }
 
     @Data

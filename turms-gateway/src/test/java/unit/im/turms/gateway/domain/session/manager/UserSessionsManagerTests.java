@@ -17,6 +17,11 @@
 
 package unit.im.turms.gateway.domain.session.manager;
 
+import java.util.Set;
+
+import org.junit.jupiter.api.Test;
+import reactor.core.publisher.Mono;
+
 import im.turms.gateway.access.client.common.connection.NetConnection;
 import im.turms.gateway.domain.session.manager.UserSessionsManager;
 import im.turms.server.common.access.client.dto.constant.DeviceType;
@@ -25,10 +30,6 @@ import im.turms.server.common.access.client.dto.request.TurmsRequestTypePool;
 import im.turms.server.common.domain.session.bo.CloseReason;
 import im.turms.server.common.domain.session.bo.SessionCloseStatus;
 import im.turms.server.common.infra.lang.ByteArrayWrapper;
-import org.junit.jupiter.api.Test;
-import reactor.core.publisher.Mono;
-
-import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
@@ -64,7 +65,8 @@ class UserSessionsManagerTests {
         UserSessionsManager manager = new UserSessionsManager(userId, userStatus);
         manager.addSessionIfAbsent(version, TurmsRequestTypePool.ALL, deviceType, null, null);
         NetConnection connection = mock(NetConnection.class);
-        manager.getSession(deviceType).setConnection(connection, new ByteArrayWrapper(new byte[]{}));
+        manager.getSession(deviceType)
+                .setConnection(connection, new ByteArrayWrapper(new byte[]{}));
 
         assertThat(manager.getDeviceTypeToSession()).hasSize(1);
         manager.closeSession(deviceType, CloseReason.get(SessionCloseStatus.SERVER_CLOSED));
@@ -82,7 +84,11 @@ class UserSessionsManagerTests {
     @Test
     void pushSessionNotification_shouldReturnFalse_ifSessionNotExists() {
         UserSessionsManager manager = new UserSessionsManager(userId, userStatus);
-        manager.addSessionIfAbsent(version, TurmsRequestTypePool.ALL, DeviceType.ANDROID, null, null);
+        manager.addSessionIfAbsent(version,
+                TurmsRequestTypePool.ALL,
+                DeviceType.ANDROID,
+                null,
+                null);
         assertThat(manager.pushSessionNotification(DeviceType.IOS, serverId)).isFalse();
     }
 
@@ -96,18 +102,34 @@ class UserSessionsManagerTests {
     @Test
     void getSessionsNumber_shouldBeThree_forThreeSessions() {
         UserSessionsManager manager = new UserSessionsManager(userId, userStatus);
-        manager.addSessionIfAbsent(version, TurmsRequestTypePool.ALL, DeviceType.ANDROID, null, null);
+        manager.addSessionIfAbsent(version,
+                TurmsRequestTypePool.ALL,
+                DeviceType.ANDROID,
+                null,
+                null);
         manager.addSessionIfAbsent(version, TurmsRequestTypePool.ALL, DeviceType.IOS, null, null);
-        manager.addSessionIfAbsent(version, TurmsRequestTypePool.ALL, DeviceType.DESKTOP, null, null);
+        manager.addSessionIfAbsent(version,
+                TurmsRequestTypePool.ALL,
+                DeviceType.DESKTOP,
+                null,
+                null);
         assertThat(manager.countSessions()).isEqualTo(3);
     }
 
     @Test
     void getLoggedInDeviceTypes_shouldBeSame() {
         UserSessionsManager manager = new UserSessionsManager(userId, userStatus);
-        manager.addSessionIfAbsent(version, TurmsRequestTypePool.ALL, DeviceType.ANDROID, null, null);
+        manager.addSessionIfAbsent(version,
+                TurmsRequestTypePool.ALL,
+                DeviceType.ANDROID,
+                null,
+                null);
         manager.addSessionIfAbsent(version, TurmsRequestTypePool.ALL, DeviceType.IOS, null, null);
-        manager.addSessionIfAbsent(version, TurmsRequestTypePool.ALL, DeviceType.DESKTOP, null, null);
+        manager.addSessionIfAbsent(version,
+                TurmsRequestTypePool.ALL,
+                DeviceType.DESKTOP,
+                null,
+                null);
 
         Set<DeviceType> loggedInDeviceTypes = manager.getLoggedInDeviceTypes();
 

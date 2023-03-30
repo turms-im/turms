@@ -17,11 +17,11 @@
 
 package im.turms.gateway.domain.session.bo;
 
+import java.util.Map;
+
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.constant.UserStatus;
 import im.turms.server.common.domain.location.bo.Location;
-
-import java.util.Map;
 
 /**
  * @author James Chen
@@ -34,5 +34,6 @@ public record UserLoginInfo(
         Map<String, String> deviceDetails,
         UserStatus userStatus,
         Location location,
-        String ip) {
+        String ip
+) {
 }

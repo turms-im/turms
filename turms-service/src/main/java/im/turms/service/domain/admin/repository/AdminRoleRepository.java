@@ -17,7 +17,15 @@
 
 package im.turms.service.domain.admin.repository;
 
+import java.util.Set;
+import jakarta.annotation.Nullable;
+
 import com.mongodb.client.result.UpdateResult;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.access.admin.permission.AdminPermission;
 import im.turms.server.common.domain.admin.po.AdminRole;
 import im.turms.server.common.domain.common.repository.BaseRepository;
@@ -26,13 +34,6 @@ import im.turms.server.common.storage.mongo.TurmsMongoClient;
 import im.turms.server.common.storage.mongo.operation.option.Filter;
 import im.turms.server.common.storage.mongo.operation.option.QueryOptions;
 import im.turms.server.common.storage.mongo.operation.option.Update;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Repository;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
-import java.util.Set;
-import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen
@@ -45,10 +46,11 @@ public class AdminRoleRepository extends BaseRepository<AdminRole, Long> {
         this.mongoClient = mongoClient;
     }
 
-    public Mono<UpdateResult> updateAdminRoles(Set<Long> roleIds,
-                                               String newName,
-                                               @Nullable Set<AdminPermission> permissions,
-                                               @Nullable Integer rank) {
+    public Mono<UpdateResult> updateAdminRoles(
+            Set<Long> roleIds,
+            String newName,
+            @Nullable Set<AdminPermission> permissions,
+            @Nullable Integer rank) {
         Filter filter = Filter.newBuilder(1)
                 .in(DomainFieldName.ID, roleIds);
         Update update = Update.newBuilder(3)
@@ -86,8 +88,7 @@ public class AdminRoleRepository extends BaseRepository<AdminRole, Long> {
             @Nullable Set<Integer> ranks,
             @Nullable Integer page,
             @Nullable Integer size) {
-        Filter filter = Filter
-                .newBuilder(4)
+        Filter filter = Filter.newBuilder(4)
                 .inIfNotNull(DomainFieldName.ID, roleIds)
                 .inIfNotNull(AdminRole.Fields.NAME, names)
                 .inIfNotNull(AdminRole.Fields.PERMISSIONS, includedPermissions)

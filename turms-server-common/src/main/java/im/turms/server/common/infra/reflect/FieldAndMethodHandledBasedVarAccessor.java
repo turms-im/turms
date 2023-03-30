@@ -17,10 +17,10 @@
 
 package im.turms.server.common.infra.reflect;
 
-import lombok.Data;
-
 import java.lang.invoke.MethodHandle;
 import java.lang.reflect.Field;
+
+import lombok.Data;
 
 /**
  * @author James Chen
@@ -42,7 +42,10 @@ public class FieldAndMethodHandledBasedVarAccessor<T, V> implements VarAccessor<
         try {
             return (V) fieldForGetter.get(object);
         } catch (Exception e) {
-            throw new RuntimeException("Failed to get the value from the object: " + object, e);
+            throw new RuntimeException(
+                    "Failed to get the value from the object: "
+                            + object,
+                    e);
         }
     }
 
@@ -51,7 +54,12 @@ public class FieldAndMethodHandledBasedVarAccessor<T, V> implements VarAccessor<
         try {
             setter.invoke(object, value);
         } catch (Throwable e) {
-            throw new RuntimeException("Failed to set the value to (" + value + ") on the object: " + object, e);
+            throw new RuntimeException(
+                    "Failed to set the value to ("
+                            + value
+                            + ") on the object: "
+                            + object,
+                    e);
         }
     }
 

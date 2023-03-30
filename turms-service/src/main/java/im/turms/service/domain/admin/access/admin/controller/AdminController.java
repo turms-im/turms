@@ -17,8 +17,15 @@
 
 package im.turms.service.domain.admin.access.admin.controller;
 
+import java.util.Collection;
+import java.util.Date;
+import java.util.Set;
+
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.access.admin.dto.response.DeleteResultDTO;
 import im.turms.server.common.access.admin.dto.response.HttpHandlerResult;
 import im.turms.server.common.access.admin.dto.response.PaginationDTO;
@@ -40,12 +47,6 @@ import im.turms.service.domain.admin.access.admin.dto.request.AddAdminDTO;
 import im.turms.service.domain.admin.access.admin.dto.request.UpdateAdminDTO;
 import im.turms.service.domain.admin.service.AdminService;
 import im.turms.service.domain.common.access.admin.controller.BaseController;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
-import java.util.Collection;
-import java.util.Date;
-import java.util.Set;
 
 import static im.turms.server.common.access.admin.permission.AdminPermission.ADMIN_CREATE;
 import static im.turms.server.common.access.admin.permission.AdminPermission.ADMIN_DELETE;
@@ -75,8 +76,7 @@ public class AdminController extends BaseController {
     public Mono<HttpHandlerResult<ResponseDTO<Admin>>> addAdmin(
             RequestContext requestContext,
             @RequestBody AddAdminDTO addAdminDTO) {
-        Mono<Admin> generatedAdmin = adminService.authAndAddAdmin(
-                requestContext.getAccount(),
+        Mono<Admin> generatedAdmin = adminService.authAndAddAdmin(requestContext.getAccount(),
                 addAdminDTO.account(),
                 addAdminDTO.password(),
                 addAdminDTO.roleId(),
@@ -98,8 +98,8 @@ public class AdminController extends BaseController {
                 .map(admin -> withPassword
                         ? admin
                         : admin.toBuilder()
-                        .password(null)
-                        .build());
+                                .password(null)
+                                .build());
         return HttpHandlerResult.okIfTruthy(admins);
     }
 
@@ -117,8 +117,8 @@ public class AdminController extends BaseController {
                 .map(admin -> withPassword
                         ? admin
                         : admin.toBuilder()
-                        .password(null)
-                        .build());
+                                .password(null)
+                                .build());
         return HttpHandlerResult.page(count, admins);
     }
 
@@ -128,12 +128,12 @@ public class AdminController extends BaseController {
             RequestContext requestContext,
             Set<String> accounts,
             @RequestBody UpdateAdminDTO updateAdminDTO) {
-        Mono<UpdateResult> updateMono = adminService.authAndUpdateAdmins(
-                requestContext.getAccount(),
-                accounts,
-                updateAdminDTO.password(),
-                updateAdminDTO.name(),
-                updateAdminDTO.roleId());
+        Mono<UpdateResult> updateMono =
+                adminService.authAndUpdateAdmins(requestContext.getAccount(),
+                        accounts,
+                        updateAdminDTO.password(),
+                        updateAdminDTO.name(),
+                        updateAdminDTO.roleId());
         return HttpHandlerResult.updateResult(updateMono);
     }
 
@@ -142,7 +142,8 @@ public class AdminController extends BaseController {
     public Mono<HttpHandlerResult<ResponseDTO<DeleteResultDTO>>> deleteAdmins(
             RequestContext requestContext,
             Set<String> accounts) {
-        Mono<DeleteResult> deleteMono = adminService.authAndDeleteAdmins(requestContext.getAccount(), accounts);
+        Mono<DeleteResult> deleteMono =
+                adminService.authAndDeleteAdmins(requestContext.getAccount(), accounts);
         return HttpHandlerResult.deleteResult(deleteMono);
     }
 

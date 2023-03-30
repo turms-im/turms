@@ -17,11 +17,12 @@
 
 package unit.im.turms.server.common.infra.cluster.service.rpc.codec;
 
+import org.junit.jupiter.api.Test;
+
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.cluster.service.rpc.RpcErrorCode;
 import im.turms.server.common.infra.cluster.service.rpc.codec.RpcExceptionCodec;
 import im.turms.server.common.infra.cluster.service.rpc.exception.RpcException;
-import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -33,8 +34,7 @@ class RpcExceptionCodecTests extends BaseCodecTest {
         ResponseStatusCode statusCode = ResponseStatusCode.SERVER_INTERNAL_ERROR;
         String message = "My error message";
         RpcException exception = RpcException.get(errorCode, statusCode, message);
-        RpcException actualException = writeDataAndReadBuffer(new RpcExceptionCodec(),
-                exception);
+        RpcException actualException = writeDataAndReadBuffer(new RpcExceptionCodec(), exception);
 
         assertThat(actualException).isEqualTo(exception);
     }

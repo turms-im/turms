@@ -17,9 +17,9 @@
 
 package im.turms.server.common.infra.security.jwt.algorithm;
 
-import im.turms.server.common.infra.security.jwt.Jwt;
-
 import java.security.interfaces.RSAPublicKey;
+
+import im.turms.server.common.infra.security.jwt.Jwt;
 
 /**
  * @author James Chen

@@ -26,18 +26,21 @@ import im.turms.server.common.infra.security.SensitiveProperty;
  */
 public record AddAdminDTO(
         String account,
-        @SensitiveProperty(SensitiveProperty.Access.ALLOW_DESERIALIZATION)
-        String password,
+        @SensitiveProperty(SensitiveProperty.Access.ALLOW_DESERIALIZATION) String password,
         String name,
         Long roleId
 ) implements ControllerDTO {
     @Override
     public String toString() {
-        return "AddAdminDTO[" +
-                "account=" + account +
-                ", password=" + SecurityValueConst.SENSITIVE_VALUE +
-                ", name=" + name +
-                ", roleId=" + roleId +
-                ']';
+        return "AddAdminDTO["
+                + "account="
+                + account
+                + ", password="
+                + SecurityValueConst.SENSITIVE_VALUE
+                + ", name="
+                + name
+                + ", roleId="
+                + roleId
+                + ']';
     }
 }

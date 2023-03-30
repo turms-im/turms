@@ -17,7 +17,19 @@
 
 package im.turms.server.common.access.admin.web;
 
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
+import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import jakarta.annotation.Nullable;
+
 import com.fasterxml.jackson.databind.JavaType;
+import io.netty.buffer.ByteBuf;
+import io.netty.handler.codec.http.HttpMethod;
+import org.springframework.context.ConfigurableApplicationContext;
+
 import im.turms.server.common.access.admin.permission.RequiredPermission;
 import im.turms.server.common.access.admin.web.annotation.DeleteMapping;
 import im.turms.server.common.access.admin.web.annotation.FormData;
@@ -36,17 +48,6 @@ import im.turms.server.common.infra.lang.Pair;
 import im.turms.server.common.infra.lang.PrimitiveUtil;
 import im.turms.server.common.infra.openapi.OpenApiBuilder;
 import im.turms.server.common.infra.reflect.ReflectionUtil;
-import io.netty.buffer.ByteBuf;
-import io.netty.handler.codec.http.HttpMethod;
-import org.springframework.context.ConfigurableApplicationContext;
-
-import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
-import java.lang.reflect.Type;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import jakarta.annotation.Nullable;
 
 import static im.turms.server.common.access.admin.web.MediaTypeConst.APPLICATION_JSON;
 import static im.turms.server.common.access.admin.web.MediaTypeConst.APPLICATION_OCTET_STREAM;
@@ -63,7 +64,8 @@ public class HttpEndpointCollector {
         this.requestParamParser = requestParamParser;
     }
 
-    public Map<ApiEndpointKey, ApiEndpoint> collectEndpoints(ConfigurableApplicationContext context) {
+    public Map<ApiEndpointKey, ApiEndpoint> collectEndpoints(
+            ConfigurableApplicationContext context) {
         Map<ApiEndpointKey, ApiEndpoint> keyToEndpoint = new HashMap<>(64);
         Map<String, Object> beans = context.getBeansWithAnnotation(RestController.class);
         for (Object controller : beans.values()) {
@@ -72,18 +74,23 @@ public class HttpEndpointCollector {
         return Map.copyOf(keyToEndpoint);
     }
 
-    public void collectEndpoints(Map<ApiEndpointKey, ApiEndpoint> keyToEndpoint, List<Object> controllers) {
+    public void collectEndpoints(
+            Map<ApiEndpointKey, ApiEndpoint> keyToEndpoint,
+            List<Object> controllers) {
         for (Object controller : controllers) {
             collectEndpoints(keyToEndpoint, controller);
         }
     }
 
-    private void collectEndpoints(Map<ApiEndpointKey, ApiEndpoint> keyToEndpoint, Object controller) {
+    private void collectEndpoints(
+            Map<ApiEndpointKey, ApiEndpoint> keyToEndpoint,
+            Object controller) {
         Class<?> controllerClass = controller.getClass();
         RestController annotation = controllerClass.getDeclaredAnnotation(RestController.class);
         if (annotation == null) {
-            throw new IllegalArgumentException("@RestController must be present in the controller class: "
-                    + controllerClass.getName());
+            throw new IllegalArgumentException(
+                    "@RestController must be present in the controller class: "
+                            + controllerClass.getName());
         }
         String basePath = annotation.value();
         Method[] methods = controllerClass.getDeclaredMethods();
@@ -93,17 +100,24 @@ public class HttpEndpointCollector {
             if (methodAndPath == null) {
                 continue;
             }
-            String path = "/" + basePath;
-            if (!methodAndPath.second().isBlank()) {
-                path += "/" + methodAndPath.second();
+            String path = "/"
+                    + basePath;
+            if (!methodAndPath.second()
+                    .isBlank()) {
+                path += "/"
+                        + methodAndPath.second();
             }
             HttpMethod httpMethod = methodAndPath.first();
             String encoding = null;
             if (httpMethod == HttpMethod.GET) {
                 GetMapping mapping = method.getDeclaredAnnotation(GetMapping.class);
-                encoding = mapping.encoding().isBlank() ? null : mapping.encoding();
+                encoding = mapping.encoding()
+                        .isBlank()
+                                ? null
+                                : mapping.encoding();
             }
-            ApiEndpoint endpoint = new ApiEndpoint(controller,
+            ApiEndpoint endpoint = new ApiEndpoint(
+                    controller,
                     method,
                     httpMethod,
                     parseParameters(method),
@@ -112,11 +126,12 @@ public class HttpEndpointCollector {
                     method.getDeclaredAnnotation(RequiredPermission.class));
             ApiEndpointKey key = new ApiEndpointKey(path, httpMethod);
             if (keyToEndpoint.putIfAbsent(key, endpoint) != null) {
-                throw new IllegalArgumentException("Found a duplicate endpoint (" +
-                        key +
-                        ")" +
-                        " in the controller: " +
-                        controllerClass.getName());
+                throw new IllegalArgumentException(
+                        "Found a duplicate endpoint ("
+                                + key
+                                + ")"
+                                + " in the controller: "
+                                + controllerClass.getName());
             }
         }
     }
@@ -127,7 +142,9 @@ public class HttpEndpointCollector {
             return APPLICATION_JSON;
         }
         GetMapping mapping = method.getDeclaredAnnotation(GetMapping.class);
-        if (mapping != null && !mapping.produces().isBlank()) {
+        if (mapping != null
+                && !mapping.produces()
+                        .isBlank()) {
             return mapping.produces();
         }
         if (ByteBuf.class.isAssignableFrom(returnValueClass)
@@ -151,7 +168,8 @@ public class HttpEndpointCollector {
             if (info != null) {
                 parameterInfos[i] = info;
                 if (hasRequestFormData) {
-                    throw new IllegalArgumentException("The endpoint must not accept both request form data and request body");
+                    throw new IllegalArgumentException(
+                            "The endpoint must not accept both request form data and request body");
                 }
                 hasRequestBody = true;
                 continue;
@@ -160,7 +178,8 @@ public class HttpEndpointCollector {
             if (info != null) {
                 parameterInfos[i] = info;
                 if (hasRequestBody) {
-                    throw new IllegalArgumentException("The endpoint must not accept both request form data and request body");
+                    throw new IllegalArgumentException(
+                            "The endpoint must not accept both request form data and request body");
                 }
                 hasRequestFormData = true;
                 continue;
@@ -171,7 +190,8 @@ public class HttpEndpointCollector {
                 continue;
             }
             if (RequestContext.class.isAssignableFrom(parameter.getType())) {
-                parameterInfos[i] = new MethodParameterInfo(parameter.getName(),
+                parameterInfos[i] = new MethodParameterInfo(
+                        parameter.getName(),
                         RequestContext.class,
                         null,
                         null,
@@ -195,10 +215,13 @@ public class HttpEndpointCollector {
         Class<?> type = parameter.getType();
         JavaType typeForJackson = JsonUtil.constructJavaType(type);
         Class<?> elementClass = ClassUtil.getElementClass(parameter.getParameterizedType());
-        JavaType elementTypeForJackson = elementClass == null ? null : JsonUtil.constructJavaType(elementClass);
+        JavaType elementTypeForJackson = elementClass == null
+                ? null
+                : JsonUtil.constructJavaType(elementClass);
         if (queryParam == null) {
             Object defaultValue = PrimitiveUtil.getDefaultValue(type);
-            return new MethodParameterInfo(parameter.getName(),
+            return new MethodParameterInfo(
+                    parameter.getName(),
                     type,
                     typeForJackson,
                     elementClass,
@@ -211,11 +234,17 @@ public class HttpEndpointCollector {
                     null,
                     true);
         }
-        String name = queryParam.value().isBlank() ? parameter.getName() : queryParam.value();
-        Object parsedDefaultValue = queryParam.defaultValue().isBlank()
-                ? PrimitiveUtil.getDefaultValue(type)
-                : requestParamParser.parsePlainValue(queryParam.defaultValue(), type, typeForJackson);
-        return new MethodParameterInfo(name,
+        String name = queryParam.value()
+                .isBlank()
+                        ? parameter.getName()
+                        : queryParam.value();
+        Object parsedDefaultValue = queryParam.defaultValue()
+                .isBlank()
+                        ? PrimitiveUtil.getDefaultValue(type)
+                        : requestParamParser
+                                .parsePlainValue(queryParam.defaultValue(), type, typeForJackson);
+        return new MethodParameterInfo(
+                name,
                 type,
                 typeForJackson,
                 elementClass,
@@ -234,14 +263,20 @@ public class HttpEndpointCollector {
         if (requestHeader == null) {
             return null;
         }
-        String name = requestHeader.value().isBlank() ? parameter.getName() : requestHeader.value();
+        String name = requestHeader.value()
+                .isBlank()
+                        ? parameter.getName()
+                        : requestHeader.value();
         Class<?> type = parameter.getType();
         Class<?> elementClass = ClassUtil.getElementClass(parameter.getParameterizedType());
-        return new MethodParameterInfo(name,
+        return new MethodParameterInfo(
+                name,
                 type,
                 JsonUtil.constructJavaType(type),
                 elementClass,
-                elementClass == null ? null : JsonUtil.constructJavaType(elementClass),
+                elementClass == null
+                        ? null
+                        : JsonUtil.constructJavaType(elementClass),
                 requestHeader.required(),
                 true,
                 false,
@@ -258,11 +293,14 @@ public class HttpEndpointCollector {
         }
         Class<?> elementClass = ClassUtil.getElementClass(parameter.getParameterizedType());
         Class<?> type = parameter.getType();
-        return new MethodParameterInfo(parameter.getName(),
+        return new MethodParameterInfo(
+                parameter.getName(),
                 type,
                 JsonUtil.constructJavaType(type),
                 elementClass,
-                elementClass == null ? null : JsonUtil.constructJavaType(elementClass),
+                elementClass == null
+                        ? null
+                        : JsonUtil.constructJavaType(elementClass),
                 requestBody.required(),
                 false,
                 true,
@@ -278,10 +316,13 @@ public class HttpEndpointCollector {
             return null;
         }
         if (!ClassUtil.isListOf(parameter.getParameterizedType(), MultipartFile.class)) {
-            throw new IllegalArgumentException("The type of the form data parameter must be List<MultipartFile>: " + parameter);
+            throw new IllegalArgumentException(
+                    "The type of the form data parameter must be List<MultipartFile>: "
+                            + parameter);
         }
         String contentType = requestFormData.contentType();
-        return new MethodParameterInfo(parameter.getName(),
+        return new MethodParameterInfo(
+                parameter.getName(),
                 List.class,
                 null,
                 MultipartFile.class,
@@ -291,22 +332,34 @@ public class HttpEndpointCollector {
                 false,
                 true,
                 null,
-                contentType.isBlank() ? null : contentType,
+                contentType.isBlank()
+                        ? null
+                        : contentType,
                 true);
     }
 
     @Nullable
     private Pair<HttpMethod, String> parseMethod(Method method) {
         if (method.isAnnotationPresent(GetMapping.class)) {
-            return Pair.of(HttpMethod.GET, method.getDeclaredAnnotation(GetMapping.class).value());
+            return Pair.of(HttpMethod.GET,
+                    method.getDeclaredAnnotation(GetMapping.class)
+                            .value());
         } else if (method.isAnnotationPresent(PostMapping.class)) {
-            return Pair.of(HttpMethod.POST, method.getDeclaredAnnotation(PostMapping.class).value());
+            return Pair.of(HttpMethod.POST,
+                    method.getDeclaredAnnotation(PostMapping.class)
+                            .value());
         } else if (method.isAnnotationPresent(PutMapping.class)) {
-            return Pair.of(HttpMethod.PUT, method.getDeclaredAnnotation(PutMapping.class).value());
+            return Pair.of(HttpMethod.PUT,
+                    method.getDeclaredAnnotation(PutMapping.class)
+                            .value());
         } else if (method.isAnnotationPresent(DeleteMapping.class)) {
-            return Pair.of(HttpMethod.DELETE, method.getDeclaredAnnotation(DeleteMapping.class).value());
+            return Pair.of(HttpMethod.DELETE,
+                    method.getDeclaredAnnotation(DeleteMapping.class)
+                            .value());
         } else if (method.isAnnotationPresent(HeadMapping.class)) {
-            return Pair.of(HttpMethod.HEAD, method.getDeclaredAnnotation(HeadMapping.class).value());
+            return Pair.of(HttpMethod.HEAD,
+                    method.getDeclaredAnnotation(HeadMapping.class)
+                            .value());
         }
         return null;
     }

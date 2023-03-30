@@ -17,12 +17,12 @@
 
 package im.turms.server.common.infra.plugin;
 
+import java.util.List;
+
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 import lombok.experimental.Accessors;
 import org.graalvm.polyglot.Context;
-
-import java.util.List;
 
 /**
  * @author James Chen
@@ -33,9 +33,10 @@ import java.util.List;
 public class JsPlugin extends Plugin {
     Context context;
 
-    public JsPlugin(JsPluginDescriptor descriptor,
-                    List<TurmsExtension> extensions,
-                    Context context) {
+    public JsPlugin(
+            JsPluginDescriptor descriptor,
+            List<TurmsExtension> extensions,
+            Context context) {
         super(descriptor, extensions);
         this.context = context;
     }

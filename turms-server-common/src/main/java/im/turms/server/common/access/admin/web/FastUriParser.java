@@ -17,14 +17,14 @@
 
 package im.turms.server.common.access.admin.web;
 
-import im.turms.server.common.infra.collection.ChunkedArrayList;
-import im.turms.server.common.infra.lang.Pair;
-import im.turms.server.common.infra.lang.StringUtil;
-
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import im.turms.server.common.infra.collection.ChunkedArrayList;
+import im.turms.server.common.infra.lang.Pair;
+import im.turms.server.common.infra.lang.StringUtil;
 
 /**
  * @author James Chen
@@ -35,9 +35,9 @@ public class FastUriParser {
     }
 
     /**
-     * @implNote Note that this method only handles the cases for turms servers,
-     * meaning it will throw and won't waste resources to parse if a URI is meaningless
-     * for turms servers even if it is a valid URI.
+     * @implNote Note that this method only handles the cases for turms servers, meaning it will
+     *           throw and won't waste resources to parse if a URI is meaningless for turms servers
+     *           even if it is a valid URI.
      */
     public static Pair<String, Map<String, List<Object>>> parsePathAndQueryParams(String uri) {
         if (!StringUtil.isLatin1(uri)) {
@@ -80,25 +80,31 @@ public class FastUriParser {
                 }
                 case PARSING_QUERY_PARAM_KEY -> {
                     if (b == '%') {
-                        if (i + 2 < srcBytesLength && srcBytes[i + 1] == '5' && srcBytes[i + 2] == 'B') {
+                        if (i + 2 < srcBytesLength
+                                && srcBytes[i + 1] == '5'
+                                && srcBytes[i + 2] == 'B') {
                             isEncodedLeftBracket = true;
                         } else {
                             // %5B => [
                             // %5D => ]
-                            throw new IllegalArgumentException("The query parameter key must only contain escape codes of \"%5B\" and \"%5D\"");
+                            throw new IllegalArgumentException(
+                                    "The query parameter key must only contain escape codes of \"%5B\" and \"%5D\"");
                         }
                     } else {
                         isEncodedLeftBracket = false;
                     }
                     if (isEncodedLeftBracket || b == '[') {
                         currentItemCharCount = i - currentItemCharBeginIndex;
-                        String newParamKey = StringUtil.newLatin1String(srcBytes, currentItemCharBeginIndex, currentItemCharCount);
+                        String newParamKey = StringUtil.newLatin1String(srcBytes,
+                                currentItemCharBeginIndex,
+                                currentItemCharCount);
                         if (!newParamKey.equals(currentParamKey)) {
                             hasArrayWithoutIndexes = false;
                             hasArrayWithIndexes = false;
                         }
                         currentParamKey = newParamKey;
-                        currentParamValues = queryParams.computeIfAbsent(currentParamKey, s -> new ChunkedArrayList<>(16, 4));
+                        currentParamValues = queryParams.computeIfAbsent(currentParamKey,
+                                s -> new ChunkedArrayList<>(16, 4));
                         if (isEncodedLeftBracket) {
                             i += 2;
                         }
@@ -106,13 +112,16 @@ public class FastUriParser {
                         currentState = ParseState.PARSING_QUERY_PARAM_KEY_ARRAY_INDEX;
                     } else if (b == '=') {
                         currentItemCharCount = i - currentItemCharBeginIndex;
-                        String newParamKey = StringUtil.newLatin1String(srcBytes, currentItemCharBeginIndex, currentItemCharCount);
+                        String newParamKey = StringUtil.newLatin1String(srcBytes,
+                                currentItemCharBeginIndex,
+                                currentItemCharCount);
                         if (!newParamKey.equals(currentParamKey)) {
                             hasArrayWithoutIndexes = false;
                             hasArrayWithIndexes = false;
                         }
                         currentParamKey = newParamKey;
-                        currentParamValues = queryParams.computeIfAbsent(currentParamKey, s -> new ChunkedArrayList<>(16, 4));
+                        currentParamValues = queryParams.computeIfAbsent(currentParamKey,
+                                s -> new ChunkedArrayList<>(16, 4));
                         currentItemCharBeginIndex = i + 1;
                         currentState = ParseState.PARSING_QUERY_PARAM_VALUE;
                     } else if (b == '.') {
@@ -122,10 +131,13 @@ public class FastUriParser {
                 }
                 case PARSING_QUERY_PARAM_KEY_ARRAY_INDEX -> {
                     if (b == '%') {
-                        if (i + 2 < srcBytesLength && srcBytes[i + 1] == '5' && srcBytes[i + 2] == 'D') {
+                        if (i + 2 < srcBytesLength
+                                && srcBytes[i + 1] == '5'
+                                && srcBytes[i + 2] == 'D') {
                             isEncodedRightBracket = true;
                         } else {
-                            throw new IllegalArgumentException("The query parameter key must only contain escape codes of \"%5B\" and \"%5D\"");
+                            throw new IllegalArgumentException(
+                                    "The query parameter key must only contain escape codes of \"%5B\" and \"%5D\"");
                         }
                     } else {
                         isEncodedRightBracket = false;
@@ -138,9 +150,10 @@ public class FastUriParser {
                         if (currentItemCharCount == 0) {
                             hasArrayWithoutIndexes = true;
                             if (hasArrayWithIndexes) {
-                                throw new IllegalArgumentException("The array item must be all indexed or not indexed. " +
-                                        "e.g. \"keys[]=1&keys[]=2&keys[]=3\" or " +
-                                        "e.g. \"keys[0]=1&keys[1]=2&keys[2]=3\"");
+                                throw new IllegalArgumentException(
+                                        "The array item must be all indexed or not indexed. "
+                                                + "e.g. \"keys[]=1&keys[]=2&keys[]=3\" or "
+                                                + "e.g. \"keys[0]=1&keys[1]=2&keys[2]=3\"");
                             }
                             if (i + 1 < srcBytesLength) {
                                 byte tempByte = srcBytes[i + 1];
@@ -150,26 +163,33 @@ public class FastUriParser {
                                 } else if (tempByte == '.') {
                                     currentState = ParseState.PARSING_QUERY_PARAM_KEY_NESTED_KEY;
                                 } else {
-                                    throw new IllegalArgumentException("\"[]\" must come with a \"=\" or a \".\"");
+                                    throw new IllegalArgumentException(
+                                            "\"[]\" must come with a \"=\" or a \".\"");
                                 }
                             } else {
-                                throw new IllegalArgumentException("\"[]\" must come with a \"=\" or a \".\"");
+                                throw new IllegalArgumentException(
+                                        "\"[]\" must come with a \"=\" or a \".\"");
                             }
                         } else {
                             hasArrayWithIndexes = true;
                             if (hasArrayWithoutIndexes) {
-                                throw new IllegalArgumentException("The array item must be all indexed or not indexed. " +
-                                        "e.g. \"keys[]=1&keys[]=2&keys[]=3\" or " +
-                                        "e.g. \"keys[0]=1&keys[1]=2&keys[2]=3\"");
+                                throw new IllegalArgumentException(
+                                        "The array item must be all indexed or not indexed. "
+                                                + "e.g. \"keys[]=1&keys[]=2&keys[]=3\" or "
+                                                + "e.g. \"keys[0]=1&keys[1]=2&keys[2]=3\"");
                             }
-                            String s = StringUtil.newLatin1String(srcBytes, currentArrayIndexCharBeginIndex, currentItemCharCount);
+                            String s = StringUtil.newLatin1String(srcBytes,
+                                    currentArrayIndexCharBeginIndex,
+                                    currentItemCharCount);
                             try {
                                 currentArrayIndex = Integer.parseInt(s);
                             } catch (NumberFormatException e) {
-                                throw new IllegalArgumentException("\"[indexed]\" should contain an integer greater than or equal to 0");
+                                throw new IllegalArgumentException(
+                                        "\"[indexed]\" should contain an integer greater than or equal to 0");
                             }
                             if (currentArrayIndex < previousArrayIndex) {
-                                throw new IllegalArgumentException("The array index should start from 0 incrementally");
+                                throw new IllegalArgumentException(
+                                        "The array index should start from 0 incrementally");
                             }
                             previousArrayIndex = currentArrayIndex;
                             if (i + 1 < srcBytesLength) {
@@ -180,24 +200,29 @@ public class FastUriParser {
                                 } else if (tempByte == '.') {
                                     currentState = ParseState.PARSING_QUERY_PARAM_KEY_NESTED_KEY;
                                 } else {
-                                    throw new IllegalArgumentException("\"[indexed]\" should comes with a \"=\" or a \".\"");
+                                    throw new IllegalArgumentException(
+                                            "\"[indexed]\" should comes with a \"=\" or a \".\"");
                                 }
                             } else {
-                                throw new IllegalArgumentException("\"[indexed]\" should comes with a \"=\" or a \".\"");
+                                throw new IllegalArgumentException(
+                                        "\"[indexed]\" should comes with a \"=\" or a \".\"");
                             }
                         }
                     }
                 }
                 case PARSING_QUERY_PARAM_KEY_NESTED_KEY -> {
                     if (b == '=') {
-                        currentParamNestedKey = StringUtil.newLatin1String(srcBytes, currentItemCharBeginIndex, i - currentItemCharBeginIndex);
+                        currentParamNestedKey = StringUtil.newLatin1String(srcBytes,
+                                currentItemCharBeginIndex,
+                                i - currentItemCharBeginIndex);
                         currentItemCharBeginIndex = i + 1;
                         List<Object> objects = queryParams.get(currentParamKey);
                         if (currentArrayIndex >= objects.size()) {
                             currentNestedParamValues = new HashMap<>(8);
                             objects.add(currentArrayIndex, currentNestedParamValues);
                         } else {
-                            currentNestedParamValues = (Map<String, String>) objects.get(currentArrayIndex);
+                            currentNestedParamValues =
+                                    (Map<String, String>) objects.get(currentArrayIndex);
                         }
                         currentState = ParseState.PARSING_QUERY_PARAM_VALUE;
                     }
@@ -212,22 +237,27 @@ public class FastUriParser {
                         length = i - currentItemCharBeginIndex + 1;
                     } else if (b == '%') {
                         // %2C => &
-                        if (i + 2 < srcBytesLength && srcBytes[i + 1] == '2' && srcBytes[i + 2] == 'C') {
+                        if (i + 2 < srcBytesLength
+                                && srcBytes[i + 1] == '2'
+                                && srcBytes[i + 2] == 'C') {
                             isValueDelimiter = true;
                             length = i - currentItemCharBeginIndex;
                             i += 2;
                         } else {
-                            throw new IllegalArgumentException("The query parameter can only contain escape codes of \"%2C\"");
+                            throw new IllegalArgumentException(
+                                    "The query parameter can only contain escape codes of \"%2C\"");
                         }
                     } else if (b == ',') {
                         if (currentParamNestedKey != null) {
-                            throw new IllegalArgumentException("The array query parameter cannot contain nested keys");
+                            throw new IllegalArgumentException(
+                                    "The array query parameter cannot contain nested keys");
                         }
                         length = i - currentItemCharBeginIndex;
                         isValueDelimiter = true;
                     }
                     if (length != -1) {
-                        value = StringUtil.newLatin1String(srcBytes, currentItemCharBeginIndex, length);
+                        value = StringUtil
+                                .newLatin1String(srcBytes, currentItemCharBeginIndex, length);
                         if (currentParamNestedKey == null) {
                             currentParamValues.add(value);
                         } else {
@@ -243,7 +273,9 @@ public class FastUriParser {
                 }
             }
         }
-        return Pair.of(path == null ? uri : path, queryParams);
+        return Pair.of(path == null
+                ? uri
+                : path, queryParams);
     }
 
     private enum ParseState {

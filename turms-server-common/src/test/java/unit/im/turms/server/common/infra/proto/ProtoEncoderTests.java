@@ -19,10 +19,11 @@ package unit.im.turms.server.common.infra.proto;
 
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
-import im.turms.server.common.access.client.dto.request.message.CreateMessageRequest;
-import im.turms.server.common.infra.proto.ProtoEncoder;
 import io.netty.buffer.ByteBuf;
 import org.junit.jupiter.api.Test;
+
+import im.turms.server.common.access.client.dto.request.message.CreateMessageRequest;
+import im.turms.server.common.infra.proto.ProtoEncoder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -32,12 +33,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 class ProtoEncoderTests {
 
     @Test
-    void getDirectByteBuffer_shouldBeParsedToOriginalRequest() throws InvalidProtocolBufferException {
+    void getDirectByteBuffer_shouldBeParsedToOriginalRequest()
+            throws InvalidProtocolBufferException {
         int messageId = 9999;
         String text = "Test Text";
         byte[] record = {1, 2, 3, 4, 10, 11};
-        CreateMessageRequest request = CreateMessageRequest
-                .newBuilder()
+        CreateMessageRequest request = CreateMessageRequest.newBuilder()
                 .setMessageId(messageId)
                 .setText(text)
                 .addRecords(ByteString.copyFrom(record))

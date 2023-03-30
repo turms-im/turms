@@ -18,15 +18,13 @@
 package io.lettuce.core.protocol;
 
 /**
- * The method is used to eliminate a lot of objects for large volume of data
- * e.g. If there is 10,000 keys, we need to create a List<Long> to collect the keys
- * and then pass the keys with other keys (e.g. TTL) to encode them to one ByteBuf[],
- * and then pass the ByteBuf[] to Lettuce, which create a List<KeyArgument>(singularArguments)
- * to hold them.
- * Obviously, it is a disaster for performance.
+ * The method is used to eliminate a lot of objects for large volume of data e.g. If there is 10,000
+ * keys, we need to create a List<Long> to collect the keys and then pass the keys with other keys
+ * (e.g. TTL) to encode them to one ByteBuf[], and then pass the ByteBuf[] to Lettuce, which create
+ * a List<KeyArgument>(singularArguments) to hold them. Obviously, it is a disaster for performance.
  * <p>
- * LongKeyGenerator works as a mediator between the key collector and the Redis encoder,
- * and it collects and encodes at the same time, and put all keys into one ByteBuf as one KeyArgument
+ * LongKeyGenerator works as a mediator between the key collector and the Redis encoder, and it
+ * collects and encodes at the same time, and put all keys into one ByteBuf as one KeyArgument
  *
  * @author James Chen
  */

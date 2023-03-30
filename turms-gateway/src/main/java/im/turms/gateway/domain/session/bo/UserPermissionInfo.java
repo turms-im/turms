@@ -17,11 +17,11 @@
 
 package im.turms.gateway.domain.session.bo;
 
-import im.turms.server.common.access.client.dto.request.TurmsRequest;
-import im.turms.server.common.access.common.ResponseStatusCode;
-
 import java.util.Collections;
 import java.util.Set;
+
+import im.turms.server.common.access.client.dto.request.TurmsRequest;
+import im.turms.server.common.access.common.ResponseStatusCode;
 
 /**
  * @author James Chen

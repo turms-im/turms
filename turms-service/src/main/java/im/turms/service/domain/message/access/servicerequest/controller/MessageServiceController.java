@@ -17,7 +17,18 @@
 
 package im.turms.service.domain.message.access.servicerequest.controller;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import com.google.protobuf.ByteString;
+import org.springframework.stereotype.Controller;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.access.client.dto.ClientMessagePool;
 import im.turms.server.common.access.client.dto.model.message.MessagesWithTotal;
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
@@ -46,16 +57,6 @@ import im.turms.service.domain.message.bo.MessageAndRecipientIds;
 import im.turms.service.domain.message.po.Message;
 import im.turms.service.domain.message.service.MessageService;
 import im.turms.service.infra.proto.ProtoModelConvertor;
-import org.springframework.stereotype.Controller;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.CREATE_MESSAGE_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_MESSAGES_REQUEST;
@@ -88,33 +89,41 @@ public class MessageServiceController extends BaseServiceController {
 
     private void updateProperties(TurmsProperties properties) {
         ServiceProperties serviceProperties = properties.getService();
-        notifyRecipientsAfterMessageUpdatedBySender = serviceProperties.getNotification().isNotifyRecipientsAfterMessageUpdatedBySender();
-        sendMessageToOtherSenderOnlineDevices = serviceProperties.getMessage().isSendMessageToOtherSenderOnlineDevices();
-        updateReadDateWhenUserQueryingMessage = serviceProperties.getConversation().getReadReceipt().isUpdateReadDateWhenUserQueryingMessage();
+        notifyRecipientsAfterMessageUpdatedBySender = serviceProperties.getNotification()
+                .isNotifyRecipientsAfterMessageUpdatedBySender();
+        sendMessageToOtherSenderOnlineDevices = serviceProperties.getMessage()
+                .isSendMessageToOtherSenderOnlineDevices();
+        updateReadDateWhenUserQueryingMessage = serviceProperties.getConversation()
+                .getReadReceipt()
+                .isUpdateReadDateWhenUserQueryingMessage();
     }
 
     @ServiceRequestMapping(CREATE_MESSAGE_REQUEST)
     public ClientRequestHandler handleCreateMessageRequest() {
         return clientRequest -> {
-            CreateMessageRequest request = clientRequest.turmsRequest().getCreateMessageRequest();
+            CreateMessageRequest request = clientRequest.turmsRequest()
+                    .getCreateMessageRequest();
             if (request.hasIsSystemMessage() && request.getIsSystemMessage()) {
-                return Mono.error(ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT, "Users cannot send the system message"));
+                return Mono.error(ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
+                        "Users cannot send the system message"));
             }
             Mono<MessageAndRecipientIds> messageAndRelatedUserIdsMono;
             boolean isGroupMessage = request.hasGroupId();
             if (!isGroupMessage && !request.hasRecipientId()) {
-                return Mono.error(ResponseException
-                        .get(ResponseStatusCode.ILLEGAL_ARGUMENT, "The recipientId must not be null for private messages"));
+                return Mono.error(ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
+                        "The recipientId must not be null for private messages"));
             }
-            long targetId = isGroupMessage ? request.getGroupId() : request.getRecipientId();
+            long targetId = isGroupMessage
+                    ? request.getGroupId()
+                    : request.getRecipientId();
             if (request.hasMessageId()) {
-                messageAndRelatedUserIdsMono = messageService.authAndCloneAndSaveMessage(
-                        clientRequest.userId(),
-                        clientRequest.clientIp(),
-                        request.getMessageId(),
-                        isGroupMessage,
-                        false,
-                        targetId);
+                messageAndRelatedUserIdsMono =
+                        messageService.authAndCloneAndSaveMessage(clientRequest.userId(),
+                                clientRequest.clientIp(),
+                                request.getMessageId(),
+                                isGroupMessage,
+                                false,
+                                targetId);
             } else {
                 List<byte[]> records = null;
                 int recordCount = request.getRecordsCount();
@@ -122,21 +131,29 @@ public class MessageServiceController extends BaseServiceController {
                     records = new ArrayList<>(recordCount);
                     for (ByteString byteString : request.getRecordsList()) {
                         // We don't support storing ByteString as ByteBuffer directly
-                        // because "org.bson.BsonBinaryWriter.doWriteBinaryData" don't support writing ByteBuffer
+                        // because "org.bson.BsonBinaryWriter.doWriteBinaryData" don't support
+                        // writing ByteBuffer
                         records.add(byteString.toByteArray());
                     }
                 }
-                Integer burnAfter = request.hasBurnAfter() ? request.getBurnAfter() : null;
-                Date deliveryDate = request.hasDeliveryDate() ? new Date(request.getDeliveryDate()) : null;
-                Long preMessageId = request.hasPreMessageId() ? request.getPreMessageId() : null;
-                messageAndRelatedUserIdsMono = messageService.authAndSaveMessage(
-                        null,
+                Integer burnAfter = request.hasBurnAfter()
+                        ? request.getBurnAfter()
+                        : null;
+                Date deliveryDate = request.hasDeliveryDate()
+                        ? new Date(request.getDeliveryDate())
+                        : null;
+                Long preMessageId = request.hasPreMessageId()
+                        ? request.getPreMessageId()
+                        : null;
+                messageAndRelatedUserIdsMono = messageService.authAndSaveMessage(null,
                         clientRequest.userId(),
                         clientRequest.clientIp(),
                         targetId,
                         isGroupMessage,
                         false,
-                        request.hasText() ? request.getText() : null,
+                        request.hasText()
+                                ? request.getText()
+                                : null,
                         records,
                         burnAfter,
                         deliveryDate,
@@ -146,7 +163,9 @@ public class MessageServiceController extends BaseServiceController {
             return messageAndRelatedUserIdsMono.map(pair -> {
                 Message message = pair.message();
                 // "message" is null if persisting messages is disabled
-                Long messageId = message == null ? null : message.getId();
+                Long messageId = message == null
+                        ? null
+                        : message.getId();
                 Set<Long> recipientIds = pair.recipientIds();
                 boolean hasDataForRecipients = recipientIds != null && !recipientIds.isEmpty();
                 if (messageId == null) {
@@ -155,45 +174,41 @@ public class MessageServiceController extends BaseServiceController {
                     }
                     TurmsRequest dataForRecipients = clientRequest.turmsRequest();
                     if (messageService.getTimeType() == TimeType.LOCAL_SERVER_TIME) {
-                        dataForRecipients = ClientMessagePool
-                                .getTurmsRequestBuilder()
+                        dataForRecipients = ClientMessagePool.getTurmsRequestBuilder()
                                 .mergeFrom(clientRequest.turmsRequest())
-                                .setCreateMessageRequest(ClientMessagePool
-                                        .getCreateMessageRequestBuilder()
-                                        .mergeFrom(request)
-                                        .setDeliveryDate(System.currentTimeMillis()))
+                                .setCreateMessageRequest(
+                                        ClientMessagePool.getCreateMessageRequestBuilder()
+                                                .mergeFrom(request)
+                                                .setDeliveryDate(System.currentTimeMillis()))
                                 .build();
                     }
-                    return RequestHandlerResultFactory.get(
-                            recipientIds,
-                            dataForRecipients);
+                    return RequestHandlerResultFactory.get(recipientIds, dataForRecipients);
                 } else {
                     if (!hasDataForRecipients) {
                         return RequestHandlerResultFactory.getByDataLong(messageId);
                     }
                     TurmsRequest dataForRecipients;
                     if (request.hasMessageId()) {
-                        dataForRecipients = ClientMessagePool
-                                .getTurmsRequestBuilder()
+                        dataForRecipients = ClientMessagePool.getTurmsRequestBuilder()
                                 .mergeFrom(clientRequest.turmsRequest())
-                                .setCreateMessageRequest(ProtoModelConvertor.cloneAndFillMessageRequest(request, message))
+                                .setCreateMessageRequest(ProtoModelConvertor
+                                        .cloneAndFillMessageRequest(request, message))
                                 .build();
                     } else {
-                        CreateMessageRequest.Builder requestBuilder = ClientMessagePool
-                                .getCreateMessageRequestBuilder()
-                                .mergeFrom(request)
-                                .setMessageId(messageId);
+                        CreateMessageRequest.Builder requestBuilder =
+                                ClientMessagePool.getCreateMessageRequestBuilder()
+                                        .mergeFrom(request)
+                                        .setMessageId(messageId);
                         if (messageService.getTimeType() == TimeType.LOCAL_SERVER_TIME) {
-                            requestBuilder.setDeliveryDate(message.getDeliveryDate().getTime());
+                            requestBuilder.setDeliveryDate(message.getDeliveryDate()
+                                    .getTime());
                         }
-                        dataForRecipients = ClientMessagePool
-                                .getTurmsRequestBuilder()
+                        dataForRecipients = ClientMessagePool.getTurmsRequestBuilder()
                                 .mergeFrom(clientRequest.turmsRequest())
                                 .setCreateMessageRequest(requestBuilder)
                                 .build();
                     }
-                    return RequestHandlerResultFactory.getByDataLong(
-                            messageId,
+                    return RequestHandlerResultFactory.getByDataLong(messageId,
                             recipientIds,
                             sendMessageToOtherSenderOnlineDevices,
                             dataForRecipients);
@@ -205,20 +220,35 @@ public class MessageServiceController extends BaseServiceController {
     @ServiceRequestMapping(QUERY_MESSAGES_REQUEST)
     public ClientRequestHandler handleQueryMessagesRequest() {
         return clientRequest -> {
-            QueryMessagesRequest request = clientRequest.turmsRequest().getQueryMessagesRequest();
-            List<Long> ids = request.getIdsCount() > 0 ? request.getIdsList() : null;
-            Boolean areGroupMessages = request.hasAreGroupMessages() ? request.getAreGroupMessages() : null;
-            Boolean areSystemMessages = request.hasAreSystemMessages() ? request.getAreSystemMessages() : null;
-            Set<Long> fromIds = request.getFromIdsCount() > 0 ? CollectionUtil.newSet(request.getFromIdsList()) : null;
-            Date deliveryDateStart = request.hasDeliveryDateStart() ? new Date(request.getDeliveryDateStart()) : null;
-            Date deliveryDateEnd = request.hasDeliveryDateEnd() ? new Date(request.getDeliveryDateEnd()) : null;
-            Integer maxCount = request.hasMaxCount() ? request.getMaxCount() : null;
+            QueryMessagesRequest request = clientRequest.turmsRequest()
+                    .getQueryMessagesRequest();
+            List<Long> ids = request.getIdsCount() > 0
+                    ? request.getIdsList()
+                    : null;
+            Boolean areGroupMessages = request.hasAreGroupMessages()
+                    ? request.getAreGroupMessages()
+                    : null;
+            Boolean areSystemMessages = request.hasAreSystemMessages()
+                    ? request.getAreSystemMessages()
+                    : null;
+            Set<Long> fromIds = request.getFromIdsCount() > 0
+                    ? CollectionUtil.newSet(request.getFromIdsList())
+                    : null;
+            Date deliveryDateStart = request.hasDeliveryDateStart()
+                    ? new Date(request.getDeliveryDateStart())
+                    : null;
+            Date deliveryDateEnd = request.hasDeliveryDateEnd()
+                    ? new Date(request.getDeliveryDateEnd())
+                    : null;
+            Integer maxCount = request.hasMaxCount()
+                    ? request.getMaxCount()
+                    : null;
             boolean ascending = !request.getDescending();
             boolean withTotal = request.getWithTotal();
             Long userId = clientRequest.userId();
             DateRange deliveryDate = DateRange.of(deliveryDateStart, deliveryDateEnd);
-            return messageService.authAndQueryCompleteMessages(
-                            userId,
+            return messageService
+                    .authAndQueryCompleteMessages(userId,
                             ids,
                             areGroupMessages,
                             areSystemMessages,
@@ -235,29 +265,39 @@ public class MessageServiceController extends BaseServiceController {
                         Mono<TurmsNotification.Data> dataMono;
                         if (withTotal) {
                             int fromIdCount = CollectionUtil.getSize(fromIds);
-                            Map<MessageFromKey, List<Message>> keyToMessages = CollectionUtil.newMapWithExpectedSize(fromIdCount > 0
-                                    ? messages.size() / fromIdCount
-                                    : messages.size());
+                            Map<MessageFromKey, List<Message>> keyToMessages =
+                                    CollectionUtil.newMapWithExpectedSize(fromIdCount > 0
+                                            ? messages.size() / fromIdCount
+                                            : messages.size());
                             for (Message message : messages) {
                                 Long targetId = message.getIsGroupMessage()
                                         ? message.getTargetId()
                                         : message.getSenderId();
-                                MessageFromKey senderKey = new MessageFromKey(message.getIsGroupMessage(), targetId);
-                                keyToMessages.computeIfAbsent(senderKey, messageFromKey -> new LinkedList<>())
+                                MessageFromKey senderKey =
+                                        new MessageFromKey(message.getIsGroupMessage(), targetId);
+                                keyToMessages
+                                        .computeIfAbsent(senderKey,
+                                                messageFromKey -> new LinkedList<>())
                                         .add(message);
                             }
-                            Set<Map.Entry<MessageFromKey, List<Message>>> entries = keyToMessages.entrySet();
-                            List<Mono<MessagesWithTotal>> messagesWithTotalMonos = new ArrayList<>(entries.size());
+                            Set<Map.Entry<MessageFromKey, List<Message>>> entries =
+                                    keyToMessages.entrySet();
+                            List<Mono<MessagesWithTotal>> messagesWithTotalMonos =
+                                    new ArrayList<>(entries.size());
                             boolean isGroupMessage;
                             for (Map.Entry<MessageFromKey, List<Message>> entry : entries) {
                                 MessageFromKey senderKey = entry.getKey();
                                 isGroupMessage = senderKey.isGroupMessage();
-                                Mono<MessagesWithTotal> messagesWithTotalMono = messageService.countMessages(
-                                                null,
+                                Mono<MessagesWithTotal> messagesWithTotalMono = messageService
+                                        .countMessages(null,
                                                 isGroupMessage,
                                                 null,
-                                                isGroupMessage ? null : Set.of(senderKey.fromId()),
-                                                isGroupMessage ? Set.of(senderKey.fromId()) : Set.of(userId),
+                                                isGroupMessage
+                                                        ? null
+                                                        : Set.of(senderKey.fromId()),
+                                                isGroupMessage
+                                                        ? Set.of(senderKey.fromId())
+                                                        : Set.of(userId),
                                                 deliveryDate,
                                                 null)
                                         .map(total -> ClientMessagePool
@@ -265,8 +305,10 @@ public class MessageServiceController extends BaseServiceController {
                                                 .setTotal(total.intValue())
                                                 .setIsGroupMessage(senderKey.isGroupMessage())
                                                 .setFromId(senderKey.fromId())
-                                                .addAllMessages(CollectionUtil.transformAsList(entry.getValue(),
-                                                        m -> ProtoModelConvertor.message2proto(m).build()))
+                                                .addAllMessages(CollectionUtil.transformAsList(
+                                                        entry.getValue(),
+                                                        m -> ProtoModelConvertor.message2proto(m)
+                                                                .build()))
                                                 .build());
                                 messagesWithTotalMonos.add(messagesWithTotalMono);
                             }
@@ -276,33 +318,45 @@ public class MessageServiceController extends BaseServiceController {
                                             .getTurmsNotificationDataBuilder()
                                             .setMessagesWithTotalList(ClientMessagePool
                                                     .getMessagesWithTotalListBuilder()
-                                                    .addAllMessagesWithTotalList(messagesWithTotals))
+                                                    .addAllMessagesWithTotalList(
+                                                            messagesWithTotals))
                                             .build());
                         } else {
                             TurmsNotification.Data data = ClientMessagePool
                                     .getTurmsNotificationDataBuilder()
-                                    .setMessages(ClientMessagePool
-                                            .getMessagesBuilder()
+                                    .setMessages(ClientMessagePool.getMessagesBuilder()
                                             .addAllMessages(CollectionUtil.transformAsList(messages,
-                                                    m -> ProtoModelConvertor.message2proto(m).build())))
+                                                    m -> ProtoModelConvertor.message2proto(m)
+                                                            .build())))
                                     .build();
                             dataMono = Mono.just(data);
                         }
-                        Mono<RequestHandlerResult> resultMono = dataMono.map(RequestHandlerResultFactory::get);
+                        Mono<RequestHandlerResult> resultMono =
+                                dataMono.map(RequestHandlerResultFactory::get);
                         if (updateReadDateWhenUserQueryingMessage) {
                             resultMono = resultMono.doOnSuccess(ignored -> {
                                 Mono<Void> mono = areGroupMessages
-                                        ? conversationService.upsertGroupConversationReadDate(messages.get(0).groupId(), userId, new Date())
-                                        : conversationService
-                                        .upsertPrivateConversationReadDate(userId, messages.get(0).getTargetId(), new Date());
+                                        ? conversationService
+                                                .upsertGroupConversationReadDate(messages.get(0)
+                                                        .groupId(), userId, new Date())
+                                        : conversationService.upsertPrivateConversationReadDate(
+                                                userId,
+                                                messages.get(0)
+                                                        .getTargetId(),
+                                                new Date());
                                 mono.subscribe(null, t -> {
                                     Message message = messages.get(0);
                                     if (areGroupMessages) {
-                                        LOGGER.error("Caught an error while upserting the group conversation read date: {}",
-                                                message.groupId(), t);
+                                        LOGGER.error(
+                                                "Caught an error while upserting the group conversation read date: {}",
+                                                message.groupId(),
+                                                t);
                                     } else {
-                                        LOGGER.error("Caught an error while upserting the private conversation read date: {sender={}, recipient={}}",
-                                                message.getSenderId(), message.getTargetId(), t);
+                                        LOGGER.error(
+                                                "Caught an error while upserting the private conversation read date: {sender={}, recipient={}}",
+                                                message.getSenderId(),
+                                                message.getTargetId(),
+                                                t);
                                     }
                                 });
                             });
@@ -315,33 +369,36 @@ public class MessageServiceController extends BaseServiceController {
     @ServiceRequestMapping(UPDATE_MESSAGE_REQUEST)
     public ClientRequestHandler handleUpdateMessageRequest() {
         return clientRequest -> {
-            UpdateMessageRequest request = clientRequest.turmsRequest().getUpdateMessageRequest();
+            UpdateMessageRequest request = clientRequest.turmsRequest()
+                    .getUpdateMessageRequest();
             long messageId = request.getMessageId();
-            String text = request.hasText() ? request.getText() : null;
+            String text = request.hasText()
+                    ? request.getText()
+                    : null;
             List<byte[]> records = null;
             int recordCount = request.getRecordsCount();
             if (recordCount > 0) {
                 records = new ArrayList<>(recordCount);
                 for (ByteString byteString : request.getRecordsList()) {
                     // We don't support storing ByteString as ByteBuffer directly
-                    // because "org.bson.BsonBinaryWriter.doWriteBinaryData" don't support writing ByteBuffer
+                    // because "org.bson.BsonBinaryWriter.doWriteBinaryData" don't support writing
+                    // ByteBuffer
                     records.add(byteString.toByteArray());
                 }
             }
-            Date recallDate = request.hasRecallDate() ? new Date(request.getRecallDate()) : null;
-            return messageService.authAndUpdateMessage(
-                            clientRequest.userId(),
-                            clientRequest.deviceType(),
-                            messageId,
-                            text,
-                            records,
-                            recallDate)
+            Date recallDate = request.hasRecallDate()
+                    ? new Date(request.getRecallDate())
+                    : null;
+            return messageService.authAndUpdateMessage(clientRequest
+                    .userId(), clientRequest.deviceType(), messageId, text, records, recallDate)
                     .then(Mono.defer(() -> {
                         if (notifyRecipientsAfterMessageUpdatedBySender) {
                             return messageService.queryMessageRecipients(messageId)
                                     .map(recipientIds -> recipientIds.isEmpty()
                                             ? RequestHandlerResultFactory.OK
-                                            : RequestHandlerResultFactory.get(recipientIds, clientRequest.turmsRequest(), sendMessageToOtherSenderOnlineDevices));
+                                            : RequestHandlerResultFactory.get(recipientIds,
+                                                    clientRequest.turmsRequest(),
+                                                    sendMessageToOtherSenderOnlineDevices));
                         }
                         return Mono.just(RequestHandlerResultFactory.OK);
                     }));

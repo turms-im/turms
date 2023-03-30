@@ -24,8 +24,7 @@ import org.bson.types.MinKey;
 
 /**
  * @author James Chen
- * @implNote We can try to make BsonValue a primitive class
- * in the future to avoid creating objects
+ * @implNote We can try to make BsonValue a primitive class in the future to avoid creating objects
  */
 public final class BsonPool {
 

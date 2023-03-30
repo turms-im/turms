@@ -23,8 +23,8 @@ import lombok.Getter;
  * Use enum so that we can use EnumMap in code
  *
  * @author James Chen
- * @implNote Note that the ID value is integer for better performance and convenience in JVM
- * but they are converted to signed short when serializing.
+ * @implNote Note that the ID value is integer for better performance and convenience in JVM but
+ *           they are converted to signed short when serializing.
  */
 public enum CodecId {
 

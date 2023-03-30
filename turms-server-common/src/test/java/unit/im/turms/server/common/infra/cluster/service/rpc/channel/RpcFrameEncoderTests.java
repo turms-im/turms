@@ -18,6 +18,11 @@
 package unit.im.turms.server.common.infra.cluster.service.rpc.channel;
 
 import com.google.protobuf.InvalidProtocolBufferException;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
+import org.junit.jupiter.api.Test;
+import unit.im.turms.server.common.infra.cluster.service.rpc.codec.BaseCodecTest;
+
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.request.TurmsRequest;
 import im.turms.server.common.access.client.dto.request.message.CreateMessageRequest;
@@ -26,10 +31,6 @@ import im.turms.server.common.access.servicerequest.rpc.HandleServiceRequest;
 import im.turms.server.common.infra.cluster.service.rpc.channel.RpcFrameDecoder;
 import im.turms.server.common.infra.cluster.service.rpc.channel.RpcFrameEncoder;
 import im.turms.server.common.infra.tracing.TracingContext;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
-import org.junit.jupiter.api.Test;
-import unit.im.turms.server.common.infra.cluster.service.rpc.codec.BaseCodecTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -44,7 +45,8 @@ class RpcFrameEncoderTests extends BaseCodecTest {
                         .setText("hello")
                         .build())
                 .build();
-        ServiceRequest serviceRequest = new ServiceRequest(new byte[]{1, 2, 3, 4},
+        ServiceRequest serviceRequest = new ServiceRequest(
+                new byte[]{1, 2, 3, 4},
                 123L,
                 DeviceType.ANDROID,
                 1L,
@@ -55,20 +57,23 @@ class RpcFrameEncoderTests extends BaseCodecTest {
         rpcRequest.setRequestId(111);
         rpcRequest.setFromNodeId("testNode");
 
-        ByteBuf rpcRequestBuffer = RpcFrameEncoder.INSTANCE.encode(rpcRequest.getRequestId(), rpcRequest);
+        ByteBuf rpcRequestBuffer =
+                RpcFrameEncoder.INSTANCE.encode(rpcRequest.getRequestId(), rpcRequest);
 
         assertThat(rpcRequestBuffer.refCnt())
                 .as("The initial refCnt of RPC request buffer should be 1")
                 .isEqualTo(1);
 
-        HandleServiceRequest parsedRequest = (HandleServiceRequest) new RpcFrameDecoder().decodePayload(null, rpcRequestBuffer);
+        HandleServiceRequest parsedRequest =
+                (HandleServiceRequest) new RpcFrameDecoder().decodePayload(null, rpcRequestBuffer);
 
         assertThat(rpcRequestBuffer.refCnt())
                 // It should be 2 because HandleServiceRequest will retainSlice the buffer
                 .as("The refCnt of RPC request buffer should be retained to 2")
                 .isEqualTo(2);
 
-        ByteBuf turmsRequestBuffer = parsedRequest.getServiceRequest().getTurmsRequestBuffer();
+        ByteBuf turmsRequestBuffer = parsedRequest.getServiceRequest()
+                .getTurmsRequestBuffer();
         TurmsRequest parsedTurmsRequest = TurmsRequest.parseFrom(turmsRequestBuffer.nioBuffer());
 
         // Note refCnf can be 1 or 0 depending on different ByteBuf,

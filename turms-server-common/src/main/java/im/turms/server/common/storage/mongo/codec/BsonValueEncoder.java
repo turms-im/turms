@@ -17,7 +17,12 @@
 
 package im.turms.server.common.storage.mongo.codec;
 
-import im.turms.server.common.storage.mongo.CodecPool;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+
 import org.bson.BsonArrayUtil;
 import org.bson.BsonBinary;
 import org.bson.BsonBoolean;
@@ -33,11 +38,7 @@ import org.bson.BsonValue;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import im.turms.server.common.storage.mongo.CodecPool;
 
 /**
  * @author James Chen
@@ -79,7 +80,9 @@ public final class BsonValueEncoder {
             return val;
         }
         if (value instanceof Boolean val) {
-            return val ? BsonBoolean.TRUE : BsonBoolean.FALSE;
+            return val
+                    ? BsonBoolean.TRUE
+                    : BsonBoolean.FALSE;
         }
         if (value instanceof Long val) {
             return new BsonInt64(val);
@@ -116,7 +119,8 @@ public final class BsonValueEncoder {
             Enum<?> element = (Enum<?>) value;
             return new BsonInt32(element.ordinal());
         }
-        EncoderContext encoderContext = EncoderContext.builder().build();
+        EncoderContext encoderContext = EncoderContext.builder()
+                .build();
         BsonDocument document = new BsonDocument();
         BsonWriter writer = new BsonDocumentWriter(document);
         EntityCodec codec = (EntityCodec) CodecPool.CODEC_REGISTRY.get(clazz);

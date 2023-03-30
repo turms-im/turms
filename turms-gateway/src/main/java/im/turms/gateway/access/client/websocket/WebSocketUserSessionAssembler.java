@@ -17,6 +17,10 @@
 
 package im.turms.gateway.access.client.websocket;
 
+import org.springframework.stereotype.Component;
+import reactor.netty.Connection;
+import reactor.netty.DisposableServer;
+
 import im.turms.gateway.access.client.common.ClientRequestDispatcher;
 import im.turms.gateway.access.client.common.UserSessionAssembler;
 import im.turms.gateway.access.client.common.connection.NetConnection;
@@ -31,9 +35,6 @@ import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.gateway.GatewayProperties;
 import im.turms.server.common.infra.property.env.gateway.WebSocketProperties;
-import org.springframework.stereotype.Component;
-import reactor.netty.Connection;
-import reactor.netty.DisposableServer;
 
 /**
  * @author James Chen
@@ -41,7 +42,8 @@ import reactor.netty.DisposableServer;
 @Component
 public class WebSocketUserSessionAssembler extends UserSessionAssembler {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(WebSocketUserSessionAssembler.class);
+    private static final Logger LOGGER =
+            LoggerFactory.getLogger(WebSocketUserSessionAssembler.class);
 
     private final DisposableServer server;
 
@@ -53,23 +55,30 @@ public class WebSocketUserSessionAssembler extends UserSessionAssembler {
             ServerStatusManager serverStatusManager,
             SessionService sessionService,
             ClientRequestDispatcher clientRequestDispatcher) {
-        super(apiLoggingContext, clientRequestDispatcher, sessionService,
-                propertiesManager.getGlobalProperties().getGateway().getWebsocket().getCloseIdleConnectionAfterSeconds());
-        GatewayProperties gatewayProperties = propertiesManager.getLocalProperties().getGateway();
+        super(apiLoggingContext,
+                clientRequestDispatcher,
+                sessionService,
+                propertiesManager.getGlobalProperties()
+                        .getGateway()
+                        .getWebsocket()
+                        .getCloseIdleConnectionAfterSeconds());
+        GatewayProperties gatewayProperties = propertiesManager.getLocalProperties()
+                .getGateway();
         WebSocketProperties webSocketProperties = gatewayProperties.getWebsocket();
         if (webSocketProperties.isEnabled()) {
-            server = WebSocketServerFactory.create(
-                    webSocketProperties,
+            server = WebSocketServerFactory.create(webSocketProperties,
                     blocklistService,
                     serverStatusManager,
                     sessionService,
                     bindConnectionWithSessionWrapper(),
-                    gatewayProperties.getClientApi().getMaxRequestSizeBytes());
+                    gatewayProperties.getClientApi()
+                            .getMaxRequestSizeBytes());
             LOGGER.info("WebSocket server started on: {}:{}", server.host(), server.port());
-            applicationContext.addShutdownHook(JobShutdownOrder.CLOSE_GATEWAY_WEBSOCKET_SERVER, timeoutMillis -> {
-                server.dispose();
-                return server.onDispose();
-            });
+            applicationContext.addShutdownHook(JobShutdownOrder.CLOSE_GATEWAY_WEBSOCKET_SERVER,
+                    timeoutMillis -> {
+                        server.dispose();
+                        return server.onDispose();
+                    });
         } else {
             server = null;
         }

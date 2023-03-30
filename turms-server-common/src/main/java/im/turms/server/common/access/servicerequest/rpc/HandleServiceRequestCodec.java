@@ -17,13 +17,14 @@
 
 package im.turms.server.common.access.servicerequest.rpc;
 
+import io.netty.buffer.ByteBuf;
+
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.servicerequest.dto.ServiceRequest;
 import im.turms.server.common.infra.cluster.service.codec.codec.CodecId;
 import im.turms.server.common.infra.cluster.service.codec.io.CodecStreamInput;
 import im.turms.server.common.infra.cluster.service.codec.io.CodecStreamOutput;
 import im.turms.server.common.infra.cluster.service.rpc.codec.RpcRequestCodec;
-import io.netty.buffer.ByteBuf;
 
 import static im.turms.server.common.infra.net.InetAddressUtil.IPV4_BYTE_LENGTH;
 import static im.turms.server.common.infra.net.InetAddressUtil.IPV6_BYTE_LENGTH;
@@ -49,35 +50,43 @@ public class HandleServiceRequestCodec extends RpcRequestCodec<HandleServiceRequ
         int ipFormatFlag = switch (ip.length) {
             case IPV4_BYTE_LENGTH -> IS_IPV4_FLAG;
             case IPV6_BYTE_LENGTH -> IS_IPV6_FLAG;
-            default -> throw new IllegalArgumentException("Illegal IP length: " + ip.length);
+            default -> throw new IllegalArgumentException(
+                    "Illegal IP length: "
+                            + ip.length);
         };
         output.writeByte(ipFormatFlag);
         output.writeBytes(request.getIp());
         output.writeLong(request.getUserId());
-        output.writeByte(request.getDeviceType().getNumber());
+        output.writeByte(request.getDeviceType()
+                .getNumber());
     }
 
     @Override
     public HandleServiceRequest readRequestData(CodecStreamInput in) {
         boolean isIpV4 = in.readByte() == IS_IPV4_FLAG;
-        int ipByteLength = isIpV4 ? IPV4_BYTE_LENGTH : IPV6_BYTE_LENGTH;
+        int ipByteLength = isIpV4
+                ? IPV4_BYTE_LENGTH
+                : IPV6_BYTE_LENGTH;
         byte[] ip = in.readBytes(ipByteLength);
         long userId = in.readLong();
         DeviceType deviceType = DeviceType.forNumber(in.readByte());
 
         ByteBuf turmsRequestBuffer = in.readRetainedSlice(in.readableBytes());
-        ServiceRequest serviceRequest = new ServiceRequest(ip, userId, deviceType, null, null, turmsRequestBuffer);
+        ServiceRequest serviceRequest =
+                new ServiceRequest(ip, userId, deviceType, null, null, turmsRequestBuffer);
         return new HandleServiceRequest(serviceRequest);
     }
 
     @Override
     public int initialCapacityForRequest(HandleServiceRequest data) {
-        return FIXED_FIELDS_LENGTH + data.getServiceRequest().getIp().length;
+        return FIXED_FIELDS_LENGTH + data.getServiceRequest()
+                .getIp().length;
     }
 
     @Override
     public ByteBuf byteBufToComposite(HandleServiceRequest data) {
-        return data.getServiceRequest().getTurmsRequestBuffer();
+        return data.getServiceRequest()
+                .getTurmsRequestBuffer();
     }
 
 }

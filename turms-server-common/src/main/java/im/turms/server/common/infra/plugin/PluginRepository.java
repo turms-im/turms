@@ -17,12 +17,6 @@
 
 package im.turms.server.common.infra.plugin;
 
-import im.turms.server.common.infra.collection.CollectionUtil;
-import im.turms.server.common.infra.exception.DuplicateResourceException;
-import im.turms.server.common.infra.logging.core.logger.Logger;
-import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
-import org.jctools.maps.NonBlockingIdentityHashMap;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -30,6 +24,13 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
+
+import org.jctools.maps.NonBlockingIdentityHashMap;
+
+import im.turms.server.common.infra.collection.CollectionUtil;
+import im.turms.server.common.infra.exception.DuplicateResourceException;
+import im.turms.server.common.infra.logging.core.logger.Logger;
+import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 
 /**
  * @author James Chen
@@ -48,20 +49,24 @@ public class PluginRepository {
     }
 
     public void register(Plugin plugin) {
-        String id = plugin.descriptor().getId();
+        String id = plugin.descriptor()
+                .getId();
         Plugin currentPlugin = idToPlugin.computeIfAbsent(id, pluginId -> {
             for (TurmsExtension extension : plugin.extensions()) {
                 ExtensionPoint extensionPoint = extension.getExtensionPoint();
-                for (Class<? extends ExtensionPoint> extensionPointClass : extension.getExtensionPointClasses()) {
-                    List<ExtensionPoint> extensionPoints = classToExtensionPoint
-                            .computeIfAbsent(extensionPointClass, key -> new CopyOnWriteArrayList<>());
-                    if (singletonExtensionPointClasses.contains(extensionPointClass) &&
-                            !extensionPoints.isEmpty()) {
-                        throw new DuplicateResourceException("The singleton extension point (" +
-                                extensionPointClass.getName() +
-                                ") in the plugin (" +
-                                pluginId +
-                                ") cannot be registered because an extension point has been registered");
+                for (Class<? extends ExtensionPoint> extensionPointClass : extension
+                        .getExtensionPointClasses()) {
+                    List<ExtensionPoint> extensionPoints =
+                            classToExtensionPoint.computeIfAbsent(extensionPointClass,
+                                    key -> new CopyOnWriteArrayList<>());
+                    if (singletonExtensionPointClasses.contains(extensionPointClass)
+                            && !extensionPoints.isEmpty()) {
+                        throw new DuplicateResourceException(
+                                "The singleton extension point ("
+                                        + extensionPointClass.getName()
+                                        + ") in the plugin ("
+                                        + pluginId
+                                        + ") cannot be registered because an extension point has been registered");
                     }
                     extensionPoints.add(extensionPoint);
                 }
@@ -69,12 +74,15 @@ public class PluginRepository {
             return plugin;
         });
         if (currentPlugin != plugin) {
-            throw new DuplicateResourceException("The plugin with the ID (" +
-                    id +
-                    ") has been registered");
+            throw new DuplicateResourceException(
+                    "The plugin with the ID ("
+                            + id
+                            + ") has been registered");
         }
-        LOGGER.info("A new plugin with the ID ({}) has been registered. The current number of plugins is: {}",
-                id, idToPlugin.size());
+        LOGGER.info(
+                "A new plugin with the ID ({}) has been registered. The current number of plugins is: {}",
+                id,
+                idToPlugin.size());
     }
 
     public <T extends ExtensionPoint> boolean hasRunningExtensions(Class<T> clazz) {
@@ -126,8 +134,10 @@ public class PluginRepository {
             }
             for (TurmsExtension extension : plugin.extensions()) {
                 ExtensionPoint extensionPoint = extension.getExtensionPoint();
-                for (Class<? extends ExtensionPoint> extensionPointClass : extension.getExtensionPointClasses()) {
-                    List<ExtensionPoint> extensionPoints = classToExtensionPoint.get(extensionPointClass);
+                for (Class<? extends ExtensionPoint> extensionPointClass : extension
+                        .getExtensionPointClasses()) {
+                    List<ExtensionPoint> extensionPoints =
+                            classToExtensionPoint.get(extensionPointClass);
                     if (extensionPoints != null) {
                         extensionPoints.remove(extensionPoint);
                     }
@@ -137,9 +147,11 @@ public class PluginRepository {
         }
         if (!removedPlugins.isEmpty()) {
             String removedPluginIds = CollectionUtil.toLatin1String(removedPlugins,
-                    plugin -> plugin.descriptor().getId());
+                    plugin -> plugin.descriptor()
+                            .getId());
             LOGGER.info("The plugins {} has been removed. The current number of plugins is: {}",
-                    removedPluginIds, idToPlugin.size());
+                    removedPluginIds,
+                    idToPlugin.size());
         }
         return removedPlugins;
     }

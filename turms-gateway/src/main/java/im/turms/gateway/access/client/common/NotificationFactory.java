@@ -17,6 +17,10 @@
 
 package im.turms.gateway.access.client.common;
 
+import jakarta.annotation.Nullable;
+
+import io.netty.buffer.ByteBuf;
+
 import im.turms.server.common.access.client.dto.ClientMessageEncoder;
 import im.turms.server.common.access.client.dto.ClientMessagePool;
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
@@ -24,9 +28,6 @@ import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.domain.session.bo.CloseReason;
 import im.turms.server.common.infra.exception.ThrowableInfo;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
-import io.netty.buffer.ByteBuf;
-
-import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen
@@ -39,15 +40,14 @@ public final class NotificationFactory {
     }
 
     public static void init(TurmsPropertiesManager propertiesManager) {
-        propertiesManager.notifyAndAddLocalPropertiesChangeListener(properties ->
-                returnReasonForServerError = properties.getGateway()
+        propertiesManager.notifyAndAddLocalPropertiesChangeListener(
+                properties -> returnReasonForServerError = properties.getGateway()
                         .getClientApi()
                         .isReturnReasonForServerError());
     }
 
     public static TurmsNotification create(ResponseStatusCode code, long requestId) {
-        TurmsNotification.Builder builder = ClientMessagePool
-                .getTurmsNotificationBuilder()
+        TurmsNotification.Builder builder = ClientMessagePool.getTurmsNotificationBuilder()
                 .setTimestamp(System.currentTimeMillis())
                 .setRequestId(requestId)
                 .setCode(code.getBusinessCode());
@@ -56,19 +56,21 @@ public final class NotificationFactory {
     }
 
     public static TurmsNotification create(ResponseStatusCode code, String reason, long requestId) {
-        TurmsNotification.Builder builder = ClientMessagePool
-                .getTurmsNotificationBuilder()
+        TurmsNotification.Builder builder = ClientMessagePool.getTurmsNotificationBuilder()
                 .setTimestamp(System.currentTimeMillis())
                 .setRequestId(requestId)
                 .setCode(code.getBusinessCode());
-        trySetReason(builder, code, reason == null ? code.getReason() : reason);
+        trySetReason(builder,
+                code,
+                reason == null
+                        ? code.getReason()
+                        : reason);
         return builder.build();
     }
 
     public static TurmsNotification create(ThrowableInfo info, long requestId) {
         ResponseStatusCode code = info.code();
-        TurmsNotification.Builder builder = ClientMessagePool
-                .getTurmsNotificationBuilder()
+        TurmsNotification.Builder builder = ClientMessagePool.getTurmsNotificationBuilder()
                 .setTimestamp(System.currentTimeMillis())
                 .setRequestId(requestId)
                 .setCode(code.getBusinessCode());
@@ -85,17 +87,17 @@ public final class NotificationFactory {
     }
 
     public static TurmsNotification sessionClosed(long requestId) {
-        return ClientMessagePool
-                .getTurmsNotificationBuilder()
+        return ClientMessagePool.getTurmsNotificationBuilder()
                 .setTimestamp(System.currentTimeMillis())
                 .setRequestId(requestId)
                 .setCode(ResponseStatusCode.SERVER_INTERNAL_ERROR.getBusinessCode())
                 .build();
     }
 
-    private static void trySetReason(TurmsNotification.Builder builder,
-                                     ResponseStatusCode code,
-                                     @Nullable String reason) {
+    private static void trySetReason(
+            TurmsNotification.Builder builder,
+            ResponseStatusCode code,
+            @Nullable String reason) {
         if (reason == null) {
             return;
         }

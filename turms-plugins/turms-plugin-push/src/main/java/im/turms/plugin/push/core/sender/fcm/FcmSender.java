@@ -17,6 +17,13 @@
 
 package im.turms.plugin.push.core.sender.fcm;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.function.Supplier;
+
 import com.google.api.core.ApiFuture;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.common.util.concurrent.MoreExecutors;
@@ -28,6 +35,9 @@ import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.MessagingErrorCode;
 import com.google.firebase.messaging.Notification;
+import lombok.Getter;
+import reactor.core.publisher.Mono;
+
 import im.turms.plugin.push.core.PushNotification;
 import im.turms.plugin.push.core.PushNotificationErrorCode;
 import im.turms.plugin.push.core.PushNotificationSender;
@@ -35,15 +45,6 @@ import im.turms.plugin.push.core.SendPushNotificationException;
 import im.turms.plugin.push.property.FcmProperties;
 import im.turms.plugin.push.property.TemplateProperties;
 import im.turms.server.common.infra.io.InputOutputException;
-import lombok.Getter;
-import reactor.core.publisher.Mono;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.Map;
-import java.util.concurrent.ExecutionException;
-import java.util.function.Supplier;
 
 /**
  * @author James Chen
@@ -58,21 +59,24 @@ public class FcmSender extends PushNotificationSender {
     private final String deviceTokenFieldName;
     private final FirebaseMessaging firebaseMessagingClient;
 
-    public FcmSender(Map<String, TemplateProperties> templates,
-                     FcmProperties fcmProperties) {
+    public FcmSender(Map<String, TemplateProperties> templates, FcmProperties fcmProperties) {
         super(templates, fcmProperties.getTemplate());
         deviceTokenFieldName = fcmProperties.getDeviceTokenFieldName();
-        byte[] credentialsBytes = fcmProperties.getCredentials().getBytes(StandardCharsets.UTF_8);
+        byte[] credentialsBytes = fcmProperties.getCredentials()
+                .getBytes(StandardCharsets.UTF_8);
         ByteArrayInputStream credentialInputStream = new ByteArrayInputStream(credentialsBytes);
         GoogleCredentials credentials;
         try {
             credentials = GoogleCredentials.fromStream(credentialInputStream);
         } catch (IOException e) {
-            InputOutputException exception = new InputOutputException("Failed to read credentials", e);
+            IllegalArgumentException exception =
+                    new IllegalArgumentException("Failed to read credentials", e);
             try {
                 credentialInputStream.close();
             } catch (IOException ex) {
-                IOException suppressed = new IOException("Caught an error while closing the credentials input stream", ex);
+                IOException suppressed = new IOException(
+                        "Caught an error while closing the credentials input stream",
+                        ex);
                 exception.addSuppressed(suppressed);
             }
             throw exception;
@@ -82,11 +86,14 @@ public class FcmSender extends PushNotificationSender {
                     .setCredentials(credentials)
                     .build());
         } catch (Exception e) {
-            RuntimeException exception = new RuntimeException("Failed to initialize the Firebase application", e);
+            RuntimeException exception =
+                    new RuntimeException("Failed to initialize the Firebase application", e);
             try {
                 credentialInputStream.close();
             } catch (IOException ex) {
-                IOException suppressed = new IOException("Caught an error while closing the credentials input stream", ex);
+                IOException suppressed = new IOException(
+                        "Caught an error while closing the credentials input stream",
+                        ex);
                 exception.addSuppressed(suppressed);
             }
             throw exception;
@@ -94,15 +101,18 @@ public class FcmSender extends PushNotificationSender {
         try {
             credentialInputStream.close();
         } catch (IOException e) {
-            throw new InputOutputException("Caught an error while closing the credentials input stream", e);
+            throw new InputOutputException(
+                    "Caught an error while closing the credentials input stream",
+                    e);
         }
         firebaseMessagingClient = FirebaseMessaging.getInstance();
     }
 
     @Override
-    public Mono<Void> sendNotification(PushNotification notification,
-                                       String locale,
-                                       Supplier<Object> dataModelSupplier) {
+    public Mono<Void> sendNotification(
+            PushNotification notification,
+            String locale,
+            Supplier<Object> dataModelSupplier) {
         var message = buildMessage(locale,
                 notification.type(),
                 notification.title(),
@@ -128,8 +138,7 @@ public class FcmSender extends PushNotificationSender {
         if (badgeNumber != null) {
             messageBuilder.putData("badge", String.valueOf(badgeNumber));
         }
-        ApiFuture<String> sendFuture = firebaseMessagingClient
-                .sendAsync(messageBuilder.build());
+        ApiFuture<String> sendFuture = firebaseMessagingClient.sendAsync(messageBuilder.build());
         return Mono.create(sink -> {
             Runnable listener = () -> {
                 try {
@@ -151,7 +160,9 @@ public class FcmSender extends PushNotificationSender {
                         }
                         sink.error(new SendPushNotificationException(errorCode, serviceErrorCode));
                     } else {
-                        sink.error(new SendPushNotificationException(cause, PushNotificationErrorCode.UNKNOWN));
+                        sink.error(new SendPushNotificationException(
+                                cause,
+                                PushNotificationErrorCode.UNKNOWN));
                     }
                 } catch (InterruptedException e) {
                     // This should never happen

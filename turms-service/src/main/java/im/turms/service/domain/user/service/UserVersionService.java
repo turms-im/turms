@@ -17,23 +17,24 @@
 
 package im.turms.service.domain.user.service;
 
-import com.mongodb.client.result.DeleteResult;
-import com.mongodb.client.result.UpdateResult;
-import com.mongodb.reactivestreams.client.ClientSession;
-import im.turms.server.common.infra.exception.ResponseException;
-import im.turms.server.common.infra.validation.Validator;
-import im.turms.server.common.storage.mongo.IMongoCollectionInitializer;
-import im.turms.service.domain.user.po.UserVersion;
-import im.turms.service.domain.user.repository.UserVersionRepository;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.stereotype.Service;
-import reactor.core.publisher.Mono;
-
 import java.util.Date;
 import java.util.Set;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+
+import com.mongodb.client.result.DeleteResult;
+import com.mongodb.client.result.UpdateResult;
+import com.mongodb.reactivestreams.client.ClientSession;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
+
+import im.turms.server.common.infra.exception.ResponseException;
+import im.turms.server.common.infra.validation.Validator;
+import im.turms.server.common.storage.mongo.IMongoCollectionInitializer;
+import im.turms.service.domain.user.po.UserVersion;
+import im.turms.service.domain.user.repository.UserVersionRepository;
 
 /**
  * @author James Chen
@@ -134,19 +135,32 @@ public class UserVersionService {
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        UserVersion userVersion =
-                new UserVersion(userId, timestamp, timestamp, timestamp, timestamp, timestamp, timestamp, timestamp, timestamp, timestamp);
+        UserVersion userVersion = new UserVersion(
+                userId,
+                timestamp,
+                timestamp,
+                timestamp,
+                timestamp,
+                timestamp,
+                timestamp,
+                timestamp,
+                timestamp,
+                timestamp);
         return userVersionRepository.upsert(userVersion, session)
                 .thenReturn(userVersion);
     }
 
     // Update
 
-    public Mono<UpdateResult> updateRelationshipsVersion(@NotNull Long userId, @Nullable ClientSession session) {
+    public Mono<UpdateResult> updateRelationshipsVersion(
+            @NotNull Long userId,
+            @Nullable ClientSession session) {
         return updateSpecificVersion(userId, session, UserVersion.Fields.RELATIONSHIPS);
     }
 
-    public Mono<UpdateResult> updateRelationshipsVersion(@NotEmpty Set<Long> userIds, @Nullable ClientSession session) {
+    public Mono<UpdateResult> updateRelationshipsVersion(
+            @NotEmpty Set<Long> userIds,
+            @Nullable ClientSession session) {
         return updateSpecificVersion(userIds, session, UserVersion.Fields.RELATIONSHIPS);
     }
 
@@ -190,7 +204,10 @@ public class UserVersionService {
         return updateSpecificVersion(userId, null, UserVersion.Fields.JOINED_GROUPS);
     }
 
-    public Mono<UpdateResult> updateSpecificVersion(@NotNull Long userId, @Nullable ClientSession session, @NotEmpty String... fields) {
+    public Mono<UpdateResult> updateSpecificVersion(
+            @NotNull Long userId,
+            @Nullable ClientSession session,
+            @NotEmpty String... fields) {
         try {
             Validator.notNull(userId, "userId");
             Validator.notEmpty(fields, "fields");
@@ -200,7 +217,10 @@ public class UserVersionService {
         return userVersionRepository.updateSpecificVersion(userId, session, fields);
     }
 
-    public Mono<UpdateResult> updateSpecificVersion(@NotNull Long userId, @Nullable ClientSession session, @NotNull String field) {
+    public Mono<UpdateResult> updateSpecificVersion(
+            @NotNull Long userId,
+            @Nullable ClientSession session,
+            @NotNull String field) {
         try {
             Validator.notNull(userId, "userId");
             Validator.notNull(field, "field");
@@ -210,9 +230,10 @@ public class UserVersionService {
         return userVersionRepository.updateSpecificVersion(userId, session, field);
     }
 
-    public Mono<UpdateResult> updateSpecificVersion(@NotEmpty Set<Long> userIds,
-                                                    @Nullable ClientSession session,
-                                                    @NotEmpty String... fields) {
+    public Mono<UpdateResult> updateSpecificVersion(
+            @NotEmpty Set<Long> userIds,
+            @Nullable ClientSession session,
+            @NotEmpty String... fields) {
         try {
             Validator.notEmpty(userIds, "userIds");
             Validator.notEmpty(fields, "fields");
@@ -224,9 +245,7 @@ public class UserVersionService {
 
     // Delete
 
-    public Mono<DeleteResult> delete(
-            @NotEmpty Set<Long> userIds,
-            @Nullable ClientSession session) {
+    public Mono<DeleteResult> delete(@NotEmpty Set<Long> userIds, @Nullable ClientSession session) {
         try {
             Validator.notEmpty(userIds, "userIds");
         } catch (ResponseException e) {

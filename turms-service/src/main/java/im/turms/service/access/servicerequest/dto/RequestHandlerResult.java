@@ -17,13 +17,14 @@
 
 package im.turms.service.access.servicerequest.dto;
 
+import java.util.Set;
+
+import lombok.With;
+
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.access.client.dto.request.TurmsRequest;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.proto.ProtoFormatter;
-import lombok.With;
-
-import java.util.Set;
 
 /**
  * @author James Chen
@@ -39,13 +40,19 @@ public record RequestHandlerResult(
 ) {
     @Override
     public String toString() {
-        return "RequestHandlerResult[" +
-                "dataForRequester=" + ProtoFormatter.toLogString(dataForRequester) +
-                ", forwardDataForRecipientsToOtherSenderOnlineDevices=" + forwardDataForRecipientsToOtherSenderOnlineDevices +
-                ", recipients=" + recipients +
-                ", dataForRecipients=" + ProtoFormatter.toLogString(dataForRecipients) +
-                ", code=" + code +
-                ", reason=" + reason +
-                ']';
+        return "RequestHandlerResult["
+                + "dataForRequester="
+                + ProtoFormatter.toLogString(dataForRequester)
+                + ", forwardDataForRecipientsToOtherSenderOnlineDevices="
+                + forwardDataForRecipientsToOtherSenderOnlineDevices
+                + ", recipients="
+                + recipients
+                + ", dataForRecipients="
+                + ProtoFormatter.toLogString(dataForRecipients)
+                + ", code="
+                + code
+                + ", reason="
+                + reason
+                + ']';
     }
 }

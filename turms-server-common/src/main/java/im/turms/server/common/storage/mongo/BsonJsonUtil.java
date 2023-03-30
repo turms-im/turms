@@ -17,8 +17,8 @@
 
 package im.turms.server.common.storage.mongo;
 
-import im.turms.server.common.infra.lang.StringBuilderPool;
-import im.turms.server.common.infra.lang.StringBuilderWriter;
+import java.util.Map;
+
 import org.bson.BsonDocument;
 import org.bson.BsonValue;
 import org.bson.codecs.Codec;
@@ -27,7 +27,8 @@ import org.bson.json.JsonMode;
 import org.bson.json.JsonWriter;
 import org.bson.json.JsonWriterSettings;
 
-import java.util.Map;
+import im.turms.server.common.infra.lang.StringBuilderPool;
+import im.turms.server.common.infra.lang.StringBuilderWriter;
 
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 
@@ -36,7 +37,8 @@ import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
  */
 public final class BsonJsonUtil {
 
-    private static final CodecRegistry REGISTRY = fromProviders(CodecPool.BSON_VALUE_CODEC_PROVIDER);
+    private static final CodecRegistry REGISTRY =
+            fromProviders(CodecPool.BSON_VALUE_CODEC_PROVIDER);
     private static final JsonWriterSettings JSON_WRITER_SETTINGS = JsonWriterSettings.builder()
             .outputMode(JsonMode.RELAXED)
             .build();
@@ -46,7 +48,7 @@ public final class BsonJsonUtil {
 
     public static String toJson(BsonDocument document) {
         try (StringBuilderWriter builderWriter = StringBuilderPool.getWriter();
-             JsonWriter writer = new JsonWriter(builderWriter, JSON_WRITER_SETTINGS)) {
+                JsonWriter writer = new JsonWriter(builderWriter, JSON_WRITER_SETTINGS)) {
             writer.writeStartDocument();
             for (Map.Entry<String, BsonValue> entry : document.entrySet()) {
                 writer.writeName(entry.getKey());

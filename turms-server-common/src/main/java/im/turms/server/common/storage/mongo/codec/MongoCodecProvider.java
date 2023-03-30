@@ -17,13 +17,13 @@
 
 package im.turms.server.common.storage.mongo.codec;
 
+import java.util.Map;
+
 import lombok.Setter;
 import org.bson.codecs.Codec;
 import org.bson.codecs.configuration.CodecProvider;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.jctools.maps.NonBlockingIdentityHashMap;
-
-import java.util.Map;
 
 /**
  * @author James Chen
@@ -38,7 +38,9 @@ public class MongoCodecProvider implements CodecProvider {
         registerCodec(new DurationCodec());
     }
 
-    public static <T extends Enum> MongoCodec<T> getEnumCodec(boolean isEnumNumber, Class<T> clazz) {
+    public static <T extends Enum> MongoCodec<T> getEnumCodec(
+            boolean isEnumNumber,
+            Class<T> clazz) {
         return isEnumNumber
                 ? new EnumNumberCodec<>(clazz)
                 : new EnumStringCodec<>(clazz);

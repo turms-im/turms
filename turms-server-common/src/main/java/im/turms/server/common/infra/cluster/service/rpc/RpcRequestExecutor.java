@@ -17,16 +17,17 @@
 
 package im.turms.server.common.infra.cluster.service.rpc;
 
+import jakarta.annotation.Nullable;
+
+import org.springframework.context.ApplicationContext;
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.cluster.service.connection.TurmsConnection;
 import im.turms.server.common.infra.cluster.service.rpc.dto.RpcRequest;
 import im.turms.server.common.infra.cluster.service.rpc.exception.RpcException;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.tracing.TracingContext;
-import org.springframework.context.ApplicationContext;
-import reactor.core.publisher.Mono;
-
-import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen
@@ -41,13 +42,14 @@ public class RpcRequestExecutor {
 
     /**
      * @return {@link reactor.core.publisher.MonoEmpty} if the result of RPC request is null
-     * @implNote 1. We record request time/response here because the RPC request may run on the local machine
-     * 2.The method itself will call {@link RpcRequest#release()}
+     * @implNote 1. We record request time/response here because the RPC request may run on the
+     *           local machine 2.The method itself will call {@link RpcRequest#release()}
      */
-    public <T> Mono<T> runRpcRequest(TracingContext tracingContext,
-                                     RpcRequest<T> rpcRequest,
-                                     @Nullable TurmsConnection connection,
-                                     String fromNodeId) {
+    public <T> Mono<T> runRpcRequest(
+            TracingContext tracingContext,
+            RpcRequest<T> rpcRequest,
+            @Nullable TurmsConnection connection,
+            String fromNodeId) {
         rpcRequest.touch(rpcRequest);
         try {
             tracingContext.updateThreadContext();
@@ -64,20 +66,26 @@ public class RpcRequestExecutor {
                         : Mono.just(data);
             }
             // TODO: slow log
-            return result
-                    .onErrorMap(e -> e instanceof RpcException
-                            ? e
-                            : RpcException.get(RpcErrorCode.FAILED_TO_RUN_RPC, ResponseStatusCode.SERVER_INTERNAL_ERROR, e.toString(), e))
+            return result.onErrorMap(e -> e instanceof RpcException
+                    ? e
+                    : RpcException.get(RpcErrorCode.FAILED_TO_RUN_RPC,
+                            ResponseStatusCode.SERVER_INTERNAL_ERROR,
+                            e.toString(),
+                            e))
                     .doFinally(signalType -> tracingContext.clearThreadContext());
         } catch (RpcException e) {
             rpcRequest.release();
             return Mono.error(e);
         } catch (ResponseException e) {
             rpcRequest.release();
-            return Mono.error(RpcException.get(RpcErrorCode.FAILED_TO_RUN_RPC, e.getCode(), e.getReason()));
+            return Mono.error(
+                    RpcException.get(RpcErrorCode.FAILED_TO_RUN_RPC, e.getCode(), e.getReason()));
         } catch (Exception e) {
             rpcRequest.release();
-            return Mono.error(RpcException.get(RpcErrorCode.FAILED_TO_RUN_RPC, ResponseStatusCode.SERVER_INTERNAL_ERROR, e.toString(), e));
+            return Mono.error(RpcException.get(RpcErrorCode.FAILED_TO_RUN_RPC,
+                    ResponseStatusCode.SERVER_INTERNAL_ERROR,
+                    e.toString(),
+                    e));
         } finally {
             tracingContext.clearThreadContext();
         }

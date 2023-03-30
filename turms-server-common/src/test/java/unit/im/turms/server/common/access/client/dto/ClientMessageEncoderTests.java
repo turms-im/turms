@@ -18,13 +18,14 @@
 package unit.im.turms.server.common.access.client.dto;
 
 import com.google.protobuf.InvalidProtocolBufferException;
+import io.netty.buffer.ByteBuf;
+import org.junit.jupiter.api.Test;
+
 import im.turms.server.common.access.client.dto.ClientMessageEncoder;
 import im.turms.server.common.access.client.dto.model.user.UserSession;
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.domain.session.bo.SessionCloseStatus;
-import io.netty.buffer.ByteBuf;
-import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -55,7 +56,8 @@ class ClientMessageEncoderTests {
         SessionCloseStatus closeStatus = SessionCloseStatus.CONNECTION_CLOSED;
         ResponseStatusCode code = ResponseStatusCode.UPDATING_TYPING_STATUS_IS_DISABLED;
         String reason = "Hello World";
-        ByteBuf response = ClientMessageEncoder.encodeCloseNotification(timestamp, closeStatus, code, reason);
+        ByteBuf response =
+                ClientMessageEncoder.encodeCloseNotification(timestamp, closeStatus, code, reason);
         TurmsNotification actual = TurmsNotification.parseFrom(response.nioBuffer());
         assertThat(actual).isEqualTo(TurmsNotification.newBuilder()
                 .setTimestamp(timestamp)
@@ -70,7 +72,8 @@ class ClientMessageEncoderTests {
         long timestamp = System.currentTimeMillis();
         String sessionId = "my session ID";
         String serverId = "my server ID";
-        ByteBuf response = ClientMessageEncoder.encodeUserSessionNotification(timestamp, sessionId, serverId);
+        ByteBuf response =
+                ClientMessageEncoder.encodeUserSessionNotification(timestamp, sessionId, serverId);
         TurmsNotification actual = TurmsNotification.parseFrom(response.nioBuffer());
         assertThat(actual).isEqualTo(TurmsNotification.newBuilder()
                 .setTimestamp(timestamp)

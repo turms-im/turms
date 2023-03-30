@@ -17,10 +17,6 @@
 
 package unit.im.turms.server.common.infra.logging.core.compression;
 
-import im.turms.server.common.infra.logging.core.compression.FastGzipOutputStream;
-import lombok.SneakyThrows;
-import org.junit.jupiter.api.Test;
-
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
@@ -29,8 +25,14 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.zip.GZIPOutputStream;
 
-import static im.turms.server.common.infra.unit.ByteSizeUnit.KB;
+import lombok.SneakyThrows;
+import org.junit.jupiter.api.Test;
+
+import im.turms.server.common.infra.logging.core.compression.FastGzipOutputStream;
+
 import static org.assertj.core.api.Assertions.assertThat;
+
+import static im.turms.server.common.infra.unit.ByteSizeUnit.KB;
 
 /**
  * @author James Chen
@@ -57,16 +59,13 @@ class FastGzipOutputStreamTests {
                 abcdefg123456
                 abcdefg123456
                 abcdefg123456
-                """
-                .getBytes();
+                """.getBytes();
 
         FastGzipOutputStream stream = new FastGzipOutputStream(compressionLevel, KB);
-        stream.init(FileChannel.open(
-                outputPath,
+        stream.init(FileChannel.open(outputPath,
                 StandardOpenOption.CREATE,
                 StandardOpenOption.WRITE,
-                StandardOpenOption.TRUNCATE_EXISTING
-        ));
+                StandardOpenOption.TRUNCATE_EXISTING));
         try (stream) {
             stream.write(ByteBuffer.allocateDirect(bytes.length)
                     .put(bytes)
@@ -81,12 +80,10 @@ class FastGzipOutputStreamTests {
                 123456789
                 """.getBytes();
         try {
-            stream.init(FileChannel.open(
-                    outputPath,
+            stream.init(FileChannel.open(outputPath,
                     StandardOpenOption.CREATE,
                     StandardOpenOption.WRITE,
-                    StandardOpenOption.TRUNCATE_EXISTING
-            ));
+                    StandardOpenOption.TRUNCATE_EXISTING));
             stream.write(ByteBuffer.allocateDirect(bytes.length)
                     .put(bytes)
                     .flip());

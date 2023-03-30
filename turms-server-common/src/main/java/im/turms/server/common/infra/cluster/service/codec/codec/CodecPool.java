@@ -17,6 +17,14 @@
 
 package im.turms.server.common.infra.cluster.service.codec.codec;
 
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Map;
+import jakarta.annotation.Nullable;
+
+import io.netty.util.collection.IntObjectHashMap;
+import org.springframework.core.GenericTypeResolver;
+
 import im.turms.server.common.access.servicerequest.rpc.HandleServiceRequestCodec;
 import im.turms.server.common.access.servicerequest.rpc.ServiceResponseCodec;
 import im.turms.server.common.domain.notification.rpc.SendNotificationRequestCodec;
@@ -41,13 +49,6 @@ import im.turms.server.common.infra.cluster.service.connection.codec.KeepaliveRe
 import im.turms.server.common.infra.cluster.service.connection.codec.OpeningHandshakeRequestCodec;
 import im.turms.server.common.infra.cluster.service.rpc.codec.RpcExceptionCodec;
 import im.turms.server.common.infra.collection.CollectionUtil;
-import io.netty.util.collection.IntObjectHashMap;
-import org.springframework.core.GenericTypeResolver;
-
-import java.util.IdentityHashMap;
-import java.util.List;
-import java.util.Map;
-import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen
@@ -58,7 +59,7 @@ public final class CodecPool {
     private static final Map<Class<?>, Codec> CLASS_TO_CODEC = new IdentityHashMap<>(32);
     private static final Map<Class<?>, Codec> SUPERCLASS_TO_CODEC = new IdentityHashMap<>(16);
 
-    public static void init() {
+    public static synchronized void init() {
         if (!ID_TO_CODEC.isEmpty()) {
             return;
         }
@@ -119,7 +120,8 @@ public final class CodecPool {
             return codec;
         }
         for (Map.Entry<Class<?>, Codec> entry : SUPERCLASS_TO_CODEC.entrySet()) {
-            if (entry.getKey().isAssignableFrom(clazz)) {
+            if (entry.getKey()
+                    .isAssignableFrom(clazz)) {
                 return entry.getValue();
             }
         }
@@ -127,38 +129,44 @@ public final class CodecPool {
     }
 
     /**
-     * @implNote We don't support something like "instanceof" because of
-     * its bad performance.
+     * @implNote We don't support something like "instanceof" because of its bad performance.
      */
     private static void register(Codec<?> codec) {
         List<Class<?>> encodableClasses = codec.getEncodableClasses();
         if (CollectionUtil.isEmpty(encodableClasses)) {
             Class<?> clazz = GenericTypeResolver.resolveTypeArgument(codec.getClass(), Codec.class);
             if (clazz == null) {
-                throw new IllegalArgumentException("The codec with the ID (" +
-                        codec.getCodecId() +
-                        ") could not be resolved");
+                throw new IllegalArgumentException(
+                        "The codec with the ID ("
+                                + codec.getCodecId()
+                                + ") could not be resolved");
             }
             encodableClasses = List.of(clazz);
         }
         for (Class<?> encodableClass : encodableClasses) {
             if (CLASS_TO_CODEC.putIfAbsent(encodableClass, codec) != null) {
-                throw new IllegalArgumentException("The codec for the class (" +
-                        encodableClass.getName() +
-                        ") has already existed");
+                throw new IllegalArgumentException(
+                        "The codec for the class ("
+                                + encodableClass.getName()
+                                + ") has already existed");
             }
         }
-        int codecId = codec.getCodecId().getId();
+        int codecId = codec.getCodecId()
+                .getId();
         if (ID_TO_CODEC.putIfAbsent(codecId, codec) != null) {
-            throw new IllegalArgumentException("The codec ID (" + codecId + ") has already existed");
+            throw new IllegalArgumentException(
+                    "The codec ID ("
+                            + codecId
+                            + ") has already existed");
         }
         List<Class<?>> encodableSuperClasses = codec.getEncodableSuperClasses();
         if (CollectionUtil.isNotEmpty(encodableSuperClasses)) {
             for (Class<?> encodableSuperClass : encodableSuperClasses) {
                 if (SUPERCLASS_TO_CODEC.putIfAbsent(encodableSuperClass, codec) != null) {
-                    throw new IllegalArgumentException("The codec for the class (" +
-                            encodableSuperClass.getName() +
-                            ") has already existed");
+                    throw new IllegalArgumentException(
+                            "The codec for the class ("
+                                    + encodableSuperClass.getName()
+                                    + ") has already existed");
                 }
             }
         }

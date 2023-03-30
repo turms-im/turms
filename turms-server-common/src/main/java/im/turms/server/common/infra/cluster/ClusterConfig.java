@@ -17,6 +17,11 @@
 
 package im.turms.server.common.infra.cluster;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
+
 import im.turms.server.common.infra.address.BaseServiceAddressManager;
 import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.cluster.node.NodeType;
@@ -25,10 +30,6 @@ import im.turms.server.common.infra.context.TurmsApplicationContext;
 import im.turms.server.common.infra.healthcheck.HealthCheckManager;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.storage.mongo.IMongoCollectionInitializer;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
 
 /**
  * @author James Chen
@@ -45,7 +46,13 @@ public class ClusterConfig {
             TurmsPropertiesManager propertiesManager,
             BaseServiceAddressManager serviceAddressManager,
             HealthCheckManager healthCheckManager) {
-        Node node = new Node(context, nodeType, turmsContext, propertiesManager, serviceAddressManager, healthCheckManager);
+        Node node = new Node(
+                context,
+                nodeType,
+                turmsContext,
+                propertiesManager,
+                serviceAddressManager,
+                healthCheckManager);
         // Note that the shutdown hook should be registered before "node#start"
         // because the node may fail to start and throw while the shutdown job should also run
         // in this case. e.g. unregister current node.

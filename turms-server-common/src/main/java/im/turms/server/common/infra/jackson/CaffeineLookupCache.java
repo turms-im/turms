@@ -17,11 +17,11 @@
 
 package im.turms.server.common.infra.jackson;
 
+import java.util.concurrent.ConcurrentMap;
+
 import com.fasterxml.jackson.databind.util.LookupCache;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
-
-import java.util.concurrent.ConcurrentMap;
 
 /**
  * @author James Chen

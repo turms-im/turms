@@ -17,10 +17,10 @@
 
 package im.turms.plugin.push.core.sender.apns;
 
-import im.turms.plugin.push.core.PushNotificationErrorCode;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import im.turms.plugin.push.core.PushNotificationErrorCode;
 
 /**
  * @author James Chen
@@ -69,7 +69,9 @@ public final class ApnsErrorCodeUtil {
 
     public static PushNotificationErrorCode toCode(String errorString) {
         PushNotificationErrorCode code = ERROR_TO_CODE.get(errorString);
-        return code == null ? PushNotificationErrorCode.UNKNOWN : code;
+        return code == null
+                ? PushNotificationErrorCode.UNKNOWN
+                : code;
     }
 
 }

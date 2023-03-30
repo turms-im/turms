@@ -17,12 +17,12 @@
 
 package im.turms.server.common.storage.mongo.entity.annotation;
 
-import im.turms.server.common.storage.mongo.entity.IndexType;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
+import im.turms.server.common.storage.mongo.entity.IndexType;
 
 /**
  * @author James Chen
@@ -39,8 +39,8 @@ public @interface Indexed {
     String partialFilter() default "";
 
     /**
-     * This annotation has no effect, and is only used for users to know
-     * why the field is indexed or isn't indexed by default
+     * This annotation has no effect, and is only used for users to know why the field is indexed or
+     * isn't indexed by default
      */
     IndexedReason reason() default IndexedReason.NO;
 }

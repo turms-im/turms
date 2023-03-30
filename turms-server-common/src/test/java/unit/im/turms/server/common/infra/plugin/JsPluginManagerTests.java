@@ -17,6 +17,17 @@
 
 package unit.im.turms.server.common.infra.plugin;
 
+import java.nio.file.Path;
+import java.time.Duration;
+import java.util.Collections;
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
+import org.springframework.context.ApplicationContext;
+import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
+
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.infra.context.TurmsApplicationContext;
 import im.turms.server.common.infra.logging.core.logger.AsyncLogger;
@@ -27,16 +38,6 @@ import im.turms.server.common.infra.plugin.script.ScriptExecutionException;
 import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.common.plugin.PluginProperties;
-import org.junit.jupiter.api.Test;
-import org.mockito.MockedStatic;
-import org.springframework.context.ApplicationContext;
-import reactor.core.publisher.Mono;
-import reactor.test.StepVerifier;
-
-import java.nio.file.Path;
-import java.time.Duration;
-import java.util.Collections;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -62,8 +63,8 @@ class JsPluginManagerTests {
     @Test
     void testNotification_forComplexObject() {
         MyExtensionPointForJs extensionPoint = createExtensionPoint();
-        Mono<List<TurmsNotification>> actual = extensionPoint
-                .testNotification(List.of(TurmsNotification.newBuilder()));
+        Mono<List<TurmsNotification>> actual =
+                extensionPoint.testNotification(List.of(TurmsNotification.newBuilder()));
         StepVerifier.create(actual)
                 .expectNextMatches(notifications -> {
                     assertThat(notifications).hasSize(1);
@@ -87,7 +88,8 @@ class JsPluginManagerTests {
     @Test
     void testLog() {
         Logger logger;
-        try (MockedStatic<LoggerFactory> factory = mockStatic(LoggerFactory.class, CALLS_REAL_METHODS)) {
+        try (MockedStatic<LoggerFactory> factory =
+                mockStatic(LoggerFactory.class, CALLS_REAL_METHODS)) {
             logger = mock(AsyncLogger.class);
             when(logger.isInfoEnabled()).thenReturn(true);
             factory.when(() -> LoggerFactory.getLogger(anyString()))
@@ -102,8 +104,7 @@ class JsPluginManagerTests {
     @Test
     void testError() {
         MyExtensionPointForJs extensionPoint = createExtensionPoint();
-        assertThatThrownBy(extensionPoint::testError)
-                .isInstanceOf(ScriptExecutionException.class)
+        assertThatThrownBy(extensionPoint::testError).isInstanceOf(ScriptExecutionException.class)
                 .cause()
                 .hasMessageContaining("An error from plugin.js");
     }
@@ -117,17 +118,19 @@ class JsPluginManagerTests {
     private MyExtensionPointForJs createExtensionPoint() {
         ApplicationContext context = mock(ApplicationContext.class);
         TurmsApplicationContext applicationContext = mock(TurmsApplicationContext.class);
-        when(applicationContext.getHome())
-                .thenReturn(Path.of("./src/test/resources"));
+        when(applicationContext.getHome()).thenReturn(Path.of("./src/test/resources"));
         TurmsPropertiesManager propertiesManager = mock(TurmsPropertiesManager.class);
-        when(propertiesManager.getLocalProperties())
-                .thenReturn(new TurmsProperties().toBuilder()
-                        .plugin(new PluginProperties().toBuilder()
-                                .enabled(true)
-                                .dir(".")
-                                .build())
-                        .build());
-        PluginManager manager = new PluginManager(context, applicationContext, propertiesManager, Collections.emptySet());
+        when(propertiesManager.getLocalProperties()).thenReturn(new TurmsProperties().toBuilder()
+                .plugin(new PluginProperties().toBuilder()
+                        .enabled(true)
+                        .dir(".")
+                        .build())
+                .build());
+        PluginManager manager = new PluginManager(
+                context,
+                applicationContext,
+                propertiesManager,
+                Collections.emptySet());
         List<MyExtensionPointForJs> list = manager.getExtensionPoints(MyExtensionPointForJs.class);
         assertThat(list).hasSize(1);
         return list.get(0);

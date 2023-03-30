@@ -17,14 +17,6 @@
 
 package im.turms.server.common.infra.address;
 
-import im.turms.server.common.infra.net.InetAddressUtil;
-import im.turms.server.common.infra.property.TurmsPropertiesManager;
-import im.turms.server.common.infra.property.env.common.IpProperties;
-import io.netty.handler.codec.http.HttpStatusClass;
-import org.springframework.stereotype.Component;
-import reactor.core.publisher.Mono;
-import reactor.netty.http.client.HttpClient;
-
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -32,6 +24,15 @@ import java.nio.channels.DatagramChannel;
 import java.util.ArrayList;
 import java.util.List;
 import jakarta.annotation.Nullable;
+
+import io.netty.handler.codec.http.HttpStatusClass;
+import org.springframework.stereotype.Component;
+import reactor.core.publisher.Mono;
+import reactor.netty.http.client.HttpClient;
+
+import im.turms.server.common.infra.net.InetAddressUtil;
+import im.turms.server.common.infra.property.TurmsPropertiesManager;
+import im.turms.server.common.infra.property.env.common.IpProperties;
 
 /**
  * @author James Chen
@@ -53,12 +54,14 @@ public class IpDetector {
     }
 
     public String queryPrivateIp() {
-        IpProperties ipProperties = propertiesManager.getLocalProperties().getIp();
+        IpProperties ipProperties = propertiesManager.getLocalProperties()
+                .getIp();
         int cachedPrivateIpExpireAfterMillis = ipProperties.getCachedPrivateIpExpireAfterMillis();
         String localCachedPrivateIp = cachedPrivateIp;
-        if (cachedPrivateIpExpireAfterMillis > 0 &&
-                localCachedPrivateIp != null &&
-                System.currentTimeMillis() - privateIpLastUpdatedDate < cachedPrivateIpExpireAfterMillis) {
+        if (cachedPrivateIpExpireAfterMillis > 0
+                && localCachedPrivateIp != null
+                && System.currentTimeMillis()
+                        - privateIpLastUpdatedDate < cachedPrivateIpExpireAfterMillis) {
             return localCachedPrivateIp;
         }
         DatagramChannel channel = null;
@@ -70,9 +73,10 @@ public class IpDetector {
             InetAddress inetAddress = localAddress.getAddress();
             String ip = inetAddress.getHostAddress();
             if (!inetAddress.isSiteLocalAddress()) {
-                throw new NoAvailableAddressFoundException("The IP address (" +
-                        ip +
-                        ") is not a site local IP address");
+                throw new NoAvailableAddressFoundException(
+                        "The IP address ("
+                                + ip
+                                + ") is not a site local IP address");
             }
             privateIpLastUpdatedDate = System.currentTimeMillis();
             cachedPrivateIp = ip;
@@ -90,32 +94,37 @@ public class IpDetector {
     }
 
     public Mono<String> queryPublicIp() {
-        IpProperties ipProperties = propertiesManager.getLocalProperties().getIp();
+        IpProperties ipProperties = propertiesManager.getLocalProperties()
+                .getIp();
         int cachedPublicIpExpireAfterMillis = ipProperties.getCachedPublicIpExpireAfterMillis();
         String localCachedPublicIp = cachedPublicIp;
-        if (cachedPublicIpExpireAfterMillis > 0 &&
-                localCachedPublicIp != null &&
-                System.currentTimeMillis() - publicIpLastUpdatedDate < cachedPublicIpExpireAfterMillis) {
+        if (cachedPublicIpExpireAfterMillis > 0
+                && localCachedPublicIp != null
+                && System.currentTimeMillis()
+                        - publicIpLastUpdatedDate < cachedPublicIpExpireAfterMillis) {
             return Mono.just(localCachedPublicIp);
         }
         List<String> ipDetectorAddresses = ipProperties.getPublicIpDetectorAddresses();
         if (ipDetectorAddresses.isEmpty()) {
-            return Mono.error(new IllegalArgumentException("Failed to detect the public IP of the local node because no IP detector address is specified"));
+            return Mono.error(new IllegalArgumentException(
+                    "Failed to detect the public IP of the local node because no IP detector address is specified"));
         }
         List<Mono<String>> monos = new ArrayList<>(ipDetectorAddresses.size());
         HttpClient httpClient = HttpClient.newConnection();
         for (String ipDetectorAddress : ipDetectorAddresses) {
             Mono<String> ipMono = httpClient.get()
                     .uri(ipDetectorAddress)
-                    .responseSingle((response, body) -> response.status().codeClass().equals(HttpStatusClass.SUCCESS)
-                            ? body.asString()
-                            .flatMap(ip -> {
-                                ip = ip.trim();
-                                return InetAddressUtil.isInetAddress(ip)
-                                        ? Mono.just(ip)
-                                        : Mono.empty();
-                            })
-                            : Mono.empty());
+                    .responseSingle((response, body) -> response.status()
+                            .codeClass()
+                            .equals(HttpStatusClass.SUCCESS)
+                                    ? body.asString()
+                                            .flatMap(ip -> {
+                                                ip = ip.trim();
+                                                return InetAddressUtil.isInetAddress(ip)
+                                                        ? Mono.just(ip)
+                                                        : Mono.empty();
+                                            })
+                                    : Mono.empty());
             monos.add(ipMono);
         }
         return Mono.firstWithValue(monos)
@@ -123,7 +132,9 @@ public class IpDetector {
                     publicIpLastUpdatedDate = System.currentTimeMillis();
                     cachedPublicIp = ip;
                 })
-                .onErrorMap(t -> new NoAvailableAddressFoundException("Failed to detect the public IP of the local node because there is no available IP", t));
+                .onErrorMap(t -> new NoAvailableAddressFoundException(
+                        "Failed to detect the public IP of the local node because there is no available IP",
+                        t));
     }
 
 }

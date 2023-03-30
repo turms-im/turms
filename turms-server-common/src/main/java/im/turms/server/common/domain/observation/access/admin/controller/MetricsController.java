@@ -17,6 +17,27 @@
 
 package im.turms.server.common.domain.observation.access.admin.controller;
 
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import io.micrometer.core.instrument.Meter;
+import io.micrometer.core.instrument.Tag;
+import io.micrometer.core.instrument.composite.CompositeMeterRegistry;
+import io.micrometer.prometheus.PrometheusMeterRegistry;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufOutputStream;
+import io.netty.buffer.PooledByteBufAllocator;
+import io.prometheus.client.exporter.common.TextFormat;
+import io.swagger.v3.oas.annotations.media.Schema;
+import org.springframework.util.CollectionUtils;
+
 import im.turms.server.common.access.admin.dto.response.HttpHandlerResult;
 import im.turms.server.common.access.admin.dto.response.ResponseDTO;
 import im.turms.server.common.access.admin.web.annotation.GetMapping;
@@ -29,26 +50,6 @@ import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.io.ByteBufFileResource;
 import im.turms.server.common.infra.metrics.CsvReporter;
 import im.turms.server.common.infra.metrics.MetricsPool;
-import io.micrometer.core.instrument.Meter;
-import io.micrometer.core.instrument.Tag;
-import io.micrometer.core.instrument.composite.CompositeMeterRegistry;
-import io.micrometer.prometheus.PrometheusMeterRegistry;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufOutputStream;
-import io.netty.buffer.PooledByteBufAllocator;
-import io.prometheus.client.exporter.common.TextFormat;
-import io.swagger.v3.oas.annotations.media.Schema;
-import org.springframework.util.CollectionUtils;
-
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import static im.turms.server.common.access.admin.web.MediaTypeConst.TEXT_CSV_UTF_8;
 import static im.turms.server.common.access.admin.web.MediaTypeConst.TEXT_PLAIN_UTF_8;
@@ -75,23 +76,27 @@ public class MetricsController {
     }
 
     @GetMapping
-    public HttpHandlerResult<ResponseDTO<Collection<MetricDTO>>> getMetrics(@QueryParam(required = false) Set<String> names,
-                                                                            @QueryParam(required = false) List<String> tags,
-                                                                            boolean returnDescription,
-                                                                            boolean returnAvailableTags) {
+    public HttpHandlerResult<ResponseDTO<Collection<MetricDTO>>> getMetrics(
+            @QueryParam(required = false) Set<String> names,
+            @QueryParam(required = false) List<String> tags,
+            boolean returnDescription,
+            boolean returnAvailableTags) {
         boolean isNamesEmpty = CollectionUtils.isEmpty(names);
         if (isNamesEmpty) {
             if (!CollectionUtils.isEmpty(tags)) {
-                throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT, "Names must not be empty if tags are not empty");
+                throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
+                        "Names must not be empty if tags are not empty");
             }
             Collection<List<Meter>> metersList;
             metersList = pool.findAllMeters()
                     .stream()
-                    .collect(Collectors.groupingBy(meter -> meter.getId().getName()))
+                    .collect(Collectors.groupingBy(meter -> meter.getId()
+                            .getName()))
                     .values();
-            List<MetricDTO> list = metersList
-                    .stream()
-                    .map(meters -> meters2Dto(meters.get(0).getId().getName(), meters, returnDescription, returnAvailableTags))
+            List<MetricDTO> list = metersList.stream()
+                    .map(meters -> meters2Dto(meters.get(0)
+                            .getId()
+                            .getName(), meters, returnDescription, returnAvailableTags))
                     .collect(CollectorUtil.toList(metersList.size()));
             return HttpHandlerResult.okIfTruthy(list);
         }
@@ -137,11 +142,14 @@ public class MetricsController {
         return buffer;
     }
 
-    private MetricDTO meters2Dto(String name,
-                                 Collection<Meter> meters,
-                                 boolean returnDescription,
-                                 boolean returnAvailableTags) {
-        Meter.Id meterId = meters.iterator().next().getId();
+    private MetricDTO meters2Dto(
+            String name,
+            Collection<Meter> meters,
+            boolean returnDescription,
+            boolean returnAvailableTags) {
+        Meter.Id meterId = meters.iterator()
+                .next()
+                .getId();
         String description = returnDescription
                 ? meterId.getDescription()
                 : null;
@@ -150,10 +158,13 @@ public class MetricsController {
                 : null;
         List<MetricDTO.MeasurementDTO> measurements = new ArrayList<>(meters.size());
         for (Meter meter : meters) {
-            List<Tag> tags = meter.getId().getTags();
+            List<Tag> tags = meter.getId()
+                    .getTags();
             List<String> tagNames = new ArrayList<>(tags.size());
             for (Tag tag : tags) {
-                tagNames.add(tag.getKey() + ":" + tag.getValue());
+                tagNames.add(tag.getKey()
+                        + ":"
+                        + tag.getValue());
             }
             measurements.add(new MetricDTO.MeasurementDTO(tagNames, pool.getMeasurements(meter)));
         }

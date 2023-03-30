@@ -17,18 +17,6 @@
 
 package im.turms.server.common.infra.metrics;
 
-import im.turms.server.common.infra.collection.CollectionUtil;
-import im.turms.server.common.infra.lang.AsciiCode;
-import im.turms.server.common.infra.lang.Pair;
-import im.turms.server.common.infra.lang.StringUtil;
-import im.turms.server.common.infra.reflect.ReflectionUtil;
-import io.micrometer.core.instrument.Measurement;
-import io.micrometer.core.instrument.Meter;
-import io.micrometer.core.instrument.MeterRegistry;
-import io.micrometer.core.instrument.Tag;
-import io.micrometer.core.instrument.composite.CompositeMeterRegistry;
-import org.eclipse.collections.impl.factory.Sets;
-
 import java.lang.invoke.MethodHandle;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -41,14 +29,28 @@ import java.util.Set;
 import java.util.TreeSet;
 import jakarta.annotation.Nullable;
 
+import io.micrometer.core.instrument.Measurement;
+import io.micrometer.core.instrument.Meter;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Tag;
+import io.micrometer.core.instrument.composite.CompositeMeterRegistry;
+import org.eclipse.collections.impl.factory.Sets;
+
+import im.turms.server.common.infra.collection.CollectionUtil;
+import im.turms.server.common.infra.lang.AsciiCode;
+import im.turms.server.common.infra.lang.Pair;
+import im.turms.server.common.infra.lang.StringUtil;
+import im.turms.server.common.infra.reflect.ReflectionUtil;
+
 /**
  * @author James Chen
- * @implNote We don't cache because the metrics in the registry may change
- * especially the metrics of turms service requests
+ * @implNote We don't cache because the metrics in the registry may change especially the metrics of
+ *           turms service requests
  */
 public class MetricsPool {
 
-    private static final MethodHandle ID_TO_METER = ReflectionUtil.getGetter(MeterRegistry.class, "meterMap");
+    private static final MethodHandle ID_TO_METER =
+            ReflectionUtil.getGetter(MeterRegistry.class, "meterMap");
     private final MeterRegistry registry;
 
     public MetricsPool(MeterRegistry registry) {
@@ -69,11 +71,13 @@ public class MetricsPool {
 
     public Map<String, Double> getMeasurements(Meter meter) {
         Iterable<Measurement> measures = meter.measure();
-        Map<String, Double> measurements = measures instanceof Collection<Measurement> measurementCollection
-                ? CollectionUtil.newMapWithExpectedSize(measurementCollection.size())
-                : new HashMap<>(8);
+        Map<String, Double> measurements =
+                measures instanceof Collection<Measurement> measurementCollection
+                        ? CollectionUtil.newMapWithExpectedSize(measurementCollection.size())
+                        : new HashMap<>(8);
         for (Measurement measurement : measures) {
-            String tag = measurement.getStatistic().getTagValueRepresentation();
+            String tag = measurement.getStatistic()
+                    .getTagValueRepresentation();
             measurements.put(tag, measurement.getValue());
         }
         return measurements;
@@ -82,7 +86,8 @@ public class MetricsPool {
     public Map<String, Set<String>> getAvailableTags(Collection<Meter> meters) {
         Map<String, Set<String>> availableTags = new HashMap<>();
         for (Meter meter : meters) {
-            for (Tag tag : meter.getId().getTagsAsIterable()) {
+            for (Tag tag : meter.getId()
+                    .getTagsAsIterable()) {
                 Set<String> value = Collections.singleton(tag.getValue());
                 // tag.getKey() e.g. "total", "max", "count", "value" etc.
                 availableTags.merge(tag.getKey(), value, Sets::union);
@@ -104,7 +109,8 @@ public class MetricsPool {
         } else {
             Map<Meter.Id, Meter> idToMeter = getIdToMeterMap();
             for (Meter meter : idToMeter.values()) {
-                names.add(meter.getId().getName());
+                names.add(meter.getId()
+                        .getName());
             }
         }
         return names;
@@ -126,14 +132,19 @@ public class MetricsPool {
         for (String tag : tags) {
             Pair<String, String> keyAndValue = StringUtil.splitLatin1(tag, AsciiCode.COLON);
             if (keyAndValue == null) {
-                throw new IllegalArgumentException("The tag parameter must be in the form \"key:value\", but got: " + tag);
+                throw new IllegalArgumentException(
+                        "The tag parameter must be in the form \"key:value\", but got: "
+                                + tag);
             }
             tagList.add(Tag.of(keyAndValue.first(), keyAndValue.second()));
         }
         return tagList;
     }
 
-    private List<Meter> findFirstMatchingMeters(MeterRegistry registry, String name, @Nullable List<Tag> tags) {
+    private List<Meter> findFirstMatchingMeters(
+            MeterRegistry registry,
+            String name,
+            @Nullable List<Tag> tags) {
         if (registry instanceof CompositeMeterRegistry meterRegistry) {
             return findFirstMatchingMeters(meterRegistry, name, tags);
         }
@@ -146,10 +157,13 @@ public class MetricsPool {
         }
         for (Meter meter : meterMap.values()) {
             Meter.Id id = meter.getId();
-            if (!id.getName().equals(name)) {
+            if (!id.getName()
+                    .equals(name)) {
                 continue;
             }
-            if (tags == null || !id.getTags().containsAll(tags)) {
+            if (tags == null
+                    || !id.getTags()
+                            .containsAll(tags)) {
                 continue;
             }
             if (list == null) {
@@ -157,10 +171,15 @@ public class MetricsPool {
             }
             list.add(meter);
         }
-        return list == null ? Collections.emptyList() : list;
+        return list == null
+                ? Collections.emptyList()
+                : list;
     }
 
-    private List<Meter> findFirstMatchingMeters(CompositeMeterRegistry composite, String name, List<Tag> tags) {
+    private List<Meter> findFirstMatchingMeters(
+            CompositeMeterRegistry composite,
+            String name,
+            List<Tag> tags) {
         for (MeterRegistry meterRegistry : composite.getRegistries()) {
             List<Meter> meters = findFirstMatchingMeters(meterRegistry, name, tags);
             if (!meters.isEmpty()) {

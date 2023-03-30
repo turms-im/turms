@@ -29,12 +29,9 @@ public record FieldMetadata(
         boolean mutable,
         boolean sensitive,
         String type,
-        @Nullable
-        String elementType,
-        @Nullable
-        Object[] options,
-        @Nullable
-        String description
+        @Nullable String elementType,
+        @Nullable Object[] options,
+        @Nullable String description
 ) {
 
     public static final class Fields {

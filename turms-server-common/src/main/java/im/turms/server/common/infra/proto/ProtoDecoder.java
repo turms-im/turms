@@ -17,12 +17,12 @@
 
 package im.turms.server.common.infra.proto;
 
+import java.io.InputStream;
+import java.util.Arrays;
+
 import com.google.protobuf.CodedInputStream;
 import com.google.protobuf.CodedInputStreamUtil;
 import io.netty.buffer.ByteBuf;
-
-import java.io.InputStream;
-import java.util.Arrays;
 
 /**
  * @author James Chen
@@ -34,9 +34,8 @@ public final class ProtoDecoder {
 
     /**
      * @implNote 1. {@link CodedInputStream} is efficient because it reuses the underlying buffers
-     * 2. Don't use {@link CodedInputStream#newInstance(InputStream)}
-     * for {@link io.netty.buffer.ByteBufInputStream}
-     * because it is inefficient.
+     *           2. Don't use {@link CodedInputStream#newInstance(InputStream)} for
+     *           {@link io.netty.buffer.ByteBufInputStream} because it is inefficient.
      */
     public static CodedInputStream newInputStream(ByteBuf byteBuf) {
         int count = byteBuf.nioBufferCount();

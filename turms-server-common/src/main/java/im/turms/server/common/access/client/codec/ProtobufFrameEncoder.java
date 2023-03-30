@@ -17,19 +17,18 @@
 
 package im.turms.server.common.access.client.codec;
 
+import java.util.List;
+
 import com.google.protobuf.MessageLite;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageEncoder;
 
-import java.util.List;
-
 import static im.turms.server.common.infra.proto.ProtoEncoder.getDirectByteBuffer;
 
 /**
- * @author James Chen
- * The class accepts TurmsNotifcation on the server side,
- * and accepts TurmsRequest on the client side
+ * @author James Chen The class accepts TurmsNotifcation on the server side, and accepts
+ *         TurmsRequest on the client side
  */
 @ChannelHandler.Sharable
 public class ProtobufFrameEncoder extends MessageToMessageEncoder<MessageLite> {

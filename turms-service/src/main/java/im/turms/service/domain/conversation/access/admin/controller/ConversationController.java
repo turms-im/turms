@@ -17,7 +17,14 @@
 
 package im.turms.service.domain.conversation.access.admin.controller;
 
+import java.util.List;
+import java.util.Set;
+
 import com.mongodb.client.result.DeleteResult;
+import org.springframework.util.CollectionUtils;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.access.admin.dto.response.DeleteResultDTO;
 import im.turms.server.common.access.admin.dto.response.HttpHandlerResult;
 import im.turms.server.common.access.admin.dto.response.ResponseDTO;
@@ -41,12 +48,6 @@ import im.turms.service.domain.conversation.po.GroupConversation;
 import im.turms.service.domain.conversation.po.PrivateConversation;
 import im.turms.service.domain.conversation.service.ConversationService;
 import im.turms.service.storage.mongo.OperationResultPublisherPool;
-import org.springframework.util.CollectionUtils;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
-import java.util.List;
-import java.util.Set;
 
 /**
  * @author James Chen
@@ -56,7 +57,9 @@ public class ConversationController extends BaseController {
 
     private final ConversationService conversationService;
 
-    public ConversationController(TurmsPropertiesManager propertiesManager, ConversationService conversationService) {
+    public ConversationController(
+            TurmsPropertiesManager propertiesManager,
+            ConversationService conversationService) {
         super(propertiesManager);
         this.conversationService = conversationService;
     }
@@ -78,15 +81,15 @@ public class ConversationController extends BaseController {
         }
         if (ownerIds != null && !ownerIds.isEmpty()) {
             privateConversationsSize += ownerIds.size();
-            privateConversationsFlux =
-                    privateConversationsFlux.concatWith(conversationService.queryPrivateConversationsByOwnerIds(ownerIds));
+            privateConversationsFlux = privateConversationsFlux
+                    .concatWith(conversationService.queryPrivateConversationsByOwnerIds(ownerIds));
         }
         Mono<List<PrivateConversation>> privateConversations =
                 privateConversationsFlux.collect(CollectorUtil.toList(privateConversationsSize));
         Mono<List<GroupConversation>> groupConversations = groupIds == null || groupIds.isEmpty()
                 ? PublisherPool.emptyList()
                 : conversationService.queryGroupConversations(groupIds)
-                .collect(CollectorUtil.toList(groupIds.size()));
+                        .collect(CollectorUtil.toList(groupIds.size()));
         Mono<ConversationsDTO> conversationsMono = privateConversations.zipWith(groupConversations)
                 .map(tuple -> new ConversationsDTO(tuple.getT1(), tuple.getT2()));
         return HttpHandlerResult.okIfTruthy(conversationsMono);
@@ -101,13 +104,15 @@ public class ConversationController extends BaseController {
         Mono<DeleteResult> resultMono = CollectionUtil.isEmpty(privateConversationKeys)
                 ? OperationResultPublisherPool.ACKNOWLEDGED_DELETE_RESULT
                 : conversationService
-                .deletePrivateConversations(CollectionUtil.newSet(privateConversationKeys));
+                        .deletePrivateConversations(CollectionUtil.newSet(privateConversationKeys));
         if (!CollectionUtils.isEmpty(ownerIds)) {
-            resultMono = resultMono.zipWith(conversationService.deletePrivateConversations(ownerIds, null))
+            resultMono = resultMono
+                    .zipWith(conversationService.deletePrivateConversations(ownerIds, null))
                     .map(tuple -> OperationResultConvertor.merge(tuple.getT1(), tuple.getT2()));
         }
         if (!CollectionUtils.isEmpty(groupIds)) {
-            resultMono = resultMono.zipWith(conversationService.deleteGroupConversations(groupIds, null))
+            resultMono = resultMono
+                    .zipWith(conversationService.deleteGroupConversations(groupIds, null))
                     .map(tuple -> OperationResultConvertor.merge(tuple.getT1(), tuple.getT2()));
         }
         return HttpHandlerResult.deleteResult(resultMono);
@@ -117,18 +122,20 @@ public class ConversationController extends BaseController {
     @RequiredPermission(AdminPermission.CONVERSATION_UPDATE)
     public Mono<HttpHandlerResult<ResponseDTO<Void>>> updateConversations(
             @QueryParam(required = false) List<PrivateConversation.Key> privateConversationKeys,
-            @QueryParam(required = false) List<GroupConversation.GroupConversionMemberKey> groupConversationMemberKeys,
+            @QueryParam(
+                    required = false) List<GroupConversation.GroupConversionMemberKey> groupConversationMemberKeys,
             @RequestBody UpdateConversationDTO updateConversationDTO) {
         Mono<Void> updatePrivateConversions = CollectionUtil.isEmpty(privateConversationKeys)
                 ? Mono.empty()
-                : conversationService
-                .upsertPrivateConversationsReadDate(CollectionUtil.newSet(privateConversationKeys),
+                : conversationService.upsertPrivateConversationsReadDate(
+                        CollectionUtil.newSet(privateConversationKeys),
                         updateConversationDTO.readDate());
-        Mono<Void> updateGroupConversationsMono = CollectionUtil.isEmpty(groupConversationMemberKeys)
-                ? Mono.empty()
-                : conversationService
-                .upsertGroupConversationsReadDate(CollectionUtil.newSet(groupConversationMemberKeys),
-                        updateConversationDTO.readDate());
+        Mono<Void> updateGroupConversationsMono =
+                CollectionUtil.isEmpty(groupConversationMemberKeys)
+                        ? Mono.empty()
+                        : conversationService.upsertGroupConversationsReadDate(
+                                CollectionUtil.newSet(groupConversationMemberKeys),
+                                updateConversationDTO.readDate());
         return Mono.whenDelayError(updatePrivateConversions, updateGroupConversationsMono)
                 .thenReturn(HttpHandlerResult.RESPONSE_OK);
     }

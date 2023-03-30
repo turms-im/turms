@@ -17,9 +17,10 @@
 
 package im.turms.server.common.infra.property.env.gateway;
 
-import im.turms.server.common.infra.property.env.common.adminapi.CommonAdminApiProperties;
 import lombok.Builder;
 import lombok.Data;
+
+import im.turms.server.common.infra.property.env.common.adminapi.CommonAdminApiProperties;
 
 /**
  * @author James Chen

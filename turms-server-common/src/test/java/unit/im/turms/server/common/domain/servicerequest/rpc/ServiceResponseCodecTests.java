@@ -17,13 +17,14 @@
 
 package unit.im.turms.server.common.domain.servicerequest.rpc;
 
+import org.junit.jupiter.api.Test;
+import unit.im.turms.server.common.infra.cluster.service.rpc.codec.BaseCodecTest;
+
 import im.turms.server.common.access.client.dto.model.common.LongsWithVersion;
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.access.servicerequest.dto.ServiceResponse;
 import im.turms.server.common.access.servicerequest.rpc.ServiceResponseCodec;
-import org.junit.jupiter.api.Test;
-import unit.im.turms.server.common.infra.cluster.service.rpc.codec.BaseCodecTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -32,12 +33,15 @@ class ServiceResponseCodecTests extends BaseCodecTest {
     @Test
     void shouldGetTheSameRequest_afterWriteAndRead_forLegalRequest() {
         TurmsNotification.Data dataForRequester = TurmsNotification.Data.newBuilder()
-                .setLongsWithVersion(LongsWithVersion.newBuilder().addLongs(100))
+                .setLongsWithVersion(LongsWithVersion.newBuilder()
+                        .addLongs(100))
                 .build();
-        ServiceResponse expectedResponse = new ServiceResponse(dataForRequester,
-                ResponseStatusCode.OK, "response for the status code");
-        ServiceResponse actualRequest = writeDataAndReadBuffer(new ServiceResponseCodec(),
-                expectedResponse);
+        ServiceResponse expectedResponse = new ServiceResponse(
+                dataForRequester,
+                ResponseStatusCode.OK,
+                "response for the status code");
+        ServiceResponse actualRequest =
+                writeDataAndReadBuffer(new ServiceResponseCodec(), expectedResponse);
 
         assertThat(actualRequest.code()).isEqualTo(expectedResponse.code());
         assertThat(actualRequest.reason()).isEqualTo(expectedResponse.reason());

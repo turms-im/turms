@@ -17,6 +17,15 @@
 
 package im.turms.service.domain.user.access.admin.controller;
 
+import java.util.Collection;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.access.admin.dto.response.DeleteResultDTO;
 import im.turms.server.common.access.admin.dto.response.HttpHandlerResult;
 import im.turms.server.common.access.admin.dto.response.PaginationDTO;
@@ -40,14 +49,6 @@ import im.turms.service.domain.user.access.admin.dto.request.AddUserDTO;
 import im.turms.service.domain.user.access.admin.dto.request.UpdateUserDTO;
 import im.turms.service.domain.user.access.admin.dto.response.UserStatisticsDTO;
 import im.turms.service.domain.user.service.UserService;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
-import java.util.Collection;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
 
 import static im.turms.server.common.access.admin.permission.AdminPermission.USER_CREATE;
 import static im.turms.server.common.access.admin.permission.AdminPermission.USER_DELETE;
@@ -63,7 +64,10 @@ public class UserController extends BaseController {
     private final UserService userService;
     private final MessageService messageService;
 
-    public UserController(TurmsPropertiesManager propertiesManager, UserService userService, MessageService messageService) {
+    public UserController(
+            TurmsPropertiesManager propertiesManager,
+            UserService userService,
+            MessageService messageService) {
         super(propertiesManager);
         this.userService = userService;
         this.messageService = messageService;
@@ -72,8 +76,7 @@ public class UserController extends BaseController {
     @PostMapping
     @RequiredPermission(USER_CREATE)
     public Mono<HttpHandlerResult<ResponseDTO<User>>> addUser(@RequestBody AddUserDTO addUserDTO) {
-        Mono<User> addUser = userService.addUser(
-                addUserDTO.id(),
+        Mono<User> addUser = userService.addUser(addUserDTO.id(),
                 addUserDTO.password(),
                 addUserDTO.name(),
                 addUserDTO.intro(),
@@ -96,8 +99,7 @@ public class UserController extends BaseController {
             @QueryParam(required = false) Boolean isActive,
             @QueryParam(required = false) Integer size) {
         size = getPageSize(size);
-        Flux<User> usersFlux = userService.queryUsers(
-                ids,
+        Flux<User> usersFlux = userService.queryUsers(ids,
                 DateRange.of(registrationDateStart, registrationDateEnd),
                 DateRange.of(deletionDateStart, deletionDateEnd),
                 isActive,
@@ -119,13 +121,11 @@ public class UserController extends BaseController {
             int page,
             @QueryParam(required = false) Integer size) {
         size = getPageSize(size);
-        Mono<Long> count = userService.countUsers(
-                ids,
+        Mono<Long> count = userService.countUsers(ids,
                 DateRange.of(registrationDateStart, registrationDateEnd),
                 DateRange.of(deletionDateStart, deletionDateEnd),
                 isActive);
-        Flux<User> usersFlux = userService.queryUsers(
-                ids,
+        Flux<User> usersFlux = userService.queryUsers(ids,
                 DateRange.of(registrationDateStart, registrationDateEnd),
                 DateRange.of(deletionDateStart, deletionDateEnd),
                 isActive,
@@ -149,29 +149,27 @@ public class UserController extends BaseController {
         UserStatisticsDTO.UserStatisticsDTOBuilder builder = UserStatisticsDTO.builder();
         if (divideBy == null || divideBy == DivideBy.NOOP) {
             if (deletedStartDate != null || deletedEndDate != null) {
-                counts.add(userService.countDeletedUsers(
-                                DateRange.of(deletedStartDate, deletedEndDate))
+                counts.add(userService
+                        .countDeletedUsers(DateRange.of(deletedStartDate, deletedEndDate))
                         .doOnNext(builder::deletedUsers));
             }
             if (sentMessageStartDate != null || sentMessageEndDate != null) {
-                counts.add(messageService.countUsersWhoSentMessage(
-                                DateRange.of(sentMessageStartDate, sentMessageEndDate),
-                                null,
-                                false)
+                counts.add(messageService
+                        .countUsersWhoSentMessage(DateRange.of(sentMessageStartDate,
+                                sentMessageEndDate), null, false)
                         .doOnNext(builder::usersWhoSentMessages));
             }
             if (counts.isEmpty() || registeredStartDate != null || registeredEndDate != null) {
-                counts.add(userService.countRegisteredUsers(
-                                DateRange.of(registeredStartDate, registeredEndDate), true)
+                counts.add(userService
+                        .countRegisteredUsers(DateRange.of(registeredStartDate, registeredEndDate),
+                                true)
                         .doOnNext(builder::registeredUsers));
             }
         } else {
             if (deletedStartDate != null && deletedEndDate != null) {
-                counts.add(checkAndQueryBetweenDate(
-                        DateRange.of(deletedStartDate, deletedEndDate),
+                counts.add(checkAndQueryBetweenDate(DateRange.of(deletedStartDate, deletedEndDate),
                         divideBy,
-                        userService::countDeletedUsers)
-                        .doOnNext(builder::deletedUsersRecords));
+                        userService::countDeletedUsers).doOnNext(builder::deletedUsersRecords));
             }
             if (sentMessageStartDate != null && sentMessageEndDate != null) {
                 counts.add(checkAndQueryBetweenDate(
@@ -179,8 +177,7 @@ public class UserController extends BaseController {
                         divideBy,
                         messageService::countUsersWhoSentMessage,
                         null,
-                        false)
-                        .doOnNext(builder::usersWhoSentMessagesRecords));
+                        false).doOnNext(builder::usersWhoSentMessagesRecords));
             }
             if (registeredStartDate != null && registeredEndDate != null) {
                 counts.add(checkAndQueryBetweenDate(
@@ -202,8 +199,8 @@ public class UserController extends BaseController {
     public Mono<HttpHandlerResult<ResponseDTO<UpdateResultDTO>>> updateUser(
             Set<Long> ids,
             @RequestBody UpdateUserDTO updateUserDTO) {
-        Mono<UpdateResultDTO> updateMono = userService.updateUsers(
-                        ids,
+        Mono<UpdateResultDTO> updateMono = userService
+                .updateUsers(ids,
                         updateUserDTO.password(),
                         updateUserDTO.name(),
                         updateUserDTO.intro(),
@@ -221,8 +218,7 @@ public class UserController extends BaseController {
     public Mono<HttpHandlerResult<ResponseDTO<DeleteResultDTO>>> deleteUsers(
             Set<Long> ids,
             @QueryParam(required = false) Boolean deleteLogically) {
-        Mono<DeleteResultDTO> deleteMono = userService
-                .deleteUsers(ids, deleteLogically)
+        Mono<DeleteResultDTO> deleteMono = userService.deleteUsers(ids, deleteLogically)
                 .map(DeleteResultDTO::get);
         return HttpHandlerResult.okIfTruthy(deleteMono);
     }

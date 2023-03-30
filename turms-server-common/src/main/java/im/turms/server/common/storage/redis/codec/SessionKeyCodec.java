@@ -17,9 +17,9 @@
 
 package im.turms.server.common.storage.redis.codec;
 
-import io.netty.buffer.ByteBuf;
-
 import java.nio.ByteBuffer;
+
+import io.netty.buffer.ByteBuf;
 
 /**
  * @author James Chen
@@ -28,7 +28,8 @@ public class SessionKeyCodec implements TurmsRedisCodec<Long> {
 
     @Override
     public ByteBuf encode(Long value) {
-        return BUFFER_ALLOCATOR.directBuffer(Long.BYTES).writeLong(value);
+        return BUFFER_ALLOCATOR.directBuffer(Long.BYTES)
+                .writeLong(value);
     }
 
     @Override

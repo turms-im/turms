@@ -17,9 +17,10 @@
 
 package im.turms.service;
 
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
 import im.turms.server.common.BaseTurmsApplication;
 import im.turms.server.common.infra.lang.PackageConst;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
  * @author James Chen

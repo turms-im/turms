@@ -17,19 +17,19 @@
 
 package im.turms.plugin.antispam.ac;
 
-import im.turms.plugin.antispam.TextPreprocessor;
-import im.turms.plugin.antispam.dictionary.DictionaryParser;
-import im.turms.plugin.antispam.dictionary.Word;
-import im.turms.plugin.antispam.property.TextParsingStrategy;
-import im.turms.server.common.infra.serialization.DeserializationException;
-import im.turms.server.common.infra.serialization.SerializationException;
-
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.nio.file.Path;
 import java.util.List;
+
+import im.turms.plugin.antispam.TextPreprocessor;
+import im.turms.plugin.antispam.dictionary.DictionaryParser;
+import im.turms.plugin.antispam.dictionary.Word;
+import im.turms.plugin.antispam.property.TextParsingStrategy;
+import im.turms.server.common.infra.serialization.DeserializationException;
+import im.turms.server.common.infra.serialization.SerializationException;
 
 /**
  * @author James Chen
@@ -67,9 +67,13 @@ public final class AhoCorasickCodec {
         }
         Path path = Path.of(dictPath);
         DictionaryParser parser = new DictionaryParser(new TextPreprocessor(parsingStrategy));
-        List<Word> words = parser.parse(path, charsetName, skipInvalidCharacter, enableExtendedWord);
+        List<Word> words =
+                parser.parse(path, charsetName, skipInvalidCharacter, enableExtendedWord);
         AhoCorasickDoubleArrayTrie trie = new AhoCorasickDoubleArrayTrie(words);
-        serialize(trie, path.getParent().resolve("words.bin").toString());
+        serialize(trie,
+                path.getParent()
+                        .resolve("words.bin")
+                        .toString());
     }
 
     public static void serialize(AhoCorasickDoubleArrayTrie trie, String outputFile) {
@@ -93,11 +97,13 @@ public final class AhoCorasickCodec {
 
     public static AhoCorasickDoubleArrayTrie deserialize(String file) {
         try (FileInputStream stream = new FileInputStream(file);
-             ObjectInputStream inputStream = new ObjectInputStream(stream)) {
+                ObjectInputStream inputStream = new ObjectInputStream(stream)) {
             // version
             int version = inputStream.readInt();
             if (version != 1) {
-                throw new DeserializationException("Unknown version: " + version);
+                throw new DeserializationException(
+                        "Unknown version: "
+                                + version);
             }
             int[] fail = (int[]) inputStream.readObject();
             int[][] output = (int[][]) inputStream.readObject();

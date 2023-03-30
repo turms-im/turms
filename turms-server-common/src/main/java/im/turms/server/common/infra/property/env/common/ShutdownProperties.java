@@ -17,14 +17,14 @@
 
 package im.turms.server.common.infra.property.env.common;
 
+import jakarta.validation.constraints.Min;
 
-import im.turms.server.common.infra.property.metadata.Description;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import jakarta.validation.constraints.Min;
+import im.turms.server.common.infra.property.metadata.Description;
 
 /**
  * @author James Chen
@@ -35,8 +35,8 @@ import jakarta.validation.constraints.Min;
 @NoArgsConstructor
 public class ShutdownProperties {
 
-    @Description("Wait for a job 2 minutes at most for extreme cases by default. " +
-            "Though it is a long time, graceful shutdown is usually better than force shutdown.")
+    @Description("Wait for a job 2 minutes at most for extreme cases by default. "
+            + "Though it is a long time, graceful shutdown is usually better than force shutdown.")
     @Min(0)
     private long jobTimeoutMillis = 120 * 1000;
 

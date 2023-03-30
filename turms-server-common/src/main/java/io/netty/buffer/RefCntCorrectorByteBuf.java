@@ -22,10 +22,10 @@ import io.netty.util.IllegalReferenceCountException;
 /**
  * Used to avoiding deallocating a pooled ByteBuf more than once.
  * <p>
- * For some code that we cannot control may not release the ByteBuf if an error occurs,
- * and if we add a callback to ensure the pooled ByteBuf is released finally, it will
- * cause the bug mentioned in https://github.com/turms-im/turms/issues/786.
- * So we wrap the pooled ByteBuf to ensure the pooled ByteBuf will be deallocated once at most.
+ * For some code that we cannot control may not release the ByteBuf if an error occurs, and if we
+ * add a callback to ensure the pooled ByteBuf is released finally, it will cause the bug mentioned
+ * in https://github.com/turms-im/turms/issues/786. So we wrap the pooled ByteBuf to ensure the
+ * pooled ByteBuf will be deallocated once at most.
  *
  * @author James Chen
  */

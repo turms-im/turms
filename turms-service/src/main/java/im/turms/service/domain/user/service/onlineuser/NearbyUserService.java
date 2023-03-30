@@ -17,6 +17,18 @@
 
 package im.turms.service.domain.user.service.onlineuser;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotNull;
+
+import io.lettuce.core.GeoCoordinates;
+import io.lettuce.core.GeoWithin;
+import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.domain.location.bo.NearbyUser;
@@ -28,17 +40,6 @@ import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.reactor.PublisherPool;
 import im.turms.server.common.infra.validation.Validator;
 import im.turms.service.domain.user.service.UserService;
-import io.lettuce.core.GeoCoordinates;
-import io.lettuce.core.GeoWithin;
-import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.NotNull;
 
 /**
  * @author James Chen
@@ -72,14 +73,9 @@ public class NearbyUserService {
         }
         Mono<Void> upsertLocation = longitude == null
                 ? Mono.empty()
-                : sessionLocationService.upsertUserLocation(
-                userId,
-                deviceType,
-                new Date(),
-                longitude,
-                latitude);
-        Flux<GeoWithin<Object>> nearbyUserFlux = sessionLocationService.queryNearbyUsers(
-                userId,
+                : sessionLocationService
+                        .upsertUserLocation(userId, deviceType, new Date(), longitude, latitude);
+        Flux<GeoWithin<Object>> nearbyUserFlux = sessionLocationService.queryNearbyUsers(userId,
                 deviceType,
                 maxCount,
                 maxDistance,
@@ -87,13 +83,12 @@ public class NearbyUserService {
                 withDistance);
         Mono<List<NearbyUser>> resultMono;
         if (withUserInfo) {
-            resultMono = nearbyUserFlux
-                    .collectMap(geo -> {
-                        if (geo.getMember() instanceof UserSessionId sessionId) {
-                            return sessionId.userId();
-                        }
-                        return (Long) geo.getMember();
-                    }, geo -> geo)
+            resultMono = nearbyUserFlux.collectMap(geo -> {
+                if (geo.getMember() instanceof UserSessionId sessionId) {
+                    return sessionId.userId();
+                }
+                return (Long) geo.getMember();
+            }, geo -> geo)
                     .flatMap(userIdToGeo -> {
                         if (userIdToGeo.isEmpty()) {
                             return PublisherPool.emptyList();
@@ -113,8 +108,7 @@ public class NearbyUserService {
                                 });
                     });
         } else {
-            resultMono = nearbyUserFlux
-                    .map(geo -> getNearbyUser(geo, null))
+            resultMono = nearbyUserFlux.map(geo -> getNearbyUser(geo, null))
                     .collect(CollectorUtil.toChunkedList());
         }
         return upsertLocation.then(resultMono);
@@ -139,14 +133,19 @@ public class NearbyUserService {
             longitude = null;
             latitude = null;
         } else {
-            longitude = coordinates.getX().floatValue();
-            latitude = coordinates.getY().floatValue();
+            longitude = coordinates.getX()
+                    .floatValue();
+            latitude = coordinates.getY()
+                    .floatValue();
         }
-        return new NearbyUser(userId,
+        return new NearbyUser(
+                userId,
                 deviceType,
                 longitude,
                 latitude,
-                distance == null ? null : distance.intValue(),
+                distance == null
+                        ? null
+                        : distance.intValue(),
                 user);
     }
 

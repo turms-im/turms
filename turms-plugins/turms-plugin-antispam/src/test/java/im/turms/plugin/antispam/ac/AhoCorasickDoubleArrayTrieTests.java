@@ -17,10 +17,11 @@
 
 package im.turms.plugin.antispam.ac;
 
-import im.turms.plugin.antispam.dictionary.Word;
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
+import im.turms.plugin.antispam.dictionary.Word;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

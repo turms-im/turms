@@ -17,6 +17,10 @@
 
 package im.turms.server.common.storage.redis.command;
 
+import java.util.Collection;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 import io.lettuce.core.protocol.CommandArgs;
 import io.lettuce.core.protocol.CommandArgsUtil;
 import io.lettuce.core.protocol.CommandEncoder;
@@ -32,14 +36,10 @@ import io.netty.channel.ChannelOutboundHandlerAdapter;
 import io.netty.channel.ChannelPromise;
 import io.netty.handler.codec.EncoderException;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 /**
  * @author James Chen
- * @implNote We don't use MessageToByteEncoder because they will release the input buffer
- * while we need to reuse the input buffer to compose a composite buffer.
+ * @implNote We don't use MessageToByteEncoder because they will release the input buffer while we
+ *           need to reuse the input buffer to compose a composite buffer.
  * @see CommandEncoder
  * @see CommandArgsUtil
  */
@@ -47,28 +47,35 @@ public class TurmsCommandEncoder extends ChannelOutboundHandlerAdapter {
 
     private static final int COMMAND_BYTEBUF_COMPONENT_COUNT = 4;
 
-    private final Map<ProtocolKeyword, ByteBuf> protocolKeywordBufferMap = new ConcurrentHashMap<>(64);
+    private final Map<ProtocolKeyword, ByteBuf> protocolKeywordBufferMap =
+            new ConcurrentHashMap<>(64);
 
     @Override
-    public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
+    public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise)
+            throws Exception {
         CompositeByteBuf out;
         if (msg instanceof RedisCommand<?, ?, ?> command) {
             int argsCount = countArgs(command);
-            int componentCount = COMMAND_BYTEBUF_COMPONENT_COUNT + argsCount * CommandArgsUtil.ARG_BYTEBUF_COMPONENT_COUNT;
+            int componentCount = COMMAND_BYTEBUF_COMPONENT_COUNT
+                    + argsCount * CommandArgsUtil.ARG_BYTEBUF_COMPONENT_COUNT;
             out = UnpooledByteBufAllocator.DEFAULT.compositeDirectBuffer(componentCount);
             encode(out, command, argsCount);
         } else if (msg instanceof Collection) {
             Collection<RedisCommand<?, ?, ?>> commands = (Collection<RedisCommand<?, ?, ?>>) msg;
             int componentCount = 0;
             for (RedisCommand<?, ?, ?> command : commands) {
-                componentCount += COMMAND_BYTEBUF_COMPONENT_COUNT + countArgs(command) * CommandArgsUtil.ARG_BYTEBUF_COMPONENT_COUNT;
+                componentCount += COMMAND_BYTEBUF_COMPONENT_COUNT
+                        + countArgs(command) * CommandArgsUtil.ARG_BYTEBUF_COMPONENT_COUNT;
             }
             out = UnpooledByteBufAllocator.DEFAULT.compositeDirectBuffer(componentCount);
             for (RedisCommand<?, ?, ?> command : commands) {
                 encode(out, command, countArgs(command));
             }
         } else {
-            throw new IllegalArgumentException("Unknown message class: " + msg.getClass().getName());
+            throw new IllegalArgumentException(
+                    "Unknown message class: "
+                            + msg.getClass()
+                                    .getName());
         }
         ctx.write(out, promise);
     }
@@ -88,8 +95,10 @@ public class TurmsCommandEncoder extends ChannelOutboundHandlerAdapter {
         } catch (RuntimeException e) {
             out.resetWriterIndex();
             command.completeExceptionally(new EncoderException(
-                    "Cannot encode command " + command +
-                            ". Please close the connection as the connection state may be out of sync.", e));
+                    "Cannot encode command "
+                            + command
+                            + ". Please close the connection as the connection state may be out of sync.",
+                    e));
         }
     }
 
@@ -111,8 +120,8 @@ public class TurmsCommandEncoder extends ChannelOutboundHandlerAdapter {
      * e.g. "$7\r\nEVALSHA\r\n"
      */
     private ByteBuf getProtocolKeywordBuffer(ProtocolKeyword keyword) {
-        return protocolKeywordBufferMap.computeIfAbsent(keyword, key ->
-                Unpooled.unreleasableBuffer(CommandArgsUtil.writeBytesArg(key.getBytes())));
+        return protocolKeywordBufferMap.computeIfAbsent(keyword,
+                key -> Unpooled.unreleasableBuffer(CommandArgsUtil.writeBytesArg(key.getBytes())));
     }
 
 }

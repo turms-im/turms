@@ -17,10 +17,10 @@
 
 package im.turms.server.common.infra.security.jwt.algorithm;
 
-import im.turms.server.common.infra.security.jwt.Jwt;
-
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.AlgorithmParameterSpec;
+
+import im.turms.server.common.infra.security.jwt.Jwt;
 
 /**
  * @author James Chen
@@ -30,7 +30,10 @@ public class RsaPssAlgorithm extends AsymmetricAlgorithm {
     private final RSAPublicKey publicKey;
     private final AlgorithmParameterSpec parameterSpec;
 
-    public RsaPssAlgorithm(JwtAlgorithmDefinition definition, RSAPublicKey publicKey, AlgorithmParameterSpec parameterSpec) {
+    public RsaPssAlgorithm(
+            JwtAlgorithmDefinition definition,
+            RSAPublicKey publicKey,
+            AlgorithmParameterSpec parameterSpec) {
         super(definition);
         this.publicKey = publicKey;
         this.parameterSpec = parameterSpec;

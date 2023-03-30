@@ -17,10 +17,11 @@
 
 package unit.im.turms.server.common.infra.plugin;
 
+import org.springframework.boot.SpringApplication;
+
 import im.turms.plugin.MyExtensionPoint;
 import im.turms.server.common.infra.cluster.service.rpc.RpcService;
 import im.turms.server.common.infra.plugin.TurmsExtension;
-import org.springframework.boot.SpringApplication;
 
 /**
  * @author James Chen

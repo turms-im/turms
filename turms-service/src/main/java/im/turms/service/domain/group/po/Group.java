@@ -17,15 +17,16 @@
 
 package im.turms.service.domain.group.po;
 
+import java.util.Date;
+
+import lombok.Data;
+
 import im.turms.server.common.domain.common.po.BaseEntity;
 import im.turms.server.common.storage.mongo.entity.annotation.Document;
 import im.turms.server.common.storage.mongo.entity.annotation.Field;
 import im.turms.server.common.storage.mongo.entity.annotation.Id;
 import im.turms.server.common.storage.mongo.entity.annotation.Indexed;
 import im.turms.server.common.storage.mongo.entity.annotation.Sharded;
-import lombok.Data;
-
-import java.util.Date;
 
 import static im.turms.server.common.storage.mongo.entity.IndexType.HASH;
 import static im.turms.server.common.storage.mongo.entity.annotation.IndexedReason.EXPIRABLE;
@@ -77,14 +78,24 @@ public final class Group extends BaseEntity {
     private final Date creationDate;
 
     @Field(Fields.DELETION_DATE)
-    @Indexed(optional = true, reason = EXPIRABLE, partialFilter = "{" + Fields.DELETION_DATE + ":{$exists:true}}")
+    @Indexed(
+            optional = true,
+            reason = EXPIRABLE,
+            partialFilter = "{"
+                    + Fields.DELETION_DATE
+                    + ":{$exists:true}}")
     private final Date deletionDate;
 
     @Field(Fields.LAST_UPDATED_DATE)
     private final Date lastUpdatedDate;
 
     @Field(Fields.MUTE_END_DATE)
-    @Indexed(optional = true, reason = EXTENDED_FEATURE, partialFilter = "{" + Fields.MUTE_END_DATE + ":{$exists:true}}")
+    @Indexed(
+            optional = true,
+            reason = EXTENDED_FEATURE,
+            partialFilter = "{"
+                    + Fields.MUTE_END_DATE
+                    + ":{$exists:true}}")
     private final Date muteEndDate;
 
     @Field(Fields.IS_ACTIVE)

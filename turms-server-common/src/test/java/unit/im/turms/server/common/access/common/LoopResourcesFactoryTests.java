@@ -17,12 +17,13 @@
 
 package unit.im.turms.server.common.access.common;
 
-import im.turms.server.common.access.common.LoopResourcesFactory;
+import java.util.concurrent.ExecutionException;
+
 import io.netty.channel.EventLoopGroup;
 import org.junit.jupiter.api.Test;
 import reactor.netty.resources.LoopResources;
 
-import java.util.concurrent.ExecutionException;
+import im.turms.server.common.access.common.LoopResourcesFactory;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -32,11 +33,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 class LoopResourcesFactoryTests {
 
     @Test
-    void createForServer_threadShouldStartsWithPrefix() throws ExecutionException, InterruptedException {
+    void createForServer_threadShouldStartsWithPrefix()
+            throws ExecutionException, InterruptedException {
         String prefix = "my-prefix-for-test";
         LoopResources resources = LoopResourcesFactory.createForServer(prefix);
         EventLoopGroup eventLoopGroup = resources.onServer(false);
-        String threadName = eventLoopGroup.submit(() -> Thread.currentThread().getName()).get();
+        String threadName = eventLoopGroup.submit(() -> Thread.currentThread()
+                .getName())
+                .get();
         assertThat(threadName).startsWith(prefix);
     }
 

@@ -17,15 +17,16 @@
 
 package unit.im.turms.gateway.domain.session.bo;
 
-import im.turms.gateway.domain.session.bo.UserLoginInfo;
-import im.turms.server.common.access.client.dto.constant.DeviceType;
-import im.turms.server.common.access.client.dto.constant.UserStatus;
-import im.turms.server.common.domain.location.bo.Location;
+import java.util.Map;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.junit.jupiter.api.Test;
 
-import java.util.Map;
+import im.turms.gateway.domain.session.bo.UserLoginInfo;
+import im.turms.server.common.access.client.dto.constant.DeviceType;
+import im.turms.server.common.access.client.dto.constant.UserStatus;
+import im.turms.server.common.domain.location.bo.Location;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -47,15 +48,29 @@ class UserLoginInfoTests {
 
     @Test
     void constructor_shouldReturnInstance() {
-        UserLoginInfo userLoginInfo =
-                new UserLoginInfo(version, userId, password, loggingInDeviceType, deviceDetails, userStatus, location, ip);
+        UserLoginInfo userLoginInfo = new UserLoginInfo(
+                version,
+                userId,
+                password,
+                loggingInDeviceType,
+                deviceDetails,
+                userStatus,
+                location,
+                ip);
         assertThat(userLoginInfo).isNotNull();
     }
 
     @Test
     void getters_shouldGetValues() {
-        UserLoginInfo userLoginInfo =
-                new UserLoginInfo(version, userId, password, loggingInDeviceType, deviceDetails, userStatus, location, ip);
+        UserLoginInfo userLoginInfo = new UserLoginInfo(
+                version,
+                userId,
+                password,
+                loggingInDeviceType,
+                deviceDetails,
+                userStatus,
+                location,
+                ip);
         assertThat(userLoginInfo.version()).isEqualTo(version);
         assertThat(userLoginInfo.userId()).isEqualTo(userId);
         assertThat(userLoginInfo.password()).isEqualTo(password);

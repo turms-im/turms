@@ -17,6 +17,15 @@
 
 package im.turms.plugin.push;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import jakarta.validation.constraints.NotNull;
+
+import reactor.core.publisher.Mono;
+import reactor.util.context.ContextView;
+
 import im.turms.plugin.push.core.PushNotification;
 import im.turms.plugin.push.core.PushNotificationManager;
 import im.turms.plugin.push.core.PushNotificationServiceProvider;
@@ -35,14 +44,6 @@ import im.turms.server.common.infra.tracing.TracingContext;
 import im.turms.service.access.servicerequest.dto.RequestHandlerResult;
 import im.turms.service.domain.user.service.UserService;
 import im.turms.service.infra.plugin.extension.RequestHandlerResultHandler;
-import reactor.core.publisher.Mono;
-import reactor.util.context.ContextView;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import jakarta.validation.constraints.NotNull;
 
 /**
  * @author James Chen
@@ -69,14 +70,16 @@ public class NotificationPusher extends TurmsExtension implements RequestHandler
 
     @Override
     protected void onStopped() {
-        manager.close().block(DurationConst.ONE_MINUTE);
+        manager.close()
+                .block(DurationConst.ONE_MINUTE);
     }
 
     @Override
-    public Mono<Void> afterNotify(@NotNull RequestHandlerResult result,
-                                  @NotNull Long requesterId,
-                                  @NotNull DeviceType requesterDevice,
-                                  @NotNull Set<Long> offlineRecipientIds) {
+    public Mono<Void> afterNotify(
+            @NotNull RequestHandlerResult result,
+            @NotNull Long requesterId,
+            @NotNull DeviceType requesterDevice,
+            @NotNull Set<Long> offlineRecipientIds) {
         TurmsRequest request = result.dataForRecipients();
         if (request == null || offlineRecipientIds.isEmpty() || deviceTokenFieldNames.isEmpty()) {
             return Mono.empty();
@@ -93,15 +96,20 @@ public class NotificationPusher extends TurmsExtension implements RequestHandler
         return Mono.deferContextual(context -> {
             userService.queryUserName(requesterId)
                     .onErrorComplete(t -> {
-                        try (TracingCloseableContext ignored = TracingContext.getCloseableContext(context)) {
+                        try (TracingCloseableContext ignored =
+                                TracingContext.getCloseableContext(context)) {
                             LOGGER.error("Failed to get the requester ID", t);
                         }
                         return true;
                     })
-                    .doOnNext(name -> userStatusService.fetchDeviceDetails(offlineRecipientIds, deviceTokenFieldNames)
+                    .doOnNext(name -> userStatusService
+                            .fetchDeviceDetails(offlineRecipientIds, deviceTokenFieldNames)
                             .onErrorComplete(t -> {
-                                try (TracingCloseableContext ignored = TracingContext.getCloseableContext(context)) {
-                                    LOGGER.error("Failed to fetch offline recipients' device details", t);
+                                try (TracingCloseableContext ignored =
+                                        TracingContext.getCloseableContext(context)) {
+                                    LOGGER.error(
+                                            "Failed to fetch offline recipients' device details",
+                                            t);
                                 }
                                 return true;
                             })
@@ -118,13 +126,14 @@ public class NotificationPusher extends TurmsExtension implements RequestHandler
         });
     }
 
-    private void sendNotification(ContextView context,
-                                  Map<Long, Map<String, String>> recipientIdToDetails,
-                                  String text,
-                                  TurmsRequest request,
-                                  Long requesterId,
-                                  DeviceType requesterDevice,
-                                  String requesterName) {
+    private void sendNotification(
+            ContextView context,
+            Map<Long, Map<String, String>> recipientIdToDetails,
+            String text,
+            TurmsRequest request,
+            Long requesterId,
+            DeviceType requesterDevice,
+            String requesterName) {
         Set<Map.Entry<Long, Map<String, String>>> entries = recipientIdToDetails.entrySet();
         int count = entries.size() << 2;
         List<Mono<Void>> monos = new ArrayList<>(count);
@@ -132,7 +141,8 @@ public class NotificationPusher extends TurmsExtension implements RequestHandler
             Map<String, String> deviceDetails = recipientToDetail.getValue();
             for (Map.Entry<String, String> detail : deviceDetails.entrySet()) {
                 String providerStr = detail.getKey();
-                PushNotificationServiceProvider provider = PushNotificationServiceProvider.get(providerStr);
+                PushNotificationServiceProvider provider =
+                        PushNotificationServiceProvider.get(providerStr);
                 if (provider == null) {
                     continue;
                 }
@@ -152,9 +162,12 @@ public class NotificationPusher extends TurmsExtension implements RequestHandler
                                 requesterName,
                                 deviceDetails)
                         .onErrorComplete(t -> {
-                            try (TracingCloseableContext ignored = TracingContext.getCloseableContext(context)) {
-                                LOGGER.error("Caught an error while delivering the push notification: {}",
-                                        notification.toStringWithoutDate(), t);
+                            try (TracingCloseableContext ignored =
+                                    TracingContext.getCloseableContext(context)) {
+                                LOGGER.error(
+                                        "Caught an error while delivering the push notification: {}",
+                                        notification.toStringWithoutDate(),
+                                        t);
                             }
                             return true;
                         });

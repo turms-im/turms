@@ -17,9 +17,9 @@
 
 package im.turms.plugin.antispam.dictionary;
 
-import lombok.Data;
-
 import java.io.Serializable;
+
+import lombok.Data;
 
 /**
  * @author James Chen

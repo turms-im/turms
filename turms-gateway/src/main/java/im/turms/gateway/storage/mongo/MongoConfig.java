@@ -17,7 +17,14 @@
 
 package im.turms.gateway.storage.mongo;
 
+import java.util.Collections;
+import java.util.Set;
+import jakarta.annotation.Nullable;
+
 import com.mongodb.connection.ClusterType;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
 import im.turms.server.common.domain.admin.po.Admin;
 import im.turms.server.common.domain.admin.po.AdminRole;
 import im.turms.server.common.domain.user.po.User;
@@ -30,12 +37,6 @@ import im.turms.server.common.infra.property.env.service.env.database.TurmsMongo
 import im.turms.server.common.storage.mongo.BaseMongoConfig;
 import im.turms.server.common.storage.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.storage.mongo.TurmsMongoClient;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-
-import java.util.Collections;
-import java.util.Set;
-import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen
@@ -50,27 +51,38 @@ public class MongoConfig extends BaseMongoConfig {
 
     @Bean
     public TurmsMongoClient adminMongoClient(TurmsPropertiesManager propertiesManager) {
-        TurmsMongoProperties properties = propertiesManager.getLocalProperties().getGateway().getMongo().getAdmin();
+        TurmsMongoProperties properties = propertiesManager.getLocalProperties()
+                .getGateway()
+                .getMongo()
+                .getAdmin();
         TurmsMongoClient mongoClient = getMongoClient(properties, "admin", Collections.emptySet());
         mongoClient.registerEntitiesByClasses(Admin.class, AdminRole.class);
         return mongoClient;
     }
 
     /**
-     * @return null if {@link IdentityAccessManagementProperties#enabled} is false
-     * or {@link IdentityAccessManagementProperties#type} is not {@link IdentityAccessManagementType#PASSWORD}
+     * @return null if {@link IdentityAccessManagementProperties#enabled} is false or
+     *         {@link IdentityAccessManagementProperties#type} is not
+     *         {@link IdentityAccessManagementType#PASSWORD}
      */
     @Nullable
     @Bean
     public TurmsMongoClient userMongoClient(TurmsPropertiesManager propertiesManager) {
         TurmsProperties localProperties = propertiesManager.getLocalProperties();
-        IdentityAccessManagementProperties authenticationProperties = localProperties.getGateway().getSession().getIdentityAccessManagement();
+        IdentityAccessManagementProperties authenticationProperties = localProperties.getGateway()
+                .getSession()
+                .getIdentityAccessManagement();
         // TODO: use global "enabled"
-        if (!authenticationProperties.isEnabled() || authenticationProperties.getType() != IdentityAccessManagementType.PASSWORD) {
+        if (!authenticationProperties.isEnabled()
+                || authenticationProperties.getType() != IdentityAccessManagementType.PASSWORD) {
             return null;
         }
-        TurmsMongoProperties properties = localProperties.getGateway().getMongo().getUser();
-        TurmsMongoClient mongoClient = getMongoClient(properties, "user", Set.of(ClusterType.SHARDED, ClusterType.LOAD_BALANCED));
+        TurmsMongoProperties properties = localProperties.getGateway()
+                .getMongo()
+                .getUser();
+        TurmsMongoClient mongoClient = getMongoClient(properties,
+                "user",
+                Set.of(ClusterType.SHARDED, ClusterType.LOAD_BALANCED));
         mongoClient.registerEntitiesByClasses(User.class);
         return mongoClient;
     }

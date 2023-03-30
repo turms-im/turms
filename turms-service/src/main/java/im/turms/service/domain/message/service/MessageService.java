@@ -17,11 +17,38 @@
 
 package im.turms.service.domain.message.service;
 
+import java.lang.reflect.Method;
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
+
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.reactivestreams.client.ClientSession;
+import io.micrometer.core.instrument.Counter;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.PooledByteBufAllocator;
+import lombok.Getter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.access.client.dto.ClientMessagePool;
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
@@ -64,32 +91,6 @@ import im.turms.service.domain.user.service.UserService;
 import im.turms.service.infra.plugin.extension.ExpiredMessageDeletionNotifier;
 import im.turms.service.infra.proto.ProtoModelConvertor;
 import im.turms.service.storage.mongo.OperationResultPublisherPool;
-import io.micrometer.core.instrument.Counter;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.PooledByteBufAllocator;
-import lombok.Getter;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
-import java.lang.reflect.Method;
-import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PastOrPresent;
 
 import static im.turms.server.common.access.common.ResponseStatusCode.ILLEGAL_ARGUMENT;
 import static im.turms.server.common.access.common.ResponseStatusCode.MESSAGE_RECALL_TIMEOUT;
@@ -163,8 +164,8 @@ public class MessageService {
     @Autowired
     public MessageService(
             MessageRepository messageRepository,
-            @Nullable @Autowired(required = false) @Qualifier("sequenceIdRedisClientManager")
-            TurmsRedisClientManager sequenceIdRedisClientManager,
+            @Nullable @Autowired(
+                    required = false) @Qualifier("sequenceIdRedisClientManager") TurmsRedisClientManager sequenceIdRedisClientManager,
 
             Node node,
 
@@ -187,55 +188,79 @@ public class MessageService {
         this.pluginManager = pluginManager;
 
         TurmsProperties globalProperties = propertiesManager.getGlobalProperties();
-        MessageProperties messageProperties = globalProperties.getService().getMessage();
+        MessageProperties messageProperties = globalProperties.getService()
+                .getMessage();
         useConversationId = messageProperties.isUseConversationId();
         SequenceIdProperties sequenceIdProperties = messageProperties.getSequenceId();
-        useSequenceIdForGroupConversation = sequenceIdProperties.isUseSequenceIdForGroupConversation();
-        useSequenceIdForPrivateConversation = sequenceIdProperties.isUseSequenceIdForPrivateConversation();
-        MessageProperties.CacheProperties cacheProperties = propertiesManager.getLocalProperties().getService().getMessage().getCache();
+        useSequenceIdForGroupConversation =
+                sequenceIdProperties.isUseSequenceIdForGroupConversation();
+        useSequenceIdForPrivateConversation =
+                sequenceIdProperties.isUseSequenceIdForPrivateConversation();
+        MessageProperties.CacheProperties cacheProperties = propertiesManager.getLocalProperties()
+                .getService()
+                .getMessage()
+                .getCache();
         int relayedMessageCacheMaxSize = cacheProperties.getSentMessageCacheMaxSize();
-        if (relayedMessageCacheMaxSize > 0 && propertiesManager.getLocalProperties().getService().getMessage().isPersistMessage()) {
-            this.sentMessageCache = Caffeine
-                    .newBuilder()
+        if (relayedMessageCacheMaxSize > 0
+                && propertiesManager.getLocalProperties()
+                        .getService()
+                        .getMessage()
+                        .isPersistMessage()) {
+            this.sentMessageCache = Caffeine.newBuilder()
                     .maximumSize(relayedMessageCacheMaxSize)
-                    .expireAfterWrite(Duration.ofSeconds(cacheProperties.getSentMessageExpireAfter()))
+                    .expireAfterWrite(
+                            Duration.ofSeconds(cacheProperties.getSentMessageExpireAfter()))
                     .build();
         } else {
             sentMessageCache = null;
         }
-        sentMessageCounter = metricsService.getRegistry().counter(SENT_MESSAGES_COUNTER);
+        sentMessageCounter = metricsService.getRegistry()
+                .counter(SENT_MESSAGES_COUNTER);
         propertiesManager.notifyAndAddGlobalPropertiesChangeListener(this::updateProperties);
         // Set up the checker for expired messages join requests
-        taskManager.reschedule(
-                "expiredMessagesCleanup",
-                propertiesManager.getLocalProperties().getService().getMessage().getExpiredMessagesCleanupCron(),
+        taskManager.reschedule("expiredMessagesCleanup",
+                propertiesManager.getLocalProperties()
+                        .getService()
+                        .getMessage()
+                        .getExpiredMessagesCleanupCron(),
                 () -> {
                     if (node.isLocalNodeLeader()) {
                         int retentionPeriodHours = messageRetentionPeriodHours;
                         if (retentionPeriodHours > 0) {
-                            deleteExpiredMessages(retentionPeriodHours)
-                                    .subscribe(null, t -> LOGGER.error("Caught an error while deleting expired messages", t));
+                            deleteExpiredMessages(retentionPeriodHours).subscribe(null,
+                                    t -> LOGGER.error(
+                                            "Caught an error while deleting expired messages",
+                                            t));
                         }
                     }
                 });
     }
 
     private void updateProperties(TurmsProperties properties) {
-        MessageProperties messageProperties = properties.getService().getMessage();
-        availableRecallDurationMillis = messageProperties.getAvailableRecallDurationSeconds() * 1000;
-        defaultAvailableMessagesNumberWithTotal = messageProperties.getDefaultAvailableMessagesNumberWithTotal();
+        MessageProperties messageProperties = properties.getService()
+                .getMessage();
+        availableRecallDurationMillis =
+                messageProperties.getAvailableRecallDurationSeconds() * 1000;
+        defaultAvailableMessagesNumberWithTotal =
+                messageProperties.getDefaultAvailableMessagesNumberWithTotal();
         maxTextLimit = messageProperties.getMaxTextLimit();
         maxRecordsSize = messageProperties.getMaxRecordsSizeBytes();
         persistPreMessageId = messageProperties.isPersistPreMessageId();
         persistRecord = messageProperties.isPersistRecord();
         persistMessage = messageProperties.isPersistMessage();
         persistSenderIp = messageProperties.isPersistSenderIp();
-        updateReadDateAfterMessageSent = properties.getService().getConversation().getReadReceipt().isUpdateReadDateAfterMessageSent();
+        updateReadDateAfterMessageSent = properties.getService()
+                .getConversation()
+                .getReadReceipt()
+                .isUpdateReadDateAfterMessageSent();
         deleteMessageLogicallyByDefault = messageProperties.isDeleteMessageLogicallyByDefault();
-        recalledMessageQueryDateRange = messageProperties.isRecalledMessageVisible() ? null : DateRange.NULL;
+        recalledMessageQueryDateRange = messageProperties.isRecalledMessageVisible()
+                ? null
+                : DateRange.NULL;
         allowRecallMessage = messageProperties.isAllowRecallMessage();
         allowEditMessageBySender = messageProperties.isAllowEditMessageBySender();
-        sendMessageToOtherSenderOnlineDevices = messageProperties.isSendMessageToOtherSenderOnlineDevices();
+        sendMessageToOtherSenderOnlineDevices =
+                messageProperties.isSendMessageToOtherSenderOnlineDevices();
         timeType = messageProperties.getTimeType();
         messageRetentionPeriodHours = messageProperties.getMessageRetentionPeriodHours();
     }
@@ -250,7 +275,8 @@ public class MessageService {
         if (sentMessageCache != null) {
             Message message = sentMessageCache.getIfPresent(messageId);
             if (message != null) {
-                return Mono.just(message.getSenderId().equals(senderId));
+                return Mono.just(message.getSenderId()
+                        .equals(senderId));
             }
         }
         return messageRepository.isMessageSender(messageId, senderId);
@@ -268,13 +294,19 @@ public class MessageService {
             if (message != null) {
                 return message.getIsGroupMessage()
                         ? groupMemberService.isGroupMember(message.getTargetId(), userId, false)
-                        : Mono.just(message.getTargetId().equals(userId) || message.getSenderId().equals(userId));
+                        : Mono.just(message.getTargetId()
+                                .equals(userId)
+                                || message.getSenderId()
+                                        .equals(userId));
             }
         }
         return messageRepository.findMessageSenderIdAndTargetIdAndIsGroupMessage(messageId)
                 .flatMap(message -> message.getIsGroupMessage()
                         ? groupMemberService.isGroupMember(message.getTargetId(), userId, false)
-                        : Mono.just(message.getTargetId().equals(userId) || message.getSenderId().equals(userId)));
+                        : Mono.just(message.getTargetId()
+                                .equals(userId)
+                                || message.getSenderId()
+                                        .equals(userId)));
     }
 
     public Mono<ServicePermission> isMessageRecallable(@NotNull Long messageId) {
@@ -297,9 +329,10 @@ public class MessageService {
             deliveryDateMono = messageRepository.findDeliveryDate(messageId);
         }
         return deliveryDateMono
-                .map(deliveryDate -> deliveryDate.getTime() - System.currentTimeMillis() < availableRecallDurationMillis
-                        ? ServicePermission.OK
-                        : ServicePermission.get(MESSAGE_RECALL_TIMEOUT))
+                .map(deliveryDate -> deliveryDate.getTime()
+                        - System.currentTimeMillis() < availableRecallDurationMillis
+                                ? ServicePermission.OK
+                                : ServicePermission.get(MESSAGE_RECALL_TIMEOUT))
                 .defaultIfEmpty(ServicePermission.get(RECALL_NON_EXISTING_MESSAGE));
     }
 
@@ -313,10 +346,12 @@ public class MessageService {
             @Nullable Integer maxCount,
             boolean ascending,
             boolean withTotal) {
-        // We don't support the case when "areGroupMessages" is null currently (meaning we will support it in the future)
+        // We don't support the case when "areGroupMessages" is null currently (meaning we will
+        // support it in the future)
         // because it makes the pagination implementation complex
         if (areGroupMessages == null) {
-            return Flux.error(ResponseException.get(ResponseStatusCode.INVALID_REQUEST, "\"areGroupMessages\" must be either true or false currently"));
+            return Flux.error(ResponseException.get(ResponseStatusCode.INVALID_REQUEST,
+                    "\"areGroupMessages\" must be either true or false currently"));
         }
         if (maxCount == null) {
             if (withTotal) {
@@ -332,8 +367,7 @@ public class MessageService {
             if (CollectionUtil.isEmpty(fromIds)) {
                 return groupMemberService.queryUserJoinedGroupIds(requesterId)
                         .collect(Collectors.toCollection(recyclableSet::getValue))
-                        .flatMapMany(groupIds -> queryMessages(
-                                messageIds,
+                        .flatMapMany(groupIds -> queryMessages(messageIds,
                                 true,
                                 areSystemMessages,
                                 null,
@@ -357,14 +391,14 @@ public class MessageService {
                                     nonGroupMemberGroupIds.add(fromId);
                                 }
                             });
-                            return Flux.error(ResponseException.get(ResponseStatusCode.NOT_MEMBER_TO_QUERY_GROUP_MESSAGES,
-                                    "The user (" +
-                                            requesterId +
-                                            ") is not the member of the groups: " +
-                                            nonGroupMemberGroupIds));
+                            return Flux.error(ResponseException.get(
+                                    ResponseStatusCode.NOT_MEMBER_TO_QUERY_GROUP_MESSAGES,
+                                    "The user ("
+                                            + requesterId
+                                            + ") is not the member of the groups: "
+                                            + nonGroupMemberGroupIds));
                         }
-                        return queryMessages(
-                                messageIds,
+                        return queryMessages(messageIds,
                                 true,
                                 areSystemMessages,
                                 null,
@@ -378,8 +412,7 @@ public class MessageService {
                     })
                     .doFinally(signalType -> recyclableSet.recycle());
         }
-        return queryMessages(
-                messageIds,
+        return queryMessages(messageIds,
                 false,
                 areSystemMessages,
                 fromIds,
@@ -425,13 +458,15 @@ public class MessageService {
                     conversationIds.add(MessageRepository.getGroupConversationId(targetId));
                     if (hasSenderIds) {
                         for (long senderId : senderIds) {
-                            conversationIds.add(MessageRepository.getPrivateConversationId(senderId, targetId));
+                            conversationIds.add(
+                                    MessageRepository.getPrivateConversationId(senderId, targetId));
                         }
                     }
                 }
                 if (hasSenderIds) {
                     // Reset "senderIds" and "targetIds" because they have been
-                    // converted to private conversation IDs so the senderIds/targetIds criteria is unnecessary.
+                    // converted to private conversation IDs so the senderIds/targetIds criteria is
+                    // unnecessary.
                     // Note that we change the semantic from
                     // "querying messages sent by the sender IDs, and sent to the target IDs"
                     // to "querying messages sent by the sender IDs, and sent to the target IDs +
@@ -440,12 +475,15 @@ public class MessageService {
                     targetIds = null;
                 } else {
                     // Reset "targetIds" because they have been converted to
-                    // group conversation IDs so the targetIds criteria is duplicate and unnecessary.
+                    // group conversation IDs so the targetIds criteria is duplicate and
+                    // unnecessary.
                     targetIds = null;
                 }
             } else if (areGroupMessages) {
                 if (targetIdCount == 1) {
-                    conversationIds = List.of(MessageRepository.getGroupConversationId(targetIds.iterator().next()));
+                    conversationIds =
+                            List.of(MessageRepository.getGroupConversationId(targetIds.iterator()
+                                    .next()));
                 } else {
                     conversationIds = new ArrayList<>(targetIdCount);
                     for (long targetId : targetIds) {
@@ -459,19 +497,24 @@ public class MessageService {
                 int senderIdCount = CollectionUtil.getSize(senderIds);
                 if (senderIdCount > 0) {
                     if (targetIdCount == 1 && senderIdCount == 1) {
-                        conversationIds = List.of(MessageRepository
-                                .getPrivateConversationId(senderIds.iterator().next(), targetIds.iterator().next()));
+                        conversationIds = List.of(MessageRepository.getPrivateConversationId(
+                                senderIds.iterator()
+                                        .next(),
+                                targetIds.iterator()
+                                        .next()));
                     } else {
                         conversationIds = new ArrayList<>(senderIdCount * targetIdCount);
                         for (long senderId : senderIds) {
                             for (long targetId : targetIds) {
-                                conversationIds.add(MessageRepository.getPrivateConversationId(senderId, targetId));
+                                conversationIds.add(MessageRepository
+                                        .getPrivateConversationId(senderId, targetId));
                             }
                         }
                     }
                 }
                 // Reset "senderIds" and "targetIds" because they have been
-                // converted to private conversation IDs so the senderIds/targetIds criteria is unnecessary.
+                // converted to private conversation IDs so the senderIds/targetIds criteria is
+                // unnecessary.
                 // Note that we change the semantic from
                 // "querying messages sent by the sender IDs, and sent to the target IDs"
                 // to "querying messages sent by the sender IDs, and sent to the target IDs +
@@ -482,8 +525,7 @@ public class MessageService {
                 }
             }
         }
-        return messageRepository.findMessages(
-                messageIds,
+        return messageRepository.findMessages(messageIds,
                 conversationIds,
                 areGroupMessages,
                 areSystemMessages,
@@ -570,7 +612,9 @@ public class MessageService {
                     null,
                     text,
                     senderId,
-                    senderIp == null ? null : InetAddressUtil.ipBytesToInt(senderIp),
+                    senderIp == null
+                            ? null
+                            : InetAddressUtil.ipBytesToInt(senderIp),
                     targetId,
                     records,
                     burnAfter,
@@ -585,40 +629,44 @@ public class MessageService {
             List<byte[]> finalRecords = records;
             Long finalPreMessageId = preMessageId;
             byte[] finalSenderIp = senderIp;
-            saveMessage = sequenceId
-                    .flatMap(seqId -> {
-                        Message message = new Message(
-                                finalMessageId,
-                                conversationId,
-                                isGroupMessage,
-                                isSystemMessage,
-                                finalDeliveryDate,
-                                null,
-                                null,
-                                null,
-                                text,
-                                senderId,
-                                finalSenderIp == null ? null : InetAddressUtil.ipBytesToInt(finalSenderIp),
-                                targetId,
-                                finalRecords,
-                                burnAfter,
-                                referenceId,
-                                seqId.intValue(),
-                                finalPreMessageId);
-                        return messageRepository.insert(message)
-                                .thenReturn(message);
-                    });
+            saveMessage = sequenceId.flatMap(seqId -> {
+                Message message = new Message(
+                        finalMessageId,
+                        conversationId,
+                        isGroupMessage,
+                        isSystemMessage,
+                        finalDeliveryDate,
+                        null,
+                        null,
+                        null,
+                        text,
+                        senderId,
+                        finalSenderIp == null
+                                ? null
+                                : InetAddressUtil.ipBytesToInt(finalSenderIp),
+                        targetId,
+                        finalRecords,
+                        burnAfter,
+                        referenceId,
+                        seqId.intValue(),
+                        finalPreMessageId);
+                return messageRepository.insert(message)
+                        .thenReturn(message);
+            });
         }
         if (updateReadDateAfterMessageSent) {
             Mono<Void> upsertConversation = isGroupMessage
-                    ? conversationService.upsertGroupConversationReadDate(targetId, senderId, deliveryDate)
-                    : conversationService.upsertPrivateConversationReadDate(senderId, targetId, deliveryDate);
-            return saveMessage
-                    .doOnNext(ignored -> upsertConversation
-                            .subscribe(null, t -> LOGGER.error("Caught an error while upserting the {} conversation: {}",
-                                    isGroupMessage ? "group" : "private",
-                                    targetId,
-                                    t)));
+                    ? conversationService
+                            .upsertGroupConversationReadDate(targetId, senderId, deliveryDate)
+                    : conversationService
+                            .upsertPrivateConversationReadDate(senderId, targetId, deliveryDate);
+            return saveMessage.doOnNext(ignored -> upsertConversation.subscribe(null,
+                    t -> LOGGER.error("Caught an error while upserting the {} conversation: {}",
+                            isGroupMessage
+                                    ? "group"
+                                    : "private",
+                            targetId,
+                            t)));
         }
         return saveMessage;
     }
@@ -634,8 +682,7 @@ public class MessageService {
     }
 
     public Mono<Void> deleteExpiredMessages(@NotNull Integer retentionPeriodHours) {
-        return queryExpiredMessageIds(retentionPeriodHours)
-                .collect(CollectorUtil.toChunkedList())
+        return queryExpiredMessageIds(retentionPeriodHours).collect(CollectorUtil.toChunkedList())
                 .flatMap(expiredMessageIds -> {
                     if (expiredMessageIds.isEmpty()) {
                         return Mono.empty();
@@ -644,11 +691,13 @@ public class MessageService {
                     if (pluginManager.hasRunningExtensions(ExpiredMessageDeletionNotifier.class)) {
                         messageIdsToDeleteMono = messageRepository.findByIds(expiredMessageIds)
                                 .collect(CollectorUtil.toChunkedList())
-                                .flatMap(messages -> pluginManager.invokeExtensionPointsSequentially(
-                                        ExpiredMessageDeletionNotifier.class,
-                                        GET_MESSAGES_TO_DELETE_METHOD,
-                                        messages,
-                                        (notifier, pre) -> pre.flatMap(notifier::getMessagesToDelete)))
+                                .flatMap(
+                                        messages -> pluginManager.invokeExtensionPointsSequentially(
+                                                ExpiredMessageDeletionNotifier.class,
+                                                GET_MESSAGES_TO_DELETE_METHOD,
+                                                messages,
+                                                (notifier, pre) -> pre
+                                                        .flatMap(notifier::getMessagesToDelete)))
                                 .map(messages -> {
                                     List<Long> messageIds = new ArrayList<>(messages.size());
                                     for (Message message : messages) {
@@ -658,7 +707,8 @@ public class MessageService {
                                 });
                     }
                     return messageIdsToDeleteMono
-                            .flatMap(messageIds -> messageRepository.deleteByIds(messageIds).then());
+                            .flatMap(messageIds -> messageRepository.deleteByIds(messageIds)
+                                    .then());
                 });
     }
 
@@ -702,7 +752,9 @@ public class MessageService {
         if (recallDate == null) {
             return messageRepository.updateMessages(messageIds,
                     isSystemMessage,
-                    senderIp == null ? null : InetAddressUtil.ipBytesToInt(senderIp),
+                    senderIp == null
+                            ? null
+                            : InetAddressUtil.ipBytesToInt(senderIp),
                     text,
                     records,
                     burnAfter,
@@ -783,7 +835,8 @@ public class MessageService {
             @Nullable DateRange dateRange,
             @Nullable Boolean areGroupMessages,
             @Nullable Boolean areSystemMessages) {
-        return messageRepository.countUsersWhoSentMessage(dateRange, areGroupMessages, areSystemMessages);
+        return messageRepository
+                .countUsersWhoSentMessage(dateRange, areGroupMessages, areSystemMessages);
     }
 
     public Mono<Long> countGroupsThatSentMessages(@Nullable DateRange dateRange) {
@@ -885,15 +938,28 @@ public class MessageService {
         if (updateMessageContent && !allowEditMessageBySender) {
             return Mono.error(ResponseException.get(UPDATING_MESSAGE_BY_SENDER_IS_DISABLED));
         }
-        return isMessageSentByUser(messageId, senderId)
-                .flatMap(isSentByUser -> {
-                    if (!isSentByUser) {
-                        return Mono.error(ResponseException.get(NOT_SENDER_TO_UPDATE_MESSAGE));
-                    }
-                    return recallDate == null
-                            ? updateMessage(senderId, senderDeviceType, messageId, null, text, records, null, null, null, null)
-                            : updateMessageRecallDate(senderId, senderDeviceType, messageId, text, records, recallDate);
-                });
+        return isMessageSentByUser(messageId, senderId).flatMap(isSentByUser -> {
+            if (!isSentByUser) {
+                return Mono.error(ResponseException.get(NOT_SENDER_TO_UPDATE_MESSAGE));
+            }
+            return recallDate == null
+                    ? updateMessage(senderId,
+                            senderDeviceType,
+                            messageId,
+                            null,
+                            text,
+                            records,
+                            null,
+                            null,
+                            null,
+                            null)
+                    : updateMessageRecallDate(senderId,
+                            senderDeviceType,
+                            messageId,
+                            text,
+                            records,
+                            recallDate);
+        });
     }
 
     public Mono<Set<Long>> queryMessageRecipients(@NotNull Long messageId) {
@@ -909,9 +975,9 @@ public class MessageService {
     }
 
     /**
-     * @return {@link reactor.core.publisher.MonoEmpty} if {@link MessageProperties#persistMessage} is false
-     * and no recipient.
-     * {@link MessageAndRecipientIds#message} is null if {@link MessageProperties#persistMessage} is false.
+     * @return {@link reactor.core.publisher.MonoEmpty} if {@link MessageProperties#persistMessage}
+     *         is false and no recipient. {@link MessageAndRecipientIds#message} is null if
+     *         {@link MessageProperties#persistMessage} is false.
      */
     public Mono<MessageAndRecipientIds> authAndSaveMessage(
             @Nullable Long messageId,
@@ -933,7 +999,8 @@ public class MessageService {
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        return userService.isAllowedToSendMessageToTarget(isGroupMessage, isSystemMessage, senderId, targetId)
+        return userService
+                .isAllowedToSendMessageToTarget(isGroupMessage, isSystemMessage, senderId, targetId)
                 .flatMap(permission -> {
                     ResponseStatusCode code = permission.code();
                     if (code != OK) {
@@ -941,7 +1008,7 @@ public class MessageService {
                     }
                     return isGroupMessage
                             ? groupMemberService.queryGroupMemberIds(targetId, true)
-                            .map(memberIds -> CollectionUtil.remove(memberIds, senderId))
+                                    .map(memberIds -> CollectionUtil.remove(memberIds, senderId))
                             : Mono.just(Set.of(targetId));
                 })
                 .flatMap(recipientIds -> {
@@ -950,9 +1017,19 @@ public class MessageService {
                                 ? Mono.empty()
                                 : Mono.just(new MessageAndRecipientIds(null, recipientIds));
                     }
-                    return saveMessage(messageId, senderId, senderIp, targetId, isGroupMessage,
-                            isSystemMessage, text, records, burnAfter, deliveryDate, null, referenceId, preMessageId)
-                            .map(message -> {
+                    return saveMessage(messageId,
+                            senderId,
+                            senderIp,
+                            targetId,
+                            isGroupMessage,
+                            isSystemMessage,
+                            text,
+                            records,
+                            burnAfter,
+                            deliveryDate,
+                            null,
+                            referenceId,
+                            preMessageId).map(message -> {
                                 if (message.getId() != null && sentMessageCache != null) {
                                     cacheSentMessage(message);
                                 }
@@ -969,8 +1046,7 @@ public class MessageService {
             @NotNull Boolean isSystemMessage,
             @NotNull Long targetId) {
         return queryMessage(referenceId)
-                .flatMap(message -> authAndSaveMessage(
-                        node.nextLargeGapId(ServiceType.MESSAGE),
+                .flatMap(message -> authAndSaveMessage(node.nextLargeGapId(ServiceType.MESSAGE),
                         requesterId,
                         requesterIp,
                         targetId,
@@ -1013,50 +1089,69 @@ public class MessageService {
             if (isSystemMessage) {
                 senderId = ADMIN_REQUESTER_ID;
             } else {
-                return Mono.error(ResponseException.get(ILLEGAL_ARGUMENT, "senderId must not be null for user messages"));
+                return Mono.error(ResponseException.get(ILLEGAL_ARGUMENT,
+                        "senderId must not be null for user messages"));
             }
         }
         Date deliveryDate = new Date();
         Mono<MessageAndRecipientIds> saveMono = referenceId == null
-                ? authAndSaveMessage(messageId, senderId, senderIp, targetId, isGroupMessage, isSystemMessage,
-                text, records, burnAfter, deliveryDate, null, preMessageId)
-                : authAndCloneAndSaveMessage(senderId, senderIp, referenceId, isGroupMessage, isSystemMessage, targetId);
-        return saveMono
-                .doOnNext(pair -> {
-                    Message message = pair.message();
-                    sentMessageCounter.increment();
-                    Long msgId = message == null ? null : message.getId();
-                    if (msgId != null && sentMessageCache != null) {
-                        cacheSentMessage(message);
-                    }
-                    if (send) {
-                        // No need to let the client wait to send notifications to recipients
-                        Set<Long> recipientIds = pair.recipientIds();
-                        sendMessage(message, recipientIds, senderDeviceType)
-                                .subscribe(null, t -> LOGGER.error("Failed to send the message ({}) to the recipients: {}",
-                                        msgId, recipientIds, t));
-                    }
-                })
+                ? authAndSaveMessage(messageId,
+                        senderId,
+                        senderIp,
+                        targetId,
+                        isGroupMessage,
+                        isSystemMessage,
+                        text,
+                        records,
+                        burnAfter,
+                        deliveryDate,
+                        null,
+                        preMessageId)
+                : authAndCloneAndSaveMessage(senderId,
+                        senderIp,
+                        referenceId,
+                        isGroupMessage,
+                        isSystemMessage,
+                        targetId);
+        return saveMono.doOnNext(pair -> {
+            Message message = pair.message();
+            sentMessageCounter.increment();
+            Long msgId = message == null
+                    ? null
+                    : message.getId();
+            if (msgId != null && sentMessageCache != null) {
+                cacheSentMessage(message);
+            }
+            if (send) {
+                // No need to let the client wait to send notifications to recipients
+                Set<Long> recipientIds = pair.recipientIds();
+                sendMessage(message, recipientIds, senderDeviceType).subscribe(null,
+                        t -> LOGGER.error("Failed to send the message ({}) to the recipients: {}",
+                                msgId,
+                                recipientIds,
+                                t));
+            }
+        })
                 .then();
     }
 
     /**
      * @param senderDeviceType can be null when it is a system message
      */
-    private Mono<Void> sendMessage(@NotNull Message message,
-                                   @NotNull Set<Long> recipientIds,
-                                   @Nullable DeviceType senderDeviceType) {
+    private Mono<Void> sendMessage(
+            @NotNull Message message,
+            @NotNull Set<Long> recipientIds,
+            @Nullable DeviceType senderDeviceType) {
         if (recipientIds.isEmpty()) {
             return Mono.empty();
         }
         Long senderId = message.getSenderId();
-        TurmsNotification notification = ClientMessagePool
-                .getTurmsNotificationBuilder()
+        TurmsNotification notification = ClientMessagePool.getTurmsNotificationBuilder()
                 .setRequesterId(senderId)
                 .setTimestamp(System.currentTimeMillis())
-                .setRelayedRequest(ClientMessagePool
-                        .getTurmsRequestBuilder()
-                        .setCreateMessageRequest(ProtoModelConvertor.message2createMessageRequest(message)))
+                .setRelayedRequest(ClientMessagePool.getTurmsRequestBuilder()
+                        .setCreateMessageRequest(
+                                ProtoModelConvertor.message2createMessageRequest(message)))
                 .setRequestId(ADMIN_REQUEST_ID)
                 .build();
         Set<UserSessionId> excludedUserSessionIds;
@@ -1067,58 +1162,57 @@ public class MessageService {
             excludedUserSessionIds = Collections.emptySet();
         }
         return outboundMessageService
-                .forwardNotification(notification,
-                        recipientIds,
-                        excludedUserSessionIds)
+                .forwardNotification(notification, recipientIds, excludedUserSessionIds)
                 // TODO: Should trigger extension points
                 // https://github.com/turms-im/turms/issues/1189
                 .then();
     }
 
     private void cacheSentMessage(@NotNull Message message) {
-        sentMessageCache.put(message.getId(), new Message(
-                message.getId(),
-                null,
-                message.getIsGroupMessage(),
-                message.getIsSystemMessage(),
-                message.getDeliveryDate(),
-                null,
-                null,
-                null,
-                null,
-                message.getSenderId(),
-                null,
-                message.getTargetId(),
-                null,
-                null,
-                null,
-                null,
-                null));
+        sentMessageCache.put(message.getId(),
+                new Message(
+                        message.getId(),
+                        null,
+                        message.getIsGroupMessage(),
+                        message.getIsSystemMessage(),
+                        message.getDeliveryDate(),
+                        null,
+                        null,
+                        null,
+                        null,
+                        message.getSenderId(),
+                        null,
+                        message.getTargetId(),
+                        null,
+                        null,
+                        null,
+                        null,
+                        null));
     }
 
-    private Mono<UpdateResult> updateMessageRecallDate(@Nullable Long senderId,
-                                                       @Nullable DeviceType senderDeviceType,
-                                                       @NotNull Long messageId,
-                                                       String text,
-                                                       List<byte[]> records,
-                                                       @PastOrPresent Date recallDate) {
-        return isMessageRecallable(messageId)
-                .flatMap(permission -> {
-                    ResponseStatusCode code = permission.code();
-                    if (code != OK) {
-                        return Mono.error(ResponseException.get(code, permission.reason()));
-                    }
-                    return updateMessage(senderId,
-                            senderDeviceType,
-                            messageId,
-                            null,
-                            text,
-                            records,
-                            null,
-                            recallDate,
-                            null,
-                            null);
-                });
+    private Mono<UpdateResult> updateMessageRecallDate(
+            @Nullable Long senderId,
+            @Nullable DeviceType senderDeviceType,
+            @NotNull Long messageId,
+            String text,
+            List<byte[]> records,
+            @PastOrPresent Date recallDate) {
+        return isMessageRecallable(messageId).flatMap(permission -> {
+            ResponseStatusCode code = permission.code();
+            if (code != OK) {
+                return Mono.error(ResponseException.get(code, permission.reason()));
+            }
+            return updateMessage(senderId,
+                    senderDeviceType,
+                    messageId,
+                    null,
+                    text,
+                    records,
+                    null,
+                    recallDate,
+                    null,
+                    null);
+        });
     }
 
     private void validRecordsLength(List<byte[]> records) {
@@ -1134,8 +1228,9 @@ public class MessageService {
             count += record.length;
         }
         if (count > maxSize) {
-            throw ResponseException
-                    .get(ILLEGAL_ARGUMENT, "The total size of records must be less than or equal to " + maxSize);
+            throw ResponseException.get(ILLEGAL_ARGUMENT,
+                    "The total size of records must be less than or equal to "
+                            + maxSize);
         }
     }
 
@@ -1151,13 +1246,15 @@ public class MessageService {
                 byte[] prefix = isGroupConversation
                         ? GROUP_CONVERSATION_SEQUENCE_ID_PREFIX
                         : PRIVATE_CONVERSATION_SEQUENCE_ID_PREFIX;
-                ByteBuf buffer = PooledByteBufAllocator.DEFAULT.directBuffer(prefix.length + Long.BYTES)
-                        .writeBytes(prefix)
-                        .writeLong(targetId);
+                ByteBuf buffer =
+                        PooledByteBufAllocator.DEFAULT.directBuffer(prefix.length + Long.BYTES)
+                                .writeBytes(prefix)
+                                .writeLong(targetId);
                 keys.add(buffer);
             }
             return client.del(keys);
-        }).then();
+        })
+                .then();
     }
 
     private Mono<Long> fetchSequenceId(boolean isGroupConversation, Long targetId) {

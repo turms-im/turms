@@ -17,17 +17,18 @@
 
 package im.turms.server.common.infra.cluster.service.codec.io;
 
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.Map;
+import jakarta.annotation.Nullable;
+
+import io.netty.buffer.ByteBuf;
+
 import im.turms.server.common.infra.cluster.service.codec.codec.Codec;
 import im.turms.server.common.infra.cluster.service.codec.codec.CodecPool;
 import im.turms.server.common.infra.cluster.service.codec.exception.CodecNotFoundException;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.io.Stream;
-import io.netty.buffer.ByteBuf;
-
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.Map;
-import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen
@@ -43,7 +44,9 @@ public class CodecStream extends Stream implements CodecStreamInput, CodecStream
         int codecId = readShort();
         Codec<T> codec = CodecPool.getCodec(codecId);
         if (codec == null) {
-            throw new CodecNotFoundException("Could not find the codec for the ID: " + codecId);
+            throw new CodecNotFoundException(
+                    "Could not find the codec for the ID: "
+                            + codecId);
         }
         return codec.read(this);
     }
@@ -52,7 +55,10 @@ public class CodecStream extends Stream implements CodecStreamInput, CodecStream
     public void writeObject(Object obj) {
         Codec<Object> codec = CodecPool.getCodec(obj.getClass());
         if (codec == null) {
-            throw new CodecNotFoundException("Could not find the codec for the class: " + obj.getClass().getName());
+            throw new CodecNotFoundException(
+                    "Could not find the codec for the class: "
+                            + obj.getClass()
+                                    .getName());
         }
         codec.write(this, obj);
     }
@@ -67,11 +73,15 @@ public class CodecStream extends Stream implements CodecStreamInput, CodecStream
         int valueCodecId = readShort();
         Codec<K> keyCodec = CodecPool.getCodec(keyCodecId);
         if (keyCodec == null) {
-            throw new CodecNotFoundException("Could not find the map key codec for the ID: " + keyCodecId);
+            throw new CodecNotFoundException(
+                    "Could not find the map key codec for the ID: "
+                            + keyCodecId);
         }
         Codec<V> valueCodec = CodecPool.getCodec(valueCodecId);
         if (valueCodec == null) {
-            throw new CodecNotFoundException("Could not find the map value codec for the ID: " + valueCodecId);
+            throw new CodecNotFoundException(
+                    "Could not find the map value codec for the ID: "
+                            + valueCodecId);
         }
         Map<K, V> map = CollectionUtil.newMapWithExpectedSize(size);
         for (int i = 0; i < size; i++) {
@@ -87,17 +97,26 @@ public class CodecStream extends Stream implements CodecStreamInput, CodecStream
             return;
         }
         writeVarint32(map.size());
-        Iterator<Map.Entry<K, V>> iterator = map.entrySet().iterator();
+        Iterator<Map.Entry<K, V>> iterator = map.entrySet()
+                .iterator();
         Map.Entry<K, V> entry = iterator.next();
-        Codec<K> keyCodec = CodecPool.getCodec(entry.getKey().getClass());
+        Codec<K> keyCodec = CodecPool.getCodec(entry.getKey()
+                .getClass());
         if (keyCodec == null) {
-            throw new CodecNotFoundException("Could not find the map key codec for the class: "
-                    + entry.getKey().getClass().getName());
+            throw new CodecNotFoundException(
+                    "Could not find the map key codec for the class: "
+                            + entry.getKey()
+                                    .getClass()
+                                    .getName());
         }
-        Codec<V> valueCodec = CodecPool.getCodec(entry.getValue().getClass());
+        Codec<V> valueCodec = CodecPool.getCodec(entry.getValue()
+                .getClass());
         if (valueCodec == null) {
-            throw new CodecNotFoundException("Could not find the map value codec for the class: "
-                    + entry.getValue().getClass().getName());
+            throw new CodecNotFoundException(
+                    "Could not find the map value codec for the class: "
+                            + entry.getValue()
+                                    .getClass()
+                                    .getName());
         }
         writeObject(entry.getKey());
         writeObject(entry.getValue());

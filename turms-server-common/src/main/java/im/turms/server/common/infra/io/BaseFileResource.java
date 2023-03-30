@@ -17,9 +17,9 @@
 
 package im.turms.server.common.infra.io;
 
-import lombok.Data;
-
 import jakarta.annotation.Nullable;
+
+import lombok.Data;
 
 /**
  * @author James Chen

@@ -17,6 +17,14 @@
 
 package im.turms.service.domain.user.access.admin.controller;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
+
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.access.admin.dto.response.HttpHandlerResult;
 import im.turms.server.common.access.admin.dto.response.ResponseDTO;
 import im.turms.server.common.access.admin.permission.AdminPermission;
@@ -44,13 +52,6 @@ import im.turms.service.domain.user.access.admin.dto.response.UserLocationDTO;
 import im.turms.service.domain.user.service.UserService;
 import im.turms.service.domain.user.service.onlineuser.NearbyUserService;
 import im.turms.service.domain.user.service.onlineuser.SessionService;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
 
 /**
  * @author James Chen
@@ -84,7 +85,8 @@ public class UserOnlineInfoController extends BaseController {
 
     @GetMapping("count")
     @RequiredPermission(AdminPermission.STATISTICS_USER_QUERY)
-    public Mono<HttpHandlerResult<ResponseDTO<OnlineUserCountDTO>>> countOnlineUsers(boolean countByNodes) {
+    public Mono<HttpHandlerResult<ResponseDTO<OnlineUserCountDTO>>> countOnlineUsers(
+            boolean countByNodes) {
         if (!countByNodes) {
             return HttpHandlerResult.okIfTruthy(statisticsService.countOnlineUsers()
                     .map(total -> new OnlineUserCountDTO(total, null)));
@@ -164,16 +166,15 @@ public class UserOnlineInfoController extends BaseController {
             boolean withCoordinates,
             boolean withDistance,
             boolean withUserInfo) {
-        Mono<List<NearbyUser>> nearbyUsers = nearbyUserService
-                .queryNearbyUsers(userId,
-                        deviceType,
-                        null,
-                        null,
-                        maxCount,
-                        maxDistance,
-                        withCoordinates,
-                        withDistance,
-                        withUserInfo);
+        Mono<List<NearbyUser>> nearbyUsers = nearbyUserService.queryNearbyUsers(userId,
+                deviceType,
+                null,
+                null,
+                maxCount,
+                maxDistance,
+                withCoordinates,
+                withDistance,
+                withUserInfo);
         return HttpHandlerResult.okIfTruthy(nearbyUsers);
     }
 
@@ -186,10 +187,13 @@ public class UserOnlineInfoController extends BaseController {
         List<Mono<UserLocationDTO>> monos = new ArrayList<>(size);
         for (Long userId : ids) {
             monos.add(sessionLocationService.getUserLocation(userId, deviceType)
-                    .map(coordinates -> new UserLocationDTO(userId,
+                    .map(coordinates -> new UserLocationDTO(
+                            userId,
                             deviceType,
-                            coordinates.getX().doubleValue(),
-                            coordinates.getY().doubleValue())));
+                            coordinates.getX()
+                                    .doubleValue(),
+                            coordinates.getY()
+                                    .doubleValue())));
         }
         return HttpHandlerResult.okIfTruthy(Flux.merge(monos), size);
     }
@@ -205,7 +209,8 @@ public class UserOnlineInfoController extends BaseController {
         if (onlineStatus == UserStatus.OFFLINE) {
             updateMono = deviceTypes == null
                     ? sessionService.disconnect(ids, SessionCloseStatus.DISCONNECTED_BY_ADMIN)
-                    : sessionService.disconnect(ids, deviceTypes, SessionCloseStatus.DISCONNECTED_BY_ADMIN);
+                    : sessionService
+                            .disconnect(ids, deviceTypes, SessionCloseStatus.DISCONNECTED_BY_ADMIN);
         } else {
             updateMono = userStatusService.updateOnlineUsersStatus(ids, onlineStatus);
         }

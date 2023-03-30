@@ -17,14 +17,15 @@
 
 package im.turms.server.common.infra.collection;
 
-import im.turms.server.common.infra.thread.ThreadSafe;
-import org.jctools.maps.NonBlockingHashMapLong;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.function.UnaryOperator;
+
+import org.jctools.maps.NonBlockingHashMapLong;
+
+import im.turms.server.common.infra.thread.ThreadSafe;
 
 /**
  * @author James Chen
@@ -55,7 +56,8 @@ public class Pool<T> {
         if (existingObject == null) {
             // We don't use LRU just because we don't need it currently
             if (keyToObject.size() > maxSize) {
-                Iterator<Map.Entry<Long, Object>> iterator = keyToObject.entrySet().iterator();
+                Iterator<Map.Entry<Long, Object>> iterator = keyToObject.entrySet()
+                        .iterator();
                 if (iterator.hasNext()) {
                     iterator.remove();
                 }
@@ -125,7 +127,8 @@ public class Pool<T> {
         if (existingObject == null) {
             // We don't use LRU just because we don't need it currently
             if (keyToObject.size() > maxSize) {
-                Iterator<Map.Entry<Long, Object>> iterator = keyToObject.entrySet().iterator();
+                Iterator<Map.Entry<Long, Object>> iterator = keyToObject.entrySet()
+                        .iterator();
                 if (iterator.hasNext()) {
                     iterator.remove();
                 }

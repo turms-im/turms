@@ -18,8 +18,8 @@
 package im.turms.server.common.infra.thread;
 
 /**
- * Gather all thread names used by Turms here
- * so that we can know which threads Turms server use clearly.
+ * Gather all thread names used by Turms here so that we can know which threads Turms server use
+ * clearly.
  *
  * @author James Chen
  */
@@ -52,8 +52,10 @@ public class ThreadNameConst {
     public static final String NODE_CONNECTION_KEEPALIVE = "turms-node-connection-keepalive";
     public static final String NODE_CONNECTION_RETRY = "turms-node-connection-retry";
     public static final String NODE_CONNECTION_SERVER = "turms-node-connection-server";
-    public static final String NODE_DISCOVERY_CHANGE_NOTIFIER = "turms-node-discovery-change-notifier";
-    public static final String NODE_DISCOVERY_HEARTBEAT_REFRESHER = "turms-node-discovery-heartbeat-refresher";
+    public static final String NODE_DISCOVERY_CHANGE_NOTIFIER =
+            "turms-node-discovery-change-notifier";
+    public static final String NODE_DISCOVERY_HEARTBEAT_REFRESHER =
+            "turms-node-discovery-heartbeat-refresher";
 
     // Task
     public static final String TASK_MANAGER = "turms-task-manager";

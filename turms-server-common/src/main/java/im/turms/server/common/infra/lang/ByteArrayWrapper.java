@@ -17,9 +17,9 @@
 
 package im.turms.server.common.infra.lang;
 
-import lombok.Getter;
-
 import java.util.Arrays;
+
+import lombok.Getter;
 
 /**
  * @author James Chen

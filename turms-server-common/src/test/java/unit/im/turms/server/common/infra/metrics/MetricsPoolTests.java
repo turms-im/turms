@@ -17,7 +17,12 @@
 
 package unit.im.turms.server.common.infra.metrics;
 
-import im.turms.server.common.infra.metrics.MetricsPool;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.Meter;
 import io.micrometer.core.instrument.MeterRegistry;
@@ -26,11 +31,7 @@ import io.micrometer.core.instrument.Tag;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.junit.jupiter.api.Test;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
+import im.turms.server.common.infra.metrics.MetricsPool;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -66,7 +67,8 @@ class MetricsPoolTests {
         Set<String> names = pool.collectNames();
         Set<String> expected = registry.getMeters()
                 .stream()
-                .map(meter -> meter.getId().getName())
+                .map(meter -> meter.getId()
+                        .getName())
                 .collect(Collectors.toSet());
 
         assertThat(names).hasSameElementsAs(expected);
@@ -76,20 +78,29 @@ class MetricsPoolTests {
     void findFirstMatchingMeters() {
         MetricsPool pool = new MetricsPool(registry);
         List<Meter> meters1 = pool.findFirstMatchingMeters(COUNTER_NAME, null);
-        List<Meter> meters2 = pool.findFirstMatchingMeters(COUNTER_NAME, List.of(COUNTER1_TAG.getKey() + ":" + COUNTER1_TAG.getValue()));
+        List<Meter> meters2 = pool.findFirstMatchingMeters(COUNTER_NAME,
+                List.of(COUNTER1_TAG.getKey()
+                        + ":"
+                        + COUNTER1_TAG.getValue()));
 
-        assertThat(meters1).hasSameElementsAs(registry.get(COUNTER_NAME).counters());
-        assertThat(meters2).hasSameElementsAs(registry.get(COUNTER_NAME).tags(COUNTER1_TAGS).counters());
+        assertThat(meters1).hasSameElementsAs(registry.get(COUNTER_NAME)
+                .counters());
+        assertThat(meters2).hasSameElementsAs(registry.get(COUNTER_NAME)
+                .tags(COUNTER1_TAGS)
+                .counters());
     }
 
     @Test
     void getAvailableTags() {
         MetricsPool pool = new MetricsPool(registry);
-        Collection<Meter> meters = registry.get(COUNTER_NAME).meters();
+        Collection<Meter> meters = registry.get(COUNTER_NAME)
+                .meters();
         Map<String, Set<String>> tags = pool.getAvailableTags(meters);
 
-        assertThat(tags.get(COUNTER1_TAG.getKey())).hasSameElementsAs(List.of(COUNTER1_TAG.getValue()));
-        assertThat(tags.get(COUNTER2_TAG.getKey())).hasSameElementsAs(List.of(COUNTER2_TAG.getValue()));
+        assertThat(tags.get(COUNTER1_TAG.getKey()))
+                .hasSameElementsAs(List.of(COUNTER1_TAG.getValue()));
+        assertThat(tags.get(COUNTER2_TAG.getKey()))
+                .hasSameElementsAs(List.of(COUNTER2_TAG.getValue()));
     }
 
     @Test
@@ -101,8 +112,8 @@ class MetricsPoolTests {
                 .findFirst()
                 .get();
         Map<String, Double> measurements = pool.getMeasurements(meter);
-        assertThat(measurements)
-                .containsExactlyEntriesOf(Map.of(Statistic.COUNT.getTagValueRepresentation(), COUNTER1_VALUE));
+        assertThat(measurements).containsExactlyEntriesOf(
+                Map.of(Statistic.COUNT.getTagValueRepresentation(), COUNTER1_VALUE));
     }
 
 }

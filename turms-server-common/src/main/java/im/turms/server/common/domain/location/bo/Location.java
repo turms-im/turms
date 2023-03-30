@@ -22,9 +22,8 @@ import java.util.Map;
 import jakarta.annotation.Nullable;
 
 /**
- * Note that though the first number is always the latitude and the second is the longitude,
- * e.g. "21.3069°, -157.8583°",
- * the geoadd command in Redis requires the longitude come firsts.
+ * Note that though the first number is always the latitude and the second is the longitude, e.g.
+ * "21.3069°, -157.8583°", the geoadd command in Redis requires the longitude come firsts.
  */
 public record Location(
         // x, -180 to 180, West to East

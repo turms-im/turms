@@ -17,12 +17,12 @@
 
 package im.turms.server.common.access.client.codec;
 
+import java.util.List;
+
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
-
-import java.util.List;
 
 /**
  * @author James Chen
@@ -37,7 +37,8 @@ public class ExtendedProtobufVarint32FrameDecoder extends ByteToMessageDecoder {
     }
 
     @Override
-    protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
+    protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out)
+            throws Exception {
         in.markReaderIndex();
         int preIndex = in.readerIndex();
         int length = readRawVarint32(in);
@@ -45,18 +46,19 @@ public class ExtendedProtobufVarint32FrameDecoder extends ByteToMessageDecoder {
             return;
         }
         if (length < 0) {
-            throw new StacklessCorruptedFrameException("Failed to decode the Protobuf message because " +
-                    "it declares a negative length: " +
-                    length);
+            throw new StacklessCorruptedFrameException(
+                    "Failed to decode the Protobuf message because "
+                            + "it declares a negative length: "
+                            + length);
         }
         if (length > maxFrameLength) {
-            throw new StacklessCorruptedFrameException("Failed to decode the Protobuf message because " +
-                    "it declares a message length (" +
-                    length +
-                    ") greater than " +
-                    maxFrameLength);
+            throw new StacklessCorruptedFrameException(
+                    "Failed to decode the Protobuf message because "
+                            + "it declares a message length ("
+                            + length
+                            + ") greater than "
+                            + maxFrameLength);
         }
-
         if (in.readableBytes() < length) {
             in.resetReaderIndex();
         } else {
@@ -104,7 +106,8 @@ public class ExtendedProtobufVarint32FrameDecoder extends ByteToMessageDecoder {
                         }
                         result |= (tmp = buffer.readByte()) << 28;
                         if (tmp < 0) {
-                            throw new StacklessCorruptedFrameException("Failed to read a 32-bit varint because it is too large");
+                            throw new StacklessCorruptedFrameException(
+                                    "Failed to read a 32-bit varint because it is too large");
                         }
                     }
                 }

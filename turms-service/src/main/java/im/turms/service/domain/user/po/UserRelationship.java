@@ -17,6 +17,11 @@
 
 package im.turms.service.domain.user.po;
 
+import java.util.Date;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
 import im.turms.server.common.domain.common.po.BaseEntity;
 import im.turms.server.common.storage.mongo.entity.IndexType;
 import im.turms.server.common.storage.mongo.entity.ShardingStrategy;
@@ -26,19 +31,15 @@ import im.turms.server.common.storage.mongo.entity.annotation.Id;
 import im.turms.server.common.storage.mongo.entity.annotation.Indexed;
 import im.turms.server.common.storage.mongo.entity.annotation.PersistenceConstructor;
 import im.turms.server.common.storage.mongo.entity.annotation.Sharded;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-
-import java.util.Date;
 
 import static im.turms.server.common.storage.mongo.entity.annotation.IndexedReason.EXTENDED_FEATURE;
 
 /**
- * Don't consolidate the two-sided relationships as one model to eliminate transactions
- * (unless MongoDB supports multiple shard keys though it seems impossible https://jira.mongodb.org/browse/SERVER-2949).
- * Otherwise, it is impossible to use targeted queries to query the data
- * according to either the owner ID or the related user ID because MongoDB can have only one shard key.
- * https://github.com/turms-im/turms/issues/343
+ * Don't consolidate the two-sided relationships as one model to eliminate transactions (unless
+ * MongoDB supports multiple shard keys though it seems impossible
+ * https://jira.mongodb.org/browse/SERVER-2949). Otherwise, it is impossible to use targeted queries
+ * to query the data according to either the owner ID or the related user ID because MongoDB can
+ * have only one shard key. https://github.com/turms-im/turms/issues/343
  *
  * @author James Chen
  */
@@ -60,7 +61,11 @@ public final class UserRelationship extends BaseEntity {
     @Indexed(optional = true, reason = EXTENDED_FEATURE)
     private final Date establishmentDate;
 
-    public UserRelationship(Long ownerId, Long relatedUserId, Date blockDate, Date establishmentDate) {
+    public UserRelationship(
+            Long ownerId,
+            Long relatedUserId,
+            Date blockDate,
+            Date establishmentDate) {
         this.key = new Key(ownerId, relatedUserId);
         this.blockDate = blockDate;
         this.establishmentDate = establishmentDate;
@@ -89,8 +94,10 @@ public final class UserRelationship extends BaseEntity {
     }
 
     public static final class Fields {
-        public static final String ID_OWNER_ID = "_id." + Key.Fields.OWNER_ID;
-        public static final String ID_RELATED_USER_ID = "_id." + Key.Fields.RELATED_USER_ID;
+        public static final String ID_OWNER_ID = "_id."
+                + Key.Fields.OWNER_ID;
+        public static final String ID_RELATED_USER_ID = "_id."
+                + Key.Fields.RELATED_USER_ID;
         public static final String BLOCK_DATE = "bd";
         public static final String ESTABLISHMENT_DATE = "ed";
 

@@ -17,9 +17,10 @@
 
 package im.turms.server.common.infra.logging.core.logger;
 
-import im.turms.server.common.infra.logging.core.model.LogLevel;
 import lombok.Builder;
 import lombok.Data;
+
+import im.turms.server.common.infra.logging.core.model.LogLevel;
 
 /**
  * @author James Chen

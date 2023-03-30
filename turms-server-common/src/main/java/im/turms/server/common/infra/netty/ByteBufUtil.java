@@ -17,16 +17,17 @@
 
 package im.turms.server.common.infra.netty;
 
-import im.turms.server.common.infra.lang.NumberFormatter;
-import im.turms.server.common.infra.lang.StringUtil;
-import im.turms.server.common.infra.test.VisibleForTesting;
+import java.nio.charset.StandardCharsets;
+
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufs;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.buffer.RefCntCorrectorByteBuf;
 import io.netty.buffer.Unpooled;
 
-import java.nio.charset.StandardCharsets;
+import im.turms.server.common.infra.lang.NumberFormatter;
+import im.turms.server.common.infra.lang.StringUtil;
+import im.turms.server.common.infra.test.VisibleForTesting;
 
 /**
  * @author James Chen
@@ -56,18 +57,21 @@ public final class ByteBufUtil {
         if (0 <= value && value < BYTE_CACHE_SIZE) {
             return BYTE_CACHE[value];
         }
-        return PooledByteBufAllocator.DEFAULT.directBuffer(Byte.BYTES).writeByte(value);
+        return PooledByteBufAllocator.DEFAULT.directBuffer(Byte.BYTES)
+                .writeByte(value);
     }
 
     public static ByteBuf getPooledPreferredIntegerBuffer(int value) {
         if (0 <= value && value < INTEGER_CACHE_SIZE) {
             return INTEGER_CACHE[value];
         }
-        return PooledByteBufAllocator.DEFAULT.directBuffer(Integer.BYTES).writeInt(value);
+        return PooledByteBufAllocator.DEFAULT.directBuffer(Integer.BYTES)
+                .writeInt(value);
     }
 
     public static ByteBuf getPooledLongBuffer(long value) {
-        return PooledByteBufAllocator.DEFAULT.directBuffer(Long.BYTES).writeLong(value);
+        return PooledByteBufAllocator.DEFAULT.directBuffer(Long.BYTES)
+                .writeLong(value);
     }
 
     public static ByteBuf getUnreleasableDirectBuffer(byte b) {
@@ -90,8 +94,8 @@ public final class ByteBufUtil {
 
     public static ByteBuf getUnreleasableDirectBuffer(String string) {
         byte[] bytes = StringUtil.getBytes(string);
-        return Unpooled.unreleasableBuffer(Unpooled
-                .directBuffer(bytes.length).writeBytes(bytes));
+        return Unpooled.unreleasableBuffer(Unpooled.directBuffer(bytes.length)
+                .writeBytes(bytes));
     }
 
     public static ByteBuf writeByte(byte element) {
@@ -99,7 +103,8 @@ public final class ByteBufUtil {
     }
 
     public static ByteBuf writeShort(short element) {
-        return PooledByteBufAllocator.DEFAULT.directBuffer(Short.BYTES).writeShort(element);
+        return PooledByteBufAllocator.DEFAULT.directBuffer(Short.BYTES)
+                .writeShort(element);
     }
 
     public static ByteBuf writeInt(int element) {
@@ -107,28 +112,35 @@ public final class ByteBufUtil {
     }
 
     public static ByteBuf writeLong(long element) {
-        return PooledByteBufAllocator.DEFAULT.directBuffer(Long.BYTES).writeLong(element);
+        return PooledByteBufAllocator.DEFAULT.directBuffer(Long.BYTES)
+                .writeLong(element);
     }
 
     public static ByteBuf writeFloat(float element) {
-        return PooledByteBufAllocator.DEFAULT.directBuffer(Float.BYTES).writeFloat(element);
+        return PooledByteBufAllocator.DEFAULT.directBuffer(Float.BYTES)
+                .writeFloat(element);
     }
 
     public static ByteBuf writeDouble(double element) {
-        return PooledByteBufAllocator.DEFAULT.directBuffer(Double.BYTES).writeDouble(element);
+        return PooledByteBufAllocator.DEFAULT.directBuffer(Double.BYTES)
+                .writeDouble(element);
     }
 
     public static ByteBuf writeChar(char element) {
-        return PooledByteBufAllocator.DEFAULT.directBuffer(Character.BYTES).writeChar(element);
+        return PooledByteBufAllocator.DEFAULT.directBuffer(Character.BYTES)
+                .writeChar(element);
     }
 
     public static ByteBuf writeBoolean(boolean element) {
-        return getPooledPreferredByteBuffer(element ? 1 : 0);
+        return getPooledPreferredByteBuffer(element
+                ? 1
+                : 0);
     }
 
     public static ByteBuf writeString(String element) {
         byte[] bytes = StringUtil.getUtf8Bytes(element);
-        return PooledByteBufAllocator.DEFAULT.directBuffer(bytes.length).writeBytes(bytes);
+        return PooledByteBufAllocator.DEFAULT.directBuffer(bytes.length)
+                .writeBytes(bytes);
     }
 
     public static String readString(ByteBuf buffer) {
@@ -154,31 +166,41 @@ public final class ByteBufUtil {
             return getPooledPreferredByteBuffer(element.intValue());
         }
         if (obj instanceof Short element) {
-            return PooledByteBufAllocator.DEFAULT.directBuffer(Short.BYTES).writeShort(element);
+            return PooledByteBufAllocator.DEFAULT.directBuffer(Short.BYTES)
+                    .writeShort(element);
         }
         if (obj instanceof Integer element) {
             return getPooledPreferredIntegerBuffer(element);
         }
         if (obj instanceof Long element) {
-            return PooledByteBufAllocator.DEFAULT.directBuffer(Long.BYTES).writeLong(element);
+            return PooledByteBufAllocator.DEFAULT.directBuffer(Long.BYTES)
+                    .writeLong(element);
         }
         if (obj instanceof String element) {
             byte[] bytes = StringUtil.getUtf8Bytes(element);
-            return PooledByteBufAllocator.DEFAULT.directBuffer(bytes.length).writeBytes(bytes);
+            return PooledByteBufAllocator.DEFAULT.directBuffer(bytes.length)
+                    .writeBytes(bytes);
         }
         if (obj instanceof Float element) {
-            return PooledByteBufAllocator.DEFAULT.directBuffer(Float.BYTES).writeFloat(element);
+            return PooledByteBufAllocator.DEFAULT.directBuffer(Float.BYTES)
+                    .writeFloat(element);
         }
         if (obj instanceof Double element) {
-            return PooledByteBufAllocator.DEFAULT.directBuffer(Double.BYTES).writeDouble(element);
+            return PooledByteBufAllocator.DEFAULT.directBuffer(Double.BYTES)
+                    .writeDouble(element);
         }
         if (obj instanceof Character element) {
-            return PooledByteBufAllocator.DEFAULT.directBuffer(Character.BYTES).writeChar(element);
+            return PooledByteBufAllocator.DEFAULT.directBuffer(Character.BYTES)
+                    .writeChar(element);
         }
         if (obj instanceof Boolean element) {
-            return getPooledPreferredByteBuffer(element ? 1 : 0);
+            return getPooledPreferredByteBuffer(element
+                    ? 1
+                    : 0);
         }
-        throw new IllegalArgumentException("Could not serialize the unknown value: " + obj);
+        throw new IllegalArgumentException(
+                "Could not serialize the unknown value: "
+                        + obj);
     }
 
     public static ByteBuf[] writeObjects(Object... objs) {
@@ -220,7 +242,10 @@ public final class ByteBufUtil {
                 buffer.writeChar(c);
             } else if (element != null) {
                 buffer.release();
-                throw new IllegalArgumentException("Unsupported class: " + element.getClass().getName());
+                throw new IllegalArgumentException(
+                        "Unsupported class: "
+                                + element.getClass()
+                                        .getName());
             }
             if (i != last) {
                 buffer.writeByte(delimiter);

@@ -17,9 +17,9 @@
 
 package im.turms.server.common.domain.session.bo;
 
-import im.turms.server.common.access.client.dto.constant.UserStatus;
-
 import java.util.List;
+
+import im.turms.server.common.access.client.dto.constant.UserStatus;
 
 /**
  * @author James Chen

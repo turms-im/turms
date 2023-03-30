@@ -17,9 +17,10 @@
 
 package im.turms.gateway.domain.observation.service;
 
+import org.springframework.stereotype.Service;
+
 import im.turms.gateway.domain.session.service.SessionService;
 import im.turms.server.common.domain.observation.service.IStatisticsService;
-import org.springframework.stereotype.Service;
 
 /**
  * @author James Chen

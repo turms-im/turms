@@ -28,9 +28,10 @@ import reactor.netty.NettyOutbound;
  */
 @FunctionalInterface
 public interface ConnectionListener {
-    Mono<Void> onAdded(Connection connection,
-                       boolean isWebSocketConnection,
-                       Flux<ByteBuf> in,
-                       NettyOutbound out,
-                       Mono<Void> onClose);
+    Mono<Void> onAdded(
+            Connection connection,
+            boolean isWebSocketConnection,
+            Flux<ByteBuf> in,
+            NettyOutbound out,
+            Mono<Void> onClose);
 }

@@ -17,12 +17,13 @@
 
 package im.turms.server.common.infra.recycler;
 
-import im.turms.server.common.infra.thread.ThreadSafe;
 import org.jctools.queues.MpmcArrayQueue;
 
+import im.turms.server.common.infra.thread.ThreadSafe;
+
 /**
- * Note that if the user forgets to recycle a value,
- * though it is a bug, it is okay because JVM GC will release it finally
+ * Note that if the user forgets to recycle a value, though it is a bug, it is okay because JVM GC
+ * will release it finally
  *
  * @author James Chen
  */

@@ -17,16 +17,17 @@
 
 package im.turms.server.common.storage.mongo.operation.option;
 
+import jakarta.annotation.Nullable;
+
 import com.mongodb.internal.client.model.FindOptions;
-import im.turms.server.common.infra.collection.CollectionUtil;
-import im.turms.server.common.storage.mongo.BsonPool;
 import lombok.Getter;
 import org.bson.BsonBoolean;
 import org.bson.BsonDocument;
 import org.bson.BsonInt32;
 import org.bson.BsonString;
 
-import jakarta.annotation.Nullable;
+import im.turms.server.common.infra.collection.CollectionUtil;
+import im.turms.server.common.storage.mongo.BsonPool;
 
 /**
  * @author James Chen
@@ -54,9 +55,8 @@ public final class QueryOptions extends BaseBson {
     }
 
     /**
-     * @implNote We merge filter into query options so that we don't need to create two
-     * documents and merge them later for better performance.
-     * Filter count: 2
+     * @implNote We merge filter into query options so that we don't need to create two documents
+     *           and merge them later for better performance. Filter count: 2
      */
     public BsonDocument asDocument(String collectionName, BsonDocument filter) {
         document.put("find", new BsonString(collectionName));

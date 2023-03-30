@@ -17,6 +17,17 @@
 
 package im.turms.server.common.infra.logging.core.logger;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.CopyOnWriteArrayList;
+import jakarta.annotation.Nullable;
+
+import lombok.Getter;
+import org.jctools.queues.MpscUnboundedArrayQueue;
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.infra.cluster.node.NodeType;
 import im.turms.server.common.infra.context.JobShutdownOrder;
 import im.turms.server.common.infra.context.TurmsApplicationContext;
@@ -33,16 +44,6 @@ import im.turms.server.common.infra.logging.core.processor.LogProcessor;
 import im.turms.server.common.infra.property.env.common.logging.ConsoleLoggingProperties;
 import im.turms.server.common.infra.property.env.common.logging.FileLoggingProperties;
 import im.turms.server.common.infra.property.env.common.logging.LoggingProperties;
-import lombok.Getter;
-import org.jctools.queues.MpscUnboundedArrayQueue;
-import reactor.core.publisher.Mono;
-
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
-import java.util.concurrent.CopyOnWriteArrayList;
-import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen
@@ -60,8 +61,10 @@ public class LoggerFactory {
 
     private static final List<Appender> ALL_APPENDERS = new CopyOnWriteArrayList<>();
     private static final List<Appender> DEFAULT_APPENDERS = new ArrayList<>(2);
-    private static final MpscUnboundedArrayQueue<LogRecord> QUEUE = new MpscUnboundedArrayQueue<>(1024);
-    private static final Queue<Pair<LoggerOptions, WrappedLogger>> UNINITIALIZED_LOGGERS = new LinkedList<>();
+    private static final MpscUnboundedArrayQueue<LogRecord> QUEUE =
+            new MpscUnboundedArrayQueue<>(1024);
+    private static final Queue<Pair<LoggerOptions, WrappedLogger>> UNINITIALIZED_LOGGERS =
+            new LinkedList<>();
 
     private static String homeDir;
     private static String serverTypeName;
@@ -73,9 +76,10 @@ public class LoggerFactory {
     private LoggerFactory() {
     }
 
-    public static synchronized void init(@Nullable NodeType nodeType,
-                                         String nodeId,
-                                         LoggingProperties properties) {
+    public static synchronized void init(
+            @Nullable NodeType nodeType,
+            String nodeId,
+            LoggingProperties properties) {
         if (initialized) {
             return;
         }
@@ -83,7 +87,9 @@ public class LoggerFactory {
             homeDir = switch (nodeType) {
                 case GATEWAY -> System.getenv(PROPERTY_NAME_TURMS_GATEWAY_HOME);
                 case SERVICE -> System.getenv(PROPERTY_NAME_TURMS_SERVICE_HOME);
-                default -> throw new IncompatibleInternalChangeException("Unknown node type: " + nodeType);
+                default -> throw new IncompatibleInternalChangeException(
+                        "Unknown node type: "
+                                + nodeType);
             };
         }
         if (homeDir == null) {
@@ -95,17 +101,20 @@ public class LoggerFactory {
         ConsoleLoggingProperties consoleLoggingProperties = properties.getConsole();
         FileLoggingProperties fileLoggingProperties = properties.getFile();
         if (consoleLoggingProperties.isEnabled()) {
-            ConsoleAppender consoleAppender = new ConsoleAppender(consoleLoggingProperties.getLevel());
+            ConsoleAppender consoleAppender =
+                    new ConsoleAppender(consoleLoggingProperties.getLevel());
             defaultConsoleAppender = consoleAppender;
             DEFAULT_APPENDERS.add(consoleAppender);
         }
         LoggerFactory.fileLoggingProperties = fileLoggingProperties;
         if (fileLoggingProperties.isEnabled()) {
-            RollingFileAppender fileAppender = new RollingFileAppender(fileLoggingProperties.getLevel(),
+            RollingFileAppender fileAppender = new RollingFileAppender(
+                    fileLoggingProperties.getLevel(),
                     getFilePath(fileLoggingProperties.getFilePath()),
                     fileLoggingProperties.getMaxFiles(),
                     fileLoggingProperties.getMaxFileSizeMb(),
-                    fileLoggingProperties.getCompression().isEnabled());
+                    fileLoggingProperties.getCompression()
+                            .isEnabled());
             DEFAULT_APPENDERS.add(fileAppender);
         }
         layout = new TurmsTemplateLayout(nodeType, nodeId);
@@ -114,7 +123,8 @@ public class LoggerFactory {
         InternalLogger.INSTANCE.init();
         Pair<LoggerOptions, WrappedLogger> pair;
         while ((pair = UNINITIALIZED_LOGGERS.poll()) != null) {
-            pair.second().setLogger(getLogger(pair.first()));
+            pair.second()
+                    .setLogger(getLogger(pair.first()));
         }
         processor = new LogProcessor(QUEUE);
         processor.start();
@@ -138,13 +148,23 @@ public class LoggerFactory {
         }
         // We use "INFO" level for tests because:
         // 1. If "DEBUG", in fact we never view these logs because they are too many to view.
-        // 2. In some tests, Netty will try to init its internal logger and log DEBUG messages when Netty initializing
-        // while our logger will require Netty to init so that we can log, so there is a circular dependency.
+        // 2. In some tests, Netty will try to init its internal logger and log DEBUG messages when
+        // Netty initializing
+        // while our logger will require Netty to init so that we can log, so there is a circular
+        // dependency.
         // Use "INFO" can just avoid Netty trying to log when initializing
-        init(nodeType, "test", LoggingProperties.builder()
-                .console(new ConsoleLoggingProperties().toBuilder().level(LogLevel.INFO).enabled(true).build())
-                .file(new FileLoggingProperties().toBuilder().level(LogLevel.INFO).enabled(true).build())
-                .build());
+        init(nodeType,
+                "test",
+                LoggingProperties.builder()
+                        .console(new ConsoleLoggingProperties().toBuilder()
+                                .level(LogLevel.INFO)
+                                .enabled(true)
+                                .build())
+                        .file(new FileLoggingProperties().toBuilder()
+                                .level(LogLevel.INFO)
+                                .enabled(true)
+                                .build())
+                        .build());
     }
 
     public static Logger getLogger(String name) {
@@ -176,11 +196,13 @@ public class LoggerFactory {
                 if (level == null) {
                     level = fileLoggingProperties.getLevel();
                 }
-                RollingFileAppender appender = new RollingFileAppender(level,
+                RollingFileAppender appender = new RollingFileAppender(
+                        level,
                         filePath,
                         fileLoggingProperties.getMaxFiles(),
                         fileLoggingProperties.getMaxFileSizeMb(),
-                        fileLoggingProperties.getCompression().isEnabled());
+                        fileLoggingProperties.getCompression()
+                                .isEnabled());
                 appenders.add(appender);
                 ALL_APPENDERS.add(appender);
                 if (defaultConsoleAppender != null) {
@@ -210,14 +232,15 @@ public class LoggerFactory {
         if (path == null) {
             return ".";
         }
-        return path
-                .replace("@HOME", homeDir)
+        return path.replace("@HOME", homeDir)
                 .replace("@SERVICE_TYPE_NAME", serverTypeName);
     }
 
     private static boolean isJUnitTest() {
-        for (StackTraceElement element : Thread.currentThread().getStackTrace()) {
-            if (element.getClassName().startsWith("org.junit.")) {
+        for (StackTraceElement element : Thread.currentThread()
+                .getStackTrace()) {
+            if (element.getClassName()
+                    .startsWith("org.junit.")) {
                 return true;
             }
         }

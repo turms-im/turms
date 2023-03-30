@@ -17,11 +17,11 @@
 
 package im.turms.service.domain.conversation.access.admin.dto.response;
 
+import java.util.List;
+
 import im.turms.server.common.domain.common.access.dto.ControllerDTO;
 import im.turms.service.domain.conversation.po.GroupConversation;
 import im.turms.service.domain.conversation.po.PrivateConversation;
-
-import java.util.List;
 
 /**
  * @author James Chen

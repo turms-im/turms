@@ -26,8 +26,7 @@ import jakarta.annotation.Nullable;
  */
 public record LogFile(
         Path path,
-        @Nullable
-        Path archivePath,
+        @Nullable Path archivePath,
         ZonedDateTime dateTime,
         long index
 ) {

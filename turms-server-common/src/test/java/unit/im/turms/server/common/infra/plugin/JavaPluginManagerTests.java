@@ -17,6 +17,17 @@
 
 package unit.im.turms.server.common.infra.plugin;
 
+import java.nio.file.Path;
+import java.util.Collections;
+import java.util.List;
+
+import lombok.SneakyThrows;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.SpringApplication;
+import org.springframework.context.ApplicationContext;
+import util.JarUtil;
+
 import im.turms.plugin.MyExtensionPoint;
 import im.turms.server.common.infra.cluster.service.rpc.RpcService;
 import im.turms.server.common.infra.context.TurmsApplicationContext;
@@ -26,16 +37,6 @@ import im.turms.server.common.infra.plugin.TurmsExtension;
 import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.common.plugin.PluginProperties;
-import lombok.SneakyThrows;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.SpringApplication;
-import org.springframework.context.ApplicationContext;
-import util.JarUtil;
-
-import java.nio.file.Path;
-import java.util.Collections;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -51,7 +52,10 @@ class JavaPluginManagerTests {
 
     static {
         JAR_FILE = JarUtil.createJarFile(JAR_NAME,
-                List.of(SpringApplication.class, MyExtension.class, MyExtensionPoint.class, MyPlugin.class),
+                List.of(SpringApplication.class,
+                        MyExtension.class,
+                        MyExtensionPoint.class,
+                        MyPlugin.class),
                 List.of("plugin.yaml"));
     }
 
@@ -60,12 +64,11 @@ class JavaPluginManagerTests {
     void shouldLoadPluginWithPluginLoader() {
         MyExtensionPoint myExtensionPoint = getMyExtensionPoint();
 
-        assertThat(myExtensionPoint.getClass())
-                .isNotEqualTo(MyExtension.class);
-        assertThat(myExtensionPoint.getClass().getName())
-                .isEqualTo(MyExtension.class.getName());
-        assertThat(myExtensionPoint.getClass().getClassLoader())
-                .isInstanceOf(PluginClassLoader.class);
+        assertThat(myExtensionPoint.getClass()).isNotEqualTo(MyExtension.class);
+        assertThat(myExtensionPoint.getClass()
+                .getName()).isEqualTo(MyExtension.class.getName());
+        assertThat(myExtensionPoint.getClass()
+                .getClassLoader()).isInstanceOf(PluginClassLoader.class);
     }
 
     @SneakyThrows
@@ -81,10 +84,8 @@ class JavaPluginManagerTests {
                 .getDeclaredField("rpcServiceClass")
                 .get(myExtension);
 
-        assertThat(rpcServiceClass)
-                .isEqualTo(RpcService.class);
-        assertThat(rpcServiceClass.getClassLoader())
-                .isEqualTo(ClassLoader.getSystemClassLoader());
+        assertThat(rpcServiceClass).isEqualTo(RpcService.class);
+        assertThat(rpcServiceClass.getClassLoader()).isEqualTo(ClassLoader.getSystemClassLoader());
     }
 
     @Disabled("legacy test and should be rewritten later")
@@ -97,19 +98,17 @@ class JavaPluginManagerTests {
                 .getDeclaredField("application")
                 .get(myExtension);
 
-        assertThat(application.getClass())
-                .isNotEqualTo(SpringApplication.class);
-        assertThat(application.getClass().getName())
-                .isEqualTo(SpringApplication.class.getName());
-        assertThat(application.getClass().getClassLoader())
-                .isInstanceOf(PluginClassLoader.class);
+        assertThat(application.getClass()).isNotEqualTo(SpringApplication.class);
+        assertThat(application.getClass()
+                .getName()).isEqualTo(SpringApplication.class.getName());
+        assertThat(application.getClass()
+                .getClassLoader()).isInstanceOf(PluginClassLoader.class);
 
         boolean testMethodRetVal = (boolean) application.getClass()
                 .getDeclaredMethod("test")
                 .invoke(application);
 
-        assertThat(testMethodRetVal)
-                .isTrue();
+        assertThat(testMethodRetVal).isTrue();
     }
 
     @SneakyThrows
@@ -120,25 +119,28 @@ class JavaPluginManagerTests {
         boolean testMethodRetVal = (boolean) myExtension.getClass()
                 .getDeclaredMethod("testBool")
                 .invoke(myExtension);
-        assertThat(testMethodRetVal)
-                .isTrue();
+        assertThat(testMethodRetVal).isTrue();
     }
 
     private MyExtensionPoint getMyExtensionPoint() {
         ApplicationContext context = mock(ApplicationContext.class);
         TurmsApplicationContext applicationContext = mock(TurmsApplicationContext.class);
-        when(applicationContext.getHome())
-                .thenReturn(JAR_FILE.getParent().toAbsolutePath());
+        when(applicationContext.getHome()).thenReturn(JAR_FILE.getParent()
+                .toAbsolutePath());
         TurmsPropertiesManager propertiesManager = mock(TurmsPropertiesManager.class);
-        when(propertiesManager.getLocalProperties())
-                .thenReturn(new TurmsProperties().toBuilder()
-                        .plugin(new PluginProperties().toBuilder()
-                                .enabled(true)
-                                .dir(".")
-                                .build())
-                        .build());
-        PluginManager manager = new PluginManager(context, applicationContext, propertiesManager, Collections.emptySet());
-        return manager.getExtensionPoints(MyExtensionPoint.class).get(0);
+        when(propertiesManager.getLocalProperties()).thenReturn(new TurmsProperties().toBuilder()
+                .plugin(new PluginProperties().toBuilder()
+                        .enabled(true)
+                        .dir(".")
+                        .build())
+                .build());
+        PluginManager manager = new PluginManager(
+                context,
+                applicationContext,
+                propertiesManager,
+                Collections.emptySet());
+        return manager.getExtensionPoints(MyExtensionPoint.class)
+                .get(0);
     }
 
 }

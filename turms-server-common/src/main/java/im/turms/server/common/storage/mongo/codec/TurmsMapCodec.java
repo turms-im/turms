@@ -17,6 +17,10 @@
 
 package im.turms.server.common.storage.mongo.codec;
 
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import org.bson.BsonReader;
 import org.bson.BsonType;
 import org.bson.BsonWriter;
@@ -24,10 +28,6 @@ import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
 import org.bson.codecs.configuration.CodecRegistry;
-
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 /**
  * @author James Chen
@@ -40,10 +40,11 @@ public class TurmsMapCodec<K, V> extends MongoCodec<Map<K, V>> {
     private Codec<V> valueCodec;
     private final boolean isEnumNumber;
 
-    public TurmsMapCodec(Class<? extends Map<?, ?>> ownerClass,
-                         Class<K> keyClass,
-                         Class<V> valueClass,
-                         boolean isEnumNumber) {
+    public TurmsMapCodec(
+            Class<? extends Map<?, ?>> ownerClass,
+            Class<K> keyClass,
+            Class<V> valueClass,
+            boolean isEnumNumber) {
         super((Class) Map.class);
         this.isLinkedHashMap = LinkedHashMap.class.isAssignableFrom(ownerClass);
         this.keyClass = keyClass;
@@ -65,7 +66,8 @@ public class TurmsMapCodec<K, V> extends MongoCodec<Map<K, V>> {
         for (Map.Entry<K, V> entry : map.entrySet()) {
             V value = entry.getValue();
             if (value != null) {
-                writer.writeName(entry.getKey().toString());
+                writer.writeName(entry.getKey()
+                        .toString());
                 encoderContext.encodeWithChildContext(valueCodec, writer, value);
             }
         }
@@ -74,7 +76,9 @@ public class TurmsMapCodec<K, V> extends MongoCodec<Map<K, V>> {
 
     @Override
     public Map<K, V> decode(final BsonReader reader, final DecoderContext decoderContext) {
-        Map<K, V> map = isLinkedHashMap ? new LinkedHashMap<>(32) : new HashMap<>(32);
+        Map<K, V> map = isLinkedHashMap
+                ? new LinkedHashMap<>(32)
+                : new HashMap<>(32);
         reader.readStartDocument();
         while (reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
             String key = reader.readName();

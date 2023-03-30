@@ -17,12 +17,13 @@
 
 package im.turms.service.domain.group.access.admin.dto.response;
 
-import im.turms.service.domain.group.po.GroupJoinRequest;
+import java.util.Date;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
-import java.util.Date;
+import im.turms.service.domain.group.po.GroupJoinRequest;
 
 /**
  * @author James Chen

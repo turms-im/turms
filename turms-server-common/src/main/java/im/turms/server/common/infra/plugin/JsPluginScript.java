@@ -29,10 +29,14 @@ public record JsPluginScript(
 
     @Override
     public String toString() {
-        return "JsPluginScript{" +
-                "fileName='" + fileName + '\'' +
-                ", code='" + SecurityValueConst.SENSITIVE_VALUE + '\'' +
-                '}';
+        return "JsPluginScript{"
+                + "fileName='"
+                + fileName
+                + '\''
+                + ", code='"
+                + SecurityValueConst.SENSITIVE_VALUE
+                + '\''
+                + '}';
     }
 
 }

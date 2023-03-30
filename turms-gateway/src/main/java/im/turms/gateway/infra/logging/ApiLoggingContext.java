@@ -17,14 +17,15 @@
 
 package im.turms.gateway.infra.logging;
 
+import java.util.Map;
+
+import org.springframework.context.annotation.Configuration;
+
 import im.turms.server.common.access.client.dto.request.TurmsRequest;
 import im.turms.server.common.infra.logging.CommonApiLoggingContext;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.gateway.clientapi.ClientApiLoggingProperties;
 import im.turms.server.common.infra.property.env.service.env.clientapi.property.LoggingRequestProperties;
-import org.springframework.context.annotation.Configuration;
-
-import java.util.Map;
 
 /**
  * @author James Chen
@@ -37,7 +38,10 @@ public class ApiLoggingContext extends CommonApiLoggingContext {
     private final float heartbeatSampleRate;
 
     public ApiLoggingContext(TurmsPropertiesManager propertiesManager) {
-        ClientApiLoggingProperties loggingProperties = propertiesManager.getLocalProperties().getGateway().getClientApi().getLogging();
+        ClientApiLoggingProperties loggingProperties = propertiesManager.getLocalProperties()
+                .getGateway()
+                .getClientApi()
+                .getLogging();
         typeToSupportedLoggingRequestProperties = getSupportedLoggingRequestProperties(
                 loggingProperties.getIncludedRequestCategories(),
                 loggingProperties.getIncludedRequests(),

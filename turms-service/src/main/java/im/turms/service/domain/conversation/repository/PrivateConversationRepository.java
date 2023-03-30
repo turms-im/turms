@@ -17,36 +17,44 @@
 
 package im.turms.service.domain.conversation.repository;
 
+import java.util.Collection;
+import java.util.Date;
+import java.util.Set;
+import jakarta.annotation.Nullable;
+
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.reactivestreams.client.ClientSession;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.domain.common.repository.BaseRepository;
 import im.turms.server.common.storage.mongo.DomainFieldName;
 import im.turms.server.common.storage.mongo.TurmsMongoClient;
 import im.turms.server.common.storage.mongo.operation.option.Filter;
 import im.turms.server.common.storage.mongo.operation.option.Update;
 import im.turms.service.domain.conversation.po.PrivateConversation;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Repository;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
-import java.util.Collection;
-import java.util.Date;
-import java.util.Set;
-import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen
  */
 @Repository
-public class PrivateConversationRepository extends BaseRepository<PrivateConversation, PrivateConversation.Key> {
+public class PrivateConversationRepository
+        extends BaseRepository<PrivateConversation, PrivateConversation.Key> {
 
-    public PrivateConversationRepository(@Qualifier("conversationMongoClient") TurmsMongoClient mongoClient) {
+    public PrivateConversationRepository(
+            @Qualifier("conversationMongoClient") TurmsMongoClient mongoClient) {
         super(mongoClient, PrivateConversation.class);
     }
 
-    public Mono<Void> upsert(Set<PrivateConversation.Key> keys, Date readDate, boolean allowMoveReadDateForward) {
-        Filter filter = Filter.newBuilder(allowMoveReadDateForward ? 1 : 2)
+    public Mono<Void> upsert(
+            Set<PrivateConversation.Key> keys,
+            Date readDate,
+            boolean allowMoveReadDateForward) {
+        Filter filter = Filter.newBuilder(allowMoveReadDateForward
+                ? 1
+                : 2)
                 .in(DomainFieldName.ID, keys);
         if (!allowMoveReadDateForward) {
             // Only update if no existing date or the existing date is before readDate
@@ -57,7 +65,9 @@ public class PrivateConversationRepository extends BaseRepository<PrivateConvers
         return mongoClient.upsert(entityClass, filter, update);
     }
 
-    public Mono<DeleteResult> deleteConversationsByOwnerIds(Set<Long> ownerIds, @Nullable ClientSession session) {
+    public Mono<DeleteResult> deleteConversationsByOwnerIds(
+            Set<Long> ownerIds,
+            @Nullable ClientSession session) {
         Filter filter = Filter.newBuilder(1)
                 .in(PrivateConversation.Fields.ID_OWNER_ID, ownerIds);
         return mongoClient.deleteMany(session, entityClass, filter);

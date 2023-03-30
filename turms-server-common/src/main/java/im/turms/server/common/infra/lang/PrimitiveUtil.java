@@ -33,26 +33,30 @@ public class PrimitiveUtil {
     private static final Float FLOAT_DEFAULT = 0F;
     private static final Double DOUBLE_DEFAULT = 0D;
 
-    private static final Set<Object> WRAPPERS = Set.of(
-            Byte.class,
+    private static final Set<Object> WRAPPERS = Set.of(Byte.class,
             Short.class,
             Integer.class,
             Long.class,
             Float.class,
             Double.class,
             Boolean.class,
-            Character.class
-    );
-    private static final Map<Class<?>, Class<?>> primitiveToWrapper = Map.of(
-            boolean.class, Boolean.class,
-            byte.class, Byte.class,
-            char.class, Character.class,
-            short.class, Short.class,
-            int.class, Integer.class,
-            long.class, Long.class,
-            double.class, Double.class,
-            float.class, Float.class
-    );
+            Character.class);
+    private static final Map<Class<?>, Class<?>> primitiveToWrapper = Map.of(boolean.class,
+            Boolean.class,
+            byte.class,
+            Byte.class,
+            char.class,
+            Character.class,
+            short.class,
+            Short.class,
+            int.class,
+            Integer.class,
+            long.class,
+            Long.class,
+            double.class,
+            Double.class,
+            float.class,
+            Float.class);
 
     private PrimitiveUtil() {
     }

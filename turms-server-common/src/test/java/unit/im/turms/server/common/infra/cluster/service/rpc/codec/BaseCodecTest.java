@@ -17,15 +17,16 @@
 
 package unit.im.turms.server.common.infra.cluster.service.rpc.codec;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.CompositeByteBuf;
+import io.netty.buffer.UnpooledByteBufAllocator;
+
 import im.turms.server.common.infra.cluster.service.codec.codec.Codec;
 import im.turms.server.common.infra.cluster.service.codec.codec.CodecPool;
 import im.turms.server.common.infra.cluster.service.codec.io.CodecStream;
 import im.turms.server.common.infra.cluster.service.rpc.codec.RpcRequestCodec;
 import im.turms.server.common.infra.cluster.service.rpc.dto.RpcRequest;
 import im.turms.server.common.infra.tracing.TracingContext;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.CompositeByteBuf;
-import io.netty.buffer.UnpooledByteBufAllocator;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -35,13 +36,16 @@ public abstract class BaseCodecTest {
         CodecPool.init();
     }
 
-    public <T extends RpcRequest<?>> T writeRequestAndReadBuffer(RpcRequestCodec<T> codec, T request) {
+    public <T extends RpcRequest<?>> T writeRequestAndReadBuffer(
+            RpcRequestCodec<T> codec,
+            T request) {
         TracingContext context = new TracingContext();
         request.setTracingContext(context);
 
         T parsedRequest = writeDataAndReadBuffer(codec, request);
 
-        assertThat(parsedRequest.getTracingContext().getTraceId()).isEqualTo(context.getTraceId());
+        assertThat(parsedRequest.getTracingContext()
+                .getTraceId()).isEqualTo(context.getTraceId());
 
         return parsedRequest;
     }

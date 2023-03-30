@@ -17,13 +17,9 @@
 
 package im.turms.server.common.infra.cluster.service.rpc;
 
-import im.turms.server.common.infra.cluster.service.connection.TurmsConnection;
-import im.turms.server.common.infra.cluster.service.rpc.channel.RpcFrameEncoder;
-import im.turms.server.common.infra.cluster.service.rpc.dto.RpcRequest;
-import im.turms.server.common.infra.cluster.service.rpc.dto.RpcResponse;
-import im.turms.server.common.infra.logging.core.logger.Logger;
-import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
-import im.turms.server.common.infra.serialization.SerializationException;
+import java.nio.channels.ClosedChannelException;
+import java.util.concurrent.ThreadLocalRandom;
+
 import io.netty.buffer.ByteBuf;
 import lombok.Getter;
 import org.jctools.maps.NonBlockingHashMapLong;
@@ -31,8 +27,13 @@ import reactor.core.publisher.Mono;
 import reactor.core.publisher.Sinks;
 import reactor.netty.channel.ChannelOperations;
 
-import java.nio.channels.ClosedChannelException;
-import java.util.concurrent.ThreadLocalRandom;
+import im.turms.server.common.infra.cluster.service.connection.TurmsConnection;
+import im.turms.server.common.infra.cluster.service.rpc.channel.RpcFrameEncoder;
+import im.turms.server.common.infra.cluster.service.rpc.dto.RpcRequest;
+import im.turms.server.common.infra.cluster.service.rpc.dto.RpcResponse;
+import im.turms.server.common.infra.logging.core.logger.Logger;
+import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
+import im.turms.server.common.infra.serialization.SerializationException;
 
 /**
  * @author James Chen
@@ -50,7 +51,9 @@ public final class RpcEndpoint {
     @Getter
     private final TurmsConnection connection;
     private final NonBlockingHashMapLong<Sinks.One<?>> pendingRequestMap =
-            new NonBlockingHashMapLong<>((int) (EXPECTED_MAX_QPS * EXPECTED_AVERAGE_RTT * (INITIAL_CAPACITY_PERCENTAGE / 100F)));
+            new NonBlockingHashMapLong<>(
+                    (int) (EXPECTED_MAX_QPS * EXPECTED_AVERAGE_RTT
+                            * (INITIAL_CAPACITY_PERCENTAGE / 100F)));
 
     public RpcEndpoint(String nodeId, TurmsConnection connection) {
         this.nodeId = nodeId;
@@ -86,7 +89,12 @@ public final class RpcEndpoint {
                 buffer = RpcFrameEncoder.INSTANCE.encodeRequest(request, requestBody);
             } catch (Exception e) {
                 requestBody.release();
-                resolveRequest(requestId, null, new SerializationException("Failed to encode the request: " + request, e));
+                resolveRequest(requestId,
+                        null,
+                        new SerializationException(
+                                "Failed to encode the request: "
+                                        + request,
+                                e));
                 break;
             }
             // sendObject() will release the buffer no matter it succeeds or fails
@@ -106,7 +114,8 @@ public final class RpcEndpoint {
     private int generateRandomId() {
         int id;
         do {
-            id = ThreadLocalRandom.current().nextInt(1, Integer.MAX_VALUE);
+            id = ThreadLocalRandom.current()
+                    .nextInt(1, Integer.MAX_VALUE);
         } while (pendingRequestMap.containsKey(id));
         return id;
     }
@@ -120,7 +129,9 @@ public final class RpcEndpoint {
     private <T> void resolveRequest(int requestId, T response, Throwable error) {
         Sinks.One<T> sink = (Sinks.One<T>) pendingRequestMap.remove(requestId);
         if (sink == null) {
-            LOGGER.warn("Could not find a pending request with the ID ({}) for the response: {}", requestId, response);
+            LOGGER.warn("Could not find a pending request with the ID ({}) for the response: {}",
+                    requestId,
+                    response);
             return;
         }
         if (error == null) {

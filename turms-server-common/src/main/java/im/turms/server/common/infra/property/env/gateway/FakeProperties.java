@@ -17,13 +17,14 @@
 
 package im.turms.server.common.infra.property.env.gateway;
 
-import im.turms.server.common.infra.property.metadata.Description;
+import jakarta.validation.constraints.Min;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import jakarta.validation.constraints.Min;
+import im.turms.server.common.infra.property.metadata.Description;
 
 /**
  * @author James Chen
@@ -40,14 +41,14 @@ public class FakeProperties {
     @Min(0)
     private long firstUserId = 100;
 
-    @Description("Run the number of real clients as faked users with an ID from [firstUserId, firstUserId + userCount) " +
-            "to connect to turms-gateway. " +
-            "So please ensure you have set \"turms.service.fake.userCount\" to a number larger than or equal to (firstUserId + userCount)")
+    @Description("Run the number of real clients as faked users with an ID from [firstUserId, firstUserId + userCount) "
+            + "to connect to turms-gateway. "
+            + "So please ensure you have set \"turms.service.fake.userCount\" to a number larger than or equal to (firstUserId + userCount)")
     @Min(0)
     private int userCount = 10;
 
-    @Description("The number of requests to send per interval. " +
-            "If requestIntervalMillis is 1000, requestCountPerInterval is TPS in fact")
+    @Description("The number of requests to send per interval. "
+            + "If requestIntervalMillis is 1000, requestCountPerInterval is TPS in fact")
     @Min(1)
     private int requestCountPerInterval = 10;
 

@@ -17,8 +17,9 @@
 
 package unit.im.turms.server.common.infra.security.password;
 
-import im.turms.server.common.infra.security.password.SaltedSha256PasswordEncoder;
 import org.junit.jupiter.api.Test;
+
+import im.turms.server.common.infra.security.password.SaltedSha256PasswordEncoder;
 
 /**
  * @author James Chen
@@ -28,7 +29,8 @@ class SaltedSha256PasswordEncoderTests extends BasePasswordEncoderTests {
     @Test
     void test() {
         int sha256OutputLength = 32;
-        test(new SaltedSha256PasswordEncoder(), SaltedSha256PasswordEncoder.SALT_SIZE_BYTES + sha256OutputLength);
+        test(new SaltedSha256PasswordEncoder(),
+                SaltedSha256PasswordEncoder.SALT_SIZE_BYTES + sha256OutputLength);
     }
 
 }

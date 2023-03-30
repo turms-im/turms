@@ -17,16 +17,17 @@
 
 package im.turms.gateway.domain.session.service;
 
+import java.util.Map;
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotNull;
+
+import reactor.core.publisher.Mono;
+
 import im.turms.gateway.domain.session.bo.UserPermissionInfo;
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.constant.UserStatus;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.domain.location.bo.Location;
-import reactor.core.publisher.Mono;
-
-import java.util.Map;
-import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.NotNull;
 
 /**
  * @author James Chen
@@ -34,10 +35,9 @@ import jakarta.validation.constraints.NotNull;
 public interface SessionIdentityAccessManagementSupport {
 
     /**
-     * @return Possible codes:
-     * {@link ResponseStatusCode#OK},
-     * {@link ResponseStatusCode#LOGIN_AUTHENTICATION_FAILED},
-     * {@link ResponseStatusCode#LOGGING_IN_USER_NOT_ACTIVE}
+     * @return Possible codes: {@link ResponseStatusCode#OK},
+     *         {@link ResponseStatusCode#LOGIN_AUTHENTICATION_FAILED},
+     *         {@link ResponseStatusCode#LOGGING_IN_USER_NOT_ACTIVE}
      */
     Mono<UserPermissionInfo> verifyAndGrant(
             int version,

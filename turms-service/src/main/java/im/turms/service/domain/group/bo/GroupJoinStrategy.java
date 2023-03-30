@@ -34,8 +34,8 @@ public enum GroupJoinStrategy {
      */
     QUESTION,
     /**
-     * A user sends a join request to the server, and can only join the group
-     * automatically when the request is approved
+     * A user sends a join request to the server, and can only join the group automatically when the
+     * request is approved
      */
     JOIN_REQUEST
 }

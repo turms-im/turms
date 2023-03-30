@@ -17,7 +17,9 @@
 
 package im.turms.server.common.storage.mongo.codec;
 
-import im.turms.server.common.infra.collection.ChunkedArrayList;
+import java.lang.reflect.Array;
+import java.util.List;
+
 import org.bson.BsonReader;
 import org.bson.BsonType;
 import org.bson.BsonWriter;
@@ -25,8 +27,7 @@ import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
 
-import java.lang.reflect.Array;
-import java.util.List;
+import im.turms.server.common.infra.collection.ChunkedArrayList;
 
 /**
  * @author James Chen

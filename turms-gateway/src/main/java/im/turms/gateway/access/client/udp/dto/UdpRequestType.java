@@ -17,8 +17,9 @@
 
 package im.turms.gateway.access.client.udp.dto;
 
-import im.turms.server.common.infra.lang.ClassUtil;
 import jakarta.annotation.Nullable;
+
+import im.turms.server.common.infra.lang.ClassUtil;
 
 /**
  * @author James Chen
@@ -27,7 +28,8 @@ public enum UdpRequestType {
     HEARTBEAT,
     GO_OFFLINE;
 
-    private static final UdpRequestType[] ALL = ClassUtil.getSharedEnumConstants(UdpRequestType.class);
+    private static final UdpRequestType[] ALL =
+            ClassUtil.getSharedEnumConstants(UdpRequestType.class);
 
     @Nullable
     public static UdpRequestType parse(int number) {

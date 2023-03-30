@@ -17,13 +17,13 @@
 
 package im.turms.server.common.infra.net;
 
-import im.turms.server.common.infra.lang.StringUtil;
-
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import jakarta.annotation.Nullable;
+
+import im.turms.server.common.infra.lang.StringUtil;
 
 /**
  * @author James Chen
@@ -46,7 +46,10 @@ public final class InetAddressUtil {
         try {
             return ipStringToBytes0(ip);
         } catch (Exception e) {
-            throw new IllegalArgumentException("Invalid IP address: " + ip, e);
+            throw new IllegalArgumentException(
+                    "Invalid IP address: "
+                            + ip,
+                    e);
         }
     }
 
@@ -54,7 +57,9 @@ public final class InetAddressUtil {
         byte[] addr = ipStringToBytes0(ipString);
         // The argument was malformed, i.e. not an IP string literal.
         if (addr == null) {
-            throw new IllegalArgumentException("Invalid IP address: " + ipString);
+            throw new IllegalArgumentException(
+                    "Invalid IP address: "
+                            + ipString);
         }
         return ipBytesToInetAddress(addr);
     }
@@ -63,15 +68,22 @@ public final class InetAddressUtil {
         try {
             return InetAddress.getByAddress(ip);
         } catch (UnknownHostException e) {
-            throw new IllegalArgumentException("Invalid IP bytes: " + Arrays.toString(ip), e);
+            throw new IllegalArgumentException(
+                    "Invalid IP bytes: "
+                            + Arrays.toString(ip),
+                    e);
         }
     }
 
     public static String ipBytesToString(byte[] ip) {
         try {
-            return InetAddress.getByAddress(ip).getHostAddress();
+            return InetAddress.getByAddress(ip)
+                    .getHostAddress();
         } catch (UnknownHostException e) {
-            throw new IllegalArgumentException("Invalid IP bytes: " + Arrays.toString(ip), e);
+            throw new IllegalArgumentException(
+                    "Invalid IP bytes: "
+                            + Arrays.toString(ip),
+                    e);
         }
     }
 
@@ -80,19 +92,12 @@ public final class InetAddressUtil {
         if (ip.length != IPV4_BYTE_LENGTH) {
             return null;
         }
-        return ip[3] & 0xFF
-                | ((ip[2] << 8) & 0xFF00)
-                | ((ip[1] << 16) & 0xFF_0000)
+        return ip[3] & 0xFF | ((ip[2] << 8) & 0xFF00) | ((ip[1] << 16) & 0xFF_0000)
                 | ((ip[0] << 24) & 0xFF00_0000);
     }
 
     public static byte[] ipIntToBytes(int ip) {
-        return new byte[]{
-                (byte) (ip >>> 24),
-                (byte) (ip >>> 16),
-                (byte) (ip >>> 8),
-                (byte) ip
-        };
+        return new byte[]{(byte) (ip >>> 24), (byte) (ip >>> 16), (byte) (ip >>> 8), (byte) ip};
     }
 
     public static boolean isIpV4OrV6(@Nullable byte[] ip) {
@@ -119,7 +124,8 @@ public final class InetAddressUtil {
                 hasColon = true;
             } else if (c == '%') {
                 percentIndex = i;
-                break; // everything after a '%' is ignored (it's a Scope ID): http://superuser.com/a/99753
+                break; // everything after a '%' is ignored (it's a Scope ID):
+                       // http://superuser.com/a/99753
             } else if (Character.digit(c, 16) == -1) {
                 return null; // Everything else must be a decimal or hex digit.
             }
@@ -171,15 +177,18 @@ public final class InetAddressUtil {
         return bytes;
     }
 
+    @Nullable
     private static byte[] textToNumericFormatV6(String ipString) {
         // An address can have [2..8] colons.
         int delimiterCount = StringUtil.countOccurrencesLatin1(ipString, IPV6_DELIMITER);
         if (delimiterCount < 2 || delimiterCount > IPV6_PART_COUNT) {
             return null;
         }
-        int partsSkipped = IPV6_PART_COUNT - (delimiterCount + 1); // estimate; may be modified later
+        int partsSkipped = IPV6_PART_COUNT - (delimiterCount + 1); // estimate; may be modified
+                                                                   // later
         boolean hasSkip = false;
-        // Scan for the appearance of ::, to mark a skip-format IPV6 string and adjust the partsSkipped
+        // Scan for the appearance of ::, to mark a skip-format IPV6 string and adjust the
+        // partsSkipped
         // estimate.
         for (int i = 0; i < ipString.length() - 1; i++) {
             if (ipString.charAt(i) == IPV6_DELIMITER && ipString.charAt(i + 1) == IPV6_DELIMITER) {
@@ -187,7 +196,7 @@ public final class InetAddressUtil {
                     return null; // Can't have more than one ::
                 }
                 hasSkip = true;
-                partsSkipped++; // :: means we skipped an extra part in between the two delimiters.
+                partsSkipped++; // :: means we skipped an extra part between the two delimiters.
                 if (i == 0) {
                     partsSkipped++; // Begins with ::, so we skipped the part preceding the first :
                 }
@@ -251,11 +260,15 @@ public final class InetAddressUtil {
         }
         String penultimate = Integer.toHexString(((quad[0] & 0xff) << 8) | (quad[1] & 0xff));
         String ultimate = Integer.toHexString(((quad[2] & 0xff) << 8) | (quad[3] & 0xff));
-        return initialPart + penultimate + ":" + ultimate;
+        return initialPart
+                + penultimate
+                + ":"
+                + ultimate;
     }
 
     private static byte parseOctet(String ipString, int start, int end) {
-        // Note: we already verified that this string contains only hex digits, but the string may still
+        // Note: we already verified that this string contains only hex digits, but the string may
+        // still
         // contain non-decimal characters.
         int length = end - start;
         if (length <= 0 || length > 3) {

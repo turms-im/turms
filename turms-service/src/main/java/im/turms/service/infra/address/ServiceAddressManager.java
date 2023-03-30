@@ -17,12 +17,13 @@
 
 package im.turms.service.infra.address;
 
+import org.springframework.stereotype.Component;
+
 import im.turms.server.common.infra.address.BaseServiceAddressManager;
 import im.turms.server.common.infra.address.IpDetector;
 import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.common.AddressProperties;
-import org.springframework.stereotype.Component;
 
 /**
  * @author James Chen
@@ -31,14 +32,17 @@ import org.springframework.stereotype.Component;
 public class ServiceAddressManager extends BaseServiceAddressManager {
 
     public ServiceAddressManager(IpDetector ipDetector, TurmsPropertiesManager propertiesManager) {
-        super(propertiesManager.getLocalProperties().getService().getAdminApi().getHttp(),
-                ipDetector,
-                propertiesManager);
+        super(propertiesManager.getLocalProperties()
+                .getService()
+                .getAdminApi()
+                .getHttp(), ipDetector, propertiesManager);
     }
 
     @Override
     protected AddressProperties getAdminAddressProperties(TurmsProperties properties) {
-        return properties.getService().getAdminApi().getAddress();
+        return properties.getService()
+                .getAdminApi()
+                .getAddress();
     }
 
 }

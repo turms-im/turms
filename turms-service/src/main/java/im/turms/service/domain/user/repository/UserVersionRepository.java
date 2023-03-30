@@ -17,8 +17,16 @@
 
 package im.turms.service.domain.user.repository;
 
+import java.util.Date;
+import java.util.Set;
+import jakarta.annotation.Nullable;
+
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.reactivestreams.client.ClientSession;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.domain.common.repository.BaseRepository;
 import im.turms.server.common.storage.mongo.DomainFieldName;
 import im.turms.server.common.storage.mongo.TurmsMongoClient;
@@ -26,13 +34,6 @@ import im.turms.server.common.storage.mongo.operation.option.Filter;
 import im.turms.server.common.storage.mongo.operation.option.QueryOptions;
 import im.turms.server.common.storage.mongo.operation.option.Update;
 import im.turms.service.domain.user.po.UserVersion;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Repository;
-import reactor.core.publisher.Mono;
-
-import java.util.Date;
-import java.util.Set;
-import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen
@@ -44,9 +45,10 @@ public class UserVersionRepository extends BaseRepository<UserVersion, Long> {
         super(mongoClient, UserVersion.class);
     }
 
-    public Mono<UpdateResult> updateSpecificVersion(Long userId,
-                                                    @Nullable ClientSession session,
-                                                    String... fields) {
+    public Mono<UpdateResult> updateSpecificVersion(
+            Long userId,
+            @Nullable ClientSession session,
+            String... fields) {
         Filter filter = Filter.newBuilder(1)
                 .eq(DomainFieldName.ID, userId);
         Date now = new Date();
@@ -57,9 +59,10 @@ public class UserVersionRepository extends BaseRepository<UserVersion, Long> {
         return mongoClient.updateMany(session, entityClass, filter, update);
     }
 
-    public Mono<UpdateResult> updateSpecificVersion(Long userId,
-                                                    @Nullable ClientSession session,
-                                                    String field) {
+    public Mono<UpdateResult> updateSpecificVersion(
+            Long userId,
+            @Nullable ClientSession session,
+            String field) {
         Filter filter = Filter.newBuilder(1)
                 .eq(DomainFieldName.ID, userId);
         Date now = new Date();
@@ -68,9 +71,10 @@ public class UserVersionRepository extends BaseRepository<UserVersion, Long> {
         return mongoClient.updateMany(session, entityClass, filter, update);
     }
 
-    public Mono<UpdateResult> updateSpecificVersion(Set<Long> userIds,
-                                                    @Nullable ClientSession session,
-                                                    String... fields) {
+    public Mono<UpdateResult> updateSpecificVersion(
+            Set<Long> userIds,
+            @Nullable ClientSession session,
+            String... fields) {
         Filter filter = Filter.newBuilder(1)
                 .in(DomainFieldName.ID, userIds);
         Date now = new Date();

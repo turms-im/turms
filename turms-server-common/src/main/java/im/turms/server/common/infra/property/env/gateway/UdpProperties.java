@@ -17,7 +17,6 @@
 
 package im.turms.server.common.infra.property.env.gateway;
 
-
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

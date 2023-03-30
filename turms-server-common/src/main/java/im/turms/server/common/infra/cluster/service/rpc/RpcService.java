@@ -17,6 +17,23 @@
 
 package im.turms.server.common.infra.cluster.service.rpc;
 
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotNull;
+
+import io.micrometer.core.instrument.Tag;
+import io.netty.buffer.ByteBuf;
+import lombok.Getter;
+import org.springframework.context.ApplicationContext;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+import reactor.netty.channel.ChannelOperations;
+import reactor.util.context.ContextView;
+
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.cluster.node.NodeType;
 import im.turms.server.common.infra.cluster.service.ClusterService;
@@ -45,22 +62,6 @@ import im.turms.server.common.infra.random.RandomUtil;
 import im.turms.server.common.infra.serialization.SerializationException;
 import im.turms.server.common.infra.tracing.TracingCloseableContext;
 import im.turms.server.common.infra.tracing.TracingContext;
-import io.micrometer.core.instrument.Tag;
-import io.netty.buffer.ByteBuf;
-import lombok.Getter;
-import org.springframework.context.ApplicationContext;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-import reactor.netty.channel.ChannelOperations;
-import reactor.util.context.ContextView;
-
-import java.time.Duration;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.NotNull;
 
 /**
  * @author James Chen
@@ -84,21 +85,20 @@ public class RpcService implements ClusterService {
 
     private final Map<String, RpcEndpoint> nodeIdToEndpoint = new ConcurrentHashMap<>(32);
 
-    public RpcService(ApplicationContext context,
-                      NodeType nodeType,
-                      RpcProperties rpcProperties) {
+    public RpcService(ApplicationContext context, NodeType nodeType, RpcProperties rpcProperties) {
         this.nodeType = nodeType;
         this.requestExecutor = new RpcRequestExecutor(context);
         defaultRequestTimeoutDuration = Duration.ofMillis(rpcProperties.getRequestTimeoutMillis());
     }
 
     @Override
-    public void lazyInit(CodecService codecService,
-                         ConnectionService connectionService,
-                         DiscoveryService discoveryService,
-                         IdService idService,
-                         RpcService rpcService,
-                         SharedConfigService sharedConfigService) {
+    public void lazyInit(
+            CodecService codecService,
+            ConnectionService connectionService,
+            DiscoveryService discoveryService,
+            IdService idService,
+            RpcService rpcService,
+            SharedConfigService sharedConfigService) {
         this.codecService = codecService;
         this.connectionService = connectionService;
         this.discoveryService = discoveryService;
@@ -135,7 +135,8 @@ public class RpcService implements ClusterService {
                 } else if (data instanceof RpcResponse response) {
                     onResponseReceived(response);
                 } else {
-                    LOGGER.error("Received unknown data: " + data);
+                    LOGGER.error("Received unknown data: "
+                            + data);
                 }
             }
 
@@ -152,13 +153,17 @@ public class RpcService implements ClusterService {
                         .doOnNext(response -> {
                             if (conn.isDisposed()) {
                                 try (TracingCloseableContext ignored = ctx.asCloseable()) {
-                                    LOGGER.error("Could not send the response ({}) to the disposed connection of the node: {}", response, nodeId);
+                                    LOGGER.error(
+                                            "Could not send the response ({}) to the disposed connection of the node: {}",
+                                            response,
+                                            nodeId);
                                 }
                                 return;
                             }
                             ByteBuf buf;
                             try {
-                                buf = RpcFrameEncoder.INSTANCE.encode(request.getRequestId(), response);
+                                buf = RpcFrameEncoder.INSTANCE.encode(request.getRequestId(),
+                                        response);
                                 buf.touch(response);
                             } catch (Exception e) {
                                 try (TracingCloseableContext ignored = ctx.asCloseable()) {
@@ -171,32 +176,42 @@ public class RpcService implements ClusterService {
                                 try {
                                     response = RpcException.get(RpcErrorCode.CODEC_FAILED_TO_ENCODE,
                                             ResponseStatusCode.SERVER_INTERNAL_ERROR,
-                                            "Failed to encode the response: " + response);
-                                    buf = RpcFrameEncoder.INSTANCE.encode(request.getRequestId(), response);
+                                            "Failed to encode the response: "
+                                                    + response);
+                                    buf = RpcFrameEncoder.INSTANCE.encode(request.getRequestId(),
+                                            response);
                                 } catch (Exception exception) {
                                     try (TracingCloseableContext ignored = ctx.asCloseable()) {
-                                        LOGGER.error("Failed to fall back to the RpcException since failing to encode the response: {}",
-                                                response, exception);
+                                        LOGGER.error(
+                                                "Failed to fall back to the RpcException since failing to encode the response: {}",
+                                                response,
+                                                exception);
                                     }
                                     return;
                                 }
                             }
                             if (buf.refCnt() == 0) {
                                 try (TracingCloseableContext ignored = ctx.asCloseable()) {
-                                    LOGGER.error("The buffer of response ({}) is released unexpectedly", response);
+                                    LOGGER.error(
+                                            "The buffer of response ({}) is released unexpectedly",
+                                            response);
                                 }
                                 return;
                             }
                             // Duplicate the buffer to use an independent reader index
-                            // because we don't want to modify the reader index of the original buffer
-                            // if it is an unreleasable buffer internally, or it may be sent to multiple endpoints.
-                            // Note that the content of the buffer is not copied, so "duplicate()" is efficient.
+                            // because we don't want to modify the reader index of the original
+                            // buffer
+                            // if it is an unreleasable buffer internally, or it may be sent to
+                            // multiple endpoints.
+                            // Note that the content of the buffer is not copied, so "duplicate()"
+                            // is efficient.
                             ByteBuf buffer = buf.duplicate();
                             conn.sendObject(buffer)
                                     .then()
                                     .subscribe(null, t -> {
                                         try (TracingCloseableContext ignored = ctx.asCloseable()) {
-                                            LOGGER.error("Failed to send the response buffer: " + buffer, t);
+                                            LOGGER.error("Failed to send the response buffer: "
+                                                    + buffer, t);
                                         }
                                     });
                         })
@@ -218,8 +233,11 @@ public class RpcService implements ClusterService {
     }
 
     public RpcEndpoint getOrCreateEndpoint(String nodeId, @Nullable TurmsConnection connection) {
-        if (nodeId.equals(discoveryService.getLocalMember().getNodeId())) {
-            throw new IllegalArgumentException("The target node ID of RPC endpoint cannot be the local node ID: " + nodeId);
+        if (nodeId.equals(discoveryService.getLocalMember()
+                .getNodeId())) {
+            throw new IllegalArgumentException(
+                    "The target node ID of RPC endpoint cannot be the local node ID: "
+                            + nodeId);
         }
         RpcEndpoint endpoint = nodeIdToEndpoint.get(nodeId);
         if (endpoint != null && (connection == null || connection == endpoint.getConnection())) {
@@ -232,31 +250,36 @@ public class RpcService implements ClusterService {
         if (connection == null) {
             connection = connectionService.getMemberConnection(nodeId);
             if (connection == null) {
-                throw new ConnectionNotFound("The connection to the member " + nodeId
-                        + " does not exist");
+                throw new ConnectionNotFound(
+                        "The connection to the member "
+                                + nodeId
+                                + " does not exist");
             }
         }
         return new RpcEndpoint(nodeId, connection);
     }
 
     /**
-     * @return 1. an empty publisher if the peer responds with a null value;
-     * 2. a non-empty publisher if the peer responds with a non-null value;
-     * 3. error for other cases (e.g. no peer exists).
+     * @return 1. an empty publisher if the peer responds with a null value; 2. a non-empty
+     *         publisher if the peer responds with a non-null value; 3. error for other cases (e.g.
+     *         no peer exists).
      */
     public <T> Mono<T> requestResponse(RpcRequest<T> request) {
-        //TODO: Provide richer load balancing strategies
+        // TODO: Provide richer load balancing strategies
         List<Member> otherMembers = getOtherActiveConnectedMembersToRespond(request);
         int size = otherMembers.size();
         if (size == 0) {
             request.release();
-            return Mono.error(RpcException.get(RpcErrorCode.MEMBER_NOT_FOUND, ResponseStatusCode.SERVER_UNAVAILABLE));
+            return Mono.error(RpcException.get(RpcErrorCode.MEMBER_NOT_FOUND,
+                    ResponseStatusCode.SERVER_UNAVAILABLE));
         }
-        // use System.currentTimeMillis() instead of "RandomUtil.nextPositiveInt()" for better performance
+        // use System.currentTimeMillis() instead of "RandomUtil.nextPositiveInt()" for better
+        // performance
         int index = (int) System.currentTimeMillis() % size;
         Member member = otherMembers.get(index);
         // fast path
-        if (!member.getStatus().isHealthy()) {
+        if (!member.getStatus()
+                .isHealthy()) {
             // slow path
             int retry = 0;
             boolean isUnhealthy;
@@ -264,11 +287,13 @@ public class RpcService implements ClusterService {
                 retry++;
                 index = (index + retry) % size;
                 member = otherMembers.get(index);
-                isUnhealthy = !member.getStatus().isHealthy();
+                isUnhealthy = !member.getStatus()
+                        .isHealthy();
             } while (isUnhealthy && retry < size);
             if (isUnhealthy) {
                 request.release();
-                return Mono.error(RpcException.get(RpcErrorCode.HEALTHY_MEMBER_NOT_FOUND, ResponseStatusCode.SERVER_UNAVAILABLE));
+                return Mono.error(RpcException.get(RpcErrorCode.HEALTHY_MEMBER_NOT_FOUND,
+                        ResponseStatusCode.SERVER_UNAVAILABLE));
             }
         }
         String memberNodeId = member.getNodeId();
@@ -286,8 +311,12 @@ public class RpcService implements ClusterService {
                     if (ThrowableUtil.isDisconnectedClientError(throwable)) {
                         for (Member newMember : getOtherActiveConnectedMembersToRespond(request)) {
                             String newMemberId = newMember.getNodeId();
-                            if (!newMemberId.equals(memberNodeId) && newMember.getStatus().isHealthy()) {
-                                return requestResponse(newMemberId, request, defaultRequestTimeoutDuration);
+                            if (!newMemberId.equals(memberNodeId)
+                                    && newMember.getStatus()
+                                            .isHealthy()) {
+                                return requestResponse(newMemberId,
+                                        request,
+                                        defaultRequestTimeoutDuration);
                             }
                         }
                     }
@@ -298,35 +327,41 @@ public class RpcService implements ClusterService {
     }
 
     /**
-     * @return 1. an empty publisher if the peer responds with a null value;
-     * 2. a non-empty publisher if the peer responds with a non-null value;
-     * 3. error for other cases (e.g. no peer exists).
+     * @return 1. an empty publisher if the peer responds with a null value; 2. a non-empty
+     *         publisher if the peer responds with a non-null value; 3. error for other cases (e.g.
+     *         no peer exists).
      */
     public <T> Mono<T> requestResponse(String memberNodeId, RpcRequest<T> request) {
         return requestResponse(memberNodeId, request, null, null);
     }
 
     /**
-     * @return 1. an empty publisher if the peer responds with a null value;
-     * 2. a non-empty publisher if the peer responds with a non-null value;
-     * 3. error for other cases (e.g. no peer exists).
+     * @return 1. an empty publisher if the peer responds with a null value; 2. a non-empty
+     *         publisher if the peer responds with a non-null value; 3. error for other cases (e.g.
+     *         no peer exists).
      */
-    public <T> Mono<T> requestResponse(String memberNodeId, RpcRequest<T> request, Duration timeout) {
+    public <T> Mono<T> requestResponse(
+            String memberNodeId,
+            RpcRequest<T> request,
+            Duration timeout) {
         return requestResponse(memberNodeId, request, timeout, null);
     }
 
     /**
-     * @return 1. an empty publisher if the peer responds with a null value;
-     * 2. a non-empty publisher if the peer responds with a non-null value;
-     * 3. error for other cases (e.g. no peer exists).
+     * @return 1. an empty publisher if the peer responds with a null value; 2. a non-empty
+     *         publisher if the peer responds with a non-null value; 3. error for other cases (e.g.
+     *         no peer exists).
      */
-    public <T> Mono<T> requestResponse(String memberNodeId, RpcRequest<T> request, Duration timeout, @Nullable TurmsConnection connection) {
+    public <T> Mono<T> requestResponse(
+            String memberNodeId,
+            RpcRequest<T> request,
+            Duration timeout,
+            @Nullable TurmsConnection connection) {
         try {
-            if (discoveryService.getLocalNodeStatusManager().isLocalNodeId(memberNodeId)) {
-                return requestExecutor.runRpcRequest(new TracingContext(request.getTracingContext()),
-                        request,
-                        null,
-                        memberNodeId);
+            if (discoveryService.getLocalNodeStatusManager()
+                    .isLocalNodeId(memberNodeId)) {
+                return requestExecutor.runRpcRequest(new TracingContext(
+                        request.getTracingContext()), request, null, memberNodeId);
             }
             RpcEndpoint endpoint = getOrCreateEndpoint(memberNodeId, connection);
             return requestResponse0(endpoint, request, timeout);
@@ -337,11 +372,14 @@ public class RpcService implements ClusterService {
     }
 
     /**
-     * @return 1. an empty publisher if the peer responds with a null value;
-     * 2. a non-empty publisher if the peer responds with a non-null value;
-     * 3. error for other cases (e.g. no peer exists).
+     * @return 1. an empty publisher if the peer responds with a null value; 2. a non-empty
+     *         publisher if the peer responds with a non-null value; 3. error for other cases (e.g.
+     *         no peer exists).
      */
-    public <T> Mono<T> requestResponse(RpcEndpoint connection, RpcRequest<T> request, @Nullable Duration timeout) {
+    public <T> Mono<T> requestResponse(
+            RpcEndpoint connection,
+            RpcRequest<T> request,
+            @Nullable Duration timeout) {
         try {
             return requestResponse0(connection, request, timeout);
         } catch (Exception e) {
@@ -350,55 +388,68 @@ public class RpcService implements ClusterService {
     }
 
     /**
-     * @return 1. an empty publisher if all peers respond with an empty payload;
-     * 2. a non-empty publisher if the peer responds with an non-empty valid payload;
-     * 3. error for other cases (e.g. no peer exists).
+     * @return 1. an empty publisher if all peers respond with an empty payload; 2. a non-empty
+     *         publisher if the peer responds with an non-empty valid payload; 3. error for other
+     *         cases (e.g. no peer exists).
      */
-    public <T> Flux<T> requestResponsesFromOtherMembers(@NotNull RpcRequest<T> request, boolean rejectIfMissingAnyConnection) {
-        return requestResponsesFromOtherMembers(request, defaultRequestTimeoutDuration, rejectIfMissingAnyConnection);
+    public <T> Flux<T> requestResponsesFromOtherMembers(
+            @NotNull RpcRequest<T> request,
+            boolean rejectIfMissingAnyConnection) {
+        return requestResponsesFromOtherMembers(request,
+                defaultRequestTimeoutDuration,
+                rejectIfMissingAnyConnection);
     }
 
     /**
-     * @return 1. an empty publisher if all peers respond with an empty payload;
-     * 2. a non-empty publisher if the peer responds with a non-empty valid payload;
-     * 3. error for other cases (e.g. no peer exists).
+     * @return 1. an empty publisher if all peers respond with an empty payload; 2. a non-empty
+     *         publisher if the peer responds with a non-empty valid payload; 3. error for other
+     *         cases (e.g. no peer exists).
      */
-    public <T> Flux<T> requestResponsesFromOtherMembers(@NotNull RpcRequest<T> request,
-                                                        @NotNull Duration timeout,
-                                                        boolean rejectIfMissingAnyConnection) {
+    public <T> Flux<T> requestResponsesFromOtherMembers(
+            @NotNull RpcRequest<T> request,
+            @NotNull Duration timeout,
+            boolean rejectIfMissingAnyConnection) {
         List<Member> members = getOtherActiveConnectedMembersToRespond(request);
-        return requestResponsesFromOtherMembers(members, request, timeout, rejectIfMissingAnyConnection);
+        return requestResponsesFromOtherMembers(members,
+                request,
+                timeout,
+                rejectIfMissingAnyConnection);
     }
 
     /**
-     * @return 1. a non-empty publisher that publishes an empty map if all peers respond with an empty payload;
-     * 2. a non-empty publisher that publishes a non-empty map if any peer responds with a non-empty valid payload;
-     * 3. error for other cases (e.g. no peer exists).
-     * The key is the member node ID, and the value is the response
+     * @return 1. a non-empty publisher that publishes an empty map if all peers respond with an
+     *         empty payload; 2. a non-empty publisher that publishes a non-empty map if any peer
+     *         responds with a non-empty valid payload; 3. error for other cases (e.g. no peer
+     *         exists). The key is the member node ID, and the value is the response
      */
-    public <T> Mono<Map<String, T>> requestResponsesAsMapFromOtherMembers(@NotNull RpcRequest<T> request,
-                                                                          boolean rejectIfMissingAnyConnection) {
-        return requestResponsesAsMapFromOtherMembers(request, defaultRequestTimeoutDuration, rejectIfMissingAnyConnection);
+    public <T> Mono<Map<String, T>> requestResponsesAsMapFromOtherMembers(
+            @NotNull RpcRequest<T> request,
+            boolean rejectIfMissingAnyConnection) {
+        return requestResponsesAsMapFromOtherMembers(request,
+                defaultRequestTimeoutDuration,
+                rejectIfMissingAnyConnection);
     }
 
     /**
-     * @return 1. a non-empty publisher that publishes an empty map if all peers respond with an empty payload;
-     * 2. a non-empty publisher that publishes a non-empty map if any peer responds with an non-empty valid payload;
-     * 3. error for other cases (e.g. no peer exists).
-     * The key is the member node ID, and the value is the response
+     * @return 1. a non-empty publisher that publishes an empty map if all peers respond with an
+     *         empty payload; 2. a non-empty publisher that publishes a non-empty map if any peer
+     *         responds with an non-empty valid payload; 3. error for other cases (e.g. no peer
+     *         exists). The key is the member node ID, and the value is the response
      */
-    public <T> Mono<Map<String, T>> requestResponsesAsMapFromOtherMembers(@NotNull RpcRequest<T> request,
-                                                                          @NotNull Duration timeout,
-                                                                          boolean rejectIfMissingAnyConnection) {
+    public <T> Mono<Map<String, T>> requestResponsesAsMapFromOtherMembers(
+            @NotNull RpcRequest<T> request,
+            @NotNull Duration timeout,
+            boolean rejectIfMissingAnyConnection) {
         List<Member> members = getOtherActiveConnectedMembersToRespond(request);
         return requestResponsesAsMap(members, request, timeout, rejectIfMissingAnyConnection);
     }
 
     // Internal implementations
 
-    private <T> Mono<T> requestResponse0(RpcEndpoint endpoint,
-                                         RpcRequest<T> request,
-                                         @Nullable Duration timeout) {
+    private <T> Mono<T> requestResponse0(
+            RpcEndpoint endpoint,
+            RpcRequest<T> request,
+            @Nullable Duration timeout) {
         try {
             assertCurrentNodeIsAllowedToSend(request);
         } catch (Exception e) {
@@ -408,18 +459,20 @@ public class RpcService implements ClusterService {
         if (timeout == null) {
             timeout = defaultRequestTimeoutDuration;
         }
-        Mono<T> mono = Mono
-                .deferContextual(context -> {
-                    addTraceIdToRequestFromContext(context, request);
-                    ByteBuf requestBody;
-                    try {
-                        requestBody = codecService.serializeWithoutCodecId(request);
-                    } catch (Exception e) {
-                        request.release();
-                        return Mono.error(new SerializationException("Failed to encode the request: " + request, e));
-                    }
-                    return endpoint.sendRequest(request, requestBody);
-                })
+        Mono<T> mono = Mono.deferContextual(context -> {
+            addTraceIdToRequestFromContext(context, request);
+            ByteBuf requestBody;
+            try {
+                requestBody = codecService.serializeWithoutCodecId(request);
+            } catch (Exception e) {
+                request.release();
+                return Mono.error(new SerializationException(
+                        "Failed to encode the request: "
+                                + request,
+                        e));
+            }
+            return endpoint.sendRequest(request, requestBody);
+        })
                 .timeout(timeout)
                 .name(METRICS_NAME_RPC_REQUEST)
                 .tag(METRICS_TAG_REQUEST_NAME, request.name())
@@ -428,26 +481,28 @@ public class RpcService implements ClusterService {
         if (tag != null) {
             mono = mono.tag(tag.getKey(), tag.getValue());
         }
-        return mono
-                .metrics()
+        return mono.metrics()
                 .onErrorMap(t -> mapThrowable(t, request));
     }
 
-    public <T> Flux<T> requestResponsesFromOtherMembers(List<Member> members,
-                                                        @NotNull RpcRequest<T> request,
-                                                        @NotNull Duration timeout,
-                                                        boolean rejectIfMissingAnyConnection) {
+    public <T> Flux<T> requestResponsesFromOtherMembers(
+            List<Member> members,
+            @NotNull RpcRequest<T> request,
+            @NotNull Duration timeout,
+            boolean rejectIfMissingAnyConnection) {
         try {
             assertCurrentNodeIsAllowedToSend(request);
         } catch (Exception e) {
             return Flux.error(e);
         }
         if (members.isEmpty()) {
-            return Flux.error(RpcException.get(RpcErrorCode.MEMBER_NOT_FOUND, ResponseStatusCode.SERVER_UNAVAILABLE));
+            return Flux.error(RpcException.get(RpcErrorCode.MEMBER_NOT_FOUND,
+                    ResponseStatusCode.SERVER_UNAVAILABLE));
         }
         if (rejectIfMissingAnyConnection && !connectionService.isHasConnectedToAllMembers()) {
-            return Flux.error(RpcException
-                    .get(RpcErrorCode.CONNECTION_NOT_FOUND, ResponseStatusCode.SERVER_UNAVAILABLE, "Not all connections are established"));
+            return Flux.error(RpcException.get(RpcErrorCode.CONNECTION_NOT_FOUND,
+                    ResponseStatusCode.SERVER_UNAVAILABLE,
+                    "Not all connections are established"));
         }
         return Flux.deferContextual(context -> {
             addTraceIdToRequestFromContext(context, request);
@@ -475,28 +530,34 @@ public class RpcService implements ClusterService {
             if (tag != null) {
                 responseFlux = responseFlux.tag(tag.getKey(), tag.getValue());
             }
-            return responseFlux
-                    .timeout(timeout)
+            return responseFlux.timeout(timeout)
                     .onErrorMap(t -> mapThrowable(t, request))
                     .doFinally(signal -> requestBody.release());
         });
     }
 
-    private <T> Mono<Map<String, T>> requestResponsesAsMap(List<Member> members,
-                                                           @NotNull RpcRequest<T> request,
-                                                           @NotNull Duration timeout,
-                                                           boolean rejectIfMissingAnyConnection) {
+    private <T> Mono<Map<String, T>> requestResponsesAsMap(
+            List<Member> members,
+            @NotNull RpcRequest<T> request,
+            @NotNull Duration timeout,
+            boolean rejectIfMissingAnyConnection) {
         try {
             assertCurrentNodeIsAllowedToSend(request);
         } catch (Exception e) {
             return Mono.error(e);
         }
         if (members.isEmpty()) {
-            return Mono.error(RpcException.get(RpcErrorCode.MEMBER_NOT_FOUND, ResponseStatusCode.SERVER_UNAVAILABLE));
+            return Mono.error(RpcException.get(RpcErrorCode.MEMBER_NOT_FOUND,
+                    ResponseStatusCode.SERVER_UNAVAILABLE));
         }
-        if (rejectIfMissingAnyConnection && !discoveryService.getLocalNodeStatusManager().getLocalMember().getStatus().isActive()) {
-            return Mono.error(RpcException
-                    .get(RpcErrorCode.CONNECTION_NOT_FOUND, ResponseStatusCode.SERVER_UNAVAILABLE, "Some connections have not established"));
+        if (rejectIfMissingAnyConnection
+                && !discoveryService.getLocalNodeStatusManager()
+                        .getLocalMember()
+                        .getStatus()
+                        .isActive()) {
+            return Mono.error(RpcException.get(RpcErrorCode.CONNECTION_NOT_FOUND,
+                    ResponseStatusCode.SERVER_UNAVAILABLE,
+                    "Some connections have not established"));
         }
         return Mono.deferContextual(context -> {
             addTraceIdToRequestFromContext(context, request);
@@ -526,8 +587,7 @@ public class RpcService implements ClusterService {
             if (tag != null) {
                 resultFlux = resultFlux.tag(tag.getKey(), tag.getValue());
             }
-            return resultFlux
-                    .timeout(timeout)
+            return resultFlux.timeout(timeout)
                     .collectMap(Pair::first, Pair::second, CollectorUtil.toMap(size))
                     .onErrorMap(t -> mapThrowable(t, request))
                     .doFinally(signal -> requestBody.release());
@@ -535,7 +595,8 @@ public class RpcService implements ClusterService {
     }
 
     private void addTraceIdToRequestFromContext(ContextView contextView, RpcRequest<?> request) {
-        long traceId = request.getTracingContext().getTraceId();
+        long traceId = request.getTracingContext()
+                .getTraceId();
         if (traceId != TracingContext.UNSET_TRACE_ID) {
             return;
         }
@@ -548,7 +609,10 @@ public class RpcService implements ClusterService {
 
     private Throwable mapThrowable(Throwable throwable, RpcRequest<?> request) {
         // e.g. ClosedChannelException
-        return new RuntimeException("Failed to request a response for the request: " + request, throwable);
+        return new RuntimeException(
+                "Failed to request a response for the request: "
+                        + request,
+                throwable);
     }
 
     // Validate node type
@@ -569,11 +633,13 @@ public class RpcService implements ClusterService {
             case SERVICE -> nodeType == NodeType.SERVICE;
         };
         if (!allowed) {
-            throw new IllegalArgumentException("The node type of the current server is: " +
-                    nodeType +
-                    ", which cannot send the request \"" +
-                    request.name() +
-                    "\" that requires the node type: " + type);
+            throw new IllegalArgumentException(
+                    "The node type of the current server is: "
+                            + nodeType
+                            + ", which cannot send the request \""
+                            + request.name()
+                            + "\" that requires the node type: "
+                            + type);
         }
     }
 

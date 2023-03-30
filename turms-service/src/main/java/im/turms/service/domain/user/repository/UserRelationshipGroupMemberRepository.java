@@ -17,33 +17,39 @@
 
 package im.turms.service.domain.user.repository;
 
+import java.util.Collection;
+import java.util.Set;
+import jakarta.annotation.Nullable;
+
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.reactivestreams.client.ClientSession;
-import im.turms.server.common.domain.common.repository.BaseRepository;
-import im.turms.server.common.storage.mongo.TurmsMongoClient;
-import im.turms.server.common.storage.mongo.operation.option.Filter;
-import im.turms.server.common.storage.mongo.operation.option.QueryOptions;
-import im.turms.service.domain.user.po.UserRelationshipGroupMember;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.Collection;
-import java.util.Set;
-import jakarta.annotation.Nullable;
+import im.turms.server.common.domain.common.repository.BaseRepository;
+import im.turms.server.common.storage.mongo.TurmsMongoClient;
+import im.turms.server.common.storage.mongo.operation.option.Filter;
+import im.turms.server.common.storage.mongo.operation.option.QueryOptions;
+import im.turms.service.domain.user.po.UserRelationshipGroupMember;
 
 /**
  * @author James Chen
  */
 @Repository
-public class UserRelationshipGroupMemberRepository extends BaseRepository<UserRelationshipGroupMember, UserRelationshipGroupMember.Key> {
+public class UserRelationshipGroupMemberRepository
+        extends BaseRepository<UserRelationshipGroupMember, UserRelationshipGroupMember.Key> {
 
-    public UserRelationshipGroupMemberRepository(@Qualifier("userMongoClient") TurmsMongoClient mongoClient) {
+    public UserRelationshipGroupMemberRepository(
+            @Qualifier("userMongoClient") TurmsMongoClient mongoClient) {
         super(mongoClient, UserRelationshipGroupMember.class);
     }
 
-    public Mono<DeleteResult> deleteRelatedUsersFromAllRelationshipGroups(Long ownerId, Collection<Long> relatedUserIds, @Nullable ClientSession session) {
+    public Mono<DeleteResult> deleteRelatedUsersFromAllRelationshipGroups(
+            Long ownerId,
+            Collection<Long> relatedUserIds,
+            @Nullable ClientSession session) {
         Filter filter = Filter.newBuilder(2)
                 .eq(UserRelationshipGroupMember.Fields.ID_OWNER_ID, ownerId)
                 .in(UserRelationshipGroupMember.Fields.ID_RELATED_USER_ID, relatedUserIds);
@@ -66,7 +72,8 @@ public class UserRelationshipGroupMemberRepository extends BaseRepository<UserRe
         QueryOptions options = QueryOptions.newBuilder(1)
                 .include(UserRelationshipGroupMember.Fields.ID_GROUP_INDEX);
         return mongoClient.findMany(entityClass, filter, options)
-                .map(member -> member.getKey().getGroupIndex());
+                .map(member -> member.getKey()
+                        .getGroupIndex());
     }
 
     public Flux<Long> findRelationshipGroupMemberIds(Long ownerId, Integer groupIndex) {
@@ -76,7 +83,8 @@ public class UserRelationshipGroupMemberRepository extends BaseRepository<UserRe
         QueryOptions options = QueryOptions.newBuilder(1)
                 .include(UserRelationshipGroupMember.Fields.ID_RELATED_USER_ID);
         return mongoClient.findMany(entityClass, filter, options)
-                .map(member -> member.getKey().getRelatedUserId());
+                .map(member -> member.getKey()
+                        .getRelatedUserId());
     }
 
     public Flux<Long> findRelationshipGroupMemberIds(
@@ -91,10 +99,13 @@ public class UserRelationshipGroupMemberRepository extends BaseRepository<UserRe
                 .paginateIfNotNull(page, size)
                 .include(UserRelationshipGroupMember.Fields.ID_RELATED_USER_ID);
         return mongoClient.findMany(entityClass, filter, options)
-                .map(member -> member.getKey().getRelatedUserId());
+                .map(member -> member.getKey()
+                        .getRelatedUserId());
     }
 
-    public Flux<UserRelationshipGroupMember> findRelationshipGroupMembers(Long ownerId, Integer groupIndex) {
+    public Flux<UserRelationshipGroupMember> findRelationshipGroupMembers(
+            Long ownerId,
+            Integer groupIndex) {
         Filter filterMember = Filter.newBuilder(2)
                 .eq(UserRelationshipGroupMember.Fields.ID_OWNER_ID, ownerId)
                 .eq(UserRelationshipGroupMember.Fields.ID_GROUP_INDEX, groupIndex);
