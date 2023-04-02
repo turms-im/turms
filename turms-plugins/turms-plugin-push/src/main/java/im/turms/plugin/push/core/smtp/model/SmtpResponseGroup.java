@@ -15,36 +15,24 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.infra.lang;
+package im.turms.plugin.push.core.smtp.model;
 
-import jakarta.annotation.Nullable;
+import java.util.List;
 
 /**
  * @author James Chen
  */
-public final class LongUtil {
+public record SmtpResponseGroup(
+        List<SmtpResponse> responses
+) {
 
-    private LongUtil() {
-    }
-
-    public static byte[] toBytes(long v) {
-        return new byte[]{(byte) v,
-                (byte) (v >>> 8),
-                (byte) (v >>> 16),
-                (byte) (v >>> 24),
-                (byte) (v >>> 32),
-                (byte) (v >>> 40),
-                (byte) (v >>> 48),
-                (byte) (v >>> 56)};
-    }
-
-    @Nullable
-    public static Long tryParse(String s) {
-        try {
-            return Long.parseLong(s);
-        } catch (NumberFormatException e) {
-            return null;
+    public boolean containsError() {
+        for (SmtpResponse response : responses) {
+            if (response.isError()) {
+                return true;
+            }
         }
+        return false;
     }
 
 }

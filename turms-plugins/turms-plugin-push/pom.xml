@@ -18,8 +18,9 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <firebase-admin.version>9.1.1</firebase-admin.version>
-        <pushy.version>0.15.2</pushy.version>
         <freemarker.version>2.3.32</freemarker.version>
+        <jmail.version>1.5.0</jmail.version>
+        <pushy.version>0.15.2</pushy.version>
     </properties>
 
     <dependencies>
@@ -37,6 +38,11 @@
             <groupId>org.freemarker</groupId>
             <artifactId>freemarker</artifactId>
             <version>${freemarker.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sanctionco.jmail</groupId>
+            <artifactId>jmail</artifactId>
+            <version>${jmail.version}</version>
         </dependency>
         <!-- Push Notification -->
         <dependency>

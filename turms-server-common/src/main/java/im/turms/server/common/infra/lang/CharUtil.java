@@ -17,34 +17,25 @@
 
 package im.turms.server.common.infra.lang;
 
-import jakarta.annotation.Nullable;
-
 /**
  * @author James Chen
  */
-public final class LongUtil {
+public final class CharUtil {
 
-    private LongUtil() {
+    private CharUtil() {
     }
 
-    public static byte[] toBytes(long v) {
-        return new byte[]{(byte) v,
-                (byte) (v >>> 8),
-                (byte) (v >>> 16),
-                (byte) (v >>> 24),
-                (byte) (v >>> 32),
-                (byte) (v >>> 40),
-                (byte) (v >>> 48),
-                (byte) (v >>> 56)};
-    }
-
-    @Nullable
-    public static Long tryParse(String s) {
-        try {
-            return Long.parseLong(s);
-        } catch (NumberFormatException e) {
-            return null;
+    public static char forDigit(int digit, int radix) {
+        if ((digit >= radix) || (digit < 0)) {
+            return '\0';
         }
+        if ((radix < Character.MIN_RADIX) || (radix > Character.MAX_RADIX)) {
+            return '\0';
+        }
+        if (digit < 10) {
+            return (char) ('0' + digit);
+        }
+        return (char) ('A' - 10 + digit);
     }
 
 }

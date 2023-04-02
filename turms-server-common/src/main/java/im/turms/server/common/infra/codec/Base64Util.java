@@ -15,36 +15,27 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.infra.lang;
+package im.turms.server.common.infra.codec;
 
-import jakarta.annotation.Nullable;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 /**
  * @author James Chen
  */
-public final class LongUtil {
+public final class Base64Util {
 
-    private LongUtil() {
+    private static final Base64.Encoder ENCODER = Base64.getEncoder();
+
+    private Base64Util() {
     }
 
-    public static byte[] toBytes(long v) {
-        return new byte[]{(byte) v,
-                (byte) (v >>> 8),
-                (byte) (v >>> 16),
-                (byte) (v >>> 24),
-                (byte) (v >>> 32),
-                (byte) (v >>> 40),
-                (byte) (v >>> 48),
-                (byte) (v >>> 56)};
+    public static String encodeToString(String s) {
+        return ENCODER.encodeToString(s.getBytes(StandardCharsets.UTF_8));
     }
 
-    @Nullable
-    public static Long tryParse(String s) {
-        try {
-            return Long.parseLong(s);
-        } catch (NumberFormatException e) {
-            return null;
-        }
+    public static byte[] encodeToBytes(String s) {
+        return ENCODER.encode(s.getBytes(StandardCharsets.UTF_8));
     }
 
 }

@@ -293,6 +293,29 @@ public final class StringUtil {
         return null;
     }
 
+    public static List<String> splitToList(String str, char separator) {
+        List<String> result = new ArrayList<>(16);
+        char[] chars = str.toCharArray();
+        int startIndex = 0;
+        int charLength = chars.length;
+        for (int i = 0; i < charLength; i++) {
+            if (chars[i] == separator) {
+                int length = i - startIndex;
+                char[] subChars = new char[length];
+                System.arraycopy(chars, startIndex, subChars, 0, length);
+                result.add(new String(subChars));
+                startIndex = i + 1;
+            }
+        }
+        if (startIndex < charLength) {
+            int length = charLength - startIndex;
+            char[] subChars = new char[length];
+            System.arraycopy(chars, startIndex, subChars, 0, length);
+            result.add(new String(subChars));
+        }
+        return result;
+    }
+
     @Nullable
     public static Pair<String, String> splitLatin1(String toSplit, byte delimiter) {
         return splitLatin1(getBytes(toSplit), delimiter);

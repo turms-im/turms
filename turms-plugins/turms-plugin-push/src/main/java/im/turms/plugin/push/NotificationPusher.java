@@ -126,6 +126,9 @@ public class NotificationPusher extends TurmsExtension implements RequestHandler
         });
     }
 
+    /**
+     * TODO: Support request timeout
+     */
     private void sendNotification(
             ContextView context,
             Map<Long, Map<String, String>> recipientIdToDetails,
