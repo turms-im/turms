@@ -20,7 +20,7 @@ package im.turms.server.common.access.admin.web;
 /**
  * @author James Chen
  */
-public class MediaTypeConst {
+public final class MediaTypeConst {
 
     private MediaTypeConst() {
     }

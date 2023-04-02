@@ -349,8 +349,8 @@ public final class MailEncoder {
     }
 
     private static byte[] encodeChar(int i) {
-        char hex1 = CharUtil.forDigit((i >> 4) & 0xF, 16);
-        char hex2 = CharUtil.forDigit(i & 0xF, 16);
+        char hex1 = CharUtil.toUppercaseHex((i >> 4) & 0xF);
+        char hex2 = CharUtil.toUppercaseHex(i & 0xF);
         return new byte[]{ESCAPE_CHAR, (byte) hex1, (byte) hex2};
     }
 

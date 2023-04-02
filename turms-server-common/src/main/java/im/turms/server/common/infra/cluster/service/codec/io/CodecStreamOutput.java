@@ -26,7 +26,7 @@ import im.turms.server.common.infra.io.StreamOutput;
  * @author James Chen
  */
 public interface CodecStreamOutput extends StreamOutput {
-    public void writeObject(Object obj);
+    void writeObject(Object obj);
 
-    public <K, V> void writeMap(@Nullable Map<K, V> map);
+    <K, V> void writeMap(@Nullable Map<K, V> map);
 }

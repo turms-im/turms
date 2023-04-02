@@ -19,11 +19,12 @@ package im.turms.server.common.infra.lang;
 
 import java.util.Map;
 import java.util.Set;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen
  */
-public class PrimitiveUtil {
+public final class PrimitiveUtil {
 
     private static final Character CHAR_DEFAULT = '\0';
     private static final Byte BYTE_DEFAULT = 0;
@@ -41,7 +42,7 @@ public class PrimitiveUtil {
             Double.class,
             Boolean.class,
             Character.class);
-    private static final Map<Class<?>, Class<?>> primitiveToWrapper = Map.of(boolean.class,
+    private static final Map<Class<?>, Class<?>> PRIMITIVE_TO_WRAPPER = Map.of(boolean.class,
             Boolean.class,
             byte.class,
             Byte.class,
@@ -69,6 +70,7 @@ public class PrimitiveUtil {
         return WRAPPERS.contains(type);
     }
 
+    @Nullable
     public static <T> T getDefaultValue(Class<T> type) {
         if (!type.isPrimitive()) {
             return null;
@@ -94,6 +96,6 @@ public class PrimitiveUtil {
     }
 
     public static Class<?> primitiveToWrapper(Class<?> clazz) {
-        return primitiveToWrapper.get(clazz);
+        return PRIMITIVE_TO_WRAPPER.get(clazz);
     }
 }

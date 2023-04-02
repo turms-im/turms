@@ -25,7 +25,7 @@ import im.turms.server.common.infra.io.StreamInput;
  * @author James Chen
  */
 public interface CodecStreamInput extends StreamInput {
-    public <T> T readObject();
+    <T> T readObject();
 
-    public <K, V> Map<K, V> readMap();
+    <K, V> Map<K, V> readMap();
 }

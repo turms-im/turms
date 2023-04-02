@@ -29,7 +29,7 @@ import im.turms.server.common.infra.lang.StringUtil;
 /**
  * @author James Chen
  */
-public class FastUriParser {
+public final class FastUriParser {
 
     private FastUriParser() {
     }

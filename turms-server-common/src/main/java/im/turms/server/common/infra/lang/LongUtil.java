@@ -38,13 +38,49 @@ public final class LongUtil {
                 (byte) (v >>> 56)};
     }
 
+    /**
+     * {@link Long#parseLong}
+     */
     @Nullable
     public static Long tryParse(String s) {
-        try {
-            return Long.parseLong(s);
-        } catch (NumberFormatException e) {
+        int length = s.length();
+        if (length == 0) {
             return null;
         }
+        boolean isNegative = false;
+        int i = 0;
+        long limit = -Long.MAX_VALUE;
+
+        char firstChar = s.charAt(0);
+        if (firstChar < '0') { // Possible leading "+" or "-"
+            if (firstChar == '-') {
+                isNegative = true;
+                limit = Long.MIN_VALUE;
+            } else if (firstChar != '+') {
+                return null;
+            }
+            if (length == 1) { // Cannot have lone "+" or "-"
+                return null;
+            }
+            i++;
+        }
+        long multmin = limit / 10;
+        long result = 0;
+        while (i < length) {
+            // Accumulating negatively avoids surprises near MAX_VALUE
+            int digit = CharUtil.digit(s.charAt(i++));
+            if (digit < 0 || result < multmin) {
+                return null;
+            }
+            result *= 10;
+            if (result < limit + digit) {
+                return null;
+            }
+            result -= digit;
+        }
+        return isNegative
+                ? result
+                : -result;
     }
 
 }

@@ -211,13 +211,13 @@ public final class JsonUtil {
         });
     }
 
-    private static record RecordMetadata(
+    private record RecordMetadata(
             Component[] components
     ) {
         static final RecordMetadata EMPTY = new RecordMetadata(new Component[0]);
     }
 
-    private static record Component(
+    private record Component(
             int nameLength,
             Method accessor
     ) {

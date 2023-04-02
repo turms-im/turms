@@ -34,8 +34,8 @@ public record MethodParameterInfo(
         boolean isHeader,
         boolean isBody,
         boolean isFormData,
-        Object defaultValue,
-        String contentType,
+        @Nullable Object defaultValue,
+        @Nullable String contentType,
         boolean isVisibleForOpenApi
 ) {
 }

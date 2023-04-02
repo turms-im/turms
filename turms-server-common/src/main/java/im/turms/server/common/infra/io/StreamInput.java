@@ -29,46 +29,46 @@ import io.netty.buffer.ByteBuf;
  */
 public interface StreamInput {
 
-    public byte readByte();
+    byte readByte();
 
-    public byte[] readBytes(int length);
+    byte[] readBytes(int length);
 
-    public short readShort();
+    short readShort();
 
-    public int readInt();
+    int readInt();
 
-    public List<Integer> readInts();
+    List<Integer> readInts();
 
-    public long readLong();
+    long readLong();
 
-    public List<Long> readLongs();
+    List<Long> readLongs();
 
-    public Set<Long> readLongSet();
+    Set<Long> readLongSet();
 
-    public float readFloat();
+    float readFloat();
 
-    public double readDouble();
+    double readDouble();
 
-    public char readChar();
+    char readChar();
 
-    public boolean readBoolean();
-
-    @Nullable
-    public String readString();
-
-    public List<String> readStrings();
-
-    public Map<String, String> readStringMap();
-
-    public int readVarint32();
+    boolean readBoolean();
 
     @Nullable
-    public byte[] readIp();
+    String readString();
 
-    public int readableBytes();
+    List<String> readStrings();
 
-    public ByteBuf readSlice(int length);
+    Map<String, String> readStringMap();
 
-    public ByteBuf readRetainedSlice(int length);
+    int readVarint32();
+
+    @Nullable
+    byte[] readIp();
+
+    int readableBytes();
+
+    ByteBuf readSlice(int length);
+
+    ByteBuf readRetainedSlice(int length);
 
 }

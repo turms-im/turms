@@ -19,9 +19,12 @@ package im.turms.server.common.infra.lang;
 
 import java.io.Writer;
 
+import im.turms.server.common.infra.thread.NotThreadSafe;
+
 /**
  * @author James Chen
  */
+@NotThreadSafe
 public class StringBuilderWriter extends Writer {
 
     private final StringBuilder builder;

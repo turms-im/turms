@@ -35,7 +35,7 @@ import static im.turms.server.common.infra.metrics.CommonMetricNameConst.ADMIN_A
 /**
  * @author James Chen
  */
-public class HttpServerFactory {
+public final class HttpServerFactory {
 
     private HttpServerFactory() {
     }

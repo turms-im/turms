@@ -26,36 +26,36 @@ import jakarta.annotation.Nullable;
  */
 public interface StreamOutput {
 
-    public Stream writeByte(int value);
+    Stream writeByte(int value);
 
-    public Stream writeBytes(byte[] bytes);
+    Stream writeBytes(byte[] bytes);
 
-    public Stream writeShort(int value);
+    Stream writeShort(int value);
 
-    public Stream writeInt(int value);
+    Stream writeInt(int value);
 
-    public Stream writeInts(Collection<Integer> integers);
+    Stream writeInts(Collection<Integer> integers);
 
-    public Stream writeLong(long value);
+    Stream writeLong(long value);
 
-    public Stream writeLongs(Collection<Long> longs);
+    Stream writeLongs(Collection<Long> longs);
 
-    public Stream writeFloat(float value);
+    Stream writeFloat(float value);
 
-    public Stream writeDouble(double value);
+    Stream writeDouble(double value);
 
-    public Stream writeChar(int value);
+    Stream writeChar(int value);
 
-    public Stream writeBoolean(boolean value);
+    Stream writeBoolean(boolean value);
 
-    public Stream writeString(@Nullable String str);
+    Stream writeString(@Nullable String str);
 
-    public Stream writeStrings(Collection<String> strings);
+    Stream writeStrings(Collection<String> strings);
 
-    public Stream writeStringMap(@Nullable Map<String, String> map);
+    Stream writeStringMap(@Nullable Map<String, String> map);
 
-    public Stream writeVarint32(int value);
+    Stream writeVarint32(int value);
 
-    public Stream writeIp(@Nullable byte[] ipBytes);
+    Stream writeIp(@Nullable byte[] ipBytes);
 
 }

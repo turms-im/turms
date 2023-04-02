@@ -22,10 +22,12 @@ import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
 import lombok.Getter;
 
 import im.turms.server.common.infra.lang.MathUtil;
+import im.turms.server.common.infra.thread.ThreadSafe;
 
 /**
  * @author James Chen
  */
+@ThreadSafe
 public class TokenBucket {
 
     private static final AtomicIntegerFieldUpdater<TokenBucket> TOKENS_UPDATER =

@@ -20,7 +20,7 @@ package im.turms.server.common.infra.lang;
 /**
  * @author James Chen
  */
-public class IntUtil {
+public final class IntUtil {
 
     private IntUtil() {
     }

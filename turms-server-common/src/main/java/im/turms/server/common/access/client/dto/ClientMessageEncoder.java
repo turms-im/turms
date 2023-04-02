@@ -40,7 +40,7 @@ import static com.google.protobuf.CodedOutputStream.newInstance;
 /**
  * @author James Chen
  */
-public class ClientMessageEncoder {
+public final class ClientMessageEncoder {
 
     private ClientMessageEncoder() {
     }

@@ -20,7 +20,7 @@ package im.turms.server.common.access.admin.web;
 /**
  * @author James Chen
  */
-public class ContentEncodingConst {
+public final class ContentEncodingConst {
 
     private ContentEncodingConst() {
     }

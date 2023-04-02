@@ -42,15 +42,15 @@ public class SpscGrowableLongRingBuffer implements RingBuffer {
     @Contended
     private volatile long[] values;
     @Contended
-    private volatile int readIndex = 0;
+    private volatile int readIndex;
     @Contended
-    private volatile int writeIndex = 0;
+    private volatile int writeIndex;
     /**
      * The lock is used to ensure the resize operation and the drain operation won't happen
      * simultaneously.
      */
     @Contended
-    private volatile int lock = 0;
+    private volatile int lock;
 
     public SpscGrowableLongRingBuffer(int initialCapacity) {
         values = new long[Pow2.roundToPowerOfTwo(initialCapacity)];

@@ -169,7 +169,7 @@ public class RandomProtobufGenerator<T extends AbstractMessage> {
                 .nextLong(numberRange.minInclusive(), numberRange.maxInclusive());
     }
 
-    public static record GeneratorOptions(
+    public record GeneratorOptions(
             float possibilityToFillOptionalFields,
             float possibilityToHaveNotEmptyRepeatedFields,
             Range<Long> numberRange

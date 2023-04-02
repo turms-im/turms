@@ -44,8 +44,8 @@ public final class ClassUtil {
 
     static {
         try {
-            GET_ENUM_CONSTANTS = ReflectionUtil
-                    .method2Handle(Class.class.getDeclaredMethod("getEnumConstantsShared"));
+            Method method = Class.class.getDeclaredMethod("getEnumConstantsShared");
+            GET_ENUM_CONSTANTS = ReflectionUtil.method2Handle(method);
         } catch (NoSuchMethodException e) {
             throw new IncompatibleJvmException(
                     "Could not find the method: java.lang.Class#getEnumConstantsShared",
@@ -139,6 +139,7 @@ public final class ClassUtil {
                 : null;
     }
 
+    @Nullable
     public static Class<?> getIterableElementClass(Field field) {
         return getElementClass(field.getGenericType());
     }

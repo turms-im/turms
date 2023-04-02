@@ -29,6 +29,7 @@ import io.netty.handler.codec.LineBasedFrameDecoder;
 import io.netty.util.CharsetUtil;
 
 import im.turms.plugin.push.core.smtp.model.SmtpResponse;
+import im.turms.server.common.infra.lang.CharUtil;
 
 /**
  * @author James Chen
@@ -126,6 +127,12 @@ public class Utf8SmtpResponseDecoder extends LineBasedFrameDecoder {
     }
 
     private int parseNumber(byte b) {
-        return Character.digit((char) b, 10);
+        int digit = CharUtil.digit((char) b);
+        if (digit == -1) {
+            throw new DecoderException(
+                    "Detected an illegal char in the status code: "
+                            + (char) b);
+        }
+        return digit;
     }
 }

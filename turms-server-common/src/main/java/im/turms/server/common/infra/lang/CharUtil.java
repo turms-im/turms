@@ -25,17 +25,42 @@ public final class CharUtil {
     private CharUtil() {
     }
 
-    public static char forDigit(int digit, int radix) {
-        if ((digit >= radix) || (digit < 0)) {
-            return '\0';
-        }
-        if ((radix < Character.MIN_RADIX) || (radix > Character.MAX_RADIX)) {
-            return '\0';
-        }
-        if (digit < 10) {
-            return (char) ('0' + digit);
-        }
-        return (char) ('A' - 10 + digit);
+    public static int digit(char digit) {
+        return switch (digit) {
+            case '0' -> 0;
+            case '1' -> 1;
+            case '2' -> 2;
+            case '3' -> 3;
+            case '4' -> 4;
+            case '5' -> 5;
+            case '6' -> 6;
+            case '7' -> 7;
+            case '8' -> 8;
+            case '9' -> 9;
+            default -> -1;
+        };
+    }
+
+    public static char toUppercaseHex(int digit) {
+        return switch (digit) {
+            case 0 -> '0';
+            case 1 -> '1';
+            case 2 -> '2';
+            case 3 -> '3';
+            case 4 -> '4';
+            case 5 -> '5';
+            case 6 -> '6';
+            case 7 -> '7';
+            case 8 -> '8';
+            case 9 -> '9';
+            case 10 -> 'A';
+            case 11 -> 'B';
+            case 12 -> 'C';
+            case 13 -> 'D';
+            case 14 -> 'E';
+            case 15 -> 'F';
+            default -> '\0';
+        };
     }
 
 }
