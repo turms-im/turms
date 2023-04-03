@@ -312,17 +312,18 @@ public class SessionService implements ISessionService, SessionIdentityAccessMan
         // Slow path
         AtomicInteger sessionCount = new AtomicInteger();
         // Use ArrayList instead of LinkedList because it is heavy
-        List<Mono<Integer>> list = new ArrayList<>(4);
-        list.add(first.doOnNext(sessionCount::addAndGet));
-        list.add(closeLocalSession(iterator.next()
+        List<Mono<Integer>> monos = new ArrayList<>(4);
+        monos.add(first.doOnNext(sessionCount::addAndGet));
+        monos.add(closeLocalSession(iterator.next()
                 .getUserId(), DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES_SET, closeReason)
                 .doOnNext(sessionCount::addAndGet));
         while (iterator.hasNext()) {
-            list.add(closeLocalSession(iterator.next()
+            monos.add(closeLocalSession(iterator.next()
                     .getUserId(), DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES_SET, closeReason)
                     .doOnNext(sessionCount::addAndGet));
         }
-        return Mono.defer(() -> Mono.fromCallable(sessionCount::get));
+        return Mono.whenDelayError(monos)
+                .then(Mono.fromCallable(sessionCount::get));
     }
 
     /**
@@ -567,6 +568,7 @@ public class SessionService implements ISessionService, SessionIdentityAccessMan
         return new UserSessionsInfo(userId, manager.getUserStatus(), sessionInfos);
     }
 
+    @Nullable
     public UserSession authAndUpdateHeartbeatTimestamp(
             long userId,
             @NotNull @ValidDeviceType DeviceType deviceType,
