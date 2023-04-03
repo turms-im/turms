@@ -59,8 +59,7 @@ public class HashedWheelWorker implements Scheduler.Worker, Scannable {
     @Override
     public Disposable schedule(Runnable task, long delay, TimeUnit unit) {
         ExtendedTimerTask timerTask = new ExtendedTimerTask(task);
-        TIMER.newTimeout(timerTask, delay, unit)
-                .cancel();
+        TIMER.newTimeout(timerTask, delay, unit);
         return timerTask::cancel;
     }
 
