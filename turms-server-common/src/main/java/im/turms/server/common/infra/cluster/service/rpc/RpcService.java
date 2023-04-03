@@ -59,6 +59,7 @@ import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.property.env.common.cluster.RpcProperties;
 import im.turms.server.common.infra.random.RandomUtil;
+import im.turms.server.common.infra.reactor.HashedWheelScheduler;
 import im.turms.server.common.infra.serialization.SerializationException;
 import im.turms.server.common.infra.tracing.TracingCloseableContext;
 import im.turms.server.common.infra.tracing.TracingContext;
@@ -473,7 +474,7 @@ public class RpcService implements ClusterService {
             }
             return endpoint.sendRequest(request, requestBody);
         })
-                .timeout(timeout)
+                .timeout(timeout, HashedWheelScheduler.getDaemon())
                 .name(METRICS_NAME_RPC_REQUEST)
                 .tag(METRICS_TAG_REQUEST_NAME, request.name())
                 .tag(METRICS_TAG_REQUEST_TARGET_NODE_ID, endpoint.getNodeId());
@@ -530,7 +531,7 @@ public class RpcService implements ClusterService {
             if (tag != null) {
                 responseFlux = responseFlux.tag(tag.getKey(), tag.getValue());
             }
-            return responseFlux.timeout(timeout)
+            return responseFlux.timeout(timeout, HashedWheelScheduler.getDaemon())
                     .onErrorMap(t -> mapThrowable(t, request))
                     .doFinally(signal -> requestBody.release());
         });
@@ -587,7 +588,7 @@ public class RpcService implements ClusterService {
             if (tag != null) {
                 resultFlux = resultFlux.tag(tag.getKey(), tag.getValue());
             }
-            return resultFlux.timeout(timeout)
+            return resultFlux.timeout(timeout, HashedWheelScheduler.getDaemon())
                     .collectMap(Pair::first, Pair::second, CollectorUtil.toMap(size))
                     .onErrorMap(t -> mapThrowable(t, request))
                     .doFinally(signal -> requestBody.release());

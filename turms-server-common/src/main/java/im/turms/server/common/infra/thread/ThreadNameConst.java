@@ -60,6 +60,9 @@ public class ThreadNameConst {
     // Task
     public static final String TASK_MANAGER = "turms-task-manager";
 
+    // Timer
+    public static final String COMMON_TIMER = "turms-common-timer";
+
     // Shutdown
     public static final String SHUTDOWN = "turms-shutdown";
 

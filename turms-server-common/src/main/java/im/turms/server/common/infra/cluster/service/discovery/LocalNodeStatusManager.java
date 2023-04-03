@@ -40,6 +40,7 @@ import im.turms.server.common.infra.cluster.service.config.entity.discovery.Lead
 import im.turms.server.common.infra.cluster.service.config.entity.discovery.Member;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
+import im.turms.server.common.infra.reactor.HashedWheelScheduler;
 import im.turms.server.common.infra.reactor.PublisherPool;
 import im.turms.server.common.infra.thread.NamedThreadFactory;
 import im.turms.server.common.infra.thread.ThreadNameConst;
@@ -192,7 +193,7 @@ public class LocalNodeStatusManager {
                                     : Mono.empty()));
                 }
                 Mono.whenDelayError(monos)
-                        .timeout(heartbeatInterval)
+                        .timeout(heartbeatInterval, HashedWheelScheduler.getDaemon())
                         .subscribe(null,
                                 t -> LOGGER.error(
                                         "Caught an error while sending the heartbeat request",

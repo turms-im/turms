@@ -52,6 +52,7 @@ import im.turms.server.common.infra.netty.ByteBufUtil;
 import im.turms.server.common.infra.netty.ReferenceCountUtil;
 import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
+import im.turms.server.common.infra.reactor.HashedWheelScheduler;
 import im.turms.server.common.infra.reactor.PublisherPool;
 import im.turms.server.common.infra.validation.ValidDeviceType;
 import im.turms.server.common.infra.validation.Validator;
@@ -252,7 +253,7 @@ public class UserStatusService {
                 updateOnlineUserStatusIfPresent,
                 userId,
                 (byte) userStatus.getNumber());
-        return result.timeout(operationTimeout);
+        return result.timeout(operationTimeout, HashedWheelScheduler.getDaemon());
     }
 
     public Mono<Void> updateOnlineUsersTtl(
@@ -295,7 +296,7 @@ public class UserStatusService {
             return Mono.error(e);
         }
         return sessionRedisClientManager.hgetall(userId, userId)
-                .timeout(operationTimeout)
+                .timeout(operationTimeout, HashedWheelScheduler.getDaemon())
                 .collect(CollectorUtil.toList(8))
                 .map(entries -> {
                     UserStatus userStatus = null;
@@ -371,7 +372,7 @@ public class UserStatusService {
                         int index = 0;
                         do {
                             Long userId = ((ByteBuf) elements.get(index++)).readLong();
-                            int fieldCount = ((int) (long) elements.get(index++));
+                            int fieldCount = (int) (long) elements.get(index++);
                             Map<String, String> details =
                                     CollectionUtil.newMapWithExpectedSize(fieldCount);
                             for (int i = 0; i < fieldCount; i++) {
@@ -408,7 +409,7 @@ public class UserStatusService {
         }
         DeviceType[] deviceTypesArray = deviceTypes.toArray(new DeviceType[0]);
         return sessionRedisClientManager.hdel(userId, userId, deviceTypesArray)
-                .timeout(operationTimeout)
+                .timeout(operationTimeout, HashedWheelScheduler.getDaemon())
                 .map(number -> number > 0);
     }
 
