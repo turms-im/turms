@@ -4,6 +4,10 @@
         "https://checkstyle.org/dtds/configuration_1_3.dtd">
 <!-- https://checkstyle.sourceforge.io/checks.html -->
 <module name="Checker">
+    <module name="SuppressionFilter">
+        <property name="file" value="codequality/checkstyle-suppressions.xml"/>
+    </module>
+
     <!-- Trailing Whitespace -->
     <module name="RegexpSingleline">
         <property name="format" value="\s+$"/>
@@ -18,8 +22,7 @@
 
     <!-- Size Violations -->
     <module name="LineLength">
-        <property name="max" value="140"/>
-        <property name="ignorePattern" value="^ *\* *https?://[^ ]+$"/>
+        <property name="max" value="100"/>
     </module>
 
     <module name="TreeWalker">

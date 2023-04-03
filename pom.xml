@@ -236,9 +236,7 @@
                         <version>${maven-checkstyle-plugin.version}</version>
                         <configuration>
                             <configLocation>codequality/checkstyle.xml</configLocation>
-                            <suppressionsLocation>codequality/checkstyle-suppressions.xml</suppressionsLocation>
                             <headerLocation>codequality/checkstyle-header.txt</headerLocation>
-                            <encoding>UTF-8</encoding>
                             <consoleOutput>true</consoleOutput>
                             <failOnViolation>true</failOnViolation>
                             <includeTestSourceDirectory>true</includeTestSourceDirectory>

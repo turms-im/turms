@@ -3,8 +3,16 @@
         "-//Checkstyle//DTD SuppressionFilter Configuration 1.2//EN"
         "https://checkstyle.org/dtds/suppressions_1_2.dtd">
 <suppressions>
-    <suppress files="turms-java-common[\\/]src[\\/]main[\\/]java[\\/]im[\\/]turms[\\/]common[\\/]constant[\\/]"
+    <!-- turms-server-common -->
+    <suppress files="turms-server-common[\\/]src[\\/]main[\\/]java[\\/]im[\\/]turms[\\/]server[\\/]common[\\/]access[\\/]client[\\/]dto[\\/]constant[\\/]"
               checks="[a-zA-Z0-9]*"/>
-    <suppress files="turms-java-common[\\/]src[\\/]main[\\/]java[\\/]im[\\/]turms[\\/]common[\\/]model[\\/]"
+    <suppress files="turms-server-common[\\/]src[\\/]main[\\/]java[\\/]im[\\/]turms[\\/]server[\\/]common[\\/]access[\\/]client[\\/]dto[\\/]model[\\/]"
+              checks="[a-zA-Z0-9]*"/>
+    <suppress files="turms-server-common[\\/]src[\\/]main[\\/]java[\\/]im[\\/]turms[\\/]server[\\/]common[\\/]access[\\/]client[\\/]dto[\\/]notification[\\/]"
+              checks="[a-zA-Z0-9]*"/>
+    <suppress files="turms-server-common[\\/]src[\\/]main[\\/]java[\\/]im[\\/]turms[\\/]server[\\/]common[\\/]access[\\/]client[\\/]dto[\\/]request[\\/]"
+              checks="[a-zA-Z0-9]*"/>
+    <!-- turms-plugin-* -->
+    <suppress files="turms-plugins[\\/]turms-plugin-antispam[\\/]src[\\/]main[\\/]java[\\/]im[\\/]turms[\\/]plugin[\\/]antispam[\\/]character[\\/]data[\\/]"
               checks="[a-zA-Z0-9]*"/>
 </suppressions>
