@@ -17,12 +17,14 @@
 
 package im.turms.server.common.infra.recycler;
 
+import java.io.Closeable;
+
 import lombok.Getter;
 
 /**
  * @author James Chen
  */
-public class Recyclable<T> {
+public class Recyclable<T> implements Closeable {
 
     private final Recycler<Recyclable<T>> owner;
     @Getter
@@ -37,4 +39,8 @@ public class Recyclable<T> {
         owner.recycle(this);
     }
 
+    @Override
+    public void close() {
+        recycle();
+    }
 }

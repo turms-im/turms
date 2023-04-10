@@ -26,8 +26,10 @@ import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
+import org.bson.codecs.configuration.CodecRegistry;
 
-import im.turms.server.common.infra.collection.ChunkedArrayList;
+import im.turms.server.common.infra.recycler.ListRecycler;
+import im.turms.server.common.infra.recycler.Recyclable;
 
 /**
  * @author James Chen
@@ -36,6 +38,7 @@ public class ArrayCodec<T> extends MongoCodec<T[]> {
 
     private final Class<T[]> arrayClazz;
     private final Class<T> componentClazz;
+    private Codec<T> componentCodec;
 
     public ArrayCodec(Class arrayClazz) {
         super(arrayClazz);
@@ -44,22 +47,30 @@ public class ArrayCodec<T> extends MongoCodec<T[]> {
     }
 
     @Override
+    public void setRegistry(CodecRegistry registry) {
+        super.setRegistry(registry);
+        componentCodec = registry.get(componentClazz);
+    }
+
+    @Override
     public T[] decode(BsonReader reader, DecoderContext decoderContext) {
-        List<T> list = new ChunkedArrayList<>();
-        reader.readStartArray();
-        while (reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
-            Codec<T> codec = registry.get(componentClazz);
-            list.add(codec.decode(reader, decoderContext));
+        try (Recyclable<List<T>> recyclable = ListRecycler.obtain()) {
+            List<T> list = recyclable.getValue();
+            reader.readStartArray();
+            Codec<T> codec = componentCodec;
+            while (reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
+                list.add(codec.decode(reader, decoderContext));
+            }
+            reader.readEndArray();
+            int length = list.size();
+            return list.toArray((T[]) Array.newInstance(arrayClazz.getComponentType(), length));
         }
-        reader.readEndArray();
-        int length = list.size();
-        return list.toArray((T[]) Array.newInstance(arrayClazz.getComponentType(), length));
     }
 
     @Override
     public void encode(BsonWriter writer, T[] values, EncoderContext encoderContext) {
         writer.writeStartArray();
-        Codec<T> codec = registry.get(componentClazz);
+        Codec<T> codec = componentCodec;
         for (T value : values) {
             codec.encode(writer, value, encoderContext);
         }

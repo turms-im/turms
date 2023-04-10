@@ -268,6 +268,10 @@ public final class MongoEntityFactory {
         List<Index> entityIndexes = null;
         Map<String, MethodHandle> setterMethods = parseSetterMethods(clazz.getDeclaredMethods());
         Field[] fields = clazz.getDeclaredFields();
+        boolean hasParameters = constructor.getParameterCount() > 0;
+        Parameter[] parameters = hasParameters
+                ? constructor.getParameters()
+                : null;
         for (Field field : fields) {
             int modifiers = field.getModifiers();
             if (Modifier.isStatic(modifiers) || Modifier.isTransient(modifiers)) {
@@ -313,9 +317,9 @@ public final class MongoEntityFactory {
                     ? VarAccessorFactory.get(field)
                     : VarAccessorFactory.get(field, setter);
             // Constructor
-            int ctorParamIndex = constructor.getParameterCount() == 0
-                    ? EntityField.UNSET_CTOR_PARAM_INDEX
-                    : parseCtorParamIndex(constructor, field);
+            int ctorParamIndex = hasParameters
+                    ? parseCtorParamIndex(constructor, parameters, field)
+                    : EntityField.UNSET_CTOR_PARAM_INDEX;
             if (nameToField == null) {
                 nameToField = CollectionUtil.newMapWithExpectedSize(fields.length);
             }
@@ -357,10 +361,12 @@ public final class MongoEntityFactory {
                 : setterMethods;
     }
 
-    private static <T> int parseCtorParamIndex(Constructor<T> constructor, Field field) {
+    private static <T> int parseCtorParamIndex(
+            Constructor<T> constructor,
+            Parameter[] params,
+            Field field) {
         String fieldName = parseFieldName(field);
         String propertyName = field.getName();
-        Parameter[] params = constructor.getParameters();
         for (int i = 0, length = params.length; i < length; i++) {
             String paramName = params[i].getName();
             if (paramName.equals(fieldName) || paramName.equals(propertyName)) {
