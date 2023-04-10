@@ -36,9 +36,13 @@ public interface StreamOutput {
 
     Stream writeInts(Collection<Integer> integers);
 
+    Stream writeNullableInts(@Nullable Collection<Integer> integers);
+
     Stream writeLong(long value);
 
     Stream writeLongs(Collection<Long> longs);
+
+    Stream writeNullableLongs(@Nullable Collection<Long> longs);
 
     Stream writeFloat(float value);
 
@@ -48,14 +52,19 @@ public interface StreamOutput {
 
     Stream writeBoolean(boolean value);
 
-    Stream writeString(@Nullable String str);
+    Stream writeString(String str);
+
+    Stream writeNullableString(@Nullable String str);
 
     Stream writeStrings(Collection<String> strings);
 
-    Stream writeStringMap(@Nullable Map<String, String> map);
+    Stream writeNullableStrings(@Nullable Collection<String> strings);
+
+    Stream writeStringMap(Map<String, String> map);
+
+    Stream writeNullableStringMap(@Nullable Map<String, String> map);
 
     Stream writeVarint32(int value);
 
-    Stream writeIp(@Nullable byte[] ipBytes);
-
+    Stream writeNullableIp(@Nullable byte[] ipBytes);
 }

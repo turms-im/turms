@@ -64,7 +64,7 @@ public class UserSessionsInfoCodec implements Codec<UserSessionsInfo> {
             output.writeLong(session.lastRequestDate()
                     .getTime());
             output.writeBoolean(session.isSessionOpen());
-            output.writeIp(session.ipBytes());
+            output.writeNullableIp(session.ipBytes());
             if (location == null) {
                 output.writeByte(0);
             } else {
@@ -95,7 +95,7 @@ public class UserSessionsInfoCodec implements Codec<UserSessionsInfo> {
             Date lastHeartbeatRequestDate = new Date(input.readLong());
             Date lastRequestDate = new Date(input.readLong());
             boolean isSessionOpen = input.readBoolean();
-            byte[] ipBytes = input.readIp();
+            byte[] ipBytes = input.readNullableIp();
             Location loginLocation = null;
             if (input.readByte() == 1) {
                 float longitude = input.readFloat();

@@ -19,7 +19,6 @@ package im.turms.server.common.infra.io;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -29,6 +28,8 @@ import io.netty.buffer.ByteBuf;
 
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.lang.StringUtil;
+import im.turms.server.common.infra.serialization.DeserializationException;
+import im.turms.server.common.infra.serialization.SerializationException;
 
 import static im.turms.server.common.infra.net.InetAddressUtil.IPV4_BYTE_LENGTH;
 import static im.turms.server.common.infra.net.InetAddressUtil.IPV6_BYTE_LENGTH;
@@ -46,55 +47,116 @@ public class Stream implements StreamInput, StreamOutput {
 
     @Override
     public byte readByte() {
-        return buf.readByte();
+        try {
+            return buf.readByte();
+        } catch (Exception e) {
+            throw new DeserializationException("Failed to read a byte", e);
+        }
     }
 
     @Override
     public Stream writeByte(int value) {
-        buf.writeByte(value);
+        try {
+            buf.writeByte(value);
+        } catch (Exception e) {
+            throw new SerializationException("Failed to write a byte", e);
+        }
         return this;
     }
 
     @Override
     public byte[] readBytes(int length) {
         byte[] bytes = new byte[length];
-        buf.readBytes(bytes);
+        try {
+            buf.readBytes(bytes);
+        } catch (Exception e) {
+            throw new DeserializationException("Failed to read bytes", e);
+        }
         return bytes;
     }
 
     @Override
     public Stream writeBytes(byte[] bytes) {
-        buf.writeBytes(bytes);
+        try {
+            buf.writeBytes(bytes);
+        } catch (Exception e) {
+            throw new SerializationException("Failed to write bytes", e);
+        }
         return this;
     }
 
     @Override
     public short readShort() {
-        return buf.readShort();
+        try {
+            return buf.readShort();
+        } catch (Exception e) {
+            throw new DeserializationException("Failed to read a short", e);
+        }
     }
 
     @Override
     public Stream writeShort(int value) {
-        buf.writeShort(value);
+        try {
+            buf.writeShort(value);
+        } catch (Exception e) {
+            throw new SerializationException("Failed to write a short", e);
+        }
         return this;
     }
 
     @Override
     public int readInt() {
-        return buf.readInt();
+        try {
+            return buf.readInt();
+        } catch (Exception e) {
+            throw new DeserializationException("Failed to read an int", e);
+        }
     }
 
     @Override
     public Stream writeInt(int value) {
-        buf.writeInt(value);
+        try {
+            buf.writeInt(value);
+        } catch (Exception e) {
+            throw new SerializationException("Failed to write an int", e);
+        }
         return this;
     }
 
     @Override
     public List<Integer> readInts() {
-        int length = readVarint32();
-        List<Integer> integers = new ArrayList<>(length);
-        for (int i = 0; i < length; i++) {
+        int size = readVarint32();
+        if (size == 0) {
+            throw new DeserializationException("The int list is null");
+        }
+        if (size < 0) {
+            throw new DeserializationException(
+                    "The int list size is negative: "
+                            + size);
+        }
+        size--;
+        List<Integer> integers = new ArrayList<>(size);
+        for (int i = 0; i < size; i++) {
+            integers.add(readInt());
+        }
+        return integers;
+    }
+
+    @Nullable
+    @Override
+    public List<Integer> readNullableInts() {
+        int size = readVarint32();
+        if (size == 0) {
+            return null;
+        }
+        if (size < 0) {
+            throw new DeserializationException(
+                    "The int list size is negative: "
+                            + size);
+        }
+        size--;
+        List<Integer> integers = new ArrayList<>(size);
+        for (int i = 0; i < size; i++) {
             integers.add(readInt());
         }
         return integers;
@@ -102,7 +164,23 @@ public class Stream implements StreamInput, StreamOutput {
 
     @Override
     public Stream writeInts(Collection<Integer> integers) {
-        writeVarint32(integers.size());
+        if (integers == null) {
+            throw new IllegalArgumentException("The input integers must not be null");
+        }
+        writeVarint32(integers.size() + 1);
+        for (int integer : integers) {
+            writeInt(integer);
+        }
+        return this;
+    }
+
+    @Override
+    public Stream writeNullableInts(@Nullable Collection<Integer> integers) {
+        if (integers == null) {
+            writeByte(0);
+            return this;
+        }
+        writeVarint32(integers.size() + 1);
         for (int integer : integers) {
             writeInt(integer);
         }
@@ -111,20 +189,57 @@ public class Stream implements StreamInput, StreamOutput {
 
     @Override
     public long readLong() {
-        return buf.readLong();
+        try {
+            return buf.readLong();
+        } catch (Exception e) {
+            throw new DeserializationException("Failed to read a long", e);
+        }
     }
 
     @Override
     public Stream writeLong(long value) {
-        buf.writeLong(value);
+        try {
+            buf.writeLong(value);
+        } catch (Exception e) {
+            throw new SerializationException("Failed to write a long", e);
+        }
         return this;
     }
 
     @Override
     public List<Long> readLongs() {
-        int length = readVarint32();
-        List<Long> longs = new ArrayList<>(length);
-        for (int i = 0; i < length; i++) {
+        int size = readVarint32();
+        if (size == 0) {
+            throw new DeserializationException("The long list is null");
+        }
+        if (size < 0) {
+            throw new DeserializationException(
+                    "The long list size is negative: "
+                            + size);
+        }
+        size--;
+        List<Long> longs = new ArrayList<>(size);
+        for (int i = 0; i < size; i++) {
+            longs.add(readLong());
+        }
+        return longs;
+    }
+
+    @Nullable
+    @Override
+    public List<Long> readNullableLongs() {
+        int size = readVarint32();
+        if (size == 0) {
+            return null;
+        }
+        if (size < 0) {
+            throw new DeserializationException(
+                    "The long list size is negative: "
+                            + size);
+        }
+        size--;
+        List<Long> longs = new ArrayList<>(size);
+        for (int i = 0; i < size; i++) {
             longs.add(readLong());
         }
         return longs;
@@ -132,7 +247,23 @@ public class Stream implements StreamInput, StreamOutput {
 
     @Override
     public Stream writeLongs(Collection<Long> longs) {
-        writeVarint32(longs.size());
+        if (longs == null) {
+            throw new IllegalArgumentException("The input long collection must not be null");
+        }
+        writeVarint32(longs.size() + 1);
+        for (long l : longs) {
+            writeLong(l);
+        }
+        return this;
+    }
+
+    @Override
+    public Stream writeNullableLongs(@Nullable Collection<Long> longs) {
+        if (longs == null) {
+            writeByte(0);
+            return this;
+        }
+        writeVarint32(longs.size() + 1);
         for (long l : longs) {
             writeLong(l);
         }
@@ -141,9 +272,38 @@ public class Stream implements StreamInput, StreamOutput {
 
     @Override
     public Set<Long> readLongSet() {
-        int length = readVarint32();
-        Set<Long> longs = CollectionUtil.newSetWithExpectedSize(length);
-        for (int i = 0; i < length; i++) {
+        int size = readVarint32();
+        if (size == 0) {
+            throw new DeserializationException("The long set is null");
+        }
+        if (size < 0) {
+            throw new DeserializationException(
+                    "The long set size is negative: "
+                            + size);
+        }
+        size--;
+        Set<Long> longs = CollectionUtil.newSetWithExpectedSize(size);
+        for (int i = 0; i < size; i++) {
+            longs.add(readLong());
+        }
+        return longs;
+    }
+
+    @Nullable
+    @Override
+    public Set<Long> readNullableLongSet() {
+        int size = readVarint32();
+        if (size == 0) {
+            return null;
+        }
+        if (size < 0) {
+            throw new DeserializationException(
+                    "The long set size is negative: "
+                            + size);
+        }
+        size--;
+        Set<Long> longs = CollectionUtil.newSetWithExpectedSize(size);
+        for (int i = 0; i < size; i++) {
             longs.add(readLong());
         }
         return longs;
@@ -151,67 +311,133 @@ public class Stream implements StreamInput, StreamOutput {
 
     @Override
     public float readFloat() {
-        return buf.readFloat();
+        try {
+            return buf.readFloat();
+        } catch (Exception e) {
+            throw new DeserializationException("Failed to read a float", e);
+        }
     }
 
     @Override
     public Stream writeFloat(float value) {
-        buf.writeFloat(value);
+        try {
+            buf.writeFloat(value);
+        } catch (Exception e) {
+            throw new SerializationException("Failed to write a float", e);
+        }
         return this;
     }
 
     @Override
     public double readDouble() {
-        return buf.readDouble();
+        try {
+            return buf.readDouble();
+        } catch (Exception e) {
+            throw new DeserializationException("Failed to read a double", e);
+        }
     }
 
     @Override
     public Stream writeDouble(double value) {
-        buf.writeDouble(value);
+        try {
+            buf.writeDouble(value);
+        } catch (Exception e) {
+            throw new SerializationException("Failed to write a double", e);
+        }
         return this;
     }
 
     @Override
     public char readChar() {
-        return buf.readChar();
+        try {
+            return buf.readChar();
+        } catch (Exception e) {
+            throw new DeserializationException("Failed to read a char", e);
+        }
     }
 
     @Override
     public Stream writeChar(int value) {
-        buf.writeChar(value);
+        try {
+            buf.writeChar(value);
+        } catch (Exception e) {
+            throw new SerializationException("Failed to write a char", e);
+        }
         return this;
     }
 
     @Override
     public boolean readBoolean() {
-        return buf.readBoolean();
+        try {
+            return buf.readBoolean();
+        } catch (Exception e) {
+            throw new DeserializationException("Failed to read a boolean", e);
+        }
     }
 
     @Override
     public Stream writeBoolean(boolean value) {
-        buf.writeBoolean(value);
+        try {
+            buf.writeBoolean(value);
+        } catch (Exception e) {
+            throw new SerializationException("Failed to write a boolean", e);
+        }
         return this;
     }
 
     @Override
-    @Nullable
     public String readString() {
+        int length = readVarint32();
+        if (length == 0) {
+            throw new DeserializationException("The string is null");
+        }
+        if (length < 0) {
+            throw new DeserializationException(
+                    "The string length is negative: "
+                            + length);
+        }
+        length--;
+        byte[] bytes = readBytes(length);
+        return StringUtil.newString(bytes, readByte());
+    }
+
+    @Override
+    @Nullable
+    public String readNullableString() {
         int length = readVarint32();
         if (length == 0) {
             return null;
         }
-        return StringUtil.newString(readBytes(length), readByte());
+        if (length < 0) {
+            throw new DeserializationException(
+                    "The string length is negative: "
+                            + length);
+        }
+        length--;
+        byte[] bytes = readBytes(length);
+        return StringUtil.newString(bytes, readByte());
     }
 
     @Override
-    public Stream writeString(@Nullable String str) {
+    public Stream writeString(String str) {
+        byte[] bytes = StringUtil.getBytes(str);
+        int length = bytes.length;
+        writeVarint32(length + 1);
+        if (length > 0) {
+            writeBytes(bytes).writeByte(StringUtil.getCoder(str));
+        }
+        return this;
+    }
+
+    @Override
+    public Stream writeNullableString(@Nullable String str) {
         if (str == null) {
             writeByte(0);
             return this;
         }
         byte[] bytes = StringUtil.getBytes(str);
         int length = bytes.length;
-        writeVarint32(length);
+        writeVarint32(length + 1);
         if (length > 0) {
             writeBytes(bytes).writeByte(StringUtil.getCoder(str));
         }
@@ -220,20 +446,66 @@ public class Stream implements StreamInput, StreamOutput {
 
     @Override
     public List<String> readStrings() {
-        int length = readVarint32();
-        List<String> strings = new ArrayList<>(length);
-        for (int i = 0; i < length; i++) {
-            strings.add(readString());
+        int size = readVarint32();
+        if (size == 0) {
+            throw new DeserializationException("The string list is null");
+        }
+        if (size < 0) {
+            throw new DeserializationException(
+                    "The string list size is negative: "
+                            + size);
+        }
+        size--;
+        List<String> strings = new ArrayList<>(size);
+        for (int i = 0; i < size; i++) {
+            strings.add(readNullableString());
+        }
+        return strings;
+    }
+
+    @Nullable
+    @Override
+    public List<String> readNullableStrings() {
+        int size = readVarint32();
+        if (size == 0) {
+            return null;
+        }
+        if (size < 0) {
+            throw new DeserializationException(
+                    "The string list size is negative: "
+                            + size);
+        }
+        size--;
+        List<String> strings = new ArrayList<>(size);
+        for (int i = 0; i < size; i++) {
+            strings.add(readNullableString());
         }
         return strings;
     }
 
     @Override
     public Stream writeStrings(Collection<String> strings) {
+        if (strings == null) {
+            throw new IllegalArgumentException("The input string collection must not be null");
+        }
         int size = strings.size();
-        writeVarint32(size);
+        writeVarint32(size + 1);
         for (String string : strings) {
-            writeString(string);
+            writeNullableString(string);
+        }
+        return this;
+    }
+
+    @Override
+    public Stream writeNullableStrings(@Nullable Collection<String> strings) {
+        if (strings == null) {
+            writeByte(0);
+            return this;
+        }
+        int size = strings.size();
+        writeVarint32(size + 1);
+        for (String string : strings) {
+            writeNullableString(string);
         }
         return this;
     }
@@ -242,25 +514,64 @@ public class Stream implements StreamInput, StreamOutput {
     public Map<String, String> readStringMap() {
         int size = readVarint32();
         if (size == 0) {
-            return Collections.emptyMap();
+            throw new DeserializationException("The string map is null");
         }
+        if (size < 0) {
+            throw new DeserializationException(
+                    "The string map size is negative: "
+                            + size);
+        }
+        size--;
         Map<String, String> map = CollectionUtil.newMapWithExpectedSize(size);
         for (int i = 0; i < size; i++) {
-            map.put(readString(), readString());
+            map.put(readString(), readNullableString());
+        }
+        return map;
+    }
+
+    @Nullable
+    @Override
+    public Map<String, String> readNullableStringMap() {
+        int size = readVarint32();
+        if (size == 0) {
+            return null;
+        }
+        if (size < 0) {
+            throw new DeserializationException(
+                    "The string map size is negative: "
+                            + size);
+        }
+        size--;
+        Map<String, String> map = CollectionUtil.newMapWithExpectedSize(size);
+        for (int i = 0; i < size; i++) {
+            map.put(readString(), readNullableString());
         }
         return map;
     }
 
     @Override
     public Stream writeStringMap(@Nullable Map<String, String> map) {
-        if (map == null || map.isEmpty()) {
+        if (map == null) {
+            throw new IllegalArgumentException("The input string map must not be null");
+        }
+        writeVarint32(map.size() + 1);
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            writeString(entry.getKey());
+            writeNullableString(entry.getValue());
+        }
+        return this;
+    }
+
+    @Override
+    public Stream writeNullableStringMap(@Nullable Map<String, String> map) {
+        if (map == null) {
             writeByte(0);
             return this;
         }
-        writeVarint32(map.size());
+        writeVarint32(map.size() + 1);
         for (Map.Entry<String, String> entry : map.entrySet()) {
             writeString(entry.getKey());
-            writeString(entry.getValue());
+            writeNullableString(entry.getValue());
         }
         return this;
     }
@@ -323,7 +634,7 @@ public class Stream implements StreamInput, StreamOutput {
                                 return out;
                             }
                         }
-                        throw new IllegalArgumentException("Failed to read varint32");
+                        throw new DeserializationException("Failed to read a varint32");
                     }
                 }
             }
@@ -332,21 +643,21 @@ public class Stream implements StreamInput, StreamOutput {
     }
 
     @Override
-    public Stream writeIp(@Nullable byte[] ipBytes) {
+    public Stream writeNullableIp(@Nullable byte[] ipBytes) {
         if (ipBytes == null) {
             writeByte(-1);
-        } else {
-            writeByte(ipBytes.length == IPV4_BYTE_LENGTH
-                    ? 0
-                    : 1);
+            return this;
         }
+        writeByte(ipBytes.length == IPV4_BYTE_LENGTH
+                ? 0
+                : 1);
         writeBytes(ipBytes);
         return this;
     }
 
     @Override
     @Nullable
-    public byte[] readIp() {
+    public byte[] readNullableIp() {
         int flag = readByte();
         if (flag == -1) {
             return null;

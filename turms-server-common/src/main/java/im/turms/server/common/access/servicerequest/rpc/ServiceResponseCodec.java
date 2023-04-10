@@ -41,13 +41,13 @@ public class ServiceResponseCodec implements Codec<ServiceResponse> {
     public void write(CodecStreamOutput output, ServiceResponse data) {
         output.writeShort((short) data.code()
                 .getBusinessCode());
-        output.writeString(data.reason());
+        output.writeNullableString(data.reason());
     }
 
     @Override
     public ServiceResponse read(CodecStreamInput input) {
         ResponseStatusCode statusCode = ResponseStatusCode.from(input.readShort());
-        String reason = input.readString();
+        String reason = input.readNullableString();
         TurmsNotification.Data data;
         if (input.readableBytes() > 0) {
             ByteBuf dataBuffer = input.readSlice(input.readableBytes());
