@@ -32,8 +32,8 @@ public class SetRecycler<T> extends Recycler<Recyclable<Set<T>>> {
     private static final SetRecycler<?> INSTANCE = new SetRecycler<>();
     private static final int INITIAL_SIZE = 256;
     /**
-     * Use a small max size so that smaller collection can clear/recycle quickly, while larger
-     * collection don't need to grow too frequently.
+     * Use a small max size so that a smaller collection can clear/recycle quickly, while a larger
+     * collection doesn't need to grow too frequently.
      */
     private static final int MAX_SIZE = 256;
 

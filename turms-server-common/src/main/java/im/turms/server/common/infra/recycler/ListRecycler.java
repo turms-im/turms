@@ -29,12 +29,13 @@ import im.turms.server.common.infra.thread.ThreadSafe;
 public class ListRecycler<T> extends Recycler<Recyclable<List<T>>> {
 
     private static final ListRecycler<?> INSTANCE = new ListRecycler<>();
-    private static final int INITIAL_SIZE = 256;
+    private static final int INITIAL_SIZE = 1024;
     /**
-     * Use a small max size so that smaller collection can clear/recycle quickly, while larger
-     * collection don't need to grow too frequently.
+     * Use a large max size to try to avoid growing the list, and {@link ArrayList#clear} method
+     * clears elements according to its size instead of capacity, so the clear/recycle operation is
+     * efficient.
      */
-    private static final int MAX_SIZE = 256;
+    private static final int MAX_SIZE = 1024;
 
     @Override
     Recyclable<List<T>> newInstance() {
