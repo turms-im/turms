@@ -7,7 +7,7 @@
 ## What is Turms
 
 Turms is the most advanced open-source instant messaging engine for 100K~10M concurrent users in the world.
-Please refer to [Turms Documentation](https://turms-im.github.io/docs) (no English version for now) for details.
+Please refer to [Turms Documentation](https://turms-im.github.io/docs) for details.
 
 ## Playground
 (Version of demo servers: `ghcr.io/turms-im/turms-admin:latest`, `ghcr.io/turms-im/turms-gateway:latest`, `ghcr.io/turms-im/turms-service:latest`)

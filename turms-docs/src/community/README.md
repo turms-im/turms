@@ -1,64 +1,59 @@
-# 社区
+# Community
 
 ## FAQ
 
-### 为什么Issues使用英文？
+### Why does Issues use English?
 
-最根本的原因：Issues使用单语言书写，方便搜索。在Issues的使用过程中，最怕遇到使用多语言的开源项目，因为当要搜索一个问题时，比如“Turms服务端的黑名单机制是如何实现的”，对于中英文双语项目，我们通常需要搜索“黑名单”与“blocklist”这两个关键词，换言之，需要搜索至少两次才能保证能搜全相关的Issues，用户搜索体验极差。而如果Issues只有英文，那用户只需搜索“blocklist”关键词。
+The fundamental reason: Issues are written in a single language to facilitate searching. During the use of Issues, encountering open source projects that use multiple languages is the most troublesome because when searching for a problem, such as "How is the blocklist mechanism implemented in the Turms server", for bilingual projects, we usually need to search for both "黑名单" and "blocklist" keywords. In other words, at least two searches are needed to ensure that all related Issues are found, resulting in a poor user search experience. However, if Issues are only in English, users only need to search for the "blocklist" keyword.
 
-次要原因：使用英文方便在全球开源与推广，而使用非英文语言就与我们开源的宗旨背道而驰了。
+Secondary reason: using English facilitates global open source and promotion, while using non-English languages goes against our open source philosophy.
 
-另外，我们不排斥用户使用非英语语言提Issue，只是鼓励用户多用英文。但我们回复时一定是使用英文。
+In addition, we do not exclude users from submitting Issues in non-English languages, but encourage them to use English more often. However, we will always reply in English.
 
-至于为什么Turms的文档除了README，其他的都是中文。这是因为文档不像Issue那样承载那么多功能，并且Turms的中文文档目前有十多万字，也没有精力做英文翻译。
+### Why are There no QQ Groups, WeChat Groups, Slack Channels, or Other Groups?
 
-### 为什么不建立QQ群、微信群或其他群？
+Using various groups for issues management and discussion is a very bad practice, and issues management should have been prioritized using GitHub's Issues. The reasons for this are as follows.
 
-使用各种群做Issues管理与讨论是一种非常糟糕的实践，Issues管理本来就应该优先使用GitHub的Issues板块。原因如下：
+* Issues allows for focused discussion on a single issue
+* It is easy for later users to search for issues
+* Developers can do task tracking through Issues
+* Users can view the progress of various tasks through Issues, open and transparent
 
-Issues板块：
+However, various groups cannot achieve the above functions. On the contrary, various groups are a manifestation of closed project information and go against the purpose of open source. Some open source projects will intentionally block the flow of information to earn consultation or service fees, but this is not the purpose of Turms.
 
-* 可以针对一个问题进行集中讨论
-* 方便后来的用户对各种问题进行搜寻
-* 开发人员可以通过Issues做任务追踪
-* 用户可以通过Issues查看各种任务的进度，公开透明
+In practice, groups and even video conferences are more often used for quick discussions among developers internally, especially in the early stages of drafting, but the final results of the discussion and the key issues involved are still recorded in Issues or documents to facilitate users and developers to understand the ins and outs of a problem.
 
-而各种群显然做不到上述功能。相反地，各种群是项目信息闭塞的表现，与开源的宗旨背道而驰。部分开源项目会故意靠阻塞信息流通，以赚取咨询费或服务费，但这就不是Turms的开源宗旨了。
+### Can I Ask "Newbie Questions"?
 
-在实践过程中，群甚至是视频会议更多地用于开发人员内部进行快速讨论，尤其是早期草案的讨论，但最终的讨论结果与其中涉及到的关键问题其实还是会记录在Issue或文档上，以方便用户与开发人员明白一个问题的来龙去脉。
+There are no so-called "newbie questions" in the Turms project, only "questions related to the Turms project" and "questions unrelated to the Turms project." Everyone may appear "not very professional" when they encounter a new field, and as newcomers, we hope that there will be more goodwill and tolerance from people in this field. Similarly, as long as it is a question related to the Turms project, we will reply. And when encountering "basic questions", we usually think not "this question is terrible," but "can we add some documents, or optimize the documents to provide more guidance to new users". Therefore, users do not need to worry about asking so-called "newbie questions."
 
-### 可以提“新手问题”吗？
+In addition, there is an attitude problem. As long as everyone respects each other, any question can be discussed. The common unacceptable attitudes are: 1. Not reading the documentation, not checking Issues first, and not willing to think before asking directly; 2. Condescending.
 
-Turms项目中没有所谓的“新手问题”，只有“与Turms项目相关的问题”与“与Turms项目不相关的问题”。每个人在接触新领域时，都可能表现地“不是很专业”，我们作为新人更多地希望在这个领域的人多些善意，多些包容。同理地，只要是与Turms项目相关的问题，我们都会答复。并且在遇到“很基础的问题”时，我们通常想得不是“这个问题很糟糕”，而是“可不可以补充些文档，或优化下文档，给新用户多些引导”，因此用户不必担心提出所谓的“新手问题”。
+Of course, learning how to ask questions is also a very interesting thing. For details, please refer to ["How To Ask Questions The Smart Way"](https://github.com/ryanhanwu/How-To-Ask-Questions-The-Smart-Way).
 
-另外就是态度问题，只要大家互相尊重，那什么问题都可以讨论。而不可取的常见态度有：1. 自己不读文档、不先查Issues、也不肯思考，直接开问；2. 居高临下。
+### About Upstream First
 
-当然，学习如何提问也是件很有意思的事情，具体可以参考：[提问的智慧](https://github.com/ryanhanwu/How-To-Ask-Questions-The-Smart-Way)
+Directly interacting with the open source community and solving problems at the source is called upstream first. 
 
-### 关于“上游优先”
+For Turms, upstream first mainly involves two aspects: communication and code feedback.
 
-开发者直接与开源社区进行互动，并在源头上解决问题的办法，被称为上游优先。
+* Communication: Before doing a feature or fixing a bug, it is best to open an [issue](https://github.com/turms-im/turms/issues/new) on GitHub in advance. Some features may seem common and easy to implement, but Turms currently does not have them implemented. It's possible that this seemingly simple feature often involves many details, such as:
 
-对于Turms而言，上游优先主要涉及两个方面：沟通与代码回馈。
+  * Are there any other related or extended requirements for this requirement?
+  * Can this requirement be implemented in this way? Can all related features be implemented in this way? Does the code implementation need to be separate? Is the code implementation universal? Can this template implement almost all related requirements?
+  * Can it be implemented in both single-machine and distributed scenarios?
+  * From a different business perspective or technical perspective, is there a better design and implementation?
 
-* 沟通：做特性或改Bug前，最好事先在GitHub开[Issue](https://github.com/turms-im/turms/issues/new)。有些特性看起来好像很常见，也容易实现，但Turms目前却没有实现，那有可能这个“看起来”简单的特性通常会涉及很多细节，比如：
+  Therefore, a "seemingly" simple requirement may involve a large amount of requirement analysis and technical analysis. If developers silently implement some features locally, they will face a series of issues mentioned above when giving back the code. If major design problems are discovered during the implementation at this time, some previous efforts may be wasted (of course, there are still gains, at least knowing that "there is room for optimization in the current solution"). **Therefore, when facing complex features, developers should be mentally prepared for "design may be overturned repeatedly."**
 
-  * 这一个需求有其他相关需求或拓展需求吗？
-  * 这一个需求可以这么实现，那这类相关特性都可以这么实现吗？是需要一个个单独实现，还有该代码实现是通用的，这一个模板可以实现几乎所有相关需求？
-  * 不论是在单机与分布式场景都可以这么实现吗？
-  * 换个业务视角或技术视角，还有更优秀的设计与实现吗？
-  
-  因此一个“看起来”简单的需求，其背后都可能涉及大量需求分析与技术分析，如果开发者在本地默默地就把一些特性给实现了，则在回馈代码时，还将面临上述一系列问题，而如果这时才发现实现中存在一些重大设计问题，那可能之前的一部分精力就浪费了（当然，还是有收获的，至少知道“当前这个方案还有优化空间”）。**因此，开发者在面对复杂特性时，最好做好“设计可能被反复推翻”的心理准备**。
-  
-  **为了尽量避免这种情况，开发者在设计与实现可能复杂的特性时，最好事先开一个在[Issue](https://github.com/turms-im/turms/issues/new)开一个新的讨论，以尽量减少设计被推翻的次数，节约开发者的时间与精力。**
-  
-  注意：其实有时候就算前期设计完了，在实现的过程中又会发现更精妙的设计，越是复杂的功能，通常也伴随着更多的设计迭代。但是，这些“推翻/半推翻”级别的迭代最好在代码发布之前，就反复讨论与开发完成，而不是代码发布了才发现。
-  
-  额外补充：正是因为需求的复杂性，所以Turms很多“看起来”的Issues是处于“悬而未决”的状态。Turms GitHub Issues区中，有大量Open Issues，很多特性相关的Issues只是一个种子，需要开发者自行做更细致的需求分析、设计与编码，而其中最难的通常就是需求分析，需要弄清楚“到底要做什么”，开发者既要考虑现在的需求，也得考虑未来的需求，还得防止过度设计，这也是为什么Turms文档中好几次提到类似“IM业务功能的设计与实现其实远比技术中间件的设计与实现难得多的多”。
-  
-* 降低自己的维护成本，方便持续性地合并上游更新。如果开发者Fork Turms项目做复杂的二次开发，那将面临一个长期维护的问题：如果开发者想要使用上游的新代码，就需要不断地在自己的分支上做适配，而上游Turms服务端更新得越快，开发者的适配工作量就越大。甚至还有可能出现逻辑上的冲突，但开发者没意识到。
+  **To minimize this situation, when designing and implementing complex features, it is best for developers to initiate a new discussion in [Issue](https://github.com/turms-im/turms/issues/new), so as to reduce the number of times of design being overturned and save developers' time and effort.**
 
-  相反的，如果开发者将代码回馈给上游，那就不会出现这类问题。因为我们不仅会一起来维护这些被回馈的代码，而且在为Turms设计其他新的相关功能模块时，也会考虑这些新设计与这些被回馈的代码在设计上是否一致。
+  Note: Sometimes, even if the design is completed in advance, more ingenious designs may be discovered during the implementation, and the more complex the function, the more design iterations it usually involves. However, these "overturned/half-overturned" iterations are best discussed and developed repeatedly before the code is released, rather than discovering them after the code is released.
 
-* 减少维护冲突，避免反复推翻本地实现。可能开发者自己在本地添加了一些新特性或者修改了一些Bugs，但都没有回馈。过一段时间之后，开发者可能会发现上游比自己实现的功能考虑得更周全且完善，一些Bugs的修复更精妙（关于Turms服务端Bugs的难度介绍，读者可以阅读[关于任务难度](https://turms-im.github.io/docs/for-developers/redevelopment.html#%E6%9C%8D%E5%8A%A1%E7%AB%AF），最终开发者不得不把自己原来做的工作全Revert，然后再重新拉去上游搭配，重头做一遍适配。这其中的工作量想想就令人感觉痛苦，开发者在本地改得越多，冲突也就可能越多。
+  Note: Because of the complexity of requirements, many "seemingly" issues on GitHub Issues are in "pending". Many feature-related issues are just seeds that developers need to do more detailed requirement analysis, design, and coding, and the most difficult thing is usually requirement analysis, which needs to clarify "what needs to be done", and developers need to consider both current and future requirements, and prevent over-design. This is also why Turms documentation mentions several times that "the design and implementation of IM business functions are far more difficult than the design and implementation of technology middleware".
 
+* Reduce your maintenance costs and facilitate the continuous merging of upstream updates. If a developer forks the Turms project for complex secondary development, they will face a long-term maintenance problem: if the developer wants to use upstream's new code, they need to constantly adapt their own branch, and the faster upstream Turms server updates, the greater the developer's adaptation workload. There may even be logical conflicts that the developer is not aware of.
+
+  On the contrary, if developers give back the code to upstream, such problems will not occur. Because we will not only maintain these feedbacked codes together, but also consider whether these new designs and these feedbacked codes are consistent in design when designing other new related functional modules for Turms.
+
+* Reduce maintenance conflicts and avoid overturning local implementations repeatedly. Developers may have added some new features or fixed some bugs locally, but have not given back. After a period of time, developers may find that upstream considers the functionality they have implemented to be more thoughtful and complete, and the bug fixes are more ingenious (readers can read about the difficulty of Turms server-side bugs in [Task Difficulty](https://turms-im.github.io/docs/server/development/redevelopment.html#%E6%9C%8D%E5%8A%A1%E7%AB%AF)). Ultimately, developers have to revert all their original work, then re-pull upstream and start over again. The workload among them is painful to think about, and the more developers change locally, the more conflicts there may be.
