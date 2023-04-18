@@ -94,11 +94,9 @@ Turms所有客户端的接口都非常容易理解与使用。开发者甚至不
 
 ### 代码示例
 
-::: code-tabs#example
+::: code-group
 
-@tab turms-client-js
-
-```javascript
+```javascript [turms-client-js]
 // Initialize client
 const client = new TurmsClient(); // new TurmsClient('ws://any-turms-gateway-server.com');
 
@@ -155,9 +153,7 @@ client.userService.login({
     });
 ```
 
-@tab turms-client-kotlin
-
-```kotlin
+```kotlin [turms-client-kotlin]
 // Initialize client
 val client = TurmsClient() // TurmsClient("127.0.0.1", 11510)
 
@@ -204,9 +200,7 @@ val groupId = client.groupService.createGroup(
 println("group $groupId has been created")
 ```
 
-@tab turms-client-swift
-
-```swift
+```swift [turms-client-swift]
 // Initialize client
 let client = TurmsClient() // TurmsClient("127.0.0.1", 11510)
 
@@ -257,9 +251,7 @@ client.userService.login(userId: 1, password: "123")
     }
 ```
 
-@tab turms-client-dart
-
-```dart
+```dart [turms-client-dart]
 // Initialize client
 final client = TurmsClient(); // TurmsClient(host: '127.0.0.1', port: 11510)
 

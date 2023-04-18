@@ -1,19 +1,16 @@
 {
   "name": "turms-docs",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "description": "documentation for turms",
   "main": "index.js",
   "scripts": {
-    "dev": "vuepress dev src",
-    "build": "vuepress build src"
+    "dev": "vitepress dev src",
+    "build": "vitepress build src"
   },
   "devDependencies": {
-    "@vuepress/client": "2.0.0-beta.61",
-    "@vuepress/plugin-docsearch": "2.0.0-beta.61",
-    "@vuepress/utils": "2.0.0-beta.61",
-    "mermaid": "^10.0.2",
-    "vuepress": "2.0.0-beta.61",
-    "vuepress-plugin-md-enhance": "^2.0.0-beta.186"
+    "mermaid": "^10.1.0",
+    "sass": "^1.62.0",
+    "vitepress": "^1.0.0-alpha.72"
   },
   "repository": {
     "type": "git",

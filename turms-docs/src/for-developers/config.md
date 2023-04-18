@@ -81,17 +81,13 @@ turms-service的JVM默认配置文件为：`turms-service/dist/config/jvm.option
 
    3. 如果通过Docker Compose，则可以使用类似：
 
-      ::: code-tabs#example
+      ::: code-group
 
-      @tab Unix:
-
-      ```shell
+      ```shell [Unix]
       TURMS_GATEWAY_JVM_CONF=<your-jvm-options-file-path> docker compose -f docker-compose.standalone.yml up --force-recreate
       ```
 
-      @tab PowerShell
-
-      ```powershell
+      ```powershell [PowerShell]
       $env:TURMS_GATEWAY_JVM_CONF=<your-jvm-options-file-path>;docker compose -f docker-compose.standalone.yml up --force-recreate
       ```
 
