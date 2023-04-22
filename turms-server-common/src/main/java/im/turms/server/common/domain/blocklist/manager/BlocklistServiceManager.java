@@ -193,8 +193,9 @@ public class BlocklistServiceManager<T extends Comparable<T>> {
             return Mono.empty();
         }
         long now = System.currentTimeMillis();
-        long blockEndTimeMillis =
-                MathUtil.add(now, blockDurationSeconds * 1000L, MAX_BLOCK_END_TIME_MILLIS);
+        long blockEndTimeMillis = MathUtil.multiply(blockDurationSeconds, 1000L, Long.MAX_VALUE);
+        blockEndTimeMillis = MathUtil.add(now, blockEndTimeMillis, Long.MAX_VALUE);
+        blockEndTimeMillis = Math.min(blockEndTimeMillis, MAX_BLOCK_END_TIME_MILLIS);
         int size = targetIds.size();
         ByteBuf[] args = new ByteBuf[size + 2];
         args[0] = getBlocklistKey();

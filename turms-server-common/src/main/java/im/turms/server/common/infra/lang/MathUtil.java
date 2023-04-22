@@ -25,6 +25,9 @@ public final class MathUtil {
     private MathUtil() {
     }
 
+    /**
+     * @see Math#addExact(int, int)
+     */
     public static int add(int x, int y, int fallbackValue) {
         int r = x + y;
         if (((x ^ r) & (y ^ r)) < 0) {
@@ -33,6 +36,9 @@ public final class MathUtil {
         return r;
     }
 
+    /**
+     * @see Math#addExact(long, long)
+     */
     public static long add(long x, long y, long fallbackValue) {
         long r = x + y;
         if (((x ^ r) & (y ^ r)) < 0) {
@@ -41,12 +47,30 @@ public final class MathUtil {
         return r;
     }
 
+    /**
+     * @see Math#multiplyExact(int, int)
+     */
     public static int multiply(int x, int y, int fallbackValue) {
         long r = (long) x * (long) y;
         if ((int) r != r) {
             return fallbackValue;
         }
         return (int) r;
+    }
+
+    /**
+     * @see Math#multiplyExact(long, long)
+     */
+    public static long multiply(long x, long y, long fallbackValue) {
+        long r = x * y;
+        long ax = Math.abs(x);
+        long ay = Math.abs(y);
+        if (((ax | ay) >>> 31 != 0)) {
+            if (((y != 0) && (r / y != x)) || (x == Long.MIN_VALUE && y == -1)) {
+                return fallbackValue;
+            }
+        }
+        return r;
     }
 
 }
