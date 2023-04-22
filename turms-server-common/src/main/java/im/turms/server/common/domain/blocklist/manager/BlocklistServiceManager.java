@@ -95,7 +95,7 @@ public class BlocklistServiceManager<T extends Comparable<T>> {
             ByteBufUtil.getUnreleasableDirectBuffer((byte) 'i');
     private static final ByteBuf BLOCKLIST_KEY_FOR_USER_ID =
             ByteBufUtil.getUnreleasableDirectBuffer((byte) 'u');
-    private static final int UNINITIALIZED_TIMESTAMP = -1;
+    private static final long UNINITIALIZED_TIMESTAMP = -1;
     private static final int UNINITIALIZED_LOG_ID = -1;
 
     private final RedisScript blockClientsScript;
@@ -126,7 +126,7 @@ public class BlocklistServiceManager<T extends Comparable<T>> {
      */
     private final ConcurrentSkipListSet<BlockedClient<T>> blockedClientSkipList;
 
-    private volatile int localTimestamp = UNINITIALIZED_TIMESTAMP;
+    private volatile long localTimestampSeconds = UNINITIALIZED_TIMESTAMP;
     private volatile int localLogId = UNINITIALIZED_LOG_ID;
 
     private final AtomicBoolean isSyncing = new AtomicBoolean();
@@ -211,7 +211,7 @@ public class BlocklistServiceManager<T extends Comparable<T>> {
         Mono<List<Object>> blockUsers = redisClient.eval(blockClientsScript, args);
         return blockUsers.flatMap(elements -> {
             LogVersion version =
-                    new LogVersion((int) (long) elements.get(0), (int) (long) elements.get(1));
+                    new LogVersion((long) elements.get(0), (int) (long) elements.get(1));
             return checkVersionToSync(version, size);
         });
     }
@@ -242,7 +242,7 @@ public class BlocklistServiceManager<T extends Comparable<T>> {
         Mono<List<Object>> unblockClients = redisClient.eval(unblockClientsScript, args);
         return unblockClients.flatMap(elements -> {
             LogVersion version =
-                    new LogVersion((int) (long) elements.get(0), (int) (long) elements.get(1));
+                    new LogVersion((long) elements.get(0), (int) (long) elements.get(1));
             return checkVersionToSync(version, (int) (long) elements.get(2));
         })
                 .then();
@@ -365,7 +365,7 @@ public class BlocklistServiceManager<T extends Comparable<T>> {
     }
 
     private Mono<Void> checkVersionToSync(LogVersion version, int size) {
-        if (version.timestamp != localTimestamp) {
+        if (version.timestampSeconds != localTimestampSeconds) {
             return resetAndSyncAllBlockedClients(true);
         }
         int expectedLogId = localLogId + size;
@@ -388,16 +388,16 @@ public class BlocklistServiceManager<T extends Comparable<T>> {
         LOGGER.info("Starting resetting and synchronizing blocked clients");
         blockedClientIdToBlockEndTimeMillis.clear();
         blockedClientSkipList.clear();
-        localTimestamp = UNINITIALIZED_TIMESTAMP;
+        localTimestampSeconds = UNINITIALIZED_TIMESTAMP;
         localLogId = UNINITIALIZED_LOG_ID;
         Mono<List<Object>> result = redisClient.eval(getBlockedClientsScript, getBlocklistKey());
         return result.doOnNext(elements -> {
-            int timestamp = (int) (long) elements.get(0);
-            if (timestamp < 0) {
+            long timestampSeconds = (long) elements.get(0);
+            if (timestampSeconds < 0) {
                 return;
             }
             int logId = (int) (long) elements.get(1);
-            localTimestamp = timestamp;
+            localTimestampSeconds = timestampSeconds;
             localLogId = logId;
             List<BlockedClient<T>> blockedUsers = parseBlockedClients(elements);
             long now = System.currentTimeMillis();
@@ -421,11 +421,12 @@ public class BlocklistServiceManager<T extends Comparable<T>> {
                 encodeLocalTimestamp(),
                 encodeLocalLogId());
         return getBlocklistLogs.flatMap(elements -> {
-            int timestamp = (int) (long) elements.get(0);
-            if (timestamp < 0) {
+            long timestampSeconds = (long) elements.get(0);
+            if (timestampSeconds < 0) {
                 return Mono.empty();
             }
-            if (timestamp != localTimestamp && localTimestamp != UNINITIALIZED_TIMESTAMP) {
+            if (timestampSeconds != localTimestampSeconds
+                    && localTimestampSeconds != UNINITIALIZED_TIMESTAMP) {
                 return resetAndSyncAllBlockedClients(checkSyncStatus);
             }
             int logId = (int) (long) elements.get(1);
@@ -469,8 +470,8 @@ public class BlocklistServiceManager<T extends Comparable<T>> {
             boolean isBlockAction = bytes[0] == BLOCK_ACTION_FLAG;
             T targetId = decodeTargetId((ByteBuf) elements.get(i + 1));
             if (isBlockAction) {
-                long timestamp = decodeBlockEndTime((long) elements.get(i + 2));
-                logs.add(new BlockClientLog<>(targetId, timestamp, true));
+                long blockEndTimeMillis = decodeBlockEndTime((long) elements.get(i + 2));
+                logs.add(new BlockClientLog<>(targetId, blockEndTimeMillis, true));
             } else {
                 logs.add(new BlockClientLog<>(targetId, 0, false));
             }
@@ -511,8 +512,8 @@ public class BlocklistServiceManager<T extends Comparable<T>> {
      * TODO: cache
      */
     private ByteBuf encodeLocalTimestamp() {
-        return BUFFER_ALLOCATOR.directBuffer(Integer.BYTES)
-                .writeInt(localTimestamp);
+        return BUFFER_ALLOCATOR.directBuffer(Long.BYTES)
+                .writeLong(localTimestampSeconds);
     }
 
     /**
@@ -563,8 +564,12 @@ public class BlocklistServiceManager<T extends Comparable<T>> {
 
     // Data structure
 
+    /**
+     * @param timestampSeconds uses long instead int because int cannot represent the dates after
+     *                         the year 2038.
+     */
     private record LogVersion(
-            int timestamp,
+            long timestampSeconds,
             int logId
     ) {
     }

@@ -1,5 +1,5 @@
 local blocklist_key = KEYS[1] == 'i' and 'blocklist:ip' or 'blocklist:uid'
-local timestamp = struct.unpack('>i', KEYS[2])
+local timestamp = struct.unpack('>l', KEYS[2])
 local log_id = struct.unpack('>i', KEYS[3])
 if log_id < 0 then
     log_id = 0
