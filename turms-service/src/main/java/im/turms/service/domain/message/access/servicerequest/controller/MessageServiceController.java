@@ -146,6 +146,7 @@ public class MessageServiceController extends BaseServiceController {
                         ? request.getPreMessageId()
                         : null;
                 messageAndRelatedUserIdsMono = messageService.authAndSaveMessage(null,
+                        null,
                         clientRequest.userId(),
                         clientRequest.clientIp(),
                         targetId,

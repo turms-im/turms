@@ -151,10 +151,12 @@ public class RasaResponser extends TurmsExtension implements RequestHandlerResul
                                     return Mono.empty();
                                 }
                                 // 3. Send rasa responses to the requester
-                                String responseText =
-                                        formatResponse(clientInfo.properties.getResponse(),
-                                                responses);
+                                RasaProperties.ResponseProperties properties =
+                                        clientInfo.properties.getResponse();
+                                String responseText = formatResponse(properties, responses);
                                 return messageService.authAndSaveAndSendMessage(true,
+                                        properties.getPersist()
+                                                .getBool(),
                                         chatbotUserId,
                                         null,
                                         null,

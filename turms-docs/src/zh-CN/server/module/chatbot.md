@@ -23,6 +23,7 @@ turms-plugin-rasa的工作流程很简单，即：将用户发送的消息转发
 | turms-plugin.rasa.instances[?].request.timeoutMillis | 60_000                                        | 请求超时时长（毫秒）                                         |
 | turms-plugin.rasa.instances[?].response.format       | `PLAIN`                                       | 为`PLAIN`时，Rasa服务端响应中的`text`文本字段将会被直接作为消息，发送给用户；<br />为`JSON`时，Rasa服务端响应会先被序列化成JSON格式文本，再作为消息，发送给用户。JSON具体格式见下文。 |
 | turms-plugin.rasa.instances[?].response.delimiter    | `\n`                                          | 当上述`format`为`PLAIN`，且用户发送给Rasa服务端一条消息，而Rasa服务端返回多个响应时，使用该字符串作为响应`text`文本字段之间的分隔符 |
+| turms-plugin.rasa.instances[?].response.persist      | `DEFAULT`                                     | 是否存储基于Rasa服务端响应生成的消息。<br />为`TRUE`时，表示存储；<br />为`FALSE`时，表示不存储；<br />为`DEFAULT`时，表示基于属性`turms.service.message.persist-message`判断； |
 
 发送给用户的消息的JSON文本格式为：
 

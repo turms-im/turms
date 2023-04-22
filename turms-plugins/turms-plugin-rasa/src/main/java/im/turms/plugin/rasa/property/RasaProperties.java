@@ -23,6 +23,8 @@ import jakarta.validation.constraints.Min;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+import im.turms.server.common.infra.property.constant.BoolType;
+
 /**
  * @author James Chen
  */
@@ -57,5 +59,7 @@ public class RasaProperties {
         private RasaResponseFormat format = RasaResponseFormat.PLAIN;
 
         private String delimiter = "\n";
+
+        private BoolType persist = BoolType.DEFAULT;
     }
 }

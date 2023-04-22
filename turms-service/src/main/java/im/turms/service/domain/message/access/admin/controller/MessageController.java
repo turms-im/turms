@@ -77,6 +77,7 @@ public class MessageController extends BaseController {
             @RequestBody CreateMessageDTO createMessageDTO) {
         String ip = createMessageDTO.senderIp();
         Mono<Void> sendMono = messageService.authAndSaveAndSendMessage(send,
+                null,
                 createMessageDTO.senderId(),
                 createMessageDTO.senderDeviceType(),
                 ip == null

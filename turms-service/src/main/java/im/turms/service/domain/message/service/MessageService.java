@@ -60,6 +60,7 @@ import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.collection.CollectorUtil;
 import im.turms.server.common.infra.exception.IncompatibleInternalChangeException;
 import im.turms.server.common.infra.exception.ResponseException;
+import im.turms.server.common.infra.lang.BoolUtil;
 import im.turms.server.common.infra.lang.LongUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
@@ -765,6 +766,7 @@ public class MessageService {
                     byte[] messageType = {BuiltinSystemMessageType.RECALL_MESSAGE};
                     byte[] messageId = LongUtil.toBytes(message.getId());
                     return authAndSaveAndSendMessage(true,
+                            null,
                             senderId,
                             senderDeviceType,
                             senderIp,
@@ -980,6 +982,7 @@ public class MessageService {
      *         {@link MessageProperties#persistMessage} is false.
      */
     public Mono<MessageAndRecipientIds> authAndSaveMessage(
+            @Nullable Boolean persist,
             @Nullable Long messageId,
             @NotNull Long senderId,
             @Nullable byte[] senderIp,
@@ -1012,7 +1015,10 @@ public class MessageService {
                             : Mono.just(Set.of(targetId));
                 })
                 .flatMap(recipientIds -> {
-                    if (!persistMessage) {
+                    boolean save = persist == null
+                            ? persistMessage
+                            : persist;
+                    if (!save) {
                         return recipientIds.isEmpty()
                                 ? Mono.empty()
                                 : Mono.just(new MessageAndRecipientIds(null, recipientIds));
@@ -1045,23 +1051,24 @@ public class MessageService {
             @NotNull Boolean isGroupMessage,
             @NotNull Boolean isSystemMessage,
             @NotNull Long targetId) {
-        return queryMessage(referenceId)
-                .flatMap(message -> authAndSaveMessage(node.nextLargeGapId(ServiceType.MESSAGE),
-                        requesterId,
-                        requesterIp,
-                        targetId,
-                        isGroupMessage,
-                        isSystemMessage,
-                        message.getText(),
-                        message.getRecords(),
-                        message.getBurnAfter(),
-                        message.getDeliveryDate(),
-                        referenceId,
-                        null));
+        return queryMessage(referenceId).flatMap(message -> authAndSaveMessage(null,
+                node.nextLargeGapId(ServiceType.MESSAGE),
+                requesterId,
+                requesterIp,
+                targetId,
+                isGroupMessage,
+                isSystemMessage,
+                message.getText(),
+                message.getRecords(),
+                message.getBurnAfter(),
+                message.getDeliveryDate(),
+                referenceId,
+                null));
     }
 
     public Mono<Void> authAndSaveAndSendMessage(
             boolean send,
+            @Nullable Boolean persist,
             @Nullable Long senderId,
             @Nullable DeviceType senderDeviceType,
             @Nullable byte[] senderIp,
@@ -1095,7 +1102,8 @@ public class MessageService {
         }
         Date deliveryDate = new Date();
         Mono<MessageAndRecipientIds> saveMono = referenceId == null
-                ? authAndSaveMessage(messageId,
+                ? authAndSaveMessage(persist,
+                        messageId,
                         senderId,
                         senderIp,
                         targetId,
@@ -1215,7 +1223,7 @@ public class MessageService {
         });
     }
 
-    private void validRecordsLength(List<byte[]> records) {
+    private void validRecordsLength(@Nullable List<byte[]> records) {
         if (records == null) {
             return;
         }
