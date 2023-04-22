@@ -17,6 +17,7 @@
 
 package im.turms.server.common.infra.property.env.gateway.session;
 
+import java.util.Collections;
 import java.util.List;
 import jakarta.validation.constraints.Min;
 
@@ -45,8 +46,6 @@ public class DeviceDetailsProperties {
 
     @GlobalProperty
     @MutableProperty
-    private List<DeviceDetailsItemProperties> items =
-            List.of(new DeviceDetailsItemProperties("apns", "a"),
-                    new DeviceDetailsItemProperties("fcm", "f"));
+    private List<DeviceDetailsItemProperties> items = Collections.emptyList();
 
 }

@@ -780,16 +780,7 @@
           "mutable": true,
           "sensitive": false,
           "type": "java.util.List",
-          "value": [
-            {
-              "fieldName": "apns",
-              "redisFieldName": "a"
-            },
-            {
-              "fieldName": "fcm",
-              "redisFieldName": "f"
-            }
-          ]
+          "value": []
         }
       },
       "identityAccessManagement": {
