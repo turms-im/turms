@@ -1,7 +1,7 @@
 local remove_all = #KEYS == 0
 
 local function remove_blocklist(name)
-    local now = tonumber(redis.call('TIME')[1]) - 1630022400
+    local now = tonumber(redis.call('TIME')[1])
     redis.call('SET', name .. ':timestamp', now)
     redis.call('DEL', name .. ':log_id')
     redis.call('DEL', name .. ':log')

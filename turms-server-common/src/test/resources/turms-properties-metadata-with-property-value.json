@@ -2023,17 +2023,17 @@
               "type": "java.util.List",
               "value": [
                 {
-                  "blockMinutes": 10,
+                  "blockDurationSeconds": 600,
                   "goNextLevelTriggerTimes": 1,
                   "reduceOneTriggerTimeIntervalMillis": 60000
                 },
                 {
-                  "blockMinutes": 30,
+                  "blockDurationSeconds": 1800,
                   "goNextLevelTriggerTimes": 1,
                   "reduceOneTriggerTimeIntervalMillis": 60000
                 },
                 {
-                  "blockMinutes": 60,
+                  "blockDurationSeconds": 3600,
                   "goNextLevelTriggerTimes": 0,
                   "reduceOneTriggerTimeIntervalMillis": 60000
                 }
@@ -2067,17 +2067,17 @@
               "type": "java.util.List",
               "value": [
                 {
-                  "blockMinutes": 10,
+                  "blockDurationSeconds": 600,
                   "goNextLevelTriggerTimes": 1,
                   "reduceOneTriggerTimeIntervalMillis": 60000
                 },
                 {
-                  "blockMinutes": 30,
+                  "blockDurationSeconds": 1800,
                   "goNextLevelTriggerTimes": 1,
                   "reduceOneTriggerTimeIntervalMillis": 60000
                 },
                 {
-                  "blockMinutes": 60,
+                  "blockDurationSeconds": 3600,
                   "goNextLevelTriggerTimes": 0,
                   "reduceOneTriggerTimeIntervalMillis": 60000
                 }
@@ -2111,17 +2111,17 @@
               "type": "java.util.List",
               "value": [
                 {
-                  "blockMinutes": 10,
+                  "blockDurationSeconds": 600,
                   "goNextLevelTriggerTimes": 1,
                   "reduceOneTriggerTimeIntervalMillis": 60000
                 },
                 {
-                  "blockMinutes": 30,
+                  "blockDurationSeconds": 1800,
                   "goNextLevelTriggerTimes": 1,
                   "reduceOneTriggerTimeIntervalMillis": 60000
                 },
                 {
-                  "blockMinutes": 60,
+                  "blockDurationSeconds": 3600,
                   "goNextLevelTriggerTimes": 0,
                   "reduceOneTriggerTimeIntervalMillis": 60000
                 }
@@ -2175,17 +2175,17 @@
               "type": "java.util.List",
               "value": [
                 {
-                  "blockMinutes": 10,
+                  "blockDurationSeconds": 600,
                   "goNextLevelTriggerTimes": 1,
                   "reduceOneTriggerTimeIntervalMillis": 60000
                 },
                 {
-                  "blockMinutes": 30,
+                  "blockDurationSeconds": 1800,
                   "goNextLevelTriggerTimes": 1,
                   "reduceOneTriggerTimeIntervalMillis": 60000
                 },
                 {
-                  "blockMinutes": 60,
+                  "blockDurationSeconds": 3600,
                   "goNextLevelTriggerTimes": 0,
                   "reduceOneTriggerTimeIntervalMillis": 60000
                 }
@@ -2219,17 +2219,17 @@
               "type": "java.util.List",
               "value": [
                 {
-                  "blockMinutes": 10,
+                  "blockDurationSeconds": 600,
                   "goNextLevelTriggerTimes": 1,
                   "reduceOneTriggerTimeIntervalMillis": 60000
                 },
                 {
-                  "blockMinutes": 30,
+                  "blockDurationSeconds": 1800,
                   "goNextLevelTriggerTimes": 1,
                   "reduceOneTriggerTimeIntervalMillis": 60000
                 },
                 {
-                  "blockMinutes": 60,
+                  "blockDurationSeconds": 3600,
                   "goNextLevelTriggerTimes": 0,
                   "reduceOneTriggerTimeIntervalMillis": 60000
                 }
@@ -2263,17 +2263,17 @@
               "type": "java.util.List",
               "value": [
                 {
-                  "blockMinutes": 10,
+                  "blockDurationSeconds": 600,
                   "goNextLevelTriggerTimes": 1,
                   "reduceOneTriggerTimeIntervalMillis": 60000
                 },
                 {
-                  "blockMinutes": 30,
+                  "blockDurationSeconds": 1800,
                   "goNextLevelTriggerTimes": 1,
                   "reduceOneTriggerTimeIntervalMillis": 60000
                 },
                 {
-                  "blockMinutes": 60,
+                  "blockDurationSeconds": 3600,
                   "goNextLevelTriggerTimes": 0,
                   "reduceOneTriggerTimeIntervalMillis": 60000
                 }

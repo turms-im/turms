@@ -47,11 +47,11 @@ export default {
                             rules: this.$validator.create({required: true, isIp: true})
                         },
                         {
-                            id: 'blockMinutes',
+                            id: 'blockDurationSeconds',
                             type: 'INPUT-NUMBER',
                             value: 1,
                             min: 1,
-                            max: 35791394 // Integer.MAX_VALUE / 60
+                            max: 9007199254740992 // 2^53
                         }
                     ]
                 }

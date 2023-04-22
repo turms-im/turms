@@ -69,7 +69,7 @@ public class IpBlocklistController extends BaseController {
     public Mono<HttpHandlerResult<ResponseDTO<Void>>> addBlockedIps(
             @RequestBody AddBlockedIpsDTO addBlockedIpsDTO) {
         Mono<Void> result = blocklistService.blockIpStrings(addBlockedIpsDTO.ids(),
-                addBlockedIpsDTO.blockMinutes());
+                addBlockedIpsDTO.blockDurationSeconds());
         return HttpHandlerResult.okIfTruthy(result);
     }
 
@@ -77,7 +77,8 @@ public class IpBlocklistController extends BaseController {
     @RequiredPermission(CLIENT_BLOCKLIST_QUERY)
     public HttpHandlerResult<ResponseDTO<Collection<BlockedIpDTO>>> queryBlockedIps(
             Set<String> ids) {
-        List<BlockedClient> blockedIps = blocklistService.getBlockedIpStrings(ids);
+        List<BlockedClient<ByteArrayWrapper>> blockedIps =
+                blocklistService.getBlockedIpStrings(ids);
         return HttpHandlerResult.okIfTruthy(clients2ips(blockedIps));
     }
 
@@ -88,7 +89,8 @@ public class IpBlocklistController extends BaseController {
             @QueryParam(required = false) Integer size) {
         size = getPageSize(size);
         int blockedIpCount = blocklistService.countBlockIps();
-        List<BlockedClient> blockedIps = blocklistService.getBlockedIps(page, size);
+        List<BlockedClient<ByteArrayWrapper>> blockedIps =
+                blocklistService.getBlockedIps(page, size);
         return HttpHandlerResult.page(blockedIpCount, clients2ips(blockedIps));
     }
 
@@ -106,13 +108,14 @@ public class IpBlocklistController extends BaseController {
         return HttpHandlerResult.okIfTruthy(result);
     }
 
-    private List<BlockedIpDTO> clients2ips(Collection<BlockedClient> blockedClients) {
+    private List<BlockedIpDTO> clients2ips(
+            Collection<BlockedClient<ByteArrayWrapper>> blockedClients) {
         List<BlockedIpDTO> items = new ArrayList<>(blockedClients.size());
-        for (BlockedClient blockedClient : blockedClients) {
+        for (BlockedClient<ByteArrayWrapper> blockedClient : blockedClients) {
             items.add(new BlockedIpDTO(
-                    InetAddressUtil
-                            .ipBytesToString(((ByteArrayWrapper) blockedClient.id()).getBytes()),
-                    new Date(blockedClient.blockEndTime())));
+                    InetAddressUtil.ipBytesToString(blockedClient.id()
+                            .getBytes()),
+                    new Date(blockedClient.blockEndTimeMillis())));
         }
         return items;
     }

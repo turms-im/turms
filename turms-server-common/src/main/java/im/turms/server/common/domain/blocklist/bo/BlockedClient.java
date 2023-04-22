@@ -20,12 +20,11 @@ package im.turms.server.common.domain.blocklist.bo;
 import java.util.Objects;
 
 /**
- * @param blockEndTime in millis
  * @author James Chen
  */
-public record BlockedClient(
-        Object id,
-        long blockEndTime
+public record BlockedClient<T extends Comparable<T>>(
+        T id,
+        long blockEndTimeMillis
 ) {
 
     @Override
@@ -36,7 +35,7 @@ public record BlockedClient(
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        BlockedClient that = (BlockedClient) o;
+        BlockedClient<?> that = (BlockedClient<?>) o;
         return Objects.equals(id, that.id);
     }
 

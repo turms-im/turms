@@ -67,7 +67,7 @@ public class UserBlocklistController extends BaseController {
     public Mono<HttpHandlerResult<ResponseDTO<Void>>> addBlockedUserIds(
             @RequestBody AddBlockedUserIdsDTO addBlockedUserIdsDTO) {
         Mono<Void> result = blocklistService.blockUserIds(addBlockedUserIdsDTO.ids(),
-                addBlockedUserIdsDTO.blockMinutes());
+                addBlockedUserIdsDTO.blockDurationSeconds());
         return HttpHandlerResult.okIfTruthy(result);
     }
 
@@ -75,7 +75,7 @@ public class UserBlocklistController extends BaseController {
     @RequiredPermission(CLIENT_BLOCKLIST_QUERY)
     public HttpHandlerResult<ResponseDTO<Collection<BlockedUserDTO>>> queryBlockedUsers(
             Set<Long> ids) {
-        List<BlockedClient> blockedUsers = blocklistService.getBlockedUsers(ids);
+        List<BlockedClient<Long>> blockedUsers = blocklistService.getBlockedUsers(ids);
         return HttpHandlerResult.okIfTruthy(clients2users(blockedUsers));
     }
 
@@ -86,7 +86,7 @@ public class UserBlocklistController extends BaseController {
             @QueryParam(required = false) Integer size) {
         size = getPageSize(size);
         int blockUserCount = blocklistService.countBlockUsers();
-        List<BlockedClient> blockedUsers = blocklistService.getBlockedUsers(page, size);
+        List<BlockedClient<Long>> blockedUsers = blocklistService.getBlockedUsers(page, size);
         return HttpHandlerResult.page(blockUserCount, clients2users(blockedUsers));
     }
 
@@ -104,12 +104,12 @@ public class UserBlocklistController extends BaseController {
         return HttpHandlerResult.okIfTruthy(result);
     }
 
-    private List<BlockedUserDTO> clients2users(Collection<BlockedClient> blockedClients) {
+    private List<BlockedUserDTO> clients2users(Collection<BlockedClient<Long>> blockedClients) {
         List<BlockedUserDTO> items = new ArrayList<>(blockedClients.size());
-        for (BlockedClient blockedClient : blockedClients) {
+        for (BlockedClient<Long> blockedClient : blockedClients) {
             items.add(new BlockedUserDTO(
-                    (Long) blockedClient.id(),
-                    new Date(blockedClient.blockEndTime())));
+                    blockedClient.id(),
+                    new Date(blockedClient.blockEndTimeMillis())));
         }
         return items;
     }

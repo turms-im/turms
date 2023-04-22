@@ -29,7 +29,7 @@ local new_log_id = redis.call('INCRBY', blocklist_log_id_key, count)
 if (new_log_id - count) == 0 then
     local current_timestamp = redis.call('GET', blocklist_timestamp_key)
     if not current_timestamp then
-        local now = tonumber(redis.call('TIME')[1]) - 1630022400
+        local now = tonumber(redis.call('TIME')[1])
         redis.call('SET', blocklist_timestamp_key, now)
     end
 end

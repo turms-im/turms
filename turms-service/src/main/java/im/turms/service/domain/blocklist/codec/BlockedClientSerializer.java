@@ -47,7 +47,7 @@ public class BlockedClientSerializer {
                 gen.writeStringField("id",
                         InetAddressUtil.ipBytesToString(((ByteArrayWrapper) id).getBytes()));
             }
-            gen.writeStringField("blockEndTime", DateUtil.toStr(value.blockEndTime()));
+            gen.writeStringField("blockEndTime", DateUtil.toStr(value.blockEndTimeMillis()));
             gen.writeEndObject();
         }
     }

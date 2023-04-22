@@ -33,6 +33,14 @@ public final class MathUtil {
         return r;
     }
 
+    public static long add(long x, long y, long fallbackValue) {
+        long r = x + y;
+        if (((x ^ r) & (y ^ r)) < 0) {
+            return fallbackValue;
+        }
+        return r;
+    }
+
     public static int multiply(int x, int y, int fallbackValue) {
         long r = (long) x * (long) y;
         if ((int) r != r) {

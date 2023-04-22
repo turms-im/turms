@@ -37,9 +37,9 @@ import im.turms.server.common.infra.property.metadata.Description;
 public class AutoBlockItemProperties {
 
     public static final List<BlockLevel> DEFAULT_BLOCK_LEVELS =
-            List.of(new BlockLevel(10, 60 * 1000, 1),
-                    new BlockLevel(30, 60 * 1000, 1),
-                    new BlockLevel(60, 60 * 1000, 0));
+            List.of(new BlockLevel(10 * 60, 60 * 1000, 1),
+                    new BlockLevel(30 * 60, 60 * 1000, 1),
+                    new BlockLevel(60 * 60, 60 * 1000, 0));
 
     private boolean enabled;
 
@@ -55,9 +55,9 @@ public class AutoBlockItemProperties {
     @NoArgsConstructor
     public static class BlockLevel {
 
-        @Description("Block the client during the specified minutes")
+        @Description("Block the client for the specified duration in seconds")
         @Min(1)
-        private int blockMinutes = 10;
+        private long blockDurationSeconds = 10L * 60;
 
         @Description("Reduce the trigger time by 1 when the time passes. "
                 + "If 0, never reduce the trigger times and "

@@ -264,44 +264,44 @@ public class BlocklistService {
 
     // Block
 
-    public void blockIp(ByteArrayWrapper address, int blockMinutes) {
+    public void blockIp(ByteArrayWrapper address, long blockDurationSeconds) {
         if (!isIpBlocklistEnabled) {
             throw ResponseException.get(ResponseStatusCode.IP_BLOCKLIST_IS_DISABLED);
         }
-        ipBlocklistServiceManager.blockClients(Set.of(address), blockMinutes)
+        ipBlocklistServiceManager.blockClients(Set.of(address), blockDurationSeconds)
                 .subscribe(null, t -> LOGGER.error("Caught an error while blocking clients", t));
     }
 
-    public Mono<Void> blockIpStrings(Set<String> ips, int blockMinutes) {
+    public Mono<Void> blockIpStrings(Set<String> ips, long blockDurationSeconds) {
         if (!isIpBlocklistEnabled) {
             return ResponseExceptionPublisherPool.ipBlocklistIsDisabled();
         }
-        return ipBlocklistServiceManager.blockClients(ipsToBytes(ips), blockMinutes);
+        return ipBlocklistServiceManager.blockClients(ipsToBytes(ips), blockDurationSeconds);
     }
 
-    public Mono<Void> blockIps(Set<ByteArrayWrapper> ips, int blockMinutes) {
+    public Mono<Void> blockIps(Set<ByteArrayWrapper> ips, long blockDurationSeconds) {
         if (!isIpBlocklistEnabled) {
             return ResponseExceptionPublisherPool.ipBlocklistIsDisabled();
         }
-        return ipBlocklistServiceManager.blockClients(ips, blockMinutes);
+        return ipBlocklistServiceManager.blockClients(ips, blockDurationSeconds);
     }
 
-    public void blockUserId(Long userId, int blockMinutes) {
+    public void blockUserId(Long userId, long blockDurationSeconds) {
         if (!isUserIdBlocklistEnabled) {
             throw ResponseException.get(ResponseStatusCode.USER_ID_BLOCKLIST_IS_DISABLED);
         }
-        userIdBlocklistServiceManager.blockClients(Set.of(userId), blockMinutes)
+        userIdBlocklistServiceManager.blockClients(Set.of(userId), blockDurationSeconds)
                 .subscribe(null,
                         t -> LOGGER.error(
                                 "Caught an error while deleting expired group invitations",
                                 t));
     }
 
-    public Mono<Void> blockUserIds(Set<Long> userIds, int blockMinutes) {
+    public Mono<Void> blockUserIds(Set<Long> userIds, long blockDurationSeconds) {
         if (!isUserIdBlocklistEnabled) {
             return ResponseExceptionPublisherPool.userIdBlocklistIsDisabled();
         }
-        return userIdBlocklistServiceManager.blockClients(userIds, blockMinutes);
+        return userIdBlocklistServiceManager.blockClients(userIds, blockDurationSeconds);
     }
 
     public void tryBlockIpForCorruptedFrame(ByteArrayWrapper ip) {
@@ -387,11 +387,12 @@ public class BlocklistService {
         return userIdBlocklistServiceManager.count();
     }
 
-    public List<BlockedClient> getBlockedIpStrings(Set<String> ips) {
-        List<BlockedClient> ipList = new ChunkedArrayList<>();
+    public List<BlockedClient<ByteArrayWrapper>> getBlockedIpStrings(Set<String> ips) {
+        List<BlockedClient<ByteArrayWrapper>> ipList = new ChunkedArrayList<>();
         for (String ip : ips) {
             ByteArrayWrapper address = new ByteArrayWrapper(InetAddressUtil.ipStringToBytes(ip));
-            BlockedClient blockedClient = ipBlocklistServiceManager.getBlockedClient(address);
+            BlockedClient<ByteArrayWrapper> blockedClient =
+                    ipBlocklistServiceManager.getBlockedClient(address);
             if (blockedClient != null) {
                 ipList.add(blockedClient);
             }
@@ -399,13 +400,14 @@ public class BlocklistService {
         return ipList;
     }
 
-    public List<BlockedClient> getBlockedIps(Set<ByteArrayWrapper> ips) {
+    public List<BlockedClient<ByteArrayWrapper>> getBlockedIps(Set<ByteArrayWrapper> ips) {
         if (!isIpBlocklistEnabled) {
             return Collections.emptyList();
         }
-        List<BlockedClient> result = new ChunkedArrayList<>();
+        List<BlockedClient<ByteArrayWrapper>> result = new ChunkedArrayList<>();
         for (ByteArrayWrapper ip : ips) {
-            BlockedClient blockedClient = ipBlocklistServiceManager.getBlockedClient(ip);
+            BlockedClient<ByteArrayWrapper> blockedClient =
+                    ipBlocklistServiceManager.getBlockedClient(ip);
             if (blockedClient != null) {
                 result.add(blockedClient);
             }
@@ -413,20 +415,21 @@ public class BlocklistService {
         return result;
     }
 
-    public List<BlockedClient> getBlockedIps(int page, int size) {
+    public List<BlockedClient<ByteArrayWrapper>> getBlockedIps(int page, int size) {
         if (!isIpBlocklistEnabled) {
             return Collections.emptyList();
         }
         return ipBlocklistServiceManager.getBlockedClients(page, size);
     }
 
-    public List<BlockedClient> getBlockedUsers(Set<Long> userIds) {
+    public List<BlockedClient<Long>> getBlockedUsers(Set<Long> userIds) {
         if (!isUserIdBlocklistEnabled) {
             return Collections.emptyList();
         }
-        List<BlockedClient> result = new ChunkedArrayList<>();
+        List<BlockedClient<Long>> result = new ChunkedArrayList<>();
         for (Long userId : userIds) {
-            BlockedClient blockedClient = userIdBlocklistServiceManager.getBlockedClient(userId);
+            BlockedClient<Long> blockedClient =
+                    userIdBlocklistServiceManager.getBlockedClient(userId);
             if (blockedClient != null) {
                 result.add(blockedClient);
             }
@@ -434,7 +437,7 @@ public class BlocklistService {
         return result;
     }
 
-    public List<BlockedClient> getBlockedUsers(int page, int size) {
+    public List<BlockedClient<Long>> getBlockedUsers(int page, int size) {
         if (!isUserIdBlocklistEnabled) {
             return Collections.emptyList();
         }

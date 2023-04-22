@@ -20,7 +20,7 @@ package im.turms.server.common.domain.blocklist.manager;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.BiConsumer;
+import java.util.function.ObjLongConsumer;
 
 import lombok.AllArgsConstructor;
 
@@ -35,7 +35,7 @@ public class AutoBlockManager<T> {
 
     private static final int UNSET_BLOCK_LEVEL = -1;
 
-    private final BiConsumer<T, Integer> onClientBlocked;
+    private final ObjLongConsumer<T> onClientBlocked;
 
     private final boolean isEnabled;
     private final List<BlockLevel> levels;
@@ -46,7 +46,7 @@ public class AutoBlockManager<T> {
 
     public AutoBlockManager(
             AutoBlockItemProperties autoBlockProperties,
-            BiConsumer<T, Integer> onClientBlocked) {
+            ObjLongConsumer<T> onClientBlocked) {
         this.onClientBlocked = onClientBlocked;
         levels = CollectionUtil.toListSupportRandomAccess(autoBlockProperties.getBlockLevels());
         maxLevel = levels.size() - 1;
@@ -90,12 +90,12 @@ public class AutoBlockManager<T> {
                     status.currentLevelProperties = levels.get(status.currentLevel);
                     status.triggerTimes = 0;
                 }
-                onClientBlocked.accept(id, status.currentLevelProperties.getBlockMinutes());
+                onClientBlocked.accept(id, status.currentLevelProperties.getBlockDurationSeconds());
             } else if (status.triggerTimes >= blockTriggerTimes) {
                 status.currentLevel = 0;
                 status.currentLevelProperties = levels.get(0);
                 status.triggerTimes = 0;
-                onClientBlocked.accept(id, status.currentLevelProperties.getBlockMinutes());
+                onClientBlocked.accept(id, status.currentLevelProperties.getBlockDurationSeconds());
             } else {
                 status.triggerTimes++;
             }

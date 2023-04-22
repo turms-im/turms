@@ -1,5 +1,5 @@
 local blocklist_key = KEYS[1] == 'i' and 'blocklist:ip' or 'blocklist:uid'
-local block_end_date = struct.unpack('>i', KEYS[2])
+local block_end_date = struct.unpack('>l', KEYS[2])
 
 local id_count = #KEYS - 2
 local blocklist_target_key = blocklist_key .. ':target'
@@ -18,7 +18,7 @@ local new_log_id = redis.call('INCRBY', blocklist_log_id_key, id_count)
 if (new_log_id - id_count) == 0 then
     local current_timestamp = redis.call('GET', blocklist_timestamp_key)
     if not current_timestamp then
-        local now = tonumber(redis.call('TIME')[1]) - 1630022400
+        local now = tonumber(redis.call('TIME')[1])
         redis.call('SET', blocklist_timestamp_key, now)
     end
 end
