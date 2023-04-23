@@ -60,13 +60,13 @@ module "natgateway" {
   create_nat = var.create_nat
 
   nat_name          = var.nat_name
-  nat_vpc_id        = var.create_vpc ? module.vpc.vpc_id : var.nat_vpc_id
-  nat_vswitch_id    = var.create_vpc ? module.vpc.vswitch_ids[0] : var.nat_vswitch_id
+  nat_vpc_id        = var.create_vpc ? module.vpc.vpc_id : var.fallback_vpc_id
+  nat_vswitch_id    = var.create_vpc ? module.vpc.vswitch_ids[0] : var.fallback_vswitch_id
   nat_payment_type  = var.nat_payment_type
   nat_specification = var.nat_specification
 
   snat_entry_name         = var.snat_entry_name
-  snat_source_vswitch_ids = var.create_vpc ? module.vpc.vswitch_ids : var.snat_source_vswitch_ids
+  snat_source_vswitch_ids = var.create_vpc ? module.vpc.vswitch_ids : [var.fallback_vswitch_id]
 
   eip_address_name         = var.nat_eip_address_name
   eip_tags                 = var.nat_eip_tags
@@ -134,8 +134,8 @@ module "turms_gateway" {
   instance_type    = var.turms_gateway_instance_type
 
   # Network
-  vpc_id            = module.vpc.vpc_id
-  vswitch_id        = module.vpc.vswitch_ids[0]
+  vpc_id            = var.create_vpc ? module.vpc.vpc_id : var.fallback_vpc_id
+  vswitch_id        = var.create_vpc ? module.vpc.vswitch_ids[0] : var.fallback_vswitch_id
   max_bandwidth_out = var.turms_gateway_max_bandwidth_out
   nic_type          = var.turms_gateway_nic_type
 
@@ -199,8 +199,8 @@ module "turms_service" {
   instance_type    = var.turms_service_instance_type
 
   # Network
-  vpc_id            = module.vpc.vpc_id
-  vswitch_id        = module.vpc.vswitch_ids[0]
+  vpc_id            = var.create_vpc ? module.vpc.vpc_id : var.fallback_vpc_id
+  vswitch_id        = var.create_vpc ? module.vpc.vswitch_ids[0] : var.fallback_vswitch_id
   max_bandwidth_out = var.turms_service_max_bandwidth_out
   nic_type          = var.turms_service_nic_type
 
@@ -268,8 +268,8 @@ module "turms_admin" {
   instance_type    = var.turms_admin_instance_type
 
   # Network
-  vpc_id            = module.vpc.vpc_id
-  vswitch_id        = module.vpc.vswitch_ids[0]
+  vpc_id            = var.create_vpc ? module.vpc.vpc_id : var.fallback_vpc_id
+  vswitch_id        = var.create_vpc ? module.vpc.vswitch_ids[0] : var.fallback_vswitch_id
   max_bandwidth_out = var.turms_admin_max_bandwidth_out
   nic_type          = var.turms_admin_nic_type
 

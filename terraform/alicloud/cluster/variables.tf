@@ -110,21 +110,26 @@ variable "vswitch_zone_cidr_list" {
   }]
 }
 
+variable "fallback_vpc_id" {
+  type    = string
+  default = null
+}
+
+variable "fallback_vpc_cidr_block" {
+  type    = string
+  default = null
+}
+
+variable "fallback_vswitch_id" {
+  type    = string
+  default = null
+}
+
 #=============== NAT Gateway
 
 variable "nat_name" {
   type    = string
   default = "nat-turms"
-}
-
-variable "nat_vpc_id" {
-  type    = string
-  default = null
-}
-
-variable "nat_vswitch_id" {
-  type    = string
-  default = null
 }
 
 variable "nat_payment_type" {
@@ -140,11 +145,6 @@ variable "nat_specification" {
 variable "snat_entry_name" {
   type    = string
   default = "snat-turms"
-}
-
-variable "snat_source_vswitch_ids" {
-  type    = list(string)
-  default = null
 }
 
 #=============== NAT Gateway - EIP
@@ -331,11 +331,11 @@ locals {
     }
 
     zone_id    = local.multi_zone_id
-    vswitch_id = module.vpc.vswitch_ids[0]
+    vswitch_id = var.create_vpc ? module.vpc.vswitch_ids[0] : var.fallback_vswitch_id
 
     instance_charge_type = "PostPaid"
 
-    security_ip_list = [module.vpc.vpc_cidr_block]
+    security_ip_list = [var.create_vpc ? module.vpc.vpc_cidr_block : var.fallback_vpc_cidr_block]
 
     engine_version      = "4.2"
     db_instance_class   = "dds.mongo.mid"
@@ -354,11 +354,11 @@ locals {
     }
 
     zone_id    = local.multi_zone_id
-    vswitch_id = module.vpc.vswitch_ids[0]
+    vswitch_id = var.create_vpc ? module.vpc.vswitch_ids[0] : var.fallback_vswitch_id
 
     instance_charge_type = "PostPaid"
 
-    security_ip_list = [module.vpc.vpc_cidr_block]
+    security_ip_list = [var.create_vpc ? module.vpc.vpc_cidr_block : var.fallback_vpc_cidr_block]
 
     engine_version = "4.2"
 
@@ -427,14 +427,14 @@ locals {
       Type  = "cluster"
     }
 
-    vswitch_id = module.vpc.vswitch_ids[0]
+    vswitch_id = var.create_vpc ? module.vpc.vswitch_ids[0] : var.fallback_vswitch_id
 
     payment_type = "PostPaid"
 
     engine_version = "6.0"
     instance_class = "redis.master.micro.default"
 
-    security_ips = [module.vpc.vpc_cidr_block]
+    security_ip_list = [var.create_vpc ? module.vpc.vpc_cidr_block : var.fallback_vpc_cidr_block]
 
     account_name      = "turms"
     account_password  = "Turms_9510"
