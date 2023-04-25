@@ -1,3 +1,4 @@
+const fs = require('fs');
 const RAW_PROPERTIES = require('../../turms-server-common/src/test/resources/turms-properties-metadata-with-property-value.json');
 const ROOT_PROPERTY = 'turms';
 const HEADERS = [{
@@ -82,4 +83,4 @@ for (const row of rows) {
 
 const data = [title, separator, content].join('\n');
 
-console.info(data);
+fs.writeFileSync('./properties.md', data);
