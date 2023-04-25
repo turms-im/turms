@@ -276,7 +276,7 @@ public class RpcService implements ClusterService {
         }
         // use System.currentTimeMillis() instead of "RandomUtil.nextPositiveInt()" for better
         // performance
-        int index = (int) System.currentTimeMillis() % size;
+        int index = (int) (System.currentTimeMillis() % size);
         Member member = otherMembers.get(index);
         // fast path
         if (!member.getStatus()
