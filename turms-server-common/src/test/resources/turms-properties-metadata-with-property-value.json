@@ -159,6 +159,15 @@
         "type": "boolean",
         "value": true
       },
+      "priority": {
+        "deprecated": false,
+        "description": "The priority to be a leader",
+        "global": false,
+        "mutable": false,
+        "sensitive": false,
+        "type": "int",
+        "value": 0
+      },
       "zone": {
         "deprecated": false,
         "description": "e.g. \"us-east-1\" and \"ap-east-1\"",

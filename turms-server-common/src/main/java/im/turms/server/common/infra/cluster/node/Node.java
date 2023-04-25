@@ -138,6 +138,7 @@ public class Node {
                 nodeType,
                 nodeVersion,
                 nodeType == NodeType.SERVICE && nodeProperties.isLeaderEligible(),
+                nodeProperties.getPriority(),
                 nodeProperties.isActiveByDefault(),
                 healthCheckManager.isHealthy(),
                 connectionService.getServer()

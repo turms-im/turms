@@ -226,6 +226,7 @@ Turms配置分为四大类：
 |turms.cluster.node.active-by-default|||boolean|true||
 |turms.cluster.node.id|||string||The node ID must start with a letter or underscore, and matches zero or more of characters [a-zA-Z0-9_] after the beginning. e.g. "turms001", "turms_002"|
 |turms.cluster.node.leader-eligible|||boolean|true|Only works when it is a turms-service node|
+|turms.cluster.node.priority|||int|0|The priority to be a leader|
 |turms.cluster.node.zone|||string||e.g. "us-east-1" and "ap-east-1"|
 |turms.cluster.rpc.request-timeout-millis|||int|30000|The timeout for RPC requests in milliseconds|
 |turms.flight-recorder.closed-recording-retention-period|||int|0|A closed recording will be retained for the given period and will be removed from the file system after the retention period. 0 means no retention. -1 means unlimited retention.|

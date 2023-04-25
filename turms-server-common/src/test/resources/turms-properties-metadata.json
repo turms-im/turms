@@ -142,6 +142,14 @@
         "sensitive": false,
         "type": "boolean"
       },
+      "priority": {
+        "deprecated": false,
+        "description": "The priority to be a leader",
+        "global": false,
+        "mutable": false,
+        "sensitive": false,
+        "type": "int"
+      },
       "zone": {
         "deprecated": false,
         "description": "e.g. \"us-east-1\" and \"ap-east-1\"",

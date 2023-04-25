@@ -17,6 +17,8 @@
 
 package im.turms.server.common.infra.property.env.common.cluster;
 
+import jakarta.validation.constraints.Min;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -47,5 +49,9 @@ public class NodeProperties {
 
     @Description("Only works when it is a turms-service node")
     private boolean leaderEligible = true;
+
+    @Description("The priority to be a leader")
+    @Min(0)
+    private int priority;
 
 }
