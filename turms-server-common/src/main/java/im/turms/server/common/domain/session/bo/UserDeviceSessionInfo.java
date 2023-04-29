@@ -15,22 +15,26 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.storage.redis;
+package im.turms.server.common.domain.session.bo;
 
-import io.netty.buffer.ByteBuf;
-
-import im.turms.server.common.infra.netty.ByteBufUtil;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
 
 /**
  * @author James Chen
  */
-public final class RedisEntryId {
+@Data
+public class UserDeviceSessionInfo {
+    private String nodeId;
+    private Long heartbeatTimestampSeconds;
+    private boolean isActive;
 
-    private RedisEntryId() {
+    public UserDeviceSessionInfo(boolean isActive) {
+        this.isActive = isActive;
     }
 
-    public static final byte SESSIONS_STATUS = '$';
-    public static final ByteBuf LOCATION_BUFFER =
-            ByteBufUtil.getUnreleasableDirectBuffer(new byte[]{'l'});
-
+    @JsonIgnore
+    public boolean isInactive() {
+        return !isActive;
+    }
 }

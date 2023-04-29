@@ -30,6 +30,7 @@ import java.util.RandomAccess;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import jakarta.annotation.Nullable;
 
 import org.eclipse.collections.api.collection.ImmutableCollection;
@@ -383,6 +384,18 @@ public final class CollectionUtil {
     // endregion
 
     // region transform
+    public static <K, V> Map<V, List<K>> reverseAsListValues(
+            Map<K, V> map,
+            int expectedValuesPerKey) {
+        Map<V, List<K>> result = newMapWithExpectedSize(map.size());
+        for (Map.Entry<K, V> keyAndValue : map.entrySet()) {
+            result.computeIfAbsent(keyAndValue.getValue(),
+                    key -> new ArrayList<>(expectedValuesPerKey))
+                    .add(keyAndValue.getKey());
+        }
+        return result;
+    }
+
     public static <K, V> Map<V, Set<K>> reverseAsSetValues(
             Map<K, V> map,
             int expectedValuesPerKey) {
@@ -489,6 +502,17 @@ public final class CollectionUtil {
         return set;
     }
 
+    public static <K, V> void removeEntriesByValues(Map<K, V> map, Collection<V> values) {
+        Iterator<Map.Entry<K, V>> iterator = map.entrySet()
+                .iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<K, V> entry = iterator.next();
+            if (values.contains(entry.getValue())) {
+                iterator.remove();
+            }
+        }
+    }
+
     public static <K, V> Map<K, V> add(Map<K, V> map, K key, V value) {
         if (isImmutable(map)) {
             Map<K, V> newMap = newMapWithExpectedSize(map.size() + 1);
@@ -573,6 +597,18 @@ public final class CollectionUtil {
             return false;
         }
         return list.contains(value);
+    }
+
+    public static <T> boolean contains(@Nullable Collection<T> values, Predicate<T> predicate) {
+        if (values == null) {
+            return false;
+        }
+        for (T value : values) {
+            if (predicate.test(value)) {
+                return true;
+            }
+        }
+        return false;
     }
     // endregion
 

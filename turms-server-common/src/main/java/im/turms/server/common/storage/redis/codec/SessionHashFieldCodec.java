@@ -22,6 +22,9 @@ import java.nio.ByteBuffer;
 import io.netty.buffer.ByteBuf;
 
 import im.turms.server.common.access.client.dto.constant.DeviceType;
+import im.turms.server.common.domain.session.bo.UserStatusField;
+import im.turms.server.common.domain.session.bo.UserStatusFieldType;
+import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.netty.ByteBufUtil;
 import im.turms.server.common.storage.redis.RedisEntryId;
 
@@ -42,17 +45,25 @@ public class SessionHashFieldCodec implements TurmsRedisCodec<Object> {
 
     @Override
     public Object decode(ByteBuffer in) {
-        byte data = in.get();
-        if (data == RedisEntryId.SESSIONS_STATUS) {
-            return RedisEntryId.SESSIONS_STATUS;
+        int readableBytes = in.remaining();
+        byte b;
+        byte[] nodeIdBytes;
+        if (readableBytes == 1) {
+            b = in.get();
+            if (b == RedisEntryId.SESSIONS_STATUS) {
+                return UserStatusField.USER_STATUS;
+            }
+            DeviceType deviceType = DeviceType.forNumber(b);
+            if (deviceType != null) {
+                return UserStatusField.getDeviceTypeToNodeIdField(deviceType);
+            }
+            nodeIdBytes = new byte[]{b};
+        } else {
+            nodeIdBytes = new byte[readableBytes];
+            in.get(nodeIdBytes);
         }
-        DeviceType deviceType = DeviceType.forNumber(data);
-        if (deviceType == null) {
-            throw new IllegalArgumentException(
-                    "Could not find the device type for the number: "
-                            + data);
-        }
-        return deviceType;
+        String nodeId = StringUtil.newLatin1String(nodeIdBytes);
+        return new UserStatusField(UserStatusFieldType.NODE_ID_TO_HEARTBEAT_TIMESTAMP, nodeId);
     }
 
 }

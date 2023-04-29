@@ -25,6 +25,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
+import im.turms.server.common.infra.lang.MathUtil;
 import im.turms.server.common.infra.property.env.gateway.identityaccessmanagement.IdentityAccessManagementProperties;
 import im.turms.server.common.infra.property.metadata.Description;
 import im.turms.server.common.infra.property.metadata.GlobalProperty;
@@ -54,7 +55,8 @@ public class SessionProperties {
     @GlobalProperty
     @MutableProperty
     @Min(0)
-    private int switchProtocolAfterSeconds = closeIdleSessionAfterSeconds * 3;
+    private int switchProtocolAfterSeconds =
+            MathUtil.multiply(closeIdleSessionAfterSeconds, 3, Integer.MAX_VALUE);
 
     @Description("The minimum interval to refresh the heartbeat status by client requests "
             + "to avoid refreshing the heartbeat status frequently")

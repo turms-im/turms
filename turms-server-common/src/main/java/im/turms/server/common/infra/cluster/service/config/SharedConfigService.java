@@ -105,6 +105,10 @@ public class SharedConfigService implements ClusterService {
         return mongoClient.findOne(clazz);
     }
 
+    public <T> Mono<Boolean> exists(Class<T> clazz, Filter filter) {
+        return mongoClient.exists(clazz, filter);
+    }
+
     public <T> Mono<T> insert(T record) {
         return mongoClient.insert(record)
                 .thenReturn(record);

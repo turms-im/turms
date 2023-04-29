@@ -143,7 +143,7 @@ public class UserOnlineInfoController extends BaseController {
             } else {
                 statusMonos.add(userStatusService.getUserSessionsStatus(userId)
                         .flatMap(info -> {
-                            if (info.userStatus() == UserStatus.OFFLINE) {
+                            if (info.getUserStatus() == UserStatus.OFFLINE) {
                                 return userService.checkIfUserExists(userId, false)
                                         .flatMap(exists -> exists
                                                 ? Mono.just(info)

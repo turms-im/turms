@@ -19,6 +19,7 @@ package im.turms.service.domain.user.service.onlineuser;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +35,7 @@ import reactor.core.publisher.Mono;
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.constant.UserStatus;
 import im.turms.server.common.domain.session.bo.SessionCloseStatus;
+import im.turms.server.common.domain.session.bo.UserDeviceSessionInfo;
 import im.turms.server.common.domain.session.bo.UserSessionInfo;
 import im.turms.server.common.domain.session.bo.UserSessionsInfo;
 import im.turms.server.common.domain.session.bo.UserSessionsStatus;
@@ -76,10 +78,11 @@ public class SessionService {
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        return userStatusService.getNodeIdToDeviceTypeMapByUserId(userId)
-                .flatMap(nodeIdAndDeviceTypeMap -> {
+        return userStatusService.getUserSessionsStatus(userId)
+                .flatMap(sessionsStatus -> {
                     Set<Map.Entry<String, Set<DeviceType>>> entries =
-                            nodeIdAndDeviceTypeMap.entrySet();
+                            sessionsStatus.getActiveNodeIdToDeviceTypes()
+                                    .entrySet();
                     List<Mono<Boolean>> monos = new ArrayList<>(entries.size());
                     for (Map.Entry<String, Set<DeviceType>> entry : entries) {
                         SetUserOfflineRequest request =
@@ -119,10 +122,11 @@ public class SessionService {
                             .next(),
                     closeStatus);
         }
-        return userStatusService.getNodeIdToDeviceTypeMapByUserId(userId)
-                .flatMap(nodeIdAndDeviceTypeMap -> {
+        return userStatusService.getUserSessionsStatus(userId)
+                .flatMap(sessionsStatus -> {
                     Set<Map.Entry<String, Set<DeviceType>>> entries =
-                            nodeIdAndDeviceTypeMap.entrySet();
+                            sessionsStatus.getActiveNodeIdToDeviceTypes()
+                                    .entrySet();
                     List<Mono<Boolean>> monos = new ArrayList<>(entries.size());
                     for (Map.Entry<String, Set<DeviceType>> entry : entries) {
                         Set<DeviceType> types =
@@ -226,27 +230,31 @@ public class SessionService {
         }
         return Flux.merge(sessionStatusMonos)
                 .collect(CollectorUtil.toList(userCount))
-                .flatMap(statuses -> {
+                .flatMap(sessionsStatuses -> {
                     // Find which nodes the users are in
                     List<UserSessionsInfo> offlineUserSessions = null;
                     Map<String, Set<Long>> nodeIdToUserIds = new HashMap<>(16);
-                    for (UserSessionsStatus status : statuses) {
-                        Map<DeviceType, String> deviceTypeToNodeId = status.deviceTypeToNodeId();
-                        if (deviceTypeToNodeId.isEmpty()) {
+                    for (UserSessionsStatus sessionsStatus : sessionsStatuses) {
+                        Map<DeviceType, UserDeviceSessionInfo> deviceTypeToSessionInfos =
+                                sessionsStatus.getDeviceTypeToSessionInfo();
+                        if (deviceTypeToSessionInfos.isEmpty()) {
                             if (offlineUserSessions == null) {
                                 offlineUserSessions = new ArrayList<>(userCount);
                             }
                             offlineUserSessions.add(new UserSessionsInfo(
-                                    status.userId(),
+                                    sessionsStatus.getUserId(),
                                     UserStatus.OFFLINE,
-                                    null));
+                                    Collections.emptyList()));
                         } else {
-                            for (String nodeId : deviceTypeToNodeId.values()) {
-                                nodeIdToUserIds
-                                        .computeIfAbsent(nodeId,
-                                                key -> CollectionUtil
-                                                        .newSetWithExpectedSize(userCount))
-                                        .add(status.userId());
+                            for (UserDeviceSessionInfo sessionInfo : deviceTypeToSessionInfos
+                                    .values()) {
+                                if (sessionInfo.isActive()) {
+                                    nodeIdToUserIds
+                                            .computeIfAbsent(sessionInfo.getNodeId(),
+                                                    key -> CollectionUtil
+                                                            .newSetWithExpectedSize(userCount))
+                                            .add(sessionsStatus.getUserId());
+                                }
                             }
                         }
                     }

@@ -22,6 +22,7 @@ import java.nio.ByteBuffer;
 import io.netty.buffer.ByteBuf;
 
 import im.turms.server.common.access.client.dto.constant.UserStatus;
+import im.turms.server.common.infra.lang.LongUtil;
 import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.netty.ByteBufUtil;
 import im.turms.server.common.infra.property.env.common.cluster.NodeProperties;
@@ -74,7 +75,11 @@ public class SessionHashValueCodec implements TurmsRedisCodec<Object> {
         } else {
             byte[] bytes = new byte[remaining];
             in.get(bytes);
-            return StringUtil.newLatin1String(bytes);
+            String s = StringUtil.newLatin1String(bytes);
+            Long timestampSeconds = LongUtil.tryParse(s);
+            return timestampSeconds == null
+                    ? s
+                    : timestampSeconds;
         }
     }
 }

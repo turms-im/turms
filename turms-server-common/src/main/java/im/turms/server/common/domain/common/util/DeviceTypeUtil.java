@@ -39,7 +39,7 @@ public final class DeviceTypeUtil {
     public static final DeviceType[] ALL_AVAILABLE_DEVICE_TYPES;
     public static final Set<DeviceType> ALL_AVAILABLE_DEVICE_TYPES_SET;
 
-    private static final int DEVICE_TYPE_COUNT;
+    public static final int DEVICE_TYPE_COUNT;
 
     // No need to use volatile or CAS
     private static ByteObjectMap<Set<DeviceType>> byteToDeviceTypes =

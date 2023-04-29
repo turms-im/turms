@@ -44,6 +44,7 @@ public final class CommandArgsUtil {
 
     private static final int ARGUMENT_LENGTH_CACHE_SIZE = 64;
     private static final ByteBuf[] ARGUMENT_LENGTH_CACHE;
+    private static final ByteBuf EMPTY_BUFFER;
 
     static {
         BULK_STRINGS_FLAG = Unpooled.unreleasableBuffer(Unpooled.directBuffer(1)
@@ -58,6 +59,7 @@ public final class CommandArgsUtil {
             ARGUMENT_LENGTH_CACHE[i] =
                     Unpooled.unreleasableBuffer(CommandArgsUtil.writeArgLength(i));
         }
+        EMPTY_BUFFER = getArgLength(0);
     }
 
     private CommandArgsUtil() {
@@ -75,6 +77,8 @@ public final class CommandArgsUtil {
                 if (key instanceof TurmsWrappedByteBuf buf
                         && buf.unwrap() instanceof CustomKeyBuffer) {
                     out.addComponent(true, key);
+                } else if (key == null) {
+                    writeNullArg(out);
                 } else {
                     writeByteBuf(out, key);
                 }
@@ -120,6 +124,13 @@ public final class CommandArgsUtil {
 
     // Argument Encoding
 
+    public static void writeNullArg(CompositeByteBuf out) {
+        out.addComponent(true, BULK_STRINGS_FLAG)
+                .addComponent(true, EMPTY_BUFFER)
+                .addComponent(true, CRLF)
+                .addComponent(true, CRLF);
+    }
+
     public static void writeRawLongArg(ByteBuf out, long value) {
         out.writeByte(BULK_STRINGS_FLAG_BYTE)
                 .writeBytes(getArgLength(Long.BYTES).duplicate())
@@ -133,6 +144,14 @@ public final class CommandArgsUtil {
                 .writeBytes(getArgLength(Short.BYTES).duplicate())
                 .writeBytes(CRLF_BYTES)
                 .writeShort(value)
+                .writeBytes(CRLF_BYTES);
+    }
+
+    public static void writeRawBytesArg(ByteBuf out, byte[] value) {
+        out.writeByte(BULK_STRINGS_FLAG_BYTE)
+                .writeBytes(getArgLength(value.length).duplicate())
+                .writeBytes(CRLF_BYTES)
+                .writeBytes(value)
                 .writeBytes(CRLF_BYTES);
     }
 

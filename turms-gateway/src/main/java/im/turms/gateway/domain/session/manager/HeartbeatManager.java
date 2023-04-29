@@ -131,7 +131,18 @@ public class HeartbeatManager {
         Collection<UserSessionsManager> managers = userIdToSessionsManager.values();
         LongKeyGenerator userIds = collectOnlineUsersAndUpdateStatus(managers);
         userStatusService.updateOnlineUsersTtl(userIds, closeIdleSessionAfterSeconds)
-                .subscribe(null,
+                .subscribe(nonexistentUserIds -> {
+                    for (Long nonexistentUserId : nonexistentUserIds) {
+                        sessionService
+                                .closeLocalSession(nonexistentUserId,
+                                        SessionCloseStatus.DISCONNECTED_BY_OTHER_DEVICE)
+                                .subscribe(null,
+                                        t -> LOGGER.error(
+                                                "Caught an error while closing the user session with the user ID: "
+                                                        + nonexistentUserId,
+                                                t));
+                    }
+                },
                         t -> LOGGER.error(
                                 "Caught an error while refreshing online users' TTL in Redis",
                                 t));

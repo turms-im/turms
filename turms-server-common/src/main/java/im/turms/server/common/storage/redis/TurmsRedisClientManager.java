@@ -164,7 +164,11 @@ public class TurmsRedisClientManager {
      * @param keyGenerator The size of keys should not be larger than 1,048,576(1024*1024), or Redis
      *                     will throw
      */
-    public Mono<Void> eval(RedisScript script, short firstKey, LongKeyGenerator keyGenerator) {
+    public <T> Flux<T> eval(
+            RedisScript script,
+            short firstKey,
+            byte[] secondKey,
+            LongKeyGenerator keyGenerator) {
         int estimatedKeySize = Math.max(keyGenerator.estimatedSize(), 1);
         int clientSize = clients.size();
         long key;
@@ -172,13 +176,16 @@ public class TurmsRedisClientManager {
         if (clientSize == 1) {
             key = keyGenerator.next();
             if (key == -1) {
-                return Mono.empty();
+                return Flux.empty();
             }
             ByteBuf keysBuffer = PooledByteBufAllocator.DEFAULT
-                    .directBuffer(estimatedKeySize * (Long.BYTES + 16));
-            int keyCount = 1;
+                    // 8 for the size of argument metadata
+                    .directBuffer((Short.BYTES + 8) + (secondKey.length + 8)
+                            + estimatedKeySize * (Long.BYTES + 8));
+            int keyCount = 2;
             try {
                 CommandArgsUtil.writeRawShortArg(keysBuffer, firstKey);
+                CommandArgsUtil.writeRawBytesArg(keysBuffer, secondKey);
                 do {
                     keyCount++;
                     CommandArgsUtil.writeRawLongArg(keysBuffer, key);
@@ -186,11 +193,11 @@ public class TurmsRedisClientManager {
                 } while (key != -1);
             } catch (Exception e) {
                 ReferenceCountUtil.safeEnsureReleased(keysBuffer);
-                throw e;
+                return Flux.error(e);
             }
             TurmsRedisClient client = clients.get(0);
-            return client.eval(script, keyCount, new CustomKeyBuffer(keysBuffer))
-                    .then();
+            Mono<T> eval = client.eval(script, keyCount, new CustomKeyBuffer(keysBuffer));
+            return Flux.from(eval);
         }
         // slow path
         int keysPerClient = Math.max(estimatedKeySize / clientSize, 1);
@@ -200,10 +207,11 @@ public class TurmsRedisClientManager {
             BufferEntry entry = keyForClients.get(client);
             ByteBuf buffer;
             if (entry == null) {
-                buffer = PooledByteBufAllocator.DEFAULT
-                        .directBuffer(keysPerClient * (Long.BYTES + 16));
+                buffer = PooledByteBufAllocator.DEFAULT.directBuffer((Short.BYTES + 8)
+                        + (secondKey.length + 8) + keysPerClient * (Long.BYTES + 8));
                 CommandArgsUtil.writeRawShortArg(buffer, firstKey);
-                entry = new BufferEntry(buffer, 1);
+                CommandArgsUtil.writeRawBytesArg(buffer, secondKey);
+                entry = new BufferEntry(buffer, 2);
                 keyForClients.put(client, entry);
             } else {
                 buffer = entry.buffer;
@@ -213,16 +221,16 @@ public class TurmsRedisClientManager {
         }
         int targetClientSize = keyForClients.size();
         if (targetClientSize == 0) {
-            return Mono.empty();
+            return Flux.empty();
         }
-        List<Mono<?>> list = new ArrayList<>(targetClientSize);
+        List<Mono<T>> list = new ArrayList<>(targetClientSize);
         for (Map.Entry<TurmsRedisClient, BufferEntry> entry : keyForClients.entrySet()) {
             BufferEntry bufferEntry = entry.getValue();
-            Mono<?> result = entry.getKey()
+            Mono<T> result = entry.getKey()
                     .eval(script, bufferEntry.keyCount, new CustomKeyBuffer(bufferEntry.buffer));
             list.add(result);
         }
-        return Mono.whenDelayError(list);
+        return Flux.merge(list);
     }
 
     // Internal

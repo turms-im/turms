@@ -17,10 +17,12 @@
 
 package integration.im.turms.server.common.domain.session.service;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import io.lettuce.core.protocol.LongKeyGenerator;
 import org.junit.jupiter.api.MethodOrderer;
@@ -32,6 +34,7 @@ import reactor.test.StepVerifier;
 
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.constant.UserStatus;
+import im.turms.server.common.domain.session.bo.UserDeviceSessionInfo;
 import im.turms.server.common.domain.session.bo.UserSessionsStatus;
 import im.turms.server.common.domain.session.service.UserStatusService;
 import im.turms.server.common.infra.cluster.node.Node;
@@ -43,7 +46,6 @@ import im.turms.server.common.storage.redis.TurmsRedisClientManager;
 import im.turms.server.common.testing.BaseIntegrationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.entry;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -58,14 +60,14 @@ class UserStatusServiceIT extends BaseIntegrationTest {
     static final int ORDER_ADD_ONLINE_DEVICE_IF_ABSENT = 0;
     static final int ORDER_GET_NODE_ID_BY_USER_ID_AND_DEVICE_TYPE = 10;
     static final int ORDER_GET_DEVICE_TYPE_TO_NODE_ID_MAP_BY_USER_ID = 20;
-    static final int ORDER_GET_NODE_ID_TO_DEVICE_TYPE_MAP_BY_USER_ID = 30;
+    static final int ORDER_GET_USER_SESSIONS_STATUS_BY_USER_ID = 30;
     static final int ORDER_FETCH_DEVICE_DETAILS = 40;
     static final int ORDER_UPDATE_ONLINE_USER_STATUS = 50;
     static final int ORDER_UPDATE_ONLINE_USERS_TTL = 60;
     static final int ORDER_GET_USER_SESSIONS_STATUS = 70;
     static final int ORDER_REMOVE_STATUS_BY_USER_ID_AND_DEVICE_TYPES = 80;
 
-    static final int HEARTBEAT_TIMEOUT_MILLIS = 10_000;
+    static final int HEARTBEAT_TIMEOUT_SECONDS = 10_00;
 
     static final UserStatusService USER_STATUS_SERVICE;
 
@@ -111,7 +113,9 @@ class UserStatusServiceIT extends BaseIntegrationTest {
                 USER_1_DEVICE,
                 USER_1_DEVICE_DETAILS,
                 USER_INITIAL_STATUS,
-                HEARTBEAT_TIMEOUT_MILLIS);
+                HEARTBEAT_TIMEOUT_SECONDS,
+                null,
+                null);
         StepVerifier.create(addOnlineDevice)
                 .expectNext(true)
                 .expectComplete()
@@ -125,7 +129,9 @@ class UserStatusServiceIT extends BaseIntegrationTest {
                 USER_1_DIFF_DEVICE,
                 USER_1_DEVICE_DETAILS,
                 USER_INITIAL_STATUS,
-                HEARTBEAT_TIMEOUT_MILLIS);
+                HEARTBEAT_TIMEOUT_SECONDS,
+                null,
+                null);
         StepVerifier.create(addOnlineDevice)
                 .expectNext(true)
                 .expectComplete()
@@ -139,7 +145,9 @@ class UserStatusServiceIT extends BaseIntegrationTest {
                 USER_2_DEVICE,
                 USER_2_DEVICE_DETAILS,
                 USER_INITIAL_STATUS,
-                HEARTBEAT_TIMEOUT_MILLIS);
+                HEARTBEAT_TIMEOUT_SECONDS,
+                null,
+                null);
         StepVerifier.create(addOnlineDevice)
                 .expectNext(true)
                 .expectComplete()
@@ -153,7 +161,9 @@ class UserStatusServiceIT extends BaseIntegrationTest {
                 USER_1_DEVICE,
                 USER_1_DEVICE_DETAILS,
                 USER_INITIAL_STATUS,
-                HEARTBEAT_TIMEOUT_MILLIS);
+                HEARTBEAT_TIMEOUT_SECONDS,
+                null,
+                null);
         StepVerifier.create(addOnlineDevice)
                 .expectNext(false)
                 .expectComplete()
@@ -182,48 +192,76 @@ class UserStatusServiceIT extends BaseIntegrationTest {
                 .verify();
     }
 
+    private void validate(
+            UserSessionsStatus sessionsStatus,
+            Map<DeviceType, String> deviceTypeToNodeId) {
+        Map<DeviceType, UserDeviceSessionInfo> deviceTypeToSessionInfo =
+                sessionsStatus.getDeviceTypeToSessionInfo();
+        for (Map.Entry<DeviceType, String> entry : deviceTypeToNodeId.entrySet()) {
+            DeviceType deviceType = entry.getKey();
+            String expectedNodeId = entry.getValue();
+            UserDeviceSessionInfo sessionInfo = deviceTypeToSessionInfo.get(deviceType);
+
+            assertThat(sessionInfo.isActive()).isTrue();
+            assertThat(sessionInfo.getNodeId()).isEqualTo(expectedNodeId);
+        }
+    }
+
     @Order(ORDER_GET_DEVICE_TYPE_TO_NODE_ID_MAP_BY_USER_ID)
     @Test
-    void getDeviceTypeToNodeIdMapByUserId_shouldReturnDeviceAndNodeId_forExistingUser() {
-        Mono<Map<DeviceType, String>> deviceAndNodeId =
-                USER_STATUS_SERVICE.getDeviceTypeToNodeIdMapByUserId(USER_1_ID);
-        StepVerifier.create(deviceAndNodeId)
-                .assertNext(map -> assertThat(map).containsOnly(entry(USER_1_DEVICE, LOCAL_NODE_ID),
-                        entry(USER_1_DIFF_DEVICE, LOCAL_NODE_ID)))
+    void getUserSessionsStatus_shouldReturnDeviceAndNodeId_forExistingUser() {
+        Mono<UserSessionsStatus> sessionsStatusMono =
+                USER_STATUS_SERVICE.getUserSessionsStatus(USER_1_ID);
+        StepVerifier.create(sessionsStatusMono)
+                .assertNext(sessionsStatus -> validate(sessionsStatus,
+                        Map.of(USER_1_DEVICE, LOCAL_NODE_ID, USER_1_DIFF_DEVICE, LOCAL_NODE_ID)))
                 .expectComplete()
                 .verify();
     }
 
     @Order(ORDER_GET_DEVICE_TYPE_TO_NODE_ID_MAP_BY_USER_ID + 1)
     @Test
-    void getDeviceTypeToNodeIdMapByUserId_shouldReturnEmpty_forNonExistingUser() {
-        Mono<Map<DeviceType, String>> deviceAndNodeId =
-                USER_STATUS_SERVICE.getDeviceTypeToNodeIdMapByUserId(NON_EXISTING_USER_ID);
-        StepVerifier.create(deviceAndNodeId)
+    void getUserSessionsStatus_shouldReturnEmpty_forNonExistingUser() {
+        Mono<UserSessionsStatus> sessionsStatusMono =
+                USER_STATUS_SERVICE.getUserSessionsStatus(NON_EXISTING_USER_ID);
+        StepVerifier.create(sessionsStatusMono)
+                .expectNextMatches(
+                        sessionsStatus -> sessionsStatus.getUserStatus() == UserStatus.OFFLINE)
                 .expectComplete()
                 .verify();
     }
 
-    @Order(ORDER_GET_NODE_ID_TO_DEVICE_TYPE_MAP_BY_USER_ID)
+    @Order(ORDER_GET_USER_SESSIONS_STATUS_BY_USER_ID)
     @Test
-    void getNodeIdToDeviceTypeMapByUserId_shouldReturnNodeIdToDeviceTypeMap_forExistingUser() {
-        Mono<Map<String, Set<DeviceType>>> nodeIdAndDevices =
-                USER_STATUS_SERVICE.getNodeIdToDeviceTypeMapByUserId(USER_1_ID);
-        StepVerifier.create(nodeIdAndDevices)
-                .assertNext(map -> assertThat(map.values()
-                        .stream()
-                        .findFirst()
-                        .get()).containsExactlyInAnyOrder(USER_1_DEVICE, USER_1_DIFF_DEVICE))
+    void getUserSessionsStatus_shouldContainDevices_forExistingUser() {
+        Mono<UserSessionsStatus> sessionsStatusMono =
+                USER_STATUS_SERVICE.getUserSessionsStatus(USER_1_ID);
+        StepVerifier.create(sessionsStatusMono)
+                .assertNext(sessionsStatus -> {
+                    Set<DeviceType> deviceTypes = sessionsStatus.getDeviceTypeToSessionInfo()
+                            .entrySet()
+                            .stream()
+                            .filter(entry -> entry.getValue()
+                                    .isActive())
+                            .map(Map.Entry::getKey)
+                            .collect(Collectors.toSet());
+
+                    assertThat(deviceTypes).containsExactlyInAnyOrder(USER_1_DEVICE,
+                            USER_1_DIFF_DEVICE);
+                })
                 .expectComplete()
                 .verify();
     }
 
-    @Order(ORDER_GET_NODE_ID_TO_DEVICE_TYPE_MAP_BY_USER_ID + 1)
+    @Order(ORDER_GET_USER_SESSIONS_STATUS_BY_USER_ID + 1)
     @Test
-    void getNodeIdToDeviceTypeMapByUserId_shouldReturnEmpty_forNonExistingUser() {
-        Mono<Map<DeviceType, String>> deviceAndNodeId =
-                USER_STATUS_SERVICE.getDeviceTypeToNodeIdMapByUserId(NON_EXISTING_USER_ID);
-        StepVerifier.create(deviceAndNodeId)
+    void getUserSessionsStatus_shouldReturnOfflineStatus_forNonExistingUser() {
+        Mono<UserSessionsStatus> sessionsStatusMono =
+                USER_STATUS_SERVICE.getUserSessionsStatus(NON_EXISTING_USER_ID);
+        StepVerifier.create(sessionsStatusMono)
+                .expectNextMatches(sessionsStatus -> sessionsStatus.getActiveNodeIdToDeviceTypes()
+                        .isEmpty()
+                        && sessionsStatus.getUserStatus() == UserStatus.OFFLINE)
                 .expectComplete()
                 .verify();
     }
@@ -284,8 +322,35 @@ class UserStatusServiceIT extends BaseIntegrationTest {
                 return -1;
             }
         };
-        Mono<Void> updateMono = USER_STATUS_SERVICE.updateOnlineUsersTtl(users, 30);
+        Mono<Set<Long>> updateMono = USER_STATUS_SERVICE.updateOnlineUsersTtl(users, 30);
         StepVerifier.create(updateMono)
+                .expectNext(Set.of(NON_EXISTING_USER_ID))
+                .expectComplete()
+                .verify();
+    }
+
+    @Order(ORDER_UPDATE_ONLINE_USERS_TTL)
+    @Test
+    void updateOnlineUsersTtl_shouldReturnEmpty_forExistentUser() {
+        List<Long> userIds = List.of(USER_1_ID);
+        Iterator<Long> iterator = userIds.iterator();
+        LongKeyGenerator users = new LongKeyGenerator() {
+            @Override
+            public int estimatedSize() {
+                return userIds.size();
+            }
+
+            @Override
+            public long next() {
+                if (iterator.hasNext()) {
+                    return iterator.next();
+                }
+                return -1;
+            }
+        };
+        Mono<Set<Long>> updateMono = USER_STATUS_SERVICE.updateOnlineUsersTtl(users, 30);
+        StepVerifier.create(updateMono)
+                .expectNext(Collections.emptySet())
                 .expectComplete()
                 .verify();
     }
@@ -296,10 +361,12 @@ class UserStatusServiceIT extends BaseIntegrationTest {
         Mono<UserSessionsStatus> statusMono = USER_STATUS_SERVICE.getUserSessionsStatus(USER_1_ID);
         StepVerifier.create(statusMono)
                 .assertNext(status -> {
-                    assertThat(status.userStatus()).isEqualTo(USER_1_STATUS_AFTER_UPDATED);
-                    assertThat(status.deviceTypeToNodeId()).containsOnly(
-                            entry(USER_1_DEVICE, LOCAL_NODE_ID),
-                            entry(USER_1_DIFF_DEVICE, LOCAL_NODE_ID));
+                    assertThat(status.getUserStatus()).isEqualTo(USER_1_STATUS_AFTER_UPDATED);
+                    validate(status,
+                            Map.of(USER_1_DEVICE,
+                                    LOCAL_NODE_ID,
+                                    USER_1_DIFF_DEVICE,
+                                    LOCAL_NODE_ID));
                 })
                 .expectComplete()
                 .verify();
@@ -312,8 +379,8 @@ class UserStatusServiceIT extends BaseIntegrationTest {
                 USER_STATUS_SERVICE.getUserSessionsStatus(NON_EXISTING_USER_ID);
         StepVerifier.create(statusMono)
                 .assertNext(status -> {
-                    assertThat(status.userStatus()).isEqualTo(UserStatus.OFFLINE);
-                    assertThat(status.deviceTypeToNodeId()).isEmpty();
+                    assertThat(status.getUserStatus()).isEqualTo(UserStatus.OFFLINE);
+                    assertThat(status.getDeviceTypeToSessionInfo()).isEmpty();
                 })
                 .expectComplete()
                 .verify();

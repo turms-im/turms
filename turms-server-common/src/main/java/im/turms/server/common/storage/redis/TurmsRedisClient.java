@@ -253,9 +253,13 @@ public class TurmsRedisClient {
      */
     public <T> Mono<T> eval(RedisScript script, int keyLength, ByteBuf... keys) {
         return Mono.defer(() -> {
+            ByteBuf key;
             for (int i = 0, length = keys.length; i < length; i++) {
-                keys[i] = ByteBufUtil.ensureByteBufRefCnfCorrect(keys[i])
-                        .retain();
+                key = keys[i];
+                if (key != null) {
+                    keys[i] = ByteBufUtil.ensureByteBufRefCnfCorrect(key)
+                            .retain();
+                }
             }
             return (Mono<T>) commands
                     .createFlux(() -> commandBuilder

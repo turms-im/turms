@@ -56,6 +56,7 @@ import im.turms.server.common.domain.common.util.DeviceTypeUtil;
 import im.turms.server.common.domain.location.bo.Location;
 import im.turms.server.common.domain.session.bo.CloseReason;
 import im.turms.server.common.domain.session.bo.SessionCloseStatus;
+import im.turms.server.common.domain.session.bo.UserDeviceSessionInfo;
 import im.turms.server.common.domain.session.bo.UserSessionInfo;
 import im.turms.server.common.domain.session.bo.UserSessionsInfo;
 import im.turms.server.common.domain.session.bo.UserSessionsStatus;
@@ -123,7 +124,7 @@ public class SessionService implements ISessionService, SessionIdentityAccessMan
 
     private int closeIdleSessionAfterSeconds;
     private boolean notifyClientsOfSessionInfoAfterConnected;
-    private List<DeviceDetailsItemProperties> detailsItem;
+    private List<DeviceDetailsItemProperties> deviceDetailsItemPropertiesList;
     private String serverId;
 
     static {
@@ -201,7 +202,7 @@ public class SessionService implements ISessionService, SessionIdentityAccessMan
         notifyClientsOfSessionInfoAfterConnected =
                 sessionProperties.isNotifyClientsOfSessionInfoAfterConnected();
         DeviceDetailsProperties detailsProperties = sessionProperties.getDeviceDetails();
-        detailsItem = detailsProperties.getItems();
+        deviceDetailsItemPropertiesList = detailsProperties.getItems();
     }
 
     private void updateLocalProperties(TurmsProperties properties) {
@@ -460,6 +461,15 @@ public class SessionService implements ISessionService, SessionIdentityAccessMan
     /**
      * @return closed session count
      */
+    public Mono<Integer> closeLocalSession(Long userId, SessionCloseStatus closeStatus) {
+        return closeLocalSession(userId,
+                DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES_SET,
+                CloseReason.get(closeStatus));
+    }
+
+    /**
+     * @return closed session count
+     */
     @Override
     public Mono<Integer> closeLocalSession(Long userId, CloseReason closeReason) {
         return closeLocalSession(userId,
@@ -629,19 +639,38 @@ public class SessionService implements ISessionService, SessionIdentityAccessMan
         // Must fetch the latest status instead of the status in the cache
         return userStatusService.fetchUserSessionsStatus(userId)
                 .flatMap(sessionsStatus -> {
-                    // getSessionStatusFromSharedAndLocalInfo() is used to handle the following edge
-                    // cases to avoid bugs when the session info in local node is inconsistent with
-                    // the one
-                    // in Redis.
+                    // 1. Close local sessions if they are already registered on Redis by other
+                    // nodes to handle the following edge cases to avoid bugs when the session
+                    // info in the local node is inconsistent with the one on Redis.
 
                     // Cases: The session exists in the local node, but:
                     // 1. Though the local node works well, Redis crashes and restart,
-                    // so all session info was lost in Redis, but sessions still exist indeed.
-                    // 2. The local node lost the connection to Redis, which causes
-                    // the local node failed to refresh the heartbeat info of users in Redis.
-                    sessionsStatus = getSessionStatusFromSharedAndLocalInfo(userId, sessionsStatus);
-                    // Check the current sessions status
-                    UserStatus existingUserStatus = sessionsStatus.userStatus();
+                    // so all session info was lost on Redis, but sessions still exist indeed.
+                    // 2. The local node lost the connection to Redis, which will cause
+                    // the local node to fail to refresh the heartbeat info of users on Redis.
+                    UserSessionsManager manager = userIdToSessionsManager.get(userId);
+                    if (manager != null) {
+                        Map<DeviceType, UserDeviceSessionInfo> deviceTypeToSessionInfo =
+                                sessionsStatus.getDeviceTypeToSessionInfo();
+                        for (DeviceType type : manager.getLoggedInDeviceTypes()) {
+                            UserDeviceSessionInfo sessionInfo = deviceTypeToSessionInfo.get(type);
+                            if (sessionInfo != null
+                                    && sessionInfo.isActive()
+                                    && !node.getLocalMemberId()
+                                            .equals(sessionInfo.getNodeId())) {
+                                closeLocalSession(userId,
+                                        type,
+                                        SessionCloseStatus.DISCONNECTED_BY_OTHER_DEVICE)
+                                        .subscribe(null,
+                                                t -> LOGGER.error(
+                                                        "Caught an error while closing the user session with the user ID: "
+                                                                + userId,
+                                                        t));
+                            }
+                        }
+                    }
+                    // If the user is offline, register the current session.
+                    UserStatus existingUserStatus = sessionsStatus.getUserStatus();
                     if (existingUserStatus == UserStatus.OFFLINE) {
                         return addOnlineDeviceIfAbsent(version,
                                 permissions,
@@ -650,10 +679,12 @@ public class SessionService implements ISessionService, SessionIdentityAccessMan
                                 deviceType,
                                 deviceDetails,
                                 userStatus,
-                                location);
+                                location,
+                                null,
+                                null);
                     }
-                    boolean conflicts = sessionsStatus.getLoggedInDeviceTypes()
-                            .contains(deviceType);
+                    // If the user is already online, check if there is any device conflict.
+                    boolean conflicts = sessionsStatus.isDeviceLoggedIn(deviceType);
                     if (conflicts) {
                         UserSession session = getLocalUserSession(userId, deviceType);
                         boolean isClosedSessionOnLocal = session != null
@@ -701,6 +732,8 @@ public class SessionService implements ISessionService, SessionIdentityAccessMan
                                     ResponseStatusCode.SESSION_SIMULTANEOUS_CONFLICTS_DECLINE));
                         }
                     }
+                    UserDeviceSessionInfo sessionInfo = sessionsStatus.getDeviceTypeToSessionInfo()
+                            .get(deviceType);
                     return closeSessionsWithConflictedDeviceTypes(userId,
                             deviceType,
                             sessionsStatus).flatMap(
@@ -712,7 +745,9 @@ public class SessionService implements ISessionService, SessionIdentityAccessMan
                                                     deviceType,
                                                     deviceDetails,
                                                     userStatus,
-                                                    location)
+                                                    location,
+                                                    sessionInfo.getNodeId(),
+                                                    sessionInfo.getHeartbeatTimestampSeconds())
                                             : Mono.error(ResponseException.get(
                                                     ResponseStatusCode.SESSION_SIMULTANEOUS_CONFLICTS_DECLINE)));
                 });
@@ -759,7 +794,7 @@ public class SessionService implements ISessionService, SessionIdentityAccessMan
                 userSimultaneousLoginService.getConflictedDeviceTypes(deviceType);
         Map<String, Set<DeviceType>> nodeIdToDeviceTypes = null;
         for (DeviceType conflictedDeviceType : conflictedDeviceTypes) {
-            String nodeId = sessionsStatus.getNodeIdByDeviceType(conflictedDeviceType);
+            String nodeId = sessionsStatus.getNodeIdIfActive(conflictedDeviceType);
             if (nodeId != null) {
                 if (nodeIdToDeviceTypes == null) {
                     nodeIdToDeviceTypes = CollectionUtil.newMapWithExpectedSize(3);
@@ -772,10 +807,11 @@ public class SessionService implements ISessionService, SessionIdentityAccessMan
         if (nodeIdToDeviceTypes == null) {
             return PublisherPool.TRUE;
         }
-        Set<String> nodeIds = nodeIdToDeviceTypes.keySet();
-        List<Mono<Boolean>> requests = new ArrayList<>(nodeIds.size());
-        for (String nodeId : nodeIds) {
-            Set<DeviceType> deviceTypes = nodeIdToDeviceTypes.get(nodeId);
+        Set<Map.Entry<String, Set<DeviceType>>> entries = nodeIdToDeviceTypes.entrySet();
+        List<Mono<Boolean>> requests = new ArrayList<>(entries.size());
+        for (Map.Entry<String, Set<DeviceType>> entry : entries) {
+            String nodeId = entry.getKey();
+            Set<DeviceType> deviceTypes = entry.getValue();
             SetUserOfflineRequest request = new SetUserOfflineRequest(
                     userId,
                     deviceTypes,
@@ -823,15 +859,17 @@ public class SessionService implements ISessionService, SessionIdentityAccessMan
             @NotNull DeviceType deviceType,
             @Nullable Map<String, String> deviceDetails,
             @Nullable UserStatus userStatus,
-            @Nullable Location location) {
+            @Nullable Location location,
+            @Nullable String expectedNodeId,
+            @Nullable Long expectedDeviceTimestamp) {
         // TODO: Add extension point https://github.com/turms-im/turms/issues/1187
         Map<String, String> details;
-        List<DeviceDetailsItemProperties> localDetailsItem = detailsItem;
-        if (localDetailsItem.isEmpty() || CollectionUtil.isEmpty(deviceDetails)) {
+        List<DeviceDetailsItemProperties> itemPropertiesList = deviceDetailsItemPropertiesList;
+        if (itemPropertiesList.isEmpty() || CollectionUtil.isEmpty(deviceDetails)) {
             details = null;
         } else {
-            details = CollectionUtil.newMapWithExpectedSize(localDetailsItem.size());
-            for (DeviceDetailsItemProperties itemProperties : localDetailsItem) {
+            details = CollectionUtil.newMapWithExpectedSize(itemPropertiesList.size());
+            for (DeviceDetailsItemProperties itemProperties : itemPropertiesList) {
                 String value = deviceDetails.get(itemProperties.getFieldName());
                 if (value != null) {
                     details.put(itemProperties.getRedisFieldName(), value);
@@ -844,7 +882,9 @@ public class SessionService implements ISessionService, SessionIdentityAccessMan
                         deviceType,
                         details,
                         userStatus,
-                        closeIdleSessionAfterSeconds)
+                        closeIdleSessionAfterSeconds,
+                        expectedNodeId,
+                        expectedDeviceTimestamp)
                 .flatMap(wasSuccessful -> {
                     if (!wasSuccessful) {
                         return Mono.error(ResponseException
@@ -914,32 +954,6 @@ public class SessionService implements ISessionService, SessionIdentityAccessMan
                         GO_OFFLINE_METHOD,
                         handler -> handler.goOffline(manager, closeReason))
                 .subscribe(null, LOGGER::error);
-    }
-
-    private UserSessionsStatus getSessionStatusFromSharedAndLocalInfo(
-            @NotNull Long userId,
-            @NotNull UserSessionsStatus sharedSessionsStatus) {
-        UserSessionsManager manager = userIdToSessionsManager.get(userId);
-        if (manager == null) {
-            return sharedSessionsStatus;
-        }
-        Map<DeviceType, String> sharedOnlineDeviceTypeToNodeId =
-                sharedSessionsStatus.deviceTypeToNodeId();
-        for (DeviceType deviceType : manager.getDeviceTypeToSession()
-                .keySet()) {
-            // Don't just merge two maps for convenience to avoiding creating a new map
-            if (!sharedOnlineDeviceTypeToNodeId.containsKey(deviceType)) {
-                Map<DeviceType, String> onlineDeviceTypeToNodeId =
-                        CollectionUtil.merge(sharedOnlineDeviceTypeToNodeId,
-                                CollectionUtil.transformValues(manager.getDeviceTypeToSession(),
-                                        Node.getNodeId()));
-                return new UserSessionsStatus(
-                        userId,
-                        manager.getUserStatus(),
-                        onlineDeviceTypeToNodeId);
-            }
-        }
-        return sharedSessionsStatus;
     }
 
     // Listener

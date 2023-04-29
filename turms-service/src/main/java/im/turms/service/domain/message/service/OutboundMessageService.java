@@ -35,6 +35,7 @@ import reactor.core.publisher.Mono;
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.domain.notification.rpc.SendNotificationRequest;
+import im.turms.server.common.domain.session.bo.UserDeviceSessionInfo;
 import im.turms.server.common.domain.session.bo.UserSessionId;
 import im.turms.server.common.domain.session.service.UserStatusService;
 import im.turms.server.common.infra.cluster.node.Node;
@@ -149,15 +150,21 @@ public class OutboundMessageService {
             @NotNull ByteBuf notificationData,
             @NotNull Long recipientId,
             @NotNull DeviceType excludedDeviceType) {
-        return userStatusService.getDeviceTypeToNodeIdMapByUserId(recipientId)
+        return userStatusService.getUserSessionsStatus(recipientId)
                 .doOnError(t -> notificationData.release())
-                .flatMap(deviceTypeAndNodeIdMap -> {
+                .flatMap(sessionsStatus -> {
+                    Map<DeviceType, UserDeviceSessionInfo> deviceTypeToSessionInfo =
+                            sessionsStatus.getDeviceTypeToSessionInfo();
                     Set<String> nodeIds =
-                            CollectionUtil.newSetWithExpectedSize(deviceTypeAndNodeIdMap.size());
-                    for (Map.Entry<DeviceType, String> entry : deviceTypeAndNodeIdMap.entrySet()) {
+                            CollectionUtil.newSetWithExpectedSize(deviceTypeToSessionInfo.size());
+                    for (Map.Entry<DeviceType, UserDeviceSessionInfo> entry : deviceTypeToSessionInfo
+                            .entrySet()) {
                         DeviceType deviceType = entry.getKey();
                         if (deviceType != excludedDeviceType) {
-                            nodeIds.add(entry.getValue());
+                            UserDeviceSessionInfo sessionInfo = entry.getValue();
+                            if (sessionInfo.isActive()) {
+                                nodeIds.add(sessionInfo.getNodeId());
+                            }
                         }
                     }
                     if (nodeIds.isEmpty()) {
@@ -197,8 +204,10 @@ public class OutboundMessageService {
         }
         List<Mono<RecipientAndNodeIds>> monos = new ArrayList<>(recipientIdCount);
         for (Long recipientId : recipientIds) {
-            monos.add(userStatusService.getDeviceTypeToNodeIdMapByUserId(recipientId)
-                    .map(map -> new RecipientAndNodeIds(recipientId, map.values())));
+            monos.add(userStatusService.getUserSessionsStatus(recipientId)
+                    .map(sessionsStatus -> new RecipientAndNodeIds(
+                            recipientId,
+                            sessionsStatus.getActiveNodeIds())));
         }
         return Flux.merge(monos)
                 .doOnError(t -> messageData.release())
@@ -242,16 +251,16 @@ public class OutboundMessageService {
             @NotNull ByteBuf notificationData,
             @NotNull Long recipientId,
             @NotNull Set<UserSessionId> excludedUserSessionIds) {
-        return userStatusService.getDeviceTypeToNodeIdMapByUserId(recipientId)
+        return userStatusService.getUserSessionsStatus(recipientId)
                 .doOnError(t -> notificationData.release())
-                .flatMap(deviceTypeAndNodeIdMap -> {
-                    Set<String> nodeIds = CollectionUtil.newSet(deviceTypeAndNodeIdMap.values());
-                    if (nodeIds.isEmpty()) {
+                .flatMap(sessionsStatus -> {
+                    Set<String> activeNodeIds = sessionsStatus.getActiveNodeIds();
+                    if (activeNodeIds.isEmpty()) {
                         notificationData.release();
                         return PublisherPool.<Long>emptySet();
                     }
                     return forwardClientMessageToNodes(notificationData,
-                            nodeIds,
+                            activeNodeIds,
                             recipientId,
                             excludedUserSessionIds,
                             null);

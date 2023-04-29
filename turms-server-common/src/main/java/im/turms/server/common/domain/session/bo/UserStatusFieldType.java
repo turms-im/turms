@@ -15,22 +15,13 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.storage.redis;
-
-import io.netty.buffer.ByteBuf;
-
-import im.turms.server.common.infra.netty.ByteBufUtil;
+package im.turms.server.common.domain.session.bo;
 
 /**
  * @author James Chen
  */
-public final class RedisEntryId {
-
-    private RedisEntryId() {
-    }
-
-    public static final byte SESSIONS_STATUS = '$';
-    public static final ByteBuf LOCATION_BUFFER =
-            ByteBufUtil.getUnreleasableDirectBuffer(new byte[]{'l'});
-
+public enum UserStatusFieldType {
+    USER_STATUS,
+    DEVICE_TYPE_TO_NODE_ID,
+    NODE_ID_TO_HEARTBEAT_TIMESTAMP
 }

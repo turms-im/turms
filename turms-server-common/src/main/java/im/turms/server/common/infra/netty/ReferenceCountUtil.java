@@ -36,13 +36,19 @@ public final class ReferenceCountUtil {
 
     public static void ensureReleased(ReferenceCounted[] values) {
         for (ReferenceCounted value : values) {
-            ensureReleased(value);
+            if (value != null) {
+                ensureReleased(value);
+            }
         }
     }
 
     public static void ensureReleased(ReferenceCounted[] values, int start, int end) {
+        ReferenceCounted value;
         for (int i = start; i < end; i++) {
-            ensureReleased(values[i]);
+            value = values[i];
+            if (value != null) {
+                ensureReleased(value);
+            }
         }
     }
 

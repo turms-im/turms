@@ -288,11 +288,20 @@ public class DiscoveryService implements ClusterService {
     }
 
     private Flux<Member> queryMembers() {
+        String clusterId = localNodeStatusManager.getLocalMember()
+                .getClusterId();
         Filter filter = Filter.newBuilder(1)
-                .eq(Member.ID_CLUSTER_ID,
-                        localNodeStatusManager.getLocalMember()
-                                .getClusterId());
+                .eq(Member.ID_CLUSTER_ID, clusterId);
         return sharedConfigService.find(Member.class, filter);
+    }
+
+    public Mono<Boolean> checkIfMemberExists(String nodeId) {
+        String clusterId = localNodeStatusManager.getLocalMember()
+                .getClusterId();
+        Filter filter = Filter.newBuilder(2)
+                .eq(Member.ID_CLUSTER_ID, clusterId)
+                .eq(Member.ID_NODE_ID, nodeId);
+        return sharedConfigService.exists(Member.class, filter);
     }
 
     private void listenLeadershipChangeEvent() {
