@@ -14,9 +14,7 @@ local existing_node_id = values[1]
 local existing_status = values[2]
 local now
 if existing_node_id then
-    if (existing_node_id == node_id)
-            or (not expected_existing_node_id or expected_existing_node_id == '')
-            or (existing_node_id ~= expected_existing_node_id) then
+    if existing_node_id == node_id then
         return false
     end
     local existing_device_timestamp = tonumber(values[3])
@@ -25,7 +23,13 @@ if existing_node_id then
     end
     now = tonumber(redis.call('TIME')[1])
     local diff = now - existing_device_timestamp
-    if diff <= DEVICE_STATUS_TTL then
+    if (diff <= DEVICE_STATUS_TTL)
+            and (not expected_existing_node_id
+            or expected_existing_node_id == ''
+            or not expected_device_timestamp
+            or expected_device_timestamp == ''
+            or expected_existing_node_id ~= existing_node_id
+            or expected_device_timestamp ~= existing_device_timestamp) then
         return false
     end
 end
