@@ -17,8 +17,10 @@
 
 package im.turms.server.common.infra.collection;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -127,13 +129,13 @@ public final class FastEnumMap<K extends Enum<K>, V> implements Map<K, V> {
         if (size == 0) {
             return Collections.emptySet();
         }
-        Set<V> set = CollectionUtil.newSetWithExpectedSize(size);
+        List<V> list = new ArrayList<>(size);
         for (V element : values) {
             if (element != null) {
-                set.add(element);
+                list.add(element);
             }
         }
-        return set;
+        return list;
     }
 
     @Override
