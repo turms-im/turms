@@ -1,16 +1,21 @@
-local field_count = struct.unpack('>b', KEYS[1])
+local keys = KEYS
+local redis_call = redis.call
+local struct_unpack = struct.unpack
+local unpack = unpack
+
+local field_count = struct_unpack('>b', keys[1])
 if field_count <= 0 then
     return {}
 end
 local fields = {}
 for i = 1, field_count do
-    fields[i] = KEYS[i + 1]
+    fields[i] = keys[i + 1]
 end
 local details = {}
 local detail_index = 0
-for i = 2 + field_count, #KEYS do
-    local user_id = KEYS[i]
-    local values = redis.call('HMGET', user_id .. ':d', unpack(fields))
+for i = 2 + field_count, #keys do
+    local user_id = keys[i]
+    local values = redis_call('HMGET', user_id .. ':d', unpack(fields))
     local value_count = 0
     for j = 1, field_count do
         local value = values[j]
