@@ -17,6 +17,8 @@
 
 package integration.im.turms.server.common.domain.session.service;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -25,6 +27,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import io.lettuce.core.protocol.LongKeyGenerator;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -38,6 +42,7 @@ import im.turms.server.common.domain.session.bo.UserDeviceSessionInfo;
 import im.turms.server.common.domain.session.bo.UserSessionsStatus;
 import im.turms.server.common.domain.session.service.UserStatusService;
 import im.turms.server.common.infra.cluster.node.Node;
+import im.turms.server.common.infra.cluster.service.discovery.DiscoveryService;
 import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.common.UserStatusProperties;
@@ -46,6 +51,7 @@ import im.turms.server.common.storage.redis.TurmsRedisClientManager;
 import im.turms.server.common.testing.BaseIntegrationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -72,6 +78,7 @@ class UserStatusServiceIT extends BaseIntegrationTest {
     static final UserStatusService USER_STATUS_SERVICE;
 
     static final String LOCAL_NODE_ID = "turms-east01";
+    static final String NEW_LOCAL_NODE_ID = "turms-west01";
     static final UserStatus USER_INITIAL_STATUS = UserStatus.DO_NOT_DISTURB;
 
     static final long USER_1_ID = 1;
@@ -91,6 +98,9 @@ class UserStatusServiceIT extends BaseIntegrationTest {
     static {
         Node node = mock(Node.class);
         when(node.getLocalMemberId()).thenReturn(LOCAL_NODE_ID);
+        DiscoveryService discoveryService = mock(DiscoveryService.class);
+        when(discoveryService.checkIfMemberExists(anyString())).thenReturn(Mono.just(true));
+        when(node.getDiscoveryService()).thenReturn(discoveryService);
 
         TurmsPropertiesManager propertiesManager = mock(TurmsPropertiesManager.class);
         when(propertiesManager.getLocalProperties()).thenReturn(new TurmsProperties().toBuilder()
@@ -170,11 +180,95 @@ class UserStatusServiceIT extends BaseIntegrationTest {
                 .verify(DEFAULT_IO_TIMEOUT);
     }
 
+    @Order(ORDER_ADD_ONLINE_DEVICE_IF_ABSENT + 4)
+    @Test
+    void addOnlineDeviceIfAbsent_shouldSucceed_ifPresentButMatchedExpectedInfoProvided() {
+        Mono<Boolean> addOnlineDeviceIfAbsent =
+                USER_STATUS_SERVICE.fetchUserSessionsStatus(USER_1_ID)
+                        .flatMap(sessionsStatus -> {
+                            UserDeviceSessionInfo sessionInfo =
+                                    sessionsStatus.getDeviceTypeToSessionInfo()
+                                            .values()
+                                            .iterator()
+                                            .next();
+                            String nodeId = sessionInfo.getNodeId();
+                            Long heartbeatTimestampSeconds =
+                                    sessionInfo.getHeartbeatTimestampSeconds();
+                            byte[] newLocalNodeIdBytes =
+                                    NEW_LOCAL_NODE_ID.getBytes(StandardCharsets.US_ASCII);
+                            ByteBuf newLocalNodeIdBuffer = Unpooled.directBuffer()
+                                    .writeBytes(newLocalNodeIdBytes);
+                            return USER_STATUS_SERVICE.addOnlineDeviceIfAbsent(newLocalNodeIdBuffer,
+                                    USER_1_ID,
+                                    USER_1_DEVICE,
+                                    USER_1_DEVICE_DETAILS,
+                                    USER_INITIAL_STATUS,
+                                    HEARTBEAT_TIMEOUT_SECONDS,
+                                    nodeId,
+                                    heartbeatTimestampSeconds);
+                        });
+        StepVerifier.create(addOnlineDeviceIfAbsent)
+                .expectNext(true)
+                .expectComplete()
+                .verify(DEFAULT_IO_TIMEOUT);
+
+        Mono<UserSessionsStatus> userSessionsStatusMono =
+                USER_STATUS_SERVICE.fetchUserSessionsStatus(USER_1_ID);
+        StepVerifier.create(userSessionsStatusMono)
+                .expectNextMatches(sessionsStatus -> {
+                    Map<DeviceType, UserDeviceSessionInfo> deviceTypeToSessionInfo =
+                            sessionsStatus.getDeviceTypeToSessionInfo();
+                    Collection<UserDeviceSessionInfo> sessionInfos =
+                            deviceTypeToSessionInfo.values();
+
+                    assertThat(deviceTypeToSessionInfo.keySet())
+                            .containsExactlyInAnyOrder(USER_1_DEVICE, USER_1_DIFF_DEVICE);
+                    assertThat(sessionInfos).hasSize(2);
+                    assertThat(sessionInfos.stream()
+                            .filter(UserDeviceSessionInfo::isActive)
+                            .count()).isEqualTo(2);
+                    assertThat(sessionInfos.stream()
+                            .map(UserDeviceSessionInfo::getNodeId)
+                            .toList()).containsExactlyInAnyOrder(LOCAL_NODE_ID, NEW_LOCAL_NODE_ID);
+                    return true;
+                })
+                .expectComplete()
+                .verify(DEFAULT_IO_TIMEOUT);
+    }
+
+    @Order(ORDER_ADD_ONLINE_DEVICE_IF_ABSENT + 4)
+    @Test
+    void addOnlineDeviceIfAbsent_shouldFail_ifPresentAndMismatchedExpectedInfoProvided() {
+        byte[] newLocalNodeIdBytes = NEW_LOCAL_NODE_ID.getBytes(StandardCharsets.US_ASCII);
+        ByteBuf newLocalNodeIdBuffer = Unpooled.directBuffer()
+                .writeBytes(newLocalNodeIdBytes);
+        Mono<Boolean> addOnlineDeviceIfAbsent =
+                USER_STATUS_SERVICE.addOnlineDeviceIfAbsent(newLocalNodeIdBuffer,
+                        USER_1_ID,
+                        USER_1_DEVICE,
+                        USER_1_DEVICE_DETAILS,
+                        USER_INITIAL_STATUS,
+                        HEARTBEAT_TIMEOUT_SECONDS,
+                        "a-mismatched-node-id",
+                        123456789L);
+        StepVerifier.create(addOnlineDeviceIfAbsent)
+                .expectNext(false)
+                .expectComplete()
+                .verify(DEFAULT_IO_TIMEOUT);
+    }
+
     @Order(ORDER_GET_NODE_ID_BY_USER_ID_AND_DEVICE_TYPE)
     @Test
     void getNodeIdByUserIdAndDeviceType_shouldReturnNodeId_forExistingUser() {
         Mono<String> nodeIdMono =
                 USER_STATUS_SERVICE.getNodeIdByUserIdAndDeviceType(USER_1_ID, USER_1_DEVICE);
+        StepVerifier.create(nodeIdMono)
+                .expectNext(NEW_LOCAL_NODE_ID)
+                .expectComplete()
+                .verify();
+
+        nodeIdMono =
+                USER_STATUS_SERVICE.getNodeIdByUserIdAndDeviceType(USER_1_ID, USER_1_DIFF_DEVICE);
         StepVerifier.create(nodeIdMono)
                 .expectNext(LOCAL_NODE_ID)
                 .expectComplete()
@@ -214,7 +308,10 @@ class UserStatusServiceIT extends BaseIntegrationTest {
                 USER_STATUS_SERVICE.getUserSessionsStatus(USER_1_ID);
         StepVerifier.create(sessionsStatusMono)
                 .assertNext(sessionsStatus -> validate(sessionsStatus,
-                        Map.of(USER_1_DEVICE, LOCAL_NODE_ID, USER_1_DIFF_DEVICE, LOCAL_NODE_ID)))
+                        Map.of(USER_1_DEVICE,
+                                NEW_LOCAL_NODE_ID,
+                                USER_1_DIFF_DEVICE,
+                                LOCAL_NODE_ID)))
                 .expectComplete()
                 .verify();
     }
@@ -259,7 +356,7 @@ class UserStatusServiceIT extends BaseIntegrationTest {
         Mono<UserSessionsStatus> sessionsStatusMono =
                 USER_STATUS_SERVICE.getUserSessionsStatus(NON_EXISTING_USER_ID);
         StepVerifier.create(sessionsStatusMono)
-                .expectNextMatches(sessionsStatus -> sessionsStatus.getActiveNodeIdToDeviceTypes()
+                .expectNextMatches(sessionsStatus -> sessionsStatus.getActiveNodeIds()
                         .isEmpty()
                         && sessionsStatus.getUserStatus() == UserStatus.OFFLINE)
                 .expectComplete()
@@ -364,7 +461,7 @@ class UserStatusServiceIT extends BaseIntegrationTest {
                     assertThat(status.getUserStatus()).isEqualTo(USER_1_STATUS_AFTER_UPDATED);
                     validate(status,
                             Map.of(USER_1_DEVICE,
-                                    LOCAL_NODE_ID,
+                                    NEW_LOCAL_NODE_ID,
                                     USER_1_DIFF_DEVICE,
                                     LOCAL_NODE_ID));
                 })

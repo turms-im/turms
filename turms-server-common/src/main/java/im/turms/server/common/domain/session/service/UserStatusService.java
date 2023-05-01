@@ -62,6 +62,7 @@ import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.gateway.session.SessionProperties;
 import im.turms.server.common.infra.reactor.HashedWheelScheduler;
 import im.turms.server.common.infra.reactor.PublisherPool;
+import im.turms.server.common.infra.test.VisibleForTesting;
 import im.turms.server.common.infra.validation.ValidDeviceType;
 import im.turms.server.common.infra.validation.Validator;
 import im.turms.server.common.storage.redis.TurmsRedisClientManager;
@@ -373,7 +374,9 @@ public class UserStatusService {
                         onlineDeviceTypeToSessionInfo.values();
                 int infoCount = sessionInfos.size();
                 if (infoCount == 1
-                        && localNodeId.equals(sessionInfos.iterator().next().getNodeId())) {
+                        && localNodeId.equals(sessionInfos.iterator()
+                                .next()
+                                .getNodeId())) {
                     if (userStatus == null || userStatus == UserStatus.OFFLINE) {
                         userStatus = UserStatus.AVAILABLE;
                     }
@@ -582,10 +585,30 @@ public class UserStatusService {
         return mono.timeout(operationTimeout, HashedWheelScheduler.getDaemon());
     }
 
+    public Mono<Boolean> addOnlineDeviceIfAbsent(
+            @NotNull Long userId,
+            @NotNull @ValidDeviceType DeviceType deviceType,
+            @Nullable Map<String, String> deviceDetails,
+            @Nullable UserStatus userStatus,
+            int heartbeatSeconds,
+            @Nullable String expectedNodeId,
+            @Nullable Long expectedDeviceTimestampSeconds) {
+        return addOnlineDeviceIfAbsent(localNodeIdBuffer.duplicate(),
+                userId,
+                deviceType,
+                deviceDetails,
+                userStatus,
+                heartbeatSeconds,
+                expectedNodeId,
+                expectedDeviceTimestampSeconds);
+    }
+
     /**
      * @return true if the userId:deviceType was absent (offline)
      */
+    @VisibleForTesting
     public Mono<Boolean> addOnlineDeviceIfAbsent(
+            @NotNull ByteBuf localNodeId,
             @NotNull Long userId,
             @NotNull @ValidDeviceType DeviceType deviceType,
             @Nullable Map<String, String> deviceDetails,
@@ -623,7 +646,7 @@ public class UserStatusService {
         try {
             args[index++] = ByteBufUtil.writeLong(userId);
             args[index++] = ByteBufUtil.writeByte((byte) deviceType.getNumber());
-            args[index++] = localNodeIdBuffer.duplicate();
+            args[index++] = localNodeId;
             args[index++] = ByteBufUtil.writeShort((short) heartbeatSeconds);
             if (hasUserStatus) {
                 args[index++] = ByteBufUtil.writeByte((byte) userStatus.getNumber());
