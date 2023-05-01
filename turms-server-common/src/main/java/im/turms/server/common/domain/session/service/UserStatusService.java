@@ -632,7 +632,8 @@ public class UserStatusService {
         int deviceDetailCount = CollectionUtil.getSize(deviceDetails);
         boolean hasDeviceDetails = deviceDetailCount > 0;
         boolean hasUserStatus = userStatus != null;
-        boolean hasExpectedValues = expectedNodeId != null;
+        boolean hasExpectedValues =
+                expectedNodeId != null && expectedDeviceTimestampSeconds != null;
         int count = 4;
         if (hasDeviceDetails) {
             count += 3 + 2 * deviceDetailCount;
@@ -655,12 +656,7 @@ public class UserStatusService {
             }
             if (hasExpectedValues) {
                 args[index++] = ByteBufUtil.writeString(expectedNodeId);
-                // TODO: Remove this lines when we don't need backwards compatibility
-                if (expectedDeviceTimestampSeconds != null) {
-                    args[index++] = ByteBufUtil.writeLong(expectedDeviceTimestampSeconds);
-                } else {
-                    index++;
-                }
+                args[index++] = ByteBufUtil.writeLong(expectedDeviceTimestampSeconds);
             } else {
                 index += 2;
             }

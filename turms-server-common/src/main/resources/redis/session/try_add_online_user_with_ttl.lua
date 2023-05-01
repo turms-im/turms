@@ -15,7 +15,7 @@ if expected_device_timestamp and expected_device_timestamp ~= '' then
     expected_device_timestamp = struct_unpack('>l', expected_device_timestamp)
 end
 
-local values = redis_call('HMGET', user_id, device, '$', node_id)
+local values = redis_call('HMGET', user_id, device, '$')
 local existing_node_id = values[1]
 local existing_status = values[2]
 local now
@@ -23,7 +23,7 @@ if existing_node_id then
     if existing_node_id == node_id then
         return false
     end
-    local existing_device_timestamp = tonumber(values[3])
+    local existing_device_timestamp = tonumber(redis_call('HGET', user_id, existing_node_id))
     if not existing_device_timestamp then
         return false
     end
@@ -37,6 +37,18 @@ if existing_node_id then
             or expected_existing_node_id ~= existing_node_id
             or expected_device_timestamp ~= existing_device_timestamp) then
         return false
+    end
+    local has_related_device = false
+    local values = redis_call('HVALS', user_id)
+    local value_count = #values
+    for i = 1, value_count do
+        if values[i] == existing_node_id then
+            has_related_device = true
+            break
+        end
+    end
+    if not has_related_device then
+        redis_call('HDEL', user_id, existing_node_id)
     end
 end
 
