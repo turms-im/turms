@@ -38,18 +38,6 @@ if existing_node_id then
             or expected_device_timestamp ~= existing_device_timestamp) then
         return false
     end
-    local has_related_device = false
-    local values = redis_call('HVALS', user_id)
-    local value_count = #values
-    for i = 1, value_count do
-        if values[i] == existing_node_id then
-            has_related_device = true
-            break
-        end
-    end
-    if not has_related_device then
-        redis_call('HDEL', user_id, existing_node_id)
-    end
 end
 
 if now == nil then
@@ -72,6 +60,21 @@ else
             node_id, now)
 end
 redis_call('EXPIRE', user_id, ttl)
+
+if existing_node_id then
+    local has_related_device = false
+    local values = redis_call('HVALS', user_id)
+    local value_count = #values
+    for i = 1, value_count do
+        if values[i] == existing_node_id then
+            has_related_device = true
+            break
+        end
+    end
+    if not has_related_device then
+        redis_call('HDEL', user_id, existing_node_id)
+    end
+end
 
 local count = #keys
 if count - 7 > 0 then
