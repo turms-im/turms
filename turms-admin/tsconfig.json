@@ -13,8 +13,6 @@
     // emit
     "declaration": true,
     "declarationMap": true,
-    // Enforce using `import type` instead of `import` for types
-    "importsNotUsedAsValues": "error",
     "removeComments": true,
     "sourceMap": true,
     // interop constraints
