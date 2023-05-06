@@ -1,10 +1,10 @@
-import unfetch from 'unfetch';
 import { StorageResourceType } from '../model/proto/constant/storage_resource_type';
 import Response from '../model/response';
 import ResponseError from '../error/response-error';
 import ResponseStatusCode from '../model/response-status-code';
 import TurmsClient from '../turms-client';
 import StorageResource from '../model/storage-resource';
+import httpRequest from '../transport/http-client';
 import NotificationUtil from '../util/notification-util';
 import StorageUpdateResult from '../model/storage-update-result';
 import CollectionUtil from '../util/collection-util';
@@ -761,7 +761,7 @@ export default class StorageService {
             options = { type: mediaType };
         }
         requestFormData.set('file', new Blob([data], options), name ?? id);
-        return unfetch(url, {
+        return httpRequest(url, {
             method: 'POST',
             body: requestFormData
         })
@@ -816,7 +816,7 @@ export default class StorageService {
     }
 
     private _queryResource(url: string): Promise<Response<StorageResource>> {
-        return unfetch(url)
+        return httpRequest(url)
             .catch(e => {
                 throw ResponseError.from({
                     code: ResponseStatusCode.HTTP_ERROR,

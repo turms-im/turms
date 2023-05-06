@@ -6,7 +6,7 @@ const glob = require('glob');
 const IS_LINUX = os.type() === 'Linux';
 const IS_ALPINE = IS_LINUX && fs.existsSync('/etc/alpine-release');
 const PB_REL = 'https://github.com/protocolbuffers/protobuf/releases';
-const PB_VERSION = '3.17.3';
+const PB_VERSION = '22.4';
 const DIR = './protoc';
 
 function runCmds(cmds) {
