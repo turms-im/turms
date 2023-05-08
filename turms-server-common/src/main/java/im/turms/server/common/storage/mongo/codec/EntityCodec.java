@@ -18,6 +18,7 @@
 package im.turms.server.common.storage.mongo.codec;
 
 import java.lang.reflect.Constructor;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -70,21 +71,27 @@ public class EntityCodec<T> extends MongoCodec<T> {
 
     @Override
     public T decode(BsonReader reader, DecoderContext decoderContext) {
+        T instance = null;
+        Object[] ctorValues = null;
         try {
             Constructor<T> constructor = entity.constructor();
             if (constructor.getParameterCount() == 0) {
-                T instance = constructor.newInstance();
+                instance = constructor.newInstance();
                 initInstance(instance, reader, decoderContext);
                 return instance;
             } else {
-                Object[] ctorValues = parseCtorValues(reader, decoderContext);
+                ctorValues = parseCtorValues(reader, decoderContext);
                 return constructor.newInstance(ctorValues);
             }
         } catch (Exception e) {
             throw new DeserializationException(
                     "Failed to decode the current Bson into the entity of the class: "
                             + entity.entityClass()
-                                    .getName(),
+                                    .getName()
+                            + ", instance: "
+                            + instance
+                            + ", constructor arguments: "
+                            + Arrays.toString(ctorValues),
                     e);
         }
     }
