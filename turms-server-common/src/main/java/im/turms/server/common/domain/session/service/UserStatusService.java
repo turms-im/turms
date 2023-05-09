@@ -469,19 +469,25 @@ public class UserStatusService {
                 id -> node.getDiscoveryService()
                         .checkIfMemberExists(nodeId)
                         .map(isActive -> new NodeStatus(System.currentTimeMillis(), isActive)));
-        return nodeStatusMono.flatMap(status -> {
-            if ((System.currentTimeMillis()
-                    - status.recordTimestampMillis) < NODE_STATUS_TTL_MILLIS) {
-                return Mono.just(status);
-            }
-            Mono<NodeStatus> newStatus = Mono.defer(() -> node.getDiscoveryService()
-                    .checkIfMemberExists(nodeId)
-                    .map(isActive -> new NodeStatus(System.currentTimeMillis(), isActive)));
-            boolean replaced = nodeIdToStatusCache.replace(nodeId, nodeStatusMono, newStatus);
-            return replaced
-                    ? newStatus
-                    : nodeIdToStatusCache.get(nodeId);
-        });
+        return nodeStatusMono
+                // To not cache error
+                .doOnError(t -> nodeIdToStatusCache.remove(nodeId, nodeStatusMono))
+                .flatMap(status -> {
+                    if ((System.currentTimeMillis()
+                            - status.recordTimestampMillis) < NODE_STATUS_TTL_MILLIS) {
+                        return Mono.just(status);
+                    }
+                    Mono<NodeStatus> newStatus = Mono.defer(() -> node.getDiscoveryService()
+                            .checkIfMemberExists(nodeId)
+                            .map(isActive -> new NodeStatus(System.currentTimeMillis(), isActive)));
+                    boolean replaced =
+                            nodeIdToStatusCache.replace(nodeId, nodeStatusMono, newStatus);
+                    return replaced
+                            ? newStatus
+                                    // To not cache error
+                                    .doOnError(t -> nodeIdToStatusCache.remove(nodeId, newStatus))
+                            : nodeIdToStatusCache.get(nodeId);
+                });
     }
 
     /**
