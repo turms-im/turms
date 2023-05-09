@@ -73,14 +73,14 @@ public final class Member {
      * should be always longer than the heartbeat timeout). Otherwise, the record will be removed
      * automatically when the TTL expires.
      */
-    private boolean isSeed;
+    private Boolean isSeed;
 
     private final Date registrationDate;
 
     /**
      * Only active leader-eligible turms-service server can be a leader
      */
-    private boolean isLeaderEligible;
+    private Boolean isLeaderEligible;
 
     /**
      * The priority to be a leader. 1. When there is no leader, a qualified (active,
@@ -89,10 +89,10 @@ public final class Member {
      * joins, the new member will NOT be elected as a new leader immediately until the existing
      * leader dies, or a developer triggers a new leader election manually via admin API.
      */
-    private int priority;
+    private Integer priority;
 
     private String memberHost;
-    private final int memberPort;
+    private final Integer memberPort;
 
     private String adminApiAddress;
     private String wsAddress;
@@ -107,12 +107,12 @@ public final class Member {
             String zone,
             NodeType nodeType,
             NodeVersion nodeVersion,
-            boolean isSeed,
-            boolean isLeaderEligible,
+            Boolean isSeed,
+            Boolean isLeaderEligible,
             Date registrationDate,
-            int priority,
+            Integer priority,
             String memberHost,
-            int memberPort,
+            Integer memberPort,
             String adminApiAddress,
             String wsAddress,
             String tcpAddress,
@@ -144,9 +144,9 @@ public final class Member {
             boolean isSeed,
             boolean isLeaderEligible,
             Date registrationDate,
-            int priority,
+            Integer priority,
             String memberHost,
-            int memberPort,
+            Integer memberPort,
             String adminApiAddress,
             String wsAddress,
             String tcpAddress,
@@ -169,6 +169,14 @@ public final class Member {
                 tcpAddress,
                 udpAddress,
                 new MemberStatus(hasJoinedCluster, isHealthy, isActive, new Date()));
+    }
+
+    public Boolean isSeed() {
+        return isSeed;
+    }
+
+    public Boolean isLeaderEligible() {
+        return isLeaderEligible;
     }
 
     public void updateIfNotNull(
@@ -218,10 +226,10 @@ public final class Member {
             status.setHasJoinedCluster(hasJoinedCluster);
         }
         if (isActive != null) {
-            status.setActive(isActive);
+            status.setIsActive(isActive);
         }
         if (isHealthy != null) {
-            status.setHealthy(isHealthy);
+            status.setIsHealthy(isHealthy);
         }
         if (lastHeartbeatDate != null) {
             status.setLastHeartbeatDate(lastHeartbeatDate);
@@ -271,18 +279,18 @@ public final class Member {
          * True if the last heartbeat has not timed out. hasJoinedCluster only works as an indicator
          * for node status, and it can still handle client requests even if it is false.
          */
-        private boolean hasJoinedCluster;
+        private Boolean hasJoinedCluster;
 
         /**
          * The node will stop serving if false
          */
-        private boolean isHealthy;
+        private Boolean isHealthy;
 
         /**
          * If a node isn't active, it cannot handle client requests. Developer can update the value
          * via admin API. Useful for blue-green deployment.
          */
-        private boolean isActive;
+        private Boolean isActive;
 
         /**
          * Note that the TTL index isn't the heartbeat timeout but is only used to make sure the
@@ -294,6 +302,18 @@ public final class Member {
                         + ":{$eq:false}}",
                 expireAfterSeconds = 60)
         private volatile Date lastHeartbeatDate;
+
+        public Boolean hasJoinedCluster() {
+            return hasJoinedCluster;
+        }
+
+        public Boolean isHealthy() {
+            return isHealthy;
+        }
+
+        public Boolean isActive() {
+            return isActive;
+        }
     }
 
 }

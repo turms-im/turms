@@ -220,7 +220,7 @@ public class LocalNodeStatusManager {
                 member.getTcpAddress(),
                 member.getUdpAddress(),
                 member.getStatus()
-                        .isHasJoinedCluster(),
+                        .hasJoinedCluster(),
                 member.getStatus()
                         .isActive(),
                 member.getStatus()

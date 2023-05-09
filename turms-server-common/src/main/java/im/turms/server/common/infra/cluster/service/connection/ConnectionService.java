@@ -573,11 +573,11 @@ public class ConnectionService implements ClusterService {
                         }
                     });
         } else {
-            String reason = !isLocalNodeClient
-                    ? "the local node is server"
-                    : !isKnownMember
-                            ? "the member is unknown"
-                            : "the local node is closing";
+            String reason = isLocalNodeClient
+                    ? isKnownMember
+                            ? "the local node is closing"
+                            : "the member is unknown"
+                    : "the local node is server";
             LOGGER.info("[{}] Stop to connect the member{} because {}",
                     nodeType,
                     memberIdAndAddress,

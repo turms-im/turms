@@ -423,11 +423,11 @@ public class DiscoveryService implements ClusterService {
                                 .getValue());
             } else if (fieldName.endsWith(Member.MemberStatus.Fields.isActive)) {
                 memberToUpdate.getStatus()
-                        .setActive(value.asBoolean()
+                        .setIsActive(value.asBoolean()
                                 .getValue());
             } else if (fieldName.endsWith(Member.MemberStatus.Fields.isHealthy)) {
                 memberToUpdate.getStatus()
-                        .setHealthy(value.asBoolean()
+                        .setIsHealthy(value.asBoolean()
                                 .getValue());
                 // Check info
             } else if (fieldName.equals(Member.Fields.zone)) {
@@ -435,10 +435,10 @@ public class DiscoveryService implements ClusterService {
                         .getValue());
             } else if (fieldName.equals(Member.Fields.isSeed)) {
                 // TODO: RENAME
-                memberToUpdate.setSeed(value.asBoolean()
+                memberToUpdate.setIsSeed(value.asBoolean()
                         .getValue());
             } else if (fieldName.equals(Member.Fields.isLeaderEligible)) {
-                memberToUpdate.setLeaderEligible(value.asBoolean()
+                memberToUpdate.setIsLeaderEligible(value.asBoolean()
                         .getValue());
             } else if (fieldName.equals(Member.Fields.priority)) {
                 memberToUpdate.setPriority(value.asInt32()
