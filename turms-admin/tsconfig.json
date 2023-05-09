@@ -35,10 +35,10 @@
     ".eslintrc.js",
     "vite.config.ts",
     "cypress.config.ts",
-    "client/**/*",
-    "client/src/**/*.json",
-    "client/src/**/*.ts",
-    "client/src/**/*.vue",
-    "server/src/**/*"
+    "server/src/**/*",
+    "ui/**/*",
+    "ui/src/**/*.json",
+    "ui/src/**/*.ts",
+    "ui/src/**/*.vue"
   ]
 }

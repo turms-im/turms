@@ -13,7 +13,7 @@
     "build:client-ast": "node script/generate-client-ast.js",
     "cypress": "cypress open",
     "delete": "pm2 delete server/ecosystem.config.js",
-    "eslint": "eslint --fix --ext .js,.ts,.vue client server",
+    "eslint": "eslint --fix --ext .js,.ts,.vue server ui",
     "eslint:print": "eslint --print-config .eslintrc.js",
     "inspect": "vite inspect",
     "lint": "npm run eslint && npm run stylelint",
@@ -26,7 +26,7 @@
     "serve": "vite serve --port 6510",
     "start": "pm2 start server/ecosystem.config.js --env production",
     "stop": "pm2 stop server/ecosystem.config.js",
-    "stylelint": "stylelint --fix client/**/*.{vue,css,sss,less,scss,sass}",
+    "stylelint": "stylelint --fix ui/**/*.{vue,css,sss,less,scss,sass}",
     "test": "cypress run"
   },
   "husky": {

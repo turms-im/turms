@@ -10,12 +10,12 @@ import { visualizer } from 'rollup-plugin-visualizer';
 const isReportMode = process.env.REPORT === 'true';
 
 export default defineConfig(({mode }) => ({
-    root: './client',
+    root: './ui',
     build: {
         outDir: '../dist',
         rollupOptions: {
             input: {
-                app: fileURLToPath(new URL('./client/index.html', import.meta.url))
+                app: fileURLToPath(new URL('./ui/index.html', import.meta.url))
             }
         }
     },
