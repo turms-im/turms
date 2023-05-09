@@ -26,4 +26,10 @@ public record ApiEndpointKey(
         String path,
         HttpMethod method
 ) {
+
+    public String toEndpointString() {
+        return method.name()
+                + " "
+                + path;
+    }
 }

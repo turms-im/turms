@@ -667,4 +667,58 @@ public final class StringUtil {
         return newLatin1String(newBytes);
     }
 
+    public static int getLevenshteinDistance(String s1, String s2) {
+        int s1Length = s1.length();
+        int s2Length = s2.length();
+        if (s1Length == 0) {
+            return s2Length;
+        } else if (s2Length == 0) {
+            return s1Length;
+        }
+        if (s1Length > s2Length) {
+            // swap the input strings to consume less memory
+            String temp = s1;
+            s1 = s2;
+            s2 = temp;
+            s1Length = s2Length;
+            s2Length = s2.length();
+        }
+        int[] costArray = new int[s1Length + 1];
+        int s1Index;
+        int s2Index;
+        int upperLeft;
+        int upper;
+        char currentS2Char;
+        int cost;
+        for (s1Index = 0; s1Index <= s1Length; s1Index++) {
+            costArray[s1Index] = s1Index;
+        }
+        for (s2Index = 1; s2Index <= s2Length; s2Index++) {
+            upperLeft = costArray[0];
+            currentS2Char = s2.charAt(s2Index - 1);
+            costArray[0] = s2Index;
+            for (s1Index = 1; s1Index <= s1Length; s1Index++) {
+                upper = costArray[s1Index];
+                cost = s1.charAt(s1Index - 1) == currentS2Char
+                        ? 0
+                        : 1;
+                // minimum of cell to the left+1, to the top+1, diagonally left and up +cost
+                costArray[s1Index] =
+                        Math.min(Math.min(costArray[s1Index - 1] + 1, costArray[s1Index] + 1),
+                                upperLeft + cost);
+                upperLeft = upper;
+            }
+        }
+        return costArray[s1Length];
+    }
+
+    public static float findSimilarity(String x, String y) {
+        int maxLength = Math.max(x.length(), y.length());
+        if (maxLength == 0) {
+            return 1.0F;
+        }
+        int distance = getLevenshteinDistance(x, y);
+        return 1.0F - distance / (float) maxLength;
+    }
+
 }

@@ -19,10 +19,12 @@ package im.turms.server.common.access.admin.web;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
 import jakarta.annotation.Nullable;
@@ -65,6 +67,8 @@ import im.turms.server.common.infra.io.FileResource;
 import im.turms.server.common.infra.io.ResourceNotFoundException;
 import im.turms.server.common.infra.json.JsonUtil;
 import im.turms.server.common.infra.lang.Pair;
+import im.turms.server.common.infra.lang.StringBuilderPool;
+import im.turms.server.common.infra.lang.StringBuilderWriter;
 import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.logging.AdminApiLogging;
 import im.turms.server.common.infra.logging.core.logger.Logger;
@@ -234,6 +238,50 @@ public class HttpRequestDispatcher {
             }
         }
     }
+
+    private String findSimilarEndpoints(String uri) {
+        Set<ApiEndpointKey> endpointKeys = keyToEndpoint.keySet();
+        Map<String, Float> pathToSimilarity =
+                CollectionUtil.newMapWithExpectedSize(endpointKeys.size());
+        List<Pair<Float, ApiEndpointKey>> similarityToEndpointPairs = new ArrayList<>(8);
+        for (ApiEndpointKey key : endpointKeys) {
+            String path = key.path();
+            float similarity =
+                    pathToSimilarity.computeIfAbsent(path, p -> StringUtil.findSimilarity(p, uri));
+            if (similarity > 0.5F) {
+                similarityToEndpointPairs.add(Pair.of(similarity, key));
+            }
+        }
+        similarityToEndpointPairs.sort((o1, o2) -> {
+            int i = o2.first()
+                    .compareTo(o1.first());
+            if (i == 0) {
+                return o2.second()
+                        .method()
+                        .name()
+                        .compareTo(o1.second()
+                                .method()
+                                .name());
+            }
+            return i;
+        });
+        String similarEndpointsStr;
+        try (StringBuilderWriter writer = StringBuilderPool.getWriter()) {
+            writer.append('[');
+            for (int i = 0, size = similarityToEndpointPairs.size(),
+                    last = size - 1; i < size; i++) {
+                Pair<Float, ApiEndpointKey> pair = similarityToEndpointPairs.get(i);
+                writer.append(pair.second()
+                        .toEndpointString());
+                if (i != last) {
+                    writer.append(", ");
+                }
+            }
+            writer.append(']');
+            similarEndpointsStr = writer.toString();
+        }
+        return similarEndpointsStr;
+    }
     // endregion
 
     // region Dispatch
@@ -313,11 +361,16 @@ public class HttpRequestDispatcher {
         ApiEndpoint endpoint =
                 keyToEndpoint.get(new ApiEndpointKey(pathAndQueryParams.first(), request.method()));
         if (endpoint == null) {
+            String similarEndpointsStr = findSimilarEndpoints(uri);
+            String reason = "There is no any resource matched to the endpoint: "
+                    + request.method()
+                            .name()
+                    + " "
+                    + uri
+                    + ". Similar endpoints: "
+                    + similarEndpointsStr;
             return Mono.just(HttpHandlerResult.create(HttpResponseStatus.BAD_REQUEST,
-                    new ResponseDTO<>(
-                            ResponseStatusCode.ILLEGAL_ARGUMENT,
-                            "There is no any resources matched to request path: "
-                                    + uri)));
+                    new ResponseDTO<>(ResponseStatusCode.ILLEGAL_ARGUMENT, reason)));
         }
         // 2. prepare request context
         requestContext.setEndpoint(endpoint);
