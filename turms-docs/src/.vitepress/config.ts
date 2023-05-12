@@ -141,6 +141,10 @@ export default defineConfig({
                                         link: '/server/module/security.md'
                                     },
                                     {
+                                        text: 'XMPP',
+                                        link: '/server/module/xmpp.md'
+                                    },
+                                    {
                                         text: 'Storage Service',
                                         link: '/server/module/storage.md'
                                     },
@@ -349,6 +353,10 @@ export default defineConfig({
                                     {
                                         text: '安全',
                                         link: '/zh-CN/server/module/security.md'
+                                    },
+                                    {
+                                        text: 'XMPP',
+                                        link: '/zh-CN/server/module/xmpp.md'
                                     },
                                     {
                                         text: '存储服务',
