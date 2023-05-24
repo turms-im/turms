@@ -23,7 +23,7 @@ import java.util.Arrays;
 /**
  * @author James Chen
  */
-public class Utf8String implements CharSequence {
+public class Utf8String implements CharSequence, Comparable<Utf8String> {
 
     /**
      * @see java.nio.charset.CharsetEncoder#maxBytesPerChar()
@@ -136,6 +136,28 @@ public class Utf8String implements CharSequence {
         return new Utf8String(string, out, 0, byteCount, charCount);
     }
 
+    private static int getCodepoint(byte[] bytes, int firstByteIndex) {
+        byte firstByte = bytes[firstByteIndex];
+        if ((firstByte & 0x80) == 0) {
+            // ASCII character
+            return firstByte;
+        } else if ((firstByte & 0xE0) == 0xC0) {
+            // Two-byte UTF-8 character
+            return ((firstByte & 0x1F) << 6) | (bytes[firstByteIndex + 1] & 0x3F);
+        } else if ((firstByte & 0xF0) == 0xE0) {
+            // Three-byte UTF-8 character
+            return ((firstByte & 0x0F) << 12) | ((bytes[firstByteIndex + 1] & 0x3F) << 6)
+                    | (bytes[firstByteIndex + 2] & 0x3F);
+        } else if ((firstByte & 0xF8) == 0xF0) {
+            // Four-byte UTF-8 character
+            return ((firstByte & 0x07) << 18) | ((bytes[firstByteIndex + 1] & 0x3F) << 12)
+                    | ((bytes[firstByteIndex + 2] & 0x3F) << 6)
+                    | (bytes[firstByteIndex + 3] & 0x3F);
+        } else {
+            throw new IllegalStateException("Invalid UTF-8 byte sequence");
+        }
+    }
+
     @Override
     public int length() {
         return charCount;
@@ -202,6 +224,32 @@ public class Utf8String implements CharSequence {
     @Override
     public CharSequence subSequence(int start, int end) {
         return substring(start, end);
+    }
+
+    @Override
+    public int compareTo(Utf8String anotherString) {
+        int i = 0;
+        int j = 0;
+        byte[] aBytes = this.bytes;
+        byte[] bBytes = anotherString.bytes;
+        int aByteEnd = this.byteOffset + this.byteCount;
+        int bByteEnd = anotherString.byteOffset + anotherString.byteCount;
+        while (i < aByteEnd && j < bByteEnd) {
+            int aChar = getCodepoint(aBytes, i);
+            int bChar = getCodepoint(bBytes, j);
+            if (aChar != bChar) {
+                return aChar - bChar;
+            }
+            i += getByteCountFromFirstUtf8Byte(aBytes[i]);
+            j += getByteCountFromFirstUtf8Byte(bBytes[j]);
+        }
+        if (i < aByteEnd) {
+            return 1;
+        } else if (j < bByteEnd) {
+            return -1;
+        } else {
+            return 0;
+        }
     }
 
     public Utf8String concat(Utf8String s) {
@@ -327,7 +375,6 @@ public class Utf8String implements CharSequence {
                     "The index must be less than "
                             + charCount);
         }
-
         int firstByteIndex = byteOffset;
         int endByteIndex = byteOffset + byteCount;
         int seenCharacters = 0;
@@ -341,25 +388,7 @@ public class Utf8String implements CharSequence {
                 seenCharacters++;
             }
         }
-        firstByte = localBytes[firstByteIndex];
-        if ((firstByte & 0x80) == 0) {
-            // ASCII character
-            return firstByte;
-        } else if ((firstByte & 0xE0) == 0xC0) {
-            // Two-byte UTF-8 character
-            return ((firstByte & 0x1F) << 6) | (localBytes[firstByteIndex + 1] & 0x3F);
-        } else if ((firstByte & 0xF0) == 0xE0) {
-            // Three-byte UTF-8 character
-            return ((firstByte & 0x0F) << 12) | ((localBytes[firstByteIndex + 1] & 0x3F) << 6)
-                    | (localBytes[firstByteIndex + 2] & 0x3F);
-        } else if ((firstByte & 0xF8) == 0xF0) {
-            // Four-byte UTF-8 character
-            return ((firstByte & 0x07) << 18) | ((localBytes[firstByteIndex + 1] & 0x3F) << 12)
-                    | ((localBytes[firstByteIndex + 2] & 0x3F) << 6)
-                    | (localBytes[firstByteIndex + 3] & 0x3F);
-        } else {
-            throw new IllegalStateException("Invalid UTF-8 byte sequence");
-        }
+        return getCodepoint(localBytes, firstByteIndex);
     }
 
 }

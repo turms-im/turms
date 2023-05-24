@@ -17,6 +17,8 @@
 
 package unit.im.turms.server.common.infra.lang;
 
+import java.nio.charset.StandardCharsets;
+
 import org.junit.jupiter.api.Test;
 
 import im.turms.server.common.infra.lang.Utf8String;
@@ -75,7 +77,7 @@ class Utf8StringTests {
     void hashCode_sameStrings_returnSameHashCode() {
         Utf8String str1 = Utf8String.of("Hello, 世界🌍");
         Utf8String str2 = Utf8String.of("Hello, 世界🌍");
-        assertThat(str1).hasSameHashCodeAs(str2);
+        assertThat((CharSequence) str1).hasSameHashCodeAs(str2);
     }
 
     @Test
@@ -117,23 +119,40 @@ class Utf8StringTests {
     }
 
     @Test
+    void compareTo() {
+        Utf8String str1 = Utf8String.of("hello");
+        Utf8String str2 = Utf8String.of("hello");
+        assertThat(str1.compareTo(str2)).isZero();
+        assertThat(str2.compareTo(str1)).isZero();
+
+        str1 = Utf8String.of("apple");
+        str2 = Utf8String.of("banana");
+        assertThat(str1.compareTo(str2)).isNegative();
+        assertThat(str2.compareTo(str1)).isPositive();
+
+        str2 = Utf8String.of("appl");
+        assertThat(str1.compareTo(str2)).isPositive();
+        assertThat(str2.compareTo(str1)).isNegative();
+    }
+
+    @Test
     void substring_validOffsetAndCount_returnSubstring() {
         Utf8String str = Utf8String.of("Hello, 世界🌍");
-        assertThat(str.substring(0, 10)).hasToString("Hello, 世界🌍");
-        assertThat(str.substring(0, 5)).hasToString("Hello");
-        assertThat(str.substring(7, 8)).hasToString("世");
-        assertThat(str.substring(9, 10)).hasToString("🌍");
-        assertThat(str.substring(7, 9)).hasToString("世界");
-        assertThat(str.substring(0, 0)).hasToString("");
-        assertThat(str.substring(10, 10)).hasToString("");
+        assertThat((CharSequence) str.substring(0, 10)).hasToString("Hello, 世界🌍");
+        assertThat((CharSequence) str.substring(0, 5)).hasToString("Hello");
+        assertThat((CharSequence) str.substring(7, 8)).hasToString("世");
+        assertThat((CharSequence) str.substring(9, 10)).hasToString("🌍");
+        assertThat((CharSequence) str.substring(7, 9)).hasToString("世界");
+        assertThat((CharSequence) str.substring(0, 0)).hasToString("");
+        assertThat((CharSequence) str.substring(10, 10)).hasToString("");
     }
 
     @Test
     void substring_validOffset_returnSubstring() {
         Utf8String str = Utf8String.of("Hello, 世界🌍");
-        assertThat(str.substring(0)).hasToString("Hello, 世界🌍");
-        assertThat(str.substring(10)).hasToString("");
-        assertThat(str.substring(7)).hasToString("世界🌍");
+        assertThat((CharSequence) str.substring(0)).hasToString("Hello, 世界🌍");
+        assertThat((CharSequence) str.substring(10)).hasToString("");
+        assertThat((CharSequence) str.substring(7)).hasToString("世界🌍");
     }
 
     @Test
@@ -149,6 +168,22 @@ class Utf8StringTests {
                 .isInstanceOf(IndexOutOfBoundsException.class);
         assertThatThrownBy(() -> str.substring(11, 12))
                 .isInstanceOf(IndexOutOfBoundsException.class);
+    }
+
+    @Test
+    void getBytes() {
+        String string = "Hello, 世界🌍";
+        assertThat(Utf8String.of(string)
+                .getBytes()).isEqualTo(string.getBytes(StandardCharsets.UTF_8));
+        string = "Hello";
+        assertThat(Utf8String.of(string)
+                .getBytes()).isEqualTo(string.getBytes(StandardCharsets.UTF_8));
+        string = "世界";
+        assertThat(Utf8String.of(string)
+                .getBytes()).isEqualTo(string.getBytes(StandardCharsets.UTF_8));
+        string = "🌍";
+        assertThat(Utf8String.of(string)
+                .getBytes()).isEqualTo(string.getBytes(StandardCharsets.UTF_8));
     }
 
     @Test
