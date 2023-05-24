@@ -72,6 +72,27 @@ class Utf8StringTests {
     }
 
     @Test
+    void hashCode_sameStrings_returnSameHashCode() {
+        Utf8String str1 = Utf8String.of("Hello, 世界🌍");
+        Utf8String str2 = Utf8String.of("Hello, 世界🌍");
+        assertThat(str1).hasSameHashCodeAs(str2);
+    }
+
+    @Test
+    void equals_sameStrings_returnTrue() {
+        Utf8String str1 = Utf8String.of("Hello, 世界🌍");
+        Utf8String str2 = Utf8String.of("Hello, 世界🌍");
+        assertThat(str1.equals(str2)).isTrue();
+    }
+
+    @Test
+    void equals_differentStrings_returnFalse() {
+        Utf8String str1 = Utf8String.of("Hello, 世界🌍");
+        Utf8String str2 = Utf8String.of("Bonjour, monde🌍");
+        assertThat(str1.equals(str2)).isFalse();
+    }
+
+    @Test
     void charAt_validIndex_returnChar() {
         // The unicode of "🌍" is 0x1F30D
         Utf8String str = Utf8String.of("Hello, 世界🌍");
@@ -103,6 +124,7 @@ class Utf8StringTests {
         assertThat(str.substring(7, 8)).hasToString("世");
         assertThat(str.substring(9, 10)).hasToString("🌍");
         assertThat(str.substring(7, 9)).hasToString("世界");
+        assertThat(str.substring(0, 0)).hasToString("");
         assertThat(str.substring(10, 10)).hasToString("");
     }
 
@@ -117,33 +139,59 @@ class Utf8StringTests {
     @Test
     void substring_invalidOffset_throw() {
         Utf8String str = Utf8String.of("Hello, 世界🌍");
-        assertThatThrownBy(() -> str.substring(0, 11))
-                .isInstanceOf(IndexOutOfBoundsException.class);
         assertThatThrownBy(() -> str.substring(-1, 0))
+                .isInstanceOf(IndexOutOfBoundsException.class);
+        assertThatThrownBy(() -> str.substring(-1, -1))
+                .isInstanceOf(IndexOutOfBoundsException.class);
+        assertThatThrownBy(() -> str.substring(-1, 11))
+                .isInstanceOf(IndexOutOfBoundsException.class);
+        assertThatThrownBy(() -> str.substring(0, 11))
                 .isInstanceOf(IndexOutOfBoundsException.class);
         assertThatThrownBy(() -> str.substring(11, 12))
                 .isInstanceOf(IndexOutOfBoundsException.class);
     }
 
     @Test
-    void hashCode_sameStrings_returnSameHashCode() {
-        Utf8String str1 = Utf8String.of("Hello, 世界🌍");
-        Utf8String str2 = Utf8String.of("Hello, 世界🌍");
-        assertThat(str1).hasSameHashCodeAs(str2);
+    void byteIndexOf_validIndex_returnIndex() {
+        Utf8String str = Utf8String.of("Hello, 世界🌍");
+        assertThat(str.byteIndexOf(0)).isEqualTo(0);
+        assertThat(str.byteIndexOf(1)).isEqualTo(1);
+        assertThat(str.byteIndexOf(2)).isEqualTo(2);
+        assertThat(str.byteIndexOf(3)).isEqualTo(3);
+        assertThat(str.byteIndexOf(4)).isEqualTo(4);
+        assertThat(str.byteIndexOf(5)).isEqualTo(5);
+        assertThat(str.byteIndexOf(6)).isEqualTo(6);
+        assertThat(str.byteIndexOf(7)).isEqualTo(7);
+        assertThat(str.byteIndexOf(8)).isEqualTo(10);
+        assertThat(str.byteIndexOf(9)).isEqualTo(13);
     }
 
     @Test
-    void equals_sameStrings_returnTrue() {
-        Utf8String str1 = Utf8String.of("Hello, 世界🌍");
-        Utf8String str2 = Utf8String.of("Hello, 世界🌍");
-        assertThat(str1.equals(str2)).isTrue();
+    void byteIndexOf_invalidIndex_throw() {
+        Utf8String str = Utf8String.of("Hello, 世界🌍");
+        assertThatThrownBy(() -> str.byteIndexOf(-1)).isInstanceOf(IndexOutOfBoundsException.class);
+        assertThatThrownBy(() -> str.byteIndexOf(11)).isInstanceOf(IndexOutOfBoundsException.class);
     }
 
     @Test
-    void equals_differentStrings_returnFalse() {
-        Utf8String str1 = Utf8String.of("Hello, 世界🌍");
-        Utf8String str2 = Utf8String.of("Bonjour, monde🌍");
-        assertThat(str1.equals(str2)).isFalse();
+    void codepointAt_validIndex_returnIndex() {
+        Utf8String str = Utf8String.of("Hello, 世界🌍");
+        assertThat(str.codepointAt(0)).isEqualTo('H');
+        assertThat(str.codepointAt(1)).isEqualTo('e');
+        assertThat(str.codepointAt(2)).isEqualTo('l');
+        assertThat(str.codepointAt(3)).isEqualTo('l');
+        assertThat(str.codepointAt(4)).isEqualTo('o');
+        assertThat(str.codepointAt(5)).isEqualTo(',');
+        assertThat(str.codepointAt(6)).isEqualTo(' ');
+        assertThat(str.codepointAt(7)).isEqualTo('世');
+        assertThat(str.codepointAt(8)).isEqualTo('界');
+        assertThat(str.codepointAt(9)).isEqualTo(127757);
     }
 
+    @Test
+    void codepointAt_invalidIndex_throw() {
+        Utf8String str = Utf8String.of("Hello, 世界🌍");
+        assertThatThrownBy(() -> str.codepointAt(-1)).isInstanceOf(IndexOutOfBoundsException.class);
+        assertThatThrownBy(() -> str.codepointAt(11)).isInstanceOf(IndexOutOfBoundsException.class);
+    }
 }

@@ -40,8 +40,17 @@ public class Utf8String implements CharSequence {
     private int hashcode;
 
     public Utf8String(String str, byte[] bytes, int byteOffset, int byteCount, int charCount) {
-        if (byteOffset < 0 || byteCount < 0 || (byteOffset + byteCount) > bytes.length) {
-            throw new IndexOutOfBoundsException();
+        if (byteOffset < 0) {
+            throw new IndexOutOfBoundsException(
+                    "The byte offset must be greater than or equal to 0");
+        }
+        if (byteCount < 0) {
+            throw new IndexOutOfBoundsException(
+                    "The byte count must be greater than or equal to 0");
+        }
+        if ((byteOffset + byteCount) > bytes.length) {
+            throw new IndexOutOfBoundsException(
+                    "byteOffset + byteCount must be less than or equal to the length of the byte array");
         }
         this.str = str;
         this.bytes = bytes;
@@ -187,12 +196,12 @@ public class Utf8String implements CharSequence {
 
     @Override
     public char charAt(int utf8CharIndex) {
-        return (char) utf8CharAt(utf8CharIndex);
+        return (char) codepointAt(utf8CharIndex);
     }
 
     @Override
     public CharSequence subSequence(int start, int end) {
-        return substring(start, end - start);
+        return substring(start, end);
     }
 
     public Utf8String concat(Utf8String s) {
@@ -206,10 +215,18 @@ public class Utf8String implements CharSequence {
     }
 
     public Utf8String substring(int utf8CharBeginIndex, int utf8CharEndIndex) {
-        if (utf8CharBeginIndex < 0
-                || utf8CharEndIndex > charCount
-                || utf8CharBeginIndex > utf8CharEndIndex) {
-            throw new IndexOutOfBoundsException();
+        if (utf8CharBeginIndex < 0) {
+            throw new IndexOutOfBoundsException(
+                    "The begin index must be greater than or equal to 0");
+        }
+        if (utf8CharEndIndex > charCount) {
+            throw new IndexOutOfBoundsException(
+                    "The end index must be less than "
+                            + charCount);
+        }
+        if (utf8CharBeginIndex > utf8CharEndIndex) {
+            throw new IndexOutOfBoundsException(
+                    "The begin index must be less than or equal to the end index");
         }
         int beginFirstByteIndex = byteOffset;
         int endByteIndex = byteOffset + byteCount;
@@ -224,9 +241,6 @@ public class Utf8String implements CharSequence {
                 seenCharacters++;
             }
         }
-        if (beginFirstByteIndex > endByteIndex || seenCharacters > utf8CharBeginIndex) {
-            throw new IndexOutOfBoundsException();
-        }
 
         int endFirstByteIndex = beginFirstByteIndex;
         while (seenCharacters < utf8CharEndIndex && endFirstByteIndex < endByteIndex) {
@@ -236,9 +250,6 @@ public class Utf8String implements CharSequence {
                 endFirstByteIndex += count;
                 seenCharacters++;
             }
-        }
-        if (endFirstByteIndex > endByteIndex || seenCharacters > utf8CharEndIndex) {
-            throw new IndexOutOfBoundsException();
         }
 
         int newByteCount = endFirstByteIndex - beginFirstByteIndex;
@@ -283,6 +294,14 @@ public class Utf8String implements CharSequence {
      * @return the start byte index of the UTF-8 char
      */
     public int byteIndexOf(int utf8CharIndex) {
+        if (utf8CharIndex < 0) {
+            throw new IndexOutOfBoundsException("The index must be greater than or equal to 0");
+        }
+        if (utf8CharIndex >= charCount) {
+            throw new IndexOutOfBoundsException(
+                    "The index must be less than "
+                            + charCount);
+        }
         int firstByteIndex = byteOffset;
         int endByteIndex = byteOffset + byteCount;
         int seenCharacters = 0;
@@ -295,17 +314,20 @@ public class Utf8String implements CharSequence {
                 firstByteIndex += count;
                 seenCharacters++;
             }
-        }
-        if (firstByteIndex >= endByteIndex || seenCharacters > utf8CharIndex) {
-            throw new IndexOutOfBoundsException();
         }
         return firstByteIndex;
     }
 
-    /**
-     * @return codepoint
-     */
-    public int utf8CharAt(int utf8CharIndex) {
+    public int codepointAt(int utf8CharIndex) {
+        if (utf8CharIndex < 0) {
+            throw new IndexOutOfBoundsException("The index must be greater than or equal to 0");
+        }
+        if (utf8CharIndex >= charCount) {
+            throw new IndexOutOfBoundsException(
+                    "The index must be less than "
+                            + charCount);
+        }
+
         int firstByteIndex = byteOffset;
         int endByteIndex = byteOffset + byteCount;
         int seenCharacters = 0;
@@ -318,9 +340,6 @@ public class Utf8String implements CharSequence {
                 firstByteIndex += count;
                 seenCharacters++;
             }
-        }
-        if (firstByteIndex >= endByteIndex || seenCharacters > utf8CharIndex) {
-            throw new IndexOutOfBoundsException();
         }
         firstByte = localBytes[firstByteIndex];
         if ((firstByte & 0x80) == 0) {
@@ -328,28 +347,13 @@ public class Utf8String implements CharSequence {
             return firstByte;
         } else if ((firstByte & 0xE0) == 0xC0) {
             // Two-byte UTF-8 character
-            if (firstByteIndex + 1 >= endByteIndex
-                    || (localBytes[firstByteIndex + 1] & 0xC0) != 0x80) {
-                throw new IllegalStateException("Invalid UTF-8 byte sequence");
-            }
             return ((firstByte & 0x1F) << 6) | (localBytes[firstByteIndex + 1] & 0x3F);
         } else if ((firstByte & 0xF0) == 0xE0) {
             // Three-byte UTF-8 character
-            if (firstByteIndex + 2 >= endByteIndex
-                    || (localBytes[firstByteIndex + 1] & 0xC0) != 0x80
-                    || (localBytes[firstByteIndex + 2] & 0xC0) != 0x80) {
-                throw new IllegalStateException("Invalid UTF-8 byte sequence");
-            }
             return ((firstByte & 0x0F) << 12) | ((localBytes[firstByteIndex + 1] & 0x3F) << 6)
                     | (localBytes[firstByteIndex + 2] & 0x3F);
         } else if ((firstByte & 0xF8) == 0xF0) {
             // Four-byte UTF-8 character
-            if (firstByteIndex + 3 >= endByteIndex
-                    || (localBytes[firstByteIndex + 1] & 0xC0) != 0x80
-                    || (localBytes[firstByteIndex + 2] & 0xC0) != 0x80
-                    || (localBytes[firstByteIndex + 3] & 0xC0) != 0x80) {
-                throw new IllegalStateException("Invalid UTF-8 byte sequence");
-            }
             return ((firstByte & 0x07) << 18) | ((localBytes[firstByteIndex + 1] & 0x3F) << 12)
                     | ((localBytes[firstByteIndex + 2] & 0x3F) << 6)
                     | (localBytes[firstByteIndex + 3] & 0x3F);
