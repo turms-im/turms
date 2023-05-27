@@ -308,6 +308,7 @@ public class GroupMemberService {
                                 muteEndDate,
                                 session);
                     }
+                    blockedUserIds = CollectionUtil.sort(blockedUserIds);
                     String ids = StringUtil.joinLatin1(", ", blockedUserIds);
                     return Mono.error(
                             ResponseException.get(ResponseStatusCode.ADD_BLOCKED_USER_TO_GROUP,

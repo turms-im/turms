@@ -850,7 +850,9 @@ public class GroupService {
                         Set<Long> creatableGroupTypeIds =
                                 userPermissionGroup.getCreatableGroupTypeIds();
                         if (!creatableGroupTypeIds.contains(groupTypeId)) {
-                            String ids = StringUtil.joinLatin1(", ", creatableGroupTypeIds);
+                            List<Long> sortedIds = new ArrayList<>(creatableGroupTypeIds);
+                            sortedIds.sort(null);
+                            String ids = StringUtil.joinLatin1(", ", sortedIds);
                             String reason =
                                     "The requester is only allowed to create groups with the types: "
                                             + ids;

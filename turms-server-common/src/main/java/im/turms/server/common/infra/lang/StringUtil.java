@@ -118,7 +118,8 @@ public final class StringUtil {
 
     /**
      * @implNote The method assumes the string does NOT contain any extended control character if it
-     *           is encoded in LATIN1
+     *           is encoded in LATIN1. Though Latin-1 is a subset of Unicode, Latin-1 and UTF-8 have
+     *           different bit patterns.
      * @see <a href="https://cs.stanford.edu/people/miles/iso8859.html">iso8859</a>
      */
     public static byte[] getUtf8Bytes(String s) {
@@ -152,25 +153,39 @@ public final class StringUtil {
         int separatorLength = separator.length();
         int itemCount = items.size();
         if (itemCount == 0) {
-            return "";
+            return "[]";
         }
         if (itemCount == 1) {
-            return String.valueOf(items instanceof List<?> list
+            Object obj = items instanceof List<?> list
                     ? list.get(0)
                     : items.iterator()
-                            .next());
+                            .next();
+            if (obj instanceof String str) {
+                return "[\""
+                        + str
+                        + "\"";
+            }
+            return "["
+                    + obj
+                    + "]";
         }
         List<String> strings = new ArrayList<>(itemCount);
         int size = 0;
         String str;
         for (Object item : items) {
-            str = String.valueOf(item);
+            str = item instanceof String itemStr
+                    ? "\""
+                            + itemStr
+                            + "\""
+                    : String.valueOf(item);
             size += str.length();
             strings.add(str);
         }
-        size += separatorLength * (itemCount - 1);
+        size += 2 + separatorLength * (itemCount - 1);
         byte[] newStringBytes = new byte[size];
-        int writerIndex = 0;
+        newStringBytes[0] = '[';
+        newStringBytes[size - 1] = ']';
+        int writerIndex = 1;
         byte[] bytes;
         byte[] separatorBytes = getBytes(separator);
         for (int i = 0; i < itemCount; i++) {
@@ -179,12 +194,8 @@ public final class StringUtil {
             System.arraycopy(bytes, 0, newStringBytes, writerIndex, bytes.length);
             writerIndex += bytes.length;
             if (i < itemCount - 1) {
-                System.arraycopy(separatorBytes,
-                        0,
-                        newStringBytes,
-                        writerIndex,
-                        separatorBytes.length);
-                writerIndex += separatorBytes.length;
+                System.arraycopy(separatorBytes, 0, newStringBytes, writerIndex, separatorLength);
+                writerIndex += separatorLength;
             }
         }
         return newLatin1String(newStringBytes);
@@ -435,7 +446,7 @@ public final class StringUtil {
         return message;
     }
 
-    public static String toString(Object val) {
+    public static String toString(@Nullable Object val) {
         return val == null
                 ? ""
                 : val.toString();

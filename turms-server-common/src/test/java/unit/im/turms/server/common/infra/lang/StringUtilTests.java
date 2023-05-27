@@ -46,11 +46,11 @@ class StringUtilTests {
     @Test
     void joinLatin1() {
         String separator = ", ";
-        assertThat(StringUtil.joinLatin1(separator, Collections.emptyList())).isEqualTo("");
-        assertThat(StringUtil.joinLatin1(separator, List.of(1))).isEqualTo("1");
-        assertThat(StringUtil.joinLatin1(separator, List.of(1, "abc"))).isEqualTo("1, abc");
+        assertThat(StringUtil.joinLatin1(separator, Collections.emptyList())).isEqualTo("[]");
+        assertThat(StringUtil.joinLatin1(separator, List.of(1))).isEqualTo("[1]");
+        assertThat(StringUtil.joinLatin1(separator, List.of(1, "abc"))).isEqualTo("[1, \"abc\"]");
         assertThat(StringUtil.joinLatin1(separator, List.of(1, "abc", Boolean.TRUE)))
-                .isEqualTo("1, abc, true");
+                .isEqualTo("[1, \"abc\", true]");
     }
 
     @Test

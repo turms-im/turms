@@ -141,6 +141,14 @@ public final class CollectionUtil {
         return ConcurrentHashMap.newKeySet(getMapCapability(expectedSize));
     }
 
+    public static <K, V> Map<K, V> newMap(K[] keys, Function<K, V> valueMapper) {
+        Map<K, V> map = newMapWithExpectedSize(keys.length);
+        for (K key : keys) {
+            map.put(key, valueMapper.apply(key));
+        }
+        return map;
+    }
+
     public static <K, V> Map<K, V> newMap(Collection<K> keys, Function<K, V> valueMapper) {
         Map<K, V> map = newMapWithExpectedSize(keys.size());
         for (K key : keys) {
@@ -221,6 +229,25 @@ public final class CollectionUtil {
     // endregion
 
     // region contains
+    public static <T> boolean contains(@Nullable List<T> list, T value) {
+        if (list == null) {
+            return false;
+        }
+        return list.contains(value);
+    }
+
+    public static <T> boolean contains(@Nullable Collection<T> values, Predicate<T> predicate) {
+        if (values == null) {
+            return false;
+        }
+        for (T value : values) {
+            if (predicate.test(value)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static boolean containsAll(Map<?, ?> map1, Map<?, ?> map2) {
         for (Map.Entry<?, ?> entry : map2.entrySet()) {
             if (!Objects.equals(entry.getValue(), map1.get(entry.getKey()))) {
@@ -439,6 +466,16 @@ public final class CollectionUtil {
         }
         return result;
     }
+
+    public static <T> List<T> sort(List<T> values) {
+        if (IMMUTABLE_COLLECTION_CLASS.isAssignableFrom(values.getClass())) {
+            List<T> newValues = new ArrayList<>(values);
+            newValues.sort(null);
+            return newValues;
+        }
+        values.sort(null);
+        return values;
+    }
     // endregion
 
     // region add/remove
@@ -592,24 +629,6 @@ public final class CollectionUtil {
         return set;
     }
 
-    public static <T> boolean contains(@Nullable List<T> list, T value) {
-        if (list == null) {
-            return false;
-        }
-        return list.contains(value);
-    }
-
-    public static <T> boolean contains(@Nullable Collection<T> values, Predicate<T> predicate) {
-        if (values == null) {
-            return false;
-        }
-        for (T value : values) {
-            if (predicate.test(value)) {
-                return true;
-            }
-        }
-        return false;
-    }
     // endregion
 
 }
