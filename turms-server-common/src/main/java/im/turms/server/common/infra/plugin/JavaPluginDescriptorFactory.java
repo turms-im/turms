@@ -89,7 +89,7 @@ public class JavaPluginDescriptorFactory extends PluginDescriptorFactory {
                             && !descriptorFileName.endsWith(".yml"))) {
                 continue;
             }
-            Map<String, String> properties;
+            Map<String, Object> properties;
             try (InputStream stream = file.getInputStream(zipEntry)) {
                 properties = YamlUtil.readValue(stream, HashMap.class);
             } catch (IOException e) {
@@ -100,10 +100,11 @@ public class JavaPluginDescriptorFactory extends PluginDescriptorFactory {
                 throw new MalformedPluginArchiveException(message, e);
             }
             try {
-                String entryClass = readPropertiesString(properties, PLUGIN_CLASS, true);
+                String entryClass = readPropertyAsString(properties, PLUGIN_CLASS, true);
                 PluginDescriptor pluginDescriptor = createPluginDescriptor(properties);
                 return new JavaPluginDescriptor(
                         pluginDescriptor.getId(),
+                        pluginDescriptor.getCompatibleServerTypeToInfo(),
                         pluginDescriptor.getVersion(),
                         pluginDescriptor.getProvider(),
                         pluginDescriptor.getLicense(),

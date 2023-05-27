@@ -55,7 +55,7 @@ public class PluginClassLoader extends URLClassLoader {
                 throw new ClassNotFoundException(
                         "Could not find the class ("
                                 + name
-                                + ") of Turms. This may happen if the plugin is loaded by a wrong Turms server",
+                                + ") of Turms. This may happen if the plugin descriptor specifies a wrong server type, or the class has been removed by Turms",
                         e);
             }
             throw e;

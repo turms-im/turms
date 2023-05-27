@@ -36,11 +36,11 @@ public class JsPluginDescriptorFactory extends PluginDescriptorFactory {
     }
 
     public static JsPluginDescriptor parsePluginDescriptor(Value plugin, @Nullable Path path) {
-        Map<String, String> properties = executeGetPluginDescriptor(plugin);
+        Map<String, Object> properties = executeGetPluginDescriptor(plugin);
         return createJsPluginDescriptor(properties, path);
     }
 
-    public static Map<String, String> executeGetPluginDescriptor(Value plugin) {
+    public static Map<String, Object> executeGetPluginDescriptor(Value plugin) {
         Value getDescriptor = plugin.getMember(GET_DESCRIPTOR);
         if (getDescriptor == null) {
             String message = "The plugin must have a function named: \""
@@ -64,7 +64,7 @@ public class JsPluginDescriptorFactory extends PluginDescriptorFactory {
                     + "\"";
             throw new CorruptedScriptException(message, e);
         }
-        Map<String, String> map;
+        Map<String, Object> map;
         try {
             map = descriptor.as(Map.class);
         } catch (Exception e) {
@@ -85,11 +85,12 @@ public class JsPluginDescriptorFactory extends PluginDescriptorFactory {
     }
 
     private static JsPluginDescriptor createJsPluginDescriptor(
-            Map<String, String> properties,
+            Map<String, Object> properties,
             @Nullable Path path) {
         PluginDescriptor descriptor = createPluginDescriptor(properties);
         return new JsPluginDescriptor(
                 descriptor.getId(),
+                descriptor.getCompatibleServerTypeToInfo(),
                 descriptor.getVersion(),
                 descriptor.getProvider(),
                 descriptor.getLicense(),

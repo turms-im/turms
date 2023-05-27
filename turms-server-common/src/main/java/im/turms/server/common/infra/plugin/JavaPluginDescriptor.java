@@ -21,9 +21,12 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.nio.file.Path;
+import java.util.Map;
 
 import lombok.EqualsAndHashCode;
 import lombok.Value;
+
+import im.turms.server.common.infra.cluster.node.NodeType;
 
 /**
  * @author James Chen
@@ -36,13 +39,20 @@ public class JavaPluginDescriptor extends PluginDescriptor {
 
     public JavaPluginDescriptor(
             String id,
+            Map<NodeType, ServerInfo> compatibleServerTypeToInfo,
             String version,
             String provider,
             String license,
             String description,
             String entryClass,
             String jarPath) {
-        super(id, version, provider, license, description, Path.of(jarPath));
+        super(id,
+                compatibleServerTypeToInfo,
+                version,
+                provider,
+                license,
+                description,
+                Path.of(jarPath));
         this.entryClass = entryClass;
         URI uri = getPath().toUri();
         try {

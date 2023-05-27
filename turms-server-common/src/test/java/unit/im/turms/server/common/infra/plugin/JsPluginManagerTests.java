@@ -29,6 +29,7 @@ import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
+import im.turms.server.common.infra.cluster.node.NodeType;
 import im.turms.server.common.infra.context.TurmsApplicationContext;
 import im.turms.server.common.infra.logging.core.logger.AsyncLogger;
 import im.turms.server.common.infra.logging.core.logger.Logger;
@@ -127,6 +128,7 @@ class JsPluginManagerTests {
                         .build())
                 .build());
         PluginManager manager = new PluginManager(
+                NodeType.GATEWAY,
                 context,
                 applicationContext,
                 propertiesManager,

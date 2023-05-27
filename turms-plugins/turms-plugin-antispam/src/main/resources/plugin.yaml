@@ -1,5 +1,7 @@
 id: im.turms.plugin.antispam.AntiSpamPlugin
 class: im.turms.plugin.antispam.AntiSpamPlugin
+compatible-servers:
+  - type: turms-service
 version: 0.10.0
 provider: im.turms
 license: MIT

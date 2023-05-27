@@ -18,9 +18,12 @@
 package im.turms.server.common.infra.plugin;
 
 import java.nio.file.Path;
+import java.util.Map;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+
+import im.turms.server.common.infra.cluster.node.NodeType;
 
 /**
  * @author James Chen
@@ -29,10 +32,22 @@ import lombok.Data;
 @Data
 public class PluginDescriptor {
     private final String id;
+    private final Map<NodeType, ServerInfo> compatibleServerTypeToInfo;
     private final String version;
     private final String provider;
     private final String license;
     private final String description;
 
     private Path path;
+
+    @Data
+    public static class ServerInfo {
+        public static final ServerInfo DEFAULT = new ServerInfo();
+
+        // TODO: for future use
+//        private final String version;
+
+        private ServerInfo() {
+        }
+    }
 }

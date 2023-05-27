@@ -29,6 +29,7 @@ import org.springframework.context.ApplicationContext;
 import util.JarUtil;
 
 import im.turms.plugin.MyExtensionPoint;
+import im.turms.server.common.infra.cluster.node.NodeType;
 import im.turms.server.common.infra.cluster.service.rpc.RpcService;
 import im.turms.server.common.infra.context.TurmsApplicationContext;
 import im.turms.server.common.infra.plugin.PluginClassLoader;
@@ -135,6 +136,7 @@ class JavaPluginManagerTests {
                         .build())
                 .build());
         PluginManager manager = new PluginManager(
+                NodeType.GATEWAY,
                 context,
                 applicationContext,
                 propertiesManager,

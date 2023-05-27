@@ -49,6 +49,7 @@ import reactor.netty.resources.ConnectionProvider;
 import reactor.netty.transport.ProxyProvider;
 
 import im.turms.server.common.access.admin.web.MultipartFile;
+import im.turms.server.common.infra.cluster.node.NodeType;
 import im.turms.server.common.infra.codec.Base16Util;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.context.JobShutdownOrder;
@@ -98,6 +99,7 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
     private final int jsInspectPort;
 
     private final PluginRepository pluginRepository;
+    private final NodeType nodeType;
     private final ApplicationContext context;
     /**
      * The object is {@link Engine} in fact, but we don't declare it as {@link Engine} because it is
@@ -107,11 +109,13 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
     private Object engine;
 
     public PluginManager(
+            NodeType nodeType,
             ApplicationContext context,
             TurmsApplicationContext applicationContext,
             TurmsPropertiesManager propertiesManager,
             @Autowired(
                     required = false) Set<Class<? extends ExtensionPoint>> singletonExtensionPoints) {
+        this.nodeType = nodeType;
         this.context = context;
         PluginProperties pluginProperties = propertiesManager.getLocalProperties()
                 .getPlugin();
@@ -402,7 +406,7 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
                                 + fileName
                                 + ") because it is not a Java plugin JAR file");
             }
-            Plugin plugin = JavaPluginFactory.create(descriptor, context);
+            Plugin plugin = JavaPluginFactory.create(descriptor, nodeType, context);
             pluginRepository.register(plugin);
         }
     }
@@ -410,7 +414,7 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
     private void loadJavaPlugins(List<ZipFile> zipFiles) {
         List<JavaPluginDescriptor> descriptors = JavaPluginDescriptorFactory.load(zipFiles);
         for (JavaPluginDescriptor descriptor : descriptors) {
-            Plugin plugin = JavaPluginFactory.create(descriptor, context);
+            Plugin plugin = JavaPluginFactory.create(descriptor, nodeType, context);
             pluginRepository.register(plugin);
         }
     }
@@ -420,7 +424,7 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
         if (descriptor == null) {
             return false;
         }
-        Plugin plugin = JavaPluginFactory.create(descriptor, context);
+        Plugin plugin = JavaPluginFactory.create(descriptor, nodeType, context);
         pluginRepository.register(plugin);
         return true;
     }

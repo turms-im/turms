@@ -17,24 +17,11 @@
 
 package im.turms.server.common.infra.plugin;
 
-import java.nio.file.Path;
-import java.util.Map;
-import jakarta.annotation.Nullable;
-
-import im.turms.server.common.infra.cluster.node.NodeType;
-
 /**
  * @author James Chen
  */
-public class JsPluginDescriptor extends PluginDescriptor {
-    public JsPluginDescriptor(
-            String id,
-            Map<NodeType, ServerInfo> compatibleServerTypeToInfo,
-            String version,
-            String provider,
-            String license,
-            String description,
-            @Nullable Path path) {
-        super(id, compatibleServerTypeToInfo, version, provider, license, description, path);
+public class IncompatibleServerException extends RuntimeException {
+    public IncompatibleServerException(String message) {
+        super(message);
     }
 }
