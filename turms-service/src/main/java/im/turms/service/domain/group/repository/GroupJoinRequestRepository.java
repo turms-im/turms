@@ -97,7 +97,10 @@ public class GroupJoinRequestRepository extends ExpirableEntityRepository<GroupJ
                 .setIfNotNull(GroupJoinRequest.Fields.CONTENT, content)
                 .setIfNotNull(GroupJoinRequest.Fields.STATUS, status)
                 .setIfNotNull(GroupJoinRequest.Fields.CREATION_DATE, creationDate);
-        updateResponseDateBasedOnStatus(update, status, responseDate);
+        updateResponseDateBasedOnStatus(GroupJoinRequest.Fields.RESPONSE_DATE,
+                update,
+                status,
+                responseDate);
         return mongoClient.updateMany(entityClass, filter, update);
     }
 

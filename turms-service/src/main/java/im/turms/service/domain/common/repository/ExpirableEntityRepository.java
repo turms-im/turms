@@ -33,7 +33,6 @@ import im.turms.server.common.storage.mongo.operation.option.QueryOptions;
 import im.turms.server.common.storage.mongo.operation.option.Update;
 import im.turms.service.domain.common.po.Expirable;
 import im.turms.service.domain.common.util.ExpirableRequestInspector;
-import im.turms.service.domain.group.po.GroupInvitation;
 import im.turms.service.domain.group.po.GroupJoinRequest;
 
 /**
@@ -88,6 +87,7 @@ public abstract class ExpirableEntityRepository<T extends Expirable, K>
     }
 
     protected void updateResponseDateBasedOnStatus(
+            @NotNull String field,
             @NotNull Update update,
             @Nullable RequestStatus status,
             @Nullable Date responseDate) {
@@ -98,9 +98,9 @@ public abstract class ExpirableEntityRepository<T extends Expirable, K>
             if (responseDate == null) {
                 responseDate = new Date();
             }
-            update.set(GroupInvitation.Fields.RESPONSE_DATE, responseDate);
+            update.set(field, responseDate);
         } else {
-            update.unset(GroupInvitation.Fields.RESPONSE_DATE);
+            update.unset(field);
         }
     }
 

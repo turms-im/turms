@@ -469,7 +469,7 @@ public class UserRelationshipService {
             Validator.notNull(upsert, "upsert");
             Validator.notEquals(ownerId,
                     relatedUserId,
-                    "The owner ID must not equal to the related user ID");
+                    "The owner ID must not be equal to the related user ID");
         } catch (ResponseException e) {
             return Mono.error(e);
         }

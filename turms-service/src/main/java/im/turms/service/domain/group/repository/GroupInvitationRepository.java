@@ -93,7 +93,10 @@ public class GroupInvitationRepository extends ExpirableEntityRepository<GroupIn
                 .setIfNotNull(GroupInvitation.Fields.CONTENT, content)
                 .setIfNotNull(GroupInvitation.Fields.STATUS, status)
                 .setIfNotNull(GroupInvitation.Fields.CREATION_DATE, creationDate);
-        updateResponseDateBasedOnStatus(update, status, responseDate);
+        updateResponseDateBasedOnStatus(GroupInvitation.Fields.RESPONSE_DATE,
+                update,
+                status,
+                responseDate);
         return mongoClient.updateMany(entityClass, filter, update);
     }
 

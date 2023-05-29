@@ -85,7 +85,10 @@ public class UserFriendRequestRepository
                 .setIfNotNull(UserFriendRequest.Fields.CONTENT, content)
                 .setIfNotNull(UserFriendRequest.Fields.REASON, reason)
                 .setIfNotNull(UserFriendRequest.Fields.CREATION_DATE, creationDate);
-        updateResponseDateBasedOnStatus(update, status, new Date());
+        updateResponseDateBasedOnStatus(UserFriendRequest.Fields.RESPONSE_DATE,
+                update,
+                status,
+                new Date());
         return mongoClient.updateMany(entityClass, filter, update);
     }
 
