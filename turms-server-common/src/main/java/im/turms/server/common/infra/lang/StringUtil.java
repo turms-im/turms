@@ -48,6 +48,7 @@ public final class StringUtil {
     private static final Unsafe UNSAFE = UnsafeUtil.UNSAFE;
     private static final long STRING_VALUE_OFFSET;
     private static final long STRING_CODER_OFFSET;
+    private static final long UTF8_STRING_OFFSET;
     private static final MethodHandle NEW_STRING;
 
     static {
@@ -74,6 +75,7 @@ public final class StringUtil {
                     "Failed to get the offset of the field: java.lang.String#coder",
                     e);
         }
+        UTF8_STRING_OFFSET = UnsafeUtil.getNextFieldOffset(String.class);
         // Validate
         String expectedText = "abc";
         String actualText = newString(getBytes(expectedText), getCoder(expectedText));
@@ -85,6 +87,9 @@ public final class StringUtil {
                             + expectedText
                             + "\"");
         }
+        // This should crash the JVM if fails
+        Utf8String utf8String = getOrSetUtf8String(expectedText);
+        UNSAFE.putObject(utf8String, UTF8_STRING_OFFSET, null);
     }
 
     private StringUtil() {
@@ -557,6 +562,18 @@ public final class StringUtil {
         } catch (Throwable e) {
             throw new IncompatibleJvmException("Failed to new a string", e);
         }
+    }
+
+    public static Utf8String getOrSetUtf8String(String s) {
+        if (s == null) {
+            throw new IllegalArgumentException("The input string must not be null");
+        }
+        Utf8String utf8String = (Utf8String) UNSAFE.getObject(s, UTF8_STRING_OFFSET);
+        if (utf8String == null) {
+            utf8String = Utf8String.of(s);
+            UNSAFE.putObject(s, UTF8_STRING_OFFSET, utf8String);
+        }
+        return utf8String;
     }
 
     // Case format conversion
