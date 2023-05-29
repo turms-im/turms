@@ -88,8 +88,8 @@ public final class StringUtil {
                             + "\"");
         }
         // This should crash the JVM if fails
-        Utf8String utf8String = getOrSetUtf8String(expectedText);
-        UNSAFE.putObject(utf8String, UTF8_STRING_OFFSET, null);
+        getOrSetUtf8String(expectedText);
+        UNSAFE.putObject(expectedText, UTF8_STRING_OFFSET, null);
     }
 
     private StringUtil() {
