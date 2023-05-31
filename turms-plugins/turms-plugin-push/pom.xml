@@ -49,6 +49,17 @@
             <groupId>com.google.firebase</groupId>
             <artifactId>firebase-admin</artifactId>
             <version>${firebase-admin.version}</version>
+            <!-- https://github.com/firebase/firebase-admin-java/issues/699 -->
+            <exclusions>
+                <exclusion>
+                    <groupId>com.google.cloud</groupId>
+                    <artifactId>google-cloud-firestore</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.google.cloud</groupId>
+                    <artifactId>google-cloud-storage</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.eatthepath</groupId>
