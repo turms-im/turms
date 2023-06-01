@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
+import jakarta.annotation.Nullable;
 
 import im.turms.server.common.infra.exception.NotImplementedException;
 import im.turms.server.common.infra.thread.ThreadSafe;
@@ -87,6 +88,7 @@ public final class ConcurrentEnumMap<K extends Enum<K>, V> implements Map<K, V> 
         return get((K) key);
     }
 
+    @Nullable
     @Override
     public V remove(Object key) {
         return remove((K) key);
@@ -94,9 +96,12 @@ public final class ConcurrentEnumMap<K extends Enum<K>, V> implements Map<K, V> 
 
     @Override
     public void putAll(Map<? extends K, ? extends V> m) {
-        throw new NotImplementedException();
+        for (Entry<? extends K, ? extends V> entry : m.entrySet()) {
+            put(entry.getKey(), entry.getValue());
+        }
     }
 
+    @Nullable
     @Override
     public V putIfAbsent(K key, V value) {
         int ordinal = key.ordinal();
@@ -174,6 +179,7 @@ public final class ConcurrentEnumMap<K extends Enum<K>, V> implements Map<K, V> 
         return existingValue;
     }
 
+    @Nullable
     public V remove(K key) {
         int ordinal = key.ordinal();
         V value = (V) VALUES_HANDLE.getAndSet(values, ordinal, null);
