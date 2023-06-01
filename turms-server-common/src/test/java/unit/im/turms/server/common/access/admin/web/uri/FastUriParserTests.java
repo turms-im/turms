@@ -179,9 +179,13 @@ class FastUriParserTests {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("The array item must be all indexed or not indexed");
 
-        testUrl("/metrics?names=system.cpu.usage%2Csystem.memory.total%2Csystem.memory.free%2Cdisk.total%2Cdisk.free",
+        testUrl("/metrics?dateStart=2023-06-01T00:00:00%2B08:00&names=system.cpu.usage%2Csystem.memory.total%2Csystem.memory.free%2Cdisk.total%2Cdisk.free&dateEnd=2023-06-02T00:00:00%2B08:00",
                 Pair.of("/metrics",
-                        Map.of("names",
+                        Map.of("dateStart",
+                                List.of("2023-06-01T00:00:00+08:00"),
+                                "dateEnd",
+                                List.of("2023-06-02T00:00:00+08:00"),
+                                "names",
                                 List.of("system.cpu.usage",
                                         "system.memory.total",
                                         "system.memory.free",

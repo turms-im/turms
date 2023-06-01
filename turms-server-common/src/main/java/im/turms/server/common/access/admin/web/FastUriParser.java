@@ -17,6 +17,7 @@
 
 package im.turms.server.common.access.admin.web;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -43,7 +44,8 @@ public final class FastUriParser {
         if (!StringUtil.isLatin1(uri)) {
             throw new IllegalArgumentException("The URI must only contain ASCII characters");
         }
-        byte[] srcBytes = StringUtil.getBytes(uri);
+        byte[] originalSrcBytes = StringUtil.getBytes(uri);
+        byte[] srcBytes = originalSrcBytes;
         String path = null;
         Map<String, List<Object>> queryParams = new HashMap<>(srcBytes.length >> 3);
 
@@ -58,6 +60,8 @@ public final class FastUriParser {
 
         boolean isEncodedLeftBracket;
         boolean isEncodedRightBracket;
+
+        int paramValueCharCountToTrim = 0;
 
         String currentParamKey = null;
         String currentParamNestedKey = null;
@@ -236,16 +240,26 @@ public final class FastUriParser {
                     } else if (i == srcBytesLength - 1) {
                         length = i - currentItemCharBeginIndex + 1;
                     } else if (b == '%') {
-                        // %2C => &
-                        if (i + 2 < srcBytesLength
-                                && srcBytes[i + 1] == '2'
-                                && srcBytes[i + 2] == 'C') {
-                            isValueDelimiter = true;
-                            length = i - currentItemCharBeginIndex;
+                        if (i + 2 < srcBytesLength && srcBytes[i + 1] == '2') {
+                            byte srcByte = srcBytes[i + 2];
+                            // %2C => ,
+                            if (srcByte == 'C') {
+                                isValueDelimiter = true;
+                                length = i - currentItemCharBeginIndex;
+                            } else if (srcByte == 'B') {
+                                // %2B => +
+                                if (srcBytes == originalSrcBytes) {
+                                    srcBytes = Arrays.copyOf(originalSrcBytes, srcBytesLength);
+                                }
+                                srcBytes[i] = '+';
+                                srcBytes[i + 1] = 0;
+                                srcBytes[i + 2] = 0;
+                                paramValueCharCountToTrim += 2;
+                            }
                             i += 2;
                         } else {
                             throw new IllegalArgumentException(
-                                    "The query parameter can only contain escape codes of \"%2C\"");
+                                    "The query parameter can only contain escape codes of \"%2B\" and \"%2C\"");
                         }
                     } else if (b == ',') {
                         if (currentParamNestedKey != null) {
@@ -254,10 +268,25 @@ public final class FastUriParser {
                         }
                         length = i - currentItemCharBeginIndex;
                         isValueDelimiter = true;
+                    } else if (b == 0) {
+                        throw new IllegalArgumentException(
+                                "The query parameter must not contain an null char");
                     }
                     if (length != -1) {
-                        value = StringUtil
-                                .newLatin1String(srcBytes, currentItemCharBeginIndex, length);
+                        if (paramValueCharCountToTrim > 0) {
+                            byte[] paramValueBytes = new byte[length - paramValueCharCountToTrim];
+                            for (int j = 0, writerIndex = 0; j < length; j++) {
+                                byte paramValueByte = srcBytes[currentItemCharBeginIndex + j];
+                                if (paramValueByte != 0) {
+                                    paramValueBytes[writerIndex++] = paramValueByte;
+                                }
+                            }
+                            paramValueCharCountToTrim = 0;
+                            value = StringUtil.newLatin1String(paramValueBytes);
+                        } else {
+                            value = StringUtil
+                                    .newLatin1String(srcBytes, currentItemCharBeginIndex, length);
+                        }
                         if (currentParamNestedKey == null) {
                             currentParamValues.add(value);
                         } else {
