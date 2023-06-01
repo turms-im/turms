@@ -36,13 +36,11 @@ import im.turms.server.common.infra.recycler.Recyclable;
  */
 public class ArrayCodec<T> extends MongoCodec<T[]> {
 
-    private final Class<T[]> arrayClazz;
     private final Class<T> componentClazz;
     private Codec<T> componentCodec;
 
     public ArrayCodec(Class arrayClazz) {
         super(arrayClazz);
-        this.arrayClazz = arrayClazz;
         componentClazz = arrayClazz.getComponentType();
     }
 
@@ -63,7 +61,7 @@ public class ArrayCodec<T> extends MongoCodec<T[]> {
             }
             reader.readEndArray();
             int length = list.size();
-            return list.toArray((T[]) Array.newInstance(arrayClazz.getComponentType(), length));
+            return list.toArray((T[]) Array.newInstance(componentClazz, length));
         }
     }
 
