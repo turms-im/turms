@@ -24,7 +24,6 @@ import org.junit.jupiter.api.Test;
 
 import im.turms.server.common.infra.lang.Pair;
 import im.turms.server.common.infra.lang.StringUtil;
-import im.turms.server.common.infra.lang.Utf8String;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -171,14 +170,6 @@ class StringUtilTests {
         assertThat(StringUtil.toQuotedStringLatin1(List.of("a", "b"))).isEqualTo("[\"a\", \"b\"]");
         assertThat(StringUtil.toQuotedStringLatin1(List.of("a", "b", "1")))
                 .isEqualTo("[\"a\", \"b\", \"1\"]");
-    }
-
-    @Test
-    void getOrSetUtf8String() {
-        String s1 = "test";
-        Utf8String utf8String1 = StringUtil.getOrSetUtf8String(s1);
-        Utf8String utf8String2 = StringUtil.getOrSetUtf8String(s1);
-        assertThat((CharSequence) utf8String1).isSameAs(utf8String2);
     }
 
 }

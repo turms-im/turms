@@ -19,6 +19,7 @@ package unit.im.turms.server.common.infra.lang;
 
 import java.nio.charset.StandardCharsets;
 
+import com.github.benmanes.caffeine.cache.Cache;
 import org.junit.jupiter.api.Test;
 
 import im.turms.server.common.infra.lang.Utf8String;
@@ -228,5 +229,25 @@ class Utf8StringTests {
         Utf8String str = Utf8String.of("Hello, 世界🌍");
         assertThatThrownBy(() -> str.codepointAt(-1)).isInstanceOf(IndexOutOfBoundsException.class);
         assertThatThrownBy(() -> str.codepointAt(11)).isInstanceOf(IndexOutOfBoundsException.class);
+    }
+
+    @Test
+    void testReference() throws InterruptedException {
+        Cache<String, Utf8String> cache = Utf8String.STRING_TO_UTF8;
+        cache.invalidateAll();
+
+        String string = new String("Hello, 世界🌍");
+        Utf8String utf8String1 = Utf8String.of(string);
+        Utf8String utf8String2 = Utf8String.of(string);
+        assertThat((CharSequence) utf8String1).isEqualTo(utf8String2);
+
+        cache.cleanUp();
+        assertThat(cache.estimatedSize()).isEqualTo(1);
+
+        string = null;
+        System.gc();
+        Thread.sleep(3000);
+        cache.cleanUp();
+        assertThat(cache.estimatedSize()).isEqualTo(0);
     }
 }

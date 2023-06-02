@@ -20,10 +20,20 @@ package im.turms.server.common.infra.lang;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
+
+import im.turms.server.common.infra.test.VisibleForTesting;
+
 /**
  * @author James Chen
  */
 public class Utf8String implements CharSequence, Comparable<Utf8String> {
+
+    @VisibleForTesting
+    public static final Cache<String, Utf8String> STRING_TO_UTF8 = Caffeine.newBuilder()
+            .weakKeys()
+            .build();
 
     /**
      * @see java.nio.charset.CharsetEncoder#maxBytesPerChar()
@@ -39,7 +49,7 @@ public class Utf8String implements CharSequence, Comparable<Utf8String> {
     private final int charCount;
     private int hashcode;
 
-    public Utf8String(String str, byte[] bytes, int byteOffset, int byteCount, int charCount) {
+    private Utf8String(String str, byte[] bytes, int byteOffset, int byteCount, int charCount) {
         if (byteOffset < 0) {
             throw new IndexOutOfBoundsException(
                     "The byte offset must be greater than or equal to 0");
@@ -61,12 +71,22 @@ public class Utf8String implements CharSequence, Comparable<Utf8String> {
     }
 
     public static Utf8String of(String string) {
-        boolean isLatin1 = StringUtil.isLatin1(string);
-        // Fast path for Latin-1
+        return STRING_TO_UTF8.get(string, Utf8String::newString);
+    }
+
+    private static Utf8String newString(String string) {
+        byte coder = StringUtil.getCoder(string);
         byte[] bytes = StringUtil.getBytes(string);
+        // Fast path for trusted Latin-1
+        boolean isLatin1 = StringUtil.isLatin1(coder);
         if (isLatin1) {
             int byteLength = bytes.length;
-            return new Utf8String(string, bytes, 0, byteLength, byteLength);
+            return new Utf8String(
+                    StringUtil.newString(bytes, coder),
+                    bytes,
+                    0,
+                    byteLength,
+                    byteLength);
         }
         // Slow path for UTF16
         int utf16CharLength = string.length();
@@ -80,10 +100,14 @@ public class Utf8String implements CharSequence, Comparable<Utf8String> {
             charCount++;
         }
         if (i == utf16CharLength) {
-            return new Utf8String(string, out, 0, utf16CharLength, utf16CharLength);
+            return new Utf8String(
+                    StringUtil.newString(bytes, coder),
+                    out,
+                    0,
+                    utf16CharLength,
+                    utf16CharLength);
         }
         int byteCount = i;
-
         for (; i < utf16CharLength; i++) {
             c = string.charAt(i);
             if (c < 0x80 && byteCount < maxBytesLength) {
@@ -133,7 +157,7 @@ public class Utf8String implements CharSequence, Comparable<Utf8String> {
             }
             charCount++;
         }
-        return new Utf8String(string, out, 0, byteCount, charCount);
+        return new Utf8String(StringUtil.newString(bytes, coder), out, 0, byteCount, charCount);
     }
 
     private static int getCodepoint(byte[] bytes, int firstByteIndex) {
