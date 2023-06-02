@@ -36,7 +36,7 @@ public class GroupInvitationDTO extends GroupInvitation {
     private final Date expirationDate;
 
     public GroupInvitationDTO(GroupInvitation invitation, Date expirationDate) {
-        super(invitation.getGroupId(),
+        super(invitation.getId(),
                 invitation.getGroupId(),
                 invitation.getInviterId(),
                 invitation.getInviteeId(),
