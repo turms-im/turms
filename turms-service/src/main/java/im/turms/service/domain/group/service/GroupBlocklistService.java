@@ -44,6 +44,7 @@ import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.exception.ResponseExceptionPublisherPool;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
+import im.turms.server.common.infra.reactor.PublisherPool;
 import im.turms.server.common.infra.recycler.ListRecycler;
 import im.turms.server.common.infra.recycler.Recyclable;
 import im.turms.server.common.infra.recycler.SetRecycler;
@@ -155,7 +156,10 @@ public class GroupBlocklistService {
                 });
     }
 
-    public Mono<Void> unblockUser(
+    /**
+     * @return whether the user to unblock was blocked
+     */
+    public Mono<Boolean> unblockUser(
             @NotNull Long requesterId,
             @NotNull Long groupId,
             @NotNull Long userIdToUnblock,
@@ -175,11 +179,12 @@ public class GroupBlocklistService {
                                 ResponseStatusCode.NOT_OWNER_OR_MANAGER_TO_REMOVE_BLOCKED_USER));
                     }
                     GroupBlockedUser.Key key = new GroupBlockedUser.Key(groupId, userIdToUnblock);
-                    Mono<DeleteResult> removeMono =
-                            groupBlocklistRepository.deleteById(key, session);
+                    Mono<Boolean> removeMono = groupBlocklistRepository.deleteById(key, session)
+                            .map(result -> result.getDeletedCount() > 0);
                     if (updateBlocklistVersion) {
-                        return removeMono.flatMap(
-                                result -> groupVersionService.updateBlocklistVersion(groupId)
+                        return removeMono.flatMap(wasBlocked -> {
+                            if (wasBlocked) {
+                                return groupVersionService.updateBlocklistVersion(groupId)
                                         .onErrorResume(t -> {
                                             LOGGER.error(
                                                     "Caught an error while updating the blocklist version of the group ({}) after unblocking a user",
@@ -187,9 +192,12 @@ public class GroupBlocklistService {
                                                     t);
                                             return Mono.empty();
                                         })
-                                        .then());
+                                        .then(PublisherPool.TRUE);
+                            }
+                            return PublisherPool.FALSE;
+                        });
                     }
-                    return removeMono.then();
+                    return removeMono;
                 });
     }
 

@@ -37,8 +37,8 @@ class ServiceResponseCodecTests extends BaseCodecTest {
                         .addLongs(100))
                 .build();
         ServiceResponse expectedResponse = new ServiceResponse(
-                dataForRequester,
                 ResponseStatusCode.OK,
+                dataForRequester,
                 "response for the status code");
         ServiceResponse actualRequest =
                 writeDataAndReadBuffer(new ServiceResponseCodec(), expectedResponse);

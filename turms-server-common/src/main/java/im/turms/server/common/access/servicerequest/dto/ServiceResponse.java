@@ -18,28 +18,61 @@
 package im.turms.server.common.access.servicerequest.dto;
 
 import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotNull;
 
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.access.common.ResponseStatusCode;
+import im.turms.server.common.infra.collection.FastEnumMap;
 import im.turms.server.common.infra.proto.ProtoFormatter;
 
 /**
  * @author James Chen
  */
 public record ServiceResponse(
-        @Nullable TurmsNotification.Data dataForRequester,
         ResponseStatusCode code,
-        String reason
+        @Nullable TurmsNotification.Data dataForRequester,
+        @Nullable String reason
 ) {
+
+    private static final FastEnumMap<ResponseStatusCode, ServiceResponse> POOL =
+            new FastEnumMap<>(ResponseStatusCode.class);
+    public static final ServiceResponse NO_CONTENT;
+
+    static {
+        for (ResponseStatusCode status : ResponseStatusCode.VALUES) {
+            POOL.put(status, new ServiceResponse(status, null, null));
+        }
+        NO_CONTENT = POOL.get(ResponseStatusCode.NO_CONTENT);
+    }
+
     @Override
     public String toString() {
         return "ServiceResponse{"
-                + "dataForRequester="
-                + ProtoFormatter.toLogString(dataForRequester)
-                + ", code="
+                + "code="
                 + code
+                + ", dataForRequester="
+                + ProtoFormatter.toLogString(dataForRequester)
                 + ", reason="
                 + reason
                 + '}';
+    }
+
+    public static ServiceResponse of(@NotNull ResponseStatusCode statusCode) {
+        return POOL.get(statusCode);
+    }
+
+    public static ServiceResponse of(@NotNull ResponseStatusCode statusCode, String message) {
+        return message == null
+                ? POOL.get(statusCode)
+                : new ServiceResponse(statusCode, null, message);
+    }
+
+    public static ServiceResponse of(
+            @Nullable TurmsNotification.Data data,
+            @NotNull ResponseStatusCode statusCode,
+            @Nullable String message) {
+        return data == null && message == null
+                ? POOL.get(statusCode)
+                : new ServiceResponse(statusCode, data, message);
     }
 }

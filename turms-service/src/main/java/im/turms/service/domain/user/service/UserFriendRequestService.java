@@ -373,7 +373,10 @@ public class UserFriendRequestService extends ExpirableEntityService<UserFriendR
         return userFriendRequestRepository.findRequesterAndRecipient(requestId);
     }
 
-    public Mono<Void> authAndHandleFriendRequest(
+    /**
+     * @return The friend request requester ID
+     */
+    public Mono<Long> authAndHandleFriendRequest(
             @NotNull Long friendRequestId,
             @NotNull Long requesterId,
             @NotNull @ValidResponseAction ResponseAction action,
@@ -386,34 +389,38 @@ public class UserFriendRequestService extends ExpirableEntityService<UserFriendR
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        return queryRequesterAndRecipient(friendRequestId).flatMap(request -> {
-            if (!request.getRecipientId()
-                    .equals(requesterId)) {
-                return Mono.error(ResponseException
-                        .get(ResponseStatusCode.REQUESTER_NOT_FRIEND_REQUEST_RECIPIENT));
-            }
-            return switch (action) {
-                case ACCEPT -> userFriendRequestRepository
-                        .inTransaction(session -> updatePendingFriendRequestStatus(friendRequestId,
-                                RequestStatus.ACCEPTED,
+        return queryRequesterAndRecipient(friendRequestId)
+                .switchIfEmpty(ResponseExceptionPublisherPool.resourceNotFound())
+                .flatMap(request -> {
+                    if (!request.getRecipientId()
+                            .equals(requesterId)) {
+                        return Mono.error(ResponseException
+                                .get(ResponseStatusCode.REQUESTER_NOT_FRIEND_REQUEST_RECIPIENT));
+                    }
+                    Mono<?> result = switch (action) {
+                        case ACCEPT -> userFriendRequestRepository
+                                .inTransaction(
+                                        session -> updatePendingFriendRequestStatus(friendRequestId,
+                                                RequestStatus.ACCEPTED,
+                                                reason,
+                                                session)
+                                                .then(userRelationshipService.friendTwoUsers(request
+                                                        .getRequesterId(), requesterId, session)))
+                                .retryWhen(TRANSACTION_RETRY);
+                        case IGNORE -> updatePendingFriendRequestStatus(friendRequestId,
+                                RequestStatus.IGNORED,
                                 reason,
-                                session)
-                                .then(userRelationshipService.friendTwoUsers(request
-                                        .getRequesterId(), requesterId, session)))
-                        .retryWhen(TRANSACTION_RETRY);
-                case IGNORE -> updatePendingFriendRequestStatus(friendRequestId,
-                        RequestStatus.IGNORED,
-                        reason,
-                        null);
-                case DECLINE -> updatePendingFriendRequestStatus(friendRequestId,
-                        RequestStatus.DECLINED,
-                        reason,
-                        null);
-                default -> Mono.error(ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
-                        "The response action must not be UNRECOGNIZED"));
-            };
-        })
-                .then();
+                                null);
+                        case DECLINE -> updatePendingFriendRequestStatus(friendRequestId,
+                                RequestStatus.DECLINED,
+                                reason,
+                                null);
+                        default ->
+                            Mono.error(ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
+                                    "The response action must not be UNRECOGNIZED"));
+                    };
+                    return result.thenReturn(request.getRequesterId());
+                });
     }
 
     public Mono<UserFriendRequestsWithVersion> queryFriendRequestsWithVersion(

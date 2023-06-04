@@ -520,6 +520,9 @@ public final class CollectionUtil {
     }
 
     public static <T> Set<T> remove(Set<T> set, T value) {
+        if (set.isEmpty()) {
+            return set;
+        }
         if (isImmutable(set)) {
             Set<T> newSet = newSetWithExpectedSize(set.size());
             newSet.addAll(set);
@@ -530,6 +533,9 @@ public final class CollectionUtil {
     }
 
     public static <T> Set<T> remove(Set<T> set, Collection<T> values) {
+        if (set.isEmpty()) {
+            return set;
+        }
         if (isImmutable(set)) {
             Set<T> newSet = newSetWithExpectedSize(set.size());
             newSet.addAll(set);
@@ -540,6 +546,9 @@ public final class CollectionUtil {
     }
 
     public static <K, V> void removeEntriesByValues(Map<K, V> map, Collection<V> values) {
+        if (map.isEmpty()) {
+            return;
+        }
         Iterator<Map.Entry<K, V>> iterator = map.entrySet()
                 .iterator();
         while (iterator.hasNext()) {

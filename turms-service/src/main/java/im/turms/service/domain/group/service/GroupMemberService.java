@@ -263,7 +263,7 @@ public class GroupMemberService {
                     "The role of the new member must not be OWNER"));
         }
         if (userIds.isEmpty()) {
-            return Mono.empty();
+            return PublisherPool.EMPTY_LIST;
         }
         GroupMemberRole finalGroupMemberRole = groupMemberRole;
         return groupService.queryGroupType(groupId)

@@ -46,11 +46,13 @@ import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.constant.TimeType;
 import im.turms.server.common.infra.property.env.service.ServiceProperties;
+import im.turms.server.common.infra.property.env.service.business.notification.NotificationProperties;
+import im.turms.server.common.infra.property.env.service.business.notification.message.NotificationMessageCreatedProperties;
+import im.turms.server.common.infra.property.env.service.business.notification.message.NotificationMessageUpdatedProperties;
 import im.turms.server.common.infra.time.DateRange;
 import im.turms.service.access.servicerequest.dispatcher.ClientRequestHandler;
 import im.turms.service.access.servicerequest.dispatcher.ServiceRequestMapping;
 import im.turms.service.access.servicerequest.dto.RequestHandlerResult;
-import im.turms.service.access.servicerequest.dto.RequestHandlerResultFactory;
 import im.turms.service.domain.common.access.servicerequest.controller.BaseServiceController;
 import im.turms.service.domain.conversation.service.ConversationService;
 import im.turms.service.domain.message.bo.MessageAndRecipientIds;
@@ -73,8 +75,12 @@ public class MessageServiceController extends BaseServiceController {
     private final MessageService messageService;
     private final ConversationService conversationService;
 
-    private boolean notifyRecipientsAfterMessageUpdatedBySender;
-    private boolean sendMessageToOtherSenderOnlineDevices;
+    private boolean notifyRequesterOtherOnlineSessionsOfMessageCreated;
+    private boolean notifyMessageRecipientsOfMessageCreated;
+
+    private boolean notifyRequesterOtherOnlineSessionsOfMessageUpdated;
+    private boolean notifyRecipientsOfMessageUpdated;
+
     private boolean updateReadDateWhenUserQueryingMessage;
 
     public MessageServiceController(
@@ -89,10 +95,22 @@ public class MessageServiceController extends BaseServiceController {
 
     private void updateProperties(TurmsProperties properties) {
         ServiceProperties serviceProperties = properties.getService();
-        notifyRecipientsAfterMessageUpdatedBySender = serviceProperties.getNotification()
-                .isNotifyRecipientsAfterMessageUpdatedBySender();
-        sendMessageToOtherSenderOnlineDevices = serviceProperties.getMessage()
-                .isSendMessageToOtherSenderOnlineDevices();
+        NotificationProperties notificationProperties = serviceProperties.getNotification();
+
+        NotificationMessageCreatedProperties notificationMessageCreatedProperties =
+                notificationProperties.getMessageCreated();
+        notifyRequesterOtherOnlineSessionsOfMessageCreated =
+                notificationMessageCreatedProperties.isNotifyRequesterOtherOnlineSessions();
+        notifyMessageRecipientsOfMessageCreated =
+                notificationMessageCreatedProperties.isNotifyMessageRecipients();
+
+        NotificationMessageUpdatedProperties notificationMessageUpdatedProperties =
+                notificationProperties.getMessageUpdated();
+        notifyRequesterOtherOnlineSessionsOfMessageUpdated =
+                notificationMessageUpdatedProperties.isNotifyRequesterOtherOnlineSessions();
+        notifyRecipientsOfMessageUpdated =
+                notificationMessageUpdatedProperties.isNotifyMessageRecipients();
+
         updateReadDateWhenUserQueryingMessage = serviceProperties.getConversation()
                 .getReadReceipt()
                 .isUpdateReadDateWhenUserQueryingMessage();
@@ -117,13 +135,14 @@ public class MessageServiceController extends BaseServiceController {
                     ? request.getGroupId()
                     : request.getRecipientId();
             if (request.hasMessageId()) {
-                messageAndRelatedUserIdsMono =
-                        messageService.authAndCloneAndSaveMessage(clientRequest.userId(),
-                                clientRequest.clientIp(),
-                                request.getMessageId(),
-                                isGroupMessage,
-                                false,
-                                targetId);
+                messageAndRelatedUserIdsMono = messageService.authAndCloneAndSaveMessage(
+                        notifyMessageRecipientsOfMessageCreated,
+                        clientRequest.userId(),
+                        clientRequest.clientIp(),
+                        request.getMessageId(),
+                        isGroupMessage,
+                        false,
+                        targetId);
             } else {
                 List<byte[]> records = null;
                 int recordCount = request.getRecordsCount();
@@ -145,21 +164,23 @@ public class MessageServiceController extends BaseServiceController {
                 Long preMessageId = request.hasPreMessageId()
                         ? request.getPreMessageId()
                         : null;
-                messageAndRelatedUserIdsMono = messageService.authAndSaveMessage(null,
-                        null,
-                        clientRequest.userId(),
-                        clientRequest.clientIp(),
-                        targetId,
-                        isGroupMessage,
-                        false,
-                        request.hasText()
-                                ? request.getText()
-                                : null,
-                        records,
-                        burnAfter,
-                        deliveryDate,
-                        null,
-                        preMessageId);
+                messageAndRelatedUserIdsMono =
+                        messageService.authAndSaveMessage(notifyMessageRecipientsOfMessageCreated,
+                                null,
+                                null,
+                                clientRequest.userId(),
+                                clientRequest.clientIp(),
+                                targetId,
+                                isGroupMessage,
+                                false,
+                                request.hasText()
+                                        ? request.getText()
+                                        : null,
+                                records,
+                                burnAfter,
+                                deliveryDate,
+                                null,
+                                preMessageId);
             }
             return messageAndRelatedUserIdsMono.map(pair -> {
                 Message message = pair.message();
@@ -168,10 +189,12 @@ public class MessageServiceController extends BaseServiceController {
                         ? null
                         : message.getId();
                 Set<Long> recipientIds = pair.recipientIds();
-                boolean hasDataForRecipients = recipientIds != null && !recipientIds.isEmpty();
+                boolean hasNoDataForRecipients = recipientIds == null || recipientIds.isEmpty();
                 if (messageId == null) {
-                    if (!hasDataForRecipients) {
-                        return RequestHandlerResultFactory.get(ResponseStatusCode.OK);
+                    if (hasNoDataForRecipients) {
+                        return RequestHandlerResult.of(
+                                notifyRequesterOtherOnlineSessionsOfMessageCreated,
+                                clientRequest.turmsRequest());
                     }
                     TurmsRequest dataForRecipients = clientRequest.turmsRequest();
                     if (messageService.getTimeType() == TimeType.LOCAL_SERVER_TIME) {
@@ -183,10 +206,15 @@ public class MessageServiceController extends BaseServiceController {
                                                 .setDeliveryDate(System.currentTimeMillis()))
                                 .build();
                     }
-                    return RequestHandlerResultFactory.get(recipientIds, dataForRecipients);
+                    return RequestHandlerResult.of(
+                            notifyRequesterOtherOnlineSessionsOfMessageCreated,
+                            recipientIds,
+                            dataForRecipients);
                 } else {
-                    if (!hasDataForRecipients) {
-                        return RequestHandlerResultFactory.getByDataLong(messageId);
+                    if (hasNoDataForRecipients) {
+                        return RequestHandlerResult.ofDataLong(messageId,
+                                notifyRequesterOtherOnlineSessionsOfMessageCreated,
+                                clientRequest.turmsRequest());
                     }
                     TurmsRequest dataForRecipients;
                     if (request.hasMessageId()) {
@@ -209,9 +237,9 @@ public class MessageServiceController extends BaseServiceController {
                                 .setCreateMessageRequest(requestBuilder)
                                 .build();
                     }
-                    return RequestHandlerResultFactory.getByDataLong(messageId,
+                    return RequestHandlerResult.ofDataLong(messageId,
+                            notifyRequesterOtherOnlineSessionsOfMessageCreated,
                             recipientIds,
-                            sendMessageToOtherSenderOnlineDevices,
                             dataForRecipients);
                 }
             });
@@ -333,7 +361,7 @@ public class MessageServiceController extends BaseServiceController {
                             dataMono = Mono.just(data);
                         }
                         Mono<RequestHandlerResult> resultMono =
-                                dataMono.map(RequestHandlerResultFactory::get);
+                                dataMono.map(RequestHandlerResult::of);
                         if (updateReadDateWhenUserQueryingMessage) {
                             resultMono = resultMono.doOnSuccess(ignored -> {
                                 Mono<Void> mono = areGroupMessages
@@ -393,15 +421,16 @@ public class MessageServiceController extends BaseServiceController {
             return messageService.authAndUpdateMessage(clientRequest
                     .userId(), clientRequest.deviceType(), messageId, text, records, recallDate)
                     .then(Mono.defer(() -> {
-                        if (notifyRecipientsAfterMessageUpdatedBySender) {
+                        if (notifyRecipientsOfMessageUpdated) {
                             return messageService.queryMessageRecipients(messageId)
-                                    .map(recipientIds -> recipientIds.isEmpty()
-                                            ? RequestHandlerResultFactory.OK
-                                            : RequestHandlerResultFactory.get(recipientIds,
-                                                    clientRequest.turmsRequest(),
-                                                    sendMessageToOtherSenderOnlineDevices));
+                                    .map(recipientIds -> RequestHandlerResult.of(
+                                            notifyRequesterOtherOnlineSessionsOfMessageUpdated,
+                                            recipientIds,
+                                            clientRequest.turmsRequest()));
                         }
-                        return Mono.just(RequestHandlerResultFactory.OK);
+                        return Mono.just(RequestHandlerResult.of(
+                                notifyRequesterOtherOnlineSessionsOfMessageUpdated,
+                                clientRequest.turmsRequest()));
                     }));
         };
     }
@@ -409,7 +438,7 @@ public class MessageServiceController extends BaseServiceController {
     /**
      * @param fromId group id or sender id
      */
-    private static record MessageFromKey(
+    private record MessageFromKey(
             boolean isGroupMessage,
             long fromId
     ) {

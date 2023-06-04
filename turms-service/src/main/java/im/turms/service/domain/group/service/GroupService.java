@@ -109,7 +109,6 @@ public class GroupService {
 
     private boolean activateGroupWhenCreated;
     private boolean deleteGroupLogicallyByDefault;
-    private boolean notifyMembersAfterGroupDeleted;
 
     public GroupService(
             Node node,
@@ -146,9 +145,6 @@ public class GroupService {
                 .getGroup();
         activateGroupWhenCreated = groupProperties.isActivateGroupWhenCreated();
         deleteGroupLogicallyByDefault = groupProperties.isDeleteGroupLogicallyByDefault();
-        notifyMembersAfterGroupDeleted = properties.getService()
-                .getNotification()
-                .isNotifyMembersAfterGroupDeleted();
     }
 
     public Mono<Group> createGroup(
@@ -214,20 +210,28 @@ public class GroupService {
                 .retryWhen(TRANSACTION_RETRY);
     }
 
-    public Mono<Void> authAndDeleteGroup(@NotNull Long requesterId, @NotNull Long groupId) {
+    /**
+     * @return group member IDs
+     */
+    public Mono<Set<Long>> authAndDeleteGroup(
+            boolean queryGroupMemberIds,
+            @NotNull Long requesterId,
+            @NotNull Long groupId) {
         return groupMemberService.isOwner(requesterId, groupId, false)
                 .flatMap(authenticated -> {
                     if (!authenticated) {
                         return Mono.error(ResponseException
                                 .get(ResponseStatusCode.NOT_OWNER_TO_DELETE_GROUP));
                     }
-                    if (notifyMembersAfterGroupDeleted) {
+                    if (queryGroupMemberIds) {
                         return groupMemberService.queryGroupMemberIds(groupId, false)
+                                // TODO: handle the case when we are deleting group members while
+                                // another application is adding new group members
                                 .flatMap(memberIds -> deleteGroupsAndGroupMembers(Set.of(groupId),
-                                        null))
-                                .then();
+                                        null).thenReturn(memberIds));
                     }
-                    return deleteGroupsAndGroupMembers(Set.of(groupId), null).then();
+                    return deleteGroupsAndGroupMembers(Set.of(groupId), null)
+                            .then((Mono<Set<Long>>) PublisherPool.EMPTY_SET);
                 });
     }
 

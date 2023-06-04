@@ -60,7 +60,6 @@ import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.collection.CollectorUtil;
 import im.turms.server.common.infra.exception.IncompatibleInternalChangeException;
 import im.turms.server.common.infra.exception.ResponseException;
-import im.turms.server.common.infra.lang.BoolUtil;
 import im.turms.server.common.infra.lang.LongUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
@@ -69,8 +68,10 @@ import im.turms.server.common.infra.plugin.PluginManager;
 import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.constant.TimeType;
+import im.turms.server.common.infra.property.env.service.ServiceProperties;
 import im.turms.server.common.infra.property.env.service.business.message.MessageProperties;
 import im.turms.server.common.infra.property.env.service.business.message.SequenceIdProperties;
+import im.turms.server.common.infra.reactor.PublisherPool;
 import im.turms.server.common.infra.recycler.Recyclable;
 import im.turms.server.common.infra.recycler.SetRecycler;
 import im.turms.server.common.infra.task.TaskManager;
@@ -144,7 +145,7 @@ public class MessageService {
     private boolean deleteMessageLogicallyByDefault;
     private boolean allowRecallMessage;
     private boolean allowEditMessageBySender;
-    private boolean sendMessageToOtherSenderOnlineDevices;
+    private boolean notifyRequesterOtherOnlineSessionsOfMessageCreated;
     @Getter
     private TimeType timeType;
     private DateRange recalledMessageQueryDateRange;
@@ -238,8 +239,8 @@ public class MessageService {
     }
 
     private void updateProperties(TurmsProperties properties) {
-        MessageProperties messageProperties = properties.getService()
-                .getMessage();
+        ServiceProperties serviceProperties = properties.getService();
+        MessageProperties messageProperties = serviceProperties.getMessage();
         availableRecallDurationMillis =
                 messageProperties.getAvailableRecallDurationSeconds() * 1000;
         defaultAvailableMessagesNumberWithTotal =
@@ -250,8 +251,7 @@ public class MessageService {
         persistRecord = messageProperties.isPersistRecord();
         persistMessage = messageProperties.isPersistMessage();
         persistSenderIp = messageProperties.isPersistSenderIp();
-        updateReadDateAfterMessageSent = properties.getService()
-                .getConversation()
+        updateReadDateAfterMessageSent = serviceProperties.getConversation()
                 .getReadReceipt()
                 .isUpdateReadDateAfterMessageSent();
         deleteMessageLogicallyByDefault = messageProperties.isDeleteMessageLogicallyByDefault();
@@ -260,8 +260,9 @@ public class MessageService {
                 : DateRange.NULL;
         allowRecallMessage = messageProperties.isAllowRecallMessage();
         allowEditMessageBySender = messageProperties.isAllowEditMessageBySender();
-        sendMessageToOtherSenderOnlineDevices =
-                messageProperties.isSendMessageToOtherSenderOnlineDevices();
+        notifyRequesterOtherOnlineSessionsOfMessageCreated = serviceProperties.getNotification()
+                .getMessageCreated()
+                .isNotifyRequesterOtherOnlineSessions();
         timeType = messageProperties.getTimeType();
         messageRetentionPeriodHours = messageProperties.getMessageRetentionPeriodHours();
     }
@@ -466,17 +467,17 @@ public class MessageService {
                 }
                 if (hasSenderIds) {
                     // Reset "senderIds" and "targetIds" because they have been
-                    // converted to private conversation IDs so the senderIds/targetIds criteria is
+                    // converted to private conversation IDs, so the senderIds/targetIds criteria is
                     // unnecessary.
                     // Note that we change the semantic from
                     // "querying messages sent by the sender IDs, and sent to the target IDs"
                     // to "querying messages sent by the sender IDs, and sent to the target IDs +
-                    // messages sent by the target IDs, and sent to the sender IDs"
+                    // messages sent by the target IDs, and sent to the sender IDs".
                     senderIds = null;
                     targetIds = null;
                 } else {
                     // Reset "targetIds" because they have been converted to
-                    // group conversation IDs so the targetIds criteria is duplicate and
+                    // group conversation IDs, so the targetIds criteria is duplicate and
                     // unnecessary.
                     targetIds = null;
                 }
@@ -492,7 +493,7 @@ public class MessageService {
                     }
                 }
                 // Reset "targetIds" because they have been converted to
-                // group conversation IDs so the targetIds criteria is duplicate and unnecessary.
+                // group conversation IDs, so the targetIds criteria is duplicate and unnecessary.
                 targetIds = null;
             } else {
                 int senderIdCount = CollectionUtil.getSize(senderIds);
@@ -514,7 +515,7 @@ public class MessageService {
                     }
                 }
                 // Reset "senderIds" and "targetIds" because they have been
-                // converted to private conversation IDs so the senderIds/targetIds criteria is
+                // converted to private conversation IDs, so the senderIds/targetIds criteria is
                 // unnecessary.
                 // Note that we change the semantic from
                 // "querying messages sent by the sender IDs, and sent to the target IDs"
@@ -982,6 +983,7 @@ public class MessageService {
      *         {@link MessageProperties#persistMessage} is false.
      */
     public Mono<MessageAndRecipientIds> authAndSaveMessage(
+            boolean queryRecipientIds,
             @Nullable Boolean persist,
             @Nullable Long messageId,
             @NotNull Long senderId,
@@ -1009,10 +1011,15 @@ public class MessageService {
                     if (code != OK) {
                         return Mono.error(ResponseException.get(code, permission.reason()));
                     }
-                    return isGroupMessage
-                            ? groupMemberService.queryGroupMemberIds(targetId, true)
-                                    .map(memberIds -> CollectionUtil.remove(memberIds, senderId))
-                            : Mono.just(Set.of(targetId));
+                    if (queryRecipientIds) {
+                        return isGroupMessage
+                                ? groupMemberService.queryGroupMemberIds(targetId, true)
+                                        .map(memberIds -> CollectionUtil.remove(memberIds,
+                                                senderId))
+                                : Mono.just(Set.of(targetId));
+                    } else {
+                        return (Mono<Set<Long>>) PublisherPool.EMPTY_SET;
+                    }
                 })
                 .flatMap(recipientIds -> {
                     boolean save = persist == null
@@ -1045,13 +1052,15 @@ public class MessageService {
     }
 
     public Mono<MessageAndRecipientIds> authAndCloneAndSaveMessage(
+            boolean queryRecipientIds,
             @NotNull Long requesterId,
             @Nullable byte[] requesterIp,
             @NotNull Long referenceId,
             @NotNull Boolean isGroupMessage,
             @NotNull Boolean isSystemMessage,
             @NotNull Long targetId) {
-        return queryMessage(referenceId).flatMap(message -> authAndSaveMessage(null,
+        return queryMessage(referenceId).flatMap(message -> authAndSaveMessage(queryRecipientIds,
+                null,
                 node.nextLargeGapId(ServiceType.MESSAGE),
                 requesterId,
                 requesterIp,
@@ -1102,7 +1111,8 @@ public class MessageService {
         }
         Date deliveryDate = new Date();
         Mono<MessageAndRecipientIds> saveMono = referenceId == null
-                ? authAndSaveMessage(persist,
+                ? authAndSaveMessage(send,
+                        persist,
                         messageId,
                         senderId,
                         senderIp,
@@ -1115,7 +1125,8 @@ public class MessageService {
                         deliveryDate,
                         null,
                         preMessageId)
-                : authAndCloneAndSaveMessage(senderId,
+                : authAndCloneAndSaveMessage(send,
+                        senderId,
                         senderIp,
                         referenceId,
                         isGroupMessage,
@@ -1163,7 +1174,7 @@ public class MessageService {
                 .setRequestId(ADMIN_REQUEST_ID)
                 .build();
         Set<UserSessionId> excludedUserSessionIds;
-        if (sendMessageToOtherSenderOnlineDevices && senderDeviceType != null) {
+        if (notifyRequesterOtherOnlineSessionsOfMessageCreated && senderDeviceType != null) {
             recipientIds = CollectionUtil.add(recipientIds, senderId);
             excludedUserSessionIds = Set.of(new UserSessionId(senderId, senderDeviceType));
         } else {

@@ -23,10 +23,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
-import im.turms.server.common.infra.property.env.service.business.NotificationProperties;
 import im.turms.server.common.infra.property.env.service.business.conversation.ConversationProperties;
 import im.turms.server.common.infra.property.env.service.business.group.GroupProperties;
 import im.turms.server.common.infra.property.env.service.business.message.MessageProperties;
+import im.turms.server.common.infra.property.env.service.business.notification.NotificationProperties;
 import im.turms.server.common.infra.property.env.service.business.storage.StorageProperties;
 import im.turms.server.common.infra.property.env.service.business.user.UserProperties;
 import im.turms.server.common.infra.property.env.service.env.FakeProperties;

@@ -154,11 +154,6 @@ public class MessageProperties {
     @Min(0)
     private int defaultAvailableMessagesNumberWithTotal = 1;
 
-    @Description("Whether to send the message to the other sender's online devices when sending a message")
-    @GlobalProperty
-    @MutableProperty
-    private boolean sendMessageToOtherSenderOnlineDevices = true;
-
     @NestedConfigurationProperty
     private CacheProperties cache = new CacheProperties();
 

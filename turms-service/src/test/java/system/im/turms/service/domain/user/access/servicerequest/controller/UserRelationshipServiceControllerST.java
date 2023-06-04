@@ -27,6 +27,7 @@ import system.im.turms.service.domain.common.access.servicerequest.controller.Ba
 
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.constant.ResponseAction;
+import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.access.client.dto.request.TurmsRequest;
 import im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest;
 import im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipGroupRequest;
@@ -68,6 +69,7 @@ class UserRelationshipServiceControllerST
     private static final long USER_ID_FOR_FRIEND_REQUEST = Integer.MAX_VALUE + 2L;
 
     private static Integer relationshipGroupIndex;
+    private static Long friendRequestId;
 
     @Test
     @Order(ORDER_HIGHEST_PRIORITY)
@@ -129,9 +131,11 @@ class UserRelationshipServiceControllerST
                 new ClientRequest(USER_ID, USER_DEVICE_TYPE, USER_IP, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleCreateFriendRequestRequest()
                 .handle(clientRequest);
-        assertResultIsOk(resultMono,
-                result -> assertThat(result.dataForRequester()
-                        .hasLong()).isTrue());
+        assertResultIsOk(resultMono, result -> {
+            TurmsNotification.Data data = result.dataForRequester();
+            assertThat(data.hasLong()).isTrue();
+            friendRequestId = data.getLong();
+        });
     }
 
     @Test
@@ -139,7 +143,7 @@ class UserRelationshipServiceControllerST
     void handleUpdateFriendRequestRequest_replyFriendRequest_shouldSucceed() {
         TurmsRequest request = TurmsRequest.newBuilder()
                 .setUpdateFriendRequestRequest(UpdateFriendRequestRequest.newBuilder()
-                        .setRequestId(USER_ID)
+                        .setRequestId(friendRequestId)
                         .setResponseAction(ResponseAction.ACCEPT)
                         .setReason("reason"))
                 .build();

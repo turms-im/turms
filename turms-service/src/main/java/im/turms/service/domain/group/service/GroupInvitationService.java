@@ -258,16 +258,19 @@ public class GroupInvitationService extends ExpirableEntityService<GroupInvitati
                 .thenReturn(groupInvitation);
     }
 
-    public Mono<GroupInvitation> queryGroupIdAndStatus(@NotNull Long invitationId) {
+    public Mono<GroupInvitation> queryGroupIdAndInviteeIdAndStatus(@NotNull Long invitationId) {
         try {
             Validator.notNull(invitationId, "invitationId");
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        return groupInvitationRepository.findGroupIdAndStatus(invitationId);
+        return groupInvitationRepository.findGroupIdAndInviteeIdAndStatus(invitationId);
     }
 
-    public Mono<Void> authAndRecallPendingGroupInvitation(
+    /**
+     * @return group ID, invitee ID, and status
+     */
+    public Mono<GroupInvitation> authAndRecallPendingGroupInvitation(
             @NotNull Long requesterId,
             @NotNull Long invitationId) {
         try {
@@ -281,12 +284,12 @@ public class GroupInvitationService extends ExpirableEntityService<GroupInvitati
             return Mono.error(ResponseException
                     .get(ResponseStatusCode.RECALLING_GROUP_INVITATION_IS_DISABLED));
         }
-        return queryGroupIdAndStatus(invitationId)
+        return queryGroupIdAndInviteeIdAndStatus(invitationId)
                 .switchIfEmpty(ResponseExceptionPublisherPool.resourceNotFound())
                 .flatMap(invitation -> groupMemberService
                         .isOwnerOrManager(requesterId, invitation.getGroupId(), false)
-                        .flatMap(authenticated -> {
-                            if (!authenticated) {
+                        .flatMap(isOwnerOrManager -> {
+                            if (!isOwnerOrManager) {
                                 return Mono.error(ResponseException.get(
                                         ResponseStatusCode.NOT_OWNER_OR_MANAGER_TO_RECALL_INVITATION));
                             }
@@ -319,7 +322,7 @@ public class GroupInvitationService extends ExpirableEntityService<GroupInvitati
                                                                 t);
                                                         return Mono.empty();
                                                     })
-                                                    .then());
+                                                    .thenReturn(invitation));
                         }));
     }
 

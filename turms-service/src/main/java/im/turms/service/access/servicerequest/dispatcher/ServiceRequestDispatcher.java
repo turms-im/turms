@@ -60,8 +60,6 @@ import im.turms.server.common.infra.tracing.TracingCloseableContext;
 import im.turms.server.common.infra.tracing.TracingContext;
 import im.turms.service.access.servicerequest.dto.ClientRequest;
 import im.turms.service.access.servicerequest.dto.RequestHandlerResult;
-import im.turms.service.access.servicerequest.dto.RequestHandlerResultFactory;
-import im.turms.service.access.servicerequest.dto.ServiceResponseFactory;
 import im.turms.service.domain.message.service.OutboundMessageService;
 import im.turms.service.infra.logging.ApiLoggingContext;
 import im.turms.service.infra.logging.ClientApiLogging;
@@ -196,8 +194,8 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
             return dispatch0(context, serviceRequest);
         } catch (Exception e) {
             LOGGER.error("Failed to handle the request: {}", serviceRequest, e);
-            return Mono.just(ServiceResponseFactory.get(ResponseStatusCode.SERVER_INTERNAL_ERROR,
-                    e.toString()));
+            return Mono.just(
+                    ServiceResponse.of(ResponseStatusCode.SERVER_INTERNAL_ERROR, e.toString()));
         } finally {
             requestBuffer.release();
         }
@@ -212,16 +210,16 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
             String message = "The user ID is missing in the request: "
                     + serviceRequest;
             return Mono.just(
-                    new ServiceResponse(null, ResponseStatusCode.SERVER_INTERNAL_ERROR, message));
+                    new ServiceResponse(ResponseStatusCode.SERVER_INTERNAL_ERROR, null, message));
         }
         if (deviceType == null) {
             String message = "The device type is missing in the request: "
                     + serviceRequest;
             return Mono.just(
-                    new ServiceResponse(null, ResponseStatusCode.SERVER_INTERNAL_ERROR, message));
+                    new ServiceResponse(ResponseStatusCode.SERVER_INTERNAL_ERROR, null, message));
         }
         if (!serverStatusManager.isActive()) {
-            return Mono.just(ServiceResponseFactory.get(ResponseStatusCode.SERVER_UNAVAILABLE));
+            return Mono.just(ServiceResponse.of(ResponseStatusCode.SERVER_UNAVAILABLE));
         }
         boolean hasRunningExtensions =
                 pluginManager.hasRunningExtensions(ClientRequestTransformer.class);
@@ -241,8 +239,8 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
             blocklistService
                     .tryBlockIpForCorruptedRequest(new ByteArrayWrapper(serviceRequest.getIp()));
             blocklistService.tryBlockUserIdForCorruptedRequest(serviceRequest.getUserId());
-            return Mono.just(
-                    ServiceResponseFactory.get(ResponseStatusCode.INVALID_REQUEST, e.getMessage()));
+            return Mono
+                    .just(ServiceResponse.of(ResponseStatusCode.INVALID_REQUEST, e.getMessage()));
         }
         turmsRequestBuffer.touch(request);
 
@@ -277,17 +275,17 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
             if (lastRequest == null) {
                 String message = "The TurmsRequest instance is null in the client request: "
                         + lastClientRequest;
-                return Mono.just(ServiceResponseFactory
-                        .get(ResponseStatusCode.SERVER_INTERNAL_ERROR, message));
+                return Mono.just(
+                        ServiceResponse.of(ResponseStatusCode.SERVER_INTERNAL_ERROR, message));
             }
             TurmsRequest.KindCase requestType = lastRequest.getKindCase();
             if (requestType == KIND_NOT_SET) {
-                return Mono.just(ServiceResponseFactory.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
+                return Mono.just(ServiceResponse.of(ResponseStatusCode.ILLEGAL_ARGUMENT,
                         "The request type cannot be KIND_NOT_SET"));
             }
             ClientRequestHandler handler = requestTypeToHandler.get(requestType);
             if (handler == null) {
-                return Mono.just(ServiceResponseFactory.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
+                return Mono.just(ServiceResponse.of(ResponseStatusCode.ILLEGAL_ARGUMENT,
                         "The request type is unsupported"));
             }
             // 4. Pass the request to the controller and get a response
@@ -301,7 +299,7 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
             return result.name(CLIENT_REQUEST)
                     .tag(CLIENT_REQUEST_TAG_TYPE, requestType.name())
                     .metrics()
-                    .defaultIfEmpty(RequestHandlerResultFactory.NO_CONTENT)
+                    .defaultIfEmpty(RequestHandlerResult.NO_CONTENT)
                     .doOnEach(signal -> {
                         if (!signal.isOnNext()) {
                             return;
@@ -337,12 +335,11 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                                             + lastClientRequest,
                                     t);
                         }
-                        return Mono
-                                .just(RequestHandlerResultFactory.get(info.code(), info.reason()));
+                        return Mono.just(RequestHandlerResult.of(info.code(), info.reason()));
                     })
                     .map(handlerResult -> {
                         ServiceResponse response =
-                                ServiceResponseFactory.get(handlerResult.dataForRequester(),
+                                ServiceResponse.of(handlerResult.dataForRequester(),
                                         handlerResult.code(),
                                         handlerResult.reason());
                         // 6. Log
@@ -386,10 +383,10 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
         TurmsRequest dataForRecipients = result.dataForRecipients();
         Set<Long> recipients = result.recipients();
         boolean noRecipient = recipients.isEmpty();
-        boolean forwardDataForRecipientsToOtherSenderOnlineDevices =
-                result.forwardDataForRecipientsToOtherSenderOnlineDevices();
+        boolean forwardDataForRecipientsToRequesterOtherOnlineSessions =
+                result.forwardDataForRecipientsToRequesterOtherOnlineSessions();
         if (dataForRecipients == null
-                || (noRecipient && !forwardDataForRecipientsToOtherSenderOnlineDevices)) {
+                || (noRecipient && !forwardDataForRecipientsToRequesterOtherOnlineSessions)) {
             return Mono.empty();
         }
         TurmsNotification notificationForRecipients =
@@ -400,7 +397,7 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                         .build();
         ByteBuf notificationByteBuf = ProtoEncoder.getDirectByteBuffer(notificationForRecipients);
         Mono<Set<Long>> mono;
-        if (forwardDataForRecipientsToOtherSenderOnlineDevices) {
+        if (forwardDataForRecipientsToRequesterOtherOnlineSessions) {
             if (noRecipient) {
                 mono = outboundMessageService.forwardNotification(notificationForRecipients,
                         notificationByteBuf,

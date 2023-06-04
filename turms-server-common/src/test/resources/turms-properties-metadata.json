@@ -2894,14 +2894,6 @@
         "sensitive": false,
         "type": "boolean"
       },
-      "sendMessageToOtherSenderOnlineDevices": {
-        "deprecated": false,
-        "description": "Whether to send the message to the other sender's online devices when sending a message",
-        "global": true,
-        "mutable": true,
-        "sensitive": false,
-        "type": "boolean"
-      },
       "sequenceId": {
         "useSequenceIdForGroupConversation": {
           "deprecated": false,
@@ -3224,197 +3216,545 @@
       }
     },
     "notification": {
-      "notifyGroupConversationParticipantsAfterReadDateUpdated": {
-        "deprecated": false,
-        "description": "Whether to notify the group conversation participants after the read receipt of a conversation has been updated by recipients",
-        "global": true,
-        "mutable": true,
-        "sensitive": false,
-        "type": "boolean"
+      "friendRequestCreated": {
+        "notifyFriendRequestRecipient": {
+          "deprecated": false,
+          "description": "Whether to notify the recipient when the requester has created a friend request",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        },
+        "notifyRequesterOtherOnlineSessions": {
+          "deprecated": false,
+          "description": "Whether to notify the requester's other online sessions when they have created a friend request",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        }
       },
-      "notifyInviteeAfterGroupInvitationRecalled": {
-        "deprecated": false,
-        "description": "Whether to notify the invitee after a group invitation has been recalled",
-        "global": true,
-        "mutable": true,
-        "sensitive": false,
-        "type": "boolean"
+      "friendRequestReplied": {
+        "notifyFriendRequestRequester": {
+          "deprecated": false,
+          "description": "Whether to notify the requester when a recipient has replied to the friend request sent by the requester",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        },
+        "notifyRequesterOtherOnlineSessions": {
+          "deprecated": false,
+          "description": "Whether to notify the requester's other online sessions when they have replied to a friend request",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        }
       },
-      "notifyMemberAfterInfoUpdatedByOthers": {
-        "deprecated": false,
-        "description": "Whether to notify members after its member information has been updated by others",
-        "global": true,
-        "mutable": true,
-        "sensitive": false,
-        "type": "boolean"
+      "groupBlockedUserAdded": {
+        "notifyBlockedUser": {
+          "deprecated": false,
+          "description": "Whether to notify the user when they have been blocked by a group",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        },
+        "notifyGroupMembers": {
+          "deprecated": false,
+          "description": "Whether to notify group members when a user has been blocked by a group",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        },
+        "notifyRequesterOtherOnlineSessions": {
+          "deprecated": false,
+          "description": "Whether to notify the requester's other online sessions when they have added a blocked user to a group",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        }
       },
-      "notifyMemberAfterRemovedFromRelationshipGroupByOthers": {
-        "deprecated": false,
-        "description": "Whether to notify the member after removed from a one-sided relationship group by others",
-        "global": true,
-        "mutable": true,
-        "sensitive": false,
-        "type": "boolean"
+      "groupBlockedUserRemoved": {
+        "notifyGroupMembers": {
+          "deprecated": false,
+          "description": "Whether to notify group members when a user is unblocked by a group",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        },
+        "notifyRequesterOtherOnlineSessions": {
+          "deprecated": false,
+          "description": "Whether to notify the requester's other online sessions when they have removed a blocked user from a group",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        },
+        "notifyUnblockedUser": {
+          "deprecated": false,
+          "description": "Whether to notify the user when they are unblocked by a group",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        }
       },
-      "notifyMembersAfterGroupDeleted": {
-        "deprecated": false,
-        "description": "Whether to notify members after a group has been removed",
-        "global": true,
-        "mutable": true,
-        "sensitive": false,
-        "type": "boolean"
+      "groupConversationReadDateUpdated": {
+        "notifyOtherGroupMembers": {
+          "deprecated": false,
+          "description": "Whether to notify other group members when a group member has updated their read date in a group conversation",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        },
+        "notifyRequesterOtherOnlineSessions": {
+          "deprecated": false,
+          "description": "Whether to notify the requester's other online sessions when they have updated the read date in a group conversation",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        }
       },
-      "notifyMembersAfterGroupUpdated": {
-        "deprecated": false,
-        "description": "Whether to notify members after a group has been updated",
-        "global": true,
-        "mutable": true,
-        "sensitive": false,
-        "type": "boolean"
+      "groupCreated": {
+        "notifyRequesterOtherOnlineSessions": {
+          "deprecated": false,
+          "description": "Whether to notify the requester's other online sessions when they have created a group",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        }
       },
-      "notifyMembersAfterOneSidedRelationshipGroupUpdatedByOthers": {
-        "deprecated": false,
-        "description": "Whether to notify members after a one-sided relationship group has been updated by others",
-        "global": true,
-        "mutable": true,
-        "sensitive": false,
-        "type": "boolean"
+      "groupDeleted": {
+        "notifyGroupMembers": {
+          "deprecated": false,
+          "description": "Whether to notify group members when a group owner has updated their group",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        },
+        "notifyRequesterOtherOnlineSessions": {
+          "deprecated": false,
+          "description": "Whether to notify the requester's other online sessions when they have deleted a group",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        }
       },
-      "notifyMembersAfterOtherMemberInfoUpdated": {
-        "deprecated": false,
-        "description": "Whether to notify members after other group member's information has been updated",
-        "global": true,
-        "mutable": true,
-        "sensitive": false,
-        "type": "boolean"
+      "groupInvitationAdded": {
+        "notifyGroupMembers": {
+          "deprecated": false,
+          "description": "Whether to notify group members when a user has been invited",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        },
+        "notifyGroupOwnerAndManagers": {
+          "deprecated": false,
+          "description": "Whether to notify the group owner and managers when a user has been invited",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        },
+        "notifyInvitee": {
+          "deprecated": false,
+          "description": "Whether to notify the user when they have been invited by a group member",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        },
+        "notifyRequesterOtherOnlineSessions": {
+          "deprecated": false,
+          "description": "Whether to notify the requester's other online sessions when they have invited a user to a group",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        }
       },
-      "notifyMembersAfterOtherMemberOnlineStatusUpdated": {
-        "deprecated": false,
-        "description": "Whether to notify members after other group member's online status has been updated",
-        "global": true,
-        "mutable": true,
-        "sensitive": false,
-        "type": "boolean"
+      "groupInvitationRecalled": {
+        "notifyGroupMembers": {
+          "deprecated": false,
+          "description": "Whether to notify group members when an invitation has been recalled",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        },
+        "notifyGroupOwnerAndManagers": {
+          "deprecated": false,
+          "description": "Whether to notify the group owner and managers when an invitation has been recalled",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        },
+        "notifyInvitee": {
+          "deprecated": false,
+          "description": "Whether to notify the invitee when a group member has recalled their received group invitation",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        },
+        "notifyRequesterOtherOnlineSessions": {
+          "deprecated": false,
+          "description": "Whether to notify the requester's other online sessions when they have recalled a group invitation",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        }
       },
-      "notifyOwnerAndManagersAfterGroupJoinRequestRecalled": {
-        "deprecated": false,
-        "description": "Whether to notify the owner and managers after a group invitation has been recalled",
-        "global": true,
-        "mutable": true,
-        "sensitive": false,
-        "type": "boolean"
+      "groupJoinRequestCreated": {
+        "notifyGroupMembers": {
+          "deprecated": false,
+          "description": "Whether to notify group members when a user has created a group join request for their group",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        },
+        "notifyGroupOwnerAndManagers": {
+          "deprecated": false,
+          "description": "Whether to notify the group owner and managers when a user has created a group join request for their group",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        },
+        "notifyRequesterOtherOnlineSessions": {
+          "deprecated": false,
+          "description": "Whether to notify the requester's other online sessions when they have created a group join request",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        }
       },
-      "notifyOwnerAndManagersAfterReceivingJoinRequest": {
-        "deprecated": false,
-        "description": "Whether to notify the owner and managers after a join request has been received",
-        "global": true,
-        "mutable": true,
-        "sensitive": false,
-        "type": "boolean"
+      "groupJoinRequestRecalled": {
+        "notifyGroupMembers": {
+          "deprecated": false,
+          "description": "Whether to notify group members when a user has recalled a group join request for their group",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        },
+        "notifyGroupOwnerAndManagers": {
+          "deprecated": false,
+          "description": "Whether to notify the group owner and managers when a user has recalled a group join request for their group",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        },
+        "notifyRequesterOtherOnlineSessions": {
+          "deprecated": false,
+          "description": "Whether to notify the requester's other online sessions when they have recalled a group join request",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        }
       },
-      "notifyPrivateConversationParticipantAfterReadDateUpdated": {
-        "deprecated": false,
-        "description": "Whether to notify the private conversation participant after the read receipt of a conversation has been updated by the recipient",
-        "global": true,
-        "mutable": true,
-        "sensitive": false,
-        "type": "boolean"
+      "groupMemberAdded": {
+        "notifyAddedGroupMember": {
+          "deprecated": false,
+          "description": "Whether to notify the group member when added by others",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        },
+        "notifyOtherGroupMembers": {
+          "deprecated": false,
+          "description": "Whether to notify other group members when a group member has been added",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        },
+        "notifyRequesterOtherOnlineSessions": {
+          "deprecated": false,
+          "description": "Whether to notify the requester's other online sessions when they have added a group member",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        }
       },
-      "notifyRecipientWhenReceivingFriendRequest": {
-        "deprecated": false,
-        "description": "Whether to notify the recipient when receiving a friend request",
-        "global": true,
-        "mutable": true,
-        "sensitive": false,
-        "type": "boolean"
+      "groupMemberInfoUpdated": {
+        "notifyOtherGroupMembers": {
+          "deprecated": false,
+          "description": "Whether to notify other group members when a group member's information has been updated",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        },
+        "notifyRequesterOtherOnlineSessions": {
+          "deprecated": false,
+          "description": "Whether to notify the requester's other online sessions when they have updated their group member information",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        },
+        "notifyUpdatedGroupMember": {
+          "deprecated": false,
+          "description": "Whether to notify the group member when others have updated their group member information",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        }
       },
-      "notifyRecipientsAfterMessageUpdatedBySender": {
-        "deprecated": false,
-        "description": "Whether to notify the recipients after a message has been updated by the sender",
-        "global": true,
-        "mutable": true,
-        "sensitive": false,
-        "type": "boolean"
+      "groupMemberOnlineStatusUpdated": {
+        "notifyGroupMembers": {
+          "deprecated": false,
+          "description": "Whether to notify other group members when a member's online status has been updated",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        }
       },
-      "notifyRelatedUserAfterAddedToOneSidedRelationshipGroupByOthers": {
-        "deprecated": false,
-        "description": "Whether to notify the related user after added to a one-sided relationship group by others",
-        "global": true,
-        "mutable": true,
-        "sensitive": false,
-        "type": "boolean"
+      "groupMemberRemoved": {
+        "notifyOtherGroupMembers": {
+          "deprecated": false,
+          "description": "Whether to notify other group members when a group member has been removed",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        },
+        "notifyRemovedGroupMember": {
+          "deprecated": false,
+          "description": "Whether to notify the group member when removed by others",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        },
+        "notifyRequesterOtherOnlineSessions": {
+          "deprecated": false,
+          "description": "Whether to notify the requester's other online sessions when they removed a group member",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        }
       },
-      "notifyRelatedUserAfterOneSidedRelationshipUpdatedByOthers": {
-        "deprecated": false,
-        "description": "Whether to notify the related user after a one-sided relationship has benn updated by others",
-        "global": true,
-        "mutable": true,
-        "sensitive": false,
-        "type": "boolean"
+      "groupUpdated": {
+        "notifyGroupMembers": {
+          "deprecated": false,
+          "description": "Whether to notify group members when the group owner or managers have updated their group",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        },
+        "notifyRequesterOtherOnlineSessions": {
+          "deprecated": false,
+          "description": "Whether to notify the requester's other online sessions when they have updated a group",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        }
       },
-      "notifyRelatedUsersAfterOtherRelatedUserInfoUpdated": {
-        "deprecated": false,
-        "description": "Whether to notify related users after other related user's information has been updated",
-        "global": true,
-        "mutable": true,
-        "sensitive": false,
-        "type": "boolean"
+      "messageCreated": {
+        "notifyMessageRecipients": {
+          "deprecated": false,
+          "description": "Whether to notify the message recipients when a sender has created a message to them",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        },
+        "notifyRequesterOtherOnlineSessions": {
+          "deprecated": false,
+          "description": "Whether to notify the requester's other online sessions when they have created a message",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        }
       },
-      "notifyRelatedUsersAfterOtherRelatedUserOnlineStatusUpdated": {
-        "deprecated": false,
-        "description": "Whether to notify related users after other related user's online status has been updated",
-        "global": true,
-        "mutable": true,
-        "sensitive": false,
-        "type": "boolean"
+      "messageUpdated": {
+        "notifyMessageRecipients": {
+          "deprecated": false,
+          "description": "Whether to notify the message recipients when a sender has updated a message sent to them",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        },
+        "notifyRequesterOtherOnlineSessions": {
+          "deprecated": false,
+          "description": "Whether to notify the requester's other online sessions when they have updated a message",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        }
       },
-      "notifyRequesterAfterFriendRequestUpdated": {
-        "deprecated": false,
-        "description": "Whether to notify the requester after a friend request has been updated",
-        "global": true,
-        "mutable": true,
-        "sensitive": false,
-        "type": "boolean"
+      "oneSidedRelationshipGroupDeleted": {
+        "notifyRelationshipGroupMembers": {
+          "deprecated": false,
+          "description": "Whether to notify members when a one-side relationship group owner has deleted the group",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        },
+        "notifyRequesterOtherOnlineSessions": {
+          "deprecated": false,
+          "description": "Whether to notify the requester's other online sessions when they have deleted a relationship group",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        }
       },
-      "notifyUserAfterAddedToGroupByOthers": {
-        "deprecated": false,
-        "description": "Whether to notify the user after added to a group by others",
-        "global": true,
-        "mutable": true,
-        "sensitive": false,
-        "type": "boolean"
+      "oneSidedRelationshipGroupMemberAdded": {
+        "notifyNewRelationshipGroupMember": {
+          "deprecated": false,
+          "description": "Whether to notify the new member when a user has added them to their one-sided relationship group",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        },
+        "notifyRequesterOtherOnlineSessions": {
+          "deprecated": false,
+          "description": "Whether to notify the requester's other online sessions when they have added a new member to their one-sided relationship group",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        }
       },
-      "notifyUserAfterBlockedByGroup": {
-        "deprecated": false,
-        "description": "Whether to notify the user after blocked by a group",
-        "global": true,
-        "mutable": true,
-        "sensitive": false,
-        "type": "boolean"
+      "oneSidedRelationshipGroupMemberRemoved": {
+        "notifyRemovedRelationshipGroupMember": {
+          "deprecated": false,
+          "description": "Whether to notify the removed member when a user has removed them from their one-sided relationship group",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        },
+        "notifyRequesterOtherOnlineSessions": {
+          "deprecated": false,
+          "description": "Whether to notify the requester's other online sessions when they have removed a new member from their one-sided relationship group",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        }
       },
-      "notifyUserAfterInvitedByGroup": {
-        "deprecated": false,
-        "description": "Whether to notify the user after invited by a group",
-        "global": true,
-        "mutable": true,
-        "sensitive": false,
-        "type": "boolean"
+      "oneSidedRelationshipGroupUpdated": {
+        "notifyRelationshipGroupMembers": {
+          "deprecated": false,
+          "description": "Whether to notify members when a one-side relationship group owner has updated the group",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        },
+        "notifyRequesterOtherOnlineSessions": {
+          "deprecated": false,
+          "description": "Whether to notify the requester's other online sessions when they have updated a relationship group",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        }
       },
-      "notifyUserAfterRemovedFromGroupByOthers": {
-        "deprecated": false,
-        "description": "Whether to notify the user after removed from a group by others",
-        "global": true,
-        "mutable": true,
-        "sensitive": false,
-        "type": "boolean"
+      "oneSidedRelationshipUpdated": {
+        "notifyRelatedUser": {
+          "deprecated": false,
+          "description": "Whether to notify the related user when a user has updated a one-sided relationship with them",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        },
+        "notifyRequesterOtherOnlineSessions": {
+          "deprecated": false,
+          "description": "Whether to notify the requester's other online sessions when they have updated a one-sided relationship",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        }
       },
-      "notifyUserAfterUnblockedByGroup": {
-        "deprecated": false,
-        "description": "Whether to notify the user after unblocked by a group",
-        "global": true,
-        "mutable": true,
-        "sensitive": false,
-        "type": "boolean"
+      "privateConversationReadDateUpdated": {
+        "notifyContact": {
+          "deprecated": false,
+          "description": "Whether to notify another contact when a contact has updated their read date in a private conversation",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        },
+        "notifyRequesterOtherOnlineSessions": {
+          "deprecated": false,
+          "description": "Whether to notify the requester's other online sessions when they have updated the read date in a private conversation",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        }
+      },
+      "userInfoUpdated": {
+        "notifyNonBlockedRelatedUsers": {
+          "deprecated": false,
+          "description": "Whether to notify non-blocked related users when a user has updated their information",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        },
+        "notifyRequesterOtherOnlineSessions": {
+          "deprecated": false,
+          "description": "Whether to notify the requester's other online sessions when they have updated their information",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        }
+      },
+      "userOnlineStatusUpdated": {
+        "notifyNonBlockedRelatedUsers": {
+          "deprecated": false,
+          "description": "Whether to notify non-blocked related users when a user has updated their online status",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        },
+        "notifyRequesterOtherOnlineSessions": {
+          "deprecated": false,
+          "description": "Whether to notify the requester's other online sessions when they have updated their online status",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        }
       }
     },
     "pushNotification": {

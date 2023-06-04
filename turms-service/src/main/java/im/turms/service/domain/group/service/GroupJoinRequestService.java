@@ -220,7 +220,10 @@ public class GroupJoinRequestService extends ExpirableEntityService<GroupJoinReq
         return groupJoinRequestRepository.findRequesterIdAndStatusAndGroupId(requestId);
     }
 
-    public Mono<Void> authAndRecallPendingGroupJoinRequest(
+    /**
+     * @return requester ID, group ID, and status
+     */
+    public Mono<GroupJoinRequest> authAndRecallPendingGroupJoinRequest(
             @NotNull Long requesterId,
             @NotNull Long requestId) {
         try {
@@ -280,7 +283,7 @@ public class GroupJoinRequestService extends ExpirableEntityService<GroupJoinReq
                                                                 t);
                                                         return Mono.empty();
                                                     }))
-                                            .then());
+                                            .thenReturn(request));
                 });
     }
 

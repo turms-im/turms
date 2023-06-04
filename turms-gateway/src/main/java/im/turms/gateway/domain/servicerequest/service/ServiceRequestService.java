@@ -38,7 +38,7 @@ import im.turms.server.common.infra.cluster.node.Node;
 public class ServiceRequestService {
 
     private static final ServiceResponse REQUEST_RESPONSE_NO_CONTENT =
-            new ServiceResponse(null, ResponseStatusCode.NO_CONTENT, null);
+            new ServiceResponse(ResponseStatusCode.NO_CONTENT, null, null);
 
     private final Node node;
 

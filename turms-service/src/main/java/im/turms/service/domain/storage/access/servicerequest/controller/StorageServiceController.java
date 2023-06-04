@@ -36,7 +36,7 @@ import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.time.DateRange;
 import im.turms.service.access.servicerequest.dispatcher.ClientRequestHandler;
 import im.turms.service.access.servicerequest.dispatcher.ServiceRequestMapping;
-import im.turms.service.access.servicerequest.dto.RequestHandlerResultFactory;
+import im.turms.service.access.servicerequest.dto.RequestHandlerResult;
 import im.turms.service.domain.common.access.servicerequest.controller.BaseServiceController;
 import im.turms.service.domain.storage.bo.StorageResourceInfo;
 import im.turms.service.domain.storage.service.StorageService;
@@ -76,7 +76,7 @@ public class StorageServiceController extends BaseServiceController {
             return storageService
                     .deleteResource(clientRequest
                             .userId(), resourceType, resourceIdNum, resourceIdStr, extra)
-                    .thenReturn(RequestHandlerResultFactory.OK);
+                    .thenReturn(RequestHandlerResult.OK);
         };
     }
 
@@ -101,7 +101,7 @@ public class StorageServiceController extends BaseServiceController {
             return storageService
                     .queryResourceUploadInfo(clientRequest
                             .userId(), resourceType, resourceIdNum, name, mediaType, extra)
-                    .map(info -> RequestHandlerResultFactory.get(ClientMessagePool
+                    .map(info -> RequestHandlerResult.of(ClientMessagePool
                             .getTurmsNotificationDataBuilder()
                             .setStringsWithVersion(ClientMessagePool.getStringsWithVersionBuilder()
                                     .addAllStrings(ProtoModelConvertor.toList(info)))
@@ -125,7 +125,7 @@ public class StorageServiceController extends BaseServiceController {
             return storageService
                     .queryResourceDownloadInfo(clientRequest
                             .userId(), resourceType, resourceIdNum, resourceIdStr, extra)
-                    .map(info -> RequestHandlerResultFactory.get(ClientMessagePool
+                    .map(info -> RequestHandlerResult.of(ClientMessagePool
                             .getTurmsNotificationDataBuilder()
                             .setStringsWithVersion(ClientMessagePool.getStringsWithVersionBuilder()
                                     .addAllStrings(ProtoModelConvertor.toList(info))
@@ -168,7 +168,7 @@ public class StorageServiceController extends BaseServiceController {
             } else {
                 result = Mono.empty();
             }
-            return result.thenReturn(RequestHandlerResultFactory.OK);
+            return result.thenReturn(RequestHandlerResult.OK);
         };
     }
 
@@ -233,7 +233,7 @@ public class StorageServiceController extends BaseServiceController {
                             creationDateRange);
                 }
             }
-            return result.map(infos -> RequestHandlerResultFactory.get(ClientMessagePool
+            return result.map(infos -> RequestHandlerResult.of(ClientMessagePool
                     .getTurmsNotificationDataBuilder()
                     .setStorageResourceInfos(ClientMessagePool.getStorageResourceInfosBuilder()
                             .addAllInfos(CollectionUtil.transformAsList(infos,

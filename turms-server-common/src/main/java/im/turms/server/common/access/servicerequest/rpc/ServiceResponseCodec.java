@@ -60,7 +60,7 @@ public class ServiceResponseCodec implements Codec<ServiceResponse> {
         } else {
             data = null;
         }
-        return new ServiceResponse(data, statusCode, reason);
+        return new ServiceResponse(statusCode, data, reason);
     }
 
     @Override

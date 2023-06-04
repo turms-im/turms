@@ -271,6 +271,8 @@ Turms配置分为四大类：
 |turms.gateway.service-discovery.identity||✅|string||The identity of the local node will be sent to clients as a notification if identity is not blank and "turms.gateway.session.notifyClientsOfSessionInfoAfterConnected" is true (e.g. "turms-east-0001")|
 |turms.gateway.session.client-heartbeat-interval-seconds|✅|✅|int|60|The client heartbeat interval. Note that the value will NOT change the actual heartbeat behavior of clients, and the value is only used to facilitate related operations of turms-gateway|
 |turms.gateway.session.close-idle-session-after-seconds|✅|✅|int|180|A session will be closed if turms server does not receive any request (including heartbeat request) from the client during closeIdleSessionAfterSeconds. References: https://mp.weixin.qq.com/s?__biz=MzAwNDY1ODY2OQ==&mid=207243549&idx=1&sn=4ebe4beb8123f1b5ab58810ac8bc5994&scene=0#rd|
+|turms.gateway.session.device-details.expire-after-seconds|||int|2592000|Device details information will expire after the specified time has elapsed. 0 means never expire|
+|turms.gateway.session.device-details.items|✅|✅|List-DeviceDetailsItemProperties|[]||
 |turms.gateway.session.identity-access-management.enabled|✅|✅|boolean|true|Whether to authenticate and authorize users when logging in. Note that user ID is always required even if enabled is false. If false at startup, turms-gateway will not connect to the MongoDB server for user records|
 |turms.gateway.session.identity-access-management.http.authentication.response-expectation.body-fields|||Map|{<br/>  "authenticated": true<br/>}||
 |turms.gateway.session.identity-access-management.http.authentication.response-expectation.headers|||Map|{}||
@@ -498,7 +500,6 @@ Turms配置分为四大类：
 |turms.service.message.persist-pre-message-id|✅|✅|boolean|false|Whether to persist the previous message ID of messages in databases|
 |turms.service.message.persist-record|✅|✅|boolean|false|Whether to persist the records of messages in databases|
 |turms.service.message.persist-sender-ip|✅|✅|boolean|false|Whether to persist the sender IP of messages in databases|
-|turms.service.message.send-message-to-other-sender-online-devices|✅|✅|boolean|true|Whether to send the message to the other sender's online devices when sending a message|
 |turms.service.message.sequence-id.use-sequence-id-for-group-conversation|✅||boolean|false|Whether to use the sequence ID for group conversations so that the client can be aware of the loss of messages. Note that the property has a significant impact on performance|
 |turms.service.message.sequence-id.use-sequence-id-for-private-conversation|✅||boolean|false|Whether to use the sequence ID for private conversations so that the client can be aware of the loss of messages. Note that the property has a significant impact on performance|
 |turms.service.message.time-type|✅|✅|enum|LOCAL_SERVER_TIME|The time type for the delivery time of message|
@@ -537,30 +538,67 @@ Turms配置分为四大类：
 |turms.service.mongo.user.optional-index.user-relationship-group-member.join-date|||boolean|false||
 |turms.service.mongo.user.optional-index.user-relationship-group-member.related-user-id|||boolean|false||
 |turms.service.mongo.user.optional-index.user-relationship.establishment-date|||boolean|false||
-|turms.service.notification.notify-group-conversation-participants-after-read-date-updated|✅|✅|boolean|false|Whether to notify the group conversation participants after the read receipt of a conversation has been updated by recipients|
-|turms.service.notification.notify-invitee-after-group-invitation-recalled|✅|✅|boolean|true|Whether to notify the invitee after a group invitation has been recalled|
-|turms.service.notification.notify-member-after-info-updated-by-others|✅|✅|boolean|true|Whether to notify members after its member information has been updated by others|
-|turms.service.notification.notify-member-after-removed-from-relationship-group-by-others|✅|✅|boolean|false|Whether to notify the member after removed from a one-sided relationship group by others|
-|turms.service.notification.notify-members-after-group-deleted|✅|✅|boolean|true|Whether to notify members after a group has been removed|
-|turms.service.notification.notify-members-after-group-updated|✅|✅|boolean|true|Whether to notify members after a group has been updated|
-|turms.service.notification.notify-members-after-one-sided-relationship-group-updated-by-others|✅|✅|boolean|false|Whether to notify members after a one-sided relationship group has been updated by others|
-|turms.service.notification.notify-members-after-other-member-info-updated|✅|✅|boolean|false|Whether to notify members after other group member's information has been updated|
-|turms.service.notification.notify-members-after-other-member-online-status-updated|✅|✅|boolean|false|Whether to notify members after other group member's online status has been updated|
-|turms.service.notification.notify-owner-and-managers-after-group-join-request-recalled|✅|✅|boolean|true|Whether to notify the owner and managers after a group invitation has been recalled|
-|turms.service.notification.notify-owner-and-managers-after-receiving-join-request|✅|✅|boolean|true|Whether to notify the owner and managers after a join request has been received|
-|turms.service.notification.notify-private-conversation-participant-after-read-date-updated|✅|✅|boolean|false|Whether to notify the private conversation participant after the read receipt of a conversation has been updated by the recipient|
-|turms.service.notification.notify-recipient-when-receiving-friend-request|✅|✅|boolean|true|Whether to notify the recipient when receiving a friend request|
-|turms.service.notification.notify-recipients-after-message-updated-by-sender|✅|✅|boolean|true|Whether to notify the recipients after a message has been updated by the sender|
-|turms.service.notification.notify-related-user-after-added-to-one-sided-relationship-group-by-others|✅|✅|boolean|false|Whether to notify the related user after added to a one-sided relationship group by others|
-|turms.service.notification.notify-related-user-after-one-sided-relationship-updated-by-others|✅|✅|boolean|false|Whether to notify the related user after a one-sided relationship has benn updated by others|
-|turms.service.notification.notify-related-users-after-other-related-user-info-updated|✅|✅|boolean|false|Whether to notify related users after other related user's information has been updated|
-|turms.service.notification.notify-related-users-after-other-related-user-online-status-updated|✅|✅|boolean|false|Whether to notify related users after other related user's online status has been updated|
-|turms.service.notification.notify-requester-after-friend-request-updated|✅|✅|boolean|true|Whether to notify the requester after a friend request has been updated|
-|turms.service.notification.notify-user-after-added-to-group-by-others|✅|✅|boolean|true|Whether to notify the user after added to a group by others|
-|turms.service.notification.notify-user-after-blocked-by-group|✅|✅|boolean|false|Whether to notify the user after blocked by a group|
-|turms.service.notification.notify-user-after-invited-by-group|✅|✅|boolean|true|Whether to notify the user after invited by a group|
-|turms.service.notification.notify-user-after-removed-from-group-by-others|✅|✅|boolean|true|Whether to notify the user after removed from a group by others|
-|turms.service.notification.notify-user-after-unblocked-by-group|✅|✅|boolean|false|Whether to notify the user after unblocked by a group|
+|turms.service.notification.friend-request-created.notify-friend-request-recipient|✅|✅|boolean|true|Whether to notify the recipient when the requester has created a friend request|
+|turms.service.notification.friend-request-created.notify-requester-other-online-sessions|✅|✅|boolean|true|Whether to notify the requester's other online sessions when they have created a friend request|
+|turms.service.notification.friend-request-replied.notify-friend-request-requester|✅|✅|boolean|true|Whether to notify the requester when a recipient has replied to the friend request sent by the requester|
+|turms.service.notification.friend-request-replied.notify-requester-other-online-sessions|✅|✅|boolean|true|Whether to notify the requester's other online sessions when they have replied to a friend request|
+|turms.service.notification.group-blocked-user-added.notify-blocked-user|✅|✅|boolean|false|Whether to notify the user when they have been blocked by a group|
+|turms.service.notification.group-blocked-user-added.notify-group-members|✅|✅|boolean|false|Whether to notify group members when a user has been blocked by a group|
+|turms.service.notification.group-blocked-user-added.notify-requester-other-online-sessions|✅|✅|boolean|true|Whether to notify the requester's other online sessions when they have added a blocked user to a group|
+|turms.service.notification.group-blocked-user-removed.notify-group-members|✅|✅|boolean|false|Whether to notify group members when a user is unblocked by a group|
+|turms.service.notification.group-blocked-user-removed.notify-requester-other-online-sessions|✅|✅|boolean|true|Whether to notify the requester's other online sessions when they have removed a blocked user from a group|
+|turms.service.notification.group-blocked-user-removed.notify-unblocked-user|✅|✅|boolean|false|Whether to notify the user when they are unblocked by a group|
+|turms.service.notification.group-conversation-read-date-updated.notify-other-group-members|✅|✅|boolean|false|Whether to notify other group members when a group member has updated their read date in a group conversation|
+|turms.service.notification.group-conversation-read-date-updated.notify-requester-other-online-sessions|✅|✅|boolean|true|Whether to notify the requester's other online sessions when they have updated the read date in a group conversation|
+|turms.service.notification.group-created.notify-requester-other-online-sessions|✅|✅|boolean|true|Whether to notify the requester's other online sessions when they have created a group|
+|turms.service.notification.group-deleted.notify-group-members|✅|✅|boolean|true|Whether to notify group members when a group owner has updated their group|
+|turms.service.notification.group-deleted.notify-requester-other-online-sessions|✅|✅|boolean|true|Whether to notify the requester's other online sessions when they have deleted a group|
+|turms.service.notification.group-invitation-added.notify-group-members|✅|✅|boolean|false|Whether to notify group members when a user has been invited|
+|turms.service.notification.group-invitation-added.notify-group-owner-and-managers|✅|✅|boolean|true|Whether to notify the group owner and managers when a user has been invited|
+|turms.service.notification.group-invitation-added.notify-invitee|✅|✅|boolean|true|Whether to notify the user when they have been invited by a group member|
+|turms.service.notification.group-invitation-added.notify-requester-other-online-sessions|✅|✅|boolean|true|Whether to notify the requester's other online sessions when they have invited a user to a group|
+|turms.service.notification.group-invitation-recalled.notify-group-members|✅|✅|boolean|false|Whether to notify group members when an invitation has been recalled|
+|turms.service.notification.group-invitation-recalled.notify-group-owner-and-managers|✅|✅|boolean|true|Whether to notify the group owner and managers when an invitation has been recalled|
+|turms.service.notification.group-invitation-recalled.notify-invitee|✅|✅|boolean|true|Whether to notify the invitee when a group member has recalled their received group invitation|
+|turms.service.notification.group-invitation-recalled.notify-requester-other-online-sessions|✅|✅|boolean|true|Whether to notify the requester's other online sessions when they have recalled a group invitation|
+|turms.service.notification.group-join-request-created.notify-group-members|✅|✅|boolean|false|Whether to notify group members when a user has created a group join request for their group|
+|turms.service.notification.group-join-request-created.notify-group-owner-and-managers|✅|✅|boolean|true|Whether to notify the group owner and managers when a user has created a group join request for their group|
+|turms.service.notification.group-join-request-created.notify-requester-other-online-sessions|✅|✅|boolean|true|Whether to notify the requester's other online sessions when they have created a group join request|
+|turms.service.notification.group-join-request-recalled.notify-group-members|✅|✅|boolean|false|Whether to notify group members when a user has recalled a group join request for their group|
+|turms.service.notification.group-join-request-recalled.notify-group-owner-and-managers|✅|✅|boolean|true|Whether to notify the group owner and managers when a user has recalled a group join request for their group|
+|turms.service.notification.group-join-request-recalled.notify-requester-other-online-sessions|✅|✅|boolean|true|Whether to notify the requester's other online sessions when they have recalled a group join request|
+|turms.service.notification.group-member-added.notify-added-group-member|✅|✅|boolean|true|Whether to notify the group member when added by others|
+|turms.service.notification.group-member-added.notify-other-group-members|✅|✅|boolean|true|Whether to notify other group members when a group member has been added|
+|turms.service.notification.group-member-added.notify-requester-other-online-sessions|✅|✅|boolean|true|Whether to notify the requester's other online sessions when they have added a group member|
+|turms.service.notification.group-member-info-updated.notify-other-group-members|✅|✅|boolean|false|Whether to notify other group members when a group member's information has been updated|
+|turms.service.notification.group-member-info-updated.notify-requester-other-online-sessions|✅|✅|boolean|true|Whether to notify the requester's other online sessions when they have updated their group member information|
+|turms.service.notification.group-member-info-updated.notify-updated-group-member|✅|✅|boolean|false|Whether to notify the group member when others have updated their group member information|
+|turms.service.notification.group-member-online-status-updated.notify-group-members|✅|✅|boolean|false|Whether to notify other group members when a member's online status has been updated|
+|turms.service.notification.group-member-removed.notify-other-group-members|✅|✅|boolean|true|Whether to notify other group members when a group member has been removed|
+|turms.service.notification.group-member-removed.notify-removed-group-member|✅|✅|boolean|true|Whether to notify the group member when removed by others|
+|turms.service.notification.group-member-removed.notify-requester-other-online-sessions|✅|✅|boolean|true|Whether to notify the requester's other online sessions when they removed a group member|
+|turms.service.notification.group-updated.notify-group-members|✅|✅|boolean|true|Whether to notify group members when the group owner or managers have updated their group|
+|turms.service.notification.group-updated.notify-requester-other-online-sessions|✅|✅|boolean|true|Whether to notify the requester's other online sessions when they have updated a group|
+|turms.service.notification.message-created.notify-message-recipients|✅|✅|boolean|true|Whether to notify the message recipients when a sender has created a message to them|
+|turms.service.notification.message-created.notify-requester-other-online-sessions|✅|✅|boolean|true|Whether to notify the requester's other online sessions when they have created a message|
+|turms.service.notification.message-updated.notify-message-recipients|✅|✅|boolean|true|Whether to notify the message recipients when a sender has updated a message sent to them|
+|turms.service.notification.message-updated.notify-requester-other-online-sessions|✅|✅|boolean|true|Whether to notify the requester's other online sessions when they have updated a message|
+|turms.service.notification.one-sided-relationship-group-deleted.notify-relationship-group-members|✅|✅|boolean|false|Whether to notify members when a one-side relationship group owner has deleted the group|
+|turms.service.notification.one-sided-relationship-group-deleted.notify-requester-other-online-sessions|✅|✅|boolean|true|Whether to notify the requester's other online sessions when they have deleted a relationship group|
+|turms.service.notification.one-sided-relationship-group-member-added.notify-new-relationship-group-member|✅|✅|boolean|false|Whether to notify the new member when a user has added them to their one-sided relationship group|
+|turms.service.notification.one-sided-relationship-group-member-added.notify-requester-other-online-sessions|✅|✅|boolean|true|Whether to notify the requester's other online sessions when they have added a new member to their one-sided relationship group|
+|turms.service.notification.one-sided-relationship-group-member-removed.notify-removed-relationship-group-member|✅|✅|boolean|false|Whether to notify the removed member when a user has removed them from their one-sided relationship group|
+|turms.service.notification.one-sided-relationship-group-member-removed.notify-requester-other-online-sessions|✅|✅|boolean|true|Whether to notify the requester's other online sessions when they have removed a new member from their one-sided relationship group|
+|turms.service.notification.one-sided-relationship-group-updated.notify-relationship-group-members|✅|✅|boolean|false|Whether to notify members when a one-side relationship group owner has updated the group|
+|turms.service.notification.one-sided-relationship-group-updated.notify-requester-other-online-sessions|✅|✅|boolean|true|Whether to notify the requester's other online sessions when they have updated a relationship group|
+|turms.service.notification.one-sided-relationship-updated.notify-related-user|✅|✅|boolean|false|Whether to notify the related user when a user has updated a one-sided relationship with them|
+|turms.service.notification.one-sided-relationship-updated.notify-requester-other-online-sessions|✅|✅|boolean|true|Whether to notify the requester's other online sessions when they have updated a one-sided relationship|
+|turms.service.notification.private-conversation-read-date-updated.notify-contact|✅|✅|boolean|false|Whether to notify another contact when a contact has updated their read date in a private conversation|
+|turms.service.notification.private-conversation-read-date-updated.notify-requester-other-online-sessions|✅|✅|boolean|true|Whether to notify the requester's other online sessions when they have updated the read date in a private conversation|
+|turms.service.notification.user-info-updated.notify-non-blocked-related-users|✅|✅|boolean|false|Whether to notify non-blocked related users when a user has updated their information|
+|turms.service.notification.user-info-updated.notify-requester-other-online-sessions|✅|✅|boolean|true|Whether to notify the requester's other online sessions when they have updated their information|
+|turms.service.notification.user-online-status-updated.notify-non-blocked-related-users|✅|✅|boolean|false|Whether to notify non-blocked related users when a user has updated their online status|
+|turms.service.notification.user-online-status-updated.notify-requester-other-online-sessions|✅|✅|boolean|true|Whether to notify the requester's other online sessions when they have updated their online status|
 |turms.service.push-notification.apns.bundle-id|||string|||
 |turms.service.push-notification.apns.enabled|||boolean|false||
 |turms.service.push-notification.apns.key-id|||string|||

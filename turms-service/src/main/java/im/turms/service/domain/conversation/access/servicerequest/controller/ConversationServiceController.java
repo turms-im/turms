@@ -32,9 +32,13 @@ import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.collection.CollectorUtil;
 import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
+import im.turms.server.common.infra.property.env.service.ServiceProperties;
+import im.turms.server.common.infra.property.env.service.business.notification.NotificationProperties;
+import im.turms.server.common.infra.property.env.service.business.notification.conversation.NotificationGroupConversationReadDateUpdatedProperties;
+import im.turms.server.common.infra.property.env.service.business.notification.conversation.NotificationPrivateConversationReadDateUpdatedProperties;
 import im.turms.service.access.servicerequest.dispatcher.ClientRequestHandler;
 import im.turms.service.access.servicerequest.dispatcher.ServiceRequestMapping;
-import im.turms.service.access.servicerequest.dto.RequestHandlerResultFactory;
+import im.turms.service.access.servicerequest.dto.RequestHandlerResult;
 import im.turms.service.domain.common.access.servicerequest.controller.BaseServiceController;
 import im.turms.service.domain.conversation.service.ConversationService;
 import im.turms.service.domain.group.service.GroupMemberService;
@@ -54,8 +58,12 @@ public class ConversationServiceController extends BaseServiceController {
     private final GroupMemberService groupMemberService;
 
     private boolean isTypingStatusEnabled;
-    private boolean notifyPrivateConversationParticipantAfterReadDateUpdated;
-    private boolean notifyGroupConversationParticipantsAfterReadDateUpdated;
+
+    private boolean notifyRequesterOtherOnlineSessionsOfPrivateConversationReadDateUpdated;
+    private boolean notifyContactOfPrivateConversationReadDateUpdated;
+
+    private boolean notifyRequesterOtherOnlineSessionsOfGroupConversationReadDateUpdated;
+    private boolean notifyOtherGroupMembersOfGroupConversationReadDateUpdated;
 
     public ConversationServiceController(
             TurmsPropertiesManager propertiesManager,
@@ -68,16 +76,25 @@ public class ConversationServiceController extends BaseServiceController {
     }
 
     private void updateProperties(TurmsProperties properties) {
-        isTypingStatusEnabled = properties.getService()
-                .getConversation()
+        ServiceProperties serviceProperties = properties.getService();
+        NotificationProperties notificationProperties = serviceProperties.getNotification();
+        isTypingStatusEnabled = serviceProperties.getConversation()
                 .getTypingStatus()
                 .isEnabled();
-        notifyPrivateConversationParticipantAfterReadDateUpdated = properties.getService()
-                .getNotification()
-                .isNotifyPrivateConversationParticipantAfterReadDateUpdated();
-        notifyGroupConversationParticipantsAfterReadDateUpdated = properties.getService()
-                .getNotification()
-                .isNotifyGroupConversationParticipantsAfterReadDateUpdated();
+
+        NotificationPrivateConversationReadDateUpdatedProperties privateConversationReadDateUpdatedProperties =
+                notificationProperties.getPrivateConversationReadDateUpdated();
+        notifyRequesterOtherOnlineSessionsOfPrivateConversationReadDateUpdated =
+                privateConversationReadDateUpdatedProperties.isNotifyRequesterOtherOnlineSessions();
+        notifyContactOfPrivateConversationReadDateUpdated =
+                privateConversationReadDateUpdatedProperties.isNotifyContact();
+
+        NotificationGroupConversationReadDateUpdatedProperties groupConversationReadDateUpdatedProperties =
+                notificationProperties.getGroupConversationReadDateUpdated();
+        notifyRequesterOtherOnlineSessionsOfGroupConversationReadDateUpdated =
+                groupConversationReadDateUpdatedProperties.isNotifyRequesterOtherOnlineSessions();
+        notifyOtherGroupMembersOfGroupConversationReadDateUpdated =
+                groupConversationReadDateUpdatedProperties.isNotifyOtherGroupMembers();
     }
 
     @ServiceRequestMapping(QUERY_CONVERSATIONS_REQUEST)
@@ -90,7 +107,7 @@ public class ConversationServiceController extends BaseServiceController {
             if (targetIds.isEmpty()) {
                 List<Long> groupIds = request.getGroupIdsList();
                 if (groupIds.isEmpty()) {
-                    return Mono.just(RequestHandlerResultFactory.NO_CONTENT);
+                    return Mono.just(RequestHandlerResult.NO_CONTENT);
                 }
                 dataFlux = conversationService.queryGroupConversations(groupIds)
                         .map(conversation -> ProtoModelConvertor
@@ -113,7 +130,7 @@ public class ConversationServiceController extends BaseServiceController {
                                         .addAllPrivateConversations(conversations))
                                 .build());
             }
-            return dataFlux.map(RequestHandlerResultFactory::get);
+            return dataFlux.map(RequestHandlerResult::of);
         };
     }
 
@@ -130,13 +147,13 @@ public class ConversationServiceController extends BaseServiceController {
     public ClientRequestHandler handleUpdateTypingStatusRequest() {
         return clientRequest -> {
             if (!isTypingStatusEnabled) {
-                return Mono.just(RequestHandlerResultFactory
-                        .get(ResponseStatusCode.UPDATING_TYPING_STATUS_IS_DISABLED));
+                return Mono.just(RequestHandlerResult
+                        .of(ResponseStatusCode.UPDATING_TYPING_STATUS_IS_DISABLED));
             }
             UpdateTypingStatusRequest request = clientRequest.turmsRequest()
                     .getUpdateTypingStatusRequest();
-            return Mono.just(RequestHandlerResultFactory
-                    .get(request.getToId(), clientRequest.turmsRequest(), ResponseStatusCode.OK));
+            return Mono.just(RequestHandlerResult
+                    .of(ResponseStatusCode.OK, request.getToId(), clientRequest.turmsRequest()));
         };
     }
 
@@ -146,9 +163,8 @@ public class ConversationServiceController extends BaseServiceController {
             UpdateConversationRequest request = clientRequest.turmsRequest()
                     .getUpdateConversationRequest();
             if (!request.hasTargetId() && !request.hasGroupId()) {
-                return Mono
-                        .just(RequestHandlerResultFactory.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
-                                "The targetId and groupId must not all null"));
+                return Mono.just(RequestHandlerResult.of(ResponseStatusCode.ILLEGAL_ARGUMENT,
+                        "The targetId and groupId must not all null"));
             }
             Long requesterId = clientRequest.userId();
             Date readDate = new Date(request.getReadDate());
@@ -166,17 +182,25 @@ public class ConversationServiceController extends BaseServiceController {
             }
             return mono.then(Mono.defer(() -> {
                 if (isUpdatePrivateConversationRequest) {
-                    if (notifyPrivateConversationParticipantAfterReadDateUpdated) {
-                        return Mono.just(RequestHandlerResultFactory.get(targetId,
-                                clientRequest.turmsRequest(),
-                                ResponseStatusCode.OK));
+                    if (notifyContactOfPrivateConversationReadDateUpdated) {
+                        return Mono.just(RequestHandlerResult.of(
+                                notifyRequesterOtherOnlineSessionsOfPrivateConversationReadDateUpdated,
+                                targetId,
+                                clientRequest.turmsRequest()));
                     }
-                } else if (notifyGroupConversationParticipantsAfterReadDateUpdated) {
+                    return Mono.just(RequestHandlerResult.of(
+                            notifyRequesterOtherOnlineSessionsOfPrivateConversationReadDateUpdated,
+                            clientRequest.turmsRequest()));
+                } else if (notifyOtherGroupMembersOfGroupConversationReadDateUpdated) {
                     return groupMemberService.queryGroupMemberIds(targetId, true)
-                            .map(memberIds -> RequestHandlerResultFactory.get(memberIds,
+                            .map(memberIds -> RequestHandlerResult.of(
+                                    notifyRequesterOtherOnlineSessionsOfGroupConversationReadDateUpdated,
+                                    memberIds,
                                     clientRequest.turmsRequest()));
                 }
-                return Mono.just(RequestHandlerResultFactory.OK);
+                return Mono.just(RequestHandlerResult.of(
+                        notifyRequesterOtherOnlineSessionsOfGroupConversationReadDateUpdated,
+                        clientRequest.turmsRequest()));
             }));
         };
     }

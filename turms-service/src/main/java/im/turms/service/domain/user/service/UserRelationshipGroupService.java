@@ -120,7 +120,7 @@ public class UserRelationshipGroupService {
                 new UserRelationshipGroup(ownerId, finalGroupIndex, groupName, creationDate);
         Mono<UserRelationshipGroup> result = userRelationshipGroupRepository.insert(group, session)
                 .thenReturn(group);
-        // If groupIndex is null but session isn't null and DuplicateKeyException occurs,
+        // If groupIndex is null, but the session isn't null and DuplicateKeyException occurs,
         // it is a bug of server because we cannot resume the session.
         // Luckily, we don't have the case now.
         if (groupIndex == null && session == null) {

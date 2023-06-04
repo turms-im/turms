@@ -53,9 +53,9 @@ class ServiceRequestServiceTests {
             new RuntimeException("Mocked error for failing to handle request");
 
     private final ServiceResponse responseForSuccess = new ServiceResponse(
+            ResponseStatusCode.OK,
             TurmsNotification.Data.newBuilder()
                     .buildPartial(),
-            ResponseStatusCode.OK,
             "reason");
 
     @Test

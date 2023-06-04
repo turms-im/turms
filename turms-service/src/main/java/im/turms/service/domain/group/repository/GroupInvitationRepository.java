@@ -124,11 +124,13 @@ public class GroupInvitationRepository extends ExpirableEntityRepository<GroupIn
         return mongoClient.count(entityClass, filter);
     }
 
-    public Mono<GroupInvitation> findGroupIdAndStatus(Long invitationId) {
+    public Mono<GroupInvitation> findGroupIdAndInviteeIdAndStatus(Long invitationId) {
         Filter filter = Filter.newBuilder(1)
                 .eq(DomainFieldName.ID, invitationId);
         QueryOptions options = QueryOptions.newBuilder(1)
-                .include(GroupInvitation.Fields.GROUP_ID, GroupInvitation.Fields.STATUS);
+                .include(GroupInvitation.Fields.GROUP_ID,
+                        GroupInvitation.Fields.INVITEE_ID,
+                        GroupInvitation.Fields.STATUS);
         return findExpirableDoc(filter, options);
     }
 
