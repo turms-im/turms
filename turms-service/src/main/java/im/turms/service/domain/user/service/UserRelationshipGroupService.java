@@ -39,7 +39,6 @@ import reactor.core.publisher.Mono;
 
 import im.turms.server.common.access.client.dto.ClientMessagePool;
 import im.turms.server.common.access.client.dto.model.user.UserRelationshipGroupsWithVersion;
-import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.collection.CollectorUtil;
 import im.turms.server.common.infra.exception.ResponseException;
@@ -288,6 +287,11 @@ public class UserRelationshipGroupService {
         return userRelationshipGroupRepository.updateRelationshipGroups(keys, name, creationDate);
     }
 
+    /**
+     * @implNote We run this method while upserting a relationship into the owner's relationship
+     *           group in a transaction currently, so we don't check whether the owner has a
+     *           relationship with the related user in this method.
+     */
     public Mono<UserRelationshipGroupMember> addRelatedUserToRelationshipGroups(
             @NotNull Long ownerId,
             @NotNull Integer groupIndex,
@@ -298,29 +302,18 @@ public class UserRelationshipGroupService {
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        return userRelationshipService.hasOneSidedRelationship(ownerId, relatedUserId)
-                .flatMap(hasRelationship -> {
-                    if (!hasRelationship) {
-                        return Mono.error(ResponseException
-                                .get(ResponseStatusCode.ADD_NOT_RELATED_USER_TO_GROUP));
-                    }
-                    UserRelationshipGroupMember member = new UserRelationshipGroupMember(
-                            ownerId,
-                            groupIndex,
-                            relatedUserId,
-                            new Date());
-                    return userRelationshipGroupMemberRepository.upsert(member, session)
-                            .flatMap(groupMember -> userVersionService
-                                    .updateRelationshipGroupsVersion(ownerId)
-                                    .onErrorResume(t -> {
-                                        LOGGER.error(
-                                                "Caught an error while updating the relationship groups version of the owner ({}) after adding a user to the groups",
-                                                ownerId,
-                                                t);
-                                        return Mono.empty();
-                                    }))
-                            .thenReturn(member);
-                });
+        UserRelationshipGroupMember member =
+                new UserRelationshipGroupMember(ownerId, groupIndex, relatedUserId, new Date());
+        return userRelationshipGroupMemberRepository.upsert(member, session)
+                .flatMap(groupMember -> userVersionService.updateRelationshipGroupsVersion(ownerId)
+                        .onErrorResume(t -> {
+                            LOGGER.error(
+                                    "Caught an error while updating the relationship groups version of the owner ({}) after adding a user to the groups",
+                                    ownerId,
+                                    t);
+                            return Mono.empty();
+                        }))
+                .thenReturn(member);
     }
 
     public Mono<Void> deleteRelationshipGroupAndMoveMembers(
