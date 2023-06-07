@@ -30,7 +30,6 @@ import reactor.netty.NettyOutbound;
 public interface ConnectionListener {
     Mono<Void> onAdded(
             Connection connection,
-            boolean isWebSocketConnection,
             Flux<ByteBuf> in,
             NettyOutbound out,
             Mono<Void> onClose);

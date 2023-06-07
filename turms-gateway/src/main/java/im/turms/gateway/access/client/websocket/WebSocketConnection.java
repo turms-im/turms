@@ -19,8 +19,10 @@ package im.turms.gateway.access.client.websocket;
 
 import java.net.InetSocketAddress;
 
+import io.netty.buffer.ByteBuf;
 import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketCloseStatus;
+import reactor.core.publisher.Mono;
 import reactor.netty.Connection;
 import reactor.netty.http.websocket.WebsocketOutbound;
 
@@ -50,6 +52,12 @@ public class WebSocketConnection extends NetConnection {
     @Override
     public InetSocketAddress getAddress() {
         return (InetSocketAddress) connection.address();
+    }
+
+    @Override
+    public Mono<Void> send(ByteBuf buffer) {
+        return out.sendObject(new BinaryWebSocketFrame(buffer))
+                .then();
     }
 
     /**

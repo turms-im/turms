@@ -19,6 +19,8 @@ package im.turms.gateway.access.client.tcp;
 
 import java.net.InetSocketAddress;
 
+import io.netty.buffer.ByteBuf;
+import reactor.core.publisher.Mono;
 import reactor.netty.channel.ChannelOperations;
 
 import im.turms.gateway.access.client.common.NotificationFactory;
@@ -45,6 +47,12 @@ public class TcpConnection extends NetConnection {
     @Override
     public InetSocketAddress getAddress() {
         return (InetSocketAddress) connection.address();
+    }
+
+    @Override
+    public Mono<Void> send(ByteBuf buffer) {
+        return connection.sendObject(buffer)
+                .then();
     }
 
     /**

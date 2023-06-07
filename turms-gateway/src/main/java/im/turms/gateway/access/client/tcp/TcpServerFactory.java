@@ -85,11 +85,8 @@ public final class TcpServerFactory {
                                 "tcp"))
                 // Note that the elements from "in.receive()" is emitted by FluxReceive,
                 // which will release buffer after "onNext" returns
-                .handle((in, out) -> connectionListener.onAdded((Connection) in,
-                        false,
-                        in.receive(),
-                        out,
-                        ((Connection) in).onDispose()))
+                .handle((in, out) -> connectionListener
+                        .onAdded((Connection) in, in.receive(), out, ((Connection) in).onDispose()))
                 .doOnChannelInit((connectionObserver, channel, remoteAddress) -> channel.pipeline()
                         .addFirst("serviceAvailabilityHandler", serviceAvailabilityHandler))
                 .doOnConnection(connection -> {

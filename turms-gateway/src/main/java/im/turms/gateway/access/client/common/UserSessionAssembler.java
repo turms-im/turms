@@ -21,11 +21,9 @@ import java.net.InetSocketAddress;
 import jakarta.annotation.Nullable;
 
 import io.netty.buffer.ByteBuf;
-import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.netty.Connection;
-import reactor.netty.NettyOutbound;
 
 import im.turms.gateway.access.client.common.connection.ConnectionListener;
 import im.turms.gateway.access.client.common.connection.NetConnection;
@@ -70,7 +68,7 @@ public abstract class UserSessionAssembler {
     protected abstract NetConnection createConnection(Connection connection);
 
     protected ConnectionListener bindConnectionWithSessionWrapper() {
-        return (connection, isWebSocketConnection, in, out, onClose) -> {
+        return (connection, in, out, onClose) -> {
             InetSocketAddress address = (InetSocketAddress) connection.address();
             NetConnection netConnection = createConnection(connection);
             UserSessionWrapper sessionWrapper = new UserSessionWrapper(
@@ -90,26 +88,20 @@ public abstract class UserSessionAssembler {
                                 turmsNotificationBuffer = turmsNotificationBuffer.duplicate();
                                 // sendObject() will release the buffer no matter it succeeds or
                                 // fails
-                                NettyOutbound outbound = isWebSocketConnection
-                                        ? out.sendObject(
-                                                new BinaryWebSocketFrame(turmsNotificationBuffer))
-                                        : out.sendObject(turmsNotificationBuffer);
-                                return Mono.from(outbound)
+                                return netConnection.send(turmsNotificationBuffer)
                                         .doOnError(t -> handleConnectionError(t,
                                                 netConnection,
                                                 userSession,
                                                 tracingContext));
                             }));
-            respondToRequests(connection, isWebSocketConnection, in, out, sessionWrapper);
+            respondToRequests(connection, in, sessionWrapper);
             return tryRemoveSessionInfoOnConnectionClosed(onClose, sessionWrapper);
         };
     }
 
     private void respondToRequests(
             Connection connection,
-            boolean isWebSocketConnection,
             Flux<ByteBuf> in,
-            NettyOutbound out,
             UserSessionWrapper sessionWrapper) {
         in.doOnNext(requestData -> {
             if (connection.isDisposed()) {
@@ -122,6 +114,7 @@ public abstract class UserSessionAssembler {
 
             // Note that handleRequest() should never return MonoError
             TracingContext ctx = new TracingContext();
+            NetConnection netConnection = sessionWrapper.getConnection();
             clientRequestDispatcher.handleRequest(sessionWrapper, requestData)
                     .onErrorResume(throwable -> {
                         ctx.updateThreadContext();
@@ -137,10 +130,7 @@ public abstract class UserSessionAssembler {
                         // Note that the content of the buffer is not copied, so "duplicate()" is
                         // efficient.
                         turmsNotificationBuffer = turmsNotificationBuffer.duplicate();
-                        NettyOutbound outbound = isWebSocketConnection
-                                ? out.sendObject(new BinaryWebSocketFrame(turmsNotificationBuffer))
-                                : out.sendObject(turmsNotificationBuffer);
-                        return Mono.from(outbound);
+                        return netConnection.send(turmsNotificationBuffer);
                     })
                     .contextWrite(context -> context.put(TracingContext.CTX_KEY_NAME, ctx))
                     .doFinally(signal -> ctx.clearThreadContext())

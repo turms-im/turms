@@ -164,7 +164,7 @@ public final class WebSocketServerFactory {
                         .then();
                 // BinaryWebSocketFrame will be created by
                 // reactor.netty.http.server.WebsocketServerOperations.send
-                return connectionListener.onAdded((Connection) in, true, inbound, out, onClose);
+                return connectionListener.onAdded((Connection) in, inbound, out, onClose);
             }, serverSpec);
         };
     }

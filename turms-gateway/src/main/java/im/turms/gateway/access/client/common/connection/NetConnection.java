@@ -20,9 +20,10 @@ package im.turms.gateway.access.client.common.connection;
 import java.net.InetSocketAddress;
 import java.time.Duration;
 import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.NotNull;
 
+import io.netty.buffer.ByteBuf;
 import lombok.Data;
+import reactor.core.publisher.Mono;
 import reactor.util.retry.Retry;
 import reactor.util.retry.RetryBackoffSpec;
 
@@ -56,7 +57,9 @@ public abstract class NetConnection {
 
     public abstract InetSocketAddress getAddress();
 
-    public void close(@NotNull CloseReason closeReason) {
+    public abstract Mono<Void> send(ByteBuf buffer);
+
+    public void close(CloseReason closeReason) {
         isConnected = false;
         isConnectionRecovering = false;
         isSwitchingToUdp = closeReason.closeStatus()
