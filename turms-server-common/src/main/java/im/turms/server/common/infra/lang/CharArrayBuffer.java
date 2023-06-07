@@ -124,7 +124,6 @@ public class CharArrayBuffer implements CharSequence {
     }
 
     public void clear() {
-        Arrays.fill(buffer, (char) 0);
         length = 0;
     }
 
