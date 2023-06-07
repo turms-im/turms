@@ -64,6 +64,7 @@ public class StringBuilderWriter extends Writer {
 
     @Override
     public void flush() {
+        close();
     }
 
     @Override
