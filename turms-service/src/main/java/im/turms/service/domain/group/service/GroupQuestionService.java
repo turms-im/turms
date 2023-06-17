@@ -168,7 +168,7 @@ public class GroupQuestionService {
                 });
     }
 
-    public Mono<GroupJoinQuestionsAnswerResult> checkGroupQuestionAnswerAndJoin(
+    public Mono<GroupJoinQuestionsAnswerResult> authAndCheckGroupQuestionAnswerAndJoin(
             @NotNull Long requesterId,
             @NotEmpty Set<@ValidGroupQuestionIdAndAnswer GroupQuestionIdAndAnswer> questionIdAndAnswerPairs) {
         try {

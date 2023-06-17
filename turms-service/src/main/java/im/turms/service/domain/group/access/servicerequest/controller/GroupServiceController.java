@@ -613,7 +613,8 @@ public class GroupServiceController extends BaseServiceController {
                         .add(new GroupQuestionIdAndAnswer(entry.getKey(), entry.getValue()));
             }
             return groupQuestionService
-                    .checkGroupQuestionAnswerAndJoin(clientRequest.userId(), idAndAnswerPairs)
+                    .authAndCheckGroupQuestionAnswerAndJoin(clientRequest.userId(),
+                            idAndAnswerPairs)
                     .map(answerResult -> RequestHandlerResult
                             .of(ClientMessagePool.getTurmsNotificationDataBuilder()
                                     .setGroupJoinQuestionAnswerResult(answerResult)

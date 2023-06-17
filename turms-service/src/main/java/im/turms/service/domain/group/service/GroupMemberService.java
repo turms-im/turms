@@ -266,7 +266,7 @@ public class GroupMemberService {
             return PublisherPool.EMPTY_LIST;
         }
         GroupMemberRole finalGroupMemberRole = groupMemberRole;
-        return groupService.queryGroupType(groupId)
+        return groupService.queryGroupTypeIfActiveAndNotDeleted(groupId)
                 .switchIfEmpty(Mono.error(
                         ResponseException.get(ResponseStatusCode.ADD_USER_TO_INACTIVE_GROUP)))
                 .flatMap(groupType -> {
@@ -620,7 +620,7 @@ public class GroupMemberService {
             return Mono.error(e);
         }
         return queryGroupMemberRole(inviterId, groupId, false)
-                .flatMap(inviterRole -> groupService.queryGroupType(groupId)
+                .flatMap(inviterRole -> groupService.queryGroupTypeIfActiveAndNotDeleted(groupId)
                         .flatMap(groupType -> {
                             GroupInvitationStrategy strategy = groupType.getInvitationStrategy();
                             ResponseStatusCode code =
@@ -701,7 +701,7 @@ public class GroupMemberService {
     private Mono<ResponseStatusCode> isGuestAllowedToSendMessage(
             @NotNull Long groupId,
             @NotNull Long senderId) {
-        return groupService.queryGroupType(groupId)
+        return groupService.queryGroupTypeIfActiveAndNotDeleted(groupId)
                 .flatMap(type -> {
                     Boolean speakable = type.getGuestSpeakable();
                     if (speakable == null || !speakable) {

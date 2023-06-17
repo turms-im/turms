@@ -518,16 +518,6 @@ public class GroupService {
                 });
     }
 
-    public Mono<GroupType> queryGroupType(@NotNull Long groupId) {
-        try {
-            Validator.notNull(groupId, "groupId");
-        } catch (ResponseException e) {
-            return Mono.error(e);
-        }
-        return groupRepository.findTypeId(groupId)
-                .flatMap(groupTypeService::queryGroupType);
-    }
-
     public Mono<Void> updateGroupInformation(
             @NotNull Long groupId,
             @Nullable Long typeId,
@@ -650,7 +640,7 @@ public class GroupService {
                 muteEndDate)) {
             return Mono.empty();
         }
-        return queryGroupType(groupId)
+        return queryGroupTypeIfActiveAndNotDeleted(groupId)
                 .switchIfEmpty(Mono.error(ResponseException
                         .get(ResponseStatusCode.UPDATE_INFO_OF_NON_EXISTING_GROUP)))
                 .flatMap(groupType -> {
