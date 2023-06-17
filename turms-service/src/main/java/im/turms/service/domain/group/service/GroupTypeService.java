@@ -41,6 +41,7 @@ import im.turms.server.common.infra.cluster.service.idgen.ServiceType;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
+import im.turms.server.common.infra.time.DurationConst;
 import im.turms.server.common.infra.validation.NoWhitespace;
 import im.turms.server.common.infra.validation.Validator;
 import im.turms.server.common.storage.mongo.IMongoCollectionInitializer;
@@ -87,6 +88,15 @@ public class GroupTypeService {
                         true,
                         true,
                         true));
+        LOGGER.info("Loading all group types");
+        groupTypeRepository.findAll()
+                .doOnNext(groupType -> idToGroupType.put(groupType.getId(), groupType))
+                .onErrorMap(t -> new RuntimeException(
+                        "Caught an error while loading all group types",
+                        t))
+                .blockLast(DurationConst.ONE_MINUTE);
+        LOGGER.info("Loaded all group types");
+
         groupTypeRepository.watch(FullDocument.UPDATE_LOOKUP)
                 .doOnNext(event -> {
                     OperationType operationType = event.getOperationType();
@@ -112,10 +122,6 @@ public class GroupTypeService {
                         o,
                         throwable))
                 .subscribe();
-        groupTypeRepository.findAll()
-                .doOnNext(groupType -> idToGroupType.put(groupType.getId(), groupType))
-                .subscribe(null,
-                        t -> LOGGER.error("Caught an error while finding all group types", t));
     }
 
     public GroupType getDefaultGroupType() {
@@ -204,17 +210,26 @@ public class GroupTypeService {
                 messageEditable)) {
             return OperationResultPublisherPool.ACKNOWLEDGED_UPDATE_RESULT;
         }
-        return groupTypeRepository.updateTypes(ids,
-                name,
-                groupSizeLimit,
-                groupInvitationStrategy,
-                groupJoinStrategy,
-                groupInfoUpdateStrategy,
-                memberInfoUpdateStrategy,
-                guestSpeakable,
-                selfInfoUpdatable,
-                enableReadReceipt,
-                messageEditable);
+        return groupTypeRepository
+                .updateTypes(ids,
+                        name,
+                        groupSizeLimit,
+                        groupInvitationStrategy,
+                        groupJoinStrategy,
+                        groupInfoUpdateStrategy,
+                        memberInfoUpdateStrategy,
+                        guestSpeakable,
+                        selfInfoUpdatable,
+                        enableReadReceipt,
+                        messageEditable)
+                .doOnNext(updateResult -> {
+                    // Though the latest records will be synced in the watch callback,
+                    // we still need to invalid dirty cache immediately, so the subsequent query
+                    // won't get outdated records
+                    for (Long id : ids) {
+                        idToGroupType.remove(id);
+                    }
+                });
     }
 
     public Mono<DeleteResult> deleteGroupTypes(@Nullable Set<Long> groupTypeIds) {
@@ -224,6 +239,9 @@ public class GroupTypeService {
         }
         return groupTypeRepository.deleteByIds(groupTypeIds)
                 .doOnNext(result -> {
+                    // Though the latest records will be synced in the watch callback,
+                    // we still need to invalid dirty cache immediately, so the subsequent query
+                    // won't get outdated records
                     if (groupTypeIds != null) {
                         for (Long id : groupTypeIds) {
                             idToGroupType.remove(id);

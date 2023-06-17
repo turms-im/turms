@@ -37,6 +37,7 @@ import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.reactor.PublisherPool;
 import im.turms.server.common.infra.security.password.PasswordManager;
+import im.turms.server.common.infra.time.DurationConst;
 import im.turms.server.common.infra.validation.NoWhitespace;
 import im.turms.server.common.infra.validation.Validator;
 
@@ -53,7 +54,7 @@ public abstract class BaseAdminService {
     private final BaseRepository<Admin, String> adminRepository;
     private final BaseAdminRoleService adminRoleService;
 
-    private final Map<String, AdminInfo> accountToAdmin = new ConcurrentHashMap<>();
+    private final Map<String, AdminInfo> accountToAdmin = new ConcurrentHashMap<>(16);
 
     protected BaseAdminService(
             PasswordManager passwordManager,
@@ -64,7 +65,30 @@ public abstract class BaseAdminService {
         this.adminRoleService = adminRoleService;
     }
 
-    protected void listenAndLoadAdmins() {
+    protected void loadAndListenAdmins() {
+        // Load
+        LOGGER.info("Loading all admins");
+        adminRepository.findAll()
+                .collect(CollectorUtil.toChunkedList())
+                .onErrorMap(
+                        t -> new RuntimeException("Caught an error while loading all admins", t))
+                .flatMap(admins -> {
+                    for (Admin admin : admins) {
+                        accountToAdmin.put(admin.getAccount(), new AdminInfo(admin, null));
+                    }
+                    for (Admin admin : admins) {
+                        if (admin.getRoleId()
+                                .equals(ADMIN_ROLE_ROOT_ID)) {
+                            break;
+                        }
+                    }
+                    return addRootAdmin().onErrorMap(t -> new RuntimeException(
+                            "Caught an error while adding the root admin",
+                            t));
+                })
+                .block(DurationConst.ONE_MINUTE);
+        LOGGER.info("Loaded all admins");
+
         // Listen
         adminRepository.watch(FullDocument.UPDATE_LOOKUP)
                 .doOnNext(event -> {
@@ -89,24 +113,6 @@ public abstract class BaseAdminService {
                         o,
                         throwable))
                 .subscribe();
-
-        // Load
-        adminRepository.findAll()
-                .collect(CollectorUtil.toChunkedList())
-                .doOnNext(admins -> {
-                    for (Admin admin : admins) {
-                        accountToAdmin.put(admin.getAccount(), new AdminInfo(admin, null));
-                    }
-                    for (Admin admin : admins) {
-                        if (admin.getRoleId()
-                                .equals(ADMIN_ROLE_ROOT_ID)) {
-                            break;
-                        }
-                    }
-                    addRootAdmin().subscribe(null,
-                            t -> LOGGER.error("Caught an error while adding the root admin", t));
-                })
-                .subscribe(null, t -> LOGGER.error("Caught an error while finding all admins", t));
     }
 
     protected Mono<Admin> addRootAdmin() {

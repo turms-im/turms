@@ -33,6 +33,7 @@ import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.time.DateConst;
+import im.turms.server.common.infra.time.DurationConst;
 import im.turms.server.common.infra.validation.Validator;
 
 import static im.turms.server.common.domain.admin.constant.AdminConst.ADMIN_ROLE_ROOT_ID;
@@ -57,10 +58,22 @@ public abstract class BaseAdminRoleService {
     protected BaseAdminRoleService(BaseRepository<AdminRole, Long> adminRoleRepository) {
         this.adminRoleRepository = adminRoleRepository;
 
-        listenAndLoadRoles();
+        loadAndListenRoles();
     }
 
-    public void listenAndLoadRoles() {
+    public void loadAndListenRoles() {
+        // Load
+        resetRoles();
+        LOGGER.info("Loading all admin roles");
+        adminRoleRepository.findAll()
+                .doOnNext(role -> idToRole.put(role.getId(), role))
+                .onErrorMap(t -> new RuntimeException(
+                        "Caught an error while loading all admin roles",
+                        t))
+                .blockLast(DurationConst.ONE_MINUTE);
+        LOGGER.info("Loaded all admin roles");
+
+        // Listen
         adminRoleRepository.watch(FullDocument.UPDATE_LOOKUP)
                 .doOnNext(event -> {
                     AdminRole adminRole = event.getFullDocument();
@@ -83,17 +96,10 @@ public abstract class BaseAdminRoleService {
                         o,
                         throwable))
                 .subscribe();
-
-        // Load
-        resetRoles();
-        adminRoleRepository.findAll()
-                .doOnNext(role -> idToRole.put(role.getId(), role))
-                .subscribe(null,
-                        t -> LOGGER.error("Caught an error while finding all admin roles", t));
     }
 
     public AdminRole getRootRole() {
-        return idToRole.get(ADMIN_ROLE_ROOT_ID);
+        return ROOT_ROLE;
     }
 
     public Mono<AdminRole> queryAndCacheRole(@NotNull Long roleId) {

@@ -101,6 +101,12 @@ public abstract class BaseRepository<T, K> {
         return mongoClient.deleteMany(session, entityClass, filter);
     }
 
+    public Mono<DeleteResult> deleteByNotIds(@Nullable Collection<K> ids) {
+        Filter filter = Filter.newBuilder(1)
+                .ninIfNotNull(DomainFieldName.ID, ids);
+        return mongoClient.deleteMany(entityClass, filter);
+    }
+
     public Mono<Long> countAll() {
         return mongoClient.countAll(entityClass);
     }

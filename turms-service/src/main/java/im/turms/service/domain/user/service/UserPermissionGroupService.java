@@ -41,8 +41,10 @@ import im.turms.server.common.infra.cluster.service.idgen.ServiceType;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
+import im.turms.server.common.infra.time.DurationConst;
 import im.turms.server.common.infra.validation.Validator;
 import im.turms.server.common.storage.mongo.IMongoCollectionInitializer;
+import im.turms.server.common.storage.mongo.exception.DuplicateKeyException;
 import im.turms.service.domain.user.po.UserPermissionGroup;
 import im.turms.service.domain.user.repository.UserPermissionGroupRepository;
 import im.turms.service.storage.mongo.OperationResultPublisherPool;
@@ -72,16 +74,26 @@ public class UserPermissionGroupService {
         this.userPermissionGroupRepository = userPermissionGroupRepository;
         this.userService = userService;
 
-        idToPermissionGroup.putIfAbsent(DEFAULT_USER_PERMISSION_GROUP_ID,
-                new UserPermissionGroup(
-                        DEFAULT_USER_PERMISSION_GROUP_ID,
+        LOGGER.info(
+                "Loading all user permission groups and adding the default user permission group");
+        userPermissionGroupRepository.findAll()
+                .doOnNext(userPermissionGroup -> idToPermissionGroup
+                        .put(userPermissionGroup.getId(), userPermissionGroup))
+                .onErrorMap(t -> new RuntimeException(
+                        "Caught an error while loading all user permission groups",
+                        t))
+                .then(addUserPermissionGroup(DEFAULT_USER_PERMISSION_GROUP_ID,
                         Set.of(DEFAULT_GROUP_TYPE_ID),
                         Integer.MAX_VALUE,
                         Integer.MAX_VALUE,
-                        Collections.emptyMap()));
-        userPermissionGroupRepository.findAll()
-                .subscribe(userPermissionGroup -> idToPermissionGroup
-                        .put(userPermissionGroup.getId(), userPermissionGroup));
+                        Collections.emptyMap()).onErrorComplete(DuplicateKeyException.class)
+                        .onErrorMap(t -> new RuntimeException(
+                                "Caught an error while adding the default user permission group",
+                                t)))
+                .block(DurationConst.ONE_MINUTE);
+        LOGGER.info(
+                "Loaded all user permission groups and added the default user permission group");
+
         userPermissionGroupRepository.watch(FullDocument.UPDATE_LOOKUP)
                 .doOnNext(event -> {
                     OperationType operationType = event.getOperationType();
@@ -108,15 +120,10 @@ public class UserPermissionGroupService {
                 .subscribe();
     }
 
-    public UserPermissionGroup getDefaultUserPermissionGroup() {
-        return idToPermissionGroup.get(DEFAULT_USER_PERMISSION_GROUP_ID);
-    }
-
     public Flux<UserPermissionGroup> queryUserPermissionGroups(
             @Nullable Integer page,
             @Nullable Integer size) {
-        return userPermissionGroupRepository.findAll(page, size)
-                .concatWithValues(getDefaultUserPermissionGroup());
+        return userPermissionGroupRepository.findAll(page, size);
     }
 
     public Mono<UserPermissionGroup> addUserPermissionGroup(
@@ -164,27 +171,42 @@ public class UserPermissionGroupService {
                 groupTypeIdToLimit)) {
             return OperationResultPublisherPool.ACKNOWLEDGED_UPDATE_RESULT;
         }
-        return userPermissionGroupRepository.updateUserPermissionGroups(groupIds,
-                creatableGroupTypeIds,
-                ownedGroupLimit,
-                ownedGroupLimitForEachGroupType,
-                groupTypeIdToLimit);
+        return userPermissionGroupRepository
+                .updateUserPermissionGroups(groupIds,
+                        creatableGroupTypeIds,
+                        ownedGroupLimit,
+                        ownedGroupLimitForEachGroupType,
+                        groupTypeIdToLimit)
+                .doOnNext(updateResult -> {
+                    // Though the latest records will be synced in the watch callback,
+                    // we still need to invalid dirty cache immediately, so the subsequent query
+                    // won't get outdated records
+                    for (Long groupId : groupIds) {
+                        idToPermissionGroup.remove(groupId);
+                    }
+                });
     }
 
+    /**
+     * @implNote Note that we don't need to remove corresponding groups in "idToPermissionGroup"
+     *           because their data will be synced in the watch callback.
+     */
     public Mono<DeleteResult> deleteUserPermissionGroups(@Nullable Set<Long> groupIds) {
-        if (groupIds != null && groupIds.contains(DEFAULT_USER_PERMISSION_GROUP_ID)) {
+        if (groupIds == null) {
+            return userPermissionGroupRepository
+                    .deleteByNotIds(Set.of(DEFAULT_USER_PERMISSION_GROUP_ID));
+        }
+        if (groupIds.contains(DEFAULT_USER_PERMISSION_GROUP_ID)) {
             return Mono.error(ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
                     "The default user permission group cannot be deleted"));
         }
         return userPermissionGroupRepository.deleteByIds(groupIds)
-                .doOnNext(result -> {
-                    if (groupIds != null) {
-                        for (Long id : groupIds) {
-                            idToPermissionGroup.remove(id);
-                        }
-                    } else {
-                        idToPermissionGroup.keySet()
-                                .removeIf(id -> !id.equals(DEFAULT_USER_PERMISSION_GROUP_ID));
+                .doOnNext(deleteResult -> {
+                    // Though the latest records will be synced in the watch callback,
+                    // we still need to invalid dirty cache immediately, so the subsequent query
+                    // won't get outdated records
+                    for (Long groupId : groupIds) {
+                        idToPermissionGroup.remove(groupId);
                     }
                 });
     }
@@ -217,8 +239,7 @@ public class UserPermissionGroupService {
     }
 
     public Mono<Long> countUserPermissionGroups() {
-        return userPermissionGroupRepository.countAll()
-                .map(number -> number + 1);
+        return userPermissionGroupRepository.countAll();
     }
 
 }

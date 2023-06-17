@@ -171,6 +171,9 @@ public class AdminRoleService extends BaseAdminRoleService {
         }
         return adminRoleRepository.deleteByIds(roleIds)
                 .map(result -> {
+                    // Though the latest records will be synced in the watch callback,
+                    // we still need to invalid dirty cache immediately, so the subsequent query
+                    // won't get outdated records
                     for (Long id : roleIds) {
                         idToRole.remove(id);
                     }
@@ -235,7 +238,15 @@ public class AdminRoleService extends BaseAdminRoleService {
         if (Validator.areAllFalsy(newName, permissions, rank)) {
             return OperationResultPublisherPool.ACKNOWLEDGED_UPDATE_RESULT;
         }
-        return adminRoleRepository.updateAdminRoles(roleIds, newName, permissions, rank);
+        return adminRoleRepository.updateAdminRoles(roleIds, newName, permissions, rank)
+                .doOnNext(updateResult -> {
+                    // Though the latest records will be synced in the watch callback,
+                    // we still need to invalid dirty cache immediately, so the subsequent query
+                    // won't get outdated records
+                    for (Long roleId : roleIds) {
+                        idToRole.remove(roleId);
+                    }
+                });
     }
 
     public Flux<AdminRole> queryAdminRoles(

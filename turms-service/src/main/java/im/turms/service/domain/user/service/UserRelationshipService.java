@@ -423,16 +423,16 @@ public class UserRelationshipService {
             Validator.notNull(userTwoId, "userTwoId");
             Validator.notEquals(userOneId,
                     userTwoId,
-                    "The ID of user one must not equal to the ID of user two");
+                    "The ID of user one must not be equal to the ID of user two");
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        Date now = new Date();
         if (session == null) {
             return userRelationshipRepository
                     .inTransaction(newSession -> friendTwoUsers(userOneId, userTwoId, newSession))
                     .retryWhen(TRANSACTION_RETRY);
         }
+        Date now = new Date();
         return upsertOneSidedRelationship(userOneId,
                 userTwoId,
                 null,

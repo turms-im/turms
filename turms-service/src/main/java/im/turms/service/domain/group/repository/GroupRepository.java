@@ -167,9 +167,7 @@ public class GroupRepository extends BaseRepository<Group, Long> {
         return mongoClient.findMany(entityClass, filter, options);
     }
 
-    public Flux<Group> findNotDeletedGroups(
-            @Nullable Set<Long> ids,
-            @Nullable Date lastUpdatedDate) {
+    public Flux<Group> findNotDeletedGroups(Set<Long> ids, @Nullable Date lastUpdatedDate) {
         Filter filter = Filter.newBuilder(3)
                 .in(DomainFieldName.ID, ids)
                 .eq(Group.Fields.DELETION_DATE, null)

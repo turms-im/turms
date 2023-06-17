@@ -74,7 +74,7 @@ public class AdminService extends BaseAdminService {
     private final AdminRepository adminRepository;
     private final AdminRoleService adminRoleService;
 
-    private final Map<String, AdminInfo> accountToAdmin = new ConcurrentHashMap<>();
+    private final Map<String, AdminInfo> accountToAdmin = new ConcurrentHashMap<>(16);
 
     public AdminService(
             PasswordManager passwordManager,
@@ -86,7 +86,7 @@ public class AdminService extends BaseAdminService {
         this.propertiesManager = propertiesManager;
         this.adminRepository = adminRepository;
         this.adminRoleService = adminRoleService;
-        listenAndLoadAdmins();
+        loadAndListenAdmins();
     }
 
     public Flux<Long> queryRoleIds(@NotEmpty Set<String> accounts) {
@@ -238,6 +238,9 @@ public class AdminService extends BaseAdminService {
         }
         return adminRepository.deleteByIds(accounts)
                 .map(result -> {
+                    // Though the latest records will be synced in the watch callback,
+                    // we still need to invalid dirty cache immediately, so the subsequent query
+                    // won't get outdated records
                     for (String account : accounts) {
                         accountToAdmin.remove(account);
                     }
@@ -316,7 +319,15 @@ public class AdminService extends BaseAdminService {
         byte[] password = rawPassword == null
                 ? null
                 : passwordManager.encodeAdminPassword(rawPassword);
-        return adminRepository.updateAdmins(targetAccounts, password, name, roleId);
+        return adminRepository.updateAdmins(targetAccounts, password, name, roleId)
+                .doOnNext(updateResult -> {
+                    // Though the latest records will be synced in the watch callback,
+                    // we still need to invalid dirty cache immediately, so the subsequent query
+                    // won't get outdated records
+                    for (String account : targetAccounts) {
+                        accountToAdmin.remove(account);
+                    }
+                });
     }
 
     public Mono<Long> countAdmins(@Nullable Set<String> accounts, @Nullable Set<Long> roleIds) {

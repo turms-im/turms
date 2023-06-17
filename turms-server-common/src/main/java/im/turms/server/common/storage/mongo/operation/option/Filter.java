@@ -141,6 +141,19 @@ public class Filter extends BaseBson {
         return this;
     }
 
+    public <T> Filter nin(String key, Collection<T> collection) {
+        document.append(key, new BsonDocument("$nin", BsonValueEncoder.encodeValue(collection)));
+        return this;
+    }
+
+    public Filter ninIfNotNull(@NotNull String key, @Nullable Collection<?> collection) {
+        if (collection != null && !collection.isEmpty()) {
+            document.append(key,
+                    new BsonDocument("$nin", BsonValueEncoder.encodeValue(collection)));
+        }
+        return this;
+    }
+
     public Filter lt(String key, Object value) {
         document.append(key, new BsonDocument("$lt", BsonValueEncoder.encodeSingleValue(value)));
         return this;
