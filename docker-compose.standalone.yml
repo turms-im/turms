@@ -58,7 +58,7 @@ x-logging-turms: &logging-turms
 services:
   # MongoDB
   mongodb-config:
-    image: mongo:6.0.3-focal
+    image: mongo:6.0.6-jammy
 #    depends_on:
 #      - loki
     entrypoint: [ "mongod", "--port", "27017", "--configsvr", "--replSet", "rs-config", "--bind_ip_all" ]
@@ -72,7 +72,7 @@ services:
 #    <<: *logging-mongo
 
   mongodb-shard:
-    image: mongo:6.0.3-focal
+    image: mongo:6.0.6-jammy
 #    depends_on:
 #      - loki
     entrypoint: [ "mongod", "--port", "27017", "--shardsvr", "--replSet", "shard01", "--bind_ip_all" ]
@@ -86,7 +86,7 @@ services:
 #    <<: *logging-mongo
 
   mongodb-router:
-    image: mongo:6.0.3-focal
+    image: mongo:6.0.6-jammy
 #    depends_on:
 #      - loki
     entrypoint: [ "mongos", "--port", "27017", "--configdb", "rs-config/mongodb-config:27017", "--bind_ip_all" ]
@@ -102,7 +102,7 @@ services:
 #    <<: *logging-mongo
 
   mongodb-setup:
-    image: mongo:6.0.3-focal
+    image: mongo:6.0.6-jammy
     depends_on:
       mongodb-config:
         condition: service_healthy
@@ -124,7 +124,7 @@ services:
 
   # Redis
   redis:
-    image: redis:7.0.7-alpine
+    image: redis:7.0.11-alpine
 #    depends_on:
 #      - loki
     healthcheck:
@@ -138,7 +138,7 @@ services:
 
   # MinIO
   minio:
-    image: minio/minio:RELEASE.2022-12-12T19-27-27Z
+    image: minio/minio:RELEASE.2023-06-16T02-41-06Z
     # https://min.io/docs/minio/linux/reference/minio-server/minio-server.html#environment-variables
     environment:
       MINIO_ROOT_USER: ${MINIO_ROOT_USER:-turms}
@@ -159,7 +159,7 @@ services:
 
   # Rasa
   rasa:
-    image: rasa/rasa:3.3.5-full
+    image: rasa/rasa:3.6.0-full
     ports:
       - 5005:5005
     profiles:
@@ -312,7 +312,7 @@ services:
   # optional services for observability - metrics
 
   grafana:
-    image: grafana/grafana:9.3.2
+    image: grafana/grafana:10.0.0-ubuntu
     depends_on:
       - prometheus
     environment:
@@ -345,9 +345,9 @@ services:
 
   cadvisor:
     # If your server is in China and suffers from the network problem,
-    # try "gcr.lank8s.cn/cadvisor/cadvisor:v0.46.0"
+    # try "gcr.lank8s.cn/cadvisor/cadvisor:v0.47.1"
     # or just comment out "cadvisor"
-    image: gcr.io/cadvisor/cadvisor:v0.46.0
+    image: gcr.io/cadvisor/cadvisor:v0.47.1
     ports:
       - "8080:8080"
     profiles:
@@ -360,7 +360,7 @@ services:
       - /dev/disk/:/dev/disk:ro
 
   mongo-exporter:
-    image: percona/mongodb_exporter:0.35.0
+    image: percona/mongodb_exporter:0.39.0
     command:
       - '--mongodb.uri=mongodb://mongodb-router:27017'
     ports:
@@ -369,7 +369,7 @@ services:
       - monitoring
 
   redis-exporter:
-    image: oliver006/redis_exporter:v1.45.0
+    image: oliver006/redis_exporter:v1.51.0
     depends_on:
       - redis
     environment:
@@ -382,7 +382,7 @@ services:
   # Services for observability - logging
 
 #  loki:
-#    image: grafana/loki:2.7.0
+#    image: grafana/loki:2.8.2
 #    ports:
 #      - "3100:3100"
 #    command: -config.file=/etc/loki/local-config.yaml
