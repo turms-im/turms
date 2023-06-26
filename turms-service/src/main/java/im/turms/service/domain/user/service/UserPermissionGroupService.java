@@ -82,14 +82,13 @@ public class UserPermissionGroupService {
                 .onErrorMap(t -> new RuntimeException(
                         "Caught an error while loading all user permission groups",
                         t))
-                .then(addUserPermissionGroup(DEFAULT_USER_PERMISSION_GROUP_ID,
-                        Set.of(DEFAULT_GROUP_TYPE_ID),
-                        Integer.MAX_VALUE,
-                        Integer.MAX_VALUE,
-                        Collections.emptyMap()).onErrorComplete(DuplicateKeyException.class)
-                        .onErrorMap(t -> new RuntimeException(
-                                "Caught an error while adding the default user permission group",
-                                t)))
+                .then(Mono.defer(
+                        () -> idToPermissionGroup.containsKey(DEFAULT_USER_PERMISSION_GROUP_ID)
+                                ? Mono.empty()
+                                : addDefaultUserPermissionGroup()
+                                        .onErrorMap(t -> new RuntimeException(
+                                                "Caught an error while adding the default user permission group",
+                                                t))))
                 .block(DurationConst.ONE_MINUTE);
         LOGGER.info(
                 "Loaded all user permission groups and added the default user permission group");
@@ -104,6 +103,16 @@ public class UserPermissionGroupService {
                         case DELETE -> {
                             long groupTypeId = ChangeStreamUtil.getIdAsLong(event.getDocumentKey());
                             idToPermissionGroup.remove(groupTypeId);
+                            if (groupTypeId == DEFAULT_USER_PERMISSION_GROUP_ID) {
+                                LOGGER.warn(
+                                        "Adding the default user permission group because it is deleted unexpectedly");
+                                addDefaultUserPermissionGroup().subscribe(
+                                        unused -> LOGGER
+                                                .warn("Added the default user permission group"),
+                                        t -> LOGGER.error(
+                                                "Caught an error while adding the default user permission group",
+                                                t));
+                            }
                         }
                         case INVALIDATE -> idToPermissionGroup.clear();
                         default -> LOGGER.fatal("Detected an illegal operation on the collection \""
@@ -118,6 +127,14 @@ public class UserPermissionGroupService {
                         o,
                         throwable))
                 .subscribe();
+    }
+
+    private Mono<UserPermissionGroup> addDefaultUserPermissionGroup() {
+        return addUserPermissionGroup(DEFAULT_USER_PERMISSION_GROUP_ID,
+                Set.of(DEFAULT_GROUP_TYPE_ID),
+                Integer.MAX_VALUE,
+                Integer.MAX_VALUE,
+                Collections.emptyMap()).onErrorComplete(DuplicateKeyException.class);
     }
 
     public Flux<UserPermissionGroup> queryUserPermissionGroups(

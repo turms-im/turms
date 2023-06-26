@@ -45,6 +45,7 @@ import im.turms.server.common.infra.time.DurationConst;
 import im.turms.server.common.infra.validation.NoWhitespace;
 import im.turms.server.common.infra.validation.Validator;
 import im.turms.server.common.storage.mongo.IMongoCollectionInitializer;
+import im.turms.server.common.storage.mongo.exception.DuplicateKeyException;
 import im.turms.service.domain.group.bo.GroupInvitationStrategy;
 import im.turms.service.domain.group.bo.GroupJoinStrategy;
 import im.turms.service.domain.group.bo.GroupUpdateStrategy;
@@ -75,26 +76,18 @@ public class GroupTypeService {
     }
 
     public void initGroupTypes() {
-        idToGroupType.putIfAbsent(DEFAULT_GROUP_TYPE_ID,
-                new GroupType(
-                        DEFAULT_GROUP_TYPE_ID,
-                        DEFAULT_GROUP_TYPE_NAME,
-                        500,
-                        GroupInvitationStrategy.OWNER_MANAGER_MEMBER_REQUIRING_APPROVAL,
-                        GroupJoinStrategy.INVITATION,
-                        GroupUpdateStrategy.OWNER_MANAGER,
-                        GroupUpdateStrategy.OWNER_MANAGER,
-                        false,
-                        true,
-                        true,
-                        true));
         LOGGER.info("Loading all group types");
         groupTypeRepository.findAll()
                 .doOnNext(groupType -> idToGroupType.put(groupType.getId(), groupType))
                 .onErrorMap(t -> new RuntimeException(
                         "Caught an error while loading all group types",
                         t))
-                .blockLast(DurationConst.ONE_MINUTE);
+                .then(Mono.defer(() -> idToGroupType.containsKey(DEFAULT_GROUP_TYPE_ID)
+                        ? Mono.empty()
+                        : addDefaultGroupType().onErrorMap(t -> new RuntimeException(
+                                "Caught an error while adding the default group type",
+                                t))))
+                .block(DurationConst.ONE_MINUTE);
         LOGGER.info("Loaded all group types");
 
         groupTypeRepository.watch(FullDocument.UPDATE_LOOKUP)
@@ -107,9 +100,17 @@ public class GroupTypeService {
                         case DELETE -> {
                             long groupTypeId = ChangeStreamUtil.getIdAsLong(event.getDocumentKey());
                             idToGroupType.remove(groupTypeId);
+                            if (groupTypeId == DEFAULT_GROUP_TYPE_ID) {
+                                LOGGER.warn(
+                                        "Adding the default group type because it is deleted unexpectedly");
+                                addDefaultGroupType().subscribe(
+                                        unused -> LOGGER.warn("Added the default group type"),
+                                        t -> LOGGER.error(
+                                                "Caught an error while adding the default group type",
+                                                t));
+                            }
                         }
-                        case INVALIDATE -> idToGroupType.keySet()
-                                .removeIf(id -> !id.equals(DEFAULT_GROUP_TYPE_ID));
+                        case INVALIDATE -> idToGroupType.clear();
                         default -> LOGGER.fatal("Detected an illegal operation on the collection \""
                                 + GroupType.COLLECTION_NAME
                                 + "\" in the change stream event: {}", event);
@@ -124,17 +125,26 @@ public class GroupTypeService {
                 .subscribe();
     }
 
-    public GroupType getDefaultGroupType() {
-        return idToGroupType.get(DEFAULT_GROUP_TYPE_ID);
+    private Mono<GroupType> addDefaultGroupType() {
+        return addGroupType(DEFAULT_GROUP_TYPE_ID,
+                DEFAULT_GROUP_TYPE_NAME,
+                500,
+                GroupInvitationStrategy.OWNER_MANAGER_MEMBER_REQUIRING_APPROVAL,
+                GroupJoinStrategy.INVITATION,
+                GroupUpdateStrategy.OWNER_MANAGER,
+                GroupUpdateStrategy.OWNER_MANAGER,
+                false,
+                true,
+                true,
+                true).onErrorComplete(DuplicateKeyException.class);
     }
 
     public Flux<GroupType> queryGroupTypes(@Nullable Integer page, @Nullable Integer size) {
-        return groupTypeRepository.findAll(page, size)
-                // TODO: respect page and size
-                .concatWithValues(getDefaultGroupType());
+        return groupTypeRepository.findAll(page, size);
     }
 
     public Mono<GroupType> addGroupType(
+            @Nullable Long id,
             @NotNull @NoWhitespace String name,
             @NotNull @Min(1) Integer groupSizeLimit,
             @NotNull GroupInvitationStrategy groupInvitationStrategy,
@@ -161,7 +171,9 @@ public class GroupTypeService {
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        Long id = node.nextLargeGapId(ServiceType.GROUP_TYPE);
+        if (id == null) {
+            id = node.nextLargeGapId(ServiceType.GROUP_TYPE);
+        }
         GroupType groupType = new GroupType(
                 id,
                 name,
@@ -174,8 +186,8 @@ public class GroupTypeService {
                 selfInfoUpdatable,
                 enableReadReceipt,
                 messageEditable);
-        idToGroupType.put(id, groupType);
         return groupTypeRepository.insert(groupType)
+                .doOnSuccess(unused -> idToGroupType.put(groupType.getId(), groupType))
                 .thenReturn(groupType);
     }
 
@@ -267,13 +279,11 @@ public class GroupTypeService {
     }
 
     public Mono<Boolean> groupTypeExists(@NotNull Long groupTypeId) {
-        return queryGroupType(groupTypeId).map(type -> true)
-                .defaultIfEmpty(false);
+        return queryGroupType(groupTypeId).hasElement();
     }
 
     public Mono<Long> countGroupTypes() {
-        return groupTypeRepository.countAll()
-                .map(number -> number + 1);
+        return groupTypeRepository.countAll();
     }
 
 }

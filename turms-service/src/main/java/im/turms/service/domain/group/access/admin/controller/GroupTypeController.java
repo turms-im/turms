@@ -63,7 +63,8 @@ public class GroupTypeController extends BaseController {
     @RequiredPermission(AdminPermission.GROUP_TYPE_CREATE)
     public Mono<HttpHandlerResult<ResponseDTO<GroupType>>> addGroupType(
             @RequestBody AddGroupTypeDTO addGroupTypeDTO) {
-        Mono<GroupType> addedGroupType = groupTypeService.addGroupType(addGroupTypeDTO.name(),
+        Mono<GroupType> addedGroupType = groupTypeService.addGroupType(null,
+                addGroupTypeDTO.name(),
                 addGroupTypeDTO.groupSizeLimit(),
                 addGroupTypeDTO.invitationStrategy(),
                 addGroupTypeDTO.joinStrategy(),
