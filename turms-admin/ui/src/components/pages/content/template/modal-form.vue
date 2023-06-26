@@ -251,6 +251,9 @@ export default {
                 const itemType = item.type;
                 const itemId = item.id;
                 const value = state[itemId];
+                if (value == null) {
+                    continue;
+                }
                 if (itemType === 'TREE') {
                     record[itemId] = item.transform(value);
                 } else if (itemType === 'DYNAMIC-INPUT') {
