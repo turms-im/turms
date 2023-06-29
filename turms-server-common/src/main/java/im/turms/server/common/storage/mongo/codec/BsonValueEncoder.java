@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import jakarta.annotation.Nullable;
 
 import org.bson.BsonArrayUtil;
 import org.bson.BsonBinary;
@@ -38,6 +40,7 @@ import org.bson.BsonValue;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
+import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.storage.mongo.CodecPool;
 
 /**
@@ -56,6 +59,24 @@ public final class BsonValueEncoder {
                 list.add(encodeSingleValue(val));
             }
             return BsonArrayUtil.newArray(list);
+        }
+        if (value instanceof Map<?, ?> map) {
+            int size = map.size();
+            Object key;
+            BsonDocument document = new BsonDocument(CollectionUtil.getMapCapability(size));
+            for (Map.Entry<?, ?> entry : map.entrySet()) {
+                key = entry.getKey();
+                if (key instanceof String str) {
+                    document.put(str, encodeValue(entry.getValue()));
+                } else if (key instanceof Number number) {
+                    document.put(number.toString(), encodeValue(entry.getValue()));
+                } else {
+                    throw new IllegalArgumentException(
+                            "Expecting the map key to be a string or number, but got: "
+                                    + key);
+                }
+            }
+            return document;
         }
         if (value instanceof byte[] bytes) {
             return new BsonBinary(bytes);
