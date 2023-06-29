@@ -340,6 +340,7 @@ const zh_CN = {
     'permissionGroup': '权限组',
     'permissionGroupId': '权限组ID',
     'pluginId': '插件ID',
+    'preMessageId': '前一条消息的ID',
     'priority': '优先级',
     'privateChat': '私聊',
     'privateChatAndGroupChat': '私聊+群聊',

@@ -343,6 +343,7 @@ const ja_JP = {
     'permissionGroup': 'パーミッショングループ',
     'permissionGroupId': 'パーミッショングループID',
     'pluginId': 'プラグインID',
+    'preMessageId': '前のメッセージのID',
     'priority': '優先度',
     'privateChat': 'プライベートチャット',
     'privateChatAndGroupChat': 'プライベートチャット + グループチャット',
