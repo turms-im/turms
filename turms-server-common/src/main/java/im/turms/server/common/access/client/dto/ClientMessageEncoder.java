@@ -52,6 +52,14 @@ public final class ClientMessageEncoder {
     public static ByteBuf encodeResponse(
             long timestamp,
             long requestId,
+            ResponseStatusCode code,
+            @Nullable String reason) {
+        return encodeResponse(timestamp, requestId, code.getBusinessCode(), reason);
+    }
+
+    public static ByteBuf encodeResponse(
+            long timestamp,
+            long requestId,
             int code,
             @Nullable String reason) {
         boolean hasReason = reason != null;

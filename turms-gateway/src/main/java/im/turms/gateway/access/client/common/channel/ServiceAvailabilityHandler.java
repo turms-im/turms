@@ -31,6 +31,7 @@ import im.turms.gateway.access.client.common.UserSession;
 import im.turms.gateway.domain.session.service.SessionService;
 import im.turms.server.common.domain.blocklist.service.BlocklistService;
 import im.turms.server.common.infra.healthcheck.ServerStatusManager;
+import im.turms.server.common.infra.healthcheck.ServiceAvailability;
 import im.turms.server.common.infra.lang.ByteArrayWrapper;
 
 /**
@@ -54,7 +55,8 @@ public class ServiceAvailabilityHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRegistered(ChannelHandlerContext ctx) {
-        if (serverStatusManager.isActive()) {
+        ServiceAvailability serviceAvailability = serverStatusManager.getServiceAvailability();
+        if (serviceAvailability.isAvailable()) {
             SocketAddress socketAddress = ctx.channel()
                     .remoteAddress();
             if (socketAddress instanceof InetSocketAddress address

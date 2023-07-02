@@ -61,7 +61,9 @@ public record ServiceResponse(
         return POOL.get(statusCode);
     }
 
-    public static ServiceResponse of(@NotNull ResponseStatusCode statusCode, String message) {
+    public static ServiceResponse of(
+            @NotNull ResponseStatusCode statusCode,
+            @Nullable String message) {
         return message == null
                 ? POOL.get(statusCode)
                 : new ServiceResponse(statusCode, null, message);

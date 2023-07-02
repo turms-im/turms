@@ -49,6 +49,7 @@ import im.turms.server.common.infra.exception.IncompatibleInternalChangeExceptio
 import im.turms.server.common.infra.exception.ThrowableInfo;
 import im.turms.server.common.infra.healthcheck.HealthCheckManager;
 import im.turms.server.common.infra.healthcheck.ServerStatusManager;
+import im.turms.server.common.infra.healthcheck.ServiceAvailability;
 import im.turms.server.common.infra.lang.ByteArrayWrapper;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
@@ -218,8 +219,10 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
             return Mono.just(
                     new ServiceResponse(ResponseStatusCode.SERVER_INTERNAL_ERROR, null, message));
         }
-        if (!serverStatusManager.isActive()) {
-            return Mono.just(ServiceResponse.of(ResponseStatusCode.SERVER_UNAVAILABLE));
+        ServiceAvailability serviceAvailability = serverStatusManager.getServiceAvailability();
+        if (!serviceAvailability.isAvailable()) {
+            return Mono.just(ServiceResponse.of(ResponseStatusCode.SERVER_UNAVAILABLE,
+                    serviceAvailability.reason()));
         }
         boolean hasRunningExtensions =
                 pluginManager.hasRunningExtensions(ClientRequestTransformer.class);

@@ -18,6 +18,7 @@
 package im.turms.server.common.infra.healthcheck;
 
 import java.lang.management.ManagementFactory;
+import jakarta.annotation.Nullable;
 
 import com.sun.management.OperatingSystemMXBean;
 
@@ -40,6 +41,8 @@ public final class CpuHealthChecker extends HealthChecker {
 
     private boolean isCpuHealthy;
     private int currentUnhealthyTimes;
+    @Nullable
+    private String unhealthyReason;
 
     public CpuHealthChecker(CpuHealthCheckProperties properties) {
         operatingSystemBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
@@ -63,6 +66,12 @@ public final class CpuHealthChecker extends HealthChecker {
         return isCpuHealthy;
     }
 
+    @Nullable
+    @Override
+    public String getUnhealthyReason() {
+        return unhealthyReason;
+    }
+
     @Override
     public void updateHealthStatus() {
         if (!isCpuHealthCheckAvailable) {
@@ -71,11 +80,16 @@ public final class CpuHealthChecker extends HealthChecker {
         boolean wasCpuHealthy = isCpuHealthy;
         double cpuLoad = operatingSystemBean.getCpuLoad();
         if (cpuLoad > unhealthyLoadThreshold) {
-            currentUnhealthyTimes++;
-            if (currentUnhealthyTimes > cpuCheckRetries) {
+            if (++currentUnhealthyTimes > cpuCheckRetries) {
+                unhealthyReason =
+                        "The CPU usage is too high, and it has failed the CPU health check "
+                                + currentUnhealthyTimes
+                                + " times, which exceeds max retries "
+                                + cpuCheckRetries;
                 isCpuHealthy = false;
             }
         } else {
+            unhealthyReason = null;
             currentUnhealthyTimes = 0;
             isCpuHealthy = true;
         }

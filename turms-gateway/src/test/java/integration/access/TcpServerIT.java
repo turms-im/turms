@@ -31,6 +31,7 @@ import im.turms.gateway.access.client.tcp.TcpServerFactory;
 import im.turms.gateway.domain.session.service.SessionService;
 import im.turms.server.common.domain.blocklist.service.BlocklistService;
 import im.turms.server.common.infra.healthcheck.ServerStatusManager;
+import im.turms.server.common.infra.healthcheck.ServiceAvailability;
 import im.turms.server.common.infra.property.env.gateway.TcpProperties;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -58,10 +59,15 @@ class TcpServerIT {
         when(blocklistService.isIpBlocked(any(byte[].class))).thenReturn(false);
 
         ServerStatusManager serverStatusManager = mock(ServerStatusManager.class);
-        List<Boolean> isActiveReturnValues = List.of(true, false, true, false);
-        OngoingStubbing<Boolean> isActiveStubbing = when(serverStatusManager.isActive());
-        for (Boolean returnValue : isActiveReturnValues) {
-            isActiveStubbing = isActiveStubbing.thenReturn(returnValue);
+        List<ServiceAvailability> serviceAvailabilities = List.of(ServiceAvailability.AVAILABLE,
+                ServiceAvailability.SHUTTING_DOWN,
+                ServiceAvailability.AVAILABLE,
+                ServiceAvailability.SHUTTING_DOWN);
+        OngoingStubbing<ServiceAvailability> serviceAvailabilityStubbing =
+                when(serverStatusManager.getServiceAvailability());
+        for (ServiceAvailability serviceAvailability : serviceAvailabilities) {
+            serviceAvailabilityStubbing =
+                    serviceAvailabilityStubbing.thenReturn(serviceAvailability);
         }
 
         SessionService sessionService = mock(SessionService.class);
@@ -73,7 +79,7 @@ class TcpServerIT {
                 8 * KB);
 
         int i = 0;
-        for (Boolean isActive : isActiveReturnValues) {
+        for (ServiceAvailability serviceAvailability : serviceAvailabilities) {
             System.out.printf("The client with index (%d) is connecting", i);
             Connection connection = TcpClient.create()
                     .host(server.host())
@@ -91,7 +97,7 @@ class TcpServerIT {
             // Wait for the server to close the connection
             Thread.sleep(200);
             boolean isConnected = !connection.isDisposed();
-            assertThat(isConnected).isEqualTo(isActive);
+            assertThat(isConnected).isEqualTo(serviceAvailability.isAvailable());
             i++;
         }
     }

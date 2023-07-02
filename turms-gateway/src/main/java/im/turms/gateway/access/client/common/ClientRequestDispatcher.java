@@ -40,6 +40,7 @@ import im.turms.server.common.domain.blocklist.service.BlocklistService;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.exception.ThrowableInfo;
 import im.turms.server.common.infra.healthcheck.ServerStatusManager;
+import im.turms.server.common.infra.healthcheck.ServiceAvailability;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
@@ -115,10 +116,12 @@ public class ClientRequestDispatcher {
         // Check if it is a heartbeat request
         if (!serviceRequestBuffer.isReadable()) {
             serviceRequestBuffer.release();
-            if (!serverStatusManager.isActive()) {
+            ServiceAvailability serviceAvailability = serverStatusManager.getServiceAvailability();
+            if (!serviceAvailability.isAvailable()) {
                 return Mono.just(ClientMessageEncoder.encodeResponse(System.currentTimeMillis(),
                         HEARTBEAT_FAILURE_REQUEST_ID,
-                        ResponseStatusCode.SERVER_UNAVAILABLE));
+                        ResponseStatusCode.SERVER_UNAVAILABLE,
+                        serviceAvailability.reason()));
             }
             return handleHeartbeatRequest(sessionWrapper);
         }
@@ -237,8 +240,10 @@ public class ClientRequestDispatcher {
                         requestId));
             }
             // Check server status
-            if (!serverStatusManager.isActive()) {
+            ServiceAvailability serviceAvailability = serverStatusManager.getServiceAvailability();
+            if (!serviceAvailability.isAvailable()) {
                 return Mono.just(NotificationFactory.create(ResponseStatusCode.SERVER_UNAVAILABLE,
+                        serviceAvailability.reason(),
                         requestId));
             }
 

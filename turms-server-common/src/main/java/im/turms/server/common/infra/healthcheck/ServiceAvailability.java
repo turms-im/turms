@@ -22,13 +22,27 @@ import jakarta.annotation.Nullable;
 /**
  * @author James Chen
  */
-public abstract class HealthChecker {
+public record ServiceAvailability(
+        Status status,
+        @Nullable String reason
+) {
 
-    public abstract boolean isHealthy();
+    public static final ServiceAvailability AVAILABLE =
+            new ServiceAvailability(Status.AVAILABLE, null);
+    public static final ServiceAvailability SHUTTING_DOWN =
+            new ServiceAvailability(Status.SHUTTING_DOWN, "The server is shutting down");
+    public static final ServiceAvailability INACTIVE =
+            new ServiceAvailability(Status.INACTIVE, "The server node is inactive");
 
-    @Nullable
-    public abstract String getUnhealthyReason();
+    public boolean isAvailable() {
+        return status == Status.AVAILABLE;
+    }
 
-    public abstract void updateHealthStatus();
-
+    public enum Status {
+        AVAILABLE,
+        SHUTTING_DOWN,
+        INACTIVE,
+        INSUFFICIENT_MEMORY,
+        HIGH_CPU_USAGE
+    }
 }

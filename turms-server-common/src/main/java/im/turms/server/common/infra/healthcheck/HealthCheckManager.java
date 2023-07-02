@@ -19,6 +19,7 @@ package im.turms.server.common.infra.healthcheck;
 
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import jakarta.annotation.Nullable;
 
 import io.netty.util.concurrent.DefaultThreadFactory;
 import org.springframework.context.annotation.Lazy;
@@ -52,6 +53,16 @@ public class HealthCheckManager {
         memoryHealthChecker = new MemoryHealthChecker(properties.getMemory());
 
         startHealthCheck(properties.getCheckIntervalSeconds());
+    }
+
+    @Nullable
+    public String getCpuUnhealthyReason() {
+        return cpuHealthChecker.getUnhealthyReason();
+    }
+
+    @Nullable
+    public String getMemoryUnhealthyReason() {
+        return memoryHealthChecker.getUnhealthyReason();
     }
 
     public boolean isHealthy() {

@@ -22,6 +22,7 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
 import java.util.List;
 import java.util.Optional;
+import jakarta.annotation.Nullable;
 
 import com.sun.management.HotSpotDiagnosticMXBean;
 import com.sun.management.OperatingSystemMXBean;
@@ -66,7 +67,6 @@ public final class MemoryHealthChecker extends HealthChecker {
     private long usedHeapMemory;
     private long usedNonHeapMemory;
     private long usedSystemMemory;
-    private long freeSystemMemory;
 
     private final BufferPoolMXBean directBufferPoolBean;
     private final MemoryMXBean memoryMXBean;
@@ -80,6 +80,10 @@ public final class MemoryHealthChecker extends HealthChecker {
     private final int heapMemoryGcThresholdPercentage;
     private final int minHeapMemoryGcIntervalMillis;
     private long lastHeapMemoryGcTimestamp;
+
+    private boolean isMemoryHealthy;
+    @Nullable
+    private String unhealthyReason;
 
     public MemoryHealthChecker(MemoryHealthCheckProperties properties) {
         operatingSystemBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
@@ -166,9 +170,13 @@ public final class MemoryHealthChecker extends HealthChecker {
 
     @Override
     public boolean isHealthy() {
-        return usedAvailableMemory < maxAvailableMemory
-                || usedDirectMemory < maxAvailableDirectMemory
-                || freeSystemMemory > minFreeSystemMemory;
+        return isMemoryHealthy;
+    }
+
+    @Nullable
+    @Override
+    public String getUnhealthyReason() {
+        return unhealthyReason;
     }
 
     @Override
@@ -177,21 +185,51 @@ public final class MemoryHealthChecker extends HealthChecker {
         // and "PooledByteBufAllocator.DEFAULT.metric().usedDirectMemory()"
         // because we have requested Netty to create DirectBuffer instances via its constructor with
         // the counter supported by JDK
-        usedDirectMemory = directBufferPoolBean.getMemoryUsed();
-        usedHeapMemory = memoryMXBean.getHeapMemoryUsage()
+        long localUsedDirectMemory = directBufferPoolBean.getMemoryUsed();
+        usedDirectMemory = localUsedDirectMemory;
+        long localUsedHeapMemory = memoryMXBean.getHeapMemoryUsage()
                 .getUsed();
+        usedHeapMemory = localUsedHeapMemory;
         // Non-heap memory pools: [CodeHeap 'non-nmethods', CodeHeap 'non-profiled nmethods',
         // CodeHeap 'profiled nmethods',
         // Compressed Class Space, Metaspace]
         // via ManagementFactory.getMemoryPoolMXBeans().stream().filter(bean -> bean.getType() ==
         // MemoryType.NON_HEAP)
         // .map(MemoryPoolMXBean::getName).sorted().toList().toString()
-        usedNonHeapMemory = memoryMXBean.getNonHeapMemoryUsage()
+        long localUsedNonHeapMemory = memoryMXBean.getNonHeapMemoryUsage()
                 .getUsed();
-        usedAvailableMemory = usedDirectMemory + usedHeapMemory + usedNonHeapMemory;
-        freeSystemMemory = operatingSystemBean.getFreeMemorySize();
-        usedSystemMemory = totalPhysicalMemorySize - freeSystemMemory;
+        usedNonHeapMemory = localUsedNonHeapMemory;
+        long localUsedAvailableMemory =
+                localUsedDirectMemory + localUsedHeapMemory + localUsedNonHeapMemory;
+        usedAvailableMemory = localUsedAvailableMemory;
+        long localFreeSystemMemory = operatingSystemBean.getFreeMemorySize();
+        long localUsedSystemMemory = totalPhysicalMemorySize - localFreeSystemMemory;
+        usedSystemMemory = localUsedSystemMemory;
 
+        if (localUsedAvailableMemory < maxAvailableMemory
+                || localUsedDirectMemory < maxAvailableDirectMemory
+                || localFreeSystemMemory > minFreeSystemMemory) {
+            unhealthyReason = null;
+            isMemoryHealthy = true;
+        } else {
+            unhealthyReason =
+                    "The memory is insufficient. The insufficient memory usage snapshot is: "
+                            + "Used system memory: "
+                            + asMbString(localUsedSystemMemory)
+                            + "/"
+                            + asMbString(totalPhysicalMemorySize)
+                            + "; "
+                            + "Used available memory: "
+                            + asMbString(localUsedAvailableMemory)
+                            + "/"
+                            + asMbString(maxAvailableMemory)
+                            + "; "
+                            + "Used direct memory: "
+                            + asMbString(localUsedDirectMemory)
+                            + "/"
+                            + asMbString(maxAvailableDirectMemory);
+            isMemoryHealthy = false;
+        }
         tryLog();
     }
 

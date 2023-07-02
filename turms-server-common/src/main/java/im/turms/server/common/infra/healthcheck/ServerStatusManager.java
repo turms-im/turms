@@ -41,8 +41,26 @@ public class ServerStatusManager {
         this.healthCheckManager = healthCheckManager;
     }
 
-    public boolean isActive() {
-        return !context.isClosing() && node.isActive() && healthCheckManager.isHealthy();
+    public ServiceAvailability getServiceAvailability() {
+        if (context.isClosing()) {
+            return ServiceAvailability.SHUTTING_DOWN;
+        }
+        if (!node.isActive()) {
+            return ServiceAvailability.INACTIVE;
+        }
+        String unhealthyReason = healthCheckManager.getCpuUnhealthyReason();
+        if (unhealthyReason != null) {
+            return new ServiceAvailability(
+                    ServiceAvailability.Status.HIGH_CPU_USAGE,
+                    unhealthyReason);
+        }
+        unhealthyReason = healthCheckManager.getMemoryUnhealthyReason();
+        if (unhealthyReason != null) {
+            return new ServiceAvailability(
+                    ServiceAvailability.Status.INSUFFICIENT_MEMORY,
+                    unhealthyReason);
+        }
+        return ServiceAvailability.AVAILABLE;
     }
 
 }
