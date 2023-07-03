@@ -160,12 +160,14 @@ public class BlocklistServiceManager<T extends Comparable<T>> {
         this.onTargetBlocked = onTargetBlocked;
 
         blockedClientSkipList = new ConcurrentSkipListSet<>((o1, o2) -> {
-            int i = (int) (o1.blockEndTimeMillis() - o2.blockEndTimeMillis());
-            if (i == 0) {
+            long i = o1.blockEndTimeMillis() - o2.blockEndTimeMillis();
+            if (i == 0L) {
                 return o1.id()
                         .compareTo(o2.id());
             }
-            return i;
+            return i > 0L
+                    ? 1
+                    : -1;
         });
         blockedClientIdToBlockEndTimeMillis = new ConcurrentHashMap<>(1024);
 
