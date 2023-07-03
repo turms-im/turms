@@ -206,11 +206,12 @@ public final class MemoryHealthChecker extends HealthChecker {
         long localUsedSystemMemory = totalPhysicalMemorySize - localFreeSystemMemory;
         usedSystemMemory = localUsedSystemMemory;
 
+        boolean localIsMemoryHealthy;
         if (localUsedAvailableMemory < maxAvailableMemory
-                || localUsedDirectMemory < maxAvailableDirectMemory
-                || localFreeSystemMemory > minFreeSystemMemory) {
+                && localUsedDirectMemory < maxAvailableDirectMemory
+                && localFreeSystemMemory > minFreeSystemMemory) {
             unhealthyReason = null;
-            isMemoryHealthy = true;
+            localIsMemoryHealthy = true;
         } else {
             unhealthyReason =
                     "The memory is insufficient. The insufficient memory usage snapshot is: "
@@ -228,13 +229,13 @@ public final class MemoryHealthChecker extends HealthChecker {
                             + asMbString(localUsedDirectMemory)
                             + "/"
                             + asMbString(maxAvailableDirectMemory);
-            isMemoryHealthy = false;
+            localIsMemoryHealthy = false;
         }
-        tryLog();
+        isMemoryHealthy = localIsMemoryHealthy;
+        tryLog(localIsMemoryHealthy);
     }
 
-    private void tryLog() {
-        boolean isHealthy = isHealthy();
+    private void tryLog(boolean isHealthy) {
         LogLevel logLevel = isHealthy
                 ? LogLevel.DEBUG
                 : LogLevel.WARN;
