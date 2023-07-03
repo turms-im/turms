@@ -684,8 +684,9 @@ public class SessionService implements ISessionService, SessionIdentityAccessMan
                                 null);
                     }
                     // If the user is already online, check if there is any device conflict.
-                    boolean conflicts = sessionsStatus.isDeviceLoggedIn(deviceType);
-                    if (conflicts) {
+                    UserDeviceSessionInfo sessionInfo = sessionsStatus.getDeviceTypeToSessionInfo()
+                            .get(deviceType);
+                    if (sessionInfo != null && sessionInfo.isActive()) {
                         UserSession session = getLocalUserSession(userId, deviceType);
                         boolean isClosedSessionOnLocal = session != null
                                 && session.getConnection() != null
@@ -701,12 +702,12 @@ public class SessionService implements ISessionService, SessionIdentityAccessMan
                                                     .updateOnlineUserStatusIfPresent(userId,
                                                             userStatus)
                                                     .then()
-                                                    .onErrorResume(t -> {
+                                                    .onErrorComplete(t -> {
                                                         LOGGER.error(
                                                                 "Failed to update the online status of the user: "
                                                                         + userId,
                                                                 t);
-                                                        return Mono.empty();
+                                                        return true;
                                                     });
                             if (location != null) {
                                 updateSessionInfoMono = updateSessionInfoMono
@@ -716,13 +717,13 @@ public class SessionService implements ISessionService, SessionIdentityAccessMan
                                                         new Date(),
                                                         location.longitude(),
                                                         location.latitude())
-                                                .onErrorResume(t -> {
+                                                .onErrorComplete(t -> {
                                                     LOGGER.error(
                                                             "Failed to upsert the location of the user session: {user={}, device={}}",
                                                             session.getUserId(),
                                                             session.getDeviceType(),
                                                             t);
-                                                    return Mono.empty();
+                                                    return true;
                                                 }));
                             }
                             return updateSessionInfoMono.thenReturn(session);
@@ -732,8 +733,15 @@ public class SessionService implements ISessionService, SessionIdentityAccessMan
                                     ResponseStatusCode.SESSION_SIMULTANEOUS_CONFLICTS_DECLINE));
                         }
                     }
-                    UserDeviceSessionInfo sessionInfo = sessionsStatus.getDeviceTypeToSessionInfo()
-                            .get(deviceType);
+                    String expectedNodeId;
+                    Long expectedDeviceTimestamp;
+                    if (sessionInfo == null) {
+                        expectedNodeId = null;
+                        expectedDeviceTimestamp = null;
+                    } else {
+                        expectedNodeId = sessionInfo.getNodeId();
+                        expectedDeviceTimestamp = sessionInfo.getHeartbeatTimestampSeconds();
+                    }
                     return closeSessionsWithConflictedDeviceTypes(userId,
                             deviceType,
                             sessionsStatus).flatMap(
@@ -746,8 +754,8 @@ public class SessionService implements ISessionService, SessionIdentityAccessMan
                                                     deviceDetails,
                                                     userStatus,
                                                     location,
-                                                    sessionInfo.getNodeId(),
-                                                    sessionInfo.getHeartbeatTimestampSeconds())
+                                                    expectedNodeId,
+                                                    expectedDeviceTimestamp)
                                             : Mono.error(ResponseException.get(
                                                     ResponseStatusCode.SESSION_SIMULTANEOUS_CONFLICTS_DECLINE)));
                 });

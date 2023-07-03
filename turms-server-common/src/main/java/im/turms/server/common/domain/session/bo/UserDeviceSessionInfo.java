@@ -17,12 +17,13 @@
 
 package im.turms.server.common.domain.session.bo;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
  * @author James Chen
  */
+@AllArgsConstructor
 @Data
 public class UserDeviceSessionInfo {
     private String nodeId;
@@ -33,8 +34,4 @@ public class UserDeviceSessionInfo {
         this.isActive = isActive;
     }
 
-    @JsonIgnore
-    public boolean isInactive() {
-        return !isActive;
-    }
 }

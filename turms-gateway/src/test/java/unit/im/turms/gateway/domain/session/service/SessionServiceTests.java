@@ -18,9 +18,13 @@
 package unit.im.turms.gateway.domain.session.service;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -35,6 +39,7 @@ import im.turms.server.common.access.client.dto.constant.UserStatus;
 import im.turms.server.common.access.client.dto.request.TurmsRequestTypePool;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.domain.session.bo.SessionCloseStatus;
+import im.turms.server.common.domain.session.bo.UserDeviceSessionInfo;
 import im.turms.server.common.domain.session.bo.UserSessionsStatus;
 import im.turms.server.common.domain.session.service.SessionLocationService;
 import im.turms.server.common.domain.session.service.UserStatusService;
@@ -62,21 +67,24 @@ import static org.mockito.Mockito.when;
 /**
  * @author James Chen
  */
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class SessionServiceTests {
 
-    private final int version = 1;
-    private final ByteArrayWrapper ip = new ByteArrayWrapper(new byte[]{127, 0, 0, 1});
-    private final Long userId = 1L;
-    private final DeviceType deviceType = DeviceType.ANDROID;
+    private static final int VERSION = 1;
+    private static final ByteArrayWrapper IP = new ByteArrayWrapper(new byte[]{127, 0, 0, 1});
+    private static final Long USER_ID = 1L;
+    private static final DeviceType DEVICE_TYPE_1 = DeviceType.ANDROID;
+    private static final DeviceType DEVICE_TYPE_2 = DeviceType.DESKTOP;
 
+    @Order(0)
     @Test
     void handleLoginRequest_shouldReturnUnsupportedClientVersion_ifIsUnsupportedVersion() {
-        SessionService service = newSessionService(true, true, true, true);
+        SessionService service = newSessionService(true, true, true, true, false);
         Mono<UserSession> result = service.handleLoginRequest(Integer.MAX_VALUE,
-                ip,
-                userId,
+                IP,
+                USER_ID,
                 null,
-                deviceType,
+                DEVICE_TYPE_1,
                 null,
                 null,
                 null,
@@ -87,11 +95,19 @@ class SessionServiceTests {
                 .verify();
     }
 
+    @Order(1)
     @Test
     void handleLoginRequest_shouldReturnForbiddenDeviceType_ifIsForbiddenDeviceType() {
-        SessionService service = newSessionService(true, true, true, true);
-        Mono<UserSession> result = service
-                .handleLoginRequest(version, ip, userId, null, deviceType, null, null, null, null);
+        SessionService service = newSessionService(true, true, true, true, false);
+        Mono<UserSession> result = service.handleLoginRequest(VERSION,
+                IP,
+                USER_ID,
+                null,
+                DEVICE_TYPE_1,
+                null,
+                null,
+                null,
+                null);
 
         StepVerifier.create(result)
                 .expectErrorMatches(throwable -> ThrowableUtil.isStatusCode(throwable,
@@ -99,11 +115,19 @@ class SessionServiceTests {
                 .verify();
     }
 
+    @Order(2)
     @Test
     void handleLoginRequest_shouldReturnUnauthorized_ifIsUnauthorized() {
-        SessionService service = newSessionService(true, true, false, false);
-        Mono<UserSession> result = service
-                .handleLoginRequest(version, ip, userId, null, deviceType, null, null, null, null);
+        SessionService service = newSessionService(true, true, false, false, false);
+        Mono<UserSession> result = service.handleLoginRequest(VERSION,
+                IP,
+                USER_ID,
+                null,
+                DEVICE_TYPE_1,
+                null,
+                null,
+                null,
+                null);
 
         StepVerifier.create(result)
                 .expectErrorMatches(throwable -> ThrowableUtil.isStatusCode(throwable,
@@ -111,11 +135,19 @@ class SessionServiceTests {
                 .verify();
     }
 
+    @Order(3)
     @Test
     void handleLoginRequest_shouldReturnNotActive_ifUserIsNotActive() {
-        SessionService service = newSessionService(true, false, false, false);
-        Mono<UserSession> result = service
-                .handleLoginRequest(version, ip, userId, null, deviceType, null, null, null, null);
+        SessionService service = newSessionService(true, false, false, false, false);
+        Mono<UserSession> result = service.handleLoginRequest(VERSION,
+                IP,
+                USER_ID,
+                null,
+                DEVICE_TYPE_1,
+                null,
+                null,
+                null,
+                null);
 
         StepVerifier.create(result)
                 .expectErrorMatches(throwable -> ThrowableUtil.isStatusCode(throwable,
@@ -123,56 +155,87 @@ class SessionServiceTests {
                 .verify();
     }
 
+    @Order(4)
     @Disabled
     @Test
     void handleLoginRequest_shouldCreateSession_ifUserIsActiveAndAuthenticated() {
-        SessionService service = newSessionService(true, true, true, false);
-        Mono<UserSession> result = service
-                .handleLoginRequest(version, ip, userId, null, deviceType, null, null, null, null);
+        SessionService service = newSessionService(true, true, true, false, false);
+        Mono<UserSession> result = service.handleLoginRequest(VERSION,
+                IP,
+                USER_ID,
+                null,
+                DEVICE_TYPE_1,
+                null,
+                null,
+                null,
+                null);
 
         StepVerifier.create(result)
                 .expectNextCount(1)
                 .verifyComplete();
     }
 
+    @Order(5)
+    @Test
+    void handleLoginRequest_shouldCreateSession_ifUserLoggingInOnNewDevice() {
+        SessionService service = newSessionService(true, true, true, false, true);
+        Mono<UserSession> result = service.handleLoginRequest(VERSION,
+                IP,
+                USER_ID,
+                null,
+                DEVICE_TYPE_2,
+                null,
+                null,
+                null,
+                null);
+
+        StepVerifier.create(result)
+                .expectNextCount(1)
+                .verifyComplete();
+    }
+
+    @Order(6)
     @Disabled
     @Test
     void closeLocalSession_shouldSucceed() {
         SessionService service = newSessionService();
         Mono<Integer> result =
-                service.closeLocalSession(userId, deviceType, SessionCloseStatus.SERVER_ERROR);
+                service.closeLocalSession(USER_ID, DEVICE_TYPE_1, SessionCloseStatus.SERVER_ERROR);
 
         StepVerifier.create(result)
                 .expectNext(1)
                 .verifyComplete();
     }
 
+    @Order(7)
     @Disabled
     @Test
     void onSessionEstablished_shouldSendSessionNotification_ifIsNotifyClientsOfSessionInfoAfterConnected() {
         SessionService service = newSessionService();
         UserSessionsManager manager = mock(UserSessionsManager.class);
         when(manager.pushSessionNotification(any(), any())).thenReturn(true);
-        service.onSessionEstablished(manager, deviceType);
+        service.onSessionEstablished(manager, DEVICE_TYPE_1);
 
         boolean hasBeenCalled =
-                verify(manager, times(1)).pushSessionNotification(eq(deviceType), any());
+                verify(manager, times(1)).pushSessionNotification(eq(DEVICE_TYPE_1), any());
         assertThat(hasBeenCalled).isTrue();
     }
 
+    @Order(8)
     @Test
     void handleHeartbeatRequest_shouldSucceed() {
         SessionService service = newSessionService();
         assertThatNoException()
                 .isThrownBy(() -> service.handleHeartbeatUpdateRequest(new UserSession(
-                        version,
+                        VERSION,
                         TurmsRequestTypePool.ALL,
-                        userId,
-                        deviceType,
+                        USER_ID,
+                        DEVICE_TYPE_1,
                         null,
                         null)));
     }
 
+    @Order(9)
     @Test
     void invokeGoOnlineHandlers_shouldSucceed() {
         SessionService service = newSessionService();
@@ -185,14 +248,15 @@ class SessionServiceTests {
     }
 
     private SessionService newSessionService() {
-        return newSessionService(true, true, true, false);
+        return newSessionService(true, true, true, false, false);
     }
 
     private SessionService newSessionService(
             boolean enableAuthentication,
             boolean isActiveAndNotDeleted,
             boolean isAuthenticated,
-            boolean isForbiddenDeviceType) {
+            boolean isForbiddenDeviceType,
+            boolean hasOnlineDevices) {
         Node node = mock(Node.class);
 
         TurmsProperties properties = new TurmsProperties().toBuilder()
@@ -222,8 +286,16 @@ class SessionServiceTests {
 
         UserStatusService userStatusService = mock(UserStatusService.class);
         when(userStatusService.updateOnlineUsersTtl(any(), anyInt())).thenReturn(Mono.empty());
-        when(userStatusService.fetchUserSessionsStatus(any())).thenReturn(
-                Mono.just(new UserSessionsStatus(userId, UserStatus.OFFLINE, new HashMap<>())));
+        Mono<UserSessionsStatus> sessionsStatusMono = hasOnlineDevices
+                ? Mono.just(new UserSessionsStatus(
+                        USER_ID,
+                        UserStatus.AVAILABLE,
+                        Map.of(DEVICE_TYPE_1, new UserDeviceSessionInfo("123456789", 0L, true))))
+                : Mono.just(new UserSessionsStatus(USER_ID, UserStatus.OFFLINE, new HashMap<>()));
+        when(userStatusService
+                .addOnlineDeviceIfAbsent(any(), any(), any(), any(), anyInt(), any(), any()))
+                .thenReturn(Mono.just(true));
+        when(userStatusService.fetchUserSessionsStatus(any())).thenReturn(sessionsStatusMono);
         when(userStatusService.removeStatusByUserIdAndDeviceTypes(any(), any()))
                 .thenReturn(Mono.just(true));
 
