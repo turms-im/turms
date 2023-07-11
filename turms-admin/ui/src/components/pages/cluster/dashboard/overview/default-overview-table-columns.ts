@@ -8,6 +8,10 @@ export default [
         dataIndex: 'nodeId',
         fixed: 'left'
     },
+    {
+        dataIndex: 'name',
+        needFilters: true
+    },
     // Status
     {
         dataIndex: 'healthy',

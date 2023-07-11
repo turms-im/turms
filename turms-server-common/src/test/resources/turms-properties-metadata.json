@@ -128,7 +128,7 @@
       },
       "id": {
         "deprecated": false,
-        "description": "The node ID must start with a letter or underscore, and matches zero or more of characters [a-zA-Z0-9_] after the beginning. e.g. \"turms001\", \"turms_002\"",
+        "description": "The node ID must start with a letter or underscore, and matches zero or more of characters [a-zA-Z0-9_] after the beginning. e.g. \"turms001\", \"turms_002\". A node must have a unique ID. If not specified, Turms server will generate a random unique ID",
         "global": false,
         "mutable": false,
         "sensitive": false,
@@ -141,6 +141,14 @@
         "mutable": false,
         "sensitive": false,
         "type": "boolean"
+      },
+      "name": {
+        "deprecated": false,
+        "description": "The node name must start with a letter or underscore, and matches zero or more of characters [a-zA-Z0-9_] after the beginning. e.g. \"turms001\", \"turms_002\". The node name can be duplicate in the cluster. If not specified, Turms server will use the node ID as the node name",
+        "global": false,
+        "mutable": false,
+        "sensitive": false,
+        "type": "string"
       },
       "priority": {
         "deprecated": false,

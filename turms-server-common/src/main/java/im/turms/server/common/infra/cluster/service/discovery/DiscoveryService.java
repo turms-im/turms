@@ -128,6 +128,7 @@ public class DiscoveryService implements ClusterService {
             String clusterId,
             String nodeId,
             String zone,
+            String name,
             NodeType nodeType,
             NodeVersion nodeVersion,
             boolean isLeaderEligible,
@@ -143,6 +144,7 @@ public class DiscoveryService implements ClusterService {
                 clusterId,
                 nodeId,
                 zone,
+                name,
                 nodeType,
                 nodeVersion,
                 false,
@@ -616,6 +618,7 @@ public class DiscoveryService implements ClusterService {
     public Mono<Void> updateMemberInfo(
             @NotNull String id,
             @Nullable String zone,
+            @Nullable String name,
             @Nullable Boolean isSeed,
             @Nullable Boolean isLeaderEligible,
             @Nullable Boolean isActive,
@@ -627,8 +630,9 @@ public class DiscoveryService implements ClusterService {
         Filter filter = Filter.newBuilder(2)
                 .eq(Member.ID_CLUSTER_ID, getLocalMember().getClusterId())
                 .eq(Member.ID_NODE_ID, id);
-        Update update = Update.newBuilder(5)
+        Update update = Update.newBuilder(6)
                 .setIfNotNull(Member.Fields.zone, zone)
+                .setIfNotNull(Member.Fields.name, name)
                 .setIfNotNull(Member.Fields.isSeed, isSeed)
                 .setIfNotNull(Member.Fields.isLeaderEligible, isLeaderEligible)
                 .setIfNotNull(Member.STATUS_IS_ACTIVE, isActive)

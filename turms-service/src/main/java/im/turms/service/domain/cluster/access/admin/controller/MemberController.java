@@ -96,6 +96,7 @@ public class MemberController extends BaseController {
                 clusterId,
                 addMemberDTO.nodeId(),
                 addMemberDTO.zone(),
+                addMemberDTO.name(),
                 nodeType,
                 NodeVersion.parse(addMemberDTO.version()),
                 addMemberDTO.isSeed(),
@@ -122,6 +123,7 @@ public class MemberController extends BaseController {
             @RequestBody UpdateMemberDTO updateMemberDTO) {
         Mono<Void> addMemberMono = discoveryService.updateMemberInfo(id,
                 updateMemberDTO.zone(),
+                updateMemberDTO.name(),
                 updateMemberDTO.isSeed(),
                 updateMemberDTO.isLeaderEligible(),
                 updateMemberDTO.isActive(),

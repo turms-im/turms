@@ -24,6 +24,7 @@ import im.turms.server.common.domain.common.access.dto.ControllerDTO;
  */
 public record UpdateMemberDTO(
         String zone,
+        String name,
         Boolean isSeed,
         Boolean isLeaderEligible,
         Boolean isActive,

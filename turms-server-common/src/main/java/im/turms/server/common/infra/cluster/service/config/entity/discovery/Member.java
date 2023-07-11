@@ -64,6 +64,8 @@ public final class Member {
 
     private String zone;
 
+    private String name;
+
     private final NodeVersion nodeVersion;
 
     private final NodeType nodeType;
@@ -105,6 +107,7 @@ public final class Member {
     public Member(
             Key key,
             String zone,
+            String name,
             NodeType nodeType,
             NodeVersion nodeVersion,
             Boolean isSeed,
@@ -120,6 +123,7 @@ public final class Member {
             MemberStatus status) {
         this.key = key;
         this.zone = zone;
+        this.name = name;
         this.nodeType = nodeType;
         this.nodeVersion = nodeVersion;
         this.isSeed = isSeed;
@@ -139,6 +143,7 @@ public final class Member {
             String clusterId,
             String nodeId,
             String zone,
+            String name,
             NodeType nodeType,
             NodeVersion nodeVersion,
             boolean isSeed,
@@ -156,6 +161,7 @@ public final class Member {
             boolean isHealthy) {
         this(new Key(clusterId, nodeId),
                 zone,
+                name,
                 nodeType,
                 nodeVersion,
                 isSeed,
@@ -181,6 +187,7 @@ public final class Member {
 
     public void updateIfNotNull(
             String zone,
+            String name,
             Boolean isSeed,
             Boolean isLeaderEligible,
             Integer priority,
@@ -196,6 +203,9 @@ public final class Member {
             Date lastHeartbeatDate) {
         if (zone != null) {
             this.zone = zone;
+        }
+        if (name != null) {
+            this.name = name;
         }
         if (isSeed != null) {
             this.isSeed = isSeed;

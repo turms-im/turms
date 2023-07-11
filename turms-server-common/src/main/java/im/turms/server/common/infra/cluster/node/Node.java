@@ -41,6 +41,7 @@ import im.turms.server.common.infra.cluster.service.rpc.RpcService;
 import im.turms.server.common.infra.context.ApplicationEnvironmentEventListener;
 import im.turms.server.common.infra.context.TurmsApplicationContext;
 import im.turms.server.common.infra.healthcheck.HealthCheckManager;
+import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.property.TurmsProperties;
@@ -123,6 +124,21 @@ public class Node {
         if (zone == null) {
             zone = "";
         }
+        String name = nodeProperties.getName();
+        if (StringUtil.isBlank(name)) {
+            name = nodeId;
+        } else {
+            if (name.length() > NodeProperties.NODE_NAME_MAX_LENGTH) {
+                throw new IllegalArgumentException(
+                        "The length of node name must be less than or equal to "
+                                + NodeProperties.NODE_NAME_MAX_LENGTH);
+            }
+            if (!name.matches("^[a-zA-Z_]\\w*$")) {
+                throw new IllegalArgumentException(
+                        "The node name must start with a letter or underscore, "
+                                + "and matches zero or more of characters [a-zA-Z0-9_] after the beginning");
+            }
+        }
 
         // Init services
         // pass the properties one by one rather than passing the node instance
@@ -135,6 +151,7 @@ public class Node {
                 clusterId,
                 nodeId,
                 zone,
+                name,
                 nodeType,
                 nodeVersion,
                 nodeType == NodeType.SERVICE && nodeProperties.isLeaderEligible(),

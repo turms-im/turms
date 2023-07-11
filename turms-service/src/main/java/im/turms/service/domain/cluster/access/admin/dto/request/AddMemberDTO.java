@@ -28,6 +28,7 @@ import im.turms.server.common.infra.cluster.node.NodeType;
 public record AddMemberDTO(
         String nodeId,
         String zone,
+        String name,
         NodeType nodeType,
         String version,
         boolean isSeed,
