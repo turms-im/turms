@@ -66,6 +66,6 @@ describe('Query', () => {
         });
         const conversations = response.data;
         expect(conversations.length).toBeGreaterThan(0);
-        expect(conversations[0].memberIdAndReadDate).toBeTruthy();
+        expect(conversations[0].memberIdToReadDate).toBeTruthy();
     });
 });

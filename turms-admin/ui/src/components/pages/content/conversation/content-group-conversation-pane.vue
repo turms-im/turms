@@ -67,7 +67,7 @@ export default {
             },
             transform: (data) => {
                 let conversations = data.groupConversations || [];
-                conversations = conversations.flatMap(conversation => Object.entries(conversation.memberIdAndReadDate)
+                conversations = conversations.flatMap(conversation => Object.entries(conversation.memberIdToReadDate)
                     .map(([memberId, date]) => ({
                         groupId: conversation.groupId,
                         memberId,
