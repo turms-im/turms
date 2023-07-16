@@ -26,6 +26,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldNameConstants;
 
 import im.turms.server.common.infra.property.TurmsProperties;
+import im.turms.server.common.infra.property.env.aiserving.AiServingProperties;
 import im.turms.server.common.infra.property.env.gateway.GatewayProperties;
 import im.turms.server.common.infra.property.env.service.ServiceProperties;
 import im.turms.server.common.storage.mongo.entity.annotation.Document;
@@ -50,9 +51,11 @@ public class SharedClusterProperties {
 
     private CommonProperties commonProperties;
 
-    private ServiceProperties serviceProperties;
+    private AiServingProperties aiServingProperties;
 
     private GatewayProperties gatewayProperties;
+
+    private ServiceProperties serviceProperties;
 
     private Date lastUpdatedTime;
 
@@ -67,8 +70,9 @@ public class SharedClusterProperties {
         this.schemaVersion = schemaVersion;
         this.turmsProperties = localProperties;
         commonProperties = getCommonProperties(localProperties);
-        serviceProperties = localProperties.getService();
+        aiServingProperties = localProperties.getAiServing();
         gatewayProperties = localProperties.getGateway();
+        serviceProperties = localProperties.getService();
         this.lastUpdatedTime = lastUpdatedTime;
     }
 
@@ -102,6 +106,7 @@ public class SharedClusterProperties {
                 localCommonProperties.getSecurity(),
                 localCommonProperties.getShutdown(),
                 localCommonProperties.getUserStatus(),
+                aiServingProperties,
                 gatewayProperties,
                 serviceProperties);
     }
@@ -113,14 +118,20 @@ public class SharedClusterProperties {
     }
 
     @PropertySetter
-    public void setServiceProperties(ServiceProperties serviceProperties) {
-        this.serviceProperties = serviceProperties;
+    public void setAiServingProperties(AiServingProperties aiServingProperties) {
+        this.aiServingProperties = aiServingProperties;
         tryInitTurmsProperties();
     }
 
     @PropertySetter
     public void setGatewayProperties(GatewayProperties gatewayProperties) {
         this.gatewayProperties = gatewayProperties;
+        tryInitTurmsProperties();
+    }
+
+    @PropertySetter
+    public void setServiceProperties(ServiceProperties serviceProperties) {
+        this.serviceProperties = serviceProperties;
         tryInitTurmsProperties();
     }
 

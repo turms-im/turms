@@ -28,7 +28,7 @@ import im.turms.server.common.access.common.ResponseStatusCode;
 public record ResponseDTO<T>(
         Integer code,
         @Nullable String reason,
-        String exception,
+        @Nullable String exception,
         Date timestamp,
         @Nullable T data
 ) {

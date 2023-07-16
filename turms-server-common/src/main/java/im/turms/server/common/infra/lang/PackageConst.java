@@ -24,6 +24,7 @@ public final class PackageConst {
 
     public static final String PREFIX_TURMS_BASE = "im.turms.";
 
+    public static final String AI_SERVING = "im.turms.ai";
     public static final String GATEWAY = "im.turms.gateway";
     public static final String SERVICE = "im.turms.service";
     public static final String SERVER_COMMON = "im.turms.server.common";

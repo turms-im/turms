@@ -31,7 +31,6 @@ import reactor.core.publisher.Mono;
 import im.turms.server.common.infra.cluster.node.NodeType;
 import im.turms.server.common.infra.context.JobShutdownOrder;
 import im.turms.server.common.infra.context.TurmsApplicationContext;
-import im.turms.server.common.infra.exception.IncompatibleInternalChangeException;
 import im.turms.server.common.infra.lang.ClassUtil;
 import im.turms.server.common.infra.lang.Pair;
 import im.turms.server.common.infra.logging.core.appender.Appender;
@@ -50,6 +49,7 @@ import im.turms.server.common.infra.property.env.common.logging.LoggingPropertie
  */
 public class LoggerFactory {
 
+    private static final String PROPERTY_NAME_TURMS_AI_SERVING_HOME = "TURMS_AI_SERVING_HOME";
     private static final String PROPERTY_NAME_TURMS_GATEWAY_HOME = "TURMS_GATEWAY_HOME";
     private static final String PROPERTY_NAME_TURMS_SERVICE_HOME = "TURMS_SERVICE_HOME";
     private static final String SERVER_TYPE_UNKNOWN = "unknown";
@@ -85,11 +85,9 @@ public class LoggerFactory {
         }
         if (nodeType != null) {
             homeDir = switch (nodeType) {
+                case AI_SERVING -> System.getenv(PROPERTY_NAME_TURMS_AI_SERVING_HOME);
                 case GATEWAY -> System.getenv(PROPERTY_NAME_TURMS_GATEWAY_HOME);
                 case SERVICE -> System.getenv(PROPERTY_NAME_TURMS_SERVICE_HOME);
-                default -> throw new IncompatibleInternalChangeException(
-                        "Unknown node type: "
-                                + nodeType);
             };
         }
         if (homeDir == null) {
@@ -141,10 +139,12 @@ public class LoggerFactory {
 
     private static synchronized void initForTest() {
         NodeType nodeType = null;
-        if (ClassUtil.exists("im.turms.service.TurmsServiceApplication")) {
-            nodeType = NodeType.SERVICE;
+        if (ClassUtil.exists("im.turms.ai.TurmsAiServingApplication")) {
+            nodeType = NodeType.AI_SERVING;
         } else if (ClassUtil.exists("im.turms.gateway.TurmsGatewayApplication")) {
             nodeType = NodeType.GATEWAY;
+        } else if (ClassUtil.exists("im.turms.service.TurmsServiceApplication")) {
+            nodeType = NodeType.SERVICE;
         }
         // We use "INFO" level for tests because:
         // 1. If "DEBUG", in fact we never view these logs because they are too many to view.

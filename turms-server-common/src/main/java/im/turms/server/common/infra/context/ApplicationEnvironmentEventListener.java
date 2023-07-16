@@ -59,9 +59,14 @@ public class ApplicationEnvironmentEventListener
         String applicationClassName = event.getSpringApplication()
                 .getMainApplicationClass()
                 .getSimpleName();
-        NodeType nodeType = applicationClassName.equals("TurmsGatewayApplication")
-                ? NodeType.GATEWAY
-                : NodeType.SERVICE;
+        NodeType nodeType = switch (applicationClassName) {
+            case "TurmsAiServingApplication" -> NodeType.AI_SERVING;
+            case "TurmsGatewayApplication" -> NodeType.GATEWAY;
+            case "TurmsServiceApplication" -> NodeType.SERVICE;
+            default -> throw new RuntimeException(
+                    "Unknown application class name: "
+                            + applicationClassName);
+        };
         Node.initNodeId(env.getProperty("turms.cluster.node.id", String.class));
 
         ConsoleLoggingProperties consoleLoggingProperties = ConsoleLoggingProperties.builder()

@@ -84,9 +84,11 @@ public class TurmsApplicationContext {
     public TurmsApplicationContext(Environment environment, NodeType nodeType) {
         LoggerFactory.bindContext(this);
 
-        String homeDir = nodeType == NodeType.SERVICE
-                ? System.getenv("TURMS_SERVICE_HOME")
-                : System.getenv("TURMS_GATEWAY_HOME");
+        String homeDir = switch (nodeType) {
+            case AI_SERVING -> System.getenv("TURMS_AI_SERVING_HOME");
+            case GATEWAY -> System.getenv("TURMS_GATEWAY_HOME");
+            case SERVICE -> System.getenv("TURMS_SERVICE_HOME");
+        };
         home = homeDir == null
                 ? Path.of("")
                         .toAbsolutePath()

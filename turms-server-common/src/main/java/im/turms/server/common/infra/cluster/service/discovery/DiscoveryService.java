@@ -110,15 +110,18 @@ public class DiscoveryService implements ClusterService {
     private final Map<String, Member> allKnownMembers = new ConcurrentHashMap<>(32);
 
     @Getter
+    private List<Member> activeSortedAiServingMembers = Collections.emptyList();
+    @Getter
     private List<Member> activeSortedServiceMembers = Collections.emptyList();
-
     @Getter
     private List<Member> activeSortedGatewayMembers = Collections.emptyList();
 
     @Getter
-    private List<Member> otherActiveConnectedServiceMembers = Collections.emptyList();
+    private List<Member> otherActiveConnectedAiServingMembers = Collections.emptyList();
     @Getter
     private List<Member> otherActiveConnectedGatewayMembers = Collections.emptyList();
+    @Getter
+    private List<Member> otherActiveConnectedServiceMembers = Collections.emptyList();
     @Getter
     private List<Member> otherActiveConnectedMembers = Collections.emptyList();
 
@@ -506,20 +509,22 @@ public class DiscoveryService implements ClusterService {
         List<Member> knownMembers = new ArrayList<>(allKnownMembers);
         knownMembers.sort(MEMBER_PRIORITY_COMPARATOR);
         int size = knownMembers.size();
-        List<Member> tempActiveSortedServiceMembers = new ArrayList<>(size);
+        List<Member> tempActiveSortedAiServingMembers = new ArrayList<>(size);
         List<Member> tempActiveSortedGatewayMembers = new ArrayList<>(size);
+        List<Member> tempActiveSortedServiceMembers = new ArrayList<>(size);
         for (Member member : knownMembers) {
             if (member.getStatus()
                     .isActive()) {
-                if (member.getNodeType() == NodeType.SERVICE) {
-                    tempActiveSortedServiceMembers.add(member);
-                } else {
-                    tempActiveSortedGatewayMembers.add(member);
+                switch (member.getNodeType()) {
+                    case AI_SERVING -> tempActiveSortedAiServingMembers.add(member);
+                    case GATEWAY -> tempActiveSortedGatewayMembers.add(member);
+                    case SERVICE -> tempActiveSortedServiceMembers.add(member);
                 }
             }
         }
-        activeSortedServiceMembers = tempActiveSortedServiceMembers;
+        activeSortedAiServingMembers = tempActiveSortedAiServingMembers;
         activeSortedGatewayMembers = tempActiveSortedGatewayMembers;
+        activeSortedServiceMembers = tempActiveSortedServiceMembers;
     }
 
     private synchronized void updateOtherActiveConnectedMemberList(boolean isAdd, Member member) {
@@ -527,10 +532,12 @@ public class DiscoveryService implements ClusterService {
         if (isLocalNode) {
             return;
         }
-        boolean isServiceMember = member.getNodeType() == NodeType.SERVICE;
-        List<Member> memberList = isServiceMember
-                ? otherActiveConnectedServiceMembers
-                : otherActiveConnectedGatewayMembers;
+        NodeType nodeType = member.getNodeType();
+        List<Member> memberList = switch (nodeType) {
+            case AI_SERVING -> otherActiveConnectedAiServingMembers;
+            case GATEWAY -> otherActiveConnectedGatewayMembers;
+            case SERVICE -> otherActiveConnectedServiceMembers;
+        };
         int size = isAdd
                 ? memberList.size() + 1
                 : memberList.size();
@@ -541,13 +548,15 @@ public class DiscoveryService implements ClusterService {
         } else {
             tempOtherActiveConnectedMembers.remove(member);
         }
-        if (isServiceMember) {
-            otherActiveConnectedServiceMembers = tempOtherActiveConnectedMembers;
-        } else {
-            otherActiveConnectedGatewayMembers = tempOtherActiveConnectedMembers;
+        switch (nodeType) {
+            case AI_SERVING ->
+                otherActiveConnectedAiServingMembers = tempOtherActiveConnectedMembers;
+            case GATEWAY -> otherActiveConnectedGatewayMembers = tempOtherActiveConnectedMembers;
+            case SERVICE -> otherActiveConnectedServiceMembers = tempOtherActiveConnectedMembers;
         }
-        otherActiveConnectedMembers = CollectionUtil.union(otherActiveConnectedServiceMembers,
-                otherActiveConnectedGatewayMembers);
+        otherActiveConnectedMembers = CollectionUtil.union(otherActiveConnectedAiServingMembers,
+                otherActiveConnectedGatewayMembers,
+                otherActiveConnectedServiceMembers);
     }
 
     /**

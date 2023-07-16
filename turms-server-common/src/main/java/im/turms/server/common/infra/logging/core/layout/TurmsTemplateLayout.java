@@ -26,7 +26,6 @@ import io.netty.buffer.PooledByteBufAllocator;
 import org.springframework.util.StringUtils;
 
 import im.turms.server.common.infra.cluster.node.NodeType;
-import im.turms.server.common.infra.exception.IncompatibleInternalChangeException;
 import im.turms.server.common.infra.exception.ThrowableUtil;
 import im.turms.server.common.infra.lang.AsciiCode;
 import im.turms.server.common.infra.lang.ClassUtil;
@@ -57,6 +56,7 @@ public class TurmsTemplateLayout extends TemplateLayout {
     private static final int TRACE_ID_LENGTH = 19;
     private static final int CLASS_NAME_LENGTH = 40;
 
+    private static final int NODE_TYPE_AI_SERVING = 'A';
     private static final int NODE_TYPE_GATEWAY = 'G';
     private static final int NODE_TYPE_SERVICE = 'S';
     private static final int NODE_TYPE_UNKNOWN = 'U';
@@ -86,11 +86,9 @@ public class TurmsTemplateLayout extends TemplateLayout {
             type = NODE_TYPE_UNKNOWN;
         } else {
             type = switch (nodeType) {
+                case AI_SERVING -> NODE_TYPE_AI_SERVING;
                 case GATEWAY -> NODE_TYPE_GATEWAY;
                 case SERVICE -> NODE_TYPE_SERVICE;
-                default -> throw new IncompatibleInternalChangeException(
-                        "Unknown node type: "
-                                + nodeType);
             };
         }
         this.nodeType = type;

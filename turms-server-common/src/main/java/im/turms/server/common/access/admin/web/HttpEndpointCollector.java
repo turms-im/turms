@@ -141,11 +141,17 @@ public class HttpEndpointCollector {
         if (!(type instanceof Class<?> returnValueClass)) {
             return APPLICATION_JSON;
         }
-        GetMapping mapping = method.getDeclaredAnnotation(GetMapping.class);
-        if (mapping != null
-                && !mapping.produces()
+        GetMapping getMapping = method.getDeclaredAnnotation(GetMapping.class);
+        if (getMapping != null
+                && !getMapping.produces()
                         .isBlank()) {
-            return mapping.produces();
+            return getMapping.produces();
+        }
+        PostMapping postMapping = method.getDeclaredAnnotation(PostMapping.class);
+        if (postMapping != null
+                && !postMapping.produces()
+                        .isBlank()) {
+            return postMapping.produces();
         }
         if (ByteBuf.class.isAssignableFrom(returnValueClass)
                 || BaseFileResource.class.isAssignableFrom(returnValueClass)) {

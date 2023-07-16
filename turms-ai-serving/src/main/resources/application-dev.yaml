@@ -1,0 +1,21 @@
+spring:
+  netty:
+    leak-detection: paranoid
+
+############################### Turms ###############################
+
+turms:
+  cluster:
+    connection:
+      server:
+        port-auto-increment: true
+    shared-config:
+      mongo:
+        uri: mongodb://localhost:27017/turms-config-dev
+  logging:
+    console:
+      enabled: true
+  ai-serving:
+    mongo:
+      admin:
+        uri: mongodb://localhost:27017/turms-dev

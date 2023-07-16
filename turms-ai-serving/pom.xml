@@ -1,0 +1,145 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>im.turms</groupId>
+        <artifactId>turms-parent</artifactId>
+        <version>${revision}</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+    <artifactId>turms-ai-serving</artifactId>
+
+    <properties>
+        <model.path>${project.basedir}/dist/model</model.path>
+
+        <djl.version>0.23.0</djl.version>
+        <paddlepaddle-native.version>2.3.2</paddlepaddle-native.version>
+        <pytorch-native.version>1.13.1</pytorch-native.version>
+
+        <os.name>linux</os.name>
+        <paddlepaddle-native.artifactId>paddlepaddle-native-cpu</paddlepaddle-native.artifactId>
+        <pytorch-native.artifactId>pytorch-native-cpu</pytorch-native.artifactId>
+    </properties>
+
+    <profiles>
+        <profile>
+            <id>gpu</id>
+            <properties>
+                <paddlepaddle-native.artifactId>paddlepaddle-native-cu112</paddlepaddle-native.artifactId>
+                <pytorch-native.artifactId>pytorch-native-cu117</pytorch-native.artifactId>
+            </properties>
+        </profile>
+        <profile>
+            <id>windows</id>
+            <activation>
+                <os>
+                    <family>windows</family>
+                </os>
+            </activation>
+            <properties>
+                <os.name>win</os.name>
+            </properties>
+        </profile>
+    </profiles>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>ai.djl</groupId>
+                <artifactId>bom</artifactId>
+                <version>0.23.0</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>im.turms</groupId>
+            <artifactId>server-common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- AI -->
+        <dependency>
+            <groupId>ai.djl.opencv</groupId>
+            <artifactId>opencv</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ai.djl.paddlepaddle</groupId>
+            <artifactId>paddlepaddle-engine</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ai.djl.paddlepaddle</groupId>
+            <artifactId>paddlepaddle-model-zoo</artifactId>
+        </dependency>
+        <!-- Note: To use GPU, we need to ensure CUDA and TensorRT are installed -->
+        <dependency>
+            <groupId>ai.djl.paddlepaddle</groupId>
+            <artifactId>${paddlepaddle-native.artifactId}</artifactId>
+            <classifier>${os.name}-x86_64</classifier>
+            <version>${paddlepaddle-native.version}</version>
+        </dependency>
+        <!-- paddlepaddle-engine doesn't support NDArray,
+        so we use pytorch-engine as an alternative -->
+        <dependency>
+            <groupId>ai.djl.pytorch</groupId>
+            <artifactId>pytorch-engine</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ai.djl.pytorch</groupId>
+            <artifactId>${pytorch-native.artifactId}</artifactId>
+            <classifier>${os.name}-x86_64</classifier>
+            <version>${pytorch-native.version}</version>
+        </dependency>
+
+        <!-- Processor -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>download-files</id>
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <mkdir dir="${model.path}"/>
+                                <get src="https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/dygraph/ppocr/utils/ppocr_keys_v1.txt"
+                                     dest="${model.path}/dict.txt"
+                                     verbose="true"
+                                     usetimestamp="true"/>
+                                <!-- https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.6/doc/doc_en/models_list_en.md -->
+                                <get src="https://paddleocr.bj.bcebos.com/PP-OCRv3/chinese/ch_PP-OCRv3_det_infer.tar"
+                                     dest="${model.path}/detection.tar"
+                                     verbose="true"
+                                     usetimestamp="true"/>
+                                <get src="https://paddleocr.bj.bcebos.com/dygraph_v2.0/ch/ch_ppocr_mobile_v2.0_cls_infer.tar"
+                                     dest="${model.path}/orientation-classification.tar"
+                                     verbose="true"
+                                     usetimestamp="true"/>
+                                <get src="https://paddleocr.bj.bcebos.com/PP-OCRv3/chinese/ch_PP-OCRv3_rec_infer.tar"
+                                     dest="${model.path}/recognition.tar"
+                                     verbose="true"
+                                     usetimestamp="true"/>
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

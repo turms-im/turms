@@ -25,6 +25,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.stereotype.Component;
 
+import im.turms.server.common.infra.property.env.aiserving.AiServingProperties;
 import im.turms.server.common.infra.property.env.common.FlightRecorderProperties;
 import im.turms.server.common.infra.property.env.common.IpProperties;
 import im.turms.server.common.infra.property.env.common.ShutdownProperties;
@@ -88,7 +89,10 @@ public class TurmsProperties {
     @NestedConfigurationProperty
     private UserStatusProperties userStatus = new UserStatusProperties();
 
-    // Gateway and Service
+    // AI Serving, Gateway and Service
+
+    @NestedConfigurationProperty
+    private AiServingProperties aiServing = new AiServingProperties();
 
     @NestedConfigurationProperty
     private GatewayProperties gateway = new GatewayProperties();

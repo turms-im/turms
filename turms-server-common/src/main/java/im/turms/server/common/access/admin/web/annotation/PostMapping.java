@@ -31,4 +31,6 @@ public @interface PostMapping {
 
     String value() default "";
 
+    String produces() default "";
+
 }

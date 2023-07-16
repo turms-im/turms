@@ -623,6 +623,17 @@ public final class CollectionUtil {
         return result;
     }
 
+    public static <T> List<T> union(
+            List<? extends T> list1,
+            List<? extends T> list2,
+            List<? extends T> list3) {
+        ArrayList<T> result = new ArrayList<>(list1.size() + list2.size() + list3.size());
+        result.addAll(list1);
+        result.addAll(list2);
+        result.addAll(list3);
+        return result;
+    }
+
     public static <T> Set<T> union(Collection<Set<T>> collections) {
         int count = 0;
         for (Collection<? extends T> collection : collections) {

@@ -25,6 +25,7 @@ import io.lettuce.core.GeoArgs;
 import io.lettuce.core.GeoCoordinates;
 import io.lettuce.core.GeoWithin;
 import lombok.Getter;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -47,6 +48,7 @@ import im.turms.server.common.storage.redis.TurmsRedisClientManager;
 /**
  * @author James Chen
  */
+@ConditionalOnBean(name = "locationRedisClientManager")
 @Service
 public class SessionLocationService {
 

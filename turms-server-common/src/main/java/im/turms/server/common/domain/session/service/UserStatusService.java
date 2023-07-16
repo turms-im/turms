@@ -34,6 +34,7 @@ import com.github.benmanes.caffeine.cache.Caffeine;
 import io.lettuce.core.ScriptOutputType;
 import io.lettuce.core.protocol.LongKeyGenerator;
 import io.netty.buffer.ByteBuf;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -71,6 +72,7 @@ import im.turms.server.common.storage.redis.script.RedisScript;
 /**
  * @author James Chen
  */
+@ConditionalOnBean(name = "sessionRedisClientManager")
 @Service
 public class UserStatusService {
 

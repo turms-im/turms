@@ -26,6 +26,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum NodeType {
+    AI_SERVING("turms-ai-serving", "Turms AI Serving"),
     GATEWAY("turms-gateway", "Turms Gateway"),
     SERVICE("turms-service", "Turms Service");
 

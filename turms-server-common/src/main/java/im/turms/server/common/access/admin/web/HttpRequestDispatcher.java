@@ -142,13 +142,15 @@ public class HttpRequestDispatcher {
         this.adminApiRateLimitingManager = adminApiRateLimitingManager;
         authenticator = new HttpRequestAuthenticator(adminService);
 
-        CommonAdminApiProperties apiProperties = node.getNodeType() == NodeType.GATEWAY
-                ? propertiesManager.getLocalProperties()
-                        .getGateway()
-                        .getAdminApi()
-                : propertiesManager.getLocalProperties()
-                        .getService()
-                        .getAdminApi();
+        TurmsProperties properties = propertiesManager.getLocalProperties();
+        CommonAdminApiProperties apiProperties = switch (node.getNodeType()) {
+            case AI_SERVING -> properties.getAiServing()
+                    .getAdminApi();
+            case GATEWAY -> properties.getGateway()
+                    .getAdminApi();
+            case SERVICE -> properties.getService()
+                    .getAdminApi();
+        };
         useAuthentication = apiProperties.isUseAuthentication();
         isApiEnabled = apiProperties.isEnabled();
         if (isApiEnabled) {
@@ -187,13 +189,16 @@ public class HttpRequestDispatcher {
 
     // region Properties
     private void updateGlobalProperties(TurmsProperties properties) {
-        boolean isGateway = node.getNodeType() == NodeType.GATEWAY;
-        CommonAdminApiProperties apiProperties = isGateway
-                ? properties.getGateway()
-                        .getAdminApi()
-                : properties.getService()
-                        .getAdminApi();
-        allowDeleteWithoutFilter = !isGateway
+        NodeType nodeType = node.getNodeType();
+        CommonAdminApiProperties apiProperties = switch (nodeType) {
+            case AI_SERVING -> properties.getAiServing()
+                    .getAdminApi();
+            case GATEWAY -> properties.getGateway()
+                    .getAdminApi();
+            case SERVICE -> properties.getService()
+                    .getAdminApi();
+        };
+        allowDeleteWithoutFilter = nodeType == NodeType.SERVICE
                 && properties.getService()
                         .getAdminApi()
                         .isAllowDeleteWithoutFilter();
@@ -480,11 +485,14 @@ public class HttpRequestDispatcher {
         }
         Object body = result.body();
         if (body instanceof BaseFileResource resource) {
+            CharSequence mediaType = endpoint == null || endpoint.mediaType() == null
+                    ? HttpHeaderValues.APPLICATION_OCTET_STREAM
+                    : endpoint.mediaType();
             HttpServerResponse preparedResponse = response
                     .header(HttpHeaderNames.CONTENT_DISPOSITION,
                             "attachment; filename="
                                     + resource.getFileName())
-                    .header(HttpHeaderNames.CONTENT_TYPE, HttpHeaderValues.APPLICATION_OCTET_STREAM)
+                    .header(HttpHeaderNames.CONTENT_TYPE, mediaType)
                     .header(HttpHeaderNames.CONTENT_LENGTH, String.valueOf(resource.getSize()));
             NettyOutbound outbound = body instanceof FileResource fileResource
                     ? preparedResponse.sendFile(fileResource.getFile())

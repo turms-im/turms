@@ -26,6 +26,7 @@ import java.util.concurrent.TimeUnit;
 
 import io.lettuce.core.ScriptOutputType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
@@ -61,6 +62,7 @@ import im.turms.server.common.storage.redis.script.RedisScript;
 /**
  * @author James Chen
  */
+@ConditionalOnBean(name = "ipBlocklistRedisClient")
 @Service
 public class BlocklistService {
 

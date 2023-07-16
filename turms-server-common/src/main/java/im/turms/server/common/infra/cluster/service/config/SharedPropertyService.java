@@ -183,10 +183,10 @@ public class SharedPropertyService implements ClusterService {
                 TurmsProperties.SCHEMA_VERSION,
                 localProperties,
                 new Date());
-        if (nodeType == NodeType.GATEWAY) {
-            clusterProperties.setServiceProperties(null);
-        } else {
-            clusterProperties.setGatewayProperties(null);
+        switch (nodeType) {
+            case AI_SERVING -> clusterProperties.setAiServingProperties(null);
+            case GATEWAY -> clusterProperties.setGatewayProperties(null);
+            case SERVICE -> clusterProperties.setServiceProperties(null);
         }
         return findAndUpdatePropertiesByNodeType(clusterProperties)
                 .switchIfEmpty(Mono.defer(() -> sharedConfigService.insert(clusterProperties)))
@@ -205,43 +205,66 @@ public class SharedPropertyService implements ClusterService {
                 .eq(DomainFieldName.ID, clusterId);
         return sharedConfigService.findOne(SharedClusterProperties.class, filter)
                 .flatMap(properties -> {
-                    if (nodeType == NodeType.GATEWAY) {
-                        if (properties.getGatewayProperties() == null) {
-                            filter.eq(SharedClusterProperties.Fields.gatewayProperties, null);
-                            Update update = Update.newBuilder(1)
-                                    .set(SharedClusterProperties.Fields.gatewayProperties,
-                                            clusterProperties.getGatewayProperties());
-                            return sharedConfigService
-                                    .updateOne(SharedClusterProperties.class, filter, update)
-                                    .map(result -> {
-                                        if (result.getModifiedCount() > 0) {
-                                            properties.setGatewayProperties(
-                                                    clusterProperties.getGatewayProperties());
-                                            return properties;
-                                        } else {
-                                            throw new RuntimeException(
-                                                    "Failed to update the cluster properties");
-                                        }
-                                    });
+                    switch (nodeType) {
+                        case AI_SERVING -> {
+                            if (properties.getAiServingProperties() == null) {
+                                filter.eq(SharedClusterProperties.Fields.aiServingProperties, null);
+                                Update update = Update.newBuilder(1)
+                                        .set(SharedClusterProperties.Fields.aiServingProperties,
+                                                clusterProperties.getAiServingProperties());
+                                return sharedConfigService
+                                        .updateOne(SharedClusterProperties.class, filter, update)
+                                        .map(result -> {
+                                            if (result.getModifiedCount() > 0) {
+                                                properties.setAiServingProperties(
+                                                        clusterProperties.getAiServingProperties());
+                                                return properties;
+                                            } else {
+                                                throw new RuntimeException(
+                                                        "Failed to update the cluster properties");
+                                            }
+                                        });
+                            }
                         }
-                    } else {
-                        if (properties.getServiceProperties() == null) {
-                            filter.eq(SharedClusterProperties.Fields.serviceProperties, null);
-                            Update update = Update.newBuilder(1)
-                                    .set(SharedClusterProperties.Fields.serviceProperties,
-                                            clusterProperties.getServiceProperties());
-                            return sharedConfigService
-                                    .updateOne(SharedClusterProperties.class, filter, update)
-                                    .map(result -> {
-                                        if (result.getModifiedCount() > 0) {
-                                            properties.setServiceProperties(
-                                                    clusterProperties.getServiceProperties());
-                                            return properties;
-                                        } else {
-                                            throw new RuntimeException(
-                                                    "Failed to update the cluster properties");
-                                        }
-                                    });
+                        case GATEWAY -> {
+                            if (properties.getGatewayProperties() == null) {
+                                filter.eq(SharedClusterProperties.Fields.gatewayProperties, null);
+                                Update update = Update.newBuilder(1)
+                                        .set(SharedClusterProperties.Fields.gatewayProperties,
+                                                clusterProperties.getGatewayProperties());
+                                return sharedConfigService
+                                        .updateOne(SharedClusterProperties.class, filter, update)
+                                        .map(result -> {
+                                            if (result.getModifiedCount() > 0) {
+                                                properties.setGatewayProperties(
+                                                        clusterProperties.getGatewayProperties());
+                                                return properties;
+                                            } else {
+                                                throw new RuntimeException(
+                                                        "Failed to update the cluster properties");
+                                            }
+                                        });
+                            }
+                        }
+                        default -> {
+                            if (properties.getServiceProperties() == null) {
+                                filter.eq(SharedClusterProperties.Fields.serviceProperties, null);
+                                Update update = Update.newBuilder(1)
+                                        .set(SharedClusterProperties.Fields.serviceProperties,
+                                                clusterProperties.getServiceProperties());
+                                return sharedConfigService
+                                        .updateOne(SharedClusterProperties.class, filter, update)
+                                        .map(result -> {
+                                            if (result.getModifiedCount() > 0) {
+                                                properties.setServiceProperties(
+                                                        clusterProperties.getServiceProperties());
+                                                return properties;
+                                            } else {
+                                                throw new RuntimeException(
+                                                        "Failed to update the cluster properties");
+                                            }
+                                        });
+                            }
                         }
                     }
                     return Mono.just(properties);

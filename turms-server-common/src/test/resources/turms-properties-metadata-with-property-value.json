@@ -1,4 +1,158 @@
 {
+  "aiServing": {
+    "adminApi": {
+      "address": {
+        "advertiseHost": {
+          "deprecated": false,
+          "description": "The advertise address of the local node exposed to admins. (e.g. 100.131.251.96)",
+          "global": false,
+          "mutable": true,
+          "sensitive": false,
+          "type": "string",
+          "value": ""
+        },
+        "advertiseStrategy": {
+          "deprecated": false,
+          "description": "The advertise strategy is used to decide which type of address should be used so that admins can access admin APIs and metrics APIs",
+          "global": false,
+          "mutable": true,
+          "options": [
+            "ADVERTISE_ADDRESS",
+            "BIND_ADDRESS",
+            "PRIVATE_ADDRESS",
+            "PUBLIC_ADDRESS"
+          ],
+          "sensitive": false,
+          "type": "enum",
+          "value": "PRIVATE_ADDRESS"
+        },
+        "attachPortToHost": {
+          "deprecated": false,
+          "description": "Whether to attach the local port to the host.\ne.g. The local host is 100.131.251.96, and the port is 9510 so the service address will be 100.131.251.96:9510",
+          "global": false,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean",
+          "value": true
+        }
+      },
+      "enabled": {
+        "deprecated": false,
+        "description": "Whether to enable the APIs for administrators",
+        "global": false,
+        "mutable": false,
+        "sensitive": false,
+        "type": "boolean",
+        "value": true
+      },
+      "http": {
+        "host": {
+          "deprecated": false,
+          "global": false,
+          "mutable": false,
+          "sensitive": false,
+          "type": "string",
+          "value": "0.0.0.0"
+        },
+        "maxRequestBodySizeBytes": {
+          "deprecated": false,
+          "global": false,
+          "mutable": false,
+          "sensitive": false,
+          "type": "int",
+          "value": 10485760
+        },
+        "port": {
+          "deprecated": false,
+          "global": false,
+          "mutable": false,
+          "sensitive": false,
+          "type": "int",
+          "value": 5510
+        }
+      },
+      "log": {
+        "enabled": {
+          "deprecated": false,
+          "description": "Whether to log API calls",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean",
+          "value": true
+        },
+        "logRequestParams": {
+          "deprecated": false,
+          "description": "Whether to log the parameters of requests",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean",
+          "value": true
+        }
+      },
+      "rateLimiting": {
+        "capacity": {
+          "deprecated": false,
+          "description": "The maximum number of tokens that the bucket can hold",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "int",
+          "value": 50
+        },
+        "initialTokens": {
+          "deprecated": false,
+          "description": "The initial number of tokens for new session",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "int",
+          "value": 50
+        },
+        "refillIntervalMillis": {
+          "deprecated": false,
+          "description": "The time interval to refill. 0 means never refill",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "int",
+          "value": 1000
+        },
+        "tokensPerPeriod": {
+          "deprecated": false,
+          "description": "Refills the bucket with the specified number of tokens per period if the bucket is not full",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "int",
+          "value": 50
+        }
+      },
+      "useAuthentication": {
+        "deprecated": false,
+        "description": "Whether to use authentication. If false, all HTTP requesters will personate the root user and all HTTP requests will be passed. You may set it to false when you want to manage authentication via security groups, NACL, etc",
+        "global": false,
+        "mutable": false,
+        "sensitive": false,
+        "type": "boolean",
+        "value": true
+      }
+    },
+    "mongo": {
+      "admin": {}
+    },
+    "ocr": {
+      "orientatePossibilityThreshold": {
+        "deprecated": false,
+        "global": false,
+        "mutable": false,
+        "sensitive": false,
+        "type": "float",
+        "value": 0.8
+      }
+    }
+  },
   "cluster": {
     "connection": {
       "client": {
