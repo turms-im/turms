@@ -245,7 +245,7 @@ public class LocalNodeStatusManager {
     public void updateHealthStatus(boolean isHealthy) {
         if (localMember.getStatus()
                 .isHealthy() == isHealthy
-                && !isHealthStatusUpdating.compareAndSet(false, true)) {
+                || !isHealthStatusUpdating.compareAndSet(false, true)) {
             return;
         }
         Filter filter = Filter.newBuilder(2)
