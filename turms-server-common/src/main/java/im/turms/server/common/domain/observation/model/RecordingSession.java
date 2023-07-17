@@ -51,11 +51,10 @@ public record RecordingSession(
         return recording().getDestination();
     }
 
-    public Path getFilePath(File tempFile) {
+    public Path getFilePath(Path destination) {
         synchronized (recording) {
             RecordingState state = recording.getState();
             if (state == RecordingState.RUNNING) {
-                Path destination = tempFile.toPath();
                 try {
                     recording.dump(destination);
                 } catch (IOException e) {

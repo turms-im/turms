@@ -17,7 +17,6 @@
 
 package im.turms.server.common.domain.observation.service;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -29,6 +28,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicLong;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.Min;
 
@@ -50,7 +50,6 @@ import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.common.FlightRecorderProperties;
-import im.turms.server.common.infra.random.RandomUtil;
 import im.turms.server.common.infra.task.CronConst;
 import im.turms.server.common.infra.task.TaskManager;
 import im.turms.server.common.infra.validation.Validator;
@@ -62,9 +61,10 @@ import im.turms.server.common.infra.validation.Validator;
 public class FlightRecordingService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FlightRecordingService.class);
+    private static final Path JFR_DIR = Path.of("jfr");
+    private static final AtomicLong TEMP_FLIGHT_RECORDING_FILE_ID = new AtomicLong(0);
 
-    private final File jfrBaseDir;
-    private final Path jfrBaseDirPath;
+    private final Path jfrDir;
     private final Map<String, String> defaultConfigs;
     private final int closedRecordingRetentionPeriod;
 
@@ -95,9 +95,8 @@ public class FlightRecordingService {
         } else {
             defaultConfigs = localDefaultConfigs;
         }
-        jfrBaseDirPath = context.getHome()
+        jfrDir = context.getHome()
                 .resolve("./jfr");
-        jfrBaseDir = jfrBaseDirPath.toFile();
         createJfrDir();
         for (Recording recording : FlightRecorder.getFlightRecorder()
                 .getRecordings()) {
@@ -107,51 +106,50 @@ public class FlightRecordingService {
         FlightRecorderProperties recorderProperties = propertiesManager.getLocalProperties()
                 .getFlightRecorder();
         closedRecordingRetentionPeriod = recorderProperties.getClosedRecordingRetentionPeriod();
-        if (closedRecordingRetentionPeriod > 0) {
-            closedNotDeletedSessionIds = new MpscUnboundedArrayQueue<>(16);
-            taskManager.reschedule("closedRecordingCleanup",
-                    CronConst.CLOSED_RECORDINGS_CLEANUP_CRON,
-                    () -> {
-                        List<Long> pendingSessionIds = null;
-                        Long sessionId;
-                        while ((sessionId = closedNotDeletedSessionIds.relaxedPoll()) != null) {
-                            RecordingSession session = idToSession.remove(sessionId);
-                            if (session == null) {
-                                continue;
-                            }
-                            try {
-                                session.deleteFile();
-                            } catch (Exception e) {
-                                // The file may be in use
-                                LOGGER.error(
-                                        "Failed to delete the recording file of the session: {}",
-                                        sessionId,
-                                        e);
-                                if (session.checkIfFileExists()) {
-                                    if (pendingSessionIds == null) {
-                                        pendingSessionIds = new ArrayList<>();
-                                    }
-                                    pendingSessionIds.add(sessionId);
-                                    idToSession.put(sessionId, session);
-                                }
-                            }
-                        }
-                        if (pendingSessionIds != null) {
-                            closedNotDeletedSessionIds.addAll(pendingSessionIds);
-                        }
-                    });
-        } else {
+        if (closedRecordingRetentionPeriod <= 0) {
             closedNotDeletedSessionIds = null;
+            return;
         }
+        closedNotDeletedSessionIds = new MpscUnboundedArrayQueue<>(16);
+        taskManager.reschedule("closedRecordingCleanup",
+                CronConst.CLOSED_RECORDINGS_CLEANUP_CRON,
+                () -> {
+                    List<Long> pendingSessionIds = null;
+                    Long sessionId;
+                    while ((sessionId = closedNotDeletedSessionIds.relaxedPoll()) != null) {
+                        RecordingSession session = idToSession.remove(sessionId);
+                        if (session == null) {
+                            continue;
+                        }
+                        try {
+                            session.deleteFile();
+                        } catch (Exception e) {
+                            // The file may be in use
+                            LOGGER.error("Failed to delete the recording file of the session: {}",
+                                    sessionId,
+                                    e);
+                            if (session.checkIfFileExists()) {
+                                if (pendingSessionIds == null) {
+                                    pendingSessionIds = new ArrayList<>();
+                                }
+                                pendingSessionIds.add(sessionId);
+                                idToSession.put(sessionId, session);
+                            }
+                        }
+                    }
+                    if (pendingSessionIds != null) {
+                        closedNotDeletedSessionIds.addAll(pendingSessionIds);
+                    }
+                });
     }
 
     private void createJfrDir() {
         try {
-            Files.createDirectories(jfrBaseDirPath);
+            Files.createDirectories(jfrDir);
         } catch (IOException e) {
             throw new InputOutputException(
                     "Failed to create the JFR directory: "
-                            + jfrBaseDirPath.normalize(),
+                            + jfrDir.normalize(),
                     e);
         }
     }
@@ -176,14 +174,23 @@ public class FlightRecordingService {
         Recording recording = new Recording(customSettings);
         long id = recording.getId();
         String name = "custom-"
-                + id;
+                + id
+                + ".jfr";
         recording.setName(name);
 
         // Ensure the directory exists because it may be deleted by users unexpectedly
         createJfrDir();
-        File tempFile = FileUtil.createTempFile(name, ".jfr", jfrBaseDir);
+        Path tempFile = jfrDir.resolve(name);
         try {
-            recording.setDestination(tempFile.toPath());
+            Files.createFile(tempFile);
+        } catch (IOException e) {
+            throw new InputOutputException(
+                    "Failed to create the JFR file: "
+                            + tempFile,
+                    e);
+        }
+        try {
+            recording.setDestination(tempFile);
             recording.setToDisk(true);
             if (durationSeconds != null) {
                 recording.setDuration(Duration.of(durationSeconds, ChronoUnit.SECONDS));
@@ -208,7 +215,11 @@ public class FlightRecordingService {
             } catch (Exception ignored) {
                 // ignore
             }
-            tempFile.delete();
+            try {
+                Files.deleteIfExists(tempFile);
+            } catch (IOException ex) {
+                e.addSuppressed(ex);
+            }
             throw new RuntimeException("Failed to start a recording", e);
         }
     }
@@ -271,11 +282,11 @@ public class FlightRecordingService {
                 }
             });
         }
-        String prefix = "temp-"
-                + id
+        String name = id
                 + "-"
-                + RandomUtil.nextPositiveInt();
-        File tempFile = FileUtil.createTempFile(prefix, ".jfr", jfrBaseDir);
+                + TEMP_FLIGHT_RECORDING_FILE_ID.getAndIncrement()
+                + ".jfr";
+        Path tempFile = FileUtil.createTempFile(JFR_DIR, name);
         return new FileResource(fileName, session.getFilePath(tempFile));
     }
 

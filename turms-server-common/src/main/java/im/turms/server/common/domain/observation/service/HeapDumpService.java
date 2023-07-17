@@ -17,11 +17,12 @@
 
 package im.turms.server.common.domain.observation.service;
 
-import java.io.File;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.concurrent.atomic.AtomicLong;
+import jakarta.annotation.Nullable;
 
 import com.sun.management.HotSpotDiagnosticMXBean;
 import org.springframework.stereotype.Service;
@@ -35,7 +36,6 @@ import im.turms.server.common.infra.io.FileUtil;
 import im.turms.server.common.infra.io.InputOutputException;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
-import im.turms.server.common.infra.random.RandomUtil;
 
 /**
  * @author James Chen
@@ -44,9 +44,11 @@ import im.turms.server.common.infra.random.RandomUtil;
 public class HeapDumpService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HeapDumpService.class);
+    private static final AtomicLong TEMP_HEAP_DUMP_FILE_ID = new AtomicLong(0);
 
     private final HotSpotDiagnosticMXBean bean;
     private final Path dir;
+    @Nullable
     private FileResource exportingFile;
 
     public HeapDumpService(TurmsApplicationContext context) {
@@ -73,11 +75,11 @@ public class HeapDumpService {
     }
 
     private FileResource dumpHeap(boolean live) {
-        File tempFile = FileUtil.createTempFile("temp-"
-                + RandomUtil.nextPositiveInt(), ".hprof", dir.toFile());
-        tempFile.delete();
-        String filePathStr = tempFile.getAbsolutePath();
-        Path filePath = tempFile.toPath();
+        Path tempFile = FileUtil.createTempFile(dir,
+                TEMP_HEAP_DUMP_FILE_ID.getAndIncrement()
+                        + ".hprof")
+                .toAbsolutePath();
+        String filePathStr = tempFile.toString();
         try {
             bean.dumpHeap(filePathStr, live);
         } catch (IOException e) {
@@ -88,10 +90,10 @@ public class HeapDumpService {
         return new FileResource(
                 System.currentTimeMillis()
                         + ".hprof",
-                filePath,
+                tempFile,
                 throwable -> {
                     try {
-                        Files.deleteIfExists(filePath);
+                        Files.deleteIfExists(tempFile);
                     } catch (IOException e) {
                         LOGGER.warn("Failed to delete the temporary heap dump file: "
                                 + filePathStr, e);

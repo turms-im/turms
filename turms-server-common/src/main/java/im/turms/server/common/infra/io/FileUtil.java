@@ -40,19 +40,43 @@ public class FileUtil {
     private static final Set<String> WEB_JAR_ASSETS = new WebJarAssetLocator().listAssets();
     private static final AntPathMatcher ANT_PATH_MATCHER = new AntPathMatcher();
 
+    private static Path tempDir;
+
     private FileUtil() {
     }
 
-    public static File createTempFile(String prefix, String suffix, File directory) {
-        directory.mkdirs();
-        File tempFile;
+    public static void setTempDir(Path tempDir) {
+        FileUtil.tempDir = tempDir;
         try {
-            tempFile = File.createTempFile(prefix, suffix, directory);
+            Files.createDirectories(tempDir);
         } catch (IOException e) {
-            throw new InputOutputException(e);
+            throw new InputOutputException(
+                    "Failed to create the temp directory: "
+                            + tempDir,
+                    e);
         }
-        tempFile.deleteOnExit();
-        return tempFile;
+    }
+
+    public static Path createTempFile(Path dir, String fileName) {
+        dir = tempDir.resolve(dir);
+        try {
+            // Ensure the directory exists because it may be deleted by users unexpectedly
+            Files.createDirectories(dir);
+        } catch (IOException e) {
+            throw new InputOutputException(
+                    "Failed to create the directory: "
+                            + dir,
+                    e);
+        }
+        Path filePath = dir.resolve(fileName);
+        try {
+            return Files.createFile(filePath);
+        } catch (IOException e) {
+            throw new InputOutputException(
+                    "Failed to create the file: "
+                            + filePath,
+                    e);
+        }
     }
 
     public static ByteBuf getWebJarAssetAsBuffer(String resourceNamePattern) {

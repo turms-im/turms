@@ -85,9 +85,7 @@ public class TurmsPropertiesManager {
                 : "application-"
                         + activeProfile
                         + "-latest.yaml";
-        latestConfigFilePath = Path.of(applicationContext.getConfigDir()
-                + "/"
-                + latestConfigFileName);
+        latestConfigFilePath = Path.of(applicationContext.getConfigDir(), latestConfigFileName);
         InvalidPropertyException exception = validate(localTurmsProperties);
         if (exception != null) {
             throw exception;

@@ -39,10 +39,12 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
+import org.springframework.util.FileSystemUtils;
 import reactor.core.publisher.Hooks;
 import reactor.core.publisher.Mono;
 
 import im.turms.server.common.infra.cluster.node.NodeType;
+import im.turms.server.common.infra.io.FileUtil;
 import im.turms.server.common.infra.io.InputOutputException;
 import im.turms.server.common.infra.io.ResourceNotFoundException;
 import im.turms.server.common.infra.lang.StringUtil;
@@ -73,6 +75,8 @@ public class TurmsApplicationContext {
 
     private final Path home;
     private final String configDir;
+    private final Path tempDir;
+
     private final boolean isProduction;
     private final boolean isDevOrLocalTest;
     private final String activeEnvProfile;
@@ -89,11 +93,10 @@ public class TurmsApplicationContext {
             case GATEWAY -> System.getenv("TURMS_GATEWAY_HOME");
             case SERVICE -> System.getenv("TURMS_SERVICE_HOME");
         };
-        home = homeDir == null
-                ? Path.of("")
-                        .toAbsolutePath()
-                : Path.of(homeDir)
-                        .toAbsolutePath();
+        home = Path.of(homeDir == null
+                ? ""
+                : homeDir)
+                .toAbsolutePath();
 
         // The property should be passed from "bin/run.sh"
         String configDir = System.getProperty("spring.config.location");
@@ -102,6 +105,16 @@ public class TurmsApplicationContext {
             configDir = "./config";
         }
         this.configDir = configDir;
+        tempDir = home.resolve("temp");
+        try {
+            FileSystemUtils.deleteRecursively(tempDir);
+        } catch (IOException e) {
+            throw new InputOutputException(
+                    "Failed to delete the temp directory: "
+                            + tempDir,
+                    e);
+        }
+        FileUtil.setTempDir(tempDir);
 
         List<String> devEnvs = List.of("dev", "development", "local");
         List<String> localTestEnvs = List.of("test", "testing");
@@ -198,6 +211,11 @@ public class TurmsApplicationContext {
             }
         }
         executor.shutdownNow();
+        try {
+            FileSystemUtils.deleteRecursively(tempDir);
+        } catch (IOException ignored) {
+            // We have closed loggers here, so we can just ignore
+        }
     }
 
     public synchronized void addShutdownHook(JobShutdownOrder order, ShutdownHook job) {
