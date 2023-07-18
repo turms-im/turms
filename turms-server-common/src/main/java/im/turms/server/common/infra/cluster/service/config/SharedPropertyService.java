@@ -184,9 +184,18 @@ public class SharedPropertyService implements ClusterService {
                 localProperties,
                 new Date());
         switch (nodeType) {
-            case AI_SERVING -> clusterProperties.setAiServingProperties(null);
-            case GATEWAY -> clusterProperties.setGatewayProperties(null);
-            case SERVICE -> clusterProperties.setServiceProperties(null);
+            case AI_SERVING -> {
+                clusterProperties.setGatewayProperties(null);
+                clusterProperties.setServiceProperties(null);
+            }
+            case GATEWAY -> {
+                clusterProperties.setAiServingProperties(null);
+                clusterProperties.setServiceProperties(null);
+            }
+            case SERVICE -> {
+                clusterProperties.setAiServingProperties(null);
+                clusterProperties.setGatewayProperties(null);
+            }
         }
         return findAndUpdatePropertiesByNodeType(clusterProperties)
                 .switchIfEmpty(Mono.defer(() -> sharedConfigService.insert(clusterProperties)))
