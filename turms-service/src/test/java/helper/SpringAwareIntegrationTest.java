@@ -36,7 +36,7 @@ import reactor.netty.http.client.HttpClient;
 
 import im.turms.server.common.access.admin.dto.response.ResponseDTO;
 import im.turms.server.common.infra.cluster.node.Node;
-import im.turms.server.common.infra.cluster.node.NodeType;
+import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.common.adminapi.AdminHttpProperties;
 import im.turms.server.common.testing.BaseIntegrationTest;
@@ -89,15 +89,18 @@ public abstract class SpringAwareIntegrationTest extends BaseIntegrationTest {
         }
         TurmsPropertiesManager propertiesManager = context.getBean(TurmsPropertiesManager.class);
         Node node = context.getBean(Node.class);
-        AdminHttpProperties httpProperties = node.getNodeType() == NodeType.GATEWAY
-                ? propertiesManager.getLocalProperties()
-                        .getGateway()
-                        .getAdminApi()
-                        .getHttp()
-                : propertiesManager.getLocalProperties()
-                        .getService()
-                        .getAdminApi()
-                        .getHttp();
+        TurmsProperties properties = propertiesManager.getLocalProperties();
+        AdminHttpProperties httpProperties = switch (node.getNodeType()) {
+            case AI_SERVING -> properties.getAiServing()
+                    .getAdminApi()
+                    .getHttp();
+            case GATEWAY -> properties.getGateway()
+                    .getAdminApi()
+                    .getHttp();
+            case SERVICE -> properties.getService()
+                    .getAdminApi()
+                    .getHttp();
+        };
         adminHttp = HttpClient.create()
                 .host("127.0.0.1")
                 .port(httpProperties.getPort());
