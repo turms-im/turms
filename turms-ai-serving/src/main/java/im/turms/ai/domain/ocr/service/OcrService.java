@@ -34,6 +34,7 @@ import jakarta.annotation.PreDestroy;
 import ai.djl.modality.cv.Image;
 import ai.djl.modality.cv.output.DetectedObjects;
 import ai.djl.opencv.OpenCVImageUtil;
+import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.springframework.stereotype.Service;
 
@@ -72,6 +73,10 @@ public class OcrService {
                 modelDir.resolve("detection.tar"),
                 modelDir.resolve("orientation-classification.tar"),
                 modelDir.resolve("recognition.tar"));
+
+        // Warm up
+        Image image = OpenCVImageUtil.create(Mat.zeros(1, 1, CvType.CV_8U));
+        ocrManager.ocr(image);
     }
 
     private void registerCustomFonts(Path fontDir) {
