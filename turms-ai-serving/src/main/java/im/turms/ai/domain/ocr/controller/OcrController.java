@@ -17,7 +17,6 @@
 
 package im.turms.ai.domain.ocr.controller;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -26,16 +25,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import ai.djl.modality.cv.Image;
 import ai.djl.modality.cv.output.DetectedObjects;
 import ai.djl.modality.cv.output.Rectangle;
-import ai.djl.opencv.OpenCVImageUtil;
-import org.opencv.core.Mat;
-import org.opencv.imgcodecs.Imgcodecs;
 
 import im.turms.ai.domain.ocr.dto.DetectObjectDTO;
 import im.turms.ai.domain.ocr.service.OcrService;
-import im.turms.ai.infra.image.ImageUtils;
 import im.turms.server.common.access.admin.dto.response.HttpHandlerResult;
 import im.turms.server.common.access.admin.dto.response.ResponseDTO;
 import im.turms.server.common.access.admin.web.MediaTypeConst;
@@ -46,7 +40,6 @@ import im.turms.server.common.access.admin.web.annotation.RestController;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.io.FileResource;
-import im.turms.server.common.infra.io.FileUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 
@@ -112,32 +105,7 @@ public class OcrController {
                     "Only support one image");
         }
         MultipartFile file = files.get(0);
-        File f = file.file();
-        String imagePath = f.toPath()
-                .toAbsolutePath()
-                .normalize()
-                .toString();
-        Image image = OpenCVImageUtil.create(imagePath);
-        DetectedObjects detectedObjects = ocrService.ocr(image);
-
-        Mat mat = (Mat) image.getWrappedImage();
-        mat = ImageUtils.drawBoundingBoxes(mat, detectedObjects);
-
-        File tempFile = FileUtil.createTempFile("output", ".png", new File("."));
-        Path path = tempFile.toPath()
-                .toAbsolutePath()
-                .normalize();
-        String pathStr = path.toString();
-        try {
-            Imgcodecs.imwrite(pathStr, mat);
-        } catch (Exception e) {
-            try {
-                Files.deleteIfExists(path);
-            } catch (IOException ex) {
-                e.addSuppressed(ex);
-            }
-            throw e;
-        }
+        Path path = ocrService.ocrAndWriteToFile(file.file());
         return new FileResource("result.png", path, t -> {
             try {
                 Files.deleteIfExists(path);

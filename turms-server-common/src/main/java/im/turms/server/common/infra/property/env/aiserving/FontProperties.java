@@ -17,8 +17,6 @@
 
 package im.turms.server.common.infra.property.env.aiserving;
 
-import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -31,11 +29,8 @@ import lombok.NoArgsConstructor;
 @Builder(toBuilder = true)
 @Data
 @NoArgsConstructor
-public class OcrProperties {
+public class FontProperties {
 
-    private float orientationPossibilityThreshold = 0.8F;
-
-    private List<FontProperties> preferredFonts =
-            List.of(new FontProperties("Noto Sans CJK SC"), new FontProperties("Noto Sans"));
+    private String familyName;
 
 }

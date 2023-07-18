@@ -39,9 +39,9 @@ import nu.pattern.OpenCV;
 import org.opencv.core.Mat;
 import org.opencv.imgcodecs.Imgcodecs;
 
-import static im.turms.ai.infra.image.ImageUtils.extendBox;
-import static im.turms.ai.infra.image.ImageUtils.getSubImage;
-import static im.turms.ai.infra.image.ImageUtils.rotate90;
+import static im.turms.ai.infra.image.ImageUtil.extendBox;
+import static im.turms.ai.infra.image.ImageUtil.getSubImage;
+import static im.turms.ai.infra.image.ImageUtil.rotate90;
 
 /**
  * @author James Chen

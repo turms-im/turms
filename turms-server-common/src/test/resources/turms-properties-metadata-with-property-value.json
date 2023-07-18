@@ -143,13 +143,29 @@
       "admin": {}
     },
     "ocr": {
-      "orientatePossibilityThreshold": {
+      "orientationPossibilityThreshold": {
         "deprecated": false,
         "global": false,
         "mutable": false,
         "sensitive": false,
         "type": "float",
         "value": 0.8
+      },
+      "preferredFonts": {
+        "deprecated": false,
+        "elementType": "im.turms.server.common.infra.property.env.aiserving.FontProperties",
+        "global": false,
+        "mutable": false,
+        "sensitive": false,
+        "type": "java.util.List",
+        "value": [
+          {
+            "familyName": "Noto Sans CJK SC"
+          },
+          {
+            "familyName": "Noto Sans"
+          }
+        ]
       }
     }
   },

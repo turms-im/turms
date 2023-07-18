@@ -129,12 +129,20 @@
       "admin": {}
     },
     "ocr": {
-      "orientatePossibilityThreshold": {
+      "orientationPossibilityThreshold": {
         "deprecated": false,
         "global": false,
         "mutable": false,
         "sensitive": false,
         "type": "float"
+      },
+      "preferredFonts": {
+        "deprecated": false,
+        "elementType": "im.turms.server.common.infra.property.env.aiserving.FontProperties",
+        "global": false,
+        "mutable": false,
+        "sensitive": false,
+        "type": "java.util.List"
       }
     }
   },

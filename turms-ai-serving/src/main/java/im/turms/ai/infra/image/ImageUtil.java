@@ -29,8 +29,12 @@ import java.awt.image.DataBufferByte;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 import javax.imageio.ImageIO;
+import jakarta.annotation.Nullable;
 
 import ai.djl.modality.cv.Image;
 import ai.djl.modality.cv.ImageFactory;
@@ -45,17 +49,19 @@ import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
 import org.opencv.imgcodecs.Imgcodecs;
 
+import im.turms.server.common.infra.io.FileUtil;
 import im.turms.server.common.infra.lang.StringUtil;
 
 /**
  * @author James Chen
  */
-public final class ImageUtils {
+public final class ImageUtil {
 
     private static final Color BACKGROUND = new Color(0, 0, 0, 128);
-    private static final Font FONT = new Font("Noto Sans", Font.PLAIN, 16);
+    private static final Path IMAGE_DIR = Path.of("image");
+    private static final AtomicLong TEMP_IMAGE_FILE_ID = new AtomicLong(0);
 
-    private ImageUtils() {
+    private ImageUtil() {
     }
 
     public static Image rotate90(Image image) {
@@ -107,12 +113,20 @@ public final class ImageUtils {
         return new Rectangle(newX, newY, newWidth, newHeight);
     }
 
-    public static Mat drawBoundingBoxes(Mat mat, DetectedObjects detections) {
+    public static Mat drawBoundingBoxes(
+            Mat mat,
+            DetectedObjects detections,
+            @Nullable String fontName) {
         BufferedImage image = mat2Image(mat);
         Graphics2D g = (Graphics2D) image.getGraphics();
         int stroke = 2;
         g.setStroke(new BasicStroke(stroke));
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        if (fontName != null) {
+            // TODO: support resizing font size
+            Font font = new Font(fontName, Font.PLAIN, 16);
+            g.setFont(font);
+        }
 
         int imageWidth = image.getWidth();
         int imageHeight = image.getHeight();
@@ -148,7 +162,6 @@ public final class ImageUtils {
         java.awt.Rectangle background = new java.awt.Rectangle(x, y, width, height);
         g.fill(background);
         g.setPaint(Color.WHITE);
-        g.setFont(FONT);
         g.drawString(text, x + padding, y + ascent);
     }
 
@@ -185,6 +198,25 @@ public final class ImageUtils {
         Mat mat = Mat.eye(image.getHeight(), image.getWidth(), CvType.CV_8UC3);
         mat.put(0, 0, pixels);
         return mat;
+    }
+
+    public static Path writeTempImageFile(Mat mat) {
+        Path tempFile = FileUtil.createTempFile(IMAGE_DIR,
+                TEMP_IMAGE_FILE_ID.getAndIncrement()
+                        + ".png");
+        Path path = tempFile.toAbsolutePath()
+                .normalize();
+        try {
+            Imgcodecs.imwrite(path.toString(), mat);
+        } catch (Exception e) {
+            try {
+                Files.deleteIfExists(path);
+            } catch (IOException ex) {
+                e.addSuppressed(ex);
+            }
+            throw e;
+        }
+        return path;
     }
 
 }
