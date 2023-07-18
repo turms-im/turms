@@ -10,7 +10,8 @@
     <artifactId>turms-ai-serving</artifactId>
 
     <properties>
-        <model.path>${project.basedir}/dist/model</model.path>
+        <fontDirectory>${project.basedir}/dist/font</fontDirectory>
+        <modelDirectory>${project.basedir}/dist/model</modelDirectory>
 
         <djl.version>0.23.0</djl.version>
         <paddlepaddle-native.version>2.3.2</paddlepaddle-native.version>
@@ -39,6 +40,35 @@
             <properties>
                 <os.name>win</os.name>
             </properties>
+        </profile>
+        <profile>
+            <id>noto-sans-cjk-sc</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>download-files</id>
+                                <phase>process-sources</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <mkdir dir="${fontDirectory}"/>
+                                        <get src="https://github.com/googlefonts/noto-cjk/raw/main/Sans/Variable/OTF/NotoSansCJKsc-VF.otf"
+                                             dest="${fontDirectory}/NotoSansCJKsc-VF.otf"
+                                             verbose="true"
+                                             usetimestamp="true"/>
+                                    </target>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
     </profiles>
 
@@ -116,22 +146,22 @@
                         </goals>
                         <configuration>
                             <target>
-                                <mkdir dir="${model.path}"/>
+                                <mkdir dir="${modelDirectory}"/>
                                 <get src="https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/dygraph/ppocr/utils/ppocr_keys_v1.txt"
-                                     dest="${model.path}/dict.txt"
+                                     dest="${modelDirectory}/dict.txt"
                                      verbose="true"
                                      usetimestamp="true"/>
                                 <!-- https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.6/doc/doc_en/models_list_en.md -->
                                 <get src="https://paddleocr.bj.bcebos.com/PP-OCRv3/chinese/ch_PP-OCRv3_det_infer.tar"
-                                     dest="${model.path}/detection.tar"
+                                     dest="${modelDirectory}/detection.tar"
                                      verbose="true"
                                      usetimestamp="true"/>
                                 <get src="https://paddleocr.bj.bcebos.com/dygraph_v2.0/ch/ch_ppocr_mobile_v2.0_cls_infer.tar"
-                                     dest="${model.path}/orientation-classification.tar"
+                                     dest="${modelDirectory}/orientation-classification.tar"
                                      verbose="true"
                                      usetimestamp="true"/>
                                 <get src="https://paddleocr.bj.bcebos.com/PP-OCRv3/chinese/ch_PP-OCRv3_rec_infer.tar"
-                                     dest="${model.path}/recognition.tar"
+                                     dest="${modelDirectory}/recognition.tar"
                                      verbose="true"
                                      usetimestamp="true"/>
                             </target>
