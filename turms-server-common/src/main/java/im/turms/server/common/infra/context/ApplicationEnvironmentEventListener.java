@@ -17,6 +17,8 @@
 
 package im.turms.server.common.infra.context;
 
+import java.lang.annotation.Annotation;
+
 import org.springframework.boot.context.event.ApplicationContextInitializedEvent;
 import org.springframework.boot.context.event.ApplicationEnvironmentPreparedEvent;
 import org.springframework.boot.context.logging.LoggingApplicationListener;
@@ -56,16 +58,46 @@ public class ApplicationEnvironmentEventListener
         // we need to ensure the local node info is logged even if the local node hasn't been
         // inited.
         // So we initialize the node info here.
-        String applicationClassName = event.getSpringApplication()
-                .getMainApplicationClass()
-                .getSimpleName();
+        Class<?> mainApplicationClass = event.getSpringApplication()
+                .getMainApplicationClass();
+        String applicationClassName = mainApplicationClass.getSimpleName();
         NodeType nodeType = switch (applicationClassName) {
             case "TurmsAiServingApplication" -> NodeType.AI_SERVING;
             case "TurmsGatewayApplication" -> NodeType.GATEWAY;
             case "TurmsServiceApplication" -> NodeType.SERVICE;
-            default -> throw new RuntimeException(
-                    "Unknown application class name: "
-                            + applicationClassName);
+            default -> {
+                Class<?> currentClass = mainApplicationClass;
+                do {
+                    for (Annotation annotation : currentClass.getDeclaredAnnotations()) {
+                        String annotationName = annotation.annotationType()
+                                .getName();
+                        if ("org.springframework.boot.test.context.SpringBootTest"
+                                .equals(annotationName)) {
+                            for (Object source : event.getSpringApplication()
+                                    .getAllSources()) {
+                                if (source instanceof Class<?> clazz) {
+                                    switch (clazz.getSimpleName()) {
+                                        case "TurmsAiServingApplication" -> {
+                                            yield NodeType.AI_SERVING;
+                                        }
+                                        case "TurmsGatewayApplication" -> {
+                                            yield NodeType.GATEWAY;
+                                        }
+                                        case "TurmsServiceApplication" -> {
+                                            yield NodeType.SERVICE;
+                                        }
+                                    }
+                                }
+                            }
+                            break;
+                        }
+                    }
+                    currentClass = currentClass.getSuperclass();
+                } while (currentClass != null);
+                throw new RuntimeException(
+                        "Unknown application class name: "
+                                + applicationClassName);
+            }
         };
         Node.initNodeId(env.getProperty("turms.cluster.node.id", String.class));
 
