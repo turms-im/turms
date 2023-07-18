@@ -97,6 +97,14 @@ public final class CollectionUtil {
         return newList(iterator);
     }
 
+    public static <T> Set<T> newSet(T[] values) {
+        Set<T> set = new UnifiedSet<>(values.length);
+        for (T value : values) {
+            set.add(value);
+        }
+        return set;
+    }
+
     public static <T> Set<T> newSet(Collection<T> values) {
         return new UnifiedSet<>(values);
     }
