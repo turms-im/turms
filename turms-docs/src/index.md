@@ -2,7 +2,7 @@
   <img height="100" src="https://raw.githubusercontent.com/turms-im/assets/9dbc34a9d78a68f9f7df2430b4066c82bf8a458f/logo/logo.svg">
 </p>
 
-[简体中文](https://github.com/turms-im/turms/blob/develop/README_zh.md)
+[简体中文](https://turms-im.github.io/docs/zh-CN/)
 
 ## What is Turms
 
