@@ -17,16 +17,8 @@
 
 package im.turms.server.common.infra.cluster.service.rpc.dto;
 
-import jakarta.annotation.Nullable;
-
-import im.turms.server.common.infra.cluster.service.rpc.exception.RpcException;
-
 /**
  * @author James Chen
  */
-public record RpcResponse(
-        int requestId,
-        @Nullable Object result,
-        @Nullable RpcException exception
-) implements RpcMessage {
+public interface RpcMessage {
 }

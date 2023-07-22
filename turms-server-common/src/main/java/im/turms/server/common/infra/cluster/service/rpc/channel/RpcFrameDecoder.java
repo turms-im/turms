@@ -30,6 +30,7 @@ import im.turms.server.common.infra.cluster.service.codec.codec.CodecPool;
 import im.turms.server.common.infra.cluster.service.codec.exception.CodecNotFoundException;
 import im.turms.server.common.infra.cluster.service.codec.io.CodecStream;
 import im.turms.server.common.infra.cluster.service.rpc.codec.RpcRequestCodec;
+import im.turms.server.common.infra.cluster.service.rpc.dto.RpcMessage;
 import im.turms.server.common.infra.cluster.service.rpc.dto.RpcRequest;
 import im.turms.server.common.infra.cluster.service.rpc.dto.RpcResponse;
 import im.turms.server.common.infra.cluster.service.rpc.exception.RpcException;
@@ -64,7 +65,7 @@ public class RpcFrameDecoder extends ProtobufVarint32FrameDecoder {
         }
     }
 
-    protected Object decode(ChannelHandlerContext ctx, ByteBuf frame) {
+    protected RpcMessage decode(ChannelHandlerContext ctx, ByteBuf frame) {
         try {
             // Validate
             int length = frame.readableBytes();
@@ -87,7 +88,7 @@ public class RpcFrameDecoder extends ProtobufVarint32FrameDecoder {
         }
     }
 
-    public Object decodePayload(ChannelHandlerContext ctx, ByteBuf frame) {
+    public RpcMessage decodePayload(ChannelHandlerContext ctx, ByteBuf frame) {
         int codecId = UNSET_CODEC_ID;
         try {
             codecId = frame.readShort() & 0xFFFF;

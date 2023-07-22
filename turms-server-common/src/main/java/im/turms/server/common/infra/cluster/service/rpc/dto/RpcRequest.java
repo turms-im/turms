@@ -51,7 +51,7 @@ import im.turms.server.common.infra.tracing.TracingContext;
  *           just return without calling our own downstream RPC acceptor if the connection has been
  *           closed {@link reactor.netty.channel.FluxReceive#onInboundNext(java.lang.Object)}
  */
-public abstract class RpcRequest<T> implements ReferenceCounted {
+public abstract class RpcRequest<T> implements RpcMessage, ReferenceCounted {
 
     /**
      * Is null if the RPC request runs on the local node
@@ -141,6 +141,7 @@ public abstract class RpcRequest<T> implements ReferenceCounted {
      */
     public abstract NodeTypeToHandleRpc nodeTypeToRespond();
 
+    @Nullable
     public Tag tag() {
         return null;
     }
