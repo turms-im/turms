@@ -48,20 +48,28 @@ public class RpcFrameDecoder extends ProtobufVarint32FrameDecoder {
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out)
             throws Exception {
         super.decode(ctx, in, out);
-        int size = out.size();
-        for (int i = 0; i < size; i++) {
-            // Note "frame" is "retainedSlice" from "in"
-            // So after "super.decode(...)", the refCnt of "in" is 2 (but it will
-            // be released once by "cumulation.release()" in
-            // in io.netty.handler.codec.ByteToMessageDecoder.channelRead())
-            // and the refCnt of "frame" is 1
+        try {
+            int size = out.size();
+            for (int i = 0; i < size; i++) {
+                // Note "frame" is "retainedSlice" from "in"
+                // So after "super.decode(...)", the refCnt of "in" is 2 (but it will
+                // be released once by "cumulation.release()" in
+                // in io.netty.handler.codec.ByteToMessageDecoder.channelRead())
+                // and the refCnt of "frame" is 1
 
-            // Because releasing "frame" will also release "in",
-            // we just need to ensure the frame is released once by us finally
-            ByteBuf frame = (ByteBuf) out.get(i);
-            Object val = decode(ctx, frame);
-            frame.touch(val);
-            out.set(i, val);
+                // Because releasing "frame" will also release "in",
+                // we just need to ensure the frame is released once by us finally
+                ByteBuf frame = (ByteBuf) out.get(i);
+                Object val = decode(ctx, frame);
+                frame.touch(val);
+                out.set(i, val);
+            }
+        } catch (Exception e) {
+            // We need to remove these corrupted buffers.
+            // Otherwise io.netty.handler.codec.ByteToMessageDecoder.channelRead
+            // will pass them down.
+            out.removeIf(ByteBuf.class::isInstance);
+            throw e;
         }
     }
 
