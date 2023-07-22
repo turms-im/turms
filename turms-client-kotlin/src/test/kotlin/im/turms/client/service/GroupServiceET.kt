@@ -192,7 +192,7 @@ internal class GroupServiceET {
         val result = client.groupService.muteGroupMember(
             groupId,
             GROUP_MEMBER_ID,
-            Date(System.currentTimeMillis() + 100000)
+            Date(System.currentTimeMillis() + 100000),
         ).data
         assertNotNull(result)
     }
@@ -261,7 +261,7 @@ internal class GroupServiceET {
             .data
         assertEquals(
             groupInvitationId,
-            groupInvitationsWithVersion!!.getGroupInvitations(0).id
+            groupInvitationsWithVersion!!.getGroupInvitations(0).id,
         )
     }
 
@@ -273,7 +273,7 @@ internal class GroupServiceET {
             .data
         assertEquals(
             groupJoinRequestId,
-            groupJoinRequestsWithVersion!!.getGroupJoinRequests(0).id
+            groupJoinRequestsWithVersion!!.getGroupJoinRequests(0).id,
         )
     }
 
@@ -285,7 +285,7 @@ internal class GroupServiceET {
             .data
         assertEquals(
             groupJoinQuestionId,
-            groupJoinQuestionsWithVersion!!.getGroupJoinQuestions(0).id
+            groupJoinQuestionsWithVersion!!.getGroupJoinQuestions(0).id,
         )
     }
 
@@ -322,8 +322,8 @@ internal class GroupServiceET {
             assertTrue(
                 ExceptionUtil.isResponseStatusCode(
                     e,
-                    ResponseStatusCode.MEMBER_CANNOT_ANSWER_GROUP_QUESTION
-                )
+                    ResponseStatusCode.MEMBER_CANNOT_ANSWER_GROUP_QUESTION,
+                ),
             )
         }
     }

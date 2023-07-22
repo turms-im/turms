@@ -23,5 +23,5 @@ data class TcpMetrics(
     var addressResolverTime: Int? = null,
 
     var dataReceived: Long = 0,
-    var dataSent: Long = 0
+    var dataSent: Long = 0,
 )

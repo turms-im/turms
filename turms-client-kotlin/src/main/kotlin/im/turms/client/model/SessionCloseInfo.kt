@@ -23,5 +23,5 @@ data class SessionCloseInfo(
     val closeStatus: Int,
     val businessStatus: Int? = null,
     val reason: String? = null,
-    val cause: Throwable? = null
+    val cause: Throwable? = null,
 )

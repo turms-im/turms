@@ -22,5 +22,5 @@ package im.turms.client.model
 data class MessageAddition(
     val isMentioned: Boolean,
     val mentionedUserIds: Set<Long>,
-    val recalledMessageIds: Set<Long>
+    val recalledMessageIds: Set<Long>,
 )

@@ -70,7 +70,7 @@ class TcpClient(override val coroutineContext: CoroutineContext) : CoroutineScop
         trustManager: X509TrustManager? = null,
         serverName: String? = null,
         hostname: String? = null,
-        pins: List<Pin>? = null
+        pins: List<Pin>? = null,
     ) {
         if (isOpen) {
             throw RuntimeException("The TCP client has connected")
@@ -115,7 +115,7 @@ class TcpClient(override val coroutineContext: CoroutineContext) : CoroutineScop
         trustManager: X509TrustManager?,
         serverName: String?,
         hostname: String?,
-        pins: List<Pin>?
+        pins: List<Pin>?,
     ) {
         val sslContext = getSslContext("TLSv1.3")
             ?: getSslContext("TLSv1.2")
@@ -150,11 +150,11 @@ class TcpClient(override val coroutineContext: CoroutineContext) : CoroutineScop
               |    certificate: ${CertificatePinner.pin(cert)}
               |    DN: ${cert.subjectDN.name}
               |    subjectAltNames: ${OkHostnameVerifier.allSubjectAltNames(cert)}
-                    """.trimMargin()
+                    """.trimMargin(),
                 )
             } else {
                 throw SSLPeerUnverifiedException(
-                    "Hostname $host not verified (no certificates)"
+                    "Hostname $host not verified (no certificates)",
                 )
             }
         }

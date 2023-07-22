@@ -25,7 +25,7 @@ data class ResponseException internal constructor(
     val requestId: Long?,
     val code: Int,
     val reason: String? = null,
-    override val cause: Throwable? = null
+    override val cause: Throwable? = null,
 ) : RuntimeException(formatMessage(code, reason), cause) {
 
     companion object {

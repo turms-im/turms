@@ -23,7 +23,7 @@ package im.turms.client.model
 data class StorageResource(
     val uri: String,
     val metadata: Map<String, String>,
-    val data: ByteArray
+    val data: ByteArray,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

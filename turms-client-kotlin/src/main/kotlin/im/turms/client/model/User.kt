@@ -29,5 +29,5 @@ data class User(
     var deviceType: DeviceType? = null,
     var deviceDetails: Map<String, String>? = null,
     var onlineStatus: UserStatus? = null,
-    var location: UserLocation? = null
+    var location: UserLocation? = null,
 )

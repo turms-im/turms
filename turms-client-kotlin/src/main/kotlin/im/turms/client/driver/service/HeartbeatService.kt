@@ -39,7 +39,7 @@ import kotlin.coroutines.suspendCoroutine
 class HeartbeatService(
     coroutineContext: CoroutineContext,
     stateStore: StateStore,
-    heartbeatIntervalMillis: Int?
+    heartbeatIntervalMillis: Int?,
 ) : BaseService(coroutineContext, stateStore) {
     private val heartbeatInterval = heartbeatIntervalMillis ?: (120 * 1000)
     private val heartbeatTimerInterval = 1L.coerceAtLeast(this.heartbeatInterval / 10L)
@@ -114,7 +114,7 @@ class HeartbeatService(
     override fun onDisconnected(throwable: Throwable?) {
         stop(throwable)
         rejectHeartbeatRequests(
-            ResponseException.from(ResponseStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED, cause = throwable)
+            ResponseException.from(ResponseStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED, cause = throwable),
         )
     }
 

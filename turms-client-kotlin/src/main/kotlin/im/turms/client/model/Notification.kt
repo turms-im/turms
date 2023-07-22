@@ -22,5 +22,5 @@ import java.util.Date
 
 data class Notification(
     val timestamp: Date,
-    val relayedRequest: TurmsRequest
+    val relayedRequest: TurmsRequest,
 )

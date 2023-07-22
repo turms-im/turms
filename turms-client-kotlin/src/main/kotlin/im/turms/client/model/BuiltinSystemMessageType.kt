@@ -21,7 +21,8 @@ package im.turms.client.model
  */
 enum class BuiltinSystemMessageType(private val num: Int) {
     NORMAL(0),
-    RECALL_MESSAGE(1);
+    RECALL_MESSAGE(1),
+    ;
 
     companion object {
         @JvmStatic

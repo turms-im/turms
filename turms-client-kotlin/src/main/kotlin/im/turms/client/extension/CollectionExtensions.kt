@@ -27,7 +27,7 @@ fun List<String>.toMap(): Map<String, String> {
     if (size % 2 != 0) {
         throw ResponseException.from(
             ResponseStatusCode.ILLEGAL_ARGUMENT,
-            "The number of elements must be even"
+            "The number of elements must be even",
         )
     }
     val map = mutableMapOf<String, String>()

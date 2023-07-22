@@ -25,7 +25,7 @@ import kotlin.coroutines.CoroutineContext
  */
 abstract class BaseService protected constructor(
     override val coroutineContext: CoroutineContext,
-    protected val stateStore: StateStore
+    protected val stateStore: StateStore,
 ) : CoroutineScope {
     abstract suspend fun close()
     abstract fun onDisconnected(throwable: Throwable? = null)

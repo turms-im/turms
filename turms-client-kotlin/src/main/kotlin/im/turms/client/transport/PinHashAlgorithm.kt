@@ -22,5 +22,5 @@ package im.turms.client.transport
  */
 enum class PinHashAlgorithm {
     SHA1,
-    SHA256
+    SHA256,
 }

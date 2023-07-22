@@ -48,7 +48,7 @@ class TurmsDriver(
     requestTimeoutMillis: Int?,
     minRequestIntervalMillis: Int?,
     heartbeatIntervalMillis: Int?,
-    context: CoroutineContext?
+    context: CoroutineContext?,
 ) : CoroutineScope {
 
     override val coroutineContext: CoroutineContext =
@@ -97,7 +97,7 @@ class TurmsDriver(
         trustManager: X509TrustManager? = null,
         serverName: String? = null,
         hostname: String? = null,
-        pins: List<Pin>? = null
+        pins: List<Pin>? = null,
     ) = connectionService.connect(host, port, connectTimeoutMillis, useTls, trustManager, serverName, hostname, pins)
 
     suspend fun disconnect() = connectionService.disconnect()
@@ -138,7 +138,7 @@ class TurmsDriver(
         if (method == null) {
             method = requestBuilder.javaClass.getDeclaredMethod(
                 "set${instanceClass.simpleName}",
-                builder.javaClass
+                builder.javaClass,
             )
             REQUEST_CLASS_TO_SET_METHOD.putIfAbsent(instanceClass, method)
         }

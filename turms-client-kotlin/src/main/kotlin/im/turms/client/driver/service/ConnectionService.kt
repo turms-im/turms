@@ -40,7 +40,7 @@ class ConnectionService(
     stateStore: StateStore,
     host: String?,
     port: Int?,
-    connectTimeoutMillis: Int?
+    connectTimeoutMillis: Int?,
 ) : BaseService(coroutineContext, stateStore) {
     private val initialHost = host ?: "127.0.0.1"
     private val initialPort = port ?: 11510
@@ -113,7 +113,7 @@ class ConnectionService(
         trustManager: X509TrustManager? = null,
         serverName: String? = null,
         hostname: String? = null,
-        pins: List<Pin>? = null
+        pins: List<Pin>? = null,
     ) {
         if (stateStore.isConnected) {
             if (host == stateStore.tcp?.host && port == stateStore.tcp?.port) {
@@ -135,7 +135,7 @@ class ConnectionService(
                 trustManager,
                 serverName,
                 hostname,
-                pins
+                pins,
             )
         } else {
             try {
@@ -147,7 +147,7 @@ class ConnectionService(
                         trustManager,
                         serverName,
                         hostname,
-                        pins
+                        pins,
                     )
                 }
             } catch (e: TimeoutCancellationException) {

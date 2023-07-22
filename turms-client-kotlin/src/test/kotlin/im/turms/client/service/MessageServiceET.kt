@@ -169,8 +169,8 @@ internal class MessageServiceET {
             1.0f,
             mapOf(
                 "name" to "value1",
-                "address" to "value2"
-            )
+                "address" to "value2",
+            ),
         )
         assertNotNull(data)
     }

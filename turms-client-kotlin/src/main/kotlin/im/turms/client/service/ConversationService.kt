@@ -40,7 +40,7 @@ class ConversationService(private val turmsClient: TurmsClient) {
                 .send(
                     QueryConversationsRequest.newBuilder().apply {
                         addAllTargetIds(targetIds)
-                    }
+                    },
                 ).toResponse {
                     it.conversations.privateConversationsList
                 }
@@ -54,7 +54,7 @@ class ConversationService(private val turmsClient: TurmsClient) {
                 .send(
                     QueryConversationsRequest.newBuilder().apply {
                         addAllGroupIds(groupIds)
-                    }
+                    },
                 ).toResponse {
                     it.conversations.groupConversationsList
                 }
@@ -66,7 +66,7 @@ class ConversationService(private val turmsClient: TurmsClient) {
                 UpdateConversationRequest.newBuilder().apply {
                     this.targetId = targetId
                     this.readDate = readDate?.time ?: Date().time
-                }
+                },
             )
             .toResponse()
 
@@ -76,7 +76,7 @@ class ConversationService(private val turmsClient: TurmsClient) {
                 UpdateConversationRequest.newBuilder().apply {
                     this.groupId = groupId
                     this.readDate = readDate?.time ?: Date().time
-                }
+                },
             )
             .toResponse()
 
@@ -86,7 +86,7 @@ class ConversationService(private val turmsClient: TurmsClient) {
                 UpdateTypingStatusRequest.newBuilder().apply {
                     toId = targetId
                     isGroupMessage = false
-                }
+                },
             )
             .toResponse()
 
@@ -96,7 +96,7 @@ class ConversationService(private val turmsClient: TurmsClient) {
                 UpdateTypingStatusRequest.newBuilder().apply {
                     toId = groupId
                     isGroupMessage = true
-                }
+                },
             )
             .toResponse()
 }

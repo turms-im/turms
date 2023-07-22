@@ -23,5 +23,5 @@ package im.turms.client.model
 data class NewGroupJoinQuestion(
     val question: String,
     val answers: Set<String>,
-    val score: Int
+    val score: Int,
 )

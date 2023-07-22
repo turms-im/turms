@@ -24,5 +24,5 @@ package im.turms.client.transport
 data class Pin(
     val pattern: String,
     val algorithm: PinHashAlgorithm,
-    val hash: String
+    val hash: String,
 )

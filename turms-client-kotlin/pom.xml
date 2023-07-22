@@ -22,7 +22,7 @@
 
         <junit.version>5.9.3</junit.version>
 
-        <ktlint.version>0.49.1</ktlint.version>
+        <ktlint.version>0.50.0</ktlint.version>
 
         <maven-antrun-plugin.version>3.1.0</maven-antrun-plugin.version>
         <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
@@ -192,6 +192,7 @@
                                     <goal>run</goal>
                                 </goals>
                             </execution>
+                            <!-- mvn antrun:run@ktlint-format -P lint-->
                             <execution>
                                 <id>ktlint-format</id>
                                 <configuration>

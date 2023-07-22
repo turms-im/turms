@@ -27,7 +27,7 @@ data class Response<T>(
     val timestamp: Date,
     val requestId: Long?,
     val code: Int,
-    val data: T
+    val data: T,
 ) {
 
     fun <T> withData(data: T): Response<T> {
@@ -48,18 +48,18 @@ data class Response<T>(
         @JvmStatic
         fun <T> fromNotification(
             notification: TurmsNotification,
-            dataTransformer: ((TurmsNotification.Data) -> T)? = null
+            dataTransformer: ((TurmsNotification.Data) -> T)? = null,
         ): Response<T> {
             if (!notification.hasCode()) {
                 throw ResponseException.from(
                     ResponseStatusCode.INVALID_NOTIFICATION,
-                    "Could not parse a success response from a notification without code"
+                    "Could not parse a success response from a notification without code",
                 )
             }
             if (notification.isError) {
                 throw ResponseException.from(
                     ResponseStatusCode.INVALID_NOTIFICATION,
-                    "Could not parse a success response from non-success notification"
+                    "Could not parse a success response from non-success notification",
                 )
             }
             val data = if (dataTransformer == null) {
@@ -70,7 +70,7 @@ data class Response<T>(
                 } catch (e: Exception) {
                     throw ResponseException.from(
                         ResponseStatusCode.INVALID_NOTIFICATION,
-                        "Failed to transform notification data: ${notification.data}. Error: ${e.message}"
+                        "Failed to transform notification data: ${notification.data}. Error: ${e.message}",
                     )
                 }
             }
@@ -78,7 +78,7 @@ data class Response<T>(
                 Date(notification.timestamp),
                 if (notification.hasRequestId()) notification.requestId else null,
                 notification.code,
-                data
+                data,
             )
         }
     }

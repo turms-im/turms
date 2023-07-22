@@ -32,14 +32,14 @@ val TurmsNotification.isError: Boolean
     get() = hasCode() && ResponseStatusCode.isErrorCode(code)
 
 fun <T> TurmsNotification.toResponse(
-    dataTransformer: ((TurmsNotification.Data) -> T)? = null
+    dataTransformer: ((TurmsNotification.Data) -> T)? = null,
 ): Response<T> = Response.fromNotification(this, dataTransformer)
 
 fun TurmsNotification.Data.getLongOrThrow(): Long {
     if (!hasLong()) {
         throw ResponseException.from(
             ResponseStatusCode.INVALID_RESPONSE,
-            "Could not get a long value from the invalid response: $this"
+            "Could not get a long value from the invalid response: $this",
         )
     }
     return long

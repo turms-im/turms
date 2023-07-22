@@ -60,7 +60,7 @@ class MessageService(private val turmsClient: TurmsClient) {
         text: String? = null,
         records: List<ByteBuffer>? = null,
         burnAfter: Int? = null,
-        preMessageId: Long? = null
+        preMessageId: Long? = null,
     ): Response<Long> {
         if (text == null && records == null) {
             throw ResponseException.from(ResponseStatusCode.ILLEGAL_ARGUMENT, "\"text\" and \"records\" must not all be null")
@@ -78,7 +78,7 @@ class MessageService(private val turmsClient: TurmsClient) {
                     records?.let { this.addAllRecords(it.map { buffer -> ByteString.copyFrom(buffer) }) }
                     burnAfter?.let { this.burnAfter = it }
                     preMessageId?.let { this.preMessageId = it }
-                }
+                },
             ).toResponse {
                 it.getLongOrThrow()
             }
@@ -87,7 +87,7 @@ class MessageService(private val turmsClient: TurmsClient) {
     suspend fun forwardMessage(
         messageId: Long,
         isGroupMessage: Boolean,
-        targetId: Long
+        targetId: Long,
     ): Response<Long> = turmsClient.driver
         .send(
             CreateMessageRequest.newBuilder().apply {
@@ -97,7 +97,7 @@ class MessageService(private val turmsClient: TurmsClient) {
                 } else {
                     recipientId = targetId
                 }
-            }
+            },
         ).toResponse {
             it.getLongOrThrow()
         }
@@ -105,7 +105,7 @@ class MessageService(private val turmsClient: TurmsClient) {
     suspend fun updateSentMessage(
         messageId: Long,
         text: String? = null,
-        records: List<ByteBuffer>? = null
+        records: List<ByteBuffer>? = null,
     ): Response<Unit> = if (Validator.areAllFalsy(text, records)) {
         Response.unitValue()
     } else {
@@ -115,7 +115,7 @@ class MessageService(private val turmsClient: TurmsClient) {
                     this.messageId = messageId
                     text?.let { this.text = it }
                     records?.let { this.addAllRecords(it.map { buffer -> ByteString.copyFrom(buffer) }) }
-                }
+                },
             )
             .toResponse()
     }
@@ -128,7 +128,7 @@ class MessageService(private val turmsClient: TurmsClient) {
         deliveryDateStart: Date? = null,
         deliveryDateEnd: Date? = null,
         maxCount: Int = 50,
-        descending: Boolean? = null
+        descending: Boolean? = null,
     ): Response<List<Message>> = turmsClient.driver
         .send(
             QueryMessagesRequest.newBuilder().apply {
@@ -141,7 +141,7 @@ class MessageService(private val turmsClient: TurmsClient) {
                 this.maxCount = maxCount
                 descending?.let { this.descending = it }
                 withTotal = false
-            }
+            },
         ).toResponse {
             it.messages.messagesList
         }
@@ -154,7 +154,7 @@ class MessageService(private val turmsClient: TurmsClient) {
         deliveryDateStart: Date? = null,
         deliveryDateEnd: Date? = null,
         maxCount: Int = 1,
-        descending: Boolean? = null
+        descending: Boolean? = null,
     ): Response<List<MessagesWithTotal>> = turmsClient.driver
         .send(
             QueryMessagesRequest.newBuilder().apply {
@@ -167,7 +167,7 @@ class MessageService(private val turmsClient: TurmsClient) {
                 this.maxCount = maxCount
                 descending?.let { this.descending = it }
                 withTotal = true
-            }
+            },
         ).toResponse {
             it.messagesWithTotalList.messagesWithTotalListList
         }
@@ -177,7 +177,7 @@ class MessageService(private val turmsClient: TurmsClient) {
             UpdateMessageRequest.newBuilder().apply {
                 this.messageId = messageId
                 this.recallDate = recallDate.time
-            }
+            },
         )
         .toResponse()
 
@@ -272,7 +272,7 @@ class MessageService(private val turmsClient: TurmsClient) {
         fun generateLocationRecord(
             latitude: Float,
             longitude: Float,
-            details: Map<String, String>? = null
+            details: Map<String, String>? = null,
         ): ByteBuffer = UserLocation.newBuilder().run {
             setLatitude(latitude)
             setLongitude(longitude)
@@ -285,7 +285,7 @@ class MessageService(private val turmsClient: TurmsClient) {
             url: String,
             duration: Int? = null,
             format: String? = null,
-            size: Int? = null
+            size: Int? = null,
         ): ByteBuffer = AudioFile.newBuilder().run {
             setDescription(
                 AudioFile.Description.newBuilder().apply {
@@ -293,7 +293,7 @@ class MessageService(private val turmsClient: TurmsClient) {
                     duration?.let { this.duration = it }
                     format?.let { this.format = it }
                     size?.let { this.size = it }
-                }
+                },
             )
                 .build()
                 .toByteString()
@@ -313,7 +313,7 @@ class MessageService(private val turmsClient: TurmsClient) {
             url: String,
             duration: Int? = null,
             format: String? = null,
-            size: Int? = null
+            size: Int? = null,
         ): ByteBuffer = VideoFile.newBuilder().run {
             setDescription(
                 VideoFile.Description.newBuilder().apply {
@@ -321,7 +321,7 @@ class MessageService(private val turmsClient: TurmsClient) {
                     duration?.let { this.duration = it }
                     format?.let { this.format = it }
                     size?.let { this.size = it }
-                }
+                },
             )
                 .build()
                 .toByteString()
@@ -347,7 +347,7 @@ class MessageService(private val turmsClient: TurmsClient) {
             url: String,
             fileSize: Int? = null,
             imageSize: Int? = null,
-            original: Boolean? = null
+            original: Boolean? = null,
         ): ByteBuffer = ImageFile.newBuilder()
             .setDescription(
                 ImageFile.Description.newBuilder().apply {
@@ -355,7 +355,7 @@ class MessageService(private val turmsClient: TurmsClient) {
                     fileSize?.let { this.fileSize = it }
                     imageSize?.let { this.imageSize = it }
                     original?.let { this.original = it }
-                }
+                },
             )
             .build()
             .toByteString()
@@ -372,14 +372,14 @@ class MessageService(private val turmsClient: TurmsClient) {
         fun generateFileRecordByDescription(
             url: String,
             format: String? = null,
-            size: Int? = null
+            size: Int? = null,
         ): ByteBuffer = File.newBuilder()
             .setDescription(
                 File.Description.newBuilder().apply {
                     setUrl(url)
                     format?.let { this.format = it }
                     size?.let { this.size = it }
-                }
+                },
             )
             .build()
             .toByteString()

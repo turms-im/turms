@@ -27,5 +27,5 @@ data class StorageUploadResult(
     val metadata: Map<String, String>,
     val data: String,
     val resourceIdNum: Long?,
-    val resourceIdStr: String?
+    val resourceIdStr: String?,
 )

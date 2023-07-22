@@ -45,7 +45,7 @@ class MessageService(
     coroutineContext: CoroutineContext,
     stateStore: StateStore,
     requestTimeout: Int?,
-    minRequestInterval: Int?
+    minRequestInterval: Int?,
 ) : BaseService(coroutineContext, stateStore) {
     private val requestTimeout = requestTimeout ?: (60 * 1000)
     private val minRequestInterval = minRequestInterval ?: 0
@@ -132,8 +132,8 @@ class MessageService(
                     cont.resumeWithException(
                         ResponseException.from(
                             ResponseStatusCode.INVALID_NOTIFICATION,
-                            "The code is missing"
-                        )
+                            "The code is missing",
+                        ),
                     )
                 }
             }
@@ -164,6 +164,6 @@ class MessageService(
 
     private data class TurmsRequestContext(
         val cont: Continuation<TurmsNotification>,
-        var timeoutDeferred: Deferred<*>?
+        var timeoutDeferred: Deferred<*>?,
     )
 }

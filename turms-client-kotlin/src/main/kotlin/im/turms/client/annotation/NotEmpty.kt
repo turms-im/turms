@@ -28,7 +28,7 @@ package im.turms.client.annotation
     AnnotationTarget.FIELD,
     AnnotationTarget.ANNOTATION_CLASS,
     AnnotationTarget.CONSTRUCTOR,
-    AnnotationTarget.VALUE_PARAMETER
+    AnnotationTarget.VALUE_PARAMETER,
 )
 @Retention(AnnotationRetention.SOURCE)
 annotation class NotEmpty
