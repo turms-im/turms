@@ -17,9 +17,9 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <firebase-admin.version>9.1.1</firebase-admin.version>
+        <firebase-admin.version>9.2.0</firebase-admin.version>
         <freemarker.version>2.3.32</freemarker.version>
-        <jmail.version>1.5.0</jmail.version>
+        <jmail.version>1.5.1</jmail.version>
         <pushy.version>0.15.2</pushy.version>
     </properties>
 
