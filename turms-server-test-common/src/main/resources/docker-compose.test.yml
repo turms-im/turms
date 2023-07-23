@@ -103,7 +103,7 @@ services:
         -Dturms.cluster.connection.server.port-auto-increment=false
 
         -Dturms.cluster.discovery.address.advertise-strategy=advertise_address
-        -Dturms.cluster.discovery.address.advertise-host=turms
+        -Dturms.cluster.discovery.address.advertise-host=turms-service
 
         -Dturms.cluster.shared-config.mongo.uri=mongodb://root:turms@mongodb-router:27017/turms-standalone?authSource=admin
         -Dturms.service.mongo.admin.uri=mongodb://root:turms@mongodb-router:27017/turms-standalone?authSource=admin
