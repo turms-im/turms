@@ -268,7 +268,8 @@ public final class Member {
     }
 
     public boolean isSameAddress(Member member) {
-        return memberHost.equals(member.getMemberHost()) && memberPort == member.getMemberPort();
+        return memberHost.equals(member.getMemberHost())
+                && memberPort.equals(member.getMemberPort());
     }
 
     @Data
