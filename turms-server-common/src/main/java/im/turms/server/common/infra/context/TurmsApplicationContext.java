@@ -52,7 +52,8 @@ import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.common.ShutdownProperties;
-import im.turms.server.common.infra.suggestion.OsConfigurationAdvisor;
+import im.turms.server.common.infra.system.OsConfigurationAdvisor;
+import im.turms.server.common.infra.system.SystemUtil;
 import im.turms.server.common.infra.thread.NamedThreadFactory;
 import im.turms.server.common.infra.thread.ThreadNameConst;
 
@@ -89,9 +90,9 @@ public class TurmsApplicationContext {
         LoggerFactory.bindContext(this);
 
         String homeDir = switch (nodeType) {
-            case AI_SERVING -> System.getenv("TURMS_AI_SERVING_HOME");
-            case GATEWAY -> System.getenv("TURMS_GATEWAY_HOME");
-            case SERVICE -> System.getenv("TURMS_SERVICE_HOME");
+            case AI_SERVING -> SystemUtil.getProperty("TURMS_AI_SERVING_HOME");
+            case GATEWAY -> SystemUtil.getProperty("TURMS_GATEWAY_HOME");
+            case SERVICE -> SystemUtil.getProperty("TURMS_SERVICE_HOME");
         };
         home = Path.of(homeDir == null
                 ? ""

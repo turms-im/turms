@@ -43,6 +43,7 @@ import im.turms.server.common.infra.logging.core.processor.LogProcessor;
 import im.turms.server.common.infra.property.env.common.logging.ConsoleLoggingProperties;
 import im.turms.server.common.infra.property.env.common.logging.FileLoggingProperties;
 import im.turms.server.common.infra.property.env.common.logging.LoggingProperties;
+import im.turms.server.common.infra.system.SystemUtil;
 
 /**
  * @author James Chen
@@ -85,9 +86,9 @@ public class LoggerFactory {
         }
         if (nodeType != null) {
             homeDir = switch (nodeType) {
-                case AI_SERVING -> System.getenv(PROPERTY_NAME_TURMS_AI_SERVING_HOME);
-                case GATEWAY -> System.getenv(PROPERTY_NAME_TURMS_GATEWAY_HOME);
-                case SERVICE -> System.getenv(PROPERTY_NAME_TURMS_SERVICE_HOME);
+                case AI_SERVING -> SystemUtil.getProperty(PROPERTY_NAME_TURMS_AI_SERVING_HOME);
+                case GATEWAY -> SystemUtil.getProperty(PROPERTY_NAME_TURMS_GATEWAY_HOME);
+                case SERVICE -> SystemUtil.getProperty(PROPERTY_NAME_TURMS_SERVICE_HOME);
             };
         }
         if (homeDir == null) {

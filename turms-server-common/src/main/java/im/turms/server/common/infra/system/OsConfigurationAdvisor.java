@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.infra.suggestion;
+package im.turms.server.common.infra.system;
 
 import java.io.BufferedReader;
 import java.io.IOException;

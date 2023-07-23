@@ -42,6 +42,7 @@ import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.access.client.dto.request.TurmsRequest;
 import im.turms.server.common.access.client.dto.request.user.CreateSessionRequest;
+import im.turms.server.common.infra.system.SystemUtil;
 import im.turms.server.common.testing.TestingEnvContainer;
 import im.turms.server.common.testing.TestingEnvContainerOptions;
 
@@ -58,7 +59,7 @@ class WebSocketAccessST extends BasePerformanceTest {
     @Test
     void shouldDenyServiceRatherThanCrash_whenManyUsersTryToLogin_on1gJvm()
             throws InterruptedException {
-        boolean useLocalServer = Boolean.parseBoolean(System.getProperty("USE_LOCAL_SERVER"));
+        boolean useLocalServer = Boolean.parseBoolean(SystemUtil.getProperty("USE_LOCAL_SERVER"));
 
         CountDownLatch pendingClientLatch = new CountDownLatch(CONCURRENT_CLIENT_COUNT);
         AtomicInteger loggedInClient = new AtomicInteger(0);
