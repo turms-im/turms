@@ -17,21 +17,23 @@
 
 package im.turms.server.common.infra.property.env.aiserving;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import java.awt.Font;
+
+import lombok.Getter;
 
 /**
  * @author James Chen
  */
-@AllArgsConstructor
-@Builder(toBuilder = true)
-@Data
-@NoArgsConstructor
-public class FontProperties {
+public enum FontStyle {
+    PLAIN(Font.PLAIN),
+    BOLD(Font.BOLD),
+    ITALIC(Font.ITALIC),
+    BOLD_ITALIC(Font.BOLD | Font.ITALIC);
 
-    private String familyName;
+    @Getter
+    private final int value;
 
-    private FontStyle style = FontStyle.PLAIN;
+    FontStyle(int value) {
+        this.value = value;
+    }
 }

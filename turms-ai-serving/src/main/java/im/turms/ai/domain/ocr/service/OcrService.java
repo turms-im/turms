@@ -43,6 +43,8 @@ import im.turms.ai.infra.ocr.OcrManager;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.context.TurmsApplicationContext;
 import im.turms.server.common.infra.io.InputOutputException;
+import im.turms.server.common.infra.logging.core.logger.Logger;
+import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.aiserving.FontProperties;
 import im.turms.server.common.infra.property.env.aiserving.OcrProperties;
@@ -53,8 +55,9 @@ import im.turms.server.common.infra.property.env.aiserving.OcrProperties;
 @Service
 public class OcrService {
 
-    @Nullable
-    private final String preferredFontFamilyName;
+    private static final Logger LOGGER = LoggerFactory.getLogger(OcrService.class);
+
+    private final Font font;
     private final OcrManager ocrManager;
 
     public OcrService(TurmsApplicationContext context, TurmsPropertiesManager propertiesManager) {
@@ -63,8 +66,10 @@ public class OcrService {
         OcrProperties ocrProperties = propertiesManager.getLocalProperties()
                 .getAiServing()
                 .getOcr();
-        this.preferredFontFamilyName =
-                findPreferredFontFamilyName(ocrProperties.getPreferredFonts());
+        Font preferredFont = findPreferredFont(ocrProperties.getPreferredFonts());
+        font = preferredFont == null
+                ? new Font(null, Font.PLAIN, 1)
+                : preferredFont;
         Path modelDir = context.getHome()
                 .resolve("model");
         ocrManager = new OcrManager(
@@ -80,6 +85,9 @@ public class OcrService {
     }
 
     private void registerCustomFonts(Path fontDir) {
+        if (Files.notExists(fontDir)) {
+            return;
+        }
         GraphicsEnvironment environment = GraphicsEnvironment.getLocalGraphicsEnvironment();
         try (Stream<Path> stream = Files.list(fontDir)) {
             stream.forEach(path -> {
@@ -92,7 +100,11 @@ public class OcrService {
                 }
                 try (InputStream inputStream = Files.newInputStream(path)) {
                     Font font = Font.createFont(Font.PLAIN, inputStream);
-                    environment.registerFont(font);
+                    if (environment.registerFont(font)) {
+                        LOGGER.info("Registered a custom font: \""
+                                + font.getFontName()
+                                + "\"");
+                    }
                 } catch (IOException e) {
                     throw new InputOutputException(
                             "Failed to read from the path: "
@@ -111,7 +123,7 @@ public class OcrService {
     }
 
     @Nullable
-    private String findPreferredFontFamilyName(List<FontProperties> fontPropertiesList) {
+    private Font findPreferredFont(List<FontProperties> fontPropertiesList) {
         if (fontPropertiesList.isEmpty()) {
             return null;
         }
@@ -121,7 +133,11 @@ public class OcrService {
         for (FontProperties fontProperties : fontPropertiesList) {
             String familyName = fontProperties.getFamilyName();
             if (fontFamilyNames.contains(familyName)) {
-                return familyName;
+                return new Font(
+                        familyName,
+                        fontProperties.getStyle()
+                                .getValue(),
+                        1);
             }
         }
         return null;
@@ -145,7 +161,7 @@ public class OcrService {
         DetectedObjects detectedObjects = ocrManager.ocr(image);
 
         Mat mat = (Mat) image.getWrappedImage();
-        mat = ImageUtil.drawBoundingBoxes(mat, detectedObjects, preferredFontFamilyName);
+        mat = ImageUtil.drawBoundingBoxes(mat, detectedObjects, font);
 
         return ImageUtil.writeTempImageFile(mat);
     }

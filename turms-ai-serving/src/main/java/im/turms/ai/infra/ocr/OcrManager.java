@@ -36,8 +36,13 @@ import ai.djl.translate.TranslateException;
 import ai.djl.util.cuda.CudaUtils;
 import io.netty.util.concurrent.FastThreadLocal;
 import nu.pattern.OpenCV;
+import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.imgcodecs.Imgcodecs;
+
+import im.turms.server.common.infra.lang.StringUtil;
+import im.turms.server.common.infra.logging.core.logger.Logger;
+import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 
 import static im.turms.ai.infra.image.ImageUtil.extendBox;
 import static im.turms.ai.infra.image.ImageUtil.getSubImage;
@@ -47,6 +52,8 @@ import static im.turms.ai.infra.image.ImageUtil.rotate90;
  * @author James Chen
  */
 public class OcrManager {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(OcrManager.class);
 
     private final float orientatePossibilityThreshold;
 
@@ -77,6 +84,8 @@ public class OcrManager {
 
     static {
         OpenCV.loadLocally();
+        LOGGER.info("Loaded OpenCV: "
+                + Core.getVersionString());
     }
 
     public OcrManager(
@@ -177,7 +186,8 @@ public class OcrManager {
             BoundingBox box = detectedObject.getBoundingBox();
             // Expands the text box because the detected text box
             // is smaller than the actual text box
-            Image subImg = getSubImage(image, extendBox(box));
+            box = extendBox(box);
+            Image subImg = getSubImage(image, box);
             if (subImg.getHeight() * 1.0 / subImg.getWidth() > 1.5) {
                 subImg = rotate90(subImg);
             }
@@ -187,6 +197,9 @@ public class OcrManager {
                 subImg = rotate90(subImg);
             }
             String name = recognize(subImg);
+            if (StringUtil.isBlank(name)) {
+                continue;
+            }
             names.add(name);
             probabilities.add(1.0);
             boundingBoxes.add(box);

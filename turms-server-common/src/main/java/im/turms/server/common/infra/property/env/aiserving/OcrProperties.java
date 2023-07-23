@@ -36,6 +36,7 @@ public class OcrProperties {
     private float orientationPossibilityThreshold = 0.8F;
 
     private List<FontProperties> preferredFonts =
-            List.of(new FontProperties("Noto Sans CJK SC"), new FontProperties("Noto Sans"));
+            List.of(new FontProperties("Noto Sans CJK SC", FontStyle.BOLD),
+                    new FontProperties("Noto Sans", FontStyle.BOLD));
 
 }

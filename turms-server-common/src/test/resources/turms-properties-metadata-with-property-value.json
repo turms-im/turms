@@ -160,10 +160,12 @@
         "type": "java.util.List",
         "value": [
           {
-            "familyName": "Noto Sans CJK SC"
+            "familyName": "Noto Sans CJK SC",
+            "style": "BOLD"
           },
           {
-            "familyName": "Noto Sans"
+            "familyName": "Noto Sans",
+            "style": "BOLD"
           }
         ]
       }
