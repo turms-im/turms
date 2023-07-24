@@ -33,6 +33,8 @@ import java.util.Deque;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import lombok.Getter;
+
 import im.turms.server.common.infra.io.InputOutputException;
 import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.logging.core.appender.Appender;
@@ -70,6 +72,7 @@ public class RollingFileAppender extends Appender {
     private final String filePrefix;
     private final String fileSuffix;
 
+    @Getter
     private final Path fileDirectory;
     private final File fileDirectoryFile;
 

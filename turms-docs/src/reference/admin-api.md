@@ -1,6 +1,6 @@
 # Admin API
 
-The Turms server-side interface documentation uses the [OpenAPI 3.0](https://swagger.io/specification) standard and provides the current server-side OpenAPI interface documentation externally via an HTTP service.
+The Turms server-side API documentation follows the [OpenAPI 3.0](https://swagger.io/specification) standard and provides the current server-side OpenAPI interface documentation externally via an HTTP service.
 
 If you need to consult the API interface documentation, you can access the API interface at http://localhost:端口号/openapi/ui after starting the Turms server. If you need the JSON format data of the API interface, you can get it by visiting http://localhost:端口号/openapi/docs. The default port number for the turms-gateway administrator HTTP server is 9510, while the turms-service uses port 8510.
 
@@ -28,93 +28,94 @@ In order to make the interface as the name suggests and to ensure developers can
 
 Note: The administration interface is not for end-users, but for your team to make internal calls. So normally you don't need to open external IP and port for turms-service server.
 
-## Classes
+## Categories
 
-### Non-business related categories
+### Non-business Related Categories
 
-#### Monitoring Classes
+#### Monitoring
 
-| **Kinds**                 | **Controller**     | Paths          | Services that support this interface |
-| :------------------------ | :----------------- | -------------- | ------------------------------------ |
-| MetricsController         | /metrics           | All supported  |                                      |
-| FlightRecordingController | /flight-recordings | both supported |                                      |
+| Type                        | Controller                | Path               | Supported Servers |
+| :-------------------------- | :------------------------ | ------------------ | ----------------- |
+| Log Management              | LogController             | /logs              | All               |
+| Metrics Management          | MetricsController         | /metrics           | All               |
+| Flight Recording Management | FlightRecordingController | /flight-recordings | All               |
 
-#### Plugin Classes
+#### Plugin
 
-| **Kinds**        | **Controller** | Paths         | Services that support this interface |
-| :--------------- | :------------- | ------------- | ------------------------------------ |
-| PluginController | /plugins       | All supported |                                      |
+| Type              | Controller       | Path     | Supported Servers |
+| :---------------- | :--------------- | -------- | ----------------- |
+| Plugin Management | PluginController | /plugins | All               |
 
-#### Administrator Classes
+#### Administrator
 
-| **Kinds**           | **Controller** | Paths | General                                                      | **Supplement** |
-| :------------------ | :------------- | ----- | ------------------------------------------------------------ | -------------- |
-| AdminController     | /admins        |       | Each Turms cluster has a default account with the role `ROOT` and the account name and password `turms` |                |
-| AdminRoleController | /admins/roles  |       | By default, each Turms cluster has a super administrator role with the role `ROOT` and all privileges |                |
+| Type                  | Controller          | Path          | Supported Servers | Notes                                                        |
+| :-------------------- | :------------------ | ------------- | ----------------- | ------------------------------------------------------------ |
+| Admin Management      | AdminController     | /admins       | turms-service     | Each Turms cluster has a default account with the role `ROOT` and the account name and password `turms` |
+| Admin Role Management | AdminRoleController | /admins/roles | turms-service     | By default, each Turms cluster has a super administrator role with the role `ROOT` and all privileges |
 
-#### Cluster Classes
+#### Cluster
 
-| **Kinds**                        | **Controller**    | Paths             | Services that support this interface |
-| :------------------------------- | :---------------- | ----------------- | ------------------------------------ |
-| Cluster Node Management          | MemberController  | /cluster/members  | turms-service                        |
-| Cluster Configuration Management | SettingController | /cluster/settings | turms-service                        |
+| Type                             | Controller        | Path              | Supported Servers |
+| :------------------------------- | :---------------- | ----------------- | ----------------- |
+| Cluster Node Management          | MemberController  | /cluster/members  | turms-service     |
+| Cluster Configuration Management | SettingController | /cluster/settings | turms-service     |
 
-#### Blacklist Classes
+#### Blocklist
 
-| **Kinds**               | **Controller**         | Paths                | Services that support this interface |
-| :---------------------- | :--------------------- | -------------------- | ------------------------------------ |
-| IP Blacklist Manager    | IpBlocklistController  | /blocked-clients/ips | turms-service                        |
-| UserBlocklistController | /blocked-clients/users | turms-service        |                                      |
+| Type                      | Controller              | Path                   | Supported Servers |
+| :------------------------ | :---------------------- | ---------------------- | ----------------- |
+| IP Blocklist Management   | IpBlocklistController   | /blocked-clients/ips   | turms-service     |
+| User Blocklist Management | UserBlocklistController | /blocked-clients/users | turms-service     |
 
-#### User Session Class
+#### User Session
 
-| **Kinds**               | **Controller**    | Path      | Services that support this interface |
-| :---------------------- | :---------------- | --------- | ------------------------------------ |
-| user-session-management | SessionController | /sessions | turms-gateway                        |
+| Type                    | Controller        | Path      | Supported Servers |
+| :---------------------- | :---------------- | --------- | ----------------- |
+| User Session Management | SessionController | /sessions | turms-gateway     |
 
-### Business-related classes
+### Business-related Categories
 
 All API ports in the following table exist only on the turms-service server side. These API ports are not available on the turms-gateway server side.
 
-#### User Classes
+#### User
 
-| **Duty**                        | **Controller**                       | Path   |
-| :------------------------------ | :----------------------------------- | ------ |
-| User Information Management     | UserController                       | /users |
-| UserOnlineInfoController        | /users/online-infos                  |        |
-| UserPermissionGroupController   | /users/permission-groups             |        |
-| UserRelationshipController      | /users/relationships                 |        |
-| UserRelationshipGroupController | /users/relationships/groups          |        |
-| UserFriendRequestController     | /users/relationships/friend-requests |        |
+| Type                               | Controller                      | Path                                 |
+| :--------------------------------- | :------------------------------ | ------------------------------------ |
+| User Information Management        | UserController                  | /users                               |
+| User Online Info Management        | UserOnlineInfoController        | /users/online-infos                  |
+| User Permission Group Management   | UserPermissionGroupController   | /users/permission-groups             |
+| User Relationship Management       | UserRelationshipController      | /users/relationships                 |
+| User Relationship Group Management | UserRelationshipGroupController | /users/relationships/groups          |
+| User Friend Request Management     | UserFriendRequestController     | /users/relationships/friend-requests |
 
-#### Groups Class
+#### Group
 
-| Responsibilities          | Controller            | Paths                      |
-| ------------------------- | --------------------- | -------------------------- |
-| Group Management          | GroupController       | /groups                    |
-| GroupTypeController       | /groups/types         |                            |
-| GroupQuestionController   | /groups/questions     |                            |
-| GroupMemberController     | /groups/members       |                            |
-| GroupBlocklistController  | /groups/blocked-users |                            |
-| GroupInvitationController | /groups/invitations   |                            |
-| GroupInvitationController | /groups/invitations   | GroupJoinRequestController |
+| Type                          | Controller                 | Path                  |
+| ----------------------------- | -------------------------- | --------------------- |
+| Group Management              | GroupController            | /groups               |
+| Group Type Management         | GroupTypeController        | /groups/types         |
+| Group Question Management     | GroupQuestionController    | /groups/questions     |
+| Group Member Management       | GroupMemberController      | /groups/members       |
+| Group Blocklist Management    | GroupBlocklistController   | /groups/blocked-users |
+| Group Invitation Management   | GroupInvitationController  | /groups/invitations   |
+| Group Join Request Management | GroupJoinRequestController | /groups/join-requests |
 
-#### Chat Session Class
+#### Chat Session
 
-| Responsibilities       | Controller     | Paths |
-| ---------------------- | -------------- | ----- |
-| ConversationController | /conversations |       |
+| Type                    | Controller             | Path           |
+| ----------------------- | ---------------------- | -------------- |
+| Conversation Management | ConversationController | /conversations |
 
 #### Message Classes
 
-| Responsibilities  | Controller | Path |
-| ----------------- | ---------- | ---- |
-| MessageController | /messages  |      |
+| Type               | Controller        | Path      |
+| ------------------ | ----------------- | --------- |
+| Message Management | MessageController | /messages |
 
 ## Statistics
 
 The statistics-related interfaces currently exposed to the public are mostly Legacy APIs, which are not recommended. We will adjust and refactor them later. Please refer to the chapter [Data Analysis](https://turms-im.github.io/docs/server/module/data-analytics) for specific reasons.
 
-## Admin API security
+## Admin API Security
 
 Every HTTP request sent by a user to Turms server will go through the authentication and authorization process of Turms server, which can be found in [Administrator Security](https://turms-im.github.io/docs/server/module/security#%E7%AE%A1%E7%90%86%E5%91%98%E5%AE%89%E5%85%A8).

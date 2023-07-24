@@ -164,6 +164,10 @@ public enum AdminPermission {
     PLUGIN_QUERY(Groups.PLUGIN),
     // endregion
 
+    // region node - log
+    LOG_QUERY(Groups.LOG),
+    // endregion
+
     // region node - others
     SHUTDOWN(Groups.LIFECYCLE);
     // endregion
@@ -249,6 +253,8 @@ public enum AdminPermission {
         private static final String CLUSTER_SETTING = "CLUSTER_SETTING";
 
         private static final String PLUGIN = "PLUGIN";
+
+        private static final String LOG = "LOG";
 
         private static final String LIFECYCLE = "LIFECYCLE";
     }

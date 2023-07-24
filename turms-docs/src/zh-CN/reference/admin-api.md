@@ -34,41 +34,42 @@ Turms服务端的接口文档采用[OpenAPI 3.0](https://swagger.io/specificatio
 
 #### 监控类
 
-| **种类**     | **Controller**            | 路径               | 支持该接口的服务 |
+| 类别         | Controller                | 路径               | 支持该接口的服务 |
 | :----------- | :------------------------ | ------------------ | ---------------- |
+| 日志管理     | LogController             | /logs              | 均支持           |
 | 度量信息管理 | MetricsController         | /metrics           | 均支持           |
 | 飞行记录管理 | FlightRecordingController | /flight-recordings | 均支持           |
 
 #### 插件类
 
-| **种类** | **Controller**   | 路径     | 支持该接口的服务 |
+| 类别     | Controller       | 路径     | 支持该接口的服务 |
 | :------- | :--------------- | -------- | ---------------- |
 | 插件管理 | PluginController | /plugins | 均支持           |
 
 #### 管理员类
 
-| **种类**       | **Controller**      | 路径          | 通用 | **补充**                                                     |
-| :------------- | :------------------ | ------------- | ---- | ------------------------------------------------------------ |
-| 管理员管理     | AdminController     | /admins       |      | 每个Turms集群默认存在一个角色为`ROOT`，账号名与密码均为`turms`的账号 |
-| 管理员角色管理 | AdminRoleController | /admins/roles |      | 每个Turms集群默认存在一个角色为`ROOT`的超级管理员角色，其具有所有权限 |
+| 类别           | Controller          | 路径          | 支持该接口的服务 | 补充                                                         |
+| :------------- | :------------------ | ------------- | ---------------- | ------------------------------------------------------------ |
+| 管理员管理     | AdminController     | /admins       | turms-service    | 每个Turms集群默认存在一个角色为`ROOT`，账号名与密码均为`turms`的账号 |
+| 管理员角色管理 | AdminRoleController | /admins/roles | turms-service    | 每个Turms集群默认存在一个角色为`ROOT`的超级管理员角色，其具有所有权限 |
 
 #### 集群类
 
-| **种类**     | **Controller**   | 路径             | 支持该接口的服务 |
+| 类别   | Controller   | 路径             | 支持该接口的服务 |
 | :----------- | :--------------- | ---------------- | ---------------- |
 | 集群节点管理 | MemberController | /cluster/members | turms-service |
 | 集群配置管理 | SettingController | /cluster/settings  | turms-service |
 
 #### 黑名单类
 
-| **种类**       | **Controller**          | 路径                   | 支持该接口的服务 |
+| 类别           | Controller              | 路径                   | 支持该接口的服务 |
 | :------------- | :---------------------- | ---------------------- | ---------------- |
 | IP黑名单管理   | IpBlocklistController   | /blocked-clients/ips   | turms-service    |
 | 用户黑名单管理 | UserBlocklistController | /blocked-clients/users | turms-service    |
 
 #### 用户会话类
 
-| **种类**     | **Controller**    | 路径      | 支持该接口的服务 |
+| 类别         | Controller        | 路径      | 支持该接口的服务 |
 | :----------- | :---------------- | --------- | ---------------- |
 | 用户会话管理 | SessionController | /sessions | turms-gateway    |
 
@@ -78,7 +79,7 @@ Turms服务端的接口文档采用[OpenAPI 3.0](https://swagger.io/specificatio
 
 #### 用户类
 
-| **职责**         | **Controller**                  | 路径                                 |
+| 类别             | Controller                      | 路径                                 |
 | :--------------- | :------------------------------ | ------------------------------------ |
 | 用户信息管理     | UserController                  | /users                               |
 | 用户在线状态管理 | UserOnlineInfoController        | /users/online-infos                  |
@@ -89,7 +90,7 @@ Turms服务端的接口文档采用[OpenAPI 3.0](https://swagger.io/specificatio
 
 #### 群组类
 
-| 职责             | Controller                 | 路径                  |
+| 类别             | Controller                 | 路径                  |
 | ---------------- | -------------------------- | --------------------- |
 | 群组管理         | GroupController            | /groups               |
 | 群组类型管理     | GroupTypeController        | /groups/types         |
@@ -101,13 +102,13 @@ Turms服务端的接口文档采用[OpenAPI 3.0](https://swagger.io/specificatio
 
 #### 聊天会话类
 
-| 职责         | Controller             | 路径           |
+| 类别         | Controller             | 路径           |
 | ------------ | ---------------------- | -------------- |
 | 聊天会话管理 | ConversationController | /conversations |
 
 #### 消息类
 
-| 职责     | Controller        | 路径      |
+| 类别     | Controller        | 路径      |
 | -------- | ----------------- | --------- |
 | 消息管理 | MessageController | /messages |
 

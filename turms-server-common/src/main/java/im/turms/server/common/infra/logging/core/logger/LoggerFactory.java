@@ -229,6 +229,10 @@ public class LoggerFactory {
         return ALL_APPENDERS;
     }
 
+    public static List<Appender> getDefaultAppenders() {
+        return DEFAULT_APPENDERS;
+    }
+
     private static String getFilePath(String path) {
         if (path == null) {
             return ".";

@@ -163,6 +163,9 @@
             "PLUGIN_UPDATE",
             "PLUGIN_QUERY"
         ],
+        "LOG": [
+            "LOG_QUERY"
+        ],
         "SHUTDOWN": [
             "SHUTDOWN"
         ]
