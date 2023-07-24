@@ -2016,7 +2016,7 @@
         "mutable": false,
         "sensitive": false,
         "type": "string",
-        "value": "@HOME/@SERVICE_TYPE_NAME.log"
+        "value": "@HOME/log/.log"
       },
       "level": {
         "deprecated": false,

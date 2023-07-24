@@ -34,6 +34,7 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import im.turms.server.common.infra.io.InputOutputException;
+import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.logging.core.appender.Appender;
 import im.turms.server.common.infra.logging.core.compression.FastGzipOutputStream;
 import im.turms.server.common.infra.logging.core.logger.InternalLogger;
@@ -261,8 +262,13 @@ public class RollingFileAppender extends Appender {
         String fileName;
         Path filePath;
         while (true) {
-            fileName = filePrefix + FIELD_DELIMITER + fileDateTimeFormatter.format(now)
-                    + FIELD_DELIMITER + nextIndex + fileSuffix;
+            if (StringUtil.isBlank(filePrefix)) {
+                fileName = fileDateTimeFormatter.format(now) + FIELD_DELIMITER + nextIndex
+                        + fileSuffix;
+            } else {
+                fileName = filePrefix + FIELD_DELIMITER + fileDateTimeFormatter.format(now)
+                        + FIELD_DELIMITER + nextIndex + fileSuffix;
+            }
             filePath = fileDirectory.resolve(fileName);
             try {
                 channel = FileChannel.open(filePath, APPEND_OPTIONS);

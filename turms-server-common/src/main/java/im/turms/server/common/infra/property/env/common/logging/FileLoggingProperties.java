@@ -36,7 +36,7 @@ public class FileLoggingProperties {
 
     public static final boolean DEFAULT_VALUE_ENABLED = true;
     public static final LogLevel DEFAULT_VALUE_LEVEL = LogLevel.INFO;
-    public static final String DEFAULT_VALUE_FILE_PATH = "@HOME/@SERVICE_TYPE_NAME.log";
+    public static final String DEFAULT_VALUE_FILE_PATH = "@HOME/log/.log";
     public static final int DEFAULT_VALUE_MAX_FILES = 320;
     public static final int DEFAULT_VALUE_FILE_SIZE_MB = 32;
 
