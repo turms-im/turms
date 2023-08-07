@@ -17,14 +17,19 @@
 
 package system.im.turms.service.domain.group.access.servicerequest.controller;
 
+import java.time.Duration;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 import helper.NotificationUtil;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Mono;
 import system.im.turms.service.domain.common.access.servicerequest.controller.BaseServiceControllerTest;
 
@@ -62,6 +67,12 @@ import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.service.access.servicerequest.dto.ClientRequest;
 import im.turms.service.access.servicerequest.dto.RequestHandlerResult;
 import im.turms.service.domain.group.access.servicerequest.controller.GroupServiceController;
+import im.turms.service.domain.group.bo.GroupInvitationStrategy;
+import im.turms.service.domain.group.bo.GroupJoinStrategy;
+import im.turms.service.domain.group.bo.GroupUpdateStrategy;
+import im.turms.service.domain.group.po.GroupType;
+import im.turms.service.domain.group.service.GroupTypeService;
+import im.turms.service.domain.user.service.UserPermissionGroupService;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
@@ -73,6 +84,7 @@ import static im.turms.server.common.testing.Constants.ORDER_LOWEST_PRIORITY;
 import static im.turms.server.common.testing.Constants.ORDER_LOW_PRIORITY;
 import static im.turms.server.common.testing.Constants.ORDER_MIDDLE_PRIORITY;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(OrderAnnotation.class)
 class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceController> {
 
@@ -85,18 +97,93 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
     private static final long GROUP_INVITATION_INVITEE = 4;
     private static final long GROUP_BLOCKED_USER_ID = 5;
 
-    private static Long groupId;
+    private static GroupType groupTypeWithInvitationStrategyOwnerManager;
+    private static GroupType groupTypeWithInvitationStrategyOwnerManagerRequiringApproval;
+    private static GroupType groupTypeWithJoinStrategyQuestion;
+
+    private static Long groupIdWithInvitationStrategyOwnerManager;
+    private static Long groupIdWithInvitationStrategyOwnerManagerRequiringApproval;
+    private static Long groupIdWithJoinStrategyQuestion;
+
     private static Long groupJoinQuestionId;
     private static Long groupJoinRequestId;
     private static Long groupInvitationId;
+
+    @Autowired
+    private GroupTypeService groupTypeService;
+
+    @Autowired
+    private UserPermissionGroupService userPermissionGroupService;
+
+    // Prepare data
+
+    @BeforeAll
+    void setup() {
+        Duration timeout = Duration.ofSeconds(30);
+        groupTypeWithInvitationStrategyOwnerManager = groupTypeService
+                .addGroupType(null,
+                        "test-name",
+                        100,
+                        GroupInvitationStrategy.OWNER_MANAGER,
+                        GroupJoinStrategy.JOIN_REQUEST,
+                        GroupUpdateStrategy.OWNER_MANAGER,
+                        GroupUpdateStrategy.OWNER_MANAGER,
+                        false,
+                        true,
+                        false,
+                        true)
+                .block(timeout);
+
+        groupTypeWithInvitationStrategyOwnerManagerRequiringApproval = groupTypeService
+                .addGroupType(null,
+                        "test-name",
+                        100,
+                        GroupInvitationStrategy.OWNER_MANAGER_REQUIRING_APPROVAL,
+                        GroupJoinStrategy.JOIN_REQUEST,
+                        GroupUpdateStrategy.OWNER_MANAGER,
+                        GroupUpdateStrategy.OWNER_MANAGER,
+                        false,
+                        true,
+                        false,
+                        true)
+                .block(timeout);
+
+        groupTypeWithJoinStrategyQuestion = groupTypeService
+                .addGroupType(null,
+                        "test-name",
+                        100,
+                        GroupInvitationStrategy.OWNER_MANAGER,
+                        GroupJoinStrategy.QUESTION,
+                        GroupUpdateStrategy.OWNER_MANAGER,
+                        GroupUpdateStrategy.OWNER_MANAGER,
+                        false,
+                        true,
+                        false,
+                        true)
+                .block(timeout);
+
+        userPermissionGroupService.queryUserPermissionGroupByUserId(USER_ID)
+                .flatMap(permissionGroup -> userPermissionGroupService.updateUserPermissionGroups(
+                        Set.of(permissionGroup.getId()),
+                        Set.of(0L,
+                                groupTypeWithInvitationStrategyOwnerManager.getId(),
+                                groupTypeWithInvitationStrategyOwnerManagerRequiringApproval
+                                        .getId(),
+                                groupTypeWithJoinStrategyQuestion.getId()),
+                        100,
+                        100,
+                        null))
+                .block(timeout);
+    }
 
     // Create
 
     @Test
     @Order(ORDER_HIGHEST_PRIORITY)
-    void handleCreateGroupRequest_createGroup_shouldReturnGroupId() {
+    void handleCreateGroupRequest_createGroupWithInvitationStrategyOwnerManager_shouldReturnGroupId() {
         TurmsRequest request = TurmsRequest.newBuilder()
                 .setCreateGroupRequest(CreateGroupRequest.newBuilder()
+                        .setTypeId(groupTypeWithInvitationStrategyOwnerManager.getId())
                         .setName("group name")
                         .setIntro("group intro")
                         .setAnnouncement("announcement"))
@@ -106,8 +193,71 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
         Mono<RequestHandlerResult> resultMono = getController().handleCreateGroupRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono, result -> {
-            groupId = NotificationUtil.getLongOrThrow(result.dataForRequester());
+            groupIdWithInvitationStrategyOwnerManager =
+                    NotificationUtil.getLongOrThrow(result.dataForRequester());
         });
+    }
+
+    @Test
+    @Order(ORDER_HIGHEST_PRIORITY)
+    void handleCreateGroupRequest_createGroupWithInvitationStrategyOwnerManagerRequiringApproval_shouldReturnGroupId() {
+        TurmsRequest request = TurmsRequest.newBuilder()
+                .setCreateGroupRequest(CreateGroupRequest.newBuilder()
+                        .setTypeId(groupTypeWithInvitationStrategyOwnerManagerRequiringApproval
+                                .getId())
+                        .setName("group name")
+                        .setIntro("group intro")
+                        .setAnnouncement("announcement"))
+                .build();
+        ClientRequest clientRequest =
+                new ClientRequest(USER_ID, USER_DEVICE, USER_IP, REQUEST_ID, request);
+        Mono<RequestHandlerResult> resultMono = getController().handleCreateGroupRequest()
+                .handle(clientRequest);
+
+        assertResultIsOk(resultMono, result -> {
+            groupIdWithInvitationStrategyOwnerManagerRequiringApproval =
+                    NotificationUtil.getLongOrThrow(result.dataForRequester());
+        });
+    }
+
+    @Test
+    @Order(ORDER_HIGHEST_PRIORITY)
+    void handleCreateGroupRequest_createGroupWithJoinStrategyQuestion_shouldReturnGroupId() {
+        TurmsRequest request = TurmsRequest.newBuilder()
+                .setCreateGroupRequest(CreateGroupRequest.newBuilder()
+                        .setTypeId(groupTypeWithJoinStrategyQuestion.getId())
+                        .setName("group name")
+                        .setIntro("group intro")
+                        .setAnnouncement("announcement"))
+                .build();
+        ClientRequest clientRequest =
+                new ClientRequest(USER_ID, USER_DEVICE, USER_IP, REQUEST_ID, request);
+        Mono<RequestHandlerResult> resultMono = getController().handleCreateGroupRequest()
+                .handle(clientRequest);
+        assertResultIsOk(resultMono, result -> {
+            groupIdWithJoinStrategyQuestion =
+                    NotificationUtil.getLongOrThrow(result.dataForRequester());
+        });
+    }
+
+    @Test
+    @Order(ORDER_HIGH_PRIORITY)
+    void handleCreateGroupQuestionsRequest_addGroupJoinQuestions_shouldFail_forGroupNotUsingJoinRequest() {
+        TurmsRequest request = TurmsRequest.newBuilder()
+                .setCreateGroupJoinQuestionsRequest(CreateGroupJoinQuestionsRequest.newBuilder()
+                        .setGroupId(groupIdWithInvitationStrategyOwnerManager)
+                        .addQuestions(GroupJoinQuestion.newBuilder()
+                                .setQuestion("question")
+                                .addAllAnswers(List.of("answer1", "answer2"))
+                                .setScore(10)
+                                .build()))
+                .build();
+        ClientRequest clientRequest =
+                new ClientRequest(USER_ID, USER_DEVICE, USER_IP, REQUEST_ID, request);
+        Mono<RequestHandlerResult> resultMono = getController().handleCreateGroupQuestionsRequest()
+                .handle(clientRequest);
+        assertResultCodes(resultMono,
+                ResponseStatusCode.CREATE_GROUP_QUESTION_FOR_GROUP_USING_JOIN_REQUEST);
     }
 
     @Test
@@ -115,7 +265,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
     void handleCreateGroupQuestionsRequest_addGroupJoinQuestions_shouldReturnQuestionIds() {
         TurmsRequest request = TurmsRequest.newBuilder()
                 .setCreateGroupJoinQuestionsRequest(CreateGroupJoinQuestionsRequest.newBuilder()
-                        .setGroupId(groupId)
+                        .setGroupId(groupIdWithJoinStrategyQuestion)
                         .addQuestions(GroupJoinQuestion.newBuilder()
                                 .setQuestion("question")
                                 .addAllAnswers(List.of("answer1", "answer2"))
@@ -140,7 +290,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
     void handleCreateGroupJoinRequestRequest_createJoinRequest_shouldReturnJoinRequestId() {
         TurmsRequest request = TurmsRequest.newBuilder()
                 .setCreateGroupJoinRequestRequest(CreateGroupJoinRequestRequest.newBuilder()
-                        .setGroupId(groupId)
+                        .setGroupId(groupIdWithInvitationStrategyOwnerManager)
                         .setContent("content"))
                 .build();
         ClientRequest clientRequest =
@@ -158,7 +308,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
     void handleCreateGroupMembersRequest_addGroupMembers_shouldSucceed() {
         TurmsRequest request = TurmsRequest.newBuilder()
                 .setCreateGroupMembersRequest(CreateGroupMembersRequest.newBuilder()
-                        .setGroupId(groupId)
+                        .setGroupId(groupIdWithInvitationStrategyOwnerManager)
                         .addAllUserIds(List.of(GROUP_SUCCESSOR, GROUP_MEMBER_ID))
                         .setName("name")
                         .setRole(GroupMemberRole.MEMBER))
@@ -175,7 +325,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
     void handleCreateGroupBlockedUserRequest_blockUser_shouldSucceed() {
         TurmsRequest request = TurmsRequest.newBuilder()
                 .setCreateGroupBlockedUserRequest(CreateGroupBlockedUserRequest.newBuilder()
-                        .setGroupId(groupId)
+                        .setGroupId(groupIdWithInvitationStrategyOwnerManager)
                         .setUserId(GROUP_BLOCKED_USER_ID))
                 .build();
         ClientRequest clientRequest =
@@ -188,10 +338,28 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
 
     @Test
     @Order(ORDER_HIGH_PRIORITY)
-    void handleCreateGroupInvitationRequestRequest_createInvitation_shouldReturnInvitationId() {
+    void handleCreateGroupInvitationRequestRequest_createInvitation_shouldFail_forGroupNotRequiringApproval() {
         TurmsRequest request = TurmsRequest.newBuilder()
                 .setCreateGroupInvitationRequest(CreateGroupInvitationRequest.newBuilder()
-                        .setGroupId(groupId)
+                        .setGroupId(groupIdWithInvitationStrategyOwnerManager)
+                        .setInviteeId(GROUP_INVITATION_INVITEE)
+                        .setContent("content"))
+                .build();
+        ClientRequest clientRequest =
+                new ClientRequest(USER_ID, USER_DEVICE, USER_IP, REQUEST_ID, request);
+        Mono<RequestHandlerResult> resultMono =
+                getController().handleCreateGroupInvitationRequestRequest()
+                        .handle(clientRequest);
+        assertResultCodes(resultMono,
+                ResponseStatusCode.SEND_GROUP_INVITATION_TO_GROUP_NOT_REQUIRE_INVITATION);
+    }
+
+    @Test
+    @Order(ORDER_HIGH_PRIORITY)
+    void handleCreateGroupInvitationRequestRequest_createInvitation_shouldReturnInvitationId_forGroupRequiringApproval() {
+        TurmsRequest request = TurmsRequest.newBuilder()
+                .setCreateGroupInvitationRequest(CreateGroupInvitationRequest.newBuilder()
+                        .setGroupId(groupIdWithInvitationStrategyOwnerManagerRequiringApproval)
                         .setInviteeId(GROUP_INVITATION_INVITEE)
                         .setContent("content"))
                 .build();
@@ -212,7 +380,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
     void handleUpdateGroupRequest_updateGroup_shouldSucceed() {
         TurmsRequest request = TurmsRequest.newBuilder()
                 .setUpdateGroupRequest(UpdateGroupRequest.newBuilder()
-                        .setGroupId(groupId)
+                        .setGroupId(groupIdWithInvitationStrategyOwnerManager)
                         .setName("new name")
                         .setIntro("new intro"))
                 .build();
@@ -228,7 +396,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
     void handleUpdateGroupRequest_transferOwnership_shouldSucceed() {
         TurmsRequest request = TurmsRequest.newBuilder()
                 .setUpdateGroupRequest(UpdateGroupRequest.newBuilder()
-                        .setGroupId(groupId)
+                        .setGroupId(groupIdWithInvitationStrategyOwnerManager)
                         .setSuccessorId(GROUP_SUCCESSOR)
                         .setQuitAfterTransfer(false))
                 .build();
@@ -240,7 +408,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
 
         request = TurmsRequest.newBuilder()
                 .setUpdateGroupRequest(UpdateGroupRequest.newBuilder()
-                        .setGroupId(groupId)
+                        .setGroupId(groupIdWithInvitationStrategyOwnerManager)
                         .setSuccessorId(USER_ID)
                         .setQuitAfterTransfer(false))
                 .build();
@@ -256,7 +424,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
     void handleUpdateGroupRequest_muteGroup_shouldSucceed() {
         TurmsRequest request = TurmsRequest.newBuilder()
                 .setUpdateGroupRequest(UpdateGroupRequest.newBuilder()
-                        .setGroupId(groupId)
+                        .setGroupId(groupIdWithInvitationStrategyOwnerManager)
                         .setMuteEndDate(System.currentTimeMillis() + 100_000))
                 .build();
         ClientRequest clientRequest =
@@ -271,7 +439,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
     void handleUpdateGroupRequest_unmuteGroup_shouldSucceed() {
         TurmsRequest request = TurmsRequest.newBuilder()
                 .setUpdateGroupRequest(UpdateGroupRequest.newBuilder()
-                        .setGroupId(groupId)
+                        .setGroupId(groupIdWithInvitationStrategyOwnerManager)
                         .setMuteEndDate(0))
                 .build();
         ClientRequest clientRequest =
@@ -303,7 +471,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
     void handleUpdateGroupMemberRequest_updateGroupMemberInfo_shouldSucceed() {
         TurmsRequest request = TurmsRequest.newBuilder()
                 .setUpdateGroupMemberRequest(UpdateGroupMemberRequest.newBuilder()
-                        .setGroupId(groupId)
+                        .setGroupId(groupIdWithInvitationStrategyOwnerManager)
                         .setMemberId(GROUP_MEMBER_ID)
                         .setName("myname"))
                 .build();
@@ -319,7 +487,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
     void handleUpdateGroupMemberRequest_muteGroupMember_shouldSucceed() {
         TurmsRequest request = TurmsRequest.newBuilder()
                 .setUpdateGroupMemberRequest(UpdateGroupMemberRequest.newBuilder()
-                        .setGroupId(groupId)
+                        .setGroupId(groupIdWithInvitationStrategyOwnerManager)
                         .setMemberId(GROUP_MEMBER_ID)
                         .setMuteEndDate(System.currentTimeMillis() + 100_000))
                 .build();
@@ -335,7 +503,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
     void handleUpdateGroupMemberRequest_unmuteGroupMember_shouldSucceed() {
         TurmsRequest request = TurmsRequest.newBuilder()
                 .setUpdateGroupMemberRequest(UpdateGroupMemberRequest.newBuilder()
-                        .setGroupId(groupId)
+                        .setGroupId(groupIdWithInvitationStrategyOwnerManager)
                         .setMemberId(GROUP_MEMBER_ID)
                         .setMuteEndDate(0))
                 .build();
@@ -353,7 +521,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
     void handleQueryGroupsRequest_queryGroups_shouldReturnGroups() {
         TurmsRequest request = TurmsRequest.newBuilder()
                 .setQueryGroupsRequest(QueryGroupsRequest.newBuilder()
-                        .addGroupIds(groupId))
+                        .addGroupIds(groupIdWithInvitationStrategyOwnerManager))
                 .build();
         ClientRequest clientRequest =
                 new ClientRequest(USER_ID, USER_DEVICE, USER_IP, REQUEST_ID, request);
@@ -363,7 +531,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
                 result -> assertThat(result.dataForRequester()
                         .getGroupsWithVersion()
                         .getGroups(0)
-                        .getId()).isEqualTo(groupId));
+                        .getId()).isEqualTo(groupIdWithInvitationStrategyOwnerManager));
     }
 
     @Test
@@ -380,7 +548,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
         assertResultIsOk(resultMono,
                 result -> assertThat(result.dataForRequester()
                         .getLongsWithVersion()
-                        .getLongsList()).contains(groupId));
+                        .getLongsList()).contains(groupIdWithInvitationStrategyOwnerManager));
     }
 
     @Test
@@ -396,7 +564,9 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
         assertResultIsOk(resultMono,
                 result -> assertThat(result.dataForRequester()
                         .getGroupsWithVersion()
-                        .getGroupsList()).anyMatch(group -> groupId.equals(group.getId())));
+                        .getGroupsList())
+                        .anyMatch(group -> groupIdWithInvitationStrategyOwnerManager
+                                .equals(group.getId())));
     }
 
     @Test
@@ -404,7 +574,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
     void handleQueryGroupBlockedUserIdsRequest_queryBlockedUserIds_shouldEqualBlockedUserId() {
         TurmsRequest request = TurmsRequest.newBuilder()
                 .setQueryGroupBlockedUserIdsRequest(QueryGroupBlockedUserIdsRequest.newBuilder()
-                        .setGroupId(groupId))
+                        .setGroupId(groupIdWithInvitationStrategyOwnerManager))
                 .build();
         ClientRequest clientRequest =
                 new ClientRequest(USER_ID, USER_DEVICE, USER_IP, REQUEST_ID, request);
@@ -422,7 +592,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
     void handleQueryGroupBlockedUsersInfosRequest_queryBlockedUserInfos_shouldEqualBlockedUserId() {
         TurmsRequest request = TurmsRequest.newBuilder()
                 .setQueryGroupBlockedUserInfosRequest(QueryGroupBlockedUserInfosRequest.newBuilder()
-                        .setGroupId(groupId))
+                        .setGroupId(groupIdWithInvitationStrategyOwnerManager))
                 .build();
         ClientRequest clientRequest =
                 new ClientRequest(USER_ID, USER_DEVICE, USER_IP, REQUEST_ID, request);
@@ -441,7 +611,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
     void handleQueryGroupInvitationsRequest_queryInvitations_shouldEqualNewInvitationId() {
         TurmsRequest request = TurmsRequest.newBuilder()
                 .setQueryGroupInvitationsRequest(QueryGroupInvitationsRequest.newBuilder()
-                        .setGroupId(groupId))
+                        .setGroupId(groupIdWithInvitationStrategyOwnerManagerRequiringApproval))
                 .build();
         ClientRequest clientRequest =
                 new ClientRequest(USER_ID, USER_DEVICE, USER_IP, REQUEST_ID, request);
@@ -459,7 +629,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
     void handleQueryGroupJoinRequestsRequest_queryJoinRequests_shouldEqualNewJoinRequestId() {
         TurmsRequest request = TurmsRequest.newBuilder()
                 .setQueryGroupJoinRequestsRequest(QueryGroupJoinRequestsRequest.newBuilder()
-                        .setGroupId(groupId))
+                        .setGroupId(groupIdWithInvitationStrategyOwnerManager))
                 .build();
         ClientRequest clientRequest =
                 new ClientRequest(USER_ID, USER_DEVICE, USER_IP, REQUEST_ID, request);
@@ -478,7 +648,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
     void handleQueryGroupJoinQuestions_queryGroupJoinQuestions_shouldEqualNewGroupQuestionId() {
         TurmsRequest request = TurmsRequest.newBuilder()
                 .setQueryGroupJoinQuestionsRequest(QueryGroupJoinQuestionsRequest.newBuilder()
-                        .setGroupId(groupId)
+                        .setGroupId(groupIdWithJoinStrategyQuestion)
                         .setWithAnswers(true))
                 .build();
         ClientRequest clientRequest =
@@ -498,7 +668,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
     void handleQueryGroupMembersRequest_queryGroupMembers_shouldEqualNewMemberId() {
         TurmsRequest request = TurmsRequest.newBuilder()
                 .setQueryGroupMembersRequest(QueryGroupMembersRequest.newBuilder()
-                        .setGroupId(groupId)
+                        .setGroupId(groupIdWithInvitationStrategyOwnerManager)
                         .setWithStatus(true))
                 .build();
         ClientRequest clientRequest =
@@ -520,7 +690,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
     void handleQueryGroupMembersRequest_queryGroupMembersByMemberIds_shouldEqualNewMemberId() {
         TurmsRequest request = TurmsRequest.newBuilder()
                 .setQueryGroupMembersRequest(QueryGroupMembersRequest.newBuilder()
-                        .setGroupId(groupId)
+                        .setGroupId(groupIdWithInvitationStrategyOwnerManager)
                         .addMemberIds(GROUP_MEMBER_ID)
                         .setWithStatus(true))
                 .build();
@@ -562,7 +732,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
     void handleDeleteGroupMembersRequest_removeGroupMembers_shouldSucceed() {
         TurmsRequest request = TurmsRequest.newBuilder()
                 .setDeleteGroupMembersRequest(DeleteGroupMembersRequest.newBuilder()
-                        .setGroupId(groupId)
+                        .setGroupId(groupIdWithInvitationStrategyOwnerManager)
                         .addMemberIds(GROUP_MEMBER_ID))
                 .build();
         ClientRequest clientRequest =
@@ -577,7 +747,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
     void handleDeleteGroupJoinQuestionsRequest_deleteGroupJoinQuestions_shouldSucceed() {
         TurmsRequest request = TurmsRequest.newBuilder()
                 .setDeleteGroupJoinQuestionsRequest(DeleteGroupJoinQuestionsRequest.newBuilder()
-                        .setGroupId(groupId)
+                        .setGroupId(groupIdWithInvitationStrategyOwnerManager)
                         .addQuestionIds(groupJoinQuestionId))
                 .build();
         ClientRequest clientRequest =
@@ -593,7 +763,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
     void handleDeleteGroupBlockedUserRequest_unblockUser_shouldSucceed() {
         TurmsRequest request = TurmsRequest.newBuilder()
                 .setDeleteGroupBlockedUserRequest(DeleteGroupBlockedUserRequest.newBuilder()
-                        .setGroupId(groupId)
+                        .setGroupId(groupIdWithInvitationStrategyOwnerManager)
                         .setUserId(GROUP_BLOCKED_USER_ID))
                 .build();
         ClientRequest clientRequest =
@@ -642,7 +812,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
     void handleUpdateGroupRequest_quitGroup_shouldSucceed() {
         TurmsRequest request = TurmsRequest.newBuilder()
                 .setUpdateGroupRequest(UpdateGroupRequest.newBuilder()
-                        .setGroupId(groupId)
+                        .setGroupId(groupIdWithInvitationStrategyOwnerManager)
                         .setQuitAfterTransfer(false))
                 .build();
         ClientRequest clientRequest =
