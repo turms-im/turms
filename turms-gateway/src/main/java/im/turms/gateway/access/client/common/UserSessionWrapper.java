@@ -34,7 +34,7 @@ import im.turms.server.common.infra.lang.ByteArrayWrapper;
 import im.turms.server.common.infra.thread.NamedThreadFactory;
 
 /**
- * Bind the network connection and the user session together from the perspective of the access
+ * Bind the network connection, and the user session together from the perspective of the access
  * layer
  *
  * @author James Chen
@@ -42,11 +42,11 @@ import im.turms.server.common.infra.thread.NamedThreadFactory;
 @Data
 public class UserSessionWrapper {
 
-    private static final HashedWheelTimer IDLE_CONNECTION_TIMEOUT_TIMER = new HashedWheelTimer(
-            new NamedThreadFactory(ThreadNameConst.GATEWAY_IDLE_CONNECTION_TIMEOUT_TIMER, true));
+    private static final HashedWheelTimer SESSION_ESTABLISH_TIMEOUT_TIMER = new HashedWheelTimer(
+            new NamedThreadFactory(ThreadNameConst.GATEWAY_SESSION_ESTABLISH_TIMEOUT_TIMER, true));
 
     private final InetSocketAddress address;
-    private final Timeout connectionTimeoutTask;
+    private final Timeout establishTimeoutTask;
     private final Consumer<UserSession> onSessionEstablished;
     private NetConnection connection;
     @Nullable
@@ -64,13 +64,13 @@ public class UserSessionWrapper {
     public UserSessionWrapper(
             NetConnection connection,
             InetSocketAddress address,
-            int closeAfterSeconds,
+            int establishTimeoutMillis,
             Consumer<UserSession> onSessionEstablished) {
         this.connection = connection;
         this.address = address;
         this.onSessionEstablished = onSessionEstablished;
-        connectionTimeoutTask = closeAfterSeconds > 0
-                ? addIdleConnectionTimeoutTask(closeAfterSeconds)
+        establishTimeoutTask = establishTimeoutMillis > 0
+                ? addSessionEstablishTimeoutTask(establishTimeoutMillis)
                 : null;
     }
 
@@ -102,13 +102,13 @@ public class UserSessionWrapper {
         return userSession != null;
     }
 
-    private Timeout addIdleConnectionTimeoutTask(int closeIdleConnectionAfterSeconds) {
-        return IDLE_CONNECTION_TIMEOUT_TIMER.newTimeout(timeout -> {
+    private Timeout addSessionEstablishTimeoutTask(int establishTimeoutMillis) {
+        return SESSION_ESTABLISH_TIMEOUT_TIMER.newTimeout(timeout -> {
             if (userSession == null || !userSession.isOpen()) {
                 CloseReason closeReason = CloseReason.get(SessionCloseStatus.LOGIN_TIMEOUT);
                 connection.close(closeReason);
             }
-        }, closeIdleConnectionAfterSeconds, TimeUnit.SECONDS);
+        }, establishTimeoutMillis, TimeUnit.MILLISECONDS);
     }
 
 }

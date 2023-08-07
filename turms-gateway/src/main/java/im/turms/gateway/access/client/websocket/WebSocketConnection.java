@@ -18,12 +18,15 @@
 package im.turms.gateway.access.client.websocket;
 
 import java.net.InetSocketAddress;
+import java.time.Duration;
+import java.util.concurrent.TimeoutException;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketCloseStatus;
 import reactor.core.publisher.Mono;
 import reactor.netty.Connection;
+import reactor.netty.http.websocket.WebsocketInbound;
 import reactor.netty.http.websocket.WebsocketOutbound;
 
 import im.turms.gateway.access.client.common.NotificationFactory;
@@ -32,6 +35,7 @@ import im.turms.server.common.domain.session.bo.CloseReason;
 import im.turms.server.common.infra.exception.ThrowableUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
+import im.turms.server.common.infra.reactor.HashedWheelScheduler;
 
 /**
  * @author James Chen
@@ -42,11 +46,16 @@ public class WebSocketConnection extends NetConnection {
 
     private final Connection connection;
     private final WebsocketOutbound out;
+    private final Duration closeTimeout;
 
-    protected WebSocketConnection(Connection connection, boolean isConnected) {
+    protected WebSocketConnection(
+            Connection connection,
+            boolean isConnected,
+            Duration closeTimeout) {
         super(isConnected);
         this.connection = connection;
         out = (WebsocketOutbound) connection;
+        this.closeTimeout = closeTimeout;
     }
 
     @Override
@@ -69,22 +78,31 @@ public class WebSocketConnection extends NetConnection {
             return;
         }
         super.close(closeReason);
-        out.sendObject(new BinaryWebSocketFrame(NotificationFactory.createBuffer(closeReason)))
+        Mono<Void> mono = out
+                .sendObject(new BinaryWebSocketFrame(NotificationFactory.createBuffer(closeReason)))
                 .then()
                 .doOnError(throwable -> {
                     if (!ThrowableUtil.isDisconnectedClientError(throwable)) {
                         LOGGER.error("Failed to send the close notification", throwable);
                     }
                 })
-                .retryWhen(RETRY_SEND_CLOSE_NOTIFICATION)
-                .doFinally(signal -> close())
-                .subscribe(null, t -> {
-                    if (!ThrowableUtil.isDisconnectedClientError(t)) {
-                        LOGGER.error("Failed to send the close notification after ("
-                                + RETRY_SEND_CLOSE_NOTIFICATION.maxAttempts
-                                + ") attempts", t);
-                    }
-                });
+                .retryWhen(RETRY_SEND_CLOSE_NOTIFICATION);
+        if (closeTimeout.isZero()) {
+            mono = mono.doFinally(signal -> close());
+        } else if (!closeTimeout.isNegative()) {
+            mono = mono.then(((WebsocketInbound) connection).receiveCloseStatus()
+                    .then())
+                    .timeout(closeTimeout, HashedWheelScheduler.getDaemon())
+                    .onErrorComplete(TimeoutException.class)
+                    .doFinally(signal -> close());
+        }
+        mono.subscribe(null, t -> {
+            if (!ThrowableUtil.isDisconnectedClientError(t)) {
+                LOGGER.error("Failed to send the close notification after ("
+                        + RETRY_SEND_CLOSE_NOTIFICATION.maxAttempts
+                        + ") attempts", t);
+            }
+        });
     }
 
     @Override

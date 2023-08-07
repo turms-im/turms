@@ -24,6 +24,9 @@ import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 import im.turms.server.common.infra.property.env.gateway.clientapi.ClientApiProperties;
+import im.turms.server.common.infra.property.env.gateway.network.TcpProperties;
+import im.turms.server.common.infra.property.env.gateway.network.UdpProperties;
+import im.turms.server.common.infra.property.env.gateway.network.WebSocketProperties;
 import im.turms.server.common.infra.property.env.gateway.redis.TurmsRedisProperties;
 import im.turms.server.common.infra.property.env.gateway.session.SessionProperties;
 

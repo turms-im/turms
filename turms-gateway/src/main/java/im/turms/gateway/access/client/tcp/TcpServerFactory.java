@@ -36,7 +36,7 @@ import im.turms.server.common.infra.metrics.TurmsMicrometerChannelMetricsRecorde
 import im.turms.server.common.infra.net.BindException;
 import im.turms.server.common.infra.net.SslUtil;
 import im.turms.server.common.infra.property.env.common.SslProperties;
-import im.turms.server.common.infra.property.env.gateway.TcpProperties;
+import im.turms.server.common.infra.property.env.gateway.network.TcpProperties;
 
 import static io.netty.channel.ChannelOption.CONNECT_TIMEOUT_MILLIS;
 import static io.netty.channel.ChannelOption.SO_BACKLOG;
@@ -69,7 +69,7 @@ public final class TcpServerFactory {
         TcpServer server = TcpServer.create()
                 .host(host)
                 .port(port)
-                .option(CONNECT_TIMEOUT_MILLIS, tcpProperties.getConnectionTimeout())
+                .option(CONNECT_TIMEOUT_MILLIS, tcpProperties.getConnectTimeoutMillis())
                 // Don't set SO_SNDBUF and SO_RCVBUF because of
                 // the reasons mentioned in https://developer.aliyun.com/article/724580
                 .option(SO_REUSEADDR, true)

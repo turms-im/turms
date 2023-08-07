@@ -32,7 +32,7 @@ import im.turms.gateway.domain.session.service.SessionService;
 import im.turms.server.common.domain.blocklist.service.BlocklistService;
 import im.turms.server.common.infra.healthcheck.ServerStatusManager;
 import im.turms.server.common.infra.healthcheck.ServiceAvailability;
-import im.turms.server.common.infra.property.env.gateway.TcpProperties;
+import im.turms.server.common.infra.property.env.gateway.network.TcpProperties;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;

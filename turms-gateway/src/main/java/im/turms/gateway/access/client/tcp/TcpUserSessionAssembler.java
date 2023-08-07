@@ -17,6 +17,8 @@
 
 package im.turms.gateway.access.client.tcp;
 
+import java.time.Duration;
+
 import lombok.Getter;
 import org.springframework.stereotype.Component;
 import reactor.netty.Connection;
@@ -37,7 +39,7 @@ import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.gateway.GatewayProperties;
-import im.turms.server.common.infra.property.env.gateway.TcpProperties;
+import im.turms.server.common.infra.property.env.gateway.network.TcpProperties;
 
 /**
  * @author James Chen
@@ -67,7 +69,13 @@ public class TcpUserSessionAssembler extends UserSessionAssembler {
                 propertiesManager.getLocalProperties()
                         .getGateway()
                         .getTcp()
-                        .getCloseIdleConnectionAfterSeconds());
+                        .getSession()
+                        .getEstablishTimeoutMillis(),
+                propertiesManager.getLocalProperties()
+                        .getGateway()
+                        .getTcp()
+                        .getSession()
+                        .getCloseTimeoutMillis());
         GatewayProperties gatewayProperties = propertiesManager.getLocalProperties()
                 .getGateway();
         TcpProperties tcpProperties = gatewayProperties.getTcp();
@@ -97,8 +105,8 @@ public class TcpUserSessionAssembler extends UserSessionAssembler {
     }
 
     @Override
-    protected NetConnection createConnection(Connection connection) {
-        return new TcpConnection((ChannelOperations<?, ?>) connection, true);
+    protected NetConnection createConnection(Connection connection, Duration closeTimeout) {
+        return new TcpConnection((ChannelOperations<?, ?>) connection, true, closeTimeout);
     }
 
     public String getHost() {

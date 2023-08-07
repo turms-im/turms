@@ -33,9 +33,9 @@ import im.turms.server.common.infra.property.constant.AdvertiseStrategy;
 import im.turms.server.common.infra.property.env.common.AddressProperties;
 import im.turms.server.common.infra.property.env.common.adminapi.AdminHttpProperties;
 import im.turms.server.common.infra.property.env.gateway.DiscoveryProperties;
-import im.turms.server.common.infra.property.env.gateway.TcpProperties;
-import im.turms.server.common.infra.property.env.gateway.UdpProperties;
-import im.turms.server.common.infra.property.env.gateway.WebSocketProperties;
+import im.turms.server.common.infra.property.env.gateway.network.TcpProperties;
+import im.turms.server.common.infra.property.env.gateway.network.UdpProperties;
+import im.turms.server.common.infra.property.env.gateway.network.WebSocketProperties;
 import im.turms.server.common.infra.reactor.PublisherPool;
 
 /**

@@ -1471,16 +1471,9 @@
         "sensitive": false,
         "type": "int"
       },
-      "closeIdleConnectionAfterSeconds": {
+      "connectTimeoutMillis": {
         "deprecated": false,
-        "description": "A TCP connection will be closed on the server side if a client has not established a user session in a specified time. Note that the developers on the client side should take the responsibility to close the TCP connection according to their business requirements",
-        "global": false,
-        "mutable": false,
-        "sensitive": false,
-        "type": "int"
-      },
-      "connectionTimeout": {
-        "deprecated": false,
+        "description": "Used to mitigate the Slowloris DoS attack by lowering the timeout for the TCP connection handshake",
         "global": false,
         "mutable": false,
         "sensitive": false,
@@ -1506,6 +1499,24 @@
         "mutable": false,
         "sensitive": false,
         "type": "int"
+      },
+      "session": {
+        "closeTimeoutMillis": {
+          "deprecated": false,
+          "description": "turms-gateway will send a TCP RST packet to the connection if the client has not closed the TCP connection within the specified time after turms-gateway has sent and flushed the session close notification. 0 means sending a TCP RST packet immediately after flushing the session close notification, and you should use 0 if you prefer fast connection close, but the client may never receive the last data sent by turms-gateway. -1 means no timeout and waiting for the client to close the connection forever. Positive value should be used when you prefer that turms-gateway waits for the client to receive within the specified time data and only close the connection when it exceeds the timeout",
+          "global": false,
+          "mutable": false,
+          "sensitive": false,
+          "type": "int"
+        },
+        "establishTimeoutMillis": {
+          "deprecated": false,
+          "description": "turms-gateway will close the TCP connection if the client has not established a user session within the specified time. 0 means no timeout",
+          "global": false,
+          "mutable": false,
+          "sensitive": false,
+          "type": "int"
+        }
       },
       "wiretap": {
         "deprecated": false,
@@ -1547,15 +1558,7 @@
         "sensitive": false,
         "type": "int"
       },
-      "closeIdleConnectionAfterSeconds": {
-        "deprecated": false,
-        "description": "A WebSocket connection will be closed on the server side if a client has not established a user session in a specified time. Note that the developers on the client side should take the responsibility to close the WebSocket connection according to their business requirements",
-        "global": false,
-        "mutable": false,
-        "sensitive": false,
-        "type": "int"
-      },
-      "connectTimeout": {
+      "connectTimeoutMillis": {
         "deprecated": false,
         "description": "Used to mitigate the Slowloris DoS attack by lowering the timeout for the TCP connection handshake",
         "global": false,
@@ -1583,6 +1586,24 @@
         "mutable": false,
         "sensitive": false,
         "type": "int"
+      },
+      "session": {
+        "closeTimeoutMillis": {
+          "deprecated": false,
+          "description": "turms-gateway will send and flush a WebSocket close frame, and then send a TCP RST packet to the connection if the client has not closed the WebSocket connection within the specified time after turms-gateway has sent and flushed the session close notification. 0 means sending and flushing a WebSocket close frame, and then sending a TCP RST packet immediately after flushing the session close notification, and you should use 0 if you prefer fast connection close, but the client may never receive the last data sent by turms-gateway. -1 means no timeout and waiting for the client to close the connection forever. Positive value should be used when you prefer that turms-gateway waits for the client to receive within the specified time data and only close the connection when it exceeds the timeout",
+          "global": false,
+          "mutable": false,
+          "sensitive": false,
+          "type": "int"
+        },
+        "establishTimeoutMillis": {
+          "deprecated": false,
+          "description": "turms-gateway will close the WebSocket connection if the client has not established a user session within the specified time. 0 means no timeout",
+          "global": false,
+          "mutable": false,
+          "sensitive": false,
+          "type": "int"
+        }
       }
     }
   },

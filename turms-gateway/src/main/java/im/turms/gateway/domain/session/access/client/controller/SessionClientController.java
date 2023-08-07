@@ -130,10 +130,10 @@ public class SessionClientController {
                         userStatus,
                         location,
                         sessionWrapper.getIpStr());
-        Timeout idleConnectionTimeout = sessionWrapper.getConnectionTimeoutTask();
+        Timeout sessionEstablishTimeout = sessionWrapper.getEstablishTimeoutTask();
         DeviceType finalDeviceType = deviceType;
         return handleLoginRequestMono.flatMap(session -> {
-            if (idleConnectionTimeout == null || idleConnectionTimeout.cancel()) {
+            if (sessionEstablishTimeout == null || sessionEstablishTimeout.cancel()) {
                 if (sessionWrapper.getConnection()
                         .isConnected()) {
                     sessionWrapper.setUserSession(session);

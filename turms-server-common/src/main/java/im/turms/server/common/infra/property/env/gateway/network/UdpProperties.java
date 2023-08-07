@@ -15,12 +15,14 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.infra.property.env.gateway;
+package im.turms.server.common.infra.property.env.gateway.network;
 
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+
+import im.turms.server.common.infra.property.env.gateway.BaseServerProperties;
 
 /**
  * @author James Chen

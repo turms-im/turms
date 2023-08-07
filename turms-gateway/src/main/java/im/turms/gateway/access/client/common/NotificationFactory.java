@@ -55,7 +55,10 @@ public final class NotificationFactory {
         return builder.build();
     }
 
-    public static TurmsNotification create(ResponseStatusCode code, String reason, long requestId) {
+    public static TurmsNotification create(
+            ResponseStatusCode code,
+            @Nullable String reason,
+            long requestId) {
         TurmsNotification.Builder builder = ClientMessagePool.getTurmsNotificationBuilder()
                 .setTimestamp(System.currentTimeMillis())
                 .setRequestId(requestId)

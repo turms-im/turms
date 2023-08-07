@@ -18,6 +18,7 @@
 package im.turms.gateway.access.client.common;
 
 import java.net.InetSocketAddress;
+import java.time.Duration;
 import jakarta.annotation.Nullable;
 
 import io.netty.buffer.ByteBuf;
@@ -52,29 +53,32 @@ public abstract class UserSessionAssembler {
     private final ApiLoggingContext apiLoggingContext;
     protected final ClientRequestDispatcher clientRequestDispatcher;
     protected final SessionService sessionService;
-    protected final int closeIdleConnectionAfterSeconds;
+    protected final int establishTimeoutMillis;
+    protected final Duration closeTimeout;
 
     protected UserSessionAssembler(
             ApiLoggingContext apiLoggingContext,
             ClientRequestDispatcher clientRequestDispatcher,
             SessionService sessionService,
-            int closeIdleConnectionAfterSeconds) {
+            int establishTimeoutMillis,
+            int closeTimeoutMillis) {
         this.apiLoggingContext = apiLoggingContext;
         this.clientRequestDispatcher = clientRequestDispatcher;
         this.sessionService = sessionService;
-        this.closeIdleConnectionAfterSeconds = closeIdleConnectionAfterSeconds;
+        this.establishTimeoutMillis = establishTimeoutMillis;
+        this.closeTimeout = Duration.ofMillis(closeTimeoutMillis);
     }
 
-    protected abstract NetConnection createConnection(Connection connection);
+    protected abstract NetConnection createConnection(Connection connection, Duration closeTimeout);
 
     protected ConnectionListener bindConnectionWithSessionWrapper() {
         return (connection, in, out, onClose) -> {
             InetSocketAddress address = (InetSocketAddress) connection.address();
-            NetConnection netConnection = createConnection(connection);
+            NetConnection netConnection = createConnection(connection, closeTimeout);
             UserSessionWrapper sessionWrapper = new UserSessionWrapper(
                     netConnection,
                     address,
-                    closeIdleConnectionAfterSeconds,
+                    establishTimeoutMillis,
                     userSession -> userSession
                             .setNotificationConsumer((turmsNotificationBuffer, tracingContext) -> {
                                 turmsNotificationBuffer.touch(turmsNotificationBuffer);
@@ -151,12 +155,12 @@ public abstract class UserSessionAssembler {
     private Mono<Void> tryRemoveSessionInfoOnConnectionClosed(
             Mono<Void> onClose,
             UserSessionWrapper sessionWrapper) {
-        return onClose.onErrorResume(throwable -> {
+        return onClose.onErrorComplete(throwable -> {
             handleConnectionError(throwable,
                     sessionWrapper.getConnection(),
                     sessionWrapper.getUserSession(),
                     TracingContext.NOOP);
-            return Mono.empty();
+            return true;
         })
                 .doFinally(signal -> {
                     UserSession userSession = sessionWrapper.getUserSession();

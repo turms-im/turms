@@ -18,7 +18,7 @@
 package im.turms.gateway.access.client.websocket;
 
 import java.util.List;
-import java.util.function.BiFunction;
+import jakarta.annotation.Nullable;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.handler.codec.http.HttpHeaders;
@@ -47,7 +47,7 @@ import im.turms.server.common.infra.metrics.TurmsMicrometerChannelMetricsRecorde
 import im.turms.server.common.infra.net.BindException;
 import im.turms.server.common.infra.net.SslUtil;
 import im.turms.server.common.infra.property.env.common.SslProperties;
-import im.turms.server.common.infra.property.env.gateway.WebSocketProperties;
+import im.turms.server.common.infra.property.env.gateway.network.WebSocketProperties;
 
 import static io.netty.channel.ChannelOption.CONNECT_TIMEOUT_MILLIS;
 import static io.netty.channel.ChannelOption.SO_BACKLOG;
@@ -93,7 +93,7 @@ public final class WebSocketServerFactory {
         HttpServer server = HttpServer.create()
                 .host(host)
                 .port(port)
-                .option(CONNECT_TIMEOUT_MILLIS, webSocketProperties.getConnectTimeout())
+                .option(CONNECT_TIMEOUT_MILLIS, webSocketProperties.getConnectTimeoutMillis())
                 .option(SO_REUSEADDR, true)
                 .option(SO_BACKLOG, webSocketProperties.getBacklog())
                 .childOption(SO_REUSEADDR, true)
@@ -104,7 +104,10 @@ public final class WebSocketServerFactory {
                         () -> new TurmsMicrometerChannelMetricsRecorder(
                                 MetricNameConst.CLIENT_NETWORK,
                                 "websocket"))
-                .handle(getHttpRequestHandler(connectionListener, serverSpec))
+                .handle((request, response) -> handleHttpRequest(request,
+                        response,
+                        connectionListener,
+                        serverSpec))
                 .doOnChannelInit((connectionObserver, channel, remoteAddress) -> channel.pipeline()
                         .addFirst("serviceAvailabilityHandler", serviceAvailabilityHandler));
         SslProperties ssl = webSocketProperties.getSsl();
@@ -123,52 +126,56 @@ public final class WebSocketServerFactory {
         }
     }
 
-    private static BiFunction<HttpServerRequest, HttpServerResponse, Publisher<Void>> getHttpRequestHandler(
+    /**
+     * @implNote 1. Return MonoNever to keep the connection alive
+     *           <p>
+     *           2. Return MonoEmpty to close the connection.
+     */
+    private static Publisher<Void> handleHttpRequest(
+            HttpServerRequest request,
+            HttpServerResponse response,
             ConnectionListener connectionListener,
             WebsocketServerSpec serverSpec) {
-        // Return MonoNever to keep the connection alive
-        // Return MonoEmpty to close the connection
-        return (request, response) -> {
-            // 1. Always respond with OK to CORS preflight requests
-            if (isPreFlightRequest(request)) {
-                return response.status(HttpResponseStatus.OK)
-                        .addHeader(ACCESS_CONTROL_ALLOW_ORIGIN, "*")
-                        .addHeader(ACCESS_CONTROL_ALLOW_METHODS, "*")
-                        .addHeader(ACCESS_CONTROL_ALLOW_HEADERS, "*")
-                        .addHeader(ACCESS_CONTROL_MAX_AGE, "7200")
-                        .send()
-                        .then(Mono.never());
-            }
-            // 2. Validate handshake request
-            HttpResponseStatus errorStatus = validateHandshakeRequest(request);
-            if (errorStatus != null) {
-                return response.status(errorStatus)
-                        .send()
-                        // Close the TCP connection
-                        .then();
-            }
-            // 3. Upgrade to WebSocket
-            // reactor.netty.http.server.HttpServer.HttpServerHandle.onStateChange
-            int maxFramePayloadLength = serverSpec.maxFramePayloadLength();
-            return response.sendWebsocket((in, out) -> {
-                Flux<ByteBuf> inbound = in.aggregateFrames(maxFramePayloadLength)
-                        .receiveFrames()
-                        // Note that:
-                        // 1. PingWebSocketFrame will be handled by Netty itself
-                        // 2. The flatMap is called by FluxReceive, which will release buffer after
-                        // "onNext" returns
-                        .flatMap(frame -> frame instanceof BinaryWebSocketFrame
-                                ? Mono.just(frame.content())
-                                : Mono.empty());
-                Mono<Void> onClose = in.receiveCloseStatus()
-                        .then();
-                // BinaryWebSocketFrame will be created by
-                // reactor.netty.http.server.WebsocketServerOperations.send
-                return connectionListener.onAdded((Connection) in, inbound, out, onClose);
-            }, serverSpec);
-        };
+        // 1. Always respond with OK to CORS preflight requests
+        if (isPreFlightRequest(request)) {
+            return response.status(HttpResponseStatus.OK)
+                    .addHeader(ACCESS_CONTROL_ALLOW_ORIGIN, "*")
+                    .addHeader(ACCESS_CONTROL_ALLOW_METHODS, "*")
+                    .addHeader(ACCESS_CONTROL_ALLOW_HEADERS, "*")
+                    .addHeader(ACCESS_CONTROL_MAX_AGE, "7200")
+                    .send()
+                    .then(Mono.never());
+        }
+        // 2. Validate handshake request
+        HttpResponseStatus errorStatus = validateHandshakeRequest(request);
+        if (errorStatus != null) {
+            return response.status(errorStatus)
+                    .send()
+                    // Close the TCP connection
+                    .then();
+        }
+        // 3. Upgrade to WebSocket
+        // reactor.netty.http.server.HttpServer.HttpServerHandle.onStateChange
+        int maxFramePayloadLength = serverSpec.maxFramePayloadLength();
+        return response.sendWebsocket((in, out) -> {
+            Flux<ByteBuf> inbound = in.aggregateFrames(maxFramePayloadLength)
+                    .receiveFrames()
+                    // Note that:
+                    // 1. PingWebSocketFrame will be handled by Netty itself
+                    // 2. The flatMap is called by FluxReceive, which will release buffer after
+                    // "onNext" returns
+                    .flatMap(frame -> frame instanceof BinaryWebSocketFrame
+                            ? Mono.just(frame.content())
+                            : Mono.empty());
+            Mono<Void> onClose = in.receiveCloseStatus()
+                    .then();
+            // BinaryWebSocketFrame will be created by
+            // reactor.netty.http.server.WebsocketServerOperations.send
+            return connectionListener.onAdded((Connection) in, inbound, out, onClose);
+        }, serverSpec);
     }
 
+    @Nullable
     private static HttpResponseStatus validateHandshakeRequest(HttpServerRequest request) {
         HttpMethod method = request.method();
         HttpHeaders headers = request.requestHeaders();

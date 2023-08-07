@@ -51,7 +51,7 @@ import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.metrics.TurmsMicrometerChannelMetricsRecorder;
 import im.turms.server.common.infra.net.BindException;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
-import im.turms.server.common.infra.property.env.gateway.UdpProperties;
+import im.turms.server.common.infra.property.env.gateway.network.UdpProperties;
 
 /**
  * @author James Chen

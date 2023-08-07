@@ -18,6 +18,8 @@
 package im.turms.gateway.access.client.tcp;
 
 import java.net.InetSocketAddress;
+import java.time.Duration;
+import java.util.concurrent.TimeoutException;
 
 import io.netty.buffer.ByteBuf;
 import reactor.core.publisher.Mono;
@@ -29,6 +31,7 @@ import im.turms.server.common.domain.session.bo.CloseReason;
 import im.turms.server.common.infra.exception.ThrowableUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
+import im.turms.server.common.infra.reactor.HashedWheelScheduler;
 
 /**
  * @author James Chen
@@ -38,10 +41,15 @@ public class TcpConnection extends NetConnection {
     private static final Logger LOGGER = LoggerFactory.getLogger(TcpConnection.class);
 
     private final ChannelOperations<?, ?> connection;
+    private final Duration closeTimeout;
 
-    protected TcpConnection(ChannelOperations<?, ?> connection, boolean isConnected) {
+    protected TcpConnection(
+            ChannelOperations<?, ?> connection,
+            boolean isConnected,
+            Duration closeTimeout) {
         super(isConnected);
         this.connection = connection;
+        this.closeTimeout = closeTimeout;
     }
 
     @Override
@@ -64,22 +72,29 @@ public class TcpConnection extends NetConnection {
             return;
         }
         super.close(closeReason);
-        connection.sendObject(NotificationFactory.createBuffer(closeReason))
+        Mono<Void> mono = connection.sendObject(NotificationFactory.createBuffer(closeReason))
                 .then()
                 .doOnError(throwable -> {
                     if (!ThrowableUtil.isDisconnectedClientError(throwable)) {
                         LOGGER.error("Failed to send the close notification", throwable);
                     }
                 })
-                .retryWhen(RETRY_SEND_CLOSE_NOTIFICATION)
-                .doFinally(signal -> close())
-                .subscribe(null, t -> {
-                    if (!ThrowableUtil.isDisconnectedClientError(t)) {
-                        LOGGER.error("Failed to send the close notification after ("
-                                + RETRY_SEND_CLOSE_NOTIFICATION.maxAttempts
-                                + ") attempts", t);
-                    }
-                });
+                .retryWhen(RETRY_SEND_CLOSE_NOTIFICATION);
+        if (closeTimeout.isZero()) {
+            mono = mono.doFinally(signal -> close());
+        } else if (!closeTimeout.isNegative()) {
+            mono = mono.then(connection.onTerminate())
+                    .timeout(closeTimeout, HashedWheelScheduler.getDaemon())
+                    .onErrorComplete(TimeoutException.class)
+                    .doFinally(signal -> close());
+        }
+        mono.subscribe(null, t -> {
+            if (!ThrowableUtil.isDisconnectedClientError(t)) {
+                LOGGER.error("Failed to send the close notification after ("
+                        + RETRY_SEND_CLOSE_NOTIFICATION.maxAttempts
+                        + ") attempts", t);
+            }
+        });
     }
 
     @Override

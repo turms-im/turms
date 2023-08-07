@@ -15,14 +15,16 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.infra.property.env.gateway;
+package im.turms.server.common.infra.property.env.gateway.network;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
+import im.turms.server.common.infra.property.env.gateway.BaseServerProperties;
 import im.turms.server.common.infra.property.metadata.Description;
 
 /**
@@ -33,23 +35,16 @@ import im.turms.server.common.infra.property.metadata.Description;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-public class TcpProperties extends BaseServerProperties {
+public class WebSocketProperties extends BaseServerProperties {
 
     @Description("The maximum number of connection requests waiting in the backlog queue. "
             + "Large enough to handle bursts and GC pauses "
             + "but do not set too large to prevent SYN-Flood attacks")
     private int backlog = 4096;
 
-    /**
-     * To mitigate the Slowloris DoS attack by lowering the timeout for the TCP connection handshake
-     */
-    private int connectionTimeout = 30;
+    @Description("Used to mitigate the Slowloris DoS attack by lowering the timeout for the TCP connection handshake")
+    private int connectTimeoutMillis = 30 * 1000;
 
-    @Description("A TCP connection will be closed on the server side if a client has not established a user session in a specified time. "
-            + "Note that the developers on the client side should take the responsibility "
-            + "to close the TCP connection according to their business requirements")
-    private int closeIdleConnectionAfterSeconds = 60 * 5;
-
-    private boolean wiretap;
-
+    @NestedConfigurationProperty
+    private WebSocketSessionProperties session = new WebSocketSessionProperties();
 }

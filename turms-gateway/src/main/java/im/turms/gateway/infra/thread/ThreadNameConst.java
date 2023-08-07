@@ -36,8 +36,8 @@ public class ThreadNameConst {
     public static final String GATEWAY_TCP_PREFIX = "turms-gateway-tcp";
     public static final String GATEWAY_WS_PREFIX = "turms-gateway-ws";
 
-    public static final String GATEWAY_IDLE_CONNECTION_TIMEOUT_TIMER =
-            "turms-gateway-idle-connection-timeout-timer";
+    public static final String GATEWAY_SESSION_ESTABLISH_TIMEOUT_TIMER =
+            "turms-gateway-session-establish-timeout-timer";
 
     // Throttler
     public static final String IP_REQUEST_TOKEN_BUCKET_CLEANER =

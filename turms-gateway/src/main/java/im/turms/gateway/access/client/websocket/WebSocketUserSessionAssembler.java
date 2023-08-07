@@ -17,6 +17,8 @@
 
 package im.turms.gateway.access.client.websocket;
 
+import java.time.Duration;
+
 import org.springframework.stereotype.Component;
 import reactor.netty.Connection;
 import reactor.netty.DisposableServer;
@@ -34,7 +36,7 @@ import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.gateway.GatewayProperties;
-import im.turms.server.common.infra.property.env.gateway.WebSocketProperties;
+import im.turms.server.common.infra.property.env.gateway.network.WebSocketProperties;
 
 /**
  * @author James Chen
@@ -58,10 +60,16 @@ public class WebSocketUserSessionAssembler extends UserSessionAssembler {
         super(apiLoggingContext,
                 clientRequestDispatcher,
                 sessionService,
-                propertiesManager.getGlobalProperties()
+                propertiesManager.getLocalProperties()
                         .getGateway()
                         .getWebsocket()
-                        .getCloseIdleConnectionAfterSeconds());
+                        .getSession()
+                        .getEstablishTimeoutMillis(),
+                propertiesManager.getLocalProperties()
+                        .getGateway()
+                        .getWebsocket()
+                        .getSession()
+                        .getCloseTimeoutMillis());
         GatewayProperties gatewayProperties = propertiesManager.getLocalProperties()
                 .getGateway();
         WebSocketProperties webSocketProperties = gatewayProperties.getWebsocket();
@@ -85,8 +93,8 @@ public class WebSocketUserSessionAssembler extends UserSessionAssembler {
     }
 
     @Override
-    protected NetConnection createConnection(Connection connection) {
-        return new WebSocketConnection(connection, true);
+    protected NetConnection createConnection(Connection connection, Duration closeTimeout) {
+        return new WebSocketConnection(connection, true, closeTimeout);
     }
 
 }

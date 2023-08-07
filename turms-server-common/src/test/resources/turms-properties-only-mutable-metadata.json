@@ -467,9 +467,13 @@
         "type": "enum"
       }
     },
-    "tcp": {},
+    "tcp": {
+      "session": {}
+    },
     "udp": {},
-    "websocket": {}
+    "websocket": {
+      "session": {}
+    }
   },
   "healthCheck": {
     "cpu": {},
