@@ -16,6 +16,7 @@ class NotificationService {
           listener.call(Notification(
               DateTime.fromMillisecondsSinceEpoch(
                   notification.timestamp.toInt()),
+              notification.requesterId,
               notification.relayedRequest));
         }
       }

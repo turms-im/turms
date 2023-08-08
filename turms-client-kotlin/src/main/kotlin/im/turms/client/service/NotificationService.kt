@@ -35,7 +35,7 @@ class NotificationService(turmsClient: TurmsClient) {
                     !notification.relayedRequest.hasCreateMessageRequest() &&
                     !notification.hasCloseStatus()
                 if (isBusinessNotification) {
-                    val n = Notification(Date(notification.timestamp), notification.relayedRequest)
+                    val n = Notification(Date(notification.timestamp), notification.requesterId, notification.relayedRequest)
                     notificationListeners.forEach { it(n) }
                 }
             }

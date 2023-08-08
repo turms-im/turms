@@ -14,7 +14,7 @@ export default class NotificationService {
                     && !notification.relayedRequest.createMessageRequest
                     && !notification.closeStatus;
                 if (isBusinessNotification) {
-                    const n = new Notification(new Date(parseInt(notification.timestamp)), notification.relayedRequest);
+                    const n = new Notification(new Date(parseInt(notification.timestamp)), notification.requesterId, notification.relayedRequest);
                     this._notificationListeners.forEach(listener => listener(n));
                 }
             });

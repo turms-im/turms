@@ -14,7 +14,7 @@ public class NotificationService {
                 if case .createMessageRequest = notification.relayedRequest.kind {
                     return
                 }
-                let n = Notification(timestamp: Date(timeIntervalSince1970: TimeInterval(notification.timestamp)), relayedRequest: notification.relayedRequest)
+                let n = Notification(timestamp: Date(timeIntervalSince1970: TimeInterval(notification.timestamp)), requesterId: notification.requesterID, relayedRequest: notification.relayedRequest)
                 self?.notificationListeners.forEach {
                     $0(n)
                 }
