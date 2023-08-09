@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -60,6 +61,7 @@ import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.collection.CollectorUtil;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.exception.ResponseExceptionPublisherPool;
+import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.property.env.common.cluster.DiscoveryProperties;
@@ -213,7 +215,7 @@ public class DiscoveryService implements ClusterService {
 
     @Override
     public void start() {
-        listenLeadershipChangeEvent();
+        listenLeaderChangeEvent();
 
         // Members
         listenMembersChangeEvent();
@@ -309,33 +311,39 @@ public class DiscoveryService implements ClusterService {
         return sharedConfigService.exists(Member.class, filter);
     }
 
-    private void listenLeadershipChangeEvent() {
+    private void listenLeaderChangeEvent() {
         sharedConfigService.subscribe(Leader.class, FullDocument.UPDATE_LOOKUP)
                 .doOnNext(event -> {
                     Leader changedLeader = event.getFullDocument();
                     String clusterId = changedLeader != null
                             ? changedLeader.getClusterId()
                             : ChangeStreamUtil.getIdAsString(event.getDocumentKey());
-                    if (clusterId.equals(localNodeStatusManager.getLocalMember()
+                    if (!clusterId.equals(localNodeStatusManager.getLocalMember()
                             .getClusterId())) {
-                        switch (event.getOperationType()) {
-                            case INSERT, REPLACE, UPDATE -> leader = changedLeader;
-                            case INVALIDATE -> {
-                                leader = null;
-                                int delay = (int) (5 * ThreadLocalRandom.current()
-                                        .nextFloat());
-                                Mono.delay(Duration.ofSeconds(delay))
-                                        .subscribe(ignored -> {
-                                            if (leader == null) {
-                                                localNodeStatusManager.tryBecomeFirstLeader()
-                                                        .subscribe(null,
-                                                                t -> LOGGER.error(
-                                                                        "Caught an error while trying to become the first leader",
-                                                                        t));
-                                            }
-                                        });
-                            }
+                        return;
+                    }
+                    switch (event.getOperationType()) {
+                        case INSERT, REPLACE, UPDATE -> leader = changedLeader;
+                        case DELETE -> {
+                            leader = null;
+                            int delay = (int) (5 * ThreadLocalRandom.current()
+                                    .nextFloat());
+                            Mono.delay(Duration.ofSeconds(delay))
+                                    .subscribe(ignored -> {
+                                        if (leader == null) {
+                                            localNodeStatusManager.tryBecomeFirstLeader()
+                                                    .subscribe(null,
+                                                            t -> LOGGER.error(
+                                                                    "Caught an error while trying to become the first leader",
+                                                                    t));
+                                        }
+                                    });
                         }
+                        case INVALIDATE -> leader = null;
+                        default -> LOGGER.fatal("Detected an illegal operation on the collection \""
+                                + StringUtil
+                                        .upperCamelToLowerCamelLatin1(Leader.class.getSimpleName())
+                                + "\" in the change stream event: {}", event);
                     }
                 })
                 .onErrorContinue((throwable, o) -> LOGGER.error(
@@ -373,8 +381,7 @@ public class DiscoveryService implements ClusterService {
                             // Note that we assume that there is no the case:
                             // a node is running but has just been unregistered in the registry
                             // because the node may lose the connection with the registry and TTL
-                            // has
-                            // passed.
+                            // has passed.
                             // During the time, another node with the SAME node ID registers itself.
                             // If the lost node recovers again, there is a potential bug.
                             if (nodeId.equals(localNodeStatusManager.getLocalMember()
@@ -382,13 +389,27 @@ public class DiscoveryService implements ClusterService {
                                 localNodeStatusManager.setLocalNodeRegistered(false);
                                 if (!localNodeStatusManager.isClosing()) {
                                     // Ignore the error because the node may have been registered by
-                                    // its
-                                    // heartbeat timer
+                                    // its heartbeat timer
                                     localNodeStatusManager.registerLocalNodeAsMember(true)
                                             .subscribe();
                                 }
                             }
                         }
+                        case INVALIDATE -> {
+                            Iterator<Map.Entry<String, Member>> iterator =
+                                    allKnownMembers.entrySet()
+                                            .iterator();
+                            while (iterator.hasNext()) {
+                                Member deletedMember = iterator.next()
+                                        .getValue();
+                                updateOtherActiveConnectedMemberList(false, deletedMember);
+                                iterator.remove();
+                            }
+                        }
+                        default -> LOGGER.fatal("Detected an illegal operation on the collection \""
+                                + StringUtil
+                                        .upperCamelToLowerCamelLatin1(Member.class.getSimpleName())
+                                + "\" in the change stream event: {}", event);
                     }
                     updateActiveMembers(allKnownMembers.values());
                     connectionService.updateHasConnectedToAllMembers(allKnownMembers.keySet());
