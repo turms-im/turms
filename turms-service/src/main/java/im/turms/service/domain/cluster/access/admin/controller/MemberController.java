@@ -22,6 +22,7 @@ import java.util.List;
 
 import reactor.core.publisher.Mono;
 
+import im.turms.server.common.access.admin.dto.response.DeleteResultDTO;
 import im.turms.server.common.access.admin.dto.response.HttpHandlerResult;
 import im.turms.server.common.access.admin.dto.response.ResponseDTO;
 import im.turms.server.common.access.admin.permission.RequiredPermission;
@@ -75,10 +76,10 @@ public class MemberController extends BaseController {
 
     @DeleteMapping
     @RequiredPermission(CLUSTER_MEMBER_DELETE)
-    public Mono<HttpHandlerResult<ResponseDTO<Void>>> removeMembers(List<String> ids) {
-        Mono<Void> unregisterMembers =
+    public Mono<HttpHandlerResult<ResponseDTO<DeleteResultDTO>>> removeMembers(List<String> ids) {
+        Mono<Long> unregisterMembers =
                 discoveryService.unregisterMembers(CollectionUtil.newSet(ids));
-        return unregisterMembers.thenReturn(HttpHandlerResult.RESPONSE_OK);
+        return HttpHandlerResult.deleteResultByLongMono(unregisterMembers);
     }
 
     @PostMapping

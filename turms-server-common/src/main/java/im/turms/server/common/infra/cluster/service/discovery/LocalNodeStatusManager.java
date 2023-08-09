@@ -119,36 +119,46 @@ public class LocalNodeStatusManager {
                 });
     }
 
-    public Mono<Void> unregisterLocalNodeMembership() {
-        LOGGER.info("Unregistering the membership of the local node");
+    public Mono<Void> unregisterLocalNodeMembershipAndLeadership() {
+        LOGGER.info("Unregistering the membership and the leadership of the local node");
         return discoveryService.unregisterMembers(Set.of(localMember.getNodeId()))
-                .then(unregisterLocalMemberLeadership())
-                .doOnError(e -> LOGGER
-                        .error("Failed to unregister the membership of the local node", e))
-                .doOnSuccess(ignored -> {
+                .flatMap(count -> {
+                    if (count > 0) {
+                        LOGGER.info("Unregistered the membership of the local node");
+                    } else {
+                        LOGGER.info("The local node is not a member");
+                    }
+                    return unregisterLocalMemberLeadership();
+                })
+                .doOnSuccess(wasRegistered -> {
                     isLocalNodeRegistered = false;
-                    LOGGER.info("Unregistered the membership of the local node");
-                });
+                    if (wasRegistered) {
+                        LOGGER.info("Unregistered the leadership of the local node");
+                    } else {
+                        LOGGER.info("The local node is not a leader");
+                    }
+                })
+                .then();
     }
 
-    public Mono<Void> tryBecomeFirstLeader() {
+    public Mono<Boolean> tryBecomeFirstLeader() {
         List<Member> qualifiedMembersToBeLeader = discoveryService.findQualifiedMembersToBeLeader();
-        if (qualifiedMembersToBeLeader.contains(localMember)) {
-            String clusterId = localMember.getClusterId();
-            Leader localLeader = new Leader(clusterId, localMember.getNodeId(), new Date(), 1);
-            return sharedConfigService.insert(localLeader)
-                    .then()
-                    .onErrorComplete(DuplicateKeyException.class);
+        if (!qualifiedMembersToBeLeader.contains(localMember)) {
+            return PublisherPool.FALSE;
         }
-        return Mono.empty();
+        String clusterId = localMember.getClusterId();
+        Leader localLeader = new Leader(clusterId, localMember.getNodeId(), new Date(), 1);
+        return sharedConfigService.insert(localLeader)
+                .thenReturn(true)
+                .onErrorReturn(DuplicateKeyException.class, false);
     }
 
-    private Mono<Void> unregisterLocalMemberLeadership() {
+    private Mono<Boolean> unregisterLocalMemberLeadership() {
         Filter query = Filter.newBuilder(2)
                 .eq(DomainFieldName.ID, localMember.getClusterId())
                 .eq(Leader.Fields.nodeId, localMember.getNodeId());
         return sharedConfigService.removeOne(Leader.class, query)
-                .then();
+                .map(deleteResult -> deleteResult.getDeletedCount() > 0);
     }
 
     public boolean isLocalNodeId(String nodeId) {

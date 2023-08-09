@@ -27,6 +27,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledExecutorService;
@@ -39,6 +40,7 @@ import jakarta.validation.constraints.NotNull;
 
 import com.mongodb.client.model.changestream.FullDocument;
 import com.mongodb.client.model.changestream.UpdateDescription;
+import com.mongodb.client.result.DeleteResult;
 import lombok.Getter;
 import org.bson.BsonValue;
 import reactor.core.publisher.Flux;
@@ -251,13 +253,17 @@ public class DiscoveryService implements ClusterService {
                     "Caught an error while registering the local node as a member",
                     e);
         }
+        boolean isLeader;
         try {
-            localNodeStatusManager.tryBecomeFirstLeader()
+            isLeader = localNodeStatusManager.tryBecomeFirstLeader()
                     .block();
         } catch (Exception e) {
             throw new RuntimeException(
                     "Caught an error while trying to become the first leader",
                     e);
+        }
+        if (isLeader) {
+            LOGGER.info("The local node has become the first leader");
         }
         localNodeStatusManager.startHeartbeat();
     }
@@ -323,19 +329,44 @@ public class DiscoveryService implements ClusterService {
                         return;
                     }
                     switch (event.getOperationType()) {
-                        case INSERT, REPLACE, UPDATE -> leader = changedLeader;
+                        case INSERT, REPLACE, UPDATE -> {
+                            if (null == leader) {
+                                LOGGER.info("The leader has changed to: {}", changedLeader);
+                            } else if (!Objects.equals(leader.getNodeId(),
+                                    changedLeader.getNodeId())
+                                    || !Objects.equals(leader.getGeneration(),
+                                            changedLeader.getGeneration())) {
+                                LOGGER.info("The leader has changed from ({}) to: {}",
+                                        leader,
+                                        changedLeader);
+                            }
+                            leader = changedLeader;
+                        }
                         case DELETE -> {
                             leader = null;
                             int delay = (int) (5 * ThreadLocalRandom.current()
                                     .nextFloat());
+                            LOGGER.info(
+                                    "The leader has been deleted. Tyring to be the first leader after {} seconds",
+                                    delay);
                             Mono.delay(Duration.ofSeconds(delay))
                                     .subscribe(ignored -> {
                                         if (leader == null) {
                                             localNodeStatusManager.tryBecomeFirstLeader()
-                                                    .subscribe(null,
+                                                    .subscribe(isLeader -> {
+                                                        if (isLeader) {
+                                                            LOGGER.info(
+                                                                    "The local node has become the first leader");
+                                                        } else {
+                                                            LOGGER.info(
+                                                                    "Another node has become the first leader");
+                                                        }
+                                                    },
                                                             t -> LOGGER.error(
                                                                     "Caught an error while trying to become the first leader",
                                                                     t));
+                                        } else {
+                                            LOGGER.info("Another node has become the first leader");
                                         }
                                     });
                         }
@@ -377,6 +408,8 @@ public class DiscoveryService implements ClusterService {
                             if (deletedMember == null) {
                                 return;
                             }
+                            LOGGER.info("A member has been deleted: "
+                                    + deletedMember);
                             updateOtherActiveConnectedMemberList(false, deletedMember);
                             // Note that we assume that there is no the case:
                             // a node is running but has just been unregistered in the registry
@@ -402,6 +435,8 @@ public class DiscoveryService implements ClusterService {
                             while (iterator.hasNext()) {
                                 Member deletedMember = iterator.next()
                                         .getValue();
+                                LOGGER.info("A member has been deleted: "
+                                        + deletedMember);
                                 updateOtherActiveConnectedMemberList(false, deletedMember);
                                 iterator.remove();
                             }
@@ -501,7 +536,10 @@ public class DiscoveryService implements ClusterService {
         String nodeId = newMember.getNodeId();
         Member localMember = localNodeStatusManager.getLocalMember();
         boolean isLocalNode = nodeId.equals(localMember.getNodeId());
-        allKnownMembers.put(nodeId, newMember);
+        if (allKnownMembers.put(nodeId, newMember) == null) {
+            LOGGER.info("A new member has been added: "
+                    + newMember);
+        }
         synchronized (this) {
             if (isLocalNode) {
                 localNodeStatusManager.updateInfo(newMember);
@@ -601,7 +639,7 @@ public class DiscoveryService implements ClusterService {
             // ignored
         }
         if (localNodeStatusManager.isLocalNodeRegistered()) {
-            return localNodeStatusManager.unregisterLocalNodeMembership()
+            return localNodeStatusManager.unregisterLocalNodeMembershipAndLeadership()
                     .onErrorMap(t -> new RuntimeException(
                             "Caught an error while unregistering the membership of the local node",
                             t));
@@ -637,12 +675,12 @@ public class DiscoveryService implements ClusterService {
                 .then();
     }
 
-    public Mono<Void> unregisterMembers(Set<String> nodeIds) {
+    public Mono<Long> unregisterMembers(Set<String> nodeIds) {
         Filter filter = Filter.newBuilder(2)
                 .eq(Member.ID_CLUSTER_ID, getLocalMember().getClusterId())
                 .in(Member.ID_NODE_ID, nodeIds);
         return sharedConfigService.remove(Member.class, filter)
-                .then();
+                .map(DeleteResult::getDeletedCount);
     }
 
     public Mono<Void> updateMemberInfo(

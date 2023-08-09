@@ -148,6 +148,11 @@ public record HttpHandlerResult<T>(
         return okIfTruthy(data.map(DeleteResultDTO::get));
     }
 
+    public static Mono<HttpHandlerResult<ResponseDTO<DeleteResultDTO>>> deleteResultByLongMono(
+            Mono<Long> data) {
+        return okIfTruthy(data.map(DeleteResultDTO::new));
+    }
+
     public static HttpHandlerResult<ResponseDTO<DeleteResultDTO>> deleteResult(long deletedCount) {
         return okIfTruthy(new DeleteResultDTO(deletedCount));
     }
