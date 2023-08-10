@@ -105,7 +105,6 @@ public class RpcService implements ClusterService {
         this.discoveryService = discoveryService;
         connectionService.addMemberConnectionListenerSupplier(() -> new MemberConnectionListener() {
             private TurmsConnection connection;
-            private Member member;
             private RpcEndpoint endpoint;
 
             @Override
@@ -116,16 +115,25 @@ public class RpcService implements ClusterService {
                 conn.addHandlerLast("rpcRequestFrameEncoder", RpcFrameEncoder.INSTANCE);
             }
 
+            /**
+             * @implNote 1. We don't need to close the endpoint after removing them because they
+             *           should be closed when "onConnectionClosed" invoked.
+             *           <p>
+             *           2. We only need to try to get the node ID from the connection because if
+             *           its member exists, the connection should have bound with the node ID too.
+             */
             @Override
             public void onConnectionClosed() {
-                if (member != null) {
-                    nodeIdToEndpoint.remove(member.getNodeId());
+                if (connection != null) {
+                    String nodeId = connection.getNodeId();
+                    if (nodeId != null) {
+                        nodeIdToEndpoint.remove(nodeId);
+                    }
                 }
             }
 
             @Override
             public void onOpeningHandshakeCompleted(Member member) {
-                this.member = member;
                 endpoint = getOrCreateEndpoint(member.getNodeId(), connection);
             }
 

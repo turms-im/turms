@@ -541,6 +541,7 @@ public class ConnectionService implements ClusterService {
                             : " unexpectedly",
                     throwable);
         } else {
+            connectingMembers.remove(nodeId);
             LOGGER.log(logLevel,
                     "[{}] The connection to the member{} has been closed{}",
                     nodeType,
@@ -564,11 +565,20 @@ public class ConnectionService implements ClusterService {
         boolean isClosing = discoveryService.getLocalNodeStatusManager()
                 .isClosing();
         if (isLocalNodeClient && isKnownMember && !isClosing) {
+            LOGGER.info("[{}] Try to reconnect the member{} after {} millis",
+                    nodeType,
+                    memberIdAndAddress,
+                    reconnectInterval.toMillis());
             Mono.delay(reconnectInterval)
                     .subscribe(ignored -> {
                         Member memberToConnect = discoveryService.getAllKnownMembers()
                                 .get(nodeId);
-                        if (memberToConnect != null) {
+                        if (memberToConnect == null) {
+                            LOGGER.info(
+                                    "[{}] Stop to reconnect the member{} because it has been unregistered",
+                                    nodeType,
+                                    memberIdAndAddress);
+                        } else {
                             connectMemberUntilSucceedOrRemoved(memberToConnect);
                         }
                     });
