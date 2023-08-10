@@ -161,7 +161,7 @@ public class ConnectionService: BaseService {
 
     public func disconnect() -> Promise<Void> {
         return Promise { seal in
-            if stateStore.isConnected {
+            if !stateStore.isConnected {
                 seal.fulfill(())
                 return
             }
@@ -180,6 +180,7 @@ public class ConnectionService: BaseService {
     private func onSocketClosed(_ error: Error?) {
         decoder.clear()
         stateStore.isConnected = false
+        fulfillDisconnectPromises()
         notifyOnDisconnectedListeners(error)
     }
 
