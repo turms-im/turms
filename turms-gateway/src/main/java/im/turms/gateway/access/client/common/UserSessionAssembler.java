@@ -111,6 +111,10 @@ public abstract class UserSessionAssembler {
             if (connection.isDisposed()) {
                 return;
             }
+            UserSession userSession = sessionWrapper.getUserSession();
+            if (userSession != null && !userSession.isSessionOpen()) {
+                return;
+            }
             // Retain by 1 so that it won't be released by FluxReceive#drainReceiver
             // before we finish handling the buffer.
             // And it should be 2 after retained
