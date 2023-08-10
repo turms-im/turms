@@ -120,11 +120,17 @@ public class TurmsDriver {
             if heartbeatService.rejectHeartbeatPromisesIfFail(notification) {
                 return
             }
+            if notification.hasCloseStatus {
+                stateStore.isSessionOpen = false
+                messageService.didReceiveNotification(notification)
+                // We must close the connection after finishing handling the notification
+                // to ensure notification handlers will always be triggered before connection close handlers.
+                connectionService.disconnect()
+                return
+            }
             if notification.hasData, case .userSession = notification.data.kind! {
                 stateStore.sessionId = notification.data.userSession.sessionID
                 stateStore.serverId = notification.data.userSession.serverID
-            } else if notification.hasCloseStatus {
-                stateStore.isSessionOpen = false
             }
             messageService.didReceiveNotification(notification)
         }

@@ -29,6 +29,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.runBlocking
 import java.lang.reflect.Method
 import java.nio.ByteBuffer
 import java.util.concurrent.ConcurrentHashMap
@@ -171,12 +172,20 @@ class TurmsDriver(
             if (heartbeatService.rejectHeartbeatPromisesIfFail(notification)) {
                 return
             }
+            if (notification.hasCloseStatus()) {
+                stateStore.isSessionOpen = false
+                messageService.didReceiveNotification(notification)
+                // We must close the connection after finishing handling the notification
+                // to ensure notification handlers will always be triggered before connection close handlers.
+                runBlocking {
+                    connectionService.disconnect()
+                }
+                return
+            }
             val isSessionInfo = notification.hasData() && notification.data.hasUserSession()
             if (isSessionInfo) {
                 stateStore.sessionId = notification.data.userSession.sessionId
                 stateStore.serverId = notification.data.userSession.serverId
-            } else if (notification.hasCloseStatus()) {
-                stateStore.isSessionOpen = false
             }
             messageService.didReceiveNotification(notification)
         } else {

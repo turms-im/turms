@@ -135,13 +135,19 @@ class TurmsDriver {
       if (_heartbeatService.rejectHeartbeatCompletersIfFail(notification)) {
         return;
       }
+      if (notification.hasCloseStatus()) {
+        _stateStore.isSessionOpen = false;
+        _messageService.didReceiveNotification(notification);
+        // We must close the connection after finishing handling the notification
+        // to ensure notification handlers will always be triggered before connection close handlers.
+        _connectionService.disconnect();
+        return;
+      }
       if (notification.data.hasUserSession()) {
         final session = notification.data.userSession;
         _stateStore
           ..sessionId = session.sessionId
           ..serverId = session.serverId;
-      } else if (notification.hasCloseStatus()) {
-        _stateStore.isSessionOpen = false;
       }
       _messageService.didReceiveNotification(notification);
     } else {

@@ -183,12 +183,18 @@ export default class TurmsDriver {
             if (this._heartbeatService.rejectHeartbeatPromisesIfFail(notification)) {
                 return;
             }
+            if (notification.closeStatus) {
+                this._stateStore.isSessionOpen = false;
+                this._messageService.didReceiveNotification(notification);
+                // We must close the connection after finishing handling the notification
+                // to ensure notification handlers will always be triggered before connection close handlers.
+                this._connectionService.disconnect();
+                return;
+            }
             const session = notification.data?.userSession;
             if (session) {
                 this._stateStore.sessionId = session.sessionId;
                 this._stateStore.serverId = session.serverId;
-            } else if (notification.closeStatus) {
-                this._stateStore.isSessionOpen = false;
             }
             this._messageService.didReceiveNotification(notification);
         } else {
