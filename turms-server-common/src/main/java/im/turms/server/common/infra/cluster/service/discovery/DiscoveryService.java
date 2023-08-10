@@ -652,24 +652,23 @@ public class DiscoveryService implements ClusterService {
     public Mono<Void> registerMember(Member member) {
         boolean noClusterId = member.getClusterId() == null;
         boolean noNodeId = member.getNodeId() == null;
-        if (noClusterId || noNodeId) {
-            String message;
-            if (noClusterId) {
-                if (noNodeId) {
-                    message = "Failed to register the member ("
-                            + member
-                            + ") because both the cluster ID and the node ID are missing";
-                } else {
-                    message = "Failed to register the member ("
-                            + member
-                            + ") because the cluster ID is missing";
-                }
+        if (noClusterId) {
+            if (noNodeId) {
+                return Mono.error(new IllegalArgumentException(
+                        "Failed to register the member ("
+                                + member
+                                + ") because both the cluster ID and the node ID are missing"));
             } else {
-                message = "Failed to register the member ("
-                        + member
-                        + ") because the node ID is missing";
+                return Mono.error(new IllegalArgumentException(
+                        "Failed to register the member ("
+                                + member
+                                + ") because the cluster ID is missing"));
             }
-            throw new IllegalArgumentException(message);
+        } else if (noNodeId) {
+            return Mono.error(new IllegalArgumentException(
+                    "Failed to register the member ("
+                            + member
+                            + ") because the node ID is missing"));
         }
         return sharedConfigService.insert(member)
                 .then();
