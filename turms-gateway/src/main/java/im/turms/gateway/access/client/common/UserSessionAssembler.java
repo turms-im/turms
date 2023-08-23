@@ -17,7 +17,6 @@
 
 package im.turms.gateway.access.client.common;
 
-import java.net.InetSocketAddress;
 import java.time.Duration;
 import jakarta.annotation.Nullable;
 
@@ -72,12 +71,11 @@ public abstract class UserSessionAssembler {
     protected abstract NetConnection createConnection(Connection connection, Duration closeTimeout);
 
     protected ConnectionListener bindConnectionWithSessionWrapper() {
-        return (connection, in, out, onClose) -> {
-            InetSocketAddress address = (InetSocketAddress) connection.address();
+        return (connection, remoteAddress, in, out, onClose) -> {
             NetConnection netConnection = createConnection(connection, closeTimeout);
             UserSessionWrapper sessionWrapper = new UserSessionWrapper(
                     netConnection,
-                    address,
+                    remoteAddress,
                     establishTimeoutMillis,
                     userSession -> userSession
                             .setNotificationConsumer((turmsNotificationBuffer, tracingContext) -> {

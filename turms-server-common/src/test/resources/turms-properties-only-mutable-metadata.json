@@ -468,10 +468,12 @@
       }
     },
     "tcp": {
+      "remoteAddressSource": {},
       "session": {}
     },
     "udp": {},
     "websocket": {
+      "remoteAddressSource": {},
       "session": {}
     }
   },

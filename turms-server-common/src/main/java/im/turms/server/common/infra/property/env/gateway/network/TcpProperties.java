@@ -48,6 +48,10 @@ public class TcpProperties extends BaseServerProperties {
     private boolean wiretap;
 
     @NestedConfigurationProperty
+    private TcpRemoteAddressSourceProperties remoteAddressSource =
+            new TcpRemoteAddressSourceProperties();
+
+    @NestedConfigurationProperty
     private TcpSessionProperties session = new TcpSessionProperties();
 
 }

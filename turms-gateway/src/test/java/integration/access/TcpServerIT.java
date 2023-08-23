@@ -44,7 +44,7 @@ import static im.turms.server.common.infra.unit.ByteSizeUnit.KB;
 class TcpServerIT {
 
     private static final ConnectionListener NEVER_CLOSE =
-            (connection, in, out, onClose) -> Mono.never();
+            (connection, remoteAddress, in, out, onClose) -> Mono.never();
 
     @Test
     void shouldCloseOrAcceptConnection_accordingTo_ServerStatusManager_isActive()

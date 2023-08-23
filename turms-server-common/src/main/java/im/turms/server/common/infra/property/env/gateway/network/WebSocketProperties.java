@@ -46,5 +46,9 @@ public class WebSocketProperties extends BaseServerProperties {
     private int connectTimeoutMillis = 30 * 1000;
 
     @NestedConfigurationProperty
+    private WebSocketRemoteAddressSourceProperties remoteAddressSource =
+            new WebSocketRemoteAddressSourceProperties();
+
+    @NestedConfigurationProperty
     private WebSocketSessionProperties session = new WebSocketSessionProperties();
 }

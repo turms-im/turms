@@ -15,25 +15,13 @@
  * limitations under the License.
  */
 
-package im.turms.gateway.access.client.common.connection;
-
-import java.net.InetSocketAddress;
-
-import io.netty.buffer.ByteBuf;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-import reactor.netty.Connection;
-import reactor.netty.NettyOutbound;
+package im.turms.server.common.infra.property.constant;
 
 /**
  * @author James Chen
  */
-@FunctionalInterface
-public interface ConnectionListener {
-    Mono<Void> onAdded(
-            Connection connection,
-            InetSocketAddress remoteAddress,
-            Flux<ByteBuf> in,
-            NettyOutbound out,
-            Mono<Void> onClose);
+public enum RemoteAddressSourceHttpHeaderMode {
+    REQUIRED,
+    OPTIONAL,
+    DISABLED
 }

@@ -1674,6 +1674,21 @@
         "type": "int",
         "value": -1
       },
+      "remoteAddressSource": {
+        "proxyProtocolMode": {
+          "deprecated": false,
+          "global": false,
+          "mutable": false,
+          "options": [
+            "REQUIRED",
+            "OPTIONAL",
+            "DISABLED"
+          ],
+          "sensitive": false,
+          "type": "enum",
+          "value": "OPTIONAL"
+        }
+      },
       "session": {
         "closeTimeoutMillis": {
           "deprecated": false,
@@ -1771,6 +1786,34 @@
         "sensitive": false,
         "type": "int",
         "value": -1
+      },
+      "remoteAddressSource": {
+        "httpHeaderMode": {
+          "deprecated": false,
+          "global": false,
+          "mutable": false,
+          "options": [
+            "REQUIRED",
+            "OPTIONAL",
+            "DISABLED"
+          ],
+          "sensitive": false,
+          "type": "enum",
+          "value": "OPTIONAL"
+        },
+        "proxyProtocolMode": {
+          "deprecated": false,
+          "global": false,
+          "mutable": false,
+          "options": [
+            "REQUIRED",
+            "OPTIONAL",
+            "DISABLED"
+          ],
+          "sensitive": false,
+          "type": "enum",
+          "value": "OPTIONAL"
+        }
       },
       "session": {
         "closeTimeoutMillis": {

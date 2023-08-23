@@ -17,6 +17,7 @@
 
 package im.turms.gateway.access.client.websocket;
 
+import java.net.InetSocketAddress;
 import java.util.List;
 import jakarta.annotation.Nullable;
 
@@ -33,6 +34,7 @@ import reactor.netty.DisposableServer;
 import reactor.netty.http.server.HttpServer;
 import reactor.netty.http.server.HttpServerRequest;
 import reactor.netty.http.server.HttpServerResponse;
+import reactor.netty.http.server.ProxyProtocolSupportType;
 import reactor.netty.http.server.WebsocketServerSpec;
 
 import im.turms.gateway.access.client.common.channel.ServiceAvailabilityHandler;
@@ -46,8 +48,10 @@ import im.turms.server.common.infra.healthcheck.ServerStatusManager;
 import im.turms.server.common.infra.metrics.TurmsMicrometerChannelMetricsRecorder;
 import im.turms.server.common.infra.net.BindException;
 import im.turms.server.common.infra.net.SslUtil;
+import im.turms.server.common.infra.property.constant.RemoteAddressSourceProxyProtocolMode;
 import im.turms.server.common.infra.property.env.common.SslProperties;
 import im.turms.server.common.infra.property.env.gateway.network.WebSocketProperties;
+import im.turms.server.common.infra.property.env.gateway.network.WebSocketRemoteAddressSourceProperties;
 
 import static io.netty.channel.ChannelOption.CONNECT_TIMEOUT_MILLIS;
 import static io.netty.channel.ChannelOption.SO_BACKLOG;
@@ -90,6 +94,15 @@ public final class WebSocketServerFactory {
         // the reasons mentioned in https://developer.aliyun.com/article/724580
         String host = webSocketProperties.getHost();
         int port = webSocketProperties.getPort();
+        WebSocketRemoteAddressSourceProperties remoteAddressSourceProperties =
+                webSocketProperties.getRemoteAddressSource();
+        RemoteAddressSourceProxyProtocolMode proxyProtocolMode =
+                remoteAddressSourceProperties.getProxyProtocolMode();
+        ProxyProtocolSupportType proxyProtocolSupportType = switch (proxyProtocolMode) {
+            case REQUIRED -> ProxyProtocolSupportType.ON;
+            case OPTIONAL -> ProxyProtocolSupportType.AUTO;
+            case DISABLED -> ProxyProtocolSupportType.OFF;
+        };
         HttpServer server = HttpServer.create()
                 .host(host)
                 .port(port)
@@ -99,6 +112,10 @@ public final class WebSocketServerFactory {
                 .childOption(SO_REUSEADDR, true)
                 .childOption(SO_LINGER, 0)
                 .childOption(TCP_NODELAY, true)
+                .proxyProtocol(proxyProtocolSupportType)
+                // TODO: We should better parse headers ourselves
+                // for better performance and flexibility
+                .forwarded(true)
                 .runOn(LoopResourcesFactory.createForServer(ThreadNameConst.GATEWAY_WS_PREFIX))
                 .metrics(true,
                         () -> new TurmsMicrometerChannelMetricsRecorder(
@@ -154,7 +171,10 @@ public final class WebSocketServerFactory {
                     // Close the TCP connection
                     .then();
         }
-        // 3. Upgrade to WebSocket
+        // 3. Get the real client address
+        InetSocketAddress remoteAddress = request.remoteAddress();
+
+        // 4. Upgrade to WebSocket
         // reactor.netty.http.server.HttpServer.HttpServerHandle.onStateChange
         int maxFramePayloadLength = serverSpec.maxFramePayloadLength();
         return response.sendWebsocket((in, out) -> {
@@ -171,7 +191,12 @@ public final class WebSocketServerFactory {
                     .then();
             // BinaryWebSocketFrame will be created by
             // reactor.netty.http.server.WebsocketServerOperations.send
-            return connectionListener.onAdded((Connection) in, inbound, out, onClose);
+            Connection connection = (Connection) in;
+            InetSocketAddress remoteAddr = remoteAddress == null
+                    ? (InetSocketAddress) connection.channel()
+                            .remoteAddress()
+                    : remoteAddress;
+            return connectionListener.onAdded(connection, remoteAddr, inbound, out, onClose);
         }, serverSpec);
     }
 

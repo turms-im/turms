@@ -17,10 +17,13 @@
 
 package im.turms.gateway.access.client.tcp;
 
+import java.net.InetSocketAddress;
 import jakarta.annotation.Nullable;
 
+import io.netty.channel.ChannelPipeline;
 import reactor.netty.Connection;
 import reactor.netty.DisposableServer;
+import reactor.netty.http.server.HAProxyUtil;
 import reactor.netty.tcp.TcpServer;
 
 import im.turms.gateway.access.client.common.channel.ServiceAvailabilityHandler;
@@ -35,6 +38,7 @@ import im.turms.server.common.infra.healthcheck.ServerStatusManager;
 import im.turms.server.common.infra.metrics.TurmsMicrometerChannelMetricsRecorder;
 import im.turms.server.common.infra.net.BindException;
 import im.turms.server.common.infra.net.SslUtil;
+import im.turms.server.common.infra.property.constant.RemoteAddressSourceProxyProtocolMode;
 import im.turms.server.common.infra.property.env.common.SslProperties;
 import im.turms.server.common.infra.property.env.gateway.network.TcpProperties;
 
@@ -85,10 +89,20 @@ public final class TcpServerFactory {
                                 "tcp"))
                 // Note that the elements from "in.receive()" is emitted by FluxReceive,
                 // which will release buffer after "onNext" returns
-                .handle((in, out) -> connectionListener
-                        .onAdded((Connection) in, in.receive(), out, ((Connection) in).onDispose()))
-                .doOnChannelInit((connectionObserver, channel, remoteAddress) -> channel.pipeline()
-                        .addFirst("serviceAvailabilityHandler", serviceAvailabilityHandler))
+                .handle((in, out) -> {
+                    Connection connection = (Connection) in;
+                    InetSocketAddress remoteAddress =
+                            HAProxyUtil.resolveRemoteAddressFromProxyProtocol(connection.channel());
+                    if (remoteAddress == null) {
+                        remoteAddress = (InetSocketAddress) connection.channel()
+                                .remoteAddress();
+                    }
+                    return connectionListener.onAdded(connection,
+                            remoteAddress,
+                            in.receive(),
+                            out,
+                            connection.onDispose());
+                })
                 .doOnConnection(connection -> {
                     // Inbound
                     connection.addHandlerLast("varintLengthBasedFrameDecoder",
@@ -104,6 +118,26 @@ public final class TcpServerFactory {
                     connection.addHandlerLast("protobufFrameEncoder",
                             CodecFactory.getProtobufFrameEncoder());
                 });
+        RemoteAddressSourceProxyProtocolMode proxyProtocolMode =
+                tcpProperties.getRemoteAddressSource()
+                        .getProxyProtocolMode();
+        switch (proxyProtocolMode) {
+            case REQUIRED ->
+                server = server.doOnChannelInit((connectionObserver, channel, remoteAddress) -> {
+                    ChannelPipeline pipeline = channel.pipeline();
+                    HAProxyUtil.addProxyProtocolHandlers(pipeline);
+                    pipeline.addFirst("serviceAvailabilityHandler", serviceAvailabilityHandler);
+                });
+            case OPTIONAL ->
+                server = server.doOnChannelInit((connectionObserver, channel, remoteAddress) -> {
+                    ChannelPipeline pipeline = channel.pipeline();
+                    HAProxyUtil.addProxyProtocolDetectorHandler(pipeline);
+                    pipeline.addFirst("serviceAvailabilityHandler", serviceAvailabilityHandler);
+                });
+            case DISABLED -> server = server.doOnChannelInit(
+                    (connectionObserver, channel, remoteAddress) -> channel.pipeline()
+                            .addFirst("serviceAvailabilityHandler", serviceAvailabilityHandler));
+        }
         SslProperties ssl = tcpProperties.getSsl();
         if (ssl.isEnabled()) {
             server.secure(spec -> SslUtil.configureSslContextSpec(spec, ssl, true));

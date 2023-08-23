@@ -15,25 +15,25 @@
  * limitations under the License.
  */
 
-package im.turms.gateway.access.client.common.connection;
+package im.turms.server.common.infra.property.env.gateway.network;
 
-import java.net.InetSocketAddress;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import io.netty.buffer.ByteBuf;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-import reactor.netty.Connection;
-import reactor.netty.NettyOutbound;
+import im.turms.server.common.infra.property.constant.RemoteAddressSourceProxyProtocolMode;
 
 /**
  * @author James Chen
  */
-@FunctionalInterface
-public interface ConnectionListener {
-    Mono<Void> onAdded(
-            Connection connection,
-            InetSocketAddress remoteAddress,
-            Flux<ByteBuf> in,
-            NettyOutbound out,
-            Mono<Void> onClose);
+@AllArgsConstructor
+@Builder(toBuilder = true)
+@Data
+@NoArgsConstructor
+public class TcpRemoteAddressSourceProperties {
+
+    private RemoteAddressSourceProxyProtocolMode proxyProtocolMode =
+            RemoteAddressSourceProxyProtocolMode.OPTIONAL;
+
 }
