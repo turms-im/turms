@@ -1,0 +1,17 @@
+BasedOnStyle: Google
+Standard: c++14
+
+ColumnLimit: 100
+IndentWidth: 4
+DerivePointerAlignment: false
+PointerAlignment: Left
+BinPackArguments: false
+BinPackParameters: false
+PackConstructorInitializers: Never
+AllowShortBlocksOnASingleLine: Never
+AllowShortCaseLabelsOnASingleLine: false
+AllowShortEnumsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: None
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLambdasOnASingleLine: None
+AllowShortLoopsOnASingleLine: false

@@ -1,0 +1,16 @@
+UseColor: true
+
+Checks: >
+    bugprone-*,
+    clang-analyzer-*,
+    cppcoreguidelines-*,
+    google-*,
+    hicpp-*,
+    misc-*,
+    modernize-*,
+    performance-*,
+    portability-*,
+    readability-*,
+    -bugprone-easily-swappable-parameters,
+    -cppcoreguidelines-macro-usage,
+    -readability-function-cognitive-complexity
