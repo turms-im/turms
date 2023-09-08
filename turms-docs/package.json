@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "vitepress dev src",
-    "build": "vitepress build src"
+    "build": "vitepress build src",
+    "upgrade": "npx npm-check-updates -u"
   },
   "devDependencies": {
     "mermaid": "^10.2.4",

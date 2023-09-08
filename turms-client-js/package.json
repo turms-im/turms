@@ -19,7 +19,8 @@
     "protoc:install": "node protoc.js install",
     "fullbuild": "npm i && npm run protoc:install && npm run protoc:compile && npm run build",
     "quickbuild": "npm i && npm run build",
-    "test": "jest --runInBand --bail"
+    "test": "jest --runInBand --bail",
+    "upgrade": "npx npm-check-updates -u"
   },
   "keywords": [
     "turms"

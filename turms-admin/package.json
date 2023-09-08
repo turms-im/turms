@@ -27,7 +27,8 @@
     "start": "pm2 start server/ecosystem.config.js --env production",
     "stop": "pm2 stop server/ecosystem.config.js",
     "stylelint": "stylelint --fix ui/**/*.{vue,css,sss,less,scss,sass}",
-    "test": "cypress run"
+    "test": "cypress run",
+    "upgrade": "npx npm-check-updates -u"
   },
   "husky": {
     "hooks": {
