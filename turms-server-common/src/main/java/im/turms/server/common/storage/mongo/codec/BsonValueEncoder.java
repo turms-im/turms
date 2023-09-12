@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import jakarta.annotation.Nullable;
 
+import org.bson.BsonArray;
 import org.bson.BsonArrayUtil;
 import org.bson.BsonBinary;
 import org.bson.BsonBoolean;
@@ -93,7 +94,15 @@ public final class BsonValueEncoder {
         return encodeSingleValue(value);
     }
 
-    public static BsonValue encodeSingleValue(Object value) {
+    public static BsonArray encodeValuesAsStrings(Collection<? extends Enum<?>> collection) {
+        List<BsonValue> list = new ArrayList<>(collection.size());
+        for (Enum<?> value : collection) {
+            list.add(new BsonString(value.name()));
+        }
+        return BsonArrayUtil.newArray(list);
+    }
+
+    public static BsonValue encodeSingleValue(@Nullable Object value) {
         if (value == null) {
             return BsonNull.VALUE;
         }

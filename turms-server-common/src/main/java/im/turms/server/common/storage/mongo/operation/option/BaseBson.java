@@ -25,6 +25,9 @@ import org.bson.conversions.Bson;
 import im.turms.server.common.storage.mongo.BsonJsonUtil;
 
 /**
+ * We designed {@link BaseBson} to be non-context-aware for simplicity (our use cases are very
+ * simple) and better performance.
+ *
  * @author James Chen
  */
 public abstract class BaseBson implements Bson {

@@ -66,6 +66,15 @@ public final class Update extends BaseBson {
         return this;
     }
 
+    public Update setIfNotNullForEnumStrings(
+            @NotNull String field,
+            @Nullable Collection<? extends Enum<?>> value) {
+        if (value != null && !value.isEmpty()) {
+            appendSetForEnumStrings(field, value);
+        }
+        return this;
+    }
+
     public Update setIfTrue(String field, Object value, boolean condition) {
         if (condition) {
             appendSet(field, value);
@@ -94,6 +103,15 @@ public final class Update extends BaseBson {
             document.append("$set", set);
         }
         set.put(key, BsonValueEncoder.encodeValue(value));
+        return this;
+    }
+
+    private Update appendSetForEnumStrings(String key, Collection<? extends Enum<?>> collection) {
+        if (set == null) {
+            set = new BsonDocument();
+            document.append("$set", set);
+        }
+        set.put(key, BsonValueEncoder.encodeValuesAsStrings(collection));
         return this;
     }
 

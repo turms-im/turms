@@ -55,7 +55,7 @@ public class AdminRoleRepository extends BaseRepository<AdminRole, Long> {
                 .in(DomainFieldName.ID, roleIds);
         Update update = Update.newBuilder(3)
                 .setIfNotNull(AdminRole.Fields.NAME, newName)
-                .setIfNotNull(AdminRole.Fields.PERMISSIONS, permissions)
+                .setIfNotNullForEnumStrings(AdminRole.Fields.PERMISSIONS, permissions)
                 .setIfNotNull(AdminRole.Fields.RANK, rank);
         return mongoClient.updateMany(entityClass, filter, update);
     }
@@ -68,7 +68,7 @@ public class AdminRoleRepository extends BaseRepository<AdminRole, Long> {
         Filter filter = Filter.newBuilder(4)
                 .inIfNotNull(DomainFieldName.ID, ids)
                 .inIfNotNull(AdminRole.Fields.NAME, names)
-                .inIfNotNull(AdminRole.Fields.PERMISSIONS, includedPermissions)
+                .inIfNotNullForEnumStrings(AdminRole.Fields.PERMISSIONS, includedPermissions)
                 .inIfNotNull(AdminRole.Fields.RANK, ranks);
         return mongoClient.count(entityClass, filter);
     }
@@ -91,7 +91,7 @@ public class AdminRoleRepository extends BaseRepository<AdminRole, Long> {
         Filter filter = Filter.newBuilder(4)
                 .inIfNotNull(DomainFieldName.ID, roleIds)
                 .inIfNotNull(AdminRole.Fields.NAME, names)
-                .inIfNotNull(AdminRole.Fields.PERMISSIONS, includedPermissions)
+                .inIfNotNullForEnumStrings(AdminRole.Fields.PERMISSIONS, includedPermissions)
                 .inIfNotNull(AdminRole.Fields.RANK, ranks);
         QueryOptions options = QueryOptions.newBuilder(2)
                 .paginateIfNotNull(page, size);

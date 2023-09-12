@@ -69,7 +69,7 @@ public class Filter extends BaseBson {
         return this;
     }
 
-    public Filter eq(String key, Object value) {
+    public Filter eq(String key, @Nullable Object value) {
         document.append(key, BsonValueEncoder.encodeSingleValue(value));
         return this;
     }
@@ -137,6 +137,16 @@ public class Filter extends BaseBson {
     public Filter inIfNotNull(@NotNull String key, @Nullable Collection<?> collection) {
         if (collection != null && !collection.isEmpty()) {
             document.append(key, new BsonDocument("$in", BsonValueEncoder.encodeValue(collection)));
+        }
+        return this;
+    }
+
+    public Filter inIfNotNullForEnumStrings(
+            @NotNull String key,
+            @Nullable Collection<? extends Enum<?>> collection) {
+        if (collection != null && !collection.isEmpty()) {
+            document.append(key,
+                    new BsonDocument("$in", BsonValueEncoder.encodeValuesAsStrings(collection)));
         }
         return this;
     }
