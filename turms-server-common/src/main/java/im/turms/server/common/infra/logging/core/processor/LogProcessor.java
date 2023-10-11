@@ -57,7 +57,7 @@ public final class LogProcessor {
             thread.join(timeoutMillis);
         } catch (InterruptedException e) {
             throw new RuntimeException(
-                    "Caught an error while waiting the log processor to close",
+                    "Caught an error while waiting for the log processor to close",
                     e);
         }
     }

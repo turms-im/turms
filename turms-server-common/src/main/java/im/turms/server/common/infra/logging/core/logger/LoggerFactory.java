@@ -168,6 +168,10 @@ public class LoggerFactory {
                         .build());
     }
 
+    public static void waitClose(long timeoutMillis) {
+        processor.waitClose(timeoutMillis);
+    }
+
     public static Logger getLogger(String name) {
         return getLogger(LoggerOptions.builder()
                 .loggerName(name)

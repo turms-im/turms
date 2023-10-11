@@ -27,7 +27,6 @@ import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.exception.IncompatibleJvmException;
 import im.turms.server.common.infra.lang.ClassUtil;
 import im.turms.server.common.infra.lang.StringUtil;
-import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.time.TimeZoneConst;
 
@@ -58,8 +57,11 @@ public abstract class BaseTurmsApplication {
             // if the context hadn't been initialized.
             if (LoggerFactory.isInitialized()) {
                 try {
-                    Logger logger = LoggerFactory.getLogger(BaseTurmsApplication.class);
-                    logger.error("Failed to bootstrap", e);
+                    // 1. Wait for LoggerFactory to close to ensure all logs will be flushed.
+                    // 2. Don't log startup error here because
+                    // "org.springframework.boot.SpringApplication.reportFailure"
+                    // should have logged.
+                    LoggerFactory.waitClose(60 * 1000L);
                 } catch (Exception ignored) {
                     e.printStackTrace();
                 }
