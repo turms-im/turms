@@ -78,17 +78,17 @@ public class UserStatusService {
 
     private static final long NODE_STATUS_TTL_MILLIS = 15_000L;
 
-    private final RedisScript addOnlineUserScript;
-    private final RedisScript getUsersDeviceDetailsScript =
+    private final RedisScript<ByteBuf> addOnlineUserScript;
+    private final RedisScript<List<Object>> getUsersDeviceDetailsScript =
             RedisScript.get(new ClassPathResource("redis/session/get_users_device_details.lua"),
                     ScriptOutputType.MULTI);
-    private final RedisScript removeUserStatusesScript =
+    private final RedisScript<Boolean> removeUserStatusesScript =
             RedisScript.get(new ClassPathResource("redis/session/remove_user_statuses.lua"),
                     ScriptOutputType.BOOLEAN);
-    private final RedisScript updateUsersTtlScript =
+    private final RedisScript<List<ByteBuf>> updateUsersTtlScript =
             RedisScript.get(new ClassPathResource("redis/session/update_users_ttl.lua"),
                     ScriptOutputType.MULTI);
-    private final RedisScript updateOnlineUserStatusIfPresent = RedisScript.get(
+    private final RedisScript<Boolean> updateOnlineUserStatusIfPresent = RedisScript.get(
             new ClassPathResource("redis/session/update_online_user_status_if_present.lua"),
             ScriptOutputType.BOOLEAN);
 
@@ -112,7 +112,7 @@ public class UserStatusService {
      * |             |           ...           |                ...                |
      * +-------------+-------------------------+-----------------------------------+
      * </pre>
-     *
+     * <p>
      * "$" is the fixed hash key of the user status value, and its value is the user status value
      * represented in number.
      * <p>
@@ -156,7 +156,7 @@ public class UserStatusService {
         deviceStatusTtlMillis = deviceStatusTtlSeconds * 1000L;
         addOnlineUserScript = RedisScript.get(
                 new ClassPathResource("redis/session/try_add_online_user_with_ttl.lua"),
-                ScriptOutputType.BOOLEAN,
+                ScriptOutputType.VALUE,
                 Map.of("DEVICE_DETAILS_TTL",
                         deviceDetailsExpireAfterSeconds,
                         "DEVICE_STATUS_TTL",
@@ -251,11 +251,20 @@ public class UserStatusService {
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        Mono<Boolean> result = sessionRedisClientManager.eval(userId,
-                updateOnlineUserStatusIfPresent,
-                userId,
-                (byte) userStatus.getNumber());
-        return result.timeout(operationTimeout, HashedWheelScheduler.getDaemon());
+        Mono<Boolean> mono = sessionRedisClientManager
+                .eval(userId,
+                        updateOnlineUserStatusIfPresent,
+                        userId,
+                        (byte) userStatus.getNumber())
+                .timeout(operationTimeout, HashedWheelScheduler.getDaemon());
+        if (cacheUserSessionsStatus) {
+            return mono.doOnNext(exists -> {
+                if (!exists) {
+                    userIdToStatusCache.invalidate(userId);
+                }
+            });
+        }
+        return mono;
     }
 
     public Mono<Set<Long>> updateOnlineUsersTtl(
@@ -279,13 +288,16 @@ public class UserStatusService {
                     }
                     int size = userIdGenerator.estimatedSize();
                     Set<Long> nonexistentUserIds = CollectionUtil.newSetWithExpectedSize(size);
-                    for (Object value : objects) {
-                        List<ByteBuf> buffers = (List<ByteBuf>) value;
+                    for (List<ByteBuf> buffers : objects) {
                         if (buffers.size() == 1 && buffers.get(0) == null) {
                             return Collections.emptySet();
                         }
                         for (ByteBuf buffer : buffers) {
-                            nonexistentUserIds.add(buffer.readLong());
+                            Long userId = buffer.readLong();
+                            nonexistentUserIds.add(userId);
+                            if (cacheUserSessionsStatus) {
+                                userIdToStatusCache.invalidate(userId);
+                            }
                         }
                     }
                     return nonexistentUserIds;
@@ -527,8 +539,7 @@ public class UserStatusService {
                 .map(results -> {
                     Map<Long, Map<String, String>> userIdToDetails =
                             CollectionUtil.newMapWithExpectedSize(userIds.size());
-                    for (Object rawElements : results) {
-                        List<Object> elements = (List<Object>) rawElements;
+                    for (List<Object> elements : results) {
                         int elementCount = elements.size();
                         if (elementCount == 0) {
                             continue;
@@ -590,6 +601,9 @@ public class UserStatusService {
             return Mono.error(new InputOutputException("Failed to encode arguments", e));
         }
         Mono<Boolean> mono = sessionRedisClientManager.eval(userId, removeUserStatusesScript, args);
+        if (cacheUserSessionsStatus) {
+            mono = mono.doOnSuccess(ignored -> userIdToStatusCache.invalidate(userId));
+        }
         return mono.timeout(operationTimeout, HashedWheelScheduler.getDaemon());
     }
 
@@ -678,7 +692,34 @@ public class UserStatusService {
             ReferenceCountUtil.ensureReleased(args, 0, index);
             return Mono.error(new InputOutputException("Failed to encode arguments", e));
         }
-        return sessionRedisClientManager.eval(userId, addOnlineUserScript, args);
+        return sessionRedisClientManager.eval(userId, addOnlineUserScript, args)
+                .map(buffer -> {
+                    byte returnCode = buffer.readByte();
+                    return switch (returnCode) {
+                        case '0' -> false;
+                        case '1' -> {
+                            if (cacheUserSessionsStatus) {
+                                Map<DeviceType, UserDeviceSessionInfo> deviceTypeToSessions =
+                                        new FastEnumMap<>(DeviceType.class);
+                                deviceTypeToSessions.put(deviceType,
+                                        new UserDeviceSessionInfo(
+                                                this.localNodeId,
+                                                System.currentTimeMillis(),
+                                                true));
+                                userIdToStatusCache.put(userId,
+                                        new UserSessionsStatus(
+                                                userId,
+                                                userStatus,
+                                                deviceTypeToSessions));
+                            }
+                            yield true;
+                        }
+                        case '2' -> true;
+                        default -> throw new RuntimeException(
+                                "Unexpected return code: "
+                                        + returnCode);
+                    };
+                });
     }
 
     private record NodeStatus(

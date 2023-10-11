@@ -38,7 +38,7 @@ import static im.turms.server.common.infra.unit.ByteSizeUnit.KB;
 /**
  * @author James Chen
  */
-public record RedisScript(
+public record RedisScript<T>(
         ByteBuf script,
         ByteBuf digest,
         ScriptOutputType outputType
@@ -49,14 +49,14 @@ public record RedisScript(
     /**
      * @param outputType {@link BaseRedisCommandBuilder#newScriptOutput}
      */
-    public static RedisScript get(ClassPathResource resource, ScriptOutputType outputType) {
+    public static <T> RedisScript<T> get(ClassPathResource resource, ScriptOutputType outputType) {
         return get(resource, outputType, null);
     }
 
     /**
      * @param outputType {@link BaseRedisCommandBuilder#newScriptOutput}
      */
-    public static RedisScript get(
+    public static <T> RedisScript<T> get(
             ClassPathResource resource,
             ScriptOutputType outputType,
             @Nullable Map<String, Object> placeholders) {
@@ -81,7 +81,7 @@ public record RedisScript(
                         + bytes.length;
                 throw new InputOutputException(message);
             }
-            return new RedisScript(
+            return new RedisScript<>(
                     ByteBufUtil.getUnreleasableDirectBuffer(bytes),
                     ByteBufUtil
                             .getUnreleasableDirectBuffer(StringUtil.getBytes(Base16.digest(bytes))),

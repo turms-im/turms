@@ -244,14 +244,14 @@ public class TurmsRedisClient {
 
     // Scripting
 
-    public <T> Mono<T> eval(RedisScript script, ByteBuf... keys) {
+    public <T> Mono<T> eval(RedisScript<T> script, ByteBuf... keys) {
         return eval(script, keys.length, keys);
     }
 
     /**
      * @param keyLength the real key length
      */
-    public <T> Mono<T> eval(RedisScript script, int keyLength, ByteBuf... keys) {
+    public <T> Mono<T> eval(RedisScript<T> script, int keyLength, ByteBuf... keys) {
         return Mono.defer(() -> {
             ByteBuf key;
             for (int i = 0, length = keys.length; i < length; i++) {

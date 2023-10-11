@@ -149,12 +149,12 @@ public class TurmsRedisClientManager {
 
     // Scripting
 
-    public <T> Mono<T> eval(Long shardKey, RedisScript script, Object... keys) {
+    public <T> Mono<T> eval(Long shardKey, RedisScript<T> script, Object... keys) {
         ByteBuf[] buffers = ByteBufUtil.writeObjects(keys);
         return getClient(shardKey).eval(script, buffers);
     }
 
-    public <T> Mono<T> eval(Long shardKey, RedisScript script, ByteBuf[] buffers) {
+    public <T> Mono<T> eval(Long shardKey, RedisScript<T> script, ByteBuf[] buffers) {
         return getClient(shardKey).eval(script, buffers);
     }
 
@@ -165,7 +165,7 @@ public class TurmsRedisClientManager {
      *                     will throw
      */
     public <T> Flux<T> eval(
-            RedisScript script,
+            RedisScript<T> script,
             short firstKey,
             byte[] secondKey,
             LongKeyGenerator keyGenerator) {

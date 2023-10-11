@@ -21,11 +21,11 @@ local existing_status = values[2]
 local now
 if existing_node_id then
     if existing_node_id == node_id then
-        return false
+        return '0'
     end
     local existing_device_timestamp = tonumber(redis_call('HGET', user_id, existing_node_id))
     if not existing_device_timestamp then
-        return false
+        return '0'
     end
     now = tonumber(redis_call('TIME')[1])
     local diff = now - existing_device_timestamp
@@ -36,7 +36,7 @@ if existing_node_id then
             or expected_device_timestamp == ''
             or expected_existing_node_id ~= existing_node_id
             or expected_device_timestamp ~= existing_device_timestamp) then
-        return false
+        return '0'
     end
 end
 
@@ -85,4 +85,8 @@ if count - 7 > 0 then
     end
 end
 
-return true
+if redis_call('HLEN', user_id) == 3 then
+    return '1'
+else
+    return '2'
+end
