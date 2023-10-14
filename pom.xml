@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.1.2</version>
+        <version>3.1.4</version>
     </parent>
 
     <groupId>im.turms</groupId>
@@ -27,28 +27,28 @@
 
     <properties>
         <!-- Project -->
-        <java.version>17</java.version>
+        <java.version>21</java.version>
         <revision>0.10.0-SNAPSHOT</revision>
 
         <!-- Runtime Deps -->
-        <awssdk.version>2.20.103</awssdk.version>
+        <awssdk.version>2.21.0</awssdk.version>
         <blockhound.version>1.0.8.RELEASE</blockhound.version>
-        <disruptor.version>3.4.4</disruptor.version>
+        <disruptor.version>4.0.0</disruptor.version>
         <eclipse-collections.version>11.1.0</eclipse-collections.version>
-        <graalvm.version>23.0.0</graalvm.version>
+        <graalvm.version>23.0.1</graalvm.version>
         <icu4j.version>73.2</icu4j.version>
         <jctools-core.version>4.0.1</jctools-core.version>
         <log4j.version>2.20.0</log4j.version>
-        <protobuf.version>3.23.4</protobuf.version>
-        <swagger.version>2.2.15</swagger.version>
-        <swagger-ui.version>5.1.0</swagger-ui.version>
+        <protobuf.version>3.24.4</protobuf.version>
+        <swagger.version>2.2.16</swagger.version>
+        <swagger-ui.version>5.7.2</swagger-ui.version>
 
         <!-- Runtime Deps for Testing -->
-        <jmh.version>1.36</jmh.version>
-        <testcontainers.version>1.18.3</testcontainers.version>
+        <jmh.version>1.37</jmh.version>
+        <testcontainers.version>1.19.1</testcontainers.version>
 
         <!-- Maven plugins -->
-        <checkstyle.version>10.12.1</checkstyle.version>
+        <checkstyle.version>10.12.4</checkstyle.version>
         <flatten-maven-plugin.version>1.5.0</flatten-maven-plugin.version>
         <git-commit-id-maven-plugin.version>6.0.0</git-commit-id-maven-plugin.version>
         <maven-checkstyle-plugin.version>3.3.0</maven-checkstyle-plugin.version>
@@ -60,11 +60,14 @@
         <maven-gpg-plugin.version>3.1.0</maven-gpg-plugin.version>
         <maven-surefire-plugin.version>3.1.2</maven-surefire-plugin.version>
         <maven-failsafe-plugin.version>3.1.2</maven-failsafe-plugin.version>
+        <!-- TODO: spring-boot-dependencies-3.1.4 use 3.4.1, which doesn't
+        support Java 21, we can remove this properties when it upgrade-->
+        <maven-shade-plugin.version>3.5.1</maven-shade-plugin.version>
         <os-maven-plugin.version>1.7.1</os-maven-plugin.version>
         <protobuf-maven-plugin.version>0.6.1</protobuf-maven-plugin.version>
         <spotbugs-maven-plugin.version>4.7.3.5</spotbugs-maven-plugin.version>
-        <spotless-maven-plugin.version>2.37.0</spotless-maven-plugin.version>
-        <spotless-maven-plugin.eclipse.version>4.27</spotless-maven-plugin.eclipse.version>
+        <spotless-maven-plugin.version>2.39.0</spotless-maven-plugin.version>
+        <spotless-maven-plugin.eclipse.version>4.29</spotless-maven-plugin.eclipse.version>
         <spring-boot-thin-layout.version>1.0.30.RELEASE</spring-boot-thin-layout.version>
 
         <!-- Configs -->

@@ -20,7 +20,7 @@ JVM HotSpot虚拟机的内存区域可以划分为：
   * 直接内存（Direct Memory）：Direct Buffer Pool
   * JVM内部内存（JVM Specific Memory）：本地方法栈、元空间、Code Cache等
 
-  特别注意：通过函数`java.lang.management.MemoryMXBean#getNonHeapMemoryUsage`获得的`NonHeapMemory`并不包括`Direct Buffer Pool`（直接内存缓存池）。具体而言，该函数在JDK 17中所指的内存空间为：
+  特别注意：通过函数`java.lang.management.MemoryMXBean#getNonHeapMemoryUsage`获得的`NonHeapMemory`并不包括`Direct Buffer Pool`（直接内存缓存池）。具体而言，该函数在JDK 21中所指的内存空间为：
 
   * CodeHeap 'non-nmethods'
   * CodeHeap 'non-profiled nmethods'
@@ -28,7 +28,7 @@ JVM HotSpot虚拟机的内存区域可以划分为：
   * Compressed Class Space
   * Metaspace
 
-参考文档：[How to Monitor VM Internal Memory](https://docs.oracle.com/en/java/javase/17/troubleshoot/diagnostic-tools#GUID-FB0581EA-2F91-4093-B2FA-46687F7AB081)
+参考文档：[How to Monitor VM Internal Memory](https://docs.oracle.com/en/java/javase/21/troubleshoot/diagnostic-tools.html#GUID-FB0581EA-2F91-4093-B2FA-46687F7AB081)
 
 ### 可控内存（Managed Memory）的使用
 

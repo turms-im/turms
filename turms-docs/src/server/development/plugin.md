@@ -36,7 +36,7 @@ The Turms server supports plug-in implementations based on JVM or JavaScript lan
 
 |                  | JVM language plugin                                          | JavaScript plugin                                            |
 | ---------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| Language Version | Java 17 (Bytecode 61.0)                                      | ECMAScript 2022                                              |
+| Language Version | Java 21 (Bytecode 65.0)                                      | ECMAScript 2022                                              |
 | Advantages       | It is suitable for implementing functions with complex logic. <br />For example, the official plugin of the Turms project `turms-plugin-antispam` sensitive word filter plug-in | Just create a new JavaScript file, you can directly write custom logic, no need to compile, no need to package;<br />It is convenient to support hot update |
 | Disadvantages    | If you just implement a little custom logic, you still need to build a plug-in project first, and then package the code into a Jar package based on the construction tool. The process is cumbersome | If you need to implement complex logic, it is better to implement it based on Java plug-ins;<br / >The memory overhead is larger than the Java plug-in;<br />interpretation and execution, low operating efficiency |
 | General Comments | It is more suitable for plug-ins that are complex, heavy-weight, and relatively fixed. <br />This type of plug-in is more like a "project" | It is more suitable for small and lightweight plug-ins that need to support hot updates. <br />This type of plugin is more like a "small patch" |

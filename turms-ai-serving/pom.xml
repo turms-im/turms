@@ -13,9 +13,9 @@
         <fontDirectory>${project.basedir}/dist/font</fontDirectory>
         <modelDirectory>${project.basedir}/dist/model</modelDirectory>
 
-        <djl.version>0.23.0</djl.version>
+        <djl.version>0.24.0</djl.version>
         <paddlepaddle-native.version>2.3.2</paddlepaddle-native.version>
-        <pytorch-native.version>1.13.1</pytorch-native.version>
+        <pytorch-native.version>2.0.1</pytorch-native.version>
 
         <os.name>linux</os.name>
         <paddlepaddle-native.artifactId>paddlepaddle-native-cpu</paddlepaddle-native.artifactId>

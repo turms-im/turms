@@ -65,7 +65,7 @@ Except for the Turms server, the construction of other sub-projects of Turms is 
 
 The construction of the Turms server development environment is actually very simple. The specific steps include:
 
-1. Install [JDK 17](https://adoptium.net/) to develop Turms server
+1. Install [JDK 21](https://adoptium.net/) to develop Turms server
 
 2. Download, install and start the Redis server. Take RHEL/CentOS as an example:
 

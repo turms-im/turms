@@ -200,7 +200,7 @@ Replenish
 
   background:
 
-  * The `byte[] value` inside the Java 17 `String` class has and can only store `LATIN-1` or `UTF-16` encoded data
+  * The `byte[] value` inside the Java 21 `String` class has and can only store `LATIN-1` or `UTF-16` encoded data
   * **Turms server itself has and only prints ASCII characters** (Turms server will not print any text entered by users or administrators)
   * Log printing is a frequently used function, meaningless memory copying is absolutely prohibited.
 

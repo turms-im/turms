@@ -65,7 +65,7 @@ git submodule foreach git pull origin master
 
 Turms服务端开发环境的搭建其实也非常简单，具体步骤包括：
 
-1. 安装[JDK 17](https://adoptium.net/)以开发Turms服务端
+1. 安装[JDK 21](https://adoptium.net/)以开发Turms服务端
 
 2. 下载、安装并启动Redis服务端。以RHEL/CentOS为例：
 

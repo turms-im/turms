@@ -10,13 +10,13 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
-        <maven.compiler.compilerVersion>17</maven.compiler.compilerVersion>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+        <maven.compiler.compilerVersion>21</maven.compiler.compilerVersion>
         <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
-        <maven-shade-plugin.version>3.5.0</maven-shade-plugin.version>
-        <spotless-maven-plugin.version>2.37.0</spotless-maven-plugin.version>
-        <spotless-maven-plugin.eclipse.version>4.27</spotless-maven-plugin.eclipse.version>
+        <maven-shade-plugin.version>3.5.1</maven-shade-plugin.version>
+        <spotless-maven-plugin.version>2.39.0</spotless-maven-plugin.version>
+        <spotless-maven-plugin.eclipse.version>4.29</spotless-maven-plugin.eclipse.version>
     </properties>
 
     <dependencies>
@@ -41,8 +41,8 @@
 <!--                <artifactId>maven-compiler-plugin</artifactId>-->
 <!--                <version>${maven-compiler-plugin.version}</version>-->
 <!--                <configuration>-->
-<!--                    <source>17</source>-->
-<!--                    <target>17</target>-->
+<!--                    <source>21</source>-->
+<!--                    <target>21</target>-->
 <!--                    <annotationProcessors>-->
 <!--                        <annotationProcessor>lombok.launch.AnnotationProcessorHider$AnnotationProcessor-->
 <!--                        </annotationProcessor>-->

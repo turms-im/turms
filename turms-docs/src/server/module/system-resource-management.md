@@ -20,7 +20,7 @@ The memory area of the JVM HotSpot virtual machine can be divided into:
   * Direct memory (Direct Memory): Direct Buffer Pool
   * JVM internal memory (JVM Specific Memory): local method stack, metaspace, Code Cache, etc.
 
-  Special attention: `NonHeapMemory` obtained by the function `java.lang.management.MemoryMXBean#getNonHeapMemoryUsage` does not include `Direct Buffer Pool` (direct memory buffer pool). Specifically, the memory space referred to by this function in JDK 17 is:
+  Special attention: `NonHeapMemory` obtained by the function `java.lang.management.MemoryMXBean#getNonHeapMemoryUsage` does not include `Direct Buffer Pool` (direct memory buffer pool). Specifically, the memory space referred to by this function in JDK 21 is:
 
   * CodeHeap 'non-nmethods'
   * CodeHeap 'non-profiled nmethods'
@@ -28,7 +28,7 @@ The memory area of the JVM HotSpot virtual machine can be divided into:
   * Compressed Class Space
   * Metaspace
 
-Reference document: [How to Monitor VM Internal Memory](https://docs.oracle.com/en/java/javase/17/troubleshoot/diagnostic-tools#GUID-FB0581EA-2F91-4093-B2FA-46687F7AB081)
+Reference document: [How to Monitor VM Internal Memory](https://docs.oracle.com/en/java/javase/21/troubleshoot/diagnostic-tools.html#GUID-FB0581EA-2F91-4093-B2FA-46687F7AB081)
 
 ### Use of Managed Memory
 
