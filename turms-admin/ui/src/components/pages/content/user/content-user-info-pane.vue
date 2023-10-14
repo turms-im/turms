@@ -141,12 +141,6 @@ export default {
                     size: 'L',
                     fields: [
                         {
-                            id: 'id',
-                            type: 'INPUT',
-                            label: 'userId',
-                            rules: this.$validator.create({onlyNumber: true})
-                        },
-                        {
                             id: 'password',
                             type: 'INPUT'
                         },
