@@ -48,6 +48,7 @@ import im.turms.server.common.infra.healthcheck.ServerStatusManager;
 import im.turms.server.common.infra.metrics.TurmsMicrometerChannelMetricsRecorder;
 import im.turms.server.common.infra.net.BindException;
 import im.turms.server.common.infra.net.SslUtil;
+import im.turms.server.common.infra.property.constant.RemoteAddressSourceHttpHeaderMode;
 import im.turms.server.common.infra.property.constant.RemoteAddressSourceProxyProtocolMode;
 import im.turms.server.common.infra.property.env.common.SslProperties;
 import im.turms.server.common.infra.property.env.gateway.network.WebSocketProperties;
@@ -113,9 +114,6 @@ public final class WebSocketServerFactory {
                 .childOption(SO_LINGER, 0)
                 .childOption(TCP_NODELAY, true)
                 .proxyProtocol(proxyProtocolSupportType)
-                // TODO: We should better parse headers ourselves
-                // for better performance and flexibility
-                .forwarded(true)
                 .runOn(LoopResourcesFactory.createForServer(ThreadNameConst.GATEWAY_WS_PREFIX))
                 .metrics(true,
                         () -> new TurmsMicrometerChannelMetricsRecorder(
@@ -127,6 +125,13 @@ public final class WebSocketServerFactory {
                         serverSpec))
                 .doOnChannelInit((connectionObserver, channel, remoteAddress) -> channel.pipeline()
                         .addFirst("serviceAvailabilityHandler", serviceAvailabilityHandler));
+        RemoteAddressSourceHttpHeaderMode remoteAddressSourceHttpHeaderMode =
+                remoteAddressSourceProperties.getHttpHeaderMode();
+        if (RemoteAddressSourceHttpHeaderMode.REQUIRED == remoteAddressSourceHttpHeaderMode) {
+            server = server.forwarded(new HttpForwardedHeaderHandler(true));
+        } else if (RemoteAddressSourceHttpHeaderMode.OPTIONAL == remoteAddressSourceHttpHeaderMode) {
+            server = server.forwarded(new HttpForwardedHeaderHandler(false));
+        }
         SslProperties ssl = webSocketProperties.getSsl();
         if (ssl.isEnabled()) {
             server.secure(spec -> SslUtil.configureSslContextSpec(spec, ssl, true), true);
