@@ -73,3 +73,25 @@ For Turms, upstream first mainly involves two aspects: communication and code fe
   On the contrary, if developers give back the code to upstream, such problems will not occur. Because we will not only maintain these feedbacked codes together, but also consider whether these new designs and these feedbacked codes are consistent in design when designing other new related functional modules for Turms.
 
 * Reduce maintenance conflicts and avoid overturning local implementations repeatedly. Developers may have added some new features or fixed some bugs locally, but have not given back. After a period of time, developers may find that upstream considers the functionality they have implemented to be more thoughtful and complete, and the bug fixes are more ingenious (readers can read about the difficulty of Turms server-side bugs in [Task Difficulty](https://turms-im.github.io/docs/server/development/redevelopment#%E6%9C%8D%E5%8A%A1%E7%AB%AF)). Ultimately, developers have to revert all their original work, then re-pull upstream and start over again. The workload among them is painful to think about, and the more developers change locally, the more conflicts there may be.
+
+### About Contacting Turms Author for Private Chat and Custom Development
+
+If readers' teams are interested in doing redevelopment themselves, they can directly refer to the article on [Redevelopment](https://turms-im.github.io/docs/en-US/server/development/redevelopment.html).
+
+For users who wish to pay Turms' author for custom development, it's worth noting that Turms' author generally only accepts unpaid development for common needs (yes, generally, only unpaid development for the community). The reason for this is quite simple; Turms' author doesn't lack money, and even if the Turms project incurs a loss of several tens of thousands of Chinese yuan every year, we can still ensure the continuous operation of the Turms project because we never intended to profit from it in the first place. So, either we will only accept a very high offer that's hard to refuse, or we will only accept unpaid development for the community.
+
+Therefore, unless you are prepared to offer a very high price, it's not advisable to try to contact Turms' author for custom development. If you genuinely want Turms' author to prioritize fulfilling your requirements, you can describe your needs clearly and post them in Issues, and then we will schedule them based on the cost-effectiveness of the requirements and your respect for the requirements you've proposed.
+
+Of course, if you are even willing to pay a high fee for custom development to Turms' author, I also recommend considering commercial solutions directly, even though their development level, work attitude, and work responsibility are probably not as good as Turms' author. Of course, this mainly depends on which country and company's solution you decide to adopt.
+
+Compared to free development, custom development differs in the following aspects:
+
+- A complete, phased project schedule will be provided, including design, development, testing, delivery, and so on.
+
+- Assistance with designing requirements. Readers might wonder why they need Turms' author to design requirements if they already want custom developmpent. This is much like what Henry Ford said, "If I had asked people what they wanted, they would have said faster horses." What users ask for may not necessarily be what they truly need, and having insights into users' real needs is one of the essential skills required for engineers.
+
+- Guaranteed fixed working hours. During this time, only project-related custom design, development, testing, deployment, and addressing various questions will be done.
+
+  Of course, all of the above is done by Turms' author during their off-hours.
+
+If some users are concerned that Turms' author might intentionally slow down the development and release progress of the features they want due to not having paid, this won't happen either, because Turms' author doesn't lack money and doesn't intend to profit from open-source, so there's no motivation to intentionally delay.
