@@ -3,15 +3,16 @@
   "version": "0.10.0",
   "description": "documentation for turms",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "dev": "vitepress dev src",
     "build": "vitepress build src",
     "upgrade": "npx npm-check-updates -u"
   },
   "devDependencies": {
-    "mermaid": "^10.4.0",
-    "sass": "^1.66.1",
-    "vitepress": "^1.0.0-rc.10"
+    "mermaid": "^10.5.0",
+    "sass": "^1.69.4",
+    "vitepress": "^1.0.0-rc.22"
   },
   "repository": {
     "type": "git",
