@@ -15,17 +15,18 @@
  * limitations under the License.
  */
 
-package reactor.netty.http.server;
+package im.turms.gateway.access.client.tcp;
 
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
+import java.util.function.Consumer;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelPipeline;
 import io.netty.handler.codec.haproxy.HAProxyMessageDecoder;
 import reactor.netty.ConnectionObserver;
 import reactor.netty.NettyPipeline;
-import reactor.util.annotation.Nullable;
+import reactor.netty.http.server.HttpServerConfig;
 
 /**
  * @author James Chen
@@ -39,21 +40,20 @@ public final class HAProxyUtil {
      * @see HttpServerConfig.HttpServerChannelInitializer#onChannelInit(ConnectionObserver, Channel,
      *      SocketAddress)
      */
-    public static void addProxyProtocolHandlers(ChannelPipeline pipeline) {
+    public static void addProxyProtocolHandlers(
+            ChannelPipeline pipeline,
+            Consumer<InetSocketAddress> onRemoteAddressConfirmed) {
         pipeline.addFirst(NettyPipeline.ProxyProtocolDecoder, new HAProxyMessageDecoder())
                 .addAfter(NettyPipeline.ProxyProtocolDecoder,
                         NettyPipeline.ProxyProtocolReader,
-                        new HAProxyMessageReader());
+                        new ExtendedHAProxyMessageReader(onRemoteAddressConfirmed));
     }
 
-    public static void addProxyProtocolDetectorHandler(ChannelPipeline pipeline) {
-        pipeline.addFirst(NettyPipeline.ProxyProtocolDecoder, new HAProxyMessageDetector());
-    }
-
-    @Nullable
-    public static InetSocketAddress resolveRemoteAddressFromProxyProtocol(Channel channel) {
-        return (InetSocketAddress) HAProxyMessageReader
-                .resolveRemoteAddressFromProxyProtocol(channel);
+    public static void addProxyProtocolDetectorHandler(
+            ChannelPipeline pipeline,
+            Consumer<InetSocketAddress> onRemoteAddressConfirmed) {
+        pipeline.addFirst(NettyPipeline.ProxyProtocolDecoder,
+                new ExtendedHAProxyMessageDetector(onRemoteAddressConfirmed));
     }
 
 }

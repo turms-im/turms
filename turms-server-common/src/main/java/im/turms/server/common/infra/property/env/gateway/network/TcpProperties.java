@@ -18,10 +18,10 @@
 package im.turms.server.common.infra.property.env.gateway.network;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 import im.turms.server.common.infra.property.env.gateway.BaseServerProperties;
@@ -31,7 +31,7 @@ import im.turms.server.common.infra.property.metadata.Description;
  * @author James Chen
  */
 @AllArgsConstructor
-@Builder(toBuilder = true)
+@SuperBuilder(toBuilder = true)
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor

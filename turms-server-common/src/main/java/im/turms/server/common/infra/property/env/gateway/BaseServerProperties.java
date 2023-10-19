@@ -17,7 +17,10 @@
 
 package im.turms.server.common.infra.property.env.gateway;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 import im.turms.server.common.infra.property.env.common.SslProperties;
@@ -25,7 +28,10 @@ import im.turms.server.common.infra.property.env.common.SslProperties;
 /**
  * @author James Chen
  */
+@AllArgsConstructor
+@SuperBuilder(toBuilder = true)
 @Data
+@NoArgsConstructor
 public abstract class BaseServerProperties {
 
     private boolean enabled = true;

@@ -17,17 +17,17 @@
 
 package im.turms.server.common.infra.property.env.gateway.network;
 
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import im.turms.server.common.infra.property.env.gateway.BaseServerProperties;
 
 /**
  * @author James Chen
  */
-@Builder(toBuilder = true)
+@SuperBuilder(toBuilder = true)
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor

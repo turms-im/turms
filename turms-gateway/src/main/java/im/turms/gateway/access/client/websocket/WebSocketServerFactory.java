@@ -119,7 +119,8 @@ public final class WebSocketServerFactory {
                         () -> new TurmsMicrometerChannelMetricsRecorder(
                                 MetricNameConst.CLIENT_NETWORK,
                                 "websocket"))
-                .handle((request, response) -> handleHttpRequest(request,
+                .handle((request, response) -> handleHttpRequest(blocklistService,
+                        request,
                         response,
                         connectionListener,
                         serverSpec))
@@ -154,6 +155,7 @@ public final class WebSocketServerFactory {
      *           2. Return MonoEmpty to close the connection.
      */
     private static Publisher<Void> handleHttpRequest(
+            BlocklistService blocklistService,
             HttpServerRequest request,
             HttpServerResponse response,
             ConnectionListener connectionListener,
@@ -179,7 +181,14 @@ public final class WebSocketServerFactory {
         // 3. Get the real client address
         InetSocketAddress remoteAddress = request.remoteAddress();
 
-        // 4. Upgrade to WebSocket
+        // 4. Check if the client address has been blocked
+        if (remoteAddress != null
+                && blocklistService.isIpBlocked(remoteAddress.getAddress()
+                        .getAddress())) {
+            return Mono.empty();
+        }
+
+        // 5. Upgrade to WebSocket
         // reactor.netty.http.server.HttpServer.HttpServerHandle.onStateChange
         int maxFramePayloadLength = serverSpec.maxFramePayloadLength();
         return response.sendWebsocket((in, out) -> {
