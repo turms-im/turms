@@ -82,6 +82,9 @@ public final class GroupType extends BaseEntity {
     @Field(Fields.MESSAGE_EDITABLE)
     private final Boolean messageEditable;
 
+    // TODO: implement
+//    private final GroupUpdateStrategy messageRecallable;
+
     public static final class Fields {
         public static final String NAME = "n";
         public static final String GROUP_SIZE_LIMIT = "gsl";

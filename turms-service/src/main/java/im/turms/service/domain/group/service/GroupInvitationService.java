@@ -291,14 +291,14 @@ public class GroupInvitationService extends ExpirableEntityService<GroupInvitati
                         .flatMap(isOwnerOrManager -> {
                             if (!isOwnerOrManager) {
                                 return Mono.error(ResponseException.get(
-                                        ResponseStatusCode.NOT_OWNER_OR_MANAGER_TO_RECALL_INVITATION));
+                                        ResponseStatusCode.NOT_GROUP_OWNER_OR_MANAGER_TO_RECALL_GROUP_INVITATION));
                             }
                             RequestStatus requestStatus = invitation.getStatus();
                             if (requestStatus != RequestStatus.PENDING) {
                                 String reason = "The invitation is under the status "
                                         + requestStatus;
                                 return Mono.error(ResponseException.get(
-                                        ResponseStatusCode.RECALL_NOT_PENDING_GROUP_INVITATION,
+                                        ResponseStatusCode.RECALL_NON_PENDING_GROUP_INVITATION,
                                         reason));
                             }
                             return groupInvitationRepository
@@ -311,7 +311,7 @@ public class GroupInvitationService extends ExpirableEntityService<GroupInvitati
                                             // So we handle these cases as if the status of the
                                             // request has changed.
                                             ? Mono.error(ResponseException.get(
-                                                    ResponseStatusCode.RECALL_NOT_PENDING_GROUP_INVITATION))
+                                                    ResponseStatusCode.RECALL_NON_PENDING_GROUP_INVITATION))
                                             : groupVersionService
                                                     .updateGroupInvitationsVersion(
                                                             invitation.getGroupId())
@@ -406,8 +406,8 @@ public class GroupInvitationService extends ExpirableEntityService<GroupInvitati
         return groupMemberService.isOwnerOrManager(userId, groupId, false)
                 .flatMap(authenticated -> {
                     if (!authenticated) {
-                        return Mono.error(ResponseException
-                                .get(ResponseStatusCode.NOT_OWNER_OR_MANAGER_TO_ACCESS_INVITATION));
+                        return Mono.error(ResponseException.get(
+                                ResponseStatusCode.NOT_GROUP_OWNER_OR_MANAGER_TO_ACCESS_GROUP_INVITATION));
                     }
                     return groupVersionService.queryGroupInvitationsVersion(groupId)
                             .flatMap(version -> {

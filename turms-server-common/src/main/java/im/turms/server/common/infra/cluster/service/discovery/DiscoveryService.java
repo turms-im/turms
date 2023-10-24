@@ -787,7 +787,7 @@ public class DiscoveryService implements ClusterService {
         Member member = allKnownMembers.get(nodeId);
         if (member == null) {
             return Mono.error(
-                    ResponseException.get(ResponseStatusCode.NON_EXISTING_MEMBER_TO_BE_LEADER));
+                    ResponseException.get(ResponseStatusCode.NONEXISTENT_MEMBER_TO_BE_LEADER));
         }
         return electNewLeaderByMember(member);
     }

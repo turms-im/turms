@@ -722,7 +722,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
             assertThat(result.dataForRequester()
                     .getGroupJoinQuestionAnswerResult()
                     .getQuestionIdsList()).contains(groupJoinQuestionId);
-        }, ResponseStatusCode.OK, ResponseStatusCode.MEMBER_CANNOT_ANSWER_GROUP_QUESTION);
+        }, ResponseStatusCode.OK, ResponseStatusCode.GROUP_MEMBER_ANSWER_GROUP_QUESTION);
     }
 
     // Delete

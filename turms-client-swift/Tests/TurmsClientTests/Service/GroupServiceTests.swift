@@ -87,7 +87,7 @@ class GroupServiceTests: XCTestCase {
             XCTAssertEqual(groupMemberId, $0.data!.groupMembers[0].userID)
         })
         assertCompleted("answerGroupQuestions_shouldReturnAnswerResult", service.answerGroupQuestions([groupQuestionId!: "answer"]).recover { error -> Promise<Response<GroupJoinQuestionsAnswerResult>> in
-            if let businessError = error as? ResponseError, businessError.code == ResponseStatusCode.memberCannotAnswerGroupQuestion.rawValue {
+            if let businessError = error as? ResponseError, businessError.code == ResponseStatusCode.groupMemberAnswerGroupQuestion.rawValue {
                 return Promise.value(Response.value(GroupJoinQuestionsAnswerResult()))
             } else {
                 throw error

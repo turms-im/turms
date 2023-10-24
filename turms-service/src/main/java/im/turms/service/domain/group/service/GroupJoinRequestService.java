@@ -164,15 +164,15 @@ public class GroupJoinRequestService extends ExpirableEntityService<GroupJoinReq
                                 .get(ResponseStatusCode.GROUP_JOIN_REQUEST_SENDER_HAS_BEEN_BLOCKED))
                         : groupService.queryGroupTypeIdIfActiveAndNotDeleted(groupId))
                 .switchIfEmpty(Mono.error(ResponseException
-                        .get(ResponseStatusCode.SEND_JOIN_REQUEST_TO_INACTIVE_GROUP)))
+                        .get(ResponseStatusCode.SEND_GROUP_JOIN_REQUEST_TO_INACTIVE_GROUP)))
                 .flatMap(groupTypeService::queryGroupType)
                 .flatMap(type -> switch (type.getJoinStrategy()) {
                     case MEMBERSHIP_REQUEST -> Mono.error(ResponseException.get(
-                            ResponseStatusCode.SEND_JOIN_REQUEST_TO_GROUP_USING_MEMBERSHIP_REQUEST));
-                    case INVITATION -> Mono.error(ResponseException
-                            .get(ResponseStatusCode.SEND_JOIN_REQUEST_TO_GROUP_USING_INVITATION));
-                    case QUESTION -> Mono.error(ResponseException
-                            .get(ResponseStatusCode.SEND_JOIN_REQUEST_TO_GROUP_USING_QUESTION));
+                            ResponseStatusCode.SEND_GROUP_JOIN_REQUEST_TO_GROUP_USING_MEMBERSHIP_REQUEST));
+                    case INVITATION -> Mono.error(ResponseException.get(
+                            ResponseStatusCode.SEND_GROUP_JOIN_REQUEST_TO_GROUP_USING_INVITATION));
+                    case QUESTION -> Mono.error(ResponseException.get(
+                            ResponseStatusCode.SEND_GROUP_JOIN_REQUEST_TO_GROUP_USING_QUESTION));
                     case JOIN_REQUEST -> {
                         long id = node.nextLargeGapId(ServiceType.GROUP_JOIN_REQUEST);
                         String finalContent = content == null
@@ -245,14 +245,14 @@ public class GroupJoinRequestService extends ExpirableEntityService<GroupJoinReq
                     // So we check whether the requester is authorized first.
                     if (!request.getRequesterId()
                             .equals(requesterId)) {
-                        return Mono.error(ResponseException
-                                .get(ResponseStatusCode.NOT_JOIN_REQUEST_SENDER_TO_RECALL_REQUEST));
+                        return Mono.error(ResponseException.get(
+                                ResponseStatusCode.NOT_GROUP_JOIN_REQUEST_SENDER_TO_RECALL_REQUEST));
                     }
                     if (status != RequestStatus.PENDING) {
                         String reason = "The request is under the status "
                                 + status;
                         return Mono.error(ResponseException.get(
-                                ResponseStatusCode.RECALL_NOT_PENDING_GROUP_JOIN_REQUEST,
+                                ResponseStatusCode.RECALL_NON_PENDING_GROUP_JOIN_REQUEST,
                                 reason));
                     }
                     return groupJoinRequestRepository
@@ -264,7 +264,7 @@ public class GroupJoinRequestService extends ExpirableEntityService<GroupJoinReq
                                     // So we handle these cases as if the status of the request has
                                     // changed.
                                     ? Mono.error(ResponseException.get(
-                                            ResponseStatusCode.RECALL_NOT_PENDING_GROUP_JOIN_REQUEST))
+                                            ResponseStatusCode.RECALL_NON_PENDING_GROUP_JOIN_REQUEST))
                                     : Mono.whenDelayError(groupVersionService
                                             .updateJoinRequestsVersion(request.getGroupId())
                                             .onErrorResume(t -> {
@@ -302,7 +302,7 @@ public class GroupJoinRequestService extends ExpirableEntityService<GroupJoinReq
                         .flatMap(authenticated -> {
                             if (!authenticated) {
                                 return Mono.error(ResponseException.get(
-                                        ResponseStatusCode.NOT_OWNER_OR_MANAGER_TO_ACCESS_GROUP_REQUEST));
+                                        ResponseStatusCode.NOT_GROUP_OWNER_OR_MANAGER_TO_ACCESS_GROUP_JOIN_REQUEST));
                             }
                             return groupVersionService.queryGroupJoinRequestsVersion(groupId);
                         })

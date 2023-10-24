@@ -230,7 +230,7 @@ describe('Query', () => {
             const isCorrect = answerResult.questionIds.indexOf(groupJoinQuestionId) >= 0;
             expect(isCorrect).toEqual(true);
         } catch (e) {
-            expect((e as ResponseError).code).toEqual(ResponseStatusCode.MEMBER_CANNOT_ANSWER_GROUP_QUESTION);
+            expect((e as ResponseError).code).toEqual(ResponseStatusCode.GROUP_MEMBER_ANSWER_GROUP_QUESTION);
         }
     });
 });
@@ -257,7 +257,7 @@ describe('Delete', () => {
             });
             expect(response.data).toBeFalsy();
         } catch (e) {
-            expect((e as ResponseError).code).toEqual(ResponseStatusCode.RECALL_NOT_PENDING_GROUP_INVITATION);
+            expect((e as ResponseError).code).toEqual(ResponseStatusCode.RECALL_NON_PENDING_GROUP_INVITATION);
         }
     });
     it('deleteInvitation_shouldSucceedOrThrowDisabledFunction', async () => {
@@ -267,7 +267,7 @@ describe('Delete', () => {
             });
             expect(response.data).toBeFalsy();
         } catch (e) {
-            expect((e as ResponseError).code).toEqual(ResponseStatusCode.RECALL_NOT_PENDING_GROUP_INVITATION);
+            expect((e as ResponseError).code).toEqual(ResponseStatusCode.RECALL_NON_PENDING_GROUP_INVITATION);
         }
     });
     it('quitGroup_shouldSucceed', async () => {

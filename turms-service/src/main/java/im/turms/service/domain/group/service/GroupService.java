@@ -17,6 +17,7 @@
 
 package im.turms.service.domain.group.service;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -29,11 +30,14 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.reactivestreams.client.ClientSession;
 import io.micrometer.core.instrument.Counter;
 import org.springframework.context.annotation.DependsOn;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -109,6 +113,11 @@ public class GroupService {
     private boolean activateGroupWhenCreated;
     private boolean deleteGroupLogicallyByDefault;
 
+    private final Cache<Long, GroupType> groupIdToGroupTypeCache;
+
+    /**
+     * @param messageService is lazy because messageService -> groupService -> messageService
+     */
     public GroupService(
             Node node,
             TurmsPropertiesManager propertiesManager,
@@ -119,7 +128,7 @@ public class GroupService {
             GroupVersionService groupVersionService,
             UserPermissionGroupService userPermissionGroupService,
             ConversationService conversationService,
-            MessageService messageService,
+            @Lazy MessageService messageService,
             MetricsService metricsService) {
         this.node = node;
         this.groupRepository = groupRepository;
@@ -135,6 +144,12 @@ public class GroupService {
                 .counter(CREATED_GROUPS_COUNTER);
         deletedGroupsCounter = metricsService.getRegistry()
                 .counter(DELETED_GROUPS_COUNTER);
+
+        // TODO: make configurable
+        groupIdToGroupTypeCache = Caffeine.newBuilder()
+                .maximumSize(10_000)
+                .expireAfterWrite(Duration.ofHours(1))
+                .build();
 
         propertiesManager.notifyAndAddGlobalPropertiesChangeListener(this::updateProperties);
     }
@@ -220,7 +235,7 @@ public class GroupService {
                 .flatMap(authenticated -> {
                     if (!authenticated) {
                         return Mono.error(ResponseException
-                                .get(ResponseStatusCode.NOT_OWNER_TO_DELETE_GROUP));
+                                .get(ResponseStatusCode.NOT_GROUP_OWNER_TO_DELETE_GROUP));
                     }
                     if (queryGroupMemberIds) {
                         return groupMemberService.queryGroupMemberIds(groupId, false)
@@ -339,14 +354,31 @@ public class GroupService {
                         size));
     }
 
+    /**
+     * TODO: remove and keep {@link GroupService#queryGroupTypeIfActiveAndNotDeleted(Long, boolean)}
+     * only.
+     */
     public Mono<GroupType> queryGroupTypeIfActiveAndNotDeleted(@NotNull Long groupId) {
+        return queryGroupTypeIfActiveAndNotDeleted(groupId, false);
+    }
+
+    public Mono<GroupType> queryGroupTypeIfActiveAndNotDeleted(
+            @NotNull Long groupId,
+            boolean preferCache) {
         try {
             Validator.notNull(groupId, "groupId");
         } catch (ResponseException e) {
             return Mono.error(e);
         }
+        if (preferCache) {
+            GroupType groupType = groupIdToGroupTypeCache.getIfPresent(groupId);
+            if (groupType != null) {
+                return Mono.just(groupType);
+            }
+        }
         return groupRepository.findTypeIdIfActiveAndNotDeleted(groupId)
-                .flatMap(groupTypeService::queryGroupType);
+                .flatMap(groupTypeService::queryGroupType)
+                .doOnNext(groupType -> groupIdToGroupTypeCache.put(groupId, groupType));
     }
 
     public Mono<Long> queryGroupTypeId(@NotNull Long groupId) {
@@ -398,7 +430,7 @@ public class GroupService {
                                 quitAfterTransfer,
                                 session)
                         : Mono.error(ResponseException
-                                .get(ResponseStatusCode.NOT_OWNER_TO_TRANSFER_GROUP)));
+                                .get(ResponseStatusCode.NOT_GROUP_OWNER_TO_TRANSFER_GROUP)));
     }
 
     public Mono<Long> queryGroupOwnerId(@NotNull Long groupId) {
@@ -438,7 +470,7 @@ public class GroupService {
                     for (Signal<Void> signal : signals) {
                         if (signal.isOnError()) {
                             if (!ThrowableUtil.isStatusCode(signal.getThrowable(),
-                                    ResponseStatusCode.TRANSFER_NON_EXISTING_GROUP)) {
+                                    ResponseStatusCode.TRANSFER_NONEXISTENT_GROUP)) {
                                 matched++;
                             }
                         } else if (signal.isOnComplete()) {
@@ -472,7 +504,7 @@ public class GroupService {
             queryOwnerIdMono = Mono.just(auxiliaryCurrentOwnerId);
         }
         return queryOwnerIdMono
-                .switchIfEmpty(ResponseExceptionPublisherPool.transferNonExistingGroup())
+                .switchIfEmpty(ResponseExceptionPublisherPool.transferNonexistentGroup())
                 .flatMap(ownerId -> {
                     if (successorId.equals(ownerId)) {
                         return Mono.empty();
@@ -640,8 +672,8 @@ public class GroupService {
             return Mono.empty();
         }
         return queryGroupTypeIfActiveAndNotDeleted(groupId)
-                .switchIfEmpty(Mono.error(ResponseException
-                        .get(ResponseStatusCode.UPDATE_INFO_OF_NON_EXISTING_GROUP)))
+                .switchIfEmpty(Mono.error(
+                        ResponseException.get(ResponseStatusCode.UPDATE_INFO_OF_NONEXISTENT_GROUP)))
                 .flatMap(groupType -> {
                     GroupUpdateStrategy groupUpdateStrategy =
                             groupType.getGroupInfoUpdateStrategy();
@@ -649,17 +681,17 @@ public class GroupService {
                         case OWNER -> groupMemberService.isOwner(requesterId, groupId, false)
                                 .map(isOwner -> isOwner
                                         ? ResponseStatusCode.OK
-                                        : ResponseStatusCode.NOT_OWNER_TO_UPDATE_GROUP_INFO);
+                                        : ResponseStatusCode.NOT_GROUP_OWNER_TO_UPDATE_GROUP_INFO);
                         case OWNER_MANAGER -> groupMemberService
                                 .isOwnerOrManager(requesterId, groupId, false)
                                 .map(isOwnerOrManager -> isOwnerOrManager
                                         ? ResponseStatusCode.OK
-                                        : ResponseStatusCode.NOT_OWNER_OR_MANAGER_TO_UPDATE_GROUP_INFO);
-                        case OWNER_MANAGER_MEMBER ->
-                            groupMemberService.isOwnerOrManagerOrMember(requesterId, groupId, false)
-                                    .map(isMember -> isMember
-                                            ? ResponseStatusCode.OK
-                                            : ResponseStatusCode.NOT_MEMBER_TO_UPDATE_GROUP_INFO);
+                                        : ResponseStatusCode.NOT_GROUP_OWNER_OR_MANAGER_TO_UPDATE_GROUP_INFO);
+                        case OWNER_MANAGER_MEMBER -> groupMemberService
+                                .isOwnerOrManagerOrMember(requesterId, groupId, false)
+                                .map(isMember -> isMember
+                                        ? ResponseStatusCode.OK
+                                        : ResponseStatusCode.NOT_GROUP_MEMBER_TO_UPDATE_GROUP_INFO);
                         case ALL -> Mono.just(ResponseStatusCode.OK);
                         default -> Mono.error(new RuntimeException(
                                 "Unexpected group update strategy: "
@@ -838,7 +870,7 @@ public class GroupService {
                 .flatMap(existed -> {
                     if (!existed) {
                         return Mono.just(ServicePermission
-                                .get(ResponseStatusCode.CREATE_GROUP_WITH_NON_EXISTING_GROUP_TYPE));
+                                .get(ResponseStatusCode.CREATE_GROUP_WITH_NONEXISTENT_GROUP_TYPE));
                     }
                     Mono<UserPermissionGroup> groupMono = auxiliaryUserPermissionGroup != null
                             ? Mono.just(auxiliaryUserPermissionGroup)

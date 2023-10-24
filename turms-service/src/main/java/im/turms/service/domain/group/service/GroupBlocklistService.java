@@ -110,8 +110,8 @@ public class GroupBlocklistService {
         return groupMemberService.isOwnerOrManager(requesterId, groupId, false)
                 .flatMap(authenticated -> authenticated
                         ? groupMemberService.isGroupMember(groupId, userIdToBlock, false)
-                        : Mono.error(ResponseException
-                                .get(ResponseStatusCode.NOT_OWNER_OR_MANAGER_TO_ADD_BLOCKED_USER)))
+                        : Mono.error(ResponseException.get(
+                                ResponseStatusCode.NOT_GROUP_OWNER_OR_MANAGER_TO_ADD_BLOCKED_USER)))
                 .flatMap(isGroupMember -> {
                     GroupBlockedUser blockedUser =
                             new GroupBlockedUser(groupId, userIdToBlock, new Date(), requesterId);
@@ -176,7 +176,7 @@ public class GroupBlocklistService {
                 .flatMap(authenticated -> {
                     if (!authenticated) {
                         return Mono.error(ResponseException.get(
-                                ResponseStatusCode.NOT_OWNER_OR_MANAGER_TO_REMOVE_BLOCKED_USER));
+                                ResponseStatusCode.NOT_GROUP_OWNER_OR_MANAGER_TO_REMOVE_BLOCKED_USER));
                     }
                     GroupBlockedUser.Key key = new GroupBlockedUser.Key(groupId, userIdToUnblock);
                     Mono<Boolean> removeMono = groupBlocklistRepository.deleteById(key, session)

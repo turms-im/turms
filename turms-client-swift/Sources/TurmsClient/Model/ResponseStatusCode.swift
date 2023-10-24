@@ -58,7 +58,7 @@ public enum ResponseStatusCode: Int {
     case illegalArgumentFromServer
     case recordContainsDuplicateKey
     case requestedRecordsTooMany
-    case sendRequestFromNonExistingSession
+    case sendRequestFromNonexistentSession
     case unauthorizedRequest
 
     // Server
@@ -84,23 +84,23 @@ public enum ResponseStatusCode: Int {
     case sessionSimultaneousConflictsNotify
     case sessionSimultaneousConflictsOffline
     case createExistingSession
-    case updateNonExistingSessionHeartbeat
+    case updateHeartbeatOfNonexistentSession
 
     // User - Location
     case userLocationRelatedFeaturesAreDisabled = 2200
     case queryingNearestUsersBySessionIdIsDisabled
 
     // User - Info
-    case updateInfoOfNonExistingUser = 2300
+    case updateInfoOfNonexistentUser = 2300
     case userProfileNotFound
     case profileRequesterNotInContactsOrBlocked
     case profileRequesterHasBeenBlocked
 
     // User - Permission
-    case queryPermissionOfNonExistingUser = 2400
+    case queryPermissionOfNonexistentUser = 2400
 
     // User - Relationship
-    case addNotRelatedUserToGroup = 2500
+    case addNonRelatedUserToGroup = 2500
     case createExistingRelationship
 
     // User - Friend Request
@@ -111,81 +111,94 @@ public enum ResponseStatusCode: Int {
     // Group
 
     // Group - Info
-    case updateInfoOfNonExistingGroup = 3000
-    case notOwnerToUpdateGroupInfo
-    case notOwnerOrManagerToUpdateGroupInfo
-    case notMemberToUpdateGroupInfo
+    case updateInfoOfNonexistentGroup = 3000
+    case notGroupOwnerToUpdateGroupInfo
+    case notGroupOwnerOrManagerToUpdateGroupInfo
+    case notGroupMemberToUpdateGroupInfo
 
     // Group - Type
     case noPermissionToCreateGroupWithGroupType = 3100
-    case createGroupWithNonExistingGroupType
+    case createGroupWithNonexistentGroupType
 
     // Group - Ownership
     case notActiveUserToCreateGroup = 3200
-    case notOwnerToTransferGroup
-    case notOwnerToDeleteGroup
+    case notGroupOwnerToTransferGroup
+    case notGroupOwnerToDeleteGroup
     case successorNotGroupMember
     case ownerQuitsWithoutSpecifyingSuccessor
     case maxOwnedGroupsReached
-    case transferNonExistingGroup
+    case transferNonexistentGroup
 
     // Group - Question
-    case notOwnerOrManagerToCreateGroupQuestion = 3300
-    case notOwnerOrManagerToDeleteGroupQuestion
-    case notOwnerOrManagerToUpdateGroupQuestion
-    case notOwnerOrManagerToAccessGroupQuestionAnswer
+    case notGroupOwnerOrManagerToCreateGroupQuestion = 3300
+    case notGroupOwnerOrManagerToDeleteGroupQuestion
+    case notGroupOwnerOrManagerToUpdateGroupQuestion
+    case notGroupOwnerOrManagerToAccessGroupQuestionAnswer
     case createGroupQuestionForInactiveGroup
     case createGroupQuestionForGroupUsingJoinRequest
     case createGroupQuestionForGroupUsingInvitation
     case createGroupQuestionForGroupUsingMembershipRequest
     case groupQuestionAnswererHasBeenBlocked
-    case memberCannotAnswerGroupQuestion
-    case answerInactiveQuestion
-    case answerQuestionOfInactiveGroup
+    case groupMemberAnswerGroupQuestion
+    case answerInactiveGroupQuestion
+    case answerGroupQuestionOfInactiveGroup
 
     // Group - Member
     case addUserToGroupRequiringInvitation = 3400
     case addUserToInactiveGroup
-    case addUserWithRoleHigherThanRequester
+    case addUserToGroupWithRoleHigherThanRequester
+    case addUserToGroupWithSizeLimitReached
     case addBlockedUserToGroup
     case addBlockedUserToInactiveGroup
-    case notOwnerOrManagerToRemoveGroupMember
-    case notOwnerToRemoveGroupOwnerOrManager
-    case notOwnerToUpdateGroupMemberInfo
-    case notOwnerOrManagerToUpdateGroupMemberInfo
-    case notMemberToQueryMemberInfo
+    case notGroupOwnerOrManagerToRemoveGroupMember
+    case notGroupOwnerToRemoveGroupOwnerOrManager
+    case notGroupOwnerToUpdateGroupMemberRole
+    case updateGroupMemberRoleOfNonexistentGroup
+    case notGroupOwnerToUpdateGroupMemberInfo
+    case notGroupOwnerOrManagerToUpdateGroupMemberInfo
+    case notGroupMemberToUpdateGroupMemberInfo
+    case updateGroupMemberInfoOfNonexistentGroup
+    case updateInfoOfNonexistentGroupMember
+    case notGroupOwnerOrManagerToMuteGroupMember
+    case muteGroupMemberWithRoleEqualToOrHigherThanRequester
+    case muteGroupMemberOfNonexistentGroup
+    case muteNonexistentGroupMember
+    case notGroupMemberToQueryGroupMemberInfo
 
     // Group - Blocklist
-    case notOwnerOrManagerToAddBlockedUser = 3500
-    case notOwnerOrManagerToRemoveBlockedUser
+    case notGroupOwnerOrManagerToAddBlockedUser = 3500
+    case notGroupOwnerOrManagerToRemoveBlockedUser
 
     // Group - Join Request
     case groupJoinRequestSenderHasBeenBlocked = 3600
-    case notJoinRequestSenderToRecallRequest
-    case notOwnerOrManagerToAccessGroupRequest
-    case recallNotPendingGroupJoinRequest
-    case sendJoinRequestToInactiveGroup
-    case sendJoinRequestToGroupUsingMembershipRequest
-    case sendJoinRequestToGroupUsingInvitation
-    case sendJoinRequestToGroupUsingQuestion
+    case notGroupJoinRequestSenderToRecallRequest
+    case notGroupOwnerOrManagerToAccessGroupJoinRequest
+    case recallNonPendingGroupJoinRequest
+    case sendGroupJoinRequestToInactiveGroup
+    case sendGroupJoinRequestToGroupUsingMembershipRequest
+    case sendGroupJoinRequestToGroupUsingInvitation
+    case sendGroupJoinRequestToGroupUsingQuestion
     case recallingGroupJoinRequestIsDisabled
 
     // Group - Invitation
-    case groupInviterNotMember = 3700
+    case groupInviterNotGroupMember = 3700
     case groupInviteeAlreadyGroupMember
-    case notOwnerOrManagerToRecallInvitation
-    case notOwnerOrManagerToAccessInvitation
-    case notOwnerToSendInvitation
-    case notOwnerOrManagerToSendInvitation
-    case notMemberToSendInvitation
-    case inviteeHasBeenBlocked
+    case groupInviteeHasBeenBlockedByGroup
+    case notGroupOwnerOrManagerToRecallGroupInvitation
+    case notGroupOwnerOrManagerToAccessGroupInvitation
+    case notGroupOwnerToSendGroupInvitation
+    case notGroupOwnerOrManagerToSendGroupInvitation
+    case notGroupMemberToSendGroupInvitation
     case recallingGroupInvitationIsDisabled
     case sendGroupInvitationToGroupNotRequireInvitation
-    case recallNotPendingGroupInvitation
+    case recallNonPendingGroupInvitation
 
     // Conversation
     case updatingTypingStatusIsDisabled = 4000
     case updatingReadDateIsDisabled
+    case updatingReadDateIsDisabledByGroup
+    case updatingReadDateOfNonexistentGroupConversation
+    case notGroupMemberToUpdateReadDateOfGroupConversation
     case movingReadDateForwardIsDisabled
 
     // Message
@@ -197,25 +210,32 @@ public enum ResponseStatusCode: Int {
     case groupMessageSenderHasBeenBlocked
     case sendMessageToInactiveGroup
     case sendMessageToMutedGroup
+    case sendMessageToNonexistentGroup
     case sendingMessagesToOneselfIsDisabled
-    case mutedMemberSendMessage
+    case mutedGroupMemberSendMessage
     case guestsHaveBeenMuted
     case messageIsIllegal
 
     // Message - Update
     case updatingMessageBySenderIsDisabled = 5100
     case notSenderToUpdateMessage
-    case notMessageRecipientToUpdateMessageReadDate
+    case updateMessageOfNonexistentGroup
+    case updatingGroupMessageBySenderIsDisabled
 
     // Message - Recall
-    case recallNonExistingMessage = 5200
+    case recallNonexistentMessage = 5200
     case recallingMessageIsDisabled
+    case notSenderToRecallMessage
+    case recallMessageOfNonexistentGroup
     case messageRecallTimeout
 
-    case notMemberToQueryGroupMessages = 5300
+    // Message - Query
+    case notGroupMemberToQueryGroupMessages = 5300
 
     // Storage
     case storageNotImplemented = 6000
+
+    // Storage - Message attachment
     case notFriendToUploadMessageAttachmentInPrivateConversation = 6100
     case notGroupMemberToUploadMessageAttachmentInGroupConversation
     case notUploaderToShareMessageAttachment
@@ -224,6 +244,8 @@ public enum ResponseStatusCode: Int {
     case notUploaderOrGroupManagerToDeleteMessageAttachmentInGroupConversation
     case notUploaderToDeleteMessageAttachmentInPrivateConversation
     case notUploaderOrSharedWithUserToDownloadMessageAttachment
+
+    // Storage - Message attachment info
     case notFriendToQueryMessageAttachmentInfoInPrivateConversation = 6130
     case notGroupMemberToQueryMessageAttachmentInfoInGroupConversation
 }

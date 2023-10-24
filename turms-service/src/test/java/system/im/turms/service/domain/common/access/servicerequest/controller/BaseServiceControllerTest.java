@@ -74,7 +74,7 @@ public class BaseServiceControllerTest<T> extends SpringAwareIntegrationTest {
     protected void assertResultIsOk(
             Mono<RequestHandlerResult> resultMono,
             @Nullable Consumer<RequestHandlerResult> resultConsumer) {
-        assertResult(resultMono, resultConsumer);
+        assertResult(resultMono, resultConsumer, ResponseStatusCode.OK);
     }
 
     protected void assertResultIsOk(Mono<RequestHandlerResult> resultMono) {

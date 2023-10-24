@@ -60,6 +60,7 @@ import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
+import im.turms.server.common.infra.property.env.service.ServiceProperties;
 import im.turms.server.common.infra.property.env.service.business.group.GroupProperties;
 import im.turms.server.common.infra.reactor.PublisherPool;
 import im.turms.server.common.infra.recycler.Recyclable;
@@ -91,7 +92,7 @@ public class GroupMemberService {
             Pair.of(ServicePermission.get(ResponseStatusCode.ADD_USER_TO_INACTIVE_GROUP), null);
 
     private static final Pair<ServicePermission, GroupInvitationStrategy> GROUP_INVITER_NOT_MEMBER =
-            Pair.of(ServicePermission.get(ResponseStatusCode.GROUP_INVITER_NOT_MEMBER), null);
+            Pair.of(ServicePermission.get(ResponseStatusCode.GROUP_INVITER_NOT_GROUP_MEMBER), null);
 
     private final GroupMemberRepository groupMemberRepository;
     private final GroupService groupService;
@@ -141,11 +142,10 @@ public class GroupMemberService {
     }
 
     private void updateProperties(TurmsProperties properties) {
-        checkIfTargetActiveAndNotDeleted = properties.getService()
-                .getMessage()
+        ServiceProperties serviceProperties = properties.getService();
+        checkIfTargetActiveAndNotDeleted = serviceProperties.getMessage()
                 .isCheckIfTargetActiveAndNotDeleted();
-        respondOfflineIfInvisible = properties.getService()
-                .getUser()
+        respondOfflineIfInvisible = serviceProperties.getUser()
                 .isRespondOfflineIfInvisible();
     }
 
@@ -240,12 +240,12 @@ public class GroupMemberService {
             @Nullable String name,
             @Nullable Date muteEndDate,
             @Nullable ClientSession session) {
-        boolean onlyRequester = CollectionUtil.containsExactly(userIds, requesterId);
+        boolean onlyAddRequesterToGroup = CollectionUtil.containsExactly(userIds, requesterId);
         try {
             Validator.notNull(userIds, "userIds");
             // TODO: configurable
             Validator.maxSize(userIds, "userIds", 100);
-            if (onlyRequester) {
+            if (onlyAddRequesterToGroup) {
                 if (groupMemberRole == null) {
                     groupMemberRole = GroupMemberRole.MEMBER;
                 } else if (groupMemberRole != GroupMemberRole.MEMBER) {
@@ -270,50 +270,59 @@ public class GroupMemberService {
                 .switchIfEmpty(Mono.error(
                         ResponseException.get(ResponseStatusCode.ADD_USER_TO_INACTIVE_GROUP)))
                 .flatMap(groupType -> {
-                    if (onlyRequester
-                            && groupType
-                                    .getJoinStrategy() == GroupJoinStrategy.MEMBERSHIP_REQUEST) {
-                        return Mono.just(ResponseStatusCode.OK);
-                    }
-                    if (groupType.getInvitationStrategy()
-                            .requiresApproval()) {
-                        return Mono.just(ResponseStatusCode.ADD_USER_TO_GROUP_REQUIRING_INVITATION);
+                    if ((!onlyAddRequesterToGroup
+                            || groupType.getJoinStrategy() != GroupJoinStrategy.MEMBERSHIP_REQUEST)
+                            && groupType.getInvitationStrategy()
+                                    .requiresApproval()) {
+                        return Mono.error(ResponseException
+                                .get(ResponseStatusCode.ADD_USER_TO_GROUP_REQUIRING_INVITATION));
                     }
                     return queryGroupMemberRole(requesterId, groupId, false).map(requesterRole -> {
                         boolean isRequesterRoleHigherThanNewMemberRole =
                                 requesterRole.getNumber() < finalGroupMemberRole.getNumber();
                         return isRequesterRoleHigherThanNewMemberRole
                                 ? ResponseStatusCode.OK
-                                : ResponseStatusCode.ADD_USER_WITH_ROLE_HIGHER_THAN_REQUESTER;
+                                : ResponseStatusCode.ADD_USER_TO_GROUP_WITH_ROLE_HIGHER_THAN_REQUESTER;
                     })
-                            .defaultIfEmpty(ResponseStatusCode.GROUP_INVITER_NOT_MEMBER);
-                })
-                .flatMap(code -> code == ResponseStatusCode.OK
-                        ? groupService.isGroupActiveAndNotDeleted(groupId)
-                        : Mono.error(ResponseException.get(code)))
-                .flatMap(isGroupActive -> {
-                    if (!isGroupActive) {
-                        return ResponseExceptionPublisherPool.addBlockedUserToInactiveGroup();
-                    }
-                    return groupBlocklistService.findBlockedUserIds(groupId, userIds)
-                            .collect(CollectorUtil.toList(userIds.size()));
-                })
-                .flatMap(blockedUserIds -> {
-                    if (blockedUserIds.isEmpty()) {
-                        return addGroupMembers(groupId,
-                                userIds,
-                                finalGroupMemberRole,
-                                name,
-                                new Date(),
-                                muteEndDate,
-                                session);
-                    }
-                    blockedUserIds = CollectionUtil.sort(blockedUserIds);
-                    String ids = StringUtil.joinLatin1(", ", blockedUserIds);
-                    return Mono.error(
-                            ResponseException.get(ResponseStatusCode.ADD_BLOCKED_USER_TO_GROUP,
-                                    "The blocked user IDs: "
-                                            + ids));
+                            .defaultIfEmpty(ResponseStatusCode.GROUP_INVITER_NOT_GROUP_MEMBER)
+                            .flatMap(code -> code == ResponseStatusCode.OK
+                                    ? groupService.isGroupActiveAndNotDeleted(groupId)
+                                    : Mono.error(ResponseException.get(code)))
+                            .flatMap(isGroupActive -> {
+                                if (!isGroupActive) {
+                                    return ResponseExceptionPublisherPool
+                                            .addBlockedUserToInactiveGroup();
+                                }
+                                return groupBlocklistService.findBlockedUserIds(groupId, userIds)
+                                        .collect(CollectorUtil.toList(userIds.size()));
+                            })
+                            .flatMap(blockedUserIds -> {
+                                if (!blockedUserIds.isEmpty()) {
+                                    blockedUserIds = CollectionUtil.sort(blockedUserIds);
+                                    String ids = StringUtil.joinLatin1(", ", blockedUserIds);
+                                    return Mono.error(ResponseException.get(
+                                            ResponseStatusCode.ADD_BLOCKED_USER_TO_GROUP,
+                                            "The blocked user IDs: "
+                                                    + ids));
+                                }
+                                // Put the logic to check the member limit last
+                                // to reduce the gap between checking count and adding members
+                                return groupMemberRepository.countMembers(groupId)
+                                        .flatMap(memberCount -> {
+                                            if (memberCount + userIds.size() > groupType
+                                                    .getGroupSizeLimit()) {
+                                                return Mono.error(ResponseException.get(
+                                                        ResponseStatusCode.ADD_USER_TO_GROUP_WITH_SIZE_LIMIT_REACHED));
+                                            }
+                                            return addGroupMembers(groupId,
+                                                    userIds,
+                                                    finalGroupMemberRole,
+                                                    name,
+                                                    new Date(),
+                                                    muteEndDate,
+                                                    session);
+                                        });
+                            });
                 });
     }
 
@@ -367,7 +376,7 @@ public class GroupMemberService {
             int requesterRoleNumber = requesterRole.getNumber();
             if (requesterRoleNumber > GroupMemberRole.MANAGER_VALUE) {
                 return Mono.error(ResponseException
-                        .get(ResponseStatusCode.NOT_OWNER_OR_MANAGER_TO_REMOVE_GROUP_MEMBER));
+                        .get(ResponseStatusCode.NOT_GROUP_OWNER_OR_MANAGER_TO_REMOVE_GROUP_MEMBER));
             }
             return queryGroupMemberKeyAndRolePairs(memberIdsToDelete, groupId)
                     .flatMap(keyAndRolePairs -> {
@@ -392,8 +401,8 @@ public class GroupMemberService {
                             if (keyAndRole.getRole()
                                     .getNumber() <= requesterRoleNumber) {
                                 return Mono.error(ResponseException.get(
-                                        ResponseStatusCode.NOT_OWNER_TO_REMOVE_GROUP_OWNER_OR_MANAGER,
-                                        ResponseStatusCode.NOT_OWNER_TO_REMOVE_GROUP_OWNER_OR_MANAGER
+                                        ResponseStatusCode.NOT_GROUP_OWNER_TO_REMOVE_GROUP_OWNER_OR_MANAGER,
+                                        ResponseStatusCode.NOT_GROUP_OWNER_TO_REMOVE_GROUP_OWNER_OR_MANAGER
                                                 .getReason()
                                                 + ". No permission to remove the member: "
                                                 + userId));
@@ -644,7 +653,7 @@ public class GroupMemberService {
     /**
      * @return Possible codes: {@link ResponseStatusCode#OK},
      *         {@link ResponseStatusCode#GROUP_INVITEE_ALREADY_GROUP_MEMBER},
-     *         {@link ResponseStatusCode#INVITEE_HAS_BEEN_BLOCKED}
+     *         {@link ResponseStatusCode#GROUP_INVITEE_HAS_BEEN_BLOCKED_BY_GROUP}
      */
     public Mono<ResponseStatusCode> isAllowedToBeInvited(
             @NotNull Long groupId,
@@ -655,7 +664,7 @@ public class GroupMemberService {
             }
             return groupBlocklistService.isBlocked(groupId, inviteeId)
                     .map(isBlocked -> isBlocked
-                            ? ResponseStatusCode.INVITEE_HAS_BEEN_BLOCKED
+                            ? ResponseStatusCode.GROUP_INVITEE_HAS_BEEN_BLOCKED_BY_GROUP
                             : ResponseStatusCode.OK);
         });
     }
@@ -676,7 +685,7 @@ public class GroupMemberService {
      * @return Possible codes: {@link ResponseStatusCode#OK}
      *         {@link ResponseStatusCode#SEND_MESSAGE_TO_MUTED_GROUP}
      *         {@link ResponseStatusCode#SEND_MESSAGE_TO_INACTIVE_GROUP}
-     *         {@link ResponseStatusCode#MUTED_MEMBER_SEND_MESSAGE}
+     *         {@link ResponseStatusCode#MUTED_GROUP_MEMBER_SEND_MESSAGE}
      */
     private Mono<ResponseStatusCode> isGroupMemberAllowedToSendMessage(
             @NotNull Long groupId,
@@ -692,7 +701,7 @@ public class GroupMemberService {
                     return groupService.isGroupActiveAndNotDeleted(groupId)
                             .flatMap(isActive -> isActive
                                     ? isMemberMuted(groupId, senderId, true).map(muted -> muted
-                                            ? ResponseStatusCode.MUTED_MEMBER_SEND_MESSAGE
+                                            ? ResponseStatusCode.MUTED_GROUP_MEMBER_SEND_MESSAGE
                                             : ResponseStatusCode.OK)
                                     : Mono.just(ResponseStatusCode.SEND_MESSAGE_TO_INACTIVE_GROUP));
                 });
@@ -814,6 +823,20 @@ public class GroupMemberService {
                         || memberRole == GroupMemberRole.MANAGER
                         || memberRole == GroupMemberRole.MEMBER)
                 .defaultIfEmpty(false);
+    }
+
+    private boolean isOwner(GroupMemberRole memberRole) {
+        return memberRole == GroupMemberRole.OWNER;
+    }
+
+    private boolean isOwnerOrManager(GroupMemberRole memberRole) {
+        return memberRole == GroupMemberRole.OWNER || memberRole == GroupMemberRole.MANAGER;
+    }
+
+    private boolean isOwnerOrManagerOrMember(GroupMemberRole memberRole) {
+        return memberRole == GroupMemberRole.OWNER
+                || memberRole == GroupMemberRole.MANAGER
+                || memberRole == GroupMemberRole.MEMBER;
     }
 
     public Flux<Long> queryUserJoinedGroupIds(@NotNull Long userId) {
@@ -1054,8 +1077,8 @@ public class GroupMemberService {
         }
         return isGroupMember(groupId, requesterId, false)
                 .flatMap(isGroupMember -> isGroupMember == null || !isGroupMember
-                        ? Mono.error(ResponseException
-                                .get(ResponseStatusCode.NOT_MEMBER_TO_QUERY_MEMBER_INFO))
+                        ? Mono.error(ResponseException.get(
+                                ResponseStatusCode.NOT_GROUP_MEMBER_TO_QUERY_GROUP_MEMBER_INFO))
                         : queryGroupMembers(groupId, memberIds, false))
                 .flatMap(members -> {
                     if (members.isEmpty()) {
@@ -1081,8 +1104,8 @@ public class GroupMemberService {
         return isGroupMember(groupId, requesterId, false)
                 .flatMap(isGroupMember -> isGroupMember != null && isGroupMember
                         ? groupVersionService.queryMembersVersion(groupId)
-                        : Mono.error(ResponseException
-                                .get(ResponseStatusCode.NOT_MEMBER_TO_QUERY_MEMBER_INFO)))
+                        : Mono.error(ResponseException.get(
+                                ResponseStatusCode.NOT_GROUP_MEMBER_TO_QUERY_GROUP_MEMBER_INFO)))
                 .flatMap(version -> {
                     if (DateUtil.isAfterOrSame(lastUpdatedDate, version)) {
                         return ResponseExceptionPublisherPool.alreadyUpToUpdate();
@@ -1125,29 +1148,112 @@ public class GroupMemberService {
             return Mono.error(ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
                     "Cannot update a group member's role to OWNER"));
         }
-        Mono<ResponseStatusCode> isAuthorizedMono;
+        Mono<Void> checkIfAuthorized;
         if (role != null) {
-            isAuthorizedMono = isOwner(requesterId, groupId, false).map(isOwner -> isOwner
-                    ? ResponseStatusCode.OK
-                    : ResponseStatusCode.NOT_OWNER_TO_UPDATE_GROUP_MEMBER_INFO);
-        } else if (muteEndDate != null || (name != null && !requesterId.equals(memberId))) {
-            isAuthorizedMono = isOwnerOrManager(requesterId, groupId, false)
-                    .map(isOwnerOrManager -> isOwnerOrManager
-                            ? ResponseStatusCode.OK
-                            : ResponseStatusCode.NOT_OWNER_OR_MANAGER_TO_UPDATE_GROUP_MEMBER_INFO);
+            // TODO: we should check if the group is active and not
+            // deleted consistently.
+            checkIfAuthorized = groupService.isGroupActiveAndNotDeleted(groupId)
+                    .flatMap(isGroupActiveAndNotDeleted -> {
+                        if (isGroupActiveAndNotDeleted) {
+                            return isOwner(requesterId, groupId, false).flatMap(isOwner -> isOwner
+                                    ? Mono.empty()
+                                    : Mono.error(ResponseException.get(
+                                            ResponseStatusCode.NOT_GROUP_OWNER_TO_UPDATE_GROUP_MEMBER_ROLE)));
+                        }
+                        return Mono.error(ResponseException.get(
+                                ResponseStatusCode.UPDATE_GROUP_MEMBER_ROLE_OF_NONEXISTENT_GROUP));
+                    });
+        } else if (name != null || muteEndDate != null) {
+            if (muteEndDate != null) {
+                if (requesterId.equals(memberId)) {
+                    return Mono.error(ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
+                            "Cannot mute oneself"));
+                }
+                // Note that we need to check the requester's role first to avoid exposing
+                // the target member's information if the requester is not a group member.
+                checkIfAuthorized = groupService.queryGroupTypeIfActiveAndNotDeleted(groupId)
+                        .switchIfEmpty(Mono.defer(() -> Mono.error(ResponseException
+                                .get(ResponseStatusCode.MUTE_GROUP_MEMBER_OF_NONEXISTENT_GROUP))))
+                        .flatMap(groupType -> queryGroupMemberRole(requesterId, groupId, false)
+                                .switchIfEmpty(Mono.defer(() -> Mono.error(ResponseException.get(
+                                        ResponseStatusCode.NOT_GROUP_OWNER_OR_MANAGER_TO_MUTE_GROUP_MEMBER))))
+                                .flatMap(requesterRole -> queryGroupMemberRole(memberId,
+                                        groupId,
+                                        false)
+                                        .switchIfEmpty(Mono.defer(() -> Mono.error(ResponseException
+                                                .get(ResponseStatusCode.MUTE_NONEXISTENT_GROUP_MEMBER))))
+                                        .flatMap(targetMemberRole -> {
+                                            if (requesterRole.getNumber() >= targetMemberRole
+                                                    .getNumber()) {
+                                                return Mono.error(ResponseException.get(
+                                                        ResponseStatusCode.MUTE_GROUP_MEMBER_WITH_ROLE_EQUAL_TO_OR_HIGHER_THAN_REQUESTER));
+                                            }
+                                            if (name == null) {
+                                                return ResponseExceptionPublisherPool.ok();
+                                            }
+                                            return switch (groupType
+                                                    .getMemberInfoUpdateStrategy()) {
+                                                case OWNER -> isOwner(requesterRole)
+                                                        ? Mono.empty()
+                                                        : Mono.error(ResponseException.get(
+                                                                ResponseStatusCode.NOT_GROUP_OWNER_TO_UPDATE_GROUP_MEMBER_INFO));
+                                                case OWNER_MANAGER ->
+                                                    isOwnerOrManager(requesterRole)
+                                                            ? Mono.empty()
+                                                            : Mono.error(ResponseException.get(
+                                                                    ResponseStatusCode.NOT_GROUP_OWNER_OR_MANAGER_TO_UPDATE_GROUP_MEMBER_INFO));
+                                                case OWNER_MANAGER_MEMBER ->
+                                                    isOwnerOrManagerOrMember(requesterRole)
+                                                            ? Mono.empty()
+                                                            : Mono.error(ResponseException.get(
+                                                                    ResponseStatusCode.NOT_GROUP_MEMBER_TO_UPDATE_GROUP_MEMBER_INFO));
+                                                case ALL -> Mono.empty();
+                                            };
+                                        })));
+            } else {
+                checkIfAuthorized = groupService.queryGroupTypeIfActiveAndNotDeleted(groupId)
+                        .switchIfEmpty(Mono.error(ResponseException.get(
+                                ResponseStatusCode.UPDATE_GROUP_MEMBER_INFO_OF_NONEXISTENT_GROUP)))
+                        .flatMap(groupType -> isGroupMember(groupId, memberId, false)
+                                .flatMap(isTargetGroupMember -> {
+                                    if (isTargetGroupMember) {
+                                        return Mono.empty();
+                                    }
+                                    return Mono.error(ResponseException.get(
+                                            ResponseStatusCode.UPDATE_INFO_OF_NONEXISTENT_GROUP_MEMBER));
+                                })
+                                .then(Mono.defer(() -> {
+                                    if (groupType.getSelfInfoUpdatable()
+                                            && requesterId.equals(memberId)) {
+                                        return Mono.empty();
+                                    }
+                                    return switch (groupType.getMemberInfoUpdateStrategy()) {
+                                        case OWNER -> isOwner(requesterId, groupId, false)
+                                                .flatMap(isOwner -> isOwner
+                                                        ? Mono.empty()
+                                                        : Mono.error(ResponseException.get(
+                                                                ResponseStatusCode.NOT_GROUP_OWNER_TO_UPDATE_GROUP_MEMBER_INFO)));
+                                        case OWNER_MANAGER ->
+                                            isOwnerOrManager(requesterId, groupId, false)
+                                                    .flatMap(isOwnerOrManager -> isOwnerOrManager
+                                                            ? Mono.empty()
+                                                            : Mono.error(ResponseException.get(
+                                                                    ResponseStatusCode.NOT_GROUP_OWNER_OR_MANAGER_TO_UPDATE_GROUP_MEMBER_INFO)));
+                                        case OWNER_MANAGER_MEMBER ->
+                                            isOwnerOrManagerOrMember(requesterId, groupId, false)
+                                                    .flatMap(isMember -> isMember
+                                                            ? Mono.empty()
+                                                            : Mono.error(ResponseException.get(
+                                                                    ResponseStatusCode.NOT_GROUP_MEMBER_TO_UPDATE_GROUP_MEMBER_INFO)));
+                                        case ALL -> Mono.empty();
+                                    };
+                                })));
+            }
         } else {
             return OperationResultPublisherPool.ACKNOWLEDGED_UPDATE_RESULT;
         }
-        return isAuthorizedMono.flatMap(code -> code == ResponseStatusCode.OK
-                ? updateGroupMember(groupId,
-                        memberId,
-                        name,
-                        role,
-                        new Date(),
-                        muteEndDate,
-                        null,
-                        false)
-                : Mono.error(ResponseException.get(code)));
+        return checkIfAuthorized.then(
+                updateGroupMember(groupId, memberId, name, role, null, muteEndDate, null, false));
     }
 
     public Mono<DeleteResult> deleteAllGroupMembers(
@@ -1225,17 +1331,17 @@ public class GroupMemberService {
             case ALL, ALL_REQUIRING_APPROVAL -> ResponseStatusCode.OK;
             case OWNER, OWNER_REQUIRING_APPROVAL -> requesterRole == GroupMemberRole.OWNER
                     ? ResponseStatusCode.OK
-                    : ResponseStatusCode.NOT_OWNER_TO_SEND_INVITATION;
+                    : ResponseStatusCode.NOT_GROUP_OWNER_TO_SEND_GROUP_INVITATION;
             case OWNER_MANAGER, OWNER_MANAGER_REQUIRING_APPROVAL ->
                 requesterRole == GroupMemberRole.OWNER || requesterRole == GroupMemberRole.MANAGER
                         ? ResponseStatusCode.OK
-                        : ResponseStatusCode.NOT_OWNER_OR_MANAGER_TO_SEND_INVITATION;
+                        : ResponseStatusCode.NOT_GROUP_OWNER_OR_MANAGER_TO_SEND_GROUP_INVITATION;
             case OWNER_MANAGER_MEMBER, OWNER_MANAGER_MEMBER_REQUIRING_APPROVAL ->
                 requesterRole == GroupMemberRole.OWNER
                         || requesterRole == GroupMemberRole.MANAGER
                         || requesterRole == GroupMemberRole.MEMBER
                                 ? ResponseStatusCode.OK
-                                : ResponseStatusCode.NOT_MEMBER_TO_SEND_INVITATION;
+                                : ResponseStatusCode.NOT_GROUP_MEMBER_TO_SEND_GROUP_INVITATION;
         };
         if (isAllowToAddRole == ResponseStatusCode.OK) {
             boolean isRequesterRoleHigherThanNewMemberRole =
@@ -1243,7 +1349,7 @@ public class GroupMemberService {
             if (isRequesterRoleHigherThanNewMemberRole) {
                 return ResponseStatusCode.OK;
             }
-            return ResponseStatusCode.ADD_USER_WITH_ROLE_HIGHER_THAN_REQUESTER;
+            return ResponseStatusCode.ADD_USER_TO_GROUP_WITH_ROLE_HIGHER_THAN_REQUESTER;
         }
         return isAllowToAddRole;
     }

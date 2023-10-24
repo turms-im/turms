@@ -490,7 +490,7 @@ public class UserService {
                         result -> result.getMatchedCount() > 0
                                 ? Mono.empty()
                                 : Mono.error(ResponseException
-                                        .get(ResponseStatusCode.UPDATE_INFO_OF_NON_EXISTING_USER)));
+                                        .get(ResponseStatusCode.UPDATE_INFO_OF_NONEXISTENT_USER)));
     }
 
     public Flux<User> queryUsers(

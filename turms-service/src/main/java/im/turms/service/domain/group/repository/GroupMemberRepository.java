@@ -84,6 +84,12 @@ public class GroupMemberRepository extends BaseRepository<GroupMember, GroupMemb
         return mongoClient.updateMany(session, entityClass, filter, update);
     }
 
+    public Mono<Long> countMembers(Long groupId) {
+        Filter filter = Filter.newBuilder(1)
+                .eq(GroupMember.Fields.ID_GROUP_ID, groupId);
+        return mongoClient.count(entityClass, filter);
+    }
+
     public Mono<Long> countMembers(
             @Nullable Set<Long> groupIds,
             @Nullable Set<Long> userIds,

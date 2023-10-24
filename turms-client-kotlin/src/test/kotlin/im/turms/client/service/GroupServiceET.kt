@@ -322,7 +322,7 @@ internal class GroupServiceET {
             assertTrue(
                 ExceptionUtil.isResponseStatusCode(
                     e,
-                    ResponseStatusCode.MEMBER_CANNOT_ANSWER_GROUP_QUESTION,
+                    ResponseStatusCode.GROUP_MEMBER_ANSWER_GROUP_QUESTION,
                 ),
             )
         }

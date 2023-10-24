@@ -30,6 +30,7 @@ import jakarta.validation.constraints.PastOrPresent;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.reactivestreams.client.ClientSession;
 import org.springframework.context.annotation.DependsOn;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -49,6 +50,7 @@ import im.turms.service.domain.conversation.po.PrivateConversation;
 import im.turms.service.domain.conversation.repository.GroupConversationRepository;
 import im.turms.service.domain.conversation.repository.PrivateConversationRepository;
 import im.turms.service.domain.group.service.GroupMemberService;
+import im.turms.service.domain.group.service.GroupService;
 import im.turms.service.storage.mongo.OperationResultPublisherPool;
 
 /**
@@ -58,6 +60,7 @@ import im.turms.service.storage.mongo.OperationResultPublisherPool;
 @DependsOn(IMongoCollectionInitializer.BEAN_NAME)
 public class ConversationService {
 
+    private final GroupService groupService;
     private final GroupMemberService groupMemberService;
 
     private final GroupConversationRepository groupConversationRepository;
@@ -67,11 +70,17 @@ public class ConversationService {
     private boolean isReadReceiptEnabled;
     private boolean useServerTime;
 
+    /**
+     * @param groupService is lazy because conversationService -> groupService ->
+     *                     conversationService
+     */
     public ConversationService(
             TurmsPropertiesManager propertiesManager,
+            @Lazy GroupService groupService,
             GroupMemberService groupMemberService,
             GroupConversationRepository groupConversationRepository,
             PrivateConversationRepository privateConversationRepository) {
+        this.groupService = groupService;
         this.groupMemberService = groupMemberService;
         this.groupConversationRepository = groupConversationRepository;
         this.privateConversationRepository = privateConversationRepository;
@@ -88,7 +97,6 @@ public class ConversationService {
         useServerTime = readReceiptProperties.isUseServerTime();
     }
 
-    // TODO: authenticate
     public Mono<Void> authAndUpsertGroupConversationReadDate(
             @NotNull Long groupId,
             @NotNull Long memberId,
@@ -97,10 +105,25 @@ public class ConversationService {
             return Mono.error(
                     ResponseException.get(ResponseStatusCode.UPDATING_READ_DATE_IS_DISABLED));
         }
-        if (useServerTime) {
-            readDate = new Date();
-        }
-        return upsertGroupConversationReadDate(groupId, memberId, readDate);
+        return groupService.queryGroupTypeIfActiveAndNotDeleted(groupId, true)
+                .switchIfEmpty(Mono.defer(() -> Mono.error(ResponseException.get(
+                        ResponseStatusCode.UPDATING_READ_DATE_OF_NONEXISTENT_GROUP_CONVERSATION))))
+                .flatMap(groupType -> groupMemberService.isGroupMember(groupId, memberId, true)
+                        .flatMap(isGroupMember -> {
+                            if (!isGroupMember) {
+                                return Mono.error(ResponseException.get(
+                                        ResponseStatusCode.NOT_GROUP_MEMBER_TO_UPDATE_READ_DATE_OF_GROUP_CONVERSATION));
+                            }
+                            if (!groupType.getEnableReadReceipt()) {
+                                return Mono.error(ResponseException.get(
+                                        ResponseStatusCode.UPDATING_READ_DATE_IS_DISABLED_BY_GROUP));
+                            }
+                            return upsertGroupConversationReadDate(groupId,
+                                    memberId,
+                                    useServerTime
+                                            ? new Date()
+                                            : readDate);
+                        }));
     }
 
     // TODO: authenticate

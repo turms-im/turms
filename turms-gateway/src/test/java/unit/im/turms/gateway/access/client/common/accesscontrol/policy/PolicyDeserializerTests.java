@@ -69,7 +69,7 @@ class PolicyDeserializerTests {
                     "statements": [{
                         "effect": "ALLOW",
                         "actions": "*",
-                        "resources": ["USER", "a non-existing resource"]
+                        "resources": ["USER", "a nonexistent resource"]
                     }]
                 }
                 """;

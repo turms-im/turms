@@ -161,7 +161,7 @@ public class UdpRequestDispatcher {
                 UserSession session = sessionService
                         .authAndUpdateHeartbeatTimestamp(userId, deviceType, sessionId);
                 if (session == null) {
-                    yield Mono.just(ResponseStatusCode.SEND_REQUEST_FROM_NON_EXISTING_SESSION);
+                    yield Mono.just(ResponseStatusCode.SEND_REQUEST_FROM_NONEXISTENT_SESSION);
                 }
                 // Update the address because it may have changed
                 session.getConnection()

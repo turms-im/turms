@@ -52,8 +52,8 @@ public class ResponseExceptionPublisherPool {
     private static final Mono RESOURCE_NOT_FOUND =
             Mono.error(ResponseException.get(ResponseStatusCode.RESOURCE_NOT_FOUND));
 
-    private static final Mono SEND_REQUEST_FROM_NON_EXISTING_SESSION = Mono.error(
-            ResponseException.get(ResponseStatusCode.SEND_REQUEST_FROM_NON_EXISTING_SESSION));
+    private static final Mono SEND_REQUEST_FROM_NONEXISTENT_SESSION = Mono
+            .error(ResponseException.get(ResponseStatusCode.SEND_REQUEST_FROM_NONEXISTENT_SESSION));
 
     private static final Mono SERVER_UNAVAILABLE =
             Mono.error(ResponseException.get(ResponseStatusCode.SERVER_UNAVAILABLE));
@@ -61,8 +61,8 @@ public class ResponseExceptionPublisherPool {
     private static final Mono SESSION_SIMULTANEOUS_CONFLICTS_DECLINE = Mono.error(
             ResponseException.get(ResponseStatusCode.SESSION_SIMULTANEOUS_CONFLICTS_DECLINE));
 
-    private static final Mono TRANSFER_NON_EXISTING_GROUP =
-            Mono.error(ResponseException.get(ResponseStatusCode.TRANSFER_NON_EXISTING_GROUP));
+    private static final Mono TRANSFER_NONEXISTENT_GROUP =
+            Mono.error(ResponseException.get(ResponseStatusCode.TRANSFER_NONEXISTENT_GROUP));
 
     private static final Mono UNAUTHORIZED =
             Mono.error(ResponseException.get(ResponseStatusCode.UNAUTHORIZED));
@@ -114,8 +114,8 @@ public class ResponseExceptionPublisherPool {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> Mono<T> sendRequestFromNonExistingSession() {
-        return SEND_REQUEST_FROM_NON_EXISTING_SESSION;
+    public static <T> Mono<T> sendRequestFromNonexistentSession() {
+        return SEND_REQUEST_FROM_NONEXISTENT_SESSION;
     }
 
     @SuppressWarnings("unchecked")
@@ -124,8 +124,8 @@ public class ResponseExceptionPublisherPool {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> Mono<T> transferNonExistingGroup() {
-        return TRANSFER_NON_EXISTING_GROUP;
+    public static <T> Mono<T> transferNonexistentGroup() {
+        return TRANSFER_NONEXISTENT_GROUP;
     }
 
     @SuppressWarnings("unchecked")

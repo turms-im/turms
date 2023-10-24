@@ -290,7 +290,7 @@ public class ClientRequestDispatcher {
         } else {
             data = ClientMessageEncoder.encodeResponse(System.currentTimeMillis(),
                     HEARTBEAT_FAILURE_REQUEST_ID,
-                    ResponseStatusCode.UPDATE_NON_EXISTING_SESSION_HEARTBEAT);
+                    ResponseStatusCode.UPDATE_HEARTBEAT_OF_NONEXISTENT_SESSION);
         }
         if (apiLoggingContext.shouldLogHeartbeatRequest()) {
             UserSession userSession = sessionWrapper.getUserSession();

@@ -252,7 +252,7 @@ public class UserPermissionGroupService {
                                         + groupId
                                         + ")"))))
                 .switchIfEmpty(Mono.error(ResponseException
-                        .get(ResponseStatusCode.QUERY_PERMISSION_OF_NON_EXISTING_USER)));
+                        .get(ResponseStatusCode.QUERY_PERMISSION_OF_NONEXISTENT_USER)));
     }
 
     public Mono<Long> countUserPermissionGroups() {

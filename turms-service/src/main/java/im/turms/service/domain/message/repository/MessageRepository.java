@@ -46,6 +46,9 @@ import im.turms.service.domain.message.po.Message;
 @Repository
 public class MessageRepository extends BaseRepository<Message, Long> {
 
+    private static final String[] FIELDS_IS_GROUP_MESSAGE_AND_TARGET_ID =
+            {Message.Fields.IS_GROUP_MESSAGE, Message.Fields.TARGET_ID};
+
     public MessageRepository(@Qualifier("messageMongoClient") TurmsMongoClient mongoClient) {
         super(mongoClient, Message.class);
     }
@@ -201,11 +204,13 @@ public class MessageRepository extends BaseRepository<Message, Long> {
         return mongoClient.findMany(entityClass, filter, options);
     }
 
-    public Mono<Boolean> isMessageSender(Long messageId, Long senderId) {
+    public Mono<Message> findIsGroupMessageAndTargetId(Long messageId, Long senderId) {
         Filter filter = Filter.newBuilder(2)
                 .eq(DomainFieldName.ID, messageId)
                 .eq(Message.Fields.SENDER_ID, senderId);
-        return mongoClient.exists(entityClass, filter);
+        QueryOptions options = QueryOptions.newBuilder(1)
+                .include(FIELDS_IS_GROUP_MESSAGE_AND_TARGET_ID);
+        return mongoClient.findOne(entityClass, filter, options);
     }
 
     public static byte[] getGroupConversationId(long groupId) {

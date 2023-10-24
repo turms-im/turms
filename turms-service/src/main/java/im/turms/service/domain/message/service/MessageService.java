@@ -84,6 +84,7 @@ import im.turms.server.common.storage.redis.TurmsRedisClientManager;
 import im.turms.service.domain.common.permission.ServicePermission;
 import im.turms.service.domain.conversation.service.ConversationService;
 import im.turms.service.domain.group.service.GroupMemberService;
+import im.turms.service.domain.group.service.GroupService;
 import im.turms.service.domain.message.bo.BuiltinSystemMessageType;
 import im.turms.service.domain.message.bo.MessageAndRecipientIds;
 import im.turms.service.domain.message.po.Message;
@@ -96,10 +97,14 @@ import im.turms.service.storage.mongo.OperationResultPublisherPool;
 
 import static im.turms.server.common.access.common.ResponseStatusCode.ILLEGAL_ARGUMENT;
 import static im.turms.server.common.access.common.ResponseStatusCode.MESSAGE_RECALL_TIMEOUT;
+import static im.turms.server.common.access.common.ResponseStatusCode.NOT_SENDER_TO_RECALL_MESSAGE;
 import static im.turms.server.common.access.common.ResponseStatusCode.NOT_SENDER_TO_UPDATE_MESSAGE;
 import static im.turms.server.common.access.common.ResponseStatusCode.OK;
 import static im.turms.server.common.access.common.ResponseStatusCode.RECALLING_MESSAGE_IS_DISABLED;
-import static im.turms.server.common.access.common.ResponseStatusCode.RECALL_NON_EXISTING_MESSAGE;
+import static im.turms.server.common.access.common.ResponseStatusCode.RECALL_MESSAGE_OF_NONEXISTENT_GROUP;
+import static im.turms.server.common.access.common.ResponseStatusCode.RECALL_NONEXISTENT_MESSAGE;
+import static im.turms.server.common.access.common.ResponseStatusCode.UPDATE_MESSAGE_OF_NONEXISTENT_GROUP;
+import static im.turms.server.common.access.common.ResponseStatusCode.UPDATING_GROUP_MESSAGE_BY_SENDER_IS_DISABLED;
 import static im.turms.server.common.access.common.ResponseStatusCode.UPDATING_MESSAGE_BY_SENDER_IS_DISABLED;
 import static im.turms.server.common.domain.admin.constant.AdminConst.ADMIN_REQUESTER_ID;
 import static im.turms.server.common.domain.admin.constant.AdminConst.ADMIN_REQUEST_ID;
@@ -124,6 +129,7 @@ public class MessageService {
     private final Node node;
     private final ConversationService conversationService;
     private final OutboundMessageService outboundMessageService;
+    private final GroupService groupService;
     private final GroupMemberService groupMemberService;
     private final UserService userService;
     private final PluginManager pluginManager;
@@ -173,6 +179,7 @@ public class MessageService {
 
             TurmsPropertiesManager propertiesManager,
             ConversationService conversationService,
+            GroupService groupService,
             GroupMemberService groupMemberService,
             UserService userService,
             OutboundMessageService outboundMessageService,
@@ -184,6 +191,7 @@ public class MessageService {
         this.redisClientManager = sequenceIdRedisClientManager;
         this.node = node;
         this.conversationService = conversationService;
+        this.groupService = groupService;
         this.groupMemberService = groupMemberService;
         this.userService = userService;
         this.outboundMessageService = outboundMessageService;
@@ -267,23 +275,6 @@ public class MessageService {
         messageRetentionPeriodHours = messageProperties.getMessageRetentionPeriodHours();
     }
 
-    public Mono<Boolean> isMessageSentByUser(@NotNull Long messageId, @NotNull Long senderId) {
-        try {
-            Validator.notNull(messageId, "messageId");
-            Validator.notNull(senderId, "senderId");
-        } catch (ResponseException e) {
-            return Mono.error(e);
-        }
-        if (sentMessageCache != null) {
-            Message message = sentMessageCache.getIfPresent(messageId);
-            if (message != null) {
-                return Mono.just(message.getSenderId()
-                        .equals(senderId));
-            }
-        }
-        return messageRepository.isMessageSender(messageId, senderId);
-    }
-
     public Mono<Boolean> isMessageRecipientOrSender(@NotNull Long messageId, @NotNull Long userId) {
         try {
             Validator.notNull(messageId, "messageId");
@@ -335,7 +326,7 @@ public class MessageService {
                         - System.currentTimeMillis() < availableRecallDurationMillis
                                 ? ServicePermission.OK
                                 : ServicePermission.get(MESSAGE_RECALL_TIMEOUT))
-                .defaultIfEmpty(ServicePermission.get(RECALL_NON_EXISTING_MESSAGE));
+                .defaultIfEmpty(ServicePermission.get(RECALL_NONEXISTENT_MESSAGE));
     }
 
     public Flux<Message> authAndQueryCompleteMessages(
@@ -394,7 +385,7 @@ public class MessageService {
                                 }
                             });
                             return Flux.error(ResponseException.get(
-                                    ResponseStatusCode.NOT_MEMBER_TO_QUERY_GROUP_MESSAGES,
+                                    ResponseStatusCode.NOT_GROUP_MEMBER_TO_QUERY_GROUP_MESSAGES,
                                     "The user ("
                                             + requesterId
                                             + ") is not the member of the groups: "
@@ -935,34 +926,102 @@ public class MessageService {
         if (!updateMessageContent && recallDate == null) {
             return Mono.empty();
         }
-        if (recallDate != null && !allowRecallMessage) {
-            return Mono.error(ResponseException.get(RECALLING_MESSAGE_IS_DISABLED));
+        Mono<Void> checkIfAllowedToUpdate;
+        if (updateMessageContent) {
+            checkIfAllowedToUpdate = checkIfAllowedToUpdateMessage(messageId, senderId);
+            if (recallDate != null) {
+                checkIfAllowedToUpdate = checkIfAllowedToUpdate
+                        .then(checkIfAllowedToRecallMessage(messageId, senderId));
+            }
+        } else {
+            checkIfAllowedToUpdate = checkIfAllowedToRecallMessage(messageId, senderId);
         }
-        if (updateMessageContent && !allowEditMessageBySender) {
+        return checkIfAllowedToUpdate.then(Mono.defer(() -> recallDate == null
+                ? updateMessage(senderId,
+                        senderDeviceType,
+                        messageId,
+                        null,
+                        text,
+                        records,
+                        null,
+                        null,
+                        null,
+                        null)
+                : updateMessageRecallDate(senderId,
+                        senderDeviceType,
+                        messageId,
+                        text,
+                        records,
+                        recallDate)));
+    }
+
+    private Mono<Void> checkIfAllowedToUpdateMessage(Long messageId, Long senderId) {
+        if (!allowEditMessageBySender) {
             return Mono.error(ResponseException.get(UPDATING_MESSAGE_BY_SENDER_IS_DISABLED));
         }
-        return isMessageSentByUser(messageId, senderId).flatMap(isSentByUser -> {
-            if (!isSentByUser) {
-                return Mono.error(ResponseException.get(NOT_SENDER_TO_UPDATE_MESSAGE));
+        if (sentMessageCache != null) {
+            Message message = sentMessageCache.getIfPresent(messageId);
+            if (message != null) {
+                if (!message.getSenderId()
+                        .equals(senderId)) {
+                    return Mono.error(ResponseException.get(NOT_SENDER_TO_UPDATE_MESSAGE));
+                }
+                if (message.getIsGroupMessage()) {
+                    return groupService.queryGroupTypeIfActiveAndNotDeleted(message.getTargetId())
+                            .switchIfEmpty(Mono.defer(() -> Mono.error(
+                                    ResponseException.get(UPDATE_MESSAGE_OF_NONEXISTENT_GROUP))))
+                            .flatMap(groupType -> groupType.getMessageEditable()
+                                    ? Mono.empty()
+                                    : Mono.error(ResponseException
+                                            .get(UPDATING_GROUP_MESSAGE_BY_SENDER_IS_DISABLED)));
+                } else {
+                    return Mono.empty();
+                }
             }
-            return recallDate == null
-                    ? updateMessage(senderId,
-                            senderDeviceType,
-                            messageId,
-                            null,
-                            text,
-                            records,
-                            null,
-                            null,
-                            null,
-                            null)
-                    : updateMessageRecallDate(senderId,
-                            senderDeviceType,
-                            messageId,
-                            text,
-                            records,
-                            recallDate);
-        });
+        }
+        return messageRepository.findIsGroupMessageAndTargetId(messageId, senderId)
+                .switchIfEmpty(Mono.defer(
+                        () -> Mono.error(ResponseException.get(NOT_SENDER_TO_UPDATE_MESSAGE))))
+                .flatMap(message -> {
+                    if (message.getIsGroupMessage()) {
+                        return groupService
+                                .queryGroupTypeIfActiveAndNotDeleted(message.getTargetId())
+                                .switchIfEmpty(Mono.defer(() -> Mono.error(ResponseException
+                                        .get(UPDATE_MESSAGE_OF_NONEXISTENT_GROUP))))
+                                .flatMap(groupType -> groupType.getMessageEditable()
+                                        ? Mono.empty()
+                                        : Mono.error(ResponseException.get(
+                                                UPDATING_GROUP_MESSAGE_BY_SENDER_IS_DISABLED)));
+                    }
+                    return Mono.empty();
+                });
+    }
+
+    private Mono<Void> checkIfAllowedToRecallMessage(Long messageId, Long senderId) {
+        if (!allowRecallMessage) {
+            return Mono.error(ResponseException.get(RECALLING_MESSAGE_IS_DISABLED));
+        }
+        if (sentMessageCache != null) {
+            Message message = sentMessageCache.getIfPresent(messageId);
+            if (message != null
+                    && (!message.getSenderId()
+                            .equals(senderId))) {
+                return Mono.error(ResponseException.get(NOT_SENDER_TO_RECALL_MESSAGE));
+            }
+        }
+        return messageRepository.findIsGroupMessageAndTargetId(messageId, senderId)
+                .switchIfEmpty(Mono.defer(
+                        () -> Mono.error(ResponseException.get(NOT_SENDER_TO_RECALL_MESSAGE))))
+                .flatMap(message -> {
+                    if (message.getIsGroupMessage()) {
+                        return groupService
+                                .queryGroupTypeIfActiveAndNotDeleted(message.getTargetId())
+                                .switchIfEmpty(Mono.defer(() -> Mono.error(ResponseException
+                                        .get(RECALL_MESSAGE_OF_NONEXISTENT_GROUP))))
+                                .then();
+                    }
+                    return Mono.empty();
+                });
     }
 
     public Mono<Set<Long>> queryMessageRecipients(@NotNull Long messageId) {
@@ -1209,12 +1268,15 @@ public class MessageService {
                         null));
     }
 
+    /**
+     * TODO: rename
+     */
     private Mono<UpdateResult> updateMessageRecallDate(
             @Nullable Long senderId,
             @Nullable DeviceType senderDeviceType,
             @NotNull Long messageId,
-            String text,
-            List<byte[]> records,
+            @Nullable String text,
+            @Nullable List<byte[]> records,
             @PastOrPresent Date recallDate) {
         return isMessageRecallable(messageId).flatMap(permission -> {
             ResponseStatusCode code = permission.code();

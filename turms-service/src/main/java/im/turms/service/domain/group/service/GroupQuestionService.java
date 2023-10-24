@@ -191,14 +191,14 @@ public class GroupQuestionService {
                         : groupMemberService.isGroupMember(groupId, requesterId, false))
                 .flatMap(isGroupMember -> isGroupMember
                         ? Mono.error(ResponseException
-                                .get(ResponseStatusCode.MEMBER_CANNOT_ANSWER_GROUP_QUESTION))
+                                .get(ResponseStatusCode.GROUP_MEMBER_ANSWER_GROUP_QUESTION))
                         : groupService.queryGroupTypeIfActiveAndNotDeleted(groupId)
                                 .switchIfEmpty(Mono.error(ResponseException.get(
-                                        ResponseStatusCode.ANSWER_QUESTION_OF_INACTIVE_GROUP))))
+                                        ResponseStatusCode.ANSWER_GROUP_QUESTION_OF_INACTIVE_GROUP))))
                 .flatMap(type -> type.getJoinStrategy() == GroupJoinStrategy.QUESTION
                         ? checkGroupQuestionAnswersAndCountScore(questionIdAndAnswerPairs, groupId)
-                        : Mono.error(
-                                ResponseException.get(ResponseStatusCode.ANSWER_INACTIVE_QUESTION)))
+                        : Mono.error(ResponseException
+                                .get(ResponseStatusCode.ANSWER_INACTIVE_GROUP_QUESTION)))
                 .flatMap(idsAndScore -> groupService.queryGroupMinimumScore(groupId)
                         .flatMap(minimumScore -> idsAndScore.getRight() >= minimumScore
                                 ? groupMemberService
@@ -239,7 +239,7 @@ public class GroupQuestionService {
                                 .switchIfEmpty(Mono.error(ResponseException.get(
                                         ResponseStatusCode.CREATE_GROUP_QUESTION_FOR_INACTIVE_GROUP)))
                         : Mono.error(ResponseException.get(
-                                ResponseStatusCode.NOT_OWNER_OR_MANAGER_TO_CREATE_GROUP_QUESTION)))
+                                ResponseStatusCode.NOT_GROUP_OWNER_OR_MANAGER_TO_CREATE_GROUP_QUESTION)))
                 .flatMap(type -> switch (type.getJoinStrategy()) {
                     case JOIN_REQUEST -> Mono.error(ResponseException.get(
                             ResponseStatusCode.CREATE_GROUP_QUESTION_FOR_GROUP_USING_JOIN_REQUEST));
@@ -321,7 +321,7 @@ public class GroupQuestionService {
                 .flatMap(authenticated -> {
                     if (!authenticated) {
                         return Mono.error(ResponseException.get(
-                                ResponseStatusCode.NOT_OWNER_OR_MANAGER_TO_DELETE_GROUP_QUESTION));
+                                ResponseStatusCode.NOT_GROUP_OWNER_OR_MANAGER_TO_DELETE_GROUP_QUESTION));
                     }
                     return groupQuestionRepository.deleteByIds(questionIds);
                 })
@@ -376,7 +376,7 @@ public class GroupQuestionService {
         return authenticated.flatMap(isAuthenticated -> isAuthenticated != null && isAuthenticated
                 ? groupVersionService.queryGroupJoinQuestionsVersion(groupId)
                 : Mono.error(ResponseException.get(
-                        ResponseStatusCode.NOT_OWNER_OR_MANAGER_TO_ACCESS_GROUP_QUESTION_ANSWER)))
+                        ResponseStatusCode.NOT_GROUP_OWNER_OR_MANAGER_TO_ACCESS_GROUP_QUESTION_ANSWER)))
                 .flatMap(version -> {
                     if (DateUtil.isAfterOrSame(lastUpdatedDate, version)) {
                         return ResponseExceptionPublisherPool.alreadyUpToUpdate();
@@ -423,7 +423,7 @@ public class GroupQuestionService {
                         .flatMap(authenticated -> {
                             if (authenticated == null || !authenticated) {
                                 return Mono.error(ResponseException.get(
-                                        ResponseStatusCode.NOT_OWNER_OR_MANAGER_TO_UPDATE_GROUP_QUESTION));
+                                        ResponseStatusCode.NOT_GROUP_OWNER_OR_MANAGER_TO_UPDATE_GROUP_QUESTION));
                             }
                             return groupQuestionRepository
                                     .updateQuestion(questionId, question, answers, score)
