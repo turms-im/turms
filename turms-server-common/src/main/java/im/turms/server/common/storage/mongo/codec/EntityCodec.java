@@ -38,6 +38,7 @@ import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.serialization.DeserializationException;
 import im.turms.server.common.infra.serialization.SerializationException;
+import im.turms.server.common.storage.mongo.CodecPool;
 import im.turms.server.common.storage.mongo.DomainFieldName;
 import im.turms.server.common.storage.mongo.entity.EntityField;
 import im.turms.server.common.storage.mongo.entity.MongoEntity;
@@ -100,18 +101,10 @@ public class EntityCodec<T> extends MongoCodec<T> {
     public void encode(BsonWriter writer, T value, EncoderContext encoderContext) {
         writer.writeStartDocument();
         try {
-            for (EntityField<?> field : entity.fields()) {
-                Object fieldValue = field.get(value);
-                if (fieldValue == null) {
-                    continue;
-                }
-                if (field.isIdField()) {
-                    writer.writeName(DomainFieldName.ID);
-                } else {
-                    writer.writeName(field.getName());
-                }
-                Codec codec = getCodec(field);
-                encoderContext.encodeWithChildContext(codec, writer, fieldValue);
+            if (CodecPool.UPSERT_ENCODER_CONTEXT == encoderContext) {
+                encodeValueForUpsert(writer, value, encoderContext);
+            } else {
+                encodeValue(writer, value, encoderContext);
             }
         } catch (Exception e) {
             throw new SerializationException(
@@ -121,6 +114,44 @@ public class EntityCodec<T> extends MongoCodec<T> {
                     e);
         }
         writer.writeEndDocument();
+    }
+
+    private void encodeValue(BsonWriter writer, T value, EncoderContext encoderContext) {
+        for (EntityField<?> field : entity.fields()) {
+            Object fieldValue = field.get(value);
+            if (fieldValue == null) {
+                continue;
+            }
+            if (field.isIdField()) {
+                writer.writeName(DomainFieldName.ID);
+            } else {
+                writer.writeName(field.getName());
+            }
+            Codec codec = getCodec(field);
+            codec.encode(writer, fieldValue, encoderContext);
+        }
+    }
+
+    /**
+     * Compared to {@link EntityCodec#encodeValue}, this method encodes null fields because we need
+     * to overwrite existing fields to null if these fields are not specified in the entity for our
+     * use cases.
+     */
+    private void encodeValueForUpsert(BsonWriter writer, T value, EncoderContext encoderContext) {
+        for (EntityField<?> field : entity.fields()) {
+            Object fieldValue = field.get(value);
+            if (field.isIdField()) {
+                writer.writeName(DomainFieldName.ID);
+            } else {
+                writer.writeName(field.getName());
+            }
+            if (fieldValue == null) {
+                writer.writeNull();
+                continue;
+            }
+            Codec codec = getCodec(field);
+            codec.encode(writer, fieldValue, encoderContext);
+        }
     }
 
     @Override

@@ -17,6 +17,8 @@
 
 package system.im.turms.service.domain.user.access.servicerequest.controller;
 
+import java.util.List;
+
 import helper.NotificationUtil;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -27,6 +29,7 @@ import system.im.turms.service.domain.common.access.servicerequest.controller.Ba
 
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.constant.ResponseAction;
+import im.turms.server.common.access.client.dto.model.user.UserRelationship;
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.access.client.dto.request.TurmsRequest;
 import im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest;
@@ -197,6 +200,79 @@ class UserRelationshipServiceControllerST
         resultMono = getController().handleUpdateRelationshipRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono);
+    }
+
+    @Test
+    @Order(ORDER_HIGH_PRIORITY)
+    void handleUpdateRelationshipRequest_unblockAndBlockUser_shouldSucceed() {
+        TurmsRequest request = TurmsRequest.newBuilder()
+                .setQueryRelationshipsRequest(QueryRelationshipsRequest.newBuilder()
+                        .setBlocked(true)
+                        .build())
+                .build();
+        ClientRequest clientRequest =
+                new ClientRequest(USER_ID, USER_DEVICE_TYPE, USER_IP, REQUEST_ID, request);
+        Mono<RequestHandlerResult> resultMono = getController().handleQueryRelationshipsRequest()
+                .handle(clientRequest);
+        assertResult(resultMono, result -> {
+            List<UserRelationship> relationships = result.dataForRequester()
+                    .getUserRelationshipsWithVersion()
+                    .getUserRelationshipsList();
+            assertThat(relationships).map(UserRelationship::getRelatedUserId)
+                    .contains(BLOCKED_USER_ID);
+        });
+
+        request = TurmsRequest.newBuilder()
+                .setUpdateRelationshipRequest(UpdateRelationshipRequest.newBuilder()
+                        .setBlocked(false)
+                        .setUserId(BLOCKED_USER_ID))
+                .build();
+        clientRequest = new ClientRequest(USER_ID, USER_DEVICE_TYPE, USER_IP, REQUEST_ID, request);
+        resultMono = getController().handleUpdateRelationshipRequest()
+                .handle(clientRequest);
+        assertResultIsOk(resultMono);
+
+        request = TurmsRequest.newBuilder()
+                .setQueryRelationshipsRequest(QueryRelationshipsRequest.newBuilder()
+                        .setBlocked(false)
+                        .build())
+                .build();
+        clientRequest = new ClientRequest(USER_ID, USER_DEVICE_TYPE, USER_IP, REQUEST_ID, request);
+        resultMono = getController().handleQueryRelationshipsRequest()
+                .handle(clientRequest);
+        assertResult(resultMono, result -> {
+            List<UserRelationship> relationships = result.dataForRequester()
+                    .getUserRelationshipsWithVersion()
+                    .getUserRelationshipsList();
+            assertThat(relationships).map(UserRelationship::getRelatedUserId)
+                    .contains(BLOCKED_USER_ID);
+        });
+
+        request = TurmsRequest.newBuilder()
+                .setUpdateRelationshipRequest(UpdateRelationshipRequest.newBuilder()
+                        .setBlocked(true)
+                        .setUserId(BLOCKED_USER_ID))
+                .build();
+        clientRequest = new ClientRequest(USER_ID, USER_DEVICE_TYPE, USER_IP, REQUEST_ID, request);
+        resultMono = getController().handleUpdateRelationshipRequest()
+                .handle(clientRequest);
+        assertResultIsOk(resultMono);
+
+        request = TurmsRequest.newBuilder()
+                .setQueryRelationshipsRequest(QueryRelationshipsRequest.newBuilder()
+                        .setBlocked(true)
+                        .build())
+                .build();
+        clientRequest = new ClientRequest(USER_ID, USER_DEVICE_TYPE, USER_IP, REQUEST_ID, request);
+        resultMono = getController().handleQueryRelationshipsRequest()
+                .handle(clientRequest);
+        assertResult(resultMono, result -> {
+            List<UserRelationship> relationships = result.dataForRequester()
+                    .getUserRelationshipsWithVersion()
+                    .getUserRelationshipsList();
+            assertThat(relationships).map(UserRelationship::getRelatedUserId)
+                    .contains(BLOCKED_USER_ID);
+        });
     }
 
     @Test

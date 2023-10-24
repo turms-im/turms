@@ -73,7 +73,6 @@ import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Scheduler;
 import reactor.core.scheduler.Schedulers;
 
-import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.collection.CollectorUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
@@ -106,7 +105,7 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TurmsMongoOperations.class);
 
-    private static final EncoderContext DEFAULT_ENCODER_CONTEXT = CodecPool.DEFAULT_ENCODER_CONTEXT;
+    private static final EncoderContext UPSERT_ENCODER_CONTEXT = CodecPool.UPSERT_ENCODER_CONTEXT;
 
     private static final BsonDocument ID_ONLY =
             new BsonDocument(DomainFieldName.ID, BsonPool.BSON_INT32_1);
@@ -245,12 +244,17 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
         Class<T> clazz = (Class<T>) record.getClass();
         MongoEntity<T> entity = (MongoEntity<T>) context.getEntity(record.getClass());
         MongoCollection<T> collection = context.getCollection(clazz);
-        BsonDocument recordDoc = encodeEntity(record);
+        BsonDocument recordDoc = encodeEntityForUpsert(record);
         ShardKey shardKey = entity.shardKey();
-        BsonDocument filter = shardKey == null
-                ? EMPTY_FILTER
-                : applyShardKey(shardKey, recordDoc);
-        BsonDocument update = encodeEntityForUpdateOps(recordDoc);
+        BsonDocument filter =
+                new BsonDocument(DomainFieldName.ID, recordDoc.get(DomainFieldName.ID));
+        if (shardKey != null) {
+            applyShardKey(filter, shardKey, recordDoc);
+        }
+        // Remove "_id", or MongoDB will throw "Performing an update on the path '_id' would modify
+        // the immutable field '_id'"
+        recordDoc.remove(DomainFieldName.ID);
+        BsonDocument update = new BsonDocument("$set", recordDoc);
         Publisher<UpdateResult> result = session == null
                 ? collection.updateOne(filter, update, DEFAULT_UPSERT_OPTIONS)
                 : collection.updateOne(session, filter, update, DEFAULT_UPSERT_OPTIONS);
@@ -263,9 +267,8 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
      * apply the shard key to the filter so that mongos know to which MongoDB the command needs to
      * be sent for better performance
      */
-    private BsonDocument applyShardKey(ShardKey shardKey, BsonDocument document) {
+    private void applyShardKey(BsonDocument filter, ShardKey shardKey, BsonDocument document) {
         List<ShardKey.Path> paths = shardKey.paths();
-        BsonDocument filter = new BsonDocument(CollectionUtil.getMapCapability(paths.size()));
         for (ShardKey.Path shardKeyPath : paths) {
             if (shardKeyPath.isIdField()) {
                 filter.append(DomainFieldName.ID, document.get(DomainFieldName.ID));
@@ -304,7 +307,6 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
                 }
             }
         }
-        return filter;
     }
 
     @Override
@@ -818,19 +820,12 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
 
     // Helper
 
-    private <T> BsonDocument encodeEntity(T value) {
+    private <T> BsonDocument encodeEntityForUpsert(T value) {
         Codec<T> codec = (Codec<T>) context.getCodec(value.getClass());
         BsonDocument document = new BsonDocument();
         BsonDocumentWriter writer = new BsonDocumentWriter(document);
-        codec.encode(writer, value, DEFAULT_ENCODER_CONTEXT);
+        codec.encode(writer, value, UPSERT_ENCODER_CONTEXT);
         return document;
-    }
-
-    private BsonDocument encodeEntityForUpdateOps(BsonDocument document) {
-        // Remove "_id", or MongoDB will throw "Performing an update on the path '_id' would modify
-        // the immutable field '_id'"
-        document.remove(DomainFieldName.ID);
-        return new BsonDocument("$set", document);
     }
 
     private <T> TurmsFindPublisherImpl<T> find(

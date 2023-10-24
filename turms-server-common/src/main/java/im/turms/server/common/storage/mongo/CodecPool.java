@@ -41,6 +41,8 @@ public final class CodecPool {
 
     public static final EncoderContext DEFAULT_ENCODER_CONTEXT = EncoderContext.builder()
             .build();
+    public static final EncoderContext UPSERT_ENCODER_CONTEXT = EncoderContext.builder()
+            .build();
     public static final BsonValueCodecProvider BSON_VALUE_CODEC_PROVIDER =
             new BsonValueCodecProvider();
     private static final MongoCodecProvider MONGO_CODEC_PROVIDER = new MongoCodecProvider();
