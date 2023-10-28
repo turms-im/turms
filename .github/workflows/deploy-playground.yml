@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: SSH
-        uses: appleboy/ssh-action@v0.1.10
+        uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.PLAYGROUND_SSH_HOST }}
           username: ${{ secrets.PLAYGROUND_SSH_USERNAME }}

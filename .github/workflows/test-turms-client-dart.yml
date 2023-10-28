@@ -5,14 +5,17 @@ on: [ push, pull_request ]
 jobs:
   test:
     runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        sdk: [3.0, stable, beta]
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4.1.1
 
       - name: Set up Dart
-        uses: dart-lang/setup-dart@v1.3
+        uses: dart-lang/setup-dart@v1.6.0
         with:
-          sdk: 2.18.4
+          sdk: ${{ matrix.sdk }}
 
       - name: Install dependencies
         working-directory: turms-client-dart
