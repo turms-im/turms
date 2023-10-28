@@ -19,8 +19,8 @@
             <div class="cluster-config__action-group">
                 <a-popconfirm
                     :title="$t('confirmRefresh')"
-                    :visible="!!isRefreshPopVisible"
-                    @visibleChange="onRefreshPopVisibleChanged"
+                    :open="!!isRefreshPopconfirmOpen"
+                    @openChange="onRefreshPopconfirmOpenChanged"
                     @confirm="requestRefresh"
                 >
                     <a-button
@@ -47,9 +47,9 @@
                 </a-popconfirm>
                 <a-popconfirm
                     :title="$t('confirmDiscardChanges')"
-                    :visible="!!isDiscardChangesPopVisible"
+                    :open="!!isDiscardChangesPopconfirmOpen"
                     @confirm="discardChanges"
-                    @visibleChange="onDiscardChangesPopVisibleChanged"
+                    @openChange="onDiscardChangesPopconfirmOpenChanged"
                 >
                     <div
                         class="cluster-config__action-group__item"
@@ -63,9 +63,9 @@
                 </a-popconfirm>
                 <a-popconfirm
                     :title="$t('confirmApplyChanges')"
-                    :visible="!!isApplyChangesPopVisible"
+                    :open="!!isApplyChangesPopconfirmOpen"
                     @confirm="requestApplyChanges"
-                    @visibleChange="onApplyChangesPopVisibleChanged"
+                    @openChange="onApplyChangesPopconfirmOpenChanged"
                 >
                     <div
                         class="cluster-config__action-group__item"
@@ -103,9 +103,9 @@ export default {
             defaultConfig: {},
             currentConfig: {},
             changedNumber: 0,
-            isDiscardChangesPopVisible: false,
-            isRefreshPopVisible: false,
-            isApplyChangesPopVisible: false
+            isDiscardChangesPopconfirmOpen: false,
+            isRefreshPopconfirmOpen: false,
+            isApplyChangesPopconfirmOpen: false
         };
     },
     computed: {
@@ -225,15 +225,15 @@ export default {
                     this.$error(this.$t('updateFailed'), error);
                 });
         },
-        onDiscardChangesPopVisibleChanged() {
-            this.isDiscardChangesPopVisible = this.changedNumber && !this.isDiscardChangesPopVisible;
+        onDiscardChangesPopconfirmOpenChanged() {
+            this.isDiscardChangesPopconfirmOpen = this.changedNumber && !this.isDiscardChangesPopconfirmOpen;
         },
-        onApplyChangesPopVisibleChanged() {
-            this.isApplyChangesPopVisible = this.changedNumber && !this.isApplyChangesPopVisible;
+        onApplyChangesPopconfirmOpenChanged() {
+            this.isApplyChangesPopconfirmOpen = this.changedNumber && !this.isApplyChangesPopconfirmOpen;
         },
-        onRefreshPopVisibleChanged(visible) {
-            this.isRefreshPopVisible = visible && this.changedNumber;
-            if (visible && !this.changedNumber) {
+        onRefreshPopconfirmOpenChanged(open) {
+            this.isRefreshPopconfirmOpen = open && this.changedNumber;
+            if (open && !this.changedNumber) {
                 this.fetchData();
             }
         }

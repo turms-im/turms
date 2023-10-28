@@ -4,7 +4,7 @@
         :footer="null"
         :keyboard="false"
         :mask-closable="false"
-        :visible="visible"
+        :open="open"
         :title="$t('adminLogin')"
     >
         <logo class="login-modal__logo" />
@@ -105,7 +105,7 @@ export default {
         admin() {
             return this.$store.getters.admin;
         },
-        visible() {
+        open() {
             return !this.admin;
         }
     },

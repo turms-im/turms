@@ -13,9 +13,9 @@
         <a-popconfirm
             v-if="!deletion.disabled"
             class="content-action-group__action"
-            :visible="popconfirmVisible"
+            :open="popconfirmOpen"
             :title="$t('confirmDeletion')"
-            @visibleChange="onPopconfirmVisibleChanged"
+            @openChange="onPopconfirmOpenChanged"
             @confirm="deleteSelectedRows"
         >
             <a-button
@@ -40,7 +40,7 @@
         <modal-form
             v-if="actions.length"
             :members="members"
-            :visible="activeAction.visible"
+            :open="activeAction.open"
             :title="$t(activeAction.title)"
             :form-items="activeAction.fields"
             :form-state="activeAction.formState"
@@ -110,7 +110,7 @@ export default {
         const activeAction = this.actions[0];
         return {
             activeAction: activeAction,
-            popconfirmVisible: false
+            popconfirmOpen: false
         };
     },
     computed: {
@@ -124,7 +124,7 @@ export default {
         },
         showModalForm(action) {
             if (action.type === 'CREATE' || (action.type === 'UPDATE' && this.selectedRecordKeys.length)) {
-                action.visible = true;
+                action.open = true;
                 this.activeAction = action;
             } else {
                 this.$message.error(this.$t('noRecordsSelected'));
@@ -132,11 +132,11 @@ export default {
         },
         hideModalForm(formState) {
             const action = this.activeAction;
-            action.visible = false;
+            action.open = false;
             action.formState = formState;
         },
-        onPopconfirmVisibleChanged(visible) {
-            this.popconfirmVisible = visible && this.hasSelectedRows;
+        onPopconfirmOpenChanged(open) {
+            this.popconfirmOpen = open && this.hasSelectedRows;
         },
         onRecordsUpdated(recordKeys, updatedFields) {
             this.$emit('onRecordsUpdated', recordKeys, updatedFields);

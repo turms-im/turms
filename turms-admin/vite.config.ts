@@ -2,9 +2,9 @@ import { fileURLToPath, URL } from 'node:url';
 import autoprefixer from 'autoprefixer';
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
-import Markdown from 'vite-plugin-vue-markdown';
 import Components from 'unplugin-vue-components/vite';
 import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers';
+import Markdown from 'unplugin-vue-markdown/vite';
 import { visualizer } from 'rollup-plugin-visualizer';
 
 const isReportMode = process.env.REPORT === 'true';
@@ -45,7 +45,9 @@ export default defineConfig(({mode }) => ({
             }
         }),
         Components({
-            resolvers: [AntDesignVueResolver()]
+            resolvers: [AntDesignVueResolver({
+                importStyle: false
+            })]
         }),
         isReportMode
             ? visualizer({

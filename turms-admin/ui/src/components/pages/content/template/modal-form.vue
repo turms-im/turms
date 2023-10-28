@@ -3,7 +3,7 @@
         :confirm-loading="loading"
         :mask-closable="false"
         :keyboard="false"
-        :visible="visible"
+        :open="open"
         :title="title"
         class="content-modal-form"
         @cancel="handleCancel"
@@ -95,7 +95,7 @@ export default {
             type: Boolean,
             default: false
         },
-        visible: {
+        open: {
             type: Boolean,
             default: false
         },

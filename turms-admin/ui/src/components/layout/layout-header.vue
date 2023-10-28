@@ -4,7 +4,7 @@
             :confirm-loading="isChanging"
             :mask-closable="false"
             :keyboard="false"
-            :visible="visible"
+            :open="open"
             :title="$t('changeTargetServerUrl')"
             @ok="changeServer"
             @cancel="closeChangeServerModal"
@@ -79,7 +79,7 @@ export default {
     data() {
         return {
             isChanging: false,
-            visible: false,
+            open: false,
             url: '',
             locale: this.$store.getters.locale,
             locales: [{
@@ -114,10 +114,10 @@ export default {
     },
     methods: {
         openChangeServerModal() {
-            this.visible = true;
+            this.open = true;
         },
         closeChangeServerModal() {
-            this.visible = false;
+            this.open = false;
         },
         changeServer() {
             this.isChanging = true;
@@ -129,7 +129,7 @@ export default {
                     this.$http.defaults.baseURL = url;
                     this.$store.setUrl(url);
                     this.$message.success(this.$t('changedServerSuccessfully'));
-                    this.visible = false;
+                    this.open = false;
                 }).catch(error => {
                     this.$error(this.$t('failedToChangeServer'), error);
                 }).finally(() => {

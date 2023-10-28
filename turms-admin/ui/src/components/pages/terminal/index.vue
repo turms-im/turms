@@ -15,7 +15,7 @@
             :options="notificationTerminalOptions"
         />
         <a-modal
-            v-model:visible="modalVisible"
+            v-model:open="modalOpen"
             :title="$t('settings')"
             @ok="handleOk"
         >
@@ -145,7 +145,7 @@ export default {
             ...this.$storage.get(this.$rs.storage.terminalSettings)
         };
         return {
-            modalVisible: false,
+            modalOpen: false,
             settings,
             formState: this.$util.copy(settings),
             cliTerminalOptions: {
@@ -166,10 +166,10 @@ export default {
     methods: {
         openSettingModal() {
             this.formState = this.$util.copy(this.settings);
-            this.modalVisible = true;
+            this.modalOpen = true;
         },
         closeSettingModal() {
-            this.modalVisible = false;
+            this.modalOpen = false;
         },
         async handleOk() {
             let newSettings;

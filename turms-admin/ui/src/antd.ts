@@ -32,7 +32,6 @@ import {
     Upload,
     message
 } from 'ant-design-vue';
-import 'ant-design-vue/es/message/style/css';
 import type {ComponentCustomProperties} from '@vue/runtime-core';
 
 const $error = function (msg, error) {
