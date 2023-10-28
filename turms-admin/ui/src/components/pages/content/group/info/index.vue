@@ -7,7 +7,7 @@
             key="1"
             :tab="$t('basicInfo')"
         >
-            <content-group-base-info-pane />
+            <content-group-info-pane />
         </a-tab-pane>
         <a-tab-pane
             key="2"
@@ -19,13 +19,13 @@
 </template>
 
 <script>
-import ContentGroupBaseInfoPane from './content-group-info-pane.vue';
+import ContentGroupInfoPane from './content-group-info-pane.vue';
 import ContentGroupQuestionPane from './content-group-question-pane.vue';
 
 export default {
     name: 'content-group-info-tabs',
     components: {
-        ContentGroupBaseInfoPane,
+        ContentGroupInfoPane,
         ContentGroupQuestionPane
     }
 };

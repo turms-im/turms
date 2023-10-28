@@ -7,7 +7,7 @@
             key="1"
             :tab="$t('groupInfo')"
         >
-            <content-group-info-pane />
+            <content-group-info-tabs />
         </a-tab-pane>
         <a-tab-pane
             key="2"
@@ -25,7 +25,7 @@
             key="4"
             :tab="$t('groupEnrollment')"
         >
-            <content-group-enrollment-pane />
+            <content-group-enrollment-tabs />
         </a-tab-pane>
         <a-tab-pane
             key="5"
@@ -37,19 +37,19 @@
 </template>
 
 <script>
-import ContentGroupInfoPane from './info/index.vue';
+import ContentGroupInfoTabs from './info/index.vue';
 import ContentGroupMemberPane from './content-group-member-pane.vue';
 import ContentGroupBlocklistPane from './content-group-blocklist-pane.vue';
-import ContentGroupEnrollmentPane from './entrollment/index.vue';
+import ContentGroupEnrollmentTabs from './entrollment/index.vue';
 import ContentGroupTypePane from './content-group-type-pane.vue';
 
 export default {
     name: 'content-group-tabs',
     components: {
-        ContentGroupInfoPane,
+        ContentGroupInfoTabs,
         ContentGroupMemberPane,
         ContentGroupBlocklistPane,
-        ContentGroupEnrollmentPane,
+        ContentGroupEnrollmentTabs,
         ContentGroupTypePane
     }
 };
