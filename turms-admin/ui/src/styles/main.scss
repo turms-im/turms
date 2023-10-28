@@ -14,6 +14,23 @@ td {
     align-items: center;
 }
 
+.ant-form-row {
+    align-items: center !important;
+
+    .ant-form-item-label {
+        white-space: normal !important;
+
+        > label{
+            margin-right: 8px !important;
+            height: unset !important;
+
+            &::after {
+                content: none !important;
+            }
+        }
+    }
+}
+
 .ant-message-notice-content {
     max-width: 500px;
 }
