@@ -19,6 +19,7 @@
     "lint": "npm run eslint && npm run stylelint",
     "postinstall": "npm run build:client && npm run build:client-ast",
     "precommit": "npm run lint",
+    "preview": "vite preview",
     "quickstart": "npm install && npm run build && npm run start",
     "reload": "pm2 reload server/ecosystem.config.js",
     "report": "cross-env REPORT=true npm run build",
