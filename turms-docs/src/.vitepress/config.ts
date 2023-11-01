@@ -195,6 +195,10 @@ export default defineConfig({
                             {
                                 text: 'turms-client-js Shared Context',
                                 link: '/client/turms-client-js.md'
+                            },
+                            {
+                                text: 'Turms Chat Demo',
+                                link: '/client/turms-chat-demo.md'
                             }
                         ]
                     },
@@ -409,6 +413,10 @@ export default defineConfig({
                             {
                                 text: 'turms-client-js共享上下文',
                                 link: '/zh-CN/client/turms-client-js.md'
+                            },
+                            {
+                                text: 'Turms Chat Demo',
+                                link: '/zh-CN/client/turms-chat-demo.md'
                             }
                         ]
                     },
