@@ -305,7 +305,7 @@ public class UserStatusService {
     }
 
     /**
-     * @return OFFLINE instead of MonoEmpty for an offline user
+     * @return {@link UserStatus#OFFLINE} instead of MonoEmpty for an offline user
      */
     public Mono<UserSessionsStatus> getUserSessionsStatus(@NotNull Long userId) {
         try {

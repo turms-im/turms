@@ -80,6 +80,9 @@ public class SessionService {
         }
         return userStatusService.getUserSessionsStatus(userId)
                 .flatMap(sessionsStatus -> {
+                    if (sessionsStatus.isOffline()) {
+                        return PublisherPool.FALSE;
+                    }
                     Set<Map.Entry<String, Set<DeviceType>>> entries =
                             sessionsStatus.getActiveNodeIdToDeviceTypes()
                                     .entrySet();
@@ -124,6 +127,9 @@ public class SessionService {
         }
         return userStatusService.getUserSessionsStatus(userId)
                 .flatMap(sessionsStatus -> {
+                    if (sessionsStatus.isOffline()) {
+                        return PublisherPool.FALSE;
+                    }
                     Set<Map.Entry<String, Set<DeviceType>>> entries =
                             sessionsStatus.getActiveNodeIdToDeviceTypes()
                                     .entrySet();
@@ -217,7 +223,7 @@ public class SessionService {
     }
 
     /**
-     * @return includes the sessions with the OFFLINE status for offline users
+     * @return includes the sessions with the {@link UserStatus#OFFLINE} status for offline users
      */
     public Mono<Collection<UserSessionsInfo>> queryUserSessions(Set<Long> userIds) {
         int userCount = userIds.size();

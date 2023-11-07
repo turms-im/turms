@@ -54,10 +54,16 @@ public final class UserSessionsStatus {
     public UserSessionsStatus(
             Long userId,
             UserStatus userStatus,
-            Map<DeviceType, UserDeviceSessionInfo> deviceTypeToSessionInfo) {
+            @Nullable Map<DeviceType, UserDeviceSessionInfo> deviceTypeToSessionInfo) {
         this.userId = userId;
         this.userStatus = userStatus;
-        this.deviceTypeToSessionInfo = deviceTypeToSessionInfo;
+        this.deviceTypeToSessionInfo = deviceTypeToSessionInfo == null
+                ? Collections.emptyMap()
+                : deviceTypeToSessionInfo;
+    }
+
+    public boolean isOffline() {
+        return UserStatus.OFFLINE == userStatus;
     }
 
     public UserStatus getUserStatus(boolean convertInvisibleToOffline) {
