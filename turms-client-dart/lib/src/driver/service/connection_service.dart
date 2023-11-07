@@ -5,7 +5,6 @@ import 'dart:typed_data';
 import '../../exception/response_exception.dart';
 import '../../model/response_status_code.dart';
 import '../../transport/tcp_client.dart';
-import '../state_store.dart';
 import 'base_service.dart';
 
 typedef OnConnectedListener = void Function();
@@ -93,11 +92,10 @@ class ConnectionService extends BaseService {
   final _MessageDecoder _decoder = _MessageDecoder();
 
   ConnectionService(
-      StateStore stateStore, String? host, int? port, int? connectTimeoutMillis)
+      super.stateStore, String? host, int? port, int? connectTimeoutMillis)
       : _initialHost = host ?? '127.0.0.1',
         _initialPort = port ?? 11510,
-        _initialConnectTimeoutMillis = connectTimeoutMillis ?? 30 * 1000,
-        super(stateStore);
+        _initialConnectTimeoutMillis = connectTimeoutMillis ?? 30 * 1000;
 
   // Listeners
 

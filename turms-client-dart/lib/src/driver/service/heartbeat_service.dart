@@ -4,7 +4,6 @@ import 'dart:math';
 import '../../exception/response_exception.dart';
 import '../../model/proto/notification/turms_notification.pb.dart';
 import '../../model/response_status_code.dart';
-import '../state_store.dart';
 import 'base_service.dart';
 
 class HeartbeatService extends BaseService {
@@ -18,15 +17,14 @@ class HeartbeatService extends BaseService {
   Timer? _heartbeatTimer;
   final List<Completer<void>> _heartbeatCompleters = [];
 
-  HeartbeatService(StateStore stateStore, int? heartbeatIntervalMillis)
+  HeartbeatService(super.stateStore, int? heartbeatIntervalMillis)
       : _heartbeatIntervalMillis =
             heartbeatIntervalMillis ?? _defaultHeartbeatIntervalMillis,
         _heartbeatTimerInterval = Duration(
             milliseconds: max(
                 1,
                 (heartbeatIntervalMillis ?? _defaultHeartbeatIntervalMillis) ~/
-                    10)),
-        super(stateStore);
+                    10));
 
   bool get isRunning => _heartbeatTimer?.isActive == true;
 

@@ -6,7 +6,6 @@ import '../../extension/int_extensions.dart';
 import '../../model/proto/notification/turms_notification.pb.dart';
 import '../../model/proto/request/turms_request.pb.dart';
 import '../../model/response_status_code.dart';
-import '../state_store.dart';
 import 'base_service.dart';
 
 typedef NotificationListener = void Function(TurmsNotification notification);
@@ -28,9 +27,8 @@ class DriverMessageService extends BaseService {
   final List<NotificationListener> _notificationListeners = [];
   final Map<int, TurmsRequestContext> _idToRequest = {};
 
-  DriverMessageService(StateStore stateStore, int? requestTimeoutMillis,
-      int? minRequestIntervalMillis)
-      : super(stateStore) {
+  DriverMessageService(super.stateStore, int? requestTimeoutMillis,
+      int? minRequestIntervalMillis) {
     _requestTimeoutMillis =
         requestTimeoutMillis == null || requestTimeoutMillis <= 0
             ? 60 * 1000

@@ -68,10 +68,11 @@ class StorageService {
   }
 
   Future<Response<Map<String, String>>> queryUserProfilePictureUploadInfo(
-      {String? name, String? mediaType, Map<String, String>? extra}) async {
-    return _queryResourceUploadInfo(StorageResourceType.USER_PROFILE_PICTURE,
-        name: name, mediaType: mediaType, extra: extra);
-  }
+          {String? name,
+          String? mediaType,
+          Map<String, String>? extra}) async =>
+      _queryResourceUploadInfo(StorageResourceType.USER_PROFILE_PICTURE,
+          name: name, mediaType: mediaType, extra: extra);
 
   Future<Response<Map<String, String>>> queryUserProfilePictureDownloadInfo(
       Int64 userId,
@@ -546,7 +547,7 @@ class StorageService {
       throw ResponseException(
           code: ResponseStatusCode.dataNotFound,
           reason:
-              'Could not get the resource URL because the key "$urlKeyName" does not exist in the data: ${data}');
+              'Could not get the resource URL because the key "$urlKeyName" does not exist in the data: $data');
     }
     return url;
   }
