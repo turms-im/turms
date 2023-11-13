@@ -5,6 +5,12 @@ body {
     height: 100vh;
 }
 
+/* Targets on Chrome. Avoid "-internal-autofill-selected" style to be applied */
+input:-webkit-autofill,
+input:-webkit-autofill:focus {
+    transition: background-color 0s 600000s, color 0s 600000s;
+}
+
 td {
     word-break: break-all;
 }
