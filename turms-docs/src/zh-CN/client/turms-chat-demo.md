@@ -30,8 +30,71 @@
 
 1. 不管是从产品角度，还是技术角度，该客户端`demo`也只不过是其中`可能的`的方案之一，用户不应该因为该`demo`而限制设计自身IM产品的能力，尤其不要认为Turms的服务端是为该`demo`定制的，正如Turms文档中反复提及Turms是一个通用IM解决方案，致力于解决各种IM场景。
 2. 为用户的二次开发做准备。这主要分为三个方面：
-   1. UI与业务逻辑分离。方便需要二次开发的团队复用UI来实现自己的业务逻辑。
+   1. UI与业务逻辑分离。方便需要二次开发的团队复用UI来实现自己的业务逻辑，读者甚至可以只用`turms-chat-demo-flutter`项目，不使用Turms服务端，而是使用自研的IM服务端。
    2. 依旧采用宽松的Apache 2.0，而不是客户端开源项目常见的、更加严格的GPL协议。
    3. 由于全球范围的IM应用的UI设计都非常类似，因此该`demo`也会实现大部分IM的通用UI与逻辑，一般不提供更为定制化的逻辑，以方面其他团队二次开发。
 
 注意：`demo`没有`质量低`的含义，这点读者之后看代码质量与UI设计就可明白。
+
+## 关于二次开发
+
+由于Flutter应用的设计模式众多，很多应用缺乏统一的设计，导致一个应用中存在众多互斥的设计，架构看起来非常混乱。
+
+为了统一本应用的架构与代码设计，方便读者阅读代码，也方便工程师添加代码，本章节对项目的状态管理与架构进行讲解。
+
+### 状态管理
+
+Flutter状态管理方案众多，至少有几十种方案。对于应用级的状态管理：turms-chat-demo-flutter采用主流的、Flutter官方推荐的、更符合Flutter自身设计的、更新勤快的方案，即Riverpod。
+
+尽管Flutter还有其他状态管理方案，但要么是引入不必要的复杂（如：Bloc），要么是侵入性过强（如：GetX），要么是跟Flutter原生风格差异过大，要么是长期不更新，要么是偏实验性的，因此均不采用。
+
+另外，本应用除了用Riverpod实现状态管理，还顺便用它来实现依赖注入（Dependency Injection）。
+
+### 架构
+
+不仅是Flutter的应用架构设计模式本身就很多，而且同一个架构设计也有多种实践方式。本项目基于Flutter应用的设计传统，选择最适合自身情况的架构设计模式：
+
+对于应用级的架构设计：基于Riverpod，采用MVC+S与MVVM混合架构设计。
+
+* Model => Repository。负责增删改查外部数据源接口交互的仓储层。
+* View => Widget：负责UI展示。
+* Controller + View Model => Controller：负责接收用户输入，并基于Service执行业务处理逻辑；管理业务组件的业务状态（State），供UI层进行展示。
+* Service：负责执行业务处理逻辑，上接Controller，下接Repository。不叫常见的`domain`是因为`domain`是一个指代含糊的词，不仅能指代service，也能指代repository，甚至还能同时指代controller、service与repository等，即指代“业务域”。
+
+提醒：
+
+* 本章节所述的Controller是应用架构分层中的Controller，而不是Flutter组件的Controller，如AnimationController。
+
+* 有些Flutter项目的Controller不仅仅是Controller，还是（is）View Model。在本应用中，Controller只是Controller，但同时又包含（has）View Model，即状态（State）。
+
+* 复杂的项目可能会采用5层架构，即：View、Controller、Service、Repository、Data Source。但本应用逻辑相对简单，因此只3层与4层架构，即View、Controller、Service（可选）、Repository。
+
+* 如果读者有阅读过有10年以上历史的桌面端开源项目，就经常能发现这类项目的`Model`类可能会包含比较复杂的业务逻辑。
+
+  这是因为在早期桌面端开发与面向对象设计中，`Model`是一个更综合的概念，常常同时指代现今更为常见的`Model/Entity`（数据模型。不包含数据处理逻辑，或者只包含基本的数据处理逻辑）与`Repository`（获取、处理、响应数据的仓储层）这两个概念。但由于这样的设计明显不符合于关注点分离（Separation of Concerns）的设计理念，因此靠谱的现代项目已经不会采用这样的设计了。
+
+### 目录结构
+
+基于上述的架构设计，该项目的目录结构大体如下：
+
+* ui
+  * components：共享UI组件（Widgets），如按钮、标签页等。
+  * screens：应用页面。每个页面除了包括Widgets，还包括各自的Controllers。
+  * themes：主题。
+* domain
+  * user
+    * services
+    * repositories
+
+  * message
+    * services
+    * repositories
+
+  * ...
+
+* infra：
+  * preferences：管理应用本地配置。
+  * routes：路由。
+  * window：管理桌面端窗口。
+  * ...
+
