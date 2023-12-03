@@ -21,7 +21,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Consumer;
+import jakarta.annotation.Nullable;
 
 import org.graalvm.polyglot.Value;
 import reactor.core.publisher.Mono;
@@ -44,6 +44,7 @@ public class JsExtensionPointInvocationHandler implements InvocationHandler {
         this.extensionPointToFunction = extensionPointToFunction;
     }
 
+    @Nullable
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         if (OBJECT_METHODS.contains(method.getName())) {
@@ -63,8 +64,8 @@ public class JsExtensionPointInvocationHandler implements InvocationHandler {
         Value function = nameToFunction.get(method.getName());
         if (function == null) {
             if (isAsync) {
-                // Keep it simple because we have only
-                // the return type of Mono currently
+                // Keep it simple because we only use
+                // the return type of Mono currently.
                 return Mono.empty();
             } else if (void.class == returnType) {
                 return null;
@@ -97,34 +98,11 @@ public class JsExtensionPointInvocationHandler implements InvocationHandler {
     }
 
     private Object parseReturnValue(boolean isAsync, Value returnValue) {
-        if (returnValue.getMetaObject()
-                .getMetaSimpleName()
-                .equals("Promise")) {
-            return Mono.create(sink -> {
-                try {
-                    Consumer<Object> resolve = o -> {
-                        if (o == null) {
-                            sink.success();
-                        } else if (o instanceof Value v) {
-                            sink.success(ValueDecoder.decode(v));
-                        } else {
-                            sink.success(o);
-                        }
-                    };
-                    Consumer<Object> reject =
-                            error -> sink.error(ValueDecoder.translateException(error));
-                    returnValue.invokeMember("then", resolve)
-                            .invokeMember("catch", reject);
-                } catch (Exception e) {
-                    sink.error(new ScriptExecutionException(
-                            "Failed to run the promise",
-                            e,
-                            ScriptExceptionSource.HOST));
-                }
-            });
-        }
         Object val = ValueDecoder.decode(returnValue);
         if (isAsync) {
+            if (val instanceof Mono<?> mono) {
+                return mono;
+            }
             return Mono.just(val);
         } else {
             return val;

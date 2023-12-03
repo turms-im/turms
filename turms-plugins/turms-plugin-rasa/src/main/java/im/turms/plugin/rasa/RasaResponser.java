@@ -64,19 +64,19 @@ public class RasaResponser extends TurmsExtension implements RequestHandlerResul
     private Map<Long, RasaClientInfo> idToClientInfo;
 
     @Override
-    public void onStarted() {
-        setUp();
+    public Mono<Void> onStarted() {
+        return setUp();
     }
 
-    private void setUp() {
+    private Mono<Void> setUp() {
         RasaProperties properties = loadProperties(RasaProperties.class);
         if (!properties.isEnabled()
                 || properties.getInstanceFindStrategy() != InstanceFindStrategy.PROPERTY) {
-            return;
+            return Mono.empty();
         }
         List<RasaProperties.InstanceProperties> instancePropertiesList = properties.getInstances();
         if (instancePropertiesList.isEmpty()) {
-            return;
+            return Mono.empty();
         }
         int size = instancePropertiesList.size();
         Map<URI, RasaClientInfo> uriToClientInfo = CollectionUtil.newMapWithExpectedSize(size);
@@ -87,10 +87,10 @@ public class RasaResponser extends TurmsExtension implements RequestHandlerResul
             try {
                 uri = new URI(url);
             } catch (URISyntaxException e) {
-                throw new IllegalArgumentException(
+                return Mono.error(new IllegalArgumentException(
                         "Illegal endpoint URL: "
                                 + url,
-                        e);
+                        e));
             }
             int requestTimeoutMillis = instanceProperties.getRequest()
                     .getTimeoutMillis();
@@ -101,15 +101,16 @@ public class RasaResponser extends TurmsExtension implements RequestHandlerResul
             Long chatbotUserId = instanceProperties.getChatbotUserId();
             RasaClientInfo existingClientInfo = idToClientInfo.put(chatbotUserId, newClientInfo);
             if (existingClientInfo != null) {
-                throw new IllegalArgumentException(
+                return Mono.error(new IllegalArgumentException(
                         "Found a duplicate chatbot user ID: "
-                                + chatbotUserId);
+                                + chatbotUserId));
             }
         }
         this.idToClientInfo = Map.copyOf(idToClientInfo);
         chatbotUserIds = CollectionUtil.toImmutableSet(idToClientInfo.keySet());
         ApplicationContext context = getContext();
         messageService = context.getBean(MessageService.class);
+        return Mono.empty();
     }
 
     @Override

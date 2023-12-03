@@ -81,7 +81,7 @@ public class AntiSpamHandler extends TurmsExtension implements ClientRequestTran
     }
 
     @Override
-    protected void onStarted() {
+    protected Mono<Void> onStarted() {
         AntiSpamProperties properties = loadProperties(AntiSpamProperties.class);
         enabled = properties.isEnabled();
         textPreprocessor = new TextPreprocessor(properties.getTextParsingStrategy());
@@ -95,6 +95,7 @@ public class AntiSpamHandler extends TurmsExtension implements ClientRequestTran
                 : null;
         textTypeToProperties = createTextTypeToPropertiesMap(properties.getTextTypes(),
                 properties.getSilentIllegalTextTypes());
+        return Mono.empty();
     }
 
     private Map<TurmsRequest.KindCase, TextTypeProperties> createTextTypeToPropertiesMap(

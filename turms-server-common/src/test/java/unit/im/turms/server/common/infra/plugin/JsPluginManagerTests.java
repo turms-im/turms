@@ -81,9 +81,10 @@ class JsPluginManagerTests {
     @Test
     void testFetch() {
         MyExtensionPointForJs extensionPoint = createExtensionPoint();
-        String actual = extensionPoint.testFetch()
-                .block(Duration.ofSeconds(15));
-        assertThat(actual).isEqualTo("turms-im/turms");
+        StepVerifier.create(extensionPoint.testFetch()
+                .timeout(Duration.ofSeconds(15)))
+                .expectNext("turms-im/turms")
+                .verifyComplete();
     }
 
     @Test

@@ -21,10 +21,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
 import jakarta.annotation.Nullable;
 
 import org.graalvm.polyglot.PolyglotException;
 import org.graalvm.polyglot.Value;
+import reactor.core.publisher.Mono;
 
 import im.turms.server.common.infra.collection.CollectionUtil;
 
@@ -96,6 +98,10 @@ public class ValueDecoder {
                 map.put(decode(entry), decode(value.getHashValue(entry)));
             }
             return map;
+        }
+        Mono<?> mono = decodeAsMonoIfPromise(value, true);
+        if (mono != null) {
+            return mono;
         } else if (value.hasMembers()) {
             Set<String> memberKeys = value.getMemberKeys();
             Map<Object, Object> map = CollectionUtil.newMapWithExpectedSize(memberKeys.size());
@@ -107,6 +113,40 @@ public class ValueDecoder {
         throw new IllegalArgumentException(
                 "Unknown value: "
                         + value);
+    }
+
+    @Nullable
+    public static Mono<?> decodeAsMonoIfPromise(Value value, boolean decodePromiseValue) {
+        if (!"Promise".equals(value.getMetaObject()
+                .getMetaSimpleName())) {
+            return null;
+        }
+        return Mono.create(sink -> {
+            try {
+                Consumer<Object> resolve = o -> {
+                    if (o == null) {
+                        sink.success();
+                    } else if (o instanceof Value v) {
+                        if (decodePromiseValue) {
+                            sink.success(ValueDecoder.decode(v));
+                        } else {
+                            sink.success(v);
+                        }
+                    } else {
+                        sink.success(o);
+                    }
+                };
+                Consumer<Object> reject =
+                        error -> sink.error(ValueDecoder.translateException(error));
+                value.invokeMember("then", resolve)
+                        .invokeMember("catch", reject);
+            } catch (Exception e) {
+                sink.error(new ScriptExecutionException(
+                        "Failed to run the promise",
+                        e,
+                        ScriptExceptionSource.HOST));
+            }
+        });
     }
 
     public static ScriptExecutionException translateException(Object exception) {

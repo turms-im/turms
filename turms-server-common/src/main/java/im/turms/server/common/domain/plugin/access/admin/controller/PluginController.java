@@ -22,6 +22,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
+import reactor.core.publisher.Mono;
+
 import im.turms.server.common.access.admin.dto.response.HttpHandlerResult;
 import im.turms.server.common.access.admin.dto.response.ResponseDTO;
 import im.turms.server.common.access.admin.dto.response.UpdateResultDTO;
@@ -106,20 +108,20 @@ public class PluginController {
 
     @PutMapping
     @RequiredPermission(AdminPermission.PLUGIN_UPDATE)
-    public HttpHandlerResult<ResponseDTO<UpdateResultDTO>> updatePlugins(
+    public Mono<HttpHandlerResult<ResponseDTO<UpdateResultDTO>>> updatePlugins(
             Set<String> ids,
             @RequestBody UpdatePluginDTO updatePluginDTO) {
         UpdatePluginDTO.PluginStatus status = updatePluginDTO.status();
         if (status == null) {
-            return HttpHandlerResult.okIfTruthy(UpdateResultDTO.NONE);
+            return HttpHandlerResult.okIfTruthy(Mono.just(UpdateResultDTO.NONE));
         }
-        long count = switch (status) {
+        Mono<Integer> count = switch (status) {
             case STARTED -> pluginManager.startPlugins(ids);
             case STOPPED -> pluginManager.stopPlugins(ids);
             case RESUMED -> pluginManager.resumePlugins(ids);
             case PAUSED -> pluginManager.pausePlugins(ids);
         };
-        return HttpHandlerResult.okIfTruthy(new UpdateResultDTO(count, count));
+        return HttpHandlerResult.updateResultByIntegerMono(count);
     }
 
     @PostMapping("java")
@@ -162,11 +164,10 @@ public class PluginController {
 
     @DeleteMapping
     @RequiredPermission(AdminPermission.PLUGIN_DELETE)
-    public HttpHandlerResult<ResponseDTO<Void>> deletePlugins(
+    public Mono<HttpHandlerResult<ResponseDTO<Void>>> deletePlugins(
             Set<String> ids,
             boolean deleteLocalFiles) {
-        pluginManager.deletePlugins(ids, deleteLocalFiles);
-        return HttpHandlerResult.RESPONSE_OK;
+        return HttpHandlerResult.okIfTruthy(pluginManager.deletePlugins(ids, deleteLocalFiles));
     }
 
 }

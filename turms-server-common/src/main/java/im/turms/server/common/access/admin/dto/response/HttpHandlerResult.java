@@ -143,6 +143,19 @@ public record HttpHandlerResult<T>(
         return okIfTruthy(new UpdateResultDTO(modifiedCount, modifiedCount));
     }
 
+    public static Mono<HttpHandlerResult<ResponseDTO<UpdateResultDTO>>> updateResultByIntegerMono(
+            Mono<Integer> data) {
+        return okIfTruthy(data.map(number -> {
+            Long count = number.longValue();
+            return new UpdateResultDTO(count, count);
+        }));
+    }
+
+    public static Mono<HttpHandlerResult<ResponseDTO<UpdateResultDTO>>> updateResultByLongMono(
+            Mono<Long> data) {
+        return okIfTruthy(data.map(number -> new UpdateResultDTO(number, number)));
+    }
+
     public static Mono<HttpHandlerResult<ResponseDTO<DeleteResultDTO>>> deleteResult(
             Mono<DeleteResult> data) {
         return okIfTruthy(data.map(DeleteResultDTO::get));

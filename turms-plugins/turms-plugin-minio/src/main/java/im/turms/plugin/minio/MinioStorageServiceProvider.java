@@ -48,6 +48,7 @@ import io.minio.messages.Status;
 import org.springframework.context.ApplicationContext;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.util.retry.Retry;
 
 import im.turms.plugin.minio.core.BucketPolicy;
 import im.turms.plugin.minio.core.BucketPolicyAction;
@@ -85,6 +86,8 @@ import im.turms.server.common.infra.reactor.PublisherUtil;
 import im.turms.server.common.infra.security.MacUtil;
 import im.turms.server.common.infra.time.DateRange;
 import im.turms.server.common.infra.time.DurationConst;
+import im.turms.server.common.infra.tracing.TracingCloseableContext;
+import im.turms.server.common.infra.tracing.TracingContext;
 import im.turms.server.common.storage.mongo.TurmsMongoClient;
 import im.turms.service.domain.group.service.GroupMemberService;
 import im.turms.service.domain.storage.bo.StorageResourceInfo;
@@ -122,8 +125,10 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
      * @implNote 1. We use HMAC(key, message) instead of a HASH(key + message) to avoid the length
      *           extension attack. To put simply, if a hacker knows the signature of the resource
      *           "1", and he can also know the signature of resource "12", "13", "123", and so on
-     *           without knowledge of the key. 2. Use MD5 because its output size (128 bits) is
-     *           small, and it is a 22-character Base62-encoded string.
+     *           without knowledge of the key.
+     *           <p>
+     *           2. Use MD5 because its output size (128 bits) is small, and it is a 22-character
+     *           Base62-encoded string.
      */
     private boolean isMacEnabled;
     @Nullable
@@ -156,30 +161,30 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
     }
 
     @Override
-    public void onStarted() {
-        setUp();
+    public Mono<Void> onStarted() {
+        return setUp();
     }
 
-    private void setUp() {
+    private Mono<Void> setUp() {
         MinioStorageProperties properties = loadProperties(MinioStorageProperties.class);
         if (!properties.isEnabled()) {
-            return;
+            return Mono.empty();
         }
         String endpoint = properties.getEndpoint();
         URI uri;
         try {
             uri = new URI(endpoint);
         } catch (URISyntaxException e) {
-            throw new IllegalArgumentException(
+            return Mono.error(new IllegalArgumentException(
                     "Illegal endpoint URL: "
                             + endpoint,
-                    e);
+                    e));
         }
         if (!uri.isAbsolute()) {
-            throw new IllegalArgumentException(
+            return Mono.error(new IllegalArgumentException(
                     "The endpoint URL ("
                             + endpoint
-                            + ") must be absolute");
+                            + ") must be absolute"));
         }
         ApplicationContext context = getContext();
         node = context.getBean(Node.class);
@@ -217,15 +222,15 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
                 key = Base64.getDecoder()
                         .decode(base64Key);
             } catch (Exception e) {
-                throw new IllegalArgumentException(
+                return Mono.error(new IllegalArgumentException(
                         "The HMAC key must be Base64-encoded, but got: "
                                 + base64Key,
-                        e);
+                        e));
             }
             if (key.length < 16) {
-                throw new IllegalArgumentException(
+                return Mono.error(new IllegalArgumentException(
                         "The length of HMAC key must be greater than or equal to 16, but got: "
-                                + key.length);
+                                + key.length));
             }
             macKey = new SecretKeySpec(key, "HmacMD5");
         } else {
@@ -235,42 +240,32 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
                 properties.getRegion(),
                 properties.getAccessKey(),
                 properties.getSecretKey());
-        Duration timeout = Duration.ofSeconds(INIT_BUCKETS_TIMEOUT_SECONDS);
-        try {
-            initBuckets().block(timeout);
-            isServing = true;
-        } catch (Exception e) {
-            MinioStorageProperties.Retry retry = properties.getRetry();
-            int maxAttempts = retry.getMaxAttempts();
-            if (!retry.isEnabled() || maxAttempts <= 0) {
-                throw new RuntimeException("Failed to initialize the MinIO client", e);
-            }
-            LOGGER.error("Failed to initialize the MinIO client. Retry times: 0", e);
-            try {
-                Thread.sleep(retry.getInitialIntervalMillis());
-            } catch (InterruptedException ex) {
-                throw new RuntimeException("Failed to initialize the MinIO client", e);
-            }
-            for (int currentRetryTimes = 1; currentRetryTimes <= maxAttempts; currentRetryTimes++) {
-                try {
-                    initBuckets().block(timeout);
-                } catch (Exception ex) {
-                    LOGGER.error("Failed to initialize the MinIO client. Retry times: "
-                            + currentRetryTimes, ex);
-                    if (currentRetryTimes == maxAttempts) {
-                        throw new RuntimeException(
-                                "Failed to initialize the MinIO client with retries exhausted: "
-                                        + maxAttempts);
-                    }
-                    try {
-                        Thread.sleep(retry.getIntervalMillis());
-                    } catch (InterruptedException ignored) {
-                        throw new RuntimeException("Failed to initialize the MinIO client", ex);
-                    }
-                }
-            }
-            isServing = true;
+
+        Mono<Void> initBuckets =
+                initBuckets().timeout(Duration.ofSeconds(INIT_BUCKETS_TIMEOUT_SECONDS))
+                        .doOnSuccess(unused -> isServing = true);
+
+        MinioStorageProperties.Retry retry = properties.getRetry();
+        int maxAttempts = retry.getMaxAttempts();
+        if (!retry.isEnabled() || maxAttempts <= 0) {
+            return initBuckets.onErrorResume(t -> Mono
+                    .error(new RuntimeException("Failed to initialize the MinIO client", t)));
         }
+        return initBuckets.retryWhen(Retry.max(maxAttempts)
+                .doBeforeRetryAsync(retrySignal -> Mono.deferContextual(contextView -> {
+                    long totalRetries = retrySignal.totalRetries();
+                    try (TracingCloseableContext ignored =
+                            TracingContext.getCloseableContext(contextView)) {
+                        LOGGER.error("Failed to initialize the MinIO client. Retry times: "
+                                + totalRetries, retrySignal.failure());
+                    }
+                    if (0 == totalRetries) {
+                        return Mono.delay(Duration.ofMillis(retry.getInitialIntervalMillis()))
+                                .then();
+                    }
+                    return Mono.delay(Duration.ofMillis(retry.getIntervalMillis()))
+                            .then();
+                })));
     }
 
     private void initClient(String endpoint, String region, String accessKey, String secretKey) {

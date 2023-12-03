@@ -21,7 +21,9 @@ import java.util.List;
 
 import lombok.Getter;
 import org.graalvm.polyglot.Value;
+import reactor.core.publisher.Mono;
 
+import im.turms.server.common.infra.plugin.script.ValueDecoder;
 import im.turms.server.common.infra.plugin.script.ValueInspector;
 
 /**
@@ -56,31 +58,34 @@ public class JsTurmsExtensionAdaptor extends TurmsExtension {
     }
 
     @Override
-    protected void onStarted() {
-        if (onStarted != null) {
-            onStarted.execute();
-        }
+    protected Mono<Void> onStarted() {
+        return execute(onStarted);
     }
 
     @Override
-    protected void onStopped() {
-        if (onStopped != null) {
-            onStopped.execute();
-        }
+    protected Mono<Void> onStopped() {
+        return execute(onStopped);
     }
 
     @Override
-    protected void onResumed() {
-        if (onResumed != null) {
-            onResumed.execute();
-        }
+    protected Mono<Void> onResumed() {
+        return execute(onResumed);
     }
 
     @Override
-    protected void onPaused() {
-        if (onPaused != null) {
-            onPaused.execute();
+    protected Mono<Void> onPaused() {
+        return execute(onPaused);
+    }
+
+    private Mono<Void> execute(Value callback) {
+        if (callback == null) {
+            return Mono.empty();
         }
+        Mono<?> mono = ValueDecoder.decodeAsMonoIfPromise(callback.execute(), false);
+        if (mono == null) {
+            return Mono.empty();
+        }
+        return mono.then();
     }
 
 }

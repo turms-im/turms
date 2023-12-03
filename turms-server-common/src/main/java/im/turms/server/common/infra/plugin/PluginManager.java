@@ -55,7 +55,6 @@ import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.context.JobShutdownOrder;
 import im.turms.server.common.infra.context.TurmsApplicationContext;
 import im.turms.server.common.infra.exception.FeatureDisabledException;
-import im.turms.server.common.infra.exception.ThrowableUtil;
 import im.turms.server.common.infra.io.FileUtil;
 import im.turms.server.common.infra.io.InputOutputException;
 import im.turms.server.common.infra.lang.ClassUtil;
@@ -154,12 +153,13 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
 
     /**
      * @implNote Start plugins after all beans are ready so that plugins can get any bean when
-     *           starting
+     *           starting.
      */
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         if (enabled) {
-            startPlugins();
+            startPlugins().timeout(Duration.ofMinutes(10))
+                    .subscribe(unused -> LOGGER.info("All plugins are started"), LOGGER::error);
         }
     }
 
@@ -169,31 +169,29 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
     }
 
     private Mono<Void> destroy() {
-        Exception stopPluginsException = null;
-        Exception closeEngineException = null;
-        try {
-            stopPlugins();
-        } catch (Exception e) {
-            stopPluginsException = e;
-        }
-        if (engine != null) {
-            try {
-                ((Engine) engine).close(true);
-            } catch (Exception e) {
-                closeEngineException = e;
-            }
-        }
-        if (stopPluginsException != null || closeEngineException != null) {
-            Exception e = new RuntimeException("Caught errors while destroying");
-            if (stopPluginsException != null) {
-                e.addSuppressed(stopPluginsException);
-            }
-            if (closeEngineException != null) {
-                e.addSuppressed(closeEngineException);
-            }
-            return Mono.error(e);
-        }
-        return Mono.empty();
+        return stopPlugins().materialize()
+                .flatMap(signal -> {
+                    Throwable stopPluginsException = signal.getThrowable();
+                    Exception closeEngineException = null;
+                    if (engine != null) {
+                        try {
+                            ((Engine) engine).close(true);
+                        } catch (Exception e) {
+                            closeEngineException = e;
+                        }
+                    }
+                    if (stopPluginsException != null || closeEngineException != null) {
+                        Exception e = new RuntimeException("Caught errors while destroying");
+                        if (stopPluginsException != null) {
+                            e.addSuppressed(stopPluginsException);
+                        }
+                        if (closeEngineException != null) {
+                            e.addSuppressed(closeEngineException);
+                        }
+                        return Mono.error(e);
+                    }
+                    return Mono.empty();
+                });
     }
 
     private void loadNetworkPlugins(NetworkProperties properties) {
@@ -531,68 +529,78 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
         return pluginRepository.getPlugins(ids);
     }
 
-    public int startPlugins() {
+    public Mono<Integer> startPlugins() {
         Collection<Plugin> plugins = pluginRepository.getPlugins();
         return startPlugins(plugins);
     }
 
-    public int startPlugins(Set<String> ids) {
+    public Mono<Integer> startPlugins(Set<String> ids) {
         List<Plugin> plugins = pluginRepository.getPlugins(ids);
         return startPlugins(plugins);
     }
 
-    public int startPlugins(Collection<Plugin> plugins) {
-        List<Runnable> runnables = new ArrayList<>(plugins.size());
+    public Mono<Integer> startPlugins(Collection<Plugin> plugins) {
+        List<Mono<Void>> startMonos = new ArrayList<>(plugins.size());
         for (Plugin plugin : plugins) {
-            runnables.add(plugin::start);
+            startMonos.add(plugin.start());
         }
-        ThrowableUtil.delayError(runnables, "Caught errors while starting plugins");
-        return plugins.size();
+        return Mono.whenDelayError(startMonos)
+                .onErrorResume(t -> Mono
+                        .error(new RuntimeException("Caught errors while starting plugins")))
+                .thenReturn(plugins.size());
     }
 
-    public int stopPlugins() {
+    public Mono<Integer> stopPlugins() {
         Collection<Plugin> plugins = pluginRepository.getPlugins();
         return stopPlugins(plugins);
     }
 
-    public int stopPlugins(Set<String> ids) {
+    public Mono<Integer> stopPlugins(Set<String> ids) {
         List<Plugin> plugins = pluginRepository.getPlugins(ids);
         return stopPlugins(plugins);
     }
 
-    public int stopPlugins(Collection<Plugin> plugins) {
-        List<Runnable> runnables = new ArrayList<>(plugins.size());
+    public Mono<Integer> stopPlugins(Collection<Plugin> plugins) {
+        List<Mono<Void>> stopMonos = new ArrayList<>(plugins.size());
         for (Plugin plugin : plugins) {
-            runnables.add(plugin::stop);
+            stopMonos.add(plugin.stop());
         }
-        ThrowableUtil.delayError(runnables, "Caught errors while stopping plugins");
-        return plugins.size();
+        return Mono.whenDelayError(stopMonos)
+                .onErrorResume(t -> Mono
+                        .error(new RuntimeException("Caught errors while stopping plugins")))
+                .thenReturn(plugins.size());
     }
 
-    public int resumePlugins(Set<String> ids) {
+    public Mono<Integer> resumePlugins(Set<String> ids) {
         List<Plugin> plugins = pluginRepository.getPlugins(ids);
-        List<Runnable> runnables = new ArrayList<>(plugins.size());
+        List<Mono<Void>> resumeMonos = new ArrayList<>(plugins.size());
         for (Plugin plugin : plugins) {
-            runnables.add(plugin::resume);
+            resumeMonos.add(plugin.resume());
         }
-        ThrowableUtil.delayError(runnables, "Caught errors while resuming plugins");
-        return plugins.size();
+        return Mono.whenDelayError(resumeMonos)
+                .onErrorResume(t -> Mono
+                        .error(new RuntimeException("Caught errors while resuming plugins")))
+                .thenReturn(plugins.size());
     }
 
-    public int pausePlugins(Set<String> ids) {
+    public Mono<Integer> pausePlugins(Set<String> ids) {
         List<Plugin> plugins = pluginRepository.getPlugins(ids);
-        List<Runnable> runnables = new ArrayList<>(plugins.size());
+        List<Mono<Void>> pauseMonos = new ArrayList<>(plugins.size());
         for (Plugin plugin : plugins) {
-            runnables.add(plugin::pause);
+            pauseMonos.add(plugin.pause());
         }
-        ThrowableUtil.delayError(runnables, "Caught errors while pausing plugins");
-        return plugins.size();
+        return Mono.whenDelayError(pauseMonos)
+                .onErrorResume(t -> Mono
+                        .error(new RuntimeException("Caught errors while pausing plugins")))
+                .thenReturn(plugins.size());
     }
 
-    public void deletePlugins(Set<String> ids, boolean deleteLocalFiles) {
+    public Mono<Void> deletePlugins(Set<String> ids, boolean deleteLocalFiles) {
         List<Plugin> plugins = pluginRepository.removePlugins(ids);
-        stopPlugins(plugins);
-        if (deleteLocalFiles) {
+        return stopPlugins(plugins).then(Mono.fromRunnable(() -> {
+            if (!deleteLocalFiles) {
+                return;
+            }
             for (Plugin plugin : plugins) {
                 try {
                     Path path = plugin.descriptor()
@@ -604,7 +612,7 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
                     // ignored
                 }
             }
-        }
+        }));
     }
 
     public <T extends ExtensionPoint> boolean hasRunningExtensions(Class<T> extensionPointClass) {
@@ -651,8 +659,7 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
             @Nullable R initialValue,
             SequentialExtensionPointInvoker<T, R> invoker) {
         List<T> extensionPoints = pluginRepository.getExtensionPoints(extensionPointClass);
-        int size = extensionPoints.size();
-        if (size == 0) {
+        if (extensionPoints.isEmpty()) {
             return initialValue == null
                     ? Mono.empty()
                     : Mono.just(initialValue);

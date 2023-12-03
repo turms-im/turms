@@ -38,7 +38,6 @@ import im.turms.server.common.domain.session.service.UserStatusService;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.plugin.TurmsExtension;
-import im.turms.server.common.infra.time.DurationConst;
 import im.turms.server.common.infra.tracing.TracingCloseableContext;
 import im.turms.server.common.infra.tracing.TracingContext;
 import im.turms.service.access.servicerequest.dto.RequestHandlerResult;
@@ -59,19 +58,19 @@ public class NotificationPusher extends TurmsExtension implements RequestHandler
     private List<String> deviceTokenFieldNames;
 
     @Override
-    protected void onStarted() {
+    protected Mono<Void> onStarted() {
         PushNotificationProperties properties = loadProperties(PushNotificationProperties.class);
         manager = new PushNotificationManager(properties);
         userService = getContext().getBean(UserService.class);
         userStatusService = getContext().getBean(UserStatusService.class);
 
         deviceTokenFieldNames = manager.getDeviceTokenFieldNames();
+        return Mono.empty();
     }
 
     @Override
-    protected void onStopped() {
-        manager.close()
-                .block(DurationConst.ONE_MINUTE);
+    protected Mono<Void> onStopped() {
+        return manager.close();
     }
 
     @Override

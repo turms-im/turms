@@ -25,12 +25,14 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.context.ApplicationContext;
+import reactor.core.publisher.Mono;
 
 import im.turms.server.common.access.admin.web.HttpRequestDispatcher;
 import im.turms.server.common.infra.lang.ClassUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
+import im.turms.server.common.infra.reactor.TaskScheduler;
 
 /**
  * @author James Chen
@@ -38,6 +40,8 @@ import im.turms.server.common.infra.property.TurmsPropertiesManager;
 public abstract class TurmsExtension {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TurmsExtension.class);
+
+    private final TaskScheduler taskScheduler = new TaskScheduler();
 
     @Setter(AccessLevel.PACKAGE)
     @Getter
@@ -93,76 +97,79 @@ public abstract class TurmsExtension {
         return extensionPointClasses;
     }
 
-    synchronized void start() {
+    Mono<Void> start() {
         if (initialized || started) {
-            return;
+            return Mono.empty();
         }
-        onStarted();
-        initialized = true;
-        started = true;
-        running = true;
-        LOGGER.info("The extension ({}) of the plugin ({}) has been started",
-                getClass().getName(),
-                plugin.descriptor()
-                        .getId());
+        return taskScheduler.schedule(Mono.defer(this::onStarted)
+                .doOnSuccess(unused -> {
+                    initialized = true;
+                    started = true;
+                    running = true;
+                    LOGGER.info("The extension ({}) of the plugin ({}) has been started",
+                            getClass().getName(),
+                            plugin.descriptor()
+                                    .getId());
+                }));
     }
 
-    synchronized void stop() {
+    Mono<Void> stop() {
         if (!started) {
-            return;
+            return Mono.empty();
         }
-        try {
-            onStopped();
-        } finally {
-            running = false;
-            started = false;
-            LOGGER.info("The extension ({}) of the plugin ({}) has been stopped",
-                    getClass().getName(),
-                    plugin.descriptor()
-                            .getId());
-        }
+        return taskScheduler.schedule(Mono.defer(this::onStopped)
+                .doFinally(signalType -> {
+                    running = false;
+                    started = false;
+                    LOGGER.info("The extension ({}) of the plugin ({}) has been stopped",
+                            getClass().getName(),
+                            plugin.descriptor()
+                                    .getId());
+                }));
     }
 
-    synchronized void resume() {
+    Mono<Void> resume() {
         if (!started || running) {
-            return;
+            return Mono.empty();
         }
-        try {
-            onResumed();
-        } finally {
-            running = true;
-            LOGGER.info("The extension ({}) of the plugin ({}) has been resumed",
-                    getClass().getName(),
-                    plugin.descriptor()
-                            .getId());
-        }
+        return taskScheduler.schedule(Mono.defer(this::onResumed)
+                .doOnSuccess(signalType -> {
+                    running = true;
+                    LOGGER.info("The extension ({}) of the plugin ({}) has been resumed",
+                            getClass().getName(),
+                            plugin.descriptor()
+                                    .getId());
+                }));
     }
 
-    synchronized void pause() {
+    Mono<Void> pause() {
         if (!running) {
-            return;
+            return Mono.empty();
         }
-        try {
-            onPaused();
-        } finally {
-            running = false;
-            LOGGER.info("The extension ({}) of the plugin ({}) has been paused",
-                    getClass().getName(),
-                    plugin.descriptor()
-                            .getId());
-        }
+        return taskScheduler.schedule(Mono.defer(this::onPaused)
+                .doFinally(signalType -> {
+                    running = false;
+                    LOGGER.info("The extension ({}) of the plugin ({}) has been paused",
+                            getClass().getName(),
+                            plugin.descriptor()
+                                    .getId());
+                }));
     }
 
-    protected void onStarted() {
+    protected Mono<Void> onStarted() {
+        return Mono.empty();
     }
 
-    protected void onStopped() {
+    protected Mono<Void> onStopped() {
+        return Mono.empty();
     }
 
-    protected void onResumed() {
+    protected Mono<Void> onResumed() {
+        return Mono.empty();
     }
 
-    protected void onPaused() {
+    protected Mono<Void> onPaused() {
+        return Mono.empty();
     }
 
 }

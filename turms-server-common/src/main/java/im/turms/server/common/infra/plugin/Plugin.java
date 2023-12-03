@@ -22,8 +22,8 @@ import java.util.List;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
+import reactor.core.publisher.Mono;
 
-import im.turms.server.common.infra.exception.ThrowableUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 
@@ -48,109 +48,99 @@ public abstract sealed class Plugin permits JavaPlugin, JsPlugin {
     private final PluginDescriptor descriptor;
     private final List<TurmsExtension> extensions;
 
-    void start() {
-        List<Runnable> runnables = new ArrayList<>(extensions.size());
+    Mono<Void> start() {
+        List<Mono<Void>> startMonos = new ArrayList<>(extensions.size());
         for (TurmsExtension extension : extensions) {
-            runnables.add(() -> {
-                try {
-                    extension.start();
-                } catch (Exception | LinkageError e) {
-                    throw new RuntimeException(
+            startMonos.add(extension.start()
+                    .onErrorResume(t -> Mono.error(new RuntimeException(
                             "Caught an error while starting the extension: "
                                     + extension.getClass()
                                             .getName(),
-                            e);
-                }
-            });
+                            t))));
         }
-        ThrowableUtil.delayError(runnables,
-                "Caught errors while starting extensions of the plugin: "
-                        + descriptor.getId());
-        LOGGER.info("The plugin ({}) has been started", descriptor.getId());
+        return Mono.whenDelayError(startMonos)
+                .onErrorResume(t -> Mono.error(new RuntimeException(
+                        "Caught errors while starting the extensions of the plugin: "
+                                + descriptor.getId())))
+                .doOnSuccess(
+                        unused -> LOGGER.info("The extensions of the plugin ({}) have been started",
+                                descriptor.getId()));
     }
 
-    void stop() {
-        List<Runnable> runnables = new ArrayList<>(extensions.size());
+    Mono<Void> stop() {
+        List<Mono<Void>> stopMonos = new ArrayList<>(extensions.size());
         for (TurmsExtension extension : extensions) {
-            runnables.add(() -> {
-                try {
-                    extension.stop();
-                } catch (Exception | LinkageError e) {
-                    throw new RuntimeException(
+            stopMonos.add(extension.stop()
+                    .onErrorResume(t -> Mono.error(new RuntimeException(
                             "Caught an error while stopping the extension: "
                                     + extension.getClass()
                                             .getName(),
-                            e);
-                }
-            });
+                            t))));
         }
-        RuntimeException stopExtensionsException = null;
-        RuntimeException closeContextException = null;
-        try {
-            ThrowableUtil.delayError(runnables, "Caught errors while stopping extensions");
-        } catch (RuntimeException e) {
-            stopExtensionsException = e;
-        }
-        try {
-            closeContext();
-        } catch (RuntimeException e) {
-            closeContextException = e;
-        }
-        if (stopExtensionsException != null || closeContextException != null) {
-            RuntimeException e = new RuntimeException(
-                    "Caught errors while stopping the plugin: "
-                            + descriptor.getId());
-            if (stopExtensionsException != null) {
-                e.addSuppressed(stopExtensionsException);
-            }
-            if (closeContextException != null) {
-                e.addSuppressed(closeContextException);
-            }
-            throw e;
-        }
-        LOGGER.info("The plugin ({}) has been stopped", descriptor.getId());
+        return Mono.whenDelayError(stopMonos)
+                .materialize()
+                .flatMap(signal -> {
+                    Throwable stopExtensionsException = signal.getThrowable();
+                    RuntimeException closeContextException = null;
+                    try {
+                        closeContext();
+                    } catch (RuntimeException e) {
+                        closeContextException = e;
+                    }
+                    if (stopExtensionsException != null || closeContextException != null) {
+                        RuntimeException e = new RuntimeException(
+                                "Caught errors while stopping the extensions of the plugin: "
+                                        + descriptor.getId());
+                        if (stopExtensionsException != null) {
+                            e.addSuppressed(stopExtensionsException);
+                        }
+                        if (closeContextException != null) {
+                            e.addSuppressed(closeContextException);
+                        }
+                        return Mono.error(e);
+                    }
+                    LOGGER.info("The extensions of the plugin ({}) have been stopped",
+                            descriptor.getId());
+                    return Mono.empty();
+                });
     }
 
-    void resume() {
-        List<Runnable> runnables = new ArrayList<>(extensions.size());
+    Mono<Void> resume() {
+        List<Mono<Void>> resumeMonos = new ArrayList<>(extensions.size());
         for (TurmsExtension extension : extensions) {
-            runnables.add(() -> {
-                try {
-                    extension.resume();
-                } catch (Exception | LinkageError e) {
-                    throw new RuntimeException(
+            resumeMonos.add(extension.resume()
+                    .onErrorResume(t -> Mono.error(new RuntimeException(
                             "Caught an error while resuming the extension: "
                                     + extension.getClass()
                                             .getName(),
-                            e);
-                }
-            });
+                            t))));
         }
-        ThrowableUtil.delayError(runnables,
-                "Caught errors while resuming extensions of the plugin: "
-                        + descriptor.getId());
-        LOGGER.info("The plugin ({}) has been resumed", descriptor.getId());
+        return Mono.whenDelayError(resumeMonos)
+                .onErrorResume(t -> Mono.error(new RuntimeException(
+                        "Caught errors while resuming the extensions of the plugin: "
+                                + descriptor.getId())))
+                .doOnSuccess(
+                        unused -> LOGGER.info("The extensions of the plugin ({}) have been resumed",
+                                descriptor.getId()));
     }
 
-    void pause() {
-        List<Runnable> runnables = new ArrayList<>(extensions.size());
+    Mono<Void> pause() {
+        List<Mono<Void>> pauseMonos = new ArrayList<>(extensions.size());
         for (TurmsExtension extension : extensions) {
-            runnables.add(() -> {
-                try {
-                    extension.pause();
-                } catch (Exception | LinkageError e) {
-                    throw new RuntimeException(
+            pauseMonos.add(extension.pause()
+                    .onErrorResume(t -> Mono.error(new RuntimeException(
                             "Caught an error while pausing the extension: "
                                     + extension.getClass()
                                             .getName(),
-                            e);
-                }
-            });
+                            t))));
         }
-        ThrowableUtil.delayError(runnables,
-                "Caught errors while pausing extensions of the plugin: "
-                        + descriptor.getId());
-        LOGGER.info("The plugin ({}) has been paused", descriptor.getId());
+        return Mono.whenDelayError(pauseMonos)
+                .onErrorResume(t -> Mono.error(new RuntimeException(
+                        "Caught errors while pausing the extensions of the plugin: "
+                                + descriptor.getId())))
+                .doOnSuccess(
+                        unused -> LOGGER.info("The extensions of the plugin ({}) have been paused",
+                                descriptor.getId()));
     }
 
     abstract void closeContext();
