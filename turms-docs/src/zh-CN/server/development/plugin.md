@@ -1,5 +1,11 @@
 # 自定义插件
 
+## 基本概念
+
+* 插件（Plugin）：插件是Turms服务端与插件交互的入口，用于描述插件信息，并指定该插件实现了哪些拓展。
+* 拓展（Extension）：拓展负责实现拓展点，一个拓展可以实现多个拓展点。
+* 拓展点（Extension Point）：Turms服务端提供的拓展点接口类定义了拓展可以实现哪些接口，插件开发者开发的拓展可以实现这些拓展点接口类。Turms服务端在执行时，会在对应的时机调用这些拓展点接口。
+
 ## 插件拓展点列表
 
 | 类别                       | 拓展点                         | 描述                                                         |
@@ -29,6 +35,68 @@
   拓展资料：[插件相关API接口](https://turms-im.github.io/docs/zh-CN/server/development/plugin#%E6%8F%92%E4%BB%B6%E7%9B%B8%E5%85%B3api%E6%8E%A5%E5%8F%A3)
 
 * 通过turms-admin加载（基于“通过HTTP加载”实现）：在`/cluster/plugin`页面，管理员也能通过UI的方式上传Java插件与JavaScript插件。
+
+## 拓展的生命周期
+
+```mermaid
+stateDiagram-v2
+	[*] --> Loaded: Load
+	state start_if_succeed <<choice>>
+	state resume_if_succeed <<choice>>
+
+	Loaded --> start_if_succeed: Start
+	start_if_succeed --> Started: If succeed
+	start_if_succeed --> Loaded: If fail<br>(Throw or Time out)
+	Loaded --> Stopped: Stop
+	Started --> Paused: Pause
+	Paused --> resume_if_succeed: Resume
+	resume_if_succeed --> Started: If succeed
+	resume_if_succeed --> Paused: If fail<br>(Throw or Time out)
+	Started --> Stopped: Stop
+	Paused --> Stopped: Stop
+
+	Stopped --> [*]
+```
+
+下表格“相关拓展的钩子接口”列中：
+
+* “执行成功”指函数异步响应成功，而非抛异常或执行超时。
+
+* “执行完成”指函数异步响应成功、抛异常或执行超时。
+
+  读者注意区分二者。
+
+### 主要状态
+
+| 状态              | 相关拓展的钩子接口                                           | 描述                                                         | 触发事件                                                     |
+| ----------------- | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| 已载入（Loaded）  | 无                                                           | 插件已经载入内存                                             | 1. 服务端启动时，会自动加载并启动拓展<br />2. 通过管理员HTTP接口加载插件 |
+| 已启动（Started） | start：当`start`函数执行成功时，拓展会进入`started`状态。<br />resume：当`resume`函数执行成功时，拓展会进入`started`状态。 | 插件已经被启动。<br />只有启动的、且未暂停的拓展的拓展点会被执行 | 1. 服务端启动时，会自动加载并启动拓展<br />2. 通过管理员HTTP接口启动插件 |
+| 已暂停（Paused）  | pause：当`pause`函数执行完成时，拓展会进入`paused`状态       | 插件已经被暂停。<br />暂停的拓展的拓展点不会被执行。         | 1. 通过管理员HTTP接口加载插件                                |
+| 已停止（Stopped） | stop：当`stop`函数执行完成时，拓展会进入`stopped`状态        | 插件已经被停止。<br />被停止的拓展不能再次启动，其拓展点也不会被执行 | 1. 服务端关闭时，会自动关闭拓展<br />2. 通过管理员HTTP接口加载插件 |
+
+### 主要拓展的生命周期钩子接口
+
+| 钩子接口 | 执行条件                                        | 可执行次数           |
+| -------- | ----------------------------------------------- | -------------------- |
+| start    | 仅当拓展处于`loaded`状态时                      | 至多会被执行成功一次 |
+| pause    | 仅当拓展处于`started`状态时                     | 无数次               |
+| resume   | 仅当拓展处于`paused`状态时                      | 无数次               |
+| stop     | 当拓展处于`loaded`、`started`，或`paused`状态时 | 至多会被执行完成一次 |
+
+补充：
+
+* Turms服务端在上述表格的事件触发时，会执行对应的拓展的钩子接口。
+
+  插件开发者在实现拓展时，可以可选地实现拓展的钩子接口，以监听拓展的生命周期并执行自定义逻辑。如在`start`钩子接口中，初始化并建立与自己服务端的网络连接。
+
+* 钩子接口是支持异步执行的。如果是JavaScript实现这些钩子接口时，实现函数可以返回Promise来实现异步逻辑，当然也可以不返回Promise对象。
+
+* Turms服务端会保证一个拓展的所有生命周期钩子接口会异步串行，而非异步并行。
+
+  举例来说，如果一个拓展的`start`正在执行初始化逻辑，而管理员同时又调用HTTP接口尝试停止（Stop）插件的拓展。此时，Turms服务端会保证有且仅有当`start`的异步执行结果返回了、抛异常了，或者超时了，之后的`stop`生命周期钩子接口才会被调用。因此插件开发者不需要担心同一时刻2个或以上钩子同时被执行的场景。
+
+注意：通过Admin HTTP接口加载自定义插件时，插件的拓展是不会被自动启动的，需要管理员再调用`PUT /plugins`接口来启动插件的拓展。
 
 ## 插件实现
 
@@ -136,7 +204,7 @@ Turms服务端支持基于JVM或JavaScript语言的插件实现。
    
    public class MyStorageServiceProvider extends TurmsExtension implements StorageServiceProvider {
        @Override
-       public void onStarted() {
+       public Mono<Void> start() {
            MyPluginProperties properties = loadProperties(MyPluginProperties.class);
            // your business logic
        }
