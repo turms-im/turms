@@ -64,7 +64,7 @@ public class RasaResponser extends TurmsExtension implements RequestHandlerResul
     private Map<Long, RasaClientInfo> idToClientInfo;
 
     @Override
-    public Mono<Void> onStarted() {
+    public Mono<Void> start() {
         return setUp();
     }
 

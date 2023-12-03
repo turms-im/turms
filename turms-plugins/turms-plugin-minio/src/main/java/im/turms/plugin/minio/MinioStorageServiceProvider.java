@@ -161,7 +161,7 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
     }
 
     @Override
-    public Mono<Void> onStarted() {
+    public Mono<Void> start() {
         return setUp();
     }
 

@@ -51,7 +51,7 @@ public abstract sealed class Plugin permits JavaPlugin, JsPlugin {
     Mono<Void> start() {
         List<Mono<Void>> startMonos = new ArrayList<>(extensions.size());
         for (TurmsExtension extension : extensions) {
-            startMonos.add(extension.start()
+            startMonos.add(extension.startExtension()
                     .onErrorResume(t -> Mono.error(new RuntimeException(
                             "Caught an error while starting the extension: "
                                     + extension.getClass()
@@ -70,7 +70,7 @@ public abstract sealed class Plugin permits JavaPlugin, JsPlugin {
     Mono<Void> stop() {
         List<Mono<Void>> stopMonos = new ArrayList<>(extensions.size());
         for (TurmsExtension extension : extensions) {
-            stopMonos.add(extension.stop()
+            stopMonos.add(extension.stopExtension()
                     .onErrorResume(t -> Mono.error(new RuntimeException(
                             "Caught an error while stopping the extension: "
                                     + extension.getClass()
@@ -108,7 +108,7 @@ public abstract sealed class Plugin permits JavaPlugin, JsPlugin {
     Mono<Void> resume() {
         List<Mono<Void>> resumeMonos = new ArrayList<>(extensions.size());
         for (TurmsExtension extension : extensions) {
-            resumeMonos.add(extension.resume()
+            resumeMonos.add(extension.resumeExtension()
                     .onErrorResume(t -> Mono.error(new RuntimeException(
                             "Caught an error while resuming the extension: "
                                     + extension.getClass()
@@ -127,7 +127,7 @@ public abstract sealed class Plugin permits JavaPlugin, JsPlugin {
     Mono<Void> pause() {
         List<Mono<Void>> pauseMonos = new ArrayList<>(extensions.size());
         for (TurmsExtension extension : extensions) {
-            pauseMonos.add(extension.pause()
+            pauseMonos.add(extension.pauseExtension()
                     .onErrorResume(t -> Mono.error(new RuntimeException(
                             "Caught an error while pausing the extension: "
                                     + extension.getClass()

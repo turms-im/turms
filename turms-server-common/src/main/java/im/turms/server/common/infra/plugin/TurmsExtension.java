@@ -97,11 +97,11 @@ public abstract class TurmsExtension {
         return extensionPointClasses;
     }
 
-    Mono<Void> start() {
+    Mono<Void> startExtension() {
         if (initialized || started) {
             return Mono.empty();
         }
-        return taskScheduler.schedule(Mono.defer(this::onStarted)
+        return taskScheduler.schedule(Mono.defer(this::start)
                 .doOnSuccess(unused -> {
                     initialized = true;
                     started = true;
@@ -113,11 +113,11 @@ public abstract class TurmsExtension {
                 }));
     }
 
-    Mono<Void> stop() {
+    Mono<Void> stopExtension() {
         if (!started) {
             return Mono.empty();
         }
-        return taskScheduler.schedule(Mono.defer(this::onStopped)
+        return taskScheduler.schedule(Mono.defer(this::stop)
                 .doFinally(signalType -> {
                     running = false;
                     started = false;
@@ -128,11 +128,11 @@ public abstract class TurmsExtension {
                 }));
     }
 
-    Mono<Void> resume() {
+    Mono<Void> resumeExtension() {
         if (!started || running) {
             return Mono.empty();
         }
-        return taskScheduler.schedule(Mono.defer(this::onResumed)
+        return taskScheduler.schedule(Mono.defer(this::resume)
                 .doOnSuccess(signalType -> {
                     running = true;
                     LOGGER.info("The extension ({}) of the plugin ({}) has been resumed",
@@ -142,11 +142,11 @@ public abstract class TurmsExtension {
                 }));
     }
 
-    Mono<Void> pause() {
+    Mono<Void> pauseExtension() {
         if (!running) {
             return Mono.empty();
         }
-        return taskScheduler.schedule(Mono.defer(this::onPaused)
+        return taskScheduler.schedule(Mono.defer(this::pause)
                 .doFinally(signalType -> {
                     running = false;
                     LOGGER.info("The extension ({}) of the plugin ({}) has been paused",
@@ -156,19 +156,19 @@ public abstract class TurmsExtension {
                 }));
     }
 
-    protected Mono<Void> onStarted() {
+    protected Mono<Void> start() {
         return Mono.empty();
     }
 
-    protected Mono<Void> onStopped() {
+    protected Mono<Void> stop() {
         return Mono.empty();
     }
 
-    protected Mono<Void> onResumed() {
+    protected Mono<Void> resume() {
         return Mono.empty();
     }
 
-    protected Mono<Void> onPaused() {
+    protected Mono<Void> pause() {
         return Mono.empty();
     }
 

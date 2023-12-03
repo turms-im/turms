@@ -58,7 +58,7 @@ public class NotificationPusher extends TurmsExtension implements RequestHandler
     private List<String> deviceTokenFieldNames;
 
     @Override
-    protected Mono<Void> onStarted() {
+    protected Mono<Void> start() {
         PushNotificationProperties properties = loadProperties(PushNotificationProperties.class);
         manager = new PushNotificationManager(properties);
         userService = getContext().getBean(UserService.class);
@@ -69,7 +69,7 @@ public class NotificationPusher extends TurmsExtension implements RequestHandler
     }
 
     @Override
-    protected Mono<Void> onStopped() {
+    protected Mono<Void> stop() {
         return manager.close();
     }
 

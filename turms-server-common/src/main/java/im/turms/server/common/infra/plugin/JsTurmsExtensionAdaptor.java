@@ -58,22 +58,22 @@ public class JsTurmsExtensionAdaptor extends TurmsExtension {
     }
 
     @Override
-    protected Mono<Void> onStarted() {
+    protected Mono<Void> start() {
         return execute(onStarted);
     }
 
     @Override
-    protected Mono<Void> onStopped() {
+    protected Mono<Void> stop() {
         return execute(onStopped);
     }
 
     @Override
-    protected Mono<Void> onResumed() {
+    protected Mono<Void> resume() {
         return execute(onResumed);
     }
 
     @Override
-    protected Mono<Void> onPaused() {
+    protected Mono<Void> pause() {
         return execute(onPaused);
     }
 
