@@ -1,6 +1,6 @@
 import { fileURLToPath, URL } from 'node:url';
 import autoprefixer from 'autoprefixer';
-import { defineConfig } from 'vite';
+import { defineConfig, splitVendorChunkPlugin } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import Components from 'unplugin-vue-components/vite';
 import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers';
@@ -49,6 +49,9 @@ export default defineConfig(({mode }) => ({
                 importStyle: false
             })]
         }),
+        // We don't split vendor into more chunks because
+        // it will cause chunks to run in wrong order.
+        splitVendorChunkPlugin(),
         isReportMode
             ? visualizer({
                 filename: './build/.cache/stats.html',
