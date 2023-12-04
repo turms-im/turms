@@ -31,6 +31,14 @@ import im.turms.service.access.servicerequest.dto.RequestHandlerResult;
  */
 public interface RequestHandlerResultHandler extends ExtensionPoint {
 
+    /**
+     * @return 1. Return a {@link Mono} that completes without emitting any request handler result
+     *         if you don't want to pass the client request result to the next handler and want to
+     *         stop notification propagation.
+     *         <p>
+     *         2. Return a {@link Mono} that emits a request handler result if you want to pass the
+     *         client request to the next handler.
+     */
     default Mono<RequestHandlerResult> beforeNotify(
             @NotNull RequestHandlerResult result,
             @NotNull Long requesterId,
@@ -38,6 +46,14 @@ public interface RequestHandlerResultHandler extends ExtensionPoint {
         return Mono.empty();
     }
 
+    /**
+     * @return 1. Return a {@link Mono} that completes without emitting any request handler result
+     *         if you don't want to pass the client request result to the next handler and want to
+     *         stop notification propagation.
+     *         <p>
+     *         2. Return a {@link Mono} that emits a request handler result if you want to pass the
+     *         client request to the next handler.
+     */
     default Mono<RequestHandlerResult> afterNotify(
             @NotNull RequestHandlerResult result,
             @NotNull Long requesterId,

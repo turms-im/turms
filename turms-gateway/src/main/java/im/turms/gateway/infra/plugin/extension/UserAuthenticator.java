@@ -30,11 +30,12 @@ import im.turms.server.common.infra.plugin.ExtensionPoint;
 public interface UserAuthenticator extends ExtensionPoint {
 
     /**
-     * @return 1. Return Mono.just(true) if the user is authenticated.
+     * @return 1. Return a {@link Mono} that emits true if the user is authenticated.
      *         <p>
-     *         2. Return Mono.just(false) if the user is unauthenticated.
+     *         2. Return a {@link Mono} that emits false if the user is unauthenticated.
      *         <p>
-     *         3. Return Mono.empty() if the authentication should be processed by the next handler.
+     *         3. Return a {@link Mono} that completes without emitting any value if you want the
+     *         next handler to decide if the user is authenticated or not.
      */
     Mono<Boolean> authenticate(@NotNull UserLoginInfo userLoginInfo);
 

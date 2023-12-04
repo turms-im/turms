@@ -31,7 +31,11 @@ import im.turms.service.access.servicerequest.dto.RequestHandlerResult;
 public interface ClientRequestHandler extends ExtensionPoint {
 
     /**
-     * @return returning Mono.empty() will pass the request to downstream to handle.
+     * @return 1. Return a {@link Mono} that completes without emitting any request handler result
+     *         if you want to pass the original client request to the next handler to handle.
+     *         <p>
+     *         2. Return a {@link Mono} that emits a request handler result as the final handle
+     *         result if you don't want to pass the client request to the next handler to handle.
      */
     Mono<RequestHandlerResult> handle(@NotNull ClientRequest clientRequest);
 

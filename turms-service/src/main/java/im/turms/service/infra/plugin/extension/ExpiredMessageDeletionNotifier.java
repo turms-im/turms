@@ -33,6 +33,13 @@ import im.turms.service.domain.message.po.Message;
  */
 public interface ExpiredMessageDeletionNotifier extends ExtensionPoint {
 
+    /**
+     * @return 1. Return a {@link Mono} that completes without emitting any list, or emits an empty
+     *         list if you don't want to delete any message.
+     *         <p>
+     *         2. Return a {@link Mono} that emits a non-empty list if you want to delete messages
+     *         in the list.
+     */
     Mono<List<Message>> getMessagesToDelete(@NotEmpty List<Message> messages);
 
 }

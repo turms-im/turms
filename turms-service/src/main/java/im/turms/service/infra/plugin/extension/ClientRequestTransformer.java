@@ -30,7 +30,11 @@ import im.turms.service.access.servicerequest.dto.ClientRequest;
 public interface ClientRequestTransformer extends ExtensionPoint {
 
     /**
-     * @return the returned {@link ClientRequest} will be passed to downstream.
+     * @return 1. Return a {@link Mono} that completes without emitting any client request if you
+     *         want to use the initial (original) client request as the final client request.
+     *         <p>
+     *         2. Return a {@link Mono} that emits a client request if you want to pass the client
+     *         request to the next transformer to transform.
      */
     Mono<ClientRequest> transform(@NotNull ClientRequest clientRequest);
 

@@ -26,6 +26,7 @@ import jakarta.validation.constraints.NotNull;
 import reactor.core.publisher.Mono;
 
 import im.turms.server.common.access.admin.web.MediaType;
+import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.exception.NotImplementedException;
 import im.turms.server.common.infra.plugin.ExtensionPoint;
 import im.turms.server.common.infra.time.DateRange;
@@ -44,6 +45,14 @@ public interface StorageServiceProvider extends ExtensionPoint {
         return Mono.error(new NotImplementedException());
     }
 
+    /**
+     * @return 1. Return a {@link Mono} that completes without emitting any value if you want to
+     *         respond the client request with the status code
+     *         {@link ResponseStatusCode#NO_CONTENT}.
+     *         <p>
+     *         2. Return a {@link Mono} that emits a map if you want to respond the client request
+     *         with the map.
+     */
     default Mono<Map<String, String>> queryUserProfilePictureUploadInfo(
             @NotNull Long requesterId,
             @Nullable String resourceName,
@@ -52,6 +61,14 @@ public interface StorageServiceProvider extends ExtensionPoint {
         return Mono.error(new NotImplementedException());
     }
 
+    /**
+     * @return 1. Return a {@link Mono} that completes without emitting any value if you want to
+     *         respond the client request with the status code
+     *         {@link ResponseStatusCode#NO_CONTENT}.
+     *         <p>
+     *         2. Return a {@link Mono} that emits a map if you want to respond the client request
+     *         with the map.
+     */
     default Mono<Map<String, String>> queryUserProfilePictureDownloadInfo(
             @NotNull Long requesterId,
             @NotNull Long userId,
@@ -68,6 +85,14 @@ public interface StorageServiceProvider extends ExtensionPoint {
         return Mono.error(new NotImplementedException());
     }
 
+    /**
+     * @return 1. Return a {@link Mono} that completes without emitting any value if you want to
+     *         respond the client request with the status code
+     *         {@link ResponseStatusCode#NO_CONTENT}.
+     *         <p>
+     *         2. Return a {@link Mono} that emits a map if you want to respond the client request
+     *         with the map.
+     */
     default Mono<Map<String, String>> queryGroupProfilePictureUploadInfo(
             @NotNull Long requesterId,
             @NotNull Long groupId,
@@ -77,6 +102,14 @@ public interface StorageServiceProvider extends ExtensionPoint {
         return Mono.error(new NotImplementedException());
     }
 
+    /**
+     * @return 1. Return a {@link Mono} that completes without emitting any value if you want to
+     *         respond the client request with the status code
+     *         {@link ResponseStatusCode#NO_CONTENT}.
+     *         <p>
+     *         2. Return a {@link Mono} that emits a map if you want to respond the client request
+     *         with the map.
+     */
     default Mono<Map<String, String>> queryGroupProfilePictureDownloadInfo(
             @NotNull Long requesterId,
             @NotNull Long groupId,
@@ -126,6 +159,14 @@ public interface StorageServiceProvider extends ExtensionPoint {
         return Mono.error(new NotImplementedException());
     }
 
+    /**
+     * @return 1. Return a {@link Mono} that completes without emitting any value if you want to
+     *         respond the client request with the status code
+     *         {@link ResponseStatusCode#NO_CONTENT}.
+     *         <p>
+     *         2. Return a {@link Mono} that emits a map if you want to respond the client request
+     *         with the map.
+     */
     default Mono<Map<String, String>> queryMessageAttachmentUploadInfo(
             @NotNull Long requesterId,
             @Nullable String resourceName,
@@ -134,6 +175,14 @@ public interface StorageServiceProvider extends ExtensionPoint {
         return Mono.error(new NotImplementedException());
     }
 
+    /**
+     * @return 1. Return a {@link Mono} that completes without emitting any value if you want to
+     *         respond the client request with the status code
+     *         {@link ResponseStatusCode#NO_CONTENT}.
+     *         <p>
+     *         2. Return a {@link Mono} that emits a map if you want to respond the client request
+     *         with the map.
+     */
     default Mono<Map<String, String>> queryMessageAttachmentUploadInfoInPrivateConversation(
             @NotNull Long requesterId,
             @NotNull Long userId,
@@ -143,6 +192,14 @@ public interface StorageServiceProvider extends ExtensionPoint {
         return Mono.error(new NotImplementedException());
     }
 
+    /**
+     * @return 1. Return a {@link Mono} that completes without emitting any value if you want to
+     *         respond the client request with the status code
+     *         {@link ResponseStatusCode#NO_CONTENT}.
+     *         <p>
+     *         2. Return a {@link Mono} that emits a map if you want to respond the client request
+     *         with the map.
+     */
     default Mono<Map<String, String>> queryMessageAttachmentUploadInfoInGroupConversation(
             @NotNull Long requesterId,
             @NotNull Long groupId,
@@ -152,6 +209,14 @@ public interface StorageServiceProvider extends ExtensionPoint {
         return Mono.error(new NotImplementedException());
     }
 
+    /**
+     * @return 1. Return a {@link Mono} that completes without emitting any value if you want to
+     *         respond the client request with the status code
+     *         {@link ResponseStatusCode#NO_CONTENT}.
+     *         <p>
+     *         2. Return a {@link Mono} that emits a map if you want to respond the client request
+     *         with the map.
+     */
     default Mono<Map<String, String>> queryMessageAttachmentDownloadInfo(
             @NotNull Long requesterId,
             @Nullable Long messageAttachmentIdNum,
@@ -162,12 +227,28 @@ public interface StorageServiceProvider extends ExtensionPoint {
 
     // Message attachment - Info
 
+    /**
+     * @return 1. Return a {@link Mono} that completes without emitting any value if you want to
+     *         respond the client request with the status code
+     *         {@link ResponseStatusCode#NO_CONTENT}.
+     *         <p>
+     *         2. Return a {@link Mono} that emits a list if you want to respond the client request
+     *         with the list.
+     */
     default Mono<List<StorageResourceInfo>> queryMessageAttachmentInfosUploadedByRequester(
             @NotNull Long requesterId,
             @Nullable DateRange creationDateRange) {
         return Mono.error(new NotImplementedException());
     }
 
+    /**
+     * @return 1. Return a {@link Mono} that completes without emitting any value if you want to
+     *         respond the client request with the status code
+     *         {@link ResponseStatusCode#NO_CONTENT}.
+     *         <p>
+     *         2. Return a {@link Mono} that emits a list if you want to respond the client request
+     *         with the list.
+     */
     default Mono<List<StorageResourceInfo>> queryMessageAttachmentInfosInPrivateConversations(
             @NotNull Long requesterId,
             @Nullable Set<Long> userIds,
@@ -176,6 +257,14 @@ public interface StorageServiceProvider extends ExtensionPoint {
         return Mono.error(new NotImplementedException());
     }
 
+    /**
+     * @return 1. Return a {@link Mono} that completes without emitting any value if you want to
+     *         respond the client request with the status code
+     *         {@link ResponseStatusCode#NO_CONTENT}.
+     *         <p>
+     *         2. Return a {@link Mono} that emits a list if you want to respond the client request
+     *         with the list.
+     */
     default Mono<List<StorageResourceInfo>> queryMessageAttachmentInfosInGroupConversations(
             @NotNull Long requesterId,
             @Nullable Set<Long> groupIds,
