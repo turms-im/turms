@@ -74,22 +74,23 @@ public class NotificationPusher extends TurmsExtension implements RequestHandler
     }
 
     @Override
-    public Mono<Void> afterNotify(
+    public Mono<RequestHandlerResult> afterNotify(
             @NotNull RequestHandlerResult result,
             @NotNull Long requesterId,
             @NotNull DeviceType requesterDevice,
             @NotNull Set<Long> offlineRecipientIds) {
+        Mono<RequestHandlerResult> handlerResultMono = Mono.just(result);
         TurmsRequest request = result.dataForRecipients();
         if (request == null || offlineRecipientIds.isEmpty() || deviceTokenFieldNames.isEmpty()) {
-            return Mono.empty();
+            return handlerResultMono;
         }
         // TODO: support other types
         if (request.getKindCase() != TurmsRequest.KindCase.CREATE_MESSAGE_REQUEST) {
-            return Mono.empty();
+            return handlerResultMono;
         }
         CreateMessageRequest createMessageRequest = request.getCreateMessageRequest();
         if (!createMessageRequest.hasText()) {
-            return Mono.empty();
+            return handlerResultMono;
         }
         String text = createMessageRequest.getText();
         return Mono.deferContextual(context -> {
@@ -121,7 +122,7 @@ public class NotificationPusher extends TurmsExtension implements RequestHandler
                                     name))
                             .subscribe())
                     .subscribe();
-            return Mono.empty();
+            return handlerResultMono;
         });
     }
 

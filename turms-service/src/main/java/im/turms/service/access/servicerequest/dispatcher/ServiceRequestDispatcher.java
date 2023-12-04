@@ -427,11 +427,17 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                     notificationByteBuf,
                     recipients);
         }
-        return mono.map(offlineRecipientIds -> pluginManager.invokeExtensionPointsSequentially(
-                RequestHandlerResultHandler.class,
-                RESULT_AFTER_NOTIFY_METHOD,
-                (cur, pre) -> pre.switchIfEmpty(Mono.defer(() -> cur
-                        .afterNotify(result, requesterId, requesterDevice, offlineRecipientIds)))))
+        return mono
+                .map(offlineRecipientIds -> pluginManager.invokeExtensionPointsSequentially(
+                        RequestHandlerResultHandler.class,
+                        RESULT_AFTER_NOTIFY_METHOD,
+                        result,
+                        (
+                                cur,
+                                pre) -> pre.flatMap(handlerResult -> cur.afterNotify(handlerResult,
+                                        requesterId,
+                                        requesterDevice,
+                                        offlineRecipientIds))))
                 .then();
     }
 

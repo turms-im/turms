@@ -38,7 +38,7 @@ public interface RequestHandlerResultHandler extends ExtensionPoint {
         return Mono.empty();
     }
 
-    default Mono<Void> afterNotify(
+    default Mono<RequestHandlerResult> afterNotify(
             @NotNull RequestHandlerResult result,
             @NotNull Long requesterId,
             @NotNull DeviceType requesterDevice,
