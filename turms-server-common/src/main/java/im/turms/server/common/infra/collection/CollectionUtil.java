@@ -191,19 +191,18 @@ public final class CollectionUtil {
     }
 
     public static int getSize(@Nullable Iterable<?> iterable) {
-        if (iterable == null) {
-            return 0;
-        } else if (iterable instanceof Collection<?> collection) {
-            return collection.size();
-        } else if (iterable instanceof Map<?, ?> map) {
-            return map.size();
-        } else {
-            int size = 0;
-            for (Object ignored : iterable) {
-                size++;
+        return switch (iterable) {
+            case null -> 0;
+            case Collection<?> collection -> collection.size();
+            case Map<?, ?> map -> map.size();
+            default -> {
+                int size = 0;
+                for (Object ignored : iterable) {
+                    size++;
+                }
+                yield size;
             }
-            return size;
-        }
+        };
     }
 
     public static <T> boolean isEmpty(@Nullable Collection<T> collection) {

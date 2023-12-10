@@ -17,6 +17,8 @@
 
 package im.turms.server.common.infra.exception;
 
+import jakarta.annotation.Nullable;
+
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.cluster.service.rpc.exception.RpcException;
 import im.turms.server.common.infra.io.ResourceNotFoundException;
@@ -28,27 +30,24 @@ import im.turms.server.common.storage.mongo.exception.DuplicateKeyException;
  */
 public record ThrowableInfo(
         ResponseStatusCode code,
-        String reason
+        @Nullable String reason
 ) {
     public static ThrowableInfo get(Throwable throwable) {
-        if (throwable instanceof ResponseException e) {
-            return new ThrowableInfo(e.getCode(), e.getReason());
-        } else if (throwable instanceof RpcException e) {
-            return new ThrowableInfo(e.getStatusCode(), e.getMessage());
-        } else if (throwable instanceof DuplicateKeyException e) {
+        return switch (throwable) {
+            case ResponseException e -> new ThrowableInfo(e.getCode(), e.getReason());
+            case RpcException e -> new ThrowableInfo(e.getStatusCode(), e.getMessage());
             // We consider DuplicateKeyException as a client error here,
             // because if it is an exception caused by the illegal args provided
             // by the server, it should recover in the upstream rather than
             // passing down DuplicateKeyException
-            return new ThrowableInfo(
-                    ResponseStatusCode.RECORD_CONTAINS_DUPLICATE_KEY,
-                    e.getMessage());
-        } else if (throwable instanceof ResourceNotFoundException e) {
-            return new ThrowableInfo(ResponseStatusCode.RESOURCE_NOT_FOUND, e.getMessage());
-        } else if (throwable instanceof ExtensionPointExecutionException e) {
-            return get(e.getCause());
-        }
-        return new ThrowableInfo(ResponseStatusCode.SERVER_INTERNAL_ERROR, throwable.getMessage());
+            case DuplicateKeyException e ->
+                new ThrowableInfo(ResponseStatusCode.RECORD_CONTAINS_DUPLICATE_KEY, e.getMessage());
+            case ResourceNotFoundException e ->
+                new ThrowableInfo(ResponseStatusCode.RESOURCE_NOT_FOUND, e.getMessage());
+            case ExtensionPointExecutionException e -> get(e.getCause());
+            default ->
+                new ThrowableInfo(ResponseStatusCode.SERVER_INTERNAL_ERROR, throwable.getMessage());
+        };
     }
 
 }

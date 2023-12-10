@@ -471,7 +471,6 @@ public class DiscoveryService implements ClusterService {
             // better maintainability considering possible field changes
             String fieldName = entry.getKey();
             BsonValue value = entry.getValue();
-            // TODO: pattern matching
             // Check status change
             if (fieldName.endsWith(Member.MemberStatus.Fields.lastHeartbeatDate)) {
                 memberToUpdate.getStatus()

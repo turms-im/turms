@@ -38,8 +38,8 @@ public class ValueDecoder {
     private ValueDecoder() {
     }
 
+    @Nullable
     public static Object decode(@Nullable Value value) {
-        // TODO: pattern matching
         if (value == null || value.isNull()) {
             return null;
         } else if (value.isString()) {
@@ -150,26 +150,26 @@ public class ValueDecoder {
     }
 
     public static ScriptExecutionException translateException(Object exception) {
-        if (exception instanceof ScriptExecutionException e) {
-            return e;
-        } else if (exception instanceof PolyglotException e) {
-            ScriptExceptionSource source = e.isHostException()
-                    ? ScriptExceptionSource.HOST
-                    : ScriptExceptionSource.SCRIPT;
-            return new ScriptExecutionException(e, source);
-        } else if (exception instanceof Throwable t) {
-            return new ScriptExecutionException(t, ScriptExceptionSource.HOST);
-        } else if (exception instanceof Value value && value.isException()) {
-            Throwable t;
-            try {
-                t = value.throwException();
-            } catch (Exception e) {
-                t = e;
+        return switch (exception) {
+            case ScriptExecutionException e -> e;
+            case PolyglotException e -> new ScriptExecutionException(
+                    e,
+                    e.isHostException()
+                            ? ScriptExceptionSource.HOST
+                            : ScriptExceptionSource.SCRIPT);
+            case Throwable t -> new ScriptExecutionException(t, ScriptExceptionSource.HOST);
+            case Value value when value.isException() -> {
+                Throwable t;
+                try {
+                    t = value.throwException();
+                } catch (Exception e) {
+                    t = e;
+                }
+                yield new ScriptExecutionException(t, ScriptExceptionSource.SCRIPT);
             }
-            return new ScriptExecutionException(t, ScriptExceptionSource.SCRIPT);
-        } else {
-            return new ScriptExecutionException(exception.toString(), ScriptExceptionSource.SCRIPT);
-        }
+            default ->
+                new ScriptExecutionException(exception.toString(), ScriptExceptionSource.SCRIPT);
+        };
     }
 
 }

@@ -53,45 +53,47 @@ public final class BsonValueEncoder {
     }
 
     public static BsonValue encodeValue(Object value) {
-        if (value instanceof Collection<?> values) {
-            int size = values.size();
-            List<BsonValue> list = new ArrayList<>(size);
-            for (Object val : values) {
-                list.add(encodeSingleValue(val));
-            }
-            return BsonArrayUtil.newArray(list);
-        }
-        if (value instanceof Map<?, ?> map) {
-            int size = map.size();
-            Object key;
-            BsonDocument document = new BsonDocument(CollectionUtil.getMapCapability(size));
-            for (Map.Entry<?, ?> entry : map.entrySet()) {
-                key = entry.getKey();
-                if (key instanceof String str) {
-                    document.put(str, encodeValue(entry.getValue()));
-                } else if (key instanceof Number number) {
-                    document.put(number.toString(), encodeValue(entry.getValue()));
-                } else {
-                    throw new IllegalArgumentException(
-                            "Expecting the map key to be a string or number, but got: "
-                                    + key);
+        return switch (value) {
+            case Collection<?> values -> {
+                int size = values.size();
+                List<BsonValue> list = new ArrayList<>(size);
+                for (Object val : values) {
+                    list.add(encodeSingleValue(val));
                 }
+                yield BsonArrayUtil.newArray(list);
             }
-            return document;
-        }
-        if (value instanceof byte[] bytes) {
-            return new BsonBinary(bytes);
-        }
-        Class<?> clazz = value.getClass();
-        if (clazz.isArray()) {
-            int size = Array.getLength(value);
-            List<BsonValue> list = new ArrayList<>(size);
-            for (int i = 0; i < size; i++) {
-                list.add(encodeSingleValue(Array.get(value, i)));
+            case Map<?, ?> map -> {
+                int size = map.size();
+                Object key;
+                BsonDocument document = new BsonDocument(CollectionUtil.getMapCapability(size));
+                for (Map.Entry<?, ?> entry : map.entrySet()) {
+                    key = entry.getKey();
+                    if (key instanceof String str) {
+                        document.put(str, encodeValue(entry.getValue()));
+                    } else if (key instanceof Number number) {
+                        document.put(number.toString(), encodeValue(entry.getValue()));
+                    } else {
+                        throw new IllegalArgumentException(
+                                "Expecting the map key to be a string or number, but got: "
+                                        + key);
+                    }
+                }
+                yield document;
             }
-            return BsonArrayUtil.newArray(list);
-        }
-        return encodeSingleValue(value);
+            case byte[] bytes -> new BsonBinary(bytes);
+            default -> {
+                Class<?> clazz = value.getClass();
+                if (clazz.isArray()) {
+                    int size = Array.getLength(value);
+                    List<BsonValue> list = new ArrayList<>(size);
+                    for (int i = 0; i < size; i++) {
+                        list.add(encodeSingleValue(Array.get(value, i)));
+                    }
+                    yield BsonArrayUtil.newArray(list);
+                }
+                yield encodeSingleValue(value);
+            }
+        };
     }
 
     public static BsonArray encodeValuesAsStrings(Collection<? extends Enum<?>> collection) {
@@ -103,59 +105,37 @@ public final class BsonValueEncoder {
     }
 
     public static BsonValue encodeSingleValue(@Nullable Object value) {
-        if (value == null) {
-            return BsonNull.VALUE;
-        }
-        if (value instanceof BsonValue val) {
-            return val;
-        }
-        if (value instanceof Boolean val) {
-            return val
+        return switch (value) {
+            case null -> BsonNull.VALUE;
+            case Byte val -> new BsonInt32(val);
+            case Short val -> new BsonInt32(val);
+            case Integer val -> new BsonInt32(val);
+            case Long val -> new BsonInt64(val);
+            case Float val -> new BsonDouble(val);
+            case Double val -> new BsonDouble(val);
+            case Character val -> new BsonString(val.toString());
+            case Boolean val -> val
                     ? BsonBoolean.TRUE
                     : BsonBoolean.FALSE;
-        }
-        if (value instanceof Long val) {
-            return new BsonInt64(val);
-        }
-        if (value instanceof Integer val) {
-            return new BsonInt32(val);
-        }
-        if (value instanceof String val) {
-            return new BsonString(val);
-        }
-        if (value instanceof Date val) {
-            return new BsonDateTime(val.getTime());
-        }
-        if (value instanceof Byte val) {
-            return new BsonInt32(val);
-        }
-        if (value instanceof Short val) {
-            return new BsonInt32(val);
-        }
-        if (value instanceof Float val) {
-            return new BsonDouble(val);
-        }
-        if (value instanceof Double val) {
-            return new BsonDouble(val);
-        }
-        if (value instanceof Character val) {
-            return new BsonString(val.toString());
-        }
-        if (value instanceof byte[] val) {
-            return new BsonBinary(val);
-        }
-        Class<?> clazz = value.getClass();
-        if (clazz.isEnum()) {
-            Enum<?> element = (Enum<?>) value;
-            return new BsonInt32(element.ordinal());
-        }
-        EncoderContext encoderContext = EncoderContext.builder()
-                .build();
-        BsonDocument document = new BsonDocument();
-        BsonWriter writer = new BsonDocumentWriter(document);
-        EntityCodec codec = (EntityCodec) CodecPool.CODEC_REGISTRY.get(clazz);
-        codec.encode(writer, value, encoderContext);
-        return document;
+            case String val -> new BsonString(val);
+            case Date val -> new BsonDateTime(val.getTime());
+            case byte[] val -> new BsonBinary(val);
+            case BsonValue val -> val;
+            default -> {
+                Class<?> clazz = value.getClass();
+                if (clazz.isEnum()) {
+                    Enum<?> element = (Enum<?>) value;
+                    yield new BsonInt32(element.ordinal());
+                }
+                EncoderContext encoderContext = EncoderContext.builder()
+                        .build();
+                BsonDocument document = new BsonDocument();
+                BsonWriter writer = new BsonDocumentWriter(document);
+                EntityCodec codec = (EntityCodec) CodecPool.CODEC_REGISTRY.get(clazz);
+                codec.encode(writer, value, encoderContext);
+                yield document;
+            }
+        };
     }
 
 }

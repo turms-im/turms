@@ -154,43 +154,48 @@ public final class JsonUtil {
     }
 
     private static int estimateNonRecordSize(Object value) {
-        int size = 0;
-        if (value instanceof Iterable<?> iterable) {
-            for (Object element : iterable) {
-                size += estimateSize(element);
+        return switch (value) {
+            case Iterable<?> iterable -> {
+                int size = 0;
+                for (Object element : iterable) {
+                    size += estimateSize(element);
+                }
+                yield size;
             }
-        } else if (value.getClass()
-                .isArray()) {
-            if (value instanceof byte[] array) {
-                size += array.length;
-            } else if (value instanceof Object[] array) {
+            case Map<?, ?> map -> {
+                int size = 0;
+                for (Map.Entry<?, ?> entry : map.entrySet()) {
+                    size += entry.getKey() instanceof String str
+                            ? StringUtil.getLength(str)
+                            : 16;
+                    Object entryValue = entry.getValue();
+                    size += estimateSize(entryValue);
+                    size += ESTIMATED_JSON_FIELD_METADATA_SIZE;
+                }
+                yield size;
+            }
+            case Date ignored -> DateUtil.DATE_TIME_LENGTH;
+            case String str -> StringUtil.getLength(str);
+            case byte[] array -> array.length;
+            case Object[] array -> {
+                int size = 0;
                 for (Object element : array) {
                     size += estimateSize(element);
                 }
-            } else {
-                // We don't support other array types now because we don't use them
-                LOGGER.warn("Unknown array type: "
-                        + value.getClass()
-                                .getName());
+                yield size;
             }
-        } else if (value instanceof Map<?, ?> map) {
-            for (Map.Entry<?, ?> entry : map.entrySet()) {
-                size += entry.getKey() instanceof String str
-                        ? StringUtil.getLength(str)
-                        : 16;
-                Object entryValue = entry.getValue();
-                size += estimateSize(entryValue);
-                size += ESTIMATED_JSON_FIELD_METADATA_SIZE;
+            default -> {
+                if (value.getClass()
+                        .isArray()) {
+                    // We don't support other array types now because we don't use them
+                    LOGGER.warn("Unknown array type: "
+                            + value.getClass()
+                                    .getName());
+                }
+                // We don't use "String.valueOf(val).length()" for better performance
+                yield 16;
             }
-        } else if (value instanceof Date) {
-            size += DateUtil.DATE_TIME_LENGTH;
-        } else if (value instanceof String str) {
-            size += StringUtil.getLength(str);
-        } else {
-            // We don't use "String.valueOf(val).length()" for better performance
-            size += 16;
-        }
-        return size;
+        };
     }
 
     private static RecordMetadata getRecordMetadata(Object value) {

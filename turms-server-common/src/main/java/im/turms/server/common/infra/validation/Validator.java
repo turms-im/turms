@@ -40,20 +40,15 @@ public final class Validator {
     }
 
     public static boolean isFalsy(@Nullable Object item) {
-        if (item == null) {
-            return true;
-        }
-        if (item instanceof String str) {
-            return str.isEmpty();
-        } else if (item instanceof Collection<?> collection) {
-            return collection.isEmpty();
-        } else if (item.getClass()
-                .isArray()) {
-            return Array.getLength(item) <= 0;
-        } else if (item instanceof Map<?, ?> map) {
-            return map.isEmpty();
-        }
-        return false;
+        return switch (item) {
+            case null -> true;
+            case String str -> str.isEmpty();
+            case Collection<?> collection -> collection.isEmpty();
+            case Map<?, ?> map -> map.isEmpty();
+            default -> item.getClass()
+                    .isArray()
+                    && Array.getLength(item) == 0;
+        };
     }
 
     public static boolean isTruthy(@Nullable Object item) {

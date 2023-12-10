@@ -290,7 +290,6 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
         };
         BiPredicate<Class<?>, Field> customIndexFilter = (entityClass, field) -> {
             String fieldName = field.getName();
-            // TODO: pattern matching
             if (entityClass == Admin.class) {
                 return isCustomIndexEnabled.test(fieldName,
                         mongoProperties.getAdmin()

@@ -159,48 +159,34 @@ public final class ByteBufUtil {
     }
 
     public static ByteBuf writeObject(Object obj) {
-        if (obj instanceof ByteBuf element) {
-            return element;
-        }
-        if (obj instanceof Byte element) {
-            return getPooledPreferredByteBuffer(element.intValue());
-        }
-        if (obj instanceof Short element) {
-            return PooledByteBufAllocator.DEFAULT.directBuffer(Short.BYTES)
+        return switch (obj) {
+            case ByteBuf element -> element;
+            case Byte element -> getPooledPreferredByteBuffer(element.intValue());
+            case Short element -> PooledByteBufAllocator.DEFAULT.directBuffer(Short.BYTES)
                     .writeShort(element);
-        }
-        if (obj instanceof Integer element) {
-            return getPooledPreferredIntegerBuffer(element);
-        }
-        if (obj instanceof Long element) {
-            return PooledByteBufAllocator.DEFAULT.directBuffer(Long.BYTES)
+            case Integer element -> getPooledPreferredIntegerBuffer(element);
+            case Long element -> PooledByteBufAllocator.DEFAULT.directBuffer(Long.BYTES)
                     .writeLong(element);
-        }
-        if (obj instanceof String element) {
-            byte[] bytes = StringUtil.getUtf8Bytes(element);
-            return PooledByteBufAllocator.DEFAULT.directBuffer(bytes.length)
-                    .writeBytes(bytes);
-        }
-        if (obj instanceof Float element) {
-            return PooledByteBufAllocator.DEFAULT.directBuffer(Float.BYTES)
+            case String element -> {
+                byte[] bytes = StringUtil.getUtf8Bytes(element);
+                yield PooledByteBufAllocator.DEFAULT.directBuffer(bytes.length)
+                        .writeBytes(bytes);
+            }
+            case Float element -> PooledByteBufAllocator.DEFAULT.directBuffer(Float.BYTES)
                     .writeFloat(element);
-        }
-        if (obj instanceof Double element) {
-            return PooledByteBufAllocator.DEFAULT.directBuffer(Double.BYTES)
+            case Double element -> PooledByteBufAllocator.DEFAULT.directBuffer(Double.BYTES)
                     .writeDouble(element);
-        }
-        if (obj instanceof Character element) {
-            return PooledByteBufAllocator.DEFAULT.directBuffer(Character.BYTES)
+            case Character element -> PooledByteBufAllocator.DEFAULT.directBuffer(Character.BYTES)
                     .writeChar(element);
-        }
-        if (obj instanceof Boolean element) {
-            return getPooledPreferredByteBuffer(element
+            case Boolean element -> getPooledPreferredByteBuffer(element
                     ? 1
                     : 0);
-        }
-        throw new IllegalArgumentException(
-                "Could not serialize the unknown value: "
-                        + obj);
+            case null,
+                    default ->
+                throw new IllegalArgumentException(
+                        "Could not serialize the unknown value: "
+                                + obj);
+        };
     }
 
     public static ByteBuf[] writeObjects(Object... objs) {
@@ -230,22 +216,21 @@ public final class ByteBufUtil {
         ByteBuf buffer = PooledByteBufAllocator.DEFAULT.directBuffer(estimatedSize);
         for (int i = 0, length = elements.length, last = length - 1; i < length; i++) {
             Object element = elements[i];
-            if (element instanceof Integer num) {
-                buffer.writeBytes(NumberFormatter.toCharBytes(num));
-            } else if (element instanceof Long num) {
-                buffer.writeBytes(NumberFormatter.toCharBytes(num));
-            } else if (element instanceof String s) {
-                buffer.writeBytes(StringUtil.getBytes(s));
-            } else if (element instanceof byte[] bytes) {
-                buffer.writeBytes(bytes);
-            } else if (element instanceof Character c) {
-                buffer.writeChar(c);
-            } else if (element != null) {
-                buffer.release();
-                throw new IllegalArgumentException(
-                        "Unsupported class: "
-                                + element.getClass()
-                                        .getName());
+            switch (element) {
+                case null -> {
+                }
+                case Integer num -> buffer.writeBytes(NumberFormatter.toCharBytes(num));
+                case Long num -> buffer.writeBytes(NumberFormatter.toCharBytes(num));
+                case Character c -> buffer.writeChar(c);
+                case String s -> buffer.writeBytes(StringUtil.getBytes(s));
+                case byte[] bytes -> buffer.writeBytes(bytes);
+                default -> {
+                    buffer.release();
+                    throw new IllegalArgumentException(
+                            "Unsupported class: "
+                                    + element.getClass()
+                                            .getName());
+                }
             }
             if (i != last) {
                 buffer.writeByte(delimiter);

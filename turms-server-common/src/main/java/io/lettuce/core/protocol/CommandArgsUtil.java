@@ -70,29 +70,29 @@ public final class CommandArgsUtil {
             return;
         }
         for (CommandArgs.SingularArgument arg : args.singularArguments) {
-            if (arg instanceof CommandArgs.IntegerArgument argument) {
-                writeBytesArg(out, NumberFormatter.toCharBytes(argument.val));
-            } else if (arg instanceof CommandArgs.KeyArgument<?, ?> argument) {
-                ByteBuf key = (ByteBuf) argument.key;
-                if (key instanceof TurmsWrappedByteBuf buf
-                        && buf.unwrap() instanceof CustomKeyBuffer) {
-                    out.addComponent(true, key);
-                } else if (key == null) {
-                    writeNullArg(out);
-                } else {
-                    writeByteBuf(out, key);
+            switch (arg) {
+                case CommandArgs.IntegerArgument argument ->
+                    writeBytesArg(out, NumberFormatter.toCharBytes(argument.val));
+                case CommandArgs.KeyArgument<?, ?> argument -> {
+                    ByteBuf key = (ByteBuf) argument.key;
+                    if (key instanceof TurmsWrappedByteBuf buf
+                            && buf.unwrap() instanceof CustomKeyBuffer) {
+                        out.addComponent(true, key);
+                    } else if (key == null) {
+                        writeNullArg(out);
+                    } else {
+                        writeByteBuf(out, key);
+                    }
                 }
-            } else if (arg instanceof CommandArgs.DoubleArgument argument) {
-                writeStringArg(out, Double.toString(argument.val));
-            } else if (arg instanceof CommandArgs.CharArrayArgument argument) {
-                writeCharsArg(out, argument.val);
-            } else if (arg instanceof CommandArgs.BytesArgument argument) {
-                writeBytesArg(out, argument.val);
-            } else if (arg instanceof CommandArgs.StringArgument argument) {
-                writeStringArg(out, argument.val);
-            } else if (arg instanceof CommandArgs.ValueArgument<?, ?> argument) {
-                ByteBuf val = (ByteBuf) argument.val;
-                writeByteBuf(out, val);
+                case CommandArgs.DoubleArgument argument ->
+                    writeStringArg(out, Double.toString(argument.val));
+                case CommandArgs.CharArrayArgument argument -> writeCharsArg(out, argument.val);
+                case CommandArgs.BytesArgument argument -> writeBytesArg(out, argument.val);
+                case CommandArgs.StringArgument argument -> writeStringArg(out, argument.val);
+                case CommandArgs.ValueArgument<?, ?> argument ->
+                    writeByteBuf(out, (ByteBuf) argument.val);
+                case null, default -> {
+                }
             }
         }
     }

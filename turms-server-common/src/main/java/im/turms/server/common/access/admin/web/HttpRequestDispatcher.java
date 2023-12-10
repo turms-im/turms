@@ -548,19 +548,15 @@ public class HttpRequestDispatcher {
             return HttpHandlerResult.create(statusCode.getHttpStatusCode(),
                     new ResponseDTO<>(statusCode, reason));
         } else {
-            ResponseStatusCode statusCode;
-            if (throwable instanceof IllegalArgumentException
-                    || throwable instanceof ConstraintViolationException) {
-                statusCode = ResponseStatusCode.ILLEGAL_ARGUMENT;
-            } else if (throwable instanceof DuplicateKeyException) {
-                statusCode = ResponseStatusCode.RECORD_CONTAINS_DUPLICATE_KEY;
-            } else if (throwable instanceof DuplicateResourceException) {
-                statusCode = ResponseStatusCode.DUPLICATE_RESOURCE;
-            } else if (throwable instanceof ResourceNotFoundException) {
-                statusCode = ResponseStatusCode.RESOURCE_NOT_FOUND;
-            } else {
-                statusCode = ResponseStatusCode.SERVER_INTERNAL_ERROR;
-            }
+            ResponseStatusCode statusCode = switch (throwable) {
+                case IllegalArgumentException ignored -> ResponseStatusCode.ILLEGAL_ARGUMENT;
+                case ConstraintViolationException ignored -> ResponseStatusCode.ILLEGAL_ARGUMENT;
+                case DuplicateKeyException ignored ->
+                    ResponseStatusCode.RECORD_CONTAINS_DUPLICATE_KEY;
+                case DuplicateResourceException ignored -> ResponseStatusCode.DUPLICATE_RESOURCE;
+                case ResourceNotFoundException ignored -> ResponseStatusCode.RESOURCE_NOT_FOUND;
+                default -> ResponseStatusCode.SERVER_INTERNAL_ERROR;
+            };
             String reason = throwable.getMessage();
             return HttpHandlerResult.create(statusCode.getHttpStatusCode(),
                     new ResponseDTO<>(statusCode, reason));

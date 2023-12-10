@@ -35,49 +35,51 @@ public final class MongoExceptionUtil {
     }
 
     public static boolean isErrorOf(Throwable throwable, int errorCode) {
-        if (throwable instanceof MongoException e) {
-            return e.getCode() == errorCode;
-        }
-        return false;
+        return throwable instanceof MongoException e && e.getCode() == errorCode;
     }
 
     public static Throwable translate(Throwable t) {
-        if (t instanceof MongoWriteException e) {
-            WriteError error = e.getError();
-            if (error.getCategory()
-                    .equals(ErrorCategory.DUPLICATE_KEY)) {
-                return new DuplicateKeyException(t.getMessage(), t);
-            }
-            if (error.getCode() == MongoErrorCodes.DOCUMENT_VALIDATION_FAILURE) {
-                throw new DocumentValidationFailureException(t.getMessage(), t);
-            }
-        } else if (t instanceof MongoBulkWriteException e) {
-            boolean areAllDuplicateKeyErrors = true;
-            boolean areAllValidationFailureErrors = true;
-            for (BulkWriteError error : e.getWriteErrors()) {
-                if (!error.getCategory()
+        return switch (t) {
+            case MongoWriteException e -> {
+                WriteError error = e.getError();
+                if (error.getCategory()
                         .equals(ErrorCategory.DUPLICATE_KEY)) {
-                    areAllDuplicateKeyErrors = false;
-                    if (!areAllValidationFailureErrors) {
-                        break;
+                    yield new DuplicateKeyException(t.getMessage(), t);
+                }
+                if (error.getCode() == MongoErrorCodes.DOCUMENT_VALIDATION_FAILURE) {
+                    yield new DocumentValidationFailureException(t.getMessage(), t);
+                }
+                yield t;
+            }
+            case MongoBulkWriteException e -> {
+                boolean areAllDuplicateKeyErrors = true;
+                boolean areAllValidationFailureErrors = true;
+                for (BulkWriteError error : e.getWriteErrors()) {
+                    if (!error.getCategory()
+                            .equals(ErrorCategory.DUPLICATE_KEY)) {
+                        areAllDuplicateKeyErrors = false;
+                        if (!areAllValidationFailureErrors) {
+                            break;
+                        }
+                    }
+                    if (error.getCode() != MongoErrorCodes.DOCUMENT_VALIDATION_FAILURE) {
+                        areAllValidationFailureErrors = false;
+                        if (!areAllDuplicateKeyErrors) {
+                            break;
+                        }
                     }
                 }
-                if (error.getCode() != MongoErrorCodes.DOCUMENT_VALIDATION_FAILURE) {
-                    areAllValidationFailureErrors = false;
-                    if (!areAllDuplicateKeyErrors) {
-                        break;
-                    }
+                if (areAllDuplicateKeyErrors) {
+                    yield new DuplicateKeyException(t.getMessage(), t);
+                } else if (areAllValidationFailureErrors) {
+                    yield new DocumentValidationFailureException(t.getMessage(), t);
                 }
+                yield t;
             }
-            if (areAllDuplicateKeyErrors) {
-                return new DuplicateKeyException(t.getMessage(), t);
-            } else if (areAllValidationFailureErrors) {
-                return new DocumentValidationFailureException(t.getMessage(), t);
-            }
-        } else if (t instanceof com.mongodb.DuplicateKeyException) {
-            return new DuplicateKeyException(t.getMessage(), t);
-        }
-        return t;
+            case com.mongodb.DuplicateKeyException ignored ->
+                new DuplicateKeyException(t.getMessage(), t);
+            default -> t;
+        };
     }
 
 }
