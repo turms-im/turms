@@ -11,3 +11,38 @@ jobs:
 
       - name: Validate
         run: docker compose -f docker-compose.standalone.yml config -q
+
+      - name: Check Service Health
+        run: |
+          ENV=prod docker compose -f docker-compose.standalone.yml up -d
+          sleep 10
+          RETRY=0
+          SERVICES=$(docker compose -f docker-compose.standalone.yml ps -q)
+          echo "Services for checking health: $SERVICES"
+          while true
+          do
+            ALL_HEALTHY=true
+            for SERVICE in $SERVICES; do
+              HEALTH_STATUS=$(docker inspect --format='{{if .Config.Healthcheck}}{{print .State.Health.Status}}{{end}}' "$SERVICE")
+              if [ -z "$HEALTH_STATUS" ]; then
+                echo "Service $SERVICE does not have a health check configured, passing through"
+              elif [ "$HEALTH_STATUS" = "healthy" ]; then
+                echo "$SERVICE is healthy"
+              else
+                echo "$SERVICE is not healthy"
+                ALL_HEALTHY=false
+                break
+              fi
+            done
+            if [ $ALL_HEALTHY = true ]; then
+              echo "All services are healthy"
+              break
+            fi
+            if [ $RETRY -eq 5 ]; then
+              echo "Failed to start services, some services are not healthy"
+              exit 1
+            fi
+            echo "Some services are not healthy. Retry times: $RETRY. Retrying..."
+            sleep 10
+            ((RETRY++))
+          done
