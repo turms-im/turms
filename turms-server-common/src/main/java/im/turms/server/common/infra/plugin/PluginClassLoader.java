@@ -37,7 +37,7 @@ public class PluginClassLoader extends URLClassLoader {
      *           or as a thin jar, the main class is the concrete class of
      *           {@link BaseTurmsApplication}, the plugin parent class loader is the system class
      *           loader. But when running in a fat jar, the main class is
-     *           {@link org.springframework.boot.loader.JarLauncher}, the plugin parent class loader
+     *           {@link org.springframework.boot.loader.launch.JarLauncher}, the plugin parent class loader
      *           is {@link org.springframework.boot.loader.LaunchedURLClassLoader}.
      */
     private static final ClassLoader PARENT_CLASS_LOADER = PluginClassLoader.class.getClassLoader();

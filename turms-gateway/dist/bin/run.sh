@@ -123,7 +123,7 @@ JVM_OPTIONS+=" ${TURMS_GATEWAY_JVM_OPTS}"
 
 MAIN_CLASS="im.turms.gateway.TurmsGatewayApplication"
 if [ "$USE_FAT_JAR" = true ]; then
-  MAIN_CLASS="org.springframework.boot.loader.JarLauncher"
+  MAIN_CLASS="org.springframework.boot.loader.launch.JarLauncher"
 fi
 
 # Create necessary dirs
