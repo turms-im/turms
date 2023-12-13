@@ -18,7 +18,7 @@
 package im.turms.server.common.infra.validation;
 
 import java.lang.reflect.Array;
-import java.net.URL;
+import java.net.URI;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
@@ -367,10 +367,12 @@ public final class Validator {
         }
     }
 
+    @Nullable
     public static Exception url(@Nullable String url) {
         if (url != null) {
             try {
-                new URL(url).toURI();
+                URI.create(url)
+                        .toURL();
             } catch (Exception e) {
                 return e;
             }

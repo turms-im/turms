@@ -27,7 +27,7 @@ import java.util.function.Consumer;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.connection.ServerDescription;
-import com.mongodb.connection.netty.NettyStreamFactoryFactory;
+import com.mongodb.connection.TransportSettings;
 import com.mongodb.event.ClusterDescriptionChangedEvent;
 import com.mongodb.event.ClusterListener;
 import com.mongodb.reactivestreams.client.MongoClient;
@@ -47,6 +47,7 @@ import org.jctools.maps.NonBlockingIdentityHashMap;
 import reactor.core.publisher.Mono;
 
 import im.turms.server.common.infra.lang.Pair;
+import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.thread.ThreadNameConst;
 import im.turms.server.common.storage.mongo.entity.MongoEntity;
 import im.turms.server.common.storage.mongo.entity.MongoEntityFactory;
@@ -101,14 +102,18 @@ public class MongoContext {
                 // com.mongodb.connection.AsynchronousSocketChannelStreamFactory,
                 // which use a heap buffer pool "bufferProvider" for BsonWriter for NIO.
                 // They should go back to school to learn how to code efficiently.
-                .streamFactoryFactory(NettyStreamFactoryFactory.builder()
+                .transportSettings(TransportSettings.nettyBuilder()
                         .allocator(PooledByteBufAllocator.DEFAULT)
                         .eventLoopGroup(eventLoopGroup)
                         .socketChannelClass(NioSocketChannel.class)
                         .build())
                 .build();
         client = MongoClients.create(settings);
-        database = client.getDatabase(connectionSettings.getDatabase());
+        String settingsDatabase = connectionSettings.getDatabase();
+        if (StringUtil.isBlank(settingsDatabase)) {
+            throw new IllegalArgumentException("The connection string does not specify a database");
+        }
+        database = client.getDatabase(settingsDatabase);
         adminDatabase = client.getDatabase("admin");
         configDatabase = client.getDatabase("config");
     }

@@ -237,10 +237,7 @@ public final class CollectionUtil {
 
     // region contains
     public static <T> boolean contains(@Nullable List<T> list, T value) {
-        if (list == null) {
-            return false;
-        }
-        return list.contains(value);
+        return list != null && list.contains(value);
     }
 
     public static <T> boolean contains(@Nullable Collection<T> values, Predicate<T> predicate) {
@@ -602,8 +599,9 @@ public final class CollectionUtil {
                 if (!existingValues.containsAll(valuesToMerge)) {
                     existingValues.addAll(valuesToMerge);
                 }
-            } else if (existingValue instanceof Map && valueToMerge instanceof Map) {
-                deepMerge((Map) existingValue, (Map) valueToMerge, appendCollectionElements);
+            } else if (existingValue instanceof Map existingValueMap
+                    && valueToMerge instanceof Map valueToMergeMap) {
+                deepMerge(existingValueMap, valueToMergeMap, appendCollectionElements);
             } else if (existingValue == null || !existingValue.equals(valueToMerge)) {
                 baseMap.put(key, valueToMerge);
             }

@@ -95,11 +95,9 @@ public final class RpcException extends StacklessException {
     }
 
     public static boolean isErrorCode(Throwable throwable, RpcErrorCode code) {
-        if (throwable instanceof RpcException e) {
-            return e.getErrorCode()
-                    .equals(code);
-        }
-        return false;
+        return throwable instanceof RpcException e
+                && e.getErrorCode()
+                        .equals(code);
     }
 
     private static String getErrorMessage(
