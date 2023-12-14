@@ -14,7 +14,16 @@ jobs:
 
       - name: Check Service Health
         run: |
+          sed -i 's|pull_policy: always|pull_policy: never|g' docker-compose.standalone.yml
+          echo "Docker compose file to run with:"
+          cat docker-compose.standalone.yml
+          
+          docker build -t "ghcr.io/turms-im/turms-admin:latest" -f turms-admin/Dockerfile .
+          docker build -t "ghcr.io/turms-im/turms-gateway:latest" -f turms-gateway/Dockerfile .
+          docker build -t "ghcr.io/turms-im/turms-service:latest" -f turms-service/Dockerfile .
+
           ENV=prod docker compose -f docker-compose.standalone.yml up -d
+
           sleep 10
           RETRY=0
           SERVICES=$(docker compose -f docker-compose.standalone.yml ps -q)
