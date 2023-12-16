@@ -15,29 +15,18 @@
  * limitations under the License.
  */
 
-package integration.im.turms.server.common.testing;
+package im.turms.server.common.testing.environment;
 
-import org.junit.jupiter.api.Test;
-
-import im.turms.server.common.testing.BaseIntegrationTest;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import lombok.Getter;
 
 /**
  * @author James Chen
  */
-class TestingEnvContainerIT extends BaseIntegrationTest {
+public abstract class ServiceTestEnvironmentManager {
+    @Getter
+    public final ServiceTestEnvironmentType type;
 
-    @Test
-    void mongoContainerShouldBeRunning() {
-        assertThat(ENV.getMongoContainer()
-                .isRunning()).isTrue();
+    protected ServiceTestEnvironmentManager(ServiceTestEnvironmentType type) {
+        this.type = type;
     }
-
-    @Test
-    void redisContainerShouldBeRunning() {
-        assertThat(ENV.getRedisContainer()
-                .isRunning()).isTrue();
-    }
-
 }

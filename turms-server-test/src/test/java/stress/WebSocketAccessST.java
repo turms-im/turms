@@ -43,8 +43,11 @@ import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.access.client.dto.request.TurmsRequest;
 import im.turms.server.common.access.client.dto.request.user.CreateSessionRequest;
 import im.turms.server.common.infra.system.SystemUtil;
-import im.turms.server.common.testing.TestingEnvContainer;
-import im.turms.server.common.testing.TestingEnvContainerOptions;
+import im.turms.server.common.testing.environment.ServiceTestEnvironmentType;
+import im.turms.server.common.testing.environment.TestEnvironmentManager;
+import im.turms.server.common.testing.properties.TestProperties;
+import im.turms.server.common.testing.properties.TurmsGatewayContainerTestEnvironmentProperties;
+import im.turms.server.common.testing.properties.TurmsGatewayTestEnvironmentProperties;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -76,18 +79,24 @@ class WebSocketAccessST extends BasePerformanceTest {
                     connectedButNotLoggedInClient,
                     notConnectedClient);
         } else {
-            TestingEnvContainer container = new TestingEnvContainer(
-                    TestingEnvContainerOptions.builder()
-                            .setupTurmsGateway(true)
-                            .turmsGatewayJvmOptions(List.of("-Xms1g",
-                                    "-Xmx1g",
-                                    "turms.health-check.check-interval-seconds=1"))
-                            .build());
-            container.start();
-            try (container) {
-                test(container.getTurmsGatewayAdminHost(),
-                        container.getTurmsGatewayAdminPort(),
-                        container.getTurmsGatewayWebSocketServerUri(),
+            TestProperties testProperties = new TestProperties().toBuilder()
+                    .turmsGateway(new TurmsGatewayTestEnvironmentProperties().toBuilder()
+                            .type(ServiceTestEnvironmentType.CONTAINER)
+                            .container(
+                                    new TurmsGatewayContainerTestEnvironmentProperties().toBuilder()
+                                            .jvmOptions(List.of("-Xms1g",
+                                                    "-Xmx1g",
+                                                    "turms.health-check.check-interval-seconds=1"))
+                                            .build())
+                            .build())
+                    .build();
+            TestEnvironmentManager testEnvironmentManager =
+                    TestEnvironmentManager.fromProperties(testProperties);
+            testEnvironmentManager.start();
+            try (testEnvironmentManager) {
+                test(testEnvironmentManager.getTurmsGatewayAdminHttpHost(),
+                        testEnvironmentManager.getTurmsGatewayAdminHttpPort(),
+                        testEnvironmentManager.getTurmsGatewayWebSocketServerUri(),
                         pendingClientLatch,
                         loggedInClient,
                         connectedButNotLoggedInClient,

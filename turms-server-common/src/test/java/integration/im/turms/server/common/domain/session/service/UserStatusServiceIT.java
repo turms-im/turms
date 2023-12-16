@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 import io.lettuce.core.protocol.LongKeyGenerator;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -75,8 +76,6 @@ class UserStatusServiceIT extends BaseIntegrationTest {
 
     static final int HEARTBEAT_TIMEOUT_SECONDS = 10_00;
 
-    static final UserStatusService USER_STATUS_SERVICE;
-
     static final String LOCAL_NODE_ID = "turms-east01";
     static final String NEW_LOCAL_NODE_ID = "turms-west01";
     static final UserStatus USER_INITIAL_STATUS = UserStatus.DO_NOT_DISTURB;
@@ -95,7 +94,12 @@ class UserStatusServiceIT extends BaseIntegrationTest {
     static final long NON_EXISTING_USER_ID = 999;
     static final DeviceType NON_EXISTING_USER_DEVICE_TYPE = DeviceType.ANDROID;
 
-    static {
+    static UserStatusService userStatusService;
+
+    @BeforeAll
+    static void setup() {
+        setupTestEnvironment();
+
         Node node = mock(Node.class);
         when(node.getLocalMemberId()).thenReturn(LOCAL_NODE_ID);
         DiscoveryService discoveryService = mock(DiscoveryService.class);
@@ -109,17 +113,17 @@ class UserStatusServiceIT extends BaseIntegrationTest {
                         .build())
                 .build());
         RedisProperties redisProperties = new RedisProperties().toBuilder()
-                .uriList(List.of("redis://%s:%d".formatted(ENV.getRedisHost(), ENV.getRedisPort())))
+                .uriList(List.of(testEnvironmentManager.getRedisUri()))
                 .build();
         TurmsRedisClientManager manager =
                 new TurmsRedisClientManager(redisProperties, USER_SESSIONS_STATUS_CODEC_CONTEXT);
-        USER_STATUS_SERVICE = new UserStatusService(node, propertiesManager, manager);
+        userStatusService = new UserStatusService(node, propertiesManager, manager);
     }
 
     @Order(ORDER_ADD_ONLINE_DEVICE_IF_ABSENT)
     @Test
     void addOnlineDeviceIfAbsent_shouldSucceed_ifAbsentForFirstUser() {
-        Mono<Boolean> addOnlineDevice = USER_STATUS_SERVICE.addOnlineDeviceIfAbsent(USER_1_ID,
+        Mono<Boolean> addOnlineDevice = userStatusService.addOnlineDeviceIfAbsent(USER_1_ID,
                 USER_1_DEVICE,
                 USER_1_DEVICE_DETAILS,
                 USER_INITIAL_STATUS,
@@ -135,7 +139,7 @@ class UserStatusServiceIT extends BaseIntegrationTest {
     @Order(ORDER_ADD_ONLINE_DEVICE_IF_ABSENT + 1)
     @Test
     void addOnlineDeviceIfAbsent_shouldSucceed_ifAbsentForFirstUserWithDifferentDevice() {
-        Mono<Boolean> addOnlineDevice = USER_STATUS_SERVICE.addOnlineDeviceIfAbsent(USER_1_ID,
+        Mono<Boolean> addOnlineDevice = userStatusService.addOnlineDeviceIfAbsent(USER_1_ID,
                 USER_1_DIFF_DEVICE,
                 USER_1_DEVICE_DETAILS,
                 USER_INITIAL_STATUS,
@@ -151,7 +155,7 @@ class UserStatusServiceIT extends BaseIntegrationTest {
     @Order(ORDER_ADD_ONLINE_DEVICE_IF_ABSENT + 2)
     @Test
     void addOnlineDeviceIfAbsent_shouldSucceed_ifAbsentForSecondUser() {
-        Mono<Boolean> addOnlineDevice = USER_STATUS_SERVICE.addOnlineDeviceIfAbsent(USER_2_ID,
+        Mono<Boolean> addOnlineDevice = userStatusService.addOnlineDeviceIfAbsent(USER_2_ID,
                 USER_2_DEVICE,
                 USER_2_DEVICE_DETAILS,
                 USER_INITIAL_STATUS,
@@ -167,7 +171,7 @@ class UserStatusServiceIT extends BaseIntegrationTest {
     @Order(ORDER_ADD_ONLINE_DEVICE_IF_ABSENT + 3)
     @Test
     void addOnlineDeviceIfAbsent_shouldFail_ifPresent() {
-        Mono<Boolean> addOnlineDevice = USER_STATUS_SERVICE.addOnlineDeviceIfAbsent(USER_1_ID,
+        Mono<Boolean> addOnlineDevice = userStatusService.addOnlineDeviceIfAbsent(USER_1_ID,
                 USER_1_DEVICE,
                 USER_1_DEVICE_DETAILS,
                 USER_INITIAL_STATUS,
@@ -183,37 +187,34 @@ class UserStatusServiceIT extends BaseIntegrationTest {
     @Order(ORDER_ADD_ONLINE_DEVICE_IF_ABSENT + 4)
     @Test
     void addOnlineDeviceIfAbsent_shouldSucceed_ifPresentButMatchedExpectedInfoProvided() {
-        Mono<Boolean> addOnlineDeviceIfAbsent =
-                USER_STATUS_SERVICE.fetchUserSessionsStatus(USER_1_ID)
-                        .flatMap(sessionsStatus -> {
-                            UserDeviceSessionInfo sessionInfo =
-                                    sessionsStatus.getDeviceTypeToSessionInfo()
-                                            .values()
-                                            .iterator()
-                                            .next();
-                            String nodeId = sessionInfo.getNodeId();
-                            Long heartbeatTimestampSeconds =
-                                    sessionInfo.getHeartbeatTimestampSeconds();
-                            byte[] newLocalNodeIdBytes =
-                                    NEW_LOCAL_NODE_ID.getBytes(StandardCharsets.US_ASCII);
-                            ByteBuf newLocalNodeIdBuffer = Unpooled.directBuffer()
-                                    .writeBytes(newLocalNodeIdBytes);
-                            return USER_STATUS_SERVICE.addOnlineDeviceIfAbsent(newLocalNodeIdBuffer,
-                                    USER_1_ID,
-                                    USER_1_DEVICE,
-                                    USER_1_DEVICE_DETAILS,
-                                    USER_INITIAL_STATUS,
-                                    HEARTBEAT_TIMEOUT_SECONDS,
-                                    nodeId,
-                                    heartbeatTimestampSeconds);
-                        });
+        Mono<Boolean> addOnlineDeviceIfAbsent = userStatusService.fetchUserSessionsStatus(USER_1_ID)
+                .flatMap(sessionsStatus -> {
+                    UserDeviceSessionInfo sessionInfo = sessionsStatus.getDeviceTypeToSessionInfo()
+                            .values()
+                            .iterator()
+                            .next();
+                    String nodeId = sessionInfo.getNodeId();
+                    Long heartbeatTimestampSeconds = sessionInfo.getHeartbeatTimestampSeconds();
+                    byte[] newLocalNodeIdBytes =
+                            NEW_LOCAL_NODE_ID.getBytes(StandardCharsets.US_ASCII);
+                    ByteBuf newLocalNodeIdBuffer = Unpooled.directBuffer()
+                            .writeBytes(newLocalNodeIdBytes);
+                    return userStatusService.addOnlineDeviceIfAbsent(newLocalNodeIdBuffer,
+                            USER_1_ID,
+                            USER_1_DEVICE,
+                            USER_1_DEVICE_DETAILS,
+                            USER_INITIAL_STATUS,
+                            HEARTBEAT_TIMEOUT_SECONDS,
+                            nodeId,
+                            heartbeatTimestampSeconds);
+                });
         StepVerifier.create(addOnlineDeviceIfAbsent)
                 .expectNext(true)
                 .expectComplete()
                 .verify(DEFAULT_IO_TIMEOUT);
 
         Mono<UserSessionsStatus> userSessionsStatusMono =
-                USER_STATUS_SERVICE.fetchUserSessionsStatus(USER_1_ID);
+                userStatusService.fetchUserSessionsStatus(USER_1_ID);
         StepVerifier.create(userSessionsStatusMono)
                 .expectNextMatches(sessionsStatus -> {
                     Map<DeviceType, UserDeviceSessionInfo> deviceTypeToSessionInfo =
@@ -243,7 +244,7 @@ class UserStatusServiceIT extends BaseIntegrationTest {
         ByteBuf newLocalNodeIdBuffer = Unpooled.directBuffer()
                 .writeBytes(newLocalNodeIdBytes);
         Mono<Boolean> addOnlineDeviceIfAbsent =
-                USER_STATUS_SERVICE.addOnlineDeviceIfAbsent(newLocalNodeIdBuffer,
+                userStatusService.addOnlineDeviceIfAbsent(newLocalNodeIdBuffer,
                         USER_1_ID,
                         USER_1_DEVICE,
                         USER_1_DEVICE_DETAILS,
@@ -261,14 +262,14 @@ class UserStatusServiceIT extends BaseIntegrationTest {
     @Test
     void getNodeIdByUserIdAndDeviceType_shouldReturnNodeId_forExistingUser() {
         Mono<String> nodeIdMono =
-                USER_STATUS_SERVICE.getNodeIdByUserIdAndDeviceType(USER_1_ID, USER_1_DEVICE);
+                userStatusService.getNodeIdByUserIdAndDeviceType(USER_1_ID, USER_1_DEVICE);
         StepVerifier.create(nodeIdMono)
                 .expectNext(NEW_LOCAL_NODE_ID)
                 .expectComplete()
                 .verify();
 
         nodeIdMono =
-                USER_STATUS_SERVICE.getNodeIdByUserIdAndDeviceType(USER_1_ID, USER_1_DIFF_DEVICE);
+                userStatusService.getNodeIdByUserIdAndDeviceType(USER_1_ID, USER_1_DIFF_DEVICE);
         StepVerifier.create(nodeIdMono)
                 .expectNext(LOCAL_NODE_ID)
                 .expectComplete()
@@ -279,7 +280,7 @@ class UserStatusServiceIT extends BaseIntegrationTest {
     @Test
     void getNodeIdByUserIdAndDeviceType_shouldReturnEmpty_forNonExistingUser() {
         Mono<String> nodeIdMono =
-                USER_STATUS_SERVICE.getNodeIdByUserIdAndDeviceType(NON_EXISTING_USER_ID,
+                userStatusService.getNodeIdByUserIdAndDeviceType(NON_EXISTING_USER_ID,
                         NON_EXISTING_USER_DEVICE_TYPE);
         StepVerifier.create(nodeIdMono)
                 .expectComplete()
@@ -305,7 +306,7 @@ class UserStatusServiceIT extends BaseIntegrationTest {
     @Test
     void getUserSessionsStatus_shouldReturnDeviceAndNodeId_forExistingUser() {
         Mono<UserSessionsStatus> sessionsStatusMono =
-                USER_STATUS_SERVICE.getUserSessionsStatus(USER_1_ID);
+                userStatusService.getUserSessionsStatus(USER_1_ID);
         StepVerifier.create(sessionsStatusMono)
                 .assertNext(sessionsStatus -> validate(sessionsStatus,
                         Map.of(USER_1_DEVICE,
@@ -320,7 +321,7 @@ class UserStatusServiceIT extends BaseIntegrationTest {
     @Test
     void getUserSessionsStatus_shouldReturnEmpty_forNonExistingUser() {
         Mono<UserSessionsStatus> sessionsStatusMono =
-                USER_STATUS_SERVICE.getUserSessionsStatus(NON_EXISTING_USER_ID);
+                userStatusService.getUserSessionsStatus(NON_EXISTING_USER_ID);
         StepVerifier.create(sessionsStatusMono)
                 .expectNextMatches(
                         sessionsStatus -> sessionsStatus.getUserStatus() == UserStatus.OFFLINE)
@@ -332,7 +333,7 @@ class UserStatusServiceIT extends BaseIntegrationTest {
     @Test
     void getUserSessionsStatus_shouldContainDevices_forExistingUser() {
         Mono<UserSessionsStatus> sessionsStatusMono =
-                USER_STATUS_SERVICE.getUserSessionsStatus(USER_1_ID);
+                userStatusService.getUserSessionsStatus(USER_1_ID);
         StepVerifier.create(sessionsStatusMono)
                 .assertNext(sessionsStatus -> {
                     Set<DeviceType> deviceTypes = sessionsStatus.getDeviceTypeToSessionInfo()
@@ -354,7 +355,7 @@ class UserStatusServiceIT extends BaseIntegrationTest {
     @Test
     void getUserSessionsStatus_shouldReturnOfflineStatus_forNonExistingUser() {
         Mono<UserSessionsStatus> sessionsStatusMono =
-                USER_STATUS_SERVICE.getUserSessionsStatus(NON_EXISTING_USER_ID);
+                userStatusService.getUserSessionsStatus(NON_EXISTING_USER_ID);
         StepVerifier.create(sessionsStatusMono)
                 .expectNextMatches(sessionsStatus -> sessionsStatus.getActiveNodeIds()
                         .isEmpty()
@@ -371,7 +372,7 @@ class UserStatusServiceIT extends BaseIntegrationTest {
                 .stream()
                 .toList();
         Mono<Map<Long, Map<String, String>>> mono =
-                USER_STATUS_SERVICE.fetchDeviceDetails(userIds, fields);
+                userStatusService.fetchDeviceDetails(userIds, fields);
         StepVerifier.create(mono)
                 .expectNext(Map.of(USER_1_ID, USER_1_DEVICE_DETAILS))
                 .expectComplete()
@@ -381,7 +382,7 @@ class UserStatusServiceIT extends BaseIntegrationTest {
     @Order(ORDER_UPDATE_ONLINE_USER_STATUS)
     @Test
     void updateOnlineUserStatus_shouldReturnTrue_forExistingUser() {
-        Mono<Boolean> updateMono = USER_STATUS_SERVICE.updateOnlineUserStatusIfPresent(USER_1_ID,
+        Mono<Boolean> updateMono = userStatusService.updateOnlineUserStatusIfPresent(USER_1_ID,
                 USER_1_STATUS_AFTER_UPDATED);
         StepVerifier.create(updateMono)
                 .expectNext(true)
@@ -392,7 +393,7 @@ class UserStatusServiceIT extends BaseIntegrationTest {
     @Order(ORDER_UPDATE_ONLINE_USER_STATUS + 1)
     @Test
     void updateOnlineUserStatus_shouldReturnFalse_forNonExistingUser() {
-        Mono<Boolean> updateMono = USER_STATUS_SERVICE
+        Mono<Boolean> updateMono = userStatusService
                 .updateOnlineUserStatusIfPresent(NON_EXISTING_USER_ID, UserStatus.AVAILABLE);
         StepVerifier.create(updateMono)
                 .expectNext(false)
@@ -419,7 +420,7 @@ class UserStatusServiceIT extends BaseIntegrationTest {
                 return -1;
             }
         };
-        Mono<Set<Long>> updateMono = USER_STATUS_SERVICE.updateOnlineUsersTtl(users, 30);
+        Mono<Set<Long>> updateMono = userStatusService.updateOnlineUsersTtl(users, 30);
         StepVerifier.create(updateMono)
                 .expectNext(Set.of(NON_EXISTING_USER_ID))
                 .expectComplete()
@@ -445,7 +446,7 @@ class UserStatusServiceIT extends BaseIntegrationTest {
                 return -1;
             }
         };
-        Mono<Set<Long>> updateMono = USER_STATUS_SERVICE.updateOnlineUsersTtl(users, 30);
+        Mono<Set<Long>> updateMono = userStatusService.updateOnlineUsersTtl(users, 30);
         StepVerifier.create(updateMono)
                 .expectNext(Collections.emptySet())
                 .expectComplete()
@@ -455,7 +456,7 @@ class UserStatusServiceIT extends BaseIntegrationTest {
     @Order(ORDER_GET_USER_SESSIONS_STATUS)
     @Test
     void getUserSessionsStatus_shouldStatusAfterUpdated_forExistingUser() {
-        Mono<UserSessionsStatus> statusMono = USER_STATUS_SERVICE.getUserSessionsStatus(USER_1_ID);
+        Mono<UserSessionsStatus> statusMono = userStatusService.getUserSessionsStatus(USER_1_ID);
         StepVerifier.create(statusMono)
                 .assertNext(status -> {
                     assertThat(status.getUserStatus()).isEqualTo(USER_1_STATUS_AFTER_UPDATED);
@@ -473,7 +474,7 @@ class UserStatusServiceIT extends BaseIntegrationTest {
     @Test
     void getUserSessionsStatus_shouldReturnOffline_forNonExistingUser() {
         Mono<UserSessionsStatus> statusMono =
-                USER_STATUS_SERVICE.getUserSessionsStatus(NON_EXISTING_USER_ID);
+                userStatusService.getUserSessionsStatus(NON_EXISTING_USER_ID);
         StepVerifier.create(statusMono)
                 .assertNext(status -> {
                     assertThat(status.getUserStatus()).isEqualTo(UserStatus.OFFLINE);
@@ -486,7 +487,7 @@ class UserStatusServiceIT extends BaseIntegrationTest {
     @Order(ORDER_REMOVE_STATUS_BY_USER_ID_AND_DEVICE_TYPES)
     @Test
     void removeStatusByUserIdAndDeviceTypes_shouldReturnTrue_forExistingUser() {
-        Mono<Boolean> removeMono = USER_STATUS_SERVICE.removeStatusByUserIdAndDeviceTypes(USER_1_ID,
+        Mono<Boolean> removeMono = userStatusService.removeStatusByUserIdAndDeviceTypes(USER_1_ID,
                 Set.of(USER_1_DEVICE, USER_1_DIFF_DEVICE));
         StepVerifier.create(removeMono)
                 .expectNext(true)
@@ -498,7 +499,7 @@ class UserStatusServiceIT extends BaseIntegrationTest {
     @Test
     void removeStatusByUserIdAndDeviceTypes_shouldReturnFalse_forExistingUser() {
         Mono<Boolean> removeMono =
-                USER_STATUS_SERVICE.removeStatusByUserIdAndDeviceTypes(NON_EXISTING_USER_ID,
+                userStatusService.removeStatusByUserIdAndDeviceTypes(NON_EXISTING_USER_ID,
                         Set.of(NON_EXISTING_USER_DEVICE_TYPE));
         StepVerifier.create(removeMono)
                 .expectNext(false)

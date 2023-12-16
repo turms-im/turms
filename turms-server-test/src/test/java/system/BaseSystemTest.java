@@ -19,7 +19,9 @@ package system;
 
 import java.time.Duration;
 
+import reactor.core.publisher.Mono;
 import reactor.netty.http.client.HttpClient;
+import reactor.test.StepVerifier;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -31,15 +33,24 @@ public abstract class BaseSystemTest {
     private static final Duration HTTP_TIMEOUT = Duration.ofSeconds(10);
 
     protected void assertTurmsGatewayAvailable(String host, int port) {
-        String uri = "http://%s:%d/health".formatted(host, port);
-        String response = HttpClient.create()
+        String uri = "http://"
+                + host
+                + ":"
+                + port
+                + "/health";
+        Mono<String> response = HttpClient.create()
                 .get()
                 .uri(uri)
                 .responseContent()
                 .aggregate()
                 .asString()
-                .block(HTTP_TIMEOUT);
-        assertThat(response).contains("\"UP\"");
+                .timeout(HTTP_TIMEOUT);
+        StepVerifier.create(response)
+                .expectNextMatches(resp -> {
+                    assertThat(resp).contains("\"UP\"");
+                    return true;
+                })
+                .verifyComplete();
     }
 
     static {

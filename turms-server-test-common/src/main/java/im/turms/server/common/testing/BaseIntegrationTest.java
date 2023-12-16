@@ -17,30 +17,62 @@
 
 package im.turms.server.common.testing;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.util.function.Supplier;
+
+import lombok.extern.slf4j.Slf4j;
+
+import im.turms.server.common.testing.environment.ServiceTestEnvironmentType;
+import im.turms.server.common.testing.environment.TestEnvironmentManager;
+import im.turms.server.common.testing.properties.MongoTestEnvironmentProperties;
+import im.turms.server.common.testing.properties.RedisTestEnvironmentProperties;
+import im.turms.server.common.testing.properties.TestProperties;
 
 /**
  * @author James Chen
  */
+@Slf4j
 public abstract class BaseIntegrationTest {
-
-    protected long waitMillis = 1000L;
-
-    public static final TestingEnvContainer ENV = new TestingEnvContainer(
-            TestingEnvContainerOptions.builder()
-                    .build());
 
     protected static final Duration DEFAULT_IO_TIMEOUT = Duration.ofSeconds(15);
 
-    static {
-        ENV.start();
+    protected static long waitMillis = 1000L;
+    protected static TestEnvironmentManager testEnvironmentManager;
+
+    public static synchronized TestEnvironmentManager setupTestEnvironment() {
+        if (testEnvironmentManager != null) {
+            return testEnvironmentManager;
+        }
+        boolean setupTestEnvironmentFromPropertiesFile = true;
+        try {
+            testEnvironmentManager = TestEnvironmentManager.fromPropertiesFile();
+        } catch (FileNotFoundException e) {
+            testEnvironmentManager = TestEnvironmentManager.fromProperties(new TestProperties());
+            setupTestEnvironmentFromPropertiesFile = false;
+        }
+        testEnvironmentManager.start();
+        if (setupTestEnvironmentFromPropertiesFile) {
+            log.info("Set up the test environment from the properties file: "
+                    + TestEnvironmentManager.DEFAULT_PROPERTIES_FILE);
+        } else {
+            log.info("Set up the test environment from default properties");
+        }
+        return testEnvironmentManager;
     }
 
-    protected static String getMongoUri() {
-        return ENV.getMongoUri("turms-test");
+    public static synchronized TestEnvironmentManager setupTestEnvironment(
+            TestProperties testProperties) {
+        if (testEnvironmentManager != null) {
+            return testEnvironmentManager;
+        }
+        testEnvironmentManager = TestEnvironmentManager.fromProperties(testProperties);
+        testEnvironmentManager.start();
+        log.info("Set up the test environment from properties");
+        return testEnvironmentManager;
     }
 
     protected String readText(String path) {

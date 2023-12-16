@@ -35,6 +35,7 @@ public class ServiceLogConsumer extends BaseConsumer<ServiceLogConsumer> {
 
     @Override
     public void accept(OutputFrame frame) {
+        // FIXME: testcontainers emits the actual STDOUT string as the STDERR string
         switch (frame.getType()) {
             case STDOUT -> log.info("["
                     + serviceName

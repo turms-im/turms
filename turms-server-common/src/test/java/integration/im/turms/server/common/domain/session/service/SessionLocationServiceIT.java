@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import io.lettuce.core.GeoCoordinates;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -56,8 +57,6 @@ import static org.mockito.Mockito.when;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class SessionLocationServiceIT extends BaseIntegrationTest {
 
-    static final SessionLocationService SESSION_LOCATION_SERVICE;
-
     static final int METERS_PER_LATITUDE_DEGREE = 111_320;
 
     static final long USER_1_ID = 1;
@@ -76,7 +75,12 @@ class SessionLocationServiceIT extends BaseIntegrationTest {
     static final long NONEXISTENT_USER_ID = 99999;
     static final DeviceType NONEXISTENT_USER_DEVICE = DeviceType.ANDROID;
 
-    static {
+    static SessionLocationService sessionLocationService;
+
+    @BeforeAll
+    static void setup() {
+        setupTestEnvironment();
+
         PluginManager pluginManager = mock(PluginManager.class);
         when(pluginManager.isEnabled()).thenReturn(false);
 
@@ -101,19 +105,19 @@ class SessionLocationServiceIT extends BaseIntegrationTest {
                 .notifyAndAddGlobalPropertiesChangeListener(any());
 
         RedisProperties redisProperties = new RedisProperties().toBuilder()
-                .uriList(List.of("redis://%s:%d".formatted(ENV.getRedisHost(), ENV.getRedisPort())))
+                .uriList(List.of(testEnvironmentManager.getRedisUri()))
                 .build();
         TurmsRedisClientManager manager = new TurmsRedisClientManager(
                 redisProperties,
                 RedisCodecContextPool.GEO_USER_SESSION_ID_CODEC_CONTEXT);
-        SESSION_LOCATION_SERVICE = new SessionLocationService(propertiesManager, manager);
+        sessionLocationService = new SessionLocationService(propertiesManager, manager);
     }
 
     @Order(0)
     @Test
     void upsertUserLocation_shouldInsert_ifNotExists() {
         StepVerifier
-                .create(SESSION_LOCATION_SERVICE.upsertUserLocation(USER_1_ID,
+                .create(sessionLocationService.upsertUserLocation(USER_1_ID,
                         USER_1_DEVICE,
                         new Date(),
                         USER_1_COORDINATES_1.longitude(),
@@ -124,7 +128,7 @@ class SessionLocationServiceIT extends BaseIntegrationTest {
                 .expectComplete()
                 .verify(DEFAULT_IO_TIMEOUT);
         StepVerifier
-                .create(SESSION_LOCATION_SERVICE.upsertUserLocation(USER_2_ID,
+                .create(sessionLocationService.upsertUserLocation(USER_2_ID,
                         USER_2_DEVICE,
                         new Date(),
                         USER_2_COORDINATES.longitude(),
@@ -135,7 +139,7 @@ class SessionLocationServiceIT extends BaseIntegrationTest {
                 .expectComplete()
                 .verify(DEFAULT_IO_TIMEOUT);
         StepVerifier
-                .create(SESSION_LOCATION_SERVICE.upsertUserLocation(USER_3_ID,
+                .create(sessionLocationService.upsertUserLocation(USER_3_ID,
                         USER_3_DEVICE,
                         new Date(),
                         USER_3_COORDINATES.longitude(),
@@ -150,7 +154,7 @@ class SessionLocationServiceIT extends BaseIntegrationTest {
     @Order(1)
     @Test
     void upsertUserLocation_shouldUpdate_ifExists() {
-        Mono<Void> upsertUserLocation = SESSION_LOCATION_SERVICE.upsertUserLocation(USER_1_ID,
+        Mono<Void> upsertUserLocation = sessionLocationService.upsertUserLocation(USER_1_ID,
                 USER_1_DEVICE,
                 new Date(),
                 USER_1_COORDINATES_2.longitude(),
@@ -164,7 +168,7 @@ class SessionLocationServiceIT extends BaseIntegrationTest {
     @Test
     void getUserLocation_shouldGet_ifExists() {
         Mono<GeoCoordinates> getUserLocation =
-                SESSION_LOCATION_SERVICE.getUserLocation(USER_1_ID, USER_1_DEVICE);
+                sessionLocationService.getUserLocation(USER_1_ID, USER_1_DEVICE);
         StepVerifier.create(getUserLocation)
                 .expectNextMatches(coordinates -> {
                     assertThat(coordinates.getX()
@@ -180,7 +184,7 @@ class SessionLocationServiceIT extends BaseIntegrationTest {
     @Order(11)
     @Test
     void getUserLocation_shouldComplete_ifNotExists() {
-        Mono<GeoCoordinates> getUserLocation = SESSION_LOCATION_SERVICE
+        Mono<GeoCoordinates> getUserLocation = sessionLocationService
                 .getUserLocation(NONEXISTENT_USER_ID, NONEXISTENT_USER_DEVICE);
         StepVerifier.create(getUserLocation)
                 .expectComplete()
@@ -191,7 +195,7 @@ class SessionLocationServiceIT extends BaseIntegrationTest {
     @Test
     void queryNearbyUsers_shouldGetNearbyUsers() {
         StepVerifier
-                .create(SESSION_LOCATION_SERVICE.queryNearbyUsers(USER_1_ID,
+                .create(sessionLocationService.queryNearbyUsers(USER_1_ID,
                         USER_1_DEVICE,
                         (short) 100,
                         15 * METERS_PER_LATITUDE_DEGREE,
@@ -204,7 +208,7 @@ class SessionLocationServiceIT extends BaseIntegrationTest {
                 .expectComplete()
                 .verify(DEFAULT_IO_TIMEOUT);
         StepVerifier
-                .create(SESSION_LOCATION_SERVICE.queryNearbyUsers(USER_2_ID,
+                .create(sessionLocationService.queryNearbyUsers(USER_2_ID,
                         USER_2_DEVICE,
                         (short) 100,
                         15 * METERS_PER_LATITUDE_DEGREE,
@@ -223,7 +227,7 @@ class SessionLocationServiceIT extends BaseIntegrationTest {
                 .expectComplete()
                 .verify(DEFAULT_IO_TIMEOUT);
         StepVerifier
-                .create(SESSION_LOCATION_SERVICE.queryNearbyUsers(NONEXISTENT_USER_ID,
+                .create(sessionLocationService.queryNearbyUsers(NONEXISTENT_USER_ID,
                         NONEXISTENT_USER_DEVICE,
                         (short) 100,
                         15 * METERS_PER_LATITUDE_DEGREE,
@@ -238,7 +242,7 @@ class SessionLocationServiceIT extends BaseIntegrationTest {
     @Order(30)
     @Test
     void removeUserLocation_shouldSucceed_ifExists() {
-        StepVerifier.create(SESSION_LOCATION_SERVICE.removeUserLocation(USER_1_ID, USER_1_DEVICE))
+        StepVerifier.create(sessionLocationService.removeUserLocation(USER_1_ID, USER_1_DEVICE))
                 .expectComplete()
                 .verify(DEFAULT_IO_TIMEOUT);
     }
@@ -247,7 +251,7 @@ class SessionLocationServiceIT extends BaseIntegrationTest {
     @Test
     void removeUserLocation_shouldSucceed_ifNotExists() {
         StepVerifier
-                .create(SESSION_LOCATION_SERVICE.removeUserLocation(NONEXISTENT_USER_ID,
+                .create(sessionLocationService.removeUserLocation(NONEXISTENT_USER_ID,
                         NONEXISTENT_USER_DEVICE))
                 .expectComplete()
                 .verify(DEFAULT_IO_TIMEOUT);

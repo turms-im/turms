@@ -20,6 +20,7 @@ package integration.im.turms.server.common.domain.blocklist.service;
 import java.time.Duration;
 import java.util.Set;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -46,134 +47,134 @@ import static org.mockito.Mockito.when;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class BlocklistServiceIT extends BaseIntegrationTest {
 
-    private static final BlocklistService BLOCKLIST_SERVICE;
+    private static final long BLOCK_DURATION_SECONDS = 60;
     private static final Duration TIMEOUT = Duration.ofSeconds(15);
 
-    static {
-        BLOCKLIST_SERVICE = newBlocklistService(2);
-    }
+    private static BlocklistService sharedBlocklistService;
 
-    BlocklistServiceIT() {
-        waitMillis = 500L;
+    @BeforeAll
+    static void setup() {
+        setupTestEnvironment();
+        sharedBlocklistService = newBlocklistService(2);
     }
 
     @Order(0)
     @Test
     void test() {
-        assertThat(BLOCKLIST_SERVICE.isUserIdBlocked(1L))
+        assertThat(sharedBlocklistService.isUserIdBlocked(1L))
                 .as("The user with ID 1 should not be blocked at first")
                 .isFalse();
-        assertThat(BLOCKLIST_SERVICE.isUserIdBlocked(2L))
+        assertThat(sharedBlocklistService.isUserIdBlocked(2L))
                 .as("The user with ID 2 should not be blocked at first")
                 .isFalse();
-        assertThat(BLOCKLIST_SERVICE.isUserIdBlocked(3L))
+        assertThat(sharedBlocklistService.isUserIdBlocked(3L))
                 .as("The user with ID 3 should not be blocked at first")
                 .isFalse();
 
         Set<Long> userIds = Set.of(1L, 2L, 3L);
 
-        BLOCKLIST_SERVICE.blockUserIds(userIds, 1)
+        sharedBlocklistService.blockUserIds(userIds, BLOCK_DURATION_SECONDS)
                 .block(TIMEOUT);
         waitToSync();
 
-        assertThat(BLOCKLIST_SERVICE.isUserIdBlocked(1L))
-                .as("The user with ID 1 should be blocked after blockUserIds()")
+        assertThat(sharedBlocklistService.isUserIdBlocked(1L))
+                .as("The user with ID 1 should be blocked after blockUserIds(...)")
                 .isTrue();
-        assertThat(BLOCKLIST_SERVICE.isUserIdBlocked(2L))
-                .as("The user with ID 2 should be blocked after blockUserIds()")
+        assertThat(sharedBlocklistService.isUserIdBlocked(2L))
+                .as("The user with ID 2 should be blocked after blockUserIds(...)")
                 .isTrue();
-        assertThat(BLOCKLIST_SERVICE.isUserIdBlocked(3L))
-                .as("The user with ID 3 should be blocked after blockUserIds()")
+        assertThat(sharedBlocklistService.isUserIdBlocked(3L))
+                .as("The user with ID 3 should be blocked after blockUserIds(...)")
                 .isTrue();
-        assertThat(BLOCKLIST_SERVICE.isUserIdBlocked(4L))
-                .as("The user with ID 4 should not be blocked after blockUserIds()")
+        assertThat(sharedBlocklistService.isUserIdBlocked(4L))
+                .as("The user with ID 4 should not be blocked after blockUserIds(...)")
                 .isFalse();
 
-        BLOCKLIST_SERVICE.unblockUserIds(userIds)
+        sharedBlocklistService.unblockUserIds(userIds)
                 .block(TIMEOUT);
         waitToSync();
 
-        assertThat(BLOCKLIST_SERVICE.isUserIdBlocked(1L))
-                .as("The user with ID 1 should not be blocked after unblockUserIds()")
+        assertThat(sharedBlocklistService.isUserIdBlocked(1L))
+                .as("The user with ID 1 should not be blocked after unblockUserIds(...)")
                 .isFalse();
-        assertThat(BLOCKLIST_SERVICE.isUserIdBlocked(2L))
-                .as("The user with ID 2 should not be blocked after unblockUserIds()")
+        assertThat(sharedBlocklistService.isUserIdBlocked(2L))
+                .as("The user with ID 2 should not be blocked after unblockUserIds(...)")
                 .isFalse();
-        assertThat(BLOCKLIST_SERVICE.isUserIdBlocked(3L))
-                .as("The user with ID 3 should not be blocked after unblockUserIds()")
+        assertThat(sharedBlocklistService.isUserIdBlocked(3L))
+                .as("The user with ID 3 should not be blocked after unblockUserIds(...)")
                 .isFalse();
-        assertThat(BLOCKLIST_SERVICE.isUserIdBlocked(4L))
-                .as("The user with ID 4 should not be blocked after unblockUserIds()")
+        assertThat(sharedBlocklistService.isUserIdBlocked(4L))
+                .as("The user with ID 4 should not be blocked after unblockUserIds(...)")
                 .isFalse();
     }
 
     @Order(1)
     @Test
     void testLogSynchronization_simple() {
-        BlocklistService myBlocklistService = newBlocklistService(2);
+        BlocklistService localBlocklistService = newBlocklistService(2);
 
-        assertThat(myBlocklistService.isUserIdBlocked(1L))
+        assertThat(localBlocklistService.isUserIdBlocked(1L))
                 .as("The user with ID 1 should not be blocked at first")
                 .isFalse();
-        assertThat(myBlocklistService.isUserIdBlocked(2L))
+        assertThat(localBlocklistService.isUserIdBlocked(2L))
                 .as("The user with ID 2 should not be blocked at first")
                 .isFalse();
-        assertThat(myBlocklistService.isUserIdBlocked(3L))
+        assertThat(localBlocklistService.isUserIdBlocked(3L))
                 .as("The user with ID 3 should not be blocked at first")
                 .isFalse();
-        assertThat(myBlocklistService.isUserIdBlocked(4L))
+        assertThat(localBlocklistService.isUserIdBlocked(4L))
                 .as("The user with ID 4 should not be blocked at first")
                 .isFalse();
-        assertThat(myBlocklistService.isUserIdBlocked(5L))
+        assertThat(localBlocklistService.isUserIdBlocked(5L))
                 .as("The user with ID 5 should not be blocked at first")
                 .isFalse();
 
         Set<Long> userIds = Set.of(1L, 2L, 3L, 4L, 5L);
 
-        BLOCKLIST_SERVICE.blockUserIds(userIds, 1)
+        sharedBlocklistService.blockUserIds(userIds, BLOCK_DURATION_SECONDS)
                 .block(TIMEOUT);
         waitToSync();
 
-        assertThat(myBlocklistService.isUserIdBlocked(1L))
-                .as("The user with ID 1 should be blocked after blockUserIds() on remote")
+        assertThat(localBlocklistService.isUserIdBlocked(1L)).as(
+                "The user with ID 1 should be blocked after the shared blocklist service called blockUserIds(...)")
                 .isTrue();
-        assertThat(myBlocklistService.isUserIdBlocked(2L))
-                .as("The user with ID 2 should be blocked after blockUserIds() on remote")
+        assertThat(localBlocklistService.isUserIdBlocked(2L)).as(
+                "The user with ID 2 should be blocked after the shared blocklist service called blockUserIds(...)")
                 .isTrue();
-        assertThat(myBlocklistService.isUserIdBlocked(3L))
-                .as("The user with ID 3 should be blocked after blockUserIds() on remote")
+        assertThat(localBlocklistService.isUserIdBlocked(3L)).as(
+                "The user with ID 3 should be blocked after the shared blocklist service called blockUserIds(...)")
                 .isTrue();
-        assertThat(myBlocklistService.isUserIdBlocked(4L))
-                .as("The user with ID 4 should be blocked after blockUserIds() on remote")
+        assertThat(localBlocklistService.isUserIdBlocked(4L)).as(
+                "The user with ID 4 should be blocked after the shared blocklist service called blockUserIds(...)")
                 .isTrue();
-        assertThat(myBlocklistService.isUserIdBlocked(5L))
-                .as("The user with ID 5 should be blocked after blockUserIds() on remote")
+        assertThat(localBlocklistService.isUserIdBlocked(5L)).as(
+                "The user with ID 5 should be blocked after the shared blocklist service called blockUserIds(...)")
                 .isTrue();
-        assertThat(myBlocklistService.isUserIdBlocked(6L))
-                .as("The user with ID 6 should not be blocked after blockUserIds() on remote")
+        assertThat(localBlocklistService.isUserIdBlocked(6L)).as(
+                "The user with ID 6 should not be blocked after the shared blocklist service called blockUserIds(...)")
                 .isFalse();
 
-        BLOCKLIST_SERVICE.unblockUserIds(userIds)
+        sharedBlocklistService.unblockUserIds(userIds)
                 .block(TIMEOUT);
         waitToSync();
 
-        assertThat(myBlocklistService.isUserIdBlocked(1L))
-                .as("The user with ID 1 should not be blocked after unblockUserIds() on remote")
+        assertThat(localBlocklistService.isUserIdBlocked(1L)).as(
+                "The user with ID 1 should not be blocked after the shared blocklist service called unblockUserIds(...)")
                 .isFalse();
-        assertThat(myBlocklistService.isUserIdBlocked(2L))
-                .as("The user with ID 2 should not be blocked after unblockUserIds() on remote")
+        assertThat(localBlocklistService.isUserIdBlocked(2L)).as(
+                "The user with ID 2 should not be blocked after the shared blocklist service called unblockUserIds(...)")
                 .isFalse();
-        assertThat(myBlocklistService.isUserIdBlocked(3L))
-                .as("The user with ID 3 should not be blocked after unblockUserIds() on remote")
+        assertThat(localBlocklistService.isUserIdBlocked(3L)).as(
+                "The user with ID 3 should not be blocked after the shared blocklist service called unblockUserIds(...)")
                 .isFalse();
-        assertThat(myBlocklistService.isUserIdBlocked(4L))
-                .as("The user with ID 4 should not be blocked after unblockUserIds() on remote")
+        assertThat(localBlocklistService.isUserIdBlocked(4L)).as(
+                "The user with ID 4 should not be blocked after the shared blocklist service called unblockUserIds(...)")
                 .isFalse();
-        assertThat(myBlocklistService.isUserIdBlocked(5L))
-                .as("The user with ID 5 should not be blocked after unblockUserIds() on remote")
+        assertThat(localBlocklistService.isUserIdBlocked(5L)).as(
+                "The user with ID 5 should not be blocked after the shared blocklist service called unblockUserIds(...)")
                 .isFalse();
-        assertThat(myBlocklistService.isUserIdBlocked(6L))
-                .as("The user with ID 6 should not be blocked after unblockUserIds() on remote")
+        assertThat(localBlocklistService.isUserIdBlocked(6L)).as(
+                "The user with ID 6 should not be blocked after the shared blocklist service called unblockUserIds(...)")
                 .isFalse();
     }
 
@@ -183,29 +184,29 @@ class BlocklistServiceIT extends BaseIntegrationTest {
         BlocklistService localBlocklistService = newBlocklistService(2);
         long userId = 1L;
 
-        // Local block - Remote block - Remote block
+        // Local block -> Shared block -> Shared block
 
-        blockUserIdsOnLocal(localBlocklistService,
+        blockUserIdsOnLocalBlocklistService(localBlocklistService,
                 userId,
-                "Local block - Remote block - Remote block = Local block");
-        blockUserIdsOnRemote(localBlocklistService,
+                "Local block -> Shared block -> Shared block = Local block");
+        blockUserIdsOnSharedBlocklistService(localBlocklistService,
                 userId,
-                "Local block - Remote block - Remote block = Remote block 1");
-        blockUserIdsOnRemote(localBlocklistService,
+                "Local block -> Shared block -> Shared block = Shared block 1");
+        blockUserIdsOnSharedBlocklistService(localBlocklistService,
                 userId,
-                "Local block - Remote block - Remote block = Remote block 2");
+                "Local block -> Shared block -> Shared block = Shared block 2");
 
-        // Remote unblock - Remote unblock - Local unblock.
+        // Shared unblock -> Shared unblock -> Local unblock
 
-        unblockUserIdsOnRemote(localBlocklistService,
+        unblockUserIdsOnSharedBlocklistService(localBlocklistService,
                 userId,
-                "Remote unblock - Remote unblock - Local unblock = Remote unblock 1");
-        unblockUserIdsOnRemote(localBlocklistService,
+                "Shared unblock -> Shared unblock -> Local unblock = Shared unblock 1");
+        unblockUserIdsOnSharedBlocklistService(localBlocklistService,
                 userId,
-                "Remote unblock - Remote unblock - Local unblock = Remote unblock 2");
-        blockUserIdsOnLocal(localBlocklistService,
+                "Shared unblock -> Shared unblock -> Local unblock = Shared unblock 2");
+        blockUserIdsOnLocalBlocklistService(localBlocklistService,
                 userId,
-                "Remote unblock - Remote unblock - Local unblock = Local unblock");
+                "Shared unblock -> Shared unblock -> Local unblock = Local unblock");
     }
 
     @Order(3)
@@ -214,65 +215,65 @@ class BlocklistServiceIT extends BaseIntegrationTest {
         BlocklistService localBlocklistService = newBlocklistService(2);
         long userId = 1L;
 
-        // Local block -> Remote unblock -> Local block -> Remote unblock
+        // Local block -> Shared unblock -> Local block -> Shared unblock
 
-        blockUserIdsOnLocal(localBlocklistService,
+        blockUserIdsOnLocalBlocklistService(localBlocklistService,
                 userId,
-                "Local block -> Remote unblock -> Local block -> Remote unblock = Local block 1");
-        unblockUserIdsOnRemote(localBlocklistService,
+                "Local block -> Shared unblock -> Local block -> Shared unblock = Local block 1");
+        unblockUserIdsOnSharedBlocklistService(localBlocklistService,
                 userId,
-                "Local block -> Remote unblock -> Local block -> Remote unblock = Remote unblock 1");
-        blockUserIdsOnLocal(localBlocklistService,
+                "Local block -> Shared unblock -> Local block -> Shared unblock = Shared unblock 1");
+        blockUserIdsOnLocalBlocklistService(localBlocklistService,
                 userId,
-                "Local block -> Remote unblock -> Local block -> Remote unblock = Local block 2");
-        unblockUserIdsOnRemote(localBlocklistService,
+                "Local block -> Shared unblock -> Local block -> Shared unblock = Local block 2");
+        unblockUserIdsOnSharedBlocklistService(localBlocklistService,
                 userId,
-                "Local block -> Remote unblock -> Local block -> Remote unblock = Remote unblock 2");
+                "Local block -> Shared unblock -> Local block -> Shared unblock = Shared unblock 2");
 
-        // Remote block -> Local unblock -> Remote block -> Local unblock
+        // Shared block -> Local unblock -> Shared block -> Local unblock
 
-        blockUserIdsOnRemote(localBlocklistService,
+        blockUserIdsOnSharedBlocklistService(localBlocklistService,
                 userId,
-                "Remote block -> Local unblock -> Remote block -> Local unblock = Remote block 1");
+                "Shared block -> Local unblock -> Shared block -> Local unblock = Shared block 1");
         unblockUserIdsOnLocal(localBlocklistService,
                 userId,
-                "Remote block -> Local unblock -> Remote block -> Local unblock = Local unblock 1");
-        blockUserIdsOnRemote(localBlocklistService,
+                "Shared block -> Local unblock -> Shared block -> Local unblock = Local unblock 1");
+        blockUserIdsOnSharedBlocklistService(localBlocklistService,
                 userId,
-                "Remote block -> Local unblock -> Remote block -> Local unblock = Remote block 2");
+                "Shared block -> Local unblock -> Shared block -> Local unblock = Shared block 2");
         unblockUserIdsOnLocal(localBlocklistService,
                 userId,
-                "Remote block -> Local unblock -> Remote block -> Local unblock = Local unblock 2");
+                "Shared block -> Local unblock -> Shared block -> Local unblock = Local unblock 2");
 
-        // Local unblock -> Remote block -> Local unblock -> Remote block
+        // Local unblock -> Shared block -> Local unblock -> Shared block
 
         unblockUserIdsOnLocal(localBlocklistService,
                 userId,
-                "Local unblock -> Remote block -> Local unblock -> Remote block = Local unblock 1");
-        blockUserIdsOnRemote(localBlocklistService,
+                "Local unblock -> Shared block -> Local unblock -> Shared block = Local unblock 1");
+        blockUserIdsOnSharedBlocklistService(localBlocklistService,
                 userId,
-                "Local unblock -> Remote block -> Local unblock -> Remote block = Remote block 1");
+                "Local unblock -> Shared block -> Local unblock -> Shared block = Shared block 1");
         unblockUserIdsOnLocal(localBlocklistService,
                 userId,
-                "Local unblock -> Remote block -> Local unblock -> Remote block = Local unblock 2");
-        blockUserIdsOnRemote(localBlocklistService,
+                "Local unblock -> Shared block -> Local unblock -> Shared block = Local unblock 2");
+        blockUserIdsOnSharedBlocklistService(localBlocklistService,
                 userId,
-                "Local unblock -> Remote block -> Local unblock -> Remote block = Remote block 2");
+                "Local unblock -> Shared block -> Local unblock -> Shared block = Shared block 2");
 
-        // Remote unblock -> Local block -> Remote unblock -> Local block
+        // Shared unblock -> Local block -> Shared unblock -> Local block
 
-        unblockUserIdsOnRemote(localBlocklistService,
+        unblockUserIdsOnSharedBlocklistService(localBlocklistService,
                 userId,
-                "Remote unblock -> Local block -> Remote unblock -> Local block = Remote unblock 1");
-        blockUserIdsOnLocal(localBlocklistService,
+                "Shared unblock -> Local block -> Shared unblock -> Local block = Shared unblock 1");
+        blockUserIdsOnLocalBlocklistService(localBlocklistService,
                 userId,
-                "Remote unblock -> Local block -> Remote unblock -> Local block = Local block 1");
-        unblockUserIdsOnRemote(localBlocklistService,
+                "Shared unblock -> Local block -> Shared unblock -> Local block = Local block 1");
+        unblockUserIdsOnSharedBlocklistService(localBlocklistService,
                 userId,
-                "Remote unblock -> Local block -> Remote unblock -> Local block = Remote unblock 2");
-        blockUserIdsOnLocal(localBlocklistService,
+                "Shared unblock -> Local block -> Shared unblock -> Local block = Shared unblock 2");
+        blockUserIdsOnLocalBlocklistService(localBlocklistService,
                 userId,
-                "Remote unblock -> Local block -> Remote unblock -> Local block = Local block 2");
+                "Shared unblock -> Local block -> Shared unblock -> Local block = Local block 2");
     }
 
     private static BlocklistService newBlocklistService(int maxLogSize) {
@@ -297,7 +298,7 @@ class BlocklistServiceIT extends BaseIntegrationTest {
                         .build())
                 .build());
 
-        String uri = "redis://%s:%d".formatted(ENV.getRedisHost(), ENV.getRedisPort());
+        String uri = testEnvironmentManager.getRedisUri();
 
         BlocklistService.maxLogQueueSize = maxLogSize;
         return new BlocklistService(
@@ -310,11 +311,11 @@ class BlocklistServiceIT extends BaseIntegrationTest {
                 null);
     }
 
-    private void blockUserIdsOnLocal(
+    private void blockUserIdsOnLocalBlocklistService(
             BlocklistService localBlocklistService,
             long userId,
             String desc) {
-        localBlocklistService.blockUserIds(Set.of(userId), 1)
+        localBlocklistService.blockUserIds(Set.of(userId), BLOCK_DURATION_SECONDS)
                 .block(TIMEOUT);
         waitToSync();
         assertThat(localBlocklistService.isUserIdBlocked(userId)).as(desc)
@@ -332,22 +333,22 @@ class BlocklistServiceIT extends BaseIntegrationTest {
                 .isFalse();
     }
 
-    private void blockUserIdsOnRemote(
+    private void blockUserIdsOnSharedBlocklistService(
             BlocklistService localBlocklistService,
             long userId,
             String desc) {
-        BLOCKLIST_SERVICE.blockUserIds(Set.of(userId), 1)
+        sharedBlocklistService.blockUserIds(Set.of(userId), BLOCK_DURATION_SECONDS)
                 .block(TIMEOUT);
         waitToSync();
         assertThat(localBlocklistService.isUserIdBlocked(userId)).as(desc)
                 .isTrue();
     }
 
-    private void unblockUserIdsOnRemote(
+    private void unblockUserIdsOnSharedBlocklistService(
             BlocklistService localBlocklistService,
             long userId,
             String desc) {
-        BLOCKLIST_SERVICE.unblockUserIds(Set.of(userId))
+        sharedBlocklistService.unblockUserIds(Set.of(userId))
                 .block(TIMEOUT);
         waitToSync();
         assertThat(localBlocklistService.isUserIdBlocked(userId)).as(desc)

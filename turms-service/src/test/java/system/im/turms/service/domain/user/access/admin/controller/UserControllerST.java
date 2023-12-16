@@ -32,7 +32,7 @@ class UserControllerST extends SpringAwareIntegrationTest {
     @Test
     void queryUsers_shouldReturnNotEmptyData() {
         ResponseDTO<Collection<User>> response =
-                getResponse("/users?registrationDateStart=1970-01-01T00:00:00Z");
+                sendHttpRequest("/users?registrationDateStart=1970-01-01T00:00:00Z");
         assertThat(response.data()).isNotEmpty();
     }
 

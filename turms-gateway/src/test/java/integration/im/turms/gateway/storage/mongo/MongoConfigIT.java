@@ -17,6 +17,7 @@
 
 package integration.im.turms.gateway.storage.mongo;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import im.turms.gateway.storage.mongo.MongoConfig;
@@ -41,13 +42,19 @@ import static org.mockito.Mockito.when;
  */
 class MongoConfigIT extends BaseIntegrationTest {
 
+    @BeforeAll
+    static void setup() {
+        setupTestEnvironment();
+    }
+
     @Test
     void userMongoClient_shouldReturnNotNullInstance() {
         MongoConfig mongoConfig = new MongoConfig(mock(TurmsApplicationContext.class));
         TurmsProperties properties = new TurmsProperties().toBuilder()
                 .gateway(new GatewayProperties().toBuilder()
                         .mongo(new MongoProperties().toBuilder()
-                                .user(new TurmsMongoProperties(getMongoUri()))
+                                .user(new TurmsMongoProperties(
+                                        testEnvironmentManager.getMongoUri()))
                                 .build())
                         .session(new SessionProperties().toBuilder()
                                 .identityAccessManagement(

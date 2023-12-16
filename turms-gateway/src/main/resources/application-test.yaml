@@ -1,0 +1,14 @@
+spring:
+  netty:
+    leak-detection: paranoid
+
+############################### Turms ###############################
+
+turms:
+  logging:
+    console:
+      enabled: true
+  plugin:
+    js:
+      debug:
+        enabled: true

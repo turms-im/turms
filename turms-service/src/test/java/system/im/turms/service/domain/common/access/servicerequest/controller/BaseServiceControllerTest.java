@@ -34,7 +34,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * @author James Chen
  */
-public class BaseServiceControllerTest<T> extends SpringAwareIntegrationTest {
+public abstract class BaseServiceControllerTest<T> extends SpringAwareIntegrationTest {
 
     private final Class<T> controllerClass;
 

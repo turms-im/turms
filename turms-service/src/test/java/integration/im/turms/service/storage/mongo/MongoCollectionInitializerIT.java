@@ -25,6 +25,7 @@ import java.util.Optional;
 import com.google.common.base.CaseFormat;
 import helper.SpringAwareIntegrationTest;
 import org.bson.Document;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import reactor.test.StepVerifier;
 
@@ -59,7 +60,6 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 class MongoCollectionInitializerIT extends SpringAwareIntegrationTest {
 
-    static final TurmsMongoClient MONGO_CLIENT;
     static final List<Class<?>> MODEL_CLASSES = List.of(
             // Admin
             Admin.class,
@@ -87,11 +87,17 @@ class MongoCollectionInitializerIT extends SpringAwareIntegrationTest {
             UserRelationshipGroupMember.class,
             UserVersion.class);
 
-    static {
-        TurmsMongoProperties mongoProperties = new TurmsMongoProperties(getMongoUri());
-        MONGO_CLIENT = TurmsMongoClient.of(mongoProperties, "test")
+    static TurmsMongoClient mongoClient;
+
+    @BeforeAll
+    void setup() {
+        setupTestEnvironment();
+
+        TurmsMongoProperties mongoProperties =
+                new TurmsMongoProperties(testEnvironmentManager.getMongoUri());
+        mongoClient = TurmsMongoClient.of(mongoProperties, "test")
                 .block(Duration.ofMinutes(1));
-        MONGO_CLIENT.registerEntitiesByClasses(MODEL_CLASSES);
+        mongoClient.registerEntitiesByClasses(MODEL_CLASSES);
     }
 
     @Test
@@ -101,7 +107,7 @@ class MongoCollectionInitializerIT extends SpringAwareIntegrationTest {
             String jsonSchema = readText("schema/"
                     + schemaFileName
                     + ".json");
-            StepVerifier.create(MONGO_CLIENT.validate(modelClass, jsonSchema))
+            StepVerifier.create(mongoClient.validate(modelClass, jsonSchema))
                     .expectNext(true)
                     .as("Entity ("
                             + modelClass.getName()
@@ -114,7 +120,7 @@ class MongoCollectionInitializerIT extends SpringAwareIntegrationTest {
     @Test
     void validateIndexes() {
         for (Class<?> modelClass : MODEL_CLASSES) {
-            StepVerifier.create(MONGO_CLIENT.listIndexes(modelClass)
+            StepVerifier.create(mongoClient.listIndexes(modelClass)
                     .collect(CollectorUtil.toList(8)))
                     .assertNext(indexes -> {
                         String schemaFileName = getFileName(modelClass);

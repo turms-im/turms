@@ -19,6 +19,8 @@ package helper;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.Duration;
+import java.util.Base64;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
@@ -27,10 +29,10 @@ import io.netty.buffer.ByteBufInputStream;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import lombok.Getter;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
-import org.springframework.util.Base64Utils;
 import org.springframework.util.MimeTypeUtils;
 import reactor.netty.http.client.HttpClient;
 
@@ -44,14 +46,17 @@ import im.turms.service.TurmsServiceApplication;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+//
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @SpringBootTest(
         webEnvironment = SpringBootTest.WebEnvironment.NONE,
-        classes = {TurmsServiceApplication.class, ContainerConfig.class},
+        classes = {TurmsServiceApplication.class, TestEnvironmentConfig.class},
         properties = "spring.profiles.active=test")
 public abstract class SpringAwareIntegrationTest extends BaseIntegrationTest {
 
     private static final String BASIC_AUTH = "Basic "
-            + Base64Utils.encodeToString("turms:turms".getBytes());
+            + Base64.getEncoder()
+                    .encodeToString("turms:turms".getBytes());
     private static final ObjectMapper MAPPER = JsonMapper.builder()
             .addModule(new ParameterNamesModule())
             .build();
@@ -60,11 +65,34 @@ public abstract class SpringAwareIntegrationTest extends BaseIntegrationTest {
     @Getter
     private ApplicationContext context;
 
-    public HttpClient adminHttp;
+    public HttpClient adminHttpClient;
 
-    public <T> ResponseDTO<T> getResponse(String uri) {
-        init();
-        return adminHttp
+    private synchronized void initAdminHttpClient() {
+        if (adminHttpClient != null) {
+            return;
+        }
+        Node node = context.getBean(Node.class);
+        TurmsPropertiesManager propertiesManager = context.getBean(TurmsPropertiesManager.class);
+        TurmsProperties properties = propertiesManager.getLocalProperties();
+        AdminHttpProperties httpProperties = switch (node.getNodeType()) {
+            case AI_SERVING -> properties.getAiServing()
+                    .getAdminApi()
+                    .getHttp();
+            case GATEWAY -> properties.getGateway()
+                    .getAdminApi()
+                    .getHttp();
+            case SERVICE -> properties.getService()
+                    .getAdminApi()
+                    .getHttp();
+        };
+        adminHttpClient = HttpClient.create()
+                .host("127.0.0.1")
+                .port(httpProperties.getPort());
+    }
+
+    public <T> ResponseDTO<T> sendHttpRequest(String uri) {
+        initAdminHttpClient();
+        return adminHttpClient
                 .headers(httpHeaders -> httpHeaders.add(HttpHeaderNames.AUTHORIZATION, BASIC_AUTH)
                         .add(HttpHeaderNames.ACCEPT, MimeTypeUtils.APPLICATION_JSON_VALUE))
                 .get()
@@ -80,30 +108,7 @@ public abstract class SpringAwareIntegrationTest extends BaseIntegrationTest {
                         }
                     });
                 })
-                .block();
-    }
-
-    private synchronized void init() {
-        if (adminHttp != null) {
-            return;
-        }
-        TurmsPropertiesManager propertiesManager = context.getBean(TurmsPropertiesManager.class);
-        Node node = context.getBean(Node.class);
-        TurmsProperties properties = propertiesManager.getLocalProperties();
-        AdminHttpProperties httpProperties = switch (node.getNodeType()) {
-            case AI_SERVING -> properties.getAiServing()
-                    .getAdminApi()
-                    .getHttp();
-            case GATEWAY -> properties.getGateway()
-                    .getAdminApi()
-                    .getHttp();
-            case SERVICE -> properties.getService()
-                    .getAdminApi()
-                    .getHttp();
-        };
-        adminHttp = HttpClient.create()
-                .host("127.0.0.1")
-                .port(httpProperties.getPort());
+                .block(Duration.ofMinutes(1));
     }
 
 }

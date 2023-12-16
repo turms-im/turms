@@ -15,22 +15,22 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.testing;
+package im.turms.server.common.testing.properties;
 
 import java.util.List;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @author James Chen
  */
-@Builder
+@AllArgsConstructor
+@Builder(toBuilder = true)
 @Data
-public class TestingEnvContainerOptions {
-    private boolean setupTurmsAdmin;
-    private boolean setupTurmsGateway;
-    private boolean setupTurmsService;
-    private List<String> turmsGatewayJvmOptions;
-    private List<String> turmsServiceJvmOptions;
+@NoArgsConstructor
+public class TurmsServiceContainerTestEnvironmentProperties {
+    private List<String> jvmOptions;
 }
