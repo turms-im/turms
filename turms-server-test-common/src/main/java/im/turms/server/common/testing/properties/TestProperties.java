@@ -36,6 +36,9 @@ public class TestProperties {
     public static final String PREFIX = "turms-test";
 
     @NestedConfigurationProperty
+    private MinioTestEnvironmentProperties minio = new MinioTestEnvironmentProperties();
+
+    @NestedConfigurationProperty
     private MongoTestEnvironmentProperties mongo = new MongoTestEnvironmentProperties();
 
     @NestedConfigurationProperty

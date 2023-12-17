@@ -30,6 +30,8 @@ import lombok.experimental.Delegate;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 
+import im.turms.server.common.testing.environment.minio.MinioTestEnvironmentAware;
+import im.turms.server.common.testing.environment.minio.MinioTestEnvironmentManager;
 import im.turms.server.common.testing.environment.mongo.MongoTestEnvironmentAware;
 import im.turms.server.common.testing.environment.mongo.MongoTestEnvironmentManager;
 import im.turms.server.common.testing.environment.redis.RedisTestEnvironmentAware;
@@ -38,6 +40,7 @@ import im.turms.server.common.testing.environment.turmsgateway.TurmsGatewayTestE
 import im.turms.server.common.testing.environment.turmsgateway.TurmsGatewayTestEnvironmentManager;
 import im.turms.server.common.testing.environment.turmsservice.TurmsServiceTestEnvironmentAware;
 import im.turms.server.common.testing.environment.turmsservice.TurmsServiceTestEnvironmentManager;
+import im.turms.server.common.testing.properties.MinioTestEnvironmentProperties;
 import im.turms.server.common.testing.properties.MongoTestEnvironmentProperties;
 import im.turms.server.common.testing.properties.RedisTestEnvironmentProperties;
 import im.turms.server.common.testing.properties.TestProperties;
@@ -51,14 +54,16 @@ import im.turms.server.common.testing.properties.TurmsServiceTestEnvironmentProp
  *           implementation does NOT fully support just because we don't have these test cases.
  */
 @Slf4j
-public class TestEnvironmentManager
-        implements Closeable, MongoTestEnvironmentAware, RedisTestEnvironmentAware,
-        TurmsGatewayTestEnvironmentAware, TurmsServiceTestEnvironmentAware {
+public class TestEnvironmentManager implements Closeable, MinioTestEnvironmentAware,
+        MongoTestEnvironmentAware, RedisTestEnvironmentAware, TurmsGatewayTestEnvironmentAware,
+        TurmsServiceTestEnvironmentAware {
 
     public static final String DEFAULT_PROPERTIES_FILE = "application-test.yaml";
 
     private final TestEnvironmentContainer testEnvironmentContainer;
 
+    @Delegate
+    private final MinioTestEnvironmentManager minioTestEnvironmentManager;
     @Delegate
     private final MongoTestEnvironmentManager mongoTestEnvironmentManager;
     @Delegate
@@ -69,6 +74,7 @@ public class TestEnvironmentManager
     private final TurmsServiceTestEnvironmentManager turmsServiceTestEnvironmentManager;
 
     private TestEnvironmentManager(TestProperties testProperties) {
+        MinioTestEnvironmentProperties minioTestEnvironmentProperties = testProperties.getMinio();
         MongoTestEnvironmentProperties mongoTestEnvironmentProperties = testProperties.getMongo();
         RedisTestEnvironmentProperties redisTestEnvironmentProperties = testProperties.getRedis();
         TurmsAdminTestEnvironmentProperties turmsAdminTestEnvironmentProperties =
@@ -79,6 +85,8 @@ public class TestEnvironmentManager
                 testProperties.getTurmsService();
 
         testEnvironmentContainer = TestEnvironmentContainer.create(
+                minioTestEnvironmentProperties.getType()
+                        .equals(ServiceTestEnvironmentType.CONTAINER),
                 mongoTestEnvironmentProperties.getType()
                         .equals(ServiceTestEnvironmentType.CONTAINER),
                 redisTestEnvironmentProperties.getType()
@@ -93,6 +101,9 @@ public class TestEnvironmentManager
                 turmsServiceTestEnvironmentProperties.getContainer()
                         .getJvmOptions());
 
+        minioTestEnvironmentManager = new MinioTestEnvironmentManager(
+                minioTestEnvironmentProperties,
+                testEnvironmentContainer);
         mongoTestEnvironmentManager = new MongoTestEnvironmentManager(
                 mongoTestEnvironmentProperties,
                 testEnvironmentContainer);
@@ -140,7 +151,7 @@ public class TestEnvironmentManager
             node = node.get(propertyName);
             if (null == node) {
                 // Use default properties if the properties file is found,
-                // but it doesn't specify properties.
+                // but it doesn't specify test properties.
                 return fromProperties(new TestProperties());
             }
         }

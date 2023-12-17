@@ -20,9 +20,15 @@ package im.turms.server.common.testing.environment;
 /**
  * @author James Chen
  */
-public class ContainerTestEnvironmentPropertyConst {
+public final class ContainerTestEnvironmentPropertyConst {
 
     public static final String DOCKER_COMPOSE_TEST_FILE = "docker-compose.test.yml";
+
+    public static final String MINIO = "minio";
+    public static final String MINIO_SERVICE_NAME = "minio_1";
+    public static final int MINIO_SERVICE_PORT = 9000;
+    public static final String MINIO_SERVICE_USERNAME = "minioadmin";
+    public static final String MINIO_SERVICE_PASSWORD = "minioadmin";
 
     public static final String MONGO = "mongodb-router";
     public static final String MONGO_SHARD = "mongodb-shard";

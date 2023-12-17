@@ -31,6 +31,7 @@ import org.testcontainers.shaded.org.apache.commons.io.FileUtils;
 import org.yaml.snakeyaml.Yaml;
 
 import static im.turms.server.common.testing.environment.ContainerTestEnvironmentPropertyConst.DOCKER_COMPOSE_TEST_FILE;
+import static im.turms.server.common.testing.environment.ContainerTestEnvironmentPropertyConst.MINIO;
 import static im.turms.server.common.testing.environment.ContainerTestEnvironmentPropertyConst.MONGO;
 import static im.turms.server.common.testing.environment.ContainerTestEnvironmentPropertyConst.MONGO_CONFIG;
 import static im.turms.server.common.testing.environment.ContainerTestEnvironmentPropertyConst.MONGO_SHARD;
@@ -52,6 +53,11 @@ public class TestEnvironmentContainer extends DockerComposeContainer<TestEnviron
     private final boolean hasContainer;
     private volatile boolean started;
 
+    /**
+     * @param dockerCompose TODO: Use InputStream instead of File once DockerComposeContainer
+     *                      supports
+     *                      (https://github.com/testcontainers/testcontainers-java/issues/3431)
+     */
     public TestEnvironmentContainer(
             File dockerCompose,
             String dockerComposeConfig,
@@ -62,6 +68,7 @@ public class TestEnvironmentContainer extends DockerComposeContainer<TestEnviron
     }
 
     public static TestEnvironmentContainer create(
+            boolean setupMinio,
             boolean setupMongo,
             boolean setupRedis,
             boolean setupTurmsAdmin,
@@ -75,7 +82,8 @@ public class TestEnvironmentContainer extends DockerComposeContainer<TestEnviron
         } catch (IOException e) {
             throw new RuntimeException("Failed to create the temp docker compose file", e);
         }
-        String config = buildDockerComposeConfig(setupMongo,
+        String config = buildDockerComposeConfig(setupMinio,
+                setupMongo,
                 setupRedis,
                 setupTurmsAdmin,
                 setupTurmsGateway,
@@ -97,11 +105,8 @@ public class TestEnvironmentContainer extends DockerComposeContainer<TestEnviron
                         || setupTurmsService);
     }
 
-    /**
-     * Fixme: Return InputStream instead of File once DockerComposeContainer supports
-     * (https://github.com/testcontainers/testcontainers-java/issues/3431)
-     */
     private static String buildDockerComposeConfig(
+            boolean setupMinio,
             boolean setupMongo,
             boolean setupRedis,
             boolean setupTurmsAdmin,
@@ -119,6 +124,9 @@ public class TestEnvironmentContainer extends DockerComposeContainer<TestEnviron
         Yaml yaml = new Yaml();
         Map<String, Object> config = yaml.load(resource);
         Map<String, Object> services = (Map<String, Object>) config.get("services");
+        if (!setupMinio) {
+            removeService(services, MINIO);
+        }
         if (!setupMongo) {
             removeService(services, MONGO);
             removeService(services, MONGO_SHARD);
