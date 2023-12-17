@@ -85,7 +85,6 @@ import im.turms.server.common.infra.property.env.service.business.storage.Storag
 import im.turms.server.common.infra.reactor.PublisherUtil;
 import im.turms.server.common.infra.security.MacUtil;
 import im.turms.server.common.infra.time.DateRange;
-import im.turms.server.common.infra.time.DurationConst;
 import im.turms.server.common.infra.tracing.TracingCloseableContext;
 import im.turms.server.common.infra.tracing.TracingContext;
 import im.turms.server.common.storage.mongo.TurmsMongoClient;
@@ -196,7 +195,15 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
                 .getStorage();
         Mono<TurmsMongoClient> clientMono =
                 TurmsMongoClient.of(properties.getMongo(), "message-attachment");
-        TurmsMongoClient mongoClient = clientMono.block(DurationConst.ONE_MINUTE);
+        return clientMono.flatMap(
+                mongoClient -> initClientAndBuckets(mongoClient, properties, uri, endpoint));
+    }
+
+    private Mono<Void> initClientAndBuckets(
+            TurmsMongoClient mongoClient,
+            MinioStorageProperties properties,
+            URI uri,
+            String endpoint) {
         messageAttachmentRepository = new MessageAttachmentRepository(mongoClient);
         baseUrl = uri.getScheme()
                 + "://"
@@ -236,10 +243,16 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
         } else {
             macKey = null;
         }
-        initClient(endpoint,
-                properties.getRegion(),
-                properties.getAccessKey(),
-                properties.getSecretKey());
+        String region = properties.getRegion();
+        String accessKey = properties.getAccessKey();
+        String secretKey = properties.getSecretKey();
+        MinioAsyncClient.Builder builder = MinioAsyncClient.builder()
+                .endpoint(endpoint)
+                .credentials(accessKey, secretKey);
+        if (StringUtil.isNotBlank(region)) {
+            builder.region(region);
+        }
+        client = new TurmsMinioAsyncClient(builder.build());
 
         Mono<Void> initBuckets =
                 initBuckets().timeout(Duration.ofSeconds(INIT_BUCKETS_TIMEOUT_SECONDS))
@@ -266,16 +279,6 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
                     return Mono.delay(Duration.ofMillis(retry.getIntervalMillis()))
                             .then();
                 })));
-    }
-
-    private void initClient(String endpoint, String region, String accessKey, String secretKey) {
-        MinioAsyncClient.Builder builder = MinioAsyncClient.builder()
-                .endpoint(endpoint)
-                .credentials(accessKey, secretKey);
-        if (StringUtil.isNotBlank(region)) {
-            builder.region(region);
-        }
-        client = new TurmsMinioAsyncClient(builder.build());
     }
 
     // region bucket
