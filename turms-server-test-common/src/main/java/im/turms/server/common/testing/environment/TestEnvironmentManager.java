@@ -167,6 +167,10 @@ public class TestEnvironmentManager implements Closeable, MinioTestEnvironmentAw
     public void start() {
         testEnvironmentContainer.start();
         // TODO: Support checking the running state of local services
+        if (getMinioTestEnvironmentType().equals(ServiceTestEnvironmentType.CONTAINER)
+                && !isMongoRunning()) {
+            throw new IllegalStateException("The MinIO container is not running");
+        }
         if (getMongoTestEnvironmentType().equals(ServiceTestEnvironmentType.CONTAINER)
                 && !isMongoRunning()) {
             throw new IllegalStateException("The MongoDB container is not running");
@@ -175,6 +179,7 @@ public class TestEnvironmentManager implements Closeable, MinioTestEnvironmentAw
                 && !isRedisRunning()) {
             throw new IllegalStateException("The Redis container is not running");
         }
+        log.info("MinIO server URI: \"{}\"", getMinioUri());
         log.info("MongoDB server URI: \"{}\"", getMongoUri());
         log.info("Redis server URI: \"{}\"", getRedisUri());
     }

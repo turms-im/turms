@@ -33,6 +33,7 @@ import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.reactor.TaskScheduler;
+import im.turms.server.common.infra.test.VisibleForTesting;
 
 /**
  * @author James Chen
@@ -70,7 +71,11 @@ public abstract class TurmsExtension {
         this.running = running;
     }
 
-    protected <T> T loadProperties(Class<T> propertiesClass) {
+    /**
+     * The method should be protected, but it is public for testing purposes.
+     */
+    @VisibleForTesting
+    public <T> T loadProperties(Class<T> propertiesClass) {
         return context.getBean(TurmsPropertiesManager.class)
                 .loadProperties(propertiesClass);
     }

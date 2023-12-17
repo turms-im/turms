@@ -102,12 +102,13 @@ import static im.turms.server.common.access.client.dto.constant.StorageResourceT
  */
 public class MinioStorageServiceProvider extends TurmsExtension implements StorageServiceProvider {
 
+    public static final String RESOURCE_ID = "id";
+    public static final String RESOURCE_URL = "url";
+
     private static final Logger LOGGER = LoggerFactory.getLogger(MinioStorageServiceProvider.class);
 
     private static final int INIT_BUCKETS_TIMEOUT_SECONDS = 60;
     private static final Map<StorageResourceType, String> RESOURCE_TYPE_TO_BUCKET_NAME;
-    private static final String RESOURCE_ID = "id";
-    private static final String RESOURCE_URL = "url";
 
     private static final String HTTP_HEADER_CONTENT_TYPE = "Content-Type";
     private static final Mono<Map<String, String>> ERROR_NOT_UPLOADER_OR_SHARED_WITH_USER_TO_DOWNLOAD_MESSAGE_ATTACHMENT =

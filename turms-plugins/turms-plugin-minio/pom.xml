@@ -35,6 +35,13 @@
             <artifactId>minio</artifactId>
             <version>${minio.version}</version>
         </dependency>
+        <!-- Testing -->
+        <dependency>
+            <groupId>im.turms</groupId>
+            <artifactId>server-test-common</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>

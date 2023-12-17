@@ -34,7 +34,7 @@ public class MinioLocalTestEnvironmentProperties {
 
     private int port = 9000;
 
-    private String username = "";
+    private String username = "minioadmin";
 
-    private String password = "";
+    private String password = "minioadmin";
 }

@@ -41,4 +41,11 @@ public interface MinioTestEnvironmentAware extends ServiceTestEnvironmentAware {
 
     String getMinioPassword();
 
+    default String getMinioUri() {
+        return "http://"
+                + getMinioHost()
+                + ":"
+                + getMinioPort();
+    }
+
 }

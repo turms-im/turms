@@ -98,7 +98,8 @@ public class TestEnvironmentContainer extends DockerComposeContainer<TestEnviron
         return new TestEnvironmentContainer(
                 dockerComposeFile,
                 config,
-                setupMongo
+                setupMinio
+                        || setupMongo
                         || setupRedis
                         || setupTurmsAdmin
                         || setupTurmsGateway
