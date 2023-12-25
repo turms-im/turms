@@ -49,22 +49,25 @@ class ResponseStatusCodeFileGenerator {
         List<String> lines = Files.readAllLines(path);
 
         // cpp
-        generateSourceCodeFile("h", lines, 0, (statusCodeName, statusCode, isGroupFirstCode) -> {
-            String codeName = convertToCamelCase(statusCodeName);
-            return "const int k"
-                    + codeName.substring(0, 1)
-                            .toUpperCase()
-                    + codeName.substring(1)
-                    + " = "
-                    + statusCode
-                    + ";";
-        });
+        generateSourceCodeFile("h",
+                lines,
+                0,
+                (statusCodeName, statusCode, groupName, isFirstGroupCode) -> {
+                    String codeName = convertToCamelCase(statusCodeName);
+                    return "const int k"
+                            + codeName.substring(0, 1)
+                                    .toUpperCase()
+                            + codeName.substring(1)
+                            + " = "
+                            + statusCode
+                            + ";";
+                });
 
         // dart
         generateSourceCodeFile("dart",
                 lines,
                 2,
-                (statusCodeName, statusCode, isGroupFirstCode) -> "static const "
+                (statusCodeName, statusCode, groupName, isFirstGroupCode) -> "static const "
                         + convertToCamelCase(statusCodeName)
                         + " = "
                         + statusCode
@@ -74,7 +77,7 @@ class ResponseStatusCodeFileGenerator {
         generateSourceCodeFile("kt",
                 lines,
                 4,
-                (statusCodeName, statusCode, isGroupFirstCode) -> "const val "
+                (statusCodeName, statusCode, groupName, isFirstGroupCode) -> "const val "
                         + statusCodeName
                         + " = "
                         + statusCode);
@@ -83,7 +86,7 @@ class ResponseStatusCodeFileGenerator {
         generateSourceCodeFile("ts",
                 lines,
                 4,
-                (statusCodeName, statusCode, isGroupFirstCode) -> isGroupFirstCode
+                (statusCodeName, statusCode, groupName, isFirstGroupCode) -> isFirstGroupCode
                         ? statusCodeName
                                 + " = "
                                 + statusCode
@@ -95,9 +98,9 @@ class ResponseStatusCodeFileGenerator {
         generateSourceCodeFile("swift",
                 lines,
                 4,
-                (statusCodeName, statusCode, isGroupFirstCode) -> {
+                (statusCodeName, statusCode, groupName, isFirstGroupCode) -> {
                     String codeName = convertToCamelCase(statusCodeName);
-                    return isGroupFirstCode
+                    return isFirstGroupCode
                             ? "case "
                                     + codeName
                                     + " = "
@@ -105,6 +108,25 @@ class ResponseStatusCodeFileGenerator {
                             : "case "
                                     + codeName;
                 });
+
+        // markdown
+        generateSourceCodeFile("md",
+                lines,
+                0,
+                false,
+                (statusCodeName, statusCode, groupName, isFirstGroupCode) -> isFirstGroupCode
+                        ? "|"
+                                + groupName
+                                + "|"
+                                + statusCodeName
+                                + "|"
+                                + statusCode
+                                + "|"
+                        : "||"
+                                + statusCodeName
+                                + "|"
+                                + statusCode
+                                + "|");
     }
 
     private static String convertToCamelCase(String input) {
@@ -128,10 +150,20 @@ class ResponseStatusCodeFileGenerator {
             List<String> lines,
             int indent,
             StatusCodeTransformer transformer) throws IOException {
+        generateSourceCodeFile(fileSuffix, lines, indent, true, transformer);
+    }
+
+    private static void generateSourceCodeFile(
+            String fileSuffix,
+            List<String> lines,
+            int indent,
+            boolean outputComments,
+            StatusCodeTransformer transformer) throws IOException {
         StringBuilder builder = new StringBuilder(1024 * 16);
         boolean start = false;
         int lastStatusCode = Integer.MIN_VALUE;
         String indentStr = " ".repeat(indent);
+        String groupName = null;
         for (String line : lines) {
             line = line.trim();
             if (!start) {
@@ -139,16 +171,22 @@ class ResponseStatusCodeFileGenerator {
                 continue;
             }
             if (line.isBlank()) {
-                builder.append('\n');
+                if (outputComments) {
+                    builder.append('\n');
+                }
                 continue;
             }
             if (line.contains("TODO")) {
                 continue;
             }
             if (line.startsWith("//")) {
-                builder.append(indentStr)
-                        .append(line)
-                        .append('\n');
+                if (outputComments) {
+                    builder.append(indentStr)
+                            .append(line)
+                            .append('\n');
+                }
+                groupName = line.substring(2)
+                        .trim();
                 continue;
             }
             if (line.endsWith(";")) {
@@ -172,23 +210,34 @@ class ResponseStatusCodeFileGenerator {
                                 + "\" as number",
                         e);
             }
-            String newLine = transformer
-                    .transform(statusCodeName, statusCode, statusCode != lastStatusCode + 1);
+            String newLine = transformer.transform(statusCodeName,
+                    statusCode,
+                    groupName,
+                    statusCode != lastStatusCode + 1);
             builder.append(indentStr)
                     .append(newLine)
                     .append('\n');
             lastStatusCode = statusCode;
         }
         String code = builder.toString();
-        Files.writeString(Path.of("./code."
-                + fileSuffix),
+        Path path = Path.of("./code."
+                + fileSuffix);
+        Files.writeString(path,
                 code,
                 StandardOpenOption.CREATE,
                 StandardOpenOption.TRUNCATE_EXISTING);
+
+        System.out.println("Generated a file: "
+                + path.toAbsolutePath()
+                        .normalize());
     }
 
     private interface StatusCodeTransformer {
-        String transform(String statusCodeName, int statusCode, boolean isGroupFirstCode);
+        String transform(
+                String statusCodeName,
+                int statusCode,
+                String groupName,
+                boolean isFirstGroupCode);
     }
 
 }
