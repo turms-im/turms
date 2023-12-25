@@ -17,6 +17,7 @@
 
 package im.turms.service.domain.user.service;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -170,6 +171,7 @@ public class UserRelationshipService {
                                                     t);
                                             return Mono.empty();
                                         }))
+                                .doOnSuccess(unused -> invalidateRelationshipCache(keys))
                                 .thenReturn(result)))
                 .retryWhen(TRANSACTION_RETRY);
     }
@@ -208,6 +210,7 @@ public class UserRelationshipService {
                                     t);
                             return Mono.empty();
                         }))
+                .doOnSuccess(unused -> invalidateRelationshipCache(ownerId, relatedUserId))
                 .then();
     }
 
@@ -240,13 +243,23 @@ public class UserRelationshipService {
                     Recyclable<Set<Long>> recyclableSet = SetRecycler.obtain();
                     return queryRelatedUserIds(Set.of(ownerId), groupIndexes, isBlocked)
                             .collect(Collectors.toCollection(recyclableSet::getValue))
-                            .map(ids -> {
-                                if (ids.isEmpty()) {
+                            .map(relatedUserIds -> {
+                                if (relatedUserIds.isEmpty()) {
                                     throw ResponseException.get(ResponseStatusCode.NO_CONTENT);
+                                }
+                                if (isBlocked != null) {
+                                    Pair<Long, Long> cacheKey;
+                                    for (Long relatedUserId : relatedUserIds) {
+                                        cacheKey = Pair.of(ownerId, relatedUserId);
+                                        ownerIdAndRelatedUserIdToHasRelationshipAndNotBlockedCache
+                                                .put(cacheKey, !isBlocked);
+                                        ownerIdAndRelatedUserIdToIsBlockedCache.put(cacheKey,
+                                                isBlocked);
+                                    }
                                 }
                                 return ClientMessagePool.getLongsWithVersionBuilder()
                                         .setLastUpdatedDate(date.getTime())
-                                        .addAllLongs(ids)
+                                        .addAllLongs(relatedUserIds)
                                         .build();
                             })
                             .doFinally(signalType -> recyclableSet.recycle());
@@ -276,7 +289,16 @@ public class UserRelationshipService {
                                 UserRelationshipsWithVersion.Builder builder =
                                         ClientMessagePool.getUserRelationshipsWithVersionBuilder()
                                                 .setLastUpdatedDate(date.getTime());
+                                UserRelationship.Key relationshipKey;
+                                Pair<Long, Long> cacheKey;
+                                boolean blocked;
                                 for (UserRelationship relationship : relationships) {
+                                    relationshipKey = relationship.getKey();
+                                    cacheKey = Pair.of(ownerId, relationshipKey.getRelatedUserId());
+                                    blocked = relationship.getBlockDate() != null;
+                                    ownerIdAndRelatedUserIdToHasRelationshipAndNotBlockedCache
+                                            .put(cacheKey, !blocked);
+                                    ownerIdAndRelatedUserIdToIsBlockedCache.put(cacheKey, blocked);
                                     builder.addUserRelationships(
                                             ProtoModelConvertor.relationship2proto(relationship));
                                 }
@@ -466,6 +488,14 @@ public class UserRelationshipService {
                         now,
                         true,
                         session))
+                .doOnSuccess(unused -> {
+                    Pair<Long, Long> cacheKey = Pair.of(userOneId, userTwoId);
+                    ownerIdAndRelatedUserIdToHasRelationshipAndNotBlockedCache.put(cacheKey, true);
+                    ownerIdAndRelatedUserIdToIsBlockedCache.put(cacheKey, false);
+                    cacheKey = Pair.of(userTwoId, userOneId);
+                    ownerIdAndRelatedUserIdToHasRelationshipAndNotBlockedCache.put(cacheKey, true);
+                    ownerIdAndRelatedUserIdToIsBlockedCache.put(cacheKey, false);
+                })
                 .then(PublisherPool.TRUE);
     }
 
@@ -521,12 +551,19 @@ public class UserRelationshipService {
         }
         UserRelationship userRelationship =
                 new UserRelationship(ownerId, relatedUserId, blockDate, establishmentDate);
-        return upsert
+        return (upsert
                 ? userRelationshipRepository.upsert(userRelationship, session)
                 : userRelationshipRepository.insert(userRelationship, session)
                         .onErrorMap(DuplicateKeyException.class,
                                 e -> ResponseException
-                                        .get(ResponseStatusCode.CREATE_EXISTING_RELATIONSHIP));
+                                        .get(ResponseStatusCode.CREATE_EXISTING_RELATIONSHIP)))
+                .doOnSuccess(unused -> {
+                    Pair<Long, Long> cacheKey = Pair.of(ownerId, relatedUserId);
+                    boolean isBlocked = blockDate != null;
+                    ownerIdAndRelatedUserIdToHasRelationshipAndNotBlockedCache.put(cacheKey,
+                            !isBlocked);
+                    ownerIdAndRelatedUserIdToIsBlockedCache.put(cacheKey, isBlocked);
+                });
     }
 
     public Mono<Boolean> isBlocked(
@@ -539,15 +576,21 @@ public class UserRelationshipService {
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        Pair<Long, Long> key = Pair.of(ownerId, relatedUserId);
+        Pair<Long, Long> cacheKey = Pair.of(ownerId, relatedUserId);
         if (preferCache) {
-            Boolean isBlocked = ownerIdAndRelatedUserIdToIsBlockedCache.getIfPresent(key);
+            Boolean isBlocked = ownerIdAndRelatedUserIdToIsBlockedCache.getIfPresent(cacheKey);
             if (isBlocked != null) {
                 return Mono.just(isBlocked);
             }
         }
         return userRelationshipRepository.isBlocked(ownerId, relatedUserId)
-                .doOnNext(isBlocked -> ownerIdAndRelatedUserIdToIsBlockedCache.put(key, isBlocked));
+                .doOnNext(isBlocked -> {
+                    if (isBlocked) {
+                        ownerIdAndRelatedUserIdToHasRelationshipAndNotBlockedCache.put(cacheKey,
+                                false);
+                    }
+                    ownerIdAndRelatedUserIdToIsBlockedCache.put(cacheKey, isBlocked);
+                });
     }
 
     public Mono<Boolean> hasNoRelationshipOrNotBlocked(
@@ -576,18 +619,23 @@ public class UserRelationshipService {
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        Pair<Long, Long> key = Pair.of(ownerId, relatedUserId);
+        Pair<Long, Long> cacheKey = Pair.of(ownerId, relatedUserId);
         if (preferCache) {
             Boolean hasRelationshipAndNotBlocked =
-                    ownerIdAndRelatedUserIdToHasRelationshipAndNotBlockedCache.getIfPresent(key);
+                    ownerIdAndRelatedUserIdToHasRelationshipAndNotBlockedCache
+                            .getIfPresent(cacheKey);
             if (hasRelationshipAndNotBlocked != null) {
                 return Mono.just(hasRelationshipAndNotBlocked);
             }
         }
         return userRelationshipRepository.hasRelationshipAndNotBlocked(ownerId, relatedUserId)
-                .doOnNext(
-                        hasRelationshipAndNotBlocked -> ownerIdAndRelatedUserIdToHasRelationshipAndNotBlockedCache
-                                .put(key, hasRelationshipAndNotBlocked));
+                .doOnNext(hasRelationshipAndNotBlocked -> {
+                    ownerIdAndRelatedUserIdToHasRelationshipAndNotBlockedCache.put(cacheKey,
+                            hasRelationshipAndNotBlocked);
+                    if (hasRelationshipAndNotBlocked) {
+                        ownerIdAndRelatedUserIdToIsBlockedCache.put(cacheKey, false);
+                    }
+                });
     }
 
     public Mono<UpdateResult> updateUserOneSidedRelationships(
@@ -642,6 +690,22 @@ public class UserRelationshipService {
         }
         UserRelationship.Key key = new UserRelationship.Key(ownerId, relatedUserId);
         return userRelationshipRepository.existsById(key);
+    }
+
+    // Cache
+
+    private void invalidateRelationshipCache(Collection<UserRelationship.Key> keys) {
+        for (UserRelationship.Key key : keys) {
+            Pair<Long, Long> pair = Pair.of(key.getOwnerId(), key.getRelatedUserId());
+            ownerIdAndRelatedUserIdToHasRelationshipAndNotBlockedCache.invalidate(pair);
+            ownerIdAndRelatedUserIdToIsBlockedCache.invalidate(pair);
+        }
+    }
+
+    private void invalidateRelationshipCache(Long ownerId, Long relatedUserId) {
+        Pair<Long, Long> pair = Pair.of(ownerId, relatedUserId);
+        ownerIdAndRelatedUserIdToHasRelationshipAndNotBlockedCache.invalidate(pair);
+        ownerIdAndRelatedUserIdToIsBlockedCache.invalidate(pair);
     }
 
 }
