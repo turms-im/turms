@@ -26,6 +26,8 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.reactivestreams.client.ClientSession;
@@ -41,6 +43,7 @@ import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.exception.ResponseExceptionPublisherPool;
+import im.turms.server.common.infra.lang.Pair;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.reactor.PublisherPool;
@@ -49,6 +52,7 @@ import im.turms.server.common.infra.recycler.Recyclable;
 import im.turms.server.common.infra.recycler.SetRecycler;
 import im.turms.server.common.infra.time.DateRange;
 import im.turms.server.common.infra.time.DateUtil;
+import im.turms.server.common.infra.time.DurationConst;
 import im.turms.server.common.infra.validation.Validator;
 import im.turms.server.common.storage.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.storage.mongo.exception.DuplicateKeyException;
@@ -77,6 +81,9 @@ public class UserRelationshipService {
     private final UserVersionService userVersionService;
     private final UserRelationshipGroupService userRelationshipGroupService;
 
+    private final Cache<Pair<Long, Long>, Boolean> ownerIdAndRelatedUserIdToIsBlockedCache;
+    private final Cache<Pair<Long, Long>, Boolean> ownerIdAndRelatedUserIdToHasRelationshipAndNotBlockedCache;
+
     public UserRelationshipService(
             UserRelationshipRepository userRelationshipRepository,
             UserVersionService userVersionService,
@@ -84,6 +91,16 @@ public class UserRelationshipService {
         this.userRelationshipRepository = userRelationshipRepository;
         this.userVersionService = userVersionService;
         this.userRelationshipGroupService = userRelationshipGroupService;
+
+        // TODO: make configurable
+        ownerIdAndRelatedUserIdToIsBlockedCache = Caffeine.newBuilder()
+                .maximumSize(8096)
+                .expireAfterWrite(DurationConst.ONE_MINUTE)
+                .build();
+        ownerIdAndRelatedUserIdToHasRelationshipAndNotBlockedCache = Caffeine.newBuilder()
+                .maximumSize(8096)
+                .expireAfterWrite(DurationConst.ONE_MINUTE)
+                .build();
     }
 
     public Mono<DeleteResult> deleteAllRelationships(
@@ -512,32 +529,65 @@ public class UserRelationshipService {
                                         .get(ResponseStatusCode.CREATE_EXISTING_RELATIONSHIP));
     }
 
-    public Mono<Boolean> isBlocked(@NotNull Long ownerId, @NotNull Long relatedUserId) {
+    public Mono<Boolean> isBlocked(
+            @NotNull Long ownerId,
+            @NotNull Long relatedUserId,
+            boolean preferCache) {
         try {
             Validator.notNull(ownerId, "ownerId");
             Validator.notNull(relatedUserId, "relatedUserId");
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        return userRelationshipRepository.isBlocked(ownerId, relatedUserId);
+        Pair<Long, Long> key = Pair.of(ownerId, relatedUserId);
+        if (preferCache) {
+            Boolean isBlocked = ownerIdAndRelatedUserIdToIsBlockedCache.getIfPresent(key);
+            if (isBlocked != null) {
+                return Mono.just(isBlocked);
+            }
+        }
+        return userRelationshipRepository.isBlocked(ownerId, relatedUserId)
+                .doOnNext(isBlocked -> ownerIdAndRelatedUserIdToIsBlockedCache.put(key, isBlocked));
     }
 
     public Mono<Boolean> hasNoRelationshipOrNotBlocked(
             @NotNull Long ownerId,
+            @NotNull Long relatedUserId,
+            boolean preferCache) {
+        return isBlocked(ownerId, relatedUserId, preferCache).map(isBlocked -> !isBlocked);
+    }
+
+    /**
+     * The method exists for backward compatibility
+     */
+    public Mono<Boolean> hasRelationshipAndNotBlocked(
+            @NotNull Long ownerId,
             @NotNull Long relatedUserId) {
-        return isBlocked(ownerId, relatedUserId).map(isBlocked -> !isBlocked);
+        return hasRelationshipAndNotBlocked(ownerId, relatedUserId, false);
     }
 
     public Mono<Boolean> hasRelationshipAndNotBlocked(
             @NotNull Long ownerId,
-            @NotNull Long relatedUserId) {
+            @NotNull Long relatedUserId,
+            boolean preferCache) {
         try {
             Validator.notNull(ownerId, "ownerId");
             Validator.notNull(relatedUserId, "relatedUserId");
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        return userRelationshipRepository.hasRelationshipAndNotBlocked(ownerId, relatedUserId);
+        Pair<Long, Long> key = Pair.of(ownerId, relatedUserId);
+        if (preferCache) {
+            Boolean hasRelationshipAndNotBlocked =
+                    ownerIdAndRelatedUserIdToHasRelationshipAndNotBlockedCache.getIfPresent(key);
+            if (hasRelationshipAndNotBlocked != null) {
+                return Mono.just(hasRelationshipAndNotBlocked);
+            }
+        }
+        return userRelationshipRepository.hasRelationshipAndNotBlocked(ownerId, relatedUserId)
+                .doOnNext(
+                        hasRelationshipAndNotBlocked -> ownerIdAndRelatedUserIdToHasRelationshipAndNotBlockedCache
+                                .put(key, hasRelationshipAndNotBlocked));
     }
 
     public Mono<UpdateResult> updateUserOneSidedRelationships(

@@ -279,15 +279,22 @@ public enum ResponseStatusCode {
     RECALL_NON_PENDING_GROUP_INVITATION(3710, "Cannot recall non-pending group invitations", 403),
 
     // Conversation
-    UPDATING_TYPING_STATUS_IS_DISABLED(4000, "Updating the typing status is disabled", 510),
-    UPDATING_READ_DATE_IS_DISABLED(4001, "Updating the read data is disabled", 510),
-    UPDATING_READ_DATE_IS_DISABLED_BY_GROUP(4002, "Updating the read data is disabled by the group",
+
+    // Conversation - Read Date
+    UPDATING_READ_DATE_IS_DISABLED(4000, "Updating the read data is disabled", 510),
+    UPDATING_READ_DATE_IS_DISABLED_BY_GROUP(4001, "Updating the read data is disabled by the group",
             510),
-    UPDATING_READ_DATE_OF_NONEXISTENT_GROUP_CONVERSATION(4003,
+    UPDATING_READ_DATE_OF_NONEXISTENT_GROUP_CONVERSATION(4002,
             "Cannot update the read date of a nonexistent group conversation", 510),
-    NOT_GROUP_MEMBER_TO_UPDATE_READ_DATE_OF_GROUP_CONVERSATION(4004,
+    NOT_GROUP_MEMBER_TO_UPDATE_READ_DATE_OF_GROUP_CONVERSATION(4003,
             "Only group members can update the read date of a group conversation", 403),
-    MOVING_READ_DATE_FORWARD_IS_DISABLED(4005, "Moving the read data forward is disabled", 510),
+    MOVING_READ_DATE_FORWARD_IS_DISABLED(4004, "Moving the read data forward is disabled", 510),
+
+    // Conversation - Typing Status
+    UPDATING_TYPING_STATUS_IS_DISABLED(4100, "Updating the typing status is disabled", 510),
+    NOT_GROUP_MEMBER_TO_SEND_TYPING_STATUS(4101, "Only group members can send their typing status",
+            403),
+    NOT_FRIEND_TO_SEND_TYPING_STATUS(4102, "Only friends can send their typing status", 403),
 
     // Message
 

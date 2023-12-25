@@ -41,6 +41,7 @@ import im.turms.server.common.infra.collection.CollectorUtil;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
+import im.turms.server.common.infra.property.env.service.ServiceProperties;
 import im.turms.server.common.infra.property.env.service.business.conversation.ReadReceiptProperties;
 import im.turms.server.common.infra.validation.Validator;
 import im.turms.server.common.storage.mongo.IMongoCollectionInitializer;
@@ -51,6 +52,7 @@ import im.turms.service.domain.conversation.repository.GroupConversationReposito
 import im.turms.service.domain.conversation.repository.PrivateConversationRepository;
 import im.turms.service.domain.group.service.GroupMemberService;
 import im.turms.service.domain.group.service.GroupService;
+import im.turms.service.domain.user.service.UserRelationshipService;
 import im.turms.service.storage.mongo.OperationResultPublisherPool;
 
 /**
@@ -60,6 +62,7 @@ import im.turms.service.storage.mongo.OperationResultPublisherPool;
 @DependsOn(IMongoCollectionInitializer.BEAN_NAME)
 public class ConversationService {
 
+    private final UserRelationshipService userRelationshipService;
     private final GroupService groupService;
     private final GroupMemberService groupMemberService;
 
@@ -70,16 +73,20 @@ public class ConversationService {
     private boolean isReadReceiptEnabled;
     private boolean useServerTime;
 
+    private boolean isTypingStatusEnabled;
+
     /**
      * @param groupService is lazy because conversationService -> groupService ->
      *                     conversationService
      */
     public ConversationService(
             TurmsPropertiesManager propertiesManager,
+            UserRelationshipService userRelationshipService,
             @Lazy GroupService groupService,
             GroupMemberService groupMemberService,
             GroupConversationRepository groupConversationRepository,
             PrivateConversationRepository privateConversationRepository) {
+        this.userRelationshipService = userRelationshipService;
         this.groupService = groupService;
         this.groupMemberService = groupMemberService;
         this.groupConversationRepository = groupConversationRepository;
@@ -89,12 +96,17 @@ public class ConversationService {
     }
 
     private void updateProperties(TurmsProperties properties) {
-        ReadReceiptProperties readReceiptProperties = properties.getService()
-                .getConversation()
+        ServiceProperties serviceProperties = properties.getService();
+
+        ReadReceiptProperties readReceiptProperties = serviceProperties.getConversation()
                 .getReadReceipt();
         allowMoveReadDateForward = readReceiptProperties.isAllowMoveReadDateForward();
         isReadReceiptEnabled = readReceiptProperties.isEnabled();
         useServerTime = readReceiptProperties.isUseServerTime();
+
+        isTypingStatusEnabled = serviceProperties.getConversation()
+                .getTypingStatus()
+                .isEnabled();
     }
 
     public Mono<Void> authAndUpsertGroupConversationReadDate(
@@ -361,4 +373,40 @@ public class ConversationService {
         return delete;
     }
 
+    // Typing Status
+
+    public Mono<Set<Long>> authAndUpdateTypingStatus(
+            @NotNull Long requesterId,
+            boolean isGroupMessage,
+            @NotNull Long toId) {
+        try {
+            Validator.notNull(requesterId, "requesterId");
+            Validator.notNull(toId, "toId");
+        } catch (ResponseException e) {
+            return Mono.error(e);
+        }
+        if (!isTypingStatusEnabled) {
+            return Mono.error(
+                    ResponseException.get(ResponseStatusCode.UPDATING_TYPING_STATUS_IS_DISABLED));
+        }
+        if (isGroupMessage) {
+            return groupMemberService.isGroupMember(toId, requesterId, true)
+                    .flatMap(isMember -> {
+                        if (!isMember) {
+                            return Mono.error(ResponseException.get(
+                                    ResponseStatusCode.NOT_GROUP_MEMBER_TO_SEND_TYPING_STATUS));
+                        }
+                        return groupMemberService.queryGroupMemberIds(toId, true);
+                    });
+        } else {
+            return userRelationshipService.hasRelationshipAndNotBlocked(toId, requesterId)
+                    .flatMap(hasRelationshipAndNotBlocked -> {
+                        if (!hasRelationshipAndNotBlocked) {
+                            return Mono.error(ResponseException
+                                    .get(ResponseStatusCode.NOT_FRIEND_TO_SEND_TYPING_STATUS));
+                        }
+                        return Mono.just(Set.of(toId));
+                    });
+        }
+    }
 }

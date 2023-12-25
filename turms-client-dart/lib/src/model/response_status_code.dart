@@ -194,12 +194,18 @@ class ResponseStatusCode {
   static const recallNonPendingGroupInvitation = 3710;
 
   // Conversation
-  static const updatingTypingStatusIsDisabled = 4000;
-  static const updatingReadDateIsDisabled = 4001;
-  static const updatingReadDateIsDisabledByGroup = 4002;
-  static const updatingReadDateOfNonexistentGroupConversation = 4003;
-  static const notGroupMemberToUpdateReadDateOfGroupConversation = 4004;
-  static const movingReadDateForwardIsDisabled = 4005;
+
+  // Conversation - Read Date
+  static const updatingReadDateIsDisabled = 4000;
+  static const updatingReadDateIsDisabledByGroup = 4001;
+  static const updatingReadDateOfNonexistentGroupConversation = 4002;
+  static const notGroupMemberToUpdateReadDateOfGroupConversation = 4003;
+  static const movingReadDateForwardIsDisabled = 4004;
+
+  // Conversation - Typing Status
+  static const updatingTypingStatusIsDisabled = 4100;
+  static const notGroupMemberToSendTypingStatus = 4101;
+  static const notFriendToSendTypingStatus = 4102;
 
   // Message
 

@@ -202,12 +202,18 @@ const int kSendGroupInvitationToGroupNotRequireInvitation = 3709;
 const int kRecallNonPendingGroupInvitation = 3710;
 
 // Conversation
-const int kUpdatingTypingStatusIsDisabled = 4000;
-const int kUpdatingReadDateIsDisabled = 4001;
-const int kUpdatingReadDateIsDisabledByGroup = 4002;
-const int kUpdatingReadDateOfNonexistentGroupConversation = 4003;
-const int kNotGroupMemberToUpdateReadDateOfGroupConversation = 4004;
-const int kMovingReadDateForwardIsDisabled = 4005;
+
+// Conversation - Read Date
+const int kUpdatingReadDateIsDisabled = 4000;
+const int kUpdatingReadDateIsDisabledByGroup = 4001;
+const int kUpdatingReadDateOfNonexistentGroupConversation = 4002;
+const int kNotGroupMemberToUpdateReadDateOfGroupConversation = 4003;
+const int kMovingReadDateForwardIsDisabled = 4004;
+
+// Conversation - Typing Status
+const int kUpdatingTypingStatusIsDisabled = 4100;
+const int kNotGroupMemberToSendTypingStatus = 4101;
+const int kNotFriendToSendTypingStatus = 4102;
 
 // Message
 

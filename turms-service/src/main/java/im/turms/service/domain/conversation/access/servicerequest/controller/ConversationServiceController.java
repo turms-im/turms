@@ -25,6 +25,7 @@ import reactor.core.publisher.Mono;
 
 import im.turms.server.common.access.client.dto.ClientMessagePool;
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
+import im.turms.server.common.access.client.dto.request.TurmsRequest;
 import im.turms.server.common.access.client.dto.request.conversation.QueryConversationsRequest;
 import im.turms.server.common.access.client.dto.request.conversation.UpdateConversationRequest;
 import im.turms.server.common.access.client.dto.request.conversation.UpdateTypingStatusRequest;
@@ -57,8 +58,6 @@ public class ConversationServiceController extends BaseServiceController {
     private final ConversationService conversationService;
     private final GroupMemberService groupMemberService;
 
-    private boolean isTypingStatusEnabled;
-
     private boolean notifyRequesterOtherOnlineSessionsOfPrivateConversationReadDateUpdated;
     private boolean notifyContactOfPrivateConversationReadDateUpdated;
 
@@ -78,9 +77,6 @@ public class ConversationServiceController extends BaseServiceController {
     private void updateProperties(TurmsProperties properties) {
         ServiceProperties serviceProperties = properties.getService();
         NotificationProperties notificationProperties = serviceProperties.getNotification();
-        isTypingStatusEnabled = serviceProperties.getConversation()
-                .getTypingStatus()
-                .isEnabled();
 
         NotificationPrivateConversationReadDateUpdatedProperties privateConversationReadDateUpdatedProperties =
                 notificationProperties.getPrivateConversationReadDateUpdated();
@@ -134,26 +130,16 @@ public class ConversationServiceController extends BaseServiceController {
         };
     }
 
-    /**
-     * Allow sending typing status to recipients without checking their relationships for better
-     * performance. The application itself should check their relationships on the client side.
-     *
-     * @implNote No need to authenticate because: 1. Most requests are authenticated indeed, so
-     *           avoid frequent authentication to improve the performance greatly; 2. For
-     *           unauthenticated requests, it is easy for the client to ignore it according to its
-     *           local data, and the user won't be aware of these requests.
-     */
     @ServiceRequestMapping(UPDATE_TYPING_STATUS_REQUEST)
     public ClientRequestHandler handleUpdateTypingStatusRequest() {
         return clientRequest -> {
-            if (!isTypingStatusEnabled) {
-                return Mono.just(RequestHandlerResult
-                        .of(ResponseStatusCode.UPDATING_TYPING_STATUS_IS_DISABLED));
-            }
-            UpdateTypingStatusRequest request = clientRequest.turmsRequest()
-                    .getUpdateTypingStatusRequest();
-            return Mono.just(RequestHandlerResult
-                    .of(ResponseStatusCode.OK, request.getToId(), clientRequest.turmsRequest()));
+            TurmsRequest turmsRequest = clientRequest.turmsRequest();
+            UpdateTypingStatusRequest request = turmsRequest.getUpdateTypingStatusRequest();
+            return conversationService
+                    .authAndUpdateTypingStatus(clientRequest.userId(),
+                            request.getIsGroupMessage(),
+                            request.getToId())
+                    .map(recipientIds -> RequestHandlerResult.of(recipientIds, turmsRequest));
         };
     }
 

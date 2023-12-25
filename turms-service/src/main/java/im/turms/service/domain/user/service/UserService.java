@@ -210,20 +210,21 @@ public class UserService {
                                         .get(ResponseStatusCode.MESSAGE_RECIPIENT_NOT_ACTIVE));
                             }
                             return userRelationshipService
-                                    .hasNoRelationshipOrNotBlocked(targetId, requesterId)
+                                    .hasNoRelationshipOrNotBlocked(targetId, requesterId, true)
                                     .map(isNotBlocked -> isNotBlocked
                                             ? ServicePermission.OK
                                             : ServicePermission.get(
                                                     ResponseStatusCode.PRIVATE_MESSAGE_SENDER_HAS_BEEN_BLOCKED));
                         });
             }
-            return userRelationshipService.hasNoRelationshipOrNotBlocked(targetId, requesterId)
+            return userRelationshipService
+                    .hasNoRelationshipOrNotBlocked(targetId, requesterId, true)
                     .map(isNotBlocked -> isNotBlocked
                             ? ServicePermission.OK
                             : ServicePermission.get(
                                     ResponseStatusCode.PRIVATE_MESSAGE_SENDER_HAS_BEEN_BLOCKED));
         }
-        return userRelationshipService.hasRelationshipAndNotBlocked(targetId, requesterId)
+        return userRelationshipService.hasRelationshipAndNotBlocked(targetId, requesterId, true)
                 .map(isRelatedAndNotBlocked -> isRelatedAndNotBlocked
                         ? ServicePermission.OK
                         : ServicePermission
@@ -327,13 +328,13 @@ public class UserService {
                 .flatMap(strategy -> switch (strategy) {
                     case ALL -> Mono.just(ServicePermission.OK);
                     case FRIENDS -> userRelationshipService
-                            .hasRelationshipAndNotBlocked(targetUserId, requesterId)
+                            .hasRelationshipAndNotBlocked(targetUserId, requesterId, false)
                             .map(isRelatedAndAllowed -> isRelatedAndAllowed
                                     ? ServicePermission.OK
                                     : ServicePermission.get(
                                             ResponseStatusCode.PROFILE_REQUESTER_NOT_IN_CONTACTS_OR_BLOCKED));
                     case ALL_EXCEPT_BLOCKED_USERS -> userRelationshipService
-                            .hasNoRelationshipOrNotBlocked(targetUserId, requesterId)
+                            .hasNoRelationshipOrNotBlocked(targetUserId, requesterId, false)
                             .map(isNotBlocked -> isNotBlocked
                                     ? ServicePermission.OK
                                     : ServicePermission.get(

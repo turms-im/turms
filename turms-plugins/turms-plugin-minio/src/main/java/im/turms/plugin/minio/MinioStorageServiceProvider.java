@@ -800,7 +800,8 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
             }
             sharedWithUserIds = List.of(userId);
             associatedGroupIds = null;
-            authorize = userRelationshipService.hasRelationshipAndNotBlocked(userId, requesterId)
+            authorize = userRelationshipService
+                    .hasRelationshipAndNotBlocked(userId, requesterId, false)
                     .flatMap(hasRelationshipAndNotBlocked -> hasRelationshipAndNotBlocked
                             ? Mono.empty()
                             : Mono.error(ResponseException.get(
@@ -912,7 +913,7 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
                     .findSimpleAttachmentsInPrivateConversation(requesterId, creationDateRange);
         } else {
             attachmentFlux =
-                    userRelationshipService.hasRelationshipAndNotBlocked(userId, requesterId)
+                    userRelationshipService.hasRelationshipAndNotBlocked(userId, requesterId, false)
                             .flatMapMany(hasRelationshipAndNotBlocked -> {
                                 if (!hasRelationshipAndNotBlocked) {
                                     return Mono.error(ResponseException.get(

@@ -188,7 +188,7 @@ public class UserFriendRequestService extends ExpirableEntityService<UserFriendR
             Validator.pastOrPresent(responseDate, "responseDate");
             Validator.notEquals(requesterId,
                     recipientId,
-                    "The requester ID must not equal to the recipient ID");
+                    "The requester ID must not be equal to the recipient ID");
         } catch (ResponseException e) {
             return Mono.error(e);
         }
@@ -254,7 +254,8 @@ public class UserFriendRequestService extends ExpirableEntityService<UserFriendR
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        return userRelationshipService.hasNoRelationshipOrNotBlocked(recipientId, requesterId)
+        return userRelationshipService
+                .hasNoRelationshipOrNotBlocked(recipientId, requesterId, false)
                 .flatMap(isNotBlocked -> {
                     if (!isNotBlocked) {
                         return Mono.error(ResponseException

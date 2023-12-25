@@ -194,12 +194,18 @@ public enum ResponseStatusCode: Int {
     case recallNonPendingGroupInvitation
 
     // Conversation
-    case updatingTypingStatusIsDisabled = 4000
-    case updatingReadDateIsDisabled
+
+    // Conversation - Read Date
+    case updatingReadDateIsDisabled = 4000
     case updatingReadDateIsDisabledByGroup
     case updatingReadDateOfNonexistentGroupConversation
     case notGroupMemberToUpdateReadDateOfGroupConversation
     case movingReadDateForwardIsDisabled
+
+    // Conversation - Typing Status
+    case updatingTypingStatusIsDisabled = 4100
+    case notGroupMemberToSendTypingStatus
+    case notFriendToSendTypingStatus
 
     // Message
 
