@@ -394,6 +394,45 @@ public class UserRelationshipGroupService {
         return deleteMono;
     }
 
+    public Mono<DeleteResult> deleteRelatedUserFromRelationshipGroup(
+            @NotNull Long ownerId,
+            @NotNull Long relatedUserId,
+            @NotNull Integer groupIndex,
+            @Nullable ClientSession session,
+            boolean updateRelationshipGroupsMembersVersion) {
+        try {
+            Validator.notNull(ownerId, "ownerId");
+            Validator.notNull(relatedUserId, "relatedUserId");
+            Validator.notNull(groupIndex, "groupIndex");
+        } catch (ResponseException e) {
+            return Mono.error(e);
+        }
+        Mono<DeleteResult> deleteMono = userRelationshipGroupMemberRepository
+                .deleteRelatedUserFromRelationshipGroup(ownerId,
+                        relatedUserId,
+                        groupIndex,
+                        session);
+        if (updateRelationshipGroupsMembersVersion) {
+            return deleteMono.flatMap(result -> {
+                if (result.getDeletedCount() == 0) {
+                    return Mono.empty();
+                }
+                return userVersionService.updateRelationshipGroupsMembersVersion(ownerId)
+                        .onErrorResume(t -> {
+                            LOGGER.error(
+                                    "Caught an error while updating the relationship groups members version of the owner ({}) after deleting the user ({}) from the group ({})",
+                                    ownerId,
+                                    relatedUserId,
+                                    groupIndex,
+                                    t);
+                            return Mono.empty();
+                        })
+                        .thenReturn(result);
+            });
+        }
+        return deleteMono;
+    }
+
     public Mono<DeleteResult> deleteRelatedUserFromAllRelationshipGroups(
             @NotNull Long ownerId,
             @NotNull Long relatedUserId,
@@ -555,6 +594,12 @@ public class UserRelationshipGroupService {
             @Nullable DateRange creationDateRange) {
         return userRelationshipGroupRepository
                 .countRelationshipGroups(ownerIds, indexes, names, creationDateRange);
+    }
+
+    public Mono<Long> countRelationshipGroups(
+            @Nullable Set<Long> ownerIds,
+            @Nullable Set<Long> relatedUserIds) {
+        return userRelationshipGroupMemberRepository.countGroups(ownerIds, relatedUserIds);
     }
 
     public Mono<Long> countRelationshipGroupMembers(

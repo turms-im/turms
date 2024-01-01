@@ -291,14 +291,21 @@ public class UserRelationshipServiceController extends BaseServiceController {
         return clientRequest -> {
             DeleteRelationshipRequest request = clientRequest.turmsRequest()
                     .getDeleteRelationshipRequest();
-            Mono<Void> deleteMono;
+            Mono<?> deleteMono;
             if (deleteTwoSidedRelationships) {
-                deleteMono = userRelationshipService
-                        .deleteTwoSidedRelationships(clientRequest.userId(), request.getUserId());
+                deleteMono = userRelationshipService.tryDeleteTwoSidedRelationships(
+                        clientRequest.userId(),
+                        request.getUserId(),
+                        request.hasGroupIndex()
+                                ? request.getGroupIndex()
+                                : null);
             } else {
                 deleteMono =
                         userRelationshipService.deleteOneSidedRelationship(clientRequest.userId(),
                                 request.getUserId(),
+                                request.hasGroupIndex()
+                                        ? request.getGroupIndex()
+                                        : null,
                                 null);
             }
             return deleteMono.then(Mono.fromCallable(

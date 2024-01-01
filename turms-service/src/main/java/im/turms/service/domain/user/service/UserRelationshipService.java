@@ -176,9 +176,16 @@ public class UserRelationshipService {
                 .retryWhen(TRANSACTION_RETRY);
     }
 
-    public Mono<Void> deleteOneSidedRelationship(
+    /**
+     * @return true if the relationship existed and has been deleted;
+     *         <p>
+     *         false if the relationship does not exist, or still exists and has been deleted from a
+     *         relationship group.
+     */
+    public Mono<Boolean> deleteOneSidedRelationship(
             @NotNull Long ownerId,
             @NotNull Long relatedUserId,
+            @Nullable Integer groupIndex,
             @Nullable ClientSession session) {
         try {
             Validator.notNull(ownerId, "ownerId");
@@ -187,45 +194,131 @@ public class UserRelationshipService {
             return Mono.error(e);
         }
         if (session == null) {
-            return userRelationshipRepository.inTransaction(
-                    newSession -> deleteOneSidedRelationship(ownerId, relatedUserId, newSession))
+            return userRelationshipRepository
+                    .inTransaction(newSession -> deleteOneSidedRelationship(ownerId,
+                            relatedUserId,
+                            groupIndex,
+                            newSession))
                     .retryWhen(TRANSACTION_RETRY);
         }
         UserRelationship.Key key = new UserRelationship.Key(ownerId, relatedUserId);
-        return userRelationshipRepository.deleteById(key)
-                .then(userRelationshipGroupService.deleteRelatedUserFromAllRelationshipGroups(
-                        ownerId,
+        if (groupIndex == null) {
+            return userRelationshipGroupService
+                    .deleteRelatedUserFromAllRelationshipGroups(ownerId,
+                            relatedUserId,
+                            session,
+                            false)
+                    .flatMap(deleteResult -> {
+                        // because every relationship should exist in a relationship group at least,
+                        // return immediately if no relationship found in any group.
+                        if (deleteResult.getDeletedCount() == 0) {
+                            return PublisherPool.FALSE;
+                        }
+                        return userRelationshipRepository.deleteById(key, session)
+                                .then(userVersionService
+                                        .updateSpecificVersion(ownerId,
+                                                null,
+                                                UserVersion.Fields.RELATIONSHIP_GROUP_MEMBERS,
+                                                UserVersion.Fields.RELATIONSHIPS)
+                                        .onErrorResume(t -> {
+                                            LOGGER.error(
+                                                    "Caught an error while updating the relationships version and relationship groups members version of "
+                                                            + "the owner ({}) after deleting the relationship with the user ({})",
+                                                    ownerId,
+                                                    relatedUserId,
+                                                    t);
+                                            return Mono.empty();
+                                        }))
+                                .then(Mono.fromCallable(() -> {
+                                    invalidateRelationshipCache(ownerId, relatedUserId);
+                                    return true;
+                                }));
+                    });
+        }
+        return userRelationshipGroupService
+                .deleteRelatedUserFromRelationshipGroup(ownerId,
                         relatedUserId,
+                        groupIndex,
                         session,
-                        false))
-                .then(userVersionService
-                        .updateSpecificVersion(ownerId,
-                                session,
-                                UserVersion.Fields.RELATIONSHIP_GROUP_MEMBERS,
-                                UserVersion.Fields.RELATIONSHIPS)
-                        .onErrorResume(t -> {
-                            LOGGER.error(
-                                    "Caught an error while updating the relationships version and relationships group members version of the owner ({}) after deleting a relationship",
-                                    ownerId,
-                                    t);
-                            return Mono.empty();
-                        }))
-                .doOnSuccess(unused -> invalidateRelationshipCache(ownerId, relatedUserId))
-                .then();
+                        false)
+                .flatMap(deleteResult -> {
+                    if (deleteResult.getDeletedCount() == 0) {
+                        return PublisherPool.FALSE;
+                    }
+                    return userRelationshipGroupService
+                            .countRelationshipGroups(Set.of(ownerId), Set.of(relatedUserId))
+                            .flatMap(relationshipGroupCount -> {
+                                if (relationshipGroupCount > 0) {
+                                    return userVersionService
+                                            .updateSpecificVersion(ownerId,
+                                                    null,
+                                                    UserVersion.Fields.RELATIONSHIP_GROUP_MEMBERS)
+                                            .onErrorResume(t -> {
+                                                LOGGER.error(
+                                                        "Caught an error while updating the relationship groups members version of "
+                                                                + "the owner ({}) after deleting the relationship with the user ({}) from the group ({})",
+                                                        ownerId,
+                                                        relatedUserId,
+                                                        groupIndex,
+                                                        t);
+                                                return Mono.empty();
+                                            })
+                                            .thenReturn(false);
+                                }
+                                return userRelationshipRepository.deleteById(key, session)
+                                        .then(Mono.defer(() -> {
+                                            invalidateRelationshipCache(ownerId, relatedUserId);
+                                            return userVersionService.updateSpecificVersion(ownerId,
+                                                    null,
+                                                    UserVersion.Fields.RELATIONSHIP_GROUP_MEMBERS,
+                                                    UserVersion.Fields.RELATIONSHIPS)
+                                                    .onErrorResume(t -> {
+                                                        LOGGER.error(
+                                                                "Caught an error while updating the relationships version and relationship group members version of "
+                                                                        + "the owner ({}) after deleting the relationship with the user ({}) from the group ({})",
+                                                                ownerId,
+                                                                relatedUserId,
+                                                                groupIndex,
+                                                                t);
+                                                        return Mono.empty();
+                                                    });
+                                        }))
+                                        .thenReturn(true);
+                            });
+                });
     }
 
-    public Mono<Void> deleteTwoSidedRelationships(
-            @NotNull Long userOneId,
-            @NotNull Long userTwoId) {
+    public Mono<Void> tryDeleteTwoSidedRelationships(
+            @NotNull Long requesterId,
+            @NotNull Long relatedUserId,
+            @Nullable Integer groupId) {
         try {
-            Validator.notNull(userOneId, "userOneId");
-            Validator.notNull(userTwoId, "userTwoId");
+            Validator.notNull(requesterId, "requesterId");
+            Validator.notNull(relatedUserId, "relatedUserId");
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        return userRelationshipRepository
-                .inTransaction(session -> deleteOneSidedRelationship(userOneId, userTwoId, session)
-                        .then(deleteOneSidedRelationship(userTwoId, userOneId, session))
+        return userRelationshipRepository.inTransaction(
+                session -> deleteOneSidedRelationship(requesterId, relatedUserId, groupId, session)
+                        .flatMap(deleted -> {
+                            if (!deleted) {
+                                // If not deleted, meaning the relationship between the requester,
+                                // and the related user didn't exist, or still exists,
+                                // we don't delete the relationship between
+                                // the related user and the requester for these cases.
+                                return Mono.empty();
+                            }
+                            return isBlocked(relatedUserId, requesterId, false)
+                                    .flatMap(isBlocked -> {
+                                        if (isBlocked) {
+                                            return Mono.empty();
+                                        }
+                                        return deleteOneSidedRelationship(relatedUserId,
+                                                requesterId,
+                                                groupId,
+                                                session);
+                                    });
+                        })
                         .then())
                 .retryWhen(TRANSACTION_RETRY);
     }

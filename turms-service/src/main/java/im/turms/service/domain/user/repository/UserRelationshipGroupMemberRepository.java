@@ -46,6 +46,18 @@ public class UserRelationshipGroupMemberRepository
         super(mongoClient, UserRelationshipGroupMember.class);
     }
 
+    public Mono<DeleteResult> deleteRelatedUserFromRelationshipGroup(
+            Long ownerId,
+            Long relatedUserId,
+            Integer groupIndex,
+            @Nullable ClientSession session) {
+        Filter filter = Filter.newBuilder(3)
+                .eq(UserRelationshipGroupMember.Fields.ID_OWNER_ID, ownerId)
+                .eq(UserRelationshipGroupMember.Fields.ID_RELATED_USER_ID, relatedUserId)
+                .eq(UserRelationshipGroupMember.Fields.ID_GROUP_INDEX, groupIndex);
+        return mongoClient.deleteOne(session, entityClass, filter);
+    }
+
     public Mono<DeleteResult> deleteRelatedUsersFromAllRelationshipGroups(
             Long ownerId,
             Collection<Long> relatedUserIds,
@@ -54,6 +66,15 @@ public class UserRelationshipGroupMemberRepository
                 .eq(UserRelationshipGroupMember.Fields.ID_OWNER_ID, ownerId)
                 .in(UserRelationshipGroupMember.Fields.ID_RELATED_USER_ID, relatedUserIds);
         return mongoClient.deleteMany(session, entityClass, filter);
+    }
+
+    public Mono<Long> countGroups(
+            @Nullable Collection<Long> ownerIds,
+            @Nullable Collection<Long> relatedUserIds) {
+        Filter filter = Filter.newBuilder(2)
+                .inIfNotNull(UserRelationshipGroupMember.Fields.ID_OWNER_ID, ownerIds)
+                .inIfNotNull(UserRelationshipGroupMember.Fields.ID_RELATED_USER_ID, relatedUserIds);
+        return mongoClient.count(entityClass, filter);
     }
 
     public Mono<Long> countMembers(
