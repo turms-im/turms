@@ -15,20 +15,10 @@
  * limitations under the License.
  */
 
-package im.turms.gateway.infra.metrics;
+package im.turms.gateway.infra.ldap.element;
 
 /**
  * @author James Chen
  */
-public final class MetricNameConst {
-
-    private MetricNameConst() {
-    }
-
-    public static final String CLIENT_NETWORK = "turms.client.network";
-
-    public static final String LDAP_CLIENT = "turms.ldap.client";
-
-    public static final String LOGGED_IN_USERS_COUNTER = "user.logged_in";
-    public static final String ONLINE_USERS_GAUGE = "user.online";
+public interface LdapElement {
 }

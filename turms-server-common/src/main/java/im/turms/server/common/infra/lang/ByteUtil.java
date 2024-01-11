@@ -34,4 +34,31 @@ public final class ByteUtil {
         return true;
     }
 
+    public static int indexOf(byte[] bytes, char c, int start, int end) {
+        for (int i = start; i < end; i++) {
+            if (bytes[i] == c) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public static int indexOf(byte[] bytes, String target, int start, int end) {
+        int length = target.length();
+        for (int i = start; i < end; i++) {
+            if (bytes[i] == target.charAt(0)) {
+                boolean match = true;
+                for (int j = 0; j < length; j++) {
+                    if (i + j >= end || bytes[i + j] != target.charAt(j)) {
+                        match = false;
+                        break;
+                    }
+                }
+                if (match) {
+                    return i;
+                }
+            }
+        }
+        return -1;
+    }
 }

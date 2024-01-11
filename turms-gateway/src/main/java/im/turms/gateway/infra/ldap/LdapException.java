@@ -15,20 +15,26 @@
  * limitations under the License.
  */
 
-package im.turms.gateway.infra.metrics;
+package im.turms.gateway.infra.ldap;
+
+import lombok.Getter;
+
+import im.turms.gateway.infra.ldap.element.common.ResultCode;
 
 /**
  * @author James Chen
  */
-public final class MetricNameConst {
+public class LdapException extends RuntimeException {
+    @Getter
+    private final int resultCode;
 
-    private MetricNameConst() {
+    public LdapException(int resultCode, String message) {
+        super(message);
+        this.resultCode = resultCode;
     }
 
-    public static final String CLIENT_NETWORK = "turms.client.network";
-
-    public static final String LDAP_CLIENT = "turms.ldap.client";
-
-    public static final String LOGGED_IN_USERS_COUNTER = "user.logged_in";
-    public static final String ONLINE_USERS_GAUGE = "user.online";
+    public LdapException(ResultCode resultCode, String message) {
+        super(message);
+        this.resultCode = resultCode.getValue();
+    }
 }

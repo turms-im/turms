@@ -15,20 +15,21 @@
  * limitations under the License.
  */
 
-package im.turms.gateway.infra.metrics;
+package im.turms.gateway.infra.ldap.element.common;
+
+import im.turms.gateway.infra.ldap.element.LdapElement;
 
 /**
  * @author James Chen
  */
-public final class MetricNameConst {
+public final class ResultCodeConst implements LdapElement {
+    public static final int SUCCESS = 0;
+    public static final int PROTOCOL_ERROR = 2;
+    public static final int INVALID_ATTRIBUTE_SYNTAX = 21;
+    public static final int INVALID_CREDENTIALS = 49;
+    public static final int FILTER_ERROR = 87;
 
-    private MetricNameConst() {
+    private ResultCodeConst() {
     }
 
-    public static final String CLIENT_NETWORK = "turms.client.network";
-
-    public static final String LDAP_CLIENT = "turms.ldap.client";
-
-    public static final String LOGGED_IN_USERS_COUNTER = "user.logged_in";
-    public static final String ONLINE_USERS_GAUGE = "user.online";
 }

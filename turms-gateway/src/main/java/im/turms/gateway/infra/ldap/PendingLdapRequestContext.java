@@ -15,20 +15,20 @@
  * limitations under the License.
  */
 
-package im.turms.gateway.infra.metrics;
+package im.turms.gateway.infra.ldap;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import reactor.core.publisher.Sinks;
+
+import im.turms.gateway.infra.ldap.element.operation.ProtocolOperation;
 
 /**
  * @author James Chen
  */
-public final class MetricNameConst {
-
-    private MetricNameConst() {
-    }
-
-    public static final String CLIENT_NETWORK = "turms.client.network";
-
-    public static final String LDAP_CLIENT = "turms.ldap.client";
-
-    public static final String LOGGED_IN_USERS_COUNTER = "user.logged_in";
-    public static final String ONLINE_USERS_GAUGE = "user.online";
+@AllArgsConstructor
+@Data
+public class PendingLdapRequestContext<T extends ProtocolOperation<T>> {
+    private final Sinks.One<T> sink;
+    private ProtocolOperation<T> responseDecoder;
 }

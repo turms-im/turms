@@ -15,20 +15,27 @@
  * limitations under the License.
  */
 
-package im.turms.gateway.infra.metrics;
+package im.turms.gateway.infra.ldap.element.operation;
+
+import im.turms.gateway.infra.ldap.asn1.BerBuffer;
 
 /**
  * @author James Chen
  */
-public final class MetricNameConst {
-
-    private MetricNameConst() {
+public interface ProtocolOperation<T extends ProtocolOperation<?>> {
+    default int estimateSize() {
+        throw new UnsupportedOperationException();
     }
 
-    public static final String CLIENT_NETWORK = "turms.client.network";
+    default void writeTo(BerBuffer buffer) {
+        throw new UnsupportedOperationException();
+    }
 
-    public static final String LDAP_CLIENT = "turms.ldap.client";
+    default T decode(BerBuffer buffer) {
+        throw new UnsupportedOperationException();
+    }
 
-    public static final String LOGGED_IN_USERS_COUNTER = "user.logged_in";
-    public static final String ONLINE_USERS_GAUGE = "user.online";
+    default boolean isComplete() {
+        return true;
+    }
 }

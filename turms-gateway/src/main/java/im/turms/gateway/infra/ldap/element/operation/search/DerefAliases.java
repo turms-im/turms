@@ -15,20 +15,26 @@
  * limitations under the License.
  */
 
-package im.turms.gateway.infra.metrics;
+package im.turms.gateway.infra.ldap.element.operation.search;
+
+import lombok.Getter;
+
+import im.turms.gateway.infra.ldap.element.LdapElement;
 
 /**
  * @author James Chen
  */
-public final class MetricNameConst {
+public enum DerefAliases implements LdapElement {
 
-    private MetricNameConst() {
+    NEVER(0),
+    IN_SEARCHING(1),
+    FINDING_BASE_OBJ(2),
+    ALWAYS(3);
+
+    @Getter
+    private final int value;
+
+    DerefAliases(int value) {
+        this.value = value;
     }
-
-    public static final String CLIENT_NETWORK = "turms.client.network";
-
-    public static final String LDAP_CLIENT = "turms.ldap.client";
-
-    public static final String LOGGED_IN_USERS_COUNTER = "user.logged_in";
-    public static final String ONLINE_USERS_GAUGE = "user.online";
 }

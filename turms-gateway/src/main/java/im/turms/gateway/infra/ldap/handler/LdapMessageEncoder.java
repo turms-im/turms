@@ -15,20 +15,24 @@
  * limitations under the License.
  */
 
-package im.turms.gateway.infra.metrics;
+package im.turms.gateway.infra.ldap.handler;
+
+import io.netty.buffer.ByteBuf;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.handler.codec.MessageToByteEncoder;
+
+import im.turms.gateway.infra.ldap.asn1.BerBuffer;
+import im.turms.gateway.infra.ldap.element.common.LdapMessage;
 
 /**
  * @author James Chen
  */
-public final class MetricNameConst {
+public class LdapMessageEncoder extends MessageToByteEncoder<LdapMessage<?>> {
 
-    private MetricNameConst() {
+    @Override
+    protected void encode(ChannelHandlerContext ctx, LdapMessage<?> message, ByteBuf out) {
+        BerBuffer buffer = new BerBuffer(out);
+        message.writeTo(buffer);
     }
 
-    public static final String CLIENT_NETWORK = "turms.client.network";
-
-    public static final String LDAP_CLIENT = "turms.ldap.client";
-
-    public static final String LOGGED_IN_USERS_COUNTER = "user.logged_in";
-    public static final String ONLINE_USERS_GAUGE = "user.online";
 }

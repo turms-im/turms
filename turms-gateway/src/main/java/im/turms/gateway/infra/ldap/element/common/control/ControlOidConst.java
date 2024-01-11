@@ -15,20 +15,16 @@
  * limitations under the License.
  */
 
-package im.turms.gateway.infra.metrics;
+package im.turms.gateway.infra.ldap.element.common.control;
 
 /**
  * @author James Chen
  */
-public final class MetricNameConst {
+public final class ControlOidConst {
 
-    private MetricNameConst() {
+    public static final String FAST_BIND = "1.2.840.113556.1.4.1781";
+    public static final String MANAGE_DSA_IT = "2.16.840.1.113730.3.4.2";
+
+    private ControlOidConst() {
     }
-
-    public static final String CLIENT_NETWORK = "turms.client.network";
-
-    public static final String LDAP_CLIENT = "turms.ldap.client";
-
-    public static final String LOGGED_IN_USERS_COUNTER = "user.logged_in";
-    public static final String ONLINE_USERS_GAUGE = "user.online";
 }

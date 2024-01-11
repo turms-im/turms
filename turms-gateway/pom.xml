@@ -47,6 +47,12 @@
             <artifactId>server-test-common</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.unboundid</groupId>
+            <artifactId>unboundid-ldapsdk</artifactId>
+            <version>6.0.11</version>
+            <scope>test</scope>
+        </dependency>
 
         <!-- Processor -->
         <dependency>
