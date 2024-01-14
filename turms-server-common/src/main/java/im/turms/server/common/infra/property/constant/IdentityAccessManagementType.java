@@ -24,5 +24,6 @@ public enum IdentityAccessManagementType {
     NOOP,
     HTTP,
     JWT,
-    PASSWORD
+    PASSWORD,
+    LDAP,
 }

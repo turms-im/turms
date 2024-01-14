@@ -39,7 +39,6 @@ import jakarta.validation.constraints.NotNull;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Tags;
-import lombok.experimental.Delegate;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -92,7 +91,7 @@ import static im.turms.gateway.infra.metrics.MetricNameConst.ONLINE_USERS_GAUGE;
  * @author James Chen
  */
 @Service
-public class SessionService implements ISessionService, SessionIdentityAccessManagementSupport {
+public class SessionService implements ISessionService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SessionService.class);
 
@@ -103,7 +102,6 @@ public class SessionService implements ISessionService, SessionIdentityAccessMan
     private final HeartbeatManager heartbeatManager;
     private final PluginManager pluginManager;
 
-    @Delegate
     private final SessionIdentityAccessManager sessionAuthenticationManager;
 
     private final SessionLocationService sessionLocationService;
@@ -242,14 +240,16 @@ public class SessionService implements ISessionService, SessionIdentityAccessMan
             return Mono.error(
                     ResponseException.get(ResponseStatusCode.LOGIN_FROM_FORBIDDEN_DEVICE_TYPE));
         }
-        return verifyAndGrant(version,
-                userId,
-                password,
-                deviceType,
-                deviceDetails,
-                userStatus,
-                location,
-                ipStr).flatMap(permissionInfo -> {
+        return sessionAuthenticationManager
+                .verifyAndGrant(version,
+                        userId,
+                        password,
+                        deviceType,
+                        deviceDetails,
+                        userStatus,
+                        location,
+                        ipStr)
+                .flatMap(permissionInfo -> {
                     ResponseStatusCode statusCode = permissionInfo.authenticationCode();
                     return statusCode == ResponseStatusCode.OK
                             ? tryRegisterOnlineUser(version,

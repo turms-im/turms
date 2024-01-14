@@ -26,6 +26,7 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import im.turms.server.common.infra.property.constant.IdentityAccessManagementType;
 import im.turms.server.common.infra.property.env.gateway.identityaccessmanagement.http.HttpIdentityAccessManagementProperties;
 import im.turms.server.common.infra.property.env.gateway.identityaccessmanagement.jwt.JwtIdentityAccessManagementProperties;
+import im.turms.server.common.infra.property.env.gateway.identityaccessmanagement.ldap.LdapIdentityAccessManagementProperties;
 import im.turms.server.common.infra.property.metadata.Description;
 import im.turms.server.common.infra.property.metadata.GlobalProperty;
 import im.turms.server.common.infra.property.metadata.MutableProperty;
@@ -52,6 +53,10 @@ public class IdentityAccessManagementProperties {
 
     @NestedConfigurationProperty
     private JwtIdentityAccessManagementProperties jwt = new JwtIdentityAccessManagementProperties();
+
+    @NestedConfigurationProperty
+    private LdapIdentityAccessManagementProperties ldap =
+            new LdapIdentityAccessManagementProperties();
 
     @NestedConfigurationProperty
     private HttpIdentityAccessManagementProperties http =

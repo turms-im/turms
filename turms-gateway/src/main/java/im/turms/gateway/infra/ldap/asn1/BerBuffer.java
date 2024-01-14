@@ -17,6 +17,8 @@
 
 package im.turms.gateway.infra.ldap.asn1;
 
+import java.io.Closeable;
+import java.io.IOException;
 import java.util.List;
 
 import io.netty.buffer.ByteBuf;
@@ -31,7 +33,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 /**
  * @author James Chen
  */
-public class BerBuffer implements ReferenceCounted {
+public class BerBuffer implements Closeable, ReferenceCounted {
 
     private int[] sequenceLengthWriterIndexes;
     private int currentSequenceLengthIndex;
@@ -464,6 +466,11 @@ public class BerBuffer implements ReferenceCounted {
 
     public void skipBytes(int length) {
         buffer.skipBytes(length);
+    }
+
+    @Override
+    public void close() throws IOException {
+        buffer.release();
     }
 
     @Override

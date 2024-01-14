@@ -393,6 +393,10 @@
             "expectation": {}
           },
           "verification": {}
+        },
+        "ldap": {
+          "admin": {},
+          "user": {}
         }
       },
       "minHeartbeatIntervalSeconds": {

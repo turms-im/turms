@@ -114,9 +114,11 @@ class FilterTest {
         ASN1Element expectedElement = create(filterString).encode();
         byte[] expectedBytes = expectedElement.encode();
 
-        BerBuffer buffer = new BerBuffer();
-        Filter.write(buffer, filterString);
-        byte[] actualBytes = buffer.getBytes();
+        byte[] actualBytes;
+        try (BerBuffer buffer = new BerBuffer()) {
+            Filter.write(buffer, filterString);
+            actualBytes = buffer.getBytes();
+        }
         // We encode the sequence in different ways,
         // so we need to normalize their representation.
         com.unboundid.ldap.sdk.Filter filter = decode(ASN1Element.decode(actualBytes));

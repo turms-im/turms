@@ -281,6 +281,7 @@ class SessionServiceTests {
         SessionLocationService locationService = mock(SessionLocationService.class);
 
         UserService userService = mock(UserService.class);
+        when(userService.isEnabled()).thenReturn(true);
         when(userService.isActiveAndNotDeleted(any())).thenReturn(Mono.just(isActiveAndNotDeleted));
         when(userService.authenticate(any(), any())).thenReturn(Mono.just(isAuthenticated));
 

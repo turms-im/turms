@@ -1536,6 +1536,84 @@
             }
           }
         },
+        "ldap": {
+          "admin": {
+            "host": {
+              "deprecated": false,
+              "description": "The host of LDAP server for admin",
+              "global": false,
+              "mutable": false,
+              "sensitive": false,
+              "type": "string",
+              "value": "localhost"
+            },
+            "password": {
+              "deprecated": false,
+              "description": "The administrator's password for binding",
+              "global": false,
+              "mutable": false,
+              "sensitive": true,
+              "type": "string",
+              "value": ""
+            },
+            "port": {
+              "deprecated": false,
+              "description": "The port of LDAP server for admin",
+              "global": false,
+              "mutable": false,
+              "sensitive": false,
+              "type": "int",
+              "value": 389
+            },
+            "username": {
+              "deprecated": false,
+              "description": "The administrator's username for binding",
+              "global": false,
+              "mutable": false,
+              "sensitive": false,
+              "type": "string",
+              "value": ""
+            }
+          },
+          "baseDn": {
+            "deprecated": false,
+            "description": "The base DN from which all operations originate",
+            "global": false,
+            "mutable": false,
+            "sensitive": false,
+            "type": "string",
+            "value": ""
+          },
+          "user": {
+            "host": {
+              "deprecated": false,
+              "description": "The host of LDAP server for user",
+              "global": false,
+              "mutable": false,
+              "sensitive": false,
+              "type": "string",
+              "value": "localhost"
+            },
+            "port": {
+              "deprecated": false,
+              "description": "The port of LDAP server for user",
+              "global": false,
+              "mutable": false,
+              "sensitive": false,
+              "type": "int",
+              "value": 389
+            },
+            "searchFilter": {
+              "deprecated": false,
+              "description": "The search filter to find the user entry. \"${userId}\" is a placeholder and will be replaced with the user ID passed in the login request",
+              "global": false,
+              "mutable": false,
+              "sensitive": false,
+              "type": "string",
+              "value": "uid=${userId}"
+            }
+          }
+        },
         "type": {
           "deprecated": false,
           "description": "Note that if the type is not PASSWORD, turms-gateway will not connect to the MongoDB server for user records",
@@ -1545,7 +1623,8 @@
             "NOOP",
             "HTTP",
             "JWT",
-            "PASSWORD"
+            "PASSWORD",
+            "LDAP"
           ],
           "sensitive": false,
           "type": "enum",

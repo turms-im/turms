@@ -21,29 +21,16 @@ import reactor.core.publisher.Mono;
 
 import im.turms.gateway.domain.session.bo.UserLoginInfo;
 import im.turms.gateway.domain.session.bo.UserPermissionInfo;
-import im.turms.server.common.access.common.ResponseStatusCode;
-import im.turms.server.common.infra.property.TurmsProperties;
+
+import static im.turms.gateway.domain.session.bo.UserPermissionInfo.GRANTED_WITH_ALL_PERMISSIONS_MONO;
 
 /**
  * @author James Chen
  */
-public interface SessionIdentityAccessManagementSupport {
+public class NoopSessionIdentityAccessManager implements SessionIdentityAccessManagementSupport {
 
-    /**
-     * @return Possible codes: {@link ResponseStatusCode#OK},
-     *         {@link ResponseStatusCode#LOGIN_AUTHENTICATION_FAILED},
-     *         {@link ResponseStatusCode#LOGGING_IN_USER_NOT_ACTIVE}
-     */
-    Mono<UserPermissionInfo> verifyAndGrant(UserLoginInfo userLoginInfo);
-
-    /**
-     * @return whether enable the identity access management.
-     */
-    default boolean updateGlobalProperties(TurmsProperties properties) {
-        return properties.getGateway()
-                .getSession()
-                .getIdentityAccessManagement()
-                .isEnabled();
+    @Override
+    public Mono<UserPermissionInfo> verifyAndGrant(UserLoginInfo userLoginInfo) {
+        return GRANTED_WITH_ALL_PERMISSIONS_MONO;
     }
-
 }

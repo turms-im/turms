@@ -20,6 +20,7 @@ package im.turms.gateway.domain.session.service;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
 
+import lombok.Getter;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -36,10 +37,13 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordManager passwordManager;
+    @Getter
+    private final boolean enabled;
 
     public UserService(UserRepository userRepository, PasswordManager passwordManager) {
         this.userRepository = userRepository;
         this.passwordManager = passwordManager;
+        enabled = userRepository.isEnabled();
     }
 
     public Mono<Boolean> authenticate(@NotNull Long userId, @Nullable String rawPassword) {
