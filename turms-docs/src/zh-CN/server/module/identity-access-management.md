@@ -9,7 +9,7 @@ Turms既提供了内置的身份与访问管理机制，也支持用户基于插
 | 配置名                                                   | 默认值   | 说明                                                         |
 | -------------------------------------------------------- | -------- | ------------------------------------------------------------ |
 | turms.gateway.session.identity-access-management.enabled | true     | 是否开启身份与访问管理机制。<br />如果该值为`false`，则关闭Turms内置的身份与访问管理机制与用户基于插件自定义身份与访问管理实现，并允许任意用户登陆，与授权其发送任意请求类型 |
-| turms.gateway.session.identity-access-management.type    | password | 使用的Turms内置身份与访问管理机制类型，其类型可以为`noop`、`password`、`jwt`、`http`。具体见下文 |
+| turms.gateway.session.identity-access-management.type    | password | 使用的Turms内置身份与访问管理机制类型，其类型可以为`noop`、`password`、`jwt`、`http`与`LDAP`。具体见下文 |
 
 ### 内置的身份与访问管理机制
 
@@ -226,6 +226,69 @@ t-->>c: OK if authenticated
 | turms.gateway.session.identity-access-management.http.authentication.response-expectation.status-codes | "2??"                     | 在响应状态码中匹配该值，如果匹配成功，则继续进行其他匹配，否则认证失败 |
 | turms.gateway.session.identity-access-management.http.authentication.response-expectation.headers |                           | 在响应头中匹配该值，如果匹配成功，则继续进行其他匹配，否则认证失败 |
 | turms.gateway.session.identity-access-management.http.authentication.response-expectation.body-fields | { "authenticated": true } | 在响应正文中匹配该值，如果匹配成功，则继续进行其他匹配，否则认证失败 |
+
+#### 5. 基于LDAP认证
+
+##### 工作流程
+
+```mermaid
+sequenceDiagram
+participant c as Client Application
+participant t as turms-gateway
+participant l as LDAP Server
+
+c->>t: login
+t->>l: search user DN by user ID
+l-->>t: result entries
+alt count is 0
+	t-->>c: unauthenticated
+else count is more than 1
+	t-->>c: internal error
+else count is 1
+	t->>l: bind by found user DN and password
+	l-->>t: result code
+	alt result code is 49
+		t-->>c: unauthenticated
+	else result code is 0
+		t-->>c: authenticated
+	else
+		t-->>c: internal error
+	end
+end
+```
+
+1. 客户端通过Turms客户端登陆接口`turmsClient.userService.login`向turms-gateway服务端发送登陆请求。
+
+2. turms-gateway获取到客户端发来的登陆请求参数后，会使用登陆请求中的`userId`参数，与turms-gateway系统中配置的参数（如下文将会提到的`baseDn`与`searchFilter`），去构造LDAP中的search请求，以查询`userId`对应的用户DN。
+
+3. 当turms-gateway获取到LDAP响应的search结果时，turms-gateway会校验search结果的entries数量：
+
+   1. 如果数量为0，则说明账号不存在，因此响应客户端未授权；
+   2. 如果数量为1，则说明用户登陆请求中的`userId`匹配到了对应的DN。turms-gateway会使用该用户DN与用户登陆请求中的`password`参数，向LDAP服务端发送bind登陆操作：
+      1. 如果结果码（result code）为49（无效凭证），则响应客户端未授权。
+      2. 如果状态码为0（登陆成功0，则响应客户端已授权。
+      3. 如果为其他状态码，则响应客户端系统内部异常。
+   3. 如果数量大于1，则说明系统配置的`searchFilter`参数异常，需要重新配置，因此响应系统内部异常。
+
+   **注意：一个LDAP用户的Turms用户ID值是由LDAP系统管理员配置的，并不是由Turms服务端配置的，且要求该值必须大于0，无其他条件限制。**
+
+##### 相关配置项
+
+| 配置名                                                       | 默认值          | 说明                                                         |
+| ------------------------------------------------------------ | --------------- | ------------------------------------------------------------ |
+| turms.gateway.session.identity-access-management.type        | password        | 设置为`ldap`以开启基于LDAP的身份与访问管理机制               |
+| turms.gateway.session.identity-access-management.ldap.base-dn | ""              | 基准目录。如`dc=turms,dc=im`                                 |
+| turms.gateway.session.identity-access-management.ldap.admin.host | localhost       | 用于管理员相关操作的LDAP服务端地址                           |
+| turms.gateway.session.identity-access-management.ldap.admin.port | 389             | 用于管理员相关操作的LDAP服务端端口号                         |
+| turms.gateway.session.identity-access-management.ldap.admin.ssl.... |                 | 用于管理员相关操作的LDAP的SSL相关配置                        |
+| turms.gateway.session.identity-access-management.ldap.admin.username | ""              | 管理员用户名                                                 |
+| turms.gateway.session.identity-access-management.ldap.admin.password | ""              | 管理员密码                                                   |
+| turms.gateway.session.identity-access-management.ldap.user.host | localhost       | 用于用户相关操作的LDAP服务端地址                             |
+| turms.gateway.session.identity-access-management.ldap.user.port | 389             | 用于用户相关操作的LDAP服务端端口号                           |
+| turms.gateway.session.identity-access-management.ldap.user.ssl.... |                 | 用于用户相关操作的LDAP的SSL相关配置                          |
+| turms.gateway.session.identity-access-management.ldap.user.search-filter | "uid=${userId}" | 搜索过滤条件。turms-gateway根据该搜索语句去LDAP系统中匹配对应的用户DN。<br />`${userId}`是用户ID占位符，在条件被使用时，会被替换成用户登陆请求中的`userId`。 |
+
+**提醒：配置中提到的`管理员`其实并不一定要是LDAP系统的管理员，只要被指定的LDAP用户拥有search查询系统中条目的权限即可。**
 
 ### 基于插件的自定义身份与访问管理实现
 

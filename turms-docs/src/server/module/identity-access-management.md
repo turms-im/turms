@@ -1,15 +1,15 @@
 # Identity and Access Management
 
-## Login authentication and authorization
+## Login Authentication and Authorization
 
 Turms not only provides a built-in identity and access management mechanism, but also supports user-defined identity and access management implementation based on plug-ins.
 
 ### Related configuration
 
-| config name                                              | default value | description                                                  |
+| Property                                                 | Default Value | Description                                                  |
 | -------------------------------------------------------- | ------------- | ------------------------------------------------------------ |
 | turms.gateway.session.identity-access-management.enabled | true          | Whether to enable the identity and access management mechanism. <br />If the value is `false`, turn off the Turms built-in identity and access management mechanism and user-based plug-in custom identity and access management implementation, and allow any user to log in, and authorize them to send any type of request |
-| turms.gateway.session.identity-access-management.type    | password      | The type of Turms built-in identity and access management mechanism used. The type can be `noop`, `password`, `jwt`, `http`. See below for details |
+| turms.gateway.session.identity-access-management.type    | password      | The type of Turms built-in identity and access management mechanism used. The type can be `noop`, `password`, `jwt`, `http` and `ldap`. See below for details |
 
 ### Built-in identity and access management mechanism
 
@@ -17,23 +17,23 @@ Turms not only provides a built-in identity and access management mechanism, but
 
 Turn off the built-in identity and access management mechanism, and allow any user to log in, and authorize it to send any request type.
 
-##### Related configuration items
+##### Related Properties
 
 * turms.gateway.session.identity-access-management.type=noop
 
-#### 2. Key-based authentication
+#### 2. Password-based authentication
 
 User authentication is based on the password in the `user` collection in the MongoDB built by the Turms server. Authorization implementation is not currently supported.
 
-##### Related configuration items
+##### Related Properties
 
 * turms.gateway.session.identity-access-management.type=password
 
-#### 3. Based on JWT authentication
+#### 3. JWT-based Authentication
 
 The JWT token contains the user's authentication and authorization information.
 
-##### work process
+##### Workflow
 
 ```mermaid
 sequenceDiagram
@@ -139,9 +139,9 @@ in:
     * `TYPING_STATUS`: input status related resources
     * `RESOURCE`: storage resource related resources
 
-##### Related configuration items
+##### Related Properties
 
-| config name                                                  | default value             | description                                                  |
+| Property                                                     | Default Value             | Description                                                  |
 | ------------------------------------------------------------ | ------------------------- | ------------------------------------------------------------ |
 | turms.gateway.session.identity-access-management.type        | password                  | Set to `jwt` to enable JWT-based identity and access management |
 | turms.service.message.check-if-target-active-and-not-deleted | true                      | When using the `JWT` mechanism, you need to set this configuration item to `false`, otherwise because it does not exist in the Turms database the user, so the user will not be able to send messages |
@@ -164,7 +164,7 @@ in:
 
 The HTTP response contains the user's authentication and authorization information.
 
-##### work process
+##### Workflow
 
 ```mermaid
 sequenceDiagram
@@ -213,9 +213,9 @@ t-->>c: OK if authenticated
 
 The meanings of `authenticated` and `statements` fields are the same as those of the corresponding statements in the JWT text above, so I won’t repeat them here.
 
-##### Related configuration items
+##### Related Properties
 
-| config name                                                  | default value             | description                                                  |
+| Property                                                     | Default Value             | Description                                                  |
 | ------------------------------------------------------------ | ------------------------- | ------------------------------------------------------------ |
 | turms.gateway.session.identity-access-management.type        | password                  | Set to `http` to enable identity and access management based on external HTTP responses |
 | turms.service.message.check-if-target-active-and-not-deleted | true                      | When using the `HTTP` mechanism, you need to set this configuration item to `false`, otherwise because it does not exist in the Turms database the user, so the user will not be able to send messages |
@@ -226,6 +226,69 @@ The meanings of `authenticated` and `statements` fields are the same as those of
 | turms.gateway.session.identity-access-management.http.authentication.response-expectation.status-codes | "2??"                     | Match this value in the response status code, if the match is successful, continue to other matches, Otherwise authentication fails |
 | turms.gateway.session.identity-access-management.http.authentication.response-expectation.headers |                           | Match the value in the response header, if the match is successful, continue to other matches, otherwise the authentication fails |
 | turms.gateway.session.identity-access-management.http.authentication.response-expectation.body-fields | { "authenticated": true } | Match this value in the response body, if the match is successful, continue with other matches , otherwise authentication fails |
+
+#### 5. LDAP-based Authentication
+
+##### Workflow
+
+```mermaid
+sequenceDiagram
+participant c as Client Application
+participant t as turms-gateway
+participant l as LDAP Server
+
+c->>t: login
+t->>l: search user DN by user ID
+l-->>t: result entries
+alt count is 0
+	t-->>c: unauthenticated
+else count is more than 1
+	t-->>c: internal error
+else count is 1
+	t->>l: bind by found user DN and password
+	l-->>t: result code
+	alt result code is 49
+		t-->>c: unauthenticated
+	else result code is 0
+		t-->>c: authenticated
+	else
+		t-->>c: internal error
+	end
+end
+```
+
+1. The client sends a login request to the turms-gateway server through the Turms client login interface `turmsClient.userService.login`.
+
+2. Upon receiving the login request from the client, the turms-gateway will use the `userId` parameter from the login request, along with the properties configured in the turms-gateway system (such as `baseDn` and `searchFilter` mentioned later in this document) to construct a search request to LDAP, in order to search the user's DN corresponding to the `userId`.
+
+3. When the turms-gateway receives the search result from LDAP, it will verify the number of entries in the search result:
+
+   1. If the number is 0, it indicates that the account does not exist, and as a result, the client will receive an unauthorized response.
+   2. If the number is 1, it indicates that the `userId` in the user's login request matches a corresponding DN. The turms-gateway will use this user's DN and the `password` parameter from the user's login request to send a bind login to the LDAP server:
+      1. If the result code is 49 (invalid credentials), the client will receive an unauthorized response.
+      2. If the result code is 0 (successful login), the client will receive an authorized response.
+      3. If it is any other result code, the client will receive a system internal error response.
+   3. If the number is greater than 1, it indicates an error in the system-configured `searchFilter` property, requiring reconfiguration, and as a result, the system will respond with an internal error.
+
+   **Note: The Turms user ID for an LDAP user is configured by the LDAP system administrator and is not configured by the Turms server. It is required that this value must be greater than 0, with no other conditions imposed.**
+
+##### Related Properties
+
+| Property                                                     | Default Value   | Description                                                  |
+| ------------------------------------------------------------ | --------------- | ------------------------------------------------------------ |
+| turms.gateway.session.identity-access-management.type        | password        | Set to `ldap` to enable LDAP-based identity and access management |
+| turms.gateway.session.identity-access-management.ldap.base-dn | ""              | Base DN. For example, `dc=turms,dc=im`                       |
+| turms.gateway.session.identity-access-management.ldap.admin.host | localhost       | LDAP server host for administrative operations               |
+| turms.gateway.session.identity-access-management.ldap.admin.port | 389             | LDAP server port for administrative operations               |
+| turms.gateway.session.identity-access-management.ldap.admin.ssl.... |                 | SSL-related properties for administrative operations in LDAP |
+| turms.gateway.session.identity-access-management.ldap.admin.username | ""              | Administrator username                                       |
+| turms.gateway.session.identity-access-management.ldap.admin.password | ""              | Administrator password                                       |
+| turms.gateway.session.identity-access-management.ldap.user.host | localhost       | LDAP server address for user-related operations              |
+| turms.gateway.session.identity-access-management.ldap.user.port | 389             | LDAP server port for user-related operations                 |
+| turms.gateway.session.identity-access-management.ldap.user.ssl.... |                 | SSL-related properties for user-related operations in LDAP   |
+| turms.gateway.session.identity-access-management.ldap.user.search-filter | "uid=${userId}" | Search filter. The turms-gateway matches the corresponding user DN in the LDAP system based on this search filter. `${userId}` is the user ID placeholder, which will be replaced with the `userId` from the user's login request when the filter is used. |
+
+**Note: The "administrator" mentioned in properties does not necessarily refer to the LDAP system administrator. It simply requires the specified LDAP user to have permission to search for entries in the system.**
 
 ### Plug-in-based custom identity and access management implementation
 
