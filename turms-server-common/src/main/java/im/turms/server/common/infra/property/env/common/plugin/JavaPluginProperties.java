@@ -33,7 +33,7 @@ import im.turms.server.common.infra.property.metadata.Description;
 @NoArgsConstructor
 public class JavaPluginProperties {
 
-    @Description("Whether to allow to save plugins using HTTP API")
+    @Description("Whether to allow saving plugins using HTTP API")
     private boolean allowSave;
 
 }

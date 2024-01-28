@@ -35,12 +35,12 @@ import im.turms.server.common.infra.property.metadata.MutableProperty;
 @NoArgsConstructor
 public class ReadReceiptProperties {
 
-    @Description("Whether to allow to update the last read date")
+    @Description("Whether to allow updating the last read date")
     @GlobalProperty
     @MutableProperty
     private boolean enabled = true;
 
-    @Description("Whether to allow to move the last read date forward")
+    @Description("Whether to allow moving the last read date forward")
     @GlobalProperty
     @MutableProperty
     private boolean allowMoveReadDateForward;

@@ -38,15 +38,20 @@ import im.turms.server.common.infra.property.metadata.MutableProperty;
 @NoArgsConstructor
 public class GroupProperties {
 
-    @Description("Whether to delete groups logically by default")
-    @GlobalProperty
-    @MutableProperty
-    private boolean deleteGroupLogicallyByDefault = true;
-
     @Description("Whether to activate a group when created by default")
     @GlobalProperty
     @MutableProperty
     private boolean activateGroupWhenCreated = true;
+
+    @Description("Whether to allow the group owner to change the group type")
+    @GlobalProperty
+    @MutableProperty
+    private boolean allowGroupOwnerChangeGroupType = false;
+
+    @Description("Whether to delete groups logically by default")
+    @GlobalProperty
+    @MutableProperty
+    private boolean deleteGroupLogicallyByDefault = true;
 
     @Description("The group member cache will expire after the specified seconds. "
             + "If 0, no group member cache")

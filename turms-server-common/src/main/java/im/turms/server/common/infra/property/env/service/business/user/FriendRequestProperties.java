@@ -45,7 +45,7 @@ public class FriendRequestProperties {
     @Min(0)
     private int maxContentLength = 200;
 
-    @Description("Whether to allow resending a friend request after the previous request has been declined, ignored, or expired")
+    @Description("Whether to allow sending a friend request again after the previous request has been declined, ignored, or expired")
     @GlobalProperty
     @MutableProperty
     private boolean allowSendRequestAfterDeclinedOrIgnoredOrExpired;

@@ -37,7 +37,7 @@ public class JsPluginProperties {
     @NestedConfigurationProperty
     private JsPluginDebugProperties debug = new JsPluginDebugProperties();
 
-    @Description("Whether to allow to save plugins using HTTP API")
+    @Description("Whether to allow saving plugins using HTTP API")
     private boolean allowSave;
 
 }

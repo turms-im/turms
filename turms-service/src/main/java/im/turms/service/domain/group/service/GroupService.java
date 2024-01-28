@@ -111,6 +111,7 @@ public class GroupService {
     private final Counter deletedGroupsCounter;
 
     private boolean activateGroupWhenCreated;
+    private boolean allowGroupOwnerChangeGroupType;
     private boolean deleteGroupLogicallyByDefault;
 
     private final Cache<Long, GroupType> groupIdToGroupTypeCache;
@@ -158,6 +159,7 @@ public class GroupService {
         GroupProperties groupProperties = properties.getService()
                 .getGroup();
         activateGroupWhenCreated = groupProperties.isActivateGroupWhenCreated();
+        allowGroupOwnerChangeGroupType = groupProperties.isAllowGroupOwnerChangeGroupType();
         deleteGroupLogicallyByDefault = groupProperties.isDeleteGroupLogicallyByDefault();
     }
 
@@ -636,7 +638,7 @@ public class GroupService {
     }
 
     public Mono<Void> authAndUpdateGroupInformation(
-            @Nullable Long requesterId,
+            @NotNull Long requesterId,
             @NotNull Long groupId,
             @Nullable Long typeId,
             @Nullable Long creatorId,
@@ -651,6 +653,7 @@ public class GroupService {
             @Nullable Date muteEndDate,
             @Nullable ClientSession session) {
         try {
+            Validator.notNull(requesterId, "requesterId");
             Validator.min(minimumScore, "minimumScore", 0);
             Validator.pastOrPresent(creationDate, "creationDate");
             Validator.pastOrPresent(deletionDate, "deletionDate");
@@ -658,8 +661,24 @@ public class GroupService {
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        if (Validator.areAllNull(typeId,
-                creatorId,
+        Mono<Void> checkIfAllowedToUpdateTypeId;
+        if (typeId == null) {
+            checkIfAllowedToUpdateTypeId = Mono.empty();
+        } else {
+            if (allowGroupOwnerChangeGroupType) {
+                checkIfAllowedToUpdateTypeId =
+                        isAllowedHaveGroupType(requesterId, typeId, null).flatMap(permission -> {
+                            ResponseStatusCode code = permission.code();
+                            return code == ResponseStatusCode.OK
+                                    ? Mono.empty()
+                                    : Mono.error(ResponseException.get(code, permission.reason()));
+                        });
+            } else {
+                checkIfAllowedToUpdateTypeId = Mono.error(
+                        ResponseException.get(ResponseStatusCode.UPDATING_GROUP_TYPE_IS_DISABLED));
+            }
+        }
+        if (Validator.areAllNull(creatorId,
                 ownerId,
                 name,
                 intro,
@@ -669,50 +688,52 @@ public class GroupService {
                 creationDate,
                 deletionDate,
                 muteEndDate)) {
-            return Mono.empty();
+            return checkIfAllowedToUpdateTypeId;
         }
-        return queryGroupTypeIfActiveAndNotDeleted(groupId)
-                .switchIfEmpty(Mono.error(
-                        ResponseException.get(ResponseStatusCode.UPDATE_INFO_OF_NONEXISTENT_GROUP)))
-                .flatMap(groupType -> {
-                    GroupUpdateStrategy groupUpdateStrategy =
-                            groupType.getGroupInfoUpdateStrategy();
-                    return switch (groupUpdateStrategy) {
-                        case OWNER -> groupMemberService.isOwner(requesterId, groupId, false)
-                                .map(isOwner -> isOwner
-                                        ? ResponseStatusCode.OK
-                                        : ResponseStatusCode.NOT_GROUP_OWNER_TO_UPDATE_GROUP_INFO);
-                        case OWNER_MANAGER -> groupMemberService
-                                .isOwnerOrManager(requesterId, groupId, false)
-                                .map(isOwnerOrManager -> isOwnerOrManager
-                                        ? ResponseStatusCode.OK
-                                        : ResponseStatusCode.NOT_GROUP_OWNER_OR_MANAGER_TO_UPDATE_GROUP_INFO);
-                        case OWNER_MANAGER_MEMBER -> groupMemberService
-                                .isOwnerOrManagerOrMember(requesterId, groupId, false)
-                                .map(isMember -> isMember
-                                        ? ResponseStatusCode.OK
-                                        : ResponseStatusCode.NOT_GROUP_MEMBER_TO_UPDATE_GROUP_INFO);
-                        case ALL -> Mono.just(ResponseStatusCode.OK);
-                        default -> Mono.error(new RuntimeException(
-                                "Unexpected group update strategy: "
-                                        + groupUpdateStrategy));
-                    };
-                })
-                .flatMap(code -> code == ResponseStatusCode.OK
-                        ? updateGroupInformation(groupId,
-                                typeId,
-                                creatorId,
-                                ownerId,
-                                name,
-                                intro,
-                                announcement,
-                                minimumScore,
-                                isActive,
-                                creationDate,
-                                deletionDate,
-                                muteEndDate,
-                                session)
-                        : Mono.error(ResponseException.get(code)));
+        return checkIfAllowedToUpdateTypeId
+                .then(Mono.defer(() -> queryGroupTypeIfActiveAndNotDeleted(groupId)
+                        .switchIfEmpty(Mono.error(ResponseException
+                                .get(ResponseStatusCode.UPDATE_INFO_OF_NONEXISTENT_GROUP)))
+                        .flatMap(groupType -> {
+                            GroupUpdateStrategy groupUpdateStrategy =
+                                    groupType.getGroupInfoUpdateStrategy();
+                            return switch (groupUpdateStrategy) {
+                                case OWNER -> groupMemberService
+                                        .isOwner(requesterId, groupId, false)
+                                        .map(isOwner -> isOwner
+                                                ? ResponseStatusCode.OK
+                                                : ResponseStatusCode.NOT_GROUP_OWNER_TO_UPDATE_GROUP_INFO);
+                                case OWNER_MANAGER -> groupMemberService
+                                        .isOwnerOrManager(requesterId, groupId, false)
+                                        .map(isOwnerOrManager -> isOwnerOrManager
+                                                ? ResponseStatusCode.OK
+                                                : ResponseStatusCode.NOT_GROUP_OWNER_OR_MANAGER_TO_UPDATE_GROUP_INFO);
+                                case OWNER_MANAGER_MEMBER -> groupMemberService
+                                        .isOwnerOrManagerOrMember(requesterId, groupId, false)
+                                        .map(isMember -> isMember
+                                                ? ResponseStatusCode.OK
+                                                : ResponseStatusCode.NOT_GROUP_MEMBER_TO_UPDATE_GROUP_INFO);
+                                case ALL -> Mono.just(ResponseStatusCode.OK);
+                                default -> Mono.error(new RuntimeException(
+                                        "Unexpected group update strategy: "
+                                                + groupUpdateStrategy));
+                            };
+                        })
+                        .flatMap(code -> code == ResponseStatusCode.OK
+                                ? updateGroupInformation(groupId,
+                                        typeId,
+                                        creatorId,
+                                        ownerId,
+                                        name,
+                                        intro,
+                                        announcement,
+                                        minimumScore,
+                                        isActive,
+                                        creationDate,
+                                        deletionDate,
+                                        muteEndDate,
+                                        session)
+                                : Mono.error(ResponseException.get(code)))));
     }
 
     public Mono<List<Group>> authAndQueryGroups(
