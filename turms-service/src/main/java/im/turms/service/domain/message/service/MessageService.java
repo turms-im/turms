@@ -97,6 +97,7 @@ import im.turms.service.storage.mongo.OperationResultPublisherPool;
 
 import static im.turms.server.common.access.common.ResponseStatusCode.ILLEGAL_ARGUMENT;
 import static im.turms.server.common.access.common.ResponseStatusCode.MESSAGE_RECALL_TIMEOUT;
+import static im.turms.server.common.access.common.ResponseStatusCode.NOT_MESSAGE_RECIPIENT_OR_SENDER_TO_FORWARD_MESSAGE;
 import static im.turms.server.common.access.common.ResponseStatusCode.NOT_SENDER_TO_RECALL_MESSAGE;
 import static im.turms.server.common.access.common.ResponseStatusCode.NOT_SENDER_TO_UPDATE_MESSAGE;
 import static im.turms.server.common.access.common.ResponseStatusCode.OK;
@@ -294,12 +295,20 @@ public class MessageService {
             }
         }
         return messageRepository.findMessageSenderIdAndTargetIdAndIsGroupMessage(messageId)
-                .flatMap(message -> message.getIsGroupMessage()
-                        ? groupMemberService.isGroupMember(message.getTargetId(), userId, false)
-                        : Mono.just(message.getTargetId()
-                                .equals(userId)
-                                || message.getSenderId()
-                                        .equals(userId)));
+                .flatMap(message -> isMessageRecipientOrSender(userId,
+                        message.getIsGroupMessage(),
+                        message.getTargetId(),
+                        message.getSenderId()));
+    }
+
+    private Mono<Boolean> isMessageRecipientOrSender(
+            @NotNull Long userId,
+            boolean isGroupMessage,
+            @NotNull Long targetId,
+            @NotNull Long senderId) {
+        return isGroupMessage
+                ? groupMemberService.isGroupMember(targetId, userId, false)
+                : Mono.just(targetId.equals(userId) || senderId.equals(userId));
     }
 
     public Mono<ServicePermission> isMessageRecallable(@NotNull Long messageId) {
@@ -1118,20 +1127,29 @@ public class MessageService {
             @NotNull Boolean isGroupMessage,
             @NotNull Boolean isSystemMessage,
             @NotNull Long targetId) {
-        return queryMessage(referenceId).flatMap(message -> authAndSaveMessage(queryRecipientIds,
-                null,
-                node.nextLargeGapId(ServiceType.MESSAGE),
-                requesterId,
-                requesterIp,
-                targetId,
-                isGroupMessage,
-                isSystemMessage,
-                message.getText(),
-                message.getRecords(),
-                message.getBurnAfter(),
-                message.getDeliveryDate(),
-                referenceId,
-                null));
+        return queryMessage(referenceId).flatMap(message -> isMessageRecipientOrSender(requesterId,
+                message.getIsGroupMessage(),
+                message.getTargetId(),
+                message.getSenderId()).flatMap(isMessageRecipientOrSender -> {
+                    if (!isMessageRecipientOrSender) {
+                        return Mono.error(ResponseException
+                                .get(NOT_MESSAGE_RECIPIENT_OR_SENDER_TO_FORWARD_MESSAGE));
+                    }
+                    return authAndSaveMessage(queryRecipientIds,
+                            null,
+                            node.nextLargeGapId(ServiceType.MESSAGE),
+                            requesterId,
+                            requesterIp,
+                            targetId,
+                            isGroupMessage,
+                            isSystemMessage,
+                            message.getText(),
+                            message.getRecords(),
+                            message.getBurnAfter(),
+                            message.getDeliveryDate(),
+                            referenceId,
+                            null);
+                }));
     }
 
     public Mono<Void> authAndSaveAndSendMessage(

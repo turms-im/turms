@@ -315,6 +315,8 @@ public enum ResponseStatusCode {
     MUTED_GROUP_MEMBER_SEND_MESSAGE(5008, "The muted group member cannot send a message", 403),
     GUESTS_HAVE_BEEN_MUTED(5009, "All guests of the group have been muted", 403),
     MESSAGE_IS_ILLEGAL(5010, "The message contains unwanted words", 403),
+    NOT_MESSAGE_RECIPIENT_OR_SENDER_TO_FORWARD_MESSAGE(5011,
+            "Only the message recipient and sender can forward the message", 403),
 
     // Message - Update
     UPDATING_MESSAGE_BY_SENDER_IS_DISABLED(5100, "Updating messages sent by the sender is disabled",
