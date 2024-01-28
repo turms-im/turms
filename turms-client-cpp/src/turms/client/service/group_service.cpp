@@ -362,6 +362,22 @@ auto GroupService::deleteInvitation(int64_t invitationId) -> boost::future<Respo
         });
 }
 
+auto GroupService::replyInvitation(int64_t invitationId,
+                                   ResponseAction responseAction,
+                                   const absl::string_view& reason)
+    -> boost::future<Response<void>> {
+    TurmsRequest turmsRequest;
+    auto* request = turmsRequest.mutable_update_group_invitation_request();
+    request->set_invitation_id(invitationId);
+    request->set_response_action(responseAction);
+    request->set_reason(reason);
+    return turmsClient_.driver()
+        .send(turmsRequest)
+        .then([](boost::future<TurmsNotification> response) {
+            return Response<void>{response.get()};
+        });
+}
+
 auto GroupService::queryInvitations(int64_t groupId,
                                     const boost::optional<time_point>& lastUpdatedDate)
     -> boost::future<Response<boost::optional<GroupInvitationsWithVersion>>> {
@@ -425,6 +441,22 @@ auto GroupService::deleteJoinRequest(int64_t requestId) -> boost::future<Respons
     TurmsRequest turmsRequest;
     auto* request = turmsRequest.mutable_delete_group_join_request_request();
     request->set_request_id(requestId);
+    return turmsClient_.driver()
+        .send(turmsRequest)
+        .then([](boost::future<TurmsNotification> response) {
+            return Response<void>{response.get()};
+        });
+}
+
+auto GroupService::replyJoinRequest(int64_t requestId,
+                                    ResponseAction responseAction,
+                                    const absl::string_view& reason)
+    -> boost::future<Response<void>> {
+    TurmsRequest turmsRequest;
+    auto* request = turmsRequest.mutable_update_group_join_request_request();
+    request->set_request_id(requestId);
+    request->set_response_action(responseAction);
+    request->set_reason(reason);
     return turmsClient_.driver()
         .send(turmsRequest)
         .then([](boost::future<TurmsNotification> response) {

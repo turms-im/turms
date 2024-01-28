@@ -25,6 +25,11 @@ class NotificationService : private boost::noncopyable {
 
     explicit NotificationService(TurmsClient& turmsClient);
 
+    /**
+     * Add a notification listener to receive notifications.
+     * Note: This listener will receive all kinds of notifications excluding messages.
+     * To listen to messages, use MessageService::addMessageListener() instead.
+     */
     template <typename T>
     auto addNotificationListener(T&& listener) -> void {
         notificationListeners_.emplace_back(std::forward<T>(listener));

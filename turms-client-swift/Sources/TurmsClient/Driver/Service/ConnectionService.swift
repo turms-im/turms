@@ -107,20 +107,20 @@ public class ConnectionService: BaseService {
     }
 
     private func notifyOnConnectedListeners() {
-        onConnectedListeners.forEach {
-            $0()
+        for onConnectedListener in onConnectedListeners {
+            onConnectedListener()
         }
     }
 
     private func notifyOnDisconnectedListeners(_ error: Error?) {
-        onDisconnectedListeners.forEach {
-            $0(error)
+        for onDisconnectedListener in onDisconnectedListeners {
+            onDisconnectedListener(error)
         }
     }
 
     private func notifyMessageListeners(_ message: Data) {
-        messageListeners.forEach {
-            $0(message)
+        for messageListener in messageListeners {
+            messageListener(message)
         }
     }
 
@@ -144,7 +144,7 @@ public class ConnectionService: BaseService {
             }, onDataReceived: { [weak self] data in
                 guard let s = self else { return }
                 let messages = try s.decoder.decodeMessages(data)
-                messages.forEach { message in
+                for message in messages {
                     s.notifyMessageListeners(message)
                 }
             })

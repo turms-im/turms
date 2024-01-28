@@ -21,6 +21,9 @@ public class NotificationService {
             }
     }
 
+    /// Add a notification listener to receive notifications.
+    /// Note: This listener will receive all kinds of notifications excluding messages.
+    /// To listen to messages, use ``MessageService/addMessageListener`` instead.
     public func addNotificationListener(listener: @escaping (Notification) -> Void) {
         notificationListeners.append(listener)
     }

@@ -92,9 +92,8 @@ public enum ResponseStatusCode: Int {
 
     // User - Info
     case updateInfoOfNonexistentUser = 2300
-    case userProfileNotFound
-    case profileRequesterNotInContactsOrBlocked
-    case profileRequesterHasBeenBlocked
+    case notFriendToQueryUserProfile
+    case blockedUserToQueryUserProfile
 
     // User - Permission
     case queryPermissionOfNonexistentUser = 2400
@@ -102,11 +101,16 @@ public enum ResponseStatusCode: Int {
     // User - Relationship
     case addNonRelatedUserToGroup = 2500
     case createExistingRelationship
+    case cannotBlockOneself
 
     // User - Friend Request
-    case requesterNotFriendRequestRecipient = 2600
-    case createExistingFriendRequest
-    case friendRequestSenderHasBeenBlocked
+    case createExistingFriendRequest = 2600
+    case blockedUserToSendFriendRequest
+    case recallNonPendingFriendRequest
+    case recallingFriendRequestIsDisabled
+    case notSenderToRecallFriendRequest
+    case updateNonPendingFriendRequest
+    case notRecipientToUpdateFriendRequest
 
     // Group
 
@@ -119,13 +123,17 @@ public enum ResponseStatusCode: Int {
     // Group - Type
     case noPermissionToCreateGroupWithGroupType = 3100
     case createGroupWithNonexistentGroupType
+    case updatingGroupTypeIsDisabled
+    case notGroupOwnerToUpdateGroupType
+    case noPermissionToUpdateGroupToGroupType
+    case updateGroupToNonexistentGroupType
 
     // Group - Ownership
     case notActiveUserToCreateGroup = 3200
     case notGroupOwnerToTransferGroup
     case notGroupOwnerToDeleteGroup
-    case successorNotGroupMember
-    case ownerQuitsWithoutSpecifyingSuccessor
+    case groupSuccessorNotGroupMember
+    case groupOwnerQuitWithoutSpecifyingSuccessor
     case maxOwnedGroupsReached
     case transferNonexistentGroup
 
@@ -133,7 +141,7 @@ public enum ResponseStatusCode: Int {
     case notGroupOwnerOrManagerToCreateGroupQuestion = 3300
     case notGroupOwnerOrManagerToDeleteGroupQuestion
     case notGroupOwnerOrManagerToUpdateGroupQuestion
-    case notGroupOwnerOrManagerToAccessGroupQuestionAnswer
+    case notGroupOwnerOrManagerToQueryGroupQuestionAnswer
     case createGroupQuestionForInactiveGroup
     case createGroupQuestionForGroupUsingJoinRequest
     case createGroupQuestionForGroupUsingInvitation
@@ -144,12 +152,14 @@ public enum ResponseStatusCode: Int {
     case answerGroupQuestionOfInactiveGroup
 
     // Group - Member
-    case addUserToGroupRequiringInvitation = 3400
+    case addUserToGroupRequiringUsersApproval = 3400
     case addUserToInactiveGroup
-    case addUserToGroupWithRoleHigherThanRequester
+    case notGroupOwnerToAddGroupManager
     case addUserToGroupWithSizeLimitReached
     case addBlockedUserToGroup
-    case addBlockedUserToInactiveGroup
+    case notGroupOwnerToAddGroupMember
+    case notGroupOwnerOrManagerToAddGroupMember
+    case notGroupMemberToAddGroupMember
     case notGroupOwnerOrManagerToRemoveGroupMember
     case notGroupOwnerToRemoveGroupOwnerOrManager
     case notGroupOwnerToUpdateGroupMemberRole
@@ -164,34 +174,42 @@ public enum ResponseStatusCode: Int {
     case muteGroupMemberOfNonexistentGroup
     case muteNonexistentGroupMember
     case notGroupMemberToQueryGroupMemberInfo
+    case userJoinGroupWithoutAcceptingGroupInvitation
+    case userJoinGroupWithoutAnsweringGroupQuestion
+    case userJoinGroupWithoutSendingGroupJoinRequest
 
     // Group - Blocklist
     case notGroupOwnerOrManagerToAddBlockedUser = 3500
     case notGroupOwnerOrManagerToRemoveBlockedUser
 
     // Group - Join Request
-    case groupJoinRequestSenderHasBeenBlocked = 3600
-    case notGroupJoinRequestSenderToRecallRequest
-    case notGroupOwnerOrManagerToAccessGroupJoinRequest
+    case blockedUserSendGroupJoinRequest = 3600
+    case groupMemberSendGroupJoinRequest
+    case notSenderToRecallGroupJoinRequest
+    case notGroupOwnerOrManagerToQueryGroupJoinRequest
     case recallNonPendingGroupJoinRequest
     case sendGroupJoinRequestToInactiveGroup
     case sendGroupJoinRequestToGroupUsingMembershipRequest
     case sendGroupJoinRequestToGroupUsingInvitation
     case sendGroupJoinRequestToGroupUsingQuestion
     case recallingGroupJoinRequestIsDisabled
+    case updateNonPendingGroupJoinRequest
+    case notGroupOwnerOrManagerToUpdateGroupJoinRequest
 
     // Group - Invitation
-    case groupInviterNotGroupMember = 3700
-    case groupInviteeAlreadyGroupMember
-    case groupInviteeHasBeenBlockedByGroup
-    case notGroupOwnerOrManagerToRecallGroupInvitation
-    case notGroupOwnerOrManagerToAccessGroupInvitation
+    case sendGroupInvitationToGroupMember = 3700
+    case sendGroupInvitationToBlockedUser
+    case sendGroupInvitationToGroupNotRequiringUsersApproval
     case notGroupOwnerToSendGroupInvitation
     case notGroupOwnerOrManagerToSendGroupInvitation
     case notGroupMemberToSendGroupInvitation
     case recallingGroupInvitationIsDisabled
-    case sendGroupInvitationToGroupNotRequireInvitation
+    case notGroupOwnerOrManagerToRecallGroupInvitation
+    case notGroupOwnerOrManagerOrSenderToRecallGroupInvitation
     case recallNonPendingGroupInvitation
+    case updateNonPendingGroupInvitation
+    case notInviteeToUpdateGroupInvitation
+    case notGroupOwnerOrManagerToQueryGroupInvitation
 
     // Conversation
 
@@ -211,16 +229,17 @@ public enum ResponseStatusCode: Int {
 
     // Message - Send
     case messageRecipientNotActive = 5000
-    case messageSenderNotInContactsOrBlocked
-    case privateMessageSenderHasBeenBlocked
-    case groupMessageSenderHasBeenBlocked
+    case notFriendToSendPrivateMessage
+    case blockedUserSendPrivateMessage
+    case blockedUserSendGroupMessage
     case sendMessageToInactiveGroup
     case sendMessageToMutedGroup
     case sendMessageToNonexistentGroup
     case sendingMessagesToOneselfIsDisabled
     case mutedGroupMemberSendMessage
-    case guestsHaveBeenMuted
+    case notSpeakableGroupGuestToSendMessage
     case messageIsIllegal
+    case notMessageRecipientOrSenderToForwardMessage
 
     // Message - Update
     case updatingMessageBySenderIsDisabled = 5100

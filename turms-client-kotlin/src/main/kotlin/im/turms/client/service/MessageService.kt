@@ -49,10 +49,78 @@ class MessageService(private val turmsClient: TurmsClient) {
     private var mentionedUserIdsParser: ((Message) -> Set<Long>)? = null
     private var messageListeners: MutableList<(Message, MessageAddition) -> Unit> = LinkedList()
 
+    /**
+     * Add a message listener that will be triggered when a new message arrives.
+     * Note: To listen to notifications excluding messages,
+     * use [NotificationService.addNotificationListener] instead.
+     */
     fun addMessageListener(listener: (Message, MessageAddition) -> Unit) = messageListeners.add(listener)
 
+    /**
+     * Remove a message listener.
+     */
     fun removeMessageListener(listener: (Message, MessageAddition) -> Unit) = messageListeners.remove(listener)
 
+    /**
+     * Send a message.
+     *
+     * Common Scenarios:
+     * * A client can call [addMessageListener] to listen to incoming new messages.
+     *
+     * Authorization:
+     *
+     * For private messages,
+     * * If the server property `turms.service.message.allow-send-messages-to-oneself`
+     *   is true (false by default), the logged-in user can send messages to itself.
+     *   Otherwise, throws [ResponseException] with the code [ResponseStatusCode.SENDING_MESSAGES_TO_ONESELF_IS_DISABLED].
+     * * If the server property `turms.service.message.allow-send-messages-to-stranger`
+     *   is true (true by default), the logged-in user can send messages to strangers
+     *   (has no relationship with the logged-in user).
+     * * If the logged-in user has blocked the target user,
+     *   throws [ResponseException] with the code [ResponseStatusCode.BLOCKED_USER_SEND_PRIVATE_MESSAGE].
+     *
+     * For group messages,
+     * * If the logged-in user has blocked the target group,
+     *   throws [ResponseException] with the code [ResponseStatusCode.BLOCKED_USER_SEND_GROUP_MESSAGE].
+     * * If the logged-in user is not a group member, and the group does NOT allow non-members to send messages,
+     *   throws [ResponseException] with the code [ResponseStatusCode.NOT_SPEAKABLE_GROUP_GUEST_TO_SEND_MESSAGE].
+     * * If the logged-in user has been muted,
+     *   throws [ResponseException] with the code [ResponseStatusCode.MUTED_GROUP_MEMBER_SEND_MESSAGE].
+     * * If the target group has been deleted,
+     *   throws [ResponseException] with the code [ResponseStatusCode.SEND_MESSAGE_TO_INACTIVE_GROUP].
+     * * If the target group has been muted,
+     *   throws [ResponseException] with the code [ResponseStatusCode.SEND_MESSAGE_TO_MUTED_GROUP].
+     *
+     * Notifications:
+     * * If the server property `turms.service.notification.message-created.notify-message-recipients`
+     *   is true (true by default), a new message notification will be sent to the message recipients actively.
+     * * If the server property `turms.service.notification.message-created.notify-requester-other-online-sessions`
+     *   is true (true by default), a new message notification will be sent to all other online sessions of the logged-in user actively.
+     *
+     * @param isGroupMessage whether the message is a group message.
+     * @param targetId The target ID.
+     * If [isGroupMessage] is true, the target ID is the group ID.
+     * If [isGroupMessage] is false, the target ID is the user ID.
+     * @param deliveryDate The delivery date.
+     * Note that [deliveryDate] will only work if the server property
+     * `turms.service.message.time-type` is `client_time` (`local_server_time` by default).
+     * @param text the message text.
+     * [text] can be anything you want. e.g. Markdown, base64 encoded bytes.
+     * Note that if [text] is null, [records] must not be null.
+     * @param records the message records.
+     * [records] can be anything you want. e.g. base64 encoded images (it is highly not recommended).
+     * Note that if [records] is null, [text] must not be null.
+     * @param burnAfter The burn after the specified time.
+     * Note that Turms server and client do NOT implement the `burn after` feature,
+     * and they just store and pass [burnAfter] between server and clients.
+     * @param preMessageId The pre-message ID.
+     * [preMessageId] is mainly used to arrange the order of messages on UI.
+     * If what you want is to ensure every message will not be lost, even if the server crashes,
+     * you can set the server property `turms.service.message.use-conversation-id` to true
+     * (false by default).
+     * @return the message ID.
+     * @throws ResponseException if an error occurs.
+     */
     suspend fun sendMessage(
         isGroupMessage: Boolean,
         targetId: Long,
@@ -84,6 +152,29 @@ class MessageService(private val turmsClient: TurmsClient) {
             }
     }
 
+    /**
+     * Forward a message.
+     * In other words, create and send a new message based on a existing message
+     * to the target user or group.
+     *
+     * Authorization:
+     * * If the logged-in user is not allowed to view the message with [messageId],
+     *   throws [ResponseException] with the code [ResponseStatusCode.NOT_MESSAGE_RECIPIENT_OR_SENDER_TO_FORWARD_MESSAGE].
+     *
+     * Notifications:
+     * * If the server property `turms.service.notification.message-created.notify-message-recipients`
+     *   is true (true by default), a new message notification will be sent to the message recipients actively.
+     * * If the server property `turms.service.notification.message-created.notify-requester-other-online-sessions`
+     *   is true (true by default), a new message notification will be sent to all other online sessions of the logged-in user actively.
+     *
+     * @param messageId the message ID for copying.
+     * @param isGroupMessage whether the message is a group message.
+     * @param targetId the target ID.
+     * If [isGroupMessage] is true, the target ID is the group ID.
+     * If [isGroupMessage] is false, the target ID is the user ID.
+     * @return the message ID.
+     * @throws ResponseException if an error occurs.
+     */
     suspend fun forwardMessage(
         messageId: Long,
         isGroupMessage: Boolean,
@@ -102,6 +193,34 @@ class MessageService(private val turmsClient: TurmsClient) {
             it.getLongOrThrow()
         }
 
+    /**
+     * Update a sent message.
+     *
+     * Authorization:
+     * * If the server property `turms.service.message.allow-send-messages-to-oneself`
+     *   is true (true by default), the logged-in user can update sent messages.
+     *   Otherwise, throws [ResponseException] with the code [ResponseStatusCode.UPDATING_MESSAGE_BY_SENDER_IS_DISABLED].
+     * * If the message is not sent by the logged-in user,
+     *   throws [ResponseException] with the code [ResponseStatusCode.NOT_SENDER_TO_UPDATE_MESSAGE].
+     * * If the message is group message, and is sent by the logged-in user but the group
+     *   has been deleted,
+     *   throws [ResponseException] with the code [ResponseStatusCode.UPDATE_MESSAGE_OF_NONEXISTENT_GROUP].
+     * * If the message is group message, and the group type has disabled updating messages,
+     *   throws [ResponseException] with the code [ResponseStatusCode.UPDATING_GROUP_MESSAGE_BY_SENDER_IS_DISABLED].
+     *
+     * Notifications:
+     * * If the server property `turms.service.notification.message-updated.notify-message-recipients`
+     *   is true (true by default), a message update notification will be sent to the message recipients actively.
+     * * If the server property `turms.service.notification.message-updated.notify-requester-other-online-sessions`
+     *   is true (true by default), a message update notification will be sent to all other online sessions of the logged-in user actively.
+     *
+     * @param messageId The sent message ID.
+     * @param text The new message text.
+     * If null, the message text will not be changed.
+     * @param records The new message records.
+     * If null, the message records will not be changed.
+     * @throws ResponseException if an error occurs.
+     */
     suspend fun updateSentMessage(
         messageId: Long,
         text: String? = null,
@@ -120,6 +239,30 @@ class MessageService(private val turmsClient: TurmsClient) {
             .toResponse()
     }
 
+    /**
+     * Find messages.
+     *
+     * @param ids the message IDs for querying.
+     * @param areGroupMessages whether the messages are group messages.
+     * If the logged-in user is not a group member,
+     * throws [ResponseException] with the code [ResponseStatusCode.NOT_GROUP_MEMBER_TO_QUERY_GROUP_MESSAGES].
+     * TODO: guest users of some group types should be able to query messages.
+     * @param areSystemMessages whether the messages are system messages.
+     * @param fromIds the from IDs.
+     * If [areGroupMessages] is true, the from ID is the group ID.
+     * If [areGroupMessages] is false, the from ID is the user ID.
+     * @param deliveryDateStart the start delivery date for querying.
+     * @param deliveryDateEnd the end delivery date for querying.
+     * @param maxCount the maximum count for querying.
+     * @param descending whether the messages are sorted in descending order.
+     * @return list of messages.
+     * Note that the list only contains messages in which the logged-in user
+     * has permission to view.
+     * If the logged-in user has no permission to view specified messages,
+     * these messages will be filtered out on the server, and no error will be thrown,
+     * except for [ResponseStatusCode.NOT_GROUP_MEMBER_TO_QUERY_GROUP_MESSAGES] mentioned above.
+     * @throws ResponseException if an error occurs.
+     */
     suspend fun queryMessages(
         ids: Set<Long>? = null,
         areGroupMessages: Boolean? = null,
@@ -146,6 +289,30 @@ class MessageService(private val turmsClient: TurmsClient) {
             it.messages.messagesList
         }
 
+    /**
+     * Find the pair of messages and the total count for each conversation.
+     *
+     * @param ids the message IDs for querying.
+     * @param areGroupMessages whether the messages are group messages.
+     * @param areSystemMessages whether the messages are system messages.
+     * If the logged-in user is not a group member,
+     * throws [ResponseException] with the code [ResponseStatusCode.NOT_GROUP_MEMBER_TO_QUERY_GROUP_MESSAGES].
+     * TODO: guest users of some group types should be able to query messages.
+     * @param fromIds The from IDs.
+     * If [areGroupMessages] is true, the from ID is the group ID.
+     * If [areGroupMessages] is false, the from ID is the user ID.
+     * @param deliveryDateStart The start delivery date for querying.
+     * @param deliveryDateEnd The end delivery date for querying.
+     * @param maxCount The maximum count for querying.
+     * @param descending Whether the messages are sorted in descending order.
+     * @return list of the pair of messages and the total count for each conversation.
+     * Note that the list only contains messages in which the logged-in user
+     * has permission to view.
+     * If the logged-in user has no permission to view specified messages,
+     * these messages will be filtered out on the server, and no error will be thrown,
+     * except for [ResponseStatusCode.NOT_GROUP_MEMBER_TO_QUERY_GROUP_MESSAGES] mentioned above.
+     * @throws ResponseException if an error occurs.
+     */
     suspend fun queryMessagesWithTotal(
         ids: Set<Long?>? = null,
         areGroupMessages: Boolean? = null,
@@ -172,6 +339,27 @@ class MessageService(private val turmsClient: TurmsClient) {
             it.messagesWithTotalList.messagesWithTotalListList
         }
 
+    /**
+     * Recall a message.
+     *
+     * Authorization:
+     * * If the server property `turms.service.message.allow-recall-message`
+     *   is true (true by default), the logged-in user can recall sent messages.
+     *   Otherwise, throws [ResponseException] with the code [ResponseStatusCode.RECALLING_MESSAGE_IS_DISABLED].
+     * * If the message does not exist,
+     *   throws [ResponseException] with the code [ResponseStatusCode.RECALL_NONEXISTENT_MESSAGE].
+     * * If the message is group message, but the group has been deleted,
+     *   throws [ResponseException] with the code [ResponseStatusCode.RECALL_MESSAGE_OF_NONEXISTENT_GROUP].
+     *
+     * Common Scenarios:
+     * * A client can call [addMessageListener] to listen to recalled messages.
+     *   The listener will receive a non-empty [MessageAddition.recalledMessageIds] when a message is recalled.
+     *
+     * @param messageId the message ID.
+     * @param recallDate the recall date.
+     * If null, the current date will be used.
+     * @throws ResponseException if an error occurs.
+     */
     suspend fun recallMessage(messageId: Long, recallDate: Date = Date()): Response<Unit> = turmsClient.driver
         .send(
             UpdateMessageRequest.newBuilder().apply {
@@ -181,6 +369,9 @@ class MessageService(private val turmsClient: TurmsClient) {
         )
         .toResponse()
 
+    /**
+     * Check if the mention feature is enabled.
+     */
     val isMentionEnabled: Boolean
         get() = mentionedUserIdsParser != null
 
@@ -244,9 +435,9 @@ class MessageService(private val turmsClient: TurmsClient) {
 
     companion object {
         /**
-         * Format: "@{userId}"
-         * Example: "@{123}", "I need to talk with @{123} and @{321}"
-         * Note that some IDEs complain that "\\" before "}" is redundant,
+         * Format: `@{userId}`
+         * Example: `@{123}`, `I need to talk with @{123} and @{321}`
+         * Note that some IDEs complain that `\\` before `}` is redundant,
          * but do NOT remove it otherwise Android will fail to compile it.
          */
         private val REGEX = Pattern.compile("@\\{(\\d+?)\\}")

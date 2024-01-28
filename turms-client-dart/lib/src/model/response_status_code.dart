@@ -1,4 +1,6 @@
 class ResponseStatusCode {
+  ResponseStatusCode._();
+
   // **********************************************************
   // * Defined on the client side
   // **********************************************************
@@ -92,9 +94,8 @@ class ResponseStatusCode {
 
   // User - Info
   static const updateInfoOfNonexistentUser = 2300;
-  static const userProfileNotFound = 2301;
-  static const profileRequesterNotInContactsOrBlocked = 2302;
-  static const profileRequesterHasBeenBlocked = 2303;
+  static const notFriendToQueryUserProfile = 2301;
+  static const blockedUserToQueryUserProfile = 2302;
 
   // User - Permission
   static const queryPermissionOfNonexistentUser = 2400;
@@ -102,11 +103,16 @@ class ResponseStatusCode {
   // User - Relationship
   static const addNonRelatedUserToGroup = 2500;
   static const createExistingRelationship = 2501;
+  static const cannotBlockOneself = 2502;
 
   // User - Friend Request
-  static const requesterNotFriendRequestRecipient = 2600;
-  static const createExistingFriendRequest = 2601;
-  static const friendRequestSenderHasBeenBlocked = 2602;
+  static const createExistingFriendRequest = 2600;
+  static const blockedUserToSendFriendRequest = 2601;
+  static const recallNonPendingFriendRequest = 2602;
+  static const recallingFriendRequestIsDisabled = 2603;
+  static const notSenderToRecallFriendRequest = 2604;
+  static const updateNonPendingFriendRequest = 2605;
+  static const notRecipientToUpdateFriendRequest = 2606;
 
   // Group
 
@@ -115,6 +121,8 @@ class ResponseStatusCode {
   static const notGroupOwnerToUpdateGroupInfo = 3001;
   static const notGroupOwnerOrManagerToUpdateGroupInfo = 3002;
   static const notGroupMemberToUpdateGroupInfo = 3003;
+  static const notGroupOwnerToUpdateGroupType = 3004;
+  static const updatingGroupTypeIsDisabled = 3005;
 
   // Group - Type
   static const noPermissionToCreateGroupWithGroupType = 3100;
@@ -124,8 +132,8 @@ class ResponseStatusCode {
   static const notActiveUserToCreateGroup = 3200;
   static const notGroupOwnerToTransferGroup = 3201;
   static const notGroupOwnerToDeleteGroup = 3202;
-  static const successorNotGroupMember = 3203;
-  static const ownerQuitsWithoutSpecifyingSuccessor = 3204;
+  static const groupSuccessorNotGroupMember = 3203;
+  static const groupOwnerQuitWithoutSpecifyingSuccessor = 3204;
   static const maxOwnedGroupsReached = 3205;
   static const transferNonexistentGroup = 3206;
 
@@ -133,7 +141,7 @@ class ResponseStatusCode {
   static const notGroupOwnerOrManagerToCreateGroupQuestion = 3300;
   static const notGroupOwnerOrManagerToDeleteGroupQuestion = 3301;
   static const notGroupOwnerOrManagerToUpdateGroupQuestion = 3302;
-  static const notGroupOwnerOrManagerToAccessGroupQuestionAnswer = 3303;
+  static const notGroupOwnerOrManagerToQueryGroupQuestionAnswer = 3303;
   static const createGroupQuestionForInactiveGroup = 3304;
   static const createGroupQuestionForGroupUsingJoinRequest = 3305;
   static const createGroupQuestionForGroupUsingInvitation = 3306;
@@ -144,54 +152,64 @@ class ResponseStatusCode {
   static const answerGroupQuestionOfInactiveGroup = 3311;
 
   // Group - Member
-  static const addUserToGroupRequiringInvitation = 3400;
+  static const addUserToGroupRequiringUsersApproval = 3400;
   static const addUserToInactiveGroup = 3401;
-  static const addUserToGroupWithRoleHigherThanRequester = 3402;
+  static const notGroupOwnerToAddGroupManager = 3402;
   static const addUserToGroupWithSizeLimitReached = 3403;
   static const addBlockedUserToGroup = 3404;
-  static const addBlockedUserToInactiveGroup = 3405;
-  static const notGroupOwnerOrManagerToRemoveGroupMember = 3406;
-  static const notGroupOwnerToRemoveGroupOwnerOrManager = 3407;
-  static const notGroupOwnerToUpdateGroupMemberRole = 3408;
-  static const updateGroupMemberRoleOfNonexistentGroup = 3409;
-  static const notGroupOwnerToUpdateGroupMemberInfo = 3410;
-  static const notGroupOwnerOrManagerToUpdateGroupMemberInfo = 3411;
-  static const notGroupMemberToUpdateGroupMemberInfo = 3412;
-  static const updateGroupMemberInfoOfNonexistentGroup = 3413;
-  static const updateInfoOfNonexistentGroupMember = 3414;
-  static const notGroupOwnerOrManagerToMuteGroupMember = 3415;
-  static const muteGroupMemberWithRoleEqualToOrHigherThanRequester = 3416;
-  static const muteGroupMemberOfNonexistentGroup = 3417;
-  static const muteNonexistentGroupMember = 3418;
-  static const notGroupMemberToQueryGroupMemberInfo = 3419;
+  static const notGroupOwnerToAddGroupMember = 3405;
+  static const notGroupOwnerOrManagerToAddGroupMember = 3406;
+  static const notGroupMemberToAddGroupMember = 3407;
+  static const notGroupOwnerOrManagerToRemoveGroupMember = 3408;
+  static const notGroupOwnerToRemoveGroupOwnerOrManager = 3409;
+  static const notGroupOwnerToUpdateGroupMemberRole = 3410;
+  static const updateGroupMemberRoleOfNonexistentGroup = 3411;
+  static const notGroupOwnerToUpdateGroupMemberInfo = 3412;
+  static const notGroupOwnerOrManagerToUpdateGroupMemberInfo = 3413;
+  static const notGroupMemberToUpdateGroupMemberInfo = 3414;
+  static const updateGroupMemberInfoOfNonexistentGroup = 3415;
+  static const updateInfoOfNonexistentGroupMember = 3416;
+  static const notGroupOwnerOrManagerToMuteGroupMember = 3417;
+  static const muteGroupMemberWithRoleEqualToOrHigherThanRequester = 3418;
+  static const muteGroupMemberOfNonexistentGroup = 3419;
+  static const muteNonexistentGroupMember = 3420;
+  static const notGroupMemberToQueryGroupMemberInfo = 3421;
+  static const userJoinGroupWithoutAcceptingGroupInvitation = 3422;
+  static const userJoinGroupWithoutAnsweringGroupQuestion = 3423;
+  static const userJoinGroupWithoutSendingGroupJoinRequest = 3424;
 
   // Group - Blocklist
   static const notGroupOwnerOrManagerToAddBlockedUser = 3500;
   static const notGroupOwnerOrManagerToRemoveBlockedUser = 3501;
 
   // Group - Join Request
-  static const groupJoinRequestSenderHasBeenBlocked = 3600;
-  static const notGroupJoinRequestSenderToRecallRequest = 3601;
-  static const notGroupOwnerOrManagerToAccessGroupJoinRequest = 3602;
-  static const recallNonPendingGroupJoinRequest = 3603;
-  static const sendGroupJoinRequestToInactiveGroup = 3604;
-  static const sendGroupJoinRequestToGroupUsingMembershipRequest = 3605;
-  static const sendGroupJoinRequestToGroupUsingInvitation = 3606;
-  static const sendGroupJoinRequestToGroupUsingQuestion = 3607;
-  static const recallingGroupJoinRequestIsDisabled = 3608;
+  static const blockedUserSendGroupJoinRequest = 3600;
+  static const groupMemberSendGroupJoinRequest = 3601;
+  static const notSenderToRecallGroupJoinRequest = 3602;
+  static const notGroupOwnerOrManagerToQueryGroupJoinRequest = 3603;
+  static const recallNonPendingGroupJoinRequest = 3604;
+  static const sendGroupJoinRequestToInactiveGroup = 3605;
+  static const sendGroupJoinRequestToGroupUsingMembershipRequest = 3606;
+  static const sendGroupJoinRequestToGroupUsingInvitation = 3607;
+  static const sendGroupJoinRequestToGroupUsingQuestion = 3608;
+  static const recallingGroupJoinRequestIsDisabled = 3609;
+  static const updateNonPendingGroupJoinRequest = 3610;
+  static const notGroupOwnerOrManagerToUpdateGroupJoinRequest = 3611;
 
   // Group - Invitation
-  static const groupInviterNotGroupMember = 3700;
-  static const groupInviteeAlreadyGroupMember = 3701;
-  static const groupInviteeHasBeenBlockedByGroup = 3702;
-  static const notGroupOwnerOrManagerToRecallGroupInvitation = 3703;
-  static const notGroupOwnerOrManagerToAccessGroupInvitation = 3704;
-  static const notGroupOwnerToSendGroupInvitation = 3705;
-  static const notGroupOwnerOrManagerToSendGroupInvitation = 3706;
-  static const notGroupMemberToSendGroupInvitation = 3707;
-  static const recallingGroupInvitationIsDisabled = 3708;
-  static const sendGroupInvitationToGroupNotRequireInvitation = 3709;
-  static const recallNonPendingGroupInvitation = 3710;
+  static const sendGroupInvitationToGroupMember = 3700;
+  static const sendGroupInvitationToBlockedUser = 3701;
+  static const sendGroupInvitationToGroupNotRequiringUsersApproval = 3702;
+  static const notGroupOwnerToSendGroupInvitation = 3703;
+  static const notGroupOwnerOrManagerToSendGroupInvitation = 3704;
+  static const notGroupMemberToSendGroupInvitation = 3705;
+  static const recallingGroupInvitationIsDisabled = 3706;
+  static const notGroupOwnerOrManagerToRecallGroupInvitation = 3707;
+  static const notGroupOwnerOrManagerOrSenderToRecallGroupInvitation = 3708;
+  static const recallNonPendingGroupInvitation = 3709;
+  static const updateNonPendingGroupInvitation = 3710;
+  static const notInviteeToUpdateGroupInvitation = 3711;
+  static const notGroupOwnerOrManagerToQueryGroupInvitation = 3712;
 
   // Conversation
 
@@ -211,16 +229,17 @@ class ResponseStatusCode {
 
   // Message - Send
   static const messageRecipientNotActive = 5000;
-  static const messageSenderNotInContactsOrBlocked = 5001;
-  static const privateMessageSenderHasBeenBlocked = 5002;
-  static const groupMessageSenderHasBeenBlocked = 5003;
+  static const notFriendToSendPrivateMessage = 5001;
+  static const blockedUserSendPrivateMessage = 5002;
+  static const blockedUserSendGroupMessage = 5003;
   static const sendMessageToInactiveGroup = 5004;
   static const sendMessageToMutedGroup = 5005;
   static const sendMessageToNonexistentGroup = 5006;
   static const sendingMessagesToOneselfIsDisabled = 5007;
   static const mutedGroupMemberSendMessage = 5008;
-  static const guestsHaveBeenMuted = 5009;
+  static const notSpeakableGroupGuestToSendMessage = 5009;
   static const messageIsIllegal = 5010;
+  static const notMessageRecipientOrSenderToForwardMessage = 5011;
 
   // Message - Update
   static const updatingMessageBySenderIsDisabled = 5100;

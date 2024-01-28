@@ -32,17 +32,81 @@ public class MessageService {
                 if !self.messageListeners.isEmpty, $0.hasRelayedRequest, case let .createMessageRequest(request) = $0.relayedRequest.kind {
                     let message = MessageService.createMessage2Message($0.requesterID, request)
                     let addition = self.parseMessageAddition(message)
-                    self.messageListeners.forEach { listener in
+                    for listener in self.messageListeners {
                         listener(message, addition)
                     }
                 }
             }
     }
 
+    /// Add a message listener that will be triggered when a new message arrives.
+    /// Note: To listen to notifications excluding messages,
+    /// use ``NotificationService/addNotificationListener`` instead.
     func addMessageListener(_ listener: @escaping (Message, MessageAddition) -> Void) {
         messageListeners.append(listener)
     }
 
+    /// Send a message.
+    ///
+    /// Common Scenarios:
+    /// * A client can call ``addMessageListener`` to listen to incoming new messages.
+    ///
+    /// Authorization:
+    ///
+    /// For private messages,
+    /// * If the server property `turms.service.message.allow-send-messages-to-oneself`
+    ///   is true (false by default), the logged-in user can send messages to itself.
+    ///   Otherwise, throws ``ResponseError`` with the code ``ResponseStatusCode/sendingMessagesToOneselfIsDisabled``.
+    /// * If the server property `turms.service.message.allow-send-messages-to-stranger`
+    ///   is true (true by default), the logged-in user can send messages to strangers
+    ///   (has no relationship with the logged-in user).
+    /// * If the logged-in user has blocked the target user,
+    ///   throws ``ResponseError`` with the code ``ResponseStatusCode/blockedUserSendPrivateMessage``.
+    ///
+    /// For group messages,
+    /// * If the logged-in user has blocked the target group,
+    ///   throws ``ResponseError`` with the code ``ResponseStatusCode/blockedUserSendGroupMessage``.
+    /// * If the logged-in user is not a group member, and the group does NOT allow non-members to send messages,
+    ///   throws ``ResponseError`` with the code ``ResponseStatusCode/notSpeakableGroupGuestToSendMessage``.
+    /// * If the logged-in user has been muted,
+    ///   throws ``ResponseError`` with the code ``ResponseStatusCode/mutedGroupMemberSendMessage``.
+    /// * If the target group has been deleted,
+    ///   throws ``ResponseError`` with the code ``ResponseStatusCode/sendMessageToInactiveGroup``.
+    /// * If the target group has been muted,
+    ///   throws ``ResponseError`` with the code ``ResponseStatusCode/sendMessageToMutedGroup``.
+    ///
+    /// Notifications:
+    /// * If the server property `turms.service.notification.message-created.notify-message-recipients`
+    ///   is true (true by default), a new message notification will be sent to the message recipients actively.
+    /// * If the server property `turms.service.notification.message-created.notify-requester-other-online-sessions`
+    ///   is true (true by default), a new message notification will be sent to all other online sessions of the logged-in user actively.
+    ///
+    /// - Parameters:
+    ///   - isGroupMessage: Whether the message is a group message.
+    ///   - targetId: The target ID.
+    ///     If `isGroupMessage` is true, the target ID is the group ID.
+    ///     If `isGroupMessage` is false, the target ID is the user ID.
+    ///   - deliveryDate: The delivery date.
+    ///     Note that `deliveryDate` will only work if the server property
+    ///     `turms.service.message.time-type` is `client_time` (`local_server_time` by default).
+    ///   - text: The message text.
+    ///     `text` can be anything you want. e.g. Markdown, base64 encoded bytes.
+    ///     Note that if `text` is null, `records` must not be null.
+    ///   - records: The message records.
+    ///     `records` can be anything you want. e.g. base64 encoded images (it is highly not recommended).
+    ///     Note that if `records` is null, `text` must not be null.
+    ///   - burnAfter: The burn after the specified time.
+    ///     Note that Turms server and client do NOT implement the `burn after` feature,
+    ///     and they just store and pass `burnAfter` between server and clients.
+    ///   - preMessageId: The pre-message ID.
+    ///     `preMessageId` is mainly used to arrange the order of messages on UI.
+    ///     If what you want is to ensure every message will not be lost, even if the server crashes,
+    ///     you can set the server property `turms.service.message.use-conversation-id` to true
+    ///     (false by default).
+    ///
+    /// - Returns: The message ID.
+    ///
+    /// - Throws: ``ResponseError`` if an error occurs.
     public func sendMessage(
         isGroupMessage: Bool,
         targetId: Int64,
@@ -90,6 +154,30 @@ public class MessageService {
             }
     }
 
+    /// Forward a message.
+    /// In other words, create and send a new message based on a existing message
+    /// to the target user or group.
+    ///
+    /// Authorization:
+    /// * If the logged-in user is not allowed to view the message with `messageId`,
+    ///   throws ``ResponseError`` with the code ``ResponseStatusCode/notMessageRecipientOrSenderToForwardMessage``.
+    ///
+    /// Notifications:
+    /// * If the server property `turms.service.notification.message-created.notify-message-recipients`
+    ///   is true (true by default), a new message notification will be sent to the message recipients actively.
+    /// * If the server property `turms.service.notification.message-created.notify-requester-other-online-sessions`
+    ///   is true (true by default), a new message notification will be sent to all other online sessions of the logged-in user actively.
+    ///
+    /// - Parameters:
+    ///   - messageId: The message ID for copying.
+    ///   - isGroupMessage: Whether the message is a group message.
+    ///   - targetId: The target ID.
+    ///     If `isGroupMessage` is true, the target ID is the group ID.
+    ///     If `isGroupMessage` is false, the target ID is the user ID.
+    ///
+    /// - Returns: The message ID.
+    ///
+    /// - Throws: ``ResponseError`` if an error occurs.
     public func forwardMessage(
         messageId: Int64,
         isGroupMessage: Bool,
@@ -113,6 +201,34 @@ public class MessageService {
             }
     }
 
+    /// Update a sent message.
+    ///
+    /// Authorization:
+    /// * If the server property `turms.service.message.allow-send-messages-to-oneself`
+    ///   is true (true by default), the logged-in user can update sent messages.
+    ///   Otherwise, throws ``ResponseError`` with the code ``ResponseStatusCode/updatingMessageBySenderIsDisabled``.
+    /// * If the message is not sent by the logged-in user,
+    ///   throws ``ResponseError`` with the code ``ResponseStatusCode/notSenderToUpdateMessage``.
+    /// * If the message is group message, and is sent by the logged-in user but the group
+    ///   has been deleted,
+    ///   throws ``ResponseError`` with the code ``ResponseStatusCode/updateMessageOfNonexistentGroup``.
+    /// * If the message is group message, and the group type has disabled updating messages,
+    ///   throws ``ResponseError`` with the code ``ResponseStatusCode/updatingGroupMessageBySenderIsDisabled``.
+    ///
+    /// Notifications:
+    /// * If the server property `turms.service.notification.message-updated.notify-message-recipients`
+    ///   is true (true by default), a message update notification will be sent to the message recipients actively.
+    /// * If the server property `turms.service.notification.message-updated.notify-requester-other-online-sessions`
+    ///   is true (true by default), a message update notification will be sent to all other online sessions of the logged-in user actively.
+    ///
+    /// - Parameters:
+    ///   - messageId: The sent message ID.
+    ///   - text: The new message text.
+    ///     If null, the message text will not be changed.
+    ///   - records: The new message records.
+    ///     If null, the message records will not be changed.
+    ///
+    /// - Throws: ``ResponseError`` if an error occurs.
     public func updateSentMessage(
         messageId: Int64,
         text: String? = nil,
@@ -138,6 +254,31 @@ public class MessageService {
             }
     }
 
+    /// Find messages.
+    ///
+    /// - Parameters:
+    ///   - ids: The message IDs for querying.
+    ///   - areGroupMessages: Whether the messages are group messages.
+    ///     If the logged-in user is not a group member,
+    ///     throws ``ResponseError`` with the code ``ResponseStatusCode/notGroupMemberToQueryGroupMessages``.
+    ///     TODO: guest users of some group types should be able to query messages.
+    ///   - areSystemMessages: Whether the messages are system messages.
+    ///   - fromIds: The from IDs.
+    ///     If `areGroupMessages` is true, the from ID is the group ID.
+    ///     If `areGroupMessages` is false, the from ID is the user ID.
+    ///   - deliveryDateStart: The start delivery date for querying.
+    ///   - deliveryDateEnd: The end delivery date for querying.
+    ///   - maxCount: The maximum count for querying.
+    ///   - descending: Whether the messages are sorted in descending order.
+    ///
+    /// - Returns: List of messages.
+    /// Note that the list only contains messages in which the logged-in user
+    /// has permission to view.
+    /// If the logged-in user has no permission to view specified messages,
+    /// these messages will be filtered out on the server, and no error will be thrown,
+    /// except for ``ResponseStatusCode/notGroupMemberToQueryGroupMessages`` mentioned above.
+    ///
+    /// - Throws: ``ResponseError`` if an error occurs.
     public func queryMessages(
         ids: [Int64]? = nil,
         areGroupMessages: Bool? = nil,
@@ -183,6 +324,31 @@ public class MessageService {
             }
     }
 
+    /// Find the pair of messages and the total count for each conversation.
+    ///
+    /// - Parameters:
+    ///   - ids: The message IDs for querying.
+    ///   - areGroupMessages: Whether the messages are group messages.
+    ///   - areSystemMessages: Whether the messages are system messages.
+    ///     If the logged-in user is not a group member,
+    ///     throws ``ResponseError`` with the code ``ResponseStatusCode/notGroupMemberToQueryGroupMessages``.
+    ///     TODO: guest users of some group types should be able to query messages.
+    ///   - fromIds: The from IDs.
+    ///     If `areGroupMessages` is true, the from ID is the group ID.
+    ///     If `areGroupMessages` is false, the from ID is the user ID.
+    ///   - deliveryDateStart: The start delivery date for querying.
+    ///   - deliveryDateEnd: The end delivery date for querying.
+    ///   - maxCount: The maximum count for querying.
+    ///   - descending: Whether the messages are sorted in descending order.
+    ///
+    /// - Returns: List of the pair of messages and the total count for each conversation.
+    /// Note that the list only contains messages in which the logged-in user
+    /// has permission to view.
+    /// If the logged-in user has no permission to view specified messages,
+    /// these messages will be filtered out on the server, and no error will be thrown,
+    /// except for ``ResponseStatusCode/notGroupMemberToQueryGroupMessages`` mentioned above.
+    ///
+    /// - Throws: ``ResponseError`` if an error occurs.
     public func queryMessagesWithTotal(
         ids: [Int64]? = nil,
         areGroupMessages: Bool? = nil,
@@ -228,6 +394,27 @@ public class MessageService {
             }
     }
 
+    /// Recall a message.
+    ///
+    /// Authorization:
+    /// * If the server property `turms.service.message.allow-recall-message`
+    ///   is true (true by default), the logged-in user can recall sent messages.
+    ///   Otherwise, throws ``ResponseError`` with the code ``ResponseStatusCode/recallingMessageIsDisabled``.
+    /// * If the message does not exist,
+    ///   throws ``ResponseError`` with the code ``ResponseStatusCode/recallNonexistentMessage``.
+    /// * If the message is group message, but the group has been deleted,
+    ///   throws ``ResponseError`` with the code ``ResponseStatusCode/recallMessageOfNonexistentGroup``.
+    ///
+    /// Common Scenarios:
+    /// * A client can call ``addMessageListener`` to listen to recalled messages.
+    ///   The listener will receive a non-empty ``MessageAddition/recalledMessageIds`` when a message is recalled.
+    ///
+    /// - Parameters:
+    ///   - messageId: The message ID.
+    ///   - recallDate: The recall date.
+    ///     If null, the current date will be used.
+    ///
+    /// - Throws: ``ResponseError`` if an error occurs.
     public func recallMessage(messageId: Int64, recallDate: Date = Date()) -> Promise<Response<Void>> {
         return turmsClient.driver
             .send {

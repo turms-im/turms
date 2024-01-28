@@ -21,8 +21,8 @@ class DriverMessageService: BaseService {
     }
 
     func notifyNotificationListener(_ notification: TurmsNotification) {
-        notificationListeners.forEach {
-            $0(notification)
+        for notificationListener in notificationListeners {
+            notificationListener(notification)
         }
     }
 

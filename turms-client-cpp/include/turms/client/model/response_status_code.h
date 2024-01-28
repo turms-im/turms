@@ -100,9 +100,8 @@ const int kQueryingNearestUsersBySessionIdIsDisabled = 2201;
 
 // User - Info
 const int kUpdateInfoOfNonexistentUser = 2300;
-const int kUserProfileNotFound = 2301;
-const int kProfileRequesterNotInContactsOrBlocked = 2302;
-const int kProfileRequesterHasBeenBlocked = 2303;
+const int kNotFriendToQueryUserProfile = 2301;
+const int kBlockedUserToQueryUserProfile = 2302;
 
 // User - Permission
 const int kQueryPermissionOfNonexistentUser = 2400;
@@ -110,11 +109,16 @@ const int kQueryPermissionOfNonexistentUser = 2400;
 // User - Relationship
 const int kAddNonRelatedUserToGroup = 2500;
 const int kCreateExistingRelationship = 2501;
+const int kCannotBlockOneself = 2502;
 
 // User - Friend Request
-const int kRequesterNotFriendRequestRecipient = 2600;
-const int kCreateExistingFriendRequest = 2601;
-const int kFriendRequestSenderHasBeenBlocked = 2602;
+const int kCreateExistingFriendRequest = 2600;
+const int kBlockedUserToSendFriendRequest = 2601;
+const int kRecallNonPendingFriendRequest = 2602;
+const int kRecallingFriendRequestIsDisabled = 2603;
+const int kNotSenderToRecallFriendRequest = 2604;
+const int kUpdateNonPendingFriendRequest = 2605;
+const int kNotRecipientToUpdateFriendRequest = 2606;
 
 // Group
 
@@ -127,13 +131,17 @@ const int kNotGroupMemberToUpdateGroupInfo = 3003;
 // Group - Type
 const int kNoPermissionToCreateGroupWithGroupType = 3100;
 const int kCreateGroupWithNonexistentGroupType = 3101;
+const int kUpdatingGroupTypeIsDisabled = 3102;
+const int kNotGroupOwnerToUpdateGroupType = 3103;
+const int kNoPermissionToUpdateGroupToGroupType = 3104;
+const int kUpdateGroupToNonexistentGroupType = 3105;
 
 // Group - Ownership
 const int kNotActiveUserToCreateGroup = 3200;
 const int kNotGroupOwnerToTransferGroup = 3201;
 const int kNotGroupOwnerToDeleteGroup = 3202;
-const int kSuccessorNotGroupMember = 3203;
-const int kOwnerQuitsWithoutSpecifyingSuccessor = 3204;
+const int kGroupSuccessorNotGroupMember = 3203;
+const int kGroupOwnerQuitWithoutSpecifyingSuccessor = 3204;
 const int kMaxOwnedGroupsReached = 3205;
 const int kTransferNonexistentGroup = 3206;
 
@@ -141,7 +149,7 @@ const int kTransferNonexistentGroup = 3206;
 const int kNotGroupOwnerOrManagerToCreateGroupQuestion = 3300;
 const int kNotGroupOwnerOrManagerToDeleteGroupQuestion = 3301;
 const int kNotGroupOwnerOrManagerToUpdateGroupQuestion = 3302;
-const int kNotGroupOwnerOrManagerToAccessGroupQuestionAnswer = 3303;
+const int kNotGroupOwnerOrManagerToQueryGroupQuestionAnswer = 3303;
 const int kCreateGroupQuestionForInactiveGroup = 3304;
 const int kCreateGroupQuestionForGroupUsingJoinRequest = 3305;
 const int kCreateGroupQuestionForGroupUsingInvitation = 3306;
@@ -152,54 +160,64 @@ const int kAnswerInactiveGroupQuestion = 3310;
 const int kAnswerGroupQuestionOfInactiveGroup = 3311;
 
 // Group - Member
-const int kAddUserToGroupRequiringInvitation = 3400;
+const int kAddUserToGroupRequiringUsersApproval = 3400;
 const int kAddUserToInactiveGroup = 3401;
-const int kAddUserToGroupWithRoleHigherThanRequester = 3402;
+const int kNotGroupOwnerToAddGroupManager = 3402;
 const int kAddUserToGroupWithSizeLimitReached = 3403;
 const int kAddBlockedUserToGroup = 3404;
-const int kAddBlockedUserToInactiveGroup = 3405;
-const int kNotGroupOwnerOrManagerToRemoveGroupMember = 3406;
-const int kNotGroupOwnerToRemoveGroupOwnerOrManager = 3407;
-const int kNotGroupOwnerToUpdateGroupMemberRole = 3408;
-const int kUpdateGroupMemberRoleOfNonexistentGroup = 3409;
-const int kNotGroupOwnerToUpdateGroupMemberInfo = 3410;
-const int kNotGroupOwnerOrManagerToUpdateGroupMemberInfo = 3411;
-const int kNotGroupMemberToUpdateGroupMemberInfo = 3412;
-const int kUpdateGroupMemberInfoOfNonexistentGroup = 3413;
-const int kUpdateInfoOfNonexistentGroupMember = 3414;
-const int kNotGroupOwnerOrManagerToMuteGroupMember = 3415;
-const int kMuteGroupMemberWithRoleEqualToOrHigherThanRequester = 3416;
-const int kMuteGroupMemberOfNonexistentGroup = 3417;
-const int kMuteNonexistentGroupMember = 3418;
-const int kNotGroupMemberToQueryGroupMemberInfo = 3419;
+const int kNotGroupOwnerToAddGroupMember = 3405;
+const int kNotGroupOwnerOrManagerToAddGroupMember = 3406;
+const int kNotGroupMemberToAddGroupMember = 3407;
+const int kNotGroupOwnerOrManagerToRemoveGroupMember = 3408;
+const int kNotGroupOwnerToRemoveGroupOwnerOrManager = 3409;
+const int kNotGroupOwnerToUpdateGroupMemberRole = 3410;
+const int kUpdateGroupMemberRoleOfNonexistentGroup = 3411;
+const int kNotGroupOwnerToUpdateGroupMemberInfo = 3412;
+const int kNotGroupOwnerOrManagerToUpdateGroupMemberInfo = 3413;
+const int kNotGroupMemberToUpdateGroupMemberInfo = 3414;
+const int kUpdateGroupMemberInfoOfNonexistentGroup = 3415;
+const int kUpdateInfoOfNonexistentGroupMember = 3416;
+const int kNotGroupOwnerOrManagerToMuteGroupMember = 3417;
+const int kMuteGroupMemberWithRoleEqualToOrHigherThanRequester = 3418;
+const int kMuteGroupMemberOfNonexistentGroup = 3419;
+const int kMuteNonexistentGroupMember = 3420;
+const int kNotGroupMemberToQueryGroupMemberInfo = 3421;
+const int kUserJoinGroupWithoutAcceptingGroupInvitation = 3422;
+const int kUserJoinGroupWithoutAnsweringGroupQuestion = 3423;
+const int kUserJoinGroupWithoutSendingGroupJoinRequest = 3424;
 
 // Group - Blocklist
 const int kNotGroupOwnerOrManagerToAddBlockedUser = 3500;
 const int kNotGroupOwnerOrManagerToRemoveBlockedUser = 3501;
 
 // Group - Join Request
-const int kGroupJoinRequestSenderHasBeenBlocked = 3600;
-const int kNotGroupJoinRequestSenderToRecallRequest = 3601;
-const int kNotGroupOwnerOrManagerToAccessGroupJoinRequest = 3602;
-const int kRecallNonPendingGroupJoinRequest = 3603;
-const int kSendGroupJoinRequestToInactiveGroup = 3604;
-const int kSendGroupJoinRequestToGroupUsingMembershipRequest = 3605;
-const int kSendGroupJoinRequestToGroupUsingInvitation = 3606;
-const int kSendGroupJoinRequestToGroupUsingQuestion = 3607;
-const int kRecallingGroupJoinRequestIsDisabled = 3608;
+const int kBlockedUserSendGroupJoinRequest = 3600;
+const int kGroupMemberSendGroupJoinRequest = 3601;
+const int kNotSenderToRecallGroupJoinRequest = 3602;
+const int kNotGroupOwnerOrManagerToQueryGroupJoinRequest = 3603;
+const int kRecallNonPendingGroupJoinRequest = 3604;
+const int kSendGroupJoinRequestToInactiveGroup = 3605;
+const int kSendGroupJoinRequestToGroupUsingMembershipRequest = 3606;
+const int kSendGroupJoinRequestToGroupUsingInvitation = 3607;
+const int kSendGroupJoinRequestToGroupUsingQuestion = 3608;
+const int kRecallingGroupJoinRequestIsDisabled = 3609;
+const int kUpdateNonPendingGroupJoinRequest = 3610;
+const int kNotGroupOwnerOrManagerToUpdateGroupJoinRequest = 3611;
 
 // Group - Invitation
-const int kGroupInviterNotGroupMember = 3700;
-const int kGroupInviteeAlreadyGroupMember = 3701;
-const int kGroupInviteeHasBeenBlockedByGroup = 3702;
-const int kNotGroupOwnerOrManagerToRecallGroupInvitation = 3703;
-const int kNotGroupOwnerOrManagerToAccessGroupInvitation = 3704;
-const int kNotGroupOwnerToSendGroupInvitation = 3705;
-const int kNotGroupOwnerOrManagerToSendGroupInvitation = 3706;
-const int kNotGroupMemberToSendGroupInvitation = 3707;
-const int kRecallingGroupInvitationIsDisabled = 3708;
-const int kSendGroupInvitationToGroupNotRequireInvitation = 3709;
-const int kRecallNonPendingGroupInvitation = 3710;
+const int kSendGroupInvitationToGroupMember = 3700;
+const int kSendGroupInvitationToBlockedUser = 3701;
+const int kSendGroupInvitationToGroupNotRequiringUsersApproval = 3702;
+const int kNotGroupOwnerToSendGroupInvitation = 3703;
+const int kNotGroupOwnerOrManagerToSendGroupInvitation = 3704;
+const int kNotGroupMemberToSendGroupInvitation = 3705;
+const int kRecallingGroupInvitationIsDisabled = 3706;
+const int kNotGroupOwnerOrManagerToRecallGroupInvitation = 3707;
+const int kNotGroupOwnerOrManagerOrSenderToRecallGroupInvitation = 3708;
+const int kRecallNonPendingGroupInvitation = 3709;
+const int kUpdateNonPendingGroupInvitation = 3710;
+const int kNotInviteeToUpdateGroupInvitation = 3711;
+const int kNotGroupOwnerOrManagerToQueryGroupInvitation = 3712;
 
 // Conversation
 
@@ -219,16 +237,17 @@ const int kNotFriendToSendTypingStatus = 4102;
 
 // Message - Send
 const int kMessageRecipientNotActive = 5000;
-const int kMessageSenderNotInContactsOrBlocked = 5001;
-const int kPrivateMessageSenderHasBeenBlocked = 5002;
-const int kGroupMessageSenderHasBeenBlocked = 5003;
+const int kNotFriendToSendPrivateMessage = 5001;
+const int kBlockedUserSendPrivateMessage = 5002;
+const int kBlockedUserSendGroupMessage = 5003;
 const int kSendMessageToInactiveGroup = 5004;
 const int kSendMessageToMutedGroup = 5005;
 const int kSendMessageToNonexistentGroup = 5006;
 const int kSendingMessagesToOneselfIsDisabled = 5007;
 const int kMutedGroupMemberSendMessage = 5008;
-const int kGuestsHaveBeenMuted = 5009;
+const int kNotSpeakableGroupGuestToSendMessage = 5009;
 const int kMessageIsIllegal = 5010;
+const int kNotMessageRecipientOrSenderToForwardMessage = 5011;
 
 // Message - Update
 const int kUpdatingMessageBySenderIsDisabled = 5100;

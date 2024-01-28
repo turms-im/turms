@@ -2,13 +2,14 @@ import 'package:fixnum/fixnum.dart';
 
 import '../../turms_client.dart';
 import '../extension/notification_extensions.dart';
+import '../model/proto/request/user/relationship/delete_friend_request_request.pb.dart';
 import '../util/system.dart';
 
 class Location {
   final double longitude;
   final double latitude;
 
-  Location(this.longitude, this.latitude);
+  const Location(this.longitude, this.latitude);
 }
 
 class User {
@@ -51,23 +52,64 @@ class UserService {
       });
   }
 
+  /// The user information of the currently logged-in user.
   User? get userInfo => _userInfo;
 
   bool get isLoggedIn =>
       _userInfo != null && _userInfo?.onlineStatus != UserStatus.OFFLINE;
 
+  /// Add an online listener that will be called when the user becomes online.
+  /// A session is considered online when it has a TCP connection with the server,
+  /// and the user is logged in by [login].
   void addOnOnlineListener(OnOnlineListener listener) =>
       _onOnlineListeners.add(listener);
 
+  /// Add an offline listener that will be called when the user becomes offline.
+  /// A session is considered offline when it has no TCP connection with the server,
+  /// or has a connected TCP connection with the server, but the user is not logged in by [login].
   void addOnOfflineListener(OnOfflineListener listener) =>
       _onOfflineListeners.add(listener);
 
+  /// Remove an online listener.
   void removeOnOnlineListener(OnOnlineListener listener) =>
       _onOnlineListeners.remove(listener);
 
+  /// Remove an offline listener.
   void removeOnOfflineListener(OnOfflineListener listener) =>
       _onOfflineListeners.remove(listener);
 
+  /// Log in.
+  ///
+  /// * If the underlying TCP connection is not connected,
+  ///   the method will connect it first under the hood.
+  /// * If log in successfully, the session is considered online.
+  ///   And the listener registered by [addOnOnlineListener] will be called.
+  ///
+  /// Related docs:
+  /// * [Turms Identity and Access Management](https://turms-im.github.io/docs/server/module/identity-access-management.html)
+  ///
+  /// **Params**:
+  /// * `userId`: The user ID
+  /// * `password`: The user password.
+  /// * `deviceType`: The device type.
+  /// If null, the detected device type will be used.
+  /// Note: The device types of online session that conflicts with [deviceType]
+  /// will be closed by the server if logged in successfully.
+  /// * `deviceDetails`: The device details.
+  /// Some plugins use this to pass additional information about the device.
+  /// e.g. Push notification token.
+  /// * `onlineStatus`: The online status.
+  /// * `location`: The location of the user.
+  /// * `storePassword`: Whether to store the password in [userInfo].
+  ///
+  /// **Throws**: [ResponseException] if an error occurs.
+  /// 1. If the client is not compatible with the server, throws
+  /// with the code [ResponseStatusCode.unsupportedClientVersion].
+  /// 2. Depending on the server property `turms.gateway.simultaneous-login.strategy`,
+  /// throws with the code [ResponseStatusCode.loginFromForbiddenDeviceType]
+  /// if the specified device type is forbidden.
+  /// 3. If provided credentials are invalid,
+  /// throws with the code [ResponseStatusCode.loginAuthenticationFailed].
   Future<Response<void>> login(Int64 userId,
       {String? password,
       DeviceType? deviceType,
@@ -97,6 +139,16 @@ class UserService {
     return n.toNullResponse();
   }
 
+  /// Log out.
+  ///
+  /// After logging out, the session is considered offline.
+  /// And the listener registered by [addOnOfflineListener] will be called.
+  ///
+  /// **Params**:
+  /// * `disconnect`: Whether to close the underlying TCP connection immediately
+  /// rather than sending a delete session request first and then closing the connection.
+  ///
+  /// **Throws**: [ResponseException] if an error occurs.
   Future<Response<void>> logout({bool disconnect = true}) async {
     if (disconnect) {
       await _turmsClient.driver.disconnect();
@@ -108,6 +160,20 @@ class UserService {
     return Response.nullValue();
   }
 
+  /// Update the online status of the logged-in user.
+  ///
+  /// Notifications:
+  /// * If the server property `turms.service.notification.user-online-status-updated.notify-requester-other-online-sessions`
+  ///   is true （true by default）,
+  ///   the server will send an update online status notification to all other online sessions of the logged-in user actively.
+  /// * If the server property `turms.service.notification.user-online-status-updated.notify-non-blocked-related-users`,
+  ///   is true (false by default),
+  ///   the server will send an update online status notification to all non-blocked related users of the logged-in user actively.
+  ///
+  /// **Params**:
+  /// * `onlineStatus`: The new online status.
+  ///
+  /// **Throws**: [ResponseException] if an error occurs.
   Future<Response<void>> updateOnlineStatus(UserStatus onlineStatus) async {
     final n = await _turmsClient.driver
         .send(UpdateUserOnlineStatusRequest(userStatus: onlineStatus));
@@ -115,6 +181,15 @@ class UserService {
     return n.toNullResponse();
   }
 
+  /// Disconnect the online devices of the logged-in user.
+  ///
+  /// If the specified device types are not online, nothing will happen and
+  /// no exception will be thrown.
+  ///
+  /// **Params**:
+  /// * `deviceTypes`: The device types to disconnect.
+  ///
+  /// **Throws**: [ResponseException] if an error occurs.
   Future<Response<void>> disconnectOnlineDevices(
       List<DeviceType> deviceTypes) async {
     if (deviceTypes.isEmpty) {
@@ -127,6 +202,12 @@ class UserService {
     return n.toNullResponse();
   }
 
+  /// Update the password of the logged-in user.
+  ///
+  /// **Params**:
+  /// * `password`: The new password.
+  ///
+  /// **Throws**: [ResponseException] if an error occurs.
   Future<Response<void>> updatePassword(String password) async {
     final n =
         await _turmsClient.driver.send(UpdateUserRequest(password: password));
@@ -136,12 +217,29 @@ class UserService {
     return n.toNullResponse();
   }
 
+  /// Update the profile of the logged-in user.
+  ///
+  /// **Params**:
+  /// * `name`: The new name.
+  /// If null, the name will not be updated.
+  /// * `intro`: The new intro.
+  /// If null, the intro will not be updated.
+  /// * `profilePicture`: The new profile picture.
+  /// If null, the profile picture will not be updated.
+  /// The profile picture can be anything you want.
+  /// e.g. an image URL or a base64 encoded string.
+  /// Note: You can use [StorageService.uploadUserProfilePicture]
+  /// to upload the profile picture and use the returned URL as [profilePicture].
+  /// * `profileAccessStrategy`: The new profile access strategy.
+  /// If null, the profile access strategy will not be updated.
+  ///
+  /// **Throws**: [ResponseException] if an error occurs.
   Future<Response<void>> updateProfile(
       {String? name,
       String? intro,
       String? profilePicture,
       ProfileAccessStrategy? profileAccessStrategy}) async {
-    if ([name, intro, profileAccessStrategy].areAllNull) {
+    if ([name, intro, profilePicture, profileAccessStrategy].areAllNull) {
       return Response.nullValue();
     }
     final n = await _turmsClient.driver.send(UpdateUserRequest(
@@ -152,6 +250,17 @@ class UserService {
     return n.toNullResponse();
   }
 
+  /// Find user profiles.
+  ///
+  /// **Params**:
+  /// * `userIds`: The target user IDs.
+  /// * `lastUpdatedDate`: The last updated date of user profiles stored locally.
+  /// The server will only return user profiles that are updated after [lastUpdatedDate].
+  /// If null, all user profiles will be returned.
+  ///
+  /// **Returns**: A list of user profiles.
+  ///
+  /// **Throws**: [ResponseException] if an error occurs.
   Future<Response<List<UserInfo>>> queryUserProfiles(Set<Int64> userIds,
       {DateTime? lastUpdatedDate}) async {
     if (userIds.isEmpty) {
@@ -162,6 +271,20 @@ class UserService {
     return n.toResponse((data) => data.userInfosWithVersion.userInfos);
   }
 
+  /// Find nearby users.
+  ///
+  /// **Params**:
+  /// * `latitude`: The latitude.
+  /// * `longitude`: The longitude.
+  /// * `maxCount`: The max count.
+  /// * `maxDistance`: The max distance.
+  /// * `withCoordinates`: Whether to include coordinates.
+  /// * `withDistance`: Whether to include distance.
+  /// * `withUserInfo`: Whether to include user info.
+  ///
+  /// **Returns**: A list of nearby users.
+  ///
+  /// **Throws**: [ResponseException] if an error occurs.
   Future<Response<List<NearbyUser>>> queryNearbyUsers(
       double latitude, double longitude,
       {int? maxCount,
@@ -180,6 +303,14 @@ class UserService {
     return n.toResponse((data) => data.nearbyUsers.nearbyUsers);
   }
 
+  /// Find online status of users.
+  ///
+  /// **Params**:
+  /// * `userIds`: The target user IDs.
+  ///
+  /// **Returns**: A list of online status of users.
+  ///
+  /// **Throws**: [ResponseException] if an error occurs.
   Future<Response<List<UserOnlineStatus>>> queryOnlineStatusesRequest(
       Set<Int64> userIds) async {
     final n = await _turmsClient.driver
@@ -189,6 +320,23 @@ class UserService {
 
   // Relationship
 
+  /// Find relationships.
+  ///
+  /// **Params**:
+  /// * `relatedUserIds`: The target related user IDs.
+  /// * `isBlocked`: Whether to query blocked relationships.
+  /// If null, all relationships will be returned.
+  /// If true, only blocked relationships will be returned.
+  /// If false, only non-blocked relationships will be returned.
+  /// * `groupIndexes`: The target group indexes for querying.
+  /// * `lastUpdatedDate`: The last updated date of user relationships stored locally.
+  /// The server will only return relationships that are created after [lastUpdatedDate].
+  /// If null, all relationships will be returned.
+  ///
+  /// **Returns**: Relationships and the version.
+  /// Note: The version can be used to update the last updated date stored locally.
+  ///
+  /// **Throws**: [ResponseException] if an error occurs.
   Future<Response<UserRelationshipsWithVersion?>> queryRelationships(
       {Set<Int64>? relatedUserIds,
       bool? isBlocked,
@@ -204,6 +352,22 @@ class UserService {
         : null);
   }
 
+  /// Find related user IDs.
+  ///
+  /// **Params**:
+  /// * `isBlocked`: Whether to query blocked relationships.
+  /// If null, all relationships will be returned.
+  /// If true, only blocked relationships will be returned.
+  /// If false, only non-blocked relationships will be returned.
+  /// * `groupIndexes`: The target group indexes for querying.
+  /// * `lastUpdatedDate`: The last updated date of related user IDs stored locally.
+  /// The server will only return related user IDs that are created after [lastUpdatedDate].
+  /// If null, all related user IDs will be returned.
+  ///
+  /// **Returns**: Related user IDs and the version.
+  /// Note: The version can be used to update the last updated date stored locally.
+  ///
+  /// **Throws**: [ResponseException] if an error occurs.
   Future<Response<LongsWithVersion?>> queryRelatedUserIds(
       {bool? isBlocked,
       Set<int>? groupIndexes,
@@ -216,6 +380,18 @@ class UserService {
         (data) => data.hasLongsWithVersion() ? data.longsWithVersion : null);
   }
 
+  /// Find friends.
+  ///
+  /// **Params**:
+  /// * `groupIndexes`: The target group indexes for finding.
+  /// * `lastUpdatedDate`: The last updated date of friends stored locally.
+  /// The server will only return friends that are created after [lastUpdatedDate].
+  /// If null, all friends will be returned.
+  ///
+  /// **Returns**: Friends and the version.
+  /// Note: The version can be used to update the last updated date stored locally.
+  ///
+  /// **Throws**: [ResponseException] if an error occurs.
   Future<Response<UserRelationshipsWithVersion?>> queryFriends(
           {Set<int>? groupIndexes, DateTime? lastUpdatedDate}) =>
       queryRelationships(
@@ -223,6 +399,18 @@ class UserService {
           groupIndexes: groupIndexes,
           lastUpdatedDate: lastUpdatedDate);
 
+  /// Find blocked users.
+  ///
+  /// **Params**:
+  /// * `groupIndexes`: The target group indexes for finding.
+  /// * `lastUpdatedDate`: The last updated date of blocked users stored locally.
+  /// The server will only return friends that are created after [lastUpdatedDate].
+  /// If null, all blocked users will be returned.
+  ///
+  /// **Returns**: Blocked users and the version.
+  /// Note: The version can be used to update the last updated date stored locally.
+  ///
+  /// **Throws**: [ResponseException] if an error occurs.
   Future<Response<UserRelationshipsWithVersion?>> queryBlockedUsers(
           {Set<int>? groupIndexes, DateTime? lastUpdatedDate}) =>
       queryRelationships(
@@ -230,6 +418,23 @@ class UserService {
           groupIndexes: groupIndexes,
           lastUpdatedDate: lastUpdatedDate);
 
+  /// Create a relationship.
+  ///
+  /// Notifications:
+  /// * If the server property `turms.service.notification.one-sided-relationship-group-member-added.notify-requester-other-online-sessions`
+  ///   is true (true by default), the server will send a new relationship notification to all other online sessions of the logged-in user actively.
+  /// * If the server property `turms.service.notification.one-sided-relationship-group-member-added.notify-new-relationship-group-member`,
+  ///   is true (false by default), the server will send a new relationship notification to [userId] actively.
+  ///
+  /// **Params**:
+  /// * `userId`: The target user ID.
+  /// * `isBlocked`: Whether to create a blocked relationship.
+  /// If true, a blocked relationship will be created,
+  /// and the target user will not be able to send messages to the logged-in user.
+  /// * `groupIndex`: The target group index in which create the relationship.
+  /// If null, the relationship will be created in the default group.
+  ///
+  /// **Throws**: [ResponseException] if an error occurs.
   Future<Response<void>> createRelationship(Int64 userId, bool isBlocked,
       {int? groupIndex}) async {
     final n = await _turmsClient.driver.send(CreateRelationshipRequest(
@@ -237,14 +442,57 @@ class UserService {
     return n.toNullResponse();
   }
 
+  /// Create a friend (non-blocked) relationship.
+  ///
+  /// Notifications:
+  /// * If the server property `turms.service.notification.one-sided-relationship-group-member-added.notify-requester-other-online-sessions`
+  ///   is true (true by default), the server will send a new relationship notification to all other online sessions of the logged-in user actively.
+  /// * If the server property `turms.service.notification.one-sided-relationship-group-member-added.notify-new-relationship-group-member`,
+  ///   is true (false by default), the server will send a new relationship notification to [userId] actively.
+  ///
+  /// **Params**:
+  /// * `userId`: The target user ID.
+  /// * `groupIndex`: The target group index in which create the relationship.
+  /// If null, the relationship will be created in the default group.
+  ///
+  /// **Throws**: [ResponseException] if an error occurs.
   Future<Response<void>> createFriendRelationship(Int64 userId,
           {int? groupIndex}) =>
       createRelationship(userId, false, groupIndex: groupIndex);
 
+  /// Create a blocked user relationship.
+  ///
+  /// Notifications:
+  /// * If the server property `turms.service.notification.one-sided-relationship-group-member-added.notify-requester-other-online-sessions`
+  ///   is true (true by default), the server will send a new relationship notification to all other online sessions of the logged-in user actively.
+  /// * If the server property `turms.service.notification.one-sided-relationship-group-member-added.notify-new-relationship-group-member`,
+  ///   is true (false by default), the server will send a new relationship notification to [userId] actively.
+  ///
+  /// **Params**:
+  /// * `userId`: The target user ID.
+  /// * `groupIndex`: The target group index in which create the relationship.
+  /// If null, the relationship will be created in the default group.
+  ///
+  /// **Throws**: [ResponseException] if an error occurs.
   Future<Response<void>> createBlockedUserRelationship(Int64 userId,
           {int? groupIndex}) =>
       createRelationship(userId, true, groupIndex: groupIndex);
 
+  /// Delete a relationship.
+  ///
+  /// Notifications:
+  /// * If the server property `turms.service.notification.group-deleted.notify-requester-other-online-sessions`
+  ///   is true (true by default), the server will send a delete relationship notification to all other online sessions of the logged-in user actively.
+  /// * If the server property `turms.service.notification.group-deleted.notify-group-members`,
+  ///   is true (true by default), the server will send a delete relationship notification to all group members in groups.
+  ///
+  /// **Params**:
+  /// * `relatedUserId`: The target user ID.
+  /// * `deleteGroupIndex`: The target group index in which delete the relationship.
+  /// If null, the relationship will be deleted in all groups.
+  /// * `targetGroupIndex`: TODO: not implemented yet.
+  ///
+  /// **Throws**: [ResponseException] if an error occurs.
   Future<Response<void>> deleteRelationship(Int64 relatedUserId,
       {int? deleteGroupIndex, int? targetGroupIndex}) async {
     final n = await _turmsClient.driver.send(DeleteRelationshipRequest(
@@ -254,6 +502,20 @@ class UserService {
     return n.toNullResponse();
   }
 
+  /// Update a relationship.
+  ///
+  /// Notifications:
+  /// * If the server property `turms.service.notification.one-sided-relationship-updated.notify-requester-other-online-sessions`
+  ///   is true (true by default), the server will send a update relationship notification to all other online sessions of the logged-in user actively.
+  /// * If the server property `turms.service.notification.one-sided-relationship-updated.notify-related-user`,
+  ///   is true (false by default), the server will send a update relationship notification to [relatedUserId] actively.
+  ///
+  /// **Params**:
+  /// * `relatedUserId`: The target user ID.
+  /// * `isBlocked`: Whether to update a blocked relationship.
+  /// If null, the relationship will not be updated.
+  ///
+  /// **Throws**: [ResponseException] if an error occurs.
   Future<Response<void>> updateRelationship(Int64 relatedUserId,
       {bool? isBlocked, int? groupIndex}) async {
     if ([isBlocked, groupIndex].areAllNull) {
@@ -264,6 +526,21 @@ class UserService {
     return n.toNullResponse();
   }
 
+  /// Send a friend request.
+  ///
+  /// Notifications:
+  /// * If the server property `turms.service.notification.friend-request-created.notify-requester-other-online-sessions`,
+  ///   is true (true by default), the server will send a new friend request notification to all other online sessions of the logged-in user actively.
+  /// * If the server property `turms.service.notification.friend-request-created.notify-friend-request-recipient`,
+  ///   is true (true by default), the server will send a new friend request notification to [recipientId] actively.
+  ///
+  /// **Params**:
+  /// * `recipientId`: The target user ID.
+  /// * `content`: The content of the friend request.
+  ///
+  /// **Returns**: The request ID.
+  ///
+  /// **Throws**: [ResponseException] if an error occurs.
   Future<Response<Int64>> sendFriendRequest(
       Int64 recipientId, String content) async {
     final n = await _turmsClient.driver.send(
@@ -271,6 +548,53 @@ class UserService {
     return n.toResponse((data) => data.getLongOrThrow());
   }
 
+  /// Delete/Recall a friend request.
+  ///
+  /// Authorization:
+  /// * If the server property `turms.service.user.friend-request.allow-recall-pending-friend-request-by-sender`
+  ///   is true (false by default), the logged-in user can recall pending friend requests sent by themselves.
+  ///   Otherwise, throws [ResponseException] with the code [ResponseStatusCode.recallingFriendRequestIsDisabled].
+  /// * If the logged-in user is not the sender of the friend request,
+  ///   throws [ResponseException] with the code [ResponseStatusCode.notSenderToRecallFriendRequest].
+  /// * If the friend request is not pending (e.g. expired, accepted, deleted, etc),
+  ///   throws [ResponseException] with the code [ResponseStatusCode.recallNonPendingFriendRequest].
+  ///
+  /// Notifications:
+  /// * If the server property `turms.service.notification.friend-request-recalled.notify-requester-other-online-sessions`
+  ///   is true (true by default), the server will send a delete friend request notification to all other online sessions of the logged-in user actively.
+  /// * If the server property `turms.service.notification.friend-request-recalled.notify-friend-request-recipient`
+  ///   is true (true by default), the server will send a delete friend request notification to the recipient of the friend request actively.
+  ///
+  /// **Throws**: [ResponseException] if an error occurs.
+  Future<Response<void>> deleteFriendRequest(Int64 requestId) async {
+    final n = await _turmsClient.driver
+        .send(DeleteFriendRequestRequest(requestId: requestId));
+    return n.toResponse((data) {});
+  }
+
+  /// Reply to a friend request.
+  ///
+  /// If the logged-in user accepts a friend request sent by another user,
+  /// the server will create a relationship between the logged-in user and the friend request sender.
+  ///
+  /// Authorization:
+  /// * If the logged-in user is not the recipient of the friend request,
+  ///   throws [ResponseException] with the code [ResponseStatusCode.notRecipientToUpdateFriendRequest].
+  /// * If the friend request is not pending (e.g. expired, accepted, deleted, etc),
+  ///   throws [ResponseException] with the code [ResponseStatusCode.updateNonPendingFriendRequest].
+  ///
+  /// Notifications:
+  /// * If the server property `turms.service.notification.friend-request-replied.notify-requester-other-online-sessions`,
+  ///   is true (true by default), the server will send a reply friend request notification to all other online sessions of the logged-in user actively.
+  /// * If the server property `turms.service.notification.friend-request-replied.notify-friend-request-sender`,
+  ///   is true (true by default), the server will send a reply friend request notification to the friend request sender actively.
+  ///
+  /// **Params**:
+  /// * `requestId`: The target friend request ID.
+  /// * `responseAction`: The response action.
+  /// * `reason`: The reason of the response.
+  ///
+  /// **Throws**: [ResponseException] if an error occurs.
   Future<Response<void>> replyFriendRequest(
       Int64 requestId, ResponseAction responseAction,
       {String? reason}) async {
@@ -279,6 +603,20 @@ class UserService {
     return n.toResponse((data) {});
   }
 
+  /// Find friend requests.
+  ///
+  /// **Params**:
+  /// * `areSentByMe`: Whether to find the friend requests sent by the logged-in user.
+  /// If true, find the friend requests sent by the logged-in user.
+  /// If false, find the friend requests not sent to the logged-in user.
+  /// * `lastUpdatedDate`: The last updated date of friend requests stored locally.
+  /// The server will only return friend requests that are updated after [lastUpdatedDate].
+  /// If null, all friend requests will be returned.
+  ///
+  /// **Returns**: Friend requests and the version.
+  /// Note: The version can be used to update the last updated date stored locally.
+  ///
+  /// **Throws**: [ResponseException] if an error occurs.
   Future<Response<UserFriendRequestsWithVersion?>> queryFriendRequests(
       bool areSentByMe,
       {DateTime? lastUpdatedDate}) async {
@@ -289,12 +627,33 @@ class UserService {
         : null);
   }
 
+  /// Create a relationship group.
+  ///
+  /// **Params**:
+  /// * `name`: The name of the group.
+  ///
+  /// **Returns**: The index of the created group.
+  ///
+  /// **Throws**: [ResponseException] if an error occurs.
   Future<Response<Int64>> createRelationshipGroup(String name) async {
     final n = await _turmsClient.driver
         .send(CreateRelationshipGroupRequest(name: name));
     return n.toResponse((data) => data.getLongOrThrow());
   }
 
+  /// Delete relationship groups.
+  ///
+  /// Notifications:
+  /// 1. If the server property `turms.service.notification.one-sided-relationship-group-deleted.notify-requester-other-online-sessions`,
+  /// is true (true by default), the server will send a delete relationship groups relationship notification to all other online sessions of the logged-in user actively.
+  /// 2. If the server property `turms.service.notification.one-sided-relationship-group-deleted.notify-relationship-group-members`,
+  /// is true (false by default), the server will send a delete relationship groups relationship notification to all group members in groups.
+  ///
+  /// @param groupIndex the target group index to delete.
+  /// @param targetGroupIndex move the group members of [groupIndex] to [targetGroupIndex]
+  ///        when the group is deleted.
+  ///        If null, the group members of [groupIndex] will be moved to the default group.
+  /// @throws ResponseException if an error occurs.
   Future<Response<void>> deleteRelationshipGroups(int groupIndex,
       {int? targetGroupIndex}) async {
     final n = await _turmsClient.driver.send(DeleteRelationshipGroupRequest(
@@ -302,6 +661,19 @@ class UserService {
     return n.toNullResponse();
   }
 
+  /// Update a relationship group.
+  ///
+  /// Notifications:
+  /// * If the server property `turms.service.notification.one-sided-relationship-group-updated.notify-requester-other-online-sessions`,
+  ///   is true (true by default), the server will send a updated relationship groups relationship notification to all other online sessions of the logged-in user actively.
+  /// * If the server property `turms.service.notification.one-sided-relationship-group-updated.notify-relationship-group-members`,
+  ///   is true (false by default), the server will send a updated relationship groups relationship notification to all group members in groups.
+  ///
+  /// **Params**:
+  /// * `groupIndex`: The target group index.
+  /// * `newName`: The new name of the group.
+  ///
+  /// **Throws**: [ResponseException] if an error occurs.
   Future<Response<void>> updateRelationshipGroup(
       int groupIndex, String newName) async {
     final n = await _turmsClient.driver.send(UpdateRelationshipGroupRequest(
@@ -309,6 +681,17 @@ class UserService {
     return n.toNullResponse();
   }
 
+  /// Find relationship groups.
+  ///
+  /// **Params**:
+  /// * `lastUpdatedDate`: The last updated date of relationship groups stored locally.
+  /// The server will only return relationship groups that are updated after [lastUpdatedDate].
+  /// If null, all relationship groups will be returned.
+  ///
+  /// **Returns**: Relationship groups and the version.
+  /// Note: The version can be used to update the last updated date stored locally.
+  ///
+  /// **Throws**: [ResponseException] if an error occurs.
   Future<Response<UserRelationshipGroupsWithVersion?>> queryRelationshipGroups(
       {DateTime? lastUpdatedDate}) async {
     final n = await _turmsClient.driver.send(QueryRelationshipGroupsRequest(
@@ -318,6 +701,19 @@ class UserService {
         : null);
   }
 
+  /// Move a related user to a group.
+  ///
+  /// Notifications:
+  /// * If the server property `turms.service.notification.one-sided-relationship-updated.notify-requester-other-online-sessions`,
+  ///   is true (true by default), the server will send a update relationship notification to all other online sessions of the logged-in user actively.
+  /// * If the server property `turms.service.notification.one-sided-relationship-updated.notify-related-user`,
+  ///   is true (false by default), the server will send a update relationship notification to [relatedUserId] actively.
+  ///
+  /// **Params**:
+  /// * `relatedUserId`: The target user ID.
+  /// * `groupIndex`: The target group index to which move the user.
+  ///
+  /// **Throws**: [ResponseException] if an error occurs.
   Future<Response<void>> moveRelatedUserToGroup(
       Int64 relatedUserId, int groupIndex) async {
     final n = await _turmsClient.driver.send(UpdateRelationshipRequest(
@@ -325,12 +721,22 @@ class UserService {
     return n.toNullResponse();
   }
 
-  /// updateLocation() in UserService is different from sendMessage()
-  /// with records of location in MessageService
-  /// updateLocation() in UserService sends the location of user to
-  /// the server only.
-  /// sendMessage() with records of location sends user's location to
-  /// both server and its recipients.
+  /// Update the location of the logged-in user.
+  ///
+  /// Note:
+  /// * [UserService.updateLocation] is different from
+  ///   [MessageService.sendMessage] with records of location.
+  ///   [UserService.updateLocation] sends the location of user to
+  ///   the server only.
+  ///   [MessageService.sendMessage] with records of location sends the user's location
+  ///   to both server and its recipients.
+  ///
+  /// **Params**:
+  /// * `latitude`: The latitude.
+  /// * `longitude`: The longitude.
+  /// * `details`: The location details
+  ///
+  /// **Throws**: [ResponseException] if an error occurs.
   Future<Response<void>> updateLocation(double latitude, double longitude,
       {Map<String, String>? details}) async {
     final n = await _turmsClient.driver.send(UpdateUserLocationRequest(

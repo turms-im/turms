@@ -343,7 +343,7 @@ internal class GroupServiceET {
     @Order(ORDER_LOWEST_PRIORITY)
     @Timeout(5)
     fun deleteGroupJoinQuestions_shouldSucceed() = runBlocking {
-        val result = client.groupService.deleteGroupJoinQuestions(setOf(groupJoinQuestionId))
+        val result = client.groupService.deleteGroupJoinQuestions(groupId, setOf(groupJoinQuestionId))
             .data
         assertNotNull(result)
     }

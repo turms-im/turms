@@ -407,6 +407,141 @@ auto UserService::createRelationship(int64_t userId,
         });
 }
 
+auto UserService::createFriendRelationship(int64_t userId, const boost::optional<int>& groupIndex)
+    -> boost::future<Response<void>> {
+    return createRelationship(userId, false, groupIndex);
+}
+
+auto UserService::createBlockedUserRelationship(int64_t userId,
+                                                const boost::optional<int>& groupIndex)
+    -> boost::future<Response<void>> {
+    return createRelationship(userId, true, groupIndex);
+}
+
+auto UserService::deleteRelationship(int64_t relatedUserId,
+                                     const boost::optional<int>& deleteGroupIndex,
+                                     const boost::optional<int>& targetGroupIndex)
+    -> boost::future<Response<void>> {
+    TurmsRequest turmsRequest;
+    auto* request = turmsRequest.mutable_delete_relationship_request();
+    request->set_user_id(relatedUserId);
+    if (deleteGroupIndex) {
+        request->set_group_index(*deleteGroupIndex);
+    }
+    if (targetGroupIndex) {
+        request->set_target_group_index(*targetGroupIndex);
+    }
+    return turmsClient_.driver()
+        .send(turmsRequest)
+        .then([](boost::future<TurmsNotification> response) {
+            return Response<void>{response.get()};
+        });
+}
+
+auto UserService::updateRelationship(int64_t relatedUserId,
+                                     const boost::optional<bool>& isBlocked,
+                                     const boost::optional<int>& groupIndex)
+    -> boost::future<Response<void>> {
+    TurmsRequest turmsRequest;
+    auto* request = turmsRequest.mutable_update_relationship_request();
+    request->set_user_id(relatedUserId);
+    if (!isBlocked && !groupIndex) {
+        return boost::make_ready_future<>(Response<void>{});
+    }
+    if (isBlocked) {
+        request->set_blocked(*isBlocked);
+    }
+    if (groupIndex) {
+        request->set_new_group_index(*groupIndex);
+    }
+    return turmsClient_.driver()
+        .send(turmsRequest)
+        .then([](boost::future<TurmsNotification> response) {
+            return Response<void>{response.get()};
+        });
+}
+
+auto UserService::sendFriendRequest(int64_t recipientId, const absl::string_view& content)
+    -> boost::future<Response<int64_t>> {
+    TurmsRequest turmsRequest;
+    auto* request = turmsRequest.mutable_create_friend_request_request();
+    request->set_recipient_id(recipientId);
+    request->set_content(content);
+    return turmsClient_.driver()
+        .send(turmsRequest)
+        .then([](boost::future<TurmsNotification> response) {
+            return Response<int64_t>{response.get(), [](const TurmsNotification::Data& data) {
+                                         return model::notification::getLongOrThrow(data);
+                                     }};
+        });
+}
+
+auto UserService::deleteFriendRequest(int64_t requestId) -> boost::future<Response<void>> {
+    TurmsRequest turmsRequest;
+    auto* request = turmsRequest.mutable_delete_friend_request_request();
+    request->set_request_id(requestId);
+    return turmsClient_.driver()
+        .send(turmsRequest)
+        .then([](boost::future<TurmsNotification> response) {
+            return Response<void>{response.get()};
+        });
+}
+
+auto UserService::replyFriendRequest(int64_t requestId,
+                                     ResponseAction responseAction,
+                                     const boost::optional<absl::string_view>& reason)
+    -> boost::future<Response<void>> {
+    TurmsRequest turmsRequest;
+    auto* request = turmsRequest.mutable_update_friend_request_request();
+    request->set_request_id(requestId);
+    request->set_response_action(responseAction);
+    if (reason) {
+        request->set_reason(*reason);
+    }
+    return turmsClient_.driver()
+        .send(turmsRequest)
+        .then([](boost::future<TurmsNotification> response) {
+            return Response<void>{response.get()};
+        });
+}
+
+auto UserService::queryFriendRequests(bool areSentByMe,
+                                      const boost::optional<time_point>& lastUpdatedDate)
+    -> boost::future<Response<boost::optional<UserFriendRequestsWithVersion>>> {
+    TurmsRequest turmsRequest;
+    auto* request = turmsRequest.mutable_query_friend_requests_request();
+    request->set_are_sent_by_me(areSentByMe);
+    if (lastUpdatedDate) {
+        request->set_last_updated_date(time::toInt64(*lastUpdatedDate));
+    }
+    return turmsClient_.driver()
+        .send(turmsRequest)
+        .then([](boost::future<TurmsNotification> response) {
+            return Response<boost::optional<UserFriendRequestsWithVersion>>{
+                response.get(), [](const TurmsNotification::Data& data) {
+                    if (data.has_user_friend_requests_with_version()) {
+                        return boost::make_optional(data.user_friend_requests_with_version());
+                    }
+                    return boost::optional<UserFriendRequestsWithVersion>{};
+                }};
+        });
+}
+
+auto UserService::createRelationshipGroup(const absl::string_view& name)
+    -> boost::future<Response<int>> {
+    TurmsRequest turmsRequest;
+    auto* request = turmsRequest.mutable_create_relationship_group_request();
+    request->set_name(name);
+    return turmsClient_.driver()
+        .send(turmsRequest)
+        .then([](boost::future<TurmsNotification> response) {
+            return Response<int>{
+                response.get(), [](const TurmsNotification::Data& data) {
+                    return static_cast<int>(model::notification::getLongOrThrow(data));
+                }};
+        });
+}
+
 auto UserService::deleteRelationshipGroups(int groupIndex, boost::optional<int> targetGroupIndex)
     -> boost::future<Response<void>> {
     TurmsRequest turmsRequest;

@@ -415,7 +415,7 @@ public class StorageService {
                 return
             }
             let request = MultipartFormDataRequest(url: httpUrl)
-            formData.forEach { key, value in
+            for (key, value) in formData {
                 request.addTextField(named: key, value: value)
             }
             request.addTextField(named: "key", value: id)

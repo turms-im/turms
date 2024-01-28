@@ -23,10 +23,14 @@ class NotificationService {
     });
   }
 
+  /// Add a notification listener to receive notifications.
+  /// Note: This listener will receive all kinds of notifications excluding messages.
+  /// To listen to messages, use [MessageService.addMessageListener] instead.
   void addNotificationListener(NotificationListener listener) {
     _notificationListeners.add(listener);
   }
 
+  /// Remove a notification listener.
   void removeNotificationListener(NotificationListener listener) {
     _notificationListeners.remove(listener);
   }

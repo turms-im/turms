@@ -56,14 +56,83 @@ export default class MessageService {
             });
     }
 
+    /**
+     * Add a message listener that will be triggered when a new message arrives.
+     * Note: To listen to notifications excluding messages,
+     * use {@link NotificationService#addNotificationListener} instead.
+     */
     addMessageListener(listener: (message: ParsedModel.Message, messageAddition: MessageAddition) => void): void {
         this._messageListeners.push(listener);
     }
 
+    /**
+     * Remove a message listener.
+     */
     removeMessageListener(listener: (message: ParsedModel.Message, messageAddition: MessageAddition) => void): void {
         this._messageListeners = this._messageListeners.filter(cur => cur !== listener);
     }
 
+    /**
+     * Send a message.
+     *
+     * @remarks
+     * Common Scenarios:
+     * * A client can call {@link addMessageListener} to listen to incoming new messages.
+     *
+     * Authorization:
+     *
+     * For private messages,
+     * * If the server property `turms.service.message.allow-send-messages-to-oneself`
+     *   is true (false by default), the logged-in user can send messages to itself.
+     *   Otherwise, throws {@link {@link ResponseError}} with the code {@link ResponseStatusCode#SENDING_MESSAGES_TO_ONESELF_IS_DISABLED}.
+     * * If the server property `turms.service.message.allow-send-messages-to-stranger`
+     *   is true (true by default), the logged-in user can send messages to strangers
+     *   (has no relationship with the logged-in user).
+     * * If the logged-in user has blocked the target user,
+     *   throws {@link {@link ResponseError}} with the code {@link ResponseStatusCode#BLOCKED_USER_SEND_PRIVATE_MESSAGE}.
+     *
+     * For group messages,
+     * * If the logged-in user has blocked the target group,
+     *   throws {@link {@link ResponseError}} with the code {@link ResponseStatusCode#BLOCKED_USER_SEND_GROUP_MESSAGE}.
+     * * If the logged-in user is not a group member, and the group does NOT allow non-members to send messages,
+     *   throws {@link {@link ResponseError}} with the code {@link ResponseStatusCode#NOT_SPEAKABLE_GROUP_GUEST_TO_SEND_MESSAGE}.
+     * * If the logged-in user has been muted,
+     *   throws {@link {@link ResponseError}} with the code {@link ResponseStatusCode#MUTED_GROUP_MEMBER_SEND_MESSAGE}.
+     * * If the target group has been deleted,
+     *   throws {@link {@link ResponseError}} with the code {@link ResponseStatusCode#SEND_MESSAGE_TO_INACTIVE_GROUP}.
+     * * If the target group has been muted,
+     *   throws {@link {@link ResponseError}} with the code {@link ResponseStatusCode#SEND_MESSAGE_TO_MUTED_GROUP}.
+     *
+     * Notifications:
+     * * If the server property `turms.service.notification.message-created.notify-message-recipients`
+     *   is true (true by default), a new message notification will be sent to the message recipients actively.
+     * * If the server property `turms.service.notification.message-created.notify-requester-other-online-sessions`
+     *   is true (true by default), a new message notification will be sent to all other online sessions of the logged-in user actively.
+     *
+     * @param isGroupMessage - whether the message is a group message.
+     * @param targetId - The target ID.
+     * If {@link isGroupMessage} is true, the target ID is the group ID.
+     * If {@link isGroupMessage} is false, the target ID is the user ID.
+     * @param deliveryDate - The delivery date.
+     * Note that {@link deliveryDate} will only work if the server property
+     * `turms.service.message.time-type` is `client_time` (`local_server_time` by default).
+     * @param text - the message text.
+     * {@link text} can be anything you want. e.g. Markdown, base64 encoded bytes.
+     * Note that if {@link text} is null, {@link records} must not be null.
+     * @param records - the message records.
+     * {@link records} can be anything you want. e.g. base64 encoded images (it is highly not recommended).
+     * Note that if {@link records} is null, {@link text} must not be null.
+     * @param burnAfter - The burn after the specified time.
+     * Note that Turms server and client do NOT implement the `burn after` feature,
+     * and they just store and pass {@link burnAfter} between server and clients.
+     * @param preMessageId - The pre-message ID.
+     * {@link preMessageId} is mainly used to arrange the order of messages on UI.
+     * If what you want is to ensure every message will not be lost, even if the server crashes,
+     * you can set the server property `turms.service.message.use-conversation-id` to true
+     * (false by default).
+     * @returns the message ID.
+     * @throws {@link ResponseError} if an error occurs.
+     */
     sendMessage({
         isGroupMessage,
         targetId,
@@ -100,6 +169,30 @@ export default class MessageService {
         }).then(n => Response.fromNotification(n, data => NotificationUtil.getLongOrThrow(data)));
     }
 
+    /**
+     * Forward a message.
+     * In other words, create and send a new message based on a existing message
+     * to the target user or group.
+     *
+     * @remarks
+     * Authorization:
+     * * If the logged-in user is not allowed to view the message with {@link messageId},
+     *   throws {@link {@link ResponseError}} with the code {@link ResponseStatusCode#NOT_MESSAGE_RECIPIENT_OR_SENDER_TO_FORWARD_MESSAGE}.
+     *
+     * Notifications:
+     * * If the server property `turms.service.notification.message-created.notify-message-recipients`
+     *   is true (true by default), a new message notification will be sent to the message recipients actively.
+     * * If the server property `turms.service.notification.message-created.notify-requester-other-online-sessions`
+     *   is true (true by default), a new message notification will be sent to all other online sessions of the logged-in user actively.
+     *
+     * @param messageId - the message ID for copying.
+     * @param isGroupMessage - whether the message is a group message.
+     * @param targetId - the target ID.
+     * If {@link isGroupMessage} is true, the target ID is the group ID.
+     * If {@link isGroupMessage} is false, the target ID is the user ID.
+     * @returns the message ID.
+     * @throws {@link ResponseError} if an error occurs.
+     */
     forwardMessage({
         messageId,
         isGroupMessage,
@@ -125,6 +218,35 @@ export default class MessageService {
         }).then(n => Response.fromNotification(n, data => NotificationUtil.getLongOrThrow(data)));
     }
 
+    /**
+     * Update a sent message.
+     *
+     * @remarks
+     * Authorization:
+     * * If the server property `turms.service.message.allow-send-messages-to-oneself`
+     *   is true (true by default), the logged-in user can update sent messages.
+     *   Otherwise, throws {@link {@link ResponseError}} with the code {@link ResponseStatusCode#UPDATING_MESSAGE_BY_SENDER_IS_DISABLED}.
+     * * If the message is not sent by the logged-in user,
+     *   throws {@link {@link ResponseError}} with the code {@link ResponseStatusCode#NOT_SENDER_TO_UPDATE_MESSAGE}.
+     * * If the message is group message, and is sent by the logged-in user but the group
+     *   has been deleted,
+     *   throws {@link {@link ResponseError}} with the code {@link ResponseStatusCode#UPDATE_MESSAGE_OF_NONEXISTENT_GROUP}.
+     * * If the message is group message, and the group type has disabled updating messages,
+     *   throws {@link {@link ResponseError}} with the code {@link ResponseStatusCode#UPDATING_GROUP_MESSAGE_BY_SENDER_IS_DISABLED}.
+     *
+     * Notifications:
+     * * If the server property `turms.service.notification.message-updated.notify-message-recipients`
+     *   is true (true by default), a message update notification will be sent to the message recipients actively.
+     * * If the server property `turms.service.notification.message-updated.notify-requester-other-online-sessions`
+     *   is true (true by default), a message update notification will be sent to all other online sessions of the logged-in user actively.
+     *
+     * @param messageId - The sent message ID.
+     * @param text - The new message text.
+     * If null, the message text will not be changed.
+     * @param records - The new message records.
+     * If null, the message records will not be changed.
+     * @throws {@link ResponseError} if an error occurs.
+     */
     updateSentMessage({
         messageId,
         text,
@@ -149,6 +271,30 @@ export default class MessageService {
         }).then(n => Response.fromNotification(n));
     }
 
+    /**
+     * Find messages.
+     *
+     * @param ids - the message IDs for querying.
+     * @param areGroupMessages - whether the messages are group messages.
+     * If the logged-in user is not a group member,
+     * throws {@link {@link ResponseError}} with the code {@link ResponseStatusCode#NOT_GROUP_MEMBER_TO_QUERY_GROUP_MESSAGES}.
+     * TODO: guest users of some group types should be able to query messages.
+     * @param areSystemMessages - whether the messages are system messages.
+     * @param fromIds - the from IDs.
+     * If {@link areGroupMessages} is true, the from ID is the group ID.
+     * If {@link areGroupMessages} is false, the from ID is the user ID.
+     * @param deliveryDateStart - the start delivery date for querying.
+     * @param deliveryDateEnd - the end delivery date for querying.
+     * @param maxCount - the maximum count for querying.
+     * @param descending - whether the messages are sorted in descending order.
+     * @returns list of messages.
+     * Note that the list only contains messages in which the logged-in user
+     * has permission to view.
+     * If the logged-in user has no permission to view specified messages,
+     * these messages will be filtered out on the server, and no error will be thrown,
+     * except for {@link ResponseStatusCode#NOT_GROUP_MEMBER_TO_QUERY_GROUP_MESSAGES} mentioned above.
+     * @throws {@link ResponseError} if an error occurs.
+     */
     queryMessages({
         ids,
         areGroupMessages,
@@ -183,6 +329,30 @@ export default class MessageService {
         }).then(n => Response.fromNotification(n, data => NotificationUtil.transformOrEmpty(data.messages?.messages)));
     }
 
+    /**
+     * Find the pair of messages and the total count for each conversation.
+     *
+     * @param ids - the message IDs for querying.
+     * @param areGroupMessages - whether the messages are group messages.
+     * @param areSystemMessages - whether the messages are system messages.
+     * If the logged-in user is not a group member,
+     * throws {@link {@link ResponseError}} with the code {@link ResponseStatusCode#NOT_GROUP_MEMBER_TO_QUERY_GROUP_MESSAGES}.
+     * TODO: guest users of some group types should be able to query messages.
+     * @param fromIds - The from IDs.
+     * If {@link areGroupMessages} is true, the from ID is the group ID.
+     * If {@link areGroupMessages} is false, the from ID is the user ID.
+     * @param deliveryDateStart - The start delivery date for querying.
+     * @param deliveryDateEnd - The end delivery date for querying.
+     * @param maxCount - The maximum count for querying.
+     * @param descending - Whether the messages are sorted in descending order.
+     * @returns list of the pair of messages and the total count for each conversation.
+     * Note that the list only contains messages in which the logged-in user
+     * has permission to view.
+     * If the logged-in user has no permission to view specified messages,
+     * these messages will be filtered out on the server, and no error will be thrown,
+     * except for {@link ResponseStatusCode#NOT_GROUP_MEMBER_TO_QUERY_GROUP_MESSAGES} mentioned above.
+     * @throws {@link ResponseError} if an error occurs.
+     */
     queryMessagesWithTotal({
         ids,
         areGroupMessages,
@@ -217,6 +387,28 @@ export default class MessageService {
         }).then(n => Response.fromNotification(n, data => NotificationUtil.transformOrEmpty(data.messagesWithTotalList?.messagesWithTotalList)));
     }
 
+    /**
+     * Recall a message.
+     *
+     * @remarks
+     * Authorization:
+     * * If the server property `turms.service.message.allow-recall-message`
+     *   is true (true by default), the logged-in user can recall sent messages.
+     *   Otherwise, throws {@link {@link ResponseError}} with the code {@link ResponseStatusCode#RECALLING_MESSAGE_IS_DISABLED}.
+     * * If the message does not exist,
+     *   throws {@link {@link ResponseError}} with the code {@link ResponseStatusCode#RECALL_NONEXISTENT_MESSAGE}.
+     * * If the message is group message, but the group has been deleted,
+     *   throws {@link {@link ResponseError}} with the code {@link ResponseStatusCode#RECALL_MESSAGE_OF_NONEXISTENT_GROUP}.
+     *
+     * Common Scenarios:
+     * * A client can call {@link addMessageListener} to listen to recalled messages.
+     *   The listener will receive a non-empty {@link MessageAddition#recalledMessageIds} when a message is recalled.
+     *
+     * @param messageId - the message ID.
+     * @param recallDate - the recall date.
+     * If null, the current date will be used.
+     * @throws {@link ResponseError} if an error occurs.
+     */
     recallMessage({
         messageId,
         recallDate = new Date()

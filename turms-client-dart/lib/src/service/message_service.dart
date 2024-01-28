@@ -10,8 +10,8 @@ typedef MessageListener = void Function(
     Message message, MessageAddition addition);
 
 class MessageService {
-  /// Format: "@{userId}"
-  /// Example: "@{123}", "I need to talk with @{123} and @{321}"
+  /// Format: `@{userId}`
+  /// Example: `@{123}`, `I need to talk with @{123} and @{321}`
   static final RegExp _defaultMentionedUserIdsParserRegex =
       RegExp(r'@{(\d+?)}', multiLine: true);
 
@@ -49,12 +49,77 @@ class MessageService {
     return userIds;
   }
 
+  /// Add a message listener that will be triggered when a new message arrives.
+  /// Note: To listen to notifications excluding messages,
+  /// use [NotificationService.addNotificationListener] instead.
   void addMessageListener(MessageListener listener) =>
       _messageListeners.add(listener);
 
+  /// Remove a message listener.
   void removeMessageListener(MessageListener listener) =>
       _messageListeners.remove(listener);
 
+  /// Send a message.
+  ///
+  /// Common Scenarios:
+  /// * A client can call [addMessageListener] to listen to incoming new messages.
+  ///
+  /// Authorization:
+  ///
+  /// For private messages,
+  /// * If the server property `turms.service.message.allow-send-messages-to-oneself`
+  ///   is true (false by default), the logged-in user can send messages to itself.
+  ///   Otherwise, throws [ResponseException] with the code [ResponseStatusCode.sendingMessagesToOneselfIsDisabled].
+  /// * If the server property `turms.service.message.allow-send-messages-to-stranger`
+  ///   is true (true by default), the logged-in user can send messages to strangers
+  ///   (has no relationship with the logged-in user).
+  /// * If the logged-in user has blocked the target user,
+  ///   throws [ResponseException] with the code [ResponseStatusCode.blockedUserSendPrivateMessage].
+  ///
+  /// For group messages,
+  /// * If the logged-in user has blocked the target group,
+  ///   throws [ResponseException] with the code [ResponseStatusCode.blockedUserSendGroupMessage].
+  /// * If the logged-in user is not a group member, and the group does NOT allow non-members to send messages,
+  ///   throws [ResponseException] with the code [ResponseStatusCode.notSpeakableGroupGuestToSendMessage].
+  /// * If the logged-in user has been muted,
+  ///   throws [ResponseException] with the code [ResponseStatusCode.mutedGroupMemberSendMessage].
+  /// * If the target group has been deleted,
+  ///   throws [ResponseException] with the code [ResponseStatusCode.sendMessageToInactiveGroup].
+  /// * If the target group has been muted,
+  ///   throws [ResponseException] with the code [ResponseStatusCode.sendMessageToMutedGroup].
+  ///
+  /// Notifications:
+  /// * If the server property `turms.service.notification.message-created.notify-message-recipients`
+  ///   is true (true by default), a new message notification will be sent to the message recipients actively.
+  /// * If the server property `turms.service.notification.message-created.notify-requester-other-online-sessions`
+  ///   is true (true by default), a new message notification will be sent to all other online sessions of the logged-in user actively.
+  ///
+  /// **Params**:
+  /// * `isGroupMessage`: Whether the message is a group message.
+  /// * `targetId`: The target ID.
+  /// If [isGroupMessage] is true, the target ID is the group ID.
+  /// If [isGroupMessage] is false, the target ID is the user ID.
+  /// * `deliveryDate`: The delivery date.
+  /// Note that [deliveryDate] will only work if the server property
+  /// `turms.service.message.time-type` is `client_time` (`local_server_time` by default).
+  /// * `text`: The message text.
+  /// [text] can be anything you want. e.g. Markdown, base64 encoded bytes.
+  /// Note that if [text] is null, [records] must not be null.
+  /// * `records`: The message records.
+  /// [records] can be anything you want. e.g. base64 encoded images (it is highly not recommended).
+  /// Note that if [records] is null, [text] must not be null.
+  /// * `burnAfter`: The burn after the specified time.
+  /// Note that Turms server and client do NOT implement the `burn after` feature,
+  /// and they just store and pass [burnAfter] between server and clients.
+  /// * `preMessageId`: The pre-message ID.
+  /// [preMessageId] is mainly used to arrange the order of messages on UI.
+  /// If what you want is to ensure every message will not be lost, even if the server crashes,
+  /// you can set the server property `turms.service.message.use-conversation-id` to true
+  /// (false by default).
+  ///
+  /// **Returns**: The message ID.
+  ///
+  /// **Throws**: [ResponseException] if an error occurs.
   Future<Response<Int64>> sendMessage(bool isGroupMessage, Int64 targetId,
       {DateTime? deliveryDate,
       String? text,
@@ -77,6 +142,30 @@ class MessageService {
     return n.toResponse((data) => data.getLongOrThrow());
   }
 
+  /// Forward a message.
+  /// In other words, create and send a new message based on a existing message
+  /// to the target user or group.
+  ///
+  /// Authorization:
+  /// * If the logged-in user is not allowed to view the message with [messageId],
+  ///   throws [ResponseException] with the code [ResponseStatusCode.notMessageRecipientOrSenderToForwardMessage].
+  ///
+  /// Notifications:
+  /// * If the server property `turms.service.notification.message-created.notify-message-recipients`
+  ///   is true (true by default), a new message notification will be sent to the message recipients actively.
+  /// * If the server property `turms.service.notification.message-created.notify-requester-other-online-sessions`
+  ///   is true (true by default), a new message notification will be sent to all other online sessions of the logged-in user actively.
+  ///
+  /// **Params**:
+  /// * `messageId`: The message ID for copying.
+  /// * `isGroupMessage`: Whether the message is a group message.
+  /// * `targetId`: The target ID.
+  /// If [isGroupMessage] is true, the target ID is the group ID.
+  /// If [isGroupMessage] is false, the target ID is the user ID.
+  ///
+  /// **Returns**: The message ID.
+  ///
+  /// **Throws**: [ResponseException] if an error occurs.
   Future<Response<Int64>> forwardMessage(
       Int64 messageId, bool isGroupMessage, Int64 targetId) async {
     final n = await _turmsClient.driver.send(CreateMessageRequest(
@@ -86,6 +175,34 @@ class MessageService {
     return n.toResponse((data) => data.getLongOrThrow());
   }
 
+  /// Update a sent message.
+  ///
+  /// Authorization:
+  /// * If the server property `turms.service.message.allow-send-messages-to-oneself`
+  ///   is true (true by default), the logged-in user can update sent messages.
+  ///   Otherwise, throws [ResponseException] with the code [ResponseStatusCode.updatingMessageBySenderIsDisabled].
+  /// * If the message is not sent by the logged-in user,
+  ///   throws [ResponseException] with the code [ResponseStatusCode.notSenderToUpdateMessage].
+  /// * If the message is group message, and is sent by the logged-in user but the group
+  ///   has been deleted,
+  ///   throws [ResponseException] with the code [ResponseStatusCode.updateMessageOfNonexistentGroup].
+  /// * If the message is group message, and the group type has disabled updating messages,
+  ///   throws [ResponseException] with the code [ResponseStatusCode.updatingGroupMessageBySenderIsDisabled].
+  ///
+  /// Notifications:
+  /// * If the server property `turms.service.notification.message-updated.notify-message-recipients`
+  ///   is true (true by default), a message update notification will be sent to the message recipients actively.
+  /// * If the server property `turms.service.notification.message-updated.notify-requester-other-online-sessions`
+  ///   is true (true by default), a message update notification will be sent to all other online sessions of the logged-in user actively.
+  ///
+  /// **Params**:
+  /// * `messageId`: The sent message ID.
+  /// * `text`: The new message text.
+  /// If null, the message text will not be changed.
+  /// * `records`: The new message records.
+  /// If null, the message records will not be changed.
+  ///
+  /// **Throws**: [ResponseException] if an error occurs.
   Future<Response<void>> updateSentMessage(Int64 messageId,
       {String? text, List<Uint8List>? records}) async {
     if ([text, records].areAllNull) {
@@ -96,6 +213,31 @@ class MessageService {
     return n.toNullResponse();
   }
 
+  /// Find messages.
+  ///
+  /// **Params**:
+  /// * `ids`: The message IDs for querying.
+  /// * `areGroupMessages`: Whether the messages are group messages.
+  /// If the logged-in user is not a group member,
+  /// throws [ResponseException] with the code [ResponseStatusCode.notGroupMemberToQueryGroupMessages].
+  /// TODO: guest users of some group types should be able to query messages.
+  /// * `areSystemMessages`: Whether the messages are system messages.
+  /// * `fromIds`: The from IDs.
+  /// If [areGroupMessages] is true, the from ID is the group ID.
+  /// If [areGroupMessages] is false, the from ID is the user ID.
+  /// * `deliveryDateStart`: The start delivery date for querying.
+  /// * `deliveryDateEnd`: The end delivery date for querying.
+  /// * `maxCount`: The maximum count for querying.
+  /// * `descending`: Whether the messages are sorted in descending order.
+  ///
+  /// **Returns**: List of messages.
+  /// Note that the list only contains messages in which the logged-in user
+  /// has permission to view.
+  /// If the logged-in user has no permission to view specified messages,
+  /// these messages will be filtered out on the server, and no error will be thrown,
+  /// except for [ResponseStatusCode.notGroupMemberToQueryGroupMessages] mentioned above.
+  ///
+  /// **Throws**: [ResponseException] if an error occurs.
   Future<Response<List<Message>>> queryMessages(
       {Set<Int64>? ids,
       bool? areGroupMessages,
@@ -118,6 +260,31 @@ class MessageService {
     return n.toResponse((data) => data.messages.messages);
   }
 
+  /// Find the pair of messages and the total count for each conversation.
+  ///
+  /// **Params**:
+  /// * `ids`: The message IDs for querying.
+  /// * `areGroupMessages`: Whether the messages are group messages.
+  /// * `areSystemMessages`: Whether the messages are system messages.
+  /// If the logged-in user is not a group member,
+  /// throws [ResponseException] with the code [ResponseStatusCode.notGroupMemberToQueryGroupMessages].
+  /// TODO: guest users of some group types should be able to query messages.
+  /// * `fromIds`: The from IDs.
+  /// If [areGroupMessages] is true, the from ID is the group ID.
+  /// If [areGroupMessages] is false, the from ID is the user ID.
+  /// * `deliveryDateStart`: The start delivery date for querying.
+  /// * `deliveryDateEnd`: The end delivery date for querying.
+  /// * `maxCount`: The maximum count for querying.
+  /// * `descending`: Whether the messages are sorted in descending order.
+  ///
+  /// **Returns**: List of the pair of messages and the total count for each conversation.
+  /// Note that the list only contains messages in which the logged-in user
+  /// has permission to view.
+  /// If the logged-in user has no permission to view specified messages,
+  /// these messages will be filtered out on the server, and no error will be thrown,
+  /// except for [ResponseStatusCode.notGroupMemberToQueryGroupMessages] mentioned above.
+  ///
+  /// **Throws**: [ResponseException] if an error occurs.
   Future<Response<List<MessagesWithTotal>>> queryMessagesWithTotal(
       {Set<Int64>? ids,
       bool? areGroupMessages,
@@ -141,6 +308,27 @@ class MessageService {
         .toResponse((data) => data.messagesWithTotalList.messagesWithTotalList);
   }
 
+  /// Recall a message.
+  ///
+  /// Authorization:
+  /// * If the server property `turms.service.message.allow-recall-message`
+  ///   is true (true by default), the logged-in user can recall sent messages.
+  ///   Otherwise, throws [ResponseException] with the code [ResponseStatusCode.recallingMessageIsDisabled].
+  /// * If the message does not exist,
+  ///   throws [ResponseException] with the code [ResponseStatusCode.recallNonexistentMessage].
+  /// * If the message is group message, but the group has been deleted,
+  ///   throws [ResponseException] with the code [ResponseStatusCode.recallMessageOfNonexistentGroup].
+  ///
+  /// Common Scenarios:
+  /// * A client can call [addMessageListener] to listen to recalled messages.
+  ///   The listener will receive a non-empty [MessageAddition.recalledMessageIds] when a message is recalled.
+  ///
+  /// **Params**:
+  /// * `messageId`: The message ID.
+  /// * `recallDate`: The recall date.
+  /// If null, the current date will be used.
+  ///
+  /// **Throws**: [ResponseException] if an error occurs.
   Future<Response<void>> recallMessage(Int64 messageId,
       {DateTime? recallDate}) async {
     final n = await _turmsClient.driver.send(UpdateMessageRequest(
@@ -150,8 +338,10 @@ class MessageService {
     return n.toNullResponse();
   }
 
+  /// Check if the mention feature is enabled.
   bool isMentionEnabled() => _mentionedUserIdsParser != null;
 
+  /// Enable the mention feature.
   void enableMention({MentionedUserIdsParser? mentionedUserIdsParser}) {
     _mentionedUserIdsParser = mentionedUserIdsParser ??
         _mentionedUserIdsParser ??

@@ -41,9 +41,17 @@ class NotificationService(turmsClient: TurmsClient) {
             }
     }
 
+    /**
+     * Add a notification listener to receive notifications.
+     * Note: This listener will receive all kinds of notifications excluding messages.
+     * To listen to messages, use [MessageService.addMessageListener] instead.
+     */
     fun addNotificationListener(listener: ((Notification) -> Unit)) =
         this.notificationListeners.add(listener)
 
+    /**
+     * Remove a notification listener.
+     */
     fun removeNotificationListener(listener: ((Notification) -> Unit)) =
         this.notificationListeners.remove(listener)
 }
