@@ -20,7 +20,9 @@ import { DeleteGroupJoinRequestRequest } from "./group/enrollment/delete_group_j
 import { QueryGroupInvitationsRequest } from "./group/enrollment/query_group_invitations_request";
 import { QueryGroupJoinQuestionsRequest } from "./group/enrollment/query_group_join_questions_request";
 import { QueryGroupJoinRequestsRequest } from "./group/enrollment/query_group_join_requests_request";
+import { UpdateGroupInvitationRequest } from "./group/enrollment/update_group_invitation_request";
 import { UpdateGroupJoinQuestionRequest } from "./group/enrollment/update_group_join_question_request";
+import { UpdateGroupJoinRequestRequest } from "./group/enrollment/update_group_join_request_request";
 import { CreateGroupMembersRequest } from "./group/member/create_group_members_request";
 import { DeleteGroupMembersRequest } from "./group/member/delete_group_members_request";
 import { QueryGroupMembersRequest } from "./group/member/query_group_members_request";
@@ -45,6 +47,7 @@ import { QueryUserProfilesRequest } from "./user/query_user_profiles_request";
 import { CreateFriendRequestRequest } from "./user/relationship/create_friend_request_request";
 import { CreateRelationshipGroupRequest } from "./user/relationship/create_relationship_group_request";
 import { CreateRelationshipRequest } from "./user/relationship/create_relationship_request";
+import { DeleteFriendRequestRequest } from "./user/relationship/delete_friend_request_request";
 import { DeleteRelationshipGroupRequest } from "./user/relationship/delete_relationship_group_request";
 import { DeleteRelationshipRequest } from "./user/relationship/delete_relationship_request";
 import { QueryFriendRequestsRequest } from "./user/relationship/query_friend_requests_request";
@@ -106,6 +109,7 @@ export interface TurmsRequest {
   createFriendRequestRequest?: CreateFriendRequestRequest | undefined;
   createRelationshipGroupRequest?: CreateRelationshipGroupRequest | undefined;
   createRelationshipRequest?: CreateRelationshipRequest | undefined;
+  deleteFriendRequestRequest?: DeleteFriendRequestRequest | undefined;
   deleteRelationshipGroupRequest?: DeleteRelationshipGroupRequest | undefined;
   deleteRelationshipRequest?: DeleteRelationshipRequest | undefined;
   queryFriendRequestsRequest?: QueryFriendRequestsRequest | undefined;
@@ -144,8 +148,10 @@ export interface TurmsRequest {
   queryGroupInvitationsRequest?: QueryGroupInvitationsRequest | undefined;
   queryGroupJoinRequestsRequest?: QueryGroupJoinRequestsRequest | undefined;
   queryGroupJoinQuestionsRequest?: QueryGroupJoinQuestionsRequest | undefined;
-  updateGroupJoinQuestionRequest?:
-    | UpdateGroupJoinQuestionRequest
+  updateGroupInvitationRequest?: UpdateGroupInvitationRequest | undefined;
+  updateGroupJoinQuestionRequest?: UpdateGroupJoinQuestionRequest | undefined;
+  updateGroupJoinRequestRequest?:
+    | UpdateGroupJoinRequestRequest
     | undefined;
   /** Storage */
   deleteResourceRequest?: DeleteResourceRequest | undefined;
@@ -179,6 +185,7 @@ function createBaseTurmsRequest(): TurmsRequest {
     createFriendRequestRequest: undefined,
     createRelationshipGroupRequest: undefined,
     createRelationshipRequest: undefined,
+    deleteFriendRequestRequest: undefined,
     deleteRelationshipGroupRequest: undefined,
     deleteRelationshipRequest: undefined,
     queryFriendRequestsRequest: undefined,
@@ -208,7 +215,9 @@ function createBaseTurmsRequest(): TurmsRequest {
     queryGroupInvitationsRequest: undefined,
     queryGroupJoinRequestsRequest: undefined,
     queryGroupJoinQuestionsRequest: undefined,
+    updateGroupInvitationRequest: undefined,
     updateGroupJoinQuestionRequest: undefined,
+    updateGroupJoinRequestRequest: undefined,
     deleteResourceRequest: undefined,
     queryResourceDownloadInfoRequest: undefined,
     queryResourceUploadInfoRequest: undefined,
@@ -286,35 +295,38 @@ export const TurmsRequest = {
     if (message.createRelationshipRequest !== undefined) {
       CreateRelationshipRequest.encode(message.createRelationshipRequest, writer.uint32(1618).fork()).ldelim();
     }
+    if (message.deleteFriendRequestRequest !== undefined) {
+      DeleteFriendRequestRequest.encode(message.deleteFriendRequestRequest, writer.uint32(1626).fork()).ldelim();
+    }
     if (message.deleteRelationshipGroupRequest !== undefined) {
-      DeleteRelationshipGroupRequest.encode(message.deleteRelationshipGroupRequest, writer.uint32(1626).fork())
+      DeleteRelationshipGroupRequest.encode(message.deleteRelationshipGroupRequest, writer.uint32(1634).fork())
         .ldelim();
     }
     if (message.deleteRelationshipRequest !== undefined) {
-      DeleteRelationshipRequest.encode(message.deleteRelationshipRequest, writer.uint32(1634).fork()).ldelim();
+      DeleteRelationshipRequest.encode(message.deleteRelationshipRequest, writer.uint32(1642).fork()).ldelim();
     }
     if (message.queryFriendRequestsRequest !== undefined) {
-      QueryFriendRequestsRequest.encode(message.queryFriendRequestsRequest, writer.uint32(1642).fork()).ldelim();
+      QueryFriendRequestsRequest.encode(message.queryFriendRequestsRequest, writer.uint32(1650).fork()).ldelim();
     }
     if (message.queryRelatedUserIdsRequest !== undefined) {
-      QueryRelatedUserIdsRequest.encode(message.queryRelatedUserIdsRequest, writer.uint32(1650).fork()).ldelim();
+      QueryRelatedUserIdsRequest.encode(message.queryRelatedUserIdsRequest, writer.uint32(1658).fork()).ldelim();
     }
     if (message.queryRelationshipGroupsRequest !== undefined) {
-      QueryRelationshipGroupsRequest.encode(message.queryRelationshipGroupsRequest, writer.uint32(1658).fork())
+      QueryRelationshipGroupsRequest.encode(message.queryRelationshipGroupsRequest, writer.uint32(1666).fork())
         .ldelim();
     }
     if (message.queryRelationshipsRequest !== undefined) {
-      QueryRelationshipsRequest.encode(message.queryRelationshipsRequest, writer.uint32(1666).fork()).ldelim();
+      QueryRelationshipsRequest.encode(message.queryRelationshipsRequest, writer.uint32(1674).fork()).ldelim();
     }
     if (message.updateFriendRequestRequest !== undefined) {
-      UpdateFriendRequestRequest.encode(message.updateFriendRequestRequest, writer.uint32(1674).fork()).ldelim();
+      UpdateFriendRequestRequest.encode(message.updateFriendRequestRequest, writer.uint32(1682).fork()).ldelim();
     }
     if (message.updateRelationshipGroupRequest !== undefined) {
-      UpdateRelationshipGroupRequest.encode(message.updateRelationshipGroupRequest, writer.uint32(1682).fork())
+      UpdateRelationshipGroupRequest.encode(message.updateRelationshipGroupRequest, writer.uint32(1690).fork())
         .ldelim();
     }
     if (message.updateRelationshipRequest !== undefined) {
-      UpdateRelationshipRequest.encode(message.updateRelationshipRequest, writer.uint32(1690).fork()).ldelim();
+      UpdateRelationshipRequest.encode(message.updateRelationshipRequest, writer.uint32(1698).fork()).ldelim();
     }
     if (message.createGroupRequest !== undefined) {
       CreateGroupRequest.encode(message.createGroupRequest, writer.uint32(2402).fork()).ldelim();
@@ -384,9 +396,15 @@ export const TurmsRequest = {
       QueryGroupJoinQuestionsRequest.encode(message.queryGroupJoinQuestionsRequest, writer.uint32(4074).fork())
         .ldelim();
     }
+    if (message.updateGroupInvitationRequest !== undefined) {
+      UpdateGroupInvitationRequest.encode(message.updateGroupInvitationRequest, writer.uint32(4082).fork()).ldelim();
+    }
     if (message.updateGroupJoinQuestionRequest !== undefined) {
-      UpdateGroupJoinQuestionRequest.encode(message.updateGroupJoinQuestionRequest, writer.uint32(4082).fork())
+      UpdateGroupJoinQuestionRequest.encode(message.updateGroupJoinQuestionRequest, writer.uint32(4090).fork())
         .ldelim();
+    }
+    if (message.updateGroupJoinRequestRequest !== undefined) {
+      UpdateGroupJoinRequestRequest.encode(message.updateGroupJoinRequestRequest, writer.uint32(4098).fork()).ldelim();
     }
     if (message.deleteResourceRequest !== undefined) {
       DeleteResourceRequest.encode(message.deleteResourceRequest, writer.uint32(8002).fork()).ldelim();
@@ -411,196 +429,446 @@ export const TurmsRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): TurmsRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTurmsRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 8) {
+            break;
+          }
+
           message.requestId = longToString(reader.int64() as Long);
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.createSessionRequest = CreateSessionRequest.decode(reader, reader.uint32());
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
+
           message.deleteSessionRequest = DeleteSessionRequest.decode(reader, reader.uint32());
-          break;
+          continue;
         case 5:
+          if (tag !== 42) {
+            break;
+          }
+
           message.queryConversationsRequest = QueryConversationsRequest.decode(reader, reader.uint32());
-          break;
+          continue;
         case 6:
+          if (tag !== 50) {
+            break;
+          }
+
           message.updateConversationRequest = UpdateConversationRequest.decode(reader, reader.uint32());
-          break;
+          continue;
         case 7:
+          if (tag !== 58) {
+            break;
+          }
+
           message.updateTypingStatusRequest = UpdateTypingStatusRequest.decode(reader, reader.uint32());
-          break;
+          continue;
         case 8:
+          if (tag !== 66) {
+            break;
+          }
+
           message.createMessageRequest = CreateMessageRequest.decode(reader, reader.uint32());
-          break;
+          continue;
         case 9:
+          if (tag !== 74) {
+            break;
+          }
+
           message.queryMessagesRequest = QueryMessagesRequest.decode(reader, reader.uint32());
-          break;
+          continue;
         case 10:
+          if (tag !== 82) {
+            break;
+          }
+
           message.updateMessageRequest = UpdateMessageRequest.decode(reader, reader.uint32());
-          break;
+          continue;
         case 11:
+          if (tag !== 90) {
+            break;
+          }
+
           message.createGroupMembersRequest = CreateGroupMembersRequest.decode(reader, reader.uint32());
-          break;
+          continue;
         case 12:
+          if (tag !== 98) {
+            break;
+          }
+
           message.deleteGroupMembersRequest = DeleteGroupMembersRequest.decode(reader, reader.uint32());
-          break;
+          continue;
         case 13:
+          if (tag !== 106) {
+            break;
+          }
+
           message.queryGroupMembersRequest = QueryGroupMembersRequest.decode(reader, reader.uint32());
-          break;
+          continue;
         case 14:
+          if (tag !== 114) {
+            break;
+          }
+
           message.updateGroupMemberRequest = UpdateGroupMemberRequest.decode(reader, reader.uint32());
-          break;
+          continue;
         case 100:
+          if (tag !== 802) {
+            break;
+          }
+
           message.queryUserProfilesRequest = QueryUserProfilesRequest.decode(reader, reader.uint32());
-          break;
+          continue;
         case 101:
+          if (tag !== 810) {
+            break;
+          }
+
           message.queryNearbyUsersRequest = QueryNearbyUsersRequest.decode(reader, reader.uint32());
-          break;
+          continue;
         case 102:
+          if (tag !== 818) {
+            break;
+          }
+
           message.queryUserOnlineStatusesRequest = QueryUserOnlineStatusesRequest.decode(reader, reader.uint32());
-          break;
+          continue;
         case 103:
+          if (tag !== 826) {
+            break;
+          }
+
           message.updateUserLocationRequest = UpdateUserLocationRequest.decode(reader, reader.uint32());
-          break;
+          continue;
         case 104:
+          if (tag !== 834) {
+            break;
+          }
+
           message.updateUserOnlineStatusRequest = UpdateUserOnlineStatusRequest.decode(reader, reader.uint32());
-          break;
+          continue;
         case 105:
+          if (tag !== 842) {
+            break;
+          }
+
           message.updateUserRequest = UpdateUserRequest.decode(reader, reader.uint32());
-          break;
+          continue;
         case 200:
+          if (tag !== 1602) {
+            break;
+          }
+
           message.createFriendRequestRequest = CreateFriendRequestRequest.decode(reader, reader.uint32());
-          break;
+          continue;
         case 201:
+          if (tag !== 1610) {
+            break;
+          }
+
           message.createRelationshipGroupRequest = CreateRelationshipGroupRequest.decode(reader, reader.uint32());
-          break;
+          continue;
         case 202:
+          if (tag !== 1618) {
+            break;
+          }
+
           message.createRelationshipRequest = CreateRelationshipRequest.decode(reader, reader.uint32());
-          break;
+          continue;
         case 203:
-          message.deleteRelationshipGroupRequest = DeleteRelationshipGroupRequest.decode(reader, reader.uint32());
-          break;
+          if (tag !== 1626) {
+            break;
+          }
+
+          message.deleteFriendRequestRequest = DeleteFriendRequestRequest.decode(reader, reader.uint32());
+          continue;
         case 204:
-          message.deleteRelationshipRequest = DeleteRelationshipRequest.decode(reader, reader.uint32());
-          break;
+          if (tag !== 1634) {
+            break;
+          }
+
+          message.deleteRelationshipGroupRequest = DeleteRelationshipGroupRequest.decode(reader, reader.uint32());
+          continue;
         case 205:
-          message.queryFriendRequestsRequest = QueryFriendRequestsRequest.decode(reader, reader.uint32());
-          break;
+          if (tag !== 1642) {
+            break;
+          }
+
+          message.deleteRelationshipRequest = DeleteRelationshipRequest.decode(reader, reader.uint32());
+          continue;
         case 206:
-          message.queryRelatedUserIdsRequest = QueryRelatedUserIdsRequest.decode(reader, reader.uint32());
-          break;
+          if (tag !== 1650) {
+            break;
+          }
+
+          message.queryFriendRequestsRequest = QueryFriendRequestsRequest.decode(reader, reader.uint32());
+          continue;
         case 207:
-          message.queryRelationshipGroupsRequest = QueryRelationshipGroupsRequest.decode(reader, reader.uint32());
-          break;
+          if (tag !== 1658) {
+            break;
+          }
+
+          message.queryRelatedUserIdsRequest = QueryRelatedUserIdsRequest.decode(reader, reader.uint32());
+          continue;
         case 208:
-          message.queryRelationshipsRequest = QueryRelationshipsRequest.decode(reader, reader.uint32());
-          break;
+          if (tag !== 1666) {
+            break;
+          }
+
+          message.queryRelationshipGroupsRequest = QueryRelationshipGroupsRequest.decode(reader, reader.uint32());
+          continue;
         case 209:
-          message.updateFriendRequestRequest = UpdateFriendRequestRequest.decode(reader, reader.uint32());
-          break;
+          if (tag !== 1674) {
+            break;
+          }
+
+          message.queryRelationshipsRequest = QueryRelationshipsRequest.decode(reader, reader.uint32());
+          continue;
         case 210:
-          message.updateRelationshipGroupRequest = UpdateRelationshipGroupRequest.decode(reader, reader.uint32());
-          break;
+          if (tag !== 1682) {
+            break;
+          }
+
+          message.updateFriendRequestRequest = UpdateFriendRequestRequest.decode(reader, reader.uint32());
+          continue;
         case 211:
+          if (tag !== 1690) {
+            break;
+          }
+
+          message.updateRelationshipGroupRequest = UpdateRelationshipGroupRequest.decode(reader, reader.uint32());
+          continue;
+        case 212:
+          if (tag !== 1698) {
+            break;
+          }
+
           message.updateRelationshipRequest = UpdateRelationshipRequest.decode(reader, reader.uint32());
-          break;
+          continue;
         case 300:
+          if (tag !== 2402) {
+            break;
+          }
+
           message.createGroupRequest = CreateGroupRequest.decode(reader, reader.uint32());
-          break;
+          continue;
         case 301:
+          if (tag !== 2410) {
+            break;
+          }
+
           message.deleteGroupRequest = DeleteGroupRequest.decode(reader, reader.uint32());
-          break;
+          continue;
         case 302:
+          if (tag !== 2418) {
+            break;
+          }
+
           message.queryGroupsRequest = QueryGroupsRequest.decode(reader, reader.uint32());
-          break;
+          continue;
         case 303:
+          if (tag !== 2426) {
+            break;
+          }
+
           message.queryJoinedGroupIdsRequest = QueryJoinedGroupIdsRequest.decode(reader, reader.uint32());
-          break;
+          continue;
         case 304:
+          if (tag !== 2434) {
+            break;
+          }
+
           message.queryJoinedGroupInfosRequest = QueryJoinedGroupInfosRequest.decode(reader, reader.uint32());
-          break;
+          continue;
         case 305:
+          if (tag !== 2442) {
+            break;
+          }
+
           message.updateGroupRequest = UpdateGroupRequest.decode(reader, reader.uint32());
-          break;
+          continue;
         case 400:
+          if (tag !== 3202) {
+            break;
+          }
+
           message.createGroupBlockedUserRequest = CreateGroupBlockedUserRequest.decode(reader, reader.uint32());
-          break;
+          continue;
         case 401:
+          if (tag !== 3210) {
+            break;
+          }
+
           message.deleteGroupBlockedUserRequest = DeleteGroupBlockedUserRequest.decode(reader, reader.uint32());
-          break;
+          continue;
         case 402:
+          if (tag !== 3218) {
+            break;
+          }
+
           message.queryGroupBlockedUserIdsRequest = QueryGroupBlockedUserIdsRequest.decode(reader, reader.uint32());
-          break;
+          continue;
         case 403:
+          if (tag !== 3226) {
+            break;
+          }
+
           message.queryGroupBlockedUserInfosRequest = QueryGroupBlockedUserInfosRequest.decode(reader, reader.uint32());
-          break;
+          continue;
         case 500:
+          if (tag !== 4002) {
+            break;
+          }
+
           message.checkGroupJoinQuestionsAnswersRequest = CheckGroupJoinQuestionsAnswersRequest.decode(
             reader,
             reader.uint32(),
           );
-          break;
+          continue;
         case 501:
+          if (tag !== 4010) {
+            break;
+          }
+
           message.createGroupInvitationRequest = CreateGroupInvitationRequest.decode(reader, reader.uint32());
-          break;
+          continue;
         case 502:
+          if (tag !== 4018) {
+            break;
+          }
+
           message.createGroupJoinRequestRequest = CreateGroupJoinRequestRequest.decode(reader, reader.uint32());
-          break;
+          continue;
         case 503:
+          if (tag !== 4026) {
+            break;
+          }
+
           message.createGroupJoinQuestionsRequest = CreateGroupJoinQuestionsRequest.decode(reader, reader.uint32());
-          break;
+          continue;
         case 504:
+          if (tag !== 4034) {
+            break;
+          }
+
           message.deleteGroupInvitationRequest = DeleteGroupInvitationRequest.decode(reader, reader.uint32());
-          break;
+          continue;
         case 505:
+          if (tag !== 4042) {
+            break;
+          }
+
           message.deleteGroupJoinRequestRequest = DeleteGroupJoinRequestRequest.decode(reader, reader.uint32());
-          break;
+          continue;
         case 506:
+          if (tag !== 4050) {
+            break;
+          }
+
           message.deleteGroupJoinQuestionsRequest = DeleteGroupJoinQuestionsRequest.decode(reader, reader.uint32());
-          break;
+          continue;
         case 507:
+          if (tag !== 4058) {
+            break;
+          }
+
           message.queryGroupInvitationsRequest = QueryGroupInvitationsRequest.decode(reader, reader.uint32());
-          break;
+          continue;
         case 508:
+          if (tag !== 4066) {
+            break;
+          }
+
           message.queryGroupJoinRequestsRequest = QueryGroupJoinRequestsRequest.decode(reader, reader.uint32());
-          break;
+          continue;
         case 509:
+          if (tag !== 4074) {
+            break;
+          }
+
           message.queryGroupJoinQuestionsRequest = QueryGroupJoinQuestionsRequest.decode(reader, reader.uint32());
-          break;
+          continue;
         case 510:
+          if (tag !== 4082) {
+            break;
+          }
+
+          message.updateGroupInvitationRequest = UpdateGroupInvitationRequest.decode(reader, reader.uint32());
+          continue;
+        case 511:
+          if (tag !== 4090) {
+            break;
+          }
+
           message.updateGroupJoinQuestionRequest = UpdateGroupJoinQuestionRequest.decode(reader, reader.uint32());
-          break;
+          continue;
+        case 512:
+          if (tag !== 4098) {
+            break;
+          }
+
+          message.updateGroupJoinRequestRequest = UpdateGroupJoinRequestRequest.decode(reader, reader.uint32());
+          continue;
         case 1000:
+          if (tag !== 8002) {
+            break;
+          }
+
           message.deleteResourceRequest = DeleteResourceRequest.decode(reader, reader.uint32());
-          break;
+          continue;
         case 1001:
+          if (tag !== 8010) {
+            break;
+          }
+
           message.queryResourceDownloadInfoRequest = QueryResourceDownloadInfoRequest.decode(reader, reader.uint32());
-          break;
+          continue;
         case 1002:
+          if (tag !== 8018) {
+            break;
+          }
+
           message.queryResourceUploadInfoRequest = QueryResourceUploadInfoRequest.decode(reader, reader.uint32());
-          break;
+          continue;
         case 1003:
+          if (tag !== 8026) {
+            break;
+          }
+
           message.queryMessageAttachmentInfosRequest = QueryMessageAttachmentInfosRequest.decode(
             reader,
             reader.uint32(),
           );
-          break;
+          continue;
         case 1004:
+          if (tag !== 8034) {
+            break;
+          }
+
           message.updateMessageAttachmentInfoRequest = UpdateMessageAttachmentInfoRequest.decode(
             reader,
             reader.uint32(),
           );
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },

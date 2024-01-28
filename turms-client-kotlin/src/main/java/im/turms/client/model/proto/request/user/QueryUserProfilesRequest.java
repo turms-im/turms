@@ -231,12 +231,12 @@ public final class QueryUserProfilesRequest extends
     }
 
     public static Builder newBuilder() {
-        return (Builder) DEFAULT_INSTANCE.createBuilder();
+        return DEFAULT_INSTANCE.createBuilder();
     }
 
     public static Builder newBuilder(
             im.turms.client.model.proto.request.user.QueryUserProfilesRequest prototype) {
-        return (Builder) DEFAULT_INSTANCE.createBuilder(prototype);
+        return DEFAULT_INSTANCE.createBuilder(prototype);
     }
 
     /**
@@ -394,8 +394,7 @@ public final class QueryUserProfilesRequest extends
                 java.lang.Object[] objects =
                         new java.lang.Object[]{"bitField0_", "userIds_", "lastUpdatedDate_",};
                 java.lang.String info =
-                        "\u0000\u0002\u0000\u0001\u0001\u0002\u0002\u0000\u0001\u0000\u0001%\u0002\u1002\u0000"
-                                + "";
+                        "\u0000\u0002\u0000\u0001\u0001\u0002\u0002\u0000\u0001\u0000\u0001%\u0002\u1002\u0000";
                 return newMessageInfo(DEFAULT_INSTANCE, info, objects);
             }
             // fall through

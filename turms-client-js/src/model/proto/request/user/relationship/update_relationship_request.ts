@@ -11,10 +11,11 @@ export interface UpdateRelationshipRequest {
   blocked?: boolean | undefined;
   newGroupIndex?: number | undefined;
   deleteGroupIndex?: number | undefined;
+  name?: string | undefined;
 }
 
 function createBaseUpdateRelationshipRequest(): UpdateRelationshipRequest {
-  return { userId: "0", blocked: undefined, newGroupIndex: undefined, deleteGroupIndex: undefined };
+  return { userId: "0", blocked: undefined, newGroupIndex: undefined, deleteGroupIndex: undefined, name: undefined };
 }
 
 export const UpdateRelationshipRequest = {
@@ -31,32 +32,59 @@ export const UpdateRelationshipRequest = {
     if (message.deleteGroupIndex !== undefined) {
       writer.uint32(32).int32(message.deleteGroupIndex);
     }
+    if (message.name !== undefined) {
+      writer.uint32(42).string(message.name);
+    }
     return writer;
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): UpdateRelationshipRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUpdateRelationshipRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 8) {
+            break;
+          }
+
           message.userId = longToString(reader.int64() as Long);
-          break;
+          continue;
         case 2:
+          if (tag !== 16) {
+            break;
+          }
+
           message.blocked = reader.bool();
-          break;
+          continue;
         case 3:
+          if (tag !== 24) {
+            break;
+          }
+
           message.newGroupIndex = reader.int32();
-          break;
+          continue;
         case 4:
+          if (tag !== 32) {
+            break;
+          }
+
           message.deleteGroupIndex = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.name = reader.string();
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },

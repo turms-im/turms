@@ -1,84 +1,24 @@
-///
+//
 //  Generated code. Do not modify.
 //  source: model/group/group_member.proto
 //
 // @dart = 2.12
-// ignore_for_file: annotate_overrides,camel_case_types,constant_identifier_names,directives_ordering,library_prefixes,non_constant_identifier_names,prefer_final_fields,return_of_invalid_type,unnecessary_const,unnecessary_import,unnecessary_this,unused_import,unused_shown_name
+
+// ignore_for_file: annotate_overrides, camel_case_types, comment_references
+// ignore_for_file: constant_identifier_names, library_prefixes
+// ignore_for_file: non_constant_identifier_names, prefer_final_fields
+// ignore_for_file: unnecessary_import, unnecessary_this, unused_import
 
 import 'dart:core' as $core;
 
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
+import '../../constant/device_type.pbenum.dart' as $2;
 import '../../constant/group_member_role.pbenum.dart' as $0;
 import '../../constant/user_status.pbenum.dart' as $1;
-import '../../constant/device_type.pbenum.dart' as $2;
 
 class GroupMember extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      const $core.bool.fromEnvironment('protobuf.omit_message_names')
-          ? ''
-          : 'GroupMember',
-      package: const $pb.PackageName(
-          const $core.bool.fromEnvironment('protobuf.omit_message_names')
-              ? ''
-              : 'im.turms.proto'),
-      createEmptyInstance: create)
-    ..aInt64(
-        1,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'groupId')
-    ..aInt64(
-        2,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'userId')
-    ..aOS(
-        3,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'name')
-    ..e<$0.GroupMemberRole>(
-        4,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'role',
-        $pb.PbFieldType.OE,
-        defaultOrMaker: $0.GroupMemberRole.OWNER,
-        valueOf: $0.GroupMemberRole.valueOf,
-        enumValues: $0.GroupMemberRole.values)
-    ..aInt64(
-        5,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'joinDate')
-    ..aInt64(
-        6,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'muteEndDate')
-    ..e<$1.UserStatus>(
-        7,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'userStatus',
-        $pb.PbFieldType.OE,
-        defaultOrMaker: $1.UserStatus.AVAILABLE,
-        valueOf: $1.UserStatus.valueOf,
-        enumValues: $1.UserStatus.values)
-    ..pc<$2.DeviceType>(
-        8,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'usingDeviceTypes',
-        $pb.PbFieldType.KE,
-        valueOf: $2.DeviceType.valueOf,
-        enumValues: $2.DeviceType.values,
-        defaultEnumValue: $2.DeviceType.DESKTOP)
-    ..hasRequiredFields = false;
-
-  GroupMember._() : super();
   factory GroupMember({
     $fixnum.Int64? groupId,
     $fixnum.Int64? userId,
@@ -89,39 +29,67 @@ class GroupMember extends $pb.GeneratedMessage {
     $1.UserStatus? userStatus,
     $core.Iterable<$2.DeviceType>? usingDeviceTypes,
   }) {
-    final _result = create();
+    final $result = create();
     if (groupId != null) {
-      _result.groupId = groupId;
+      $result.groupId = groupId;
     }
     if (userId != null) {
-      _result.userId = userId;
+      $result.userId = userId;
     }
     if (name != null) {
-      _result.name = name;
+      $result.name = name;
     }
     if (role != null) {
-      _result.role = role;
+      $result.role = role;
     }
     if (joinDate != null) {
-      _result.joinDate = joinDate;
+      $result.joinDate = joinDate;
     }
     if (muteEndDate != null) {
-      _result.muteEndDate = muteEndDate;
+      $result.muteEndDate = muteEndDate;
     }
     if (userStatus != null) {
-      _result.userStatus = userStatus;
+      $result.userStatus = userStatus;
     }
     if (usingDeviceTypes != null) {
-      _result.usingDeviceTypes.addAll(usingDeviceTypes);
+      $result.usingDeviceTypes.addAll(usingDeviceTypes);
     }
-    return _result;
+    return $result;
   }
+  GroupMember._() : super();
   factory GroupMember.fromBuffer($core.List<$core.int> i,
           [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(i, r);
   factory GroupMember.fromJson($core.String i,
           [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(i, r);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GroupMember',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'im.turms.proto'),
+      createEmptyInstance: create)
+    ..aInt64(1, _omitFieldNames ? '' : 'groupId')
+    ..aInt64(2, _omitFieldNames ? '' : 'userId')
+    ..aOS(3, _omitFieldNames ? '' : 'name')
+    ..e<$0.GroupMemberRole>(
+        4, _omitFieldNames ? '' : 'role', $pb.PbFieldType.OE,
+        defaultOrMaker: $0.GroupMemberRole.OWNER,
+        valueOf: $0.GroupMemberRole.valueOf,
+        enumValues: $0.GroupMemberRole.values)
+    ..aInt64(5, _omitFieldNames ? '' : 'joinDate')
+    ..aInt64(6, _omitFieldNames ? '' : 'muteEndDate')
+    ..e<$1.UserStatus>(
+        7, _omitFieldNames ? '' : 'userStatus', $pb.PbFieldType.OE,
+        defaultOrMaker: $1.UserStatus.AVAILABLE,
+        valueOf: $1.UserStatus.valueOf,
+        enumValues: $1.UserStatus.values)
+    ..pc<$2.DeviceType>(
+        8, _omitFieldNames ? '' : 'usingDeviceTypes', $pb.PbFieldType.KE,
+        valueOf: $2.DeviceType.valueOf,
+        enumValues: $2.DeviceType.values,
+        defaultEnumValue: $2.DeviceType.DESKTOP)
+    ..hasRequiredFields = false;
+
   @$core.Deprecated('Using this can add significant overhead to your binary. '
       'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
       'Will be removed in next major version')
@@ -131,8 +99,10 @@ class GroupMember extends $pb.GeneratedMessage {
       'Will be removed in next major version')
   GroupMember copyWith(void Function(GroupMember) updates) =>
       super.copyWith((message) => updates(message as GroupMember))
-          as GroupMember; // ignore: deprecated_member_use
+          as GroupMember;
+
   $pb.BuilderInfo get info_ => _i;
+
   @$core.pragma('dart2js:noInline')
   static GroupMember create() => GroupMember._();
   GroupMember createEmptyInstance() => create();
@@ -229,3 +199,7 @@ class GroupMember extends $pb.GeneratedMessage {
   @$pb.TagNumber(8)
   $core.List<$2.DeviceType> get usingDeviceTypes => $_getList(7);
 }
+
+const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');
+const _omitMessageNames =
+    $core.bool.fromEnvironment('protobuf.omit_message_names');

@@ -35,7 +35,9 @@ export interface TurmsNotification {
   requestId?: string | undefined;
   code?: number | undefined;
   reason?: string | undefined;
-  data?: TurmsNotification_Data;
+  data?:
+    | TurmsNotification_Data
+    | undefined;
   /**
    * Notification => [10, 15]
    * "requester_id" only exists when a requester triggers a notification to its recipients
@@ -44,7 +46,7 @@ export interface TurmsNotification {
    */
   requesterId?: string | undefined;
   closeStatus?: number | undefined;
-  relayedRequest?: TurmsRequest;
+  relayedRequest?: TurmsRequest | undefined;
 }
 
 export interface TurmsNotification_Data {
@@ -130,40 +132,73 @@ export const TurmsNotification = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): TurmsNotification {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTurmsNotification();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 8) {
+            break;
+          }
+
           message.timestamp = longToString(reader.int64() as Long);
-          break;
+          continue;
         case 4:
+          if (tag !== 32) {
+            break;
+          }
+
           message.requestId = longToString(reader.int64() as Long);
-          break;
+          continue;
         case 5:
+          if (tag !== 40) {
+            break;
+          }
+
           message.code = reader.int32();
-          break;
+          continue;
         case 6:
+          if (tag !== 50) {
+            break;
+          }
+
           message.reason = reader.string();
-          break;
+          continue;
         case 7:
+          if (tag !== 58) {
+            break;
+          }
+
           message.data = TurmsNotification_Data.decode(reader, reader.uint32());
-          break;
+          continue;
         case 10:
+          if (tag !== 80) {
+            break;
+          }
+
           message.requesterId = longToString(reader.int64() as Long);
-          break;
+          continue;
         case 11:
+          if (tag !== 88) {
+            break;
+          }
+
           message.closeStatus = reader.int32();
-          break;
+          continue;
         case 12:
+          if (tag !== 98) {
+            break;
+          }
+
           message.relayedRequest = TurmsRequest.decode(reader, reader.uint32());
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -265,79 +300,164 @@ export const TurmsNotification_Data = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): TurmsNotification_Data {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTurmsNotification_Data();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 8) {
+            break;
+          }
+
           message.long = longToString(reader.int64() as Long);
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.string = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.longsWithVersion = LongsWithVersion.decode(reader, reader.uint32());
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
+
           message.stringsWithVersion = StringsWithVersion.decode(reader, reader.uint32());
-          break;
+          continue;
         case 5:
+          if (tag !== 42) {
+            break;
+          }
+
           message.conversations = Conversations.decode(reader, reader.uint32());
-          break;
+          continue;
         case 6:
+          if (tag !== 50) {
+            break;
+          }
+
           message.messages = Messages.decode(reader, reader.uint32());
-          break;
+          continue;
         case 7:
+          if (tag !== 58) {
+            break;
+          }
+
           message.messagesWithTotalList = MessagesWithTotalList.decode(reader, reader.uint32());
-          break;
+          continue;
         case 8:
+          if (tag !== 66) {
+            break;
+          }
+
           message.userSession = UserSession.decode(reader, reader.uint32());
-          break;
+          continue;
         case 9:
+          if (tag !== 74) {
+            break;
+          }
+
           message.userInfosWithVersion = UserInfosWithVersion.decode(reader, reader.uint32());
-          break;
+          continue;
         case 10:
+          if (tag !== 82) {
+            break;
+          }
+
           message.userOnlineStatuses = UserOnlineStatuses.decode(reader, reader.uint32());
-          break;
+          continue;
         case 11:
+          if (tag !== 90) {
+            break;
+          }
+
           message.userFriendRequestsWithVersion = UserFriendRequestsWithVersion.decode(reader, reader.uint32());
-          break;
+          continue;
         case 12:
+          if (tag !== 98) {
+            break;
+          }
+
           message.userRelationshipGroupsWithVersion = UserRelationshipGroupsWithVersion.decode(reader, reader.uint32());
-          break;
+          continue;
         case 13:
+          if (tag !== 106) {
+            break;
+          }
+
           message.userRelationshipsWithVersion = UserRelationshipsWithVersion.decode(reader, reader.uint32());
-          break;
+          continue;
         case 14:
+          if (tag !== 114) {
+            break;
+          }
+
           message.nearbyUsers = NearbyUsers.decode(reader, reader.uint32());
-          break;
+          continue;
         case 15:
+          if (tag !== 122) {
+            break;
+          }
+
           message.groupInvitationsWithVersion = GroupInvitationsWithVersion.decode(reader, reader.uint32());
-          break;
+          continue;
         case 16:
+          if (tag !== 130) {
+            break;
+          }
+
           message.groupJoinQuestionAnswerResult = GroupJoinQuestionsAnswerResult.decode(reader, reader.uint32());
-          break;
+          continue;
         case 17:
+          if (tag !== 138) {
+            break;
+          }
+
           message.groupJoinRequestsWithVersion = GroupJoinRequestsWithVersion.decode(reader, reader.uint32());
-          break;
+          continue;
         case 18:
+          if (tag !== 146) {
+            break;
+          }
+
           message.groupJoinQuestionsWithVersion = GroupJoinQuestionsWithVersion.decode(reader, reader.uint32());
-          break;
+          continue;
         case 19:
+          if (tag !== 154) {
+            break;
+          }
+
           message.groupMembersWithVersion = GroupMembersWithVersion.decode(reader, reader.uint32());
-          break;
+          continue;
         case 20:
+          if (tag !== 162) {
+            break;
+          }
+
           message.groupsWithVersion = GroupsWithVersion.decode(reader, reader.uint32());
-          break;
+          continue;
         case 50:
+          if (tag !== 402) {
+            break;
+          }
+
           message.storageResourceInfos = StorageResourceInfos.decode(reader, reader.uint32());
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },

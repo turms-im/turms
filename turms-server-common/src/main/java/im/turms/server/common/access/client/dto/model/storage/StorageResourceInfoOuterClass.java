@@ -61,11 +61,7 @@ public final class StorageResourceInfoOuterClass {
                                 "Name",
                                 "MediaType",
                                 "UploaderId",
-                                "CreationDate",
-                                "IdNum",
-                                "IdStr",
-                                "Name",
-                                "MediaType",});
+                                "CreationDate",});
     }
 
     // @@protoc_insertion_point(outer_class_scope)

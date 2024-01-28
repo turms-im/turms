@@ -120,7 +120,11 @@ public enum RequestStatus implements com.google.protobuf.ProtocolMessageEnum {
     }
 
     private static final com.google.protobuf.Internal.EnumLiteMap<RequestStatus> internalValueMap =
-            number -> RequestStatus.forNumber(number);
+            new com.google.protobuf.Internal.EnumLiteMap<>() {
+                public RequestStatus findValueByNumber(int number) {
+                    return RequestStatus.forNumber(number);
+                }
+            };
 
     public final com.google.protobuf.Descriptors.EnumValueDescriptor getValueDescriptor() {
         if (this == UNRECOGNIZED) {
@@ -157,7 +161,7 @@ public enum RequestStatus implements com.google.protobuf.ProtocolMessageEnum {
 
     private final int value;
 
-    RequestStatus(int value) {
+    private RequestStatus(int value) {
         this.value = value;
     }
 

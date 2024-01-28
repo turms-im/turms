@@ -55,11 +55,7 @@ public final class QueryRelatedUserIdsRequestOuterClass {
         internal_static_im_turms_proto_QueryRelatedUserIdsRequest_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
                         internal_static_im_turms_proto_QueryRelatedUserIdsRequest_descriptor,
-                        new java.lang.String[]{"Blocked",
-                                "GroupIndexes",
-                                "LastUpdatedDate",
-                                "Blocked",
-                                "LastUpdatedDate",});
+                        new java.lang.String[]{"Blocked", "GroupIndexes", "LastUpdatedDate",});
     }
 
     // @@protoc_insertion_point(outer_class_scope)

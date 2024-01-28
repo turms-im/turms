@@ -55,8 +55,8 @@ extension CreateFriendRequestRequest: SwiftProtobuf.Message, SwiftProtobuf._Mess
             // allocates stack space for every case branch when no optimizations are
             // enabled. https://github.com/apple/swift-protobuf/issues/1034
             switch fieldNumber {
-            case 1: try try decoder.decodeSingularInt64Field(value: &recipientID)
-            case 2: try try decoder.decodeSingularStringField(value: &content)
+            case 1: try decoder.decodeSingularInt64Field(value: &recipientID)
+            case 2: try decoder.decodeSingularStringField(value: &content)
             default: break
             }
         }

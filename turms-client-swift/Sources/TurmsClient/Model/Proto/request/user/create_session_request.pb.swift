@@ -98,13 +98,13 @@ extension CreateSessionRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
             // allocates stack space for every case branch when no optimizations are
             // enabled. https://github.com/apple/swift-protobuf/issues/1034
             switch fieldNumber {
-            case 1: try try decoder.decodeSingularInt32Field(value: &version)
-            case 2: try try decoder.decodeSingularInt64Field(value: &userID)
-            case 3: try try decoder.decodeSingularStringField(value: &_password)
-            case 4: try try decoder.decodeSingularEnumField(value: &_userStatus)
-            case 5: try try decoder.decodeSingularEnumField(value: &deviceType)
-            case 6: try { try decoder.decodeMapField(fieldType: SwiftProtobuf._ProtobufMap<SwiftProtobuf.ProtobufString, SwiftProtobuf.ProtobufString>.self, value: &self.deviceDetails) }()
-            case 7: try try decoder.decodeSingularMessageField(value: &_location)
+            case 1: try decoder.decodeSingularInt32Field(value: &version)
+            case 2: try decoder.decodeSingularInt64Field(value: &userID)
+            case 3: try decoder.decodeSingularStringField(value: &_password)
+            case 4: try decoder.decodeSingularEnumField(value: &_userStatus)
+            case 5: try decoder.decodeSingularEnumField(value: &deviceType)
+            case 6: try decoder.decodeMapField(fieldType: SwiftProtobuf._ProtobufMap<SwiftProtobuf.ProtobufString, SwiftProtobuf.ProtobufString>.self, value: &deviceDetails)
+            case 7: try decoder.decodeSingularMessageField(value: &_location)
             default: break
             }
         }

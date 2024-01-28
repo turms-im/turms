@@ -192,12 +192,12 @@ public final class UserRelationshipGroup extends
     }
 
     public static Builder newBuilder() {
-        return (Builder) DEFAULT_INSTANCE.createBuilder();
+        return DEFAULT_INSTANCE.createBuilder();
     }
 
     public static Builder newBuilder(
             im.turms.client.model.proto.model.user.UserRelationshipGroup prototype) {
-        return (Builder) DEFAULT_INSTANCE.createBuilder(prototype);
+        return DEFAULT_INSTANCE.createBuilder(prototype);
     }
 
     /**
@@ -320,8 +320,7 @@ public final class UserRelationshipGroup extends
             case BUILD_MESSAGE_INFO: {
                 java.lang.Object[] objects = new java.lang.Object[]{"index_", "name_",};
                 java.lang.String info =
-                        "\u0000\u0002\u0000\u0000\u0001\u0002\u0002\u0000\u0000\u0000\u0001\u0004\u0002\u0208"
-                                + "";
+                        "\u0000\u0002\u0000\u0000\u0001\u0002\u0002\u0000\u0000\u0000\u0001\u0004\u0002\u0208";
                 return newMessageInfo(DEFAULT_INSTANCE, info, objects);
             }
             // fall through

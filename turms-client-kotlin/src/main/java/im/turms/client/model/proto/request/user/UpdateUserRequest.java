@@ -40,7 +40,7 @@ public final class UpdateUserRequest extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>optional string password = 1;</code>
      *
      * @return Whether the password field is set.
@@ -54,7 +54,7 @@ public final class UpdateUserRequest extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>optional string password = 1;</code>
      *
      * @return The password.
@@ -68,7 +68,7 @@ public final class UpdateUserRequest extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>optional string password = 1;</code>
      *
      * @return The bytes for password.
@@ -82,7 +82,7 @@ public final class UpdateUserRequest extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>optional string password = 1;</code>
      *
      * @param value The password to set.
@@ -97,7 +97,7 @@ public final class UpdateUserRequest extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>optional string password = 1;</code>
      */
     private void clearPassword() {
@@ -109,7 +109,7 @@ public final class UpdateUserRequest extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>optional string password = 1;</code>
      *
      * @param value The bytes for password to set.
@@ -455,12 +455,12 @@ public final class UpdateUserRequest extends
     }
 
     public static Builder newBuilder() {
-        return (Builder) DEFAULT_INSTANCE.createBuilder();
+        return DEFAULT_INSTANCE.createBuilder();
     }
 
     public static Builder newBuilder(
             im.turms.client.model.proto.request.user.UpdateUserRequest prototype) {
-        return (Builder) DEFAULT_INSTANCE.createBuilder(prototype);
+        return DEFAULT_INSTANCE.createBuilder(prototype);
     }
 
     /**
@@ -480,7 +480,7 @@ public final class UpdateUserRequest extends
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>optional string password = 1;</code>
          *
          * @return Whether the password field is set.
@@ -494,7 +494,7 @@ public final class UpdateUserRequest extends
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>optional string password = 1;</code>
          *
          * @return The password.
@@ -508,7 +508,7 @@ public final class UpdateUserRequest extends
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>optional string password = 1;</code>
          *
          * @return The bytes for password.
@@ -522,7 +522,7 @@ public final class UpdateUserRequest extends
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>optional string password = 1;</code>
          *
          * @param value The password to set.
@@ -538,7 +538,7 @@ public final class UpdateUserRequest extends
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>optional string password = 1;</code>
          *
          * @return This builder for chaining.
@@ -553,7 +553,7 @@ public final class UpdateUserRequest extends
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>optional string password = 1;</code>
          *
          * @param value The bytes for password to set.

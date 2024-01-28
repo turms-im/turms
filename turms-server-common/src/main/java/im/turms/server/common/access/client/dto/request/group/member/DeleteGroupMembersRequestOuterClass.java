@@ -59,8 +59,6 @@ public final class DeleteGroupMembersRequestOuterClass {
                         new java.lang.String[]{"GroupId",
                                 "MemberIds",
                                 "SuccessorId",
-                                "QuitAfterTransfer",
-                                "SuccessorId",
                                 "QuitAfterTransfer",});
     }
 

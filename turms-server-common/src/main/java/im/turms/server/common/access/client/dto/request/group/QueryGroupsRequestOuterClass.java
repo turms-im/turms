@@ -53,7 +53,7 @@ public final class QueryGroupsRequestOuterClass {
         internal_static_im_turms_proto_QueryGroupsRequest_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
                         internal_static_im_turms_proto_QueryGroupsRequest_descriptor,
-                        new java.lang.String[]{"GroupIds", "LastUpdatedDate", "LastUpdatedDate",});
+                        new java.lang.String[]{"GroupIds", "LastUpdatedDate",});
     }
 
     // @@protoc_insertion_point(outer_class_scope)

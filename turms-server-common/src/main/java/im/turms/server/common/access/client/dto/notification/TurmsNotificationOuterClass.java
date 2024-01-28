@@ -166,12 +166,7 @@ public final class TurmsNotificationOuterClass {
                                 "Data",
                                 "RequesterId",
                                 "CloseStatus",
-                                "RelayedRequest",
-                                "RequestId",
-                                "Code",
-                                "Reason",
-                                "RequesterId",
-                                "CloseStatus",});
+                                "RelayedRequest",});
         internal_static_im_turms_proto_TurmsNotification_Data_descriptor =
                 internal_static_im_turms_proto_TurmsNotification_descriptor.getNestedTypes()
                         .get(0);

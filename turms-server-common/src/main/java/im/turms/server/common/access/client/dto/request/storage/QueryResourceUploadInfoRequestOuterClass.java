@@ -70,11 +70,7 @@ public final class QueryResourceUploadInfoRequestOuterClass {
                                 "IdStr",
                                 "Name",
                                 "MediaType",
-                                "Extra",
-                                "IdNum",
-                                "IdStr",
-                                "Name",
-                                "MediaType",});
+                                "Extra",});
         internal_static_im_turms_proto_QueryResourceUploadInfoRequest_ExtraEntry_descriptor =
                 internal_static_im_turms_proto_QueryResourceUploadInfoRequest_descriptor
                         .getNestedTypes()

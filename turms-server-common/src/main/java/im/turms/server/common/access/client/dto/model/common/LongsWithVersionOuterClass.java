@@ -53,7 +53,7 @@ public final class LongsWithVersionOuterClass {
         internal_static_im_turms_proto_LongsWithVersion_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
                         internal_static_im_turms_proto_LongsWithVersion_descriptor,
-                        new java.lang.String[]{"Longs", "LastUpdatedDate", "LastUpdatedDate",});
+                        new java.lang.String[]{"Longs", "LastUpdatedDate",});
     }
 
     // @@protoc_insertion_point(outer_class_scope)

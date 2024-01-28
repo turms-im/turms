@@ -151,15 +151,15 @@ extension CreateMessageRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
             // allocates stack space for every case branch when no optimizations are
             // enabled. https://github.com/apple/swift-protobuf/issues/1034
             switch fieldNumber {
-            case 1: try try decoder.decodeSingularInt64Field(value: &_messageID)
-            case 2: try try decoder.decodeSingularBoolField(value: &_isSystemMessage)
-            case 3: try try decoder.decodeSingularInt64Field(value: &_groupID)
-            case 4: try try decoder.decodeSingularInt64Field(value: &_recipientID)
-            case 5: try try decoder.decodeSingularInt64Field(value: &_deliveryDate)
-            case 6: try try decoder.decodeSingularStringField(value: &_text)
-            case 7: try try decoder.decodeRepeatedBytesField(value: &records)
-            case 8: try try decoder.decodeSingularInt32Field(value: &_burnAfter)
-            case 9: try try decoder.decodeSingularInt64Field(value: &_preMessageID)
+            case 1: try decoder.decodeSingularInt64Field(value: &_messageID)
+            case 2: try decoder.decodeSingularBoolField(value: &_isSystemMessage)
+            case 3: try decoder.decodeSingularInt64Field(value: &_groupID)
+            case 4: try decoder.decodeSingularInt64Field(value: &_recipientID)
+            case 5: try decoder.decodeSingularInt64Field(value: &_deliveryDate)
+            case 6: try decoder.decodeSingularStringField(value: &_text)
+            case 7: try decoder.decodeRepeatedBytesField(value: &records)
+            case 8: try decoder.decodeSingularInt32Field(value: &_burnAfter)
+            case 9: try decoder.decodeSingularInt64Field(value: &_preMessageID)
             default: break
             }
         }

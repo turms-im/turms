@@ -64,6 +64,9 @@ class CreateGroupMembersRequest::_Internal {
   static void set_has_name(HasBits* has_bits) {
     (*has_bits)[0] |= 1u;
   }
+  static void set_has_role(HasBits* has_bits) {
+    (*has_bits)[0] |= 4u;
+  }
   static void set_has_mute_end_date(HasBits* has_bits) {
     (*has_bits)[0] |= 2u;
   }
@@ -145,8 +148,11 @@ PROTOBUF_NOINLINE void CreateGroupMembersRequest::Clear() {
     _impl_.name_.ClearNonDefaultToEmpty();
   }
   _impl_.group_id_ = ::int64_t{0};
-  _impl_.mute_end_date_ = ::int64_t{0};
-  _impl_.role_ = 0;
+  if (cached_has_bits & 0x00000006u) {
+    ::memset(&_impl_.mute_end_date_, 0, static_cast<::size_t>(
+        reinterpret_cast<char*>(&_impl_.role_) -
+        reinterpret_cast<char*>(&_impl_.mute_end_date_)) + sizeof(_impl_.role_));
+  }
   _impl_._has_bits_.Clear();
   _internal_metadata_.Clear<std::string>();
 }
@@ -183,9 +189,9 @@ const ::_pbi::TcParseTable<3, 5, 0, 63, 2> CreateGroupMembersRequest::_table_ = 
     // optional string name = 3;
     {::_pbi::TcParser::FastUS1,
      {26, 0, 0, PROTOBUF_FIELD_OFFSET(CreateGroupMembersRequest, _impl_.name_)}},
-    // .turms.client.model.proto.GroupMemberRole role = 4;
+    // optional .turms.client.model.proto.GroupMemberRole role = 4;
     {::_pbi::TcParser::FastV32S1,
-     {32, 63, 0, PROTOBUF_FIELD_OFFSET(CreateGroupMembersRequest, _impl_.role_)}},
+     {32, 2, 0, PROTOBUF_FIELD_OFFSET(CreateGroupMembersRequest, _impl_.role_)}},
     // optional int64 mute_end_date = 5;
     {::_pbi::TcParser::FastV64S1,
      {40, 1, 0, PROTOBUF_FIELD_OFFSET(CreateGroupMembersRequest, _impl_.mute_end_date_)}},
@@ -203,9 +209,9 @@ const ::_pbi::TcParseTable<3, 5, 0, 63, 2> CreateGroupMembersRequest::_table_ = 
     // optional string name = 3;
     {PROTOBUF_FIELD_OFFSET(CreateGroupMembersRequest, _impl_.name_), _Internal::kHasBitsOffset + 0, 0,
     (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
-    // .turms.client.model.proto.GroupMemberRole role = 4;
-    {PROTOBUF_FIELD_OFFSET(CreateGroupMembersRequest, _impl_.role_), -1, 0,
-    (0 | ::_fl::kFcSingular | ::_fl::kOpenEnum)},
+    // optional .turms.client.model.proto.GroupMemberRole role = 4;
+    {PROTOBUF_FIELD_OFFSET(CreateGroupMembersRequest, _impl_.role_), _Internal::kHasBitsOffset + 2, 0,
+    (0 | ::_fl::kFcOptional | ::_fl::kOpenEnum)},
     // optional int64 mute_end_date = 5;
     {PROTOBUF_FIELD_OFFSET(CreateGroupMembersRequest, _impl_.mute_end_date_), _Internal::kHasBitsOffset + 1, 0,
     (0 | ::_fl::kFcOptional | ::_fl::kInt64)},
@@ -250,8 +256,8 @@ const ::_pbi::TcParseTable<3, 5, 0, 63, 2> CreateGroupMembersRequest::_table_ = 
     target = stream->WriteStringMaybeAliased(3, _s, target);
   }
 
-  // .turms.client.model.proto.GroupMemberRole role = 4;
-  if (this->_internal_role() != 0) {
+  // optional .turms.client.model.proto.GroupMemberRole role = 4;
+  if (cached_has_bits & 0x00000004u) {
     target = stream->EnsureSpace(target);
     target = ::_pbi::WireFormatLite::WriteEnumToArray(
         4, this->_internal_role(), target);
@@ -307,18 +313,20 @@ const ::_pbi::TcParseTable<3, 5, 0, 63, 2> CreateGroupMembersRequest::_table_ = 
         this->_internal_group_id());
   }
 
-  // optional int64 mute_end_date = 5;
-  if (cached_has_bits & 0x00000002u) {
-    total_size += ::_pbi::WireFormatLite::Int64SizePlusOne(
-        this->_internal_mute_end_date());
-  }
+  if (cached_has_bits & 0x00000006u) {
+    // optional int64 mute_end_date = 5;
+    if (cached_has_bits & 0x00000002u) {
+      total_size += ::_pbi::WireFormatLite::Int64SizePlusOne(
+          this->_internal_mute_end_date());
+    }
 
-  // .turms.client.model.proto.GroupMemberRole role = 4;
-  if (this->_internal_role() != 0) {
-    total_size += 1 +
-                  ::_pbi::WireFormatLite::EnumSize(this->_internal_role());
-  }
+    // optional .turms.client.model.proto.GroupMemberRole role = 4;
+    if (cached_has_bits & 0x00000004u) {
+      total_size += 1 +
+                    ::_pbi::WireFormatLite::EnumSize(this->_internal_role());
+    }
 
+  }
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     total_size += _internal_metadata_.unknown_fields<std::string>(::google::protobuf::internal::GetEmptyString).size();
   }
@@ -347,11 +355,15 @@ void CreateGroupMembersRequest::MergeFrom(const CreateGroupMembersRequest& from)
   if (from._internal_group_id() != 0) {
     _this->_internal_set_group_id(from._internal_group_id());
   }
-  if ((from._impl_._has_bits_[0] & 0x00000002u) != 0) {
-    _this->_internal_set_mute_end_date(from._internal_mute_end_date());
-  }
-  if (from._internal_role() != 0) {
-    _this->_internal_set_role(from._internal_role());
+  cached_has_bits = from._impl_._has_bits_[0];
+  if (cached_has_bits & 0x00000006u) {
+    if (cached_has_bits & 0x00000002u) {
+      _this->_impl_.mute_end_date_ = from._impl_.mute_end_date_;
+    }
+    if (cached_has_bits & 0x00000004u) {
+      _this->_impl_.role_ = from._impl_.role_;
+    }
+    _this->_impl_._has_bits_[0] |= cached_has_bits;
   }
   _this->_internal_metadata_.MergeFrom<std::string>(from._internal_metadata_);
 }

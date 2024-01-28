@@ -1,9 +1,13 @@
-///
+//
 //  Generated code. Do not modify.
 //  source: model/group/group_members_with_version.proto
 //
 // @dart = 2.12
-// ignore_for_file: annotate_overrides,camel_case_types,constant_identifier_names,directives_ordering,library_prefixes,non_constant_identifier_names,prefer_final_fields,return_of_invalid_type,unnecessary_const,unnecessary_import,unnecessary_this,unused_import,unused_shown_name
+
+// ignore_for_file: annotate_overrides, camel_case_types, comment_references
+// ignore_for_file: constant_identifier_names, library_prefixes
+// ignore_for_file: non_constant_identifier_names, prefer_final_fields
+// ignore_for_file: unnecessary_import, unnecessary_this, unused_import
 
 import 'dart:core' as $core;
 
@@ -13,49 +17,37 @@ import 'package:protobuf/protobuf.dart' as $pb;
 import 'group_member.pb.dart' as $0;
 
 class GroupMembersWithVersion extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      const $core.bool.fromEnvironment('protobuf.omit_message_names')
-          ? ''
-          : 'GroupMembersWithVersion',
-      package: const $pb.PackageName(
-          const $core.bool.fromEnvironment('protobuf.omit_message_names')
-              ? ''
-              : 'im.turms.proto'),
-      createEmptyInstance: create)
-    ..pc<$0.GroupMember>(
-        1,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'groupMembers',
-        $pb.PbFieldType.PM,
-        subBuilder: $0.GroupMember.create)
-    ..aInt64(
-        2,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'lastUpdatedDate')
-    ..hasRequiredFields = false;
-
-  GroupMembersWithVersion._() : super();
   factory GroupMembersWithVersion({
     $core.Iterable<$0.GroupMember>? groupMembers,
     $fixnum.Int64? lastUpdatedDate,
   }) {
-    final _result = create();
+    final $result = create();
     if (groupMembers != null) {
-      _result.groupMembers.addAll(groupMembers);
+      $result.groupMembers.addAll(groupMembers);
     }
     if (lastUpdatedDate != null) {
-      _result.lastUpdatedDate = lastUpdatedDate;
+      $result.lastUpdatedDate = lastUpdatedDate;
     }
-    return _result;
+    return $result;
   }
+  GroupMembersWithVersion._() : super();
   factory GroupMembersWithVersion.fromBuffer($core.List<$core.int> i,
           [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(i, r);
   factory GroupMembersWithVersion.fromJson($core.String i,
           [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(i, r);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GroupMembersWithVersion',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'im.turms.proto'),
+      createEmptyInstance: create)
+    ..pc<$0.GroupMember>(
+        1, _omitFieldNames ? '' : 'groupMembers', $pb.PbFieldType.PM,
+        subBuilder: $0.GroupMember.create)
+    ..aInt64(2, _omitFieldNames ? '' : 'lastUpdatedDate')
+    ..hasRequiredFields = false;
+
   @$core.Deprecated('Using this can add significant overhead to your binary. '
       'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
       'Will be removed in next major version')
@@ -67,8 +59,10 @@ class GroupMembersWithVersion extends $pb.GeneratedMessage {
   GroupMembersWithVersion copyWith(
           void Function(GroupMembersWithVersion) updates) =>
       super.copyWith((message) => updates(message as GroupMembersWithVersion))
-          as GroupMembersWithVersion; // ignore: deprecated_member_use
+          as GroupMembersWithVersion;
+
   $pb.BuilderInfo get info_ => _i;
+
   @$core.pragma('dart2js:noInline')
   static GroupMembersWithVersion create() => GroupMembersWithVersion._();
   GroupMembersWithVersion createEmptyInstance() => create();
@@ -94,3 +88,7 @@ class GroupMembersWithVersion extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   void clearLastUpdatedDate() => clearField(2);
 }
+
+const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');
+const _omitMessageNames =
+    $core.bool.fromEnvironment('protobuf.omit_message_names');

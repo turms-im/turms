@@ -111,11 +111,11 @@ extension UpdateUserRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
             // allocates stack space for every case branch when no optimizations are
             // enabled. https://github.com/apple/swift-protobuf/issues/1034
             switch fieldNumber {
-            case 1: try try decoder.decodeSingularStringField(value: &_password)
-            case 2: try try decoder.decodeSingularStringField(value: &_name)
-            case 3: try try decoder.decodeSingularStringField(value: &_intro)
-            case 4: try try decoder.decodeSingularStringField(value: &_profilePicture)
-            case 5: try try decoder.decodeSingularEnumField(value: &_profileAccessStrategy)
+            case 1: try decoder.decodeSingularStringField(value: &_password)
+            case 2: try decoder.decodeSingularStringField(value: &_name)
+            case 3: try decoder.decodeSingularStringField(value: &_intro)
+            case 4: try decoder.decodeSingularStringField(value: &_profilePicture)
+            case 5: try decoder.decodeSingularEnumField(value: &_profileAccessStrategy)
             default: break
             }
         }

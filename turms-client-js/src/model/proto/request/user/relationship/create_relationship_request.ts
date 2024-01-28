@@ -8,10 +8,11 @@ export interface CreateRelationshipRequest {
   userId: string;
   blocked: boolean;
   groupIndex?: number | undefined;
+  name?: string | undefined;
 }
 
 function createBaseCreateRelationshipRequest(): CreateRelationshipRequest {
-  return { userId: "0", blocked: false, groupIndex: undefined };
+  return { userId: "0", blocked: false, groupIndex: undefined, name: undefined };
 }
 
 export const CreateRelationshipRequest = {
@@ -25,29 +26,52 @@ export const CreateRelationshipRequest = {
     if (message.groupIndex !== undefined) {
       writer.uint32(24).int32(message.groupIndex);
     }
+    if (message.name !== undefined) {
+      writer.uint32(34).string(message.name);
+    }
     return writer;
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): CreateRelationshipRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCreateRelationshipRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 8) {
+            break;
+          }
+
           message.userId = longToString(reader.int64() as Long);
-          break;
+          continue;
         case 2:
+          if (tag !== 16) {
+            break;
+          }
+
           message.blocked = reader.bool();
-          break;
+          continue;
         case 3:
+          if (tag !== 24) {
+            break;
+          }
+
           message.groupIndex = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.name = reader.string();
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },

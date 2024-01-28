@@ -125,7 +125,12 @@ public enum RequestStatus implements com.google.protobuf.Internal.EnumLite {
     }
 
     private static final com.google.protobuf.Internal.EnumLiteMap<RequestStatus> internalValueMap =
-            number -> RequestStatus.forNumber(number);
+            new com.google.protobuf.Internal.EnumLiteMap<RequestStatus>() {
+                @java.lang.Override
+                public RequestStatus findValueByNumber(int number) {
+                    return RequestStatus.forNumber(number);
+                }
+            };
 
     public static com.google.protobuf.Internal.EnumVerifier internalGetVerifier() {
         return RequestStatusVerifier.INSTANCE;
@@ -144,7 +149,7 @@ public enum RequestStatus implements com.google.protobuf.Internal.EnumLite {
 
     private final int value;
 
-    RequestStatus(int value) {
+    private RequestStatus(int value) {
         this.value = value;
     }
 

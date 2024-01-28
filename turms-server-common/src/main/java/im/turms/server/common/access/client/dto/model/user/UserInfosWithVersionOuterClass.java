@@ -56,7 +56,7 @@ public final class UserInfosWithVersionOuterClass {
         internal_static_im_turms_proto_UserInfosWithVersion_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
                         internal_static_im_turms_proto_UserInfosWithVersion_descriptor,
-                        new java.lang.String[]{"UserInfos", "LastUpdatedDate", "LastUpdatedDate",});
+                        new java.lang.String[]{"UserInfos", "LastUpdatedDate",});
         im.turms.server.common.access.client.dto.model.user.UserInfoOuterClass.getDescriptor();
     }
 

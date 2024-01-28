@@ -33,7 +33,7 @@ public enum ContentType implements com.google.protobuf.ProtocolMessageEnum {
      * <pre>
      * STORAGE = 2;
      * </pre>
-     * 
+     *
      * <code>ATTACHMENT = 2;</code>
      */
     ATTACHMENT(2),
@@ -51,7 +51,7 @@ public enum ContentType implements com.google.protobuf.ProtocolMessageEnum {
      * <pre>
      * STORAGE = 2;
      * </pre>
-     * 
+     *
      * <code>ATTACHMENT = 2;</code>
      */
     public static final int ATTACHMENT_VALUE = 2;

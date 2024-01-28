@@ -85,7 +85,12 @@ public enum ProfileAccessStrategy implements com.google.protobuf.Internal.EnumLi
     }
 
     private static final com.google.protobuf.Internal.EnumLiteMap<ProfileAccessStrategy> internalValueMap =
-            number -> ProfileAccessStrategy.forNumber(number);
+            new com.google.protobuf.Internal.EnumLiteMap<ProfileAccessStrategy>() {
+                @java.lang.Override
+                public ProfileAccessStrategy findValueByNumber(int number) {
+                    return ProfileAccessStrategy.forNumber(number);
+                }
+            };
 
     public static com.google.protobuf.Internal.EnumVerifier internalGetVerifier() {
         return ProfileAccessStrategyVerifier.INSTANCE;
@@ -104,7 +109,7 @@ public enum ProfileAccessStrategy implements com.google.protobuf.Internal.EnumLi
 
     private final int value;
 
-    ProfileAccessStrategy(int value) {
+    private ProfileAccessStrategy(int value) {
         this.value = value;
     }
 

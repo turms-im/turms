@@ -62,12 +62,7 @@ public final class DeleteResourceRequestOuterClass {
         internal_static_im_turms_proto_DeleteResourceRequest_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
                         internal_static_im_turms_proto_DeleteResourceRequest_descriptor,
-                        new java.lang.String[]{"Type",
-                                "IdNum",
-                                "IdStr",
-                                "Extra",
-                                "IdNum",
-                                "IdStr",});
+                        new java.lang.String[]{"Type", "IdNum", "IdStr", "Extra",});
         internal_static_im_turms_proto_DeleteResourceRequest_ExtraEntry_descriptor =
                 internal_static_im_turms_proto_DeleteResourceRequest_descriptor.getNestedTypes()
                         .get(0);

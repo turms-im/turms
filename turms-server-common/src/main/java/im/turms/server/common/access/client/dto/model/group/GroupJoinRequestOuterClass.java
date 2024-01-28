@@ -69,14 +69,6 @@ public final class GroupJoinRequestOuterClass {
                                 "ExpirationDate",
                                 "GroupId",
                                 "RequesterId",
-                                "ResponderId",
-                                "Id",
-                                "CreationDate",
-                                "Content",
-                                "Status",
-                                "ExpirationDate",
-                                "GroupId",
-                                "RequesterId",
                                 "ResponderId",});
         im.turms.server.common.access.client.dto.constant.RequestStatusOuterClass.getDescriptor();
     }

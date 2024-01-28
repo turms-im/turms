@@ -56,13 +56,13 @@ public final class QueryMessagesRequest extends com.google.protobuf.GeneratedMes
     private int bitField0_;
     public static final int IDS_FIELD_NUMBER = 1;
     @SuppressWarnings("serial")
-    private com.google.protobuf.Internal.LongList ids_;
+    private com.google.protobuf.Internal.LongList ids_ = emptyLongList();
 
     /**
      * <pre>
      * Filter
      * </pre>
-     * 
+     *
      * <code>repeated int64 ids = 1;</code>
      *
      * @return A list containing the ids.
@@ -76,7 +76,7 @@ public final class QueryMessagesRequest extends com.google.protobuf.GeneratedMes
      * <pre>
      * Filter
      * </pre>
-     * 
+     *
      * <code>repeated int64 ids = 1;</code>
      *
      * @return The count of ids.
@@ -89,7 +89,7 @@ public final class QueryMessagesRequest extends com.google.protobuf.GeneratedMes
      * <pre>
      * Filter
      * </pre>
-     * 
+     *
      * <code>repeated int64 ids = 1;</code>
      *
      * @param index The index of the element to return.
@@ -149,7 +149,7 @@ public final class QueryMessagesRequest extends com.google.protobuf.GeneratedMes
 
     public static final int FROM_IDS_FIELD_NUMBER = 4;
     @SuppressWarnings("serial")
-    private com.google.protobuf.Internal.LongList fromIds_;
+    private com.google.protobuf.Internal.LongList fromIds_ = emptyLongList();
 
     /**
      * <code>repeated int64 from_ids = 4;</code>
@@ -235,7 +235,7 @@ public final class QueryMessagesRequest extends com.google.protobuf.GeneratedMes
      * <pre>
      * Option
      * </pre>
-     * 
+     *
      * <code>optional int32 max_count = 7;</code>
      *
      * @return Whether the maxCount field is set.
@@ -249,7 +249,7 @@ public final class QueryMessagesRequest extends com.google.protobuf.GeneratedMes
      * <pre>
      * Option
      * </pre>
-     * 
+     *
      * <code>optional int32 max_count = 7;</code>
      *
      * @return The maxCount.
@@ -266,7 +266,7 @@ public final class QueryMessagesRequest extends com.google.protobuf.GeneratedMes
      * <pre>
      * Command
      * </pre>
-     * 
+     *
      * <code>bool with_total = 8;</code>
      *
      * @return The withTotal.
@@ -284,7 +284,7 @@ public final class QueryMessagesRequest extends com.google.protobuf.GeneratedMes
      * Option
      * TODO: reorder
      * </pre>
-     * 
+     *
      * <code>optional bool descending = 9;</code>
      *
      * @return Whether the descending field is set.
@@ -299,7 +299,7 @@ public final class QueryMessagesRequest extends com.google.protobuf.GeneratedMes
      * Option
      * TODO: reorder
      * </pre>
-     * 
+     *
      * <code>optional bool descending = 9;</code>
      *
      * @return The descending.
@@ -717,7 +717,6 @@ public final class QueryMessagesRequest extends com.google.protobuf.GeneratedMes
             im.turms.server.common.access.client.dto.request.message.QueryMessagesRequest result =
                     new im.turms.server.common.access.client.dto.request.message.QueryMessagesRequest(
                             this);
-            buildPartialRepeatedFields(result);
             if (bitField0_ != 0) {
                 buildPartial0(result);
             }
@@ -725,23 +724,13 @@ public final class QueryMessagesRequest extends com.google.protobuf.GeneratedMes
             return result;
         }
 
-        private void buildPartialRepeatedFields(
-                im.turms.server.common.access.client.dto.request.message.QueryMessagesRequest result) {
-            if (((bitField0_ & 0x00000001) != 0)) {
-                ids_.makeImmutable();
-                bitField0_ &= ~0x00000001;
-            }
-            result.ids_ = ids_;
-            if (((bitField0_ & 0x00000008) != 0)) {
-                fromIds_.makeImmutable();
-                bitField0_ &= ~0x00000008;
-            }
-            result.fromIds_ = fromIds_;
-        }
-
         private void buildPartial0(
                 im.turms.server.common.access.client.dto.request.message.QueryMessagesRequest result) {
             int from_bitField0_ = bitField0_;
+            if (((from_bitField0_ & 0x00000001) != 0)) {
+                ids_.makeImmutable();
+                result.ids_ = ids_;
+            }
             int to_bitField0_ = 0;
             if (((from_bitField0_ & 0x00000002) != 0)) {
                 result.areGroupMessages_ = areGroupMessages_;
@@ -750,6 +739,10 @@ public final class QueryMessagesRequest extends com.google.protobuf.GeneratedMes
             if (((from_bitField0_ & 0x00000004) != 0)) {
                 result.areSystemMessages_ = areSystemMessages_;
                 to_bitField0_ |= 0x00000002;
+            }
+            if (((from_bitField0_ & 0x00000008) != 0)) {
+                fromIds_.makeImmutable();
+                result.fromIds_ = fromIds_;
             }
             if (((from_bitField0_ & 0x00000010) != 0)) {
                 result.deliveryDateStart_ = deliveryDateStart_;
@@ -774,6 +767,43 @@ public final class QueryMessagesRequest extends com.google.protobuf.GeneratedMes
         }
 
         @java.lang.Override
+        public Builder clone() {
+            return super.clone();
+        }
+
+        @java.lang.Override
+        public Builder setField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value) {
+            return super.setField(field, value);
+        }
+
+        @java.lang.Override
+        public Builder clearField(com.google.protobuf.Descriptors.FieldDescriptor field) {
+            return super.clearField(field);
+        }
+
+        @java.lang.Override
+        public Builder clearOneof(com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+            return super.clearOneof(oneof);
+        }
+
+        @java.lang.Override
+        public Builder setRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                int index,
+                java.lang.Object value) {
+            return super.setRepeatedField(field, index, value);
+        }
+
+        @java.lang.Override
+        public Builder addRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value) {
+            return super.addRepeatedField(field, value);
+        }
+
+        @java.lang.Override
         public Builder mergeFrom(com.google.protobuf.Message other) {
             if (other instanceof im.turms.server.common.access.client.dto.request.message.QueryMessagesRequest) {
                 return mergeFrom(
@@ -793,7 +823,8 @@ public final class QueryMessagesRequest extends com.google.protobuf.GeneratedMes
             if (!other.ids_.isEmpty()) {
                 if (ids_.isEmpty()) {
                     ids_ = other.ids_;
-                    bitField0_ &= ~0x00000001;
+                    ids_.makeImmutable();
+                    bitField0_ |= 0x00000001;
                 } else {
                     ensureIdsIsMutable();
                     ids_.addAll(other.ids_);
@@ -809,7 +840,8 @@ public final class QueryMessagesRequest extends com.google.protobuf.GeneratedMes
             if (!other.fromIds_.isEmpty()) {
                 if (fromIds_.isEmpty()) {
                     fromIds_ = other.fromIds_;
-                    bitField0_ &= ~0x00000008;
+                    fromIds_.makeImmutable();
+                    bitField0_ |= 0x00000008;
                 } else {
                     ensureFromIdsIsMutable();
                     fromIds_.addAll(other.fromIds_);
@@ -931,32 +963,31 @@ public final class QueryMessagesRequest extends com.google.protobuf.GeneratedMes
         private com.google.protobuf.Internal.LongList ids_ = emptyLongList();
 
         private void ensureIdsIsMutable() {
-            if ((bitField0_ & 0x00000001) == 0) {
-                ids_ = mutableCopy(ids_);
-                bitField0_ |= 0x00000001;
+            if (!ids_.isModifiable()) {
+                ids_ = makeMutableCopy(ids_);
             }
+            bitField0_ |= 0x00000001;
         }
 
         /**
          * <pre>
          * Filter
          * </pre>
-         * 
+         *
          * <code>repeated int64 ids = 1;</code>
          *
          * @return A list containing the ids.
          */
         public java.util.List<java.lang.Long> getIdsList() {
-            return ((bitField0_ & 0x00000001) != 0)
-                    ? java.util.Collections.unmodifiableList(ids_)
-                    : ids_;
+            ids_.makeImmutable();
+            return ids_;
         }
 
         /**
          * <pre>
          * Filter
          * </pre>
-         * 
+         *
          * <code>repeated int64 ids = 1;</code>
          *
          * @return The count of ids.
@@ -969,7 +1000,7 @@ public final class QueryMessagesRequest extends com.google.protobuf.GeneratedMes
          * <pre>
          * Filter
          * </pre>
-         * 
+         *
          * <code>repeated int64 ids = 1;</code>
          *
          * @param index The index of the element to return.
@@ -983,7 +1014,7 @@ public final class QueryMessagesRequest extends com.google.protobuf.GeneratedMes
          * <pre>
          * Filter
          * </pre>
-         * 
+         *
          * <code>repeated int64 ids = 1;</code>
          *
          * @param index The index to set the value at.
@@ -994,6 +1025,7 @@ public final class QueryMessagesRequest extends com.google.protobuf.GeneratedMes
 
             ensureIdsIsMutable();
             ids_.setLong(index, value);
+            bitField0_ |= 0x00000001;
             onChanged();
             return this;
         }
@@ -1002,7 +1034,7 @@ public final class QueryMessagesRequest extends com.google.protobuf.GeneratedMes
          * <pre>
          * Filter
          * </pre>
-         * 
+         *
          * <code>repeated int64 ids = 1;</code>
          *
          * @param value The ids to add.
@@ -1012,6 +1044,7 @@ public final class QueryMessagesRequest extends com.google.protobuf.GeneratedMes
 
             ensureIdsIsMutable();
             ids_.addLong(value);
+            bitField0_ |= 0x00000001;
             onChanged();
             return this;
         }
@@ -1020,7 +1053,7 @@ public final class QueryMessagesRequest extends com.google.protobuf.GeneratedMes
          * <pre>
          * Filter
          * </pre>
-         * 
+         *
          * <code>repeated int64 ids = 1;</code>
          *
          * @param values The ids to add.
@@ -1029,6 +1062,7 @@ public final class QueryMessagesRequest extends com.google.protobuf.GeneratedMes
         public Builder addAllIds(java.lang.Iterable<? extends java.lang.Long> values) {
             ensureIdsIsMutable();
             com.google.protobuf.AbstractMessageLite.Builder.addAll(values, ids_);
+            bitField0_ |= 0x00000001;
             onChanged();
             return this;
         }
@@ -1037,7 +1071,7 @@ public final class QueryMessagesRequest extends com.google.protobuf.GeneratedMes
          * <pre>
          * Filter
          * </pre>
-         * 
+         *
          * <code>repeated int64 ids = 1;</code>
          *
          * @return This builder for chaining.
@@ -1148,10 +1182,10 @@ public final class QueryMessagesRequest extends com.google.protobuf.GeneratedMes
         private com.google.protobuf.Internal.LongList fromIds_ = emptyLongList();
 
         private void ensureFromIdsIsMutable() {
-            if ((bitField0_ & 0x00000008) == 0) {
-                fromIds_ = mutableCopy(fromIds_);
-                bitField0_ |= 0x00000008;
+            if (!fromIds_.isModifiable()) {
+                fromIds_ = makeMutableCopy(fromIds_);
             }
+            bitField0_ |= 0x00000008;
         }
 
         /**
@@ -1160,9 +1194,8 @@ public final class QueryMessagesRequest extends com.google.protobuf.GeneratedMes
          * @return A list containing the fromIds.
          */
         public java.util.List<java.lang.Long> getFromIdsList() {
-            return ((bitField0_ & 0x00000008) != 0)
-                    ? java.util.Collections.unmodifiableList(fromIds_)
-                    : fromIds_;
+            fromIds_.makeImmutable();
+            return fromIds_;
         }
 
         /**
@@ -1195,6 +1228,7 @@ public final class QueryMessagesRequest extends com.google.protobuf.GeneratedMes
 
             ensureFromIdsIsMutable();
             fromIds_.setLong(index, value);
+            bitField0_ |= 0x00000008;
             onChanged();
             return this;
         }
@@ -1209,6 +1243,7 @@ public final class QueryMessagesRequest extends com.google.protobuf.GeneratedMes
 
             ensureFromIdsIsMutable();
             fromIds_.addLong(value);
+            bitField0_ |= 0x00000008;
             onChanged();
             return this;
         }
@@ -1222,6 +1257,7 @@ public final class QueryMessagesRequest extends com.google.protobuf.GeneratedMes
         public Builder addAllFromIds(java.lang.Iterable<? extends java.lang.Long> values) {
             ensureFromIdsIsMutable();
             com.google.protobuf.AbstractMessageLite.Builder.addAll(values, fromIds_);
+            bitField0_ |= 0x00000008;
             onChanged();
             return this;
         }
@@ -1340,7 +1376,7 @@ public final class QueryMessagesRequest extends com.google.protobuf.GeneratedMes
          * <pre>
          * Option
          * </pre>
-         * 
+         *
          * <code>optional int32 max_count = 7;</code>
          *
          * @return Whether the maxCount field is set.
@@ -1354,7 +1390,7 @@ public final class QueryMessagesRequest extends com.google.protobuf.GeneratedMes
          * <pre>
          * Option
          * </pre>
-         * 
+         *
          * <code>optional int32 max_count = 7;</code>
          *
          * @return The maxCount.
@@ -1368,7 +1404,7 @@ public final class QueryMessagesRequest extends com.google.protobuf.GeneratedMes
          * <pre>
          * Option
          * </pre>
-         * 
+         *
          * <code>optional int32 max_count = 7;</code>
          *
          * @param value The maxCount to set.
@@ -1386,7 +1422,7 @@ public final class QueryMessagesRequest extends com.google.protobuf.GeneratedMes
          * <pre>
          * Option
          * </pre>
-         * 
+         *
          * <code>optional int32 max_count = 7;</code>
          *
          * @return This builder for chaining.
@@ -1404,7 +1440,7 @@ public final class QueryMessagesRequest extends com.google.protobuf.GeneratedMes
          * <pre>
          * Command
          * </pre>
-         * 
+         *
          * <code>bool with_total = 8;</code>
          *
          * @return The withTotal.
@@ -1418,7 +1454,7 @@ public final class QueryMessagesRequest extends com.google.protobuf.GeneratedMes
          * <pre>
          * Command
          * </pre>
-         * 
+         *
          * <code>bool with_total = 8;</code>
          *
          * @param value The withTotal to set.
@@ -1436,7 +1472,7 @@ public final class QueryMessagesRequest extends com.google.protobuf.GeneratedMes
          * <pre>
          * Command
          * </pre>
-         * 
+         *
          * <code>bool with_total = 8;</code>
          *
          * @return This builder for chaining.
@@ -1455,7 +1491,7 @@ public final class QueryMessagesRequest extends com.google.protobuf.GeneratedMes
          * Option
          * TODO: reorder
          * </pre>
-         * 
+         *
          * <code>optional bool descending = 9;</code>
          *
          * @return Whether the descending field is set.
@@ -1470,7 +1506,7 @@ public final class QueryMessagesRequest extends com.google.protobuf.GeneratedMes
          * Option
          * TODO: reorder
          * </pre>
-         * 
+         *
          * <code>optional bool descending = 9;</code>
          *
          * @return The descending.
@@ -1485,7 +1521,7 @@ public final class QueryMessagesRequest extends com.google.protobuf.GeneratedMes
          * Option
          * TODO: reorder
          * </pre>
-         * 
+         *
          * <code>optional bool descending = 9;</code>
          *
          * @param value The descending to set.
@@ -1504,7 +1540,7 @@ public final class QueryMessagesRequest extends com.google.protobuf.GeneratedMes
          * Option
          * TODO: reorder
          * </pre>
-         * 
+         *
          * <code>optional bool descending = 9;</code>
          *
          * @return This builder for chaining.

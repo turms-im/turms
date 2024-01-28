@@ -1,9 +1,13 @@
-///
+//
 //  Generated code. Do not modify.
 //  source: request/group/member/delete_group_members_request.proto
 //
 // @dart = 2.12
-// ignore_for_file: annotate_overrides,camel_case_types,constant_identifier_names,directives_ordering,library_prefixes,non_constant_identifier_names,prefer_final_fields,return_of_invalid_type,unnecessary_const,unnecessary_import,unnecessary_this,unused_import,unused_shown_name
+
+// ignore_for_file: annotate_overrides, camel_case_types, comment_references
+// ignore_for_file: constant_identifier_names, library_prefixes
+// ignore_for_file: non_constant_identifier_names, prefer_final_fields
+// ignore_for_file: unnecessary_import, unnecessary_this, unused_import
 
 import 'dart:core' as $core;
 
@@ -11,66 +15,46 @@ import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 class DeleteGroupMembersRequest extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      const $core.bool.fromEnvironment('protobuf.omit_message_names')
-          ? ''
-          : 'DeleteGroupMembersRequest',
-      package: const $pb.PackageName(
-          const $core.bool.fromEnvironment('protobuf.omit_message_names')
-              ? ''
-              : 'im.turms.proto'),
-      createEmptyInstance: create)
-    ..aInt64(
-        1,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'groupId')
-    ..p<$fixnum.Int64>(
-        2,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'memberIds',
-        $pb.PbFieldType.K6)
-    ..aInt64(
-        3,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'successorId')
-    ..aOB(
-        4,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'quitAfterTransfer')
-    ..hasRequiredFields = false;
-
-  DeleteGroupMembersRequest._() : super();
   factory DeleteGroupMembersRequest({
     $fixnum.Int64? groupId,
     $core.Iterable<$fixnum.Int64>? memberIds,
     $fixnum.Int64? successorId,
     $core.bool? quitAfterTransfer,
   }) {
-    final _result = create();
+    final $result = create();
     if (groupId != null) {
-      _result.groupId = groupId;
+      $result.groupId = groupId;
     }
     if (memberIds != null) {
-      _result.memberIds.addAll(memberIds);
+      $result.memberIds.addAll(memberIds);
     }
     if (successorId != null) {
-      _result.successorId = successorId;
+      $result.successorId = successorId;
     }
     if (quitAfterTransfer != null) {
-      _result.quitAfterTransfer = quitAfterTransfer;
+      $result.quitAfterTransfer = quitAfterTransfer;
     }
-    return _result;
+    return $result;
   }
+  DeleteGroupMembersRequest._() : super();
   factory DeleteGroupMembersRequest.fromBuffer($core.List<$core.int> i,
           [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(i, r);
   factory DeleteGroupMembersRequest.fromJson($core.String i,
           [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(i, r);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'DeleteGroupMembersRequest',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'im.turms.proto'),
+      createEmptyInstance: create)
+    ..aInt64(1, _omitFieldNames ? '' : 'groupId')
+    ..p<$fixnum.Int64>(
+        2, _omitFieldNames ? '' : 'memberIds', $pb.PbFieldType.K6)
+    ..aInt64(3, _omitFieldNames ? '' : 'successorId')
+    ..aOB(4, _omitFieldNames ? '' : 'quitAfterTransfer')
+    ..hasRequiredFields = false;
+
   @$core.Deprecated('Using this can add significant overhead to your binary. '
       'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
       'Will be removed in next major version')
@@ -82,8 +66,10 @@ class DeleteGroupMembersRequest extends $pb.GeneratedMessage {
   DeleteGroupMembersRequest copyWith(
           void Function(DeleteGroupMembersRequest) updates) =>
       super.copyWith((message) => updates(message as DeleteGroupMembersRequest))
-          as DeleteGroupMembersRequest; // ignore: deprecated_member_use
+          as DeleteGroupMembersRequest;
+
   $pb.BuilderInfo get info_ => _i;
+
   @$core.pragma('dart2js:noInline')
   static DeleteGroupMembersRequest create() => DeleteGroupMembersRequest._();
   DeleteGroupMembersRequest createEmptyInstance() => create();
@@ -133,3 +119,7 @@ class DeleteGroupMembersRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   void clearQuitAfterTransfer() => clearField(4);
 }
+
+const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');
+const _omitMessageNames =
+    $core.bool.fromEnvironment('protobuf.omit_message_names');

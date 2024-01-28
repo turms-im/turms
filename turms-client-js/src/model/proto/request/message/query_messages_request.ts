@@ -78,57 +78,100 @@ export const QueryMessagesRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): QueryMessagesRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseQueryMessagesRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if ((tag & 7) === 2) {
+          if (tag === 8) {
+            message.ids.push(longToString(reader.int64() as Long));
+
+            continue;
+          }
+
+          if (tag === 10) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
               message.ids.push(longToString(reader.int64() as Long));
             }
-          } else {
-            message.ids.push(longToString(reader.int64() as Long));
+
+            continue;
           }
+
           break;
         case 2:
+          if (tag !== 16) {
+            break;
+          }
+
           message.areGroupMessages = reader.bool();
-          break;
+          continue;
         case 3:
+          if (tag !== 24) {
+            break;
+          }
+
           message.areSystemMessages = reader.bool();
-          break;
+          continue;
         case 4:
-          if ((tag & 7) === 2) {
+          if (tag === 32) {
+            message.fromIds.push(longToString(reader.int64() as Long));
+
+            continue;
+          }
+
+          if (tag === 34) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
               message.fromIds.push(longToString(reader.int64() as Long));
             }
-          } else {
-            message.fromIds.push(longToString(reader.int64() as Long));
+
+            continue;
           }
+
           break;
         case 5:
+          if (tag !== 40) {
+            break;
+          }
+
           message.deliveryDateStart = longToString(reader.int64() as Long);
-          break;
+          continue;
         case 6:
+          if (tag !== 48) {
+            break;
+          }
+
           message.deliveryDateEnd = longToString(reader.int64() as Long);
-          break;
+          continue;
         case 7:
+          if (tag !== 56) {
+            break;
+          }
+
           message.maxCount = reader.int32();
-          break;
+          continue;
         case 8:
+          if (tag !== 64) {
+            break;
+          }
+
           message.withTotal = reader.bool();
-          break;
+          continue;
         case 9:
+          if (tag !== 72) {
+            break;
+          }
+
           message.descending = reader.bool();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },

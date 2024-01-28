@@ -26,6 +26,7 @@ public final class UpdateRelationshipRequest extends
         // @@protoc_insertion_point(message_implements:im.turms.proto.UpdateRelationshipRequest)
         UpdateRelationshipRequestOrBuilder {
     private UpdateRelationshipRequest() {
+        name_ = "";
     }
 
     private int bitField0_;
@@ -36,7 +37,7 @@ public final class UpdateRelationshipRequest extends
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>int64 user_id = 1;</code>
      *
      * @return The userId.
@@ -50,7 +51,7 @@ public final class UpdateRelationshipRequest extends
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>int64 user_id = 1;</code>
      *
      * @param value The userId to set.
@@ -64,7 +65,7 @@ public final class UpdateRelationshipRequest extends
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>int64 user_id = 1;</code>
      */
     private void clearUserId() {
@@ -79,7 +80,7 @@ public final class UpdateRelationshipRequest extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>optional bool blocked = 2;</code>
      *
      * @return Whether the blocked field is set.
@@ -93,7 +94,7 @@ public final class UpdateRelationshipRequest extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>optional bool blocked = 2;</code>
      *
      * @return The blocked.
@@ -107,7 +108,7 @@ public final class UpdateRelationshipRequest extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>optional bool blocked = 2;</code>
      *
      * @param value The blocked to set.
@@ -121,7 +122,7 @@ public final class UpdateRelationshipRequest extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>optional bool blocked = 2;</code>
      */
     private void clearBlocked() {
@@ -211,6 +212,69 @@ public final class UpdateRelationshipRequest extends
         deleteGroupIndex_ = 0;
     }
 
+    public static final int NAME_FIELD_NUMBER = 5;
+    private java.lang.String name_;
+
+    /**
+     * <code>optional string name = 5;</code>
+     *
+     * @return Whether the name field is set.
+     */
+    @java.lang.Override
+    public boolean hasName() {
+        return ((bitField0_ & 0x00000008) != 0);
+    }
+
+    /**
+     * <code>optional string name = 5;</code>
+     *
+     * @return The name.
+     */
+    @java.lang.Override
+    public java.lang.String getName() {
+        return name_;
+    }
+
+    /**
+     * <code>optional string name = 5;</code>
+     *
+     * @return The bytes for name.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString getNameBytes() {
+        return com.google.protobuf.ByteString.copyFromUtf8(name_);
+    }
+
+    /**
+     * <code>optional string name = 5;</code>
+     *
+     * @param value The name to set.
+     */
+    private void setName(java.lang.String value) {
+        java.lang.Class<?> valueClass = value.getClass();
+        bitField0_ |= 0x00000008;
+        name_ = value;
+    }
+
+    /**
+     * <code>optional string name = 5;</code>
+     */
+    private void clearName() {
+        bitField0_ &= ~0x00000008;
+        name_ = getDefaultInstance().getName();
+    }
+
+    /**
+     * <code>optional string name = 5;</code>
+     *
+     * @param value The bytes for name to set.
+     */
+    private void setNameBytes(com.google.protobuf.ByteString value) {
+        checkByteStringIsUtf8(value);
+        name_ = value.toStringUtf8();
+        bitField0_ |= 0x00000008;
+    }
+
     public static im.turms.client.model.proto.request.user.relationship.UpdateRelationshipRequest parseFrom(
             java.nio.ByteBuffer data) throws com.google.protobuf.InvalidProtocolBufferException {
         return com.google.protobuf.GeneratedMessageLite.parseFrom(DEFAULT_INSTANCE, data);
@@ -290,12 +354,12 @@ public final class UpdateRelationshipRequest extends
     }
 
     public static Builder newBuilder() {
-        return (Builder) DEFAULT_INSTANCE.createBuilder();
+        return DEFAULT_INSTANCE.createBuilder();
     }
 
     public static Builder newBuilder(
             im.turms.client.model.proto.request.user.relationship.UpdateRelationshipRequest prototype) {
-        return (Builder) DEFAULT_INSTANCE.createBuilder(prototype);
+        return DEFAULT_INSTANCE.createBuilder(prototype);
     }
 
     /**
@@ -316,7 +380,7 @@ public final class UpdateRelationshipRequest extends
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>int64 user_id = 1;</code>
          *
          * @return The userId.
@@ -330,7 +394,7 @@ public final class UpdateRelationshipRequest extends
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>int64 user_id = 1;</code>
          *
          * @param value The userId to set.
@@ -346,7 +410,7 @@ public final class UpdateRelationshipRequest extends
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>int64 user_id = 1;</code>
          *
          * @return This builder for chaining.
@@ -361,7 +425,7 @@ public final class UpdateRelationshipRequest extends
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>optional bool blocked = 2;</code>
          *
          * @return Whether the blocked field is set.
@@ -375,7 +439,7 @@ public final class UpdateRelationshipRequest extends
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>optional bool blocked = 2;</code>
          *
          * @return The blocked.
@@ -389,7 +453,7 @@ public final class UpdateRelationshipRequest extends
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>optional bool blocked = 2;</code>
          *
          * @param value The blocked to set.
@@ -405,7 +469,7 @@ public final class UpdateRelationshipRequest extends
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>optional bool blocked = 2;</code>
          *
          * @return This builder for chaining.
@@ -502,6 +566,71 @@ public final class UpdateRelationshipRequest extends
             return this;
         }
 
+        /**
+         * <code>optional string name = 5;</code>
+         *
+         * @return Whether the name field is set.
+         */
+        @java.lang.Override
+        public boolean hasName() {
+            return instance.hasName();
+        }
+
+        /**
+         * <code>optional string name = 5;</code>
+         *
+         * @return The name.
+         */
+        @java.lang.Override
+        public java.lang.String getName() {
+            return instance.getName();
+        }
+
+        /**
+         * <code>optional string name = 5;</code>
+         *
+         * @return The bytes for name.
+         */
+        @java.lang.Override
+        public com.google.protobuf.ByteString getNameBytes() {
+            return instance.getNameBytes();
+        }
+
+        /**
+         * <code>optional string name = 5;</code>
+         *
+         * @param value The name to set.
+         * @return This builder for chaining.
+         */
+        public Builder setName(java.lang.String value) {
+            copyOnWrite();
+            instance.setName(value);
+            return this;
+        }
+
+        /**
+         * <code>optional string name = 5;</code>
+         *
+         * @return This builder for chaining.
+         */
+        public Builder clearName() {
+            copyOnWrite();
+            instance.clearName();
+            return this;
+        }
+
+        /**
+         * <code>optional string name = 5;</code>
+         *
+         * @param value The bytes for name to set.
+         * @return This builder for chaining.
+         */
+        public Builder setNameBytes(com.google.protobuf.ByteString value) {
+            copyOnWrite();
+            instance.setNameBytes(value);
+            return this;
+        }
+
         // @@protoc_insertion_point(builder_scope:im.turms.proto.UpdateRelationshipRequest)
     }
 
@@ -523,10 +652,11 @@ public final class UpdateRelationshipRequest extends
                         "userId_",
                         "blocked_",
                         "newGroupIndex_",
-                        "deleteGroupIndex_",};
+                        "deleteGroupIndex_",
+                        "name_",};
                 java.lang.String info =
-                        "\u0000\u0004\u0000\u0001\u0001\u0004\u0004\u0000\u0000\u0000\u0001\u0002\u0002\u1007"
-                                + "\u0000\u0003\u1004\u0001\u0004\u1004\u0002";
+                        "\u0000\u0005\u0000\u0001\u0001\u0005\u0005\u0000\u0000\u0000\u0001\u0002\u0002\u1007"
+                                + "\u0000\u0003\u1004\u0001\u0004\u1004\u0002\u0005\u1208\u0003";
                 return newMessageInfo(DEFAULT_INSTANCE, info, objects);
             }
             // fall through

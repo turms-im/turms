@@ -37,7 +37,7 @@ public final class TurmsNotification extends
          * <pre>
          * Common
          * </pre>
-         * 
+         *
          * <code>int64 long = 1;</code>
          *
          * @return Whether the long field is set.
@@ -48,7 +48,7 @@ public final class TurmsNotification extends
          * <pre>
          * Common
          * </pre>
-         * 
+         *
          * <code>int64 long = 1;</code>
          *
          * @return The long.
@@ -108,7 +108,7 @@ public final class TurmsNotification extends
          * <pre>
          * Conversation
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.Conversations conversations = 5;</code>
          *
          * @return Whether the conversations field is set.
@@ -119,7 +119,7 @@ public final class TurmsNotification extends
          * <pre>
          * Conversation
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.Conversations conversations = 5;</code>
          *
          * @return The conversations.
@@ -130,7 +130,7 @@ public final class TurmsNotification extends
          * <pre>
          * Message
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.Messages messages = 6;</code>
          *
          * @return Whether the messages field is set.
@@ -141,7 +141,7 @@ public final class TurmsNotification extends
          * <pre>
          * Message
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.Messages messages = 6;</code>
          *
          * @return The messages.
@@ -166,7 +166,7 @@ public final class TurmsNotification extends
          * <pre>
          * User
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.UserSession user_session = 8;</code>
          *
          * @return Whether the userSession field is set.
@@ -177,7 +177,7 @@ public final class TurmsNotification extends
          * <pre>
          * User
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.UserSession user_session = 8;</code>
          *
          * @return The userSession.
@@ -272,7 +272,7 @@ public final class TurmsNotification extends
          * <pre>
          * Group
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 15;</code>
          *
          * @return Whether the groupInvitationsWithVersion field is set.
@@ -283,7 +283,7 @@ public final class TurmsNotification extends
          * <pre>
          * Group
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 15;</code>
          *
          * @return The groupInvitationsWithVersion.
@@ -364,7 +364,7 @@ public final class TurmsNotification extends
          * <pre>
          * Storage
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.StorageResourceInfos storage_resource_infos = 50;</code>
          *
          * @return Whether the storageResourceInfos field is set.
@@ -375,14 +375,14 @@ public final class TurmsNotification extends
          * <pre>
          * Storage
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.StorageResourceInfos storage_resource_infos = 50;</code>
          *
          * @return The storageResourceInfos.
          */
         im.turms.client.model.proto.model.storage.StorageResourceInfos getStorageResourceInfos();
 
-        im.turms.client.model.proto.notification.TurmsNotification.Data.KindCase getKindCase();
+        public im.turms.client.model.proto.notification.TurmsNotification.Data.KindCase getKindCase();
     }
 
     /**
@@ -424,7 +424,7 @@ public final class TurmsNotification extends
 
             private final int value;
 
-            KindCase(int value) {
+            private KindCase(int value) {
                 this.value = value;
             }
 
@@ -508,7 +508,7 @@ public final class TurmsNotification extends
          * <pre>
          * Common
          * </pre>
-         * 
+         *
          * <code>int64 long = 1;</code>
          *
          * @return Whether the long field is set.
@@ -522,7 +522,7 @@ public final class TurmsNotification extends
          * <pre>
          * Common
          * </pre>
-         * 
+         *
          * <code>int64 long = 1;</code>
          *
          * @return The long.
@@ -539,7 +539,7 @@ public final class TurmsNotification extends
          * <pre>
          * Common
          * </pre>
-         * 
+         *
          * <code>int64 long = 1;</code>
          *
          * @param value The long to set.
@@ -553,7 +553,7 @@ public final class TurmsNotification extends
          * <pre>
          * Common
          * </pre>
-         * 
+         *
          * <code>int64 long = 1;</code>
          */
         private void clearLong() {
@@ -763,7 +763,7 @@ public final class TurmsNotification extends
          * <pre>
          * Conversation
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.Conversations conversations = 5;</code>
          */
         @java.lang.Override
@@ -775,7 +775,7 @@ public final class TurmsNotification extends
          * <pre>
          * Conversation
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.Conversations conversations = 5;</code>
          */
         @java.lang.Override
@@ -791,7 +791,7 @@ public final class TurmsNotification extends
          * <pre>
          * Conversation
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.Conversations conversations = 5;</code>
          */
         private void setConversations(
@@ -805,7 +805,7 @@ public final class TurmsNotification extends
          * <pre>
          * Conversation
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.Conversations conversations = 5;</code>
          */
         private void mergeConversations(
@@ -828,7 +828,7 @@ public final class TurmsNotification extends
          * <pre>
          * Conversation
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.Conversations conversations = 5;</code>
          */
         private void clearConversations() {
@@ -844,7 +844,7 @@ public final class TurmsNotification extends
          * <pre>
          * Message
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.Messages messages = 6;</code>
          */
         @java.lang.Override
@@ -856,7 +856,7 @@ public final class TurmsNotification extends
          * <pre>
          * Message
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.Messages messages = 6;</code>
          */
         @java.lang.Override
@@ -871,7 +871,7 @@ public final class TurmsNotification extends
          * <pre>
          * Message
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.Messages messages = 6;</code>
          */
         private void setMessages(im.turms.client.model.proto.model.message.Messages value) {
@@ -884,7 +884,7 @@ public final class TurmsNotification extends
          * <pre>
          * Message
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.Messages messages = 6;</code>
          */
         private void mergeMessages(im.turms.client.model.proto.model.message.Messages value) {
@@ -906,7 +906,7 @@ public final class TurmsNotification extends
          * <pre>
          * Message
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.Messages messages = 6;</code>
          */
         private void clearMessages() {
@@ -983,7 +983,7 @@ public final class TurmsNotification extends
          * <pre>
          * User
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.UserSession user_session = 8;</code>
          */
         @java.lang.Override
@@ -995,7 +995,7 @@ public final class TurmsNotification extends
          * <pre>
          * User
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.UserSession user_session = 8;</code>
          */
         @java.lang.Override
@@ -1010,7 +1010,7 @@ public final class TurmsNotification extends
          * <pre>
          * User
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.UserSession user_session = 8;</code>
          */
         private void setUserSession(im.turms.client.model.proto.model.user.UserSession value) {
@@ -1023,7 +1023,7 @@ public final class TurmsNotification extends
          * <pre>
          * User
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.UserSession user_session = 8;</code>
          */
         private void mergeUserSession(im.turms.client.model.proto.model.user.UserSession value) {
@@ -1045,7 +1045,7 @@ public final class TurmsNotification extends
          * <pre>
          * User
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.UserSession user_session = 8;</code>
          */
         private void clearUserSession() {
@@ -1427,7 +1427,7 @@ public final class TurmsNotification extends
          * <pre>
          * Group
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 15;</code>
          */
         @java.lang.Override
@@ -1439,7 +1439,7 @@ public final class TurmsNotification extends
          * <pre>
          * Group
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 15;</code>
          */
         @java.lang.Override
@@ -1455,7 +1455,7 @@ public final class TurmsNotification extends
          * <pre>
          * Group
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 15;</code>
          */
         private void setGroupInvitationsWithVersion(
@@ -1469,7 +1469,7 @@ public final class TurmsNotification extends
          * <pre>
          * Group
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 15;</code>
          */
         private void mergeGroupInvitationsWithVersion(
@@ -1493,7 +1493,7 @@ public final class TurmsNotification extends
          * <pre>
          * Group
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 15;</code>
          */
         private void clearGroupInvitationsWithVersion() {
@@ -1817,7 +1817,7 @@ public final class TurmsNotification extends
          * <pre>
          * Storage
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.StorageResourceInfos storage_resource_infos = 50;</code>
          */
         @java.lang.Override
@@ -1829,7 +1829,7 @@ public final class TurmsNotification extends
          * <pre>
          * Storage
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.StorageResourceInfos storage_resource_infos = 50;</code>
          */
         @java.lang.Override
@@ -1845,7 +1845,7 @@ public final class TurmsNotification extends
          * <pre>
          * Storage
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.StorageResourceInfos storage_resource_infos = 50;</code>
          */
         private void setStorageResourceInfos(
@@ -1859,7 +1859,7 @@ public final class TurmsNotification extends
          * <pre>
          * Storage
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.StorageResourceInfos storage_resource_infos = 50;</code>
          */
         private void mergeStorageResourceInfos(
@@ -1882,7 +1882,7 @@ public final class TurmsNotification extends
          * <pre>
          * Storage
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.StorageResourceInfos storage_resource_infos = 50;</code>
          */
         private void clearStorageResourceInfos() {
@@ -1972,12 +1972,12 @@ public final class TurmsNotification extends
         }
 
         public static Builder newBuilder() {
-            return (Builder) DEFAULT_INSTANCE.createBuilder();
+            return DEFAULT_INSTANCE.createBuilder();
         }
 
         public static Builder newBuilder(
                 im.turms.client.model.proto.notification.TurmsNotification.Data prototype) {
-            return (Builder) DEFAULT_INSTANCE.createBuilder(prototype);
+            return DEFAULT_INSTANCE.createBuilder(prototype);
         }
 
         /**
@@ -2009,7 +2009,7 @@ public final class TurmsNotification extends
              * <pre>
              * Common
              * </pre>
-             * 
+             *
              * <code>int64 long = 1;</code>
              *
              * @return Whether the long field is set.
@@ -2023,7 +2023,7 @@ public final class TurmsNotification extends
              * <pre>
              * Common
              * </pre>
-             * 
+             *
              * <code>int64 long = 1;</code>
              *
              * @return The long.
@@ -2037,7 +2037,7 @@ public final class TurmsNotification extends
              * <pre>
              * Common
              * </pre>
-             * 
+             *
              * <code>int64 long = 1;</code>
              *
              * @param value The long to set.
@@ -2053,7 +2053,7 @@ public final class TurmsNotification extends
              * <pre>
              * Common
              * </pre>
-             * 
+             *
              * <code>int64 long = 1;</code>
              *
              * @return This builder for chaining.
@@ -2243,7 +2243,7 @@ public final class TurmsNotification extends
              * <pre>
              * Conversation
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.Conversations conversations = 5;</code>
              */
             @java.lang.Override
@@ -2255,7 +2255,7 @@ public final class TurmsNotification extends
              * <pre>
              * Conversation
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.Conversations conversations = 5;</code>
              */
             @java.lang.Override
@@ -2267,7 +2267,7 @@ public final class TurmsNotification extends
              * <pre>
              * Conversation
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.Conversations conversations = 5;</code>
              */
             public Builder setConversations(
@@ -2281,7 +2281,7 @@ public final class TurmsNotification extends
              * <pre>
              * Conversation
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.Conversations conversations = 5;</code>
              */
             public Builder setConversations(
@@ -2295,7 +2295,7 @@ public final class TurmsNotification extends
              * <pre>
              * Conversation
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.Conversations conversations = 5;</code>
              */
             public Builder mergeConversations(
@@ -2309,7 +2309,7 @@ public final class TurmsNotification extends
              * <pre>
              * Conversation
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.Conversations conversations = 5;</code>
              */
             public Builder clearConversations() {
@@ -2322,7 +2322,7 @@ public final class TurmsNotification extends
              * <pre>
              * Message
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.Messages messages = 6;</code>
              */
             @java.lang.Override
@@ -2334,7 +2334,7 @@ public final class TurmsNotification extends
              * <pre>
              * Message
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.Messages messages = 6;</code>
              */
             @java.lang.Override
@@ -2346,7 +2346,7 @@ public final class TurmsNotification extends
              * <pre>
              * Message
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.Messages messages = 6;</code>
              */
             public Builder setMessages(im.turms.client.model.proto.model.message.Messages value) {
@@ -2359,7 +2359,7 @@ public final class TurmsNotification extends
              * <pre>
              * Message
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.Messages messages = 6;</code>
              */
             public Builder setMessages(
@@ -2373,7 +2373,7 @@ public final class TurmsNotification extends
              * <pre>
              * Message
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.Messages messages = 6;</code>
              */
             public Builder mergeMessages(im.turms.client.model.proto.model.message.Messages value) {
@@ -2386,7 +2386,7 @@ public final class TurmsNotification extends
              * <pre>
              * Message
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.Messages messages = 6;</code>
              */
             public Builder clearMessages() {
@@ -2454,7 +2454,7 @@ public final class TurmsNotification extends
              * <pre>
              * User
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.UserSession user_session = 8;</code>
              */
             @java.lang.Override
@@ -2466,7 +2466,7 @@ public final class TurmsNotification extends
              * <pre>
              * User
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.UserSession user_session = 8;</code>
              */
             @java.lang.Override
@@ -2478,7 +2478,7 @@ public final class TurmsNotification extends
              * <pre>
              * User
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.UserSession user_session = 8;</code>
              */
             public Builder setUserSession(
@@ -2492,7 +2492,7 @@ public final class TurmsNotification extends
              * <pre>
              * User
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.UserSession user_session = 8;</code>
              */
             public Builder setUserSession(
@@ -2506,7 +2506,7 @@ public final class TurmsNotification extends
              * <pre>
              * User
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.UserSession user_session = 8;</code>
              */
             public Builder mergeUserSession(
@@ -2520,7 +2520,7 @@ public final class TurmsNotification extends
              * <pre>
              * User
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.UserSession user_session = 8;</code>
              */
             public Builder clearUserSession() {
@@ -2863,7 +2863,7 @@ public final class TurmsNotification extends
              * <pre>
              * Group
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 15;</code>
              */
             @java.lang.Override
@@ -2875,7 +2875,7 @@ public final class TurmsNotification extends
              * <pre>
              * Group
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 15;</code>
              */
             @java.lang.Override
@@ -2887,7 +2887,7 @@ public final class TurmsNotification extends
              * <pre>
              * Group
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 15;</code>
              */
             public Builder setGroupInvitationsWithVersion(
@@ -2901,7 +2901,7 @@ public final class TurmsNotification extends
              * <pre>
              * Group
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 15;</code>
              */
             public Builder setGroupInvitationsWithVersion(
@@ -2915,7 +2915,7 @@ public final class TurmsNotification extends
              * <pre>
              * Group
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 15;</code>
              */
             public Builder mergeGroupInvitationsWithVersion(
@@ -2929,7 +2929,7 @@ public final class TurmsNotification extends
              * <pre>
              * Group
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 15;</code>
              */
             public Builder clearGroupInvitationsWithVersion() {
@@ -3217,7 +3217,7 @@ public final class TurmsNotification extends
              * <pre>
              * Storage
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.StorageResourceInfos storage_resource_infos = 50;</code>
              */
             @java.lang.Override
@@ -3229,7 +3229,7 @@ public final class TurmsNotification extends
              * <pre>
              * Storage
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.StorageResourceInfos storage_resource_infos = 50;</code>
              */
             @java.lang.Override
@@ -3241,7 +3241,7 @@ public final class TurmsNotification extends
              * <pre>
              * Storage
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.StorageResourceInfos storage_resource_infos = 50;</code>
              */
             public Builder setStorageResourceInfos(
@@ -3255,7 +3255,7 @@ public final class TurmsNotification extends
              * <pre>
              * Storage
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.StorageResourceInfos storage_resource_infos = 50;</code>
              */
             public Builder setStorageResourceInfos(
@@ -3269,7 +3269,7 @@ public final class TurmsNotification extends
              * <pre>
              * Storage
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.StorageResourceInfos storage_resource_infos = 50;</code>
              */
             public Builder mergeStorageResourceInfos(
@@ -3283,7 +3283,7 @@ public final class TurmsNotification extends
              * <pre>
              * Storage
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.StorageResourceInfos storage_resource_infos = 50;</code>
              */
             public Builder clearStorageResourceInfos() {
@@ -3367,7 +3367,6 @@ public final class TurmsNotification extends
 
         // @@protoc_insertion_point(class_scope:im.turms.proto.TurmsNotification.Data)
         private static final im.turms.client.model.proto.notification.TurmsNotification.Data DEFAULT_INSTANCE;
-
         static {
             Data defaultInstance = new Data();
             // New instances are implicitly immutable so no need to make
@@ -3396,7 +3395,7 @@ public final class TurmsNotification extends
      * <pre>
      * Common =&gt; [1, 3]
      * </pre>
-     * 
+     *
      * <code>int64 timestamp = 1;</code>
      *
      * @return The timestamp.
@@ -3410,7 +3409,7 @@ public final class TurmsNotification extends
      * <pre>
      * Common =&gt; [1, 3]
      * </pre>
-     * 
+     *
      * <code>int64 timestamp = 1;</code>
      *
      * @param value The timestamp to set.
@@ -3424,7 +3423,7 @@ public final class TurmsNotification extends
      * <pre>
      * Common =&gt; [1, 3]
      * </pre>
-     * 
+     *
      * <code>int64 timestamp = 1;</code>
      */
     private void clearTimestamp() {
@@ -3441,7 +3440,7 @@ public final class TurmsNotification extends
      * "request_id" is used to tell the client that
      * this notification is a response to the specific request
      * </pre>
-     * 
+     *
      * <code>optional int64 request_id = 4;</code>
      *
      * @return Whether the requestId field is set.
@@ -3457,7 +3456,7 @@ public final class TurmsNotification extends
      * "request_id" is used to tell the client that
      * this notification is a response to the specific request
      * </pre>
-     * 
+     *
      * <code>optional int64 request_id = 4;</code>
      *
      * @return The requestId.
@@ -3473,7 +3472,7 @@ public final class TurmsNotification extends
      * "request_id" is used to tell the client that
      * this notification is a response to the specific request
      * </pre>
-     * 
+     *
      * <code>optional int64 request_id = 4;</code>
      *
      * @param value The requestId to set.
@@ -3489,7 +3488,7 @@ public final class TurmsNotification extends
      * "request_id" is used to tell the client that
      * this notification is a response to the specific request
      * </pre>
-     * 
+     *
      * <code>optional int64 request_id = 4;</code>
      */
     private void clearRequestId() {
@@ -3609,7 +3608,7 @@ public final class TurmsNotification extends
      */
     @java.lang.Override
     public boolean hasData() {
-        return data_ != null;
+        return ((bitField0_ & 0x00000008) != 0);
     }
 
     /**
@@ -3629,7 +3628,7 @@ public final class TurmsNotification extends
     private void setData(im.turms.client.model.proto.notification.TurmsNotification.Data value) {
         value.getClass();
         data_ = value;
-
+        bitField0_ |= 0x00000008;
     }
 
     /**
@@ -3648,7 +3647,7 @@ public final class TurmsNotification extends
         } else {
             data_ = value;
         }
-
+        bitField0_ |= 0x00000008;
     }
 
     /**
@@ -3656,7 +3655,7 @@ public final class TurmsNotification extends
      */
     private void clearData() {
         data_ = null;
-
+        bitField0_ &= ~0x00000008;
     }
 
     public static final int REQUESTER_ID_FIELD_NUMBER = 10;
@@ -3669,14 +3668,14 @@ public final class TurmsNotification extends
      * Note: Do not move "requester_id" to TurmsRequest because it requires rebuilding
      * a new TurmsNotification when recipients need "requester_id".
      * </pre>
-     * 
+     *
      * <code>optional int64 requester_id = 10;</code>
      *
      * @return Whether the requesterId field is set.
      */
     @java.lang.Override
     public boolean hasRequesterId() {
-        return ((bitField0_ & 0x00000008) != 0);
+        return ((bitField0_ & 0x00000010) != 0);
     }
 
     /**
@@ -3686,7 +3685,7 @@ public final class TurmsNotification extends
      * Note: Do not move "requester_id" to TurmsRequest because it requires rebuilding
      * a new TurmsNotification when recipients need "requester_id".
      * </pre>
-     * 
+     *
      * <code>optional int64 requester_id = 10;</code>
      *
      * @return The requesterId.
@@ -3703,13 +3702,13 @@ public final class TurmsNotification extends
      * Note: Do not move "requester_id" to TurmsRequest because it requires rebuilding
      * a new TurmsNotification when recipients need "requester_id".
      * </pre>
-     * 
+     *
      * <code>optional int64 requester_id = 10;</code>
      *
      * @param value The requesterId to set.
      */
     private void setRequesterId(long value) {
-        bitField0_ |= 0x00000008;
+        bitField0_ |= 0x00000010;
         requesterId_ = value;
     }
 
@@ -3720,11 +3719,11 @@ public final class TurmsNotification extends
      * Note: Do not move "requester_id" to TurmsRequest because it requires rebuilding
      * a new TurmsNotification when recipients need "requester_id".
      * </pre>
-     * 
+     *
      * <code>optional int64 requester_id = 10;</code>
      */
     private void clearRequesterId() {
-        bitField0_ &= ~0x00000008;
+        bitField0_ &= ~0x00000010;
         requesterId_ = 0L;
     }
 
@@ -3738,7 +3737,7 @@ public final class TurmsNotification extends
      */
     @java.lang.Override
     public boolean hasCloseStatus() {
-        return ((bitField0_ & 0x00000010) != 0);
+        return ((bitField0_ & 0x00000020) != 0);
     }
 
     /**
@@ -3757,7 +3756,7 @@ public final class TurmsNotification extends
      * @param value The closeStatus to set.
      */
     private void setCloseStatus(int value) {
-        bitField0_ |= 0x00000010;
+        bitField0_ |= 0x00000020;
         closeStatus_ = value;
     }
 
@@ -3765,7 +3764,7 @@ public final class TurmsNotification extends
      * <code>optional int32 close_status = 11;</code>
      */
     private void clearCloseStatus() {
-        bitField0_ &= ~0x00000010;
+        bitField0_ &= ~0x00000020;
         closeStatus_ = 0;
     }
 
@@ -3777,7 +3776,7 @@ public final class TurmsNotification extends
      */
     @java.lang.Override
     public boolean hasRelayedRequest() {
-        return relayedRequest_ != null;
+        return ((bitField0_ & 0x00000040) != 0);
     }
 
     /**
@@ -3796,7 +3795,7 @@ public final class TurmsNotification extends
     private void setRelayedRequest(im.turms.client.model.proto.request.TurmsRequest value) {
         value.getClass();
         relayedRequest_ = value;
-
+        bitField0_ |= 0x00000040;
     }
 
     /**
@@ -3815,7 +3814,7 @@ public final class TurmsNotification extends
         } else {
             relayedRequest_ = value;
         }
-
+        bitField0_ |= 0x00000040;
     }
 
     /**
@@ -3823,7 +3822,7 @@ public final class TurmsNotification extends
      */
     private void clearRelayedRequest() {
         relayedRequest_ = null;
-
+        bitField0_ &= ~0x00000040;
     }
 
     public static im.turms.client.model.proto.notification.TurmsNotification parseFrom(
@@ -3905,12 +3904,12 @@ public final class TurmsNotification extends
     }
 
     public static Builder newBuilder() {
-        return (Builder) DEFAULT_INSTANCE.createBuilder();
+        return DEFAULT_INSTANCE.createBuilder();
     }
 
     public static Builder newBuilder(
             im.turms.client.model.proto.notification.TurmsNotification prototype) {
-        return (Builder) DEFAULT_INSTANCE.createBuilder(prototype);
+        return DEFAULT_INSTANCE.createBuilder(prototype);
     }
 
     /**
@@ -3930,7 +3929,7 @@ public final class TurmsNotification extends
          * <pre>
          * Common =&gt; [1, 3]
          * </pre>
-         * 
+         *
          * <code>int64 timestamp = 1;</code>
          *
          * @return The timestamp.
@@ -3944,7 +3943,7 @@ public final class TurmsNotification extends
          * <pre>
          * Common =&gt; [1, 3]
          * </pre>
-         * 
+         *
          * <code>int64 timestamp = 1;</code>
          *
          * @param value The timestamp to set.
@@ -3960,7 +3959,7 @@ public final class TurmsNotification extends
          * <pre>
          * Common =&gt; [1, 3]
          * </pre>
-         * 
+         *
          * <code>int64 timestamp = 1;</code>
          *
          * @return This builder for chaining.
@@ -3977,7 +3976,7 @@ public final class TurmsNotification extends
          * "request_id" is used to tell the client that
          * this notification is a response to the specific request
          * </pre>
-         * 
+         *
          * <code>optional int64 request_id = 4;</code>
          *
          * @return Whether the requestId field is set.
@@ -3993,7 +3992,7 @@ public final class TurmsNotification extends
          * "request_id" is used to tell the client that
          * this notification is a response to the specific request
          * </pre>
-         * 
+         *
          * <code>optional int64 request_id = 4;</code>
          *
          * @return The requestId.
@@ -4009,7 +4008,7 @@ public final class TurmsNotification extends
          * "request_id" is used to tell the client that
          * this notification is a response to the specific request
          * </pre>
-         * 
+         *
          * <code>optional int64 request_id = 4;</code>
          *
          * @param value The requestId to set.
@@ -4027,7 +4026,7 @@ public final class TurmsNotification extends
          * "request_id" is used to tell the client that
          * this notification is a response to the specific request
          * </pre>
-         * 
+         *
          * <code>optional int64 request_id = 4;</code>
          *
          * @return This builder for chaining.
@@ -4208,7 +4207,7 @@ public final class TurmsNotification extends
          * Note: Do not move "requester_id" to TurmsRequest because it requires rebuilding
          * a new TurmsNotification when recipients need "requester_id".
          * </pre>
-         * 
+         *
          * <code>optional int64 requester_id = 10;</code>
          *
          * @return Whether the requesterId field is set.
@@ -4225,7 +4224,7 @@ public final class TurmsNotification extends
          * Note: Do not move "requester_id" to TurmsRequest because it requires rebuilding
          * a new TurmsNotification when recipients need "requester_id".
          * </pre>
-         * 
+         *
          * <code>optional int64 requester_id = 10;</code>
          *
          * @return The requesterId.
@@ -4242,7 +4241,7 @@ public final class TurmsNotification extends
          * Note: Do not move "requester_id" to TurmsRequest because it requires rebuilding
          * a new TurmsNotification when recipients need "requester_id".
          * </pre>
-         * 
+         *
          * <code>optional int64 requester_id = 10;</code>
          *
          * @param value The requesterId to set.
@@ -4261,7 +4260,7 @@ public final class TurmsNotification extends
          * Note: Do not move "requester_id" to TurmsRequest because it requires rebuilding
          * a new TurmsNotification when recipients need "requester_id".
          * </pre>
-         * 
+         *
          * <code>optional int64 requester_id = 10;</code>
          *
          * @return This builder for chaining.
@@ -4396,7 +4395,8 @@ public final class TurmsNotification extends
                         "relayedRequest_",};
                 java.lang.String info =
                         "\u0000\b\u0000\u0001\u0001\f\b\u0000\u0000\u0000\u0001\u0002\u0004\u1002\u0000\u0005"
-                                + "\u1004\u0001\u0006\u1208\u0002\u0007\t\n\u1002\u0003\u000b\u1004\u0004\f\t";
+                                + "\u1004\u0001\u0006\u1208\u0002\u0007\u1009\u0003\n\u1002\u0004\u000b\u1004\u0005"
+                                + "\f\u1009\u0006";
                 return newMessageInfo(DEFAULT_INSTANCE, info, objects);
             }
             // fall through

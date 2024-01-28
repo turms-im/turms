@@ -59,7 +59,7 @@ public final class UpdateTypingStatusRequest extends com.google.protobuf.Generat
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>bool is_group_message = 1;</code>
      *
      * @return The isGroupMessage.
@@ -350,6 +350,43 @@ public final class UpdateTypingStatusRequest extends com.google.protobuf.Generat
         }
 
         @java.lang.Override
+        public Builder clone() {
+            return super.clone();
+        }
+
+        @java.lang.Override
+        public Builder setField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value) {
+            return super.setField(field, value);
+        }
+
+        @java.lang.Override
+        public Builder clearField(com.google.protobuf.Descriptors.FieldDescriptor field) {
+            return super.clearField(field);
+        }
+
+        @java.lang.Override
+        public Builder clearOneof(com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+            return super.clearOneof(oneof);
+        }
+
+        @java.lang.Override
+        public Builder setRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                int index,
+                java.lang.Object value) {
+            return super.setRepeatedField(field, index, value);
+        }
+
+        @java.lang.Override
+        public Builder addRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value) {
+            return super.addRepeatedField(field, value);
+        }
+
+        @java.lang.Override
         public Builder mergeFrom(com.google.protobuf.Message other) {
             if (other instanceof im.turms.server.common.access.client.dto.request.conversation.UpdateTypingStatusRequest) {
                 return mergeFrom(
@@ -427,7 +464,7 @@ public final class UpdateTypingStatusRequest extends com.google.protobuf.Generat
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>bool is_group_message = 1;</code>
          *
          * @return The isGroupMessage.
@@ -441,7 +478,7 @@ public final class UpdateTypingStatusRequest extends com.google.protobuf.Generat
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>bool is_group_message = 1;</code>
          *
          * @param value The isGroupMessage to set.
@@ -459,7 +496,7 @@ public final class UpdateTypingStatusRequest extends com.google.protobuf.Generat
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>bool is_group_message = 1;</code>
          *
          * @return This builder for chaining.

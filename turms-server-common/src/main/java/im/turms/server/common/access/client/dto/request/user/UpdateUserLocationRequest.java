@@ -46,13 +46,14 @@ public final class UpdateUserLocationRequest extends com.google.protobuf.Generat
 
     @SuppressWarnings({"rawtypes"})
     @java.lang.Override
-    protected com.google.protobuf.MapField internalGetMapField(int number) {
-        return switch (number) {
-            case 3 -> internalGetDetails();
-            default -> throw new RuntimeException(
-                    "Invalid map field number: "
-                            + number);
-        };
+    protected com.google.protobuf.MapFieldReflectionAccessor internalGetMapFieldReflection(
+            int number) {
+        if (number == 3) {
+            return internalGetDetails();
+        }
+        throw new RuntimeException(
+                "Invalid map field number: "
+                        + number);
     }
 
     @java.lang.Override
@@ -70,7 +71,7 @@ public final class UpdateUserLocationRequest extends com.google.protobuf.Generat
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>float latitude = 1;</code>
      *
      * @return The latitude.
@@ -97,7 +98,7 @@ public final class UpdateUserLocationRequest extends com.google.protobuf.Generat
 
     private static final class DetailsDefaultEntryHolder {
         static final com.google.protobuf.MapEntry<java.lang.String, java.lang.String> defaultEntry =
-                com.google.protobuf.MapEntry.<java.lang.String, java.lang.String>newDefaultInstance(
+                com.google.protobuf.MapEntry.newDefaultInstance(
                         im.turms.server.common.access.client.dto.request.user.UpdateUserLocationRequestOuterClass.internal_static_im_turms_proto_UpdateUserLocationRequest_DetailsEntry_descriptor,
                         com.google.protobuf.WireFormat.FieldType.STRING,
                         "",
@@ -401,23 +402,25 @@ public final class UpdateUserLocationRequest extends com.google.protobuf.Generat
         }
 
         @SuppressWarnings({"rawtypes"})
-        protected com.google.protobuf.MapField internalGetMapField(int number) {
-            return switch (number) {
-                case 3 -> internalGetDetails();
-                default -> throw new RuntimeException(
-                        "Invalid map field number: "
-                                + number);
-            };
+        protected com.google.protobuf.MapFieldReflectionAccessor internalGetMapFieldReflection(
+                int number) {
+            if (number == 3) {
+                return internalGetDetails();
+            }
+            throw new RuntimeException(
+                    "Invalid map field number: "
+                            + number);
         }
 
         @SuppressWarnings({"rawtypes"})
-        protected com.google.protobuf.MapField internalGetMutableMapField(int number) {
-            return switch (number) {
-                case 3 -> internalGetMutableDetails();
-                default -> throw new RuntimeException(
-                        "Invalid map field number: "
-                                + number);
-            };
+        protected com.google.protobuf.MapFieldReflectionAccessor internalGetMutableMapFieldReflection(
+                int number) {
+            if (number == 3) {
+                return internalGetMutableDetails();
+            }
+            throw new RuntimeException(
+                    "Invalid map field number: "
+                            + number);
         }
 
         @java.lang.Override
@@ -495,6 +498,43 @@ public final class UpdateUserLocationRequest extends com.google.protobuf.Generat
                 result.details_ = internalGetDetails();
                 result.details_.makeImmutable();
             }
+        }
+
+        @java.lang.Override
+        public Builder clone() {
+            return super.clone();
+        }
+
+        @java.lang.Override
+        public Builder setField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value) {
+            return super.setField(field, value);
+        }
+
+        @java.lang.Override
+        public Builder clearField(com.google.protobuf.Descriptors.FieldDescriptor field) {
+            return super.clearField(field);
+        }
+
+        @java.lang.Override
+        public Builder clearOneof(com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+            return super.clearOneof(oneof);
+        }
+
+        @java.lang.Override
+        public Builder setRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                int index,
+                java.lang.Object value) {
+            return super.setRepeatedField(field, index, value);
+        }
+
+        @java.lang.Override
+        public Builder addRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value) {
+            return super.addRepeatedField(field, value);
         }
 
         @java.lang.Override
@@ -587,7 +627,7 @@ public final class UpdateUserLocationRequest extends com.google.protobuf.Generat
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>float latitude = 1;</code>
          *
          * @return The latitude.
@@ -601,7 +641,7 @@ public final class UpdateUserLocationRequest extends com.google.protobuf.Generat
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>float latitude = 1;</code>
          *
          * @param value The latitude to set.
@@ -619,7 +659,7 @@ public final class UpdateUserLocationRequest extends com.google.protobuf.Generat
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>float latitude = 1;</code>
          *
          * @return This builder for chaining.

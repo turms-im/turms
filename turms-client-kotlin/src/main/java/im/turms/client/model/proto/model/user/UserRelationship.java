@@ -26,6 +26,7 @@ public final class UserRelationship
         // @@protoc_insertion_point(message_implements:im.turms.proto.UserRelationship)
         UserRelationshipOrBuilder {
     private UserRelationship() {
+        name_ = "";
     }
 
     private int bitField0_;
@@ -234,6 +235,69 @@ public final class UserRelationship
         establishmentDate_ = 0L;
     }
 
+    public static final int NAME_FIELD_NUMBER = 6;
+    private java.lang.String name_;
+
+    /**
+     * <code>optional string name = 6;</code>
+     *
+     * @return Whether the name field is set.
+     */
+    @java.lang.Override
+    public boolean hasName() {
+        return ((bitField0_ & 0x00000020) != 0);
+    }
+
+    /**
+     * <code>optional string name = 6;</code>
+     *
+     * @return The name.
+     */
+    @java.lang.Override
+    public java.lang.String getName() {
+        return name_;
+    }
+
+    /**
+     * <code>optional string name = 6;</code>
+     *
+     * @return The bytes for name.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString getNameBytes() {
+        return com.google.protobuf.ByteString.copyFromUtf8(name_);
+    }
+
+    /**
+     * <code>optional string name = 6;</code>
+     *
+     * @param value The name to set.
+     */
+    private void setName(java.lang.String value) {
+        java.lang.Class<?> valueClass = value.getClass();
+        bitField0_ |= 0x00000020;
+        name_ = value;
+    }
+
+    /**
+     * <code>optional string name = 6;</code>
+     */
+    private void clearName() {
+        bitField0_ &= ~0x00000020;
+        name_ = getDefaultInstance().getName();
+    }
+
+    /**
+     * <code>optional string name = 6;</code>
+     *
+     * @param value The bytes for name to set.
+     */
+    private void setNameBytes(com.google.protobuf.ByteString value) {
+        checkByteStringIsUtf8(value);
+        name_ = value.toStringUtf8();
+        bitField0_ |= 0x00000020;
+    }
+
     public static im.turms.client.model.proto.model.user.UserRelationship parseFrom(
             java.nio.ByteBuffer data) throws com.google.protobuf.InvalidProtocolBufferException {
         return com.google.protobuf.GeneratedMessageLite.parseFrom(DEFAULT_INSTANCE, data);
@@ -313,12 +377,12 @@ public final class UserRelationship
     }
 
     public static Builder newBuilder() {
-        return (Builder) DEFAULT_INSTANCE.createBuilder();
+        return DEFAULT_INSTANCE.createBuilder();
     }
 
     public static Builder newBuilder(
             im.turms.client.model.proto.model.user.UserRelationship prototype) {
-        return (Builder) DEFAULT_INSTANCE.createBuilder(prototype);
+        return DEFAULT_INSTANCE.createBuilder(prototype);
     }
 
     /**
@@ -549,6 +613,71 @@ public final class UserRelationship
             return this;
         }
 
+        /**
+         * <code>optional string name = 6;</code>
+         *
+         * @return Whether the name field is set.
+         */
+        @java.lang.Override
+        public boolean hasName() {
+            return instance.hasName();
+        }
+
+        /**
+         * <code>optional string name = 6;</code>
+         *
+         * @return The name.
+         */
+        @java.lang.Override
+        public java.lang.String getName() {
+            return instance.getName();
+        }
+
+        /**
+         * <code>optional string name = 6;</code>
+         *
+         * @return The bytes for name.
+         */
+        @java.lang.Override
+        public com.google.protobuf.ByteString getNameBytes() {
+            return instance.getNameBytes();
+        }
+
+        /**
+         * <code>optional string name = 6;</code>
+         *
+         * @param value The name to set.
+         * @return This builder for chaining.
+         */
+        public Builder setName(java.lang.String value) {
+            copyOnWrite();
+            instance.setName(value);
+            return this;
+        }
+
+        /**
+         * <code>optional string name = 6;</code>
+         *
+         * @return This builder for chaining.
+         */
+        public Builder clearName() {
+            copyOnWrite();
+            instance.clearName();
+            return this;
+        }
+
+        /**
+         * <code>optional string name = 6;</code>
+         *
+         * @param value The bytes for name to set.
+         * @return This builder for chaining.
+         */
+        public Builder setNameBytes(com.google.protobuf.ByteString value) {
+            copyOnWrite();
+            instance.setNameBytes(value);
+            return this;
+        }
+
         // @@protoc_insertion_point(builder_scope:im.turms.proto.UserRelationship)
     }
 
@@ -571,10 +700,11 @@ public final class UserRelationship
                         "relatedUserId_",
                         "blockDate_",
                         "groupIndex_",
-                        "establishmentDate_",};
+                        "establishmentDate_",
+                        "name_",};
                 java.lang.String info =
-                        "\u0000\u0005\u0000\u0001\u0001\u0005\u0005\u0000\u0000\u0000\u0001\u1002\u0000\u0002"
-                                + "\u1002\u0001\u0003\u1002\u0002\u0004\u1002\u0003\u0005\u1002\u0004";
+                        "\u0000\u0006\u0000\u0001\u0001\u0006\u0006\u0000\u0000\u0000\u0001\u1002\u0000\u0002"
+                                + "\u1002\u0001\u0003\u1002\u0002\u0004\u1002\u0003\u0005\u1002\u0004\u0006\u1208\u0005";
                 return newMessageInfo(DEFAULT_INSTANCE, info, objects);
             }
             // fall through

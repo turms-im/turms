@@ -32,7 +32,7 @@ public final class UpdateMessageRequest extends com.google.protobuf.GeneratedMes
 
     private UpdateMessageRequest() {
         text_ = "";
-        records_ = java.util.Collections.emptyList();
+        records_ = emptyList(com.google.protobuf.ByteString.class);
     }
 
     @java.lang.Override
@@ -61,7 +61,7 @@ public final class UpdateMessageRequest extends com.google.protobuf.GeneratedMes
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>int64 message_id = 1;</code>
      *
      * @return The messageId.
@@ -79,7 +79,7 @@ public final class UpdateMessageRequest extends com.google.protobuf.GeneratedMes
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>optional string text = 2;</code>
      *
      * @return Whether the text field is set.
@@ -93,7 +93,7 @@ public final class UpdateMessageRequest extends com.google.protobuf.GeneratedMes
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>optional string text = 2;</code>
      *
      * @return The text.
@@ -115,7 +115,7 @@ public final class UpdateMessageRequest extends com.google.protobuf.GeneratedMes
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>optional string text = 2;</code>
      *
      * @return The bytes for text.
@@ -135,7 +135,8 @@ public final class UpdateMessageRequest extends com.google.protobuf.GeneratedMes
 
     public static final int RECORDS_FIELD_NUMBER = 3;
     @SuppressWarnings("serial")
-    private java.util.List<com.google.protobuf.ByteString> records_;
+    private com.google.protobuf.Internal.ProtobufList<com.google.protobuf.ByteString> records_ =
+            emptyList(com.google.protobuf.ByteString.class);
 
     /**
      * <code>repeated bytes records = 3;</code>
@@ -242,7 +243,7 @@ public final class UpdateMessageRequest extends com.google.protobuf.GeneratedMes
                 dataSize += com.google.protobuf.CodedOutputStream.computeBytesSizeNoTag(bytes);
             }
             size += dataSize;
-            size += 1 * getRecordsList().size();
+            size += getRecordsList().size();
         }
         if (((bitField0_ & 0x00000002) != 0)) {
             size += com.google.protobuf.CodedOutputStream.computeInt64Size(4, recallDate_);
@@ -452,7 +453,7 @@ public final class UpdateMessageRequest extends com.google.protobuf.GeneratedMes
             bitField0_ = 0;
             messageId_ = 0L;
             text_ = "";
-            records_ = java.util.Collections.emptyList();
+            records_ = emptyList(com.google.protobuf.ByteString.class);
             recallDate_ = 0L;
             return this;
         }
@@ -483,21 +484,11 @@ public final class UpdateMessageRequest extends com.google.protobuf.GeneratedMes
             im.turms.server.common.access.client.dto.request.message.UpdateMessageRequest result =
                     new im.turms.server.common.access.client.dto.request.message.UpdateMessageRequest(
                             this);
-            buildPartialRepeatedFields(result);
             if (bitField0_ != 0) {
                 buildPartial0(result);
             }
             onBuilt();
             return result;
-        }
-
-        private void buildPartialRepeatedFields(
-                im.turms.server.common.access.client.dto.request.message.UpdateMessageRequest result) {
-            if (((bitField0_ & 0x00000004) != 0)) {
-                records_ = java.util.Collections.unmodifiableList(records_);
-                bitField0_ &= ~0x00000004;
-            }
-            result.records_ = records_;
         }
 
         private void buildPartial0(
@@ -511,11 +502,52 @@ public final class UpdateMessageRequest extends com.google.protobuf.GeneratedMes
                 result.text_ = text_;
                 to_bitField0_ |= 0x00000001;
             }
+            if (((from_bitField0_ & 0x00000004) != 0)) {
+                records_.makeImmutable();
+                result.records_ = records_;
+            }
             if (((from_bitField0_ & 0x00000008) != 0)) {
                 result.recallDate_ = recallDate_;
                 to_bitField0_ |= 0x00000002;
             }
             result.bitField0_ |= to_bitField0_;
+        }
+
+        @java.lang.Override
+        public Builder clone() {
+            return super.clone();
+        }
+
+        @java.lang.Override
+        public Builder setField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value) {
+            return super.setField(field, value);
+        }
+
+        @java.lang.Override
+        public Builder clearField(com.google.protobuf.Descriptors.FieldDescriptor field) {
+            return super.clearField(field);
+        }
+
+        @java.lang.Override
+        public Builder clearOneof(com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+            return super.clearOneof(oneof);
+        }
+
+        @java.lang.Override
+        public Builder setRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                int index,
+                java.lang.Object value) {
+            return super.setRepeatedField(field, index, value);
+        }
+
+        @java.lang.Override
+        public Builder addRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value) {
+            return super.addRepeatedField(field, value);
         }
 
         @java.lang.Override
@@ -546,7 +578,8 @@ public final class UpdateMessageRequest extends com.google.protobuf.GeneratedMes
             if (!other.records_.isEmpty()) {
                 if (records_.isEmpty()) {
                     records_ = other.records_;
-                    bitField0_ &= ~0x00000004;
+                    records_.makeImmutable();
+                    bitField0_ |= 0x00000004;
                 } else {
                     ensureRecordsIsMutable();
                     records_.addAll(other.records_);
@@ -620,7 +653,7 @@ public final class UpdateMessageRequest extends com.google.protobuf.GeneratedMes
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>int64 message_id = 1;</code>
          *
          * @return The messageId.
@@ -634,7 +667,7 @@ public final class UpdateMessageRequest extends com.google.protobuf.GeneratedMes
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>int64 message_id = 1;</code>
          *
          * @param value The messageId to set.
@@ -652,7 +685,7 @@ public final class UpdateMessageRequest extends com.google.protobuf.GeneratedMes
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>int64 message_id = 1;</code>
          *
          * @return This builder for chaining.
@@ -670,7 +703,7 @@ public final class UpdateMessageRequest extends com.google.protobuf.GeneratedMes
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>optional string text = 2;</code>
          *
          * @return Whether the text field is set.
@@ -683,7 +716,7 @@ public final class UpdateMessageRequest extends com.google.protobuf.GeneratedMes
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>optional string text = 2;</code>
          *
          * @return The text.
@@ -704,7 +737,7 @@ public final class UpdateMessageRequest extends com.google.protobuf.GeneratedMes
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>optional string text = 2;</code>
          *
          * @return The bytes for text.
@@ -725,7 +758,7 @@ public final class UpdateMessageRequest extends com.google.protobuf.GeneratedMes
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>optional string text = 2;</code>
          *
          * @param value The text to set.
@@ -745,7 +778,7 @@ public final class UpdateMessageRequest extends com.google.protobuf.GeneratedMes
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>optional string text = 2;</code>
          *
          * @return This builder for chaining.
@@ -761,7 +794,7 @@ public final class UpdateMessageRequest extends com.google.protobuf.GeneratedMes
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>optional string text = 2;</code>
          *
          * @param value The bytes for text to set.
@@ -778,14 +811,14 @@ public final class UpdateMessageRequest extends com.google.protobuf.GeneratedMes
             return this;
         }
 
-        private java.util.List<com.google.protobuf.ByteString> records_ =
-                java.util.Collections.emptyList();
+        private com.google.protobuf.Internal.ProtobufList<com.google.protobuf.ByteString> records_ =
+                emptyList(com.google.protobuf.ByteString.class);
 
         private void ensureRecordsIsMutable() {
-            if ((bitField0_ & 0x00000004) == 0) {
-                records_ = new java.util.ArrayList<>(records_);
-                bitField0_ |= 0x00000004;
+            if (!records_.isModifiable()) {
+                records_ = makeMutableCopy(records_);
             }
+            bitField0_ |= 0x00000004;
         }
 
         /**
@@ -794,9 +827,8 @@ public final class UpdateMessageRequest extends com.google.protobuf.GeneratedMes
          * @return A list containing the records.
          */
         public java.util.List<com.google.protobuf.ByteString> getRecordsList() {
-            return ((bitField0_ & 0x00000004) != 0)
-                    ? java.util.Collections.unmodifiableList(records_)
-                    : records_;
+            records_.makeImmutable();
+            return records_;
         }
 
         /**
@@ -831,6 +863,7 @@ public final class UpdateMessageRequest extends com.google.protobuf.GeneratedMes
             }
             ensureRecordsIsMutable();
             records_.set(index, value);
+            bitField0_ |= 0x00000004;
             onChanged();
             return this;
         }
@@ -847,6 +880,7 @@ public final class UpdateMessageRequest extends com.google.protobuf.GeneratedMes
             }
             ensureRecordsIsMutable();
             records_.add(value);
+            bitField0_ |= 0x00000004;
             onChanged();
             return this;
         }
@@ -861,6 +895,7 @@ public final class UpdateMessageRequest extends com.google.protobuf.GeneratedMes
                 java.lang.Iterable<? extends com.google.protobuf.ByteString> values) {
             ensureRecordsIsMutable();
             com.google.protobuf.AbstractMessageLite.Builder.addAll(values, records_);
+            bitField0_ |= 0x00000004;
             onChanged();
             return this;
         }
@@ -871,7 +906,7 @@ public final class UpdateMessageRequest extends com.google.protobuf.GeneratedMes
          * @return This builder for chaining.
          */
         public Builder clearRecords() {
-            records_ = java.util.Collections.emptyList();
+            records_ = emptyList(com.google.protobuf.ByteString.class);
             bitField0_ &= ~0x00000004;
             onChanged();
             return this;

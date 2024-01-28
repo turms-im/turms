@@ -52,7 +52,7 @@ extension MessagesWithTotalList: SwiftProtobuf.Message, SwiftProtobuf._MessageIm
             // allocates stack space for every case branch when no optimizations are
             // enabled. https://github.com/apple/swift-protobuf/issues/1034
             switch fieldNumber {
-            case 1: try try decoder.decodeRepeatedMessageField(value: &messagesWithTotalList)
+            case 1: try decoder.decodeRepeatedMessageField(value: &messagesWithTotalList)
             default: break
             }
         }

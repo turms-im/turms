@@ -54,9 +54,7 @@ public final class QueryFriendRequestsRequestOuterClass {
         internal_static_im_turms_proto_QueryFriendRequestsRequest_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
                         internal_static_im_turms_proto_QueryFriendRequestsRequest_descriptor,
-                        new java.lang.String[]{"AreSentByMe",
-                                "LastUpdatedDate",
-                                "LastUpdatedDate",});
+                        new java.lang.String[]{"AreSentByMe", "LastUpdatedDate",});
     }
 
     // @@protoc_insertion_point(outer_class_scope)

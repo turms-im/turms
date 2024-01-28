@@ -53,7 +53,7 @@ public final class StringsWithVersionOuterClass {
         internal_static_im_turms_proto_StringsWithVersion_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
                         internal_static_im_turms_proto_StringsWithVersion_descriptor,
-                        new java.lang.String[]{"Strings", "LastUpdatedDate", "LastUpdatedDate",});
+                        new java.lang.String[]{"Strings", "LastUpdatedDate",});
     }
 
     // @@protoc_insertion_point(outer_class_scope)

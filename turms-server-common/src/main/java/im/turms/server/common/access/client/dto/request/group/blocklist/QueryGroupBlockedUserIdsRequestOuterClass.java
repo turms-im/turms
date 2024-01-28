@@ -54,7 +54,7 @@ public final class QueryGroupBlockedUserIdsRequestOuterClass {
         internal_static_im_turms_proto_QueryGroupBlockedUserIdsRequest_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
                         internal_static_im_turms_proto_QueryGroupBlockedUserIdsRequest_descriptor,
-                        new java.lang.String[]{"GroupId", "LastUpdatedDate", "LastUpdatedDate",});
+                        new java.lang.String[]{"GroupId", "LastUpdatedDate",});
     }
 
     // @@protoc_insertion_point(outer_class_scope)

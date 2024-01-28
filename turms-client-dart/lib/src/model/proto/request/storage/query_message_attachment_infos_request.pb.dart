@@ -1,9 +1,13 @@
-///
+//
 //  Generated code. Do not modify.
 //  source: request/storage/query_message_attachment_infos_request.proto
 //
 // @dart = 2.12
-// ignore_for_file: annotate_overrides,camel_case_types,constant_identifier_names,directives_ordering,library_prefixes,non_constant_identifier_names,prefer_final_fields,return_of_invalid_type,unnecessary_const,unnecessary_import,unnecessary_this,unused_import,unused_shown_name
+
+// ignore_for_file: annotate_overrides, camel_case_types, comment_references
+// ignore_for_file: constant_identifier_names, library_prefixes
+// ignore_for_file: non_constant_identifier_names, prefer_final_fields
+// ignore_for_file: unnecessary_import, unnecessary_this, unused_import
 
 import 'dart:core' as $core;
 
@@ -11,50 +15,6 @@ import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 class QueryMessageAttachmentInfosRequest extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      const $core.bool.fromEnvironment('protobuf.omit_message_names')
-          ? ''
-          : 'QueryMessageAttachmentInfosRequest',
-      package: const $pb.PackageName(
-          const $core.bool.fromEnvironment('protobuf.omit_message_names')
-              ? ''
-              : 'im.turms.proto'),
-      createEmptyInstance: create)
-    ..p<$fixnum.Int64>(
-        1,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'userIds',
-        $pb.PbFieldType.K6)
-    ..p<$fixnum.Int64>(
-        2,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'groupIds',
-        $pb.PbFieldType.K6)
-    ..aInt64(
-        3,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'creationDateStart')
-    ..aInt64(
-        4,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'creationDateEnd')
-    ..aOB(
-        5,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'inPrivateConversation')
-    ..aOB(
-        6,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'areSharedByMe')
-    ..hasRequiredFields = false;
-
-  QueryMessageAttachmentInfosRequest._() : super();
   factory QueryMessageAttachmentInfosRequest({
     $core.Iterable<$fixnum.Int64>? userIds,
     $core.Iterable<$fixnum.Int64>? groupIds,
@@ -63,33 +23,47 @@ class QueryMessageAttachmentInfosRequest extends $pb.GeneratedMessage {
     $core.bool? inPrivateConversation,
     $core.bool? areSharedByMe,
   }) {
-    final _result = create();
+    final $result = create();
     if (userIds != null) {
-      _result.userIds.addAll(userIds);
+      $result.userIds.addAll(userIds);
     }
     if (groupIds != null) {
-      _result.groupIds.addAll(groupIds);
+      $result.groupIds.addAll(groupIds);
     }
     if (creationDateStart != null) {
-      _result.creationDateStart = creationDateStart;
+      $result.creationDateStart = creationDateStart;
     }
     if (creationDateEnd != null) {
-      _result.creationDateEnd = creationDateEnd;
+      $result.creationDateEnd = creationDateEnd;
     }
     if (inPrivateConversation != null) {
-      _result.inPrivateConversation = inPrivateConversation;
+      $result.inPrivateConversation = inPrivateConversation;
     }
     if (areSharedByMe != null) {
-      _result.areSharedByMe = areSharedByMe;
+      $result.areSharedByMe = areSharedByMe;
     }
-    return _result;
+    return $result;
   }
+  QueryMessageAttachmentInfosRequest._() : super();
   factory QueryMessageAttachmentInfosRequest.fromBuffer($core.List<$core.int> i,
           [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(i, r);
   factory QueryMessageAttachmentInfosRequest.fromJson($core.String i,
           [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(i, r);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'QueryMessageAttachmentInfosRequest',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'im.turms.proto'),
+      createEmptyInstance: create)
+    ..p<$fixnum.Int64>(1, _omitFieldNames ? '' : 'userIds', $pb.PbFieldType.K6)
+    ..p<$fixnum.Int64>(2, _omitFieldNames ? '' : 'groupIds', $pb.PbFieldType.K6)
+    ..aInt64(3, _omitFieldNames ? '' : 'creationDateStart')
+    ..aInt64(4, _omitFieldNames ? '' : 'creationDateEnd')
+    ..aOB(5, _omitFieldNames ? '' : 'inPrivateConversation')
+    ..aOB(6, _omitFieldNames ? '' : 'areSharedByMe')
+    ..hasRequiredFields = false;
+
   @$core.Deprecated('Using this can add significant overhead to your binary. '
       'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
       'Will be removed in next major version')
@@ -102,8 +76,10 @@ class QueryMessageAttachmentInfosRequest extends $pb.GeneratedMessage {
           void Function(QueryMessageAttachmentInfosRequest) updates) =>
       super.copyWith((message) =>
               updates(message as QueryMessageAttachmentInfosRequest))
-          as QueryMessageAttachmentInfosRequest; // ignore: deprecated_member_use
+          as QueryMessageAttachmentInfosRequest;
+
   $pb.BuilderInfo get info_ => _i;
+
   @$core.pragma('dart2js:noInline')
   static QueryMessageAttachmentInfosRequest create() =>
       QueryMessageAttachmentInfosRequest._();
@@ -170,3 +146,7 @@ class QueryMessageAttachmentInfosRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(6)
   void clearAreSharedByMe() => clearField(6);
 }
+
+const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');
+const _omitMessageNames =
+    $core.bool.fromEnvironment('protobuf.omit_message_names');

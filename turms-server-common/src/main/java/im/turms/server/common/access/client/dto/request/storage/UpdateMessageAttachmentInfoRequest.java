@@ -62,7 +62,7 @@ public final class UpdateMessageAttachmentInfoRequest extends com.google.protobu
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>optional int64 attachment_id_num = 1;</code>
      *
      * @return Whether the attachmentIdNum field is set.
@@ -76,7 +76,7 @@ public final class UpdateMessageAttachmentInfoRequest extends com.google.protobu
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>optional int64 attachment_id_num = 1;</code>
      *
      * @return The attachmentIdNum.
@@ -143,7 +143,7 @@ public final class UpdateMessageAttachmentInfoRequest extends com.google.protobu
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>optional int64 user_id_to_share_with = 3;</code>
      *
      * @return Whether the userIdToShareWith field is set.
@@ -157,7 +157,7 @@ public final class UpdateMessageAttachmentInfoRequest extends com.google.protobu
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>optional int64 user_id_to_share_with = 3;</code>
      *
      * @return The userIdToShareWith.
@@ -615,6 +615,43 @@ public final class UpdateMessageAttachmentInfoRequest extends com.google.protobu
         }
 
         @java.lang.Override
+        public Builder clone() {
+            return super.clone();
+        }
+
+        @java.lang.Override
+        public Builder setField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value) {
+            return super.setField(field, value);
+        }
+
+        @java.lang.Override
+        public Builder clearField(com.google.protobuf.Descriptors.FieldDescriptor field) {
+            return super.clearField(field);
+        }
+
+        @java.lang.Override
+        public Builder clearOneof(com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+            return super.clearOneof(oneof);
+        }
+
+        @java.lang.Override
+        public Builder setRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                int index,
+                java.lang.Object value) {
+            return super.setRepeatedField(field, index, value);
+        }
+
+        @java.lang.Override
+        public Builder addRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value) {
+            return super.addRepeatedField(field, value);
+        }
+
+        @java.lang.Override
         public Builder mergeFrom(com.google.protobuf.Message other) {
             if (other instanceof im.turms.server.common.access.client.dto.request.storage.UpdateMessageAttachmentInfoRequest) {
                 return mergeFrom(
@@ -722,7 +759,7 @@ public final class UpdateMessageAttachmentInfoRequest extends com.google.protobu
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>optional int64 attachment_id_num = 1;</code>
          *
          * @return Whether the attachmentIdNum field is set.
@@ -736,7 +773,7 @@ public final class UpdateMessageAttachmentInfoRequest extends com.google.protobu
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>optional int64 attachment_id_num = 1;</code>
          *
          * @return The attachmentIdNum.
@@ -750,7 +787,7 @@ public final class UpdateMessageAttachmentInfoRequest extends com.google.protobu
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>optional int64 attachment_id_num = 1;</code>
          *
          * @param value The attachmentIdNum to set.
@@ -768,7 +805,7 @@ public final class UpdateMessageAttachmentInfoRequest extends com.google.protobu
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>optional int64 attachment_id_num = 1;</code>
          *
          * @return This builder for chaining.
@@ -876,7 +913,7 @@ public final class UpdateMessageAttachmentInfoRequest extends com.google.protobu
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>optional int64 user_id_to_share_with = 3;</code>
          *
          * @return Whether the userIdToShareWith field is set.
@@ -890,7 +927,7 @@ public final class UpdateMessageAttachmentInfoRequest extends com.google.protobu
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>optional int64 user_id_to_share_with = 3;</code>
          *
          * @return The userIdToShareWith.
@@ -904,7 +941,7 @@ public final class UpdateMessageAttachmentInfoRequest extends com.google.protobu
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>optional int64 user_id_to_share_with = 3;</code>
          *
          * @param value The userIdToShareWith to set.
@@ -922,7 +959,7 @@ public final class UpdateMessageAttachmentInfoRequest extends com.google.protobu
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>optional int64 user_id_to_share_with = 3;</code>
          *
          * @return This builder for chaining.

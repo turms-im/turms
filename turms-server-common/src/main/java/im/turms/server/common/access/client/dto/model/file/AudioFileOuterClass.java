@@ -57,20 +57,14 @@ public final class AudioFileOuterClass {
         internal_static_im_turms_proto_AudioFile_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
                         internal_static_im_turms_proto_AudioFile_descriptor,
-                        new java.lang.String[]{"Description", "Data", "Description", "Data",});
+                        new java.lang.String[]{"Description", "Data",});
         internal_static_im_turms_proto_AudioFile_Description_descriptor =
                 internal_static_im_turms_proto_AudioFile_descriptor.getNestedTypes()
                         .get(0);
         internal_static_im_turms_proto_AudioFile_Description_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
                         internal_static_im_turms_proto_AudioFile_Description_descriptor,
-                        new java.lang.String[]{"Url",
-                                "Duration",
-                                "Size",
-                                "Format",
-                                "Duration",
-                                "Size",
-                                "Format",});
+                        new java.lang.String[]{"Url", "Duration", "Size", "Format",});
     }
 
     // @@protoc_insertion_point(outer_class_scope)

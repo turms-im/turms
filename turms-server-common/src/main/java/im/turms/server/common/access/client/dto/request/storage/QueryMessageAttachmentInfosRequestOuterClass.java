@@ -64,10 +64,6 @@ public final class QueryMessageAttachmentInfosRequestOuterClass {
                                 "CreationDateStart",
                                 "CreationDateEnd",
                                 "InPrivateConversation",
-                                "AreSharedByMe",
-                                "CreationDateStart",
-                                "CreationDateEnd",
-                                "InPrivateConversation",
                                 "AreSharedByMe",});
     }
 

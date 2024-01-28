@@ -25,7 +25,7 @@ public interface NearbyUserOrBuilder extends
      * <pre>
      * session info
      * </pre>
-     * 
+     *
      * <code>int64 user_id = 1;</code>
      *
      * @return The userId.
@@ -57,7 +57,7 @@ public interface NearbyUserOrBuilder extends
      * <pre>
      * user info
      * </pre>
-     * 
+     *
      * <code>optional .im.turms.proto.UserInfo info = 3;</code>
      *
      * @return Whether the info field is set.
@@ -68,7 +68,7 @@ public interface NearbyUserOrBuilder extends
      * <pre>
      * user info
      * </pre>
-     * 
+     *
      * <code>optional .im.turms.proto.UserInfo info = 3;</code>
      *
      * @return The info.
@@ -79,7 +79,7 @@ public interface NearbyUserOrBuilder extends
      * <pre>
      * geo info
      * </pre>
-     * 
+     *
      * <code>optional int32 distance = 4;</code>
      *
      * @return Whether the distance field is set.
@@ -90,7 +90,7 @@ public interface NearbyUserOrBuilder extends
      * <pre>
      * geo info
      * </pre>
-     * 
+     *
      * <code>optional int32 distance = 4;</code>
      *
      * @return The distance.

@@ -1,9 +1,13 @@
-///
+//
 //  Generated code. Do not modify.
 //  source: request/storage/query_resource_upload_info_request.proto
 //
 // @dart = 2.12
-// ignore_for_file: annotate_overrides,camel_case_types,constant_identifier_names,directives_ordering,library_prefixes,non_constant_identifier_names,prefer_final_fields,return_of_invalid_type,unnecessary_const,unnecessary_import,unnecessary_this,unused_import,unused_shown_name
+
+// ignore_for_file: annotate_overrides, camel_case_types, comment_references
+// ignore_for_file: constant_identifier_names, library_prefixes
+// ignore_for_file: non_constant_identifier_names, prefer_final_fields
+// ignore_for_file: unnecessary_import, unnecessary_this, unused_import
 
 import 'dart:core' as $core;
 
@@ -13,56 +17,6 @@ import 'package:protobuf/protobuf.dart' as $pb;
 import '../../constant/storage_resource_type.pbenum.dart' as $0;
 
 class QueryResourceUploadInfoRequest extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      const $core.bool.fromEnvironment('protobuf.omit_message_names')
-          ? ''
-          : 'QueryResourceUploadInfoRequest',
-      package: const $pb.PackageName(
-          const $core.bool.fromEnvironment('protobuf.omit_message_names')
-              ? ''
-              : 'im.turms.proto'),
-      createEmptyInstance: create)
-    ..e<$0.StorageResourceType>(
-        1,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'type',
-        $pb.PbFieldType.OE,
-        defaultOrMaker: $0.StorageResourceType.USER_PROFILE_PICTURE,
-        valueOf: $0.StorageResourceType.valueOf,
-        enumValues: $0.StorageResourceType.values)
-    ..aInt64(
-        2,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'idNum')
-    ..aOS(
-        3,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'idStr')
-    ..aOS(
-        4,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'name')
-    ..aOS(
-        5,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'mediaType')
-    ..m<$core.String, $core.String>(
-        6,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'extra',
-        entryClassName: 'QueryResourceUploadInfoRequest.ExtraEntry',
-        keyFieldType: $pb.PbFieldType.OS,
-        valueFieldType: $pb.PbFieldType.OS,
-        packageName: const $pb.PackageName('im.turms.proto'))
-    ..hasRequiredFields = false;
-
-  QueryResourceUploadInfoRequest._() : super();
   factory QueryResourceUploadInfoRequest({
     $0.StorageResourceType? type,
     $fixnum.Int64? idNum,
@@ -71,33 +25,55 @@ class QueryResourceUploadInfoRequest extends $pb.GeneratedMessage {
     $core.String? mediaType,
     $core.Map<$core.String, $core.String>? extra,
   }) {
-    final _result = create();
+    final $result = create();
     if (type != null) {
-      _result.type = type;
+      $result.type = type;
     }
     if (idNum != null) {
-      _result.idNum = idNum;
+      $result.idNum = idNum;
     }
     if (idStr != null) {
-      _result.idStr = idStr;
+      $result.idStr = idStr;
     }
     if (name != null) {
-      _result.name = name;
+      $result.name = name;
     }
     if (mediaType != null) {
-      _result.mediaType = mediaType;
+      $result.mediaType = mediaType;
     }
     if (extra != null) {
-      _result.extra.addAll(extra);
+      $result.extra.addAll(extra);
     }
-    return _result;
+    return $result;
   }
+  QueryResourceUploadInfoRequest._() : super();
   factory QueryResourceUploadInfoRequest.fromBuffer($core.List<$core.int> i,
           [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(i, r);
   factory QueryResourceUploadInfoRequest.fromJson($core.String i,
           [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(i, r);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'QueryResourceUploadInfoRequest',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'im.turms.proto'),
+      createEmptyInstance: create)
+    ..e<$0.StorageResourceType>(
+        1, _omitFieldNames ? '' : 'type', $pb.PbFieldType.OE,
+        defaultOrMaker: $0.StorageResourceType.USER_PROFILE_PICTURE,
+        valueOf: $0.StorageResourceType.valueOf,
+        enumValues: $0.StorageResourceType.values)
+    ..aInt64(2, _omitFieldNames ? '' : 'idNum')
+    ..aOS(3, _omitFieldNames ? '' : 'idStr')
+    ..aOS(4, _omitFieldNames ? '' : 'name')
+    ..aOS(5, _omitFieldNames ? '' : 'mediaType')
+    ..m<$core.String, $core.String>(6, _omitFieldNames ? '' : 'extra',
+        entryClassName: 'QueryResourceUploadInfoRequest.ExtraEntry',
+        keyFieldType: $pb.PbFieldType.OS,
+        valueFieldType: $pb.PbFieldType.OS,
+        packageName: const $pb.PackageName('im.turms.proto'))
+    ..hasRequiredFields = false;
+
   @$core.Deprecated('Using this can add significant overhead to your binary. '
       'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
       'Will be removed in next major version')
@@ -110,8 +86,10 @@ class QueryResourceUploadInfoRequest extends $pb.GeneratedMessage {
           void Function(QueryResourceUploadInfoRequest) updates) =>
       super.copyWith(
               (message) => updates(message as QueryResourceUploadInfoRequest))
-          as QueryResourceUploadInfoRequest; // ignore: deprecated_member_use
+          as QueryResourceUploadInfoRequest;
+
   $pb.BuilderInfo get info_ => _i;
+
   @$core.pragma('dart2js:noInline')
   static QueryResourceUploadInfoRequest create() =>
       QueryResourceUploadInfoRequest._();
@@ -186,3 +164,7 @@ class QueryResourceUploadInfoRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(6)
   $core.Map<$core.String, $core.String> get extra => $_getMap(5);
 }
+
+const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');
+const _omitMessageNames =
+    $core.bool.fromEnvironment('protobuf.omit_message_names');

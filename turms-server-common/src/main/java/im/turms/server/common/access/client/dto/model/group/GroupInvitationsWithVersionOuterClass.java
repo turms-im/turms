@@ -57,9 +57,7 @@ public final class GroupInvitationsWithVersionOuterClass {
         internal_static_im_turms_proto_GroupInvitationsWithVersion_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
                         internal_static_im_turms_proto_GroupInvitationsWithVersion_descriptor,
-                        new java.lang.String[]{"GroupInvitations",
-                                "LastUpdatedDate",
-                                "LastUpdatedDate",});
+                        new java.lang.String[]{"GroupInvitations", "LastUpdatedDate",});
         im.turms.server.common.access.client.dto.model.group.GroupInvitationOuterClass
                 .getDescriptor();
     }

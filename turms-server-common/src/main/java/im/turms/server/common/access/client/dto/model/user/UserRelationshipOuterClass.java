@@ -39,15 +39,15 @@ public final class UserRelationshipOuterClass {
 
     static {
         java.lang.String[] descriptorData = {"\n\"model/user/user_relationship.proto\022\016im"
-                + ".turms.proto\"\362\001\n\020UserRelationship\022\025\n\010own"
+                + ".turms.proto\"\216\002\n\020UserRelationship\022\025\n\010own"
                 + "er_id\030\001 \001(\003H\000\210\001\001\022\034\n\017related_user_id\030\002 \001("
                 + "\003H\001\210\001\001\022\027\n\nblock_date\030\003 \001(\003H\002\210\001\001\022\030\n\013group"
                 + "_index\030\004 \001(\003H\003\210\001\001\022\037\n\022establishment_date\030"
-                + "\005 \001(\003H\004\210\001\001B\013\n\t_owner_idB\022\n\020_related_user"
-                + "_idB\r\n\013_block_dateB\016\n\014_group_indexB\025\n\023_e"
-                + "stablishment_dateB:\n3im.turms.server.com"
-                + "mon.access.client.dto.model.userP\001\272\002\000b\006p"
-                + "roto3"};
+                + "\005 \001(\003H\004\210\001\001\022\021\n\004name\030\006 \001(\tH\005\210\001\001B\013\n\t_owner_"
+                + "idB\022\n\020_related_user_idB\r\n\013_block_dateB\016\n"
+                + "\014_group_indexB\025\n\023_establishment_dateB\007\n\005"
+                + "_nameB:\n3im.turms.server.common.access.c"
+                + "lient.dto.model.userP\001\272\002\000b\006proto3"};
         descriptor = com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(
                 descriptorData,
                 new com.google.protobuf.Descriptors.FileDescriptor[]{});
@@ -62,11 +62,7 @@ public final class UserRelationshipOuterClass {
                                 "BlockDate",
                                 "GroupIndex",
                                 "EstablishmentDate",
-                                "OwnerId",
-                                "RelatedUserId",
-                                "BlockDate",
-                                "GroupIndex",
-                                "EstablishmentDate",});
+                                "Name",});
     }
 
     // @@protoc_insertion_point(outer_class_scope)

@@ -32,7 +32,7 @@ public final class Message extends com.google.protobuf.GeneratedMessageV3 implem
 
     private Message() {
         text_ = "";
-        records_ = java.util.Collections.emptyList();
+        records_ = emptyList(com.google.protobuf.ByteString.class);
     }
 
     @java.lang.Override
@@ -267,7 +267,8 @@ public final class Message extends com.google.protobuf.GeneratedMessageV3 implem
 
     public static final int RECORDS_FIELD_NUMBER = 9;
     @SuppressWarnings("serial")
-    private java.util.List<com.google.protobuf.ByteString> records_;
+    private com.google.protobuf.Internal.ProtobufList<com.google.protobuf.ByteString> records_ =
+            emptyList(com.google.protobuf.ByteString.class);
 
     /**
      * <code>repeated bytes records = 9;</code>
@@ -436,7 +437,7 @@ public final class Message extends com.google.protobuf.GeneratedMessageV3 implem
                 dataSize += com.google.protobuf.CodedOutputStream.computeBytesSizeNoTag(bytes);
             }
             size += dataSize;
-            size += 1 * getRecordsList().size();
+            size += getRecordsList().size();
         }
         if (((bitField0_ & 0x00000100) != 0)) {
             size += com.google.protobuf.CodedOutputStream.computeInt32Size(10, sequenceId_);
@@ -746,7 +747,7 @@ public final class Message extends com.google.protobuf.GeneratedMessageV3 implem
             groupId_ = 0L;
             isSystemMessage_ = false;
             recipientId_ = 0L;
-            records_ = java.util.Collections.emptyList();
+            records_ = emptyList(com.google.protobuf.ByteString.class);
             sequenceId_ = 0;
             preMessageId_ = 0L;
             return this;
@@ -776,21 +777,11 @@ public final class Message extends com.google.protobuf.GeneratedMessageV3 implem
         public im.turms.server.common.access.client.dto.model.message.Message buildPartial() {
             im.turms.server.common.access.client.dto.model.message.Message result =
                     new im.turms.server.common.access.client.dto.model.message.Message(this);
-            buildPartialRepeatedFields(result);
             if (bitField0_ != 0) {
                 buildPartial0(result);
             }
             onBuilt();
             return result;
-        }
-
-        private void buildPartialRepeatedFields(
-                im.turms.server.common.access.client.dto.model.message.Message result) {
-            if (((bitField0_ & 0x00000100) != 0)) {
-                records_ = java.util.Collections.unmodifiableList(records_);
-                bitField0_ &= ~0x00000100;
-            }
-            result.records_ = records_;
         }
 
         private void buildPartial0(
@@ -829,6 +820,10 @@ public final class Message extends com.google.protobuf.GeneratedMessageV3 implem
                 result.recipientId_ = recipientId_;
                 to_bitField0_ |= 0x00000080;
             }
+            if (((from_bitField0_ & 0x00000100) != 0)) {
+                records_.makeImmutable();
+                result.records_ = records_;
+            }
             if (((from_bitField0_ & 0x00000200) != 0)) {
                 result.sequenceId_ = sequenceId_;
                 to_bitField0_ |= 0x00000100;
@@ -838,6 +833,43 @@ public final class Message extends com.google.protobuf.GeneratedMessageV3 implem
                 to_bitField0_ |= 0x00000200;
             }
             result.bitField0_ |= to_bitField0_;
+        }
+
+        @java.lang.Override
+        public Builder clone() {
+            return super.clone();
+        }
+
+        @java.lang.Override
+        public Builder setField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value) {
+            return super.setField(field, value);
+        }
+
+        @java.lang.Override
+        public Builder clearField(com.google.protobuf.Descriptors.FieldDescriptor field) {
+            return super.clearField(field);
+        }
+
+        @java.lang.Override
+        public Builder clearOneof(com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+            return super.clearOneof(oneof);
+        }
+
+        @java.lang.Override
+        public Builder setRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                int index,
+                java.lang.Object value) {
+            return super.setRepeatedField(field, index, value);
+        }
+
+        @java.lang.Override
+        public Builder addRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value) {
+            return super.addRepeatedField(field, value);
         }
 
         @java.lang.Override
@@ -886,7 +918,8 @@ public final class Message extends com.google.protobuf.GeneratedMessageV3 implem
             if (!other.records_.isEmpty()) {
                 if (records_.isEmpty()) {
                     records_ = other.records_;
-                    bitField0_ &= ~0x00000100;
+                    records_.makeImmutable();
+                    bitField0_ |= 0x00000100;
                 } else {
                     ensureRecordsIsMutable();
                     records_.addAll(other.records_);
@@ -1411,14 +1444,14 @@ public final class Message extends com.google.protobuf.GeneratedMessageV3 implem
             return this;
         }
 
-        private java.util.List<com.google.protobuf.ByteString> records_ =
-                java.util.Collections.emptyList();
+        private com.google.protobuf.Internal.ProtobufList<com.google.protobuf.ByteString> records_ =
+                emptyList(com.google.protobuf.ByteString.class);
 
         private void ensureRecordsIsMutable() {
-            if ((bitField0_ & 0x00000100) == 0) {
-                records_ = new java.util.ArrayList<>(records_);
-                bitField0_ |= 0x00000100;
+            if (!records_.isModifiable()) {
+                records_ = makeMutableCopy(records_);
             }
+            bitField0_ |= 0x00000100;
         }
 
         /**
@@ -1427,9 +1460,8 @@ public final class Message extends com.google.protobuf.GeneratedMessageV3 implem
          * @return A list containing the records.
          */
         public java.util.List<com.google.protobuf.ByteString> getRecordsList() {
-            return ((bitField0_ & 0x00000100) != 0)
-                    ? java.util.Collections.unmodifiableList(records_)
-                    : records_;
+            records_.makeImmutable();
+            return records_;
         }
 
         /**
@@ -1464,6 +1496,7 @@ public final class Message extends com.google.protobuf.GeneratedMessageV3 implem
             }
             ensureRecordsIsMutable();
             records_.set(index, value);
+            bitField0_ |= 0x00000100;
             onChanged();
             return this;
         }
@@ -1480,6 +1513,7 @@ public final class Message extends com.google.protobuf.GeneratedMessageV3 implem
             }
             ensureRecordsIsMutable();
             records_.add(value);
+            bitField0_ |= 0x00000100;
             onChanged();
             return this;
         }
@@ -1494,6 +1528,7 @@ public final class Message extends com.google.protobuf.GeneratedMessageV3 implem
                 java.lang.Iterable<? extends com.google.protobuf.ByteString> values) {
             ensureRecordsIsMutable();
             com.google.protobuf.AbstractMessageLite.Builder.addAll(values, records_);
+            bitField0_ |= 0x00000100;
             onChanged();
             return this;
         }
@@ -1504,7 +1539,7 @@ public final class Message extends com.google.protobuf.GeneratedMessageV3 implem
          * @return This builder for chaining.
          */
         public Builder clearRecords() {
-            records_ = java.util.Collections.emptyList();
+            records_ = emptyList(com.google.protobuf.ByteString.class);
             bitField0_ &= ~0x00000100;
             onChanged();
             return this;

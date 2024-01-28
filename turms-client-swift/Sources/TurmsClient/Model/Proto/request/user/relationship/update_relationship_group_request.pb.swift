@@ -57,8 +57,8 @@ extension UpdateRelationshipGroupRequest: SwiftProtobuf.Message, SwiftProtobuf._
             // allocates stack space for every case branch when no optimizations are
             // enabled. https://github.com/apple/swift-protobuf/issues/1034
             switch fieldNumber {
-            case 1: try try decoder.decodeSingularInt32Field(value: &groupIndex)
-            case 2: try try decoder.decodeSingularStringField(value: &newName)
+            case 1: try decoder.decodeSingularInt32Field(value: &groupIndex)
+            case 2: try decoder.decodeSingularStringField(value: &newName)
             default: break
             }
         }

@@ -56,12 +56,7 @@ public final class QueryGroupInvitationsRequestOuterClass {
         internal_static_im_turms_proto_QueryGroupInvitationsRequest_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
                         internal_static_im_turms_proto_QueryGroupInvitationsRequest_descriptor,
-                        new java.lang.String[]{"GroupId",
-                                "AreSentByMe",
-                                "LastUpdatedDate",
-                                "GroupId",
-                                "AreSentByMe",
-                                "LastUpdatedDate",});
+                        new java.lang.String[]{"GroupId", "AreSentByMe", "LastUpdatedDate",});
     }
 
     // @@protoc_insertion_point(outer_class_scope)

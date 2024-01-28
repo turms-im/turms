@@ -136,15 +136,15 @@ extension QueryMessagesRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
             // allocates stack space for every case branch when no optimizations are
             // enabled. https://github.com/apple/swift-protobuf/issues/1034
             switch fieldNumber {
-            case 1: try try decoder.decodeRepeatedInt64Field(value: &ids)
-            case 2: try try decoder.decodeSingularBoolField(value: &_areGroupMessages)
-            case 3: try try decoder.decodeSingularBoolField(value: &_areSystemMessages)
-            case 4: try try decoder.decodeRepeatedInt64Field(value: &fromIds)
-            case 5: try try decoder.decodeSingularInt64Field(value: &_deliveryDateStart)
-            case 6: try try decoder.decodeSingularInt64Field(value: &_deliveryDateEnd)
-            case 7: try try decoder.decodeSingularInt32Field(value: &_maxCount)
-            case 8: try try decoder.decodeSingularBoolField(value: &withTotal)
-            case 9: try try decoder.decodeSingularBoolField(value: &_descending)
+            case 1: try decoder.decodeRepeatedInt64Field(value: &ids)
+            case 2: try decoder.decodeSingularBoolField(value: &_areGroupMessages)
+            case 3: try decoder.decodeSingularBoolField(value: &_areSystemMessages)
+            case 4: try decoder.decodeRepeatedInt64Field(value: &fromIds)
+            case 5: try decoder.decodeSingularInt64Field(value: &_deliveryDateStart)
+            case 6: try decoder.decodeSingularInt64Field(value: &_deliveryDateEnd)
+            case 7: try decoder.decodeSingularInt32Field(value: &_maxCount)
+            case 8: try decoder.decodeSingularBoolField(value: &withTotal)
+            case 9: try decoder.decodeSingularBoolField(value: &_descending)
             default: break
             }
         }

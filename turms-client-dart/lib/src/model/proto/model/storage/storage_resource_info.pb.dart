@@ -1,9 +1,13 @@
-///
+//
 //  Generated code. Do not modify.
 //  source: model/storage/storage_resource_info.proto
 //
 // @dart = 2.12
-// ignore_for_file: annotate_overrides,camel_case_types,constant_identifier_names,directives_ordering,library_prefixes,non_constant_identifier_names,prefer_final_fields,return_of_invalid_type,unnecessary_const,unnecessary_import,unnecessary_this,unused_import,unused_shown_name
+
+// ignore_for_file: annotate_overrides, camel_case_types, comment_references
+// ignore_for_file: constant_identifier_names, library_prefixes
+// ignore_for_file: non_constant_identifier_names, prefer_final_fields
+// ignore_for_file: unnecessary_import, unnecessary_this, unused_import
 
 import 'dart:core' as $core;
 
@@ -11,48 +15,6 @@ import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 class StorageResourceInfo extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      const $core.bool.fromEnvironment('protobuf.omit_message_names')
-          ? ''
-          : 'StorageResourceInfo',
-      package: const $pb.PackageName(
-          const $core.bool.fromEnvironment('protobuf.omit_message_names')
-              ? ''
-              : 'im.turms.proto'),
-      createEmptyInstance: create)
-    ..aInt64(
-        1,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'idNum')
-    ..aOS(
-        2,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'idStr')
-    ..aOS(
-        3,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'name')
-    ..aOS(
-        4,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'mediaType')
-    ..aInt64(
-        5,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'uploaderId')
-    ..aInt64(
-        6,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'creationDate')
-    ..hasRequiredFields = false;
-
-  StorageResourceInfo._() : super();
   factory StorageResourceInfo({
     $fixnum.Int64? idNum,
     $core.String? idStr,
@@ -61,33 +23,47 @@ class StorageResourceInfo extends $pb.GeneratedMessage {
     $fixnum.Int64? uploaderId,
     $fixnum.Int64? creationDate,
   }) {
-    final _result = create();
+    final $result = create();
     if (idNum != null) {
-      _result.idNum = idNum;
+      $result.idNum = idNum;
     }
     if (idStr != null) {
-      _result.idStr = idStr;
+      $result.idStr = idStr;
     }
     if (name != null) {
-      _result.name = name;
+      $result.name = name;
     }
     if (mediaType != null) {
-      _result.mediaType = mediaType;
+      $result.mediaType = mediaType;
     }
     if (uploaderId != null) {
-      _result.uploaderId = uploaderId;
+      $result.uploaderId = uploaderId;
     }
     if (creationDate != null) {
-      _result.creationDate = creationDate;
+      $result.creationDate = creationDate;
     }
-    return _result;
+    return $result;
   }
+  StorageResourceInfo._() : super();
   factory StorageResourceInfo.fromBuffer($core.List<$core.int> i,
           [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(i, r);
   factory StorageResourceInfo.fromJson($core.String i,
           [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(i, r);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'StorageResourceInfo',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'im.turms.proto'),
+      createEmptyInstance: create)
+    ..aInt64(1, _omitFieldNames ? '' : 'idNum')
+    ..aOS(2, _omitFieldNames ? '' : 'idStr')
+    ..aOS(3, _omitFieldNames ? '' : 'name')
+    ..aOS(4, _omitFieldNames ? '' : 'mediaType')
+    ..aInt64(5, _omitFieldNames ? '' : 'uploaderId')
+    ..aInt64(6, _omitFieldNames ? '' : 'creationDate')
+    ..hasRequiredFields = false;
+
   @$core.Deprecated('Using this can add significant overhead to your binary. '
       'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
       'Will be removed in next major version')
@@ -97,8 +73,10 @@ class StorageResourceInfo extends $pb.GeneratedMessage {
       'Will be removed in next major version')
   StorageResourceInfo copyWith(void Function(StorageResourceInfo) updates) =>
       super.copyWith((message) => updates(message as StorageResourceInfo))
-          as StorageResourceInfo; // ignore: deprecated_member_use
+          as StorageResourceInfo;
+
   $pb.BuilderInfo get info_ => _i;
+
   @$core.pragma('dart2js:noInline')
   static StorageResourceInfo create() => StorageResourceInfo._();
   StorageResourceInfo createEmptyInstance() => create();
@@ -181,3 +159,7 @@ class StorageResourceInfo extends $pb.GeneratedMessage {
   @$pb.TagNumber(6)
   void clearCreationDate() => clearField(6);
 }
+
+const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');
+const _omitMessageNames =
+    $core.bool.fromEnvironment('protobuf.omit_message_names');

@@ -62,7 +62,7 @@ public final class UpdateGroupRequest extends com.google.protobuf.GeneratedMessa
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>int64 group_id = 1;</code>
      *
      * @return The groupId.
@@ -79,7 +79,7 @@ public final class UpdateGroupRequest extends com.google.protobuf.GeneratedMessa
      * <pre>
      * Update options
      * </pre>
-     * 
+     *
      * <code>optional bool quit_after_transfer = 2;</code>
      *
      * @return Whether the quitAfterTransfer field is set.
@@ -93,7 +93,7 @@ public final class UpdateGroupRequest extends com.google.protobuf.GeneratedMessa
      * <pre>
      * Update options
      * </pre>
-     * 
+     *
      * <code>optional bool quit_after_transfer = 2;</code>
      *
      * @return The quitAfterTransfer.
@@ -111,7 +111,7 @@ public final class UpdateGroupRequest extends com.google.protobuf.GeneratedMessa
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>optional string name = 3;</code>
      *
      * @return Whether the name field is set.
@@ -125,7 +125,7 @@ public final class UpdateGroupRequest extends com.google.protobuf.GeneratedMessa
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>optional string name = 3;</code>
      *
      * @return The name.
@@ -147,7 +147,7 @@ public final class UpdateGroupRequest extends com.google.protobuf.GeneratedMessa
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>optional string name = 3;</code>
      *
      * @return The bytes for name.
@@ -796,6 +796,43 @@ public final class UpdateGroupRequest extends com.google.protobuf.GeneratedMessa
         }
 
         @java.lang.Override
+        public Builder clone() {
+            return super.clone();
+        }
+
+        @java.lang.Override
+        public Builder setField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value) {
+            return super.setField(field, value);
+        }
+
+        @java.lang.Override
+        public Builder clearField(com.google.protobuf.Descriptors.FieldDescriptor field) {
+            return super.clearField(field);
+        }
+
+        @java.lang.Override
+        public Builder clearOneof(com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+            return super.clearOneof(oneof);
+        }
+
+        @java.lang.Override
+        public Builder setRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                int index,
+                java.lang.Object value) {
+            return super.setRepeatedField(field, index, value);
+        }
+
+        @java.lang.Override
+        public Builder addRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value) {
+            return super.addRepeatedField(field, value);
+        }
+
+        @java.lang.Override
         public Builder mergeFrom(com.google.protobuf.Message other) {
             if (other instanceof im.turms.server.common.access.client.dto.request.group.UpdateGroupRequest) {
                 return mergeFrom(
@@ -928,7 +965,7 @@ public final class UpdateGroupRequest extends com.google.protobuf.GeneratedMessa
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>int64 group_id = 1;</code>
          *
          * @return The groupId.
@@ -942,7 +979,7 @@ public final class UpdateGroupRequest extends com.google.protobuf.GeneratedMessa
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>int64 group_id = 1;</code>
          *
          * @param value The groupId to set.
@@ -960,7 +997,7 @@ public final class UpdateGroupRequest extends com.google.protobuf.GeneratedMessa
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>int64 group_id = 1;</code>
          *
          * @return This builder for chaining.
@@ -978,7 +1015,7 @@ public final class UpdateGroupRequest extends com.google.protobuf.GeneratedMessa
          * <pre>
          * Update options
          * </pre>
-         * 
+         *
          * <code>optional bool quit_after_transfer = 2;</code>
          *
          * @return Whether the quitAfterTransfer field is set.
@@ -992,7 +1029,7 @@ public final class UpdateGroupRequest extends com.google.protobuf.GeneratedMessa
          * <pre>
          * Update options
          * </pre>
-         * 
+         *
          * <code>optional bool quit_after_transfer = 2;</code>
          *
          * @return The quitAfterTransfer.
@@ -1006,7 +1043,7 @@ public final class UpdateGroupRequest extends com.google.protobuf.GeneratedMessa
          * <pre>
          * Update options
          * </pre>
-         * 
+         *
          * <code>optional bool quit_after_transfer = 2;</code>
          *
          * @param value The quitAfterTransfer to set.
@@ -1024,7 +1061,7 @@ public final class UpdateGroupRequest extends com.google.protobuf.GeneratedMessa
          * <pre>
          * Update options
          * </pre>
-         * 
+         *
          * <code>optional bool quit_after_transfer = 2;</code>
          *
          * @return This builder for chaining.
@@ -1042,7 +1079,7 @@ public final class UpdateGroupRequest extends com.google.protobuf.GeneratedMessa
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>optional string name = 3;</code>
          *
          * @return Whether the name field is set.
@@ -1055,7 +1092,7 @@ public final class UpdateGroupRequest extends com.google.protobuf.GeneratedMessa
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>optional string name = 3;</code>
          *
          * @return The name.
@@ -1076,7 +1113,7 @@ public final class UpdateGroupRequest extends com.google.protobuf.GeneratedMessa
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>optional string name = 3;</code>
          *
          * @return The bytes for name.
@@ -1097,7 +1134,7 @@ public final class UpdateGroupRequest extends com.google.protobuf.GeneratedMessa
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>optional string name = 3;</code>
          *
          * @param value The name to set.
@@ -1117,7 +1154,7 @@ public final class UpdateGroupRequest extends com.google.protobuf.GeneratedMessa
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>optional string name = 3;</code>
          *
          * @return This builder for chaining.
@@ -1133,7 +1170,7 @@ public final class UpdateGroupRequest extends com.google.protobuf.GeneratedMessa
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>optional string name = 3;</code>
          *
          * @param value The bytes for name to set.

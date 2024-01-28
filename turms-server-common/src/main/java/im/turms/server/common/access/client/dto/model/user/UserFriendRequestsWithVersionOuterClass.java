@@ -58,9 +58,7 @@ public final class UserFriendRequestsWithVersionOuterClass {
         internal_static_im_turms_proto_UserFriendRequestsWithVersion_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
                         internal_static_im_turms_proto_UserFriendRequestsWithVersion_descriptor,
-                        new java.lang.String[]{"UserFriendRequests",
-                                "LastUpdatedDate",
-                                "LastUpdatedDate",});
+                        new java.lang.String[]{"UserFriendRequests", "LastUpdatedDate",});
         im.turms.server.common.access.client.dto.model.user.UserFriendRequestOuterClass
                 .getDescriptor();
     }

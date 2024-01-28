@@ -83,15 +83,16 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         CREATE_FRIEND_REQUEST_REQUEST(200),
         CREATE_RELATIONSHIP_GROUP_REQUEST(201),
         CREATE_RELATIONSHIP_REQUEST(202),
-        DELETE_RELATIONSHIP_GROUP_REQUEST(203),
-        DELETE_RELATIONSHIP_REQUEST(204),
-        QUERY_FRIEND_REQUESTS_REQUEST(205),
-        QUERY_RELATED_USER_IDS_REQUEST(206),
-        QUERY_RELATIONSHIP_GROUPS_REQUEST(207),
-        QUERY_RELATIONSHIPS_REQUEST(208),
-        UPDATE_FRIEND_REQUEST_REQUEST(209),
-        UPDATE_RELATIONSHIP_GROUP_REQUEST(210),
-        UPDATE_RELATIONSHIP_REQUEST(211),
+        DELETE_FRIEND_REQUEST_REQUEST(203),
+        DELETE_RELATIONSHIP_GROUP_REQUEST(204),
+        DELETE_RELATIONSHIP_REQUEST(205),
+        QUERY_FRIEND_REQUESTS_REQUEST(206),
+        QUERY_RELATED_USER_IDS_REQUEST(207),
+        QUERY_RELATIONSHIP_GROUPS_REQUEST(208),
+        QUERY_RELATIONSHIPS_REQUEST(209),
+        UPDATE_FRIEND_REQUEST_REQUEST(210),
+        UPDATE_RELATIONSHIP_GROUP_REQUEST(211),
+        UPDATE_RELATIONSHIP_REQUEST(212),
         CREATE_GROUP_REQUEST(300),
         DELETE_GROUP_REQUEST(301),
         QUERY_GROUPS_REQUEST(302),
@@ -112,7 +113,9 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         QUERY_GROUP_INVITATIONS_REQUEST(507),
         QUERY_GROUP_JOIN_REQUESTS_REQUEST(508),
         QUERY_GROUP_JOIN_QUESTIONS_REQUEST(509),
-        UPDATE_GROUP_JOIN_QUESTION_REQUEST(510),
+        UPDATE_GROUP_INVITATION_REQUEST(510),
+        UPDATE_GROUP_JOIN_QUESTION_REQUEST(511),
+        UPDATE_GROUP_JOIN_REQUEST_REQUEST(512),
         DELETE_RESOURCE_REQUEST(1000),
         QUERY_RESOURCE_DOWNLOAD_INFO_REQUEST(1001),
         QUERY_RESOURCE_UPLOAD_INFO_REQUEST(1002),
@@ -122,7 +125,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
 
         private final int value;
 
-        KindCase(int value) {
+        private KindCase(int value) {
             this.value = value;
         }
 
@@ -159,15 +162,16 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
                 case 200 -> CREATE_FRIEND_REQUEST_REQUEST;
                 case 201 -> CREATE_RELATIONSHIP_GROUP_REQUEST;
                 case 202 -> CREATE_RELATIONSHIP_REQUEST;
-                case 203 -> DELETE_RELATIONSHIP_GROUP_REQUEST;
-                case 204 -> DELETE_RELATIONSHIP_REQUEST;
-                case 205 -> QUERY_FRIEND_REQUESTS_REQUEST;
-                case 206 -> QUERY_RELATED_USER_IDS_REQUEST;
-                case 207 -> QUERY_RELATIONSHIP_GROUPS_REQUEST;
-                case 208 -> QUERY_RELATIONSHIPS_REQUEST;
-                case 209 -> UPDATE_FRIEND_REQUEST_REQUEST;
-                case 210 -> UPDATE_RELATIONSHIP_GROUP_REQUEST;
-                case 211 -> UPDATE_RELATIONSHIP_REQUEST;
+                case 203 -> DELETE_FRIEND_REQUEST_REQUEST;
+                case 204 -> DELETE_RELATIONSHIP_GROUP_REQUEST;
+                case 205 -> DELETE_RELATIONSHIP_REQUEST;
+                case 206 -> QUERY_FRIEND_REQUESTS_REQUEST;
+                case 207 -> QUERY_RELATED_USER_IDS_REQUEST;
+                case 208 -> QUERY_RELATIONSHIP_GROUPS_REQUEST;
+                case 209 -> QUERY_RELATIONSHIPS_REQUEST;
+                case 210 -> UPDATE_FRIEND_REQUEST_REQUEST;
+                case 211 -> UPDATE_RELATIONSHIP_GROUP_REQUEST;
+                case 212 -> UPDATE_RELATIONSHIP_REQUEST;
                 case 300 -> CREATE_GROUP_REQUEST;
                 case 301 -> DELETE_GROUP_REQUEST;
                 case 302 -> QUERY_GROUPS_REQUEST;
@@ -188,7 +192,9 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
                 case 507 -> QUERY_GROUP_INVITATIONS_REQUEST;
                 case 508 -> QUERY_GROUP_JOIN_REQUESTS_REQUEST;
                 case 509 -> QUERY_GROUP_JOIN_QUESTIONS_REQUEST;
-                case 510 -> UPDATE_GROUP_JOIN_QUESTION_REQUEST;
+                case 510 -> UPDATE_GROUP_INVITATION_REQUEST;
+                case 511 -> UPDATE_GROUP_JOIN_QUESTION_REQUEST;
+                case 512 -> UPDATE_GROUP_JOIN_REQUEST_REQUEST;
                 case 1000 -> DELETE_RESOURCE_REQUEST;
                 case 1001 -> QUERY_RESOURCE_DOWNLOAD_INFO_REQUEST;
                 case 1002 -> QUERY_RESOURCE_UPLOAD_INFO_REQUEST;
@@ -216,7 +222,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
      * Note: "request_id" is allowed to be duplicate because
      * it is used for clients to identify the response of the same request id in a session
      * </pre>
-     * 
+     *
      * <code>optional int64 request_id = 1;</code>
      *
      * @return Whether the requestId field is set.
@@ -231,7 +237,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
      * Note: "request_id" is allowed to be duplicate because
      * it is used for clients to identify the response of the same request id in a session
      * </pre>
-     * 
+     *
      * <code>optional int64 request_id = 1;</code>
      *
      * @return The requestId.
@@ -247,7 +253,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
      * <pre>
      * User - Session
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CreateSessionRequest create_session_request = 3;</code>
      *
      * @return Whether the createSessionRequest field is set.
@@ -261,7 +267,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
      * <pre>
      * User - Session
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CreateSessionRequest create_session_request = 3;</code>
      *
      * @return The createSessionRequest.
@@ -279,7 +285,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
      * <pre>
      * User - Session
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CreateSessionRequest create_session_request = 3;</code>
      */
     @java.lang.Override
@@ -335,7 +341,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
      * <pre>
      * Conversation
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.QueryConversationsRequest query_conversations_request = 5;</code>
      *
      * @return Whether the queryConversationsRequest field is set.
@@ -349,7 +355,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
      * <pre>
      * Conversation
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.QueryConversationsRequest query_conversations_request = 5;</code>
      *
      * @return The queryConversationsRequest.
@@ -367,7 +373,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
      * <pre>
      * Conversation
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.QueryConversationsRequest query_conversations_request = 5;</code>
      */
     @java.lang.Override
@@ -461,7 +467,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
      * <pre>
      * Message
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CreateMessageRequest create_message_request = 8;</code>
      *
      * @return Whether the createMessageRequest field is set.
@@ -475,7 +481,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
      * <pre>
      * Message
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CreateMessageRequest create_message_request = 8;</code>
      *
      * @return The createMessageRequest.
@@ -493,7 +499,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
      * <pre>
      * Message
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CreateMessageRequest create_message_request = 8;</code>
      */
     @java.lang.Override
@@ -587,7 +593,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
      * <pre>
      * Group Member
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CreateGroupMembersRequest create_group_members_request = 11;</code>
      *
      * @return Whether the createGroupMembersRequest field is set.
@@ -601,7 +607,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
      * <pre>
      * Group Member
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CreateGroupMembersRequest create_group_members_request = 11;</code>
      *
      * @return The createGroupMembersRequest.
@@ -619,7 +625,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
      * <pre>
      * Group Member
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CreateGroupMembersRequest create_group_members_request = 11;</code>
      */
     @java.lang.Override
@@ -751,7 +757,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
      * <pre>
      * User
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.QueryUserProfilesRequest query_user_profiles_request = 100;</code>
      *
      * @return Whether the queryUserProfilesRequest field is set.
@@ -765,7 +771,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
      * <pre>
      * User
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.QueryUserProfilesRequest query_user_profiles_request = 100;</code>
      *
      * @return The queryUserProfilesRequest.
@@ -783,7 +789,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
      * <pre>
      * User
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.QueryUserProfilesRequest query_user_profiles_request = 100;</code>
      */
     @java.lang.Override
@@ -991,7 +997,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
      * <pre>
      * User Relationship
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CreateFriendRequestRequest create_friend_request_request = 200;</code>
      *
      * @return Whether the createFriendRequestRequest field is set.
@@ -1005,7 +1011,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
      * <pre>
      * User Relationship
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CreateFriendRequestRequest create_friend_request_request = 200;</code>
      *
      * @return The createFriendRequestRequest.
@@ -1023,7 +1029,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
      * <pre>
      * User Relationship
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CreateFriendRequestRequest create_friend_request_request = 200;</code>
      */
     @java.lang.Override
@@ -1111,26 +1117,64 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
                 .getDefaultInstance();
     }
 
-    public static final int DELETE_RELATIONSHIP_GROUP_REQUEST_FIELD_NUMBER = 203;
+    public static final int DELETE_FRIEND_REQUEST_REQUEST_FIELD_NUMBER = 203;
 
     /**
-     * <code>.im.turms.proto.DeleteRelationshipGroupRequest delete_relationship_group_request = 203;</code>
+     * <code>.im.turms.proto.DeleteFriendRequestRequest delete_friend_request_request = 203;</code>
+     *
+     * @return Whether the deleteFriendRequestRequest field is set.
+     */
+    @java.lang.Override
+    public boolean hasDeleteFriendRequestRequest() {
+        return kindCase_ == 203;
+    }
+
+    /**
+     * <code>.im.turms.proto.DeleteFriendRequestRequest delete_friend_request_request = 203;</code>
+     *
+     * @return The deleteFriendRequestRequest.
+     */
+    @java.lang.Override
+    public im.turms.server.common.access.client.dto.request.user.relationship.DeleteFriendRequestRequest getDeleteFriendRequestRequest() {
+        if (kindCase_ == 203) {
+            return (im.turms.server.common.access.client.dto.request.user.relationship.DeleteFriendRequestRequest) kind_;
+        }
+        return im.turms.server.common.access.client.dto.request.user.relationship.DeleteFriendRequestRequest
+                .getDefaultInstance();
+    }
+
+    /**
+     * <code>.im.turms.proto.DeleteFriendRequestRequest delete_friend_request_request = 203;</code>
+     */
+    @java.lang.Override
+    public im.turms.server.common.access.client.dto.request.user.relationship.DeleteFriendRequestRequestOrBuilder getDeleteFriendRequestRequestOrBuilder() {
+        if (kindCase_ == 203) {
+            return (im.turms.server.common.access.client.dto.request.user.relationship.DeleteFriendRequestRequest) kind_;
+        }
+        return im.turms.server.common.access.client.dto.request.user.relationship.DeleteFriendRequestRequest
+                .getDefaultInstance();
+    }
+
+    public static final int DELETE_RELATIONSHIP_GROUP_REQUEST_FIELD_NUMBER = 204;
+
+    /**
+     * <code>.im.turms.proto.DeleteRelationshipGroupRequest delete_relationship_group_request = 204;</code>
      *
      * @return Whether the deleteRelationshipGroupRequest field is set.
      */
     @java.lang.Override
     public boolean hasDeleteRelationshipGroupRequest() {
-        return kindCase_ == 203;
+        return kindCase_ == 204;
     }
 
     /**
-     * <code>.im.turms.proto.DeleteRelationshipGroupRequest delete_relationship_group_request = 203;</code>
+     * <code>.im.turms.proto.DeleteRelationshipGroupRequest delete_relationship_group_request = 204;</code>
      *
      * @return The deleteRelationshipGroupRequest.
      */
     @java.lang.Override
     public im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequest getDeleteRelationshipGroupRequest() {
-        if (kindCase_ == 203) {
+        if (kindCase_ == 204) {
             return (im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequest) kind_;
         }
         return im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequest
@@ -1138,37 +1182,37 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
     }
 
     /**
-     * <code>.im.turms.proto.DeleteRelationshipGroupRequest delete_relationship_group_request = 203;</code>
+     * <code>.im.turms.proto.DeleteRelationshipGroupRequest delete_relationship_group_request = 204;</code>
      */
     @java.lang.Override
     public im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequestOrBuilder getDeleteRelationshipGroupRequestOrBuilder() {
-        if (kindCase_ == 203) {
+        if (kindCase_ == 204) {
             return (im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequest) kind_;
         }
         return im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequest
                 .getDefaultInstance();
     }
 
-    public static final int DELETE_RELATIONSHIP_REQUEST_FIELD_NUMBER = 204;
+    public static final int DELETE_RELATIONSHIP_REQUEST_FIELD_NUMBER = 205;
 
     /**
-     * <code>.im.turms.proto.DeleteRelationshipRequest delete_relationship_request = 204;</code>
+     * <code>.im.turms.proto.DeleteRelationshipRequest delete_relationship_request = 205;</code>
      *
      * @return Whether the deleteRelationshipRequest field is set.
      */
     @java.lang.Override
     public boolean hasDeleteRelationshipRequest() {
-        return kindCase_ == 204;
+        return kindCase_ == 205;
     }
 
     /**
-     * <code>.im.turms.proto.DeleteRelationshipRequest delete_relationship_request = 204;</code>
+     * <code>.im.turms.proto.DeleteRelationshipRequest delete_relationship_request = 205;</code>
      *
      * @return The deleteRelationshipRequest.
      */
     @java.lang.Override
     public im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipRequest getDeleteRelationshipRequest() {
-        if (kindCase_ == 204) {
+        if (kindCase_ == 205) {
             return (im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipRequest) kind_;
         }
         return im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipRequest
@@ -1176,37 +1220,37 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
     }
 
     /**
-     * <code>.im.turms.proto.DeleteRelationshipRequest delete_relationship_request = 204;</code>
+     * <code>.im.turms.proto.DeleteRelationshipRequest delete_relationship_request = 205;</code>
      */
     @java.lang.Override
     public im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipRequestOrBuilder getDeleteRelationshipRequestOrBuilder() {
-        if (kindCase_ == 204) {
+        if (kindCase_ == 205) {
             return (im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipRequest) kind_;
         }
         return im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipRequest
                 .getDefaultInstance();
     }
 
-    public static final int QUERY_FRIEND_REQUESTS_REQUEST_FIELD_NUMBER = 205;
+    public static final int QUERY_FRIEND_REQUESTS_REQUEST_FIELD_NUMBER = 206;
 
     /**
-     * <code>.im.turms.proto.QueryFriendRequestsRequest query_friend_requests_request = 205;</code>
+     * <code>.im.turms.proto.QueryFriendRequestsRequest query_friend_requests_request = 206;</code>
      *
      * @return Whether the queryFriendRequestsRequest field is set.
      */
     @java.lang.Override
     public boolean hasQueryFriendRequestsRequest() {
-        return kindCase_ == 205;
+        return kindCase_ == 206;
     }
 
     /**
-     * <code>.im.turms.proto.QueryFriendRequestsRequest query_friend_requests_request = 205;</code>
+     * <code>.im.turms.proto.QueryFriendRequestsRequest query_friend_requests_request = 206;</code>
      *
      * @return The queryFriendRequestsRequest.
      */
     @java.lang.Override
     public im.turms.server.common.access.client.dto.request.user.relationship.QueryFriendRequestsRequest getQueryFriendRequestsRequest() {
-        if (kindCase_ == 205) {
+        if (kindCase_ == 206) {
             return (im.turms.server.common.access.client.dto.request.user.relationship.QueryFriendRequestsRequest) kind_;
         }
         return im.turms.server.common.access.client.dto.request.user.relationship.QueryFriendRequestsRequest
@@ -1214,37 +1258,37 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
     }
 
     /**
-     * <code>.im.turms.proto.QueryFriendRequestsRequest query_friend_requests_request = 205;</code>
+     * <code>.im.turms.proto.QueryFriendRequestsRequest query_friend_requests_request = 206;</code>
      */
     @java.lang.Override
     public im.turms.server.common.access.client.dto.request.user.relationship.QueryFriendRequestsRequestOrBuilder getQueryFriendRequestsRequestOrBuilder() {
-        if (kindCase_ == 205) {
+        if (kindCase_ == 206) {
             return (im.turms.server.common.access.client.dto.request.user.relationship.QueryFriendRequestsRequest) kind_;
         }
         return im.turms.server.common.access.client.dto.request.user.relationship.QueryFriendRequestsRequest
                 .getDefaultInstance();
     }
 
-    public static final int QUERY_RELATED_USER_IDS_REQUEST_FIELD_NUMBER = 206;
+    public static final int QUERY_RELATED_USER_IDS_REQUEST_FIELD_NUMBER = 207;
 
     /**
-     * <code>.im.turms.proto.QueryRelatedUserIdsRequest query_related_user_ids_request = 206;</code>
+     * <code>.im.turms.proto.QueryRelatedUserIdsRequest query_related_user_ids_request = 207;</code>
      *
      * @return Whether the queryRelatedUserIdsRequest field is set.
      */
     @java.lang.Override
     public boolean hasQueryRelatedUserIdsRequest() {
-        return kindCase_ == 206;
+        return kindCase_ == 207;
     }
 
     /**
-     * <code>.im.turms.proto.QueryRelatedUserIdsRequest query_related_user_ids_request = 206;</code>
+     * <code>.im.turms.proto.QueryRelatedUserIdsRequest query_related_user_ids_request = 207;</code>
      *
      * @return The queryRelatedUserIdsRequest.
      */
     @java.lang.Override
     public im.turms.server.common.access.client.dto.request.user.relationship.QueryRelatedUserIdsRequest getQueryRelatedUserIdsRequest() {
-        if (kindCase_ == 206) {
+        if (kindCase_ == 207) {
             return (im.turms.server.common.access.client.dto.request.user.relationship.QueryRelatedUserIdsRequest) kind_;
         }
         return im.turms.server.common.access.client.dto.request.user.relationship.QueryRelatedUserIdsRequest
@@ -1252,37 +1296,37 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
     }
 
     /**
-     * <code>.im.turms.proto.QueryRelatedUserIdsRequest query_related_user_ids_request = 206;</code>
+     * <code>.im.turms.proto.QueryRelatedUserIdsRequest query_related_user_ids_request = 207;</code>
      */
     @java.lang.Override
     public im.turms.server.common.access.client.dto.request.user.relationship.QueryRelatedUserIdsRequestOrBuilder getQueryRelatedUserIdsRequestOrBuilder() {
-        if (kindCase_ == 206) {
+        if (kindCase_ == 207) {
             return (im.turms.server.common.access.client.dto.request.user.relationship.QueryRelatedUserIdsRequest) kind_;
         }
         return im.turms.server.common.access.client.dto.request.user.relationship.QueryRelatedUserIdsRequest
                 .getDefaultInstance();
     }
 
-    public static final int QUERY_RELATIONSHIP_GROUPS_REQUEST_FIELD_NUMBER = 207;
+    public static final int QUERY_RELATIONSHIP_GROUPS_REQUEST_FIELD_NUMBER = 208;
 
     /**
-     * <code>.im.turms.proto.QueryRelationshipGroupsRequest query_relationship_groups_request = 207;</code>
+     * <code>.im.turms.proto.QueryRelationshipGroupsRequest query_relationship_groups_request = 208;</code>
      *
      * @return Whether the queryRelationshipGroupsRequest field is set.
      */
     @java.lang.Override
     public boolean hasQueryRelationshipGroupsRequest() {
-        return kindCase_ == 207;
+        return kindCase_ == 208;
     }
 
     /**
-     * <code>.im.turms.proto.QueryRelationshipGroupsRequest query_relationship_groups_request = 207;</code>
+     * <code>.im.turms.proto.QueryRelationshipGroupsRequest query_relationship_groups_request = 208;</code>
      *
      * @return The queryRelationshipGroupsRequest.
      */
     @java.lang.Override
     public im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipGroupsRequest getQueryRelationshipGroupsRequest() {
-        if (kindCase_ == 207) {
+        if (kindCase_ == 208) {
             return (im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipGroupsRequest) kind_;
         }
         return im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipGroupsRequest
@@ -1290,37 +1334,37 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
     }
 
     /**
-     * <code>.im.turms.proto.QueryRelationshipGroupsRequest query_relationship_groups_request = 207;</code>
+     * <code>.im.turms.proto.QueryRelationshipGroupsRequest query_relationship_groups_request = 208;</code>
      */
     @java.lang.Override
     public im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipGroupsRequestOrBuilder getQueryRelationshipGroupsRequestOrBuilder() {
-        if (kindCase_ == 207) {
+        if (kindCase_ == 208) {
             return (im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipGroupsRequest) kind_;
         }
         return im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipGroupsRequest
                 .getDefaultInstance();
     }
 
-    public static final int QUERY_RELATIONSHIPS_REQUEST_FIELD_NUMBER = 208;
+    public static final int QUERY_RELATIONSHIPS_REQUEST_FIELD_NUMBER = 209;
 
     /**
-     * <code>.im.turms.proto.QueryRelationshipsRequest query_relationships_request = 208;</code>
+     * <code>.im.turms.proto.QueryRelationshipsRequest query_relationships_request = 209;</code>
      *
      * @return Whether the queryRelationshipsRequest field is set.
      */
     @java.lang.Override
     public boolean hasQueryRelationshipsRequest() {
-        return kindCase_ == 208;
+        return kindCase_ == 209;
     }
 
     /**
-     * <code>.im.turms.proto.QueryRelationshipsRequest query_relationships_request = 208;</code>
+     * <code>.im.turms.proto.QueryRelationshipsRequest query_relationships_request = 209;</code>
      *
      * @return The queryRelationshipsRequest.
      */
     @java.lang.Override
     public im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequest getQueryRelationshipsRequest() {
-        if (kindCase_ == 208) {
+        if (kindCase_ == 209) {
             return (im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequest) kind_;
         }
         return im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequest
@@ -1328,37 +1372,37 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
     }
 
     /**
-     * <code>.im.turms.proto.QueryRelationshipsRequest query_relationships_request = 208;</code>
+     * <code>.im.turms.proto.QueryRelationshipsRequest query_relationships_request = 209;</code>
      */
     @java.lang.Override
     public im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequestOrBuilder getQueryRelationshipsRequestOrBuilder() {
-        if (kindCase_ == 208) {
+        if (kindCase_ == 209) {
             return (im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequest) kind_;
         }
         return im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequest
                 .getDefaultInstance();
     }
 
-    public static final int UPDATE_FRIEND_REQUEST_REQUEST_FIELD_NUMBER = 209;
+    public static final int UPDATE_FRIEND_REQUEST_REQUEST_FIELD_NUMBER = 210;
 
     /**
-     * <code>.im.turms.proto.UpdateFriendRequestRequest update_friend_request_request = 209;</code>
+     * <code>.im.turms.proto.UpdateFriendRequestRequest update_friend_request_request = 210;</code>
      *
      * @return Whether the updateFriendRequestRequest field is set.
      */
     @java.lang.Override
     public boolean hasUpdateFriendRequestRequest() {
-        return kindCase_ == 209;
+        return kindCase_ == 210;
     }
 
     /**
-     * <code>.im.turms.proto.UpdateFriendRequestRequest update_friend_request_request = 209;</code>
+     * <code>.im.turms.proto.UpdateFriendRequestRequest update_friend_request_request = 210;</code>
      *
      * @return The updateFriendRequestRequest.
      */
     @java.lang.Override
     public im.turms.server.common.access.client.dto.request.user.relationship.UpdateFriendRequestRequest getUpdateFriendRequestRequest() {
-        if (kindCase_ == 209) {
+        if (kindCase_ == 210) {
             return (im.turms.server.common.access.client.dto.request.user.relationship.UpdateFriendRequestRequest) kind_;
         }
         return im.turms.server.common.access.client.dto.request.user.relationship.UpdateFriendRequestRequest
@@ -1366,37 +1410,37 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
     }
 
     /**
-     * <code>.im.turms.proto.UpdateFriendRequestRequest update_friend_request_request = 209;</code>
+     * <code>.im.turms.proto.UpdateFriendRequestRequest update_friend_request_request = 210;</code>
      */
     @java.lang.Override
     public im.turms.server.common.access.client.dto.request.user.relationship.UpdateFriendRequestRequestOrBuilder getUpdateFriendRequestRequestOrBuilder() {
-        if (kindCase_ == 209) {
+        if (kindCase_ == 210) {
             return (im.turms.server.common.access.client.dto.request.user.relationship.UpdateFriendRequestRequest) kind_;
         }
         return im.turms.server.common.access.client.dto.request.user.relationship.UpdateFriendRequestRequest
                 .getDefaultInstance();
     }
 
-    public static final int UPDATE_RELATIONSHIP_GROUP_REQUEST_FIELD_NUMBER = 210;
+    public static final int UPDATE_RELATIONSHIP_GROUP_REQUEST_FIELD_NUMBER = 211;
 
     /**
-     * <code>.im.turms.proto.UpdateRelationshipGroupRequest update_relationship_group_request = 210;</code>
+     * <code>.im.turms.proto.UpdateRelationshipGroupRequest update_relationship_group_request = 211;</code>
      *
      * @return Whether the updateRelationshipGroupRequest field is set.
      */
     @java.lang.Override
     public boolean hasUpdateRelationshipGroupRequest() {
-        return kindCase_ == 210;
+        return kindCase_ == 211;
     }
 
     /**
-     * <code>.im.turms.proto.UpdateRelationshipGroupRequest update_relationship_group_request = 210;</code>
+     * <code>.im.turms.proto.UpdateRelationshipGroupRequest update_relationship_group_request = 211;</code>
      *
      * @return The updateRelationshipGroupRequest.
      */
     @java.lang.Override
     public im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipGroupRequest getUpdateRelationshipGroupRequest() {
-        if (kindCase_ == 210) {
+        if (kindCase_ == 211) {
             return (im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipGroupRequest) kind_;
         }
         return im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipGroupRequest
@@ -1404,37 +1448,37 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
     }
 
     /**
-     * <code>.im.turms.proto.UpdateRelationshipGroupRequest update_relationship_group_request = 210;</code>
+     * <code>.im.turms.proto.UpdateRelationshipGroupRequest update_relationship_group_request = 211;</code>
      */
     @java.lang.Override
     public im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipGroupRequestOrBuilder getUpdateRelationshipGroupRequestOrBuilder() {
-        if (kindCase_ == 210) {
+        if (kindCase_ == 211) {
             return (im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipGroupRequest) kind_;
         }
         return im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipGroupRequest
                 .getDefaultInstance();
     }
 
-    public static final int UPDATE_RELATIONSHIP_REQUEST_FIELD_NUMBER = 211;
+    public static final int UPDATE_RELATIONSHIP_REQUEST_FIELD_NUMBER = 212;
 
     /**
-     * <code>.im.turms.proto.UpdateRelationshipRequest update_relationship_request = 211;</code>
+     * <code>.im.turms.proto.UpdateRelationshipRequest update_relationship_request = 212;</code>
      *
      * @return Whether the updateRelationshipRequest field is set.
      */
     @java.lang.Override
     public boolean hasUpdateRelationshipRequest() {
-        return kindCase_ == 211;
+        return kindCase_ == 212;
     }
 
     /**
-     * <code>.im.turms.proto.UpdateRelationshipRequest update_relationship_request = 211;</code>
+     * <code>.im.turms.proto.UpdateRelationshipRequest update_relationship_request = 212;</code>
      *
      * @return The updateRelationshipRequest.
      */
     @java.lang.Override
     public im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipRequest getUpdateRelationshipRequest() {
-        if (kindCase_ == 211) {
+        if (kindCase_ == 212) {
             return (im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipRequest) kind_;
         }
         return im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipRequest
@@ -1442,11 +1486,11 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
     }
 
     /**
-     * <code>.im.turms.proto.UpdateRelationshipRequest update_relationship_request = 211;</code>
+     * <code>.im.turms.proto.UpdateRelationshipRequest update_relationship_request = 212;</code>
      */
     @java.lang.Override
     public im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipRequestOrBuilder getUpdateRelationshipRequestOrBuilder() {
-        if (kindCase_ == 211) {
+        if (kindCase_ == 212) {
             return (im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipRequest) kind_;
         }
         return im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipRequest
@@ -1459,7 +1503,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
      * <pre>
      * Group
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CreateGroupRequest create_group_request = 300;</code>
      *
      * @return Whether the createGroupRequest field is set.
@@ -1473,7 +1517,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
      * <pre>
      * Group
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CreateGroupRequest create_group_request = 300;</code>
      *
      * @return The createGroupRequest.
@@ -1491,7 +1535,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
      * <pre>
      * Group
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CreateGroupRequest create_group_request = 300;</code>
      */
     @java.lang.Override
@@ -1699,7 +1743,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
      * <pre>
      * Group Blocklist
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CreateGroupBlockedUserRequest create_group_blocked_user_request = 400;</code>
      *
      * @return Whether the createGroupBlockedUserRequest field is set.
@@ -1713,7 +1757,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
      * <pre>
      * Group Blocklist
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CreateGroupBlockedUserRequest create_group_blocked_user_request = 400;</code>
      *
      * @return The createGroupBlockedUserRequest.
@@ -1731,7 +1775,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
      * <pre>
      * Group Blocklist
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CreateGroupBlockedUserRequest create_group_blocked_user_request = 400;</code>
      */
     @java.lang.Override
@@ -1863,7 +1907,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
      * <pre>
      * Group Enrollment
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CheckGroupJoinQuestionsAnswersRequest check_group_join_questions_answers_request = 500;</code>
      *
      * @return Whether the checkGroupJoinQuestionsAnswersRequest field is set.
@@ -1877,7 +1921,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
      * <pre>
      * Group Enrollment
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CheckGroupJoinQuestionsAnswersRequest check_group_join_questions_answers_request = 500;</code>
      *
      * @return The checkGroupJoinQuestionsAnswersRequest.
@@ -1895,7 +1939,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
      * <pre>
      * Group Enrollment
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CheckGroupJoinQuestionsAnswersRequest check_group_join_questions_answers_request = 500;</code>
      */
     @java.lang.Override
@@ -2249,26 +2293,64 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
                 .getDefaultInstance();
     }
 
-    public static final int UPDATE_GROUP_JOIN_QUESTION_REQUEST_FIELD_NUMBER = 510;
+    public static final int UPDATE_GROUP_INVITATION_REQUEST_FIELD_NUMBER = 510;
 
     /**
-     * <code>.im.turms.proto.UpdateGroupJoinQuestionRequest update_group_join_question_request = 510;</code>
+     * <code>.im.turms.proto.UpdateGroupInvitationRequest update_group_invitation_request = 510;</code>
+     *
+     * @return Whether the updateGroupInvitationRequest field is set.
+     */
+    @java.lang.Override
+    public boolean hasUpdateGroupInvitationRequest() {
+        return kindCase_ == 510;
+    }
+
+    /**
+     * <code>.im.turms.proto.UpdateGroupInvitationRequest update_group_invitation_request = 510;</code>
+     *
+     * @return The updateGroupInvitationRequest.
+     */
+    @java.lang.Override
+    public im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupInvitationRequest getUpdateGroupInvitationRequest() {
+        if (kindCase_ == 510) {
+            return (im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupInvitationRequest) kind_;
+        }
+        return im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupInvitationRequest
+                .getDefaultInstance();
+    }
+
+    /**
+     * <code>.im.turms.proto.UpdateGroupInvitationRequest update_group_invitation_request = 510;</code>
+     */
+    @java.lang.Override
+    public im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupInvitationRequestOrBuilder getUpdateGroupInvitationRequestOrBuilder() {
+        if (kindCase_ == 510) {
+            return (im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupInvitationRequest) kind_;
+        }
+        return im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupInvitationRequest
+                .getDefaultInstance();
+    }
+
+    public static final int UPDATE_GROUP_JOIN_QUESTION_REQUEST_FIELD_NUMBER = 511;
+
+    /**
+     * <code>.im.turms.proto.UpdateGroupJoinQuestionRequest update_group_join_question_request = 511;</code>
      *
      * @return Whether the updateGroupJoinQuestionRequest field is set.
      */
     @java.lang.Override
     public boolean hasUpdateGroupJoinQuestionRequest() {
-        return kindCase_ == 510;
+        return kindCase_ == 511;
     }
 
     /**
-     * <code>.im.turms.proto.UpdateGroupJoinQuestionRequest update_group_join_question_request = 510;</code>
+     * <code>.im.turms.proto.UpdateGroupJoinQuestionRequest update_group_join_question_request = 511;</code>
      *
      * @return The updateGroupJoinQuestionRequest.
      */
     @java.lang.Override
     public im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest getUpdateGroupJoinQuestionRequest() {
-        if (kindCase_ == 510) {
+        if (kindCase_ == 511) {
             return (im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest) kind_;
         }
         return im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest
@@ -2276,14 +2358,52 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
     }
 
     /**
-     * <code>.im.turms.proto.UpdateGroupJoinQuestionRequest update_group_join_question_request = 510;</code>
+     * <code>.im.turms.proto.UpdateGroupJoinQuestionRequest update_group_join_question_request = 511;</code>
      */
     @java.lang.Override
     public im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequestOrBuilder getUpdateGroupJoinQuestionRequestOrBuilder() {
-        if (kindCase_ == 510) {
+        if (kindCase_ == 511) {
             return (im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest) kind_;
         }
         return im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest
+                .getDefaultInstance();
+    }
+
+    public static final int UPDATE_GROUP_JOIN_REQUEST_REQUEST_FIELD_NUMBER = 512;
+
+    /**
+     * <code>.im.turms.proto.UpdateGroupJoinRequestRequest update_group_join_request_request = 512;</code>
+     *
+     * @return Whether the updateGroupJoinRequestRequest field is set.
+     */
+    @java.lang.Override
+    public boolean hasUpdateGroupJoinRequestRequest() {
+        return kindCase_ == 512;
+    }
+
+    /**
+     * <code>.im.turms.proto.UpdateGroupJoinRequestRequest update_group_join_request_request = 512;</code>
+     *
+     * @return The updateGroupJoinRequestRequest.
+     */
+    @java.lang.Override
+    public im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinRequestRequest getUpdateGroupJoinRequestRequest() {
+        if (kindCase_ == 512) {
+            return (im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinRequestRequest) kind_;
+        }
+        return im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinRequestRequest
+                .getDefaultInstance();
+    }
+
+    /**
+     * <code>.im.turms.proto.UpdateGroupJoinRequestRequest update_group_join_request_request = 512;</code>
+     */
+    @java.lang.Override
+    public im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinRequestRequestOrBuilder getUpdateGroupJoinRequestRequestOrBuilder() {
+        if (kindCase_ == 512) {
+            return (im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinRequestRequest) kind_;
+        }
+        return im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinRequestRequest
                 .getDefaultInstance();
     }
 
@@ -2293,7 +2413,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
      * <pre>
      * Storage
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.DeleteResourceRequest delete_resource_request = 1000;</code>
      *
      * @return Whether the deleteResourceRequest field is set.
@@ -2307,7 +2427,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
      * <pre>
      * Storage
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.DeleteResourceRequest delete_resource_request = 1000;</code>
      *
      * @return The deleteResourceRequest.
@@ -2325,7 +2445,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
      * <pre>
      * Storage
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.DeleteResourceRequest delete_resource_request = 1000;</code>
      */
     @java.lang.Override
@@ -2596,38 +2716,42 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         }
         if (kindCase_ == 203) {
             output.writeMessage(203,
-                    (im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequest) kind_);
+                    (im.turms.server.common.access.client.dto.request.user.relationship.DeleteFriendRequestRequest) kind_);
         }
         if (kindCase_ == 204) {
             output.writeMessage(204,
-                    (im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipRequest) kind_);
+                    (im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequest) kind_);
         }
         if (kindCase_ == 205) {
             output.writeMessage(205,
-                    (im.turms.server.common.access.client.dto.request.user.relationship.QueryFriendRequestsRequest) kind_);
+                    (im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipRequest) kind_);
         }
         if (kindCase_ == 206) {
             output.writeMessage(206,
-                    (im.turms.server.common.access.client.dto.request.user.relationship.QueryRelatedUserIdsRequest) kind_);
+                    (im.turms.server.common.access.client.dto.request.user.relationship.QueryFriendRequestsRequest) kind_);
         }
         if (kindCase_ == 207) {
             output.writeMessage(207,
-                    (im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipGroupsRequest) kind_);
+                    (im.turms.server.common.access.client.dto.request.user.relationship.QueryRelatedUserIdsRequest) kind_);
         }
         if (kindCase_ == 208) {
             output.writeMessage(208,
-                    (im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequest) kind_);
+                    (im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipGroupsRequest) kind_);
         }
         if (kindCase_ == 209) {
             output.writeMessage(209,
-                    (im.turms.server.common.access.client.dto.request.user.relationship.UpdateFriendRequestRequest) kind_);
+                    (im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequest) kind_);
         }
         if (kindCase_ == 210) {
             output.writeMessage(210,
-                    (im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipGroupRequest) kind_);
+                    (im.turms.server.common.access.client.dto.request.user.relationship.UpdateFriendRequestRequest) kind_);
         }
         if (kindCase_ == 211) {
             output.writeMessage(211,
+                    (im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipGroupRequest) kind_);
+        }
+        if (kindCase_ == 212) {
+            output.writeMessage(212,
                     (im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipRequest) kind_);
         }
         if (kindCase_ == 300) {
@@ -2712,7 +2836,15 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         }
         if (kindCase_ == 510) {
             output.writeMessage(510,
+                    (im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupInvitationRequest) kind_);
+        }
+        if (kindCase_ == 511) {
+            output.writeMessage(511,
                     (im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest) kind_);
+        }
+        if (kindCase_ == 512) {
+            output.writeMessage(512,
+                    (im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinRequestRequest) kind_);
         }
         if (kindCase_ == 1000) {
             output.writeMessage(1000,
@@ -2834,38 +2966,42 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         }
         if (kindCase_ == 203) {
             size += com.google.protobuf.CodedOutputStream.computeMessageSize(203,
-                    (im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequest) kind_);
+                    (im.turms.server.common.access.client.dto.request.user.relationship.DeleteFriendRequestRequest) kind_);
         }
         if (kindCase_ == 204) {
             size += com.google.protobuf.CodedOutputStream.computeMessageSize(204,
-                    (im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipRequest) kind_);
+                    (im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequest) kind_);
         }
         if (kindCase_ == 205) {
             size += com.google.protobuf.CodedOutputStream.computeMessageSize(205,
-                    (im.turms.server.common.access.client.dto.request.user.relationship.QueryFriendRequestsRequest) kind_);
+                    (im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipRequest) kind_);
         }
         if (kindCase_ == 206) {
             size += com.google.protobuf.CodedOutputStream.computeMessageSize(206,
-                    (im.turms.server.common.access.client.dto.request.user.relationship.QueryRelatedUserIdsRequest) kind_);
+                    (im.turms.server.common.access.client.dto.request.user.relationship.QueryFriendRequestsRequest) kind_);
         }
         if (kindCase_ == 207) {
             size += com.google.protobuf.CodedOutputStream.computeMessageSize(207,
-                    (im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipGroupsRequest) kind_);
+                    (im.turms.server.common.access.client.dto.request.user.relationship.QueryRelatedUserIdsRequest) kind_);
         }
         if (kindCase_ == 208) {
             size += com.google.protobuf.CodedOutputStream.computeMessageSize(208,
-                    (im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequest) kind_);
+                    (im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipGroupsRequest) kind_);
         }
         if (kindCase_ == 209) {
             size += com.google.protobuf.CodedOutputStream.computeMessageSize(209,
-                    (im.turms.server.common.access.client.dto.request.user.relationship.UpdateFriendRequestRequest) kind_);
+                    (im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequest) kind_);
         }
         if (kindCase_ == 210) {
             size += com.google.protobuf.CodedOutputStream.computeMessageSize(210,
-                    (im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipGroupRequest) kind_);
+                    (im.turms.server.common.access.client.dto.request.user.relationship.UpdateFriendRequestRequest) kind_);
         }
         if (kindCase_ == 211) {
             size += com.google.protobuf.CodedOutputStream.computeMessageSize(211,
+                    (im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipGroupRequest) kind_);
+        }
+        if (kindCase_ == 212) {
+            size += com.google.protobuf.CodedOutputStream.computeMessageSize(212,
                     (im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipRequest) kind_);
         }
         if (kindCase_ == 300) {
@@ -2950,7 +3086,15 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         }
         if (kindCase_ == 510) {
             size += com.google.protobuf.CodedOutputStream.computeMessageSize(510,
+                    (im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupInvitationRequest) kind_);
+        }
+        if (kindCase_ == 511) {
+            size += com.google.protobuf.CodedOutputStream.computeMessageSize(511,
                     (im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest) kind_);
+        }
+        if (kindCase_ == 512) {
+            size += com.google.protobuf.CodedOutputStream.computeMessageSize(512,
+                    (im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinRequestRequest) kind_);
         }
         if (kindCase_ == 1000) {
             size += com.google.protobuf.CodedOutputStream.computeMessageSize(1000,
@@ -3108,52 +3252,58 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
                 }
             }
             case 203 -> {
+                if (!getDeleteFriendRequestRequest()
+                        .equals(other.getDeleteFriendRequestRequest())) {
+                    return false;
+                }
+            }
+            case 204 -> {
                 if (!getDeleteRelationshipGroupRequest()
                         .equals(other.getDeleteRelationshipGroupRequest())) {
                     return false;
                 }
             }
-            case 204 -> {
+            case 205 -> {
                 if (!getDeleteRelationshipRequest().equals(other.getDeleteRelationshipRequest())) {
                     return false;
                 }
             }
-            case 205 -> {
+            case 206 -> {
                 if (!getQueryFriendRequestsRequest()
                         .equals(other.getQueryFriendRequestsRequest())) {
                     return false;
                 }
             }
-            case 206 -> {
+            case 207 -> {
                 if (!getQueryRelatedUserIdsRequest()
                         .equals(other.getQueryRelatedUserIdsRequest())) {
                     return false;
                 }
             }
-            case 207 -> {
+            case 208 -> {
                 if (!getQueryRelationshipGroupsRequest()
                         .equals(other.getQueryRelationshipGroupsRequest())) {
                     return false;
                 }
             }
-            case 208 -> {
+            case 209 -> {
                 if (!getQueryRelationshipsRequest().equals(other.getQueryRelationshipsRequest())) {
                     return false;
                 }
             }
-            case 209 -> {
+            case 210 -> {
                 if (!getUpdateFriendRequestRequest()
                         .equals(other.getUpdateFriendRequestRequest())) {
                     return false;
                 }
             }
-            case 210 -> {
+            case 211 -> {
                 if (!getUpdateRelationshipGroupRequest()
                         .equals(other.getUpdateRelationshipGroupRequest())) {
                     return false;
                 }
             }
-            case 211 -> {
+            case 212 -> {
                 if (!getUpdateRelationshipRequest().equals(other.getUpdateRelationshipRequest())) {
                     return false;
                 }
@@ -3275,8 +3425,20 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
                 }
             }
             case 510 -> {
+                if (!getUpdateGroupInvitationRequest()
+                        .equals(other.getUpdateGroupInvitationRequest())) {
+                    return false;
+                }
+            }
+            case 511 -> {
                 if (!getUpdateGroupJoinQuestionRequest()
                         .equals(other.getUpdateGroupJoinQuestionRequest())) {
+                    return false;
+                }
+            }
+            case 512 -> {
+                if (!getUpdateGroupJoinRequestRequest()
+                        .equals(other.getUpdateGroupJoinRequestRequest())) {
                     return false;
                 }
             }
@@ -3308,8 +3470,6 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
                         .equals(other.getUpdateMessageAttachmentInfoRequest())) {
                     return false;
                 }
-            }
-            case 0 -> {
             }
             default -> {
             }
@@ -3414,38 +3574,42 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
                 hash = (53 * hash) + getCreateRelationshipRequest().hashCode();
             }
             case 203 -> {
+                hash = (37 * hash) + DELETE_FRIEND_REQUEST_REQUEST_FIELD_NUMBER;
+                hash = (53 * hash) + getDeleteFriendRequestRequest().hashCode();
+            }
+            case 204 -> {
                 hash = (37 * hash) + DELETE_RELATIONSHIP_GROUP_REQUEST_FIELD_NUMBER;
                 hash = (53 * hash) + getDeleteRelationshipGroupRequest().hashCode();
             }
-            case 204 -> {
+            case 205 -> {
                 hash = (37 * hash) + DELETE_RELATIONSHIP_REQUEST_FIELD_NUMBER;
                 hash = (53 * hash) + getDeleteRelationshipRequest().hashCode();
             }
-            case 205 -> {
+            case 206 -> {
                 hash = (37 * hash) + QUERY_FRIEND_REQUESTS_REQUEST_FIELD_NUMBER;
                 hash = (53 * hash) + getQueryFriendRequestsRequest().hashCode();
             }
-            case 206 -> {
+            case 207 -> {
                 hash = (37 * hash) + QUERY_RELATED_USER_IDS_REQUEST_FIELD_NUMBER;
                 hash = (53 * hash) + getQueryRelatedUserIdsRequest().hashCode();
             }
-            case 207 -> {
+            case 208 -> {
                 hash = (37 * hash) + QUERY_RELATIONSHIP_GROUPS_REQUEST_FIELD_NUMBER;
                 hash = (53 * hash) + getQueryRelationshipGroupsRequest().hashCode();
             }
-            case 208 -> {
+            case 209 -> {
                 hash = (37 * hash) + QUERY_RELATIONSHIPS_REQUEST_FIELD_NUMBER;
                 hash = (53 * hash) + getQueryRelationshipsRequest().hashCode();
             }
-            case 209 -> {
+            case 210 -> {
                 hash = (37 * hash) + UPDATE_FRIEND_REQUEST_REQUEST_FIELD_NUMBER;
                 hash = (53 * hash) + getUpdateFriendRequestRequest().hashCode();
             }
-            case 210 -> {
+            case 211 -> {
                 hash = (37 * hash) + UPDATE_RELATIONSHIP_GROUP_REQUEST_FIELD_NUMBER;
                 hash = (53 * hash) + getUpdateRelationshipGroupRequest().hashCode();
             }
-            case 211 -> {
+            case 212 -> {
                 hash = (37 * hash) + UPDATE_RELATIONSHIP_REQUEST_FIELD_NUMBER;
                 hash = (53 * hash) + getUpdateRelationshipRequest().hashCode();
             }
@@ -3530,8 +3694,16 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
                 hash = (53 * hash) + getQueryGroupJoinQuestionsRequest().hashCode();
             }
             case 510 -> {
+                hash = (37 * hash) + UPDATE_GROUP_INVITATION_REQUEST_FIELD_NUMBER;
+                hash = (53 * hash) + getUpdateGroupInvitationRequest().hashCode();
+            }
+            case 511 -> {
                 hash = (37 * hash) + UPDATE_GROUP_JOIN_QUESTION_REQUEST_FIELD_NUMBER;
                 hash = (53 * hash) + getUpdateGroupJoinQuestionRequest().hashCode();
+            }
+            case 512 -> {
+                hash = (37 * hash) + UPDATE_GROUP_JOIN_REQUEST_REQUEST_FIELD_NUMBER;
+                hash = (53 * hash) + getUpdateGroupJoinRequestRequest().hashCode();
             }
             case 1000 -> {
                 hash = (37 * hash) + DELETE_RESOURCE_REQUEST_FIELD_NUMBER;
@@ -3552,8 +3724,6 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             case 1004 -> {
                 hash = (37 * hash) + UPDATE_MESSAGE_ATTACHMENT_INFO_REQUEST_FIELD_NUMBER;
                 hash = (53 * hash) + getUpdateMessageAttachmentInfoRequest().hashCode();
-            }
-            case 0 -> {
             }
             default -> {
             }
@@ -3770,6 +3940,9 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             if (createRelationshipRequestBuilder_ != null) {
                 createRelationshipRequestBuilder_.clear();
             }
+            if (deleteFriendRequestRequestBuilder_ != null) {
+                deleteFriendRequestRequestBuilder_.clear();
+            }
             if (deleteRelationshipGroupRequestBuilder_ != null) {
                 deleteRelationshipGroupRequestBuilder_.clear();
             }
@@ -3857,8 +4030,14 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             if (queryGroupJoinQuestionsRequestBuilder_ != null) {
                 queryGroupJoinQuestionsRequestBuilder_.clear();
             }
+            if (updateGroupInvitationRequestBuilder_ != null) {
+                updateGroupInvitationRequestBuilder_.clear();
+            }
             if (updateGroupJoinQuestionRequestBuilder_ != null) {
                 updateGroupJoinQuestionRequestBuilder_.clear();
+            }
+            if (updateGroupJoinRequestRequestBuilder_ != null) {
+                updateGroupJoinRequestRequestBuilder_.clear();
             }
             if (deleteResourceRequestBuilder_ != null) {
                 deleteResourceRequestBuilder_.clear();
@@ -3998,31 +4177,34 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             if (kindCase_ == 202 && createRelationshipRequestBuilder_ != null) {
                 result.kind_ = createRelationshipRequestBuilder_.build();
             }
-            if (kindCase_ == 203 && deleteRelationshipGroupRequestBuilder_ != null) {
+            if (kindCase_ == 203 && deleteFriendRequestRequestBuilder_ != null) {
+                result.kind_ = deleteFriendRequestRequestBuilder_.build();
+            }
+            if (kindCase_ == 204 && deleteRelationshipGroupRequestBuilder_ != null) {
                 result.kind_ = deleteRelationshipGroupRequestBuilder_.build();
             }
-            if (kindCase_ == 204 && deleteRelationshipRequestBuilder_ != null) {
+            if (kindCase_ == 205 && deleteRelationshipRequestBuilder_ != null) {
                 result.kind_ = deleteRelationshipRequestBuilder_.build();
             }
-            if (kindCase_ == 205 && queryFriendRequestsRequestBuilder_ != null) {
+            if (kindCase_ == 206 && queryFriendRequestsRequestBuilder_ != null) {
                 result.kind_ = queryFriendRequestsRequestBuilder_.build();
             }
-            if (kindCase_ == 206 && queryRelatedUserIdsRequestBuilder_ != null) {
+            if (kindCase_ == 207 && queryRelatedUserIdsRequestBuilder_ != null) {
                 result.kind_ = queryRelatedUserIdsRequestBuilder_.build();
             }
-            if (kindCase_ == 207 && queryRelationshipGroupsRequestBuilder_ != null) {
+            if (kindCase_ == 208 && queryRelationshipGroupsRequestBuilder_ != null) {
                 result.kind_ = queryRelationshipGroupsRequestBuilder_.build();
             }
-            if (kindCase_ == 208 && queryRelationshipsRequestBuilder_ != null) {
+            if (kindCase_ == 209 && queryRelationshipsRequestBuilder_ != null) {
                 result.kind_ = queryRelationshipsRequestBuilder_.build();
             }
-            if (kindCase_ == 209 && updateFriendRequestRequestBuilder_ != null) {
+            if (kindCase_ == 210 && updateFriendRequestRequestBuilder_ != null) {
                 result.kind_ = updateFriendRequestRequestBuilder_.build();
             }
-            if (kindCase_ == 210 && updateRelationshipGroupRequestBuilder_ != null) {
+            if (kindCase_ == 211 && updateRelationshipGroupRequestBuilder_ != null) {
                 result.kind_ = updateRelationshipGroupRequestBuilder_.build();
             }
-            if (kindCase_ == 211 && updateRelationshipRequestBuilder_ != null) {
+            if (kindCase_ == 212 && updateRelationshipRequestBuilder_ != null) {
                 result.kind_ = updateRelationshipRequestBuilder_.build();
             }
             if (kindCase_ == 300 && createGroupRequestBuilder_ != null) {
@@ -4085,8 +4267,14 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             if (kindCase_ == 509 && queryGroupJoinQuestionsRequestBuilder_ != null) {
                 result.kind_ = queryGroupJoinQuestionsRequestBuilder_.build();
             }
-            if (kindCase_ == 510 && updateGroupJoinQuestionRequestBuilder_ != null) {
+            if (kindCase_ == 510 && updateGroupInvitationRequestBuilder_ != null) {
+                result.kind_ = updateGroupInvitationRequestBuilder_.build();
+            }
+            if (kindCase_ == 511 && updateGroupJoinQuestionRequestBuilder_ != null) {
                 result.kind_ = updateGroupJoinQuestionRequestBuilder_.build();
+            }
+            if (kindCase_ == 512 && updateGroupJoinRequestRequestBuilder_ != null) {
+                result.kind_ = updateGroupJoinRequestRequestBuilder_.build();
             }
             if (kindCase_ == 1000 && deleteResourceRequestBuilder_ != null) {
                 result.kind_ = deleteResourceRequestBuilder_.build();
@@ -4103,6 +4291,43 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             if (kindCase_ == 1004 && updateMessageAttachmentInfoRequestBuilder_ != null) {
                 result.kind_ = updateMessageAttachmentInfoRequestBuilder_.build();
             }
+        }
+
+        @java.lang.Override
+        public Builder clone() {
+            return super.clone();
+        }
+
+        @java.lang.Override
+        public Builder setField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value) {
+            return super.setField(field, value);
+        }
+
+        @java.lang.Override
+        public Builder clearField(com.google.protobuf.Descriptors.FieldDescriptor field) {
+            return super.clearField(field);
+        }
+
+        @java.lang.Override
+        public Builder clearOneof(com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+            return super.clearOneof(oneof);
+        }
+
+        @java.lang.Override
+        public Builder setRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                int index,
+                java.lang.Object value) {
+            return super.setRepeatedField(field, index, value);
+        }
+
+        @java.lang.Override
+        public Builder addRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value) {
+            return super.addRepeatedField(field, value);
         }
 
         @java.lang.Override
@@ -4188,6 +4413,9 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
                 }
                 case CREATE_RELATIONSHIP_REQUEST -> {
                     mergeCreateRelationshipRequest(other.getCreateRelationshipRequest());
+                }
+                case DELETE_FRIEND_REQUEST_REQUEST -> {
+                    mergeDeleteFriendRequestRequest(other.getDeleteFriendRequestRequest());
                 }
                 case DELETE_RELATIONSHIP_GROUP_REQUEST -> {
                     mergeDeleteRelationshipGroupRequest(other.getDeleteRelationshipGroupRequest());
@@ -4281,8 +4509,14 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
                 case QUERY_GROUP_JOIN_QUESTIONS_REQUEST -> {
                     mergeQueryGroupJoinQuestionsRequest(other.getQueryGroupJoinQuestionsRequest());
                 }
+                case UPDATE_GROUP_INVITATION_REQUEST -> {
+                    mergeUpdateGroupInvitationRequest(other.getUpdateGroupInvitationRequest());
+                }
                 case UPDATE_GROUP_JOIN_QUESTION_REQUEST -> {
                     mergeUpdateGroupJoinQuestionRequest(other.getUpdateGroupJoinQuestionRequest());
+                }
+                case UPDATE_GROUP_JOIN_REQUEST_REQUEST -> {
+                    mergeUpdateGroupJoinRequestRequest(other.getUpdateGroupJoinRequestRequest());
                 }
                 case DELETE_RESOURCE_REQUEST -> {
                     mergeDeleteResourceRequest(other.getDeleteResourceRequest());
@@ -4454,58 +4688,64 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
                         } // case 1618
                         case 1626 -> {
                             input.readMessage(
-                                    getDeleteRelationshipGroupRequestFieldBuilder().getBuilder(),
+                                    getDeleteFriendRequestRequestFieldBuilder().getBuilder(),
                                     extensionRegistry);
                             kindCase_ = 203;
                         } // case 1626
                         case 1634 -> {
                             input.readMessage(
-                                    getDeleteRelationshipRequestFieldBuilder().getBuilder(),
+                                    getDeleteRelationshipGroupRequestFieldBuilder().getBuilder(),
                                     extensionRegistry);
                             kindCase_ = 204;
                         } // case 1634
                         case 1642 -> {
                             input.readMessage(
-                                    getQueryFriendRequestsRequestFieldBuilder().getBuilder(),
+                                    getDeleteRelationshipRequestFieldBuilder().getBuilder(),
                                     extensionRegistry);
                             kindCase_ = 205;
                         } // case 1642
                         case 1650 -> {
                             input.readMessage(
-                                    getQueryRelatedUserIdsRequestFieldBuilder().getBuilder(),
+                                    getQueryFriendRequestsRequestFieldBuilder().getBuilder(),
                                     extensionRegistry);
                             kindCase_ = 206;
                         } // case 1650
                         case 1658 -> {
                             input.readMessage(
-                                    getQueryRelationshipGroupsRequestFieldBuilder().getBuilder(),
+                                    getQueryRelatedUserIdsRequestFieldBuilder().getBuilder(),
                                     extensionRegistry);
                             kindCase_ = 207;
                         } // case 1658
                         case 1666 -> {
                             input.readMessage(
-                                    getQueryRelationshipsRequestFieldBuilder().getBuilder(),
+                                    getQueryRelationshipGroupsRequestFieldBuilder().getBuilder(),
                                     extensionRegistry);
                             kindCase_ = 208;
                         } // case 1666
                         case 1674 -> {
                             input.readMessage(
-                                    getUpdateFriendRequestRequestFieldBuilder().getBuilder(),
+                                    getQueryRelationshipsRequestFieldBuilder().getBuilder(),
                                     extensionRegistry);
                             kindCase_ = 209;
                         } // case 1674
                         case 1682 -> {
                             input.readMessage(
-                                    getUpdateRelationshipGroupRequestFieldBuilder().getBuilder(),
+                                    getUpdateFriendRequestRequestFieldBuilder().getBuilder(),
                                     extensionRegistry);
                             kindCase_ = 210;
                         } // case 1682
                         case 1690 -> {
                             input.readMessage(
-                                    getUpdateRelationshipRequestFieldBuilder().getBuilder(),
+                                    getUpdateRelationshipGroupRequestFieldBuilder().getBuilder(),
                                     extensionRegistry);
                             kindCase_ = 211;
                         } // case 1690
+                        case 1698 -> {
+                            input.readMessage(
+                                    getUpdateRelationshipRequestFieldBuilder().getBuilder(),
+                                    extensionRegistry);
+                            kindCase_ = 212;
+                        } // case 1698
                         case 2402 -> {
                             input.readMessage(getCreateGroupRequestFieldBuilder().getBuilder(),
                                     extensionRegistry);
@@ -4625,10 +4865,22 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
                         } // case 4074
                         case 4082 -> {
                             input.readMessage(
-                                    getUpdateGroupJoinQuestionRequestFieldBuilder().getBuilder(),
+                                    getUpdateGroupInvitationRequestFieldBuilder().getBuilder(),
                                     extensionRegistry);
                             kindCase_ = 510;
                         } // case 4082
+                        case 4090 -> {
+                            input.readMessage(
+                                    getUpdateGroupJoinQuestionRequestFieldBuilder().getBuilder(),
+                                    extensionRegistry);
+                            kindCase_ = 511;
+                        } // case 4090
+                        case 4098 -> {
+                            input.readMessage(
+                                    getUpdateGroupJoinRequestRequestFieldBuilder().getBuilder(),
+                                    extensionRegistry);
+                            kindCase_ = 512;
+                        } // case 4098
                         case 8002 -> {
                             input.readMessage(getDeleteResourceRequestFieldBuilder().getBuilder(),
                                     extensionRegistry);
@@ -4699,7 +4951,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * Note: "request_id" is allowed to be duplicate because
          * it is used for clients to identify the response of the same request id in a session
          * </pre>
-         * 
+         *
          * <code>optional int64 request_id = 1;</code>
          *
          * @return Whether the requestId field is set.
@@ -4714,7 +4966,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * Note: "request_id" is allowed to be duplicate because
          * it is used for clients to identify the response of the same request id in a session
          * </pre>
-         * 
+         *
          * <code>optional int64 request_id = 1;</code>
          *
          * @return The requestId.
@@ -4729,7 +4981,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * Note: "request_id" is allowed to be duplicate because
          * it is used for clients to identify the response of the same request id in a session
          * </pre>
-         * 
+         *
          * <code>optional int64 request_id = 1;</code>
          *
          * @param value The requestId to set.
@@ -4748,7 +5000,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * Note: "request_id" is allowed to be duplicate because
          * it is used for clients to identify the response of the same request id in a session
          * </pre>
-         * 
+         *
          * <code>optional int64 request_id = 1;</code>
          *
          * @return This builder for chaining.
@@ -4766,7 +5018,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * User - Session
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateSessionRequest create_session_request = 3;</code>
          *
          * @return Whether the createSessionRequest field is set.
@@ -4780,7 +5032,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * User - Session
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateSessionRequest create_session_request = 3;</code>
          *
          * @return The createSessionRequest.
@@ -4806,7 +5058,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * User - Session
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateSessionRequest create_session_request = 3;</code>
          */
         public Builder setCreateSessionRequest(
@@ -4828,7 +5080,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * User - Session
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateSessionRequest create_session_request = 3;</code>
          */
         public Builder setCreateSessionRequest(
@@ -4847,7 +5099,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * User - Session
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateSessionRequest create_session_request = 3;</code>
          */
         public Builder mergeCreateSessionRequest(
@@ -4880,7 +5132,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * User - Session
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateSessionRequest create_session_request = 3;</code>
          */
         public Builder clearCreateSessionRequest() {
@@ -4904,7 +5156,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * User - Session
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateSessionRequest create_session_request = 3;</code>
          */
         public im.turms.server.common.access.client.dto.request.user.CreateSessionRequest.Builder getCreateSessionRequestBuilder() {
@@ -4915,7 +5167,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * User - Session
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateSessionRequest create_session_request = 3;</code>
          */
         @java.lang.Override
@@ -4935,7 +5187,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * User - Session
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateSessionRequest create_session_request = 3;</code>
          */
         private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.user.CreateSessionRequest, im.turms.server.common.access.client.dto.request.user.CreateSessionRequest.Builder, im.turms.server.common.access.client.dto.request.user.CreateSessionRequestOrBuilder> getCreateSessionRequestFieldBuilder() {
@@ -5120,7 +5372,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * Conversation
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.QueryConversationsRequest query_conversations_request = 5;</code>
          *
          * @return Whether the queryConversationsRequest field is set.
@@ -5134,7 +5386,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * Conversation
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.QueryConversationsRequest query_conversations_request = 5;</code>
          *
          * @return The queryConversationsRequest.
@@ -5160,7 +5412,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * Conversation
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.QueryConversationsRequest query_conversations_request = 5;</code>
          */
         public Builder setQueryConversationsRequest(
@@ -5182,7 +5434,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * Conversation
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.QueryConversationsRequest query_conversations_request = 5;</code>
          */
         public Builder setQueryConversationsRequest(
@@ -5201,7 +5453,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * Conversation
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.QueryConversationsRequest query_conversations_request = 5;</code>
          */
         public Builder mergeQueryConversationsRequest(
@@ -5234,7 +5486,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * Conversation
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.QueryConversationsRequest query_conversations_request = 5;</code>
          */
         public Builder clearQueryConversationsRequest() {
@@ -5258,7 +5510,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * Conversation
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.QueryConversationsRequest query_conversations_request = 5;</code>
          */
         public im.turms.server.common.access.client.dto.request.conversation.QueryConversationsRequest.Builder getQueryConversationsRequestBuilder() {
@@ -5269,7 +5521,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * Conversation
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.QueryConversationsRequest query_conversations_request = 5;</code>
          */
         @java.lang.Override
@@ -5289,7 +5541,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * Conversation
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.QueryConversationsRequest query_conversations_request = 5;</code>
          */
         private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.conversation.QueryConversationsRequest, im.turms.server.common.access.client.dto.request.conversation.QueryConversationsRequest.Builder, im.turms.server.common.access.client.dto.request.conversation.QueryConversationsRequestOrBuilder> getQueryConversationsRequestFieldBuilder() {
@@ -5633,7 +5885,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * Message
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateMessageRequest create_message_request = 8;</code>
          *
          * @return Whether the createMessageRequest field is set.
@@ -5647,7 +5899,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * Message
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateMessageRequest create_message_request = 8;</code>
          *
          * @return The createMessageRequest.
@@ -5673,7 +5925,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * Message
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateMessageRequest create_message_request = 8;</code>
          */
         public Builder setCreateMessageRequest(
@@ -5695,7 +5947,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * Message
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateMessageRequest create_message_request = 8;</code>
          */
         public Builder setCreateMessageRequest(
@@ -5714,7 +5966,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * Message
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateMessageRequest create_message_request = 8;</code>
          */
         public Builder mergeCreateMessageRequest(
@@ -5747,7 +5999,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * Message
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateMessageRequest create_message_request = 8;</code>
          */
         public Builder clearCreateMessageRequest() {
@@ -5771,7 +6023,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * Message
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateMessageRequest create_message_request = 8;</code>
          */
         public im.turms.server.common.access.client.dto.request.message.CreateMessageRequest.Builder getCreateMessageRequestBuilder() {
@@ -5782,7 +6034,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * Message
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateMessageRequest create_message_request = 8;</code>
          */
         @java.lang.Override
@@ -5802,7 +6054,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * Message
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateMessageRequest create_message_request = 8;</code>
          */
         private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.message.CreateMessageRequest, im.turms.server.common.access.client.dto.request.message.CreateMessageRequest.Builder, im.turms.server.common.access.client.dto.request.message.CreateMessageRequestOrBuilder> getCreateMessageRequestFieldBuilder() {
@@ -6146,7 +6398,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * Group Member
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateGroupMembersRequest create_group_members_request = 11;</code>
          *
          * @return Whether the createGroupMembersRequest field is set.
@@ -6160,7 +6412,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * Group Member
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateGroupMembersRequest create_group_members_request = 11;</code>
          *
          * @return The createGroupMembersRequest.
@@ -6186,7 +6438,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * Group Member
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateGroupMembersRequest create_group_members_request = 11;</code>
          */
         public Builder setCreateGroupMembersRequest(
@@ -6208,7 +6460,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * Group Member
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateGroupMembersRequest create_group_members_request = 11;</code>
          */
         public Builder setCreateGroupMembersRequest(
@@ -6227,7 +6479,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * Group Member
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateGroupMembersRequest create_group_members_request = 11;</code>
          */
         public Builder mergeCreateGroupMembersRequest(
@@ -6260,7 +6512,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * Group Member
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateGroupMembersRequest create_group_members_request = 11;</code>
          */
         public Builder clearCreateGroupMembersRequest() {
@@ -6284,7 +6536,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * Group Member
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateGroupMembersRequest create_group_members_request = 11;</code>
          */
         public im.turms.server.common.access.client.dto.request.group.member.CreateGroupMembersRequest.Builder getCreateGroupMembersRequestBuilder() {
@@ -6295,7 +6547,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * Group Member
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateGroupMembersRequest create_group_members_request = 11;</code>
          */
         @java.lang.Override
@@ -6315,7 +6567,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * Group Member
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateGroupMembersRequest create_group_members_request = 11;</code>
          */
         private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.group.member.CreateGroupMembersRequest, im.turms.server.common.access.client.dto.request.group.member.CreateGroupMembersRequest.Builder, im.turms.server.common.access.client.dto.request.group.member.CreateGroupMembersRequestOrBuilder> getCreateGroupMembersRequestFieldBuilder() {
@@ -6818,7 +7070,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * User
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.QueryUserProfilesRequest query_user_profiles_request = 100;</code>
          *
          * @return Whether the queryUserProfilesRequest field is set.
@@ -6832,7 +7084,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * User
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.QueryUserProfilesRequest query_user_profiles_request = 100;</code>
          *
          * @return The queryUserProfilesRequest.
@@ -6858,7 +7110,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * User
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.QueryUserProfilesRequest query_user_profiles_request = 100;</code>
          */
         public Builder setQueryUserProfilesRequest(
@@ -6880,7 +7132,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * User
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.QueryUserProfilesRequest query_user_profiles_request = 100;</code>
          */
         public Builder setQueryUserProfilesRequest(
@@ -6899,7 +7151,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * User
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.QueryUserProfilesRequest query_user_profiles_request = 100;</code>
          */
         public Builder mergeQueryUserProfilesRequest(
@@ -6932,7 +7184,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * User
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.QueryUserProfilesRequest query_user_profiles_request = 100;</code>
          */
         public Builder clearQueryUserProfilesRequest() {
@@ -6956,7 +7208,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * User
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.QueryUserProfilesRequest query_user_profiles_request = 100;</code>
          */
         public im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest.Builder getQueryUserProfilesRequestBuilder() {
@@ -6967,7 +7219,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * User
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.QueryUserProfilesRequest query_user_profiles_request = 100;</code>
          */
         @java.lang.Override
@@ -6987,7 +7239,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * User
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.QueryUserProfilesRequest query_user_profiles_request = 100;</code>
          */
         private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest, im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest.Builder, im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequestOrBuilder> getQueryUserProfilesRequestFieldBuilder() {
@@ -7810,7 +8062,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * User Relationship
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateFriendRequestRequest create_friend_request_request = 200;</code>
          *
          * @return Whether the createFriendRequestRequest field is set.
@@ -7824,7 +8076,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * User Relationship
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateFriendRequestRequest create_friend_request_request = 200;</code>
          *
          * @return The createFriendRequestRequest.
@@ -7850,7 +8102,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * User Relationship
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateFriendRequestRequest create_friend_request_request = 200;</code>
          */
         public Builder setCreateFriendRequestRequest(
@@ -7872,7 +8124,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * User Relationship
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateFriendRequestRequest create_friend_request_request = 200;</code>
          */
         public Builder setCreateFriendRequestRequest(
@@ -7891,7 +8143,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * User Relationship
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateFriendRequestRequest create_friend_request_request = 200;</code>
          */
         public Builder mergeCreateFriendRequestRequest(
@@ -7924,7 +8176,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * User Relationship
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateFriendRequestRequest create_friend_request_request = 200;</code>
          */
         public Builder clearCreateFriendRequestRequest() {
@@ -7948,7 +8200,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * User Relationship
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateFriendRequestRequest create_friend_request_request = 200;</code>
          */
         public im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest.Builder getCreateFriendRequestRequestBuilder() {
@@ -7959,7 +8211,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * User Relationship
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateFriendRequestRequest create_friend_request_request = 200;</code>
          */
         @java.lang.Override
@@ -7979,7 +8231,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * User Relationship
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateFriendRequestRequest create_friend_request_request = 200;</code>
          */
         private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest, im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequestOrBuilder> getCreateFriendRequestRequestFieldBuilder() {
@@ -8318,33 +8570,192 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             return createRelationshipRequestBuilder_;
         }
 
+        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.user.relationship.DeleteFriendRequestRequest, im.turms.server.common.access.client.dto.request.user.relationship.DeleteFriendRequestRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.DeleteFriendRequestRequestOrBuilder> deleteFriendRequestRequestBuilder_;
+
+        /**
+         * <code>.im.turms.proto.DeleteFriendRequestRequest delete_friend_request_request = 203;</code>
+         *
+         * @return Whether the deleteFriendRequestRequest field is set.
+         */
+        @java.lang.Override
+        public boolean hasDeleteFriendRequestRequest() {
+            return kindCase_ == 203;
+        }
+
+        /**
+         * <code>.im.turms.proto.DeleteFriendRequestRequest delete_friend_request_request = 203;</code>
+         *
+         * @return The deleteFriendRequestRequest.
+         */
+        @java.lang.Override
+        public im.turms.server.common.access.client.dto.request.user.relationship.DeleteFriendRequestRequest getDeleteFriendRequestRequest() {
+            if (deleteFriendRequestRequestBuilder_ == null) {
+                if (kindCase_ == 203) {
+                    return (im.turms.server.common.access.client.dto.request.user.relationship.DeleteFriendRequestRequest) kind_;
+                }
+                return im.turms.server.common.access.client.dto.request.user.relationship.DeleteFriendRequestRequest
+                        .getDefaultInstance();
+            } else {
+                if (kindCase_ == 203) {
+                    return deleteFriendRequestRequestBuilder_.getMessage();
+                }
+                return im.turms.server.common.access.client.dto.request.user.relationship.DeleteFriendRequestRequest
+                        .getDefaultInstance();
+            }
+        }
+
+        /**
+         * <code>.im.turms.proto.DeleteFriendRequestRequest delete_friend_request_request = 203;</code>
+         */
+        public Builder setDeleteFriendRequestRequest(
+                im.turms.server.common.access.client.dto.request.user.relationship.DeleteFriendRequestRequest value) {
+            if (deleteFriendRequestRequestBuilder_ == null) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                kind_ = value;
+                onChanged();
+            } else {
+                deleteFriendRequestRequestBuilder_.setMessage(value);
+            }
+            kindCase_ = 203;
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.DeleteFriendRequestRequest delete_friend_request_request = 203;</code>
+         */
+        public Builder setDeleteFriendRequestRequest(
+                im.turms.server.common.access.client.dto.request.user.relationship.DeleteFriendRequestRequest.Builder builderForValue) {
+            if (deleteFriendRequestRequestBuilder_ == null) {
+                kind_ = builderForValue.build();
+                onChanged();
+            } else {
+                deleteFriendRequestRequestBuilder_.setMessage(builderForValue.build());
+            }
+            kindCase_ = 203;
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.DeleteFriendRequestRequest delete_friend_request_request = 203;</code>
+         */
+        public Builder mergeDeleteFriendRequestRequest(
+                im.turms.server.common.access.client.dto.request.user.relationship.DeleteFriendRequestRequest value) {
+            if (deleteFriendRequestRequestBuilder_ == null) {
+                if (kindCase_ == 203
+                        && kind_ != im.turms.server.common.access.client.dto.request.user.relationship.DeleteFriendRequestRequest
+                                .getDefaultInstance()) {
+                    kind_ = im.turms.server.common.access.client.dto.request.user.relationship.DeleteFriendRequestRequest
+                            .newBuilder(
+                                    (im.turms.server.common.access.client.dto.request.user.relationship.DeleteFriendRequestRequest) kind_)
+                            .mergeFrom(value)
+                            .buildPartial();
+                } else {
+                    kind_ = value;
+                }
+                onChanged();
+            } else {
+                if (kindCase_ == 203) {
+                    deleteFriendRequestRequestBuilder_.mergeFrom(value);
+                } else {
+                    deleteFriendRequestRequestBuilder_.setMessage(value);
+                }
+            }
+            kindCase_ = 203;
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.DeleteFriendRequestRequest delete_friend_request_request = 203;</code>
+         */
+        public Builder clearDeleteFriendRequestRequest() {
+            if (deleteFriendRequestRequestBuilder_ == null) {
+                if (kindCase_ == 203) {
+                    kindCase_ = 0;
+                    kind_ = null;
+                    onChanged();
+                }
+            } else {
+                if (kindCase_ == 203) {
+                    kindCase_ = 0;
+                    kind_ = null;
+                }
+                deleteFriendRequestRequestBuilder_.clear();
+            }
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.DeleteFriendRequestRequest delete_friend_request_request = 203;</code>
+         */
+        public im.turms.server.common.access.client.dto.request.user.relationship.DeleteFriendRequestRequest.Builder getDeleteFriendRequestRequestBuilder() {
+            return getDeleteFriendRequestRequestFieldBuilder().getBuilder();
+        }
+
+        /**
+         * <code>.im.turms.proto.DeleteFriendRequestRequest delete_friend_request_request = 203;</code>
+         */
+        @java.lang.Override
+        public im.turms.server.common.access.client.dto.request.user.relationship.DeleteFriendRequestRequestOrBuilder getDeleteFriendRequestRequestOrBuilder() {
+            if ((kindCase_ == 203) && (deleteFriendRequestRequestBuilder_ != null)) {
+                return deleteFriendRequestRequestBuilder_.getMessageOrBuilder();
+            } else {
+                if (kindCase_ == 203) {
+                    return (im.turms.server.common.access.client.dto.request.user.relationship.DeleteFriendRequestRequest) kind_;
+                }
+                return im.turms.server.common.access.client.dto.request.user.relationship.DeleteFriendRequestRequest
+                        .getDefaultInstance();
+            }
+        }
+
+        /**
+         * <code>.im.turms.proto.DeleteFriendRequestRequest delete_friend_request_request = 203;</code>
+         */
+        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.user.relationship.DeleteFriendRequestRequest, im.turms.server.common.access.client.dto.request.user.relationship.DeleteFriendRequestRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.DeleteFriendRequestRequestOrBuilder> getDeleteFriendRequestRequestFieldBuilder() {
+            if (deleteFriendRequestRequestBuilder_ == null) {
+                if (!(kindCase_ == 203)) {
+                    kind_ = im.turms.server.common.access.client.dto.request.user.relationship.DeleteFriendRequestRequest
+                            .getDefaultInstance();
+                }
+                deleteFriendRequestRequestBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
+                        (im.turms.server.common.access.client.dto.request.user.relationship.DeleteFriendRequestRequest) kind_,
+                        getParentForChildren(),
+                        isClean());
+                kind_ = null;
+            }
+            kindCase_ = 203;
+            onChanged();
+            return deleteFriendRequestRequestBuilder_;
+        }
+
         private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequest, im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequestOrBuilder> deleteRelationshipGroupRequestBuilder_;
 
         /**
-         * <code>.im.turms.proto.DeleteRelationshipGroupRequest delete_relationship_group_request = 203;</code>
+         * <code>.im.turms.proto.DeleteRelationshipGroupRequest delete_relationship_group_request = 204;</code>
          *
          * @return Whether the deleteRelationshipGroupRequest field is set.
          */
         @java.lang.Override
         public boolean hasDeleteRelationshipGroupRequest() {
-            return kindCase_ == 203;
+            return kindCase_ == 204;
         }
 
         /**
-         * <code>.im.turms.proto.DeleteRelationshipGroupRequest delete_relationship_group_request = 203;</code>
+         * <code>.im.turms.proto.DeleteRelationshipGroupRequest delete_relationship_group_request = 204;</code>
          *
          * @return The deleteRelationshipGroupRequest.
          */
         @java.lang.Override
         public im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequest getDeleteRelationshipGroupRequest() {
             if (deleteRelationshipGroupRequestBuilder_ == null) {
-                if (kindCase_ == 203) {
+                if (kindCase_ == 204) {
                     return (im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequest) kind_;
                 }
                 return im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequest
                         .getDefaultInstance();
             } else {
-                if (kindCase_ == 203) {
+                if (kindCase_ == 204) {
                     return deleteRelationshipGroupRequestBuilder_.getMessage();
                 }
                 return im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequest
@@ -8353,7 +8764,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         }
 
         /**
-         * <code>.im.turms.proto.DeleteRelationshipGroupRequest delete_relationship_group_request = 203;</code>
+         * <code>.im.turms.proto.DeleteRelationshipGroupRequest delete_relationship_group_request = 204;</code>
          */
         public Builder setDeleteRelationshipGroupRequest(
                 im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequest value) {
@@ -8366,12 +8777,12 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             } else {
                 deleteRelationshipGroupRequestBuilder_.setMessage(value);
             }
-            kindCase_ = 203;
+            kindCase_ = 204;
             return this;
         }
 
         /**
-         * <code>.im.turms.proto.DeleteRelationshipGroupRequest delete_relationship_group_request = 203;</code>
+         * <code>.im.turms.proto.DeleteRelationshipGroupRequest delete_relationship_group_request = 204;</code>
          */
         public Builder setDeleteRelationshipGroupRequest(
                 im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequest.Builder builderForValue) {
@@ -8381,17 +8792,17 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             } else {
                 deleteRelationshipGroupRequestBuilder_.setMessage(builderForValue.build());
             }
-            kindCase_ = 203;
+            kindCase_ = 204;
             return this;
         }
 
         /**
-         * <code>.im.turms.proto.DeleteRelationshipGroupRequest delete_relationship_group_request = 203;</code>
+         * <code>.im.turms.proto.DeleteRelationshipGroupRequest delete_relationship_group_request = 204;</code>
          */
         public Builder mergeDeleteRelationshipGroupRequest(
                 im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequest value) {
             if (deleteRelationshipGroupRequestBuilder_ == null) {
-                if (kindCase_ == 203
+                if (kindCase_ == 204
                         && kind_ != im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequest
                                 .getDefaultInstance()) {
                     kind_ = im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequest
@@ -8404,28 +8815,28 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
                 }
                 onChanged();
             } else {
-                if (kindCase_ == 203) {
+                if (kindCase_ == 204) {
                     deleteRelationshipGroupRequestBuilder_.mergeFrom(value);
                 } else {
                     deleteRelationshipGroupRequestBuilder_.setMessage(value);
                 }
             }
-            kindCase_ = 203;
+            kindCase_ = 204;
             return this;
         }
 
         /**
-         * <code>.im.turms.proto.DeleteRelationshipGroupRequest delete_relationship_group_request = 203;</code>
+         * <code>.im.turms.proto.DeleteRelationshipGroupRequest delete_relationship_group_request = 204;</code>
          */
         public Builder clearDeleteRelationshipGroupRequest() {
             if (deleteRelationshipGroupRequestBuilder_ == null) {
-                if (kindCase_ == 203) {
+                if (kindCase_ == 204) {
                     kindCase_ = 0;
                     kind_ = null;
                     onChanged();
                 }
             } else {
-                if (kindCase_ == 203) {
+                if (kindCase_ == 204) {
                     kindCase_ = 0;
                     kind_ = null;
                 }
@@ -8435,21 +8846,21 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         }
 
         /**
-         * <code>.im.turms.proto.DeleteRelationshipGroupRequest delete_relationship_group_request = 203;</code>
+         * <code>.im.turms.proto.DeleteRelationshipGroupRequest delete_relationship_group_request = 204;</code>
          */
         public im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequest.Builder getDeleteRelationshipGroupRequestBuilder() {
             return getDeleteRelationshipGroupRequestFieldBuilder().getBuilder();
         }
 
         /**
-         * <code>.im.turms.proto.DeleteRelationshipGroupRequest delete_relationship_group_request = 203;</code>
+         * <code>.im.turms.proto.DeleteRelationshipGroupRequest delete_relationship_group_request = 204;</code>
          */
         @java.lang.Override
         public im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequestOrBuilder getDeleteRelationshipGroupRequestOrBuilder() {
-            if ((kindCase_ == 203) && (deleteRelationshipGroupRequestBuilder_ != null)) {
+            if ((kindCase_ == 204) && (deleteRelationshipGroupRequestBuilder_ != null)) {
                 return deleteRelationshipGroupRequestBuilder_.getMessageOrBuilder();
             } else {
-                if (kindCase_ == 203) {
+                if (kindCase_ == 204) {
                     return (im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequest) kind_;
                 }
                 return im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequest
@@ -8458,11 +8869,11 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         }
 
         /**
-         * <code>.im.turms.proto.DeleteRelationshipGroupRequest delete_relationship_group_request = 203;</code>
+         * <code>.im.turms.proto.DeleteRelationshipGroupRequest delete_relationship_group_request = 204;</code>
          */
         private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequest, im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequestOrBuilder> getDeleteRelationshipGroupRequestFieldBuilder() {
             if (deleteRelationshipGroupRequestBuilder_ == null) {
-                if (!(kindCase_ == 203)) {
+                if (!(kindCase_ == 204)) {
                     kind_ = im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequest
                             .getDefaultInstance();
                 }
@@ -8473,7 +8884,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
                                 isClean());
                 kind_ = null;
             }
-            kindCase_ = 203;
+            kindCase_ = 204;
             onChanged();
             return deleteRelationshipGroupRequestBuilder_;
         }
@@ -8481,30 +8892,30 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipRequest, im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipRequestOrBuilder> deleteRelationshipRequestBuilder_;
 
         /**
-         * <code>.im.turms.proto.DeleteRelationshipRequest delete_relationship_request = 204;</code>
+         * <code>.im.turms.proto.DeleteRelationshipRequest delete_relationship_request = 205;</code>
          *
          * @return Whether the deleteRelationshipRequest field is set.
          */
         @java.lang.Override
         public boolean hasDeleteRelationshipRequest() {
-            return kindCase_ == 204;
+            return kindCase_ == 205;
         }
 
         /**
-         * <code>.im.turms.proto.DeleteRelationshipRequest delete_relationship_request = 204;</code>
+         * <code>.im.turms.proto.DeleteRelationshipRequest delete_relationship_request = 205;</code>
          *
          * @return The deleteRelationshipRequest.
          */
         @java.lang.Override
         public im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipRequest getDeleteRelationshipRequest() {
             if (deleteRelationshipRequestBuilder_ == null) {
-                if (kindCase_ == 204) {
+                if (kindCase_ == 205) {
                     return (im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipRequest) kind_;
                 }
                 return im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipRequest
                         .getDefaultInstance();
             } else {
-                if (kindCase_ == 204) {
+                if (kindCase_ == 205) {
                     return deleteRelationshipRequestBuilder_.getMessage();
                 }
                 return im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipRequest
@@ -8513,7 +8924,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         }
 
         /**
-         * <code>.im.turms.proto.DeleteRelationshipRequest delete_relationship_request = 204;</code>
+         * <code>.im.turms.proto.DeleteRelationshipRequest delete_relationship_request = 205;</code>
          */
         public Builder setDeleteRelationshipRequest(
                 im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipRequest value) {
@@ -8526,12 +8937,12 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             } else {
                 deleteRelationshipRequestBuilder_.setMessage(value);
             }
-            kindCase_ = 204;
+            kindCase_ = 205;
             return this;
         }
 
         /**
-         * <code>.im.turms.proto.DeleteRelationshipRequest delete_relationship_request = 204;</code>
+         * <code>.im.turms.proto.DeleteRelationshipRequest delete_relationship_request = 205;</code>
          */
         public Builder setDeleteRelationshipRequest(
                 im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipRequest.Builder builderForValue) {
@@ -8541,17 +8952,17 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             } else {
                 deleteRelationshipRequestBuilder_.setMessage(builderForValue.build());
             }
-            kindCase_ = 204;
+            kindCase_ = 205;
             return this;
         }
 
         /**
-         * <code>.im.turms.proto.DeleteRelationshipRequest delete_relationship_request = 204;</code>
+         * <code>.im.turms.proto.DeleteRelationshipRequest delete_relationship_request = 205;</code>
          */
         public Builder mergeDeleteRelationshipRequest(
                 im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipRequest value) {
             if (deleteRelationshipRequestBuilder_ == null) {
-                if (kindCase_ == 204
+                if (kindCase_ == 205
                         && kind_ != im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipRequest
                                 .getDefaultInstance()) {
                     kind_ = im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipRequest
@@ -8564,28 +8975,28 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
                 }
                 onChanged();
             } else {
-                if (kindCase_ == 204) {
+                if (kindCase_ == 205) {
                     deleteRelationshipRequestBuilder_.mergeFrom(value);
                 } else {
                     deleteRelationshipRequestBuilder_.setMessage(value);
                 }
             }
-            kindCase_ = 204;
+            kindCase_ = 205;
             return this;
         }
 
         /**
-         * <code>.im.turms.proto.DeleteRelationshipRequest delete_relationship_request = 204;</code>
+         * <code>.im.turms.proto.DeleteRelationshipRequest delete_relationship_request = 205;</code>
          */
         public Builder clearDeleteRelationshipRequest() {
             if (deleteRelationshipRequestBuilder_ == null) {
-                if (kindCase_ == 204) {
+                if (kindCase_ == 205) {
                     kindCase_ = 0;
                     kind_ = null;
                     onChanged();
                 }
             } else {
-                if (kindCase_ == 204) {
+                if (kindCase_ == 205) {
                     kindCase_ = 0;
                     kind_ = null;
                 }
@@ -8595,21 +9006,21 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         }
 
         /**
-         * <code>.im.turms.proto.DeleteRelationshipRequest delete_relationship_request = 204;</code>
+         * <code>.im.turms.proto.DeleteRelationshipRequest delete_relationship_request = 205;</code>
          */
         public im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipRequest.Builder getDeleteRelationshipRequestBuilder() {
             return getDeleteRelationshipRequestFieldBuilder().getBuilder();
         }
 
         /**
-         * <code>.im.turms.proto.DeleteRelationshipRequest delete_relationship_request = 204;</code>
+         * <code>.im.turms.proto.DeleteRelationshipRequest delete_relationship_request = 205;</code>
          */
         @java.lang.Override
         public im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipRequestOrBuilder getDeleteRelationshipRequestOrBuilder() {
-            if ((kindCase_ == 204) && (deleteRelationshipRequestBuilder_ != null)) {
+            if ((kindCase_ == 205) && (deleteRelationshipRequestBuilder_ != null)) {
                 return deleteRelationshipRequestBuilder_.getMessageOrBuilder();
             } else {
-                if (kindCase_ == 204) {
+                if (kindCase_ == 205) {
                     return (im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipRequest) kind_;
                 }
                 return im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipRequest
@@ -8618,11 +9029,11 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         }
 
         /**
-         * <code>.im.turms.proto.DeleteRelationshipRequest delete_relationship_request = 204;</code>
+         * <code>.im.turms.proto.DeleteRelationshipRequest delete_relationship_request = 205;</code>
          */
         private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipRequest, im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipRequestOrBuilder> getDeleteRelationshipRequestFieldBuilder() {
             if (deleteRelationshipRequestBuilder_ == null) {
-                if (!(kindCase_ == 204)) {
+                if (!(kindCase_ == 205)) {
                     kind_ = im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipRequest
                             .getDefaultInstance();
                 }
@@ -8632,7 +9043,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
                         isClean());
                 kind_ = null;
             }
-            kindCase_ = 204;
+            kindCase_ = 205;
             onChanged();
             return deleteRelationshipRequestBuilder_;
         }
@@ -8640,30 +9051,30 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.user.relationship.QueryFriendRequestsRequest, im.turms.server.common.access.client.dto.request.user.relationship.QueryFriendRequestsRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.QueryFriendRequestsRequestOrBuilder> queryFriendRequestsRequestBuilder_;
 
         /**
-         * <code>.im.turms.proto.QueryFriendRequestsRequest query_friend_requests_request = 205;</code>
+         * <code>.im.turms.proto.QueryFriendRequestsRequest query_friend_requests_request = 206;</code>
          *
          * @return Whether the queryFriendRequestsRequest field is set.
          */
         @java.lang.Override
         public boolean hasQueryFriendRequestsRequest() {
-            return kindCase_ == 205;
+            return kindCase_ == 206;
         }
 
         /**
-         * <code>.im.turms.proto.QueryFriendRequestsRequest query_friend_requests_request = 205;</code>
+         * <code>.im.turms.proto.QueryFriendRequestsRequest query_friend_requests_request = 206;</code>
          *
          * @return The queryFriendRequestsRequest.
          */
         @java.lang.Override
         public im.turms.server.common.access.client.dto.request.user.relationship.QueryFriendRequestsRequest getQueryFriendRequestsRequest() {
             if (queryFriendRequestsRequestBuilder_ == null) {
-                if (kindCase_ == 205) {
+                if (kindCase_ == 206) {
                     return (im.turms.server.common.access.client.dto.request.user.relationship.QueryFriendRequestsRequest) kind_;
                 }
                 return im.turms.server.common.access.client.dto.request.user.relationship.QueryFriendRequestsRequest
                         .getDefaultInstance();
             } else {
-                if (kindCase_ == 205) {
+                if (kindCase_ == 206) {
                     return queryFriendRequestsRequestBuilder_.getMessage();
                 }
                 return im.turms.server.common.access.client.dto.request.user.relationship.QueryFriendRequestsRequest
@@ -8672,7 +9083,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         }
 
         /**
-         * <code>.im.turms.proto.QueryFriendRequestsRequest query_friend_requests_request = 205;</code>
+         * <code>.im.turms.proto.QueryFriendRequestsRequest query_friend_requests_request = 206;</code>
          */
         public Builder setQueryFriendRequestsRequest(
                 im.turms.server.common.access.client.dto.request.user.relationship.QueryFriendRequestsRequest value) {
@@ -8685,12 +9096,12 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             } else {
                 queryFriendRequestsRequestBuilder_.setMessage(value);
             }
-            kindCase_ = 205;
+            kindCase_ = 206;
             return this;
         }
 
         /**
-         * <code>.im.turms.proto.QueryFriendRequestsRequest query_friend_requests_request = 205;</code>
+         * <code>.im.turms.proto.QueryFriendRequestsRequest query_friend_requests_request = 206;</code>
          */
         public Builder setQueryFriendRequestsRequest(
                 im.turms.server.common.access.client.dto.request.user.relationship.QueryFriendRequestsRequest.Builder builderForValue) {
@@ -8700,17 +9111,17 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             } else {
                 queryFriendRequestsRequestBuilder_.setMessage(builderForValue.build());
             }
-            kindCase_ = 205;
+            kindCase_ = 206;
             return this;
         }
 
         /**
-         * <code>.im.turms.proto.QueryFriendRequestsRequest query_friend_requests_request = 205;</code>
+         * <code>.im.turms.proto.QueryFriendRequestsRequest query_friend_requests_request = 206;</code>
          */
         public Builder mergeQueryFriendRequestsRequest(
                 im.turms.server.common.access.client.dto.request.user.relationship.QueryFriendRequestsRequest value) {
             if (queryFriendRequestsRequestBuilder_ == null) {
-                if (kindCase_ == 205
+                if (kindCase_ == 206
                         && kind_ != im.turms.server.common.access.client.dto.request.user.relationship.QueryFriendRequestsRequest
                                 .getDefaultInstance()) {
                     kind_ = im.turms.server.common.access.client.dto.request.user.relationship.QueryFriendRequestsRequest
@@ -8723,28 +9134,28 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
                 }
                 onChanged();
             } else {
-                if (kindCase_ == 205) {
+                if (kindCase_ == 206) {
                     queryFriendRequestsRequestBuilder_.mergeFrom(value);
                 } else {
                     queryFriendRequestsRequestBuilder_.setMessage(value);
                 }
             }
-            kindCase_ = 205;
+            kindCase_ = 206;
             return this;
         }
 
         /**
-         * <code>.im.turms.proto.QueryFriendRequestsRequest query_friend_requests_request = 205;</code>
+         * <code>.im.turms.proto.QueryFriendRequestsRequest query_friend_requests_request = 206;</code>
          */
         public Builder clearQueryFriendRequestsRequest() {
             if (queryFriendRequestsRequestBuilder_ == null) {
-                if (kindCase_ == 205) {
+                if (kindCase_ == 206) {
                     kindCase_ = 0;
                     kind_ = null;
                     onChanged();
                 }
             } else {
-                if (kindCase_ == 205) {
+                if (kindCase_ == 206) {
                     kindCase_ = 0;
                     kind_ = null;
                 }
@@ -8754,21 +9165,21 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         }
 
         /**
-         * <code>.im.turms.proto.QueryFriendRequestsRequest query_friend_requests_request = 205;</code>
+         * <code>.im.turms.proto.QueryFriendRequestsRequest query_friend_requests_request = 206;</code>
          */
         public im.turms.server.common.access.client.dto.request.user.relationship.QueryFriendRequestsRequest.Builder getQueryFriendRequestsRequestBuilder() {
             return getQueryFriendRequestsRequestFieldBuilder().getBuilder();
         }
 
         /**
-         * <code>.im.turms.proto.QueryFriendRequestsRequest query_friend_requests_request = 205;</code>
+         * <code>.im.turms.proto.QueryFriendRequestsRequest query_friend_requests_request = 206;</code>
          */
         @java.lang.Override
         public im.turms.server.common.access.client.dto.request.user.relationship.QueryFriendRequestsRequestOrBuilder getQueryFriendRequestsRequestOrBuilder() {
-            if ((kindCase_ == 205) && (queryFriendRequestsRequestBuilder_ != null)) {
+            if ((kindCase_ == 206) && (queryFriendRequestsRequestBuilder_ != null)) {
                 return queryFriendRequestsRequestBuilder_.getMessageOrBuilder();
             } else {
-                if (kindCase_ == 205) {
+                if (kindCase_ == 206) {
                     return (im.turms.server.common.access.client.dto.request.user.relationship.QueryFriendRequestsRequest) kind_;
                 }
                 return im.turms.server.common.access.client.dto.request.user.relationship.QueryFriendRequestsRequest
@@ -8777,11 +9188,11 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         }
 
         /**
-         * <code>.im.turms.proto.QueryFriendRequestsRequest query_friend_requests_request = 205;</code>
+         * <code>.im.turms.proto.QueryFriendRequestsRequest query_friend_requests_request = 206;</code>
          */
         private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.user.relationship.QueryFriendRequestsRequest, im.turms.server.common.access.client.dto.request.user.relationship.QueryFriendRequestsRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.QueryFriendRequestsRequestOrBuilder> getQueryFriendRequestsRequestFieldBuilder() {
             if (queryFriendRequestsRequestBuilder_ == null) {
-                if (!(kindCase_ == 205)) {
+                if (!(kindCase_ == 206)) {
                     kind_ = im.turms.server.common.access.client.dto.request.user.relationship.QueryFriendRequestsRequest
                             .getDefaultInstance();
                 }
@@ -8791,7 +9202,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
                         isClean());
                 kind_ = null;
             }
-            kindCase_ = 205;
+            kindCase_ = 206;
             onChanged();
             return queryFriendRequestsRequestBuilder_;
         }
@@ -8799,30 +9210,30 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.user.relationship.QueryRelatedUserIdsRequest, im.turms.server.common.access.client.dto.request.user.relationship.QueryRelatedUserIdsRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.QueryRelatedUserIdsRequestOrBuilder> queryRelatedUserIdsRequestBuilder_;
 
         /**
-         * <code>.im.turms.proto.QueryRelatedUserIdsRequest query_related_user_ids_request = 206;</code>
+         * <code>.im.turms.proto.QueryRelatedUserIdsRequest query_related_user_ids_request = 207;</code>
          *
          * @return Whether the queryRelatedUserIdsRequest field is set.
          */
         @java.lang.Override
         public boolean hasQueryRelatedUserIdsRequest() {
-            return kindCase_ == 206;
+            return kindCase_ == 207;
         }
 
         /**
-         * <code>.im.turms.proto.QueryRelatedUserIdsRequest query_related_user_ids_request = 206;</code>
+         * <code>.im.turms.proto.QueryRelatedUserIdsRequest query_related_user_ids_request = 207;</code>
          *
          * @return The queryRelatedUserIdsRequest.
          */
         @java.lang.Override
         public im.turms.server.common.access.client.dto.request.user.relationship.QueryRelatedUserIdsRequest getQueryRelatedUserIdsRequest() {
             if (queryRelatedUserIdsRequestBuilder_ == null) {
-                if (kindCase_ == 206) {
+                if (kindCase_ == 207) {
                     return (im.turms.server.common.access.client.dto.request.user.relationship.QueryRelatedUserIdsRequest) kind_;
                 }
                 return im.turms.server.common.access.client.dto.request.user.relationship.QueryRelatedUserIdsRequest
                         .getDefaultInstance();
             } else {
-                if (kindCase_ == 206) {
+                if (kindCase_ == 207) {
                     return queryRelatedUserIdsRequestBuilder_.getMessage();
                 }
                 return im.turms.server.common.access.client.dto.request.user.relationship.QueryRelatedUserIdsRequest
@@ -8831,7 +9242,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         }
 
         /**
-         * <code>.im.turms.proto.QueryRelatedUserIdsRequest query_related_user_ids_request = 206;</code>
+         * <code>.im.turms.proto.QueryRelatedUserIdsRequest query_related_user_ids_request = 207;</code>
          */
         public Builder setQueryRelatedUserIdsRequest(
                 im.turms.server.common.access.client.dto.request.user.relationship.QueryRelatedUserIdsRequest value) {
@@ -8844,12 +9255,12 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             } else {
                 queryRelatedUserIdsRequestBuilder_.setMessage(value);
             }
-            kindCase_ = 206;
+            kindCase_ = 207;
             return this;
         }
 
         /**
-         * <code>.im.turms.proto.QueryRelatedUserIdsRequest query_related_user_ids_request = 206;</code>
+         * <code>.im.turms.proto.QueryRelatedUserIdsRequest query_related_user_ids_request = 207;</code>
          */
         public Builder setQueryRelatedUserIdsRequest(
                 im.turms.server.common.access.client.dto.request.user.relationship.QueryRelatedUserIdsRequest.Builder builderForValue) {
@@ -8859,17 +9270,17 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             } else {
                 queryRelatedUserIdsRequestBuilder_.setMessage(builderForValue.build());
             }
-            kindCase_ = 206;
+            kindCase_ = 207;
             return this;
         }
 
         /**
-         * <code>.im.turms.proto.QueryRelatedUserIdsRequest query_related_user_ids_request = 206;</code>
+         * <code>.im.turms.proto.QueryRelatedUserIdsRequest query_related_user_ids_request = 207;</code>
          */
         public Builder mergeQueryRelatedUserIdsRequest(
                 im.turms.server.common.access.client.dto.request.user.relationship.QueryRelatedUserIdsRequest value) {
             if (queryRelatedUserIdsRequestBuilder_ == null) {
-                if (kindCase_ == 206
+                if (kindCase_ == 207
                         && kind_ != im.turms.server.common.access.client.dto.request.user.relationship.QueryRelatedUserIdsRequest
                                 .getDefaultInstance()) {
                     kind_ = im.turms.server.common.access.client.dto.request.user.relationship.QueryRelatedUserIdsRequest
@@ -8882,28 +9293,28 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
                 }
                 onChanged();
             } else {
-                if (kindCase_ == 206) {
+                if (kindCase_ == 207) {
                     queryRelatedUserIdsRequestBuilder_.mergeFrom(value);
                 } else {
                     queryRelatedUserIdsRequestBuilder_.setMessage(value);
                 }
             }
-            kindCase_ = 206;
+            kindCase_ = 207;
             return this;
         }
 
         /**
-         * <code>.im.turms.proto.QueryRelatedUserIdsRequest query_related_user_ids_request = 206;</code>
+         * <code>.im.turms.proto.QueryRelatedUserIdsRequest query_related_user_ids_request = 207;</code>
          */
         public Builder clearQueryRelatedUserIdsRequest() {
             if (queryRelatedUserIdsRequestBuilder_ == null) {
-                if (kindCase_ == 206) {
+                if (kindCase_ == 207) {
                     kindCase_ = 0;
                     kind_ = null;
                     onChanged();
                 }
             } else {
-                if (kindCase_ == 206) {
+                if (kindCase_ == 207) {
                     kindCase_ = 0;
                     kind_ = null;
                 }
@@ -8913,21 +9324,21 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         }
 
         /**
-         * <code>.im.turms.proto.QueryRelatedUserIdsRequest query_related_user_ids_request = 206;</code>
+         * <code>.im.turms.proto.QueryRelatedUserIdsRequest query_related_user_ids_request = 207;</code>
          */
         public im.turms.server.common.access.client.dto.request.user.relationship.QueryRelatedUserIdsRequest.Builder getQueryRelatedUserIdsRequestBuilder() {
             return getQueryRelatedUserIdsRequestFieldBuilder().getBuilder();
         }
 
         /**
-         * <code>.im.turms.proto.QueryRelatedUserIdsRequest query_related_user_ids_request = 206;</code>
+         * <code>.im.turms.proto.QueryRelatedUserIdsRequest query_related_user_ids_request = 207;</code>
          */
         @java.lang.Override
         public im.turms.server.common.access.client.dto.request.user.relationship.QueryRelatedUserIdsRequestOrBuilder getQueryRelatedUserIdsRequestOrBuilder() {
-            if ((kindCase_ == 206) && (queryRelatedUserIdsRequestBuilder_ != null)) {
+            if ((kindCase_ == 207) && (queryRelatedUserIdsRequestBuilder_ != null)) {
                 return queryRelatedUserIdsRequestBuilder_.getMessageOrBuilder();
             } else {
-                if (kindCase_ == 206) {
+                if (kindCase_ == 207) {
                     return (im.turms.server.common.access.client.dto.request.user.relationship.QueryRelatedUserIdsRequest) kind_;
                 }
                 return im.turms.server.common.access.client.dto.request.user.relationship.QueryRelatedUserIdsRequest
@@ -8936,11 +9347,11 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         }
 
         /**
-         * <code>.im.turms.proto.QueryRelatedUserIdsRequest query_related_user_ids_request = 206;</code>
+         * <code>.im.turms.proto.QueryRelatedUserIdsRequest query_related_user_ids_request = 207;</code>
          */
         private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.user.relationship.QueryRelatedUserIdsRequest, im.turms.server.common.access.client.dto.request.user.relationship.QueryRelatedUserIdsRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.QueryRelatedUserIdsRequestOrBuilder> getQueryRelatedUserIdsRequestFieldBuilder() {
             if (queryRelatedUserIdsRequestBuilder_ == null) {
-                if (!(kindCase_ == 206)) {
+                if (!(kindCase_ == 207)) {
                     kind_ = im.turms.server.common.access.client.dto.request.user.relationship.QueryRelatedUserIdsRequest
                             .getDefaultInstance();
                 }
@@ -8950,7 +9361,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
                         isClean());
                 kind_ = null;
             }
-            kindCase_ = 206;
+            kindCase_ = 207;
             onChanged();
             return queryRelatedUserIdsRequestBuilder_;
         }
@@ -8958,30 +9369,30 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipGroupsRequest, im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipGroupsRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipGroupsRequestOrBuilder> queryRelationshipGroupsRequestBuilder_;
 
         /**
-         * <code>.im.turms.proto.QueryRelationshipGroupsRequest query_relationship_groups_request = 207;</code>
+         * <code>.im.turms.proto.QueryRelationshipGroupsRequest query_relationship_groups_request = 208;</code>
          *
          * @return Whether the queryRelationshipGroupsRequest field is set.
          */
         @java.lang.Override
         public boolean hasQueryRelationshipGroupsRequest() {
-            return kindCase_ == 207;
+            return kindCase_ == 208;
         }
 
         /**
-         * <code>.im.turms.proto.QueryRelationshipGroupsRequest query_relationship_groups_request = 207;</code>
+         * <code>.im.turms.proto.QueryRelationshipGroupsRequest query_relationship_groups_request = 208;</code>
          *
          * @return The queryRelationshipGroupsRequest.
          */
         @java.lang.Override
         public im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipGroupsRequest getQueryRelationshipGroupsRequest() {
             if (queryRelationshipGroupsRequestBuilder_ == null) {
-                if (kindCase_ == 207) {
+                if (kindCase_ == 208) {
                     return (im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipGroupsRequest) kind_;
                 }
                 return im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipGroupsRequest
                         .getDefaultInstance();
             } else {
-                if (kindCase_ == 207) {
+                if (kindCase_ == 208) {
                     return queryRelationshipGroupsRequestBuilder_.getMessage();
                 }
                 return im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipGroupsRequest
@@ -8990,7 +9401,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         }
 
         /**
-         * <code>.im.turms.proto.QueryRelationshipGroupsRequest query_relationship_groups_request = 207;</code>
+         * <code>.im.turms.proto.QueryRelationshipGroupsRequest query_relationship_groups_request = 208;</code>
          */
         public Builder setQueryRelationshipGroupsRequest(
                 im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipGroupsRequest value) {
@@ -9003,12 +9414,12 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             } else {
                 queryRelationshipGroupsRequestBuilder_.setMessage(value);
             }
-            kindCase_ = 207;
+            kindCase_ = 208;
             return this;
         }
 
         /**
-         * <code>.im.turms.proto.QueryRelationshipGroupsRequest query_relationship_groups_request = 207;</code>
+         * <code>.im.turms.proto.QueryRelationshipGroupsRequest query_relationship_groups_request = 208;</code>
          */
         public Builder setQueryRelationshipGroupsRequest(
                 im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipGroupsRequest.Builder builderForValue) {
@@ -9018,17 +9429,17 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             } else {
                 queryRelationshipGroupsRequestBuilder_.setMessage(builderForValue.build());
             }
-            kindCase_ = 207;
+            kindCase_ = 208;
             return this;
         }
 
         /**
-         * <code>.im.turms.proto.QueryRelationshipGroupsRequest query_relationship_groups_request = 207;</code>
+         * <code>.im.turms.proto.QueryRelationshipGroupsRequest query_relationship_groups_request = 208;</code>
          */
         public Builder mergeQueryRelationshipGroupsRequest(
                 im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipGroupsRequest value) {
             if (queryRelationshipGroupsRequestBuilder_ == null) {
-                if (kindCase_ == 207
+                if (kindCase_ == 208
                         && kind_ != im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipGroupsRequest
                                 .getDefaultInstance()) {
                     kind_ = im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipGroupsRequest
@@ -9041,28 +9452,28 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
                 }
                 onChanged();
             } else {
-                if (kindCase_ == 207) {
+                if (kindCase_ == 208) {
                     queryRelationshipGroupsRequestBuilder_.mergeFrom(value);
                 } else {
                     queryRelationshipGroupsRequestBuilder_.setMessage(value);
                 }
             }
-            kindCase_ = 207;
+            kindCase_ = 208;
             return this;
         }
 
         /**
-         * <code>.im.turms.proto.QueryRelationshipGroupsRequest query_relationship_groups_request = 207;</code>
+         * <code>.im.turms.proto.QueryRelationshipGroupsRequest query_relationship_groups_request = 208;</code>
          */
         public Builder clearQueryRelationshipGroupsRequest() {
             if (queryRelationshipGroupsRequestBuilder_ == null) {
-                if (kindCase_ == 207) {
+                if (kindCase_ == 208) {
                     kindCase_ = 0;
                     kind_ = null;
                     onChanged();
                 }
             } else {
-                if (kindCase_ == 207) {
+                if (kindCase_ == 208) {
                     kindCase_ = 0;
                     kind_ = null;
                 }
@@ -9072,21 +9483,21 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         }
 
         /**
-         * <code>.im.turms.proto.QueryRelationshipGroupsRequest query_relationship_groups_request = 207;</code>
+         * <code>.im.turms.proto.QueryRelationshipGroupsRequest query_relationship_groups_request = 208;</code>
          */
         public im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipGroupsRequest.Builder getQueryRelationshipGroupsRequestBuilder() {
             return getQueryRelationshipGroupsRequestFieldBuilder().getBuilder();
         }
 
         /**
-         * <code>.im.turms.proto.QueryRelationshipGroupsRequest query_relationship_groups_request = 207;</code>
+         * <code>.im.turms.proto.QueryRelationshipGroupsRequest query_relationship_groups_request = 208;</code>
          */
         @java.lang.Override
         public im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipGroupsRequestOrBuilder getQueryRelationshipGroupsRequestOrBuilder() {
-            if ((kindCase_ == 207) && (queryRelationshipGroupsRequestBuilder_ != null)) {
+            if ((kindCase_ == 208) && (queryRelationshipGroupsRequestBuilder_ != null)) {
                 return queryRelationshipGroupsRequestBuilder_.getMessageOrBuilder();
             } else {
-                if (kindCase_ == 207) {
+                if (kindCase_ == 208) {
                     return (im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipGroupsRequest) kind_;
                 }
                 return im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipGroupsRequest
@@ -9095,11 +9506,11 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         }
 
         /**
-         * <code>.im.turms.proto.QueryRelationshipGroupsRequest query_relationship_groups_request = 207;</code>
+         * <code>.im.turms.proto.QueryRelationshipGroupsRequest query_relationship_groups_request = 208;</code>
          */
         private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipGroupsRequest, im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipGroupsRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipGroupsRequestOrBuilder> getQueryRelationshipGroupsRequestFieldBuilder() {
             if (queryRelationshipGroupsRequestBuilder_ == null) {
-                if (!(kindCase_ == 207)) {
+                if (!(kindCase_ == 208)) {
                     kind_ = im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipGroupsRequest
                             .getDefaultInstance();
                 }
@@ -9110,7 +9521,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
                                 isClean());
                 kind_ = null;
             }
-            kindCase_ = 207;
+            kindCase_ = 208;
             onChanged();
             return queryRelationshipGroupsRequestBuilder_;
         }
@@ -9118,30 +9529,30 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequest, im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequestOrBuilder> queryRelationshipsRequestBuilder_;
 
         /**
-         * <code>.im.turms.proto.QueryRelationshipsRequest query_relationships_request = 208;</code>
+         * <code>.im.turms.proto.QueryRelationshipsRequest query_relationships_request = 209;</code>
          *
          * @return Whether the queryRelationshipsRequest field is set.
          */
         @java.lang.Override
         public boolean hasQueryRelationshipsRequest() {
-            return kindCase_ == 208;
+            return kindCase_ == 209;
         }
 
         /**
-         * <code>.im.turms.proto.QueryRelationshipsRequest query_relationships_request = 208;</code>
+         * <code>.im.turms.proto.QueryRelationshipsRequest query_relationships_request = 209;</code>
          *
          * @return The queryRelationshipsRequest.
          */
         @java.lang.Override
         public im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequest getQueryRelationshipsRequest() {
             if (queryRelationshipsRequestBuilder_ == null) {
-                if (kindCase_ == 208) {
+                if (kindCase_ == 209) {
                     return (im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequest) kind_;
                 }
                 return im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequest
                         .getDefaultInstance();
             } else {
-                if (kindCase_ == 208) {
+                if (kindCase_ == 209) {
                     return queryRelationshipsRequestBuilder_.getMessage();
                 }
                 return im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequest
@@ -9150,7 +9561,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         }
 
         /**
-         * <code>.im.turms.proto.QueryRelationshipsRequest query_relationships_request = 208;</code>
+         * <code>.im.turms.proto.QueryRelationshipsRequest query_relationships_request = 209;</code>
          */
         public Builder setQueryRelationshipsRequest(
                 im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequest value) {
@@ -9163,12 +9574,12 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             } else {
                 queryRelationshipsRequestBuilder_.setMessage(value);
             }
-            kindCase_ = 208;
+            kindCase_ = 209;
             return this;
         }
 
         /**
-         * <code>.im.turms.proto.QueryRelationshipsRequest query_relationships_request = 208;</code>
+         * <code>.im.turms.proto.QueryRelationshipsRequest query_relationships_request = 209;</code>
          */
         public Builder setQueryRelationshipsRequest(
                 im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequest.Builder builderForValue) {
@@ -9178,17 +9589,17 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             } else {
                 queryRelationshipsRequestBuilder_.setMessage(builderForValue.build());
             }
-            kindCase_ = 208;
+            kindCase_ = 209;
             return this;
         }
 
         /**
-         * <code>.im.turms.proto.QueryRelationshipsRequest query_relationships_request = 208;</code>
+         * <code>.im.turms.proto.QueryRelationshipsRequest query_relationships_request = 209;</code>
          */
         public Builder mergeQueryRelationshipsRequest(
                 im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequest value) {
             if (queryRelationshipsRequestBuilder_ == null) {
-                if (kindCase_ == 208
+                if (kindCase_ == 209
                         && kind_ != im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequest
                                 .getDefaultInstance()) {
                     kind_ = im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequest
@@ -9201,28 +9612,28 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
                 }
                 onChanged();
             } else {
-                if (kindCase_ == 208) {
+                if (kindCase_ == 209) {
                     queryRelationshipsRequestBuilder_.mergeFrom(value);
                 } else {
                     queryRelationshipsRequestBuilder_.setMessage(value);
                 }
             }
-            kindCase_ = 208;
+            kindCase_ = 209;
             return this;
         }
 
         /**
-         * <code>.im.turms.proto.QueryRelationshipsRequest query_relationships_request = 208;</code>
+         * <code>.im.turms.proto.QueryRelationshipsRequest query_relationships_request = 209;</code>
          */
         public Builder clearQueryRelationshipsRequest() {
             if (queryRelationshipsRequestBuilder_ == null) {
-                if (kindCase_ == 208) {
+                if (kindCase_ == 209) {
                     kindCase_ = 0;
                     kind_ = null;
                     onChanged();
                 }
             } else {
-                if (kindCase_ == 208) {
+                if (kindCase_ == 209) {
                     kindCase_ = 0;
                     kind_ = null;
                 }
@@ -9232,21 +9643,21 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         }
 
         /**
-         * <code>.im.turms.proto.QueryRelationshipsRequest query_relationships_request = 208;</code>
+         * <code>.im.turms.proto.QueryRelationshipsRequest query_relationships_request = 209;</code>
          */
         public im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequest.Builder getQueryRelationshipsRequestBuilder() {
             return getQueryRelationshipsRequestFieldBuilder().getBuilder();
         }
 
         /**
-         * <code>.im.turms.proto.QueryRelationshipsRequest query_relationships_request = 208;</code>
+         * <code>.im.turms.proto.QueryRelationshipsRequest query_relationships_request = 209;</code>
          */
         @java.lang.Override
         public im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequestOrBuilder getQueryRelationshipsRequestOrBuilder() {
-            if ((kindCase_ == 208) && (queryRelationshipsRequestBuilder_ != null)) {
+            if ((kindCase_ == 209) && (queryRelationshipsRequestBuilder_ != null)) {
                 return queryRelationshipsRequestBuilder_.getMessageOrBuilder();
             } else {
-                if (kindCase_ == 208) {
+                if (kindCase_ == 209) {
                     return (im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequest) kind_;
                 }
                 return im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequest
@@ -9255,11 +9666,11 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         }
 
         /**
-         * <code>.im.turms.proto.QueryRelationshipsRequest query_relationships_request = 208;</code>
+         * <code>.im.turms.proto.QueryRelationshipsRequest query_relationships_request = 209;</code>
          */
         private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequest, im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequestOrBuilder> getQueryRelationshipsRequestFieldBuilder() {
             if (queryRelationshipsRequestBuilder_ == null) {
-                if (!(kindCase_ == 208)) {
+                if (!(kindCase_ == 209)) {
                     kind_ = im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequest
                             .getDefaultInstance();
                 }
@@ -9269,7 +9680,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
                         isClean());
                 kind_ = null;
             }
-            kindCase_ = 208;
+            kindCase_ = 209;
             onChanged();
             return queryRelationshipsRequestBuilder_;
         }
@@ -9277,30 +9688,30 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.user.relationship.UpdateFriendRequestRequest, im.turms.server.common.access.client.dto.request.user.relationship.UpdateFriendRequestRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.UpdateFriendRequestRequestOrBuilder> updateFriendRequestRequestBuilder_;
 
         /**
-         * <code>.im.turms.proto.UpdateFriendRequestRequest update_friend_request_request = 209;</code>
+         * <code>.im.turms.proto.UpdateFriendRequestRequest update_friend_request_request = 210;</code>
          *
          * @return Whether the updateFriendRequestRequest field is set.
          */
         @java.lang.Override
         public boolean hasUpdateFriendRequestRequest() {
-            return kindCase_ == 209;
+            return kindCase_ == 210;
         }
 
         /**
-         * <code>.im.turms.proto.UpdateFriendRequestRequest update_friend_request_request = 209;</code>
+         * <code>.im.turms.proto.UpdateFriendRequestRequest update_friend_request_request = 210;</code>
          *
          * @return The updateFriendRequestRequest.
          */
         @java.lang.Override
         public im.turms.server.common.access.client.dto.request.user.relationship.UpdateFriendRequestRequest getUpdateFriendRequestRequest() {
             if (updateFriendRequestRequestBuilder_ == null) {
-                if (kindCase_ == 209) {
+                if (kindCase_ == 210) {
                     return (im.turms.server.common.access.client.dto.request.user.relationship.UpdateFriendRequestRequest) kind_;
                 }
                 return im.turms.server.common.access.client.dto.request.user.relationship.UpdateFriendRequestRequest
                         .getDefaultInstance();
             } else {
-                if (kindCase_ == 209) {
+                if (kindCase_ == 210) {
                     return updateFriendRequestRequestBuilder_.getMessage();
                 }
                 return im.turms.server.common.access.client.dto.request.user.relationship.UpdateFriendRequestRequest
@@ -9309,7 +9720,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         }
 
         /**
-         * <code>.im.turms.proto.UpdateFriendRequestRequest update_friend_request_request = 209;</code>
+         * <code>.im.turms.proto.UpdateFriendRequestRequest update_friend_request_request = 210;</code>
          */
         public Builder setUpdateFriendRequestRequest(
                 im.turms.server.common.access.client.dto.request.user.relationship.UpdateFriendRequestRequest value) {
@@ -9322,12 +9733,12 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             } else {
                 updateFriendRequestRequestBuilder_.setMessage(value);
             }
-            kindCase_ = 209;
+            kindCase_ = 210;
             return this;
         }
 
         /**
-         * <code>.im.turms.proto.UpdateFriendRequestRequest update_friend_request_request = 209;</code>
+         * <code>.im.turms.proto.UpdateFriendRequestRequest update_friend_request_request = 210;</code>
          */
         public Builder setUpdateFriendRequestRequest(
                 im.turms.server.common.access.client.dto.request.user.relationship.UpdateFriendRequestRequest.Builder builderForValue) {
@@ -9337,17 +9748,17 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             } else {
                 updateFriendRequestRequestBuilder_.setMessage(builderForValue.build());
             }
-            kindCase_ = 209;
+            kindCase_ = 210;
             return this;
         }
 
         /**
-         * <code>.im.turms.proto.UpdateFriendRequestRequest update_friend_request_request = 209;</code>
+         * <code>.im.turms.proto.UpdateFriendRequestRequest update_friend_request_request = 210;</code>
          */
         public Builder mergeUpdateFriendRequestRequest(
                 im.turms.server.common.access.client.dto.request.user.relationship.UpdateFriendRequestRequest value) {
             if (updateFriendRequestRequestBuilder_ == null) {
-                if (kindCase_ == 209
+                if (kindCase_ == 210
                         && kind_ != im.turms.server.common.access.client.dto.request.user.relationship.UpdateFriendRequestRequest
                                 .getDefaultInstance()) {
                     kind_ = im.turms.server.common.access.client.dto.request.user.relationship.UpdateFriendRequestRequest
@@ -9360,28 +9771,28 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
                 }
                 onChanged();
             } else {
-                if (kindCase_ == 209) {
+                if (kindCase_ == 210) {
                     updateFriendRequestRequestBuilder_.mergeFrom(value);
                 } else {
                     updateFriendRequestRequestBuilder_.setMessage(value);
                 }
             }
-            kindCase_ = 209;
+            kindCase_ = 210;
             return this;
         }
 
         /**
-         * <code>.im.turms.proto.UpdateFriendRequestRequest update_friend_request_request = 209;</code>
+         * <code>.im.turms.proto.UpdateFriendRequestRequest update_friend_request_request = 210;</code>
          */
         public Builder clearUpdateFriendRequestRequest() {
             if (updateFriendRequestRequestBuilder_ == null) {
-                if (kindCase_ == 209) {
+                if (kindCase_ == 210) {
                     kindCase_ = 0;
                     kind_ = null;
                     onChanged();
                 }
             } else {
-                if (kindCase_ == 209) {
+                if (kindCase_ == 210) {
                     kindCase_ = 0;
                     kind_ = null;
                 }
@@ -9391,21 +9802,21 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         }
 
         /**
-         * <code>.im.turms.proto.UpdateFriendRequestRequest update_friend_request_request = 209;</code>
+         * <code>.im.turms.proto.UpdateFriendRequestRequest update_friend_request_request = 210;</code>
          */
         public im.turms.server.common.access.client.dto.request.user.relationship.UpdateFriendRequestRequest.Builder getUpdateFriendRequestRequestBuilder() {
             return getUpdateFriendRequestRequestFieldBuilder().getBuilder();
         }
 
         /**
-         * <code>.im.turms.proto.UpdateFriendRequestRequest update_friend_request_request = 209;</code>
+         * <code>.im.turms.proto.UpdateFriendRequestRequest update_friend_request_request = 210;</code>
          */
         @java.lang.Override
         public im.turms.server.common.access.client.dto.request.user.relationship.UpdateFriendRequestRequestOrBuilder getUpdateFriendRequestRequestOrBuilder() {
-            if ((kindCase_ == 209) && (updateFriendRequestRequestBuilder_ != null)) {
+            if ((kindCase_ == 210) && (updateFriendRequestRequestBuilder_ != null)) {
                 return updateFriendRequestRequestBuilder_.getMessageOrBuilder();
             } else {
-                if (kindCase_ == 209) {
+                if (kindCase_ == 210) {
                     return (im.turms.server.common.access.client.dto.request.user.relationship.UpdateFriendRequestRequest) kind_;
                 }
                 return im.turms.server.common.access.client.dto.request.user.relationship.UpdateFriendRequestRequest
@@ -9414,11 +9825,11 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         }
 
         /**
-         * <code>.im.turms.proto.UpdateFriendRequestRequest update_friend_request_request = 209;</code>
+         * <code>.im.turms.proto.UpdateFriendRequestRequest update_friend_request_request = 210;</code>
          */
         private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.user.relationship.UpdateFriendRequestRequest, im.turms.server.common.access.client.dto.request.user.relationship.UpdateFriendRequestRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.UpdateFriendRequestRequestOrBuilder> getUpdateFriendRequestRequestFieldBuilder() {
             if (updateFriendRequestRequestBuilder_ == null) {
-                if (!(kindCase_ == 209)) {
+                if (!(kindCase_ == 210)) {
                     kind_ = im.turms.server.common.access.client.dto.request.user.relationship.UpdateFriendRequestRequest
                             .getDefaultInstance();
                 }
@@ -9428,7 +9839,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
                         isClean());
                 kind_ = null;
             }
-            kindCase_ = 209;
+            kindCase_ = 210;
             onChanged();
             return updateFriendRequestRequestBuilder_;
         }
@@ -9436,30 +9847,30 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipGroupRequest, im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipGroupRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipGroupRequestOrBuilder> updateRelationshipGroupRequestBuilder_;
 
         /**
-         * <code>.im.turms.proto.UpdateRelationshipGroupRequest update_relationship_group_request = 210;</code>
+         * <code>.im.turms.proto.UpdateRelationshipGroupRequest update_relationship_group_request = 211;</code>
          *
          * @return Whether the updateRelationshipGroupRequest field is set.
          */
         @java.lang.Override
         public boolean hasUpdateRelationshipGroupRequest() {
-            return kindCase_ == 210;
+            return kindCase_ == 211;
         }
 
         /**
-         * <code>.im.turms.proto.UpdateRelationshipGroupRequest update_relationship_group_request = 210;</code>
+         * <code>.im.turms.proto.UpdateRelationshipGroupRequest update_relationship_group_request = 211;</code>
          *
          * @return The updateRelationshipGroupRequest.
          */
         @java.lang.Override
         public im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipGroupRequest getUpdateRelationshipGroupRequest() {
             if (updateRelationshipGroupRequestBuilder_ == null) {
-                if (kindCase_ == 210) {
+                if (kindCase_ == 211) {
                     return (im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipGroupRequest) kind_;
                 }
                 return im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipGroupRequest
                         .getDefaultInstance();
             } else {
-                if (kindCase_ == 210) {
+                if (kindCase_ == 211) {
                     return updateRelationshipGroupRequestBuilder_.getMessage();
                 }
                 return im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipGroupRequest
@@ -9468,7 +9879,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         }
 
         /**
-         * <code>.im.turms.proto.UpdateRelationshipGroupRequest update_relationship_group_request = 210;</code>
+         * <code>.im.turms.proto.UpdateRelationshipGroupRequest update_relationship_group_request = 211;</code>
          */
         public Builder setUpdateRelationshipGroupRequest(
                 im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipGroupRequest value) {
@@ -9481,12 +9892,12 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             } else {
                 updateRelationshipGroupRequestBuilder_.setMessage(value);
             }
-            kindCase_ = 210;
+            kindCase_ = 211;
             return this;
         }
 
         /**
-         * <code>.im.turms.proto.UpdateRelationshipGroupRequest update_relationship_group_request = 210;</code>
+         * <code>.im.turms.proto.UpdateRelationshipGroupRequest update_relationship_group_request = 211;</code>
          */
         public Builder setUpdateRelationshipGroupRequest(
                 im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipGroupRequest.Builder builderForValue) {
@@ -9496,17 +9907,17 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             } else {
                 updateRelationshipGroupRequestBuilder_.setMessage(builderForValue.build());
             }
-            kindCase_ = 210;
+            kindCase_ = 211;
             return this;
         }
 
         /**
-         * <code>.im.turms.proto.UpdateRelationshipGroupRequest update_relationship_group_request = 210;</code>
+         * <code>.im.turms.proto.UpdateRelationshipGroupRequest update_relationship_group_request = 211;</code>
          */
         public Builder mergeUpdateRelationshipGroupRequest(
                 im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipGroupRequest value) {
             if (updateRelationshipGroupRequestBuilder_ == null) {
-                if (kindCase_ == 210
+                if (kindCase_ == 211
                         && kind_ != im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipGroupRequest
                                 .getDefaultInstance()) {
                     kind_ = im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipGroupRequest
@@ -9519,28 +9930,28 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
                 }
                 onChanged();
             } else {
-                if (kindCase_ == 210) {
+                if (kindCase_ == 211) {
                     updateRelationshipGroupRequestBuilder_.mergeFrom(value);
                 } else {
                     updateRelationshipGroupRequestBuilder_.setMessage(value);
                 }
             }
-            kindCase_ = 210;
+            kindCase_ = 211;
             return this;
         }
 
         /**
-         * <code>.im.turms.proto.UpdateRelationshipGroupRequest update_relationship_group_request = 210;</code>
+         * <code>.im.turms.proto.UpdateRelationshipGroupRequest update_relationship_group_request = 211;</code>
          */
         public Builder clearUpdateRelationshipGroupRequest() {
             if (updateRelationshipGroupRequestBuilder_ == null) {
-                if (kindCase_ == 210) {
+                if (kindCase_ == 211) {
                     kindCase_ = 0;
                     kind_ = null;
                     onChanged();
                 }
             } else {
-                if (kindCase_ == 210) {
+                if (kindCase_ == 211) {
                     kindCase_ = 0;
                     kind_ = null;
                 }
@@ -9550,21 +9961,21 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         }
 
         /**
-         * <code>.im.turms.proto.UpdateRelationshipGroupRequest update_relationship_group_request = 210;</code>
+         * <code>.im.turms.proto.UpdateRelationshipGroupRequest update_relationship_group_request = 211;</code>
          */
         public im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipGroupRequest.Builder getUpdateRelationshipGroupRequestBuilder() {
             return getUpdateRelationshipGroupRequestFieldBuilder().getBuilder();
         }
 
         /**
-         * <code>.im.turms.proto.UpdateRelationshipGroupRequest update_relationship_group_request = 210;</code>
+         * <code>.im.turms.proto.UpdateRelationshipGroupRequest update_relationship_group_request = 211;</code>
          */
         @java.lang.Override
         public im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipGroupRequestOrBuilder getUpdateRelationshipGroupRequestOrBuilder() {
-            if ((kindCase_ == 210) && (updateRelationshipGroupRequestBuilder_ != null)) {
+            if ((kindCase_ == 211) && (updateRelationshipGroupRequestBuilder_ != null)) {
                 return updateRelationshipGroupRequestBuilder_.getMessageOrBuilder();
             } else {
-                if (kindCase_ == 210) {
+                if (kindCase_ == 211) {
                     return (im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipGroupRequest) kind_;
                 }
                 return im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipGroupRequest
@@ -9573,11 +9984,11 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         }
 
         /**
-         * <code>.im.turms.proto.UpdateRelationshipGroupRequest update_relationship_group_request = 210;</code>
+         * <code>.im.turms.proto.UpdateRelationshipGroupRequest update_relationship_group_request = 211;</code>
          */
         private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipGroupRequest, im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipGroupRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipGroupRequestOrBuilder> getUpdateRelationshipGroupRequestFieldBuilder() {
             if (updateRelationshipGroupRequestBuilder_ == null) {
-                if (!(kindCase_ == 210)) {
+                if (!(kindCase_ == 211)) {
                     kind_ = im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipGroupRequest
                             .getDefaultInstance();
                 }
@@ -9588,7 +9999,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
                                 isClean());
                 kind_ = null;
             }
-            kindCase_ = 210;
+            kindCase_ = 211;
             onChanged();
             return updateRelationshipGroupRequestBuilder_;
         }
@@ -9596,30 +10007,30 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipRequest, im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipRequestOrBuilder> updateRelationshipRequestBuilder_;
 
         /**
-         * <code>.im.turms.proto.UpdateRelationshipRequest update_relationship_request = 211;</code>
+         * <code>.im.turms.proto.UpdateRelationshipRequest update_relationship_request = 212;</code>
          *
          * @return Whether the updateRelationshipRequest field is set.
          */
         @java.lang.Override
         public boolean hasUpdateRelationshipRequest() {
-            return kindCase_ == 211;
+            return kindCase_ == 212;
         }
 
         /**
-         * <code>.im.turms.proto.UpdateRelationshipRequest update_relationship_request = 211;</code>
+         * <code>.im.turms.proto.UpdateRelationshipRequest update_relationship_request = 212;</code>
          *
          * @return The updateRelationshipRequest.
          */
         @java.lang.Override
         public im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipRequest getUpdateRelationshipRequest() {
             if (updateRelationshipRequestBuilder_ == null) {
-                if (kindCase_ == 211) {
+                if (kindCase_ == 212) {
                     return (im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipRequest) kind_;
                 }
                 return im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipRequest
                         .getDefaultInstance();
             } else {
-                if (kindCase_ == 211) {
+                if (kindCase_ == 212) {
                     return updateRelationshipRequestBuilder_.getMessage();
                 }
                 return im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipRequest
@@ -9628,7 +10039,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         }
 
         /**
-         * <code>.im.turms.proto.UpdateRelationshipRequest update_relationship_request = 211;</code>
+         * <code>.im.turms.proto.UpdateRelationshipRequest update_relationship_request = 212;</code>
          */
         public Builder setUpdateRelationshipRequest(
                 im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipRequest value) {
@@ -9641,12 +10052,12 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             } else {
                 updateRelationshipRequestBuilder_.setMessage(value);
             }
-            kindCase_ = 211;
+            kindCase_ = 212;
             return this;
         }
 
         /**
-         * <code>.im.turms.proto.UpdateRelationshipRequest update_relationship_request = 211;</code>
+         * <code>.im.turms.proto.UpdateRelationshipRequest update_relationship_request = 212;</code>
          */
         public Builder setUpdateRelationshipRequest(
                 im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipRequest.Builder builderForValue) {
@@ -9656,17 +10067,17 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             } else {
                 updateRelationshipRequestBuilder_.setMessage(builderForValue.build());
             }
-            kindCase_ = 211;
+            kindCase_ = 212;
             return this;
         }
 
         /**
-         * <code>.im.turms.proto.UpdateRelationshipRequest update_relationship_request = 211;</code>
+         * <code>.im.turms.proto.UpdateRelationshipRequest update_relationship_request = 212;</code>
          */
         public Builder mergeUpdateRelationshipRequest(
                 im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipRequest value) {
             if (updateRelationshipRequestBuilder_ == null) {
-                if (kindCase_ == 211
+                if (kindCase_ == 212
                         && kind_ != im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipRequest
                                 .getDefaultInstance()) {
                     kind_ = im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipRequest
@@ -9679,28 +10090,28 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
                 }
                 onChanged();
             } else {
-                if (kindCase_ == 211) {
+                if (kindCase_ == 212) {
                     updateRelationshipRequestBuilder_.mergeFrom(value);
                 } else {
                     updateRelationshipRequestBuilder_.setMessage(value);
                 }
             }
-            kindCase_ = 211;
+            kindCase_ = 212;
             return this;
         }
 
         /**
-         * <code>.im.turms.proto.UpdateRelationshipRequest update_relationship_request = 211;</code>
+         * <code>.im.turms.proto.UpdateRelationshipRequest update_relationship_request = 212;</code>
          */
         public Builder clearUpdateRelationshipRequest() {
             if (updateRelationshipRequestBuilder_ == null) {
-                if (kindCase_ == 211) {
+                if (kindCase_ == 212) {
                     kindCase_ = 0;
                     kind_ = null;
                     onChanged();
                 }
             } else {
-                if (kindCase_ == 211) {
+                if (kindCase_ == 212) {
                     kindCase_ = 0;
                     kind_ = null;
                 }
@@ -9710,21 +10121,21 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         }
 
         /**
-         * <code>.im.turms.proto.UpdateRelationshipRequest update_relationship_request = 211;</code>
+         * <code>.im.turms.proto.UpdateRelationshipRequest update_relationship_request = 212;</code>
          */
         public im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipRequest.Builder getUpdateRelationshipRequestBuilder() {
             return getUpdateRelationshipRequestFieldBuilder().getBuilder();
         }
 
         /**
-         * <code>.im.turms.proto.UpdateRelationshipRequest update_relationship_request = 211;</code>
+         * <code>.im.turms.proto.UpdateRelationshipRequest update_relationship_request = 212;</code>
          */
         @java.lang.Override
         public im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipRequestOrBuilder getUpdateRelationshipRequestOrBuilder() {
-            if ((kindCase_ == 211) && (updateRelationshipRequestBuilder_ != null)) {
+            if ((kindCase_ == 212) && (updateRelationshipRequestBuilder_ != null)) {
                 return updateRelationshipRequestBuilder_.getMessageOrBuilder();
             } else {
-                if (kindCase_ == 211) {
+                if (kindCase_ == 212) {
                     return (im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipRequest) kind_;
                 }
                 return im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipRequest
@@ -9733,11 +10144,11 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         }
 
         /**
-         * <code>.im.turms.proto.UpdateRelationshipRequest update_relationship_request = 211;</code>
+         * <code>.im.turms.proto.UpdateRelationshipRequest update_relationship_request = 212;</code>
          */
         private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipRequest, im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipRequestOrBuilder> getUpdateRelationshipRequestFieldBuilder() {
             if (updateRelationshipRequestBuilder_ == null) {
-                if (!(kindCase_ == 211)) {
+                if (!(kindCase_ == 212)) {
                     kind_ = im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipRequest
                             .getDefaultInstance();
                 }
@@ -9747,7 +10158,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
                         isClean());
                 kind_ = null;
             }
-            kindCase_ = 211;
+            kindCase_ = 212;
             onChanged();
             return updateRelationshipRequestBuilder_;
         }
@@ -9758,7 +10169,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * Group
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateGroupRequest create_group_request = 300;</code>
          *
          * @return Whether the createGroupRequest field is set.
@@ -9772,7 +10183,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * Group
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateGroupRequest create_group_request = 300;</code>
          *
          * @return The createGroupRequest.
@@ -9798,7 +10209,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * Group
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateGroupRequest create_group_request = 300;</code>
          */
         public Builder setCreateGroupRequest(
@@ -9820,7 +10231,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * Group
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateGroupRequest create_group_request = 300;</code>
          */
         public Builder setCreateGroupRequest(
@@ -9839,7 +10250,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * Group
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateGroupRequest create_group_request = 300;</code>
          */
         public Builder mergeCreateGroupRequest(
@@ -9872,7 +10283,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * Group
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateGroupRequest create_group_request = 300;</code>
          */
         public Builder clearCreateGroupRequest() {
@@ -9896,7 +10307,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * Group
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateGroupRequest create_group_request = 300;</code>
          */
         public im.turms.server.common.access.client.dto.request.group.CreateGroupRequest.Builder getCreateGroupRequestBuilder() {
@@ -9907,7 +10318,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * Group
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateGroupRequest create_group_request = 300;</code>
          */
         @java.lang.Override
@@ -9927,7 +10338,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * Group
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateGroupRequest create_group_request = 300;</code>
          */
         private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.group.CreateGroupRequest, im.turms.server.common.access.client.dto.request.group.CreateGroupRequest.Builder, im.turms.server.common.access.client.dto.request.group.CreateGroupRequestOrBuilder> getCreateGroupRequestFieldBuilder() {
@@ -10749,7 +11160,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * Group Blocklist
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateGroupBlockedUserRequest create_group_blocked_user_request = 400;</code>
          *
          * @return Whether the createGroupBlockedUserRequest field is set.
@@ -10763,7 +11174,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * Group Blocklist
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateGroupBlockedUserRequest create_group_blocked_user_request = 400;</code>
          *
          * @return The createGroupBlockedUserRequest.
@@ -10789,7 +11200,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * Group Blocklist
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateGroupBlockedUserRequest create_group_blocked_user_request = 400;</code>
          */
         public Builder setCreateGroupBlockedUserRequest(
@@ -10811,7 +11222,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * Group Blocklist
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateGroupBlockedUserRequest create_group_blocked_user_request = 400;</code>
          */
         public Builder setCreateGroupBlockedUserRequest(
@@ -10830,7 +11241,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * Group Blocklist
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateGroupBlockedUserRequest create_group_blocked_user_request = 400;</code>
          */
         public Builder mergeCreateGroupBlockedUserRequest(
@@ -10863,7 +11274,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * Group Blocklist
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateGroupBlockedUserRequest create_group_blocked_user_request = 400;</code>
          */
         public Builder clearCreateGroupBlockedUserRequest() {
@@ -10887,7 +11298,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * Group Blocklist
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateGroupBlockedUserRequest create_group_blocked_user_request = 400;</code>
          */
         public im.turms.server.common.access.client.dto.request.group.blocklist.CreateGroupBlockedUserRequest.Builder getCreateGroupBlockedUserRequestBuilder() {
@@ -10898,7 +11309,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * Group Blocklist
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateGroupBlockedUserRequest create_group_blocked_user_request = 400;</code>
          */
         @java.lang.Override
@@ -10918,7 +11329,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * Group Blocklist
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateGroupBlockedUserRequest create_group_blocked_user_request = 400;</code>
          */
         private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.group.blocklist.CreateGroupBlockedUserRequest, im.turms.server.common.access.client.dto.request.group.blocklist.CreateGroupBlockedUserRequest.Builder, im.turms.server.common.access.client.dto.request.group.blocklist.CreateGroupBlockedUserRequestOrBuilder> getCreateGroupBlockedUserRequestFieldBuilder() {
@@ -11425,7 +11836,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * Group Enrollment
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CheckGroupJoinQuestionsAnswersRequest check_group_join_questions_answers_request = 500;</code>
          *
          * @return Whether the checkGroupJoinQuestionsAnswersRequest field is set.
@@ -11439,7 +11850,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * Group Enrollment
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CheckGroupJoinQuestionsAnswersRequest check_group_join_questions_answers_request = 500;</code>
          *
          * @return The checkGroupJoinQuestionsAnswersRequest.
@@ -11465,7 +11876,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * Group Enrollment
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CheckGroupJoinQuestionsAnswersRequest check_group_join_questions_answers_request = 500;</code>
          */
         public Builder setCheckGroupJoinQuestionsAnswersRequest(
@@ -11487,7 +11898,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * Group Enrollment
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CheckGroupJoinQuestionsAnswersRequest check_group_join_questions_answers_request = 500;</code>
          */
         public Builder setCheckGroupJoinQuestionsAnswersRequest(
@@ -11506,7 +11917,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * Group Enrollment
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CheckGroupJoinQuestionsAnswersRequest check_group_join_questions_answers_request = 500;</code>
          */
         public Builder mergeCheckGroupJoinQuestionsAnswersRequest(
@@ -11539,7 +11950,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * Group Enrollment
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CheckGroupJoinQuestionsAnswersRequest check_group_join_questions_answers_request = 500;</code>
          */
         public Builder clearCheckGroupJoinQuestionsAnswersRequest() {
@@ -11563,7 +11974,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * Group Enrollment
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CheckGroupJoinQuestionsAnswersRequest check_group_join_questions_answers_request = 500;</code>
          */
         public im.turms.server.common.access.client.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequest.Builder getCheckGroupJoinQuestionsAnswersRequestBuilder() {
@@ -11574,7 +11985,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * Group Enrollment
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CheckGroupJoinQuestionsAnswersRequest check_group_join_questions_answers_request = 500;</code>
          */
         @java.lang.Override
@@ -11594,7 +12005,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * Group Enrollment
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CheckGroupJoinQuestionsAnswersRequest check_group_join_questions_answers_request = 500;</code>
          */
         private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequest, im.turms.server.common.access.client.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequestOrBuilder> getCheckGroupJoinQuestionsAnswersRequestFieldBuilder() {
@@ -13055,33 +13466,193 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             return queryGroupJoinQuestionsRequestBuilder_;
         }
 
+        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupInvitationRequest, im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupInvitationRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupInvitationRequestOrBuilder> updateGroupInvitationRequestBuilder_;
+
+        /**
+         * <code>.im.turms.proto.UpdateGroupInvitationRequest update_group_invitation_request = 510;</code>
+         *
+         * @return Whether the updateGroupInvitationRequest field is set.
+         */
+        @java.lang.Override
+        public boolean hasUpdateGroupInvitationRequest() {
+            return kindCase_ == 510;
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateGroupInvitationRequest update_group_invitation_request = 510;</code>
+         *
+         * @return The updateGroupInvitationRequest.
+         */
+        @java.lang.Override
+        public im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupInvitationRequest getUpdateGroupInvitationRequest() {
+            if (updateGroupInvitationRequestBuilder_ == null) {
+                if (kindCase_ == 510) {
+                    return (im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupInvitationRequest) kind_;
+                }
+                return im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupInvitationRequest
+                        .getDefaultInstance();
+            } else {
+                if (kindCase_ == 510) {
+                    return updateGroupInvitationRequestBuilder_.getMessage();
+                }
+                return im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupInvitationRequest
+                        .getDefaultInstance();
+            }
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateGroupInvitationRequest update_group_invitation_request = 510;</code>
+         */
+        public Builder setUpdateGroupInvitationRequest(
+                im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupInvitationRequest value) {
+            if (updateGroupInvitationRequestBuilder_ == null) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                kind_ = value;
+                onChanged();
+            } else {
+                updateGroupInvitationRequestBuilder_.setMessage(value);
+            }
+            kindCase_ = 510;
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateGroupInvitationRequest update_group_invitation_request = 510;</code>
+         */
+        public Builder setUpdateGroupInvitationRequest(
+                im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupInvitationRequest.Builder builderForValue) {
+            if (updateGroupInvitationRequestBuilder_ == null) {
+                kind_ = builderForValue.build();
+                onChanged();
+            } else {
+                updateGroupInvitationRequestBuilder_.setMessage(builderForValue.build());
+            }
+            kindCase_ = 510;
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateGroupInvitationRequest update_group_invitation_request = 510;</code>
+         */
+        public Builder mergeUpdateGroupInvitationRequest(
+                im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupInvitationRequest value) {
+            if (updateGroupInvitationRequestBuilder_ == null) {
+                if (kindCase_ == 510
+                        && kind_ != im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupInvitationRequest
+                                .getDefaultInstance()) {
+                    kind_ = im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupInvitationRequest
+                            .newBuilder(
+                                    (im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupInvitationRequest) kind_)
+                            .mergeFrom(value)
+                            .buildPartial();
+                } else {
+                    kind_ = value;
+                }
+                onChanged();
+            } else {
+                if (kindCase_ == 510) {
+                    updateGroupInvitationRequestBuilder_.mergeFrom(value);
+                } else {
+                    updateGroupInvitationRequestBuilder_.setMessage(value);
+                }
+            }
+            kindCase_ = 510;
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateGroupInvitationRequest update_group_invitation_request = 510;</code>
+         */
+        public Builder clearUpdateGroupInvitationRequest() {
+            if (updateGroupInvitationRequestBuilder_ == null) {
+                if (kindCase_ == 510) {
+                    kindCase_ = 0;
+                    kind_ = null;
+                    onChanged();
+                }
+            } else {
+                if (kindCase_ == 510) {
+                    kindCase_ = 0;
+                    kind_ = null;
+                }
+                updateGroupInvitationRequestBuilder_.clear();
+            }
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateGroupInvitationRequest update_group_invitation_request = 510;</code>
+         */
+        public im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupInvitationRequest.Builder getUpdateGroupInvitationRequestBuilder() {
+            return getUpdateGroupInvitationRequestFieldBuilder().getBuilder();
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateGroupInvitationRequest update_group_invitation_request = 510;</code>
+         */
+        @java.lang.Override
+        public im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupInvitationRequestOrBuilder getUpdateGroupInvitationRequestOrBuilder() {
+            if ((kindCase_ == 510) && (updateGroupInvitationRequestBuilder_ != null)) {
+                return updateGroupInvitationRequestBuilder_.getMessageOrBuilder();
+            } else {
+                if (kindCase_ == 510) {
+                    return (im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupInvitationRequest) kind_;
+                }
+                return im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupInvitationRequest
+                        .getDefaultInstance();
+            }
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateGroupInvitationRequest update_group_invitation_request = 510;</code>
+         */
+        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupInvitationRequest, im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupInvitationRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupInvitationRequestOrBuilder> getUpdateGroupInvitationRequestFieldBuilder() {
+            if (updateGroupInvitationRequestBuilder_ == null) {
+                if (!(kindCase_ == 510)) {
+                    kind_ = im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupInvitationRequest
+                            .getDefaultInstance();
+                }
+                updateGroupInvitationRequestBuilder_ =
+                        new com.google.protobuf.SingleFieldBuilderV3<>(
+                                (im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupInvitationRequest) kind_,
+                                getParentForChildren(),
+                                isClean());
+                kind_ = null;
+            }
+            kindCase_ = 510;
+            onChanged();
+            return updateGroupInvitationRequestBuilder_;
+        }
+
         private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest, im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequestOrBuilder> updateGroupJoinQuestionRequestBuilder_;
 
         /**
-         * <code>.im.turms.proto.UpdateGroupJoinQuestionRequest update_group_join_question_request = 510;</code>
+         * <code>.im.turms.proto.UpdateGroupJoinQuestionRequest update_group_join_question_request = 511;</code>
          *
          * @return Whether the updateGroupJoinQuestionRequest field is set.
          */
         @java.lang.Override
         public boolean hasUpdateGroupJoinQuestionRequest() {
-            return kindCase_ == 510;
+            return kindCase_ == 511;
         }
 
         /**
-         * <code>.im.turms.proto.UpdateGroupJoinQuestionRequest update_group_join_question_request = 510;</code>
+         * <code>.im.turms.proto.UpdateGroupJoinQuestionRequest update_group_join_question_request = 511;</code>
          *
          * @return The updateGroupJoinQuestionRequest.
          */
         @java.lang.Override
         public im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest getUpdateGroupJoinQuestionRequest() {
             if (updateGroupJoinQuestionRequestBuilder_ == null) {
-                if (kindCase_ == 510) {
+                if (kindCase_ == 511) {
                     return (im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest) kind_;
                 }
                 return im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest
                         .getDefaultInstance();
             } else {
-                if (kindCase_ == 510) {
+                if (kindCase_ == 511) {
                     return updateGroupJoinQuestionRequestBuilder_.getMessage();
                 }
                 return im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest
@@ -13090,7 +13661,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         }
 
         /**
-         * <code>.im.turms.proto.UpdateGroupJoinQuestionRequest update_group_join_question_request = 510;</code>
+         * <code>.im.turms.proto.UpdateGroupJoinQuestionRequest update_group_join_question_request = 511;</code>
          */
         public Builder setUpdateGroupJoinQuestionRequest(
                 im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest value) {
@@ -13103,12 +13674,12 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             } else {
                 updateGroupJoinQuestionRequestBuilder_.setMessage(value);
             }
-            kindCase_ = 510;
+            kindCase_ = 511;
             return this;
         }
 
         /**
-         * <code>.im.turms.proto.UpdateGroupJoinQuestionRequest update_group_join_question_request = 510;</code>
+         * <code>.im.turms.proto.UpdateGroupJoinQuestionRequest update_group_join_question_request = 511;</code>
          */
         public Builder setUpdateGroupJoinQuestionRequest(
                 im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest.Builder builderForValue) {
@@ -13118,17 +13689,17 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             } else {
                 updateGroupJoinQuestionRequestBuilder_.setMessage(builderForValue.build());
             }
-            kindCase_ = 510;
+            kindCase_ = 511;
             return this;
         }
 
         /**
-         * <code>.im.turms.proto.UpdateGroupJoinQuestionRequest update_group_join_question_request = 510;</code>
+         * <code>.im.turms.proto.UpdateGroupJoinQuestionRequest update_group_join_question_request = 511;</code>
          */
         public Builder mergeUpdateGroupJoinQuestionRequest(
                 im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest value) {
             if (updateGroupJoinQuestionRequestBuilder_ == null) {
-                if (kindCase_ == 510
+                if (kindCase_ == 511
                         && kind_ != im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest
                                 .getDefaultInstance()) {
                     kind_ = im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest
@@ -13141,28 +13712,28 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
                 }
                 onChanged();
             } else {
-                if (kindCase_ == 510) {
+                if (kindCase_ == 511) {
                     updateGroupJoinQuestionRequestBuilder_.mergeFrom(value);
                 } else {
                     updateGroupJoinQuestionRequestBuilder_.setMessage(value);
                 }
             }
-            kindCase_ = 510;
+            kindCase_ = 511;
             return this;
         }
 
         /**
-         * <code>.im.turms.proto.UpdateGroupJoinQuestionRequest update_group_join_question_request = 510;</code>
+         * <code>.im.turms.proto.UpdateGroupJoinQuestionRequest update_group_join_question_request = 511;</code>
          */
         public Builder clearUpdateGroupJoinQuestionRequest() {
             if (updateGroupJoinQuestionRequestBuilder_ == null) {
-                if (kindCase_ == 510) {
+                if (kindCase_ == 511) {
                     kindCase_ = 0;
                     kind_ = null;
                     onChanged();
                 }
             } else {
-                if (kindCase_ == 510) {
+                if (kindCase_ == 511) {
                     kindCase_ = 0;
                     kind_ = null;
                 }
@@ -13172,21 +13743,21 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         }
 
         /**
-         * <code>.im.turms.proto.UpdateGroupJoinQuestionRequest update_group_join_question_request = 510;</code>
+         * <code>.im.turms.proto.UpdateGroupJoinQuestionRequest update_group_join_question_request = 511;</code>
          */
         public im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest.Builder getUpdateGroupJoinQuestionRequestBuilder() {
             return getUpdateGroupJoinQuestionRequestFieldBuilder().getBuilder();
         }
 
         /**
-         * <code>.im.turms.proto.UpdateGroupJoinQuestionRequest update_group_join_question_request = 510;</code>
+         * <code>.im.turms.proto.UpdateGroupJoinQuestionRequest update_group_join_question_request = 511;</code>
          */
         @java.lang.Override
         public im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequestOrBuilder getUpdateGroupJoinQuestionRequestOrBuilder() {
-            if ((kindCase_ == 510) && (updateGroupJoinQuestionRequestBuilder_ != null)) {
+            if ((kindCase_ == 511) && (updateGroupJoinQuestionRequestBuilder_ != null)) {
                 return updateGroupJoinQuestionRequestBuilder_.getMessageOrBuilder();
             } else {
-                if (kindCase_ == 510) {
+                if (kindCase_ == 511) {
                     return (im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest) kind_;
                 }
                 return im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest
@@ -13195,11 +13766,11 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         }
 
         /**
-         * <code>.im.turms.proto.UpdateGroupJoinQuestionRequest update_group_join_question_request = 510;</code>
+         * <code>.im.turms.proto.UpdateGroupJoinQuestionRequest update_group_join_question_request = 511;</code>
          */
         private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest, im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequestOrBuilder> getUpdateGroupJoinQuestionRequestFieldBuilder() {
             if (updateGroupJoinQuestionRequestBuilder_ == null) {
-                if (!(kindCase_ == 510)) {
+                if (!(kindCase_ == 511)) {
                     kind_ = im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest
                             .getDefaultInstance();
                 }
@@ -13210,9 +13781,169 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
                                 isClean());
                 kind_ = null;
             }
-            kindCase_ = 510;
+            kindCase_ = 511;
             onChanged();
             return updateGroupJoinQuestionRequestBuilder_;
+        }
+
+        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinRequestRequest, im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinRequestRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinRequestRequestOrBuilder> updateGroupJoinRequestRequestBuilder_;
+
+        /**
+         * <code>.im.turms.proto.UpdateGroupJoinRequestRequest update_group_join_request_request = 512;</code>
+         *
+         * @return Whether the updateGroupJoinRequestRequest field is set.
+         */
+        @java.lang.Override
+        public boolean hasUpdateGroupJoinRequestRequest() {
+            return kindCase_ == 512;
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateGroupJoinRequestRequest update_group_join_request_request = 512;</code>
+         *
+         * @return The updateGroupJoinRequestRequest.
+         */
+        @java.lang.Override
+        public im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinRequestRequest getUpdateGroupJoinRequestRequest() {
+            if (updateGroupJoinRequestRequestBuilder_ == null) {
+                if (kindCase_ == 512) {
+                    return (im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinRequestRequest) kind_;
+                }
+                return im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinRequestRequest
+                        .getDefaultInstance();
+            } else {
+                if (kindCase_ == 512) {
+                    return updateGroupJoinRequestRequestBuilder_.getMessage();
+                }
+                return im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinRequestRequest
+                        .getDefaultInstance();
+            }
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateGroupJoinRequestRequest update_group_join_request_request = 512;</code>
+         */
+        public Builder setUpdateGroupJoinRequestRequest(
+                im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinRequestRequest value) {
+            if (updateGroupJoinRequestRequestBuilder_ == null) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                kind_ = value;
+                onChanged();
+            } else {
+                updateGroupJoinRequestRequestBuilder_.setMessage(value);
+            }
+            kindCase_ = 512;
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateGroupJoinRequestRequest update_group_join_request_request = 512;</code>
+         */
+        public Builder setUpdateGroupJoinRequestRequest(
+                im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinRequestRequest.Builder builderForValue) {
+            if (updateGroupJoinRequestRequestBuilder_ == null) {
+                kind_ = builderForValue.build();
+                onChanged();
+            } else {
+                updateGroupJoinRequestRequestBuilder_.setMessage(builderForValue.build());
+            }
+            kindCase_ = 512;
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateGroupJoinRequestRequest update_group_join_request_request = 512;</code>
+         */
+        public Builder mergeUpdateGroupJoinRequestRequest(
+                im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinRequestRequest value) {
+            if (updateGroupJoinRequestRequestBuilder_ == null) {
+                if (kindCase_ == 512
+                        && kind_ != im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinRequestRequest
+                                .getDefaultInstance()) {
+                    kind_ = im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinRequestRequest
+                            .newBuilder(
+                                    (im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinRequestRequest) kind_)
+                            .mergeFrom(value)
+                            .buildPartial();
+                } else {
+                    kind_ = value;
+                }
+                onChanged();
+            } else {
+                if (kindCase_ == 512) {
+                    updateGroupJoinRequestRequestBuilder_.mergeFrom(value);
+                } else {
+                    updateGroupJoinRequestRequestBuilder_.setMessage(value);
+                }
+            }
+            kindCase_ = 512;
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateGroupJoinRequestRequest update_group_join_request_request = 512;</code>
+         */
+        public Builder clearUpdateGroupJoinRequestRequest() {
+            if (updateGroupJoinRequestRequestBuilder_ == null) {
+                if (kindCase_ == 512) {
+                    kindCase_ = 0;
+                    kind_ = null;
+                    onChanged();
+                }
+            } else {
+                if (kindCase_ == 512) {
+                    kindCase_ = 0;
+                    kind_ = null;
+                }
+                updateGroupJoinRequestRequestBuilder_.clear();
+            }
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateGroupJoinRequestRequest update_group_join_request_request = 512;</code>
+         */
+        public im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinRequestRequest.Builder getUpdateGroupJoinRequestRequestBuilder() {
+            return getUpdateGroupJoinRequestRequestFieldBuilder().getBuilder();
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateGroupJoinRequestRequest update_group_join_request_request = 512;</code>
+         */
+        @java.lang.Override
+        public im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinRequestRequestOrBuilder getUpdateGroupJoinRequestRequestOrBuilder() {
+            if ((kindCase_ == 512) && (updateGroupJoinRequestRequestBuilder_ != null)) {
+                return updateGroupJoinRequestRequestBuilder_.getMessageOrBuilder();
+            } else {
+                if (kindCase_ == 512) {
+                    return (im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinRequestRequest) kind_;
+                }
+                return im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinRequestRequest
+                        .getDefaultInstance();
+            }
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateGroupJoinRequestRequest update_group_join_request_request = 512;</code>
+         */
+        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinRequestRequest, im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinRequestRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinRequestRequestOrBuilder> getUpdateGroupJoinRequestRequestFieldBuilder() {
+            if (updateGroupJoinRequestRequestBuilder_ == null) {
+                if (!(kindCase_ == 512)) {
+                    kind_ = im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinRequestRequest
+                            .getDefaultInstance();
+                }
+                updateGroupJoinRequestRequestBuilder_ =
+                        new com.google.protobuf.SingleFieldBuilderV3<>(
+                                (im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinRequestRequest) kind_,
+                                getParentForChildren(),
+                                isClean());
+                kind_ = null;
+            }
+            kindCase_ = 512;
+            onChanged();
+            return updateGroupJoinRequestRequestBuilder_;
         }
 
         private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.storage.DeleteResourceRequest, im.turms.server.common.access.client.dto.request.storage.DeleteResourceRequest.Builder, im.turms.server.common.access.client.dto.request.storage.DeleteResourceRequestOrBuilder> deleteResourceRequestBuilder_;
@@ -13221,7 +13952,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * Storage
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.DeleteResourceRequest delete_resource_request = 1000;</code>
          *
          * @return Whether the deleteResourceRequest field is set.
@@ -13235,7 +13966,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * Storage
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.DeleteResourceRequest delete_resource_request = 1000;</code>
          *
          * @return The deleteResourceRequest.
@@ -13261,7 +13992,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * Storage
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.DeleteResourceRequest delete_resource_request = 1000;</code>
          */
         public Builder setDeleteResourceRequest(
@@ -13283,7 +14014,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * Storage
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.DeleteResourceRequest delete_resource_request = 1000;</code>
          */
         public Builder setDeleteResourceRequest(
@@ -13302,7 +14033,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * Storage
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.DeleteResourceRequest delete_resource_request = 1000;</code>
          */
         public Builder mergeDeleteResourceRequest(
@@ -13335,7 +14066,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * Storage
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.DeleteResourceRequest delete_resource_request = 1000;</code>
          */
         public Builder clearDeleteResourceRequest() {
@@ -13359,7 +14090,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * Storage
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.DeleteResourceRequest delete_resource_request = 1000;</code>
          */
         public im.turms.server.common.access.client.dto.request.storage.DeleteResourceRequest.Builder getDeleteResourceRequestBuilder() {
@@ -13370,7 +14101,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * Storage
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.DeleteResourceRequest delete_resource_request = 1000;</code>
          */
         @java.lang.Override
@@ -13390,7 +14121,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * Storage
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.DeleteResourceRequest delete_resource_request = 1000;</code>
          */
         private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.storage.DeleteResourceRequest, im.turms.server.common.access.client.dto.request.storage.DeleteResourceRequest.Builder, im.turms.server.common.access.client.dto.request.storage.DeleteResourceRequestOrBuilder> getDeleteResourceRequestFieldBuilder() {

@@ -25,7 +25,7 @@ public interface UpdateUserRequestOrBuilder extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>optional string password = 1;</code>
      *
      * @return Whether the password field is set.
@@ -36,7 +36,7 @@ public interface UpdateUserRequestOrBuilder extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>optional string password = 1;</code>
      *
      * @return The password.
@@ -47,7 +47,7 @@ public interface UpdateUserRequestOrBuilder extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>optional string password = 1;</code>
      *
      * @return The bytes for password.

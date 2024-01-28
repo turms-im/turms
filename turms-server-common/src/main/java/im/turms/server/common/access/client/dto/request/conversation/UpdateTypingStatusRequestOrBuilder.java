@@ -25,7 +25,7 @@ public interface UpdateTypingStatusRequestOrBuilder extends
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>bool is_group_message = 1;</code>
      *
      * @return The isGroupMessage.

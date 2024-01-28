@@ -137,14 +137,14 @@ extension GroupMember: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementati
             // allocates stack space for every case branch when no optimizations are
             // enabled. https://github.com/apple/swift-protobuf/issues/1034
             switch fieldNumber {
-            case 1: try try decoder.decodeSingularInt64Field(value: &_groupID)
-            case 2: try try decoder.decodeSingularInt64Field(value: &_userID)
-            case 3: try try decoder.decodeSingularStringField(value: &_name)
-            case 4: try try decoder.decodeSingularEnumField(value: &_role)
-            case 5: try try decoder.decodeSingularInt64Field(value: &_joinDate)
-            case 6: try try decoder.decodeSingularInt64Field(value: &_muteEndDate)
-            case 7: try try decoder.decodeSingularEnumField(value: &_userStatus)
-            case 8: try try decoder.decodeRepeatedEnumField(value: &usingDeviceTypes)
+            case 1: try decoder.decodeSingularInt64Field(value: &_groupID)
+            case 2: try decoder.decodeSingularInt64Field(value: &_userID)
+            case 3: try decoder.decodeSingularStringField(value: &_name)
+            case 4: try decoder.decodeSingularEnumField(value: &_role)
+            case 5: try decoder.decodeSingularInt64Field(value: &_joinDate)
+            case 6: try decoder.decodeSingularInt64Field(value: &_muteEndDate)
+            case 7: try decoder.decodeSingularEnumField(value: &_userStatus)
+            case 8: try decoder.decodeRepeatedEnumField(value: &usingDeviceTypes)
             default: break
             }
         }

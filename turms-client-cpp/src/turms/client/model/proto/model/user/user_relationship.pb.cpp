@@ -26,6 +26,10 @@ PROTOBUF_CONSTEXPR UserRelationship::UserRelationship(::_pbi::ConstantInitialize
     : _impl_{
       /*decltype(_impl_._has_bits_)*/ {},
       /*decltype(_impl_._cached_size_)*/ {},
+      /*decltype(_impl_.name_)*/ {
+          &::_pbi::fixed_address_empty_string,
+          ::_pbi::ConstantInitialized{},
+      },
       /*decltype(_impl_.owner_id_)*/ ::int64_t{0},
       /*decltype(_impl_.related_user_id_)*/ ::int64_t{0},
       /*decltype(_impl_.block_date_)*/ ::int64_t{0},
@@ -58,19 +62,22 @@ class UserRelationship::_Internal {
   static constexpr ::int32_t kHasBitsOffset =
     8 * PROTOBUF_FIELD_OFFSET(UserRelationship, _impl_._has_bits_);
   static void set_has_owner_id(HasBits* has_bits) {
-    (*has_bits)[0] |= 1u;
-  }
-  static void set_has_related_user_id(HasBits* has_bits) {
     (*has_bits)[0] |= 2u;
   }
-  static void set_has_block_date(HasBits* has_bits) {
+  static void set_has_related_user_id(HasBits* has_bits) {
     (*has_bits)[0] |= 4u;
   }
-  static void set_has_group_index(HasBits* has_bits) {
+  static void set_has_block_date(HasBits* has_bits) {
     (*has_bits)[0] |= 8u;
   }
-  static void set_has_establishment_date(HasBits* has_bits) {
+  static void set_has_group_index(HasBits* has_bits) {
     (*has_bits)[0] |= 16u;
+  }
+  static void set_has_establishment_date(HasBits* has_bits) {
+    (*has_bits)[0] |= 32u;
+  }
+  static void set_has_name(HasBits* has_bits) {
+    (*has_bits)[0] |= 1u;
   }
 };
 
@@ -79,10 +86,32 @@ UserRelationship::UserRelationship(::google::protobuf::Arena* arena)
   SharedCtor(arena);
   // @@protoc_insertion_point(arena_constructor:turms.client.model.proto.UserRelationship)
 }
-UserRelationship::UserRelationship(const UserRelationship& from)
-    : ::google::protobuf::MessageLite(), _impl_(from._impl_) {
+UserRelationship::UserRelationship(const UserRelationship& from) : ::google::protobuf::MessageLite() {
+  UserRelationship* const _this = this;
+  (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_._has_bits_){from._impl_._has_bits_},
+      /*decltype(_impl_._cached_size_)*/ {},
+      decltype(_impl_.name_){},
+      decltype(_impl_.owner_id_){},
+      decltype(_impl_.related_user_id_){},
+      decltype(_impl_.block_date_){},
+      decltype(_impl_.group_index_){},
+      decltype(_impl_.establishment_date_){},
+  };
   _internal_metadata_.MergeFrom<std::string>(
       from._internal_metadata_);
+  _impl_.name_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+        _impl_.name_.Set("", GetArenaForAllocation());
+  #endif  // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  if ((from._impl_._has_bits_[0] & 0x00000001u) != 0) {
+    _this->_impl_.name_.Set(from._internal_name(), _this->GetArenaForAllocation());
+  }
+  ::memcpy(&_impl_.owner_id_, &from._impl_.owner_id_,
+    static_cast<::size_t>(reinterpret_cast<char*>(&_impl_.establishment_date_) -
+    reinterpret_cast<char*>(&_impl_.owner_id_)) + sizeof(_impl_.establishment_date_));
+
   // @@protoc_insertion_point(copy_constructor:turms.client.model.proto.UserRelationship)
 }
 inline void UserRelationship::SharedCtor(::_pb::Arena* arena) {
@@ -90,12 +119,17 @@ inline void UserRelationship::SharedCtor(::_pb::Arena* arena) {
   new (&_impl_) Impl_{
       decltype(_impl_._has_bits_){},
       /*decltype(_impl_._cached_size_)*/ {},
+      decltype(_impl_.name_){},
       decltype(_impl_.owner_id_){::int64_t{0}},
       decltype(_impl_.related_user_id_){::int64_t{0}},
       decltype(_impl_.block_date_){::int64_t{0}},
       decltype(_impl_.group_index_){::int64_t{0}},
       decltype(_impl_.establishment_date_){::int64_t{0}},
   };
+  _impl_.name_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+        _impl_.name_.Set("", GetArenaForAllocation());
+  #endif  // PROTOBUF_FORCE_COPY_DEFAULT_STRING
 }
 UserRelationship::~UserRelationship() {
   // @@protoc_insertion_point(destructor:turms.client.model.proto.UserRelationship)
@@ -104,6 +138,7 @@ UserRelationship::~UserRelationship() {
 }
 inline void UserRelationship::SharedDtor() {
   ABSL_DCHECK(GetArenaForAllocation() == nullptr);
+  _impl_.name_.Destroy();
 }
 void UserRelationship::SetCachedSize(int size) const {
   _impl_._cached_size_.Set(size);
@@ -116,7 +151,10 @@ PROTOBUF_NOINLINE void UserRelationship::Clear() {
   (void) cached_has_bits;
 
   cached_has_bits = _impl_._has_bits_[0];
-  if (cached_has_bits & 0x0000001fu) {
+  if (cached_has_bits & 0x00000001u) {
+    _impl_.name_.ClearNonDefaultToEmpty();
+  }
+  if (cached_has_bits & 0x0000003eu) {
     ::memset(&_impl_.owner_id_, 0, static_cast<::size_t>(
         reinterpret_cast<char*>(&_impl_.establishment_date_) -
         reinterpret_cast<char*>(&_impl_.owner_id_)) + sizeof(_impl_.establishment_date_));
@@ -133,15 +171,15 @@ const char* UserRelationship::_InternalParse(
 
 
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<3, 5, 0, 0, 2> UserRelationship::_table_ = {
+const ::_pbi::TcParseTable<3, 6, 0, 54, 2> UserRelationship::_table_ = {
   {
     PROTOBUF_FIELD_OFFSET(UserRelationship, _impl_._has_bits_),
     0, // no _extensions_
-    5, 56,  // max_field_number, fast_idx_mask
+    6, 56,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
-    4294967264,  // skipmap
+    4294967232,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    5,  // num_field_entries
+    6,  // num_field_entries
     0,  // num_aux_entries
     offsetof(decltype(_table_), field_names),  // no aux_entries
     &_UserRelationship_default_instance_._instance,
@@ -150,42 +188,50 @@ const ::_pbi::TcParseTable<3, 5, 0, 0, 2> UserRelationship::_table_ = {
     {::_pbi::TcParser::MiniParse, {}},
     // optional int64 owner_id = 1;
     {::_pbi::TcParser::FastV64S1,
-     {8, 0, 0, PROTOBUF_FIELD_OFFSET(UserRelationship, _impl_.owner_id_)}},
+     {8, 1, 0, PROTOBUF_FIELD_OFFSET(UserRelationship, _impl_.owner_id_)}},
     // optional int64 related_user_id = 2;
     {::_pbi::TcParser::FastV64S1,
-     {16, 1, 0, PROTOBUF_FIELD_OFFSET(UserRelationship, _impl_.related_user_id_)}},
+     {16, 2, 0, PROTOBUF_FIELD_OFFSET(UserRelationship, _impl_.related_user_id_)}},
     // optional int64 block_date = 3;
     {::_pbi::TcParser::FastV64S1,
-     {24, 2, 0, PROTOBUF_FIELD_OFFSET(UserRelationship, _impl_.block_date_)}},
+     {24, 3, 0, PROTOBUF_FIELD_OFFSET(UserRelationship, _impl_.block_date_)}},
     // optional int64 group_index = 4;
     {::_pbi::TcParser::FastV64S1,
-     {32, 3, 0, PROTOBUF_FIELD_OFFSET(UserRelationship, _impl_.group_index_)}},
+     {32, 4, 0, PROTOBUF_FIELD_OFFSET(UserRelationship, _impl_.group_index_)}},
     // optional int64 establishment_date = 5;
     {::_pbi::TcParser::FastV64S1,
-     {40, 4, 0, PROTOBUF_FIELD_OFFSET(UserRelationship, _impl_.establishment_date_)}},
-    {::_pbi::TcParser::MiniParse, {}},
+     {40, 5, 0, PROTOBUF_FIELD_OFFSET(UserRelationship, _impl_.establishment_date_)}},
+    // optional string name = 6;
+    {::_pbi::TcParser::FastUS1,
+     {50, 0, 0, PROTOBUF_FIELD_OFFSET(UserRelationship, _impl_.name_)}},
     {::_pbi::TcParser::MiniParse, {}},
   }}, {{
     65535, 65535
   }}, {{
     // optional int64 owner_id = 1;
-    {PROTOBUF_FIELD_OFFSET(UserRelationship, _impl_.owner_id_), _Internal::kHasBitsOffset + 0, 0,
+    {PROTOBUF_FIELD_OFFSET(UserRelationship, _impl_.owner_id_), _Internal::kHasBitsOffset + 1, 0,
     (0 | ::_fl::kFcOptional | ::_fl::kInt64)},
     // optional int64 related_user_id = 2;
-    {PROTOBUF_FIELD_OFFSET(UserRelationship, _impl_.related_user_id_), _Internal::kHasBitsOffset + 1, 0,
+    {PROTOBUF_FIELD_OFFSET(UserRelationship, _impl_.related_user_id_), _Internal::kHasBitsOffset + 2, 0,
     (0 | ::_fl::kFcOptional | ::_fl::kInt64)},
     // optional int64 block_date = 3;
-    {PROTOBUF_FIELD_OFFSET(UserRelationship, _impl_.block_date_), _Internal::kHasBitsOffset + 2, 0,
+    {PROTOBUF_FIELD_OFFSET(UserRelationship, _impl_.block_date_), _Internal::kHasBitsOffset + 3, 0,
     (0 | ::_fl::kFcOptional | ::_fl::kInt64)},
     // optional int64 group_index = 4;
-    {PROTOBUF_FIELD_OFFSET(UserRelationship, _impl_.group_index_), _Internal::kHasBitsOffset + 3, 0,
+    {PROTOBUF_FIELD_OFFSET(UserRelationship, _impl_.group_index_), _Internal::kHasBitsOffset + 4, 0,
     (0 | ::_fl::kFcOptional | ::_fl::kInt64)},
     // optional int64 establishment_date = 5;
-    {PROTOBUF_FIELD_OFFSET(UserRelationship, _impl_.establishment_date_), _Internal::kHasBitsOffset + 4, 0,
+    {PROTOBUF_FIELD_OFFSET(UserRelationship, _impl_.establishment_date_), _Internal::kHasBitsOffset + 5, 0,
     (0 | ::_fl::kFcOptional | ::_fl::kInt64)},
+    // optional string name = 6;
+    {PROTOBUF_FIELD_OFFSET(UserRelationship, _impl_.name_), _Internal::kHasBitsOffset + 0, 0,
+    (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
   }},
   // no aux_entries
   {{
+    "\51\0\0\0\0\0\4\0"
+    "turms.client.model.proto.UserRelationship"
+    "name"
   }},
 };
 
@@ -198,38 +244,46 @@ const ::_pbi::TcParseTable<3, 5, 0, 0, 2> UserRelationship::_table_ = {
 
   cached_has_bits = _impl_._has_bits_[0];
   // optional int64 owner_id = 1;
-  if (cached_has_bits & 0x00000001u) {
+  if (cached_has_bits & 0x00000002u) {
     target = ::google::protobuf::internal::WireFormatLite::
         WriteInt64ToArrayWithField<1>(
             stream, this->_internal_owner_id(), target);
   }
 
   // optional int64 related_user_id = 2;
-  if (cached_has_bits & 0x00000002u) {
+  if (cached_has_bits & 0x00000004u) {
     target = ::google::protobuf::internal::WireFormatLite::
         WriteInt64ToArrayWithField<2>(
             stream, this->_internal_related_user_id(), target);
   }
 
   // optional int64 block_date = 3;
-  if (cached_has_bits & 0x00000004u) {
+  if (cached_has_bits & 0x00000008u) {
     target = ::google::protobuf::internal::WireFormatLite::
         WriteInt64ToArrayWithField<3>(
             stream, this->_internal_block_date(), target);
   }
 
   // optional int64 group_index = 4;
-  if (cached_has_bits & 0x00000008u) {
+  if (cached_has_bits & 0x00000010u) {
     target = ::google::protobuf::internal::WireFormatLite::
         WriteInt64ToArrayWithField<4>(
             stream, this->_internal_group_index(), target);
   }
 
   // optional int64 establishment_date = 5;
-  if (cached_has_bits & 0x00000010u) {
+  if (cached_has_bits & 0x00000020u) {
     target = ::google::protobuf::internal::WireFormatLite::
         WriteInt64ToArrayWithField<5>(
             stream, this->_internal_establishment_date(), target);
+  }
+
+  // optional string name = 6;
+  if (cached_has_bits & 0x00000001u) {
+    const std::string& _s = this->_internal_name();
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+        _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "turms.client.model.proto.UserRelationship.name");
+    target = stream->WriteStringMaybeAliased(6, _s, target);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -250,33 +304,39 @@ const ::_pbi::TcParseTable<3, 5, 0, 0, 2> UserRelationship::_table_ = {
   (void) cached_has_bits;
 
   cached_has_bits = _impl_._has_bits_[0];
-  if (cached_has_bits & 0x0000001fu) {
-    // optional int64 owner_id = 1;
+  if (cached_has_bits & 0x0000003fu) {
+    // optional string name = 6;
     if (cached_has_bits & 0x00000001u) {
+      total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
+                                      this->_internal_name());
+    }
+
+    // optional int64 owner_id = 1;
+    if (cached_has_bits & 0x00000002u) {
       total_size += ::_pbi::WireFormatLite::Int64SizePlusOne(
           this->_internal_owner_id());
     }
 
     // optional int64 related_user_id = 2;
-    if (cached_has_bits & 0x00000002u) {
+    if (cached_has_bits & 0x00000004u) {
       total_size += ::_pbi::WireFormatLite::Int64SizePlusOne(
           this->_internal_related_user_id());
     }
 
     // optional int64 block_date = 3;
-    if (cached_has_bits & 0x00000004u) {
+    if (cached_has_bits & 0x00000008u) {
       total_size += ::_pbi::WireFormatLite::Int64SizePlusOne(
           this->_internal_block_date());
     }
 
     // optional int64 group_index = 4;
-    if (cached_has_bits & 0x00000008u) {
+    if (cached_has_bits & 0x00000010u) {
       total_size += ::_pbi::WireFormatLite::Int64SizePlusOne(
           this->_internal_group_index());
     }
 
     // optional int64 establishment_date = 5;
-    if (cached_has_bits & 0x00000010u) {
+    if (cached_has_bits & 0x00000020u) {
       total_size += ::_pbi::WireFormatLite::Int64SizePlusOne(
           this->_internal_establishment_date());
     }
@@ -304,20 +364,23 @@ void UserRelationship::MergeFrom(const UserRelationship& from) {
   (void) cached_has_bits;
 
   cached_has_bits = from._impl_._has_bits_[0];
-  if (cached_has_bits & 0x0000001fu) {
+  if (cached_has_bits & 0x0000003fu) {
     if (cached_has_bits & 0x00000001u) {
-      _this->_impl_.owner_id_ = from._impl_.owner_id_;
+      _this->_internal_set_name(from._internal_name());
     }
     if (cached_has_bits & 0x00000002u) {
-      _this->_impl_.related_user_id_ = from._impl_.related_user_id_;
+      _this->_impl_.owner_id_ = from._impl_.owner_id_;
     }
     if (cached_has_bits & 0x00000004u) {
-      _this->_impl_.block_date_ = from._impl_.block_date_;
+      _this->_impl_.related_user_id_ = from._impl_.related_user_id_;
     }
     if (cached_has_bits & 0x00000008u) {
-      _this->_impl_.group_index_ = from._impl_.group_index_;
+      _this->_impl_.block_date_ = from._impl_.block_date_;
     }
     if (cached_has_bits & 0x00000010u) {
+      _this->_impl_.group_index_ = from._impl_.group_index_;
+    }
+    if (cached_has_bits & 0x00000020u) {
       _this->_impl_.establishment_date_ = from._impl_.establishment_date_;
     }
     _this->_impl_._has_bits_[0] |= cached_has_bits;
@@ -338,8 +401,12 @@ PROTOBUF_NOINLINE bool UserRelationship::IsInitialized() const {
 
 void UserRelationship::InternalSwap(UserRelationship* other) {
   using std::swap;
+  auto* lhs_arena = GetArenaForAllocation();
+  auto* rhs_arena = other->GetArenaForAllocation();
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
+  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.name_, lhs_arena,
+                                       &other->_impl_.name_, rhs_arena);
   ::google::protobuf::internal::memswap<
       PROTOBUF_FIELD_OFFSET(UserRelationship, _impl_.establishment_date_)
       + sizeof(UserRelationship::_impl_.establishment_date_)

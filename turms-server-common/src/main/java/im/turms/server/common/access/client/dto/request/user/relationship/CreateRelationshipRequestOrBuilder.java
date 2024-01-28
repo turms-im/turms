@@ -48,4 +48,25 @@ public interface CreateRelationshipRequestOrBuilder extends
      * @return The groupIndex.
      */
     int getGroupIndex();
+
+    /**
+     * <code>optional string name = 4;</code>
+     *
+     * @return Whether the name field is set.
+     */
+    boolean hasName();
+
+    /**
+     * <code>optional string name = 4;</code>
+     *
+     * @return The name.
+     */
+    java.lang.String getName();
+
+    /**
+     * <code>optional string name = 4;</code>
+     *
+     * @return The bytes for name.
+     */
+    com.google.protobuf.ByteString getNameBytes();
 }

@@ -69,14 +69,6 @@ public final class UserInfoOuterClass {
                                 "ProfileAccessStrategy",
                                 "RegistrationDate",
                                 "LastUpdatedDate",
-                                "Active",
-                                "Id",
-                                "Name",
-                                "Intro",
-                                "ProfilePicture",
-                                "ProfileAccessStrategy",
-                                "RegistrationDate",
-                                "LastUpdatedDate",
                                 "Active",});
         im.turms.server.common.access.client.dto.constant.ProfileAccessStrategyOuterClass
                 .getDescriptor();

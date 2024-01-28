@@ -53,7 +53,7 @@ public interface UserLocationOrBuilder extends
      * <pre>
      * e.g. street address, city, state, country, etc.
      * </pre>
-     * 
+     *
      * <code>map&lt;string, string&gt; details = 4;</code>
      */
     int getDetailsCount();
@@ -62,7 +62,7 @@ public interface UserLocationOrBuilder extends
      * <pre>
      * e.g. street address, city, state, country, etc.
      * </pre>
-     * 
+     *
      * <code>map&lt;string, string&gt; details = 4;</code>
      */
     boolean containsDetails(java.lang.String key);
@@ -77,7 +77,7 @@ public interface UserLocationOrBuilder extends
      * <pre>
      * e.g. street address, city, state, country, etc.
      * </pre>
-     * 
+     *
      * <code>map&lt;string, string&gt; details = 4;</code>
      */
     java.util.Map<java.lang.String, java.lang.String> getDetailsMap();
@@ -86,7 +86,7 @@ public interface UserLocationOrBuilder extends
      * <pre>
      * e.g. street address, city, state, country, etc.
      * </pre>
-     * 
+     *
      * <code>map&lt;string, string&gt; details = 4;</code>
      */
 
@@ -100,7 +100,7 @@ public interface UserLocationOrBuilder extends
      * <pre>
      * e.g. street address, city, state, country, etc.
      * </pre>
-     * 
+     *
      * <code>map&lt;string, string&gt; details = 4;</code>
      */
 

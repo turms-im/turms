@@ -111,7 +111,11 @@ public enum DeviceType implements com.google.protobuf.ProtocolMessageEnum {
     }
 
     private static final com.google.protobuf.Internal.EnumLiteMap<DeviceType> internalValueMap =
-            number -> DeviceType.forNumber(number);
+            new com.google.protobuf.Internal.EnumLiteMap<>() {
+                public DeviceType findValueByNumber(int number) {
+                    return DeviceType.forNumber(number);
+                }
+            };
 
     public final com.google.protobuf.Descriptors.EnumValueDescriptor getValueDescriptor() {
         if (this == UNRECOGNIZED) {
@@ -148,7 +152,7 @@ public enum DeviceType implements com.google.protobuf.ProtocolMessageEnum {
 
     private final int value;
 
-    DeviceType(int value) {
+    private DeviceType(int value) {
         this.value = value;
     }
 

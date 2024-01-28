@@ -55,7 +55,7 @@ public final class LongsWithVersion extends com.google.protobuf.GeneratedMessage
     private int bitField0_;
     public static final int LONGS_FIELD_NUMBER = 1;
     @SuppressWarnings("serial")
-    private com.google.protobuf.Internal.LongList longs_;
+    private com.google.protobuf.Internal.LongList longs_ = emptyLongList();
 
     /**
      * <code>repeated int64 longs = 1;</code>
@@ -384,7 +384,6 @@ public final class LongsWithVersion extends com.google.protobuf.GeneratedMessage
             im.turms.server.common.access.client.dto.model.common.LongsWithVersion result =
                     new im.turms.server.common.access.client.dto.model.common.LongsWithVersion(
                             this);
-            buildPartialRepeatedFields(result);
             if (bitField0_ != 0) {
                 buildPartial0(result);
             }
@@ -392,24 +391,56 @@ public final class LongsWithVersion extends com.google.protobuf.GeneratedMessage
             return result;
         }
 
-        private void buildPartialRepeatedFields(
-                im.turms.server.common.access.client.dto.model.common.LongsWithVersion result) {
-            if (((bitField0_ & 0x00000001) != 0)) {
-                longs_.makeImmutable();
-                bitField0_ &= ~0x00000001;
-            }
-            result.longs_ = longs_;
-        }
-
         private void buildPartial0(
                 im.turms.server.common.access.client.dto.model.common.LongsWithVersion result) {
             int from_bitField0_ = bitField0_;
+            if (((from_bitField0_ & 0x00000001) != 0)) {
+                longs_.makeImmutable();
+                result.longs_ = longs_;
+            }
             int to_bitField0_ = 0;
             if (((from_bitField0_ & 0x00000002) != 0)) {
                 result.lastUpdatedDate_ = lastUpdatedDate_;
                 to_bitField0_ |= 0x00000001;
             }
             result.bitField0_ |= to_bitField0_;
+        }
+
+        @java.lang.Override
+        public Builder clone() {
+            return super.clone();
+        }
+
+        @java.lang.Override
+        public Builder setField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value) {
+            return super.setField(field, value);
+        }
+
+        @java.lang.Override
+        public Builder clearField(com.google.protobuf.Descriptors.FieldDescriptor field) {
+            return super.clearField(field);
+        }
+
+        @java.lang.Override
+        public Builder clearOneof(com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+            return super.clearOneof(oneof);
+        }
+
+        @java.lang.Override
+        public Builder setRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                int index,
+                java.lang.Object value) {
+            return super.setRepeatedField(field, index, value);
+        }
+
+        @java.lang.Override
+        public Builder addRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value) {
+            return super.addRepeatedField(field, value);
         }
 
         @java.lang.Override
@@ -432,7 +463,8 @@ public final class LongsWithVersion extends com.google.protobuf.GeneratedMessage
             if (!other.longs_.isEmpty()) {
                 if (longs_.isEmpty()) {
                     longs_ = other.longs_;
-                    bitField0_ &= ~0x00000001;
+                    longs_.makeImmutable();
+                    bitField0_ |= 0x00000001;
                 } else {
                     ensureLongsIsMutable();
                     longs_.addAll(other.longs_);
@@ -504,10 +536,10 @@ public final class LongsWithVersion extends com.google.protobuf.GeneratedMessage
         private com.google.protobuf.Internal.LongList longs_ = emptyLongList();
 
         private void ensureLongsIsMutable() {
-            if ((bitField0_ & 0x00000001) == 0) {
-                longs_ = mutableCopy(longs_);
-                bitField0_ |= 0x00000001;
+            if (!longs_.isModifiable()) {
+                longs_ = makeMutableCopy(longs_);
             }
+            bitField0_ |= 0x00000001;
         }
 
         /**
@@ -516,9 +548,8 @@ public final class LongsWithVersion extends com.google.protobuf.GeneratedMessage
          * @return A list containing the longs.
          */
         public java.util.List<java.lang.Long> getLongsList() {
-            return ((bitField0_ & 0x00000001) != 0)
-                    ? java.util.Collections.unmodifiableList(longs_)
-                    : longs_;
+            longs_.makeImmutable();
+            return longs_;
         }
 
         /**
@@ -551,6 +582,7 @@ public final class LongsWithVersion extends com.google.protobuf.GeneratedMessage
 
             ensureLongsIsMutable();
             longs_.setLong(index, value);
+            bitField0_ |= 0x00000001;
             onChanged();
             return this;
         }
@@ -565,6 +597,7 @@ public final class LongsWithVersion extends com.google.protobuf.GeneratedMessage
 
             ensureLongsIsMutable();
             longs_.addLong(value);
+            bitField0_ |= 0x00000001;
             onChanged();
             return this;
         }
@@ -578,6 +611,7 @@ public final class LongsWithVersion extends com.google.protobuf.GeneratedMessage
         public Builder addAllLongs(java.lang.Iterable<? extends java.lang.Long> values) {
             ensureLongsIsMutable();
             com.google.protobuf.AbstractMessageLite.Builder.addAll(values, longs_);
+            bitField0_ |= 0x00000001;
             onChanged();
             return this;
         }

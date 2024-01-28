@@ -54,12 +54,7 @@ public final class UpdateMessageRequestOuterClass {
         internal_static_im_turms_proto_UpdateMessageRequest_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
                         internal_static_im_turms_proto_UpdateMessageRequest_descriptor,
-                        new java.lang.String[]{"MessageId",
-                                "Text",
-                                "Records",
-                                "RecallDate",
-                                "Text",
-                                "RecallDate",});
+                        new java.lang.String[]{"MessageId", "Text", "Records", "RecallDate",});
     }
 
     // @@protoc_insertion_point(outer_class_scope)

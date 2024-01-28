@@ -47,13 +47,14 @@ public final class CheckGroupJoinQuestionsAnswersRequest
 
     @SuppressWarnings({"rawtypes"})
     @java.lang.Override
-    protected com.google.protobuf.MapField internalGetMapField(int number) {
-        return switch (number) {
-            case 1 -> internalGetQuestionIdToAnswer();
-            default -> throw new RuntimeException(
-                    "Invalid map field number: "
-                            + number);
-        };
+    protected com.google.protobuf.MapFieldReflectionAccessor internalGetMapFieldReflection(
+            int number) {
+        if (number == 1) {
+            return internalGetQuestionIdToAnswer();
+        }
+        throw new RuntimeException(
+                "Invalid map field number: "
+                        + number);
     }
 
     @java.lang.Override
@@ -68,7 +69,7 @@ public final class CheckGroupJoinQuestionsAnswersRequest
 
     private static final class QuestionIdToAnswerDefaultEntryHolder {
         static final com.google.protobuf.MapEntry<java.lang.Long, java.lang.String> defaultEntry =
-                com.google.protobuf.MapEntry.<java.lang.Long, java.lang.String>newDefaultInstance(
+                com.google.protobuf.MapEntry.newDefaultInstance(
                         im.turms.server.common.access.client.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequestOuterClass.internal_static_im_turms_proto_CheckGroupJoinQuestionsAnswersRequest_QuestionIdToAnswerEntry_descriptor,
                         com.google.protobuf.WireFormat.FieldType.INT64,
                         0L,
@@ -345,23 +346,25 @@ public final class CheckGroupJoinQuestionsAnswersRequest
         }
 
         @SuppressWarnings({"rawtypes"})
-        protected com.google.protobuf.MapField internalGetMapField(int number) {
-            return switch (number) {
-                case 1 -> internalGetQuestionIdToAnswer();
-                default -> throw new RuntimeException(
-                        "Invalid map field number: "
-                                + number);
-            };
+        protected com.google.protobuf.MapFieldReflectionAccessor internalGetMapFieldReflection(
+                int number) {
+            if (number == 1) {
+                return internalGetQuestionIdToAnswer();
+            }
+            throw new RuntimeException(
+                    "Invalid map field number: "
+                            + number);
         }
 
         @SuppressWarnings({"rawtypes"})
-        protected com.google.protobuf.MapField internalGetMutableMapField(int number) {
-            return switch (number) {
-                case 1 -> internalGetMutableQuestionIdToAnswer();
-                default -> throw new RuntimeException(
-                        "Invalid map field number: "
-                                + number);
-            };
+        protected com.google.protobuf.MapFieldReflectionAccessor internalGetMutableMapFieldReflection(
+                int number) {
+            if (number == 1) {
+                return internalGetMutableQuestionIdToAnswer();
+            }
+            throw new RuntimeException(
+                    "Invalid map field number: "
+                            + number);
         }
 
         @java.lang.Override
@@ -431,6 +434,43 @@ public final class CheckGroupJoinQuestionsAnswersRequest
                 result.questionIdToAnswer_ = internalGetQuestionIdToAnswer();
                 result.questionIdToAnswer_.makeImmutable();
             }
+        }
+
+        @java.lang.Override
+        public Builder clone() {
+            return super.clone();
+        }
+
+        @java.lang.Override
+        public Builder setField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value) {
+            return super.setField(field, value);
+        }
+
+        @java.lang.Override
+        public Builder clearField(com.google.protobuf.Descriptors.FieldDescriptor field) {
+            return super.clearField(field);
+        }
+
+        @java.lang.Override
+        public Builder clearOneof(com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+            return super.clearOneof(oneof);
+        }
+
+        @java.lang.Override
+        public Builder setRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                int index,
+                java.lang.Object value) {
+            return super.setRepeatedField(field, index, value);
+        }
+
+        @java.lang.Override
+        public Builder addRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value) {
+            return super.addRepeatedField(field, value);
         }
 
         @java.lang.Override

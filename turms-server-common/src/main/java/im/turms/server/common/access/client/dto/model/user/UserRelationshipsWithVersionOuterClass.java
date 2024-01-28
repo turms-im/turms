@@ -57,9 +57,7 @@ public final class UserRelationshipsWithVersionOuterClass {
         internal_static_im_turms_proto_UserRelationshipsWithVersion_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
                         internal_static_im_turms_proto_UserRelationshipsWithVersion_descriptor,
-                        new java.lang.String[]{"UserRelationships",
-                                "LastUpdatedDate",
-                                "LastUpdatedDate",});
+                        new java.lang.String[]{"UserRelationships", "LastUpdatedDate",});
         im.turms.server.common.access.client.dto.model.user.UserRelationshipOuterClass
                 .getDescriptor();
     }

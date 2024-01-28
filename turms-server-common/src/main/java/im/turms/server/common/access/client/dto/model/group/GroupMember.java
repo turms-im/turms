@@ -276,13 +276,16 @@ public final class GroupMember extends com.google.protobuf.GeneratedMessageV3 im
     @SuppressWarnings("serial")
     private java.util.List<java.lang.Integer> usingDeviceTypes_;
     private static final com.google.protobuf.Internal.ListAdapter.Converter<java.lang.Integer, im.turms.server.common.access.client.dto.constant.DeviceType> usingDeviceTypes_converter_ =
-            from -> {
-                im.turms.server.common.access.client.dto.constant.DeviceType result =
-                        im.turms.server.common.access.client.dto.constant.DeviceType
-                                .forNumber(from);
-                return result == null
-                        ? im.turms.server.common.access.client.dto.constant.DeviceType.UNRECOGNIZED
-                        : result;
+            new com.google.protobuf.Internal.ListAdapter.Converter<>() {
+                public im.turms.server.common.access.client.dto.constant.DeviceType convert(
+                        java.lang.Integer from) {
+                    im.turms.server.common.access.client.dto.constant.DeviceType result =
+                            im.turms.server.common.access.client.dto.constant.DeviceType
+                                    .forNumber(from);
+                    return result == null
+                            ? im.turms.server.common.access.client.dto.constant.DeviceType.UNRECOGNIZED
+                            : result;
+                }
             };
 
     /**
@@ -778,6 +781,43 @@ public final class GroupMember extends com.google.protobuf.GeneratedMessageV3 im
                 to_bitField0_ |= 0x00000040;
             }
             result.bitField0_ |= to_bitField0_;
+        }
+
+        @java.lang.Override
+        public Builder clone() {
+            return super.clone();
+        }
+
+        @java.lang.Override
+        public Builder setField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value) {
+            return super.setField(field, value);
+        }
+
+        @java.lang.Override
+        public Builder clearField(com.google.protobuf.Descriptors.FieldDescriptor field) {
+            return super.clearField(field);
+        }
+
+        @java.lang.Override
+        public Builder clearOneof(com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+            return super.clearOneof(oneof);
+        }
+
+        @java.lang.Override
+        public Builder setRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                int index,
+                java.lang.Object value) {
+            return super.setRepeatedField(field, index, value);
+        }
+
+        @java.lang.Override
+        public Builder addRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value) {
+            return super.addRepeatedField(field, value);
         }
 
         @java.lang.Override

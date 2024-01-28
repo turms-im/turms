@@ -1,82 +1,24 @@
-///
+//
 //  Generated code. Do not modify.
 //  source: request/user/create_session_request.proto
 //
 // @dart = 2.12
-// ignore_for_file: annotate_overrides,camel_case_types,constant_identifier_names,directives_ordering,library_prefixes,non_constant_identifier_names,prefer_final_fields,return_of_invalid_type,unnecessary_const,unnecessary_import,unnecessary_this,unused_import,unused_shown_name
+
+// ignore_for_file: annotate_overrides, camel_case_types, comment_references
+// ignore_for_file: constant_identifier_names, library_prefixes
+// ignore_for_file: non_constant_identifier_names, prefer_final_fields
+// ignore_for_file: unnecessary_import, unnecessary_this, unused_import
 
 import 'dart:core' as $core;
 
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
+import '../../constant/device_type.pbenum.dart' as $2;
+import '../../constant/user_status.pbenum.dart' as $1;
 import '../../model/user/user_location.pb.dart' as $0;
 
-import '../../constant/user_status.pbenum.dart' as $1;
-import '../../constant/device_type.pbenum.dart' as $2;
-
 class CreateSessionRequest extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      const $core.bool.fromEnvironment('protobuf.omit_message_names')
-          ? ''
-          : 'CreateSessionRequest',
-      package: const $pb.PackageName(
-          const $core.bool.fromEnvironment('protobuf.omit_message_names')
-              ? ''
-              : 'im.turms.proto'),
-      createEmptyInstance: create)
-    ..a<$core.int>(
-        1,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'version',
-        $pb.PbFieldType.O3)
-    ..aInt64(
-        2,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'userId')
-    ..aOS(
-        3,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'password')
-    ..e<$1.UserStatus>(
-        4,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'userStatus',
-        $pb.PbFieldType.OE,
-        defaultOrMaker: $1.UserStatus.AVAILABLE,
-        valueOf: $1.UserStatus.valueOf,
-        enumValues: $1.UserStatus.values)
-    ..e<$2.DeviceType>(
-        5,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'deviceType',
-        $pb.PbFieldType.OE,
-        defaultOrMaker: $2.DeviceType.DESKTOP,
-        valueOf: $2.DeviceType.valueOf,
-        enumValues: $2.DeviceType.values)
-    ..m<$core.String, $core.String>(
-        6,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'deviceDetails',
-        entryClassName: 'CreateSessionRequest.DeviceDetailsEntry',
-        keyFieldType: $pb.PbFieldType.OS,
-        valueFieldType: $pb.PbFieldType.OS,
-        packageName: const $pb.PackageName('im.turms.proto'))
-    ..aOM<$0.UserLocation>(
-        7,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'location',
-        subBuilder: $0.UserLocation.create)
-    ..hasRequiredFields = false;
-
-  CreateSessionRequest._() : super();
   factory CreateSessionRequest({
     $core.int? version,
     $fixnum.Int64? userId,
@@ -86,36 +28,64 @@ class CreateSessionRequest extends $pb.GeneratedMessage {
     $core.Map<$core.String, $core.String>? deviceDetails,
     $0.UserLocation? location,
   }) {
-    final _result = create();
+    final $result = create();
     if (version != null) {
-      _result.version = version;
+      $result.version = version;
     }
     if (userId != null) {
-      _result.userId = userId;
+      $result.userId = userId;
     }
     if (password != null) {
-      _result.password = password;
+      $result.password = password;
     }
     if (userStatus != null) {
-      _result.userStatus = userStatus;
+      $result.userStatus = userStatus;
     }
     if (deviceType != null) {
-      _result.deviceType = deviceType;
+      $result.deviceType = deviceType;
     }
     if (deviceDetails != null) {
-      _result.deviceDetails.addAll(deviceDetails);
+      $result.deviceDetails.addAll(deviceDetails);
     }
     if (location != null) {
-      _result.location = location;
+      $result.location = location;
     }
-    return _result;
+    return $result;
   }
+  CreateSessionRequest._() : super();
   factory CreateSessionRequest.fromBuffer($core.List<$core.int> i,
           [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(i, r);
   factory CreateSessionRequest.fromJson($core.String i,
           [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(i, r);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'CreateSessionRequest',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'im.turms.proto'),
+      createEmptyInstance: create)
+    ..a<$core.int>(1, _omitFieldNames ? '' : 'version', $pb.PbFieldType.O3)
+    ..aInt64(2, _omitFieldNames ? '' : 'userId')
+    ..aOS(3, _omitFieldNames ? '' : 'password')
+    ..e<$1.UserStatus>(
+        4, _omitFieldNames ? '' : 'userStatus', $pb.PbFieldType.OE,
+        defaultOrMaker: $1.UserStatus.AVAILABLE,
+        valueOf: $1.UserStatus.valueOf,
+        enumValues: $1.UserStatus.values)
+    ..e<$2.DeviceType>(
+        5, _omitFieldNames ? '' : 'deviceType', $pb.PbFieldType.OE,
+        defaultOrMaker: $2.DeviceType.DESKTOP,
+        valueOf: $2.DeviceType.valueOf,
+        enumValues: $2.DeviceType.values)
+    ..m<$core.String, $core.String>(6, _omitFieldNames ? '' : 'deviceDetails',
+        entryClassName: 'CreateSessionRequest.DeviceDetailsEntry',
+        keyFieldType: $pb.PbFieldType.OS,
+        valueFieldType: $pb.PbFieldType.OS,
+        packageName: const $pb.PackageName('im.turms.proto'))
+    ..aOM<$0.UserLocation>(7, _omitFieldNames ? '' : 'location',
+        subBuilder: $0.UserLocation.create)
+    ..hasRequiredFields = false;
+
   @$core.Deprecated('Using this can add significant overhead to your binary. '
       'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
       'Will be removed in next major version')
@@ -126,8 +96,10 @@ class CreateSessionRequest extends $pb.GeneratedMessage {
       'Will be removed in next major version')
   CreateSessionRequest copyWith(void Function(CreateSessionRequest) updates) =>
       super.copyWith((message) => updates(message as CreateSessionRequest))
-          as CreateSessionRequest; // ignore: deprecated_member_use
+          as CreateSessionRequest;
+
   $pb.BuilderInfo get info_ => _i;
+
   @$core.pragma('dart2js:noInline')
   static CreateSessionRequest create() => CreateSessionRequest._();
   CreateSessionRequest createEmptyInstance() => create();
@@ -215,3 +187,7 @@ class CreateSessionRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(7)
   $0.UserLocation ensureLocation() => $_ensure(6);
 }
+
+const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');
+const _omitMessageNames =
+    $core.bool.fromEnvironment('protobuf.omit_message_names');

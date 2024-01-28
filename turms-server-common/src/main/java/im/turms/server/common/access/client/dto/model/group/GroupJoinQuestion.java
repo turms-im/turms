@@ -275,7 +275,7 @@ public final class GroupJoinQuestion extends com.google.protobuf.GeneratedMessag
                 dataSize += computeStringSizeNoTag(answers_.getRaw(i));
             }
             size += dataSize;
-            size += 1 * getAnswersList().size();
+            size += getAnswersList().size();
         }
         if (((bitField0_ & 0x00000008) != 0)) {
             size += com.google.protobuf.CodedOutputStream.computeInt32Size(5, score_);
@@ -568,6 +568,43 @@ public final class GroupJoinQuestion extends com.google.protobuf.GeneratedMessag
                 to_bitField0_ |= 0x00000008;
             }
             result.bitField0_ |= to_bitField0_;
+        }
+
+        @java.lang.Override
+        public Builder clone() {
+            return super.clone();
+        }
+
+        @java.lang.Override
+        public Builder setField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value) {
+            return super.setField(field, value);
+        }
+
+        @java.lang.Override
+        public Builder clearField(com.google.protobuf.Descriptors.FieldDescriptor field) {
+            return super.clearField(field);
+        }
+
+        @java.lang.Override
+        public Builder clearOneof(com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+            return super.clearOneof(oneof);
+        }
+
+        @java.lang.Override
+        public Builder setRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                int index,
+                java.lang.Object value) {
+            return super.setRepeatedField(field, index, value);
+        }
+
+        @java.lang.Override
+        public Builder addRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value) {
+            return super.addRepeatedField(field, value);
         }
 
         @java.lang.Override

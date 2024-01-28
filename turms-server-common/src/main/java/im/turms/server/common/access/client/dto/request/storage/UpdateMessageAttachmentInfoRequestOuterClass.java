@@ -66,12 +66,6 @@ public final class UpdateMessageAttachmentInfoRequestOuterClass {
                                 "UserIdToShareWith",
                                 "UserIdToUnshareWith",
                                 "GroupIdToShareWith",
-                                "GroupIdToUnshareWith",
-                                "AttachmentIdNum",
-                                "AttachmentIdStr",
-                                "UserIdToShareWith",
-                                "UserIdToUnshareWith",
-                                "GroupIdToShareWith",
                                 "GroupIdToUnshareWith",});
     }
 

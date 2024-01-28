@@ -25,7 +25,7 @@ public interface UpdateUserOnlineStatusRequestOrBuilder extends
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>repeated .im.turms.proto.DeviceType device_types = 1;</code>
      *
      * @return A list containing the deviceTypes.
@@ -36,7 +36,7 @@ public interface UpdateUserOnlineStatusRequestOrBuilder extends
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>repeated .im.turms.proto.DeviceType device_types = 1;</code>
      *
      * @return The count of deviceTypes.
@@ -47,7 +47,7 @@ public interface UpdateUserOnlineStatusRequestOrBuilder extends
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>repeated .im.turms.proto.DeviceType device_types = 1;</code>
      *
      * @param index The index of the element to return.
@@ -59,7 +59,7 @@ public interface UpdateUserOnlineStatusRequestOrBuilder extends
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>repeated .im.turms.proto.DeviceType device_types = 1;</code>
      *
      * @return A list containing the enum numeric values on the wire for deviceTypes.
@@ -70,7 +70,7 @@ public interface UpdateUserOnlineStatusRequestOrBuilder extends
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>repeated .im.turms.proto.DeviceType device_types = 1;</code>
      *
      * @param index The index of the value to return.
@@ -82,7 +82,7 @@ public interface UpdateUserOnlineStatusRequestOrBuilder extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.UserStatus user_status = 2;</code>
      *
      * @return The enum numeric value on the wire for userStatus.
@@ -93,7 +93,7 @@ public interface UpdateUserOnlineStatusRequestOrBuilder extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.UserStatus user_status = 2;</code>
      *
      * @return The userStatus.

@@ -40,7 +40,7 @@ public interface CreateMessageRequestOrBuilder extends
      * is_system_message can only be true if the user is an administrator,
      * or turms server will return an error
      * </pre>
-     * 
+     *
      * <code>optional bool is_system_message = 2;</code>
      *
      * @return Whether the isSystemMessage field is set.
@@ -52,7 +52,7 @@ public interface CreateMessageRequestOrBuilder extends
      * is_system_message can only be true if the user is an administrator,
      * or turms server will return an error
      * </pre>
-     * 
+     *
      * <code>optional bool is_system_message = 2;</code>
      *
      * @return The isSystemMessage.

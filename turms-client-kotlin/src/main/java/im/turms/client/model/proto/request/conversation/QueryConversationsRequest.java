@@ -37,7 +37,7 @@ public final class QueryConversationsRequest extends
      * <pre>
      * Private conversations
      * </pre>
-     * 
+     *
      * <code>repeated int64 target_ids = 1;</code>
      *
      * @return A list containing the targetIds.
@@ -51,7 +51,7 @@ public final class QueryConversationsRequest extends
      * <pre>
      * Private conversations
      * </pre>
-     * 
+     *
      * <code>repeated int64 target_ids = 1;</code>
      *
      * @return The count of targetIds.
@@ -65,7 +65,7 @@ public final class QueryConversationsRequest extends
      * <pre>
      * Private conversations
      * </pre>
-     * 
+     *
      * <code>repeated int64 target_ids = 1;</code>
      *
      * @param index The index of the element to return.
@@ -89,7 +89,7 @@ public final class QueryConversationsRequest extends
      * <pre>
      * Private conversations
      * </pre>
-     * 
+     *
      * <code>repeated int64 target_ids = 1;</code>
      *
      * @param index The index to set the value at.
@@ -104,7 +104,7 @@ public final class QueryConversationsRequest extends
      * <pre>
      * Private conversations
      * </pre>
-     * 
+     *
      * <code>repeated int64 target_ids = 1;</code>
      *
      * @param value The targetIds to add.
@@ -118,7 +118,7 @@ public final class QueryConversationsRequest extends
      * <pre>
      * Private conversations
      * </pre>
-     * 
+     *
      * <code>repeated int64 target_ids = 1;</code>
      *
      * @param values The targetIds to add.
@@ -132,7 +132,7 @@ public final class QueryConversationsRequest extends
      * <pre>
      * Private conversations
      * </pre>
-     * 
+     *
      * <code>repeated int64 target_ids = 1;</code>
      */
     private void clearTargetIds() {
@@ -146,7 +146,7 @@ public final class QueryConversationsRequest extends
      * <pre>
      * Group conversations
      * </pre>
-     * 
+     *
      * <code>repeated int64 group_ids = 2;</code>
      *
      * @return A list containing the groupIds.
@@ -160,7 +160,7 @@ public final class QueryConversationsRequest extends
      * <pre>
      * Group conversations
      * </pre>
-     * 
+     *
      * <code>repeated int64 group_ids = 2;</code>
      *
      * @return The count of groupIds.
@@ -174,7 +174,7 @@ public final class QueryConversationsRequest extends
      * <pre>
      * Group conversations
      * </pre>
-     * 
+     *
      * <code>repeated int64 group_ids = 2;</code>
      *
      * @param index The index of the element to return.
@@ -198,7 +198,7 @@ public final class QueryConversationsRequest extends
      * <pre>
      * Group conversations
      * </pre>
-     * 
+     *
      * <code>repeated int64 group_ids = 2;</code>
      *
      * @param index The index to set the value at.
@@ -213,7 +213,7 @@ public final class QueryConversationsRequest extends
      * <pre>
      * Group conversations
      * </pre>
-     * 
+     *
      * <code>repeated int64 group_ids = 2;</code>
      *
      * @param value The groupIds to add.
@@ -227,7 +227,7 @@ public final class QueryConversationsRequest extends
      * <pre>
      * Group conversations
      * </pre>
-     * 
+     *
      * <code>repeated int64 group_ids = 2;</code>
      *
      * @param values The groupIds to add.
@@ -241,7 +241,7 @@ public final class QueryConversationsRequest extends
      * <pre>
      * Group conversations
      * </pre>
-     * 
+     *
      * <code>repeated int64 group_ids = 2;</code>
      */
     private void clearGroupIds() {
@@ -327,12 +327,12 @@ public final class QueryConversationsRequest extends
     }
 
     public static Builder newBuilder() {
-        return (Builder) DEFAULT_INSTANCE.createBuilder();
+        return DEFAULT_INSTANCE.createBuilder();
     }
 
     public static Builder newBuilder(
             im.turms.client.model.proto.request.conversation.QueryConversationsRequest prototype) {
-        return (Builder) DEFAULT_INSTANCE.createBuilder(prototype);
+        return DEFAULT_INSTANCE.createBuilder(prototype);
     }
 
     /**
@@ -353,7 +353,7 @@ public final class QueryConversationsRequest extends
          * <pre>
          * Private conversations
          * </pre>
-         * 
+         *
          * <code>repeated int64 target_ids = 1;</code>
          *
          * @return A list containing the targetIds.
@@ -367,7 +367,7 @@ public final class QueryConversationsRequest extends
          * <pre>
          * Private conversations
          * </pre>
-         * 
+         *
          * <code>repeated int64 target_ids = 1;</code>
          *
          * @return The count of targetIds.
@@ -381,7 +381,7 @@ public final class QueryConversationsRequest extends
          * <pre>
          * Private conversations
          * </pre>
-         * 
+         *
          * <code>repeated int64 target_ids = 1;</code>
          *
          * @param index The index of the element to return.
@@ -396,7 +396,7 @@ public final class QueryConversationsRequest extends
          * <pre>
          * Private conversations
          * </pre>
-         * 
+         *
          * <code>repeated int64 target_ids = 1;</code>
          *
          * @param value The targetIds to set.
@@ -412,7 +412,7 @@ public final class QueryConversationsRequest extends
          * <pre>
          * Private conversations
          * </pre>
-         * 
+         *
          * <code>repeated int64 target_ids = 1;</code>
          *
          * @param value The targetIds to add.
@@ -428,7 +428,7 @@ public final class QueryConversationsRequest extends
          * <pre>
          * Private conversations
          * </pre>
-         * 
+         *
          * <code>repeated int64 target_ids = 1;</code>
          *
          * @param values The targetIds to add.
@@ -444,7 +444,7 @@ public final class QueryConversationsRequest extends
          * <pre>
          * Private conversations
          * </pre>
-         * 
+         *
          * <code>repeated int64 target_ids = 1;</code>
          *
          * @return This builder for chaining.
@@ -459,7 +459,7 @@ public final class QueryConversationsRequest extends
          * <pre>
          * Group conversations
          * </pre>
-         * 
+         *
          * <code>repeated int64 group_ids = 2;</code>
          *
          * @return A list containing the groupIds.
@@ -473,7 +473,7 @@ public final class QueryConversationsRequest extends
          * <pre>
          * Group conversations
          * </pre>
-         * 
+         *
          * <code>repeated int64 group_ids = 2;</code>
          *
          * @return The count of groupIds.
@@ -487,7 +487,7 @@ public final class QueryConversationsRequest extends
          * <pre>
          * Group conversations
          * </pre>
-         * 
+         *
          * <code>repeated int64 group_ids = 2;</code>
          *
          * @param index The index of the element to return.
@@ -502,7 +502,7 @@ public final class QueryConversationsRequest extends
          * <pre>
          * Group conversations
          * </pre>
-         * 
+         *
          * <code>repeated int64 group_ids = 2;</code>
          *
          * @param value The groupIds to set.
@@ -518,7 +518,7 @@ public final class QueryConversationsRequest extends
          * <pre>
          * Group conversations
          * </pre>
-         * 
+         *
          * <code>repeated int64 group_ids = 2;</code>
          *
          * @param value The groupIds to add.
@@ -534,7 +534,7 @@ public final class QueryConversationsRequest extends
          * <pre>
          * Group conversations
          * </pre>
-         * 
+         *
          * <code>repeated int64 group_ids = 2;</code>
          *
          * @param values The groupIds to add.
@@ -550,7 +550,7 @@ public final class QueryConversationsRequest extends
          * <pre>
          * Group conversations
          * </pre>
-         * 
+         *
          * <code>repeated int64 group_ids = 2;</code>
          *
          * @return This builder for chaining.

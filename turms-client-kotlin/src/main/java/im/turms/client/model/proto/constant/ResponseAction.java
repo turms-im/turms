@@ -85,7 +85,12 @@ public enum ResponseAction implements com.google.protobuf.Internal.EnumLite {
     }
 
     private static final com.google.protobuf.Internal.EnumLiteMap<ResponseAction> internalValueMap =
-            number -> ResponseAction.forNumber(number);
+            new com.google.protobuf.Internal.EnumLiteMap<ResponseAction>() {
+                @java.lang.Override
+                public ResponseAction findValueByNumber(int number) {
+                    return ResponseAction.forNumber(number);
+                }
+            };
 
     public static com.google.protobuf.Internal.EnumVerifier internalGetVerifier() {
         return ResponseActionVerifier.INSTANCE;
@@ -104,7 +109,7 @@ public enum ResponseAction implements com.google.protobuf.Internal.EnumLite {
 
     private final int value;
 
-    ResponseAction(int value) {
+    private ResponseAction(int value) {
         this.value = value;
     }
 

@@ -35,7 +35,7 @@ public final class UpdateTypingStatusRequest extends
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>bool is_group_message = 1;</code>
      *
      * @return The isGroupMessage.
@@ -49,7 +49,7 @@ public final class UpdateTypingStatusRequest extends
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>bool is_group_message = 1;</code>
      *
      * @param value The isGroupMessage to set.
@@ -63,7 +63,7 @@ public final class UpdateTypingStatusRequest extends
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>bool is_group_message = 1;</code>
      */
     private void clearIsGroupMessage() {
@@ -181,12 +181,12 @@ public final class UpdateTypingStatusRequest extends
     }
 
     public static Builder newBuilder() {
-        return (Builder) DEFAULT_INSTANCE.createBuilder();
+        return DEFAULT_INSTANCE.createBuilder();
     }
 
     public static Builder newBuilder(
             im.turms.client.model.proto.request.conversation.UpdateTypingStatusRequest prototype) {
-        return (Builder) DEFAULT_INSTANCE.createBuilder(prototype);
+        return DEFAULT_INSTANCE.createBuilder(prototype);
     }
 
     /**
@@ -207,7 +207,7 @@ public final class UpdateTypingStatusRequest extends
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>bool is_group_message = 1;</code>
          *
          * @return The isGroupMessage.
@@ -221,7 +221,7 @@ public final class UpdateTypingStatusRequest extends
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>bool is_group_message = 1;</code>
          *
          * @param value The isGroupMessage to set.
@@ -237,7 +237,7 @@ public final class UpdateTypingStatusRequest extends
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>bool is_group_message = 1;</code>
          *
          * @return This builder for chaining.
@@ -300,8 +300,7 @@ public final class UpdateTypingStatusRequest extends
             case BUILD_MESSAGE_INFO: {
                 java.lang.Object[] objects = new java.lang.Object[]{"isGroupMessage_", "toId_",};
                 java.lang.String info =
-                        "\u0000\u0002\u0000\u0000\u0001\u0002\u0002\u0000\u0000\u0000\u0001\u0007\u0002\u0002"
-                                + "";
+                        "\u0000\u0002\u0000\u0000\u0001\u0002\u0002\u0000\u0000\u0000\u0001\u0007\u0002\u0002";
                 return newMessageInfo(DEFAULT_INSTANCE, info, objects);
             }
             // fall through

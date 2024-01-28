@@ -25,7 +25,7 @@ public interface QueryMessagesRequestOrBuilder extends
      * <pre>
      * Filter
      * </pre>
-     * 
+     *
      * <code>repeated int64 ids = 1;</code>
      *
      * @return A list containing the ids.
@@ -36,7 +36,7 @@ public interface QueryMessagesRequestOrBuilder extends
      * <pre>
      * Filter
      * </pre>
-     * 
+     *
      * <code>repeated int64 ids = 1;</code>
      *
      * @return The count of ids.
@@ -47,7 +47,7 @@ public interface QueryMessagesRequestOrBuilder extends
      * <pre>
      * Filter
      * </pre>
-     * 
+     *
      * <code>repeated int64 ids = 1;</code>
      *
      * @param index The index of the element to return.
@@ -137,7 +137,7 @@ public interface QueryMessagesRequestOrBuilder extends
      * <pre>
      * Option
      * </pre>
-     * 
+     *
      * <code>optional int32 max_count = 7;</code>
      *
      * @return Whether the maxCount field is set.
@@ -148,7 +148,7 @@ public interface QueryMessagesRequestOrBuilder extends
      * <pre>
      * Option
      * </pre>
-     * 
+     *
      * <code>optional int32 max_count = 7;</code>
      *
      * @return The maxCount.
@@ -159,7 +159,7 @@ public interface QueryMessagesRequestOrBuilder extends
      * <pre>
      * Command
      * </pre>
-     * 
+     *
      * <code>bool with_total = 8;</code>
      *
      * @return The withTotal.
@@ -171,7 +171,7 @@ public interface QueryMessagesRequestOrBuilder extends
      * Option
      * TODO: reorder
      * </pre>
-     * 
+     *
      * <code>optional bool descending = 9;</code>
      *
      * @return Whether the descending field is set.
@@ -183,7 +183,7 @@ public interface QueryMessagesRequestOrBuilder extends
      * Option
      * TODO: reorder
      * </pre>
-     * 
+     *
      * <code>optional bool descending = 9;</code>
      *
      * @return The descending.

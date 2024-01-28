@@ -52,48 +52,79 @@ export const QueryMessageAttachmentInfosRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): QueryMessageAttachmentInfosRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseQueryMessageAttachmentInfosRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if ((tag & 7) === 2) {
+          if (tag === 8) {
+            message.userIds.push(longToString(reader.int64() as Long));
+
+            continue;
+          }
+
+          if (tag === 10) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
               message.userIds.push(longToString(reader.int64() as Long));
             }
-          } else {
-            message.userIds.push(longToString(reader.int64() as Long));
+
+            continue;
           }
+
           break;
         case 2:
-          if ((tag & 7) === 2) {
+          if (tag === 16) {
+            message.groupIds.push(longToString(reader.int64() as Long));
+
+            continue;
+          }
+
+          if (tag === 18) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
               message.groupIds.push(longToString(reader.int64() as Long));
             }
-          } else {
-            message.groupIds.push(longToString(reader.int64() as Long));
+
+            continue;
           }
+
           break;
         case 3:
+          if (tag !== 24) {
+            break;
+          }
+
           message.creationDateStart = longToString(reader.int64() as Long);
-          break;
+          continue;
         case 4:
+          if (tag !== 32) {
+            break;
+          }
+
           message.creationDateEnd = longToString(reader.int64() as Long);
-          break;
+          continue;
         case 5:
+          if (tag !== 40) {
+            break;
+          }
+
           message.inPrivateConversation = reader.bool();
-          break;
+          continue;
         case 6:
+          if (tag !== 48) {
+            break;
+          }
+
           message.areSharedByMe = reader.bool();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },

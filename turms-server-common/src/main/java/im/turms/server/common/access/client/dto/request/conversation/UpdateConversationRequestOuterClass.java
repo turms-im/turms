@@ -54,11 +54,7 @@ public final class UpdateConversationRequestOuterClass {
         internal_static_im_turms_proto_UpdateConversationRequest_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
                         internal_static_im_turms_proto_UpdateConversationRequest_descriptor,
-                        new java.lang.String[]{"TargetId",
-                                "GroupId",
-                                "ReadDate",
-                                "TargetId",
-                                "GroupId",});
+                        new java.lang.String[]{"TargetId", "GroupId", "ReadDate",});
     }
 
     // @@protoc_insertion_point(outer_class_scope)

@@ -1,9 +1,13 @@
-///
+//
 //  Generated code. Do not modify.
 //  source: request/storage/delete_resource_request.proto
 //
 // @dart = 2.12
-// ignore_for_file: annotate_overrides,camel_case_types,constant_identifier_names,directives_ordering,library_prefixes,non_constant_identifier_names,prefer_final_fields,return_of_invalid_type,unnecessary_const,unnecessary_import,unnecessary_this,unused_import,unused_shown_name
+
+// ignore_for_file: annotate_overrides, camel_case_types, comment_references
+// ignore_for_file: constant_identifier_names, library_prefixes
+// ignore_for_file: non_constant_identifier_names, prefer_final_fields
+// ignore_for_file: unnecessary_import, unnecessary_this, unused_import
 
 import 'dart:core' as $core;
 
@@ -13,73 +17,53 @@ import 'package:protobuf/protobuf.dart' as $pb;
 import '../../constant/storage_resource_type.pbenum.dart' as $0;
 
 class DeleteResourceRequest extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      const $core.bool.fromEnvironment('protobuf.omit_message_names')
-          ? ''
-          : 'DeleteResourceRequest',
-      package: const $pb.PackageName(
-          const $core.bool.fromEnvironment('protobuf.omit_message_names')
-              ? ''
-              : 'im.turms.proto'),
-      createEmptyInstance: create)
-    ..e<$0.StorageResourceType>(
-        1,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'type',
-        $pb.PbFieldType.OE,
-        defaultOrMaker: $0.StorageResourceType.USER_PROFILE_PICTURE,
-        valueOf: $0.StorageResourceType.valueOf,
-        enumValues: $0.StorageResourceType.values)
-    ..aInt64(
-        2,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'idNum')
-    ..aOS(
-        3,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'idStr')
-    ..m<$core.String, $core.String>(
-        4,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'extra',
-        entryClassName: 'DeleteResourceRequest.ExtraEntry',
-        keyFieldType: $pb.PbFieldType.OS,
-        valueFieldType: $pb.PbFieldType.OS,
-        packageName: const $pb.PackageName('im.turms.proto'))
-    ..hasRequiredFields = false;
-
-  DeleteResourceRequest._() : super();
   factory DeleteResourceRequest({
     $0.StorageResourceType? type,
     $fixnum.Int64? idNum,
     $core.String? idStr,
     $core.Map<$core.String, $core.String>? extra,
   }) {
-    final _result = create();
+    final $result = create();
     if (type != null) {
-      _result.type = type;
+      $result.type = type;
     }
     if (idNum != null) {
-      _result.idNum = idNum;
+      $result.idNum = idNum;
     }
     if (idStr != null) {
-      _result.idStr = idStr;
+      $result.idStr = idStr;
     }
     if (extra != null) {
-      _result.extra.addAll(extra);
+      $result.extra.addAll(extra);
     }
-    return _result;
+    return $result;
   }
+  DeleteResourceRequest._() : super();
   factory DeleteResourceRequest.fromBuffer($core.List<$core.int> i,
           [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(i, r);
   factory DeleteResourceRequest.fromJson($core.String i,
           [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(i, r);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'DeleteResourceRequest',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'im.turms.proto'),
+      createEmptyInstance: create)
+    ..e<$0.StorageResourceType>(
+        1, _omitFieldNames ? '' : 'type', $pb.PbFieldType.OE,
+        defaultOrMaker: $0.StorageResourceType.USER_PROFILE_PICTURE,
+        valueOf: $0.StorageResourceType.valueOf,
+        enumValues: $0.StorageResourceType.values)
+    ..aInt64(2, _omitFieldNames ? '' : 'idNum')
+    ..aOS(3, _omitFieldNames ? '' : 'idStr')
+    ..m<$core.String, $core.String>(4, _omitFieldNames ? '' : 'extra',
+        entryClassName: 'DeleteResourceRequest.ExtraEntry',
+        keyFieldType: $pb.PbFieldType.OS,
+        valueFieldType: $pb.PbFieldType.OS,
+        packageName: const $pb.PackageName('im.turms.proto'))
+    ..hasRequiredFields = false;
+
   @$core.Deprecated('Using this can add significant overhead to your binary. '
       'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
       'Will be removed in next major version')
@@ -91,8 +75,10 @@ class DeleteResourceRequest extends $pb.GeneratedMessage {
   DeleteResourceRequest copyWith(
           void Function(DeleteResourceRequest) updates) =>
       super.copyWith((message) => updates(message as DeleteResourceRequest))
-          as DeleteResourceRequest; // ignore: deprecated_member_use
+          as DeleteResourceRequest;
+
   $pb.BuilderInfo get info_ => _i;
+
   @$core.pragma('dart2js:noInline')
   static DeleteResourceRequest create() => DeleteResourceRequest._();
   DeleteResourceRequest createEmptyInstance() => create();
@@ -142,3 +128,7 @@ class DeleteResourceRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   $core.Map<$core.String, $core.String> get extra => $_getMap(3);
 }
+
+const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');
+const _omitMessageNames =
+    $core.bool.fromEnvironment('protobuf.omit_message_names');

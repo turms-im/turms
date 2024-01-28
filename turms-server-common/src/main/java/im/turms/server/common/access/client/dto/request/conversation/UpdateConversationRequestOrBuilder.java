@@ -25,7 +25,7 @@ public interface UpdateConversationRequestOrBuilder extends
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>optional int64 target_id = 1;</code>
      *
      * @return Whether the targetId field is set.
@@ -36,7 +36,7 @@ public interface UpdateConversationRequestOrBuilder extends
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>optional int64 target_id = 1;</code>
      *
      * @return The targetId.
@@ -61,7 +61,7 @@ public interface UpdateConversationRequestOrBuilder extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>int64 read_date = 3;</code>
      *
      * @return The readDate.

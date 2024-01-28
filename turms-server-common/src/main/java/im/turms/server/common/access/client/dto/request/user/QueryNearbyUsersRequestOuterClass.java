@@ -64,11 +64,6 @@ public final class QueryNearbyUsersRequestOuterClass {
                                 "MaxDistance",
                                 "WithCoordinates",
                                 "WithDistance",
-                                "WithUserInfo",
-                                "MaxCount",
-                                "MaxDistance",
-                                "WithCoordinates",
-                                "WithDistance",
                                 "WithUserInfo",});
     }
 

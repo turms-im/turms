@@ -60,7 +60,7 @@ public final class NearbyUser extends com.google.protobuf.GeneratedMessageV3 imp
      * <pre>
      * session info
      * </pre>
-     * 
+     *
      * <code>int64 user_id = 1;</code>
      *
      * @return The userId.
@@ -114,7 +114,7 @@ public final class NearbyUser extends com.google.protobuf.GeneratedMessageV3 imp
      * <pre>
      * user info
      * </pre>
-     * 
+     *
      * <code>optional .im.turms.proto.UserInfo info = 3;</code>
      *
      * @return Whether the info field is set.
@@ -128,7 +128,7 @@ public final class NearbyUser extends com.google.protobuf.GeneratedMessageV3 imp
      * <pre>
      * user info
      * </pre>
-     * 
+     *
      * <code>optional .im.turms.proto.UserInfo info = 3;</code>
      *
      * @return The info.
@@ -144,7 +144,7 @@ public final class NearbyUser extends com.google.protobuf.GeneratedMessageV3 imp
      * <pre>
      * user info
      * </pre>
-     * 
+     *
      * <code>optional .im.turms.proto.UserInfo info = 3;</code>
      */
     @java.lang.Override
@@ -161,7 +161,7 @@ public final class NearbyUser extends com.google.protobuf.GeneratedMessageV3 imp
      * <pre>
      * geo info
      * </pre>
-     * 
+     *
      * <code>optional int32 distance = 4;</code>
      *
      * @return Whether the distance field is set.
@@ -175,7 +175,7 @@ public final class NearbyUser extends com.google.protobuf.GeneratedMessageV3 imp
      * <pre>
      * geo info
      * </pre>
-     * 
+     *
      * <code>optional int32 distance = 4;</code>
      *
      * @return The distance.
@@ -586,6 +586,43 @@ public final class NearbyUser extends com.google.protobuf.GeneratedMessageV3 imp
         }
 
         @java.lang.Override
+        public Builder clone() {
+            return super.clone();
+        }
+
+        @java.lang.Override
+        public Builder setField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value) {
+            return super.setField(field, value);
+        }
+
+        @java.lang.Override
+        public Builder clearField(com.google.protobuf.Descriptors.FieldDescriptor field) {
+            return super.clearField(field);
+        }
+
+        @java.lang.Override
+        public Builder clearOneof(com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+            return super.clearOneof(oneof);
+        }
+
+        @java.lang.Override
+        public Builder setRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                int index,
+                java.lang.Object value) {
+            return super.setRepeatedField(field, index, value);
+        }
+
+        @java.lang.Override
+        public Builder addRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value) {
+            return super.addRepeatedField(field, value);
+        }
+
+        @java.lang.Override
         public Builder mergeFrom(com.google.protobuf.Message other) {
             if (other instanceof im.turms.server.common.access.client.dto.model.user.NearbyUser) {
                 return mergeFrom(
@@ -686,7 +723,7 @@ public final class NearbyUser extends com.google.protobuf.GeneratedMessageV3 imp
          * <pre>
          * session info
          * </pre>
-         * 
+         *
          * <code>int64 user_id = 1;</code>
          *
          * @return The userId.
@@ -700,7 +737,7 @@ public final class NearbyUser extends com.google.protobuf.GeneratedMessageV3 imp
          * <pre>
          * session info
          * </pre>
-         * 
+         *
          * <code>int64 user_id = 1;</code>
          *
          * @param value The userId to set.
@@ -718,7 +755,7 @@ public final class NearbyUser extends com.google.protobuf.GeneratedMessageV3 imp
          * <pre>
          * session info
          * </pre>
-         * 
+         *
          * <code>int64 user_id = 1;</code>
          *
          * @return This builder for chaining.
@@ -816,7 +853,7 @@ public final class NearbyUser extends com.google.protobuf.GeneratedMessageV3 imp
          * <pre>
          * user info
          * </pre>
-         * 
+         *
          * <code>optional .im.turms.proto.UserInfo info = 3;</code>
          *
          * @return Whether the info field is set.
@@ -829,7 +866,7 @@ public final class NearbyUser extends com.google.protobuf.GeneratedMessageV3 imp
          * <pre>
          * user info
          * </pre>
-         * 
+         *
          * <code>optional .im.turms.proto.UserInfo info = 3;</code>
          *
          * @return The info.
@@ -849,7 +886,7 @@ public final class NearbyUser extends com.google.protobuf.GeneratedMessageV3 imp
          * <pre>
          * user info
          * </pre>
-         * 
+         *
          * <code>optional .im.turms.proto.UserInfo info = 3;</code>
          */
         public Builder setInfo(im.turms.server.common.access.client.dto.model.user.UserInfo value) {
@@ -870,7 +907,7 @@ public final class NearbyUser extends com.google.protobuf.GeneratedMessageV3 imp
          * <pre>
          * user info
          * </pre>
-         * 
+         *
          * <code>optional .im.turms.proto.UserInfo info = 3;</code>
          */
         public Builder setInfo(
@@ -889,7 +926,7 @@ public final class NearbyUser extends com.google.protobuf.GeneratedMessageV3 imp
          * <pre>
          * user info
          * </pre>
-         * 
+         *
          * <code>optional .im.turms.proto.UserInfo info = 3;</code>
          */
         public Builder mergeInfo(
@@ -906,8 +943,10 @@ public final class NearbyUser extends com.google.protobuf.GeneratedMessageV3 imp
             } else {
                 infoBuilder_.mergeFrom(value);
             }
-            bitField0_ |= 0x00000004;
-            onChanged();
+            if (info_ != null) {
+                bitField0_ |= 0x00000004;
+                onChanged();
+            }
             return this;
         }
 
@@ -915,7 +954,7 @@ public final class NearbyUser extends com.google.protobuf.GeneratedMessageV3 imp
          * <pre>
          * user info
          * </pre>
-         * 
+         *
          * <code>optional .im.turms.proto.UserInfo info = 3;</code>
          */
         public Builder clearInfo() {
@@ -933,7 +972,7 @@ public final class NearbyUser extends com.google.protobuf.GeneratedMessageV3 imp
          * <pre>
          * user info
          * </pre>
-         * 
+         *
          * <code>optional .im.turms.proto.UserInfo info = 3;</code>
          */
         public im.turms.server.common.access.client.dto.model.user.UserInfo.Builder getInfoBuilder() {
@@ -946,7 +985,7 @@ public final class NearbyUser extends com.google.protobuf.GeneratedMessageV3 imp
          * <pre>
          * user info
          * </pre>
-         * 
+         *
          * <code>optional .im.turms.proto.UserInfo info = 3;</code>
          */
         public im.turms.server.common.access.client.dto.model.user.UserInfoOrBuilder getInfoOrBuilder() {
@@ -964,7 +1003,7 @@ public final class NearbyUser extends com.google.protobuf.GeneratedMessageV3 imp
          * <pre>
          * user info
          * </pre>
-         * 
+         *
          * <code>optional .im.turms.proto.UserInfo info = 3;</code>
          */
         private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.model.user.UserInfo, im.turms.server.common.access.client.dto.model.user.UserInfo.Builder, im.turms.server.common.access.client.dto.model.user.UserInfoOrBuilder> getInfoFieldBuilder() {
@@ -984,7 +1023,7 @@ public final class NearbyUser extends com.google.protobuf.GeneratedMessageV3 imp
          * <pre>
          * geo info
          * </pre>
-         * 
+         *
          * <code>optional int32 distance = 4;</code>
          *
          * @return Whether the distance field is set.
@@ -998,7 +1037,7 @@ public final class NearbyUser extends com.google.protobuf.GeneratedMessageV3 imp
          * <pre>
          * geo info
          * </pre>
-         * 
+         *
          * <code>optional int32 distance = 4;</code>
          *
          * @return The distance.
@@ -1012,7 +1051,7 @@ public final class NearbyUser extends com.google.protobuf.GeneratedMessageV3 imp
          * <pre>
          * geo info
          * </pre>
-         * 
+         *
          * <code>optional int32 distance = 4;</code>
          *
          * @param value The distance to set.
@@ -1030,7 +1069,7 @@ public final class NearbyUser extends com.google.protobuf.GeneratedMessageV3 imp
          * <pre>
          * geo info
          * </pre>
-         * 
+         *
          * <code>optional int32 distance = 4;</code>
          *
          * @return This builder for chaining.
@@ -1120,8 +1159,10 @@ public final class NearbyUser extends com.google.protobuf.GeneratedMessageV3 imp
             } else {
                 locationBuilder_.mergeFrom(value);
             }
-            bitField0_ |= 0x00000010;
-            onChanged();
+            if (location_ != null) {
+                bitField0_ |= 0x00000010;
+                onChanged();
+            }
             return this;
         }
 

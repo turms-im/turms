@@ -214,11 +214,11 @@ public final class UserSession extends
     }
 
     public static Builder newBuilder() {
-        return (Builder) DEFAULT_INSTANCE.createBuilder();
+        return DEFAULT_INSTANCE.createBuilder();
     }
 
     public static Builder newBuilder(im.turms.client.model.proto.model.user.UserSession prototype) {
-        return (Builder) DEFAULT_INSTANCE.createBuilder(prototype);
+        return DEFAULT_INSTANCE.createBuilder(prototype);
     }
 
     /**
@@ -363,8 +363,7 @@ public final class UserSession extends
             case BUILD_MESSAGE_INFO: {
                 java.lang.Object[] objects = new java.lang.Object[]{"sessionId_", "serverId_",};
                 java.lang.String info =
-                        "\u0000\u0002\u0000\u0000\u0001\u0002\u0002\u0000\u0000\u0000\u0001\u0208\u0002\u0208"
-                                + "";
+                        "\u0000\u0002\u0000\u0000\u0001\u0002\u0002\u0000\u0000\u0000\u0001\u0208\u0002\u0208";
                 return newMessageInfo(DEFAULT_INSTANCE, info, objects);
             }
             // fall through

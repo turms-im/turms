@@ -59,20 +59,23 @@ public final class UpdateUserOnlineStatusRequest extends com.google.protobuf.Gen
     @SuppressWarnings("serial")
     private java.util.List<java.lang.Integer> deviceTypes_;
     private static final com.google.protobuf.Internal.ListAdapter.Converter<java.lang.Integer, im.turms.server.common.access.client.dto.constant.DeviceType> deviceTypes_converter_ =
-            from -> {
-                im.turms.server.common.access.client.dto.constant.DeviceType result =
-                        im.turms.server.common.access.client.dto.constant.DeviceType
-                                .forNumber(from);
-                return result == null
-                        ? im.turms.server.common.access.client.dto.constant.DeviceType.UNRECOGNIZED
-                        : result;
+            new com.google.protobuf.Internal.ListAdapter.Converter<>() {
+                public im.turms.server.common.access.client.dto.constant.DeviceType convert(
+                        java.lang.Integer from) {
+                    im.turms.server.common.access.client.dto.constant.DeviceType result =
+                            im.turms.server.common.access.client.dto.constant.DeviceType
+                                    .forNumber(from);
+                    return result == null
+                            ? im.turms.server.common.access.client.dto.constant.DeviceType.UNRECOGNIZED
+                            : result;
+                }
             };
 
     /**
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>repeated .im.turms.proto.DeviceType device_types = 1;</code>
      *
      * @return A list containing the deviceTypes.
@@ -86,7 +89,7 @@ public final class UpdateUserOnlineStatusRequest extends com.google.protobuf.Gen
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>repeated .im.turms.proto.DeviceType device_types = 1;</code>
      *
      * @return The count of deviceTypes.
@@ -100,7 +103,7 @@ public final class UpdateUserOnlineStatusRequest extends com.google.protobuf.Gen
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>repeated .im.turms.proto.DeviceType device_types = 1;</code>
      *
      * @param index The index of the element to return.
@@ -115,7 +118,7 @@ public final class UpdateUserOnlineStatusRequest extends com.google.protobuf.Gen
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>repeated .im.turms.proto.DeviceType device_types = 1;</code>
      *
      * @return A list containing the enum numeric values on the wire for deviceTypes.
@@ -129,7 +132,7 @@ public final class UpdateUserOnlineStatusRequest extends com.google.protobuf.Gen
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>repeated .im.turms.proto.DeviceType device_types = 1;</code>
      *
      * @param index The index of the value to return.
@@ -149,7 +152,7 @@ public final class UpdateUserOnlineStatusRequest extends com.google.protobuf.Gen
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.UserStatus user_status = 2;</code>
      *
      * @return The enum numeric value on the wire for userStatus.
@@ -163,7 +166,7 @@ public final class UpdateUserOnlineStatusRequest extends com.google.protobuf.Gen
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.UserStatus user_status = 2;</code>
      *
      * @return The userStatus.
@@ -471,6 +474,43 @@ public final class UpdateUserOnlineStatusRequest extends com.google.protobuf.Gen
         }
 
         @java.lang.Override
+        public Builder clone() {
+            return super.clone();
+        }
+
+        @java.lang.Override
+        public Builder setField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value) {
+            return super.setField(field, value);
+        }
+
+        @java.lang.Override
+        public Builder clearField(com.google.protobuf.Descriptors.FieldDescriptor field) {
+            return super.clearField(field);
+        }
+
+        @java.lang.Override
+        public Builder clearOneof(com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+            return super.clearOneof(oneof);
+        }
+
+        @java.lang.Override
+        public Builder setRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                int index,
+                java.lang.Object value) {
+            return super.setRepeatedField(field, index, value);
+        }
+
+        @java.lang.Override
+        public Builder addRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value) {
+            return super.addRepeatedField(field, value);
+        }
+
+        @java.lang.Override
         public Builder mergeFrom(com.google.protobuf.Message other) {
             if (other instanceof im.turms.server.common.access.client.dto.request.user.UpdateUserOnlineStatusRequest) {
                 return mergeFrom(
@@ -573,7 +613,7 @@ public final class UpdateUserOnlineStatusRequest extends com.google.protobuf.Gen
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>repeated .im.turms.proto.DeviceType device_types = 1;</code>
          *
          * @return A list containing the deviceTypes.
@@ -588,7 +628,7 @@ public final class UpdateUserOnlineStatusRequest extends com.google.protobuf.Gen
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>repeated .im.turms.proto.DeviceType device_types = 1;</code>
          *
          * @return The count of deviceTypes.
@@ -601,7 +641,7 @@ public final class UpdateUserOnlineStatusRequest extends com.google.protobuf.Gen
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>repeated .im.turms.proto.DeviceType device_types = 1;</code>
          *
          * @param index The index of the element to return.
@@ -616,7 +656,7 @@ public final class UpdateUserOnlineStatusRequest extends com.google.protobuf.Gen
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>repeated .im.turms.proto.DeviceType device_types = 1;</code>
          *
          * @param index The index to set the value at.
@@ -639,7 +679,7 @@ public final class UpdateUserOnlineStatusRequest extends com.google.protobuf.Gen
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>repeated .im.turms.proto.DeviceType device_types = 1;</code>
          *
          * @param value The deviceTypes to add.
@@ -660,7 +700,7 @@ public final class UpdateUserOnlineStatusRequest extends com.google.protobuf.Gen
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>repeated .im.turms.proto.DeviceType device_types = 1;</code>
          *
          * @param values The deviceTypes to add.
@@ -680,7 +720,7 @@ public final class UpdateUserOnlineStatusRequest extends com.google.protobuf.Gen
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>repeated .im.turms.proto.DeviceType device_types = 1;</code>
          *
          * @return This builder for chaining.
@@ -696,7 +736,7 @@ public final class UpdateUserOnlineStatusRequest extends com.google.protobuf.Gen
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>repeated .im.turms.proto.DeviceType device_types = 1;</code>
          *
          * @return A list containing the enum numeric values on the wire for deviceTypes.
@@ -709,7 +749,7 @@ public final class UpdateUserOnlineStatusRequest extends com.google.protobuf.Gen
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>repeated .im.turms.proto.DeviceType device_types = 1;</code>
          *
          * @param index The index of the value to return.
@@ -723,7 +763,7 @@ public final class UpdateUserOnlineStatusRequest extends com.google.protobuf.Gen
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>repeated .im.turms.proto.DeviceType device_types = 1;</code>
          *
          * @param index The index to set the value at.
@@ -741,7 +781,7 @@ public final class UpdateUserOnlineStatusRequest extends com.google.protobuf.Gen
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>repeated .im.turms.proto.DeviceType device_types = 1;</code>
          *
          * @param value The enum numeric value on the wire for deviceTypes to add.
@@ -758,7 +798,7 @@ public final class UpdateUserOnlineStatusRequest extends com.google.protobuf.Gen
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>repeated .im.turms.proto.DeviceType device_types = 1;</code>
          *
          * @param values The enum numeric values on the wire for deviceTypes to add.
@@ -779,7 +819,7 @@ public final class UpdateUserOnlineStatusRequest extends com.google.protobuf.Gen
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.UserStatus user_status = 2;</code>
          *
          * @return The enum numeric value on the wire for userStatus.
@@ -793,7 +833,7 @@ public final class UpdateUserOnlineStatusRequest extends com.google.protobuf.Gen
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.UserStatus user_status = 2;</code>
          *
          * @param value The enum numeric value on the wire for userStatus to set.
@@ -810,7 +850,7 @@ public final class UpdateUserOnlineStatusRequest extends com.google.protobuf.Gen
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.UserStatus user_status = 2;</code>
          *
          * @return The userStatus.
@@ -829,7 +869,7 @@ public final class UpdateUserOnlineStatusRequest extends com.google.protobuf.Gen
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.UserStatus user_status = 2;</code>
          *
          * @param value The userStatus to set.
@@ -850,7 +890,7 @@ public final class UpdateUserOnlineStatusRequest extends com.google.protobuf.Gen
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.UserStatus user_status = 2;</code>
          *
          * @return This builder for chaining.

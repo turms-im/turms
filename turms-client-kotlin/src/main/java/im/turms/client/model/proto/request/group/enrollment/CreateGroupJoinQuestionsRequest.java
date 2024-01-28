@@ -244,12 +244,12 @@ public final class CreateGroupJoinQuestionsRequest extends
     }
 
     public static Builder newBuilder() {
-        return (Builder) DEFAULT_INSTANCE.createBuilder();
+        return DEFAULT_INSTANCE.createBuilder();
     }
 
     public static Builder newBuilder(
             im.turms.client.model.proto.request.group.enrollment.CreateGroupJoinQuestionsRequest prototype) {
-        return (Builder) DEFAULT_INSTANCE.createBuilder(prototype);
+        return DEFAULT_INSTANCE.createBuilder(prototype);
     }
 
     /**
@@ -436,8 +436,7 @@ public final class CreateGroupJoinQuestionsRequest extends
                         "questions_",
                         im.turms.client.model.proto.model.group.GroupJoinQuestion.class,};
                 java.lang.String info =
-                        "\u0000\u0002\u0000\u0000\u0001\u0002\u0002\u0000\u0001\u0000\u0001\u0002\u0002\u001b"
-                                + "";
+                        "\u0000\u0002\u0000\u0000\u0001\u0002\u0002\u0000\u0001\u0000\u0001\u0002\u0002\u001b";
                 return newMessageInfo(DEFAULT_INSTANCE, info, objects);
             }
             // fall through

@@ -1,9 +1,13 @@
-///
+//
 //  Generated code. Do not modify.
 //  source: request/message/query_messages_request.proto
 //
 // @dart = 2.12
-// ignore_for_file: annotate_overrides,camel_case_types,constant_identifier_names,directives_ordering,library_prefixes,non_constant_identifier_names,prefer_final_fields,return_of_invalid_type,unnecessary_const,unnecessary_import,unnecessary_this,unused_import,unused_shown_name
+
+// ignore_for_file: annotate_overrides, camel_case_types, comment_references
+// ignore_for_file: constant_identifier_names, library_prefixes
+// ignore_for_file: non_constant_identifier_names, prefer_final_fields
+// ignore_for_file: unnecessary_import, unnecessary_this, unused_import
 
 import 'dart:core' as $core;
 
@@ -11,66 +15,6 @@ import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 class QueryMessagesRequest extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      const $core.bool.fromEnvironment('protobuf.omit_message_names')
-          ? ''
-          : 'QueryMessagesRequest',
-      package: const $pb.PackageName(
-          const $core.bool.fromEnvironment('protobuf.omit_message_names')
-              ? ''
-              : 'im.turms.proto'),
-      createEmptyInstance: create)
-    ..p<$fixnum.Int64>(
-        1,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'ids',
-        $pb.PbFieldType.K6)
-    ..aOB(
-        2,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'areGroupMessages')
-    ..aOB(
-        3,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'areSystemMessages')
-    ..p<$fixnum.Int64>(
-        4,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'fromIds',
-        $pb.PbFieldType.K6)
-    ..aInt64(
-        5,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'deliveryDateStart')
-    ..aInt64(
-        6,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'deliveryDateEnd')
-    ..a<$core.int>(
-        7,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'maxCount',
-        $pb.PbFieldType.O3)
-    ..aOB(
-        8,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'withTotal')
-    ..aOB(
-        9,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'descending')
-    ..hasRequiredFields = false;
-
-  QueryMessagesRequest._() : super();
   factory QueryMessagesRequest({
     $core.Iterable<$fixnum.Int64>? ids,
     $core.bool? areGroupMessages,
@@ -82,42 +26,59 @@ class QueryMessagesRequest extends $pb.GeneratedMessage {
     $core.bool? withTotal,
     $core.bool? descending,
   }) {
-    final _result = create();
+    final $result = create();
     if (ids != null) {
-      _result.ids.addAll(ids);
+      $result.ids.addAll(ids);
     }
     if (areGroupMessages != null) {
-      _result.areGroupMessages = areGroupMessages;
+      $result.areGroupMessages = areGroupMessages;
     }
     if (areSystemMessages != null) {
-      _result.areSystemMessages = areSystemMessages;
+      $result.areSystemMessages = areSystemMessages;
     }
     if (fromIds != null) {
-      _result.fromIds.addAll(fromIds);
+      $result.fromIds.addAll(fromIds);
     }
     if (deliveryDateStart != null) {
-      _result.deliveryDateStart = deliveryDateStart;
+      $result.deliveryDateStart = deliveryDateStart;
     }
     if (deliveryDateEnd != null) {
-      _result.deliveryDateEnd = deliveryDateEnd;
+      $result.deliveryDateEnd = deliveryDateEnd;
     }
     if (maxCount != null) {
-      _result.maxCount = maxCount;
+      $result.maxCount = maxCount;
     }
     if (withTotal != null) {
-      _result.withTotal = withTotal;
+      $result.withTotal = withTotal;
     }
     if (descending != null) {
-      _result.descending = descending;
+      $result.descending = descending;
     }
-    return _result;
+    return $result;
   }
+  QueryMessagesRequest._() : super();
   factory QueryMessagesRequest.fromBuffer($core.List<$core.int> i,
           [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(i, r);
   factory QueryMessagesRequest.fromJson($core.String i,
           [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(i, r);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'QueryMessagesRequest',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'im.turms.proto'),
+      createEmptyInstance: create)
+    ..p<$fixnum.Int64>(1, _omitFieldNames ? '' : 'ids', $pb.PbFieldType.K6)
+    ..aOB(2, _omitFieldNames ? '' : 'areGroupMessages')
+    ..aOB(3, _omitFieldNames ? '' : 'areSystemMessages')
+    ..p<$fixnum.Int64>(4, _omitFieldNames ? '' : 'fromIds', $pb.PbFieldType.K6)
+    ..aInt64(5, _omitFieldNames ? '' : 'deliveryDateStart')
+    ..aInt64(6, _omitFieldNames ? '' : 'deliveryDateEnd')
+    ..a<$core.int>(7, _omitFieldNames ? '' : 'maxCount', $pb.PbFieldType.O3)
+    ..aOB(8, _omitFieldNames ? '' : 'withTotal')
+    ..aOB(9, _omitFieldNames ? '' : 'descending')
+    ..hasRequiredFields = false;
+
   @$core.Deprecated('Using this can add significant overhead to your binary. '
       'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
       'Will be removed in next major version')
@@ -128,8 +89,10 @@ class QueryMessagesRequest extends $pb.GeneratedMessage {
       'Will be removed in next major version')
   QueryMessagesRequest copyWith(void Function(QueryMessagesRequest) updates) =>
       super.copyWith((message) => updates(message as QueryMessagesRequest))
-          as QueryMessagesRequest; // ignore: deprecated_member_use
+          as QueryMessagesRequest;
+
   $pb.BuilderInfo get info_ => _i;
+
   @$core.pragma('dart2js:noInline')
   static QueryMessagesRequest create() => QueryMessagesRequest._();
   QueryMessagesRequest createEmptyInstance() => create();
@@ -140,6 +103,7 @@ class QueryMessagesRequest extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<QueryMessagesRequest>(create);
   static QueryMessagesRequest? _defaultInstance;
 
+  /// Filter
   @$pb.TagNumber(1)
   $core.List<$fixnum.Int64> get ids => $_getList(0);
 
@@ -194,6 +158,7 @@ class QueryMessagesRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(6)
   void clearDeliveryDateEnd() => clearField(6);
 
+  /// Option
   @$pb.TagNumber(7)
   $core.int get maxCount => $_getIZ(6);
   @$pb.TagNumber(7)
@@ -206,6 +171,7 @@ class QueryMessagesRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(7)
   void clearMaxCount() => clearField(7);
 
+  /// Command
   @$pb.TagNumber(8)
   $core.bool get withTotal => $_getBF(7);
   @$pb.TagNumber(8)
@@ -218,6 +184,8 @@ class QueryMessagesRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(8)
   void clearWithTotal() => clearField(8);
 
+  /// Option
+  /// TODO: reorder
   @$pb.TagNumber(9)
   $core.bool get descending => $_getBF(8);
   @$pb.TagNumber(9)
@@ -230,3 +198,7 @@ class QueryMessagesRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(9)
   void clearDescending() => clearField(9);
 }
+
+const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');
+const _omitMessageNames =
+    $core.bool.fromEnvironment('protobuf.omit_message_names');

@@ -60,7 +60,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
          * <pre>
          * Common
          * </pre>
-         * 
+         *
          * <code>int64 long = 1;</code>
          *
          * @return Whether the long field is set.
@@ -71,7 +71,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
          * <pre>
          * Common
          * </pre>
-         * 
+         *
          * <code>int64 long = 1;</code>
          *
          * @return The long.
@@ -141,7 +141,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
          * <pre>
          * Conversation
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.Conversations conversations = 5;</code>
          *
          * @return Whether the conversations field is set.
@@ -152,7 +152,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
          * <pre>
          * Conversation
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.Conversations conversations = 5;</code>
          *
          * @return The conversations.
@@ -163,7 +163,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
          * <pre>
          * Conversation
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.Conversations conversations = 5;</code>
          */
         im.turms.server.common.access.client.dto.model.conversation.ConversationsOrBuilder getConversationsOrBuilder();
@@ -172,7 +172,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
          * <pre>
          * Message
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.Messages messages = 6;</code>
          *
          * @return Whether the messages field is set.
@@ -183,7 +183,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
          * <pre>
          * Message
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.Messages messages = 6;</code>
          *
          * @return The messages.
@@ -194,7 +194,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
          * <pre>
          * Message
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.Messages messages = 6;</code>
          */
         im.turms.server.common.access.client.dto.model.message.MessagesOrBuilder getMessagesOrBuilder();
@@ -222,7 +222,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
          * <pre>
          * User
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.UserSession user_session = 8;</code>
          *
          * @return Whether the userSession field is set.
@@ -233,7 +233,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
          * <pre>
          * User
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.UserSession user_session = 8;</code>
          *
          * @return The userSession.
@@ -244,7 +244,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
          * <pre>
          * User
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.UserSession user_session = 8;</code>
          */
         im.turms.server.common.access.client.dto.model.user.UserSessionOrBuilder getUserSessionOrBuilder();
@@ -367,7 +367,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
          * <pre>
          * Group
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 15;</code>
          *
          * @return Whether the groupInvitationsWithVersion field is set.
@@ -378,7 +378,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
          * <pre>
          * Group
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 15;</code>
          *
          * @return The groupInvitationsWithVersion.
@@ -389,7 +389,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
          * <pre>
          * Group
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 15;</code>
          */
         im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersionOrBuilder getGroupInvitationsWithVersionOrBuilder();
@@ -493,7 +493,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
          * <pre>
          * Storage
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.StorageResourceInfos storage_resource_infos = 50;</code>
          *
          * @return Whether the storageResourceInfos field is set.
@@ -504,7 +504,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
          * <pre>
          * Storage
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.StorageResourceInfos storage_resource_infos = 50;</code>
          *
          * @return The storageResourceInfos.
@@ -515,7 +515,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
          * <pre>
          * Storage
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.StorageResourceInfos storage_resource_infos = 50;</code>
          */
         im.turms.server.common.access.client.dto.model.storage.StorageResourceInfosOrBuilder getStorageResourceInfosOrBuilder();
@@ -588,7 +588,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
 
             private final int value;
 
-            KindCase(int value) {
+            private KindCase(int value) {
                 this.value = value;
             }
 
@@ -645,7 +645,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
          * <pre>
          * Common
          * </pre>
-         * 
+         *
          * <code>int64 long = 1;</code>
          *
          * @return Whether the long field is set.
@@ -659,7 +659,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
          * <pre>
          * Common
          * </pre>
-         * 
+         *
          * <code>int64 long = 1;</code>
          *
          * @return The long.
@@ -809,7 +809,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
          * <pre>
          * Conversation
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.Conversations conversations = 5;</code>
          *
          * @return Whether the conversations field is set.
@@ -823,7 +823,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
          * <pre>
          * Conversation
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.Conversations conversations = 5;</code>
          *
          * @return The conversations.
@@ -841,7 +841,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
          * <pre>
          * Conversation
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.Conversations conversations = 5;</code>
          */
         @java.lang.Override
@@ -859,7 +859,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
          * <pre>
          * Message
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.Messages messages = 6;</code>
          *
          * @return Whether the messages field is set.
@@ -873,7 +873,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
          * <pre>
          * Message
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.Messages messages = 6;</code>
          *
          * @return The messages.
@@ -891,7 +891,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
          * <pre>
          * Message
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.Messages messages = 6;</code>
          */
         @java.lang.Override
@@ -947,7 +947,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
          * <pre>
          * User
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.UserSession user_session = 8;</code>
          *
          * @return Whether the userSession field is set.
@@ -961,7 +961,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
          * <pre>
          * User
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.UserSession user_session = 8;</code>
          *
          * @return The userSession.
@@ -979,7 +979,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
          * <pre>
          * User
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.UserSession user_session = 8;</code>
          */
         @java.lang.Override
@@ -1225,7 +1225,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
          * <pre>
          * Group
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 15;</code>
          *
          * @return Whether the groupInvitationsWithVersion field is set.
@@ -1239,7 +1239,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
          * <pre>
          * Group
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 15;</code>
          *
          * @return The groupInvitationsWithVersion.
@@ -1257,7 +1257,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
          * <pre>
          * Group
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 15;</code>
          */
         @java.lang.Override
@@ -1465,7 +1465,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
          * <pre>
          * Storage
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.StorageResourceInfos storage_resource_infos = 50;</code>
          *
          * @return Whether the storageResourceInfos field is set.
@@ -1479,7 +1479,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
          * <pre>
          * Storage
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.StorageResourceInfos storage_resource_infos = 50;</code>
          *
          * @return The storageResourceInfos.
@@ -1497,7 +1497,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
          * <pre>
          * Storage
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.StorageResourceInfos storage_resource_infos = 50;</code>
          */
         @java.lang.Override
@@ -1529,7 +1529,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
         public void writeTo(com.google.protobuf.CodedOutputStream output)
                 throws java.io.IOException {
             if (kindCase_ == 1) {
-                output.writeInt64(1, (long) ((java.lang.Long) kind_));
+                output.writeInt64(1, (Long) kind_);
             }
             if (kindCase_ == 2) {
                 com.google.protobuf.GeneratedMessageV3.writeString(output, 2, kind_);
@@ -1622,8 +1622,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
 
             size = 0;
             if (kindCase_ == 1) {
-                size += com.google.protobuf.CodedOutputStream.computeInt64Size(1,
-                        (long) ((java.lang.Long) kind_));
+                size += com.google.protobuf.CodedOutputStream.computeInt64Size(1, (Long) kind_);
             }
             if (kindCase_ == 2) {
                 size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, kind_);
@@ -1834,8 +1833,6 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
                         return false;
                     }
                 }
-                case 0 -> {
-                }
                 default -> {
                 }
             }
@@ -1933,8 +1930,6 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
                 case 50 -> {
                     hash = (37 * hash) + STORAGE_RESOURCE_INFOS_FIELD_NUMBER;
                     hash = (53 * hash) + getStorageResourceInfos().hashCode();
-                }
-                case 0 -> {
                 }
                 default -> {
                 }
@@ -2249,6 +2244,43 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
             }
 
             @java.lang.Override
+            public Builder clone() {
+                return super.clone();
+            }
+
+            @java.lang.Override
+            public Builder setField(
+                    com.google.protobuf.Descriptors.FieldDescriptor field,
+                    java.lang.Object value) {
+                return super.setField(field, value);
+            }
+
+            @java.lang.Override
+            public Builder clearField(com.google.protobuf.Descriptors.FieldDescriptor field) {
+                return super.clearField(field);
+            }
+
+            @java.lang.Override
+            public Builder clearOneof(com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+                return super.clearOneof(oneof);
+            }
+
+            @java.lang.Override
+            public Builder setRepeatedField(
+                    com.google.protobuf.Descriptors.FieldDescriptor field,
+                    int index,
+                    java.lang.Object value) {
+                return super.setRepeatedField(field, index, value);
+            }
+
+            @java.lang.Override
+            public Builder addRepeatedField(
+                    com.google.protobuf.Descriptors.FieldDescriptor field,
+                    java.lang.Object value) {
+                return super.addRepeatedField(field, value);
+            }
+
+            @java.lang.Override
             public Builder mergeFrom(com.google.protobuf.Message other) {
                 if (other instanceof im.turms.server.common.access.client.dto.notification.TurmsNotification.Data) {
                     return mergeFrom(
@@ -2513,7 +2545,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
              * <pre>
              * Common
              * </pre>
-             * 
+             *
              * <code>int64 long = 1;</code>
              *
              * @return Whether the long field is set.
@@ -2526,7 +2558,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
              * <pre>
              * Common
              * </pre>
-             * 
+             *
              * <code>int64 long = 1;</code>
              *
              * @return The long.
@@ -2542,7 +2574,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
              * <pre>
              * Common
              * </pre>
-             * 
+             *
              * <code>int64 long = 1;</code>
              *
              * @param value The long to set.
@@ -2560,7 +2592,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
              * <pre>
              * Common
              * </pre>
-             * 
+             *
              * <code>int64 long = 1;</code>
              *
              * @return This builder for chaining.
@@ -3001,7 +3033,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
              * <pre>
              * Conversation
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.Conversations conversations = 5;</code>
              *
              * @return Whether the conversations field is set.
@@ -3015,7 +3047,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
              * <pre>
              * Conversation
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.Conversations conversations = 5;</code>
              *
              * @return The conversations.
@@ -3041,7 +3073,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
              * <pre>
              * Conversation
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.Conversations conversations = 5;</code>
              */
             public Builder setConversations(
@@ -3063,7 +3095,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
              * <pre>
              * Conversation
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.Conversations conversations = 5;</code>
              */
             public Builder setConversations(
@@ -3082,7 +3114,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
              * <pre>
              * Conversation
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.Conversations conversations = 5;</code>
              */
             public Builder mergeConversations(
@@ -3115,7 +3147,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
              * <pre>
              * Conversation
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.Conversations conversations = 5;</code>
              */
             public Builder clearConversations() {
@@ -3139,7 +3171,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
              * <pre>
              * Conversation
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.Conversations conversations = 5;</code>
              */
             public im.turms.server.common.access.client.dto.model.conversation.Conversations.Builder getConversationsBuilder() {
@@ -3150,7 +3182,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
              * <pre>
              * Conversation
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.Conversations conversations = 5;</code>
              */
             @java.lang.Override
@@ -3170,7 +3202,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
              * <pre>
              * Conversation
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.Conversations conversations = 5;</code>
              */
             private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.model.conversation.Conversations, im.turms.server.common.access.client.dto.model.conversation.Conversations.Builder, im.turms.server.common.access.client.dto.model.conversation.ConversationsOrBuilder> getConversationsFieldBuilder() {
@@ -3196,7 +3228,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
              * <pre>
              * Message
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.Messages messages = 6;</code>
              *
              * @return Whether the messages field is set.
@@ -3210,7 +3242,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
              * <pre>
              * Message
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.Messages messages = 6;</code>
              *
              * @return The messages.
@@ -3236,7 +3268,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
              * <pre>
              * Message
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.Messages messages = 6;</code>
              */
             public Builder setMessages(
@@ -3258,7 +3290,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
              * <pre>
              * Message
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.Messages messages = 6;</code>
              */
             public Builder setMessages(
@@ -3277,7 +3309,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
              * <pre>
              * Message
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.Messages messages = 6;</code>
              */
             public Builder mergeMessages(
@@ -3310,7 +3342,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
              * <pre>
              * Message
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.Messages messages = 6;</code>
              */
             public Builder clearMessages() {
@@ -3334,7 +3366,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
              * <pre>
              * Message
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.Messages messages = 6;</code>
              */
             public im.turms.server.common.access.client.dto.model.message.Messages.Builder getMessagesBuilder() {
@@ -3345,7 +3377,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
              * <pre>
              * Message
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.Messages messages = 6;</code>
              */
             @java.lang.Override
@@ -3365,7 +3397,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
              * <pre>
              * Message
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.Messages messages = 6;</code>
              */
             private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.model.message.Messages, im.turms.server.common.access.client.dto.model.message.Messages.Builder, im.turms.server.common.access.client.dto.model.message.MessagesOrBuilder> getMessagesFieldBuilder() {
@@ -3550,7 +3582,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
              * <pre>
              * User
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.UserSession user_session = 8;</code>
              *
              * @return Whether the userSession field is set.
@@ -3564,7 +3596,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
              * <pre>
              * User
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.UserSession user_session = 8;</code>
              *
              * @return The userSession.
@@ -3590,7 +3622,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
              * <pre>
              * User
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.UserSession user_session = 8;</code>
              */
             public Builder setUserSession(
@@ -3612,7 +3644,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
              * <pre>
              * User
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.UserSession user_session = 8;</code>
              */
             public Builder setUserSession(
@@ -3631,7 +3663,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
              * <pre>
              * User
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.UserSession user_session = 8;</code>
              */
             public Builder mergeUserSession(
@@ -3664,7 +3696,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
              * <pre>
              * User
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.UserSession user_session = 8;</code>
              */
             public Builder clearUserSession() {
@@ -3688,7 +3720,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
              * <pre>
              * User
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.UserSession user_session = 8;</code>
              */
             public im.turms.server.common.access.client.dto.model.user.UserSession.Builder getUserSessionBuilder() {
@@ -3699,7 +3731,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
              * <pre>
              * User
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.UserSession user_session = 8;</code>
              */
             @java.lang.Override
@@ -3719,7 +3751,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
              * <pre>
              * User
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.UserSession user_session = 8;</code>
              */
             private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.model.user.UserSession, im.turms.server.common.access.client.dto.model.user.UserSession.Builder, im.turms.server.common.access.client.dto.model.user.UserSessionOrBuilder> getUserSessionFieldBuilder() {
@@ -4702,7 +4734,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
              * <pre>
              * Group
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 15;</code>
              *
              * @return Whether the groupInvitationsWithVersion field is set.
@@ -4716,7 +4748,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
              * <pre>
              * Group
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 15;</code>
              *
              * @return The groupInvitationsWithVersion.
@@ -4742,7 +4774,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
              * <pre>
              * Group
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 15;</code>
              */
             public Builder setGroupInvitationsWithVersion(
@@ -4764,7 +4796,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
              * <pre>
              * Group
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 15;</code>
              */
             public Builder setGroupInvitationsWithVersion(
@@ -4783,7 +4815,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
              * <pre>
              * Group
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 15;</code>
              */
             public Builder mergeGroupInvitationsWithVersion(
@@ -4816,7 +4848,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
              * <pre>
              * Group
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 15;</code>
              */
             public Builder clearGroupInvitationsWithVersion() {
@@ -4840,7 +4872,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
              * <pre>
              * Group
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 15;</code>
              */
             public im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersion.Builder getGroupInvitationsWithVersionBuilder() {
@@ -4851,7 +4883,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
              * <pre>
              * Group
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 15;</code>
              */
             @java.lang.Override
@@ -4871,7 +4903,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
              * <pre>
              * Group
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 15;</code>
              */
             private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersion, im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersion.Builder, im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersionOrBuilder> getGroupInvitationsWithVersionFieldBuilder() {
@@ -5697,7 +5729,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
              * <pre>
              * Storage
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.StorageResourceInfos storage_resource_infos = 50;</code>
              *
              * @return Whether the storageResourceInfos field is set.
@@ -5711,7 +5743,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
              * <pre>
              * Storage
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.StorageResourceInfos storage_resource_infos = 50;</code>
              *
              * @return The storageResourceInfos.
@@ -5737,7 +5769,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
              * <pre>
              * Storage
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.StorageResourceInfos storage_resource_infos = 50;</code>
              */
             public Builder setStorageResourceInfos(
@@ -5759,7 +5791,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
              * <pre>
              * Storage
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.StorageResourceInfos storage_resource_infos = 50;</code>
              */
             public Builder setStorageResourceInfos(
@@ -5778,7 +5810,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
              * <pre>
              * Storage
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.StorageResourceInfos storage_resource_infos = 50;</code>
              */
             public Builder mergeStorageResourceInfos(
@@ -5811,7 +5843,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
              * <pre>
              * Storage
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.StorageResourceInfos storage_resource_infos = 50;</code>
              */
             public Builder clearStorageResourceInfos() {
@@ -5835,7 +5867,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
              * <pre>
              * Storage
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.StorageResourceInfos storage_resource_infos = 50;</code>
              */
             public im.turms.server.common.access.client.dto.model.storage.StorageResourceInfos.Builder getStorageResourceInfosBuilder() {
@@ -5846,7 +5878,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
              * <pre>
              * Storage
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.StorageResourceInfos storage_resource_infos = 50;</code>
              */
             @java.lang.Override
@@ -5866,7 +5898,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
              * <pre>
              * Storage
              * </pre>
-             * 
+             *
              * <code>.im.turms.proto.StorageResourceInfos storage_resource_infos = 50;</code>
              */
             private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.model.storage.StorageResourceInfos, im.turms.server.common.access.client.dto.model.storage.StorageResourceInfos.Builder, im.turms.server.common.access.client.dto.model.storage.StorageResourceInfosOrBuilder> getStorageResourceInfosFieldBuilder() {
@@ -5960,7 +5992,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
      * <pre>
      * Common =&gt; [1, 3]
      * </pre>
-     * 
+     *
      * <code>int64 timestamp = 1;</code>
      *
      * @return The timestamp.
@@ -5979,7 +6011,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
      * "request_id" is used to tell the client that
      * this notification is a response to the specific request
      * </pre>
-     * 
+     *
      * <code>optional int64 request_id = 4;</code>
      *
      * @return Whether the requestId field is set.
@@ -5995,7 +6027,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
      * "request_id" is used to tell the client that
      * this notification is a response to the specific request
      * </pre>
-     * 
+     *
      * <code>optional int64 request_id = 4;</code>
      *
      * @return The requestId.
@@ -6088,7 +6120,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
      */
     @java.lang.Override
     public boolean hasData() {
-        return data_ != null;
+        return ((bitField0_ & 0x00000008) != 0);
     }
 
     /**
@@ -6125,14 +6157,14 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
      * Note: Do not move "requester_id" to TurmsRequest because it requires rebuilding
      * a new TurmsNotification when recipients need "requester_id".
      * </pre>
-     * 
+     *
      * <code>optional int64 requester_id = 10;</code>
      *
      * @return Whether the requesterId field is set.
      */
     @java.lang.Override
     public boolean hasRequesterId() {
-        return ((bitField0_ & 0x00000008) != 0);
+        return ((bitField0_ & 0x00000010) != 0);
     }
 
     /**
@@ -6142,7 +6174,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
      * Note: Do not move "requester_id" to TurmsRequest because it requires rebuilding
      * a new TurmsNotification when recipients need "requester_id".
      * </pre>
-     * 
+     *
      * <code>optional int64 requester_id = 10;</code>
      *
      * @return The requesterId.
@@ -6162,7 +6194,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
      */
     @java.lang.Override
     public boolean hasCloseStatus() {
-        return ((bitField0_ & 0x00000010) != 0);
+        return ((bitField0_ & 0x00000020) != 0);
     }
 
     /**
@@ -6185,7 +6217,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
      */
     @java.lang.Override
     public boolean hasRelayedRequest() {
-        return relayedRequest_ != null;
+        return ((bitField0_ & 0x00000040) != 0);
     }
 
     /**
@@ -6240,16 +6272,16 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
         if (((bitField0_ & 0x00000004) != 0)) {
             com.google.protobuf.GeneratedMessageV3.writeString(output, 6, reason_);
         }
-        if (data_ != null) {
+        if (((bitField0_ & 0x00000008) != 0)) {
             output.writeMessage(7, getData());
         }
-        if (((bitField0_ & 0x00000008) != 0)) {
+        if (((bitField0_ & 0x00000010) != 0)) {
             output.writeInt64(10, requesterId_);
         }
-        if (((bitField0_ & 0x00000010) != 0)) {
+        if (((bitField0_ & 0x00000020) != 0)) {
             output.writeInt32(11, closeStatus_);
         }
-        if (relayedRequest_ != null) {
+        if (((bitField0_ & 0x00000040) != 0)) {
             output.writeMessage(12, getRelayedRequest());
         }
         getUnknownFields().writeTo(output);
@@ -6275,16 +6307,16 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
         if (((bitField0_ & 0x00000004) != 0)) {
             size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, reason_);
         }
-        if (data_ != null) {
+        if (((bitField0_ & 0x00000008) != 0)) {
             size += com.google.protobuf.CodedOutputStream.computeMessageSize(7, getData());
         }
-        if (((bitField0_ & 0x00000008) != 0)) {
+        if (((bitField0_ & 0x00000010) != 0)) {
             size += com.google.protobuf.CodedOutputStream.computeInt64Size(10, requesterId_);
         }
-        if (((bitField0_ & 0x00000010) != 0)) {
+        if (((bitField0_ & 0x00000020) != 0)) {
             size += com.google.protobuf.CodedOutputStream.computeInt32Size(11, closeStatus_);
         }
-        if (relayedRequest_ != null) {
+        if (((bitField0_ & 0x00000040) != 0)) {
             size += com.google.protobuf.CodedOutputStream.computeMessageSize(12,
                     getRelayedRequest());
         }
@@ -6532,12 +6564,19 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
         // Construct using
         // im.turms.server.common.access.client.dto.notification.TurmsNotification.newBuilder()
         private Builder() {
-
+            maybeForceBuilderInitialization();
         }
 
         private Builder(com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
             super(parent);
+            maybeForceBuilderInitialization();
+        }
 
+        private void maybeForceBuilderInitialization() {
+            if (com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders) {
+                getDataFieldBuilder();
+                getRelayedRequestFieldBuilder();
+            }
         }
 
         @java.lang.Override
@@ -6619,21 +6658,60 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
                 result.data_ = dataBuilder_ == null
                         ? data_
                         : dataBuilder_.build();
+                to_bitField0_ |= 0x00000008;
             }
             if (((from_bitField0_ & 0x00000020) != 0)) {
                 result.requesterId_ = requesterId_;
-                to_bitField0_ |= 0x00000008;
+                to_bitField0_ |= 0x00000010;
             }
             if (((from_bitField0_ & 0x00000040) != 0)) {
                 result.closeStatus_ = closeStatus_;
-                to_bitField0_ |= 0x00000010;
+                to_bitField0_ |= 0x00000020;
             }
             if (((from_bitField0_ & 0x00000080) != 0)) {
                 result.relayedRequest_ = relayedRequestBuilder_ == null
                         ? relayedRequest_
                         : relayedRequestBuilder_.build();
+                to_bitField0_ |= 0x00000040;
             }
             result.bitField0_ |= to_bitField0_;
+        }
+
+        @java.lang.Override
+        public Builder clone() {
+            return super.clone();
+        }
+
+        @java.lang.Override
+        public Builder setField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value) {
+            return super.setField(field, value);
+        }
+
+        @java.lang.Override
+        public Builder clearField(com.google.protobuf.Descriptors.FieldDescriptor field) {
+            return super.clearField(field);
+        }
+
+        @java.lang.Override
+        public Builder clearOneof(com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+            return super.clearOneof(oneof);
+        }
+
+        @java.lang.Override
+        public Builder setRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                int index,
+                java.lang.Object value) {
+            return super.setRepeatedField(field, index, value);
+        }
+
+        @java.lang.Override
+        public Builder addRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value) {
+            return super.addRepeatedField(field, value);
         }
 
         @java.lang.Override
@@ -6760,7 +6838,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
          * <pre>
          * Common =&gt; [1, 3]
          * </pre>
-         * 
+         *
          * <code>int64 timestamp = 1;</code>
          *
          * @return The timestamp.
@@ -6774,7 +6852,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
          * <pre>
          * Common =&gt; [1, 3]
          * </pre>
-         * 
+         *
          * <code>int64 timestamp = 1;</code>
          *
          * @param value The timestamp to set.
@@ -6792,7 +6870,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
          * <pre>
          * Common =&gt; [1, 3]
          * </pre>
-         * 
+         *
          * <code>int64 timestamp = 1;</code>
          *
          * @return This builder for chaining.
@@ -6812,7 +6890,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
          * "request_id" is used to tell the client that
          * this notification is a response to the specific request
          * </pre>
-         * 
+         *
          * <code>optional int64 request_id = 4;</code>
          *
          * @return Whether the requestId field is set.
@@ -6828,7 +6906,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
          * "request_id" is used to tell the client that
          * this notification is a response to the specific request
          * </pre>
-         * 
+         *
          * <code>optional int64 request_id = 4;</code>
          *
          * @return The requestId.
@@ -6844,7 +6922,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
          * "request_id" is used to tell the client that
          * this notification is a response to the specific request
          * </pre>
-         * 
+         *
          * <code>optional int64 request_id = 4;</code>
          *
          * @param value The requestId to set.
@@ -6864,7 +6942,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
          * "request_id" is used to tell the client that
          * this notification is a response to the specific request
          * </pre>
-         * 
+         *
          * <code>optional int64 request_id = 4;</code>
          *
          * @return This builder for chaining.
@@ -7092,8 +7170,10 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
             } else {
                 dataBuilder_.mergeFrom(value);
             }
-            bitField0_ |= 0x00000010;
-            onChanged();
+            if (data_ != null) {
+                bitField0_ |= 0x00000010;
+                onChanged();
+            }
             return this;
         }
 
@@ -7157,7 +7237,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
          * Note: Do not move "requester_id" to TurmsRequest because it requires rebuilding
          * a new TurmsNotification when recipients need "requester_id".
          * </pre>
-         * 
+         *
          * <code>optional int64 requester_id = 10;</code>
          *
          * @return Whether the requesterId field is set.
@@ -7174,7 +7254,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
          * Note: Do not move "requester_id" to TurmsRequest because it requires rebuilding
          * a new TurmsNotification when recipients need "requester_id".
          * </pre>
-         * 
+         *
          * <code>optional int64 requester_id = 10;</code>
          *
          * @return The requesterId.
@@ -7191,7 +7271,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
          * Note: Do not move "requester_id" to TurmsRequest because it requires rebuilding
          * a new TurmsNotification when recipients need "requester_id".
          * </pre>
-         * 
+         *
          * <code>optional int64 requester_id = 10;</code>
          *
          * @param value The requesterId to set.
@@ -7212,7 +7292,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
          * Note: Do not move "requester_id" to TurmsRequest because it requires rebuilding
          * a new TurmsNotification when recipients need "requester_id".
          * </pre>
-         * 
+         *
          * <code>optional int64 requester_id = 10;</code>
          *
          * @return This builder for chaining.
@@ -7350,8 +7430,10 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
             } else {
                 relayedRequestBuilder_.mergeFrom(value);
             }
-            bitField0_ |= 0x00000080;
-            onChanged();
+            if (relayedRequest_ != null) {
+                bitField0_ |= 0x00000080;
+                onChanged();
+            }
             return this;
         }
 

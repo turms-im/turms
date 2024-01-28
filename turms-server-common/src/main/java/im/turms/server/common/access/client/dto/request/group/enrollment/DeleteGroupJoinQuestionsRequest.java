@@ -69,7 +69,7 @@ public final class DeleteGroupJoinQuestionsRequest extends com.google.protobuf.G
 
     public static final int QUESTION_IDS_FIELD_NUMBER = 2;
     @SuppressWarnings("serial")
-    private com.google.protobuf.Internal.LongList questionIds_;
+    private com.google.protobuf.Internal.LongList questionIds_ = emptyLongList();
 
     /**
      * <code>repeated int64 question_ids = 2;</code>
@@ -368,21 +368,11 @@ public final class DeleteGroupJoinQuestionsRequest extends com.google.protobuf.G
             im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionsRequest result =
                     new im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionsRequest(
                             this);
-            buildPartialRepeatedFields(result);
             if (bitField0_ != 0) {
                 buildPartial0(result);
             }
             onBuilt();
             return result;
-        }
-
-        private void buildPartialRepeatedFields(
-                im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionsRequest result) {
-            if (((bitField0_ & 0x00000002) != 0)) {
-                questionIds_.makeImmutable();
-                bitField0_ &= ~0x00000002;
-            }
-            result.questionIds_ = questionIds_;
         }
 
         private void buildPartial0(
@@ -391,6 +381,47 @@ public final class DeleteGroupJoinQuestionsRequest extends com.google.protobuf.G
             if (((from_bitField0_ & 0x00000001) != 0)) {
                 result.groupId_ = groupId_;
             }
+            if (((from_bitField0_ & 0x00000002) != 0)) {
+                questionIds_.makeImmutable();
+                result.questionIds_ = questionIds_;
+            }
+        }
+
+        @java.lang.Override
+        public Builder clone() {
+            return super.clone();
+        }
+
+        @java.lang.Override
+        public Builder setField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value) {
+            return super.setField(field, value);
+        }
+
+        @java.lang.Override
+        public Builder clearField(com.google.protobuf.Descriptors.FieldDescriptor field) {
+            return super.clearField(field);
+        }
+
+        @java.lang.Override
+        public Builder clearOneof(com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+            return super.clearOneof(oneof);
+        }
+
+        @java.lang.Override
+        public Builder setRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                int index,
+                java.lang.Object value) {
+            return super.setRepeatedField(field, index, value);
+        }
+
+        @java.lang.Override
+        public Builder addRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value) {
+            return super.addRepeatedField(field, value);
         }
 
         @java.lang.Override
@@ -416,7 +447,8 @@ public final class DeleteGroupJoinQuestionsRequest extends com.google.protobuf.G
             if (!other.questionIds_.isEmpty()) {
                 if (questionIds_.isEmpty()) {
                     questionIds_ = other.questionIds_;
-                    bitField0_ &= ~0x00000002;
+                    questionIds_.makeImmutable();
+                    bitField0_ |= 0x00000002;
                 } else {
                     ensureQuestionIdsIsMutable();
                     questionIds_.addAll(other.questionIds_);
@@ -523,10 +555,10 @@ public final class DeleteGroupJoinQuestionsRequest extends com.google.protobuf.G
         private com.google.protobuf.Internal.LongList questionIds_ = emptyLongList();
 
         private void ensureQuestionIdsIsMutable() {
-            if ((bitField0_ & 0x00000002) == 0) {
-                questionIds_ = mutableCopy(questionIds_);
-                bitField0_ |= 0x00000002;
+            if (!questionIds_.isModifiable()) {
+                questionIds_ = makeMutableCopy(questionIds_);
             }
+            bitField0_ |= 0x00000002;
         }
 
         /**
@@ -535,9 +567,8 @@ public final class DeleteGroupJoinQuestionsRequest extends com.google.protobuf.G
          * @return A list containing the questionIds.
          */
         public java.util.List<java.lang.Long> getQuestionIdsList() {
-            return ((bitField0_ & 0x00000002) != 0)
-                    ? java.util.Collections.unmodifiableList(questionIds_)
-                    : questionIds_;
+            questionIds_.makeImmutable();
+            return questionIds_;
         }
 
         /**
@@ -570,6 +601,7 @@ public final class DeleteGroupJoinQuestionsRequest extends com.google.protobuf.G
 
             ensureQuestionIdsIsMutable();
             questionIds_.setLong(index, value);
+            bitField0_ |= 0x00000002;
             onChanged();
             return this;
         }
@@ -584,6 +616,7 @@ public final class DeleteGroupJoinQuestionsRequest extends com.google.protobuf.G
 
             ensureQuestionIdsIsMutable();
             questionIds_.addLong(value);
+            bitField0_ |= 0x00000002;
             onChanged();
             return this;
         }
@@ -597,6 +630,7 @@ public final class DeleteGroupJoinQuestionsRequest extends com.google.protobuf.G
         public Builder addAllQuestionIds(java.lang.Iterable<? extends java.lang.Long> values) {
             ensureQuestionIdsIsMutable();
             com.google.protobuf.AbstractMessageLite.Builder.addAll(values, questionIds_);
+            bitField0_ |= 0x00000002;
             onChanged();
             return this;
         }

@@ -25,7 +25,7 @@ public interface UpdateMessageRequestOrBuilder extends
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>int64 message_id = 1;</code>
      *
      * @return The messageId.
@@ -36,7 +36,7 @@ public interface UpdateMessageRequestOrBuilder extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>optional string text = 2;</code>
      *
      * @return Whether the text field is set.
@@ -47,7 +47,7 @@ public interface UpdateMessageRequestOrBuilder extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>optional string text = 2;</code>
      *
      * @return The text.
@@ -58,7 +58,7 @@ public interface UpdateMessageRequestOrBuilder extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>optional string text = 2;</code>
      *
      * @return The bytes for text.

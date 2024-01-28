@@ -56,11 +56,7 @@ public final class UserLocationOuterClass {
         internal_static_im_turms_proto_UserLocation_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
                         internal_static_im_turms_proto_UserLocation_descriptor,
-                        new java.lang.String[]{"Latitude",
-                                "Longitude",
-                                "Timestamp",
-                                "Details",
-                                "Timestamp",});
+                        new java.lang.String[]{"Latitude", "Longitude", "Timestamp", "Details",});
         internal_static_im_turms_proto_UserLocation_DetailsEntry_descriptor =
                 internal_static_im_turms_proto_UserLocation_descriptor.getNestedTypes()
                         .get(0);

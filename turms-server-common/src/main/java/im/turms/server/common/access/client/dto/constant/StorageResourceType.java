@@ -84,7 +84,11 @@ public enum StorageResourceType implements com.google.protobuf.ProtocolMessageEn
     }
 
     private static final com.google.protobuf.Internal.EnumLiteMap<StorageResourceType> internalValueMap =
-            number -> StorageResourceType.forNumber(number);
+            new com.google.protobuf.Internal.EnumLiteMap<>() {
+                public StorageResourceType findValueByNumber(int number) {
+                    return StorageResourceType.forNumber(number);
+                }
+            };
 
     public final com.google.protobuf.Descriptors.EnumValueDescriptor getValueDescriptor() {
         if (this == UNRECOGNIZED) {
@@ -122,7 +126,7 @@ public enum StorageResourceType implements com.google.protobuf.ProtocolMessageEn
 
     private final int value;
 
-    StorageResourceType(int value) {
+    private StorageResourceType(int value) {
         this.value = value;
     }
 

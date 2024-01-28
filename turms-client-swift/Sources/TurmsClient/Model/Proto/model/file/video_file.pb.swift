@@ -121,8 +121,8 @@ extension VideoFile: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementation
             // allocates stack space for every case branch when no optimizations are
             // enabled. https://github.com/apple/swift-protobuf/issues/1034
             switch fieldNumber {
-            case 1: try try decoder.decodeSingularMessageField(value: &_description_p)
-            case 2: try try decoder.decodeSingularBytesField(value: &_data)
+            case 1: try decoder.decodeSingularMessageField(value: &_description_p)
+            case 2: try decoder.decodeSingularBytesField(value: &_data)
             default: break
             }
         }
@@ -165,10 +165,10 @@ extension VideoFile.Description: SwiftProtobuf.Message, SwiftProtobuf._MessageIm
             // allocates stack space for every case branch when no optimizations are
             // enabled. https://github.com/apple/swift-protobuf/issues/1034
             switch fieldNumber {
-            case 1: try try decoder.decodeSingularStringField(value: &url)
-            case 2: try try decoder.decodeSingularInt32Field(value: &_duration)
-            case 3: try try decoder.decodeSingularInt32Field(value: &_size)
-            case 4: try try decoder.decodeSingularStringField(value: &_format)
+            case 1: try decoder.decodeSingularStringField(value: &url)
+            case 2: try decoder.decodeSingularInt32Field(value: &_duration)
+            case 3: try decoder.decodeSingularInt32Field(value: &_size)
+            case 4: try decoder.decodeSingularStringField(value: &_format)
             default: break
             }
         }

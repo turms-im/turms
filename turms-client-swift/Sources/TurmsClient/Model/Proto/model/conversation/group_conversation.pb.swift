@@ -55,8 +55,8 @@ extension GroupConversation: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
             // allocates stack space for every case branch when no optimizations are
             // enabled. https://github.com/apple/swift-protobuf/issues/1034
             switch fieldNumber {
-            case 1: try try decoder.decodeSingularInt64Field(value: &groupID)
-            case 2: try { try decoder.decodeMapField(fieldType: SwiftProtobuf._ProtobufMap<SwiftProtobuf.ProtobufInt64, SwiftProtobuf.ProtobufInt64>.self, value: &self.memberIDToReadDate) }()
+            case 1: try decoder.decodeSingularInt64Field(value: &groupID)
+            case 2: try decoder.decodeMapField(fieldType: SwiftProtobuf._ProtobufMap<SwiftProtobuf.ProtobufInt64, SwiftProtobuf.ProtobufInt64>.self, value: &memberIDToReadDate)
             default: break
             }
         }

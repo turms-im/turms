@@ -77,9 +77,9 @@ extension DeleteRelationshipRequest: SwiftProtobuf.Message, SwiftProtobuf._Messa
             // allocates stack space for every case branch when no optimizations are
             // enabled. https://github.com/apple/swift-protobuf/issues/1034
             switch fieldNumber {
-            case 1: try try decoder.decodeSingularInt64Field(value: &userID)
-            case 2: try try decoder.decodeSingularInt32Field(value: &_groupIndex)
-            case 3: try try decoder.decodeSingularInt32Field(value: &_targetGroupIndex)
+            case 1: try decoder.decodeSingularInt64Field(value: &userID)
+            case 2: try decoder.decodeSingularInt32Field(value: &_groupIndex)
+            case 3: try decoder.decodeSingularInt32Field(value: &_targetGroupIndex)
             default: break
             }
         }

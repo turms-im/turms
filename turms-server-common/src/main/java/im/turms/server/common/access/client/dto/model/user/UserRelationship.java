@@ -31,6 +31,7 @@ public final class UserRelationship extends com.google.protobuf.GeneratedMessage
     }
 
     private UserRelationship() {
+        name_ = "";
     }
 
     @java.lang.Override
@@ -167,6 +168,56 @@ public final class UserRelationship extends com.google.protobuf.GeneratedMessage
         return establishmentDate_;
     }
 
+    public static final int NAME_FIELD_NUMBER = 6;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object name_ = "";
+
+    /**
+     * <code>optional string name = 6;</code>
+     *
+     * @return Whether the name field is set.
+     */
+    @java.lang.Override
+    public boolean hasName() {
+        return ((bitField0_ & 0x00000020) != 0);
+    }
+
+    /**
+     * <code>optional string name = 6;</code>
+     *
+     * @return The name.
+     */
+    @java.lang.Override
+    public java.lang.String getName() {
+        java.lang.Object ref = name_;
+        if (ref instanceof java.lang.String) {
+            return (java.lang.String) ref;
+        } else {
+            com.google.protobuf.ByteString bs = (com.google.protobuf.ByteString) ref;
+            java.lang.String s = bs.toStringUtf8();
+            name_ = s;
+            return s;
+        }
+    }
+
+    /**
+     * <code>optional string name = 6;</code>
+     *
+     * @return The bytes for name.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString getNameBytes() {
+        java.lang.Object ref = name_;
+        if (ref instanceof java.lang.String) {
+            com.google.protobuf.ByteString b =
+                    com.google.protobuf.ByteString.copyFromUtf8((java.lang.String) ref);
+            name_ = b;
+            return b;
+        } else {
+            return (com.google.protobuf.ByteString) ref;
+        }
+    }
+
     private byte memoizedIsInitialized = -1;
 
     @java.lang.Override
@@ -200,6 +251,9 @@ public final class UserRelationship extends com.google.protobuf.GeneratedMessage
         if (((bitField0_ & 0x00000010) != 0)) {
             output.writeInt64(5, establishmentDate_);
         }
+        if (((bitField0_ & 0x00000020) != 0)) {
+            com.google.protobuf.GeneratedMessageV3.writeString(output, 6, name_);
+        }
         getUnknownFields().writeTo(output);
     }
 
@@ -225,6 +279,9 @@ public final class UserRelationship extends com.google.protobuf.GeneratedMessage
         }
         if (((bitField0_ & 0x00000010) != 0)) {
             size += com.google.protobuf.CodedOutputStream.computeInt64Size(5, establishmentDate_);
+        }
+        if (((bitField0_ & 0x00000020) != 0)) {
+            size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, name_);
         }
         size += getUnknownFields().getSerializedSize();
         memoizedSize = size;
@@ -280,6 +337,14 @@ public final class UserRelationship extends com.google.protobuf.GeneratedMessage
                 return false;
             }
         }
+        if (hasName() != other.hasName()) {
+            return false;
+        }
+        if (hasName()) {
+            if (!getName().equals(other.getName())) {
+                return false;
+            }
+        }
         return getUnknownFields().equals(other.getUnknownFields());
     }
 
@@ -309,6 +374,10 @@ public final class UserRelationship extends com.google.protobuf.GeneratedMessage
         if (hasEstablishmentDate()) {
             hash = (37 * hash) + ESTABLISHMENT_DATE_FIELD_NUMBER;
             hash = (53 * hash) + com.google.protobuf.Internal.hashLong(getEstablishmentDate());
+        }
+        if (hasName()) {
+            hash = (37 * hash) + NAME_FIELD_NUMBER;
+            hash = (53 * hash) + getName().hashCode();
         }
         hash = (29 * hash) + getUnknownFields().hashCode();
         memoizedHashCode = hash;
@@ -458,6 +527,7 @@ public final class UserRelationship extends com.google.protobuf.GeneratedMessage
             blockDate_ = 0L;
             groupIndex_ = 0L;
             establishmentDate_ = 0L;
+            name_ = "";
             return this;
         }
 
@@ -517,7 +587,48 @@ public final class UserRelationship extends com.google.protobuf.GeneratedMessage
                 result.establishmentDate_ = establishmentDate_;
                 to_bitField0_ |= 0x00000010;
             }
+            if (((from_bitField0_ & 0x00000020) != 0)) {
+                result.name_ = name_;
+                to_bitField0_ |= 0x00000020;
+            }
             result.bitField0_ |= to_bitField0_;
+        }
+
+        @java.lang.Override
+        public Builder clone() {
+            return super.clone();
+        }
+
+        @java.lang.Override
+        public Builder setField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value) {
+            return super.setField(field, value);
+        }
+
+        @java.lang.Override
+        public Builder clearField(com.google.protobuf.Descriptors.FieldDescriptor field) {
+            return super.clearField(field);
+        }
+
+        @java.lang.Override
+        public Builder clearOneof(com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+            return super.clearOneof(oneof);
+        }
+
+        @java.lang.Override
+        public Builder setRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                int index,
+                java.lang.Object value) {
+            return super.setRepeatedField(field, index, value);
+        }
+
+        @java.lang.Override
+        public Builder addRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value) {
+            return super.addRepeatedField(field, value);
         }
 
         @java.lang.Override
@@ -551,6 +662,11 @@ public final class UserRelationship extends com.google.protobuf.GeneratedMessage
             }
             if (other.hasEstablishmentDate()) {
                 setEstablishmentDate(other.getEstablishmentDate());
+            }
+            if (other.hasName()) {
+                name_ = other.name_;
+                bitField0_ |= 0x00000020;
+                onChanged();
             }
             this.mergeUnknownFields(other.getUnknownFields());
             onChanged();
@@ -596,6 +712,10 @@ public final class UserRelationship extends com.google.protobuf.GeneratedMessage
                             establishmentDate_ = input.readInt64();
                             bitField0_ |= 0x00000010;
                         } // case 40
+                        case 50 -> {
+                            name_ = input.readStringRequireUtf8();
+                            bitField0_ |= 0x00000020;
+                        } // case 50
                         default -> {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
@@ -849,6 +969,96 @@ public final class UserRelationship extends com.google.protobuf.GeneratedMessage
         public Builder clearEstablishmentDate() {
             bitField0_ &= ~0x00000010;
             establishmentDate_ = 0L;
+            onChanged();
+            return this;
+        }
+
+        private java.lang.Object name_ = "";
+
+        /**
+         * <code>optional string name = 6;</code>
+         *
+         * @return Whether the name field is set.
+         */
+        public boolean hasName() {
+            return ((bitField0_ & 0x00000020) != 0);
+        }
+
+        /**
+         * <code>optional string name = 6;</code>
+         *
+         * @return The name.
+         */
+        public java.lang.String getName() {
+            java.lang.Object ref = name_;
+            if (!(ref instanceof java.lang.String)) {
+                com.google.protobuf.ByteString bs = (com.google.protobuf.ByteString) ref;
+                java.lang.String s = bs.toStringUtf8();
+                name_ = s;
+                return s;
+            } else {
+                return (java.lang.String) ref;
+            }
+        }
+
+        /**
+         * <code>optional string name = 6;</code>
+         *
+         * @return The bytes for name.
+         */
+        public com.google.protobuf.ByteString getNameBytes() {
+            java.lang.Object ref = name_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8((java.lang.String) ref);
+                name_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        /**
+         * <code>optional string name = 6;</code>
+         *
+         * @param value The name to set.
+         * @return This builder for chaining.
+         */
+        public Builder setName(java.lang.String value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+            name_ = value;
+            bitField0_ |= 0x00000020;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <code>optional string name = 6;</code>
+         *
+         * @return This builder for chaining.
+         */
+        public Builder clearName() {
+            name_ = getDefaultInstance().getName();
+            bitField0_ &= ~0x00000020;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <code>optional string name = 6;</code>
+         *
+         * @param value The bytes for name to set.
+         * @return This builder for chaining.
+         */
+        public Builder setNameBytes(com.google.protobuf.ByteString value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+            checkByteStringIsUtf8(value);
+            name_ = value;
+            bitField0_ |= 0x00000020;
             onChanged();
             return this;
         }

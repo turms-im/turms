@@ -39,7 +39,7 @@ public final class UpdateGroupRequest extends
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>int64 group_id = 1;</code>
      *
      * @return The groupId.
@@ -53,7 +53,7 @@ public final class UpdateGroupRequest extends
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>int64 group_id = 1;</code>
      *
      * @param value The groupId to set.
@@ -67,7 +67,7 @@ public final class UpdateGroupRequest extends
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>int64 group_id = 1;</code>
      */
     private void clearGroupId() {
@@ -82,7 +82,7 @@ public final class UpdateGroupRequest extends
      * <pre>
      * Update options
      * </pre>
-     * 
+     *
      * <code>optional bool quit_after_transfer = 2;</code>
      *
      * @return Whether the quitAfterTransfer field is set.
@@ -96,7 +96,7 @@ public final class UpdateGroupRequest extends
      * <pre>
      * Update options
      * </pre>
-     * 
+     *
      * <code>optional bool quit_after_transfer = 2;</code>
      *
      * @return The quitAfterTransfer.
@@ -110,7 +110,7 @@ public final class UpdateGroupRequest extends
      * <pre>
      * Update options
      * </pre>
-     * 
+     *
      * <code>optional bool quit_after_transfer = 2;</code>
      *
      * @param value The quitAfterTransfer to set.
@@ -124,7 +124,7 @@ public final class UpdateGroupRequest extends
      * <pre>
      * Update options
      * </pre>
-     * 
+     *
      * <code>optional bool quit_after_transfer = 2;</code>
      */
     private void clearQuitAfterTransfer() {
@@ -139,7 +139,7 @@ public final class UpdateGroupRequest extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>optional string name = 3;</code>
      *
      * @return Whether the name field is set.
@@ -153,7 +153,7 @@ public final class UpdateGroupRequest extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>optional string name = 3;</code>
      *
      * @return The name.
@@ -167,7 +167,7 @@ public final class UpdateGroupRequest extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>optional string name = 3;</code>
      *
      * @return The bytes for name.
@@ -181,7 +181,7 @@ public final class UpdateGroupRequest extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>optional string name = 3;</code>
      *
      * @param value The name to set.
@@ -196,7 +196,7 @@ public final class UpdateGroupRequest extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>optional string name = 3;</code>
      */
     private void clearName() {
@@ -208,7 +208,7 @@ public final class UpdateGroupRequest extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>optional string name = 3;</code>
      *
      * @param value The bytes for name to set.
@@ -588,12 +588,12 @@ public final class UpdateGroupRequest extends
     }
 
     public static Builder newBuilder() {
-        return (Builder) DEFAULT_INSTANCE.createBuilder();
+        return DEFAULT_INSTANCE.createBuilder();
     }
 
     public static Builder newBuilder(
             im.turms.client.model.proto.request.group.UpdateGroupRequest prototype) {
-        return (Builder) DEFAULT_INSTANCE.createBuilder(prototype);
+        return DEFAULT_INSTANCE.createBuilder(prototype);
     }
 
     /**
@@ -613,7 +613,7 @@ public final class UpdateGroupRequest extends
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>int64 group_id = 1;</code>
          *
          * @return The groupId.
@@ -627,7 +627,7 @@ public final class UpdateGroupRequest extends
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>int64 group_id = 1;</code>
          *
          * @param value The groupId to set.
@@ -643,7 +643,7 @@ public final class UpdateGroupRequest extends
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>int64 group_id = 1;</code>
          *
          * @return This builder for chaining.
@@ -658,7 +658,7 @@ public final class UpdateGroupRequest extends
          * <pre>
          * Update options
          * </pre>
-         * 
+         *
          * <code>optional bool quit_after_transfer = 2;</code>
          *
          * @return Whether the quitAfterTransfer field is set.
@@ -672,7 +672,7 @@ public final class UpdateGroupRequest extends
          * <pre>
          * Update options
          * </pre>
-         * 
+         *
          * <code>optional bool quit_after_transfer = 2;</code>
          *
          * @return The quitAfterTransfer.
@@ -686,7 +686,7 @@ public final class UpdateGroupRequest extends
          * <pre>
          * Update options
          * </pre>
-         * 
+         *
          * <code>optional bool quit_after_transfer = 2;</code>
          *
          * @param value The quitAfterTransfer to set.
@@ -702,7 +702,7 @@ public final class UpdateGroupRequest extends
          * <pre>
          * Update options
          * </pre>
-         * 
+         *
          * <code>optional bool quit_after_transfer = 2;</code>
          *
          * @return This builder for chaining.
@@ -717,7 +717,7 @@ public final class UpdateGroupRequest extends
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>optional string name = 3;</code>
          *
          * @return Whether the name field is set.
@@ -731,7 +731,7 @@ public final class UpdateGroupRequest extends
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>optional string name = 3;</code>
          *
          * @return The name.
@@ -745,7 +745,7 @@ public final class UpdateGroupRequest extends
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>optional string name = 3;</code>
          *
          * @return The bytes for name.
@@ -759,7 +759,7 @@ public final class UpdateGroupRequest extends
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>optional string name = 3;</code>
          *
          * @param value The name to set.
@@ -775,7 +775,7 @@ public final class UpdateGroupRequest extends
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>optional string name = 3;</code>
          *
          * @return This builder for chaining.
@@ -790,7 +790,7 @@ public final class UpdateGroupRequest extends
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>optional string name = 3;</code>
          *
          * @param value The bytes for name to set.

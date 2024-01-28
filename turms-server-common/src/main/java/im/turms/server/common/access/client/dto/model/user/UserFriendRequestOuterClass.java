@@ -70,14 +70,6 @@ public final class UserFriendRequestOuterClass {
                                 "Reason",
                                 "ExpirationDate",
                                 "RequesterId",
-                                "RecipientId",
-                                "Id",
-                                "CreationDate",
-                                "Content",
-                                "RequestStatus",
-                                "Reason",
-                                "ExpirationDate",
-                                "RequesterId",
                                 "RecipientId",});
         im.turms.server.common.access.client.dto.constant.RequestStatusOuterClass.getDescriptor();
     }

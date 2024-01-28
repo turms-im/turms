@@ -25,7 +25,7 @@ public interface QueryConversationsRequestOrBuilder extends
      * <pre>
      * Private conversations
      * </pre>
-     * 
+     *
      * <code>repeated int64 target_ids = 1;</code>
      *
      * @return A list containing the targetIds.
@@ -36,7 +36,7 @@ public interface QueryConversationsRequestOrBuilder extends
      * <pre>
      * Private conversations
      * </pre>
-     * 
+     *
      * <code>repeated int64 target_ids = 1;</code>
      *
      * @return The count of targetIds.
@@ -47,7 +47,7 @@ public interface QueryConversationsRequestOrBuilder extends
      * <pre>
      * Private conversations
      * </pre>
-     * 
+     *
      * <code>repeated int64 target_ids = 1;</code>
      *
      * @param index The index of the element to return.
@@ -59,7 +59,7 @@ public interface QueryConversationsRequestOrBuilder extends
      * <pre>
      * Group conversations
      * </pre>
-     * 
+     *
      * <code>repeated int64 group_ids = 2;</code>
      *
      * @return A list containing the groupIds.
@@ -70,7 +70,7 @@ public interface QueryConversationsRequestOrBuilder extends
      * <pre>
      * Group conversations
      * </pre>
-     * 
+     *
      * <code>repeated int64 group_ids = 2;</code>
      *
      * @return The count of groupIds.
@@ -81,7 +81,7 @@ public interface QueryConversationsRequestOrBuilder extends
      * <pre>
      * Group conversations
      * </pre>
-     * 
+     *
      * <code>repeated int64 group_ids = 2;</code>
      *
      * @param index The index of the element to return.

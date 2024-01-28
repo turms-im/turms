@@ -1,65 +1,24 @@
-///
+//
 //  Generated code. Do not modify.
 //  source: model/user/nearby_user.proto
 //
 // @dart = 2.12
-// ignore_for_file: annotate_overrides,camel_case_types,constant_identifier_names,directives_ordering,library_prefixes,non_constant_identifier_names,prefer_final_fields,return_of_invalid_type,unnecessary_const,unnecessary_import,unnecessary_this,unused_import,unused_shown_name
+
+// ignore_for_file: annotate_overrides, camel_case_types, comment_references
+// ignore_for_file: constant_identifier_names, library_prefixes
+// ignore_for_file: non_constant_identifier_names, prefer_final_fields
+// ignore_for_file: unnecessary_import, unnecessary_this, unused_import
 
 import 'dart:core' as $core;
 
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
+import '../../constant/device_type.pbenum.dart' as $2;
 import 'user_info.pb.dart' as $0;
 import 'user_location.pb.dart' as $1;
 
-import '../../constant/device_type.pbenum.dart' as $2;
-
 class NearbyUser extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      const $core.bool.fromEnvironment('protobuf.omit_message_names')
-          ? ''
-          : 'NearbyUser',
-      package: const $pb.PackageName(
-          const $core.bool.fromEnvironment('protobuf.omit_message_names')
-              ? ''
-              : 'im.turms.proto'),
-      createEmptyInstance: create)
-    ..aInt64(
-        1,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'userId')
-    ..e<$2.DeviceType>(
-        2,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'deviceType',
-        $pb.PbFieldType.OE,
-        defaultOrMaker: $2.DeviceType.DESKTOP,
-        valueOf: $2.DeviceType.valueOf,
-        enumValues: $2.DeviceType.values)
-    ..aOM<$0.UserInfo>(
-        3,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'info',
-        subBuilder: $0.UserInfo.create)
-    ..a<$core.int>(
-        4,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'distance',
-        $pb.PbFieldType.O3)
-    ..aOM<$1.UserLocation>(
-        5,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'location',
-        subBuilder: $1.UserLocation.create)
-    ..hasRequiredFields = false;
-
-  NearbyUser._() : super();
   factory NearbyUser({
     $fixnum.Int64? userId,
     $2.DeviceType? deviceType,
@@ -67,30 +26,49 @@ class NearbyUser extends $pb.GeneratedMessage {
     $core.int? distance,
     $1.UserLocation? location,
   }) {
-    final _result = create();
+    final $result = create();
     if (userId != null) {
-      _result.userId = userId;
+      $result.userId = userId;
     }
     if (deviceType != null) {
-      _result.deviceType = deviceType;
+      $result.deviceType = deviceType;
     }
     if (info != null) {
-      _result.info = info;
+      $result.info = info;
     }
     if (distance != null) {
-      _result.distance = distance;
+      $result.distance = distance;
     }
     if (location != null) {
-      _result.location = location;
+      $result.location = location;
     }
-    return _result;
+    return $result;
   }
+  NearbyUser._() : super();
   factory NearbyUser.fromBuffer($core.List<$core.int> i,
           [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(i, r);
   factory NearbyUser.fromJson($core.String i,
           [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(i, r);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'NearbyUser',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'im.turms.proto'),
+      createEmptyInstance: create)
+    ..aInt64(1, _omitFieldNames ? '' : 'userId')
+    ..e<$2.DeviceType>(
+        2, _omitFieldNames ? '' : 'deviceType', $pb.PbFieldType.OE,
+        defaultOrMaker: $2.DeviceType.DESKTOP,
+        valueOf: $2.DeviceType.valueOf,
+        enumValues: $2.DeviceType.values)
+    ..aOM<$0.UserInfo>(3, _omitFieldNames ? '' : 'info',
+        subBuilder: $0.UserInfo.create)
+    ..a<$core.int>(4, _omitFieldNames ? '' : 'distance', $pb.PbFieldType.O3)
+    ..aOM<$1.UserLocation>(5, _omitFieldNames ? '' : 'location',
+        subBuilder: $1.UserLocation.create)
+    ..hasRequiredFields = false;
+
   @$core.Deprecated('Using this can add significant overhead to your binary. '
       'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
       'Will be removed in next major version')
@@ -99,9 +77,10 @@ class NearbyUser extends $pb.GeneratedMessage {
       'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
       'Will be removed in next major version')
   NearbyUser copyWith(void Function(NearbyUser) updates) =>
-      super.copyWith((message) => updates(message as NearbyUser))
-          as NearbyUser; // ignore: deprecated_member_use
+      super.copyWith((message) => updates(message as NearbyUser)) as NearbyUser;
+
   $pb.BuilderInfo get info_ => _i;
+
   @$core.pragma('dart2js:noInline')
   static NearbyUser create() => NearbyUser._();
   NearbyUser createEmptyInstance() => create();
@@ -111,6 +90,7 @@ class NearbyUser extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<NearbyUser>(create);
   static NearbyUser? _defaultInstance;
 
+  /// session info
   @$pb.TagNumber(1)
   $fixnum.Int64 get userId => $_getI64(0);
   @$pb.TagNumber(1)
@@ -135,6 +115,7 @@ class NearbyUser extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   void clearDeviceType() => clearField(2);
 
+  /// user info
   @$pb.TagNumber(3)
   $0.UserInfo get info => $_getN(2);
   @$pb.TagNumber(3)
@@ -149,6 +130,7 @@ class NearbyUser extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $0.UserInfo ensureInfo() => $_ensure(2);
 
+  /// geo info
   @$pb.TagNumber(4)
   $core.int get distance => $_getIZ(3);
   @$pb.TagNumber(4)
@@ -175,3 +157,7 @@ class NearbyUser extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   $1.UserLocation ensureLocation() => $_ensure(4);
 }
+
+const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');
+const _omitMessageNames =
+    $core.bool.fromEnvironment('protobuf.omit_message_names');

@@ -69,14 +69,6 @@ public final class GroupInvitationOuterClass {
                                 "ExpirationDate",
                                 "GroupId",
                                 "InviterId",
-                                "InviteeId",
-                                "Id",
-                                "CreationDate",
-                                "Content",
-                                "Status",
-                                "ExpirationDate",
-                                "GroupId",
-                                "InviterId",
                                 "InviteeId",});
         im.turms.server.common.access.client.dto.constant.RequestStatusOuterClass.getDescriptor();
     }

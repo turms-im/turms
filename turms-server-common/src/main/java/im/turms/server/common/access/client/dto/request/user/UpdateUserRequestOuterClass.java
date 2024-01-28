@@ -64,11 +64,6 @@ public final class UpdateUserRequestOuterClass {
                                 "Name",
                                 "Intro",
                                 "ProfilePicture",
-                                "ProfileAccessStrategy",
-                                "Password",
-                                "Name",
-                                "Intro",
-                                "ProfilePicture",
                                 "ProfileAccessStrategy",});
         im.turms.server.common.access.client.dto.constant.ProfileAccessStrategyOuterClass
                 .getDescriptor();

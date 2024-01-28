@@ -21,7 +21,7 @@ package im.turms.client.model.proto.request;
  * <pre>
  * Client -&gt; Server -&gt; Client
  * </pre>
- * <p>
+ *
  * Protobuf type {@code im.turms.proto.TurmsRequest}
  */
 public final class TurmsRequest extends
@@ -57,15 +57,16 @@ public final class TurmsRequest extends
         CREATE_FRIEND_REQUEST_REQUEST(200),
         CREATE_RELATIONSHIP_GROUP_REQUEST(201),
         CREATE_RELATIONSHIP_REQUEST(202),
-        DELETE_RELATIONSHIP_GROUP_REQUEST(203),
-        DELETE_RELATIONSHIP_REQUEST(204),
-        QUERY_FRIEND_REQUESTS_REQUEST(205),
-        QUERY_RELATED_USER_IDS_REQUEST(206),
-        QUERY_RELATIONSHIP_GROUPS_REQUEST(207),
-        QUERY_RELATIONSHIPS_REQUEST(208),
-        UPDATE_FRIEND_REQUEST_REQUEST(209),
-        UPDATE_RELATIONSHIP_GROUP_REQUEST(210),
-        UPDATE_RELATIONSHIP_REQUEST(211),
+        DELETE_FRIEND_REQUEST_REQUEST(203),
+        DELETE_RELATIONSHIP_GROUP_REQUEST(204),
+        DELETE_RELATIONSHIP_REQUEST(205),
+        QUERY_FRIEND_REQUESTS_REQUEST(206),
+        QUERY_RELATED_USER_IDS_REQUEST(207),
+        QUERY_RELATIONSHIP_GROUPS_REQUEST(208),
+        QUERY_RELATIONSHIPS_REQUEST(209),
+        UPDATE_FRIEND_REQUEST_REQUEST(210),
+        UPDATE_RELATIONSHIP_GROUP_REQUEST(211),
+        UPDATE_RELATIONSHIP_REQUEST(212),
         CREATE_GROUP_REQUEST(300),
         DELETE_GROUP_REQUEST(301),
         QUERY_GROUPS_REQUEST(302),
@@ -86,7 +87,9 @@ public final class TurmsRequest extends
         QUERY_GROUP_INVITATIONS_REQUEST(507),
         QUERY_GROUP_JOIN_REQUESTS_REQUEST(508),
         QUERY_GROUP_JOIN_QUESTIONS_REQUEST(509),
-        UPDATE_GROUP_JOIN_QUESTION_REQUEST(510),
+        UPDATE_GROUP_INVITATION_REQUEST(510),
+        UPDATE_GROUP_JOIN_QUESTION_REQUEST(511),
+        UPDATE_GROUP_JOIN_REQUEST_REQUEST(512),
         DELETE_RESOURCE_REQUEST(1000),
         QUERY_RESOURCE_DOWNLOAD_INFO_REQUEST(1001),
         QUERY_RESOURCE_UPLOAD_INFO_REQUEST(1002),
@@ -96,7 +99,7 @@ public final class TurmsRequest extends
 
         private final int value;
 
-        KindCase(int value) {
+        private KindCase(int value) {
             this.value = value;
         }
 
@@ -153,22 +156,24 @@ public final class TurmsRequest extends
                 case 202:
                     return CREATE_RELATIONSHIP_REQUEST;
                 case 203:
-                    return DELETE_RELATIONSHIP_GROUP_REQUEST;
+                    return DELETE_FRIEND_REQUEST_REQUEST;
                 case 204:
-                    return DELETE_RELATIONSHIP_REQUEST;
+                    return DELETE_RELATIONSHIP_GROUP_REQUEST;
                 case 205:
-                    return QUERY_FRIEND_REQUESTS_REQUEST;
+                    return DELETE_RELATIONSHIP_REQUEST;
                 case 206:
-                    return QUERY_RELATED_USER_IDS_REQUEST;
+                    return QUERY_FRIEND_REQUESTS_REQUEST;
                 case 207:
-                    return QUERY_RELATIONSHIP_GROUPS_REQUEST;
+                    return QUERY_RELATED_USER_IDS_REQUEST;
                 case 208:
-                    return QUERY_RELATIONSHIPS_REQUEST;
+                    return QUERY_RELATIONSHIP_GROUPS_REQUEST;
                 case 209:
-                    return UPDATE_FRIEND_REQUEST_REQUEST;
+                    return QUERY_RELATIONSHIPS_REQUEST;
                 case 210:
-                    return UPDATE_RELATIONSHIP_GROUP_REQUEST;
+                    return UPDATE_FRIEND_REQUEST_REQUEST;
                 case 211:
+                    return UPDATE_RELATIONSHIP_GROUP_REQUEST;
+                case 212:
                     return UPDATE_RELATIONSHIP_REQUEST;
                 case 300:
                     return CREATE_GROUP_REQUEST;
@@ -211,7 +216,11 @@ public final class TurmsRequest extends
                 case 509:
                     return QUERY_GROUP_JOIN_QUESTIONS_REQUEST;
                 case 510:
+                    return UPDATE_GROUP_INVITATION_REQUEST;
+                case 511:
                     return UPDATE_GROUP_JOIN_QUESTION_REQUEST;
+                case 512:
+                    return UPDATE_GROUP_JOIN_REQUEST_REQUEST;
                 case 1000:
                     return DELETE_RESOURCE_REQUEST;
                 case 1001:
@@ -252,7 +261,7 @@ public final class TurmsRequest extends
      * Note: "request_id" is allowed to be duplicate because
      * it is used for clients to identify the response of the same request id in a session
      * </pre>
-     * 
+     *
      * <code>optional int64 request_id = 1;</code>
      *
      * @return Whether the requestId field is set.
@@ -267,7 +276,7 @@ public final class TurmsRequest extends
      * Note: "request_id" is allowed to be duplicate because
      * it is used for clients to identify the response of the same request id in a session
      * </pre>
-     * 
+     *
      * <code>optional int64 request_id = 1;</code>
      *
      * @return The requestId.
@@ -282,7 +291,7 @@ public final class TurmsRequest extends
      * Note: "request_id" is allowed to be duplicate because
      * it is used for clients to identify the response of the same request id in a session
      * </pre>
-     * 
+     *
      * <code>optional int64 request_id = 1;</code>
      *
      * @param value The requestId to set.
@@ -297,7 +306,7 @@ public final class TurmsRequest extends
      * Note: "request_id" is allowed to be duplicate because
      * it is used for clients to identify the response of the same request id in a session
      * </pre>
-     * 
+     *
      * <code>optional int64 request_id = 1;</code>
      */
     private void clearRequestId() {
@@ -311,7 +320,7 @@ public final class TurmsRequest extends
      * <pre>
      * User - Session
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CreateSessionRequest create_session_request = 3;</code>
      */
     @java.lang.Override
@@ -323,7 +332,7 @@ public final class TurmsRequest extends
      * <pre>
      * User - Session
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CreateSessionRequest create_session_request = 3;</code>
      */
     @java.lang.Override
@@ -338,7 +347,7 @@ public final class TurmsRequest extends
      * <pre>
      * User - Session
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CreateSessionRequest create_session_request = 3;</code>
      */
     private void setCreateSessionRequest(
@@ -352,7 +361,7 @@ public final class TurmsRequest extends
      * <pre>
      * User - Session
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CreateSessionRequest create_session_request = 3;</code>
      */
     private void mergeCreateSessionRequest(
@@ -376,7 +385,7 @@ public final class TurmsRequest extends
      * <pre>
      * User - Session
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CreateSessionRequest create_session_request = 3;</code>
      */
     private void clearCreateSessionRequest() {
@@ -453,7 +462,7 @@ public final class TurmsRequest extends
      * <pre>
      * Conversation
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.QueryConversationsRequest query_conversations_request = 5;</code>
      */
     @java.lang.Override
@@ -465,7 +474,7 @@ public final class TurmsRequest extends
      * <pre>
      * Conversation
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.QueryConversationsRequest query_conversations_request = 5;</code>
      */
     @java.lang.Override
@@ -481,7 +490,7 @@ public final class TurmsRequest extends
      * <pre>
      * Conversation
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.QueryConversationsRequest query_conversations_request = 5;</code>
      */
     private void setQueryConversationsRequest(
@@ -495,7 +504,7 @@ public final class TurmsRequest extends
      * <pre>
      * Conversation
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.QueryConversationsRequest query_conversations_request = 5;</code>
      */
     private void mergeQueryConversationsRequest(
@@ -519,7 +528,7 @@ public final class TurmsRequest extends
      * <pre>
      * Conversation
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.QueryConversationsRequest query_conversations_request = 5;</code>
      */
     private void clearQueryConversationsRequest() {
@@ -659,7 +668,7 @@ public final class TurmsRequest extends
      * <pre>
      * Message
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CreateMessageRequest create_message_request = 8;</code>
      */
     @java.lang.Override
@@ -671,7 +680,7 @@ public final class TurmsRequest extends
      * <pre>
      * Message
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CreateMessageRequest create_message_request = 8;</code>
      */
     @java.lang.Override
@@ -687,7 +696,7 @@ public final class TurmsRequest extends
      * <pre>
      * Message
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CreateMessageRequest create_message_request = 8;</code>
      */
     private void setCreateMessageRequest(
@@ -701,7 +710,7 @@ public final class TurmsRequest extends
      * <pre>
      * Message
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CreateMessageRequest create_message_request = 8;</code>
      */
     private void mergeCreateMessageRequest(
@@ -724,7 +733,7 @@ public final class TurmsRequest extends
      * <pre>
      * Message
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CreateMessageRequest create_message_request = 8;</code>
      */
     private void clearCreateMessageRequest() {
@@ -862,7 +871,7 @@ public final class TurmsRequest extends
      * <pre>
      * Group Member
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CreateGroupMembersRequest create_group_members_request = 11;</code>
      */
     @java.lang.Override
@@ -874,7 +883,7 @@ public final class TurmsRequest extends
      * <pre>
      * Group Member
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CreateGroupMembersRequest create_group_members_request = 11;</code>
      */
     @java.lang.Override
@@ -890,7 +899,7 @@ public final class TurmsRequest extends
      * <pre>
      * Group Member
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CreateGroupMembersRequest create_group_members_request = 11;</code>
      */
     private void setCreateGroupMembersRequest(
@@ -904,7 +913,7 @@ public final class TurmsRequest extends
      * <pre>
      * Group Member
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CreateGroupMembersRequest create_group_members_request = 11;</code>
      */
     private void mergeCreateGroupMembersRequest(
@@ -928,7 +937,7 @@ public final class TurmsRequest extends
      * <pre>
      * Group Member
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CreateGroupMembersRequest create_group_members_request = 11;</code>
      */
     private void clearCreateGroupMembersRequest() {
@@ -1130,7 +1139,7 @@ public final class TurmsRequest extends
      * <pre>
      * User
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.QueryUserProfilesRequest query_user_profiles_request = 100;</code>
      */
     @java.lang.Override
@@ -1142,7 +1151,7 @@ public final class TurmsRequest extends
      * <pre>
      * User
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.QueryUserProfilesRequest query_user_profiles_request = 100;</code>
      */
     @java.lang.Override
@@ -1158,7 +1167,7 @@ public final class TurmsRequest extends
      * <pre>
      * User
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.QueryUserProfilesRequest query_user_profiles_request = 100;</code>
      */
     private void setQueryUserProfilesRequest(
@@ -1172,7 +1181,7 @@ public final class TurmsRequest extends
      * <pre>
      * User
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.QueryUserProfilesRequest query_user_profiles_request = 100;</code>
      */
     private void mergeQueryUserProfilesRequest(
@@ -1195,7 +1204,7 @@ public final class TurmsRequest extends
      * <pre>
      * User
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.QueryUserProfilesRequest query_user_profiles_request = 100;</code>
      */
     private void clearQueryUserProfilesRequest() {
@@ -1517,7 +1526,7 @@ public final class TurmsRequest extends
      * <pre>
      * User Relationship
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CreateFriendRequestRequest create_friend_request_request = 200;</code>
      */
     @java.lang.Override
@@ -1529,7 +1538,7 @@ public final class TurmsRequest extends
      * <pre>
      * User Relationship
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CreateFriendRequestRequest create_friend_request_request = 200;</code>
      */
     @java.lang.Override
@@ -1545,7 +1554,7 @@ public final class TurmsRequest extends
      * <pre>
      * User Relationship
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CreateFriendRequestRequest create_friend_request_request = 200;</code>
      */
     private void setCreateFriendRequestRequest(
@@ -1559,7 +1568,7 @@ public final class TurmsRequest extends
      * <pre>
      * User Relationship
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CreateFriendRequestRequest create_friend_request_request = 200;</code>
      */
     private void mergeCreateFriendRequestRequest(
@@ -1583,7 +1592,7 @@ public final class TurmsRequest extends
      * <pre>
      * User Relationship
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CreateFriendRequestRequest create_friend_request_request = 200;</code>
      */
     private void clearCreateFriendRequestRequest() {
@@ -1717,22 +1726,84 @@ public final class TurmsRequest extends
         }
     }
 
-    public static final int DELETE_RELATIONSHIP_GROUP_REQUEST_FIELD_NUMBER = 203;
+    public static final int DELETE_FRIEND_REQUEST_REQUEST_FIELD_NUMBER = 203;
 
     /**
-     * <code>.im.turms.proto.DeleteRelationshipGroupRequest delete_relationship_group_request = 203;</code>
+     * <code>.im.turms.proto.DeleteFriendRequestRequest delete_friend_request_request = 203;</code>
      */
     @java.lang.Override
-    public boolean hasDeleteRelationshipGroupRequest() {
+    public boolean hasDeleteFriendRequestRequest() {
         return kindCase_ == 203;
     }
 
     /**
-     * <code>.im.turms.proto.DeleteRelationshipGroupRequest delete_relationship_group_request = 203;</code>
+     * <code>.im.turms.proto.DeleteFriendRequestRequest delete_friend_request_request = 203;</code>
+     */
+    @java.lang.Override
+    public im.turms.client.model.proto.request.user.relationship.DeleteFriendRequestRequest getDeleteFriendRequestRequest() {
+        if (kindCase_ == 203) {
+            return (im.turms.client.model.proto.request.user.relationship.DeleteFriendRequestRequest) kind_;
+        }
+        return im.turms.client.model.proto.request.user.relationship.DeleteFriendRequestRequest
+                .getDefaultInstance();
+    }
+
+    /**
+     * <code>.im.turms.proto.DeleteFriendRequestRequest delete_friend_request_request = 203;</code>
+     */
+    private void setDeleteFriendRequestRequest(
+            im.turms.client.model.proto.request.user.relationship.DeleteFriendRequestRequest value) {
+        value.getClass();
+        kind_ = value;
+        kindCase_ = 203;
+    }
+
+    /**
+     * <code>.im.turms.proto.DeleteFriendRequestRequest delete_friend_request_request = 203;</code>
+     */
+    private void mergeDeleteFriendRequestRequest(
+            im.turms.client.model.proto.request.user.relationship.DeleteFriendRequestRequest value) {
+        value.getClass();
+        if (kindCase_ == 203
+                && kind_ != im.turms.client.model.proto.request.user.relationship.DeleteFriendRequestRequest
+                        .getDefaultInstance()) {
+            kind_ = im.turms.client.model.proto.request.user.relationship.DeleteFriendRequestRequest
+                    .newBuilder(
+                            (im.turms.client.model.proto.request.user.relationship.DeleteFriendRequestRequest) kind_)
+                    .mergeFrom(value)
+                    .buildPartial();
+        } else {
+            kind_ = value;
+        }
+        kindCase_ = 203;
+    }
+
+    /**
+     * <code>.im.turms.proto.DeleteFriendRequestRequest delete_friend_request_request = 203;</code>
+     */
+    private void clearDeleteFriendRequestRequest() {
+        if (kindCase_ == 203) {
+            kindCase_ = 0;
+            kind_ = null;
+        }
+    }
+
+    public static final int DELETE_RELATIONSHIP_GROUP_REQUEST_FIELD_NUMBER = 204;
+
+    /**
+     * <code>.im.turms.proto.DeleteRelationshipGroupRequest delete_relationship_group_request = 204;</code>
+     */
+    @java.lang.Override
+    public boolean hasDeleteRelationshipGroupRequest() {
+        return kindCase_ == 204;
+    }
+
+    /**
+     * <code>.im.turms.proto.DeleteRelationshipGroupRequest delete_relationship_group_request = 204;</code>
      */
     @java.lang.Override
     public im.turms.client.model.proto.request.user.relationship.DeleteRelationshipGroupRequest getDeleteRelationshipGroupRequest() {
-        if (kindCase_ == 203) {
+        if (kindCase_ == 204) {
             return (im.turms.client.model.proto.request.user.relationship.DeleteRelationshipGroupRequest) kind_;
         }
         return im.turms.client.model.proto.request.user.relationship.DeleteRelationshipGroupRequest
@@ -1740,22 +1811,22 @@ public final class TurmsRequest extends
     }
 
     /**
-     * <code>.im.turms.proto.DeleteRelationshipGroupRequest delete_relationship_group_request = 203;</code>
+     * <code>.im.turms.proto.DeleteRelationshipGroupRequest delete_relationship_group_request = 204;</code>
      */
     private void setDeleteRelationshipGroupRequest(
             im.turms.client.model.proto.request.user.relationship.DeleteRelationshipGroupRequest value) {
         value.getClass();
         kind_ = value;
-        kindCase_ = 203;
+        kindCase_ = 204;
     }
 
     /**
-     * <code>.im.turms.proto.DeleteRelationshipGroupRequest delete_relationship_group_request = 203;</code>
+     * <code>.im.turms.proto.DeleteRelationshipGroupRequest delete_relationship_group_request = 204;</code>
      */
     private void mergeDeleteRelationshipGroupRequest(
             im.turms.client.model.proto.request.user.relationship.DeleteRelationshipGroupRequest value) {
         value.getClass();
-        if (kindCase_ == 203
+        if (kindCase_ == 204
                 && kind_ != im.turms.client.model.proto.request.user.relationship.DeleteRelationshipGroupRequest
                         .getDefaultInstance()) {
             kind_ = im.turms.client.model.proto.request.user.relationship.DeleteRelationshipGroupRequest
@@ -1766,35 +1837,35 @@ public final class TurmsRequest extends
         } else {
             kind_ = value;
         }
-        kindCase_ = 203;
+        kindCase_ = 204;
     }
 
     /**
-     * <code>.im.turms.proto.DeleteRelationshipGroupRequest delete_relationship_group_request = 203;</code>
+     * <code>.im.turms.proto.DeleteRelationshipGroupRequest delete_relationship_group_request = 204;</code>
      */
     private void clearDeleteRelationshipGroupRequest() {
-        if (kindCase_ == 203) {
+        if (kindCase_ == 204) {
             kindCase_ = 0;
             kind_ = null;
         }
     }
 
-    public static final int DELETE_RELATIONSHIP_REQUEST_FIELD_NUMBER = 204;
+    public static final int DELETE_RELATIONSHIP_REQUEST_FIELD_NUMBER = 205;
 
     /**
-     * <code>.im.turms.proto.DeleteRelationshipRequest delete_relationship_request = 204;</code>
+     * <code>.im.turms.proto.DeleteRelationshipRequest delete_relationship_request = 205;</code>
      */
     @java.lang.Override
     public boolean hasDeleteRelationshipRequest() {
-        return kindCase_ == 204;
+        return kindCase_ == 205;
     }
 
     /**
-     * <code>.im.turms.proto.DeleteRelationshipRequest delete_relationship_request = 204;</code>
+     * <code>.im.turms.proto.DeleteRelationshipRequest delete_relationship_request = 205;</code>
      */
     @java.lang.Override
     public im.turms.client.model.proto.request.user.relationship.DeleteRelationshipRequest getDeleteRelationshipRequest() {
-        if (kindCase_ == 204) {
+        if (kindCase_ == 205) {
             return (im.turms.client.model.proto.request.user.relationship.DeleteRelationshipRequest) kind_;
         }
         return im.turms.client.model.proto.request.user.relationship.DeleteRelationshipRequest
@@ -1802,22 +1873,22 @@ public final class TurmsRequest extends
     }
 
     /**
-     * <code>.im.turms.proto.DeleteRelationshipRequest delete_relationship_request = 204;</code>
+     * <code>.im.turms.proto.DeleteRelationshipRequest delete_relationship_request = 205;</code>
      */
     private void setDeleteRelationshipRequest(
             im.turms.client.model.proto.request.user.relationship.DeleteRelationshipRequest value) {
         value.getClass();
         kind_ = value;
-        kindCase_ = 204;
+        kindCase_ = 205;
     }
 
     /**
-     * <code>.im.turms.proto.DeleteRelationshipRequest delete_relationship_request = 204;</code>
+     * <code>.im.turms.proto.DeleteRelationshipRequest delete_relationship_request = 205;</code>
      */
     private void mergeDeleteRelationshipRequest(
             im.turms.client.model.proto.request.user.relationship.DeleteRelationshipRequest value) {
         value.getClass();
-        if (kindCase_ == 204
+        if (kindCase_ == 205
                 && kind_ != im.turms.client.model.proto.request.user.relationship.DeleteRelationshipRequest
                         .getDefaultInstance()) {
             kind_ = im.turms.client.model.proto.request.user.relationship.DeleteRelationshipRequest
@@ -1828,35 +1899,35 @@ public final class TurmsRequest extends
         } else {
             kind_ = value;
         }
-        kindCase_ = 204;
+        kindCase_ = 205;
     }
 
     /**
-     * <code>.im.turms.proto.DeleteRelationshipRequest delete_relationship_request = 204;</code>
+     * <code>.im.turms.proto.DeleteRelationshipRequest delete_relationship_request = 205;</code>
      */
     private void clearDeleteRelationshipRequest() {
-        if (kindCase_ == 204) {
+        if (kindCase_ == 205) {
             kindCase_ = 0;
             kind_ = null;
         }
     }
 
-    public static final int QUERY_FRIEND_REQUESTS_REQUEST_FIELD_NUMBER = 205;
+    public static final int QUERY_FRIEND_REQUESTS_REQUEST_FIELD_NUMBER = 206;
 
     /**
-     * <code>.im.turms.proto.QueryFriendRequestsRequest query_friend_requests_request = 205;</code>
+     * <code>.im.turms.proto.QueryFriendRequestsRequest query_friend_requests_request = 206;</code>
      */
     @java.lang.Override
     public boolean hasQueryFriendRequestsRequest() {
-        return kindCase_ == 205;
+        return kindCase_ == 206;
     }
 
     /**
-     * <code>.im.turms.proto.QueryFriendRequestsRequest query_friend_requests_request = 205;</code>
+     * <code>.im.turms.proto.QueryFriendRequestsRequest query_friend_requests_request = 206;</code>
      */
     @java.lang.Override
     public im.turms.client.model.proto.request.user.relationship.QueryFriendRequestsRequest getQueryFriendRequestsRequest() {
-        if (kindCase_ == 205) {
+        if (kindCase_ == 206) {
             return (im.turms.client.model.proto.request.user.relationship.QueryFriendRequestsRequest) kind_;
         }
         return im.turms.client.model.proto.request.user.relationship.QueryFriendRequestsRequest
@@ -1864,22 +1935,22 @@ public final class TurmsRequest extends
     }
 
     /**
-     * <code>.im.turms.proto.QueryFriendRequestsRequest query_friend_requests_request = 205;</code>
+     * <code>.im.turms.proto.QueryFriendRequestsRequest query_friend_requests_request = 206;</code>
      */
     private void setQueryFriendRequestsRequest(
             im.turms.client.model.proto.request.user.relationship.QueryFriendRequestsRequest value) {
         value.getClass();
         kind_ = value;
-        kindCase_ = 205;
+        kindCase_ = 206;
     }
 
     /**
-     * <code>.im.turms.proto.QueryFriendRequestsRequest query_friend_requests_request = 205;</code>
+     * <code>.im.turms.proto.QueryFriendRequestsRequest query_friend_requests_request = 206;</code>
      */
     private void mergeQueryFriendRequestsRequest(
             im.turms.client.model.proto.request.user.relationship.QueryFriendRequestsRequest value) {
         value.getClass();
-        if (kindCase_ == 205
+        if (kindCase_ == 206
                 && kind_ != im.turms.client.model.proto.request.user.relationship.QueryFriendRequestsRequest
                         .getDefaultInstance()) {
             kind_ = im.turms.client.model.proto.request.user.relationship.QueryFriendRequestsRequest
@@ -1890,35 +1961,35 @@ public final class TurmsRequest extends
         } else {
             kind_ = value;
         }
-        kindCase_ = 205;
+        kindCase_ = 206;
     }
 
     /**
-     * <code>.im.turms.proto.QueryFriendRequestsRequest query_friend_requests_request = 205;</code>
+     * <code>.im.turms.proto.QueryFriendRequestsRequest query_friend_requests_request = 206;</code>
      */
     private void clearQueryFriendRequestsRequest() {
-        if (kindCase_ == 205) {
+        if (kindCase_ == 206) {
             kindCase_ = 0;
             kind_ = null;
         }
     }
 
-    public static final int QUERY_RELATED_USER_IDS_REQUEST_FIELD_NUMBER = 206;
+    public static final int QUERY_RELATED_USER_IDS_REQUEST_FIELD_NUMBER = 207;
 
     /**
-     * <code>.im.turms.proto.QueryRelatedUserIdsRequest query_related_user_ids_request = 206;</code>
+     * <code>.im.turms.proto.QueryRelatedUserIdsRequest query_related_user_ids_request = 207;</code>
      */
     @java.lang.Override
     public boolean hasQueryRelatedUserIdsRequest() {
-        return kindCase_ == 206;
+        return kindCase_ == 207;
     }
 
     /**
-     * <code>.im.turms.proto.QueryRelatedUserIdsRequest query_related_user_ids_request = 206;</code>
+     * <code>.im.turms.proto.QueryRelatedUserIdsRequest query_related_user_ids_request = 207;</code>
      */
     @java.lang.Override
     public im.turms.client.model.proto.request.user.relationship.QueryRelatedUserIdsRequest getQueryRelatedUserIdsRequest() {
-        if (kindCase_ == 206) {
+        if (kindCase_ == 207) {
             return (im.turms.client.model.proto.request.user.relationship.QueryRelatedUserIdsRequest) kind_;
         }
         return im.turms.client.model.proto.request.user.relationship.QueryRelatedUserIdsRequest
@@ -1926,22 +1997,22 @@ public final class TurmsRequest extends
     }
 
     /**
-     * <code>.im.turms.proto.QueryRelatedUserIdsRequest query_related_user_ids_request = 206;</code>
+     * <code>.im.turms.proto.QueryRelatedUserIdsRequest query_related_user_ids_request = 207;</code>
      */
     private void setQueryRelatedUserIdsRequest(
             im.turms.client.model.proto.request.user.relationship.QueryRelatedUserIdsRequest value) {
         value.getClass();
         kind_ = value;
-        kindCase_ = 206;
+        kindCase_ = 207;
     }
 
     /**
-     * <code>.im.turms.proto.QueryRelatedUserIdsRequest query_related_user_ids_request = 206;</code>
+     * <code>.im.turms.proto.QueryRelatedUserIdsRequest query_related_user_ids_request = 207;</code>
      */
     private void mergeQueryRelatedUserIdsRequest(
             im.turms.client.model.proto.request.user.relationship.QueryRelatedUserIdsRequest value) {
         value.getClass();
-        if (kindCase_ == 206
+        if (kindCase_ == 207
                 && kind_ != im.turms.client.model.proto.request.user.relationship.QueryRelatedUserIdsRequest
                         .getDefaultInstance()) {
             kind_ = im.turms.client.model.proto.request.user.relationship.QueryRelatedUserIdsRequest
@@ -1952,35 +2023,35 @@ public final class TurmsRequest extends
         } else {
             kind_ = value;
         }
-        kindCase_ = 206;
+        kindCase_ = 207;
     }
 
     /**
-     * <code>.im.turms.proto.QueryRelatedUserIdsRequest query_related_user_ids_request = 206;</code>
+     * <code>.im.turms.proto.QueryRelatedUserIdsRequest query_related_user_ids_request = 207;</code>
      */
     private void clearQueryRelatedUserIdsRequest() {
-        if (kindCase_ == 206) {
+        if (kindCase_ == 207) {
             kindCase_ = 0;
             kind_ = null;
         }
     }
 
-    public static final int QUERY_RELATIONSHIP_GROUPS_REQUEST_FIELD_NUMBER = 207;
+    public static final int QUERY_RELATIONSHIP_GROUPS_REQUEST_FIELD_NUMBER = 208;
 
     /**
-     * <code>.im.turms.proto.QueryRelationshipGroupsRequest query_relationship_groups_request = 207;</code>
+     * <code>.im.turms.proto.QueryRelationshipGroupsRequest query_relationship_groups_request = 208;</code>
      */
     @java.lang.Override
     public boolean hasQueryRelationshipGroupsRequest() {
-        return kindCase_ == 207;
+        return kindCase_ == 208;
     }
 
     /**
-     * <code>.im.turms.proto.QueryRelationshipGroupsRequest query_relationship_groups_request = 207;</code>
+     * <code>.im.turms.proto.QueryRelationshipGroupsRequest query_relationship_groups_request = 208;</code>
      */
     @java.lang.Override
     public im.turms.client.model.proto.request.user.relationship.QueryRelationshipGroupsRequest getQueryRelationshipGroupsRequest() {
-        if (kindCase_ == 207) {
+        if (kindCase_ == 208) {
             return (im.turms.client.model.proto.request.user.relationship.QueryRelationshipGroupsRequest) kind_;
         }
         return im.turms.client.model.proto.request.user.relationship.QueryRelationshipGroupsRequest
@@ -1988,22 +2059,22 @@ public final class TurmsRequest extends
     }
 
     /**
-     * <code>.im.turms.proto.QueryRelationshipGroupsRequest query_relationship_groups_request = 207;</code>
+     * <code>.im.turms.proto.QueryRelationshipGroupsRequest query_relationship_groups_request = 208;</code>
      */
     private void setQueryRelationshipGroupsRequest(
             im.turms.client.model.proto.request.user.relationship.QueryRelationshipGroupsRequest value) {
         value.getClass();
         kind_ = value;
-        kindCase_ = 207;
+        kindCase_ = 208;
     }
 
     /**
-     * <code>.im.turms.proto.QueryRelationshipGroupsRequest query_relationship_groups_request = 207;</code>
+     * <code>.im.turms.proto.QueryRelationshipGroupsRequest query_relationship_groups_request = 208;</code>
      */
     private void mergeQueryRelationshipGroupsRequest(
             im.turms.client.model.proto.request.user.relationship.QueryRelationshipGroupsRequest value) {
         value.getClass();
-        if (kindCase_ == 207
+        if (kindCase_ == 208
                 && kind_ != im.turms.client.model.proto.request.user.relationship.QueryRelationshipGroupsRequest
                         .getDefaultInstance()) {
             kind_ = im.turms.client.model.proto.request.user.relationship.QueryRelationshipGroupsRequest
@@ -2014,35 +2085,35 @@ public final class TurmsRequest extends
         } else {
             kind_ = value;
         }
-        kindCase_ = 207;
+        kindCase_ = 208;
     }
 
     /**
-     * <code>.im.turms.proto.QueryRelationshipGroupsRequest query_relationship_groups_request = 207;</code>
+     * <code>.im.turms.proto.QueryRelationshipGroupsRequest query_relationship_groups_request = 208;</code>
      */
     private void clearQueryRelationshipGroupsRequest() {
-        if (kindCase_ == 207) {
+        if (kindCase_ == 208) {
             kindCase_ = 0;
             kind_ = null;
         }
     }
 
-    public static final int QUERY_RELATIONSHIPS_REQUEST_FIELD_NUMBER = 208;
+    public static final int QUERY_RELATIONSHIPS_REQUEST_FIELD_NUMBER = 209;
 
     /**
-     * <code>.im.turms.proto.QueryRelationshipsRequest query_relationships_request = 208;</code>
+     * <code>.im.turms.proto.QueryRelationshipsRequest query_relationships_request = 209;</code>
      */
     @java.lang.Override
     public boolean hasQueryRelationshipsRequest() {
-        return kindCase_ == 208;
+        return kindCase_ == 209;
     }
 
     /**
-     * <code>.im.turms.proto.QueryRelationshipsRequest query_relationships_request = 208;</code>
+     * <code>.im.turms.proto.QueryRelationshipsRequest query_relationships_request = 209;</code>
      */
     @java.lang.Override
     public im.turms.client.model.proto.request.user.relationship.QueryRelationshipsRequest getQueryRelationshipsRequest() {
-        if (kindCase_ == 208) {
+        if (kindCase_ == 209) {
             return (im.turms.client.model.proto.request.user.relationship.QueryRelationshipsRequest) kind_;
         }
         return im.turms.client.model.proto.request.user.relationship.QueryRelationshipsRequest
@@ -2050,22 +2121,22 @@ public final class TurmsRequest extends
     }
 
     /**
-     * <code>.im.turms.proto.QueryRelationshipsRequest query_relationships_request = 208;</code>
+     * <code>.im.turms.proto.QueryRelationshipsRequest query_relationships_request = 209;</code>
      */
     private void setQueryRelationshipsRequest(
             im.turms.client.model.proto.request.user.relationship.QueryRelationshipsRequest value) {
         value.getClass();
         kind_ = value;
-        kindCase_ = 208;
+        kindCase_ = 209;
     }
 
     /**
-     * <code>.im.turms.proto.QueryRelationshipsRequest query_relationships_request = 208;</code>
+     * <code>.im.turms.proto.QueryRelationshipsRequest query_relationships_request = 209;</code>
      */
     private void mergeQueryRelationshipsRequest(
             im.turms.client.model.proto.request.user.relationship.QueryRelationshipsRequest value) {
         value.getClass();
-        if (kindCase_ == 208
+        if (kindCase_ == 209
                 && kind_ != im.turms.client.model.proto.request.user.relationship.QueryRelationshipsRequest
                         .getDefaultInstance()) {
             kind_ = im.turms.client.model.proto.request.user.relationship.QueryRelationshipsRequest
@@ -2076,35 +2147,35 @@ public final class TurmsRequest extends
         } else {
             kind_ = value;
         }
-        kindCase_ = 208;
+        kindCase_ = 209;
     }
 
     /**
-     * <code>.im.turms.proto.QueryRelationshipsRequest query_relationships_request = 208;</code>
+     * <code>.im.turms.proto.QueryRelationshipsRequest query_relationships_request = 209;</code>
      */
     private void clearQueryRelationshipsRequest() {
-        if (kindCase_ == 208) {
+        if (kindCase_ == 209) {
             kindCase_ = 0;
             kind_ = null;
         }
     }
 
-    public static final int UPDATE_FRIEND_REQUEST_REQUEST_FIELD_NUMBER = 209;
+    public static final int UPDATE_FRIEND_REQUEST_REQUEST_FIELD_NUMBER = 210;
 
     /**
-     * <code>.im.turms.proto.UpdateFriendRequestRequest update_friend_request_request = 209;</code>
+     * <code>.im.turms.proto.UpdateFriendRequestRequest update_friend_request_request = 210;</code>
      */
     @java.lang.Override
     public boolean hasUpdateFriendRequestRequest() {
-        return kindCase_ == 209;
+        return kindCase_ == 210;
     }
 
     /**
-     * <code>.im.turms.proto.UpdateFriendRequestRequest update_friend_request_request = 209;</code>
+     * <code>.im.turms.proto.UpdateFriendRequestRequest update_friend_request_request = 210;</code>
      */
     @java.lang.Override
     public im.turms.client.model.proto.request.user.relationship.UpdateFriendRequestRequest getUpdateFriendRequestRequest() {
-        if (kindCase_ == 209) {
+        if (kindCase_ == 210) {
             return (im.turms.client.model.proto.request.user.relationship.UpdateFriendRequestRequest) kind_;
         }
         return im.turms.client.model.proto.request.user.relationship.UpdateFriendRequestRequest
@@ -2112,22 +2183,22 @@ public final class TurmsRequest extends
     }
 
     /**
-     * <code>.im.turms.proto.UpdateFriendRequestRequest update_friend_request_request = 209;</code>
+     * <code>.im.turms.proto.UpdateFriendRequestRequest update_friend_request_request = 210;</code>
      */
     private void setUpdateFriendRequestRequest(
             im.turms.client.model.proto.request.user.relationship.UpdateFriendRequestRequest value) {
         value.getClass();
         kind_ = value;
-        kindCase_ = 209;
+        kindCase_ = 210;
     }
 
     /**
-     * <code>.im.turms.proto.UpdateFriendRequestRequest update_friend_request_request = 209;</code>
+     * <code>.im.turms.proto.UpdateFriendRequestRequest update_friend_request_request = 210;</code>
      */
     private void mergeUpdateFriendRequestRequest(
             im.turms.client.model.proto.request.user.relationship.UpdateFriendRequestRequest value) {
         value.getClass();
-        if (kindCase_ == 209
+        if (kindCase_ == 210
                 && kind_ != im.turms.client.model.proto.request.user.relationship.UpdateFriendRequestRequest
                         .getDefaultInstance()) {
             kind_ = im.turms.client.model.proto.request.user.relationship.UpdateFriendRequestRequest
@@ -2138,35 +2209,35 @@ public final class TurmsRequest extends
         } else {
             kind_ = value;
         }
-        kindCase_ = 209;
+        kindCase_ = 210;
     }
 
     /**
-     * <code>.im.turms.proto.UpdateFriendRequestRequest update_friend_request_request = 209;</code>
+     * <code>.im.turms.proto.UpdateFriendRequestRequest update_friend_request_request = 210;</code>
      */
     private void clearUpdateFriendRequestRequest() {
-        if (kindCase_ == 209) {
+        if (kindCase_ == 210) {
             kindCase_ = 0;
             kind_ = null;
         }
     }
 
-    public static final int UPDATE_RELATIONSHIP_GROUP_REQUEST_FIELD_NUMBER = 210;
+    public static final int UPDATE_RELATIONSHIP_GROUP_REQUEST_FIELD_NUMBER = 211;
 
     /**
-     * <code>.im.turms.proto.UpdateRelationshipGroupRequest update_relationship_group_request = 210;</code>
+     * <code>.im.turms.proto.UpdateRelationshipGroupRequest update_relationship_group_request = 211;</code>
      */
     @java.lang.Override
     public boolean hasUpdateRelationshipGroupRequest() {
-        return kindCase_ == 210;
+        return kindCase_ == 211;
     }
 
     /**
-     * <code>.im.turms.proto.UpdateRelationshipGroupRequest update_relationship_group_request = 210;</code>
+     * <code>.im.turms.proto.UpdateRelationshipGroupRequest update_relationship_group_request = 211;</code>
      */
     @java.lang.Override
     public im.turms.client.model.proto.request.user.relationship.UpdateRelationshipGroupRequest getUpdateRelationshipGroupRequest() {
-        if (kindCase_ == 210) {
+        if (kindCase_ == 211) {
             return (im.turms.client.model.proto.request.user.relationship.UpdateRelationshipGroupRequest) kind_;
         }
         return im.turms.client.model.proto.request.user.relationship.UpdateRelationshipGroupRequest
@@ -2174,22 +2245,22 @@ public final class TurmsRequest extends
     }
 
     /**
-     * <code>.im.turms.proto.UpdateRelationshipGroupRequest update_relationship_group_request = 210;</code>
+     * <code>.im.turms.proto.UpdateRelationshipGroupRequest update_relationship_group_request = 211;</code>
      */
     private void setUpdateRelationshipGroupRequest(
             im.turms.client.model.proto.request.user.relationship.UpdateRelationshipGroupRequest value) {
         value.getClass();
         kind_ = value;
-        kindCase_ = 210;
+        kindCase_ = 211;
     }
 
     /**
-     * <code>.im.turms.proto.UpdateRelationshipGroupRequest update_relationship_group_request = 210;</code>
+     * <code>.im.turms.proto.UpdateRelationshipGroupRequest update_relationship_group_request = 211;</code>
      */
     private void mergeUpdateRelationshipGroupRequest(
             im.turms.client.model.proto.request.user.relationship.UpdateRelationshipGroupRequest value) {
         value.getClass();
-        if (kindCase_ == 210
+        if (kindCase_ == 211
                 && kind_ != im.turms.client.model.proto.request.user.relationship.UpdateRelationshipGroupRequest
                         .getDefaultInstance()) {
             kind_ = im.turms.client.model.proto.request.user.relationship.UpdateRelationshipGroupRequest
@@ -2200,35 +2271,35 @@ public final class TurmsRequest extends
         } else {
             kind_ = value;
         }
-        kindCase_ = 210;
+        kindCase_ = 211;
     }
 
     /**
-     * <code>.im.turms.proto.UpdateRelationshipGroupRequest update_relationship_group_request = 210;</code>
+     * <code>.im.turms.proto.UpdateRelationshipGroupRequest update_relationship_group_request = 211;</code>
      */
     private void clearUpdateRelationshipGroupRequest() {
-        if (kindCase_ == 210) {
+        if (kindCase_ == 211) {
             kindCase_ = 0;
             kind_ = null;
         }
     }
 
-    public static final int UPDATE_RELATIONSHIP_REQUEST_FIELD_NUMBER = 211;
+    public static final int UPDATE_RELATIONSHIP_REQUEST_FIELD_NUMBER = 212;
 
     /**
-     * <code>.im.turms.proto.UpdateRelationshipRequest update_relationship_request = 211;</code>
+     * <code>.im.turms.proto.UpdateRelationshipRequest update_relationship_request = 212;</code>
      */
     @java.lang.Override
     public boolean hasUpdateRelationshipRequest() {
-        return kindCase_ == 211;
+        return kindCase_ == 212;
     }
 
     /**
-     * <code>.im.turms.proto.UpdateRelationshipRequest update_relationship_request = 211;</code>
+     * <code>.im.turms.proto.UpdateRelationshipRequest update_relationship_request = 212;</code>
      */
     @java.lang.Override
     public im.turms.client.model.proto.request.user.relationship.UpdateRelationshipRequest getUpdateRelationshipRequest() {
-        if (kindCase_ == 211) {
+        if (kindCase_ == 212) {
             return (im.turms.client.model.proto.request.user.relationship.UpdateRelationshipRequest) kind_;
         }
         return im.turms.client.model.proto.request.user.relationship.UpdateRelationshipRequest
@@ -2236,22 +2307,22 @@ public final class TurmsRequest extends
     }
 
     /**
-     * <code>.im.turms.proto.UpdateRelationshipRequest update_relationship_request = 211;</code>
+     * <code>.im.turms.proto.UpdateRelationshipRequest update_relationship_request = 212;</code>
      */
     private void setUpdateRelationshipRequest(
             im.turms.client.model.proto.request.user.relationship.UpdateRelationshipRequest value) {
         value.getClass();
         kind_ = value;
-        kindCase_ = 211;
+        kindCase_ = 212;
     }
 
     /**
-     * <code>.im.turms.proto.UpdateRelationshipRequest update_relationship_request = 211;</code>
+     * <code>.im.turms.proto.UpdateRelationshipRequest update_relationship_request = 212;</code>
      */
     private void mergeUpdateRelationshipRequest(
             im.turms.client.model.proto.request.user.relationship.UpdateRelationshipRequest value) {
         value.getClass();
-        if (kindCase_ == 211
+        if (kindCase_ == 212
                 && kind_ != im.turms.client.model.proto.request.user.relationship.UpdateRelationshipRequest
                         .getDefaultInstance()) {
             kind_ = im.turms.client.model.proto.request.user.relationship.UpdateRelationshipRequest
@@ -2262,14 +2333,14 @@ public final class TurmsRequest extends
         } else {
             kind_ = value;
         }
-        kindCase_ = 211;
+        kindCase_ = 212;
     }
 
     /**
-     * <code>.im.turms.proto.UpdateRelationshipRequest update_relationship_request = 211;</code>
+     * <code>.im.turms.proto.UpdateRelationshipRequest update_relationship_request = 212;</code>
      */
     private void clearUpdateRelationshipRequest() {
-        if (kindCase_ == 211) {
+        if (kindCase_ == 212) {
             kindCase_ = 0;
             kind_ = null;
         }
@@ -2281,7 +2352,7 @@ public final class TurmsRequest extends
      * <pre>
      * Group
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CreateGroupRequest create_group_request = 300;</code>
      */
     @java.lang.Override
@@ -2293,7 +2364,7 @@ public final class TurmsRequest extends
      * <pre>
      * Group
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CreateGroupRequest create_group_request = 300;</code>
      */
     @java.lang.Override
@@ -2308,7 +2379,7 @@ public final class TurmsRequest extends
      * <pre>
      * Group
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CreateGroupRequest create_group_request = 300;</code>
      */
     private void setCreateGroupRequest(
@@ -2322,7 +2393,7 @@ public final class TurmsRequest extends
      * <pre>
      * Group
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CreateGroupRequest create_group_request = 300;</code>
      */
     private void mergeCreateGroupRequest(
@@ -2346,7 +2417,7 @@ public final class TurmsRequest extends
      * <pre>
      * Group
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CreateGroupRequest create_group_request = 300;</code>
      */
     private void clearCreateGroupRequest() {
@@ -2668,7 +2739,7 @@ public final class TurmsRequest extends
      * <pre>
      * Group Blocklist
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CreateGroupBlockedUserRequest create_group_blocked_user_request = 400;</code>
      */
     @java.lang.Override
@@ -2680,7 +2751,7 @@ public final class TurmsRequest extends
      * <pre>
      * Group Blocklist
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CreateGroupBlockedUserRequest create_group_blocked_user_request = 400;</code>
      */
     @java.lang.Override
@@ -2696,7 +2767,7 @@ public final class TurmsRequest extends
      * <pre>
      * Group Blocklist
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CreateGroupBlockedUserRequest create_group_blocked_user_request = 400;</code>
      */
     private void setCreateGroupBlockedUserRequest(
@@ -2710,7 +2781,7 @@ public final class TurmsRequest extends
      * <pre>
      * Group Blocklist
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CreateGroupBlockedUserRequest create_group_blocked_user_request = 400;</code>
      */
     private void mergeCreateGroupBlockedUserRequest(
@@ -2734,7 +2805,7 @@ public final class TurmsRequest extends
      * <pre>
      * Group Blocklist
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CreateGroupBlockedUserRequest create_group_blocked_user_request = 400;</code>
      */
     private void clearCreateGroupBlockedUserRequest() {
@@ -2936,7 +3007,7 @@ public final class TurmsRequest extends
      * <pre>
      * Group Enrollment
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CheckGroupJoinQuestionsAnswersRequest check_group_join_questions_answers_request = 500;</code>
      */
     @java.lang.Override
@@ -2948,7 +3019,7 @@ public final class TurmsRequest extends
      * <pre>
      * Group Enrollment
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CheckGroupJoinQuestionsAnswersRequest check_group_join_questions_answers_request = 500;</code>
      */
     @java.lang.Override
@@ -2964,7 +3035,7 @@ public final class TurmsRequest extends
      * <pre>
      * Group Enrollment
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CheckGroupJoinQuestionsAnswersRequest check_group_join_questions_answers_request = 500;</code>
      */
     private void setCheckGroupJoinQuestionsAnswersRequest(
@@ -2978,7 +3049,7 @@ public final class TurmsRequest extends
      * <pre>
      * Group Enrollment
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CheckGroupJoinQuestionsAnswersRequest check_group_join_questions_answers_request = 500;</code>
      */
     private void mergeCheckGroupJoinQuestionsAnswersRequest(
@@ -3002,7 +3073,7 @@ public final class TurmsRequest extends
      * <pre>
      * Group Enrollment
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CheckGroupJoinQuestionsAnswersRequest check_group_join_questions_answers_request = 500;</code>
      */
     private void clearCheckGroupJoinQuestionsAnswersRequest() {
@@ -3570,22 +3641,84 @@ public final class TurmsRequest extends
         }
     }
 
-    public static final int UPDATE_GROUP_JOIN_QUESTION_REQUEST_FIELD_NUMBER = 510;
+    public static final int UPDATE_GROUP_INVITATION_REQUEST_FIELD_NUMBER = 510;
 
     /**
-     * <code>.im.turms.proto.UpdateGroupJoinQuestionRequest update_group_join_question_request = 510;</code>
+     * <code>.im.turms.proto.UpdateGroupInvitationRequest update_group_invitation_request = 510;</code>
      */
     @java.lang.Override
-    public boolean hasUpdateGroupJoinQuestionRequest() {
+    public boolean hasUpdateGroupInvitationRequest() {
         return kindCase_ == 510;
     }
 
     /**
-     * <code>.im.turms.proto.UpdateGroupJoinQuestionRequest update_group_join_question_request = 510;</code>
+     * <code>.im.turms.proto.UpdateGroupInvitationRequest update_group_invitation_request = 510;</code>
+     */
+    @java.lang.Override
+    public im.turms.client.model.proto.request.group.enrollment.UpdateGroupInvitationRequest getUpdateGroupInvitationRequest() {
+        if (kindCase_ == 510) {
+            return (im.turms.client.model.proto.request.group.enrollment.UpdateGroupInvitationRequest) kind_;
+        }
+        return im.turms.client.model.proto.request.group.enrollment.UpdateGroupInvitationRequest
+                .getDefaultInstance();
+    }
+
+    /**
+     * <code>.im.turms.proto.UpdateGroupInvitationRequest update_group_invitation_request = 510;</code>
+     */
+    private void setUpdateGroupInvitationRequest(
+            im.turms.client.model.proto.request.group.enrollment.UpdateGroupInvitationRequest value) {
+        value.getClass();
+        kind_ = value;
+        kindCase_ = 510;
+    }
+
+    /**
+     * <code>.im.turms.proto.UpdateGroupInvitationRequest update_group_invitation_request = 510;</code>
+     */
+    private void mergeUpdateGroupInvitationRequest(
+            im.turms.client.model.proto.request.group.enrollment.UpdateGroupInvitationRequest value) {
+        value.getClass();
+        if (kindCase_ == 510
+                && kind_ != im.turms.client.model.proto.request.group.enrollment.UpdateGroupInvitationRequest
+                        .getDefaultInstance()) {
+            kind_ = im.turms.client.model.proto.request.group.enrollment.UpdateGroupInvitationRequest
+                    .newBuilder(
+                            (im.turms.client.model.proto.request.group.enrollment.UpdateGroupInvitationRequest) kind_)
+                    .mergeFrom(value)
+                    .buildPartial();
+        } else {
+            kind_ = value;
+        }
+        kindCase_ = 510;
+    }
+
+    /**
+     * <code>.im.turms.proto.UpdateGroupInvitationRequest update_group_invitation_request = 510;</code>
+     */
+    private void clearUpdateGroupInvitationRequest() {
+        if (kindCase_ == 510) {
+            kindCase_ = 0;
+            kind_ = null;
+        }
+    }
+
+    public static final int UPDATE_GROUP_JOIN_QUESTION_REQUEST_FIELD_NUMBER = 511;
+
+    /**
+     * <code>.im.turms.proto.UpdateGroupJoinQuestionRequest update_group_join_question_request = 511;</code>
+     */
+    @java.lang.Override
+    public boolean hasUpdateGroupJoinQuestionRequest() {
+        return kindCase_ == 511;
+    }
+
+    /**
+     * <code>.im.turms.proto.UpdateGroupJoinQuestionRequest update_group_join_question_request = 511;</code>
      */
     @java.lang.Override
     public im.turms.client.model.proto.request.group.enrollment.UpdateGroupJoinQuestionRequest getUpdateGroupJoinQuestionRequest() {
-        if (kindCase_ == 510) {
+        if (kindCase_ == 511) {
             return (im.turms.client.model.proto.request.group.enrollment.UpdateGroupJoinQuestionRequest) kind_;
         }
         return im.turms.client.model.proto.request.group.enrollment.UpdateGroupJoinQuestionRequest
@@ -3593,22 +3726,22 @@ public final class TurmsRequest extends
     }
 
     /**
-     * <code>.im.turms.proto.UpdateGroupJoinQuestionRequest update_group_join_question_request = 510;</code>
+     * <code>.im.turms.proto.UpdateGroupJoinQuestionRequest update_group_join_question_request = 511;</code>
      */
     private void setUpdateGroupJoinQuestionRequest(
             im.turms.client.model.proto.request.group.enrollment.UpdateGroupJoinQuestionRequest value) {
         value.getClass();
         kind_ = value;
-        kindCase_ = 510;
+        kindCase_ = 511;
     }
 
     /**
-     * <code>.im.turms.proto.UpdateGroupJoinQuestionRequest update_group_join_question_request = 510;</code>
+     * <code>.im.turms.proto.UpdateGroupJoinQuestionRequest update_group_join_question_request = 511;</code>
      */
     private void mergeUpdateGroupJoinQuestionRequest(
             im.turms.client.model.proto.request.group.enrollment.UpdateGroupJoinQuestionRequest value) {
         value.getClass();
-        if (kindCase_ == 510
+        if (kindCase_ == 511
                 && kind_ != im.turms.client.model.proto.request.group.enrollment.UpdateGroupJoinQuestionRequest
                         .getDefaultInstance()) {
             kind_ = im.turms.client.model.proto.request.group.enrollment.UpdateGroupJoinQuestionRequest
@@ -3619,14 +3752,76 @@ public final class TurmsRequest extends
         } else {
             kind_ = value;
         }
-        kindCase_ = 510;
+        kindCase_ = 511;
     }
 
     /**
-     * <code>.im.turms.proto.UpdateGroupJoinQuestionRequest update_group_join_question_request = 510;</code>
+     * <code>.im.turms.proto.UpdateGroupJoinQuestionRequest update_group_join_question_request = 511;</code>
      */
     private void clearUpdateGroupJoinQuestionRequest() {
-        if (kindCase_ == 510) {
+        if (kindCase_ == 511) {
+            kindCase_ = 0;
+            kind_ = null;
+        }
+    }
+
+    public static final int UPDATE_GROUP_JOIN_REQUEST_REQUEST_FIELD_NUMBER = 512;
+
+    /**
+     * <code>.im.turms.proto.UpdateGroupJoinRequestRequest update_group_join_request_request = 512;</code>
+     */
+    @java.lang.Override
+    public boolean hasUpdateGroupJoinRequestRequest() {
+        return kindCase_ == 512;
+    }
+
+    /**
+     * <code>.im.turms.proto.UpdateGroupJoinRequestRequest update_group_join_request_request = 512;</code>
+     */
+    @java.lang.Override
+    public im.turms.client.model.proto.request.group.enrollment.UpdateGroupJoinRequestRequest getUpdateGroupJoinRequestRequest() {
+        if (kindCase_ == 512) {
+            return (im.turms.client.model.proto.request.group.enrollment.UpdateGroupJoinRequestRequest) kind_;
+        }
+        return im.turms.client.model.proto.request.group.enrollment.UpdateGroupJoinRequestRequest
+                .getDefaultInstance();
+    }
+
+    /**
+     * <code>.im.turms.proto.UpdateGroupJoinRequestRequest update_group_join_request_request = 512;</code>
+     */
+    private void setUpdateGroupJoinRequestRequest(
+            im.turms.client.model.proto.request.group.enrollment.UpdateGroupJoinRequestRequest value) {
+        value.getClass();
+        kind_ = value;
+        kindCase_ = 512;
+    }
+
+    /**
+     * <code>.im.turms.proto.UpdateGroupJoinRequestRequest update_group_join_request_request = 512;</code>
+     */
+    private void mergeUpdateGroupJoinRequestRequest(
+            im.turms.client.model.proto.request.group.enrollment.UpdateGroupJoinRequestRequest value) {
+        value.getClass();
+        if (kindCase_ == 512
+                && kind_ != im.turms.client.model.proto.request.group.enrollment.UpdateGroupJoinRequestRequest
+                        .getDefaultInstance()) {
+            kind_ = im.turms.client.model.proto.request.group.enrollment.UpdateGroupJoinRequestRequest
+                    .newBuilder(
+                            (im.turms.client.model.proto.request.group.enrollment.UpdateGroupJoinRequestRequest) kind_)
+                    .mergeFrom(value)
+                    .buildPartial();
+        } else {
+            kind_ = value;
+        }
+        kindCase_ = 512;
+    }
+
+    /**
+     * <code>.im.turms.proto.UpdateGroupJoinRequestRequest update_group_join_request_request = 512;</code>
+     */
+    private void clearUpdateGroupJoinRequestRequest() {
+        if (kindCase_ == 512) {
             kindCase_ = 0;
             kind_ = null;
         }
@@ -3638,7 +3833,7 @@ public final class TurmsRequest extends
      * <pre>
      * Storage
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.DeleteResourceRequest delete_resource_request = 1000;</code>
      */
     @java.lang.Override
@@ -3650,7 +3845,7 @@ public final class TurmsRequest extends
      * <pre>
      * Storage
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.DeleteResourceRequest delete_resource_request = 1000;</code>
      */
     @java.lang.Override
@@ -3666,7 +3861,7 @@ public final class TurmsRequest extends
      * <pre>
      * Storage
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.DeleteResourceRequest delete_resource_request = 1000;</code>
      */
     private void setDeleteResourceRequest(
@@ -3680,7 +3875,7 @@ public final class TurmsRequest extends
      * <pre>
      * Storage
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.DeleteResourceRequest delete_resource_request = 1000;</code>
      */
     private void mergeDeleteResourceRequest(
@@ -3703,7 +3898,7 @@ public final class TurmsRequest extends
      * <pre>
      * Storage
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.DeleteResourceRequest delete_resource_request = 1000;</code>
      */
     private void clearDeleteResourceRequest() {
@@ -4040,18 +4235,18 @@ public final class TurmsRequest extends
     }
 
     public static Builder newBuilder() {
-        return (Builder) DEFAULT_INSTANCE.createBuilder();
+        return DEFAULT_INSTANCE.createBuilder();
     }
 
     public static Builder newBuilder(im.turms.client.model.proto.request.TurmsRequest prototype) {
-        return (Builder) DEFAULT_INSTANCE.createBuilder(prototype);
+        return DEFAULT_INSTANCE.createBuilder(prototype);
     }
 
     /**
      * <pre>
      * Client -&gt; Server -&gt; Client
      * </pre>
-     * <p>
+     *
      * Protobuf type {@code im.turms.proto.TurmsRequest}
      */
     public static final class Builder extends
@@ -4080,7 +4275,7 @@ public final class TurmsRequest extends
          * Note: "request_id" is allowed to be duplicate because
          * it is used for clients to identify the response of the same request id in a session
          * </pre>
-         * 
+         *
          * <code>optional int64 request_id = 1;</code>
          *
          * @return Whether the requestId field is set.
@@ -4095,7 +4290,7 @@ public final class TurmsRequest extends
          * Note: "request_id" is allowed to be duplicate because
          * it is used for clients to identify the response of the same request id in a session
          * </pre>
-         * 
+         *
          * <code>optional int64 request_id = 1;</code>
          *
          * @return The requestId.
@@ -4110,7 +4305,7 @@ public final class TurmsRequest extends
          * Note: "request_id" is allowed to be duplicate because
          * it is used for clients to identify the response of the same request id in a session
          * </pre>
-         * 
+         *
          * <code>optional int64 request_id = 1;</code>
          *
          * @param value The requestId to set.
@@ -4127,7 +4322,7 @@ public final class TurmsRequest extends
          * Note: "request_id" is allowed to be duplicate because
          * it is used for clients to identify the response of the same request id in a session
          * </pre>
-         * 
+         *
          * <code>optional int64 request_id = 1;</code>
          *
          * @return This builder for chaining.
@@ -4142,7 +4337,7 @@ public final class TurmsRequest extends
          * <pre>
          * User - Session
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateSessionRequest create_session_request = 3;</code>
          */
         @java.lang.Override
@@ -4154,7 +4349,7 @@ public final class TurmsRequest extends
          * <pre>
          * User - Session
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateSessionRequest create_session_request = 3;</code>
          */
         @java.lang.Override
@@ -4166,7 +4361,7 @@ public final class TurmsRequest extends
          * <pre>
          * User - Session
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateSessionRequest create_session_request = 3;</code>
          */
         public Builder setCreateSessionRequest(
@@ -4180,7 +4375,7 @@ public final class TurmsRequest extends
          * <pre>
          * User - Session
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateSessionRequest create_session_request = 3;</code>
          */
         public Builder setCreateSessionRequest(
@@ -4194,7 +4389,7 @@ public final class TurmsRequest extends
          * <pre>
          * User - Session
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateSessionRequest create_session_request = 3;</code>
          */
         public Builder mergeCreateSessionRequest(
@@ -4208,7 +4403,7 @@ public final class TurmsRequest extends
          * <pre>
          * User - Session
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateSessionRequest create_session_request = 3;</code>
          */
         public Builder clearCreateSessionRequest() {
@@ -4276,7 +4471,7 @@ public final class TurmsRequest extends
          * <pre>
          * Conversation
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.QueryConversationsRequest query_conversations_request = 5;</code>
          */
         @java.lang.Override
@@ -4288,7 +4483,7 @@ public final class TurmsRequest extends
          * <pre>
          * Conversation
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.QueryConversationsRequest query_conversations_request = 5;</code>
          */
         @java.lang.Override
@@ -4300,7 +4495,7 @@ public final class TurmsRequest extends
          * <pre>
          * Conversation
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.QueryConversationsRequest query_conversations_request = 5;</code>
          */
         public Builder setQueryConversationsRequest(
@@ -4314,7 +4509,7 @@ public final class TurmsRequest extends
          * <pre>
          * Conversation
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.QueryConversationsRequest query_conversations_request = 5;</code>
          */
         public Builder setQueryConversationsRequest(
@@ -4328,7 +4523,7 @@ public final class TurmsRequest extends
          * <pre>
          * Conversation
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.QueryConversationsRequest query_conversations_request = 5;</code>
          */
         public Builder mergeQueryConversationsRequest(
@@ -4342,7 +4537,7 @@ public final class TurmsRequest extends
          * <pre>
          * Conversation
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.QueryConversationsRequest query_conversations_request = 5;</code>
          */
         public Builder clearQueryConversationsRequest() {
@@ -4465,7 +4660,7 @@ public final class TurmsRequest extends
          * <pre>
          * Message
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateMessageRequest create_message_request = 8;</code>
          */
         @java.lang.Override
@@ -4477,7 +4672,7 @@ public final class TurmsRequest extends
          * <pre>
          * Message
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateMessageRequest create_message_request = 8;</code>
          */
         @java.lang.Override
@@ -4489,7 +4684,7 @@ public final class TurmsRequest extends
          * <pre>
          * Message
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateMessageRequest create_message_request = 8;</code>
          */
         public Builder setCreateMessageRequest(
@@ -4503,7 +4698,7 @@ public final class TurmsRequest extends
          * <pre>
          * Message
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateMessageRequest create_message_request = 8;</code>
          */
         public Builder setCreateMessageRequest(
@@ -4517,7 +4712,7 @@ public final class TurmsRequest extends
          * <pre>
          * Message
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateMessageRequest create_message_request = 8;</code>
          */
         public Builder mergeCreateMessageRequest(
@@ -4531,7 +4726,7 @@ public final class TurmsRequest extends
          * <pre>
          * Message
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateMessageRequest create_message_request = 8;</code>
          */
         public Builder clearCreateMessageRequest() {
@@ -4654,7 +4849,7 @@ public final class TurmsRequest extends
          * <pre>
          * Group Member
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateGroupMembersRequest create_group_members_request = 11;</code>
          */
         @java.lang.Override
@@ -4666,7 +4861,7 @@ public final class TurmsRequest extends
          * <pre>
          * Group Member
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateGroupMembersRequest create_group_members_request = 11;</code>
          */
         @java.lang.Override
@@ -4678,7 +4873,7 @@ public final class TurmsRequest extends
          * <pre>
          * Group Member
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateGroupMembersRequest create_group_members_request = 11;</code>
          */
         public Builder setCreateGroupMembersRequest(
@@ -4692,7 +4887,7 @@ public final class TurmsRequest extends
          * <pre>
          * Group Member
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateGroupMembersRequest create_group_members_request = 11;</code>
          */
         public Builder setCreateGroupMembersRequest(
@@ -4706,7 +4901,7 @@ public final class TurmsRequest extends
          * <pre>
          * Group Member
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateGroupMembersRequest create_group_members_request = 11;</code>
          */
         public Builder mergeCreateGroupMembersRequest(
@@ -4720,7 +4915,7 @@ public final class TurmsRequest extends
          * <pre>
          * Group Member
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateGroupMembersRequest create_group_members_request = 11;</code>
          */
         public Builder clearCreateGroupMembersRequest() {
@@ -4898,7 +5093,7 @@ public final class TurmsRequest extends
          * <pre>
          * User
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.QueryUserProfilesRequest query_user_profiles_request = 100;</code>
          */
         @java.lang.Override
@@ -4910,7 +5105,7 @@ public final class TurmsRequest extends
          * <pre>
          * User
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.QueryUserProfilesRequest query_user_profiles_request = 100;</code>
          */
         @java.lang.Override
@@ -4922,7 +5117,7 @@ public final class TurmsRequest extends
          * <pre>
          * User
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.QueryUserProfilesRequest query_user_profiles_request = 100;</code>
          */
         public Builder setQueryUserProfilesRequest(
@@ -4936,7 +5131,7 @@ public final class TurmsRequest extends
          * <pre>
          * User
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.QueryUserProfilesRequest query_user_profiles_request = 100;</code>
          */
         public Builder setQueryUserProfilesRequest(
@@ -4950,7 +5145,7 @@ public final class TurmsRequest extends
          * <pre>
          * User
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.QueryUserProfilesRequest query_user_profiles_request = 100;</code>
          */
         public Builder mergeQueryUserProfilesRequest(
@@ -4964,7 +5159,7 @@ public final class TurmsRequest extends
          * <pre>
          * User
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.QueryUserProfilesRequest query_user_profiles_request = 100;</code>
          */
         public Builder clearQueryUserProfilesRequest() {
@@ -5252,7 +5447,7 @@ public final class TurmsRequest extends
          * <pre>
          * User Relationship
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateFriendRequestRequest create_friend_request_request = 200;</code>
          */
         @java.lang.Override
@@ -5264,7 +5459,7 @@ public final class TurmsRequest extends
          * <pre>
          * User Relationship
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateFriendRequestRequest create_friend_request_request = 200;</code>
          */
         @java.lang.Override
@@ -5276,7 +5471,7 @@ public final class TurmsRequest extends
          * <pre>
          * User Relationship
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateFriendRequestRequest create_friend_request_request = 200;</code>
          */
         public Builder setCreateFriendRequestRequest(
@@ -5290,7 +5485,7 @@ public final class TurmsRequest extends
          * <pre>
          * User Relationship
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateFriendRequestRequest create_friend_request_request = 200;</code>
          */
         public Builder setCreateFriendRequestRequest(
@@ -5304,7 +5499,7 @@ public final class TurmsRequest extends
          * <pre>
          * User Relationship
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateFriendRequestRequest create_friend_request_request = 200;</code>
          */
         public Builder mergeCreateFriendRequestRequest(
@@ -5318,7 +5513,7 @@ public final class TurmsRequest extends
          * <pre>
          * User Relationship
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateFriendRequestRequest create_friend_request_request = 200;</code>
          */
         public Builder clearCreateFriendRequestRequest() {
@@ -5438,7 +5633,62 @@ public final class TurmsRequest extends
         }
 
         /**
-         * <code>.im.turms.proto.DeleteRelationshipGroupRequest delete_relationship_group_request = 203;</code>
+         * <code>.im.turms.proto.DeleteFriendRequestRequest delete_friend_request_request = 203;</code>
+         */
+        @java.lang.Override
+        public boolean hasDeleteFriendRequestRequest() {
+            return instance.hasDeleteFriendRequestRequest();
+        }
+
+        /**
+         * <code>.im.turms.proto.DeleteFriendRequestRequest delete_friend_request_request = 203;</code>
+         */
+        @java.lang.Override
+        public im.turms.client.model.proto.request.user.relationship.DeleteFriendRequestRequest getDeleteFriendRequestRequest() {
+            return instance.getDeleteFriendRequestRequest();
+        }
+
+        /**
+         * <code>.im.turms.proto.DeleteFriendRequestRequest delete_friend_request_request = 203;</code>
+         */
+        public Builder setDeleteFriendRequestRequest(
+                im.turms.client.model.proto.request.user.relationship.DeleteFriendRequestRequest value) {
+            copyOnWrite();
+            instance.setDeleteFriendRequestRequest(value);
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.DeleteFriendRequestRequest delete_friend_request_request = 203;</code>
+         */
+        public Builder setDeleteFriendRequestRequest(
+                im.turms.client.model.proto.request.user.relationship.DeleteFriendRequestRequest.Builder builderForValue) {
+            copyOnWrite();
+            instance.setDeleteFriendRequestRequest(builderForValue.build());
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.DeleteFriendRequestRequest delete_friend_request_request = 203;</code>
+         */
+        public Builder mergeDeleteFriendRequestRequest(
+                im.turms.client.model.proto.request.user.relationship.DeleteFriendRequestRequest value) {
+            copyOnWrite();
+            instance.mergeDeleteFriendRequestRequest(value);
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.DeleteFriendRequestRequest delete_friend_request_request = 203;</code>
+         */
+        public Builder clearDeleteFriendRequestRequest() {
+            copyOnWrite();
+            instance.clearDeleteFriendRequestRequest();
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.DeleteRelationshipGroupRequest delete_relationship_group_request = 204;</code>
          */
         @java.lang.Override
         public boolean hasDeleteRelationshipGroupRequest() {
@@ -5446,7 +5696,7 @@ public final class TurmsRequest extends
         }
 
         /**
-         * <code>.im.turms.proto.DeleteRelationshipGroupRequest delete_relationship_group_request = 203;</code>
+         * <code>.im.turms.proto.DeleteRelationshipGroupRequest delete_relationship_group_request = 204;</code>
          */
         @java.lang.Override
         public im.turms.client.model.proto.request.user.relationship.DeleteRelationshipGroupRequest getDeleteRelationshipGroupRequest() {
@@ -5454,7 +5704,7 @@ public final class TurmsRequest extends
         }
 
         /**
-         * <code>.im.turms.proto.DeleteRelationshipGroupRequest delete_relationship_group_request = 203;</code>
+         * <code>.im.turms.proto.DeleteRelationshipGroupRequest delete_relationship_group_request = 204;</code>
          */
         public Builder setDeleteRelationshipGroupRequest(
                 im.turms.client.model.proto.request.user.relationship.DeleteRelationshipGroupRequest value) {
@@ -5464,7 +5714,7 @@ public final class TurmsRequest extends
         }
 
         /**
-         * <code>.im.turms.proto.DeleteRelationshipGroupRequest delete_relationship_group_request = 203;</code>
+         * <code>.im.turms.proto.DeleteRelationshipGroupRequest delete_relationship_group_request = 204;</code>
          */
         public Builder setDeleteRelationshipGroupRequest(
                 im.turms.client.model.proto.request.user.relationship.DeleteRelationshipGroupRequest.Builder builderForValue) {
@@ -5474,7 +5724,7 @@ public final class TurmsRequest extends
         }
 
         /**
-         * <code>.im.turms.proto.DeleteRelationshipGroupRequest delete_relationship_group_request = 203;</code>
+         * <code>.im.turms.proto.DeleteRelationshipGroupRequest delete_relationship_group_request = 204;</code>
          */
         public Builder mergeDeleteRelationshipGroupRequest(
                 im.turms.client.model.proto.request.user.relationship.DeleteRelationshipGroupRequest value) {
@@ -5484,7 +5734,7 @@ public final class TurmsRequest extends
         }
 
         /**
-         * <code>.im.turms.proto.DeleteRelationshipGroupRequest delete_relationship_group_request = 203;</code>
+         * <code>.im.turms.proto.DeleteRelationshipGroupRequest delete_relationship_group_request = 204;</code>
          */
         public Builder clearDeleteRelationshipGroupRequest() {
             copyOnWrite();
@@ -5493,7 +5743,7 @@ public final class TurmsRequest extends
         }
 
         /**
-         * <code>.im.turms.proto.DeleteRelationshipRequest delete_relationship_request = 204;</code>
+         * <code>.im.turms.proto.DeleteRelationshipRequest delete_relationship_request = 205;</code>
          */
         @java.lang.Override
         public boolean hasDeleteRelationshipRequest() {
@@ -5501,7 +5751,7 @@ public final class TurmsRequest extends
         }
 
         /**
-         * <code>.im.turms.proto.DeleteRelationshipRequest delete_relationship_request = 204;</code>
+         * <code>.im.turms.proto.DeleteRelationshipRequest delete_relationship_request = 205;</code>
          */
         @java.lang.Override
         public im.turms.client.model.proto.request.user.relationship.DeleteRelationshipRequest getDeleteRelationshipRequest() {
@@ -5509,7 +5759,7 @@ public final class TurmsRequest extends
         }
 
         /**
-         * <code>.im.turms.proto.DeleteRelationshipRequest delete_relationship_request = 204;</code>
+         * <code>.im.turms.proto.DeleteRelationshipRequest delete_relationship_request = 205;</code>
          */
         public Builder setDeleteRelationshipRequest(
                 im.turms.client.model.proto.request.user.relationship.DeleteRelationshipRequest value) {
@@ -5519,7 +5769,7 @@ public final class TurmsRequest extends
         }
 
         /**
-         * <code>.im.turms.proto.DeleteRelationshipRequest delete_relationship_request = 204;</code>
+         * <code>.im.turms.proto.DeleteRelationshipRequest delete_relationship_request = 205;</code>
          */
         public Builder setDeleteRelationshipRequest(
                 im.turms.client.model.proto.request.user.relationship.DeleteRelationshipRequest.Builder builderForValue) {
@@ -5529,7 +5779,7 @@ public final class TurmsRequest extends
         }
 
         /**
-         * <code>.im.turms.proto.DeleteRelationshipRequest delete_relationship_request = 204;</code>
+         * <code>.im.turms.proto.DeleteRelationshipRequest delete_relationship_request = 205;</code>
          */
         public Builder mergeDeleteRelationshipRequest(
                 im.turms.client.model.proto.request.user.relationship.DeleteRelationshipRequest value) {
@@ -5539,7 +5789,7 @@ public final class TurmsRequest extends
         }
 
         /**
-         * <code>.im.turms.proto.DeleteRelationshipRequest delete_relationship_request = 204;</code>
+         * <code>.im.turms.proto.DeleteRelationshipRequest delete_relationship_request = 205;</code>
          */
         public Builder clearDeleteRelationshipRequest() {
             copyOnWrite();
@@ -5548,7 +5798,7 @@ public final class TurmsRequest extends
         }
 
         /**
-         * <code>.im.turms.proto.QueryFriendRequestsRequest query_friend_requests_request = 205;</code>
+         * <code>.im.turms.proto.QueryFriendRequestsRequest query_friend_requests_request = 206;</code>
          */
         @java.lang.Override
         public boolean hasQueryFriendRequestsRequest() {
@@ -5556,7 +5806,7 @@ public final class TurmsRequest extends
         }
 
         /**
-         * <code>.im.turms.proto.QueryFriendRequestsRequest query_friend_requests_request = 205;</code>
+         * <code>.im.turms.proto.QueryFriendRequestsRequest query_friend_requests_request = 206;</code>
          */
         @java.lang.Override
         public im.turms.client.model.proto.request.user.relationship.QueryFriendRequestsRequest getQueryFriendRequestsRequest() {
@@ -5564,7 +5814,7 @@ public final class TurmsRequest extends
         }
 
         /**
-         * <code>.im.turms.proto.QueryFriendRequestsRequest query_friend_requests_request = 205;</code>
+         * <code>.im.turms.proto.QueryFriendRequestsRequest query_friend_requests_request = 206;</code>
          */
         public Builder setQueryFriendRequestsRequest(
                 im.turms.client.model.proto.request.user.relationship.QueryFriendRequestsRequest value) {
@@ -5574,7 +5824,7 @@ public final class TurmsRequest extends
         }
 
         /**
-         * <code>.im.turms.proto.QueryFriendRequestsRequest query_friend_requests_request = 205;</code>
+         * <code>.im.turms.proto.QueryFriendRequestsRequest query_friend_requests_request = 206;</code>
          */
         public Builder setQueryFriendRequestsRequest(
                 im.turms.client.model.proto.request.user.relationship.QueryFriendRequestsRequest.Builder builderForValue) {
@@ -5584,7 +5834,7 @@ public final class TurmsRequest extends
         }
 
         /**
-         * <code>.im.turms.proto.QueryFriendRequestsRequest query_friend_requests_request = 205;</code>
+         * <code>.im.turms.proto.QueryFriendRequestsRequest query_friend_requests_request = 206;</code>
          */
         public Builder mergeQueryFriendRequestsRequest(
                 im.turms.client.model.proto.request.user.relationship.QueryFriendRequestsRequest value) {
@@ -5594,7 +5844,7 @@ public final class TurmsRequest extends
         }
 
         /**
-         * <code>.im.turms.proto.QueryFriendRequestsRequest query_friend_requests_request = 205;</code>
+         * <code>.im.turms.proto.QueryFriendRequestsRequest query_friend_requests_request = 206;</code>
          */
         public Builder clearQueryFriendRequestsRequest() {
             copyOnWrite();
@@ -5603,7 +5853,7 @@ public final class TurmsRequest extends
         }
 
         /**
-         * <code>.im.turms.proto.QueryRelatedUserIdsRequest query_related_user_ids_request = 206;</code>
+         * <code>.im.turms.proto.QueryRelatedUserIdsRequest query_related_user_ids_request = 207;</code>
          */
         @java.lang.Override
         public boolean hasQueryRelatedUserIdsRequest() {
@@ -5611,7 +5861,7 @@ public final class TurmsRequest extends
         }
 
         /**
-         * <code>.im.turms.proto.QueryRelatedUserIdsRequest query_related_user_ids_request = 206;</code>
+         * <code>.im.turms.proto.QueryRelatedUserIdsRequest query_related_user_ids_request = 207;</code>
          */
         @java.lang.Override
         public im.turms.client.model.proto.request.user.relationship.QueryRelatedUserIdsRequest getQueryRelatedUserIdsRequest() {
@@ -5619,7 +5869,7 @@ public final class TurmsRequest extends
         }
 
         /**
-         * <code>.im.turms.proto.QueryRelatedUserIdsRequest query_related_user_ids_request = 206;</code>
+         * <code>.im.turms.proto.QueryRelatedUserIdsRequest query_related_user_ids_request = 207;</code>
          */
         public Builder setQueryRelatedUserIdsRequest(
                 im.turms.client.model.proto.request.user.relationship.QueryRelatedUserIdsRequest value) {
@@ -5629,7 +5879,7 @@ public final class TurmsRequest extends
         }
 
         /**
-         * <code>.im.turms.proto.QueryRelatedUserIdsRequest query_related_user_ids_request = 206;</code>
+         * <code>.im.turms.proto.QueryRelatedUserIdsRequest query_related_user_ids_request = 207;</code>
          */
         public Builder setQueryRelatedUserIdsRequest(
                 im.turms.client.model.proto.request.user.relationship.QueryRelatedUserIdsRequest.Builder builderForValue) {
@@ -5639,7 +5889,7 @@ public final class TurmsRequest extends
         }
 
         /**
-         * <code>.im.turms.proto.QueryRelatedUserIdsRequest query_related_user_ids_request = 206;</code>
+         * <code>.im.turms.proto.QueryRelatedUserIdsRequest query_related_user_ids_request = 207;</code>
          */
         public Builder mergeQueryRelatedUserIdsRequest(
                 im.turms.client.model.proto.request.user.relationship.QueryRelatedUserIdsRequest value) {
@@ -5649,7 +5899,7 @@ public final class TurmsRequest extends
         }
 
         /**
-         * <code>.im.turms.proto.QueryRelatedUserIdsRequest query_related_user_ids_request = 206;</code>
+         * <code>.im.turms.proto.QueryRelatedUserIdsRequest query_related_user_ids_request = 207;</code>
          */
         public Builder clearQueryRelatedUserIdsRequest() {
             copyOnWrite();
@@ -5658,7 +5908,7 @@ public final class TurmsRequest extends
         }
 
         /**
-         * <code>.im.turms.proto.QueryRelationshipGroupsRequest query_relationship_groups_request = 207;</code>
+         * <code>.im.turms.proto.QueryRelationshipGroupsRequest query_relationship_groups_request = 208;</code>
          */
         @java.lang.Override
         public boolean hasQueryRelationshipGroupsRequest() {
@@ -5666,7 +5916,7 @@ public final class TurmsRequest extends
         }
 
         /**
-         * <code>.im.turms.proto.QueryRelationshipGroupsRequest query_relationship_groups_request = 207;</code>
+         * <code>.im.turms.proto.QueryRelationshipGroupsRequest query_relationship_groups_request = 208;</code>
          */
         @java.lang.Override
         public im.turms.client.model.proto.request.user.relationship.QueryRelationshipGroupsRequest getQueryRelationshipGroupsRequest() {
@@ -5674,7 +5924,7 @@ public final class TurmsRequest extends
         }
 
         /**
-         * <code>.im.turms.proto.QueryRelationshipGroupsRequest query_relationship_groups_request = 207;</code>
+         * <code>.im.turms.proto.QueryRelationshipGroupsRequest query_relationship_groups_request = 208;</code>
          */
         public Builder setQueryRelationshipGroupsRequest(
                 im.turms.client.model.proto.request.user.relationship.QueryRelationshipGroupsRequest value) {
@@ -5684,7 +5934,7 @@ public final class TurmsRequest extends
         }
 
         /**
-         * <code>.im.turms.proto.QueryRelationshipGroupsRequest query_relationship_groups_request = 207;</code>
+         * <code>.im.turms.proto.QueryRelationshipGroupsRequest query_relationship_groups_request = 208;</code>
          */
         public Builder setQueryRelationshipGroupsRequest(
                 im.turms.client.model.proto.request.user.relationship.QueryRelationshipGroupsRequest.Builder builderForValue) {
@@ -5694,7 +5944,7 @@ public final class TurmsRequest extends
         }
 
         /**
-         * <code>.im.turms.proto.QueryRelationshipGroupsRequest query_relationship_groups_request = 207;</code>
+         * <code>.im.turms.proto.QueryRelationshipGroupsRequest query_relationship_groups_request = 208;</code>
          */
         public Builder mergeQueryRelationshipGroupsRequest(
                 im.turms.client.model.proto.request.user.relationship.QueryRelationshipGroupsRequest value) {
@@ -5704,7 +5954,7 @@ public final class TurmsRequest extends
         }
 
         /**
-         * <code>.im.turms.proto.QueryRelationshipGroupsRequest query_relationship_groups_request = 207;</code>
+         * <code>.im.turms.proto.QueryRelationshipGroupsRequest query_relationship_groups_request = 208;</code>
          */
         public Builder clearQueryRelationshipGroupsRequest() {
             copyOnWrite();
@@ -5713,7 +5963,7 @@ public final class TurmsRequest extends
         }
 
         /**
-         * <code>.im.turms.proto.QueryRelationshipsRequest query_relationships_request = 208;</code>
+         * <code>.im.turms.proto.QueryRelationshipsRequest query_relationships_request = 209;</code>
          */
         @java.lang.Override
         public boolean hasQueryRelationshipsRequest() {
@@ -5721,7 +5971,7 @@ public final class TurmsRequest extends
         }
 
         /**
-         * <code>.im.turms.proto.QueryRelationshipsRequest query_relationships_request = 208;</code>
+         * <code>.im.turms.proto.QueryRelationshipsRequest query_relationships_request = 209;</code>
          */
         @java.lang.Override
         public im.turms.client.model.proto.request.user.relationship.QueryRelationshipsRequest getQueryRelationshipsRequest() {
@@ -5729,7 +5979,7 @@ public final class TurmsRequest extends
         }
 
         /**
-         * <code>.im.turms.proto.QueryRelationshipsRequest query_relationships_request = 208;</code>
+         * <code>.im.turms.proto.QueryRelationshipsRequest query_relationships_request = 209;</code>
          */
         public Builder setQueryRelationshipsRequest(
                 im.turms.client.model.proto.request.user.relationship.QueryRelationshipsRequest value) {
@@ -5739,7 +5989,7 @@ public final class TurmsRequest extends
         }
 
         /**
-         * <code>.im.turms.proto.QueryRelationshipsRequest query_relationships_request = 208;</code>
+         * <code>.im.turms.proto.QueryRelationshipsRequest query_relationships_request = 209;</code>
          */
         public Builder setQueryRelationshipsRequest(
                 im.turms.client.model.proto.request.user.relationship.QueryRelationshipsRequest.Builder builderForValue) {
@@ -5749,7 +5999,7 @@ public final class TurmsRequest extends
         }
 
         /**
-         * <code>.im.turms.proto.QueryRelationshipsRequest query_relationships_request = 208;</code>
+         * <code>.im.turms.proto.QueryRelationshipsRequest query_relationships_request = 209;</code>
          */
         public Builder mergeQueryRelationshipsRequest(
                 im.turms.client.model.proto.request.user.relationship.QueryRelationshipsRequest value) {
@@ -5759,7 +6009,7 @@ public final class TurmsRequest extends
         }
 
         /**
-         * <code>.im.turms.proto.QueryRelationshipsRequest query_relationships_request = 208;</code>
+         * <code>.im.turms.proto.QueryRelationshipsRequest query_relationships_request = 209;</code>
          */
         public Builder clearQueryRelationshipsRequest() {
             copyOnWrite();
@@ -5768,7 +6018,7 @@ public final class TurmsRequest extends
         }
 
         /**
-         * <code>.im.turms.proto.UpdateFriendRequestRequest update_friend_request_request = 209;</code>
+         * <code>.im.turms.proto.UpdateFriendRequestRequest update_friend_request_request = 210;</code>
          */
         @java.lang.Override
         public boolean hasUpdateFriendRequestRequest() {
@@ -5776,7 +6026,7 @@ public final class TurmsRequest extends
         }
 
         /**
-         * <code>.im.turms.proto.UpdateFriendRequestRequest update_friend_request_request = 209;</code>
+         * <code>.im.turms.proto.UpdateFriendRequestRequest update_friend_request_request = 210;</code>
          */
         @java.lang.Override
         public im.turms.client.model.proto.request.user.relationship.UpdateFriendRequestRequest getUpdateFriendRequestRequest() {
@@ -5784,7 +6034,7 @@ public final class TurmsRequest extends
         }
 
         /**
-         * <code>.im.turms.proto.UpdateFriendRequestRequest update_friend_request_request = 209;</code>
+         * <code>.im.turms.proto.UpdateFriendRequestRequest update_friend_request_request = 210;</code>
          */
         public Builder setUpdateFriendRequestRequest(
                 im.turms.client.model.proto.request.user.relationship.UpdateFriendRequestRequest value) {
@@ -5794,7 +6044,7 @@ public final class TurmsRequest extends
         }
 
         /**
-         * <code>.im.turms.proto.UpdateFriendRequestRequest update_friend_request_request = 209;</code>
+         * <code>.im.turms.proto.UpdateFriendRequestRequest update_friend_request_request = 210;</code>
          */
         public Builder setUpdateFriendRequestRequest(
                 im.turms.client.model.proto.request.user.relationship.UpdateFriendRequestRequest.Builder builderForValue) {
@@ -5804,7 +6054,7 @@ public final class TurmsRequest extends
         }
 
         /**
-         * <code>.im.turms.proto.UpdateFriendRequestRequest update_friend_request_request = 209;</code>
+         * <code>.im.turms.proto.UpdateFriendRequestRequest update_friend_request_request = 210;</code>
          */
         public Builder mergeUpdateFriendRequestRequest(
                 im.turms.client.model.proto.request.user.relationship.UpdateFriendRequestRequest value) {
@@ -5814,7 +6064,7 @@ public final class TurmsRequest extends
         }
 
         /**
-         * <code>.im.turms.proto.UpdateFriendRequestRequest update_friend_request_request = 209;</code>
+         * <code>.im.turms.proto.UpdateFriendRequestRequest update_friend_request_request = 210;</code>
          */
         public Builder clearUpdateFriendRequestRequest() {
             copyOnWrite();
@@ -5823,7 +6073,7 @@ public final class TurmsRequest extends
         }
 
         /**
-         * <code>.im.turms.proto.UpdateRelationshipGroupRequest update_relationship_group_request = 210;</code>
+         * <code>.im.turms.proto.UpdateRelationshipGroupRequest update_relationship_group_request = 211;</code>
          */
         @java.lang.Override
         public boolean hasUpdateRelationshipGroupRequest() {
@@ -5831,7 +6081,7 @@ public final class TurmsRequest extends
         }
 
         /**
-         * <code>.im.turms.proto.UpdateRelationshipGroupRequest update_relationship_group_request = 210;</code>
+         * <code>.im.turms.proto.UpdateRelationshipGroupRequest update_relationship_group_request = 211;</code>
          */
         @java.lang.Override
         public im.turms.client.model.proto.request.user.relationship.UpdateRelationshipGroupRequest getUpdateRelationshipGroupRequest() {
@@ -5839,7 +6089,7 @@ public final class TurmsRequest extends
         }
 
         /**
-         * <code>.im.turms.proto.UpdateRelationshipGroupRequest update_relationship_group_request = 210;</code>
+         * <code>.im.turms.proto.UpdateRelationshipGroupRequest update_relationship_group_request = 211;</code>
          */
         public Builder setUpdateRelationshipGroupRequest(
                 im.turms.client.model.proto.request.user.relationship.UpdateRelationshipGroupRequest value) {
@@ -5849,7 +6099,7 @@ public final class TurmsRequest extends
         }
 
         /**
-         * <code>.im.turms.proto.UpdateRelationshipGroupRequest update_relationship_group_request = 210;</code>
+         * <code>.im.turms.proto.UpdateRelationshipGroupRequest update_relationship_group_request = 211;</code>
          */
         public Builder setUpdateRelationshipGroupRequest(
                 im.turms.client.model.proto.request.user.relationship.UpdateRelationshipGroupRequest.Builder builderForValue) {
@@ -5859,7 +6109,7 @@ public final class TurmsRequest extends
         }
 
         /**
-         * <code>.im.turms.proto.UpdateRelationshipGroupRequest update_relationship_group_request = 210;</code>
+         * <code>.im.turms.proto.UpdateRelationshipGroupRequest update_relationship_group_request = 211;</code>
          */
         public Builder mergeUpdateRelationshipGroupRequest(
                 im.turms.client.model.proto.request.user.relationship.UpdateRelationshipGroupRequest value) {
@@ -5869,7 +6119,7 @@ public final class TurmsRequest extends
         }
 
         /**
-         * <code>.im.turms.proto.UpdateRelationshipGroupRequest update_relationship_group_request = 210;</code>
+         * <code>.im.turms.proto.UpdateRelationshipGroupRequest update_relationship_group_request = 211;</code>
          */
         public Builder clearUpdateRelationshipGroupRequest() {
             copyOnWrite();
@@ -5878,7 +6128,7 @@ public final class TurmsRequest extends
         }
 
         /**
-         * <code>.im.turms.proto.UpdateRelationshipRequest update_relationship_request = 211;</code>
+         * <code>.im.turms.proto.UpdateRelationshipRequest update_relationship_request = 212;</code>
          */
         @java.lang.Override
         public boolean hasUpdateRelationshipRequest() {
@@ -5886,7 +6136,7 @@ public final class TurmsRequest extends
         }
 
         /**
-         * <code>.im.turms.proto.UpdateRelationshipRequest update_relationship_request = 211;</code>
+         * <code>.im.turms.proto.UpdateRelationshipRequest update_relationship_request = 212;</code>
          */
         @java.lang.Override
         public im.turms.client.model.proto.request.user.relationship.UpdateRelationshipRequest getUpdateRelationshipRequest() {
@@ -5894,7 +6144,7 @@ public final class TurmsRequest extends
         }
 
         /**
-         * <code>.im.turms.proto.UpdateRelationshipRequest update_relationship_request = 211;</code>
+         * <code>.im.turms.proto.UpdateRelationshipRequest update_relationship_request = 212;</code>
          */
         public Builder setUpdateRelationshipRequest(
                 im.turms.client.model.proto.request.user.relationship.UpdateRelationshipRequest value) {
@@ -5904,7 +6154,7 @@ public final class TurmsRequest extends
         }
 
         /**
-         * <code>.im.turms.proto.UpdateRelationshipRequest update_relationship_request = 211;</code>
+         * <code>.im.turms.proto.UpdateRelationshipRequest update_relationship_request = 212;</code>
          */
         public Builder setUpdateRelationshipRequest(
                 im.turms.client.model.proto.request.user.relationship.UpdateRelationshipRequest.Builder builderForValue) {
@@ -5914,7 +6164,7 @@ public final class TurmsRequest extends
         }
 
         /**
-         * <code>.im.turms.proto.UpdateRelationshipRequest update_relationship_request = 211;</code>
+         * <code>.im.turms.proto.UpdateRelationshipRequest update_relationship_request = 212;</code>
          */
         public Builder mergeUpdateRelationshipRequest(
                 im.turms.client.model.proto.request.user.relationship.UpdateRelationshipRequest value) {
@@ -5924,7 +6174,7 @@ public final class TurmsRequest extends
         }
 
         /**
-         * <code>.im.turms.proto.UpdateRelationshipRequest update_relationship_request = 211;</code>
+         * <code>.im.turms.proto.UpdateRelationshipRequest update_relationship_request = 212;</code>
          */
         public Builder clearUpdateRelationshipRequest() {
             copyOnWrite();
@@ -5936,7 +6186,7 @@ public final class TurmsRequest extends
          * <pre>
          * Group
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateGroupRequest create_group_request = 300;</code>
          */
         @java.lang.Override
@@ -5948,7 +6198,7 @@ public final class TurmsRequest extends
          * <pre>
          * Group
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateGroupRequest create_group_request = 300;</code>
          */
         @java.lang.Override
@@ -5960,7 +6210,7 @@ public final class TurmsRequest extends
          * <pre>
          * Group
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateGroupRequest create_group_request = 300;</code>
          */
         public Builder setCreateGroupRequest(
@@ -5974,7 +6224,7 @@ public final class TurmsRequest extends
          * <pre>
          * Group
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateGroupRequest create_group_request = 300;</code>
          */
         public Builder setCreateGroupRequest(
@@ -5988,7 +6238,7 @@ public final class TurmsRequest extends
          * <pre>
          * Group
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateGroupRequest create_group_request = 300;</code>
          */
         public Builder mergeCreateGroupRequest(
@@ -6002,7 +6252,7 @@ public final class TurmsRequest extends
          * <pre>
          * Group
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateGroupRequest create_group_request = 300;</code>
          */
         public Builder clearCreateGroupRequest() {
@@ -6290,7 +6540,7 @@ public final class TurmsRequest extends
          * <pre>
          * Group Blocklist
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateGroupBlockedUserRequest create_group_blocked_user_request = 400;</code>
          */
         @java.lang.Override
@@ -6302,7 +6552,7 @@ public final class TurmsRequest extends
          * <pre>
          * Group Blocklist
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateGroupBlockedUserRequest create_group_blocked_user_request = 400;</code>
          */
         @java.lang.Override
@@ -6314,7 +6564,7 @@ public final class TurmsRequest extends
          * <pre>
          * Group Blocklist
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateGroupBlockedUserRequest create_group_blocked_user_request = 400;</code>
          */
         public Builder setCreateGroupBlockedUserRequest(
@@ -6328,7 +6578,7 @@ public final class TurmsRequest extends
          * <pre>
          * Group Blocklist
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateGroupBlockedUserRequest create_group_blocked_user_request = 400;</code>
          */
         public Builder setCreateGroupBlockedUserRequest(
@@ -6342,7 +6592,7 @@ public final class TurmsRequest extends
          * <pre>
          * Group Blocklist
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateGroupBlockedUserRequest create_group_blocked_user_request = 400;</code>
          */
         public Builder mergeCreateGroupBlockedUserRequest(
@@ -6356,7 +6606,7 @@ public final class TurmsRequest extends
          * <pre>
          * Group Blocklist
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CreateGroupBlockedUserRequest create_group_blocked_user_request = 400;</code>
          */
         public Builder clearCreateGroupBlockedUserRequest() {
@@ -6534,7 +6784,7 @@ public final class TurmsRequest extends
          * <pre>
          * Group Enrollment
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CheckGroupJoinQuestionsAnswersRequest check_group_join_questions_answers_request = 500;</code>
          */
         @java.lang.Override
@@ -6546,7 +6796,7 @@ public final class TurmsRequest extends
          * <pre>
          * Group Enrollment
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CheckGroupJoinQuestionsAnswersRequest check_group_join_questions_answers_request = 500;</code>
          */
         @java.lang.Override
@@ -6558,7 +6808,7 @@ public final class TurmsRequest extends
          * <pre>
          * Group Enrollment
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CheckGroupJoinQuestionsAnswersRequest check_group_join_questions_answers_request = 500;</code>
          */
         public Builder setCheckGroupJoinQuestionsAnswersRequest(
@@ -6572,7 +6822,7 @@ public final class TurmsRequest extends
          * <pre>
          * Group Enrollment
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CheckGroupJoinQuestionsAnswersRequest check_group_join_questions_answers_request = 500;</code>
          */
         public Builder setCheckGroupJoinQuestionsAnswersRequest(
@@ -6586,7 +6836,7 @@ public final class TurmsRequest extends
          * <pre>
          * Group Enrollment
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CheckGroupJoinQuestionsAnswersRequest check_group_join_questions_answers_request = 500;</code>
          */
         public Builder mergeCheckGroupJoinQuestionsAnswersRequest(
@@ -6600,7 +6850,7 @@ public final class TurmsRequest extends
          * <pre>
          * Group Enrollment
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.CheckGroupJoinQuestionsAnswersRequest check_group_join_questions_answers_request = 500;</code>
          */
         public Builder clearCheckGroupJoinQuestionsAnswersRequest() {
@@ -7105,7 +7355,62 @@ public final class TurmsRequest extends
         }
 
         /**
-         * <code>.im.turms.proto.UpdateGroupJoinQuestionRequest update_group_join_question_request = 510;</code>
+         * <code>.im.turms.proto.UpdateGroupInvitationRequest update_group_invitation_request = 510;</code>
+         */
+        @java.lang.Override
+        public boolean hasUpdateGroupInvitationRequest() {
+            return instance.hasUpdateGroupInvitationRequest();
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateGroupInvitationRequest update_group_invitation_request = 510;</code>
+         */
+        @java.lang.Override
+        public im.turms.client.model.proto.request.group.enrollment.UpdateGroupInvitationRequest getUpdateGroupInvitationRequest() {
+            return instance.getUpdateGroupInvitationRequest();
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateGroupInvitationRequest update_group_invitation_request = 510;</code>
+         */
+        public Builder setUpdateGroupInvitationRequest(
+                im.turms.client.model.proto.request.group.enrollment.UpdateGroupInvitationRequest value) {
+            copyOnWrite();
+            instance.setUpdateGroupInvitationRequest(value);
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateGroupInvitationRequest update_group_invitation_request = 510;</code>
+         */
+        public Builder setUpdateGroupInvitationRequest(
+                im.turms.client.model.proto.request.group.enrollment.UpdateGroupInvitationRequest.Builder builderForValue) {
+            copyOnWrite();
+            instance.setUpdateGroupInvitationRequest(builderForValue.build());
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateGroupInvitationRequest update_group_invitation_request = 510;</code>
+         */
+        public Builder mergeUpdateGroupInvitationRequest(
+                im.turms.client.model.proto.request.group.enrollment.UpdateGroupInvitationRequest value) {
+            copyOnWrite();
+            instance.mergeUpdateGroupInvitationRequest(value);
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateGroupInvitationRequest update_group_invitation_request = 510;</code>
+         */
+        public Builder clearUpdateGroupInvitationRequest() {
+            copyOnWrite();
+            instance.clearUpdateGroupInvitationRequest();
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateGroupJoinQuestionRequest update_group_join_question_request = 511;</code>
          */
         @java.lang.Override
         public boolean hasUpdateGroupJoinQuestionRequest() {
@@ -7113,7 +7418,7 @@ public final class TurmsRequest extends
         }
 
         /**
-         * <code>.im.turms.proto.UpdateGroupJoinQuestionRequest update_group_join_question_request = 510;</code>
+         * <code>.im.turms.proto.UpdateGroupJoinQuestionRequest update_group_join_question_request = 511;</code>
          */
         @java.lang.Override
         public im.turms.client.model.proto.request.group.enrollment.UpdateGroupJoinQuestionRequest getUpdateGroupJoinQuestionRequest() {
@@ -7121,7 +7426,7 @@ public final class TurmsRequest extends
         }
 
         /**
-         * <code>.im.turms.proto.UpdateGroupJoinQuestionRequest update_group_join_question_request = 510;</code>
+         * <code>.im.turms.proto.UpdateGroupJoinQuestionRequest update_group_join_question_request = 511;</code>
          */
         public Builder setUpdateGroupJoinQuestionRequest(
                 im.turms.client.model.proto.request.group.enrollment.UpdateGroupJoinQuestionRequest value) {
@@ -7131,7 +7436,7 @@ public final class TurmsRequest extends
         }
 
         /**
-         * <code>.im.turms.proto.UpdateGroupJoinQuestionRequest update_group_join_question_request = 510;</code>
+         * <code>.im.turms.proto.UpdateGroupJoinQuestionRequest update_group_join_question_request = 511;</code>
          */
         public Builder setUpdateGroupJoinQuestionRequest(
                 im.turms.client.model.proto.request.group.enrollment.UpdateGroupJoinQuestionRequest.Builder builderForValue) {
@@ -7141,7 +7446,7 @@ public final class TurmsRequest extends
         }
 
         /**
-         * <code>.im.turms.proto.UpdateGroupJoinQuestionRequest update_group_join_question_request = 510;</code>
+         * <code>.im.turms.proto.UpdateGroupJoinQuestionRequest update_group_join_question_request = 511;</code>
          */
         public Builder mergeUpdateGroupJoinQuestionRequest(
                 im.turms.client.model.proto.request.group.enrollment.UpdateGroupJoinQuestionRequest value) {
@@ -7151,7 +7456,7 @@ public final class TurmsRequest extends
         }
 
         /**
-         * <code>.im.turms.proto.UpdateGroupJoinQuestionRequest update_group_join_question_request = 510;</code>
+         * <code>.im.turms.proto.UpdateGroupJoinQuestionRequest update_group_join_question_request = 511;</code>
          */
         public Builder clearUpdateGroupJoinQuestionRequest() {
             copyOnWrite();
@@ -7160,10 +7465,65 @@ public final class TurmsRequest extends
         }
 
         /**
+         * <code>.im.turms.proto.UpdateGroupJoinRequestRequest update_group_join_request_request = 512;</code>
+         */
+        @java.lang.Override
+        public boolean hasUpdateGroupJoinRequestRequest() {
+            return instance.hasUpdateGroupJoinRequestRequest();
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateGroupJoinRequestRequest update_group_join_request_request = 512;</code>
+         */
+        @java.lang.Override
+        public im.turms.client.model.proto.request.group.enrollment.UpdateGroupJoinRequestRequest getUpdateGroupJoinRequestRequest() {
+            return instance.getUpdateGroupJoinRequestRequest();
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateGroupJoinRequestRequest update_group_join_request_request = 512;</code>
+         */
+        public Builder setUpdateGroupJoinRequestRequest(
+                im.turms.client.model.proto.request.group.enrollment.UpdateGroupJoinRequestRequest value) {
+            copyOnWrite();
+            instance.setUpdateGroupJoinRequestRequest(value);
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateGroupJoinRequestRequest update_group_join_request_request = 512;</code>
+         */
+        public Builder setUpdateGroupJoinRequestRequest(
+                im.turms.client.model.proto.request.group.enrollment.UpdateGroupJoinRequestRequest.Builder builderForValue) {
+            copyOnWrite();
+            instance.setUpdateGroupJoinRequestRequest(builderForValue.build());
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateGroupJoinRequestRequest update_group_join_request_request = 512;</code>
+         */
+        public Builder mergeUpdateGroupJoinRequestRequest(
+                im.turms.client.model.proto.request.group.enrollment.UpdateGroupJoinRequestRequest value) {
+            copyOnWrite();
+            instance.mergeUpdateGroupJoinRequestRequest(value);
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateGroupJoinRequestRequest update_group_join_request_request = 512;</code>
+         */
+        public Builder clearUpdateGroupJoinRequestRequest() {
+            copyOnWrite();
+            instance.clearUpdateGroupJoinRequestRequest();
+            return this;
+        }
+
+        /**
          * <pre>
          * Storage
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.DeleteResourceRequest delete_resource_request = 1000;</code>
          */
         @java.lang.Override
@@ -7175,7 +7535,7 @@ public final class TurmsRequest extends
          * <pre>
          * Storage
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.DeleteResourceRequest delete_resource_request = 1000;</code>
          */
         @java.lang.Override
@@ -7187,7 +7547,7 @@ public final class TurmsRequest extends
          * <pre>
          * Storage
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.DeleteResourceRequest delete_resource_request = 1000;</code>
          */
         public Builder setDeleteResourceRequest(
@@ -7201,7 +7561,7 @@ public final class TurmsRequest extends
          * <pre>
          * Storage
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.DeleteResourceRequest delete_resource_request = 1000;</code>
          */
         public Builder setDeleteResourceRequest(
@@ -7215,7 +7575,7 @@ public final class TurmsRequest extends
          * <pre>
          * Storage
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.DeleteResourceRequest delete_resource_request = 1000;</code>
          */
         public Builder mergeDeleteResourceRequest(
@@ -7229,7 +7589,7 @@ public final class TurmsRequest extends
          * <pre>
          * Storage
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.DeleteResourceRequest delete_resource_request = 1000;</code>
          */
         public Builder clearDeleteResourceRequest() {
@@ -7500,6 +7860,7 @@ public final class TurmsRequest extends
                         im.turms.client.model.proto.request.user.relationship.CreateFriendRequestRequest.class,
                         im.turms.client.model.proto.request.user.relationship.CreateRelationshipGroupRequest.class,
                         im.turms.client.model.proto.request.user.relationship.CreateRelationshipRequest.class,
+                        im.turms.client.model.proto.request.user.relationship.DeleteFriendRequestRequest.class,
                         im.turms.client.model.proto.request.user.relationship.DeleteRelationshipGroupRequest.class,
                         im.turms.client.model.proto.request.user.relationship.DeleteRelationshipRequest.class,
                         im.turms.client.model.proto.request.user.relationship.QueryFriendRequestsRequest.class,
@@ -7529,22 +7890,25 @@ public final class TurmsRequest extends
                         im.turms.client.model.proto.request.group.enrollment.QueryGroupInvitationsRequest.class,
                         im.turms.client.model.proto.request.group.enrollment.QueryGroupJoinRequestsRequest.class,
                         im.turms.client.model.proto.request.group.enrollment.QueryGroupJoinQuestionsRequest.class,
+                        im.turms.client.model.proto.request.group.enrollment.UpdateGroupInvitationRequest.class,
                         im.turms.client.model.proto.request.group.enrollment.UpdateGroupJoinQuestionRequest.class,
+                        im.turms.client.model.proto.request.group.enrollment.UpdateGroupJoinRequestRequest.class,
                         im.turms.client.model.proto.request.storage.DeleteResourceRequest.class,
                         im.turms.client.model.proto.request.storage.QueryResourceDownloadInfoRequest.class,
                         im.turms.client.model.proto.request.storage.QueryResourceUploadInfoRequest.class,
                         im.turms.client.model.proto.request.storage.QueryMessageAttachmentInfosRequest.class,
                         im.turms.client.model.proto.request.storage.UpdateMessageAttachmentInfoRequest.class,};
                 java.lang.String info =
-                        "\u00009\u0001\u0001\u0001\u03ec9\u0000\u0000\u0000\u0001\u1002\u0000\u0003<\u0000"
+                        "\u0000<\u0001\u0001\u0001\u03ec<\u0000\u0000\u0000\u0001\u1002\u0000\u0003<\u0000"
                                 + "\u0004<\u0000\u0005<\u0000\u0006<\u0000\u0007<\u0000\b<\u0000\t<\u0000\n<\u0000\u000b"
                                 + "<\u0000\f<\u0000\r<\u0000\u000e<\u0000d<\u0000e<\u0000f<\u0000g<\u0000h<\u0000i<"
                                 + "\u0000\u00c8<\u0000\u00c9<\u0000\u00ca<\u0000\u00cb<\u0000\u00cc<\u0000\u00cd<\u0000"
-                                + "\u00ce<\u0000\u00cf<\u0000\u00d0<\u0000\u00d1<\u0000\u00d2<\u0000\u00d3<\u0000\u012c"
-                                + "<\u0000\u012d<\u0000\u012e<\u0000\u012f<\u0000\u0130<\u0000\u0131<\u0000\u0190<\u0000"
-                                + "\u0191<\u0000\u0192<\u0000\u0193<\u0000\u01f4<\u0000\u01f5<\u0000\u01f6<\u0000\u01f7"
-                                + "<\u0000\u01f8<\u0000\u01f9<\u0000\u01fa<\u0000\u01fb<\u0000\u01fc<\u0000\u01fd<\u0000"
-                                + "\u01fe<\u0000\u03e8<\u0000\u03e9<\u0000\u03ea<\u0000\u03eb<\u0000\u03ec<\u0000";
+                                + "\u00ce<\u0000\u00cf<\u0000\u00d0<\u0000\u00d1<\u0000\u00d2<\u0000\u00d3<\u0000\u00d4"
+                                + "<\u0000\u012c<\u0000\u012d<\u0000\u012e<\u0000\u012f<\u0000\u0130<\u0000\u0131<\u0000"
+                                + "\u0190<\u0000\u0191<\u0000\u0192<\u0000\u0193<\u0000\u01f4<\u0000\u01f5<\u0000\u01f6"
+                                + "<\u0000\u01f7<\u0000\u01f8<\u0000\u01f9<\u0000\u01fa<\u0000\u01fb<\u0000\u01fc<\u0000"
+                                + "\u01fd<\u0000\u01fe<\u0000\u01ff<\u0000\u0200<\u0000\u03e8<\u0000\u03e9<\u0000\u03ea"
+                                + "<\u0000\u03eb<\u0000\u03ec<\u0000";
                 return newMessageInfo(DEFAULT_INSTANCE, info, objects);
             }
             // fall through

@@ -84,7 +84,11 @@ public enum ResponseAction implements com.google.protobuf.ProtocolMessageEnum {
     }
 
     private static final com.google.protobuf.Internal.EnumLiteMap<ResponseAction> internalValueMap =
-            number -> ResponseAction.forNumber(number);
+            new com.google.protobuf.Internal.EnumLiteMap<>() {
+                public ResponseAction findValueByNumber(int number) {
+                    return ResponseAction.forNumber(number);
+                }
+            };
 
     public final com.google.protobuf.Descriptors.EnumValueDescriptor getValueDescriptor() {
         if (this == UNRECOGNIZED) {
@@ -121,7 +125,7 @@ public enum ResponseAction implements com.google.protobuf.ProtocolMessageEnum {
 
     private final int value;
 
-    ResponseAction(int value) {
+    private ResponseAction(int value) {
         this.value = value;
     }
 

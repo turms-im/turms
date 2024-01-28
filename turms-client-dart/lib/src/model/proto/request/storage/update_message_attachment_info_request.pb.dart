@@ -1,9 +1,13 @@
-///
+//
 //  Generated code. Do not modify.
 //  source: request/storage/update_message_attachment_info_request.proto
 //
 // @dart = 2.12
-// ignore_for_file: annotate_overrides,camel_case_types,constant_identifier_names,directives_ordering,library_prefixes,non_constant_identifier_names,prefer_final_fields,return_of_invalid_type,unnecessary_const,unnecessary_import,unnecessary_this,unused_import,unused_shown_name
+
+// ignore_for_file: annotate_overrides, camel_case_types, comment_references
+// ignore_for_file: constant_identifier_names, library_prefixes
+// ignore_for_file: non_constant_identifier_names, prefer_final_fields
+// ignore_for_file: unnecessary_import, unnecessary_this, unused_import
 
 import 'dart:core' as $core;
 
@@ -11,48 +15,6 @@ import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 class UpdateMessageAttachmentInfoRequest extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      const $core.bool.fromEnvironment('protobuf.omit_message_names')
-          ? ''
-          : 'UpdateMessageAttachmentInfoRequest',
-      package: const $pb.PackageName(
-          const $core.bool.fromEnvironment('protobuf.omit_message_names')
-              ? ''
-              : 'im.turms.proto'),
-      createEmptyInstance: create)
-    ..aInt64(
-        1,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'attachmentIdNum')
-    ..aOS(
-        2,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'attachmentIdStr')
-    ..aInt64(
-        3,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'userIdToShareWith')
-    ..aInt64(
-        4,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'userIdToUnshareWith')
-    ..aInt64(
-        5,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'groupIdToShareWith')
-    ..aInt64(
-        6,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'groupIdToUnshareWith')
-    ..hasRequiredFields = false;
-
-  UpdateMessageAttachmentInfoRequest._() : super();
   factory UpdateMessageAttachmentInfoRequest({
     $fixnum.Int64? attachmentIdNum,
     $core.String? attachmentIdStr,
@@ -61,33 +23,47 @@ class UpdateMessageAttachmentInfoRequest extends $pb.GeneratedMessage {
     $fixnum.Int64? groupIdToShareWith,
     $fixnum.Int64? groupIdToUnshareWith,
   }) {
-    final _result = create();
+    final $result = create();
     if (attachmentIdNum != null) {
-      _result.attachmentIdNum = attachmentIdNum;
+      $result.attachmentIdNum = attachmentIdNum;
     }
     if (attachmentIdStr != null) {
-      _result.attachmentIdStr = attachmentIdStr;
+      $result.attachmentIdStr = attachmentIdStr;
     }
     if (userIdToShareWith != null) {
-      _result.userIdToShareWith = userIdToShareWith;
+      $result.userIdToShareWith = userIdToShareWith;
     }
     if (userIdToUnshareWith != null) {
-      _result.userIdToUnshareWith = userIdToUnshareWith;
+      $result.userIdToUnshareWith = userIdToUnshareWith;
     }
     if (groupIdToShareWith != null) {
-      _result.groupIdToShareWith = groupIdToShareWith;
+      $result.groupIdToShareWith = groupIdToShareWith;
     }
     if (groupIdToUnshareWith != null) {
-      _result.groupIdToUnshareWith = groupIdToUnshareWith;
+      $result.groupIdToUnshareWith = groupIdToUnshareWith;
     }
-    return _result;
+    return $result;
   }
+  UpdateMessageAttachmentInfoRequest._() : super();
   factory UpdateMessageAttachmentInfoRequest.fromBuffer($core.List<$core.int> i,
           [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(i, r);
   factory UpdateMessageAttachmentInfoRequest.fromJson($core.String i,
           [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(i, r);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'UpdateMessageAttachmentInfoRequest',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'im.turms.proto'),
+      createEmptyInstance: create)
+    ..aInt64(1, _omitFieldNames ? '' : 'attachmentIdNum')
+    ..aOS(2, _omitFieldNames ? '' : 'attachmentIdStr')
+    ..aInt64(3, _omitFieldNames ? '' : 'userIdToShareWith')
+    ..aInt64(4, _omitFieldNames ? '' : 'userIdToUnshareWith')
+    ..aInt64(5, _omitFieldNames ? '' : 'groupIdToShareWith')
+    ..aInt64(6, _omitFieldNames ? '' : 'groupIdToUnshareWith')
+    ..hasRequiredFields = false;
+
   @$core.Deprecated('Using this can add significant overhead to your binary. '
       'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
       'Will be removed in next major version')
@@ -100,8 +76,10 @@ class UpdateMessageAttachmentInfoRequest extends $pb.GeneratedMessage {
           void Function(UpdateMessageAttachmentInfoRequest) updates) =>
       super.copyWith((message) =>
               updates(message as UpdateMessageAttachmentInfoRequest))
-          as UpdateMessageAttachmentInfoRequest; // ignore: deprecated_member_use
+          as UpdateMessageAttachmentInfoRequest;
+
   $pb.BuilderInfo get info_ => _i;
+
   @$core.pragma('dart2js:noInline')
   static UpdateMessageAttachmentInfoRequest create() =>
       UpdateMessageAttachmentInfoRequest._();
@@ -114,6 +92,7 @@ class UpdateMessageAttachmentInfoRequest extends $pb.GeneratedMessage {
           create);
   static UpdateMessageAttachmentInfoRequest? _defaultInstance;
 
+  /// Query filter
   @$pb.TagNumber(1)
   $fixnum.Int64 get attachmentIdNum => $_getI64(0);
   @$pb.TagNumber(1)
@@ -138,6 +117,7 @@ class UpdateMessageAttachmentInfoRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   void clearAttachmentIdStr() => clearField(2);
 
+  /// Update
   @$pb.TagNumber(3)
   $fixnum.Int64 get userIdToShareWith => $_getI64(2);
   @$pb.TagNumber(3)
@@ -186,3 +166,7 @@ class UpdateMessageAttachmentInfoRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(6)
   void clearGroupIdToUnshareWith() => clearField(6);
 }
+
+const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');
+const _omitMessageNames =
+    $core.bool.fromEnvironment('protobuf.omit_message_names');

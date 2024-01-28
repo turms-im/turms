@@ -1,9 +1,13 @@
-///
+//
 //  Generated code. Do not modify.
 //  source: request/group/member/create_group_members_request.proto
 //
 // @dart = 2.12
-// ignore_for_file: annotate_overrides,camel_case_types,constant_identifier_names,directives_ordering,library_prefixes,non_constant_identifier_names,prefer_final_fields,return_of_invalid_type,unnecessary_const,unnecessary_import,unnecessary_this,unused_import,unused_shown_name
+
+// ignore_for_file: annotate_overrides, camel_case_types, comment_references
+// ignore_for_file: constant_identifier_names, library_prefixes
+// ignore_for_file: non_constant_identifier_names, prefer_final_fields
+// ignore_for_file: unnecessary_import, unnecessary_this, unused_import
 
 import 'dart:core' as $core;
 
@@ -13,48 +17,6 @@ import 'package:protobuf/protobuf.dart' as $pb;
 import '../../../constant/group_member_role.pbenum.dart' as $0;
 
 class CreateGroupMembersRequest extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      const $core.bool.fromEnvironment('protobuf.omit_message_names')
-          ? ''
-          : 'CreateGroupMembersRequest',
-      package: const $pb.PackageName(
-          const $core.bool.fromEnvironment('protobuf.omit_message_names')
-              ? ''
-              : 'im.turms.proto'),
-      createEmptyInstance: create)
-    ..aInt64(
-        1,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'groupId')
-    ..p<$fixnum.Int64>(
-        2,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'userIds',
-        $pb.PbFieldType.K6)
-    ..aOS(
-        3,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'name')
-    ..e<$0.GroupMemberRole>(
-        4,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'role',
-        $pb.PbFieldType.OE,
-        defaultOrMaker: $0.GroupMemberRole.OWNER,
-        valueOf: $0.GroupMemberRole.valueOf,
-        enumValues: $0.GroupMemberRole.values)
-    ..aInt64(
-        5,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'muteEndDate')
-    ..hasRequiredFields = false;
-
-  CreateGroupMembersRequest._() : super();
   factory CreateGroupMembersRequest({
     $fixnum.Int64? groupId,
     $core.Iterable<$fixnum.Int64>? userIds,
@@ -62,30 +24,47 @@ class CreateGroupMembersRequest extends $pb.GeneratedMessage {
     $0.GroupMemberRole? role,
     $fixnum.Int64? muteEndDate,
   }) {
-    final _result = create();
+    final $result = create();
     if (groupId != null) {
-      _result.groupId = groupId;
+      $result.groupId = groupId;
     }
     if (userIds != null) {
-      _result.userIds.addAll(userIds);
+      $result.userIds.addAll(userIds);
     }
     if (name != null) {
-      _result.name = name;
+      $result.name = name;
     }
     if (role != null) {
-      _result.role = role;
+      $result.role = role;
     }
     if (muteEndDate != null) {
-      _result.muteEndDate = muteEndDate;
+      $result.muteEndDate = muteEndDate;
     }
-    return _result;
+    return $result;
   }
+  CreateGroupMembersRequest._() : super();
   factory CreateGroupMembersRequest.fromBuffer($core.List<$core.int> i,
           [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(i, r);
   factory CreateGroupMembersRequest.fromJson($core.String i,
           [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(i, r);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'CreateGroupMembersRequest',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'im.turms.proto'),
+      createEmptyInstance: create)
+    ..aInt64(1, _omitFieldNames ? '' : 'groupId')
+    ..p<$fixnum.Int64>(2, _omitFieldNames ? '' : 'userIds', $pb.PbFieldType.K6)
+    ..aOS(3, _omitFieldNames ? '' : 'name')
+    ..e<$0.GroupMemberRole>(
+        4, _omitFieldNames ? '' : 'role', $pb.PbFieldType.OE,
+        defaultOrMaker: $0.GroupMemberRole.OWNER,
+        valueOf: $0.GroupMemberRole.valueOf,
+        enumValues: $0.GroupMemberRole.values)
+    ..aInt64(5, _omitFieldNames ? '' : 'muteEndDate')
+    ..hasRequiredFields = false;
+
   @$core.Deprecated('Using this can add significant overhead to your binary. '
       'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
       'Will be removed in next major version')
@@ -97,8 +76,10 @@ class CreateGroupMembersRequest extends $pb.GeneratedMessage {
   CreateGroupMembersRequest copyWith(
           void Function(CreateGroupMembersRequest) updates) =>
       super.copyWith((message) => updates(message as CreateGroupMembersRequest))
-          as CreateGroupMembersRequest; // ignore: deprecated_member_use
+          as CreateGroupMembersRequest;
+
   $pb.BuilderInfo get info_ => _i;
+
   @$core.pragma('dart2js:noInline')
   static CreateGroupMembersRequest create() => CreateGroupMembersRequest._();
   CreateGroupMembersRequest createEmptyInstance() => create();
@@ -160,3 +141,7 @@ class CreateGroupMembersRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   void clearMuteEndDate() => clearField(5);
 }
+
+const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');
+const _omitMessageNames =
+    $core.bool.fromEnvironment('protobuf.omit_message_names');

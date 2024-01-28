@@ -25,7 +25,7 @@ public interface UpdateRelationshipRequestOrBuilder extends
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>int64 user_id = 1;</code>
      *
      * @return The userId.
@@ -36,7 +36,7 @@ public interface UpdateRelationshipRequestOrBuilder extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>optional bool blocked = 2;</code>
      *
      * @return Whether the blocked field is set.
@@ -47,7 +47,7 @@ public interface UpdateRelationshipRequestOrBuilder extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>optional bool blocked = 2;</code>
      *
      * @return The blocked.
@@ -81,4 +81,25 @@ public interface UpdateRelationshipRequestOrBuilder extends
      * @return The deleteGroupIndex.
      */
     int getDeleteGroupIndex();
+
+    /**
+     * <code>optional string name = 5;</code>
+     *
+     * @return Whether the name field is set.
+     */
+    boolean hasName();
+
+    /**
+     * <code>optional string name = 5;</code>
+     *
+     * @return The name.
+     */
+    java.lang.String getName();
+
+    /**
+     * <code>optional string name = 5;</code>
+     *
+     * @return The bytes for name.
+     */
+    com.google.protobuf.ByteString getNameBytes();
 }

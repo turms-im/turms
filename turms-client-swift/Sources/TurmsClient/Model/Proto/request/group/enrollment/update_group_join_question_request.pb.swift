@@ -82,10 +82,10 @@ extension UpdateGroupJoinQuestionRequest: SwiftProtobuf.Message, SwiftProtobuf._
             // allocates stack space for every case branch when no optimizations are
             // enabled. https://github.com/apple/swift-protobuf/issues/1034
             switch fieldNumber {
-            case 1: try try decoder.decodeSingularInt64Field(value: &questionID)
-            case 2: try try decoder.decodeSingularStringField(value: &_question)
-            case 3: try try decoder.decodeRepeatedStringField(value: &answers)
-            case 4: try try decoder.decodeSingularInt32Field(value: &_score)
+            case 1: try decoder.decodeSingularInt64Field(value: &questionID)
+            case 2: try decoder.decodeSingularStringField(value: &_question)
+            case 3: try decoder.decodeRepeatedStringField(value: &answers)
+            case 4: try decoder.decodeSingularInt32Field(value: &_score)
             default: break
             }
         }

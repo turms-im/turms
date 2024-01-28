@@ -63,12 +63,7 @@ public final class QueryResourceDownloadInfoRequestOuterClass {
         internal_static_im_turms_proto_QueryResourceDownloadInfoRequest_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
                         internal_static_im_turms_proto_QueryResourceDownloadInfoRequest_descriptor,
-                        new java.lang.String[]{"Type",
-                                "IdNum",
-                                "IdStr",
-                                "Extra",
-                                "IdNum",
-                                "IdStr",});
+                        new java.lang.String[]{"Type", "IdNum", "IdStr", "Extra",});
         internal_static_im_turms_proto_QueryResourceDownloadInfoRequest_ExtraEntry_descriptor =
                 internal_static_im_turms_proto_QueryResourceDownloadInfoRequest_descriptor
                         .getNestedTypes()

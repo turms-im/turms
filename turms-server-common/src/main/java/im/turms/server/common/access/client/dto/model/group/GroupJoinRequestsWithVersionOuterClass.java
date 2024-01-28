@@ -58,9 +58,7 @@ public final class GroupJoinRequestsWithVersionOuterClass {
         internal_static_im_turms_proto_GroupJoinRequestsWithVersion_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
                         internal_static_im_turms_proto_GroupJoinRequestsWithVersion_descriptor,
-                        new java.lang.String[]{"GroupJoinRequests",
-                                "LastUpdatedDate",
-                                "LastUpdatedDate",});
+                        new java.lang.String[]{"GroupJoinRequests", "LastUpdatedDate",});
         im.turms.server.common.access.client.dto.model.group.GroupJoinRequestOuterClass
                 .getDescriptor();
     }

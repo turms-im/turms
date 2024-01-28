@@ -25,7 +25,7 @@ public interface UpdateMessageAttachmentInfoRequestOrBuilder extends
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>optional int64 attachment_id_num = 1;</code>
      *
      * @return Whether the attachmentIdNum field is set.
@@ -36,7 +36,7 @@ public interface UpdateMessageAttachmentInfoRequestOrBuilder extends
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>optional int64 attachment_id_num = 1;</code>
      *
      * @return The attachmentIdNum.
@@ -68,7 +68,7 @@ public interface UpdateMessageAttachmentInfoRequestOrBuilder extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>optional int64 user_id_to_share_with = 3;</code>
      *
      * @return Whether the userIdToShareWith field is set.
@@ -79,7 +79,7 @@ public interface UpdateMessageAttachmentInfoRequestOrBuilder extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>optional int64 user_id_to_share_with = 3;</code>
      *
      * @return The userIdToShareWith.

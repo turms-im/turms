@@ -68,14 +68,6 @@ public final class CreateMessageRequestOuterClass {
                                 "Text",
                                 "Records",
                                 "BurnAfter",
-                                "PreMessageId",
-                                "MessageId",
-                                "IsSystemMessage",
-                                "GroupId",
-                                "RecipientId",
-                                "DeliveryDate",
-                                "Text",
-                                "BurnAfter",
                                 "PreMessageId",});
     }
 

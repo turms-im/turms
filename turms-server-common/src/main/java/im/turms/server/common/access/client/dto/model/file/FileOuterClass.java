@@ -56,14 +56,14 @@ public final class FileOuterClass {
         internal_static_im_turms_proto_File_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
                         internal_static_im_turms_proto_File_descriptor,
-                        new java.lang.String[]{"Description", "Data", "Description", "Data",});
+                        new java.lang.String[]{"Description", "Data",});
         internal_static_im_turms_proto_File_Description_descriptor =
                 internal_static_im_turms_proto_File_descriptor.getNestedTypes()
                         .get(0);
         internal_static_im_turms_proto_File_Description_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
                         internal_static_im_turms_proto_File_Description_descriptor,
-                        new java.lang.String[]{"Url", "Size", "Format", "Size", "Format",});
+                        new java.lang.String[]{"Url", "Size", "Format",});
     }
 
     // @@protoc_insertion_point(outer_class_scope)

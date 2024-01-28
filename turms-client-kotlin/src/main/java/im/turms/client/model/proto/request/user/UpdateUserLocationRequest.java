@@ -35,7 +35,7 @@ public final class UpdateUserLocationRequest extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>float latitude = 1;</code>
      *
      * @return The latitude.
@@ -49,7 +49,7 @@ public final class UpdateUserLocationRequest extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>float latitude = 1;</code>
      *
      * @param value The latitude to set.
@@ -63,7 +63,7 @@ public final class UpdateUserLocationRequest extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>float latitude = 1;</code>
      */
     private void clearLatitude() {
@@ -106,7 +106,7 @@ public final class UpdateUserLocationRequest extends
 
     private static final class DetailsDefaultEntryHolder {
         static final com.google.protobuf.MapEntryLite<java.lang.String, java.lang.String> defaultEntry =
-                com.google.protobuf.MapEntryLite.<java.lang.String, java.lang.String>newDefaultInstance(
+                com.google.protobuf.MapEntryLite.newDefaultInstance(
                         com.google.protobuf.WireFormat.FieldType.STRING,
                         "",
                         com.google.protobuf.WireFormat.FieldType.STRING,
@@ -173,9 +173,7 @@ public final class UpdateUserLocationRequest extends
             java.lang.String defaultValue) {
         java.lang.Class<?> keyClass = key.getClass();
         java.util.Map<java.lang.String, java.lang.String> map = internalGetDetails();
-        return map.containsKey(key)
-                ? map.get(key)
-                : defaultValue;
+        return map.getOrDefault(key, defaultValue);
     }
 
     /**
@@ -278,12 +276,12 @@ public final class UpdateUserLocationRequest extends
     }
 
     public static Builder newBuilder() {
-        return (Builder) DEFAULT_INSTANCE.createBuilder();
+        return DEFAULT_INSTANCE.createBuilder();
     }
 
     public static Builder newBuilder(
             im.turms.client.model.proto.request.user.UpdateUserLocationRequest prototype) {
-        return (Builder) DEFAULT_INSTANCE.createBuilder(prototype);
+        return DEFAULT_INSTANCE.createBuilder(prototype);
     }
 
     /**
@@ -304,7 +302,7 @@ public final class UpdateUserLocationRequest extends
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>float latitude = 1;</code>
          *
          * @return The latitude.
@@ -318,7 +316,7 @@ public final class UpdateUserLocationRequest extends
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>float latitude = 1;</code>
          *
          * @param value The latitude to set.
@@ -334,7 +332,7 @@ public final class UpdateUserLocationRequest extends
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>float latitude = 1;</code>
          *
          * @return This builder for chaining.
@@ -444,9 +442,7 @@ public final class UpdateUserLocationRequest extends
                 java.lang.String defaultValue) {
             java.lang.Class<?> keyClass = key.getClass();
             java.util.Map<java.lang.String, java.lang.String> map = instance.getDetailsMap();
-            return map.containsKey(key)
-                    ? map.get(key)
-                    : defaultValue;
+            return map.getOrDefault(key, defaultValue);
         }
 
         /**

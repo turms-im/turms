@@ -37,7 +37,7 @@ public final class UpdateFriendRequestRequest extends
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>int64 request_id = 1;</code>
      *
      * @return The requestId.
@@ -51,7 +51,7 @@ public final class UpdateFriendRequestRequest extends
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>int64 request_id = 1;</code>
      *
      * @param value The requestId to set.
@@ -65,7 +65,7 @@ public final class UpdateFriendRequestRequest extends
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>int64 request_id = 1;</code>
      */
     private void clearRequestId() {
@@ -80,7 +80,7 @@ public final class UpdateFriendRequestRequest extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.ResponseAction response_action = 2;</code>
      *
      * @return The enum numeric value on the wire for responseAction.
@@ -94,7 +94,7 @@ public final class UpdateFriendRequestRequest extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.ResponseAction response_action = 2;</code>
      *
      * @return The responseAction.
@@ -112,7 +112,7 @@ public final class UpdateFriendRequestRequest extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.ResponseAction response_action = 2;</code>
      *
      * @param value The enum numeric value on the wire for responseAction to set.
@@ -125,7 +125,7 @@ public final class UpdateFriendRequestRequest extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.ResponseAction response_action = 2;</code>
      *
      * @param value The responseAction to set.
@@ -139,7 +139,7 @@ public final class UpdateFriendRequestRequest extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.ResponseAction response_action = 2;</code>
      */
     private void clearResponseAction() {
@@ -289,12 +289,12 @@ public final class UpdateFriendRequestRequest extends
     }
 
     public static Builder newBuilder() {
-        return (Builder) DEFAULT_INSTANCE.createBuilder();
+        return DEFAULT_INSTANCE.createBuilder();
     }
 
     public static Builder newBuilder(
             im.turms.client.model.proto.request.user.relationship.UpdateFriendRequestRequest prototype) {
-        return (Builder) DEFAULT_INSTANCE.createBuilder(prototype);
+        return DEFAULT_INSTANCE.createBuilder(prototype);
     }
 
     /**
@@ -315,7 +315,7 @@ public final class UpdateFriendRequestRequest extends
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>int64 request_id = 1;</code>
          *
          * @return The requestId.
@@ -329,7 +329,7 @@ public final class UpdateFriendRequestRequest extends
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>int64 request_id = 1;</code>
          *
          * @param value The requestId to set.
@@ -345,7 +345,7 @@ public final class UpdateFriendRequestRequest extends
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>int64 request_id = 1;</code>
          *
          * @return This builder for chaining.
@@ -360,7 +360,7 @@ public final class UpdateFriendRequestRequest extends
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.ResponseAction response_action = 2;</code>
          *
          * @return The enum numeric value on the wire for responseAction.
@@ -374,7 +374,7 @@ public final class UpdateFriendRequestRequest extends
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.ResponseAction response_action = 2;</code>
          *
          * @param value The responseAction to set.
@@ -390,7 +390,7 @@ public final class UpdateFriendRequestRequest extends
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.ResponseAction response_action = 2;</code>
          *
          * @return The responseAction.
@@ -404,7 +404,7 @@ public final class UpdateFriendRequestRequest extends
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.ResponseAction response_action = 2;</code>
          *
          * @param value The enum numeric value on the wire for responseAction to set.
@@ -421,7 +421,7 @@ public final class UpdateFriendRequestRequest extends
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.ResponseAction response_action = 2;</code>
          *
          * @return This builder for chaining.

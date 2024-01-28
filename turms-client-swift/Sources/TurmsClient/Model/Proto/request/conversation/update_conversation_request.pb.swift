@@ -79,9 +79,9 @@ extension UpdateConversationRequest: SwiftProtobuf.Message, SwiftProtobuf._Messa
             // allocates stack space for every case branch when no optimizations are
             // enabled. https://github.com/apple/swift-protobuf/issues/1034
             switch fieldNumber {
-            case 1: try try decoder.decodeSingularInt64Field(value: &_targetID)
-            case 2: try try decoder.decodeSingularInt64Field(value: &_groupID)
-            case 3: try try decoder.decodeSingularInt64Field(value: &readDate)
+            case 1: try decoder.decodeSingularInt64Field(value: &_targetID)
+            case 2: try decoder.decodeSingularInt64Field(value: &_groupID)
+            case 3: try decoder.decodeSingularInt64Field(value: &readDate)
             default: break
             }
         }

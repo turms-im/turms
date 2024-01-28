@@ -52,7 +52,7 @@ extension QueryUserOnlineStatusesRequest: SwiftProtobuf.Message, SwiftProtobuf._
             // allocates stack space for every case branch when no optimizations are
             // enabled. https://github.com/apple/swift-protobuf/issues/1034
             switch fieldNumber {
-            case 1: try try decoder.decodeRepeatedInt64Field(value: &userIds)
+            case 1: try decoder.decodeRepeatedInt64Field(value: &userIds)
             default: break
             }
         }

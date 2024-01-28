@@ -32,7 +32,7 @@ public final class CheckGroupJoinQuestionsAnswersRequest extends
 
     private static final class QuestionIdToAnswerDefaultEntryHolder {
         static final com.google.protobuf.MapEntryLite<java.lang.Long, java.lang.String> defaultEntry =
-                com.google.protobuf.MapEntryLite.<java.lang.Long, java.lang.String>newDefaultInstance(
+                com.google.protobuf.MapEntryLite.newDefaultInstance(
                         com.google.protobuf.WireFormat.FieldType.INT64,
                         0L,
                         com.google.protobuf.WireFormat.FieldType.STRING,
@@ -99,9 +99,7 @@ public final class CheckGroupJoinQuestionsAnswersRequest extends
             java.lang.String defaultValue) {
 
         java.util.Map<java.lang.Long, java.lang.String> map = internalGetQuestionIdToAnswer();
-        return map.containsKey(key)
-                ? map.get(key)
-                : defaultValue;
+        return map.getOrDefault(key, defaultValue);
     }
 
     /**
@@ -204,12 +202,12 @@ public final class CheckGroupJoinQuestionsAnswersRequest extends
     }
 
     public static Builder newBuilder() {
-        return (Builder) DEFAULT_INSTANCE.createBuilder();
+        return DEFAULT_INSTANCE.createBuilder();
     }
 
     public static Builder newBuilder(
             im.turms.client.model.proto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequest prototype) {
-        return (Builder) DEFAULT_INSTANCE.createBuilder(prototype);
+        return DEFAULT_INSTANCE.createBuilder(prototype);
     }
 
     /**
@@ -293,9 +291,7 @@ public final class CheckGroupJoinQuestionsAnswersRequest extends
 
             java.util.Map<java.lang.Long, java.lang.String> map =
                     instance.getQuestionIdToAnswerMap();
-            return map.containsKey(key)
-                    ? map.get(key)
-                    : defaultValue;
+            return map.getOrDefault(key, defaultValue);
         }
 
         /**

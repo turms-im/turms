@@ -387,12 +387,12 @@ public final class AudioFile
         }
 
         public static Builder newBuilder() {
-            return (Builder) DEFAULT_INSTANCE.createBuilder();
+            return DEFAULT_INSTANCE.createBuilder();
         }
 
         public static Builder newBuilder(
                 im.turms.client.model.proto.model.file.AudioFile.Description prototype) {
-            return (Builder) DEFAULT_INSTANCE.createBuilder(prototype);
+            return DEFAULT_INSTANCE.createBuilder(prototype);
         }
 
         /**
@@ -672,7 +672,6 @@ public final class AudioFile
 
         // @@protoc_insertion_point(class_scope:im.turms.proto.AudioFile.Description)
         private static final im.turms.client.model.proto.model.file.AudioFile.Description DEFAULT_INSTANCE;
-
         static {
             Description defaultInstance = new Description();
             // New instances are implicitly immutable so no need to make
@@ -874,11 +873,11 @@ public final class AudioFile
     }
 
     public static Builder newBuilder() {
-        return (Builder) DEFAULT_INSTANCE.createBuilder();
+        return DEFAULT_INSTANCE.createBuilder();
     }
 
     public static Builder newBuilder(im.turms.client.model.proto.model.file.AudioFile prototype) {
-        return (Builder) DEFAULT_INSTANCE.createBuilder(prototype);
+        return DEFAULT_INSTANCE.createBuilder(prototype);
     }
 
     /**

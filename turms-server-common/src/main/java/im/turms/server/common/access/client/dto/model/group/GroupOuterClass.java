@@ -70,17 +70,6 @@ public final class GroupOuterClass {
                                 "CreationDate",
                                 "LastUpdatedDate",
                                 "MuteEndDate",
-                                "Active",
-                                "Id",
-                                "TypeId",
-                                "CreatorId",
-                                "OwnerId",
-                                "Name",
-                                "Intro",
-                                "Announcement",
-                                "CreationDate",
-                                "LastUpdatedDate",
-                                "MuteEndDate",
                                 "Active",});
     }
 

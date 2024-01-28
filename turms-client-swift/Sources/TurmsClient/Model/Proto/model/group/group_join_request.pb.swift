@@ -146,14 +146,14 @@ extension GroupJoinRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImpleme
             // allocates stack space for every case branch when no optimizations are
             // enabled. https://github.com/apple/swift-protobuf/issues/1034
             switch fieldNumber {
-            case 1: try try decoder.decodeSingularInt64Field(value: &_id)
-            case 2: try try decoder.decodeSingularInt64Field(value: &_creationDate)
-            case 3: try try decoder.decodeSingularStringField(value: &_content)
-            case 4: try try decoder.decodeSingularEnumField(value: &_status)
-            case 5: try try decoder.decodeSingularInt64Field(value: &_expirationDate)
-            case 6: try try decoder.decodeSingularInt64Field(value: &_groupID)
-            case 7: try try decoder.decodeSingularInt64Field(value: &_requesterID)
-            case 8: try try decoder.decodeSingularInt64Field(value: &_responderID)
+            case 1: try decoder.decodeSingularInt64Field(value: &_id)
+            case 2: try decoder.decodeSingularInt64Field(value: &_creationDate)
+            case 3: try decoder.decodeSingularStringField(value: &_content)
+            case 4: try decoder.decodeSingularEnumField(value: &_status)
+            case 5: try decoder.decodeSingularInt64Field(value: &_expirationDate)
+            case 6: try decoder.decodeSingularInt64Field(value: &_groupID)
+            case 7: try decoder.decodeSingularInt64Field(value: &_requesterID)
+            case 8: try decoder.decodeSingularInt64Field(value: &_responderID)
             default: break
             }
         }

@@ -58,7 +58,7 @@ public final class QueryMessageAttachmentInfosRequest extends com.google.protobu
     private int bitField0_;
     public static final int USER_IDS_FIELD_NUMBER = 1;
     @SuppressWarnings("serial")
-    private com.google.protobuf.Internal.LongList userIds_;
+    private com.google.protobuf.Internal.LongList userIds_ = emptyLongList();
 
     /**
      * <code>repeated int64 user_ids = 1;</code>
@@ -93,7 +93,7 @@ public final class QueryMessageAttachmentInfosRequest extends com.google.protobu
 
     public static final int GROUP_IDS_FIELD_NUMBER = 2;
     @SuppressWarnings("serial")
-    private com.google.protobuf.Internal.LongList groupIds_;
+    private com.google.protobuf.Internal.LongList groupIds_ = emptyLongList();
 
     /**
      * <code>repeated int64 group_ids = 2;</code>
@@ -578,7 +578,6 @@ public final class QueryMessageAttachmentInfosRequest extends com.google.protobu
             im.turms.server.common.access.client.dto.request.storage.QueryMessageAttachmentInfosRequest result =
                     new im.turms.server.common.access.client.dto.request.storage.QueryMessageAttachmentInfosRequest(
                             this);
-            buildPartialRepeatedFields(result);
             if (bitField0_ != 0) {
                 buildPartial0(result);
             }
@@ -586,23 +585,17 @@ public final class QueryMessageAttachmentInfosRequest extends com.google.protobu
             return result;
         }
 
-        private void buildPartialRepeatedFields(
-                im.turms.server.common.access.client.dto.request.storage.QueryMessageAttachmentInfosRequest result) {
-            if (((bitField0_ & 0x00000001) != 0)) {
-                userIds_.makeImmutable();
-                bitField0_ &= ~0x00000001;
-            }
-            result.userIds_ = userIds_;
-            if (((bitField0_ & 0x00000002) != 0)) {
-                groupIds_.makeImmutable();
-                bitField0_ &= ~0x00000002;
-            }
-            result.groupIds_ = groupIds_;
-        }
-
         private void buildPartial0(
                 im.turms.server.common.access.client.dto.request.storage.QueryMessageAttachmentInfosRequest result) {
             int from_bitField0_ = bitField0_;
+            if (((from_bitField0_ & 0x00000001) != 0)) {
+                userIds_.makeImmutable();
+                result.userIds_ = userIds_;
+            }
+            if (((from_bitField0_ & 0x00000002) != 0)) {
+                groupIds_.makeImmutable();
+                result.groupIds_ = groupIds_;
+            }
             int to_bitField0_ = 0;
             if (((from_bitField0_ & 0x00000004) != 0)) {
                 result.creationDateStart_ = creationDateStart_;
@@ -621,6 +614,43 @@ public final class QueryMessageAttachmentInfosRequest extends com.google.protobu
                 to_bitField0_ |= 0x00000008;
             }
             result.bitField0_ |= to_bitField0_;
+        }
+
+        @java.lang.Override
+        public Builder clone() {
+            return super.clone();
+        }
+
+        @java.lang.Override
+        public Builder setField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value) {
+            return super.setField(field, value);
+        }
+
+        @java.lang.Override
+        public Builder clearField(com.google.protobuf.Descriptors.FieldDescriptor field) {
+            return super.clearField(field);
+        }
+
+        @java.lang.Override
+        public Builder clearOneof(com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+            return super.clearOneof(oneof);
+        }
+
+        @java.lang.Override
+        public Builder setRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                int index,
+                java.lang.Object value) {
+            return super.setRepeatedField(field, index, value);
+        }
+
+        @java.lang.Override
+        public Builder addRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value) {
+            return super.addRepeatedField(field, value);
         }
 
         @java.lang.Override
@@ -643,7 +673,8 @@ public final class QueryMessageAttachmentInfosRequest extends com.google.protobu
             if (!other.userIds_.isEmpty()) {
                 if (userIds_.isEmpty()) {
                     userIds_ = other.userIds_;
-                    bitField0_ &= ~0x00000001;
+                    userIds_.makeImmutable();
+                    bitField0_ |= 0x00000001;
                 } else {
                     ensureUserIdsIsMutable();
                     userIds_.addAll(other.userIds_);
@@ -653,7 +684,8 @@ public final class QueryMessageAttachmentInfosRequest extends com.google.protobu
             if (!other.groupIds_.isEmpty()) {
                 if (groupIds_.isEmpty()) {
                     groupIds_ = other.groupIds_;
-                    bitField0_ &= ~0x00000002;
+                    groupIds_.makeImmutable();
+                    bitField0_ |= 0x00000002;
                 } else {
                     ensureGroupIdsIsMutable();
                     groupIds_.addAll(other.groupIds_);
@@ -760,10 +792,10 @@ public final class QueryMessageAttachmentInfosRequest extends com.google.protobu
         private com.google.protobuf.Internal.LongList userIds_ = emptyLongList();
 
         private void ensureUserIdsIsMutable() {
-            if ((bitField0_ & 0x00000001) == 0) {
-                userIds_ = mutableCopy(userIds_);
-                bitField0_ |= 0x00000001;
+            if (!userIds_.isModifiable()) {
+                userIds_ = makeMutableCopy(userIds_);
             }
+            bitField0_ |= 0x00000001;
         }
 
         /**
@@ -772,9 +804,8 @@ public final class QueryMessageAttachmentInfosRequest extends com.google.protobu
          * @return A list containing the userIds.
          */
         public java.util.List<java.lang.Long> getUserIdsList() {
-            return ((bitField0_ & 0x00000001) != 0)
-                    ? java.util.Collections.unmodifiableList(userIds_)
-                    : userIds_;
+            userIds_.makeImmutable();
+            return userIds_;
         }
 
         /**
@@ -807,6 +838,7 @@ public final class QueryMessageAttachmentInfosRequest extends com.google.protobu
 
             ensureUserIdsIsMutable();
             userIds_.setLong(index, value);
+            bitField0_ |= 0x00000001;
             onChanged();
             return this;
         }
@@ -821,6 +853,7 @@ public final class QueryMessageAttachmentInfosRequest extends com.google.protobu
 
             ensureUserIdsIsMutable();
             userIds_.addLong(value);
+            bitField0_ |= 0x00000001;
             onChanged();
             return this;
         }
@@ -834,6 +867,7 @@ public final class QueryMessageAttachmentInfosRequest extends com.google.protobu
         public Builder addAllUserIds(java.lang.Iterable<? extends java.lang.Long> values) {
             ensureUserIdsIsMutable();
             com.google.protobuf.AbstractMessageLite.Builder.addAll(values, userIds_);
+            bitField0_ |= 0x00000001;
             onChanged();
             return this;
         }
@@ -853,10 +887,10 @@ public final class QueryMessageAttachmentInfosRequest extends com.google.protobu
         private com.google.protobuf.Internal.LongList groupIds_ = emptyLongList();
 
         private void ensureGroupIdsIsMutable() {
-            if ((bitField0_ & 0x00000002) == 0) {
-                groupIds_ = mutableCopy(groupIds_);
-                bitField0_ |= 0x00000002;
+            if (!groupIds_.isModifiable()) {
+                groupIds_ = makeMutableCopy(groupIds_);
             }
+            bitField0_ |= 0x00000002;
         }
 
         /**
@@ -865,9 +899,8 @@ public final class QueryMessageAttachmentInfosRequest extends com.google.protobu
          * @return A list containing the groupIds.
          */
         public java.util.List<java.lang.Long> getGroupIdsList() {
-            return ((bitField0_ & 0x00000002) != 0)
-                    ? java.util.Collections.unmodifiableList(groupIds_)
-                    : groupIds_;
+            groupIds_.makeImmutable();
+            return groupIds_;
         }
 
         /**
@@ -900,6 +933,7 @@ public final class QueryMessageAttachmentInfosRequest extends com.google.protobu
 
             ensureGroupIdsIsMutable();
             groupIds_.setLong(index, value);
+            bitField0_ |= 0x00000002;
             onChanged();
             return this;
         }
@@ -914,6 +948,7 @@ public final class QueryMessageAttachmentInfosRequest extends com.google.protobu
 
             ensureGroupIdsIsMutable();
             groupIds_.addLong(value);
+            bitField0_ |= 0x00000002;
             onChanged();
             return this;
         }
@@ -927,6 +962,7 @@ public final class QueryMessageAttachmentInfosRequest extends com.google.protobu
         public Builder addAllGroupIds(java.lang.Iterable<? extends java.lang.Long> values) {
             ensureGroupIdsIsMutable();
             com.google.protobuf.AbstractMessageLite.Builder.addAll(values, groupIds_);
+            bitField0_ |= 0x00000002;
             onChanged();
             return this;
         }

@@ -58,20 +58,14 @@ public final class ImageFileOuterClass {
         internal_static_im_turms_proto_ImageFile_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
                         internal_static_im_turms_proto_ImageFile_descriptor,
-                        new java.lang.String[]{"Description", "Data", "Description", "Data",});
+                        new java.lang.String[]{"Description", "Data",});
         internal_static_im_turms_proto_ImageFile_Description_descriptor =
                 internal_static_im_turms_proto_ImageFile_descriptor.getNestedTypes()
                         .get(0);
         internal_static_im_turms_proto_ImageFile_Description_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
                         internal_static_im_turms_proto_ImageFile_Description_descriptor,
-                        new java.lang.String[]{"Url",
-                                "Original",
-                                "ImageSize",
-                                "FileSize",
-                                "Original",
-                                "ImageSize",
-                                "FileSize",});
+                        new java.lang.String[]{"Url", "Original", "ImageSize", "FileSize",});
     }
 
     // @@protoc_insertion_point(outer_class_scope)

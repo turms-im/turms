@@ -25,7 +25,7 @@ public interface UpdateUserLocationRequestOrBuilder extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>float latitude = 1;</code>
      *
      * @return The latitude.

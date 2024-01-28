@@ -1,9 +1,13 @@
-///
+//
 //  Generated code. Do not modify.
 //  source: request/message/update_message_request.proto
 //
 // @dart = 2.12
-// ignore_for_file: annotate_overrides,camel_case_types,constant_identifier_names,directives_ordering,library_prefixes,non_constant_identifier_names,prefer_final_fields,return_of_invalid_type,unnecessary_const,unnecessary_import,unnecessary_this,unused_import,unused_shown_name
+
+// ignore_for_file: annotate_overrides, camel_case_types, comment_references
+// ignore_for_file: constant_identifier_names, library_prefixes
+// ignore_for_file: non_constant_identifier_names, prefer_final_fields
+// ignore_for_file: unnecessary_import, unnecessary_this, unused_import
 
 import 'dart:core' as $core;
 
@@ -11,66 +15,46 @@ import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 class UpdateMessageRequest extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      const $core.bool.fromEnvironment('protobuf.omit_message_names')
-          ? ''
-          : 'UpdateMessageRequest',
-      package: const $pb.PackageName(
-          const $core.bool.fromEnvironment('protobuf.omit_message_names')
-              ? ''
-              : 'im.turms.proto'),
-      createEmptyInstance: create)
-    ..aInt64(
-        1,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'messageId')
-    ..aOS(
-        2,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'text')
-    ..p<$core.List<$core.int>>(
-        3,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'records',
-        $pb.PbFieldType.PY)
-    ..aInt64(
-        4,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'recallDate')
-    ..hasRequiredFields = false;
-
-  UpdateMessageRequest._() : super();
   factory UpdateMessageRequest({
     $fixnum.Int64? messageId,
     $core.String? text,
     $core.Iterable<$core.List<$core.int>>? records,
     $fixnum.Int64? recallDate,
   }) {
-    final _result = create();
+    final $result = create();
     if (messageId != null) {
-      _result.messageId = messageId;
+      $result.messageId = messageId;
     }
     if (text != null) {
-      _result.text = text;
+      $result.text = text;
     }
     if (records != null) {
-      _result.records.addAll(records);
+      $result.records.addAll(records);
     }
     if (recallDate != null) {
-      _result.recallDate = recallDate;
+      $result.recallDate = recallDate;
     }
-    return _result;
+    return $result;
   }
+  UpdateMessageRequest._() : super();
   factory UpdateMessageRequest.fromBuffer($core.List<$core.int> i,
           [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(i, r);
   factory UpdateMessageRequest.fromJson($core.String i,
           [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(i, r);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'UpdateMessageRequest',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'im.turms.proto'),
+      createEmptyInstance: create)
+    ..aInt64(1, _omitFieldNames ? '' : 'messageId')
+    ..aOS(2, _omitFieldNames ? '' : 'text')
+    ..p<$core.List<$core.int>>(
+        3, _omitFieldNames ? '' : 'records', $pb.PbFieldType.PY)
+    ..aInt64(4, _omitFieldNames ? '' : 'recallDate')
+    ..hasRequiredFields = false;
+
   @$core.Deprecated('Using this can add significant overhead to your binary. '
       'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
       'Will be removed in next major version')
@@ -81,8 +65,10 @@ class UpdateMessageRequest extends $pb.GeneratedMessage {
       'Will be removed in next major version')
   UpdateMessageRequest copyWith(void Function(UpdateMessageRequest) updates) =>
       super.copyWith((message) => updates(message as UpdateMessageRequest))
-          as UpdateMessageRequest; // ignore: deprecated_member_use
+          as UpdateMessageRequest;
+
   $pb.BuilderInfo get info_ => _i;
+
   @$core.pragma('dart2js:noInline')
   static UpdateMessageRequest create() => UpdateMessageRequest._();
   UpdateMessageRequest createEmptyInstance() => create();
@@ -93,6 +79,7 @@ class UpdateMessageRequest extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<UpdateMessageRequest>(create);
   static UpdateMessageRequest? _defaultInstance;
 
+  /// Query filter
   @$pb.TagNumber(1)
   $fixnum.Int64 get messageId => $_getI64(0);
   @$pb.TagNumber(1)
@@ -105,6 +92,7 @@ class UpdateMessageRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   void clearMessageId() => clearField(1);
 
+  /// Update
   @$pb.TagNumber(2)
   $core.String get text => $_getSZ(1);
   @$pb.TagNumber(2)
@@ -132,3 +120,7 @@ class UpdateMessageRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   void clearRecallDate() => clearField(4);
 }
+
+const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');
+const _omitMessageNames =
+    $core.bool.fromEnvironment('protobuf.omit_message_names');

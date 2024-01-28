@@ -1,76 +1,58 @@
-///
+//
 //  Generated code. Do not modify.
 //  source: model/file/image_file.proto
 //
 // @dart = 2.12
-// ignore_for_file: annotate_overrides,camel_case_types,constant_identifier_names,directives_ordering,library_prefixes,non_constant_identifier_names,prefer_final_fields,return_of_invalid_type,unnecessary_const,unnecessary_import,unnecessary_this,unused_import,unused_shown_name
+
+// ignore_for_file: annotate_overrides, camel_case_types, comment_references
+// ignore_for_file: constant_identifier_names, library_prefixes
+// ignore_for_file: non_constant_identifier_names, prefer_final_fields
+// ignore_for_file: unnecessary_import, unnecessary_this, unused_import
 
 import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
 class ImageFile_Description extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      const $core.bool.fromEnvironment('protobuf.omit_message_names')
-          ? ''
-          : 'ImageFile.Description',
-      package: const $pb.PackageName(
-          const $core.bool.fromEnvironment('protobuf.omit_message_names')
-              ? ''
-              : 'im.turms.proto'),
-      createEmptyInstance: create)
-    ..aOS(
-        1,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'url')
-    ..aOB(
-        2,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'original')
-    ..a<$core.int>(
-        3,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'imageSize',
-        $pb.PbFieldType.O3)
-    ..a<$core.int>(
-        4,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'fileSize',
-        $pb.PbFieldType.O3)
-    ..hasRequiredFields = false;
-
-  ImageFile_Description._() : super();
   factory ImageFile_Description({
     $core.String? url,
     $core.bool? original,
     $core.int? imageSize,
     $core.int? fileSize,
   }) {
-    final _result = create();
+    final $result = create();
     if (url != null) {
-      _result.url = url;
+      $result.url = url;
     }
     if (original != null) {
-      _result.original = original;
+      $result.original = original;
     }
     if (imageSize != null) {
-      _result.imageSize = imageSize;
+      $result.imageSize = imageSize;
     }
     if (fileSize != null) {
-      _result.fileSize = fileSize;
+      $result.fileSize = fileSize;
     }
-    return _result;
+    return $result;
   }
+  ImageFile_Description._() : super();
   factory ImageFile_Description.fromBuffer($core.List<$core.int> i,
           [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(i, r);
   factory ImageFile_Description.fromJson($core.String i,
           [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(i, r);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ImageFile.Description',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'im.turms.proto'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'url')
+    ..aOB(2, _omitFieldNames ? '' : 'original')
+    ..a<$core.int>(3, _omitFieldNames ? '' : 'imageSize', $pb.PbFieldType.O3)
+    ..a<$core.int>(4, _omitFieldNames ? '' : 'fileSize', $pb.PbFieldType.O3)
+    ..hasRequiredFields = false;
+
   @$core.Deprecated('Using this can add significant overhead to your binary. '
       'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
       'Will be removed in next major version')
@@ -82,8 +64,10 @@ class ImageFile_Description extends $pb.GeneratedMessage {
   ImageFile_Description copyWith(
           void Function(ImageFile_Description) updates) =>
       super.copyWith((message) => updates(message as ImageFile_Description))
-          as ImageFile_Description; // ignore: deprecated_member_use
+          as ImageFile_Description;
+
   $pb.BuilderInfo get info_ => _i;
+
   @$core.pragma('dart2js:noInline')
   static ImageFile_Description create() => ImageFile_Description._();
   ImageFile_Description createEmptyInstance() => create();
@@ -144,49 +128,37 @@ class ImageFile_Description extends $pb.GeneratedMessage {
 }
 
 class ImageFile extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      const $core.bool.fromEnvironment('protobuf.omit_message_names')
-          ? ''
-          : 'ImageFile',
-      package: const $pb.PackageName(
-          const $core.bool.fromEnvironment('protobuf.omit_message_names')
-              ? ''
-              : 'im.turms.proto'),
-      createEmptyInstance: create)
-    ..aOM<ImageFile_Description>(
-        1,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'description',
-        subBuilder: ImageFile_Description.create)
-    ..a<$core.List<$core.int>>(
-        2,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'data',
-        $pb.PbFieldType.OY)
-    ..hasRequiredFields = false;
-
-  ImageFile._() : super();
   factory ImageFile({
     ImageFile_Description? description,
     $core.List<$core.int>? data,
   }) {
-    final _result = create();
+    final $result = create();
     if (description != null) {
-      _result.description = description;
+      $result.description = description;
     }
     if (data != null) {
-      _result.data = data;
+      $result.data = data;
     }
-    return _result;
+    return $result;
   }
+  ImageFile._() : super();
   factory ImageFile.fromBuffer($core.List<$core.int> i,
           [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(i, r);
   factory ImageFile.fromJson($core.String i,
           [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(i, r);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ImageFile',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'im.turms.proto'),
+      createEmptyInstance: create)
+    ..aOM<ImageFile_Description>(1, _omitFieldNames ? '' : 'description',
+        subBuilder: ImageFile_Description.create)
+    ..a<$core.List<$core.int>>(
+        2, _omitFieldNames ? '' : 'data', $pb.PbFieldType.OY)
+    ..hasRequiredFields = false;
+
   @$core.Deprecated('Using this can add significant overhead to your binary. '
       'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
       'Will be removed in next major version')
@@ -195,9 +167,10 @@ class ImageFile extends $pb.GeneratedMessage {
       'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
       'Will be removed in next major version')
   ImageFile copyWith(void Function(ImageFile) updates) =>
-      super.copyWith((message) => updates(message as ImageFile))
-          as ImageFile; // ignore: deprecated_member_use
+      super.copyWith((message) => updates(message as ImageFile)) as ImageFile;
+
   $pb.BuilderInfo get info_ => _i;
+
   @$core.pragma('dart2js:noInline')
   static ImageFile create() => ImageFile._();
   ImageFile createEmptyInstance() => create();
@@ -233,3 +206,7 @@ class ImageFile extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   void clearData() => clearField(2);
 }
+
+const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');
+const _omitMessageNames =
+    $core.bool.fromEnvironment('protobuf.omit_message_names');

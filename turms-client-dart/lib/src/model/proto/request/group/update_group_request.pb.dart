@@ -1,9 +1,13 @@
-///
+//
 //  Generated code. Do not modify.
 //  source: request/group/update_group_request.proto
 //
 // @dart = 2.12
-// ignore_for_file: annotate_overrides,camel_case_types,constant_identifier_names,directives_ordering,library_prefixes,non_constant_identifier_names,prefer_final_fields,return_of_invalid_type,unnecessary_const,unnecessary_import,unnecessary_this,unused_import,unused_shown_name
+
+// ignore_for_file: annotate_overrides, camel_case_types, comment_references
+// ignore_for_file: constant_identifier_names, library_prefixes
+// ignore_for_file: non_constant_identifier_names, prefer_final_fields
+// ignore_for_file: unnecessary_import, unnecessary_this, unused_import
 
 import 'dart:core' as $core;
 
@@ -11,64 +15,6 @@ import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 class UpdateGroupRequest extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      const $core.bool.fromEnvironment('protobuf.omit_message_names')
-          ? ''
-          : 'UpdateGroupRequest',
-      package: const $pb.PackageName(
-          const $core.bool.fromEnvironment('protobuf.omit_message_names')
-              ? ''
-              : 'im.turms.proto'),
-      createEmptyInstance: create)
-    ..aInt64(
-        1,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'groupId')
-    ..aOB(
-        2,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'quitAfterTransfer')
-    ..aOS(
-        3,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'name')
-    ..aOS(
-        4,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'intro')
-    ..aOS(
-        5,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'announcement')
-    ..a<$core.int>(
-        6,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'minScore',
-        $pb.PbFieldType.O3)
-    ..aInt64(
-        7,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'typeId')
-    ..aInt64(
-        8,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'muteEndDate')
-    ..aInt64(
-        9,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'successorId')
-    ..hasRequiredFields = false;
-
-  UpdateGroupRequest._() : super();
   factory UpdateGroupRequest({
     $fixnum.Int64? groupId,
     $core.bool? quitAfterTransfer,
@@ -80,42 +26,59 @@ class UpdateGroupRequest extends $pb.GeneratedMessage {
     $fixnum.Int64? muteEndDate,
     $fixnum.Int64? successorId,
   }) {
-    final _result = create();
+    final $result = create();
     if (groupId != null) {
-      _result.groupId = groupId;
+      $result.groupId = groupId;
     }
     if (quitAfterTransfer != null) {
-      _result.quitAfterTransfer = quitAfterTransfer;
+      $result.quitAfterTransfer = quitAfterTransfer;
     }
     if (name != null) {
-      _result.name = name;
+      $result.name = name;
     }
     if (intro != null) {
-      _result.intro = intro;
+      $result.intro = intro;
     }
     if (announcement != null) {
-      _result.announcement = announcement;
+      $result.announcement = announcement;
     }
     if (minScore != null) {
-      _result.minScore = minScore;
+      $result.minScore = minScore;
     }
     if (typeId != null) {
-      _result.typeId = typeId;
+      $result.typeId = typeId;
     }
     if (muteEndDate != null) {
-      _result.muteEndDate = muteEndDate;
+      $result.muteEndDate = muteEndDate;
     }
     if (successorId != null) {
-      _result.successorId = successorId;
+      $result.successorId = successorId;
     }
-    return _result;
+    return $result;
   }
+  UpdateGroupRequest._() : super();
   factory UpdateGroupRequest.fromBuffer($core.List<$core.int> i,
           [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(i, r);
   factory UpdateGroupRequest.fromJson($core.String i,
           [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(i, r);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'UpdateGroupRequest',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'im.turms.proto'),
+      createEmptyInstance: create)
+    ..aInt64(1, _omitFieldNames ? '' : 'groupId')
+    ..aOB(2, _omitFieldNames ? '' : 'quitAfterTransfer')
+    ..aOS(3, _omitFieldNames ? '' : 'name')
+    ..aOS(4, _omitFieldNames ? '' : 'intro')
+    ..aOS(5, _omitFieldNames ? '' : 'announcement')
+    ..a<$core.int>(6, _omitFieldNames ? '' : 'minScore', $pb.PbFieldType.O3)
+    ..aInt64(7, _omitFieldNames ? '' : 'typeId')
+    ..aInt64(8, _omitFieldNames ? '' : 'muteEndDate')
+    ..aInt64(9, _omitFieldNames ? '' : 'successorId')
+    ..hasRequiredFields = false;
+
   @$core.Deprecated('Using this can add significant overhead to your binary. '
       'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
       'Will be removed in next major version')
@@ -125,8 +88,10 @@ class UpdateGroupRequest extends $pb.GeneratedMessage {
       'Will be removed in next major version')
   UpdateGroupRequest copyWith(void Function(UpdateGroupRequest) updates) =>
       super.copyWith((message) => updates(message as UpdateGroupRequest))
-          as UpdateGroupRequest; // ignore: deprecated_member_use
+          as UpdateGroupRequest;
+
   $pb.BuilderInfo get info_ => _i;
+
   @$core.pragma('dart2js:noInline')
   static UpdateGroupRequest create() => UpdateGroupRequest._();
   UpdateGroupRequest createEmptyInstance() => create();
@@ -137,6 +102,7 @@ class UpdateGroupRequest extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<UpdateGroupRequest>(create);
   static UpdateGroupRequest? _defaultInstance;
 
+  /// Query filter
   @$pb.TagNumber(1)
   $fixnum.Int64 get groupId => $_getI64(0);
   @$pb.TagNumber(1)
@@ -149,6 +115,7 @@ class UpdateGroupRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   void clearGroupId() => clearField(1);
 
+  /// Update options
   @$pb.TagNumber(2)
   $core.bool get quitAfterTransfer => $_getBF(1);
   @$pb.TagNumber(2)
@@ -161,6 +128,7 @@ class UpdateGroupRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   void clearQuitAfterTransfer() => clearField(2);
 
+  /// Update
   @$pb.TagNumber(3)
   $core.String get name => $_getSZ(2);
   @$pb.TagNumber(3)
@@ -245,3 +213,7 @@ class UpdateGroupRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(9)
   void clearSuccessorId() => clearField(9);
 }
+
+const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');
+const _omitMessageNames =
+    $core.bool.fromEnvironment('protobuf.omit_message_names');

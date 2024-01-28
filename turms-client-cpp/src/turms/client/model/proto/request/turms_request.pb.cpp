@@ -81,6 +81,7 @@ class TurmsRequest::_Internal {
   static const ::turms::client::model::proto::CreateFriendRequestRequest& create_friend_request_request(const TurmsRequest* msg);
   static const ::turms::client::model::proto::CreateRelationshipGroupRequest& create_relationship_group_request(const TurmsRequest* msg);
   static const ::turms::client::model::proto::CreateRelationshipRequest& create_relationship_request(const TurmsRequest* msg);
+  static const ::turms::client::model::proto::DeleteFriendRequestRequest& delete_friend_request_request(const TurmsRequest* msg);
   static const ::turms::client::model::proto::DeleteRelationshipGroupRequest& delete_relationship_group_request(const TurmsRequest* msg);
   static const ::turms::client::model::proto::DeleteRelationshipRequest& delete_relationship_request(const TurmsRequest* msg);
   static const ::turms::client::model::proto::QueryFriendRequestsRequest& query_friend_requests_request(const TurmsRequest* msg);
@@ -110,7 +111,9 @@ class TurmsRequest::_Internal {
   static const ::turms::client::model::proto::QueryGroupInvitationsRequest& query_group_invitations_request(const TurmsRequest* msg);
   static const ::turms::client::model::proto::QueryGroupJoinRequestsRequest& query_group_join_requests_request(const TurmsRequest* msg);
   static const ::turms::client::model::proto::QueryGroupJoinQuestionsRequest& query_group_join_questions_request(const TurmsRequest* msg);
+  static const ::turms::client::model::proto::UpdateGroupInvitationRequest& update_group_invitation_request(const TurmsRequest* msg);
   static const ::turms::client::model::proto::UpdateGroupJoinQuestionRequest& update_group_join_question_request(const TurmsRequest* msg);
+  static const ::turms::client::model::proto::UpdateGroupJoinRequestRequest& update_group_join_request_request(const TurmsRequest* msg);
   static const ::turms::client::model::proto::DeleteResourceRequest& delete_resource_request(const TurmsRequest* msg);
   static const ::turms::client::model::proto::QueryResourceDownloadInfoRequest& query_resource_download_info_request(const TurmsRequest* msg);
   static const ::turms::client::model::proto::QueryResourceUploadInfoRequest& query_resource_upload_info_request(const TurmsRequest* msg);
@@ -180,6 +183,9 @@ const ::turms::client::model::proto::CreateRelationshipGroupRequest& TurmsReques
 }
 const ::turms::client::model::proto::CreateRelationshipRequest& TurmsRequest::_Internal::create_relationship_request(const TurmsRequest* msg) {
   return *msg->_impl_.kind_.create_relationship_request_;
+}
+const ::turms::client::model::proto::DeleteFriendRequestRequest& TurmsRequest::_Internal::delete_friend_request_request(const TurmsRequest* msg) {
+  return *msg->_impl_.kind_.delete_friend_request_request_;
 }
 const ::turms::client::model::proto::DeleteRelationshipGroupRequest& TurmsRequest::_Internal::delete_relationship_group_request(const TurmsRequest* msg) {
   return *msg->_impl_.kind_.delete_relationship_group_request_;
@@ -268,8 +274,14 @@ const ::turms::client::model::proto::QueryGroupJoinRequestsRequest& TurmsRequest
 const ::turms::client::model::proto::QueryGroupJoinQuestionsRequest& TurmsRequest::_Internal::query_group_join_questions_request(const TurmsRequest* msg) {
   return *msg->_impl_.kind_.query_group_join_questions_request_;
 }
+const ::turms::client::model::proto::UpdateGroupInvitationRequest& TurmsRequest::_Internal::update_group_invitation_request(const TurmsRequest* msg) {
+  return *msg->_impl_.kind_.update_group_invitation_request_;
+}
 const ::turms::client::model::proto::UpdateGroupJoinQuestionRequest& TurmsRequest::_Internal::update_group_join_question_request(const TurmsRequest* msg) {
   return *msg->_impl_.kind_.update_group_join_question_request_;
+}
+const ::turms::client::model::proto::UpdateGroupJoinRequestRequest& TurmsRequest::_Internal::update_group_join_request_request(const TurmsRequest* msg) {
+  return *msg->_impl_.kind_.update_group_join_request_request_;
 }
 const ::turms::client::model::proto::DeleteResourceRequest& TurmsRequest::_Internal::delete_resource_request(const TurmsRequest* msg) {
   return *msg->_impl_.kind_.delete_resource_request_;
@@ -786,6 +798,30 @@ void TurmsRequest::clear_create_relationship_request() {
   if (kind_case() == kCreateRelationshipRequest) {
     if (GetArenaForAllocation() == nullptr) {
       delete _impl_.kind_.create_relationship_request_;
+    }
+    clear_has_kind();
+  }
+}
+void TurmsRequest::set_allocated_delete_friend_request_request(::turms::client::model::proto::DeleteFriendRequestRequest* delete_friend_request_request) {
+  ::google::protobuf::Arena* message_arena = GetArenaForAllocation();
+  clear_kind();
+  if (delete_friend_request_request) {
+    ::google::protobuf::Arena* submessage_arena =
+        ::google::protobuf::Arena::InternalGetOwningArena(
+                reinterpret_cast<::google::protobuf::MessageLite*>(delete_friend_request_request));
+    if (message_arena != submessage_arena) {
+      delete_friend_request_request = ::google::protobuf::internal::GetOwnedMessage(
+          message_arena, delete_friend_request_request, submessage_arena);
+    }
+    set_has_delete_friend_request_request();
+    _impl_.kind_.delete_friend_request_request_ = delete_friend_request_request;
+  }
+  // @@protoc_insertion_point(field_set_allocated:turms.client.model.proto.TurmsRequest.delete_friend_request_request)
+}
+void TurmsRequest::clear_delete_friend_request_request() {
+  if (kind_case() == kDeleteFriendRequestRequest) {
+    if (GetArenaForAllocation() == nullptr) {
+      delete _impl_.kind_.delete_friend_request_request_;
     }
     clear_has_kind();
   }
@@ -1486,6 +1522,30 @@ void TurmsRequest::clear_query_group_join_questions_request() {
     clear_has_kind();
   }
 }
+void TurmsRequest::set_allocated_update_group_invitation_request(::turms::client::model::proto::UpdateGroupInvitationRequest* update_group_invitation_request) {
+  ::google::protobuf::Arena* message_arena = GetArenaForAllocation();
+  clear_kind();
+  if (update_group_invitation_request) {
+    ::google::protobuf::Arena* submessage_arena =
+        ::google::protobuf::Arena::InternalGetOwningArena(
+                reinterpret_cast<::google::protobuf::MessageLite*>(update_group_invitation_request));
+    if (message_arena != submessage_arena) {
+      update_group_invitation_request = ::google::protobuf::internal::GetOwnedMessage(
+          message_arena, update_group_invitation_request, submessage_arena);
+    }
+    set_has_update_group_invitation_request();
+    _impl_.kind_.update_group_invitation_request_ = update_group_invitation_request;
+  }
+  // @@protoc_insertion_point(field_set_allocated:turms.client.model.proto.TurmsRequest.update_group_invitation_request)
+}
+void TurmsRequest::clear_update_group_invitation_request() {
+  if (kind_case() == kUpdateGroupInvitationRequest) {
+    if (GetArenaForAllocation() == nullptr) {
+      delete _impl_.kind_.update_group_invitation_request_;
+    }
+    clear_has_kind();
+  }
+}
 void TurmsRequest::set_allocated_update_group_join_question_request(::turms::client::model::proto::UpdateGroupJoinQuestionRequest* update_group_join_question_request) {
   ::google::protobuf::Arena* message_arena = GetArenaForAllocation();
   clear_kind();
@@ -1506,6 +1566,30 @@ void TurmsRequest::clear_update_group_join_question_request() {
   if (kind_case() == kUpdateGroupJoinQuestionRequest) {
     if (GetArenaForAllocation() == nullptr) {
       delete _impl_.kind_.update_group_join_question_request_;
+    }
+    clear_has_kind();
+  }
+}
+void TurmsRequest::set_allocated_update_group_join_request_request(::turms::client::model::proto::UpdateGroupJoinRequestRequest* update_group_join_request_request) {
+  ::google::protobuf::Arena* message_arena = GetArenaForAllocation();
+  clear_kind();
+  if (update_group_join_request_request) {
+    ::google::protobuf::Arena* submessage_arena =
+        ::google::protobuf::Arena::InternalGetOwningArena(
+                reinterpret_cast<::google::protobuf::MessageLite*>(update_group_join_request_request));
+    if (message_arena != submessage_arena) {
+      update_group_join_request_request = ::google::protobuf::internal::GetOwnedMessage(
+          message_arena, update_group_join_request_request, submessage_arena);
+    }
+    set_has_update_group_join_request_request();
+    _impl_.kind_.update_group_join_request_request_ = update_group_join_request_request;
+  }
+  // @@protoc_insertion_point(field_set_allocated:turms.client.model.proto.TurmsRequest.update_group_join_request_request)
+}
+void TurmsRequest::clear_update_group_join_request_request() {
+  if (kind_case() == kUpdateGroupJoinRequestRequest) {
+    if (GetArenaForAllocation() == nullptr) {
+      delete _impl_.kind_.update_group_join_request_request_;
     }
     clear_has_kind();
   }
@@ -1755,6 +1839,11 @@ TurmsRequest::TurmsRequest(const TurmsRequest& from) : ::google::protobuf::Messa
           from._internal_create_relationship_request());
       break;
     }
+    case kDeleteFriendRequestRequest: {
+      _this->_internal_mutable_delete_friend_request_request()->::turms::client::model::proto::DeleteFriendRequestRequest::MergeFrom(
+          from._internal_delete_friend_request_request());
+      break;
+    }
     case kDeleteRelationshipGroupRequest: {
       _this->_internal_mutable_delete_relationship_group_request()->::turms::client::model::proto::DeleteRelationshipGroupRequest::MergeFrom(
           from._internal_delete_relationship_group_request());
@@ -1900,9 +1989,19 @@ TurmsRequest::TurmsRequest(const TurmsRequest& from) : ::google::protobuf::Messa
           from._internal_query_group_join_questions_request());
       break;
     }
+    case kUpdateGroupInvitationRequest: {
+      _this->_internal_mutable_update_group_invitation_request()->::turms::client::model::proto::UpdateGroupInvitationRequest::MergeFrom(
+          from._internal_update_group_invitation_request());
+      break;
+    }
     case kUpdateGroupJoinQuestionRequest: {
       _this->_internal_mutable_update_group_join_question_request()->::turms::client::model::proto::UpdateGroupJoinQuestionRequest::MergeFrom(
           from._internal_update_group_join_question_request());
+      break;
+    }
+    case kUpdateGroupJoinRequestRequest: {
+      _this->_internal_mutable_update_group_join_request_request()->::turms::client::model::proto::UpdateGroupJoinRequestRequest::MergeFrom(
+          from._internal_update_group_join_request_request());
       break;
     }
     case kDeleteResourceRequest: {
@@ -2092,6 +2191,12 @@ void TurmsRequest::clear_kind() {
       }
       break;
     }
+    case kDeleteFriendRequestRequest: {
+      if (GetArenaForAllocation() == nullptr) {
+        delete _impl_.kind_.delete_friend_request_request_;
+      }
+      break;
+    }
     case kDeleteRelationshipGroupRequest: {
       if (GetArenaForAllocation() == nullptr) {
         delete _impl_.kind_.delete_relationship_group_request_;
@@ -2266,9 +2371,21 @@ void TurmsRequest::clear_kind() {
       }
       break;
     }
+    case kUpdateGroupInvitationRequest: {
+      if (GetArenaForAllocation() == nullptr) {
+        delete _impl_.kind_.update_group_invitation_request_;
+      }
+      break;
+    }
     case kUpdateGroupJoinQuestionRequest: {
       if (GetArenaForAllocation() == nullptr) {
         delete _impl_.kind_.update_group_join_question_request_;
+      }
+      break;
+    }
+    case kUpdateGroupJoinRequestRequest: {
+      if (GetArenaForAllocation() == nullptr) {
+        delete _impl_.kind_.update_group_join_request_request_;
       }
       break;
     }
@@ -2330,7 +2447,7 @@ const char* TurmsRequest::_InternalParse(
 
 
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<0, 57, 56, 0, 32> TurmsRequest::_table_ = {
+const ::_pbi::TcParseTable<0, 60, 59, 0, 32> TurmsRequest::_table_ = {
   {
     PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_._has_bits_),
     0, // no _extensions_
@@ -2338,8 +2455,8 @@ const ::_pbi::TcParseTable<0, 57, 56, 0, 32> TurmsRequest::_table_ = {
     offsetof(decltype(_table_), field_lookup_table),
     4294950914,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    57,  // num_field_entries
-    56,  // num_aux_entries
+    60,  // num_field_entries
+    59,  // num_aux_entries
     offsetof(decltype(_table_), aux_entries),
     &_TurmsRequest_default_instance_._instance,
     ::_pbi::TcParser::GenericFallbackLite,  // fallback
@@ -2350,11 +2467,11 @@ const ::_pbi::TcParseTable<0, 57, 56, 0, 32> TurmsRequest::_table_ = {
   }}, {{
     100, 0, 1,
     65472, 13,200, 0, 1,
-     61440, 19,300, 0, 1,
-     65472, 31,400, 0, 1,
-     65520, 37,500, 0, 1,
-     63488, 41,1000, 0, 1,
-     65504, 52,
+     57344, 19,300, 0, 1,
+     65472, 32,400, 0, 1,
+     65520, 38,500, 0, 1,
+     57344, 42,1000, 0, 1,
+     65504, 55,
     65535, 65535
   }}, {{
     // optional int64 request_id = 1;
@@ -2423,110 +2540,119 @@ const ::_pbi::TcParseTable<0, 57, 56, 0, 32> TurmsRequest::_table_ = {
     // .turms.client.model.proto.CreateRelationshipRequest create_relationship_request = 202;
     {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.create_relationship_request_), _Internal::kOneofCaseOffset + 0, 20,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .turms.client.model.proto.DeleteRelationshipGroupRequest delete_relationship_group_request = 203;
-    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.delete_relationship_group_request_), _Internal::kOneofCaseOffset + 0, 21,
+    // .turms.client.model.proto.DeleteFriendRequestRequest delete_friend_request_request = 203;
+    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.delete_friend_request_request_), _Internal::kOneofCaseOffset + 0, 21,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .turms.client.model.proto.DeleteRelationshipRequest delete_relationship_request = 204;
-    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.delete_relationship_request_), _Internal::kOneofCaseOffset + 0, 22,
+    // .turms.client.model.proto.DeleteRelationshipGroupRequest delete_relationship_group_request = 204;
+    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.delete_relationship_group_request_), _Internal::kOneofCaseOffset + 0, 22,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .turms.client.model.proto.QueryFriendRequestsRequest query_friend_requests_request = 205;
-    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.query_friend_requests_request_), _Internal::kOneofCaseOffset + 0, 23,
+    // .turms.client.model.proto.DeleteRelationshipRequest delete_relationship_request = 205;
+    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.delete_relationship_request_), _Internal::kOneofCaseOffset + 0, 23,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .turms.client.model.proto.QueryRelatedUserIdsRequest query_related_user_ids_request = 206;
-    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.query_related_user_ids_request_), _Internal::kOneofCaseOffset + 0, 24,
+    // .turms.client.model.proto.QueryFriendRequestsRequest query_friend_requests_request = 206;
+    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.query_friend_requests_request_), _Internal::kOneofCaseOffset + 0, 24,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .turms.client.model.proto.QueryRelationshipGroupsRequest query_relationship_groups_request = 207;
-    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.query_relationship_groups_request_), _Internal::kOneofCaseOffset + 0, 25,
+    // .turms.client.model.proto.QueryRelatedUserIdsRequest query_related_user_ids_request = 207;
+    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.query_related_user_ids_request_), _Internal::kOneofCaseOffset + 0, 25,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .turms.client.model.proto.QueryRelationshipsRequest query_relationships_request = 208;
-    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.query_relationships_request_), _Internal::kOneofCaseOffset + 0, 26,
+    // .turms.client.model.proto.QueryRelationshipGroupsRequest query_relationship_groups_request = 208;
+    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.query_relationship_groups_request_), _Internal::kOneofCaseOffset + 0, 26,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .turms.client.model.proto.UpdateFriendRequestRequest update_friend_request_request = 209;
-    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.update_friend_request_request_), _Internal::kOneofCaseOffset + 0, 27,
+    // .turms.client.model.proto.QueryRelationshipsRequest query_relationships_request = 209;
+    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.query_relationships_request_), _Internal::kOneofCaseOffset + 0, 27,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .turms.client.model.proto.UpdateRelationshipGroupRequest update_relationship_group_request = 210;
-    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.update_relationship_group_request_), _Internal::kOneofCaseOffset + 0, 28,
+    // .turms.client.model.proto.UpdateFriendRequestRequest update_friend_request_request = 210;
+    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.update_friend_request_request_), _Internal::kOneofCaseOffset + 0, 28,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .turms.client.model.proto.UpdateRelationshipRequest update_relationship_request = 211;
-    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.update_relationship_request_), _Internal::kOneofCaseOffset + 0, 29,
+    // .turms.client.model.proto.UpdateRelationshipGroupRequest update_relationship_group_request = 211;
+    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.update_relationship_group_request_), _Internal::kOneofCaseOffset + 0, 29,
+    (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .turms.client.model.proto.UpdateRelationshipRequest update_relationship_request = 212;
+    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.update_relationship_request_), _Internal::kOneofCaseOffset + 0, 30,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
     // .turms.client.model.proto.CreateGroupRequest create_group_request = 300;
-    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.create_group_request_), _Internal::kOneofCaseOffset + 0, 30,
+    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.create_group_request_), _Internal::kOneofCaseOffset + 0, 31,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
     // .turms.client.model.proto.DeleteGroupRequest delete_group_request = 301;
-    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.delete_group_request_), _Internal::kOneofCaseOffset + 0, 31,
+    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.delete_group_request_), _Internal::kOneofCaseOffset + 0, 32,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
     // .turms.client.model.proto.QueryGroupsRequest query_groups_request = 302;
-    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.query_groups_request_), _Internal::kOneofCaseOffset + 0, 32,
+    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.query_groups_request_), _Internal::kOneofCaseOffset + 0, 33,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
     // .turms.client.model.proto.QueryJoinedGroupIdsRequest query_joined_group_ids_request = 303;
-    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.query_joined_group_ids_request_), _Internal::kOneofCaseOffset + 0, 33,
+    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.query_joined_group_ids_request_), _Internal::kOneofCaseOffset + 0, 34,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
     // .turms.client.model.proto.QueryJoinedGroupInfosRequest query_joined_group_infos_request = 304;
-    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.query_joined_group_infos_request_), _Internal::kOneofCaseOffset + 0, 34,
+    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.query_joined_group_infos_request_), _Internal::kOneofCaseOffset + 0, 35,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
     // .turms.client.model.proto.UpdateGroupRequest update_group_request = 305;
-    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.update_group_request_), _Internal::kOneofCaseOffset + 0, 35,
+    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.update_group_request_), _Internal::kOneofCaseOffset + 0, 36,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
     // .turms.client.model.proto.CreateGroupBlockedUserRequest create_group_blocked_user_request = 400;
-    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.create_group_blocked_user_request_), _Internal::kOneofCaseOffset + 0, 36,
+    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.create_group_blocked_user_request_), _Internal::kOneofCaseOffset + 0, 37,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
     // .turms.client.model.proto.DeleteGroupBlockedUserRequest delete_group_blocked_user_request = 401;
-    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.delete_group_blocked_user_request_), _Internal::kOneofCaseOffset + 0, 37,
+    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.delete_group_blocked_user_request_), _Internal::kOneofCaseOffset + 0, 38,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
     // .turms.client.model.proto.QueryGroupBlockedUserIdsRequest query_group_blocked_user_ids_request = 402;
-    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.query_group_blocked_user_ids_request_), _Internal::kOneofCaseOffset + 0, 38,
+    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.query_group_blocked_user_ids_request_), _Internal::kOneofCaseOffset + 0, 39,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
     // .turms.client.model.proto.QueryGroupBlockedUserInfosRequest query_group_blocked_user_infos_request = 403;
-    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.query_group_blocked_user_infos_request_), _Internal::kOneofCaseOffset + 0, 39,
+    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.query_group_blocked_user_infos_request_), _Internal::kOneofCaseOffset + 0, 40,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
     // .turms.client.model.proto.CheckGroupJoinQuestionsAnswersRequest check_group_join_questions_answers_request = 500;
-    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.check_group_join_questions_answers_request_), _Internal::kOneofCaseOffset + 0, 40,
+    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.check_group_join_questions_answers_request_), _Internal::kOneofCaseOffset + 0, 41,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
     // .turms.client.model.proto.CreateGroupInvitationRequest create_group_invitation_request = 501;
-    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.create_group_invitation_request_), _Internal::kOneofCaseOffset + 0, 41,
+    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.create_group_invitation_request_), _Internal::kOneofCaseOffset + 0, 42,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
     // .turms.client.model.proto.CreateGroupJoinRequestRequest create_group_join_request_request = 502;
-    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.create_group_join_request_request_), _Internal::kOneofCaseOffset + 0, 42,
+    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.create_group_join_request_request_), _Internal::kOneofCaseOffset + 0, 43,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
     // .turms.client.model.proto.CreateGroupJoinQuestionsRequest create_group_join_questions_request = 503;
-    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.create_group_join_questions_request_), _Internal::kOneofCaseOffset + 0, 43,
+    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.create_group_join_questions_request_), _Internal::kOneofCaseOffset + 0, 44,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
     // .turms.client.model.proto.DeleteGroupInvitationRequest delete_group_invitation_request = 504;
-    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.delete_group_invitation_request_), _Internal::kOneofCaseOffset + 0, 44,
+    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.delete_group_invitation_request_), _Internal::kOneofCaseOffset + 0, 45,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
     // .turms.client.model.proto.DeleteGroupJoinRequestRequest delete_group_join_request_request = 505;
-    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.delete_group_join_request_request_), _Internal::kOneofCaseOffset + 0, 45,
+    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.delete_group_join_request_request_), _Internal::kOneofCaseOffset + 0, 46,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
     // .turms.client.model.proto.DeleteGroupJoinQuestionsRequest delete_group_join_questions_request = 506;
-    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.delete_group_join_questions_request_), _Internal::kOneofCaseOffset + 0, 46,
+    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.delete_group_join_questions_request_), _Internal::kOneofCaseOffset + 0, 47,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
     // .turms.client.model.proto.QueryGroupInvitationsRequest query_group_invitations_request = 507;
-    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.query_group_invitations_request_), _Internal::kOneofCaseOffset + 0, 47,
+    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.query_group_invitations_request_), _Internal::kOneofCaseOffset + 0, 48,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
     // .turms.client.model.proto.QueryGroupJoinRequestsRequest query_group_join_requests_request = 508;
-    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.query_group_join_requests_request_), _Internal::kOneofCaseOffset + 0, 48,
+    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.query_group_join_requests_request_), _Internal::kOneofCaseOffset + 0, 49,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
     // .turms.client.model.proto.QueryGroupJoinQuestionsRequest query_group_join_questions_request = 509;
-    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.query_group_join_questions_request_), _Internal::kOneofCaseOffset + 0, 49,
+    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.query_group_join_questions_request_), _Internal::kOneofCaseOffset + 0, 50,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .turms.client.model.proto.UpdateGroupJoinQuestionRequest update_group_join_question_request = 510;
-    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.update_group_join_question_request_), _Internal::kOneofCaseOffset + 0, 50,
+    // .turms.client.model.proto.UpdateGroupInvitationRequest update_group_invitation_request = 510;
+    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.update_group_invitation_request_), _Internal::kOneofCaseOffset + 0, 51,
+    (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .turms.client.model.proto.UpdateGroupJoinQuestionRequest update_group_join_question_request = 511;
+    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.update_group_join_question_request_), _Internal::kOneofCaseOffset + 0, 52,
+    (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .turms.client.model.proto.UpdateGroupJoinRequestRequest update_group_join_request_request = 512;
+    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.update_group_join_request_request_), _Internal::kOneofCaseOffset + 0, 53,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
     // .turms.client.model.proto.DeleteResourceRequest delete_resource_request = 1000;
-    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.delete_resource_request_), _Internal::kOneofCaseOffset + 0, 51,
+    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.delete_resource_request_), _Internal::kOneofCaseOffset + 0, 54,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
     // .turms.client.model.proto.QueryResourceDownloadInfoRequest query_resource_download_info_request = 1001;
-    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.query_resource_download_info_request_), _Internal::kOneofCaseOffset + 0, 52,
+    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.query_resource_download_info_request_), _Internal::kOneofCaseOffset + 0, 55,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
     // .turms.client.model.proto.QueryResourceUploadInfoRequest query_resource_upload_info_request = 1002;
-    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.query_resource_upload_info_request_), _Internal::kOneofCaseOffset + 0, 53,
+    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.query_resource_upload_info_request_), _Internal::kOneofCaseOffset + 0, 56,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
     // .turms.client.model.proto.QueryMessageAttachmentInfosRequest query_message_attachment_infos_request = 1003;
-    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.query_message_attachment_infos_request_), _Internal::kOneofCaseOffset + 0, 54,
+    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.query_message_attachment_infos_request_), _Internal::kOneofCaseOffset + 0, 57,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
     // .turms.client.model.proto.UpdateMessageAttachmentInfoRequest update_message_attachment_info_request = 1004;
-    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.update_message_attachment_info_request_), _Internal::kOneofCaseOffset + 0, 55,
+    {PROTOBUF_FIELD_OFFSET(TurmsRequest, _impl_.kind_.update_message_attachment_info_request_), _Internal::kOneofCaseOffset + 0, 58,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
   }}, {{
     {::_pbi::TcParser::GetTable<::turms::client::model::proto::CreateSessionRequest>()},
@@ -2550,6 +2676,7 @@ const ::_pbi::TcParseTable<0, 57, 56, 0, 32> TurmsRequest::_table_ = {
     {::_pbi::TcParser::GetTable<::turms::client::model::proto::CreateFriendRequestRequest>()},
     {::_pbi::TcParser::GetTable<::turms::client::model::proto::CreateRelationshipGroupRequest>()},
     {::_pbi::TcParser::GetTable<::turms::client::model::proto::CreateRelationshipRequest>()},
+    {::_pbi::TcParser::GetTable<::turms::client::model::proto::DeleteFriendRequestRequest>()},
     {::_pbi::TcParser::GetTable<::turms::client::model::proto::DeleteRelationshipGroupRequest>()},
     {::_pbi::TcParser::GetTable<::turms::client::model::proto::DeleteRelationshipRequest>()},
     {::_pbi::TcParser::GetTable<::turms::client::model::proto::QueryFriendRequestsRequest>()},
@@ -2579,7 +2706,9 @@ const ::_pbi::TcParseTable<0, 57, 56, 0, 32> TurmsRequest::_table_ = {
     {::_pbi::TcParser::GetTable<::turms::client::model::proto::QueryGroupInvitationsRequest>()},
     {::_pbi::TcParser::GetTable<::turms::client::model::proto::QueryGroupJoinRequestsRequest>()},
     {::_pbi::TcParser::GetTable<::turms::client::model::proto::QueryGroupJoinQuestionsRequest>()},
+    {::_pbi::TcParser::GetTable<::turms::client::model::proto::UpdateGroupInvitationRequest>()},
     {::_pbi::TcParser::GetTable<::turms::client::model::proto::UpdateGroupJoinQuestionRequest>()},
+    {::_pbi::TcParser::GetTable<::turms::client::model::proto::UpdateGroupJoinRequestRequest>()},
     {::_pbi::TcParser::GetTable<::turms::client::model::proto::DeleteResourceRequest>()},
     {::_pbi::TcParser::GetTable<::turms::client::model::proto::QueryResourceDownloadInfoRequest>()},
     {::_pbi::TcParser::GetTable<::turms::client::model::proto::QueryResourceUploadInfoRequest>()},
@@ -2731,57 +2860,63 @@ const ::_pbi::TcParseTable<0, 57, 56, 0, 32> TurmsRequest::_table_ = {
           _Internal::create_relationship_request(this).GetCachedSize(), target, stream);
       break;
     }
+    case kDeleteFriendRequestRequest: {
+      target = ::google::protobuf::internal::WireFormatLite::
+        InternalWriteMessage(203, _Internal::delete_friend_request_request(this),
+          _Internal::delete_friend_request_request(this).GetCachedSize(), target, stream);
+      break;
+    }
     case kDeleteRelationshipGroupRequest: {
       target = ::google::protobuf::internal::WireFormatLite::
-        InternalWriteMessage(203, _Internal::delete_relationship_group_request(this),
+        InternalWriteMessage(204, _Internal::delete_relationship_group_request(this),
           _Internal::delete_relationship_group_request(this).GetCachedSize(), target, stream);
       break;
     }
     case kDeleteRelationshipRequest: {
       target = ::google::protobuf::internal::WireFormatLite::
-        InternalWriteMessage(204, _Internal::delete_relationship_request(this),
+        InternalWriteMessage(205, _Internal::delete_relationship_request(this),
           _Internal::delete_relationship_request(this).GetCachedSize(), target, stream);
       break;
     }
     case kQueryFriendRequestsRequest: {
       target = ::google::protobuf::internal::WireFormatLite::
-        InternalWriteMessage(205, _Internal::query_friend_requests_request(this),
+        InternalWriteMessage(206, _Internal::query_friend_requests_request(this),
           _Internal::query_friend_requests_request(this).GetCachedSize(), target, stream);
       break;
     }
     case kQueryRelatedUserIdsRequest: {
       target = ::google::protobuf::internal::WireFormatLite::
-        InternalWriteMessage(206, _Internal::query_related_user_ids_request(this),
+        InternalWriteMessage(207, _Internal::query_related_user_ids_request(this),
           _Internal::query_related_user_ids_request(this).GetCachedSize(), target, stream);
       break;
     }
     case kQueryRelationshipGroupsRequest: {
       target = ::google::protobuf::internal::WireFormatLite::
-        InternalWriteMessage(207, _Internal::query_relationship_groups_request(this),
+        InternalWriteMessage(208, _Internal::query_relationship_groups_request(this),
           _Internal::query_relationship_groups_request(this).GetCachedSize(), target, stream);
       break;
     }
     case kQueryRelationshipsRequest: {
       target = ::google::protobuf::internal::WireFormatLite::
-        InternalWriteMessage(208, _Internal::query_relationships_request(this),
+        InternalWriteMessage(209, _Internal::query_relationships_request(this),
           _Internal::query_relationships_request(this).GetCachedSize(), target, stream);
       break;
     }
     case kUpdateFriendRequestRequest: {
       target = ::google::protobuf::internal::WireFormatLite::
-        InternalWriteMessage(209, _Internal::update_friend_request_request(this),
+        InternalWriteMessage(210, _Internal::update_friend_request_request(this),
           _Internal::update_friend_request_request(this).GetCachedSize(), target, stream);
       break;
     }
     case kUpdateRelationshipGroupRequest: {
       target = ::google::protobuf::internal::WireFormatLite::
-        InternalWriteMessage(210, _Internal::update_relationship_group_request(this),
+        InternalWriteMessage(211, _Internal::update_relationship_group_request(this),
           _Internal::update_relationship_group_request(this).GetCachedSize(), target, stream);
       break;
     }
     case kUpdateRelationshipRequest: {
       target = ::google::protobuf::internal::WireFormatLite::
-        InternalWriteMessage(211, _Internal::update_relationship_request(this),
+        InternalWriteMessage(212, _Internal::update_relationship_request(this),
           _Internal::update_relationship_request(this).GetCachedSize(), target, stream);
       break;
     }
@@ -2905,10 +3040,22 @@ const ::_pbi::TcParseTable<0, 57, 56, 0, 32> TurmsRequest::_table_ = {
           _Internal::query_group_join_questions_request(this).GetCachedSize(), target, stream);
       break;
     }
+    case kUpdateGroupInvitationRequest: {
+      target = ::google::protobuf::internal::WireFormatLite::
+        InternalWriteMessage(510, _Internal::update_group_invitation_request(this),
+          _Internal::update_group_invitation_request(this).GetCachedSize(), target, stream);
+      break;
+    }
     case kUpdateGroupJoinQuestionRequest: {
       target = ::google::protobuf::internal::WireFormatLite::
-        InternalWriteMessage(510, _Internal::update_group_join_question_request(this),
+        InternalWriteMessage(511, _Internal::update_group_join_question_request(this),
           _Internal::update_group_join_question_request(this).GetCachedSize(), target, stream);
+      break;
+    }
+    case kUpdateGroupJoinRequestRequest: {
+      target = ::google::protobuf::internal::WireFormatLite::
+        InternalWriteMessage(512, _Internal::update_group_join_request_request(this),
+          _Internal::update_group_join_request_request(this).GetCachedSize(), target, stream);
       break;
     }
     case kDeleteResourceRequest: {
@@ -3116,63 +3263,70 @@ const ::_pbi::TcParseTable<0, 57, 56, 0, 32> TurmsRequest::_table_ = {
           *_impl_.kind_.create_relationship_request_);
       break;
     }
-    // .turms.client.model.proto.DeleteRelationshipGroupRequest delete_relationship_group_request = 203;
+    // .turms.client.model.proto.DeleteFriendRequestRequest delete_friend_request_request = 203;
+    case kDeleteFriendRequestRequest: {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::MessageSize(
+          *_impl_.kind_.delete_friend_request_request_);
+      break;
+    }
+    // .turms.client.model.proto.DeleteRelationshipGroupRequest delete_relationship_group_request = 204;
     case kDeleteRelationshipGroupRequest: {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::MessageSize(
           *_impl_.kind_.delete_relationship_group_request_);
       break;
     }
-    // .turms.client.model.proto.DeleteRelationshipRequest delete_relationship_request = 204;
+    // .turms.client.model.proto.DeleteRelationshipRequest delete_relationship_request = 205;
     case kDeleteRelationshipRequest: {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::MessageSize(
           *_impl_.kind_.delete_relationship_request_);
       break;
     }
-    // .turms.client.model.proto.QueryFriendRequestsRequest query_friend_requests_request = 205;
+    // .turms.client.model.proto.QueryFriendRequestsRequest query_friend_requests_request = 206;
     case kQueryFriendRequestsRequest: {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::MessageSize(
           *_impl_.kind_.query_friend_requests_request_);
       break;
     }
-    // .turms.client.model.proto.QueryRelatedUserIdsRequest query_related_user_ids_request = 206;
+    // .turms.client.model.proto.QueryRelatedUserIdsRequest query_related_user_ids_request = 207;
     case kQueryRelatedUserIdsRequest: {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::MessageSize(
           *_impl_.kind_.query_related_user_ids_request_);
       break;
     }
-    // .turms.client.model.proto.QueryRelationshipGroupsRequest query_relationship_groups_request = 207;
+    // .turms.client.model.proto.QueryRelationshipGroupsRequest query_relationship_groups_request = 208;
     case kQueryRelationshipGroupsRequest: {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::MessageSize(
           *_impl_.kind_.query_relationship_groups_request_);
       break;
     }
-    // .turms.client.model.proto.QueryRelationshipsRequest query_relationships_request = 208;
+    // .turms.client.model.proto.QueryRelationshipsRequest query_relationships_request = 209;
     case kQueryRelationshipsRequest: {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::MessageSize(
           *_impl_.kind_.query_relationships_request_);
       break;
     }
-    // .turms.client.model.proto.UpdateFriendRequestRequest update_friend_request_request = 209;
+    // .turms.client.model.proto.UpdateFriendRequestRequest update_friend_request_request = 210;
     case kUpdateFriendRequestRequest: {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::MessageSize(
           *_impl_.kind_.update_friend_request_request_);
       break;
     }
-    // .turms.client.model.proto.UpdateRelationshipGroupRequest update_relationship_group_request = 210;
+    // .turms.client.model.proto.UpdateRelationshipGroupRequest update_relationship_group_request = 211;
     case kUpdateRelationshipGroupRequest: {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::MessageSize(
           *_impl_.kind_.update_relationship_group_request_);
       break;
     }
-    // .turms.client.model.proto.UpdateRelationshipRequest update_relationship_request = 211;
+    // .turms.client.model.proto.UpdateRelationshipRequest update_relationship_request = 212;
     case kUpdateRelationshipRequest: {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::MessageSize(
@@ -3319,11 +3473,25 @@ const ::_pbi::TcParseTable<0, 57, 56, 0, 32> TurmsRequest::_table_ = {
           *_impl_.kind_.query_group_join_questions_request_);
       break;
     }
-    // .turms.client.model.proto.UpdateGroupJoinQuestionRequest update_group_join_question_request = 510;
+    // .turms.client.model.proto.UpdateGroupInvitationRequest update_group_invitation_request = 510;
+    case kUpdateGroupInvitationRequest: {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::MessageSize(
+          *_impl_.kind_.update_group_invitation_request_);
+      break;
+    }
+    // .turms.client.model.proto.UpdateGroupJoinQuestionRequest update_group_join_question_request = 511;
     case kUpdateGroupJoinQuestionRequest: {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::MessageSize(
           *_impl_.kind_.update_group_join_question_request_);
+      break;
+    }
+    // .turms.client.model.proto.UpdateGroupJoinRequestRequest update_group_join_request_request = 512;
+    case kUpdateGroupJoinRequestRequest: {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::MessageSize(
+          *_impl_.kind_.update_group_join_request_request_);
       break;
     }
     // .turms.client.model.proto.DeleteResourceRequest delete_resource_request = 1000;
@@ -3495,6 +3663,11 @@ void TurmsRequest::MergeFrom(const TurmsRequest& from) {
           from._internal_create_relationship_request());
       break;
     }
+    case kDeleteFriendRequestRequest: {
+      _this->_internal_mutable_delete_friend_request_request()->::turms::client::model::proto::DeleteFriendRequestRequest::MergeFrom(
+          from._internal_delete_friend_request_request());
+      break;
+    }
     case kDeleteRelationshipGroupRequest: {
       _this->_internal_mutable_delete_relationship_group_request()->::turms::client::model::proto::DeleteRelationshipGroupRequest::MergeFrom(
           from._internal_delete_relationship_group_request());
@@ -3640,9 +3813,19 @@ void TurmsRequest::MergeFrom(const TurmsRequest& from) {
           from._internal_query_group_join_questions_request());
       break;
     }
+    case kUpdateGroupInvitationRequest: {
+      _this->_internal_mutable_update_group_invitation_request()->::turms::client::model::proto::UpdateGroupInvitationRequest::MergeFrom(
+          from._internal_update_group_invitation_request());
+      break;
+    }
     case kUpdateGroupJoinQuestionRequest: {
       _this->_internal_mutable_update_group_join_question_request()->::turms::client::model::proto::UpdateGroupJoinQuestionRequest::MergeFrom(
           from._internal_update_group_join_question_request());
+      break;
+    }
+    case kUpdateGroupJoinRequestRequest: {
+      _this->_internal_mutable_update_group_join_request_request()->::turms::client::model::proto::UpdateGroupJoinRequestRequest::MergeFrom(
+          from._internal_update_group_join_request_request());
       break;
     }
     case kDeleteResourceRequest: {

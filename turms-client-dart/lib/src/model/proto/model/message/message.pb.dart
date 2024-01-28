@@ -1,9 +1,13 @@
-///
+//
 //  Generated code. Do not modify.
 //  source: model/message/message.proto
 //
 // @dart = 2.12
-// ignore_for_file: annotate_overrides,camel_case_types,constant_identifier_names,directives_ordering,library_prefixes,non_constant_identifier_names,prefer_final_fields,return_of_invalid_type,unnecessary_const,unnecessary_import,unnecessary_this,unused_import,unused_shown_name
+
+// ignore_for_file: annotate_overrides, camel_case_types, comment_references
+// ignore_for_file: constant_identifier_names, library_prefixes
+// ignore_for_file: non_constant_identifier_names, prefer_final_fields
+// ignore_for_file: unnecessary_import, unnecessary_this, unused_import
 
 import 'dart:core' as $core;
 
@@ -11,75 +15,6 @@ import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 class Message extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      const $core.bool.fromEnvironment('protobuf.omit_message_names')
-          ? ''
-          : 'Message',
-      package: const $pb.PackageName(
-          const $core.bool.fromEnvironment('protobuf.omit_message_names')
-              ? ''
-              : 'im.turms.proto'),
-      createEmptyInstance: create)
-    ..aInt64(
-        1,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'id')
-    ..aInt64(
-        2,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'deliveryDate')
-    ..aInt64(
-        3,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'modificationDate')
-    ..aOS(
-        4,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'text')
-    ..aInt64(
-        5,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'senderId')
-    ..aInt64(
-        6,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'groupId')
-    ..aOB(
-        7,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'isSystemMessage')
-    ..aInt64(
-        8,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'recipientId')
-    ..p<$core.List<$core.int>>(
-        9,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'records',
-        $pb.PbFieldType.PY)
-    ..a<$core.int>(
-        10,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'sequenceId',
-        $pb.PbFieldType.O3)
-    ..aInt64(
-        11,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'preMessageId')
-    ..hasRequiredFields = false;
-
-  Message._() : super();
   factory Message({
     $fixnum.Int64? id,
     $fixnum.Int64? deliveryDate,
@@ -93,48 +28,68 @@ class Message extends $pb.GeneratedMessage {
     $core.int? sequenceId,
     $fixnum.Int64? preMessageId,
   }) {
-    final _result = create();
+    final $result = create();
     if (id != null) {
-      _result.id = id;
+      $result.id = id;
     }
     if (deliveryDate != null) {
-      _result.deliveryDate = deliveryDate;
+      $result.deliveryDate = deliveryDate;
     }
     if (modificationDate != null) {
-      _result.modificationDate = modificationDate;
+      $result.modificationDate = modificationDate;
     }
     if (text != null) {
-      _result.text = text;
+      $result.text = text;
     }
     if (senderId != null) {
-      _result.senderId = senderId;
+      $result.senderId = senderId;
     }
     if (groupId != null) {
-      _result.groupId = groupId;
+      $result.groupId = groupId;
     }
     if (isSystemMessage != null) {
-      _result.isSystemMessage = isSystemMessage;
+      $result.isSystemMessage = isSystemMessage;
     }
     if (recipientId != null) {
-      _result.recipientId = recipientId;
+      $result.recipientId = recipientId;
     }
     if (records != null) {
-      _result.records.addAll(records);
+      $result.records.addAll(records);
     }
     if (sequenceId != null) {
-      _result.sequenceId = sequenceId;
+      $result.sequenceId = sequenceId;
     }
     if (preMessageId != null) {
-      _result.preMessageId = preMessageId;
+      $result.preMessageId = preMessageId;
     }
-    return _result;
+    return $result;
   }
+  Message._() : super();
   factory Message.fromBuffer($core.List<$core.int> i,
           [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(i, r);
   factory Message.fromJson($core.String i,
           [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(i, r);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'Message',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'im.turms.proto'),
+      createEmptyInstance: create)
+    ..aInt64(1, _omitFieldNames ? '' : 'id')
+    ..aInt64(2, _omitFieldNames ? '' : 'deliveryDate')
+    ..aInt64(3, _omitFieldNames ? '' : 'modificationDate')
+    ..aOS(4, _omitFieldNames ? '' : 'text')
+    ..aInt64(5, _omitFieldNames ? '' : 'senderId')
+    ..aInt64(6, _omitFieldNames ? '' : 'groupId')
+    ..aOB(7, _omitFieldNames ? '' : 'isSystemMessage')
+    ..aInt64(8, _omitFieldNames ? '' : 'recipientId')
+    ..p<$core.List<$core.int>>(
+        9, _omitFieldNames ? '' : 'records', $pb.PbFieldType.PY)
+    ..a<$core.int>(10, _omitFieldNames ? '' : 'sequenceId', $pb.PbFieldType.O3)
+    ..aInt64(11, _omitFieldNames ? '' : 'preMessageId')
+    ..hasRequiredFields = false;
+
   @$core.Deprecated('Using this can add significant overhead to your binary. '
       'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
       'Will be removed in next major version')
@@ -143,9 +98,10 @@ class Message extends $pb.GeneratedMessage {
       'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
       'Will be removed in next major version')
   Message copyWith(void Function(Message) updates) =>
-      super.copyWith((message) => updates(message as Message))
-          as Message; // ignore: deprecated_member_use
+      super.copyWith((message) => updates(message as Message)) as Message;
+
   $pb.BuilderInfo get info_ => _i;
+
   @$core.pragma('dart2js:noInline')
   static Message create() => Message._();
   Message createEmptyInstance() => create();
@@ -278,3 +234,7 @@ class Message extends $pb.GeneratedMessage {
   @$pb.TagNumber(11)
   void clearPreMessageId() => clearField(11);
 }
+
+const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');
+const _omitMessageNames =
+    $core.bool.fromEnvironment('protobuf.omit_message_names');

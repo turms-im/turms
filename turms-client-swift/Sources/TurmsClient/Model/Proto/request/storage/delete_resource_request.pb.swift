@@ -80,10 +80,10 @@ extension DeleteResourceRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageIm
             // allocates stack space for every case branch when no optimizations are
             // enabled. https://github.com/apple/swift-protobuf/issues/1034
             switch fieldNumber {
-            case 1: try try decoder.decodeSingularEnumField(value: &type)
-            case 2: try try decoder.decodeSingularInt64Field(value: &_idNum)
-            case 3: try try decoder.decodeSingularStringField(value: &_idStr)
-            case 4: try { try decoder.decodeMapField(fieldType: SwiftProtobuf._ProtobufMap<SwiftProtobuf.ProtobufString, SwiftProtobuf.ProtobufString>.self, value: &self.extra) }()
+            case 1: try decoder.decodeSingularEnumField(value: &type)
+            case 2: try decoder.decodeSingularInt64Field(value: &_idNum)
+            case 3: try decoder.decodeSingularStringField(value: &_idStr)
+            case 4: try decoder.decodeMapField(fieldType: SwiftProtobuf._ProtobufMap<SwiftProtobuf.ProtobufString, SwiftProtobuf.ProtobufString>.self, value: &extra)
             default: break
             }
         }

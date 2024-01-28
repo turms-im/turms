@@ -214,6 +214,14 @@ public struct TurmsRequest {
         set { kind = .createRelationshipRequest(newValue) }
     }
 
+    public var deleteFriendRequestRequest: DeleteFriendRequestRequest {
+        get {
+            if case let .deleteFriendRequestRequest(v)? = kind { return v }
+            return DeleteFriendRequestRequest()
+        }
+        set { kind = .deleteFriendRequestRequest(newValue) }
+    }
+
     public var deleteRelationshipGroupRequest: DeleteRelationshipGroupRequest {
         get {
             if case let .deleteRelationshipGroupRequest(v)? = kind { return v }
@@ -449,12 +457,28 @@ public struct TurmsRequest {
         set { kind = .queryGroupJoinQuestionsRequest(newValue) }
     }
 
+    public var updateGroupInvitationRequest: UpdateGroupInvitationRequest {
+        get {
+            if case let .updateGroupInvitationRequest(v)? = kind { return v }
+            return UpdateGroupInvitationRequest()
+        }
+        set { kind = .updateGroupInvitationRequest(newValue) }
+    }
+
     public var updateGroupJoinQuestionRequest: UpdateGroupJoinQuestionRequest {
         get {
             if case let .updateGroupJoinQuestionRequest(v)? = kind { return v }
             return UpdateGroupJoinQuestionRequest()
         }
         set { kind = .updateGroupJoinQuestionRequest(newValue) }
+    }
+
+    public var updateGroupJoinRequestRequest: UpdateGroupJoinRequestRequest {
+        get {
+            if case let .updateGroupJoinRequestRequest(v)? = kind { return v }
+            return UpdateGroupJoinRequestRequest()
+        }
+        set { kind = .updateGroupJoinRequestRequest(newValue) }
     }
 
     /// Storage
@@ -528,6 +552,7 @@ public struct TurmsRequest {
         case createFriendRequestRequest(CreateFriendRequestRequest)
         case createRelationshipGroupRequest(CreateRelationshipGroupRequest)
         case createRelationshipRequest(CreateRelationshipRequest)
+        case deleteFriendRequestRequest(DeleteFriendRequestRequest)
         case deleteRelationshipGroupRequest(DeleteRelationshipGroupRequest)
         case deleteRelationshipRequest(DeleteRelationshipRequest)
         case queryFriendRequestsRequest(QueryFriendRequestsRequest)
@@ -560,7 +585,9 @@ public struct TurmsRequest {
         case queryGroupInvitationsRequest(QueryGroupInvitationsRequest)
         case queryGroupJoinRequestsRequest(QueryGroupJoinRequestsRequest)
         case queryGroupJoinQuestionsRequest(QueryGroupJoinQuestionsRequest)
+        case updateGroupInvitationRequest(UpdateGroupInvitationRequest)
         case updateGroupJoinQuestionRequest(UpdateGroupJoinQuestionRequest)
+        case updateGroupJoinRequestRequest(UpdateGroupJoinRequestRequest)
         /// Storage
         case deleteResourceRequest(DeleteResourceRequest)
         case queryResourceDownloadInfoRequest(QueryResourceDownloadInfoRequest)
@@ -656,6 +683,10 @@ public struct TurmsRequest {
                     }()
                 case (.createRelationshipRequest, .createRelationshipRequest): return {
                         guard case let .createRelationshipRequest(l) = lhs, case let .createRelationshipRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                case (.deleteFriendRequestRequest, .deleteFriendRequestRequest): return {
+                        guard case let .deleteFriendRequestRequest(l) = lhs, case let .deleteFriendRequestRequest(r) = rhs else { preconditionFailure() }
                         return l == r
                     }()
                 case (.deleteRelationshipGroupRequest, .deleteRelationshipGroupRequest): return {
@@ -774,8 +805,16 @@ public struct TurmsRequest {
                         guard case let .queryGroupJoinQuestionsRequest(l) = lhs, case let .queryGroupJoinQuestionsRequest(r) = rhs else { preconditionFailure() }
                         return l == r
                     }()
+                case (.updateGroupInvitationRequest, .updateGroupInvitationRequest): return {
+                        guard case let .updateGroupInvitationRequest(l) = lhs, case let .updateGroupInvitationRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
                 case (.updateGroupJoinQuestionRequest, .updateGroupJoinQuestionRequest): return {
                         guard case let .updateGroupJoinQuestionRequest(l) = lhs, case let .updateGroupJoinQuestionRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                case (.updateGroupJoinRequestRequest, .updateGroupJoinRequestRequest): return {
+                        guard case let .updateGroupJoinRequestRequest(l) = lhs, case let .updateGroupJoinRequestRequest(r) = rhs else { preconditionFailure() }
                         return l == r
                     }()
                 case (.deleteResourceRequest, .deleteResourceRequest): return {
@@ -843,15 +882,16 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
         200: .standard(proto: "create_friend_request_request"),
         201: .standard(proto: "create_relationship_group_request"),
         202: .standard(proto: "create_relationship_request"),
-        203: .standard(proto: "delete_relationship_group_request"),
-        204: .standard(proto: "delete_relationship_request"),
-        205: .standard(proto: "query_friend_requests_request"),
-        206: .standard(proto: "query_related_user_ids_request"),
-        207: .standard(proto: "query_relationship_groups_request"),
-        208: .standard(proto: "query_relationships_request"),
-        209: .standard(proto: "update_friend_request_request"),
-        210: .standard(proto: "update_relationship_group_request"),
-        211: .standard(proto: "update_relationship_request"),
+        203: .standard(proto: "delete_friend_request_request"),
+        204: .standard(proto: "delete_relationship_group_request"),
+        205: .standard(proto: "delete_relationship_request"),
+        206: .standard(proto: "query_friend_requests_request"),
+        207: .standard(proto: "query_related_user_ids_request"),
+        208: .standard(proto: "query_relationship_groups_request"),
+        209: .standard(proto: "query_relationships_request"),
+        210: .standard(proto: "update_friend_request_request"),
+        211: .standard(proto: "update_relationship_group_request"),
+        212: .standard(proto: "update_relationship_request"),
         300: .standard(proto: "create_group_request"),
         301: .standard(proto: "delete_group_request"),
         302: .standard(proto: "query_groups_request"),
@@ -872,7 +912,9 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
         507: .standard(proto: "query_group_invitations_request"),
         508: .standard(proto: "query_group_join_requests_request"),
         509: .standard(proto: "query_group_join_questions_request"),
-        510: .standard(proto: "update_group_join_question_request"),
+        510: .standard(proto: "update_group_invitation_request"),
+        511: .standard(proto: "update_group_join_question_request"),
+        512: .standard(proto: "update_group_join_request_request"),
         1000: .standard(proto: "delete_resource_request"),
         1001: .standard(proto: "query_resource_download_info_request"),
         1002: .standard(proto: "query_resource_upload_info_request"),
@@ -886,7 +928,7 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
             // allocates stack space for every case branch when no optimizations are
             // enabled. https://github.com/apple/swift-protobuf/issues/1034
             switch fieldNumber {
-            case 1: try try decoder.decodeSingularInt64Field(value: &_requestID)
+            case 1: try decoder.decodeSingularInt64Field(value: &_requestID)
             case 3: try {
                     var v: CreateSessionRequest?
                     var hadOneofValue = false
@@ -1161,6 +1203,19 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
                     }
                 }()
             case 203: try {
+                    var v: DeleteFriendRequestRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .deleteFriendRequestRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .deleteFriendRequestRequest(v)
+                    }
+                }()
+            case 204: try {
                     var v: DeleteRelationshipGroupRequest?
                     var hadOneofValue = false
                     if let current = self.kind {
@@ -1173,7 +1228,7 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
                         self.kind = .deleteRelationshipGroupRequest(v)
                     }
                 }()
-            case 204: try {
+            case 205: try {
                     var v: DeleteRelationshipRequest?
                     var hadOneofValue = false
                     if let current = self.kind {
@@ -1186,7 +1241,7 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
                         self.kind = .deleteRelationshipRequest(v)
                     }
                 }()
-            case 205: try {
+            case 206: try {
                     var v: QueryFriendRequestsRequest?
                     var hadOneofValue = false
                     if let current = self.kind {
@@ -1199,7 +1254,7 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
                         self.kind = .queryFriendRequestsRequest(v)
                     }
                 }()
-            case 206: try {
+            case 207: try {
                     var v: QueryRelatedUserIdsRequest?
                     var hadOneofValue = false
                     if let current = self.kind {
@@ -1212,7 +1267,7 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
                         self.kind = .queryRelatedUserIdsRequest(v)
                     }
                 }()
-            case 207: try {
+            case 208: try {
                     var v: QueryRelationshipGroupsRequest?
                     var hadOneofValue = false
                     if let current = self.kind {
@@ -1225,7 +1280,7 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
                         self.kind = .queryRelationshipGroupsRequest(v)
                     }
                 }()
-            case 208: try {
+            case 209: try {
                     var v: QueryRelationshipsRequest?
                     var hadOneofValue = false
                     if let current = self.kind {
@@ -1238,7 +1293,7 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
                         self.kind = .queryRelationshipsRequest(v)
                     }
                 }()
-            case 209: try {
+            case 210: try {
                     var v: UpdateFriendRequestRequest?
                     var hadOneofValue = false
                     if let current = self.kind {
@@ -1251,7 +1306,7 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
                         self.kind = .updateFriendRequestRequest(v)
                     }
                 }()
-            case 210: try {
+            case 211: try {
                     var v: UpdateRelationshipGroupRequest?
                     var hadOneofValue = false
                     if let current = self.kind {
@@ -1264,7 +1319,7 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
                         self.kind = .updateRelationshipGroupRequest(v)
                     }
                 }()
-            case 211: try {
+            case 212: try {
                     var v: UpdateRelationshipRequest?
                     var hadOneofValue = false
                     if let current = self.kind {
@@ -1538,6 +1593,19 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
                     }
                 }()
             case 510: try {
+                    var v: UpdateGroupInvitationRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .updateGroupInvitationRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .updateGroupInvitationRequest(v)
+                    }
+                }()
+            case 511: try {
                     var v: UpdateGroupJoinQuestionRequest?
                     var hadOneofValue = false
                     if let current = self.kind {
@@ -1548,6 +1616,19 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
                     if let v = v {
                         if hadOneofValue { try decoder.handleConflictingOneOf() }
                         self.kind = .updateGroupJoinQuestionRequest(v)
+                    }
+                }()
+            case 512: try {
+                    var v: UpdateGroupJoinRequestRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .updateGroupJoinRequestRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .updateGroupJoinRequestRequest(v)
                     }
                 }()
             case 1000: try {
@@ -1713,41 +1794,45 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
                 guard case let .createRelationshipRequest(v)? = self.kind else { preconditionFailure() }
                 try visitor.visitSingularMessageField(value: v, fieldNumber: 202)
             }()
+        case .deleteFriendRequestRequest?: try {
+                guard case let .deleteFriendRequestRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 203)
+            }()
         case .deleteRelationshipGroupRequest?: try {
                 guard case let .deleteRelationshipGroupRequest(v)? = self.kind else { preconditionFailure() }
-                try visitor.visitSingularMessageField(value: v, fieldNumber: 203)
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 204)
             }()
         case .deleteRelationshipRequest?: try {
                 guard case let .deleteRelationshipRequest(v)? = self.kind else { preconditionFailure() }
-                try visitor.visitSingularMessageField(value: v, fieldNumber: 204)
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 205)
             }()
         case .queryFriendRequestsRequest?: try {
                 guard case let .queryFriendRequestsRequest(v)? = self.kind else { preconditionFailure() }
-                try visitor.visitSingularMessageField(value: v, fieldNumber: 205)
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 206)
             }()
         case .queryRelatedUserIdsRequest?: try {
                 guard case let .queryRelatedUserIdsRequest(v)? = self.kind else { preconditionFailure() }
-                try visitor.visitSingularMessageField(value: v, fieldNumber: 206)
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 207)
             }()
         case .queryRelationshipGroupsRequest?: try {
                 guard case let .queryRelationshipGroupsRequest(v)? = self.kind else { preconditionFailure() }
-                try visitor.visitSingularMessageField(value: v, fieldNumber: 207)
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 208)
             }()
         case .queryRelationshipsRequest?: try {
                 guard case let .queryRelationshipsRequest(v)? = self.kind else { preconditionFailure() }
-                try visitor.visitSingularMessageField(value: v, fieldNumber: 208)
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 209)
             }()
         case .updateFriendRequestRequest?: try {
                 guard case let .updateFriendRequestRequest(v)? = self.kind else { preconditionFailure() }
-                try visitor.visitSingularMessageField(value: v, fieldNumber: 209)
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 210)
             }()
         case .updateRelationshipGroupRequest?: try {
                 guard case let .updateRelationshipGroupRequest(v)? = self.kind else { preconditionFailure() }
-                try visitor.visitSingularMessageField(value: v, fieldNumber: 210)
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 211)
             }()
         case .updateRelationshipRequest?: try {
                 guard case let .updateRelationshipRequest(v)? = self.kind else { preconditionFailure() }
-                try visitor.visitSingularMessageField(value: v, fieldNumber: 211)
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 212)
             }()
         case .createGroupRequest?: try {
                 guard case let .createGroupRequest(v)? = self.kind else { preconditionFailure() }
@@ -1829,9 +1914,17 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
                 guard case let .queryGroupJoinQuestionsRequest(v)? = self.kind else { preconditionFailure() }
                 try visitor.visitSingularMessageField(value: v, fieldNumber: 509)
             }()
+        case .updateGroupInvitationRequest?: try {
+                guard case let .updateGroupInvitationRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 510)
+            }()
         case .updateGroupJoinQuestionRequest?: try {
                 guard case let .updateGroupJoinQuestionRequest(v)? = self.kind else { preconditionFailure() }
-                try visitor.visitSingularMessageField(value: v, fieldNumber: 510)
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 511)
+            }()
+        case .updateGroupJoinRequestRequest?: try {
+                guard case let .updateGroupJoinRequestRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 512)
             }()
         case .deleteResourceRequest?: try {
                 guard case let .deleteResourceRequest(v)? = self.kind else { preconditionFailure() }

@@ -58,8 +58,6 @@ public final class QueryGroupMembersRequestOuterClass {
                         new java.lang.String[]{"GroupId",
                                 "LastUpdatedDate",
                                 "MemberIds",
-                                "WithStatus",
-                                "LastUpdatedDate",
                                 "WithStatus",});
     }
 

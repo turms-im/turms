@@ -1,9 +1,13 @@
-///
+//
 //  Generated code. Do not modify.
 //  source: model/user/user_relationships_with_version.proto
 //
 // @dart = 2.12
-// ignore_for_file: annotate_overrides,camel_case_types,constant_identifier_names,directives_ordering,library_prefixes,non_constant_identifier_names,prefer_final_fields,return_of_invalid_type,unnecessary_const,unnecessary_import,unnecessary_this,unused_import,unused_shown_name
+
+// ignore_for_file: annotate_overrides, camel_case_types, comment_references
+// ignore_for_file: constant_identifier_names, library_prefixes
+// ignore_for_file: non_constant_identifier_names, prefer_final_fields
+// ignore_for_file: unnecessary_import, unnecessary_this, unused_import
 
 import 'dart:core' as $core;
 
@@ -13,49 +17,37 @@ import 'package:protobuf/protobuf.dart' as $pb;
 import 'user_relationship.pb.dart' as $0;
 
 class UserRelationshipsWithVersion extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      const $core.bool.fromEnvironment('protobuf.omit_message_names')
-          ? ''
-          : 'UserRelationshipsWithVersion',
-      package: const $pb.PackageName(
-          const $core.bool.fromEnvironment('protobuf.omit_message_names')
-              ? ''
-              : 'im.turms.proto'),
-      createEmptyInstance: create)
-    ..pc<$0.UserRelationship>(
-        1,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'userRelationships',
-        $pb.PbFieldType.PM,
-        subBuilder: $0.UserRelationship.create)
-    ..aInt64(
-        2,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'lastUpdatedDate')
-    ..hasRequiredFields = false;
-
-  UserRelationshipsWithVersion._() : super();
   factory UserRelationshipsWithVersion({
     $core.Iterable<$0.UserRelationship>? userRelationships,
     $fixnum.Int64? lastUpdatedDate,
   }) {
-    final _result = create();
+    final $result = create();
     if (userRelationships != null) {
-      _result.userRelationships.addAll(userRelationships);
+      $result.userRelationships.addAll(userRelationships);
     }
     if (lastUpdatedDate != null) {
-      _result.lastUpdatedDate = lastUpdatedDate;
+      $result.lastUpdatedDate = lastUpdatedDate;
     }
-    return _result;
+    return $result;
   }
+  UserRelationshipsWithVersion._() : super();
   factory UserRelationshipsWithVersion.fromBuffer($core.List<$core.int> i,
           [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(i, r);
   factory UserRelationshipsWithVersion.fromJson($core.String i,
           [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(i, r);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'UserRelationshipsWithVersion',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'im.turms.proto'),
+      createEmptyInstance: create)
+    ..pc<$0.UserRelationship>(
+        1, _omitFieldNames ? '' : 'userRelationships', $pb.PbFieldType.PM,
+        subBuilder: $0.UserRelationship.create)
+    ..aInt64(2, _omitFieldNames ? '' : 'lastUpdatedDate')
+    ..hasRequiredFields = false;
+
   @$core.Deprecated('Using this can add significant overhead to your binary. '
       'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
       'Will be removed in next major version')
@@ -68,8 +60,10 @@ class UserRelationshipsWithVersion extends $pb.GeneratedMessage {
           void Function(UserRelationshipsWithVersion) updates) =>
       super.copyWith(
               (message) => updates(message as UserRelationshipsWithVersion))
-          as UserRelationshipsWithVersion; // ignore: deprecated_member_use
+          as UserRelationshipsWithVersion;
+
   $pb.BuilderInfo get info_ => _i;
+
   @$core.pragma('dart2js:noInline')
   static UserRelationshipsWithVersion create() =>
       UserRelationshipsWithVersion._();
@@ -96,3 +90,7 @@ class UserRelationshipsWithVersion extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   void clearLastUpdatedDate() => clearField(2);
 }
+
+const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');
+const _omitMessageNames =
+    $core.bool.fromEnvironment('protobuf.omit_message_names');

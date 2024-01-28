@@ -26,6 +26,10 @@ PROTOBUF_CONSTEXPR CreateRelationshipRequest::CreateRelationshipRequest(::_pbi::
     : _impl_{
       /*decltype(_impl_._has_bits_)*/ {},
       /*decltype(_impl_._cached_size_)*/ {},
+      /*decltype(_impl_.name_)*/ {
+          &::_pbi::fixed_address_empty_string,
+          ::_pbi::ConstantInitialized{},
+      },
       /*decltype(_impl_.user_id_)*/ ::int64_t{0},
       /*decltype(_impl_.blocked_)*/ false,
       /*decltype(_impl_.group_index_)*/ 0,
@@ -56,6 +60,9 @@ class CreateRelationshipRequest::_Internal {
   static constexpr ::int32_t kHasBitsOffset =
     8 * PROTOBUF_FIELD_OFFSET(CreateRelationshipRequest, _impl_._has_bits_);
   static void set_has_group_index(HasBits* has_bits) {
+    (*has_bits)[0] |= 2u;
+  }
+  static void set_has_name(HasBits* has_bits) {
     (*has_bits)[0] |= 1u;
   }
 };
@@ -65,10 +72,30 @@ CreateRelationshipRequest::CreateRelationshipRequest(::google::protobuf::Arena* 
   SharedCtor(arena);
   // @@protoc_insertion_point(arena_constructor:turms.client.model.proto.CreateRelationshipRequest)
 }
-CreateRelationshipRequest::CreateRelationshipRequest(const CreateRelationshipRequest& from)
-    : ::google::protobuf::MessageLite(), _impl_(from._impl_) {
+CreateRelationshipRequest::CreateRelationshipRequest(const CreateRelationshipRequest& from) : ::google::protobuf::MessageLite() {
+  CreateRelationshipRequest* const _this = this;
+  (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_._has_bits_){from._impl_._has_bits_},
+      /*decltype(_impl_._cached_size_)*/ {},
+      decltype(_impl_.name_){},
+      decltype(_impl_.user_id_){},
+      decltype(_impl_.blocked_){},
+      decltype(_impl_.group_index_){},
+  };
   _internal_metadata_.MergeFrom<std::string>(
       from._internal_metadata_);
+  _impl_.name_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+        _impl_.name_.Set("", GetArenaForAllocation());
+  #endif  // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  if ((from._impl_._has_bits_[0] & 0x00000001u) != 0) {
+    _this->_impl_.name_.Set(from._internal_name(), _this->GetArenaForAllocation());
+  }
+  ::memcpy(&_impl_.user_id_, &from._impl_.user_id_,
+    static_cast<::size_t>(reinterpret_cast<char*>(&_impl_.group_index_) -
+    reinterpret_cast<char*>(&_impl_.user_id_)) + sizeof(_impl_.group_index_));
+
   // @@protoc_insertion_point(copy_constructor:turms.client.model.proto.CreateRelationshipRequest)
 }
 inline void CreateRelationshipRequest::SharedCtor(::_pb::Arena* arena) {
@@ -76,10 +103,15 @@ inline void CreateRelationshipRequest::SharedCtor(::_pb::Arena* arena) {
   new (&_impl_) Impl_{
       decltype(_impl_._has_bits_){},
       /*decltype(_impl_._cached_size_)*/ {},
+      decltype(_impl_.name_){},
       decltype(_impl_.user_id_){::int64_t{0}},
       decltype(_impl_.blocked_){false},
       decltype(_impl_.group_index_){0},
   };
+  _impl_.name_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+        _impl_.name_.Set("", GetArenaForAllocation());
+  #endif  // PROTOBUF_FORCE_COPY_DEFAULT_STRING
 }
 CreateRelationshipRequest::~CreateRelationshipRequest() {
   // @@protoc_insertion_point(destructor:turms.client.model.proto.CreateRelationshipRequest)
@@ -88,6 +120,7 @@ CreateRelationshipRequest::~CreateRelationshipRequest() {
 }
 inline void CreateRelationshipRequest::SharedDtor() {
   ABSL_DCHECK(GetArenaForAllocation() == nullptr);
+  _impl_.name_.Destroy();
 }
 void CreateRelationshipRequest::SetCachedSize(int size) const {
   _impl_._cached_size_.Set(size);
@@ -99,6 +132,10 @@ PROTOBUF_NOINLINE void CreateRelationshipRequest::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
+  cached_has_bits = _impl_._has_bits_[0];
+  if (cached_has_bits & 0x00000001u) {
+    _impl_.name_.ClearNonDefaultToEmpty();
+  }
   ::memset(&_impl_.user_id_, 0, static_cast<::size_t>(
       reinterpret_cast<char*>(&_impl_.blocked_) -
       reinterpret_cast<char*>(&_impl_.user_id_)) + sizeof(_impl_.blocked_));
@@ -115,21 +152,23 @@ const char* CreateRelationshipRequest::_InternalParse(
 
 
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<2, 3, 0, 0, 2> CreateRelationshipRequest::_table_ = {
+const ::_pbi::TcParseTable<2, 4, 0, 63, 2> CreateRelationshipRequest::_table_ = {
   {
     PROTOBUF_FIELD_OFFSET(CreateRelationshipRequest, _impl_._has_bits_),
     0, // no _extensions_
-    3, 24,  // max_field_number, fast_idx_mask
+    4, 24,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
-    4294967288,  // skipmap
+    4294967280,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    3,  // num_field_entries
+    4,  // num_field_entries
     0,  // num_aux_entries
     offsetof(decltype(_table_), field_names),  // no aux_entries
     &_CreateRelationshipRequest_default_instance_._instance,
     ::_pbi::TcParser::GenericFallbackLite,  // fallback
   }, {{
-    {::_pbi::TcParser::MiniParse, {}},
+    // optional string name = 4;
+    {::_pbi::TcParser::FastUS1,
+     {34, 0, 0, PROTOBUF_FIELD_OFFSET(CreateRelationshipRequest, _impl_.name_)}},
     // int64 user_id = 1;
     {::_pbi::TcParser::FastV64S1,
      {8, 63, 0, PROTOBUF_FIELD_OFFSET(CreateRelationshipRequest, _impl_.user_id_)}},
@@ -138,7 +177,7 @@ const ::_pbi::TcParseTable<2, 3, 0, 0, 2> CreateRelationshipRequest::_table_ = {
      {16, 63, 0, PROTOBUF_FIELD_OFFSET(CreateRelationshipRequest, _impl_.blocked_)}},
     // optional int32 group_index = 3;
     {::_pbi::TcParser::FastV32S1,
-     {24, 0, 0, PROTOBUF_FIELD_OFFSET(CreateRelationshipRequest, _impl_.group_index_)}},
+     {24, 1, 0, PROTOBUF_FIELD_OFFSET(CreateRelationshipRequest, _impl_.group_index_)}},
   }}, {{
     65535, 65535
   }}, {{
@@ -149,11 +188,17 @@ const ::_pbi::TcParseTable<2, 3, 0, 0, 2> CreateRelationshipRequest::_table_ = {
     {PROTOBUF_FIELD_OFFSET(CreateRelationshipRequest, _impl_.blocked_), -1, 0,
     (0 | ::_fl::kFcSingular | ::_fl::kBool)},
     // optional int32 group_index = 3;
-    {PROTOBUF_FIELD_OFFSET(CreateRelationshipRequest, _impl_.group_index_), _Internal::kHasBitsOffset + 0, 0,
+    {PROTOBUF_FIELD_OFFSET(CreateRelationshipRequest, _impl_.group_index_), _Internal::kHasBitsOffset + 1, 0,
     (0 | ::_fl::kFcOptional | ::_fl::kInt32)},
+    // optional string name = 4;
+    {PROTOBUF_FIELD_OFFSET(CreateRelationshipRequest, _impl_.name_), _Internal::kHasBitsOffset + 0, 0,
+    (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
   }},
   // no aux_entries
   {{
+    "\62\0\0\0\4\0\0\0"
+    "turms.client.model.proto.CreateRelationshipRequest"
+    "name"
   }},
 };
 
@@ -180,10 +225,18 @@ const ::_pbi::TcParseTable<2, 3, 0, 0, 2> CreateRelationshipRequest::_table_ = {
 
   cached_has_bits = _impl_._has_bits_[0];
   // optional int32 group_index = 3;
-  if (cached_has_bits & 0x00000001u) {
+  if (cached_has_bits & 0x00000002u) {
     target = ::google::protobuf::internal::WireFormatLite::
         WriteInt32ToArrayWithField<3>(
             stream, this->_internal_group_index(), target);
+  }
+
+  // optional string name = 4;
+  if (cached_has_bits & 0x00000001u) {
+    const std::string& _s = this->_internal_name();
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+        _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "turms.client.model.proto.CreateRelationshipRequest.name");
+    target = stream->WriteStringMaybeAliased(4, _s, target);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -203,6 +256,13 @@ const ::_pbi::TcParseTable<2, 3, 0, 0, 2> CreateRelationshipRequest::_table_ = {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
+  // optional string name = 4;
+  cached_has_bits = _impl_._has_bits_[0];
+  if (cached_has_bits & 0x00000001u) {
+    total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
+                                    this->_internal_name());
+  }
+
   // int64 user_id = 1;
   if (this->_internal_user_id() != 0) {
     total_size += ::_pbi::WireFormatLite::Int64SizePlusOne(
@@ -215,8 +275,7 @@ const ::_pbi::TcParseTable<2, 3, 0, 0, 2> CreateRelationshipRequest::_table_ = {
   }
 
   // optional int32 group_index = 3;
-  cached_has_bits = _impl_._has_bits_[0];
-  if (cached_has_bits & 0x00000001u) {
+  if (cached_has_bits & 0x00000002u) {
     total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(
         this->_internal_group_index());
   }
@@ -242,13 +301,16 @@ void CreateRelationshipRequest::MergeFrom(const CreateRelationshipRequest& from)
   ::uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
+  if ((from._impl_._has_bits_[0] & 0x00000001u) != 0) {
+    _this->_internal_set_name(from._internal_name());
+  }
   if (from._internal_user_id() != 0) {
     _this->_internal_set_user_id(from._internal_user_id());
   }
   if (from._internal_blocked() != 0) {
     _this->_internal_set_blocked(from._internal_blocked());
   }
-  if ((from._impl_._has_bits_[0] & 0x00000001u) != 0) {
+  if ((from._impl_._has_bits_[0] & 0x00000002u) != 0) {
     _this->_internal_set_group_index(from._internal_group_index());
   }
   _this->_internal_metadata_.MergeFrom<std::string>(from._internal_metadata_);
@@ -267,8 +329,12 @@ PROTOBUF_NOINLINE bool CreateRelationshipRequest::IsInitialized() const {
 
 void CreateRelationshipRequest::InternalSwap(CreateRelationshipRequest* other) {
   using std::swap;
+  auto* lhs_arena = GetArenaForAllocation();
+  auto* rhs_arena = other->GetArenaForAllocation();
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
+  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.name_, lhs_arena,
+                                       &other->_impl_.name_, rhs_arena);
   ::google::protobuf::internal::memswap<
       PROTOBUF_FIELD_OFFSET(CreateRelationshipRequest, _impl_.group_index_)
       + sizeof(CreateRelationshipRequest::_impl_.group_index_)

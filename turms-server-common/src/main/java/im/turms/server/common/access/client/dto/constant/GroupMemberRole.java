@@ -102,7 +102,11 @@ public enum GroupMemberRole implements com.google.protobuf.ProtocolMessageEnum {
     }
 
     private static final com.google.protobuf.Internal.EnumLiteMap<GroupMemberRole> internalValueMap =
-            number -> GroupMemberRole.forNumber(number);
+            new com.google.protobuf.Internal.EnumLiteMap<>() {
+                public GroupMemberRole findValueByNumber(int number) {
+                    return GroupMemberRole.forNumber(number);
+                }
+            };
 
     public final com.google.protobuf.Descriptors.EnumValueDescriptor getValueDescriptor() {
         if (this == UNRECOGNIZED) {
@@ -140,7 +144,7 @@ public enum GroupMemberRole implements com.google.protobuf.ProtocolMessageEnum {
 
     private final int value;
 
-    GroupMemberRole(int value) {
+    private GroupMemberRole(int value) {
         this.value = value;
     }
 

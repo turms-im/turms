@@ -1,9 +1,13 @@
-///
+//
 //  Generated code. Do not modify.
 //  source: request/conversation/update_conversation_request.proto
 //
 // @dart = 2.12
-// ignore_for_file: annotate_overrides,camel_case_types,constant_identifier_names,directives_ordering,library_prefixes,non_constant_identifier_names,prefer_final_fields,return_of_invalid_type,unnecessary_const,unnecessary_import,unnecessary_this,unused_import,unused_shown_name
+
+// ignore_for_file: annotate_overrides, camel_case_types, comment_references
+// ignore_for_file: constant_identifier_names, library_prefixes
+// ignore_for_file: non_constant_identifier_names, prefer_final_fields
+// ignore_for_file: unnecessary_import, unnecessary_this, unused_import
 
 import 'dart:core' as $core;
 
@@ -11,56 +15,40 @@ import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 class UpdateConversationRequest extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      const $core.bool.fromEnvironment('protobuf.omit_message_names')
-          ? ''
-          : 'UpdateConversationRequest',
-      package: const $pb.PackageName(
-          const $core.bool.fromEnvironment('protobuf.omit_message_names')
-              ? ''
-              : 'im.turms.proto'),
-      createEmptyInstance: create)
-    ..aInt64(
-        1,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'targetId')
-    ..aInt64(
-        2,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'groupId')
-    ..aInt64(
-        3,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'readDate')
-    ..hasRequiredFields = false;
-
-  UpdateConversationRequest._() : super();
   factory UpdateConversationRequest({
     $fixnum.Int64? targetId,
     $fixnum.Int64? groupId,
     $fixnum.Int64? readDate,
   }) {
-    final _result = create();
+    final $result = create();
     if (targetId != null) {
-      _result.targetId = targetId;
+      $result.targetId = targetId;
     }
     if (groupId != null) {
-      _result.groupId = groupId;
+      $result.groupId = groupId;
     }
     if (readDate != null) {
-      _result.readDate = readDate;
+      $result.readDate = readDate;
     }
-    return _result;
+    return $result;
   }
+  UpdateConversationRequest._() : super();
   factory UpdateConversationRequest.fromBuffer($core.List<$core.int> i,
           [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(i, r);
   factory UpdateConversationRequest.fromJson($core.String i,
           [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(i, r);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'UpdateConversationRequest',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'im.turms.proto'),
+      createEmptyInstance: create)
+    ..aInt64(1, _omitFieldNames ? '' : 'targetId')
+    ..aInt64(2, _omitFieldNames ? '' : 'groupId')
+    ..aInt64(3, _omitFieldNames ? '' : 'readDate')
+    ..hasRequiredFields = false;
+
   @$core.Deprecated('Using this can add significant overhead to your binary. '
       'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
       'Will be removed in next major version')
@@ -72,8 +60,10 @@ class UpdateConversationRequest extends $pb.GeneratedMessage {
   UpdateConversationRequest copyWith(
           void Function(UpdateConversationRequest) updates) =>
       super.copyWith((message) => updates(message as UpdateConversationRequest))
-          as UpdateConversationRequest; // ignore: deprecated_member_use
+          as UpdateConversationRequest;
+
   $pb.BuilderInfo get info_ => _i;
+
   @$core.pragma('dart2js:noInline')
   static UpdateConversationRequest create() => UpdateConversationRequest._();
   UpdateConversationRequest createEmptyInstance() => create();
@@ -84,6 +74,7 @@ class UpdateConversationRequest extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<UpdateConversationRequest>(create);
   static UpdateConversationRequest? _defaultInstance;
 
+  /// Query filter
   @$pb.TagNumber(1)
   $fixnum.Int64 get targetId => $_getI64(0);
   @$pb.TagNumber(1)
@@ -108,6 +99,7 @@ class UpdateConversationRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   void clearGroupId() => clearField(2);
 
+  /// Update
   @$pb.TagNumber(3)
   $fixnum.Int64 get readDate => $_getI64(2);
   @$pb.TagNumber(3)
@@ -120,3 +112,7 @@ class UpdateConversationRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   void clearReadDate() => clearField(3);
 }
+
+const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');
+const _omitMessageNames =
+    $core.bool.fromEnvironment('protobuf.omit_message_names');

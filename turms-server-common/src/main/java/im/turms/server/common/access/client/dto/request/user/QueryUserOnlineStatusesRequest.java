@@ -56,7 +56,7 @@ public final class QueryUserOnlineStatusesRequest extends com.google.protobuf.Ge
 
     public static final int USER_IDS_FIELD_NUMBER = 1;
     @SuppressWarnings("serial")
-    private com.google.protobuf.Internal.LongList userIds_;
+    private com.google.protobuf.Internal.LongList userIds_ = emptyLongList();
 
     /**
      * <code>repeated int64 user_ids = 1;</code>
@@ -343,7 +343,6 @@ public final class QueryUserOnlineStatusesRequest extends com.google.protobuf.Ge
             im.turms.server.common.access.client.dto.request.user.QueryUserOnlineStatusesRequest result =
                     new im.turms.server.common.access.client.dto.request.user.QueryUserOnlineStatusesRequest(
                             this);
-            buildPartialRepeatedFields(result);
             if (bitField0_ != 0) {
                 buildPartial0(result);
             }
@@ -351,18 +350,50 @@ public final class QueryUserOnlineStatusesRequest extends com.google.protobuf.Ge
             return result;
         }
 
-        private void buildPartialRepeatedFields(
-                im.turms.server.common.access.client.dto.request.user.QueryUserOnlineStatusesRequest result) {
-            if (((bitField0_ & 0x00000001) != 0)) {
-                userIds_.makeImmutable();
-                bitField0_ &= ~0x00000001;
-            }
-            result.userIds_ = userIds_;
-        }
-
         private void buildPartial0(
                 im.turms.server.common.access.client.dto.request.user.QueryUserOnlineStatusesRequest result) {
             int from_bitField0_ = bitField0_;
+            if (((from_bitField0_ & 0x00000001) != 0)) {
+                userIds_.makeImmutable();
+                result.userIds_ = userIds_;
+            }
+        }
+
+        @java.lang.Override
+        public Builder clone() {
+            return super.clone();
+        }
+
+        @java.lang.Override
+        public Builder setField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value) {
+            return super.setField(field, value);
+        }
+
+        @java.lang.Override
+        public Builder clearField(com.google.protobuf.Descriptors.FieldDescriptor field) {
+            return super.clearField(field);
+        }
+
+        @java.lang.Override
+        public Builder clearOneof(com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+            return super.clearOneof(oneof);
+        }
+
+        @java.lang.Override
+        public Builder setRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                int index,
+                java.lang.Object value) {
+            return super.setRepeatedField(field, index, value);
+        }
+
+        @java.lang.Override
+        public Builder addRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value) {
+            return super.addRepeatedField(field, value);
         }
 
         @java.lang.Override
@@ -385,7 +416,8 @@ public final class QueryUserOnlineStatusesRequest extends com.google.protobuf.Ge
             if (!other.userIds_.isEmpty()) {
                 if (userIds_.isEmpty()) {
                     userIds_ = other.userIds_;
-                    bitField0_ &= ~0x00000001;
+                    userIds_.makeImmutable();
+                    bitField0_ |= 0x00000001;
                 } else {
                     ensureUserIdsIsMutable();
                     userIds_.addAll(other.userIds_);
@@ -450,10 +482,10 @@ public final class QueryUserOnlineStatusesRequest extends com.google.protobuf.Ge
         private com.google.protobuf.Internal.LongList userIds_ = emptyLongList();
 
         private void ensureUserIdsIsMutable() {
-            if ((bitField0_ & 0x00000001) == 0) {
-                userIds_ = mutableCopy(userIds_);
-                bitField0_ |= 0x00000001;
+            if (!userIds_.isModifiable()) {
+                userIds_ = makeMutableCopy(userIds_);
             }
+            bitField0_ |= 0x00000001;
         }
 
         /**
@@ -462,9 +494,8 @@ public final class QueryUserOnlineStatusesRequest extends com.google.protobuf.Ge
          * @return A list containing the userIds.
          */
         public java.util.List<java.lang.Long> getUserIdsList() {
-            return ((bitField0_ & 0x00000001) != 0)
-                    ? java.util.Collections.unmodifiableList(userIds_)
-                    : userIds_;
+            userIds_.makeImmutable();
+            return userIds_;
         }
 
         /**
@@ -497,6 +528,7 @@ public final class QueryUserOnlineStatusesRequest extends com.google.protobuf.Ge
 
             ensureUserIdsIsMutable();
             userIds_.setLong(index, value);
+            bitField0_ |= 0x00000001;
             onChanged();
             return this;
         }
@@ -511,6 +543,7 @@ public final class QueryUserOnlineStatusesRequest extends com.google.protobuf.Ge
 
             ensureUserIdsIsMutable();
             userIds_.addLong(value);
+            bitField0_ |= 0x00000001;
             onChanged();
             return this;
         }
@@ -524,6 +557,7 @@ public final class QueryUserOnlineStatusesRequest extends com.google.protobuf.Ge
         public Builder addAllUserIds(java.lang.Iterable<? extends java.lang.Long> values) {
             ensureUserIdsIsMutable();
             com.google.protobuf.AbstractMessageLite.Builder.addAll(values, userIds_);
+            bitField0_ |= 0x00000001;
             onChanged();
             return this;
         }

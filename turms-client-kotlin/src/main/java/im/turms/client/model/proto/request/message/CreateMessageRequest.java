@@ -80,7 +80,7 @@ public final class CreateMessageRequest extends
      * is_system_message can only be true if the user is an administrator,
      * or turms server will return an error
      * </pre>
-     * 
+     *
      * <code>optional bool is_system_message = 2;</code>
      *
      * @return Whether the isSystemMessage field is set.
@@ -95,7 +95,7 @@ public final class CreateMessageRequest extends
      * is_system_message can only be true if the user is an administrator,
      * or turms server will return an error
      * </pre>
-     * 
+     *
      * <code>optional bool is_system_message = 2;</code>
      *
      * @return The isSystemMessage.
@@ -110,7 +110,7 @@ public final class CreateMessageRequest extends
      * is_system_message can only be true if the user is an administrator,
      * or turms server will return an error
      * </pre>
-     * 
+     *
      * <code>optional bool is_system_message = 2;</code>
      *
      * @param value The isSystemMessage to set.
@@ -125,7 +125,7 @@ public final class CreateMessageRequest extends
      * is_system_message can only be true if the user is an administrator,
      * or turms server will return an error
      * </pre>
-     * 
+     *
      * <code>optional bool is_system_message = 2;</code>
      */
     private void clearIsSystemMessage() {
@@ -562,12 +562,12 @@ public final class CreateMessageRequest extends
     }
 
     public static Builder newBuilder() {
-        return (Builder) DEFAULT_INSTANCE.createBuilder();
+        return DEFAULT_INSTANCE.createBuilder();
     }
 
     public static Builder newBuilder(
             im.turms.client.model.proto.request.message.CreateMessageRequest prototype) {
-        return (Builder) DEFAULT_INSTANCE.createBuilder(prototype);
+        return DEFAULT_INSTANCE.createBuilder(prototype);
     }
 
     /**
@@ -632,7 +632,7 @@ public final class CreateMessageRequest extends
          * is_system_message can only be true if the user is an administrator,
          * or turms server will return an error
          * </pre>
-         * 
+         *
          * <code>optional bool is_system_message = 2;</code>
          *
          * @return Whether the isSystemMessage field is set.
@@ -647,7 +647,7 @@ public final class CreateMessageRequest extends
          * is_system_message can only be true if the user is an administrator,
          * or turms server will return an error
          * </pre>
-         * 
+         *
          * <code>optional bool is_system_message = 2;</code>
          *
          * @return The isSystemMessage.
@@ -662,7 +662,7 @@ public final class CreateMessageRequest extends
          * is_system_message can only be true if the user is an administrator,
          * or turms server will return an error
          * </pre>
-         * 
+         *
          * <code>optional bool is_system_message = 2;</code>
          *
          * @param value The isSystemMessage to set.
@@ -679,7 +679,7 @@ public final class CreateMessageRequest extends
          * is_system_message can only be true if the user is an administrator,
          * or turms server will return an error
          * </pre>
-         * 
+         *
          * <code>optional bool is_system_message = 2;</code>
          *
          * @return This builder for chaining.

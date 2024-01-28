@@ -25,7 +25,7 @@ public interface TurmsNotificationOrBuilder extends
      * <pre>
      * Common =&gt; [1, 3]
      * </pre>
-     * 
+     *
      * <code>int64 timestamp = 1;</code>
      *
      * @return The timestamp.
@@ -38,7 +38,7 @@ public interface TurmsNotificationOrBuilder extends
      * "request_id" is used to tell the client that
      * this notification is a response to the specific request
      * </pre>
-     * 
+     *
      * <code>optional int64 request_id = 4;</code>
      *
      * @return Whether the requestId field is set.
@@ -51,7 +51,7 @@ public interface TurmsNotificationOrBuilder extends
      * "request_id" is used to tell the client that
      * this notification is a response to the specific request
      * </pre>
-     * 
+     *
      * <code>optional int64 request_id = 4;</code>
      *
      * @return The requestId.
@@ -114,7 +114,7 @@ public interface TurmsNotificationOrBuilder extends
      * Note: Do not move "requester_id" to TurmsRequest because it requires rebuilding
      * a new TurmsNotification when recipients need "requester_id".
      * </pre>
-     * 
+     *
      * <code>optional int64 requester_id = 10;</code>
      *
      * @return Whether the requesterId field is set.
@@ -128,7 +128,7 @@ public interface TurmsNotificationOrBuilder extends
      * Note: Do not move "requester_id" to TurmsRequest because it requires rebuilding
      * a new TurmsNotification when recipients need "requester_id".
      * </pre>
-     * 
+     *
      * <code>optional int64 requester_id = 10;</code>
      *
      * @return The requesterId.

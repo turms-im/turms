@@ -26,7 +26,7 @@ public interface TurmsRequestOrBuilder extends
      * Note: "request_id" is allowed to be duplicate because
      * it is used for clients to identify the response of the same request id in a session
      * </pre>
-     * 
+     *
      * <code>optional int64 request_id = 1;</code>
      *
      * @return Whether the requestId field is set.
@@ -38,7 +38,7 @@ public interface TurmsRequestOrBuilder extends
      * Note: "request_id" is allowed to be duplicate because
      * it is used for clients to identify the response of the same request id in a session
      * </pre>
-     * 
+     *
      * <code>optional int64 request_id = 1;</code>
      *
      * @return The requestId.
@@ -49,7 +49,7 @@ public interface TurmsRequestOrBuilder extends
      * <pre>
      * User - Session
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CreateSessionRequest create_session_request = 3;</code>
      *
      * @return Whether the createSessionRequest field is set.
@@ -60,7 +60,7 @@ public interface TurmsRequestOrBuilder extends
      * <pre>
      * User - Session
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CreateSessionRequest create_session_request = 3;</code>
      *
      * @return The createSessionRequest.
@@ -71,7 +71,7 @@ public interface TurmsRequestOrBuilder extends
      * <pre>
      * User - Session
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CreateSessionRequest create_session_request = 3;</code>
      */
     im.turms.server.common.access.client.dto.request.user.CreateSessionRequestOrBuilder getCreateSessionRequestOrBuilder();
@@ -99,7 +99,7 @@ public interface TurmsRequestOrBuilder extends
      * <pre>
      * Conversation
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.QueryConversationsRequest query_conversations_request = 5;</code>
      *
      * @return Whether the queryConversationsRequest field is set.
@@ -110,7 +110,7 @@ public interface TurmsRequestOrBuilder extends
      * <pre>
      * Conversation
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.QueryConversationsRequest query_conversations_request = 5;</code>
      *
      * @return The queryConversationsRequest.
@@ -121,7 +121,7 @@ public interface TurmsRequestOrBuilder extends
      * <pre>
      * Conversation
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.QueryConversationsRequest query_conversations_request = 5;</code>
      */
     im.turms.server.common.access.client.dto.request.conversation.QueryConversationsRequestOrBuilder getQueryConversationsRequestOrBuilder();
@@ -168,7 +168,7 @@ public interface TurmsRequestOrBuilder extends
      * <pre>
      * Message
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CreateMessageRequest create_message_request = 8;</code>
      *
      * @return Whether the createMessageRequest field is set.
@@ -179,7 +179,7 @@ public interface TurmsRequestOrBuilder extends
      * <pre>
      * Message
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CreateMessageRequest create_message_request = 8;</code>
      *
      * @return The createMessageRequest.
@@ -190,7 +190,7 @@ public interface TurmsRequestOrBuilder extends
      * <pre>
      * Message
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CreateMessageRequest create_message_request = 8;</code>
      */
     im.turms.server.common.access.client.dto.request.message.CreateMessageRequestOrBuilder getCreateMessageRequestOrBuilder();
@@ -237,7 +237,7 @@ public interface TurmsRequestOrBuilder extends
      * <pre>
      * Group Member
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CreateGroupMembersRequest create_group_members_request = 11;</code>
      *
      * @return Whether the createGroupMembersRequest field is set.
@@ -248,7 +248,7 @@ public interface TurmsRequestOrBuilder extends
      * <pre>
      * Group Member
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CreateGroupMembersRequest create_group_members_request = 11;</code>
      *
      * @return The createGroupMembersRequest.
@@ -259,7 +259,7 @@ public interface TurmsRequestOrBuilder extends
      * <pre>
      * Group Member
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CreateGroupMembersRequest create_group_members_request = 11;</code>
      */
     im.turms.server.common.access.client.dto.request.group.member.CreateGroupMembersRequestOrBuilder getCreateGroupMembersRequestOrBuilder();
@@ -325,7 +325,7 @@ public interface TurmsRequestOrBuilder extends
      * <pre>
      * User
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.QueryUserProfilesRequest query_user_profiles_request = 100;</code>
      *
      * @return Whether the queryUserProfilesRequest field is set.
@@ -336,7 +336,7 @@ public interface TurmsRequestOrBuilder extends
      * <pre>
      * User
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.QueryUserProfilesRequest query_user_profiles_request = 100;</code>
      *
      * @return The queryUserProfilesRequest.
@@ -347,7 +347,7 @@ public interface TurmsRequestOrBuilder extends
      * <pre>
      * User
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.QueryUserProfilesRequest query_user_profiles_request = 100;</code>
      */
     im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequestOrBuilder getQueryUserProfilesRequestOrBuilder();
@@ -451,7 +451,7 @@ public interface TurmsRequestOrBuilder extends
      * <pre>
      * User Relationship
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CreateFriendRequestRequest create_friend_request_request = 200;</code>
      *
      * @return Whether the createFriendRequestRequest field is set.
@@ -462,7 +462,7 @@ public interface TurmsRequestOrBuilder extends
      * <pre>
      * User Relationship
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CreateFriendRequestRequest create_friend_request_request = 200;</code>
      *
      * @return The createFriendRequestRequest.
@@ -473,7 +473,7 @@ public interface TurmsRequestOrBuilder extends
      * <pre>
      * User Relationship
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CreateFriendRequestRequest create_friend_request_request = 200;</code>
      */
     im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequestOrBuilder getCreateFriendRequestRequestOrBuilder();
@@ -517,173 +517,192 @@ public interface TurmsRequestOrBuilder extends
     im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipRequestOrBuilder getCreateRelationshipRequestOrBuilder();
 
     /**
-     * <code>.im.turms.proto.DeleteRelationshipGroupRequest delete_relationship_group_request = 203;</code>
+     * <code>.im.turms.proto.DeleteFriendRequestRequest delete_friend_request_request = 203;</code>
+     *
+     * @return Whether the deleteFriendRequestRequest field is set.
+     */
+    boolean hasDeleteFriendRequestRequest();
+
+    /**
+     * <code>.im.turms.proto.DeleteFriendRequestRequest delete_friend_request_request = 203;</code>
+     *
+     * @return The deleteFriendRequestRequest.
+     */
+    im.turms.server.common.access.client.dto.request.user.relationship.DeleteFriendRequestRequest getDeleteFriendRequestRequest();
+
+    /**
+     * <code>.im.turms.proto.DeleteFriendRequestRequest delete_friend_request_request = 203;</code>
+     */
+    im.turms.server.common.access.client.dto.request.user.relationship.DeleteFriendRequestRequestOrBuilder getDeleteFriendRequestRequestOrBuilder();
+
+    /**
+     * <code>.im.turms.proto.DeleteRelationshipGroupRequest delete_relationship_group_request = 204;</code>
      *
      * @return Whether the deleteRelationshipGroupRequest field is set.
      */
     boolean hasDeleteRelationshipGroupRequest();
 
     /**
-     * <code>.im.turms.proto.DeleteRelationshipGroupRequest delete_relationship_group_request = 203;</code>
+     * <code>.im.turms.proto.DeleteRelationshipGroupRequest delete_relationship_group_request = 204;</code>
      *
      * @return The deleteRelationshipGroupRequest.
      */
     im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequest getDeleteRelationshipGroupRequest();
 
     /**
-     * <code>.im.turms.proto.DeleteRelationshipGroupRequest delete_relationship_group_request = 203;</code>
+     * <code>.im.turms.proto.DeleteRelationshipGroupRequest delete_relationship_group_request = 204;</code>
      */
     im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequestOrBuilder getDeleteRelationshipGroupRequestOrBuilder();
 
     /**
-     * <code>.im.turms.proto.DeleteRelationshipRequest delete_relationship_request = 204;</code>
+     * <code>.im.turms.proto.DeleteRelationshipRequest delete_relationship_request = 205;</code>
      *
      * @return Whether the deleteRelationshipRequest field is set.
      */
     boolean hasDeleteRelationshipRequest();
 
     /**
-     * <code>.im.turms.proto.DeleteRelationshipRequest delete_relationship_request = 204;</code>
+     * <code>.im.turms.proto.DeleteRelationshipRequest delete_relationship_request = 205;</code>
      *
      * @return The deleteRelationshipRequest.
      */
     im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipRequest getDeleteRelationshipRequest();
 
     /**
-     * <code>.im.turms.proto.DeleteRelationshipRequest delete_relationship_request = 204;</code>
+     * <code>.im.turms.proto.DeleteRelationshipRequest delete_relationship_request = 205;</code>
      */
     im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipRequestOrBuilder getDeleteRelationshipRequestOrBuilder();
 
     /**
-     * <code>.im.turms.proto.QueryFriendRequestsRequest query_friend_requests_request = 205;</code>
+     * <code>.im.turms.proto.QueryFriendRequestsRequest query_friend_requests_request = 206;</code>
      *
      * @return Whether the queryFriendRequestsRequest field is set.
      */
     boolean hasQueryFriendRequestsRequest();
 
     /**
-     * <code>.im.turms.proto.QueryFriendRequestsRequest query_friend_requests_request = 205;</code>
+     * <code>.im.turms.proto.QueryFriendRequestsRequest query_friend_requests_request = 206;</code>
      *
      * @return The queryFriendRequestsRequest.
      */
     im.turms.server.common.access.client.dto.request.user.relationship.QueryFriendRequestsRequest getQueryFriendRequestsRequest();
 
     /**
-     * <code>.im.turms.proto.QueryFriendRequestsRequest query_friend_requests_request = 205;</code>
+     * <code>.im.turms.proto.QueryFriendRequestsRequest query_friend_requests_request = 206;</code>
      */
     im.turms.server.common.access.client.dto.request.user.relationship.QueryFriendRequestsRequestOrBuilder getQueryFriendRequestsRequestOrBuilder();
 
     /**
-     * <code>.im.turms.proto.QueryRelatedUserIdsRequest query_related_user_ids_request = 206;</code>
+     * <code>.im.turms.proto.QueryRelatedUserIdsRequest query_related_user_ids_request = 207;</code>
      *
      * @return Whether the queryRelatedUserIdsRequest field is set.
      */
     boolean hasQueryRelatedUserIdsRequest();
 
     /**
-     * <code>.im.turms.proto.QueryRelatedUserIdsRequest query_related_user_ids_request = 206;</code>
+     * <code>.im.turms.proto.QueryRelatedUserIdsRequest query_related_user_ids_request = 207;</code>
      *
      * @return The queryRelatedUserIdsRequest.
      */
     im.turms.server.common.access.client.dto.request.user.relationship.QueryRelatedUserIdsRequest getQueryRelatedUserIdsRequest();
 
     /**
-     * <code>.im.turms.proto.QueryRelatedUserIdsRequest query_related_user_ids_request = 206;</code>
+     * <code>.im.turms.proto.QueryRelatedUserIdsRequest query_related_user_ids_request = 207;</code>
      */
     im.turms.server.common.access.client.dto.request.user.relationship.QueryRelatedUserIdsRequestOrBuilder getQueryRelatedUserIdsRequestOrBuilder();
 
     /**
-     * <code>.im.turms.proto.QueryRelationshipGroupsRequest query_relationship_groups_request = 207;</code>
+     * <code>.im.turms.proto.QueryRelationshipGroupsRequest query_relationship_groups_request = 208;</code>
      *
      * @return Whether the queryRelationshipGroupsRequest field is set.
      */
     boolean hasQueryRelationshipGroupsRequest();
 
     /**
-     * <code>.im.turms.proto.QueryRelationshipGroupsRequest query_relationship_groups_request = 207;</code>
+     * <code>.im.turms.proto.QueryRelationshipGroupsRequest query_relationship_groups_request = 208;</code>
      *
      * @return The queryRelationshipGroupsRequest.
      */
     im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipGroupsRequest getQueryRelationshipGroupsRequest();
 
     /**
-     * <code>.im.turms.proto.QueryRelationshipGroupsRequest query_relationship_groups_request = 207;</code>
+     * <code>.im.turms.proto.QueryRelationshipGroupsRequest query_relationship_groups_request = 208;</code>
      */
     im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipGroupsRequestOrBuilder getQueryRelationshipGroupsRequestOrBuilder();
 
     /**
-     * <code>.im.turms.proto.QueryRelationshipsRequest query_relationships_request = 208;</code>
+     * <code>.im.turms.proto.QueryRelationshipsRequest query_relationships_request = 209;</code>
      *
      * @return Whether the queryRelationshipsRequest field is set.
      */
     boolean hasQueryRelationshipsRequest();
 
     /**
-     * <code>.im.turms.proto.QueryRelationshipsRequest query_relationships_request = 208;</code>
+     * <code>.im.turms.proto.QueryRelationshipsRequest query_relationships_request = 209;</code>
      *
      * @return The queryRelationshipsRequest.
      */
     im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequest getQueryRelationshipsRequest();
 
     /**
-     * <code>.im.turms.proto.QueryRelationshipsRequest query_relationships_request = 208;</code>
+     * <code>.im.turms.proto.QueryRelationshipsRequest query_relationships_request = 209;</code>
      */
     im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequestOrBuilder getQueryRelationshipsRequestOrBuilder();
 
     /**
-     * <code>.im.turms.proto.UpdateFriendRequestRequest update_friend_request_request = 209;</code>
+     * <code>.im.turms.proto.UpdateFriendRequestRequest update_friend_request_request = 210;</code>
      *
      * @return Whether the updateFriendRequestRequest field is set.
      */
     boolean hasUpdateFriendRequestRequest();
 
     /**
-     * <code>.im.turms.proto.UpdateFriendRequestRequest update_friend_request_request = 209;</code>
+     * <code>.im.turms.proto.UpdateFriendRequestRequest update_friend_request_request = 210;</code>
      *
      * @return The updateFriendRequestRequest.
      */
     im.turms.server.common.access.client.dto.request.user.relationship.UpdateFriendRequestRequest getUpdateFriendRequestRequest();
 
     /**
-     * <code>.im.turms.proto.UpdateFriendRequestRequest update_friend_request_request = 209;</code>
+     * <code>.im.turms.proto.UpdateFriendRequestRequest update_friend_request_request = 210;</code>
      */
     im.turms.server.common.access.client.dto.request.user.relationship.UpdateFriendRequestRequestOrBuilder getUpdateFriendRequestRequestOrBuilder();
 
     /**
-     * <code>.im.turms.proto.UpdateRelationshipGroupRequest update_relationship_group_request = 210;</code>
+     * <code>.im.turms.proto.UpdateRelationshipGroupRequest update_relationship_group_request = 211;</code>
      *
      * @return Whether the updateRelationshipGroupRequest field is set.
      */
     boolean hasUpdateRelationshipGroupRequest();
 
     /**
-     * <code>.im.turms.proto.UpdateRelationshipGroupRequest update_relationship_group_request = 210;</code>
+     * <code>.im.turms.proto.UpdateRelationshipGroupRequest update_relationship_group_request = 211;</code>
      *
      * @return The updateRelationshipGroupRequest.
      */
     im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipGroupRequest getUpdateRelationshipGroupRequest();
 
     /**
-     * <code>.im.turms.proto.UpdateRelationshipGroupRequest update_relationship_group_request = 210;</code>
+     * <code>.im.turms.proto.UpdateRelationshipGroupRequest update_relationship_group_request = 211;</code>
      */
     im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipGroupRequestOrBuilder getUpdateRelationshipGroupRequestOrBuilder();
 
     /**
-     * <code>.im.turms.proto.UpdateRelationshipRequest update_relationship_request = 211;</code>
+     * <code>.im.turms.proto.UpdateRelationshipRequest update_relationship_request = 212;</code>
      *
      * @return Whether the updateRelationshipRequest field is set.
      */
     boolean hasUpdateRelationshipRequest();
 
     /**
-     * <code>.im.turms.proto.UpdateRelationshipRequest update_relationship_request = 211;</code>
+     * <code>.im.turms.proto.UpdateRelationshipRequest update_relationship_request = 212;</code>
      *
      * @return The updateRelationshipRequest.
      */
     im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipRequest getUpdateRelationshipRequest();
 
     /**
-     * <code>.im.turms.proto.UpdateRelationshipRequest update_relationship_request = 211;</code>
+     * <code>.im.turms.proto.UpdateRelationshipRequest update_relationship_request = 212;</code>
      */
     im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipRequestOrBuilder getUpdateRelationshipRequestOrBuilder();
 
@@ -691,7 +710,7 @@ public interface TurmsRequestOrBuilder extends
      * <pre>
      * Group
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CreateGroupRequest create_group_request = 300;</code>
      *
      * @return Whether the createGroupRequest field is set.
@@ -702,7 +721,7 @@ public interface TurmsRequestOrBuilder extends
      * <pre>
      * Group
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CreateGroupRequest create_group_request = 300;</code>
      *
      * @return The createGroupRequest.
@@ -713,7 +732,7 @@ public interface TurmsRequestOrBuilder extends
      * <pre>
      * Group
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CreateGroupRequest create_group_request = 300;</code>
      */
     im.turms.server.common.access.client.dto.request.group.CreateGroupRequestOrBuilder getCreateGroupRequestOrBuilder();
@@ -817,7 +836,7 @@ public interface TurmsRequestOrBuilder extends
      * <pre>
      * Group Blocklist
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CreateGroupBlockedUserRequest create_group_blocked_user_request = 400;</code>
      *
      * @return Whether the createGroupBlockedUserRequest field is set.
@@ -828,7 +847,7 @@ public interface TurmsRequestOrBuilder extends
      * <pre>
      * Group Blocklist
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CreateGroupBlockedUserRequest create_group_blocked_user_request = 400;</code>
      *
      * @return The createGroupBlockedUserRequest.
@@ -839,7 +858,7 @@ public interface TurmsRequestOrBuilder extends
      * <pre>
      * Group Blocklist
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CreateGroupBlockedUserRequest create_group_blocked_user_request = 400;</code>
      */
     im.turms.server.common.access.client.dto.request.group.blocklist.CreateGroupBlockedUserRequestOrBuilder getCreateGroupBlockedUserRequestOrBuilder();
@@ -905,7 +924,7 @@ public interface TurmsRequestOrBuilder extends
      * <pre>
      * Group Enrollment
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CheckGroupJoinQuestionsAnswersRequest check_group_join_questions_answers_request = 500;</code>
      *
      * @return Whether the checkGroupJoinQuestionsAnswersRequest field is set.
@@ -916,7 +935,7 @@ public interface TurmsRequestOrBuilder extends
      * <pre>
      * Group Enrollment
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CheckGroupJoinQuestionsAnswersRequest check_group_join_questions_answers_request = 500;</code>
      *
      * @return The checkGroupJoinQuestionsAnswersRequest.
@@ -927,7 +946,7 @@ public interface TurmsRequestOrBuilder extends
      * <pre>
      * Group Enrollment
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.CheckGroupJoinQuestionsAnswersRequest check_group_join_questions_answers_request = 500;</code>
      */
     im.turms.server.common.access.client.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequestOrBuilder getCheckGroupJoinQuestionsAnswersRequestOrBuilder();
@@ -1104,29 +1123,67 @@ public interface TurmsRequestOrBuilder extends
     im.turms.server.common.access.client.dto.request.group.enrollment.QueryGroupJoinQuestionsRequestOrBuilder getQueryGroupJoinQuestionsRequestOrBuilder();
 
     /**
-     * <code>.im.turms.proto.UpdateGroupJoinQuestionRequest update_group_join_question_request = 510;</code>
+     * <code>.im.turms.proto.UpdateGroupInvitationRequest update_group_invitation_request = 510;</code>
+     *
+     * @return Whether the updateGroupInvitationRequest field is set.
+     */
+    boolean hasUpdateGroupInvitationRequest();
+
+    /**
+     * <code>.im.turms.proto.UpdateGroupInvitationRequest update_group_invitation_request = 510;</code>
+     *
+     * @return The updateGroupInvitationRequest.
+     */
+    im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupInvitationRequest getUpdateGroupInvitationRequest();
+
+    /**
+     * <code>.im.turms.proto.UpdateGroupInvitationRequest update_group_invitation_request = 510;</code>
+     */
+    im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupInvitationRequestOrBuilder getUpdateGroupInvitationRequestOrBuilder();
+
+    /**
+     * <code>.im.turms.proto.UpdateGroupJoinQuestionRequest update_group_join_question_request = 511;</code>
      *
      * @return Whether the updateGroupJoinQuestionRequest field is set.
      */
     boolean hasUpdateGroupJoinQuestionRequest();
 
     /**
-     * <code>.im.turms.proto.UpdateGroupJoinQuestionRequest update_group_join_question_request = 510;</code>
+     * <code>.im.turms.proto.UpdateGroupJoinQuestionRequest update_group_join_question_request = 511;</code>
      *
      * @return The updateGroupJoinQuestionRequest.
      */
     im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest getUpdateGroupJoinQuestionRequest();
 
     /**
-     * <code>.im.turms.proto.UpdateGroupJoinQuestionRequest update_group_join_question_request = 510;</code>
+     * <code>.im.turms.proto.UpdateGroupJoinQuestionRequest update_group_join_question_request = 511;</code>
      */
     im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequestOrBuilder getUpdateGroupJoinQuestionRequestOrBuilder();
+
+    /**
+     * <code>.im.turms.proto.UpdateGroupJoinRequestRequest update_group_join_request_request = 512;</code>
+     *
+     * @return Whether the updateGroupJoinRequestRequest field is set.
+     */
+    boolean hasUpdateGroupJoinRequestRequest();
+
+    /**
+     * <code>.im.turms.proto.UpdateGroupJoinRequestRequest update_group_join_request_request = 512;</code>
+     *
+     * @return The updateGroupJoinRequestRequest.
+     */
+    im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinRequestRequest getUpdateGroupJoinRequestRequest();
+
+    /**
+     * <code>.im.turms.proto.UpdateGroupJoinRequestRequest update_group_join_request_request = 512;</code>
+     */
+    im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinRequestRequestOrBuilder getUpdateGroupJoinRequestRequestOrBuilder();
 
     /**
      * <pre>
      * Storage
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.DeleteResourceRequest delete_resource_request = 1000;</code>
      *
      * @return Whether the deleteResourceRequest field is set.
@@ -1137,7 +1194,7 @@ public interface TurmsRequestOrBuilder extends
      * <pre>
      * Storage
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.DeleteResourceRequest delete_resource_request = 1000;</code>
      *
      * @return The deleteResourceRequest.
@@ -1148,7 +1205,7 @@ public interface TurmsRequestOrBuilder extends
      * <pre>
      * Storage
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.DeleteResourceRequest delete_resource_request = 1000;</code>
      */
     im.turms.server.common.access.client.dto.request.storage.DeleteResourceRequestOrBuilder getDeleteResourceRequestOrBuilder();

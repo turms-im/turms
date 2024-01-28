@@ -70,16 +70,6 @@ public final class MessageOuterClass {
                                 "RecipientId",
                                 "Records",
                                 "SequenceId",
-                                "PreMessageId",
-                                "Id",
-                                "DeliveryDate",
-                                "ModificationDate",
-                                "Text",
-                                "SenderId",
-                                "GroupId",
-                                "IsSystemMessage",
-                                "RecipientId",
-                                "SequenceId",
                                 "PreMessageId",});
     }
 

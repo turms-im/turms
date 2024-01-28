@@ -104,12 +104,12 @@ extension QueryMessageAttachmentInfosRequest: SwiftProtobuf.Message, SwiftProtob
             // allocates stack space for every case branch when no optimizations are
             // enabled. https://github.com/apple/swift-protobuf/issues/1034
             switch fieldNumber {
-            case 1: try try decoder.decodeRepeatedInt64Field(value: &userIds)
-            case 2: try try decoder.decodeRepeatedInt64Field(value: &groupIds)
-            case 3: try try decoder.decodeSingularInt64Field(value: &_creationDateStart)
-            case 4: try try decoder.decodeSingularInt64Field(value: &_creationDateEnd)
-            case 5: try try decoder.decodeSingularBoolField(value: &_inPrivateConversation)
-            case 6: try try decoder.decodeSingularBoolField(value: &_areSharedByMe)
+            case 1: try decoder.decodeRepeatedInt64Field(value: &userIds)
+            case 2: try decoder.decodeRepeatedInt64Field(value: &groupIds)
+            case 3: try decoder.decodeSingularInt64Field(value: &_creationDateStart)
+            case 4: try decoder.decodeSingularInt64Field(value: &_creationDateEnd)
+            case 5: try decoder.decodeSingularBoolField(value: &_inPrivateConversation)
+            case 6: try decoder.decodeSingularBoolField(value: &_areSharedByMe)
             default: break
             }
         }

@@ -68,10 +68,6 @@ public final class NearbyUserOuterClass {
                                 "DeviceType",
                                 "Info",
                                 "Distance",
-                                "Location",
-                                "DeviceType",
-                                "Info",
-                                "Distance",
                                 "Location",});
         im.turms.server.common.access.client.dto.constant.DeviceTypeOuterClass.getDescriptor();
         im.turms.server.common.access.client.dto.model.user.UserLocationOuterClass.getDescriptor();

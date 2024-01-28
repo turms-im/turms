@@ -63,9 +63,6 @@ public final class CreateGroupMembersRequestOuterClass {
                                 "UserIds",
                                 "Name",
                                 "Role",
-                                "MuteEndDate",
-                                "Name",
-                                "Role",
                                 "MuteEndDate",});
         im.turms.server.common.access.client.dto.constant.GroupMemberRoleOuterClass.getDescriptor();
     }

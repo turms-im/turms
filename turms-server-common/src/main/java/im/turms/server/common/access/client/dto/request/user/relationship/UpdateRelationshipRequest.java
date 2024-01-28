@@ -32,6 +32,7 @@ public final class UpdateRelationshipRequest extends com.google.protobuf.Generat
     }
 
     private UpdateRelationshipRequest() {
+        name_ = "";
     }
 
     @java.lang.Override
@@ -60,7 +61,7 @@ public final class UpdateRelationshipRequest extends com.google.protobuf.Generat
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>int64 user_id = 1;</code>
      *
      * @return The userId.
@@ -77,7 +78,7 @@ public final class UpdateRelationshipRequest extends com.google.protobuf.Generat
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>optional bool blocked = 2;</code>
      *
      * @return Whether the blocked field is set.
@@ -91,7 +92,7 @@ public final class UpdateRelationshipRequest extends com.google.protobuf.Generat
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>optional bool blocked = 2;</code>
      *
      * @return The blocked.
@@ -147,6 +148,56 @@ public final class UpdateRelationshipRequest extends com.google.protobuf.Generat
         return deleteGroupIndex_;
     }
 
+    public static final int NAME_FIELD_NUMBER = 5;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object name_ = "";
+
+    /**
+     * <code>optional string name = 5;</code>
+     *
+     * @return Whether the name field is set.
+     */
+    @java.lang.Override
+    public boolean hasName() {
+        return ((bitField0_ & 0x00000008) != 0);
+    }
+
+    /**
+     * <code>optional string name = 5;</code>
+     *
+     * @return The name.
+     */
+    @java.lang.Override
+    public java.lang.String getName() {
+        java.lang.Object ref = name_;
+        if (ref instanceof java.lang.String) {
+            return (java.lang.String) ref;
+        } else {
+            com.google.protobuf.ByteString bs = (com.google.protobuf.ByteString) ref;
+            java.lang.String s = bs.toStringUtf8();
+            name_ = s;
+            return s;
+        }
+    }
+
+    /**
+     * <code>optional string name = 5;</code>
+     *
+     * @return The bytes for name.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString getNameBytes() {
+        java.lang.Object ref = name_;
+        if (ref instanceof java.lang.String) {
+            com.google.protobuf.ByteString b =
+                    com.google.protobuf.ByteString.copyFromUtf8((java.lang.String) ref);
+            name_ = b;
+            return b;
+        } else {
+            return (com.google.protobuf.ByteString) ref;
+        }
+    }
+
     private byte memoizedIsInitialized = -1;
 
     @java.lang.Override
@@ -177,6 +228,9 @@ public final class UpdateRelationshipRequest extends com.google.protobuf.Generat
         if (((bitField0_ & 0x00000004) != 0)) {
             output.writeInt32(4, deleteGroupIndex_);
         }
+        if (((bitField0_ & 0x00000008) != 0)) {
+            com.google.protobuf.GeneratedMessageV3.writeString(output, 5, name_);
+        }
         getUnknownFields().writeTo(output);
     }
 
@@ -199,6 +253,9 @@ public final class UpdateRelationshipRequest extends com.google.protobuf.Generat
         }
         if (((bitField0_ & 0x00000004) != 0)) {
             size += com.google.protobuf.CodedOutputStream.computeInt32Size(4, deleteGroupIndex_);
+        }
+        if (((bitField0_ & 0x00000008) != 0)) {
+            size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, name_);
         }
         size += getUnknownFields().getSerializedSize();
         memoizedSize = size;
@@ -241,6 +298,14 @@ public final class UpdateRelationshipRequest extends com.google.protobuf.Generat
                 return false;
             }
         }
+        if (hasName() != other.hasName()) {
+            return false;
+        }
+        if (hasName()) {
+            if (!getName().equals(other.getName())) {
+                return false;
+            }
+        }
         return getUnknownFields().equals(other.getUnknownFields());
     }
 
@@ -264,6 +329,10 @@ public final class UpdateRelationshipRequest extends com.google.protobuf.Generat
         if (hasDeleteGroupIndex()) {
             hash = (37 * hash) + DELETE_GROUP_INDEX_FIELD_NUMBER;
             hash = (53 * hash) + getDeleteGroupIndex();
+        }
+        if (hasName()) {
+            hash = (37 * hash) + NAME_FIELD_NUMBER;
+            hash = (53 * hash) + getName().hashCode();
         }
         hash = (29 * hash) + getUnknownFields().hashCode();
         memoizedHashCode = hash;
@@ -412,6 +481,7 @@ public final class UpdateRelationshipRequest extends com.google.protobuf.Generat
             blocked_ = false;
             newGroupIndex_ = 0;
             deleteGroupIndex_ = 0;
+            name_ = "";
             return this;
         }
 
@@ -467,7 +537,48 @@ public final class UpdateRelationshipRequest extends com.google.protobuf.Generat
                 result.deleteGroupIndex_ = deleteGroupIndex_;
                 to_bitField0_ |= 0x00000004;
             }
+            if (((from_bitField0_ & 0x00000010) != 0)) {
+                result.name_ = name_;
+                to_bitField0_ |= 0x00000008;
+            }
             result.bitField0_ |= to_bitField0_;
+        }
+
+        @java.lang.Override
+        public Builder clone() {
+            return super.clone();
+        }
+
+        @java.lang.Override
+        public Builder setField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value) {
+            return super.setField(field, value);
+        }
+
+        @java.lang.Override
+        public Builder clearField(com.google.protobuf.Descriptors.FieldDescriptor field) {
+            return super.clearField(field);
+        }
+
+        @java.lang.Override
+        public Builder clearOneof(com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+            return super.clearOneof(oneof);
+        }
+
+        @java.lang.Override
+        public Builder setRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                int index,
+                java.lang.Object value) {
+            return super.setRepeatedField(field, index, value);
+        }
+
+        @java.lang.Override
+        public Builder addRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value) {
+            return super.addRepeatedField(field, value);
         }
 
         @java.lang.Override
@@ -498,6 +609,11 @@ public final class UpdateRelationshipRequest extends com.google.protobuf.Generat
             }
             if (other.hasDeleteGroupIndex()) {
                 setDeleteGroupIndex(other.getDeleteGroupIndex());
+            }
+            if (other.hasName()) {
+                name_ = other.name_;
+                bitField0_ |= 0x00000010;
+                onChanged();
             }
             this.mergeUnknownFields(other.getUnknownFields());
             onChanged();
@@ -539,6 +655,10 @@ public final class UpdateRelationshipRequest extends com.google.protobuf.Generat
                             deleteGroupIndex_ = input.readInt32();
                             bitField0_ |= 0x00000008;
                         } // case 32
+                        case 42 -> {
+                            name_ = input.readStringRequireUtf8();
+                            bitField0_ |= 0x00000010;
+                        } // case 42
                         default -> {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
@@ -562,7 +682,7 @@ public final class UpdateRelationshipRequest extends com.google.protobuf.Generat
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>int64 user_id = 1;</code>
          *
          * @return The userId.
@@ -576,7 +696,7 @@ public final class UpdateRelationshipRequest extends com.google.protobuf.Generat
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>int64 user_id = 1;</code>
          *
          * @param value The userId to set.
@@ -594,7 +714,7 @@ public final class UpdateRelationshipRequest extends com.google.protobuf.Generat
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>int64 user_id = 1;</code>
          *
          * @return This builder for chaining.
@@ -612,7 +732,7 @@ public final class UpdateRelationshipRequest extends com.google.protobuf.Generat
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>optional bool blocked = 2;</code>
          *
          * @return Whether the blocked field is set.
@@ -626,7 +746,7 @@ public final class UpdateRelationshipRequest extends com.google.protobuf.Generat
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>optional bool blocked = 2;</code>
          *
          * @return The blocked.
@@ -640,7 +760,7 @@ public final class UpdateRelationshipRequest extends com.google.protobuf.Generat
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>optional bool blocked = 2;</code>
          *
          * @param value The blocked to set.
@@ -658,7 +778,7 @@ public final class UpdateRelationshipRequest extends com.google.protobuf.Generat
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>optional bool blocked = 2;</code>
          *
          * @return This builder for chaining.
@@ -762,6 +882,96 @@ public final class UpdateRelationshipRequest extends com.google.protobuf.Generat
         public Builder clearDeleteGroupIndex() {
             bitField0_ &= ~0x00000008;
             deleteGroupIndex_ = 0;
+            onChanged();
+            return this;
+        }
+
+        private java.lang.Object name_ = "";
+
+        /**
+         * <code>optional string name = 5;</code>
+         *
+         * @return Whether the name field is set.
+         */
+        public boolean hasName() {
+            return ((bitField0_ & 0x00000010) != 0);
+        }
+
+        /**
+         * <code>optional string name = 5;</code>
+         *
+         * @return The name.
+         */
+        public java.lang.String getName() {
+            java.lang.Object ref = name_;
+            if (!(ref instanceof java.lang.String)) {
+                com.google.protobuf.ByteString bs = (com.google.protobuf.ByteString) ref;
+                java.lang.String s = bs.toStringUtf8();
+                name_ = s;
+                return s;
+            } else {
+                return (java.lang.String) ref;
+            }
+        }
+
+        /**
+         * <code>optional string name = 5;</code>
+         *
+         * @return The bytes for name.
+         */
+        public com.google.protobuf.ByteString getNameBytes() {
+            java.lang.Object ref = name_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8((java.lang.String) ref);
+                name_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        /**
+         * <code>optional string name = 5;</code>
+         *
+         * @param value The name to set.
+         * @return This builder for chaining.
+         */
+        public Builder setName(java.lang.String value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+            name_ = value;
+            bitField0_ |= 0x00000010;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <code>optional string name = 5;</code>
+         *
+         * @return This builder for chaining.
+         */
+        public Builder clearName() {
+            name_ = getDefaultInstance().getName();
+            bitField0_ &= ~0x00000010;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <code>optional string name = 5;</code>
+         *
+         * @param value The bytes for name to set.
+         * @return This builder for chaining.
+         */
+        public Builder setNameBytes(com.google.protobuf.ByteString value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+            checkByteStringIsUtf8(value);
+            name_ = value;
+            bitField0_ |= 0x00000010;
             onChanged();
             return this;
         }

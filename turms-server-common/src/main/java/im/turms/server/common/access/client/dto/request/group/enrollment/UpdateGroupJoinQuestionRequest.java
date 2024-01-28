@@ -63,7 +63,7 @@ public final class UpdateGroupJoinQuestionRequest extends com.google.protobuf.Ge
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>int64 question_id = 1;</code>
      *
      * @return The questionId.
@@ -81,7 +81,7 @@ public final class UpdateGroupJoinQuestionRequest extends com.google.protobuf.Ge
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>optional string question = 2;</code>
      *
      * @return Whether the question field is set.
@@ -95,7 +95,7 @@ public final class UpdateGroupJoinQuestionRequest extends com.google.protobuf.Ge
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>optional string question = 2;</code>
      *
      * @return The question.
@@ -117,7 +117,7 @@ public final class UpdateGroupJoinQuestionRequest extends com.google.protobuf.Ge
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>optional string question = 2;</code>
      *
      * @return The bytes for question.
@@ -254,7 +254,7 @@ public final class UpdateGroupJoinQuestionRequest extends com.google.protobuf.Ge
                 dataSize += computeStringSizeNoTag(answers_.getRaw(i));
             }
             size += dataSize;
-            size += 1 * getAnswersList().size();
+            size += getAnswersList().size();
         }
         if (((bitField0_ & 0x00000002) != 0)) {
             size += com.google.protobuf.CodedOutputStream.computeInt32Size(4, score_);
@@ -525,6 +525,43 @@ public final class UpdateGroupJoinQuestionRequest extends com.google.protobuf.Ge
         }
 
         @java.lang.Override
+        public Builder clone() {
+            return super.clone();
+        }
+
+        @java.lang.Override
+        public Builder setField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value) {
+            return super.setField(field, value);
+        }
+
+        @java.lang.Override
+        public Builder clearField(com.google.protobuf.Descriptors.FieldDescriptor field) {
+            return super.clearField(field);
+        }
+
+        @java.lang.Override
+        public Builder clearOneof(com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+            return super.clearOneof(oneof);
+        }
+
+        @java.lang.Override
+        public Builder setRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                int index,
+                java.lang.Object value) {
+            return super.setRepeatedField(field, index, value);
+        }
+
+        @java.lang.Override
+        public Builder addRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value) {
+            return super.addRepeatedField(field, value);
+        }
+
+        @java.lang.Override
         public Builder mergeFrom(com.google.protobuf.Message other) {
             if (other instanceof im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest) {
                 return mergeFrom(
@@ -626,7 +663,7 @@ public final class UpdateGroupJoinQuestionRequest extends com.google.protobuf.Ge
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>int64 question_id = 1;</code>
          *
          * @return The questionId.
@@ -640,7 +677,7 @@ public final class UpdateGroupJoinQuestionRequest extends com.google.protobuf.Ge
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>int64 question_id = 1;</code>
          *
          * @param value The questionId to set.
@@ -658,7 +695,7 @@ public final class UpdateGroupJoinQuestionRequest extends com.google.protobuf.Ge
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>int64 question_id = 1;</code>
          *
          * @return This builder for chaining.
@@ -676,7 +713,7 @@ public final class UpdateGroupJoinQuestionRequest extends com.google.protobuf.Ge
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>optional string question = 2;</code>
          *
          * @return Whether the question field is set.
@@ -689,7 +726,7 @@ public final class UpdateGroupJoinQuestionRequest extends com.google.protobuf.Ge
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>optional string question = 2;</code>
          *
          * @return The question.
@@ -710,7 +747,7 @@ public final class UpdateGroupJoinQuestionRequest extends com.google.protobuf.Ge
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>optional string question = 2;</code>
          *
          * @return The bytes for question.
@@ -731,7 +768,7 @@ public final class UpdateGroupJoinQuestionRequest extends com.google.protobuf.Ge
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>optional string question = 2;</code>
          *
          * @param value The question to set.
@@ -751,7 +788,7 @@ public final class UpdateGroupJoinQuestionRequest extends com.google.protobuf.Ge
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>optional string question = 2;</code>
          *
          * @return This builder for chaining.
@@ -767,7 +804,7 @@ public final class UpdateGroupJoinQuestionRequest extends com.google.protobuf.Ge
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>optional string question = 2;</code>
          *
          * @param value The bytes for question to set.

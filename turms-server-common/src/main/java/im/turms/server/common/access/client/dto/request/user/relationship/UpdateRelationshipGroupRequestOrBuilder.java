@@ -25,7 +25,7 @@ public interface UpdateRelationshipGroupRequestOrBuilder extends
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>int32 group_index = 1;</code>
      *
      * @return The groupIndex.
@@ -36,7 +36,7 @@ public interface UpdateRelationshipGroupRequestOrBuilder extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>string new_name = 2;</code>
      *
      * @return The newName.
@@ -47,7 +47,7 @@ public interface UpdateRelationshipGroupRequestOrBuilder extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>string new_name = 2;</code>
      *
      * @return The bytes for newName.

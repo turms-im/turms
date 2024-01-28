@@ -1,9 +1,13 @@
-///
+//
 //  Generated code. Do not modify.
 //  source: model/user/user_friend_request.proto
 //
 // @dart = 2.12
-// ignore_for_file: annotate_overrides,camel_case_types,constant_identifier_names,directives_ordering,library_prefixes,non_constant_identifier_names,prefer_final_fields,return_of_invalid_type,unnecessary_const,unnecessary_import,unnecessary_this,unused_import,unused_shown_name
+
+// ignore_for_file: annotate_overrides, camel_case_types, comment_references
+// ignore_for_file: constant_identifier_names, library_prefixes
+// ignore_for_file: non_constant_identifier_names, prefer_final_fields
+// ignore_for_file: unnecessary_import, unnecessary_this, unused_import
 
 import 'dart:core' as $core;
 
@@ -13,62 +17,6 @@ import 'package:protobuf/protobuf.dart' as $pb;
 import '../../constant/request_status.pbenum.dart' as $0;
 
 class UserFriendRequest extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      const $core.bool.fromEnvironment('protobuf.omit_message_names')
-          ? ''
-          : 'UserFriendRequest',
-      package: const $pb.PackageName(
-          const $core.bool.fromEnvironment('protobuf.omit_message_names')
-              ? ''
-              : 'im.turms.proto'),
-      createEmptyInstance: create)
-    ..aInt64(
-        1,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'id')
-    ..aInt64(
-        2,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'creationDate')
-    ..aOS(
-        3,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'content')
-    ..e<$0.RequestStatus>(
-        4,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'requestStatus',
-        $pb.PbFieldType.OE,
-        defaultOrMaker: $0.RequestStatus.PENDING,
-        valueOf: $0.RequestStatus.valueOf,
-        enumValues: $0.RequestStatus.values)
-    ..aOS(
-        5,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'reason')
-    ..aInt64(
-        6,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'expirationDate')
-    ..aInt64(
-        7,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'requesterId')
-    ..aInt64(
-        8,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'recipientId')
-    ..hasRequiredFields = false;
-
-  UserFriendRequest._() : super();
   factory UserFriendRequest({
     $fixnum.Int64? id,
     $fixnum.Int64? creationDate,
@@ -79,39 +27,59 @@ class UserFriendRequest extends $pb.GeneratedMessage {
     $fixnum.Int64? requesterId,
     $fixnum.Int64? recipientId,
   }) {
-    final _result = create();
+    final $result = create();
     if (id != null) {
-      _result.id = id;
+      $result.id = id;
     }
     if (creationDate != null) {
-      _result.creationDate = creationDate;
+      $result.creationDate = creationDate;
     }
     if (content != null) {
-      _result.content = content;
+      $result.content = content;
     }
     if (requestStatus != null) {
-      _result.requestStatus = requestStatus;
+      $result.requestStatus = requestStatus;
     }
     if (reason != null) {
-      _result.reason = reason;
+      $result.reason = reason;
     }
     if (expirationDate != null) {
-      _result.expirationDate = expirationDate;
+      $result.expirationDate = expirationDate;
     }
     if (requesterId != null) {
-      _result.requesterId = requesterId;
+      $result.requesterId = requesterId;
     }
     if (recipientId != null) {
-      _result.recipientId = recipientId;
+      $result.recipientId = recipientId;
     }
-    return _result;
+    return $result;
   }
+  UserFriendRequest._() : super();
   factory UserFriendRequest.fromBuffer($core.List<$core.int> i,
           [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(i, r);
   factory UserFriendRequest.fromJson($core.String i,
           [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(i, r);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'UserFriendRequest',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'im.turms.proto'),
+      createEmptyInstance: create)
+    ..aInt64(1, _omitFieldNames ? '' : 'id')
+    ..aInt64(2, _omitFieldNames ? '' : 'creationDate')
+    ..aOS(3, _omitFieldNames ? '' : 'content')
+    ..e<$0.RequestStatus>(
+        4, _omitFieldNames ? '' : 'requestStatus', $pb.PbFieldType.OE,
+        defaultOrMaker: $0.RequestStatus.PENDING,
+        valueOf: $0.RequestStatus.valueOf,
+        enumValues: $0.RequestStatus.values)
+    ..aOS(5, _omitFieldNames ? '' : 'reason')
+    ..aInt64(6, _omitFieldNames ? '' : 'expirationDate')
+    ..aInt64(7, _omitFieldNames ? '' : 'requesterId')
+    ..aInt64(8, _omitFieldNames ? '' : 'recipientId')
+    ..hasRequiredFields = false;
+
   @$core.Deprecated('Using this can add significant overhead to your binary. '
       'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
       'Will be removed in next major version')
@@ -121,8 +89,10 @@ class UserFriendRequest extends $pb.GeneratedMessage {
       'Will be removed in next major version')
   UserFriendRequest copyWith(void Function(UserFriendRequest) updates) =>
       super.copyWith((message) => updates(message as UserFriendRequest))
-          as UserFriendRequest; // ignore: deprecated_member_use
+          as UserFriendRequest;
+
   $pb.BuilderInfo get info_ => _i;
+
   @$core.pragma('dart2js:noInline')
   static UserFriendRequest create() => UserFriendRequest._();
   UserFriendRequest createEmptyInstance() => create();
@@ -229,3 +199,7 @@ class UserFriendRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(8)
   void clearRecipientId() => clearField(8);
 }
+
+const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');
+const _omitMessageNames =
+    $core.bool.fromEnvironment('protobuf.omit_message_names');

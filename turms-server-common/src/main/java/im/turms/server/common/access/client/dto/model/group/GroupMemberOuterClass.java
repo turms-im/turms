@@ -74,14 +74,7 @@ public final class GroupMemberOuterClass {
                                 "JoinDate",
                                 "MuteEndDate",
                                 "UserStatus",
-                                "UsingDeviceTypes",
-                                "GroupId",
-                                "UserId",
-                                "Name",
-                                "Role",
-                                "JoinDate",
-                                "MuteEndDate",
-                                "UserStatus",});
+                                "UsingDeviceTypes",});
         im.turms.server.common.access.client.dto.constant.GroupMemberRoleOuterClass.getDescriptor();
         im.turms.server.common.access.client.dto.constant.UserStatusOuterClass.getDescriptor();
         im.turms.server.common.access.client.dto.constant.DeviceTypeOuterClass.getDescriptor();

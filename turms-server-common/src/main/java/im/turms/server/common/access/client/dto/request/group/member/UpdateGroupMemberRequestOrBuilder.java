@@ -25,7 +25,7 @@ public interface UpdateGroupMemberRequestOrBuilder extends
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>int64 group_id = 1;</code>
      *
      * @return The groupId.
@@ -43,7 +43,7 @@ public interface UpdateGroupMemberRequestOrBuilder extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>optional string name = 3;</code>
      *
      * @return Whether the name field is set.
@@ -54,7 +54,7 @@ public interface UpdateGroupMemberRequestOrBuilder extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>optional string name = 3;</code>
      *
      * @return The name.
@@ -65,7 +65,7 @@ public interface UpdateGroupMemberRequestOrBuilder extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>optional string name = 3;</code>
      *
      * @return The bytes for name.

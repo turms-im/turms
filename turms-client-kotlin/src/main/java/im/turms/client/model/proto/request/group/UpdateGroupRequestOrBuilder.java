@@ -25,7 +25,7 @@ public interface UpdateGroupRequestOrBuilder extends
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>int64 group_id = 1;</code>
      *
      * @return The groupId.
@@ -36,7 +36,7 @@ public interface UpdateGroupRequestOrBuilder extends
      * <pre>
      * Update options
      * </pre>
-     * 
+     *
      * <code>optional bool quit_after_transfer = 2;</code>
      *
      * @return Whether the quitAfterTransfer field is set.
@@ -47,7 +47,7 @@ public interface UpdateGroupRequestOrBuilder extends
      * <pre>
      * Update options
      * </pre>
-     * 
+     *
      * <code>optional bool quit_after_transfer = 2;</code>
      *
      * @return The quitAfterTransfer.
@@ -58,7 +58,7 @@ public interface UpdateGroupRequestOrBuilder extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>optional string name = 3;</code>
      *
      * @return Whether the name field is set.
@@ -69,7 +69,7 @@ public interface UpdateGroupRequestOrBuilder extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>optional string name = 3;</code>
      *
      * @return The name.
@@ -80,7 +80,7 @@ public interface UpdateGroupRequestOrBuilder extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>optional string name = 3;</code>
      *
      * @return The bytes for name.

@@ -55,8 +55,8 @@ extension UserRelationshipGroup: SwiftProtobuf.Message, SwiftProtobuf._MessageIm
             // allocates stack space for every case branch when no optimizations are
             // enabled. https://github.com/apple/swift-protobuf/issues/1034
             switch fieldNumber {
-            case 1: try try decoder.decodeSingularInt32Field(value: &index)
-            case 2: try try decoder.decodeSingularStringField(value: &name)
+            case 1: try decoder.decodeSingularInt32Field(value: &index)
+            case 2: try decoder.decodeSingularStringField(value: &name)
             default: break
             }
         }

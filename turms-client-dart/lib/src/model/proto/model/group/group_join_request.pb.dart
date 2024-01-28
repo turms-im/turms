@@ -1,9 +1,13 @@
-///
+//
 //  Generated code. Do not modify.
 //  source: model/group/group_join_request.proto
 //
 // @dart = 2.12
-// ignore_for_file: annotate_overrides,camel_case_types,constant_identifier_names,directives_ordering,library_prefixes,non_constant_identifier_names,prefer_final_fields,return_of_invalid_type,unnecessary_const,unnecessary_import,unnecessary_this,unused_import,unused_shown_name
+
+// ignore_for_file: annotate_overrides, camel_case_types, comment_references
+// ignore_for_file: constant_identifier_names, library_prefixes
+// ignore_for_file: non_constant_identifier_names, prefer_final_fields
+// ignore_for_file: unnecessary_import, unnecessary_this, unused_import
 
 import 'dart:core' as $core;
 
@@ -13,62 +17,6 @@ import 'package:protobuf/protobuf.dart' as $pb;
 import '../../constant/request_status.pbenum.dart' as $0;
 
 class GroupJoinRequest extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      const $core.bool.fromEnvironment('protobuf.omit_message_names')
-          ? ''
-          : 'GroupJoinRequest',
-      package: const $pb.PackageName(
-          const $core.bool.fromEnvironment('protobuf.omit_message_names')
-              ? ''
-              : 'im.turms.proto'),
-      createEmptyInstance: create)
-    ..aInt64(
-        1,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'id')
-    ..aInt64(
-        2,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'creationDate')
-    ..aOS(
-        3,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'content')
-    ..e<$0.RequestStatus>(
-        4,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'status',
-        $pb.PbFieldType.OE,
-        defaultOrMaker: $0.RequestStatus.PENDING,
-        valueOf: $0.RequestStatus.valueOf,
-        enumValues: $0.RequestStatus.values)
-    ..aInt64(
-        5,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'expirationDate')
-    ..aInt64(
-        6,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'groupId')
-    ..aInt64(
-        7,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'requesterId')
-    ..aInt64(
-        8,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'responderId')
-    ..hasRequiredFields = false;
-
-  GroupJoinRequest._() : super();
   factory GroupJoinRequest({
     $fixnum.Int64? id,
     $fixnum.Int64? creationDate,
@@ -79,39 +27,59 @@ class GroupJoinRequest extends $pb.GeneratedMessage {
     $fixnum.Int64? requesterId,
     $fixnum.Int64? responderId,
   }) {
-    final _result = create();
+    final $result = create();
     if (id != null) {
-      _result.id = id;
+      $result.id = id;
     }
     if (creationDate != null) {
-      _result.creationDate = creationDate;
+      $result.creationDate = creationDate;
     }
     if (content != null) {
-      _result.content = content;
+      $result.content = content;
     }
     if (status != null) {
-      _result.status = status;
+      $result.status = status;
     }
     if (expirationDate != null) {
-      _result.expirationDate = expirationDate;
+      $result.expirationDate = expirationDate;
     }
     if (groupId != null) {
-      _result.groupId = groupId;
+      $result.groupId = groupId;
     }
     if (requesterId != null) {
-      _result.requesterId = requesterId;
+      $result.requesterId = requesterId;
     }
     if (responderId != null) {
-      _result.responderId = responderId;
+      $result.responderId = responderId;
     }
-    return _result;
+    return $result;
   }
+  GroupJoinRequest._() : super();
   factory GroupJoinRequest.fromBuffer($core.List<$core.int> i,
           [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(i, r);
   factory GroupJoinRequest.fromJson($core.String i,
           [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(i, r);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GroupJoinRequest',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'im.turms.proto'),
+      createEmptyInstance: create)
+    ..aInt64(1, _omitFieldNames ? '' : 'id')
+    ..aInt64(2, _omitFieldNames ? '' : 'creationDate')
+    ..aOS(3, _omitFieldNames ? '' : 'content')
+    ..e<$0.RequestStatus>(
+        4, _omitFieldNames ? '' : 'status', $pb.PbFieldType.OE,
+        defaultOrMaker: $0.RequestStatus.PENDING,
+        valueOf: $0.RequestStatus.valueOf,
+        enumValues: $0.RequestStatus.values)
+    ..aInt64(5, _omitFieldNames ? '' : 'expirationDate')
+    ..aInt64(6, _omitFieldNames ? '' : 'groupId')
+    ..aInt64(7, _omitFieldNames ? '' : 'requesterId')
+    ..aInt64(8, _omitFieldNames ? '' : 'responderId')
+    ..hasRequiredFields = false;
+
   @$core.Deprecated('Using this can add significant overhead to your binary. '
       'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
       'Will be removed in next major version')
@@ -121,8 +89,10 @@ class GroupJoinRequest extends $pb.GeneratedMessage {
       'Will be removed in next major version')
   GroupJoinRequest copyWith(void Function(GroupJoinRequest) updates) =>
       super.copyWith((message) => updates(message as GroupJoinRequest))
-          as GroupJoinRequest; // ignore: deprecated_member_use
+          as GroupJoinRequest;
+
   $pb.BuilderInfo get info_ => _i;
+
   @$core.pragma('dart2js:noInline')
   static GroupJoinRequest create() => GroupJoinRequest._();
   GroupJoinRequest createEmptyInstance() => create();
@@ -229,3 +199,7 @@ class GroupJoinRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(8)
   void clearResponderId() => clearField(8);
 }
+
+const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');
+const _omitMessageNames =
+    $core.bool.fromEnvironment('protobuf.omit_message_names');

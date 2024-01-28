@@ -39,11 +39,22 @@ public struct CreateRelationshipRequest {
     /// Clears the value of `groupIndex`. Subsequent reads from it will return its default value.
     public mutating func clearGroupIndex() { _groupIndex = nil }
 
+    public var name: String {
+        get { return _name ?? String() }
+        set { _name = newValue }
+    }
+
+    /// Returns true if `name` has been explicitly set.
+    public var hasName: Bool { return _name != nil }
+    /// Clears the value of `name`. Subsequent reads from it will return its default value.
+    public mutating func clearName() { _name = nil }
+
     public var unknownFields = SwiftProtobuf.UnknownStorage()
 
     public init() {}
 
     fileprivate var _groupIndex: Int32?
+    fileprivate var _name: String?
 }
 
 #if swift(>=5.5) && canImport(_Concurrency)
@@ -60,6 +71,7 @@ extension CreateRelationshipRequest: SwiftProtobuf.Message, SwiftProtobuf._Messa
         1: .standard(proto: "user_id"),
         2: .same(proto: "blocked"),
         3: .standard(proto: "group_index"),
+        4: .same(proto: "name"),
     ]
 
     public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -68,9 +80,10 @@ extension CreateRelationshipRequest: SwiftProtobuf.Message, SwiftProtobuf._Messa
             // allocates stack space for every case branch when no optimizations are
             // enabled. https://github.com/apple/swift-protobuf/issues/1034
             switch fieldNumber {
-            case 1: try try decoder.decodeSingularInt64Field(value: &userID)
-            case 2: try try decoder.decodeSingularBoolField(value: &blocked)
-            case 3: try try decoder.decodeSingularInt32Field(value: &_groupIndex)
+            case 1: try decoder.decodeSingularInt64Field(value: &userID)
+            case 2: try decoder.decodeSingularBoolField(value: &blocked)
+            case 3: try decoder.decodeSingularInt32Field(value: &_groupIndex)
+            case 4: try decoder.decodeSingularStringField(value: &_name)
             default: break
             }
         }
@@ -90,6 +103,9 @@ extension CreateRelationshipRequest: SwiftProtobuf.Message, SwiftProtobuf._Messa
         try { if let v = self._groupIndex {
             try visitor.visitSingularInt32Field(value: v, fieldNumber: 3)
         } }()
+        try { if let v = self._name {
+            try visitor.visitSingularStringField(value: v, fieldNumber: 4)
+        } }()
         try unknownFields.traverse(visitor: &visitor)
     }
 
@@ -97,6 +113,7 @@ extension CreateRelationshipRequest: SwiftProtobuf.Message, SwiftProtobuf._Messa
         if lhs.userID != rhs.userID { return false }
         if lhs.blocked != rhs.blocked { return false }
         if lhs._groupIndex != rhs._groupIndex { return false }
+        if lhs._name != rhs._name { return false }
         if lhs.unknownFields != rhs.unknownFields { return false }
         return true
     }

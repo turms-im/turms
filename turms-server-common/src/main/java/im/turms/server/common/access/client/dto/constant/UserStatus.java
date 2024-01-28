@@ -120,7 +120,11 @@ public enum UserStatus implements com.google.protobuf.ProtocolMessageEnum {
     }
 
     private static final com.google.protobuf.Internal.EnumLiteMap<UserStatus> internalValueMap =
-            number -> UserStatus.forNumber(number);
+            new com.google.protobuf.Internal.EnumLiteMap<>() {
+                public UserStatus findValueByNumber(int number) {
+                    return UserStatus.forNumber(number);
+                }
+            };
 
     public final com.google.protobuf.Descriptors.EnumValueDescriptor getValueDescriptor() {
         if (this == UNRECOGNIZED) {
@@ -157,7 +161,7 @@ public enum UserStatus implements com.google.protobuf.ProtocolMessageEnum {
 
     private final int value;
 
-    UserStatus(int value) {
+    private UserStatus(int value) {
         this.value = value;
     }
 

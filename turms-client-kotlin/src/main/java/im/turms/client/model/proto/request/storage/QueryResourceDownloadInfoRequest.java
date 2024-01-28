@@ -192,7 +192,7 @@ public final class QueryResourceDownloadInfoRequest extends
 
     private static final class ExtraDefaultEntryHolder {
         static final com.google.protobuf.MapEntryLite<java.lang.String, java.lang.String> defaultEntry =
-                com.google.protobuf.MapEntryLite.<java.lang.String, java.lang.String>newDefaultInstance(
+                com.google.protobuf.MapEntryLite.newDefaultInstance(
                         com.google.protobuf.WireFormat.FieldType.STRING,
                         "",
                         com.google.protobuf.WireFormat.FieldType.STRING,
@@ -259,9 +259,7 @@ public final class QueryResourceDownloadInfoRequest extends
             java.lang.String defaultValue) {
         java.lang.Class<?> keyClass = key.getClass();
         java.util.Map<java.lang.String, java.lang.String> map = internalGetExtra();
-        return map.containsKey(key)
-                ? map.get(key)
-                : defaultValue;
+        return map.getOrDefault(key, defaultValue);
     }
 
     /**
@@ -364,12 +362,12 @@ public final class QueryResourceDownloadInfoRequest extends
     }
 
     public static Builder newBuilder() {
-        return (Builder) DEFAULT_INSTANCE.createBuilder();
+        return DEFAULT_INSTANCE.createBuilder();
     }
 
     public static Builder newBuilder(
             im.turms.client.model.proto.request.storage.QueryResourceDownloadInfoRequest prototype) {
-        return (Builder) DEFAULT_INSTANCE.createBuilder(prototype);
+        return DEFAULT_INSTANCE.createBuilder(prototype);
     }
 
     /**
@@ -615,9 +613,7 @@ public final class QueryResourceDownloadInfoRequest extends
                 java.lang.String defaultValue) {
             java.lang.Class<?> keyClass = key.getClass();
             java.util.Map<java.lang.String, java.lang.String> map = instance.getExtraMap();
-            return map.containsKey(key)
-                    ? map.get(key)
-                    : defaultValue;
+            return map.getOrDefault(key, defaultValue);
         }
 
         /**

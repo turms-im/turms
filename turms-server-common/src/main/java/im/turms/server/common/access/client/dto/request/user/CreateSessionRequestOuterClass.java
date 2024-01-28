@@ -77,9 +77,6 @@ public final class CreateSessionRequestOuterClass {
                                 "UserStatus",
                                 "DeviceType",
                                 "DeviceDetails",
-                                "Location",
-                                "Password",
-                                "UserStatus",
                                 "Location",});
         internal_static_im_turms_proto_CreateSessionRequest_DeviceDetailsEntry_descriptor =
                 internal_static_im_turms_proto_CreateSessionRequest_descriptor.getNestedTypes()

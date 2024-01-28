@@ -58,8 +58,6 @@ public final class QueryRelationshipsRequestOuterClass {
                         new java.lang.String[]{"UserIds",
                                 "Blocked",
                                 "GroupIndexes",
-                                "LastUpdatedDate",
-                                "Blocked",
                                 "LastUpdatedDate",});
     }
 

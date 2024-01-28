@@ -1,71 +1,57 @@
-///
+//
 //  Generated code. Do not modify.
 //  source: request/user/update_user_location_request.proto
 //
 // @dart = 2.12
-// ignore_for_file: annotate_overrides,camel_case_types,constant_identifier_names,directives_ordering,library_prefixes,non_constant_identifier_names,prefer_final_fields,return_of_invalid_type,unnecessary_const,unnecessary_import,unnecessary_this,unused_import,unused_shown_name
+
+// ignore_for_file: annotate_overrides, camel_case_types, comment_references
+// ignore_for_file: constant_identifier_names, library_prefixes
+// ignore_for_file: non_constant_identifier_names, prefer_final_fields
+// ignore_for_file: unnecessary_import, unnecessary_this, unused_import
 
 import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
 class UpdateUserLocationRequest extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      const $core.bool.fromEnvironment('protobuf.omit_message_names')
-          ? ''
-          : 'UpdateUserLocationRequest',
-      package: const $pb.PackageName(
-          const $core.bool.fromEnvironment('protobuf.omit_message_names')
-              ? ''
-              : 'im.turms.proto'),
-      createEmptyInstance: create)
-    ..a<$core.double>(
-        1,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'latitude',
-        $pb.PbFieldType.OF)
-    ..a<$core.double>(
-        2,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'longitude',
-        $pb.PbFieldType.OF)
-    ..m<$core.String, $core.String>(
-        3,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'details',
-        entryClassName: 'UpdateUserLocationRequest.DetailsEntry',
-        keyFieldType: $pb.PbFieldType.OS,
-        valueFieldType: $pb.PbFieldType.OS,
-        packageName: const $pb.PackageName('im.turms.proto'))
-    ..hasRequiredFields = false;
-
-  UpdateUserLocationRequest._() : super();
   factory UpdateUserLocationRequest({
     $core.double? latitude,
     $core.double? longitude,
     $core.Map<$core.String, $core.String>? details,
   }) {
-    final _result = create();
+    final $result = create();
     if (latitude != null) {
-      _result.latitude = latitude;
+      $result.latitude = latitude;
     }
     if (longitude != null) {
-      _result.longitude = longitude;
+      $result.longitude = longitude;
     }
     if (details != null) {
-      _result.details.addAll(details);
+      $result.details.addAll(details);
     }
-    return _result;
+    return $result;
   }
+  UpdateUserLocationRequest._() : super();
   factory UpdateUserLocationRequest.fromBuffer($core.List<$core.int> i,
           [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(i, r);
   factory UpdateUserLocationRequest.fromJson($core.String i,
           [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(i, r);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'UpdateUserLocationRequest',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'im.turms.proto'),
+      createEmptyInstance: create)
+    ..a<$core.double>(1, _omitFieldNames ? '' : 'latitude', $pb.PbFieldType.OF)
+    ..a<$core.double>(2, _omitFieldNames ? '' : 'longitude', $pb.PbFieldType.OF)
+    ..m<$core.String, $core.String>(3, _omitFieldNames ? '' : 'details',
+        entryClassName: 'UpdateUserLocationRequest.DetailsEntry',
+        keyFieldType: $pb.PbFieldType.OS,
+        valueFieldType: $pb.PbFieldType.OS,
+        packageName: const $pb.PackageName('im.turms.proto'))
+    ..hasRequiredFields = false;
+
   @$core.Deprecated('Using this can add significant overhead to your binary. '
       'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
       'Will be removed in next major version')
@@ -77,8 +63,10 @@ class UpdateUserLocationRequest extends $pb.GeneratedMessage {
   UpdateUserLocationRequest copyWith(
           void Function(UpdateUserLocationRequest) updates) =>
       super.copyWith((message) => updates(message as UpdateUserLocationRequest))
-          as UpdateUserLocationRequest; // ignore: deprecated_member_use
+          as UpdateUserLocationRequest;
+
   $pb.BuilderInfo get info_ => _i;
+
   @$core.pragma('dart2js:noInline')
   static UpdateUserLocationRequest create() => UpdateUserLocationRequest._();
   UpdateUserLocationRequest createEmptyInstance() => create();
@@ -89,6 +77,7 @@ class UpdateUserLocationRequest extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<UpdateUserLocationRequest>(create);
   static UpdateUserLocationRequest? _defaultInstance;
 
+  /// Update
   @$pb.TagNumber(1)
   $core.double get latitude => $_getN(0);
   @$pb.TagNumber(1)
@@ -116,3 +105,7 @@ class UpdateUserLocationRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $core.Map<$core.String, $core.String> get details => $_getMap(2);
 }
+
+const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');
+const _omitMessageNames =
+    $core.bool.fromEnvironment('protobuf.omit_message_names');

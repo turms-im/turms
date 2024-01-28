@@ -25,7 +25,7 @@ public interface UpdateFriendRequestRequestOrBuilder extends
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>int64 request_id = 1;</code>
      *
      * @return The requestId.
@@ -36,7 +36,7 @@ public interface UpdateFriendRequestRequestOrBuilder extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.ResponseAction response_action = 2;</code>
      *
      * @return The enum numeric value on the wire for responseAction.
@@ -47,7 +47,7 @@ public interface UpdateFriendRequestRequestOrBuilder extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.ResponseAction response_action = 2;</code>
      *
      * @return The responseAction.

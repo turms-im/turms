@@ -68,14 +68,6 @@ public final class UpdateGroupRequestOuterClass {
                                 "MinScore",
                                 "TypeId",
                                 "MuteEndDate",
-                                "SuccessorId",
-                                "QuitAfterTransfer",
-                                "Name",
-                                "Intro",
-                                "Announcement",
-                                "MinScore",
-                                "TypeId",
-                                "MuteEndDate",
                                 "SuccessorId",});
     }
 

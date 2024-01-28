@@ -68,12 +68,6 @@ public final class QueryMessagesRequestOuterClass {
                                 "DeliveryDateEnd",
                                 "MaxCount",
                                 "WithTotal",
-                                "Descending",
-                                "AreGroupMessages",
-                                "AreSystemMessages",
-                                "DeliveryDateStart",
-                                "DeliveryDateEnd",
-                                "MaxCount",
                                 "Descending",});
     }
 

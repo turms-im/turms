@@ -61,11 +61,6 @@ public final class CreateGroupRequestOuterClass {
                                 "Announcement",
                                 "MinScore",
                                 "TypeId",
-                                "MuteEndDate",
-                                "Intro",
-                                "Announcement",
-                                "MinScore",
-                                "TypeId",
                                 "MuteEndDate",});
     }
 

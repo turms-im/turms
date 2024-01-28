@@ -53,7 +53,7 @@ public final class QueryUserProfilesRequestOuterClass {
         internal_static_im_turms_proto_QueryUserProfilesRequest_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
                         internal_static_im_turms_proto_QueryUserProfilesRequest_descriptor,
-                        new java.lang.String[]{"UserIds", "LastUpdatedDate", "LastUpdatedDate",});
+                        new java.lang.String[]{"UserIds", "LastUpdatedDate",});
     }
 
     // @@protoc_insertion_point(outer_class_scope)

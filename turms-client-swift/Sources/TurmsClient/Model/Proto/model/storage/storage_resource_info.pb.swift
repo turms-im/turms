@@ -104,12 +104,12 @@ extension StorageResourceInfo: SwiftProtobuf.Message, SwiftProtobuf._MessageImpl
             // allocates stack space for every case branch when no optimizations are
             // enabled. https://github.com/apple/swift-protobuf/issues/1034
             switch fieldNumber {
-            case 1: try try decoder.decodeSingularInt64Field(value: &_idNum)
-            case 2: try try decoder.decodeSingularStringField(value: &_idStr)
-            case 3: try try decoder.decodeSingularStringField(value: &_name)
-            case 4: try try decoder.decodeSingularStringField(value: &_mediaType)
-            case 5: try try decoder.decodeSingularInt64Field(value: &uploaderID)
-            case 6: try try decoder.decodeSingularInt64Field(value: &creationDate)
+            case 1: try decoder.decodeSingularInt64Field(value: &_idNum)
+            case 2: try decoder.decodeSingularStringField(value: &_idStr)
+            case 3: try decoder.decodeSingularStringField(value: &_name)
+            case 4: try decoder.decodeSingularStringField(value: &_mediaType)
+            case 5: try decoder.decodeSingularInt64Field(value: &uploaderID)
+            case 6: try decoder.decodeSingularInt64Field(value: &creationDate)
             default: break
             }
         }

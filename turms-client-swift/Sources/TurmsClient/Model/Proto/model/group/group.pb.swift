@@ -182,17 +182,17 @@ extension Group: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase
             // allocates stack space for every case branch when no optimizations are
             // enabled. https://github.com/apple/swift-protobuf/issues/1034
             switch fieldNumber {
-            case 1: try try decoder.decodeSingularInt64Field(value: &_id)
-            case 2: try try decoder.decodeSingularInt64Field(value: &_typeID)
-            case 3: try try decoder.decodeSingularInt64Field(value: &_creatorID)
-            case 4: try try decoder.decodeSingularInt64Field(value: &_ownerID)
-            case 5: try try decoder.decodeSingularStringField(value: &_name)
-            case 6: try try decoder.decodeSingularStringField(value: &_intro)
-            case 7: try try decoder.decodeSingularStringField(value: &_announcement)
-            case 8: try try decoder.decodeSingularInt64Field(value: &_creationDate)
-            case 9: try try decoder.decodeSingularInt64Field(value: &_lastUpdatedDate)
-            case 10: try try decoder.decodeSingularInt64Field(value: &_muteEndDate)
-            case 11: try try decoder.decodeSingularBoolField(value: &_active)
+            case 1: try decoder.decodeSingularInt64Field(value: &_id)
+            case 2: try decoder.decodeSingularInt64Field(value: &_typeID)
+            case 3: try decoder.decodeSingularInt64Field(value: &_creatorID)
+            case 4: try decoder.decodeSingularInt64Field(value: &_ownerID)
+            case 5: try decoder.decodeSingularStringField(value: &_name)
+            case 6: try decoder.decodeSingularStringField(value: &_intro)
+            case 7: try decoder.decodeSingularStringField(value: &_announcement)
+            case 8: try decoder.decodeSingularInt64Field(value: &_creationDate)
+            case 9: try decoder.decodeSingularInt64Field(value: &_lastUpdatedDate)
+            case 10: try decoder.decodeSingularInt64Field(value: &_muteEndDate)
+            case 11: try decoder.decodeSingularBoolField(value: &_active)
             default: break
             }
         }

@@ -75,6 +75,16 @@ public struct UserRelationship {
     /// Clears the value of `establishmentDate`. Subsequent reads from it will return its default value.
     public mutating func clearEstablishmentDate() { _establishmentDate = nil }
 
+    public var name: String {
+        get { return _name ?? String() }
+        set { _name = newValue }
+    }
+
+    /// Returns true if `name` has been explicitly set.
+    public var hasName: Bool { return _name != nil }
+    /// Clears the value of `name`. Subsequent reads from it will return its default value.
+    public mutating func clearName() { _name = nil }
+
     public var unknownFields = SwiftProtobuf.UnknownStorage()
 
     public init() {}
@@ -84,6 +94,7 @@ public struct UserRelationship {
     fileprivate var _blockDate: Int64?
     fileprivate var _groupIndex: Int64?
     fileprivate var _establishmentDate: Int64?
+    fileprivate var _name: String?
 }
 
 #if swift(>=5.5) && canImport(_Concurrency)
@@ -102,6 +113,7 @@ extension UserRelationship: SwiftProtobuf.Message, SwiftProtobuf._MessageImpleme
         3: .standard(proto: "block_date"),
         4: .standard(proto: "group_index"),
         5: .standard(proto: "establishment_date"),
+        6: .same(proto: "name"),
     ]
 
     public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -110,11 +122,12 @@ extension UserRelationship: SwiftProtobuf.Message, SwiftProtobuf._MessageImpleme
             // allocates stack space for every case branch when no optimizations are
             // enabled. https://github.com/apple/swift-protobuf/issues/1034
             switch fieldNumber {
-            case 1: try try decoder.decodeSingularInt64Field(value: &_ownerID)
-            case 2: try try decoder.decodeSingularInt64Field(value: &_relatedUserID)
-            case 3: try try decoder.decodeSingularInt64Field(value: &_blockDate)
-            case 4: try try decoder.decodeSingularInt64Field(value: &_groupIndex)
-            case 5: try try decoder.decodeSingularInt64Field(value: &_establishmentDate)
+            case 1: try decoder.decodeSingularInt64Field(value: &_ownerID)
+            case 2: try decoder.decodeSingularInt64Field(value: &_relatedUserID)
+            case 3: try decoder.decodeSingularInt64Field(value: &_blockDate)
+            case 4: try decoder.decodeSingularInt64Field(value: &_groupIndex)
+            case 5: try decoder.decodeSingularInt64Field(value: &_establishmentDate)
+            case 6: try decoder.decodeSingularStringField(value: &_name)
             default: break
             }
         }
@@ -140,6 +153,9 @@ extension UserRelationship: SwiftProtobuf.Message, SwiftProtobuf._MessageImpleme
         try { if let v = self._establishmentDate {
             try visitor.visitSingularInt64Field(value: v, fieldNumber: 5)
         } }()
+        try { if let v = self._name {
+            try visitor.visitSingularStringField(value: v, fieldNumber: 6)
+        } }()
         try unknownFields.traverse(visitor: &visitor)
     }
 
@@ -149,6 +165,7 @@ extension UserRelationship: SwiftProtobuf.Message, SwiftProtobuf._MessageImpleme
         if lhs._blockDate != rhs._blockDate { return false }
         if lhs._groupIndex != rhs._groupIndex { return false }
         if lhs._establishmentDate != rhs._establishmentDate { return false }
+        if lhs._name != rhs._name { return false }
         if lhs.unknownFields != rhs.unknownFields { return false }
         return true
     }

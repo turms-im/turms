@@ -45,13 +45,14 @@ public final class UserLocation extends com.google.protobuf.GeneratedMessageV3 i
 
     @SuppressWarnings({"rawtypes"})
     @java.lang.Override
-    protected com.google.protobuf.MapField internalGetMapField(int number) {
-        return switch (number) {
-            case 4 -> internalGetDetails();
-            default -> throw new RuntimeException(
-                    "Invalid map field number: "
-                            + number);
-        };
+    protected com.google.protobuf.MapFieldReflectionAccessor internalGetMapFieldReflection(
+            int number) {
+        if (number == 4) {
+            return internalGetDetails();
+        }
+        throw new RuntimeException(
+                "Invalid map field number: "
+                        + number);
     }
 
     @java.lang.Override
@@ -116,7 +117,7 @@ public final class UserLocation extends com.google.protobuf.GeneratedMessageV3 i
 
     private static final class DetailsDefaultEntryHolder {
         static final com.google.protobuf.MapEntry<java.lang.String, java.lang.String> defaultEntry =
-                com.google.protobuf.MapEntry.<java.lang.String, java.lang.String>newDefaultInstance(
+                com.google.protobuf.MapEntry.newDefaultInstance(
                         im.turms.server.common.access.client.dto.model.user.UserLocationOuterClass.internal_static_im_turms_proto_UserLocation_DetailsEntry_descriptor,
                         com.google.protobuf.WireFormat.FieldType.STRING,
                         "",
@@ -144,7 +145,7 @@ public final class UserLocation extends com.google.protobuf.GeneratedMessageV3 i
      * <pre>
      * e.g. street address, city, state, country, etc.
      * </pre>
-     * 
+     *
      * <code>map&lt;string, string&gt; details = 4;</code>
      */
     @java.lang.Override
@@ -169,7 +170,7 @@ public final class UserLocation extends com.google.protobuf.GeneratedMessageV3 i
      * <pre>
      * e.g. street address, city, state, country, etc.
      * </pre>
-     * 
+     *
      * <code>map&lt;string, string&gt; details = 4;</code>
      */
     @java.lang.Override
@@ -181,7 +182,7 @@ public final class UserLocation extends com.google.protobuf.GeneratedMessageV3 i
      * <pre>
      * e.g. street address, city, state, country, etc.
      * </pre>
-     * 
+     *
      * <code>map&lt;string, string&gt; details = 4;</code>
      */
     @java.lang.Override
@@ -201,7 +202,7 @@ public final class UserLocation extends com.google.protobuf.GeneratedMessageV3 i
      * <pre>
      * e.g. street address, city, state, country, etc.
      * </pre>
-     * 
+     *
      * <code>map&lt;string, string&gt; details = 4;</code>
      */
     @java.lang.Override
@@ -454,23 +455,25 @@ public final class UserLocation extends com.google.protobuf.GeneratedMessageV3 i
         }
 
         @SuppressWarnings({"rawtypes"})
-        protected com.google.protobuf.MapField internalGetMapField(int number) {
-            return switch (number) {
-                case 4 -> internalGetDetails();
-                default -> throw new RuntimeException(
-                        "Invalid map field number: "
-                                + number);
-            };
+        protected com.google.protobuf.MapFieldReflectionAccessor internalGetMapFieldReflection(
+                int number) {
+            if (number == 4) {
+                return internalGetDetails();
+            }
+            throw new RuntimeException(
+                    "Invalid map field number: "
+                            + number);
         }
 
         @SuppressWarnings({"rawtypes"})
-        protected com.google.protobuf.MapField internalGetMutableMapField(int number) {
-            return switch (number) {
-                case 4 -> internalGetMutableDetails();
-                default -> throw new RuntimeException(
-                        "Invalid map field number: "
-                                + number);
-            };
+        protected com.google.protobuf.MapFieldReflectionAccessor internalGetMutableMapFieldReflection(
+                int number) {
+            if (number == 4) {
+                return internalGetMutableDetails();
+            }
+            throw new RuntimeException(
+                    "Invalid map field number: "
+                            + number);
         }
 
         @java.lang.Override
@@ -554,6 +557,43 @@ public final class UserLocation extends com.google.protobuf.GeneratedMessageV3 i
                 result.details_.makeImmutable();
             }
             result.bitField0_ |= to_bitField0_;
+        }
+
+        @java.lang.Override
+        public Builder clone() {
+            return super.clone();
+        }
+
+        @java.lang.Override
+        public Builder setField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value) {
+            return super.setField(field, value);
+        }
+
+        @java.lang.Override
+        public Builder clearField(com.google.protobuf.Descriptors.FieldDescriptor field) {
+            return super.clearField(field);
+        }
+
+        @java.lang.Override
+        public Builder clearOneof(com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+            return super.clearOneof(oneof);
+        }
+
+        @java.lang.Override
+        public Builder setRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                int index,
+                java.lang.Object value) {
+            return super.setRepeatedField(field, index, value);
+        }
+
+        @java.lang.Override
+        public Builder addRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value) {
+            return super.addRepeatedField(field, value);
         }
 
         @java.lang.Override
@@ -803,7 +843,7 @@ public final class UserLocation extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * e.g. street address, city, state, country, etc.
          * </pre>
-         * 
+         *
          * <code>map&lt;string, string&gt; details = 4;</code>
          */
         @java.lang.Override
@@ -828,7 +868,7 @@ public final class UserLocation extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * e.g. street address, city, state, country, etc.
          * </pre>
-         * 
+         *
          * <code>map&lt;string, string&gt; details = 4;</code>
          */
         @java.lang.Override
@@ -840,7 +880,7 @@ public final class UserLocation extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * e.g. street address, city, state, country, etc.
          * </pre>
-         * 
+         *
          * <code>map&lt;string, string&gt; details = 4;</code>
          */
         @java.lang.Override
@@ -860,7 +900,7 @@ public final class UserLocation extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * e.g. street address, city, state, country, etc.
          * </pre>
-         * 
+         *
          * <code>map&lt;string, string&gt; details = 4;</code>
          */
         @java.lang.Override
@@ -886,7 +926,7 @@ public final class UserLocation extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * e.g. street address, city, state, country, etc.
          * </pre>
-         * 
+         *
          * <code>map&lt;string, string&gt; details = 4;</code>
          */
         public Builder removeDetails(java.lang.String key) {
@@ -911,7 +951,7 @@ public final class UserLocation extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * e.g. street address, city, state, country, etc.
          * </pre>
-         * 
+         *
          * <code>map&lt;string, string&gt; details = 4;</code>
          */
         public Builder putDetails(java.lang.String key, java.lang.String value) {
@@ -931,7 +971,7 @@ public final class UserLocation extends com.google.protobuf.GeneratedMessageV3 i
          * <pre>
          * e.g. street address, city, state, country, etc.
          * </pre>
-         * 
+         *
          * <code>map&lt;string, string&gt; details = 4;</code>
          */
         public Builder putAllDetails(java.util.Map<java.lang.String, java.lang.String> values) {

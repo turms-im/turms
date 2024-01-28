@@ -55,7 +55,7 @@ public final class QueryGroupsRequest extends com.google.protobuf.GeneratedMessa
     private int bitField0_;
     public static final int GROUP_IDS_FIELD_NUMBER = 1;
     @SuppressWarnings("serial")
-    private com.google.protobuf.Internal.LongList groupIds_;
+    private com.google.protobuf.Internal.LongList groupIds_ = emptyLongList();
 
     /**
      * <code>repeated int64 group_ids = 1;</code>
@@ -384,7 +384,6 @@ public final class QueryGroupsRequest extends com.google.protobuf.GeneratedMessa
             im.turms.server.common.access.client.dto.request.group.QueryGroupsRequest result =
                     new im.turms.server.common.access.client.dto.request.group.QueryGroupsRequest(
                             this);
-            buildPartialRepeatedFields(result);
             if (bitField0_ != 0) {
                 buildPartial0(result);
             }
@@ -392,24 +391,56 @@ public final class QueryGroupsRequest extends com.google.protobuf.GeneratedMessa
             return result;
         }
 
-        private void buildPartialRepeatedFields(
-                im.turms.server.common.access.client.dto.request.group.QueryGroupsRequest result) {
-            if (((bitField0_ & 0x00000001) != 0)) {
-                groupIds_.makeImmutable();
-                bitField0_ &= ~0x00000001;
-            }
-            result.groupIds_ = groupIds_;
-        }
-
         private void buildPartial0(
                 im.turms.server.common.access.client.dto.request.group.QueryGroupsRequest result) {
             int from_bitField0_ = bitField0_;
+            if (((from_bitField0_ & 0x00000001) != 0)) {
+                groupIds_.makeImmutable();
+                result.groupIds_ = groupIds_;
+            }
             int to_bitField0_ = 0;
             if (((from_bitField0_ & 0x00000002) != 0)) {
                 result.lastUpdatedDate_ = lastUpdatedDate_;
                 to_bitField0_ |= 0x00000001;
             }
             result.bitField0_ |= to_bitField0_;
+        }
+
+        @java.lang.Override
+        public Builder clone() {
+            return super.clone();
+        }
+
+        @java.lang.Override
+        public Builder setField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value) {
+            return super.setField(field, value);
+        }
+
+        @java.lang.Override
+        public Builder clearField(com.google.protobuf.Descriptors.FieldDescriptor field) {
+            return super.clearField(field);
+        }
+
+        @java.lang.Override
+        public Builder clearOneof(com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+            return super.clearOneof(oneof);
+        }
+
+        @java.lang.Override
+        public Builder setRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                int index,
+                java.lang.Object value) {
+            return super.setRepeatedField(field, index, value);
+        }
+
+        @java.lang.Override
+        public Builder addRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value) {
+            return super.addRepeatedField(field, value);
         }
 
         @java.lang.Override
@@ -432,7 +463,8 @@ public final class QueryGroupsRequest extends com.google.protobuf.GeneratedMessa
             if (!other.groupIds_.isEmpty()) {
                 if (groupIds_.isEmpty()) {
                     groupIds_ = other.groupIds_;
-                    bitField0_ &= ~0x00000001;
+                    groupIds_.makeImmutable();
+                    bitField0_ |= 0x00000001;
                 } else {
                     ensureGroupIdsIsMutable();
                     groupIds_.addAll(other.groupIds_);
@@ -504,10 +536,10 @@ public final class QueryGroupsRequest extends com.google.protobuf.GeneratedMessa
         private com.google.protobuf.Internal.LongList groupIds_ = emptyLongList();
 
         private void ensureGroupIdsIsMutable() {
-            if ((bitField0_ & 0x00000001) == 0) {
-                groupIds_ = mutableCopy(groupIds_);
-                bitField0_ |= 0x00000001;
+            if (!groupIds_.isModifiable()) {
+                groupIds_ = makeMutableCopy(groupIds_);
             }
+            bitField0_ |= 0x00000001;
         }
 
         /**
@@ -516,9 +548,8 @@ public final class QueryGroupsRequest extends com.google.protobuf.GeneratedMessa
          * @return A list containing the groupIds.
          */
         public java.util.List<java.lang.Long> getGroupIdsList() {
-            return ((bitField0_ & 0x00000001) != 0)
-                    ? java.util.Collections.unmodifiableList(groupIds_)
-                    : groupIds_;
+            groupIds_.makeImmutable();
+            return groupIds_;
         }
 
         /**
@@ -551,6 +582,7 @@ public final class QueryGroupsRequest extends com.google.protobuf.GeneratedMessa
 
             ensureGroupIdsIsMutable();
             groupIds_.setLong(index, value);
+            bitField0_ |= 0x00000001;
             onChanged();
             return this;
         }
@@ -565,6 +597,7 @@ public final class QueryGroupsRequest extends com.google.protobuf.GeneratedMessa
 
             ensureGroupIdsIsMutable();
             groupIds_.addLong(value);
+            bitField0_ |= 0x00000001;
             onChanged();
             return this;
         }
@@ -578,6 +611,7 @@ public final class QueryGroupsRequest extends com.google.protobuf.GeneratedMessa
         public Builder addAllGroupIds(java.lang.Iterable<? extends java.lang.Long> values) {
             ensureGroupIdsIsMutable();
             com.google.protobuf.AbstractMessageLite.Builder.addAll(values, groupIds_);
+            bitField0_ |= 0x00000001;
             onChanged();
             return this;
         }

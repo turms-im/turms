@@ -58,7 +58,7 @@ public final class UpdateFriendRequestRequestOuterClass {
         internal_static_im_turms_proto_UpdateFriendRequestRequest_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
                         internal_static_im_turms_proto_UpdateFriendRequestRequest_descriptor,
-                        new java.lang.String[]{"RequestId", "ResponseAction", "Reason", "Reason",});
+                        new java.lang.String[]{"RequestId", "ResponseAction", "Reason",});
         im.turms.server.common.access.client.dto.constant.ResponseActionOuterClass.getDescriptor();
     }
 

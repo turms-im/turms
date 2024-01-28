@@ -38,7 +38,7 @@ public final class QueryMessagesRequest extends
      * <pre>
      * Filter
      * </pre>
-     * 
+     *
      * <code>repeated int64 ids = 1;</code>
      *
      * @return A list containing the ids.
@@ -52,7 +52,7 @@ public final class QueryMessagesRequest extends
      * <pre>
      * Filter
      * </pre>
-     * 
+     *
      * <code>repeated int64 ids = 1;</code>
      *
      * @return The count of ids.
@@ -66,7 +66,7 @@ public final class QueryMessagesRequest extends
      * <pre>
      * Filter
      * </pre>
-     * 
+     *
      * <code>repeated int64 ids = 1;</code>
      *
      * @param index The index of the element to return.
@@ -90,7 +90,7 @@ public final class QueryMessagesRequest extends
      * <pre>
      * Filter
      * </pre>
-     * 
+     *
      * <code>repeated int64 ids = 1;</code>
      *
      * @param index The index to set the value at.
@@ -105,7 +105,7 @@ public final class QueryMessagesRequest extends
      * <pre>
      * Filter
      * </pre>
-     * 
+     *
      * <code>repeated int64 ids = 1;</code>
      *
      * @param value The ids to add.
@@ -119,7 +119,7 @@ public final class QueryMessagesRequest extends
      * <pre>
      * Filter
      * </pre>
-     * 
+     *
      * <code>repeated int64 ids = 1;</code>
      *
      * @param values The ids to add.
@@ -133,7 +133,7 @@ public final class QueryMessagesRequest extends
      * <pre>
      * Filter
      * </pre>
-     * 
+     *
      * <code>repeated int64 ids = 1;</code>
      */
     private void clearIds() {
@@ -392,7 +392,7 @@ public final class QueryMessagesRequest extends
      * <pre>
      * Option
      * </pre>
-     * 
+     *
      * <code>optional int32 max_count = 7;</code>
      *
      * @return Whether the maxCount field is set.
@@ -406,7 +406,7 @@ public final class QueryMessagesRequest extends
      * <pre>
      * Option
      * </pre>
-     * 
+     *
      * <code>optional int32 max_count = 7;</code>
      *
      * @return The maxCount.
@@ -420,7 +420,7 @@ public final class QueryMessagesRequest extends
      * <pre>
      * Option
      * </pre>
-     * 
+     *
      * <code>optional int32 max_count = 7;</code>
      *
      * @param value The maxCount to set.
@@ -434,7 +434,7 @@ public final class QueryMessagesRequest extends
      * <pre>
      * Option
      * </pre>
-     * 
+     *
      * <code>optional int32 max_count = 7;</code>
      */
     private void clearMaxCount() {
@@ -449,7 +449,7 @@ public final class QueryMessagesRequest extends
      * <pre>
      * Command
      * </pre>
-     * 
+     *
      * <code>bool with_total = 8;</code>
      *
      * @return The withTotal.
@@ -463,7 +463,7 @@ public final class QueryMessagesRequest extends
      * <pre>
      * Command
      * </pre>
-     * 
+     *
      * <code>bool with_total = 8;</code>
      *
      * @param value The withTotal to set.
@@ -477,7 +477,7 @@ public final class QueryMessagesRequest extends
      * <pre>
      * Command
      * </pre>
-     * 
+     *
      * <code>bool with_total = 8;</code>
      */
     private void clearWithTotal() {
@@ -493,7 +493,7 @@ public final class QueryMessagesRequest extends
      * Option
      * TODO: reorder
      * </pre>
-     * 
+     *
      * <code>optional bool descending = 9;</code>
      *
      * @return Whether the descending field is set.
@@ -508,7 +508,7 @@ public final class QueryMessagesRequest extends
      * Option
      * TODO: reorder
      * </pre>
-     * 
+     *
      * <code>optional bool descending = 9;</code>
      *
      * @return The descending.
@@ -523,7 +523,7 @@ public final class QueryMessagesRequest extends
      * Option
      * TODO: reorder
      * </pre>
-     * 
+     *
      * <code>optional bool descending = 9;</code>
      *
      * @param value The descending to set.
@@ -538,7 +538,7 @@ public final class QueryMessagesRequest extends
      * Option
      * TODO: reorder
      * </pre>
-     * 
+     *
      * <code>optional bool descending = 9;</code>
      */
     private void clearDescending() {
@@ -625,12 +625,12 @@ public final class QueryMessagesRequest extends
     }
 
     public static Builder newBuilder() {
-        return (Builder) DEFAULT_INSTANCE.createBuilder();
+        return DEFAULT_INSTANCE.createBuilder();
     }
 
     public static Builder newBuilder(
             im.turms.client.model.proto.request.message.QueryMessagesRequest prototype) {
-        return (Builder) DEFAULT_INSTANCE.createBuilder(prototype);
+        return DEFAULT_INSTANCE.createBuilder(prototype);
     }
 
     /**
@@ -651,7 +651,7 @@ public final class QueryMessagesRequest extends
          * <pre>
          * Filter
          * </pre>
-         * 
+         *
          * <code>repeated int64 ids = 1;</code>
          *
          * @return A list containing the ids.
@@ -665,7 +665,7 @@ public final class QueryMessagesRequest extends
          * <pre>
          * Filter
          * </pre>
-         * 
+         *
          * <code>repeated int64 ids = 1;</code>
          *
          * @return The count of ids.
@@ -679,7 +679,7 @@ public final class QueryMessagesRequest extends
          * <pre>
          * Filter
          * </pre>
-         * 
+         *
          * <code>repeated int64 ids = 1;</code>
          *
          * @param index The index of the element to return.
@@ -694,7 +694,7 @@ public final class QueryMessagesRequest extends
          * <pre>
          * Filter
          * </pre>
-         * 
+         *
          * <code>repeated int64 ids = 1;</code>
          *
          * @param value The ids to set.
@@ -710,7 +710,7 @@ public final class QueryMessagesRequest extends
          * <pre>
          * Filter
          * </pre>
-         * 
+         *
          * <code>repeated int64 ids = 1;</code>
          *
          * @param value The ids to add.
@@ -726,7 +726,7 @@ public final class QueryMessagesRequest extends
          * <pre>
          * Filter
          * </pre>
-         * 
+         *
          * <code>repeated int64 ids = 1;</code>
          *
          * @param values The ids to add.
@@ -742,7 +742,7 @@ public final class QueryMessagesRequest extends
          * <pre>
          * Filter
          * </pre>
-         * 
+         *
          * <code>repeated int64 ids = 1;</code>
          *
          * @return This builder for chaining.
@@ -1007,7 +1007,7 @@ public final class QueryMessagesRequest extends
          * <pre>
          * Option
          * </pre>
-         * 
+         *
          * <code>optional int32 max_count = 7;</code>
          *
          * @return Whether the maxCount field is set.
@@ -1021,7 +1021,7 @@ public final class QueryMessagesRequest extends
          * <pre>
          * Option
          * </pre>
-         * 
+         *
          * <code>optional int32 max_count = 7;</code>
          *
          * @return The maxCount.
@@ -1035,7 +1035,7 @@ public final class QueryMessagesRequest extends
          * <pre>
          * Option
          * </pre>
-         * 
+         *
          * <code>optional int32 max_count = 7;</code>
          *
          * @param value The maxCount to set.
@@ -1051,7 +1051,7 @@ public final class QueryMessagesRequest extends
          * <pre>
          * Option
          * </pre>
-         * 
+         *
          * <code>optional int32 max_count = 7;</code>
          *
          * @return This builder for chaining.
@@ -1066,7 +1066,7 @@ public final class QueryMessagesRequest extends
          * <pre>
          * Command
          * </pre>
-         * 
+         *
          * <code>bool with_total = 8;</code>
          *
          * @return The withTotal.
@@ -1080,7 +1080,7 @@ public final class QueryMessagesRequest extends
          * <pre>
          * Command
          * </pre>
-         * 
+         *
          * <code>bool with_total = 8;</code>
          *
          * @param value The withTotal to set.
@@ -1096,7 +1096,7 @@ public final class QueryMessagesRequest extends
          * <pre>
          * Command
          * </pre>
-         * 
+         *
          * <code>bool with_total = 8;</code>
          *
          * @return This builder for chaining.
@@ -1112,7 +1112,7 @@ public final class QueryMessagesRequest extends
          * Option
          * TODO: reorder
          * </pre>
-         * 
+         *
          * <code>optional bool descending = 9;</code>
          *
          * @return Whether the descending field is set.
@@ -1127,7 +1127,7 @@ public final class QueryMessagesRequest extends
          * Option
          * TODO: reorder
          * </pre>
-         * 
+         *
          * <code>optional bool descending = 9;</code>
          *
          * @return The descending.
@@ -1142,7 +1142,7 @@ public final class QueryMessagesRequest extends
          * Option
          * TODO: reorder
          * </pre>
-         * 
+         *
          * <code>optional bool descending = 9;</code>
          *
          * @param value The descending to set.
@@ -1159,7 +1159,7 @@ public final class QueryMessagesRequest extends
          * Option
          * TODO: reorder
          * </pre>
-         * 
+         *
          * <code>optional bool descending = 9;</code>
          *
          * @return This builder for chaining.

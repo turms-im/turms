@@ -60,7 +60,7 @@ public final class UpdateConversationRequest extends com.google.protobuf.Generat
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>optional int64 target_id = 1;</code>
      *
      * @return Whether the targetId field is set.
@@ -74,7 +74,7 @@ public final class UpdateConversationRequest extends com.google.protobuf.Generat
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>optional int64 target_id = 1;</code>
      *
      * @return The targetId.
@@ -114,7 +114,7 @@ public final class UpdateConversationRequest extends com.google.protobuf.Generat
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>int64 read_date = 3;</code>
      *
      * @return The readDate.
@@ -425,6 +425,43 @@ public final class UpdateConversationRequest extends com.google.protobuf.Generat
         }
 
         @java.lang.Override
+        public Builder clone() {
+            return super.clone();
+        }
+
+        @java.lang.Override
+        public Builder setField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value) {
+            return super.setField(field, value);
+        }
+
+        @java.lang.Override
+        public Builder clearField(com.google.protobuf.Descriptors.FieldDescriptor field) {
+            return super.clearField(field);
+        }
+
+        @java.lang.Override
+        public Builder clearOneof(com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+            return super.clearOneof(oneof);
+        }
+
+        @java.lang.Override
+        public Builder setRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                int index,
+                java.lang.Object value) {
+            return super.setRepeatedField(field, index, value);
+        }
+
+        @java.lang.Override
+        public Builder addRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value) {
+            return super.addRepeatedField(field, value);
+        }
+
+        @java.lang.Override
         public Builder mergeFrom(com.google.protobuf.Message other) {
             if (other instanceof im.turms.server.common.access.client.dto.request.conversation.UpdateConversationRequest) {
                 return mergeFrom(
@@ -509,7 +546,7 @@ public final class UpdateConversationRequest extends com.google.protobuf.Generat
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>optional int64 target_id = 1;</code>
          *
          * @return Whether the targetId field is set.
@@ -523,7 +560,7 @@ public final class UpdateConversationRequest extends com.google.protobuf.Generat
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>optional int64 target_id = 1;</code>
          *
          * @return The targetId.
@@ -537,7 +574,7 @@ public final class UpdateConversationRequest extends com.google.protobuf.Generat
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>optional int64 target_id = 1;</code>
          *
          * @param value The targetId to set.
@@ -555,7 +592,7 @@ public final class UpdateConversationRequest extends com.google.protobuf.Generat
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>optional int64 target_id = 1;</code>
          *
          * @return This builder for chaining.
@@ -621,7 +658,7 @@ public final class UpdateConversationRequest extends com.google.protobuf.Generat
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>int64 read_date = 3;</code>
          *
          * @return The readDate.
@@ -635,7 +672,7 @@ public final class UpdateConversationRequest extends com.google.protobuf.Generat
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>int64 read_date = 3;</code>
          *
          * @param value The readDate to set.
@@ -653,7 +690,7 @@ public final class UpdateConversationRequest extends com.google.protobuf.Generat
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>int64 read_date = 3;</code>
          *
          * @return This builder for chaining.

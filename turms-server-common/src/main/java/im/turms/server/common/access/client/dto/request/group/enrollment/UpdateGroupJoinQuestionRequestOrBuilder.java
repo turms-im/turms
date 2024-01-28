@@ -25,7 +25,7 @@ public interface UpdateGroupJoinQuestionRequestOrBuilder extends
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>int64 question_id = 1;</code>
      *
      * @return The questionId.
@@ -36,7 +36,7 @@ public interface UpdateGroupJoinQuestionRequestOrBuilder extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>optional string question = 2;</code>
      *
      * @return Whether the question field is set.
@@ -47,7 +47,7 @@ public interface UpdateGroupJoinQuestionRequestOrBuilder extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>optional string question = 2;</code>
      *
      * @return The question.
@@ -58,7 +58,7 @@ public interface UpdateGroupJoinQuestionRequestOrBuilder extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>optional string question = 2;</code>
      *
      * @return The bytes for question.

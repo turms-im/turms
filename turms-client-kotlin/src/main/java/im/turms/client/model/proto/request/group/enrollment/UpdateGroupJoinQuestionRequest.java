@@ -38,7 +38,7 @@ public final class UpdateGroupJoinQuestionRequest extends
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>int64 question_id = 1;</code>
      *
      * @return The questionId.
@@ -52,7 +52,7 @@ public final class UpdateGroupJoinQuestionRequest extends
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>int64 question_id = 1;</code>
      *
      * @param value The questionId to set.
@@ -66,7 +66,7 @@ public final class UpdateGroupJoinQuestionRequest extends
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>int64 question_id = 1;</code>
      */
     private void clearQuestionId() {
@@ -81,7 +81,7 @@ public final class UpdateGroupJoinQuestionRequest extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>optional string question = 2;</code>
      *
      * @return Whether the question field is set.
@@ -95,7 +95,7 @@ public final class UpdateGroupJoinQuestionRequest extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>optional string question = 2;</code>
      *
      * @return The question.
@@ -109,7 +109,7 @@ public final class UpdateGroupJoinQuestionRequest extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>optional string question = 2;</code>
      *
      * @return The bytes for question.
@@ -123,7 +123,7 @@ public final class UpdateGroupJoinQuestionRequest extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>optional string question = 2;</code>
      *
      * @param value The question to set.
@@ -138,7 +138,7 @@ public final class UpdateGroupJoinQuestionRequest extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>optional string question = 2;</code>
      */
     private void clearQuestion() {
@@ -150,7 +150,7 @@ public final class UpdateGroupJoinQuestionRequest extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>optional string question = 2;</code>
      *
      * @param value The bytes for question to set.
@@ -384,12 +384,12 @@ public final class UpdateGroupJoinQuestionRequest extends
     }
 
     public static Builder newBuilder() {
-        return (Builder) DEFAULT_INSTANCE.createBuilder();
+        return DEFAULT_INSTANCE.createBuilder();
     }
 
     public static Builder newBuilder(
             im.turms.client.model.proto.request.group.enrollment.UpdateGroupJoinQuestionRequest prototype) {
-        return (Builder) DEFAULT_INSTANCE.createBuilder(prototype);
+        return DEFAULT_INSTANCE.createBuilder(prototype);
     }
 
     /**
@@ -410,7 +410,7 @@ public final class UpdateGroupJoinQuestionRequest extends
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>int64 question_id = 1;</code>
          *
          * @return The questionId.
@@ -424,7 +424,7 @@ public final class UpdateGroupJoinQuestionRequest extends
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>int64 question_id = 1;</code>
          *
          * @param value The questionId to set.
@@ -440,7 +440,7 @@ public final class UpdateGroupJoinQuestionRequest extends
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>int64 question_id = 1;</code>
          *
          * @return This builder for chaining.
@@ -455,7 +455,7 @@ public final class UpdateGroupJoinQuestionRequest extends
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>optional string question = 2;</code>
          *
          * @return Whether the question field is set.
@@ -469,7 +469,7 @@ public final class UpdateGroupJoinQuestionRequest extends
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>optional string question = 2;</code>
          *
          * @return The question.
@@ -483,7 +483,7 @@ public final class UpdateGroupJoinQuestionRequest extends
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>optional string question = 2;</code>
          *
          * @return The bytes for question.
@@ -497,7 +497,7 @@ public final class UpdateGroupJoinQuestionRequest extends
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>optional string question = 2;</code>
          *
          * @param value The question to set.
@@ -513,7 +513,7 @@ public final class UpdateGroupJoinQuestionRequest extends
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>optional string question = 2;</code>
          *
          * @return This builder for chaining.
@@ -528,7 +528,7 @@ public final class UpdateGroupJoinQuestionRequest extends
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>optional string question = 2;</code>
          *
          * @param value The bytes for question to set.

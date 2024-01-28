@@ -113,12 +113,12 @@ extension CreateGroupRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImple
             // allocates stack space for every case branch when no optimizations are
             // enabled. https://github.com/apple/swift-protobuf/issues/1034
             switch fieldNumber {
-            case 1: try try decoder.decodeSingularStringField(value: &name)
-            case 2: try try decoder.decodeSingularStringField(value: &_intro)
-            case 3: try try decoder.decodeSingularStringField(value: &_announcement)
-            case 4: try try decoder.decodeSingularInt32Field(value: &_minScore)
-            case 5: try try decoder.decodeSingularInt64Field(value: &_typeID)
-            case 6: try try decoder.decodeSingularInt64Field(value: &_muteEndDate)
+            case 1: try decoder.decodeSingularStringField(value: &name)
+            case 2: try decoder.decodeSingularStringField(value: &_intro)
+            case 3: try decoder.decodeSingularStringField(value: &_announcement)
+            case 4: try decoder.decodeSingularInt32Field(value: &_minScore)
+            case 5: try decoder.decodeSingularInt64Field(value: &_typeID)
+            case 6: try decoder.decodeSingularInt64Field(value: &_muteEndDate)
             default: break
             }
         }

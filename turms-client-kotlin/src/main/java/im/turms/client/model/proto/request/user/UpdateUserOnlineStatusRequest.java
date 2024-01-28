@@ -32,19 +32,23 @@ public final class UpdateUserOnlineStatusRequest extends
     public static final int DEVICE_TYPES_FIELD_NUMBER = 1;
     private com.google.protobuf.Internal.IntList deviceTypes_;
     private static final com.google.protobuf.Internal.ListAdapter.Converter<java.lang.Integer, im.turms.client.model.proto.constant.DeviceType> deviceTypes_converter_ =
-            from -> {
-                im.turms.client.model.proto.constant.DeviceType result =
-                        im.turms.client.model.proto.constant.DeviceType.forNumber(from);
-                return result == null
-                        ? im.turms.client.model.proto.constant.DeviceType.UNRECOGNIZED
-                        : result;
+            new com.google.protobuf.Internal.ListAdapter.Converter<java.lang.Integer, im.turms.client.model.proto.constant.DeviceType>() {
+                @java.lang.Override
+                public im.turms.client.model.proto.constant.DeviceType convert(
+                        java.lang.Integer from) {
+                    im.turms.client.model.proto.constant.DeviceType result =
+                            im.turms.client.model.proto.constant.DeviceType.forNumber(from);
+                    return result == null
+                            ? im.turms.client.model.proto.constant.DeviceType.UNRECOGNIZED
+                            : result;
+                }
             };
 
     /**
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>repeated .im.turms.proto.DeviceType device_types = 1;</code>
      *
      * @return A list containing the deviceTypes.
@@ -58,7 +62,7 @@ public final class UpdateUserOnlineStatusRequest extends
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>repeated .im.turms.proto.DeviceType device_types = 1;</code>
      *
      * @return The count of deviceTypes.
@@ -72,7 +76,7 @@ public final class UpdateUserOnlineStatusRequest extends
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>repeated .im.turms.proto.DeviceType device_types = 1;</code>
      *
      * @param index The index of the element to return.
@@ -92,7 +96,7 @@ public final class UpdateUserOnlineStatusRequest extends
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>repeated .im.turms.proto.DeviceType device_types = 1;</code>
      *
      * @return A list containing the enum numeric values on the wire for deviceTypes.
@@ -106,7 +110,7 @@ public final class UpdateUserOnlineStatusRequest extends
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>repeated .im.turms.proto.DeviceType device_types = 1;</code>
      *
      * @param index The index of the value to return.
@@ -130,7 +134,7 @@ public final class UpdateUserOnlineStatusRequest extends
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>repeated .im.turms.proto.DeviceType device_types = 1;</code>
      *
      * @param index The index to set the value at.
@@ -146,7 +150,7 @@ public final class UpdateUserOnlineStatusRequest extends
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>repeated .im.turms.proto.DeviceType device_types = 1;</code>
      *
      * @param value The deviceTypes to add.
@@ -161,7 +165,7 @@ public final class UpdateUserOnlineStatusRequest extends
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>repeated .im.turms.proto.DeviceType device_types = 1;</code>
      *
      * @param values The deviceTypes to add.
@@ -178,7 +182,7 @@ public final class UpdateUserOnlineStatusRequest extends
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>repeated .im.turms.proto.DeviceType device_types = 1;</code>
      */
     private void clearDeviceTypes() {
@@ -189,7 +193,7 @@ public final class UpdateUserOnlineStatusRequest extends
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>repeated .im.turms.proto.DeviceType device_types = 1;</code>
      *
      * @param value The enum numeric value on the wire for deviceTypes to set.
@@ -203,7 +207,7 @@ public final class UpdateUserOnlineStatusRequest extends
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>repeated .im.turms.proto.DeviceType device_types = 1;</code>
      *
      * @param value The enum numeric value on the wire for deviceTypes to add.
@@ -217,7 +221,7 @@ public final class UpdateUserOnlineStatusRequest extends
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>repeated .im.turms.proto.DeviceType device_types = 1;</code>
      *
      * @param values The enum numeric values on the wire for deviceTypes to add.
@@ -236,7 +240,7 @@ public final class UpdateUserOnlineStatusRequest extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.UserStatus user_status = 2;</code>
      *
      * @return The enum numeric value on the wire for userStatus.
@@ -250,7 +254,7 @@ public final class UpdateUserOnlineStatusRequest extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.UserStatus user_status = 2;</code>
      *
      * @return The userStatus.
@@ -268,7 +272,7 @@ public final class UpdateUserOnlineStatusRequest extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.UserStatus user_status = 2;</code>
      *
      * @param value The enum numeric value on the wire for userStatus to set.
@@ -281,7 +285,7 @@ public final class UpdateUserOnlineStatusRequest extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.UserStatus user_status = 2;</code>
      *
      * @param value The userStatus to set.
@@ -295,7 +299,7 @@ public final class UpdateUserOnlineStatusRequest extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.UserStatus user_status = 2;</code>
      */
     private void clearUserStatus() {
@@ -382,12 +386,12 @@ public final class UpdateUserOnlineStatusRequest extends
     }
 
     public static Builder newBuilder() {
-        return (Builder) DEFAULT_INSTANCE.createBuilder();
+        return DEFAULT_INSTANCE.createBuilder();
     }
 
     public static Builder newBuilder(
             im.turms.client.model.proto.request.user.UpdateUserOnlineStatusRequest prototype) {
-        return (Builder) DEFAULT_INSTANCE.createBuilder(prototype);
+        return DEFAULT_INSTANCE.createBuilder(prototype);
     }
 
     /**
@@ -408,7 +412,7 @@ public final class UpdateUserOnlineStatusRequest extends
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>repeated .im.turms.proto.DeviceType device_types = 1;</code>
          *
          * @return A list containing the deviceTypes.
@@ -422,7 +426,7 @@ public final class UpdateUserOnlineStatusRequest extends
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>repeated .im.turms.proto.DeviceType device_types = 1;</code>
          *
          * @return The count of deviceTypes.
@@ -436,7 +440,7 @@ public final class UpdateUserOnlineStatusRequest extends
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>repeated .im.turms.proto.DeviceType device_types = 1;</code>
          *
          * @param index The index of the element to return.
@@ -451,7 +455,7 @@ public final class UpdateUserOnlineStatusRequest extends
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>repeated .im.turms.proto.DeviceType device_types = 1;</code>
          *
          * @param index The index to set the value at.
@@ -470,7 +474,7 @@ public final class UpdateUserOnlineStatusRequest extends
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>repeated .im.turms.proto.DeviceType device_types = 1;</code>
          *
          * @param value The deviceTypes to add.
@@ -486,7 +490,7 @@ public final class UpdateUserOnlineStatusRequest extends
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>repeated .im.turms.proto.DeviceType device_types = 1;</code>
          *
          * @param values The deviceTypes to add.
@@ -503,7 +507,7 @@ public final class UpdateUserOnlineStatusRequest extends
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>repeated .im.turms.proto.DeviceType device_types = 1;</code>
          *
          * @return This builder for chaining.
@@ -518,7 +522,7 @@ public final class UpdateUserOnlineStatusRequest extends
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>repeated .im.turms.proto.DeviceType device_types = 1;</code>
          *
          * @return A list containing the enum numeric values on the wire for deviceTypes.
@@ -532,7 +536,7 @@ public final class UpdateUserOnlineStatusRequest extends
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>repeated .im.turms.proto.DeviceType device_types = 1;</code>
          *
          * @param index The index of the value to return.
@@ -547,7 +551,7 @@ public final class UpdateUserOnlineStatusRequest extends
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>repeated .im.turms.proto.DeviceType device_types = 1;</code>
          *
          * @param index The index to set the value at.
@@ -564,7 +568,7 @@ public final class UpdateUserOnlineStatusRequest extends
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>repeated .im.turms.proto.DeviceType device_types = 1;</code>
          *
          * @param value The enum numeric value on the wire for deviceTypes to add.
@@ -580,7 +584,7 @@ public final class UpdateUserOnlineStatusRequest extends
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>repeated .im.turms.proto.DeviceType device_types = 1;</code>
          *
          * @param values The enum numeric values on the wire for deviceTypes to add.
@@ -596,7 +600,7 @@ public final class UpdateUserOnlineStatusRequest extends
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.UserStatus user_status = 2;</code>
          *
          * @return The enum numeric value on the wire for userStatus.
@@ -610,7 +614,7 @@ public final class UpdateUserOnlineStatusRequest extends
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.UserStatus user_status = 2;</code>
          *
          * @param value The userStatus to set.
@@ -626,7 +630,7 @@ public final class UpdateUserOnlineStatusRequest extends
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.UserStatus user_status = 2;</code>
          *
          * @return The userStatus.
@@ -640,7 +644,7 @@ public final class UpdateUserOnlineStatusRequest extends
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.UserStatus user_status = 2;</code>
          *
          * @param value The enum numeric value on the wire for userStatus to set.
@@ -656,7 +660,7 @@ public final class UpdateUserOnlineStatusRequest extends
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.UserStatus user_status = 2;</code>
          *
          * @return This builder for chaining.

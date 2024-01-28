@@ -116,13 +116,13 @@ extension QueryNearbyUsersRequest: SwiftProtobuf.Message, SwiftProtobuf._Message
             // allocates stack space for every case branch when no optimizations are
             // enabled. https://github.com/apple/swift-protobuf/issues/1034
             switch fieldNumber {
-            case 1: try try decoder.decodeSingularFloatField(value: &latitude)
-            case 2: try try decoder.decodeSingularFloatField(value: &longitude)
-            case 3: try try decoder.decodeSingularInt32Field(value: &_maxCount)
-            case 4: try try decoder.decodeSingularInt32Field(value: &_maxDistance)
-            case 5: try try decoder.decodeSingularBoolField(value: &_withCoordinates)
-            case 6: try try decoder.decodeSingularBoolField(value: &_withDistance)
-            case 7: try try decoder.decodeSingularBoolField(value: &_withUserInfo)
+            case 1: try decoder.decodeSingularFloatField(value: &latitude)
+            case 2: try decoder.decodeSingularFloatField(value: &longitude)
+            case 3: try decoder.decodeSingularInt32Field(value: &_maxCount)
+            case 4: try decoder.decodeSingularInt32Field(value: &_maxDistance)
+            case 5: try decoder.decodeSingularBoolField(value: &_withCoordinates)
+            case 6: try decoder.decodeSingularBoolField(value: &_withDistance)
+            case 7: try decoder.decodeSingularBoolField(value: &_withUserInfo)
             default: break
             }
         }

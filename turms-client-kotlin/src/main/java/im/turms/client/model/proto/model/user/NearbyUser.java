@@ -35,7 +35,7 @@ public final class NearbyUser
      * <pre>
      * session info
      * </pre>
-     * 
+     *
      * <code>int64 user_id = 1;</code>
      *
      * @return The userId.
@@ -49,7 +49,7 @@ public final class NearbyUser
      * <pre>
      * session info
      * </pre>
-     * 
+     *
      * <code>int64 user_id = 1;</code>
      *
      * @param value The userId to set.
@@ -63,7 +63,7 @@ public final class NearbyUser
      * <pre>
      * session info
      * </pre>
-     * 
+     *
      * <code>int64 user_id = 1;</code>
      */
     private void clearUserId() {
@@ -143,7 +143,7 @@ public final class NearbyUser
      * <pre>
      * user info
      * </pre>
-     * 
+     *
      * <code>optional .im.turms.proto.UserInfo info = 3;</code>
      */
     @java.lang.Override
@@ -155,7 +155,7 @@ public final class NearbyUser
      * <pre>
      * user info
      * </pre>
-     * 
+     *
      * <code>optional .im.turms.proto.UserInfo info = 3;</code>
      */
     @java.lang.Override
@@ -169,7 +169,7 @@ public final class NearbyUser
      * <pre>
      * user info
      * </pre>
-     * 
+     *
      * <code>optional .im.turms.proto.UserInfo info = 3;</code>
      */
     private void setInfo(im.turms.client.model.proto.model.user.UserInfo value) {
@@ -182,7 +182,7 @@ public final class NearbyUser
      * <pre>
      * user info
      * </pre>
-     * 
+     *
      * <code>optional .im.turms.proto.UserInfo info = 3;</code>
      */
     @java.lang.SuppressWarnings({"ReferenceEquality"})
@@ -203,7 +203,7 @@ public final class NearbyUser
      * <pre>
      * user info
      * </pre>
-     * 
+     *
      * <code>optional .im.turms.proto.UserInfo info = 3;</code>
      */
     private void clearInfo() {
@@ -218,7 +218,7 @@ public final class NearbyUser
      * <pre>
      * geo info
      * </pre>
-     * 
+     *
      * <code>optional int32 distance = 4;</code>
      *
      * @return Whether the distance field is set.
@@ -232,7 +232,7 @@ public final class NearbyUser
      * <pre>
      * geo info
      * </pre>
-     * 
+     *
      * <code>optional int32 distance = 4;</code>
      *
      * @return The distance.
@@ -246,7 +246,7 @@ public final class NearbyUser
      * <pre>
      * geo info
      * </pre>
-     * 
+     *
      * <code>optional int32 distance = 4;</code>
      *
      * @param value The distance to set.
@@ -260,7 +260,7 @@ public final class NearbyUser
      * <pre>
      * geo info
      * </pre>
-     * 
+     *
      * <code>optional int32 distance = 4;</code>
      */
     private void clearDistance() {
@@ -403,11 +403,11 @@ public final class NearbyUser
     }
 
     public static Builder newBuilder() {
-        return (Builder) DEFAULT_INSTANCE.createBuilder();
+        return DEFAULT_INSTANCE.createBuilder();
     }
 
     public static Builder newBuilder(im.turms.client.model.proto.model.user.NearbyUser prototype) {
-        return (Builder) DEFAULT_INSTANCE.createBuilder(prototype);
+        return DEFAULT_INSTANCE.createBuilder(prototype);
     }
 
     /**
@@ -427,7 +427,7 @@ public final class NearbyUser
          * <pre>
          * session info
          * </pre>
-         * 
+         *
          * <code>int64 user_id = 1;</code>
          *
          * @return The userId.
@@ -441,7 +441,7 @@ public final class NearbyUser
          * <pre>
          * session info
          * </pre>
-         * 
+         *
          * <code>int64 user_id = 1;</code>
          *
          * @param value The userId to set.
@@ -457,7 +457,7 @@ public final class NearbyUser
          * <pre>
          * session info
          * </pre>
-         * 
+         *
          * <code>int64 user_id = 1;</code>
          *
          * @return This builder for chaining.
@@ -537,7 +537,7 @@ public final class NearbyUser
          * <pre>
          * user info
          * </pre>
-         * 
+         *
          * <code>optional .im.turms.proto.UserInfo info = 3;</code>
          */
         @java.lang.Override
@@ -549,7 +549,7 @@ public final class NearbyUser
          * <pre>
          * user info
          * </pre>
-         * 
+         *
          * <code>optional .im.turms.proto.UserInfo info = 3;</code>
          */
         @java.lang.Override
@@ -561,7 +561,7 @@ public final class NearbyUser
          * <pre>
          * user info
          * </pre>
-         * 
+         *
          * <code>optional .im.turms.proto.UserInfo info = 3;</code>
          */
         public Builder setInfo(im.turms.client.model.proto.model.user.UserInfo value) {
@@ -574,7 +574,7 @@ public final class NearbyUser
          * <pre>
          * user info
          * </pre>
-         * 
+         *
          * <code>optional .im.turms.proto.UserInfo info = 3;</code>
          */
         public Builder setInfo(
@@ -588,7 +588,7 @@ public final class NearbyUser
          * <pre>
          * user info
          * </pre>
-         * 
+         *
          * <code>optional .im.turms.proto.UserInfo info = 3;</code>
          */
         public Builder mergeInfo(im.turms.client.model.proto.model.user.UserInfo value) {
@@ -601,7 +601,7 @@ public final class NearbyUser
          * <pre>
          * user info
          * </pre>
-         * 
+         *
          * <code>optional .im.turms.proto.UserInfo info = 3;</code>
          */
         public Builder clearInfo() {
@@ -614,7 +614,7 @@ public final class NearbyUser
          * <pre>
          * geo info
          * </pre>
-         * 
+         *
          * <code>optional int32 distance = 4;</code>
          *
          * @return Whether the distance field is set.
@@ -628,7 +628,7 @@ public final class NearbyUser
          * <pre>
          * geo info
          * </pre>
-         * 
+         *
          * <code>optional int32 distance = 4;</code>
          *
          * @return The distance.
@@ -642,7 +642,7 @@ public final class NearbyUser
          * <pre>
          * geo info
          * </pre>
-         * 
+         *
          * <code>optional int32 distance = 4;</code>
          *
          * @param value The distance to set.
@@ -658,7 +658,7 @@ public final class NearbyUser
          * <pre>
          * geo info
          * </pre>
-         * 
+         *
          * <code>optional int32 distance = 4;</code>
          *
          * @return This builder for chaining.

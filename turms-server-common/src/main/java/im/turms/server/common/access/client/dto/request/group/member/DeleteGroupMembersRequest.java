@@ -69,7 +69,7 @@ public final class DeleteGroupMembersRequest extends com.google.protobuf.Generat
 
     public static final int MEMBER_IDS_FIELD_NUMBER = 2;
     @SuppressWarnings("serial")
-    private com.google.protobuf.Internal.LongList memberIds_;
+    private com.google.protobuf.Internal.LongList memberIds_ = emptyLongList();
 
     /**
      * <code>repeated int64 member_ids = 2;</code>
@@ -452,7 +452,6 @@ public final class DeleteGroupMembersRequest extends com.google.protobuf.Generat
             im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequest result =
                     new im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequest(
                             this);
-            buildPartialRepeatedFields(result);
             if (bitField0_ != 0) {
                 buildPartial0(result);
             }
@@ -460,20 +459,15 @@ public final class DeleteGroupMembersRequest extends com.google.protobuf.Generat
             return result;
         }
 
-        private void buildPartialRepeatedFields(
-                im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequest result) {
-            if (((bitField0_ & 0x00000002) != 0)) {
-                memberIds_.makeImmutable();
-                bitField0_ &= ~0x00000002;
-            }
-            result.memberIds_ = memberIds_;
-        }
-
         private void buildPartial0(
                 im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequest result) {
             int from_bitField0_ = bitField0_;
             if (((from_bitField0_ & 0x00000001) != 0)) {
                 result.groupId_ = groupId_;
+            }
+            if (((from_bitField0_ & 0x00000002) != 0)) {
+                memberIds_.makeImmutable();
+                result.memberIds_ = memberIds_;
             }
             int to_bitField0_ = 0;
             if (((from_bitField0_ & 0x00000004) != 0)) {
@@ -485,6 +479,43 @@ public final class DeleteGroupMembersRequest extends com.google.protobuf.Generat
                 to_bitField0_ |= 0x00000002;
             }
             result.bitField0_ |= to_bitField0_;
+        }
+
+        @java.lang.Override
+        public Builder clone() {
+            return super.clone();
+        }
+
+        @java.lang.Override
+        public Builder setField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value) {
+            return super.setField(field, value);
+        }
+
+        @java.lang.Override
+        public Builder clearField(com.google.protobuf.Descriptors.FieldDescriptor field) {
+            return super.clearField(field);
+        }
+
+        @java.lang.Override
+        public Builder clearOneof(com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+            return super.clearOneof(oneof);
+        }
+
+        @java.lang.Override
+        public Builder setRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                int index,
+                java.lang.Object value) {
+            return super.setRepeatedField(field, index, value);
+        }
+
+        @java.lang.Override
+        public Builder addRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value) {
+            return super.addRepeatedField(field, value);
         }
 
         @java.lang.Override
@@ -510,7 +541,8 @@ public final class DeleteGroupMembersRequest extends com.google.protobuf.Generat
             if (!other.memberIds_.isEmpty()) {
                 if (memberIds_.isEmpty()) {
                     memberIds_ = other.memberIds_;
-                    bitField0_ &= ~0x00000002;
+                    memberIds_.makeImmutable();
+                    bitField0_ |= 0x00000002;
                 } else {
                     ensureMemberIdsIsMutable();
                     memberIds_.addAll(other.memberIds_);
@@ -631,10 +663,10 @@ public final class DeleteGroupMembersRequest extends com.google.protobuf.Generat
         private com.google.protobuf.Internal.LongList memberIds_ = emptyLongList();
 
         private void ensureMemberIdsIsMutable() {
-            if ((bitField0_ & 0x00000002) == 0) {
-                memberIds_ = mutableCopy(memberIds_);
-                bitField0_ |= 0x00000002;
+            if (!memberIds_.isModifiable()) {
+                memberIds_ = makeMutableCopy(memberIds_);
             }
+            bitField0_ |= 0x00000002;
         }
 
         /**
@@ -643,9 +675,8 @@ public final class DeleteGroupMembersRequest extends com.google.protobuf.Generat
          * @return A list containing the memberIds.
          */
         public java.util.List<java.lang.Long> getMemberIdsList() {
-            return ((bitField0_ & 0x00000002) != 0)
-                    ? java.util.Collections.unmodifiableList(memberIds_)
-                    : memberIds_;
+            memberIds_.makeImmutable();
+            return memberIds_;
         }
 
         /**
@@ -678,6 +709,7 @@ public final class DeleteGroupMembersRequest extends com.google.protobuf.Generat
 
             ensureMemberIdsIsMutable();
             memberIds_.setLong(index, value);
+            bitField0_ |= 0x00000002;
             onChanged();
             return this;
         }
@@ -692,6 +724,7 @@ public final class DeleteGroupMembersRequest extends com.google.protobuf.Generat
 
             ensureMemberIdsIsMutable();
             memberIds_.addLong(value);
+            bitField0_ |= 0x00000002;
             onChanged();
             return this;
         }
@@ -705,6 +738,7 @@ public final class DeleteGroupMembersRequest extends com.google.protobuf.Generat
         public Builder addAllMemberIds(java.lang.Iterable<? extends java.lang.Long> values) {
             ensureMemberIdsIsMutable();
             com.google.protobuf.AbstractMessageLite.Builder.addAll(values, memberIds_);
+            bitField0_ |= 0x00000002;
             onChanged();
             return this;
         }

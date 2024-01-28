@@ -56,13 +56,13 @@ public final class QueryConversationsRequest extends com.google.protobuf.Generat
 
     public static final int TARGET_IDS_FIELD_NUMBER = 1;
     @SuppressWarnings("serial")
-    private com.google.protobuf.Internal.LongList targetIds_;
+    private com.google.protobuf.Internal.LongList targetIds_ = emptyLongList();
 
     /**
      * <pre>
      * Private conversations
      * </pre>
-     * 
+     *
      * <code>repeated int64 target_ids = 1;</code>
      *
      * @return A list containing the targetIds.
@@ -76,7 +76,7 @@ public final class QueryConversationsRequest extends com.google.protobuf.Generat
      * <pre>
      * Private conversations
      * </pre>
-     * 
+     *
      * <code>repeated int64 target_ids = 1;</code>
      *
      * @return The count of targetIds.
@@ -89,7 +89,7 @@ public final class QueryConversationsRequest extends com.google.protobuf.Generat
      * <pre>
      * Private conversations
      * </pre>
-     * 
+     *
      * <code>repeated int64 target_ids = 1;</code>
      *
      * @param index The index of the element to return.
@@ -103,13 +103,13 @@ public final class QueryConversationsRequest extends com.google.protobuf.Generat
 
     public static final int GROUP_IDS_FIELD_NUMBER = 2;
     @SuppressWarnings("serial")
-    private com.google.protobuf.Internal.LongList groupIds_;
+    private com.google.protobuf.Internal.LongList groupIds_ = emptyLongList();
 
     /**
      * <pre>
      * Group conversations
      * </pre>
-     * 
+     *
      * <code>repeated int64 group_ids = 2;</code>
      *
      * @return A list containing the groupIds.
@@ -123,7 +123,7 @@ public final class QueryConversationsRequest extends com.google.protobuf.Generat
      * <pre>
      * Group conversations
      * </pre>
-     * 
+     *
      * <code>repeated int64 group_ids = 2;</code>
      *
      * @return The count of groupIds.
@@ -136,7 +136,7 @@ public final class QueryConversationsRequest extends com.google.protobuf.Generat
      * <pre>
      * Group conversations
      * </pre>
-     * 
+     *
      * <code>repeated int64 group_ids = 2;</code>
      *
      * @param index The index of the element to return.
@@ -430,7 +430,6 @@ public final class QueryConversationsRequest extends com.google.protobuf.Generat
             im.turms.server.common.access.client.dto.request.conversation.QueryConversationsRequest result =
                     new im.turms.server.common.access.client.dto.request.conversation.QueryConversationsRequest(
                             this);
-            buildPartialRepeatedFields(result);
             if (bitField0_ != 0) {
                 buildPartial0(result);
             }
@@ -438,23 +437,54 @@ public final class QueryConversationsRequest extends com.google.protobuf.Generat
             return result;
         }
 
-        private void buildPartialRepeatedFields(
-                im.turms.server.common.access.client.dto.request.conversation.QueryConversationsRequest result) {
-            if (((bitField0_ & 0x00000001) != 0)) {
-                targetIds_.makeImmutable();
-                bitField0_ &= ~0x00000001;
-            }
-            result.targetIds_ = targetIds_;
-            if (((bitField0_ & 0x00000002) != 0)) {
-                groupIds_.makeImmutable();
-                bitField0_ &= ~0x00000002;
-            }
-            result.groupIds_ = groupIds_;
-        }
-
         private void buildPartial0(
                 im.turms.server.common.access.client.dto.request.conversation.QueryConversationsRequest result) {
             int from_bitField0_ = bitField0_;
+            if (((from_bitField0_ & 0x00000001) != 0)) {
+                targetIds_.makeImmutable();
+                result.targetIds_ = targetIds_;
+            }
+            if (((from_bitField0_ & 0x00000002) != 0)) {
+                groupIds_.makeImmutable();
+                result.groupIds_ = groupIds_;
+            }
+        }
+
+        @java.lang.Override
+        public Builder clone() {
+            return super.clone();
+        }
+
+        @java.lang.Override
+        public Builder setField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value) {
+            return super.setField(field, value);
+        }
+
+        @java.lang.Override
+        public Builder clearField(com.google.protobuf.Descriptors.FieldDescriptor field) {
+            return super.clearField(field);
+        }
+
+        @java.lang.Override
+        public Builder clearOneof(com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+            return super.clearOneof(oneof);
+        }
+
+        @java.lang.Override
+        public Builder setRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                int index,
+                java.lang.Object value) {
+            return super.setRepeatedField(field, index, value);
+        }
+
+        @java.lang.Override
+        public Builder addRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value) {
+            return super.addRepeatedField(field, value);
         }
 
         @java.lang.Override
@@ -477,7 +507,8 @@ public final class QueryConversationsRequest extends com.google.protobuf.Generat
             if (!other.targetIds_.isEmpty()) {
                 if (targetIds_.isEmpty()) {
                     targetIds_ = other.targetIds_;
-                    bitField0_ &= ~0x00000001;
+                    targetIds_.makeImmutable();
+                    bitField0_ |= 0x00000001;
                 } else {
                     ensureTargetIdsIsMutable();
                     targetIds_.addAll(other.targetIds_);
@@ -487,7 +518,8 @@ public final class QueryConversationsRequest extends com.google.protobuf.Generat
             if (!other.groupIds_.isEmpty()) {
                 if (groupIds_.isEmpty()) {
                     groupIds_ = other.groupIds_;
-                    bitField0_ &= ~0x00000002;
+                    groupIds_.makeImmutable();
+                    bitField0_ |= 0x00000002;
                 } else {
                     ensureGroupIdsIsMutable();
                     groupIds_.addAll(other.groupIds_);
@@ -566,32 +598,31 @@ public final class QueryConversationsRequest extends com.google.protobuf.Generat
         private com.google.protobuf.Internal.LongList targetIds_ = emptyLongList();
 
         private void ensureTargetIdsIsMutable() {
-            if ((bitField0_ & 0x00000001) == 0) {
-                targetIds_ = mutableCopy(targetIds_);
-                bitField0_ |= 0x00000001;
+            if (!targetIds_.isModifiable()) {
+                targetIds_ = makeMutableCopy(targetIds_);
             }
+            bitField0_ |= 0x00000001;
         }
 
         /**
          * <pre>
          * Private conversations
          * </pre>
-         * 
+         *
          * <code>repeated int64 target_ids = 1;</code>
          *
          * @return A list containing the targetIds.
          */
         public java.util.List<java.lang.Long> getTargetIdsList() {
-            return ((bitField0_ & 0x00000001) != 0)
-                    ? java.util.Collections.unmodifiableList(targetIds_)
-                    : targetIds_;
+            targetIds_.makeImmutable();
+            return targetIds_;
         }
 
         /**
          * <pre>
          * Private conversations
          * </pre>
-         * 
+         *
          * <code>repeated int64 target_ids = 1;</code>
          *
          * @return The count of targetIds.
@@ -604,7 +635,7 @@ public final class QueryConversationsRequest extends com.google.protobuf.Generat
          * <pre>
          * Private conversations
          * </pre>
-         * 
+         *
          * <code>repeated int64 target_ids = 1;</code>
          *
          * @param index The index of the element to return.
@@ -618,7 +649,7 @@ public final class QueryConversationsRequest extends com.google.protobuf.Generat
          * <pre>
          * Private conversations
          * </pre>
-         * 
+         *
          * <code>repeated int64 target_ids = 1;</code>
          *
          * @param index The index to set the value at.
@@ -629,6 +660,7 @@ public final class QueryConversationsRequest extends com.google.protobuf.Generat
 
             ensureTargetIdsIsMutable();
             targetIds_.setLong(index, value);
+            bitField0_ |= 0x00000001;
             onChanged();
             return this;
         }
@@ -637,7 +669,7 @@ public final class QueryConversationsRequest extends com.google.protobuf.Generat
          * <pre>
          * Private conversations
          * </pre>
-         * 
+         *
          * <code>repeated int64 target_ids = 1;</code>
          *
          * @param value The targetIds to add.
@@ -647,6 +679,7 @@ public final class QueryConversationsRequest extends com.google.protobuf.Generat
 
             ensureTargetIdsIsMutable();
             targetIds_.addLong(value);
+            bitField0_ |= 0x00000001;
             onChanged();
             return this;
         }
@@ -655,7 +688,7 @@ public final class QueryConversationsRequest extends com.google.protobuf.Generat
          * <pre>
          * Private conversations
          * </pre>
-         * 
+         *
          * <code>repeated int64 target_ids = 1;</code>
          *
          * @param values The targetIds to add.
@@ -664,6 +697,7 @@ public final class QueryConversationsRequest extends com.google.protobuf.Generat
         public Builder addAllTargetIds(java.lang.Iterable<? extends java.lang.Long> values) {
             ensureTargetIdsIsMutable();
             com.google.protobuf.AbstractMessageLite.Builder.addAll(values, targetIds_);
+            bitField0_ |= 0x00000001;
             onChanged();
             return this;
         }
@@ -672,7 +706,7 @@ public final class QueryConversationsRequest extends com.google.protobuf.Generat
          * <pre>
          * Private conversations
          * </pre>
-         * 
+         *
          * <code>repeated int64 target_ids = 1;</code>
          *
          * @return This builder for chaining.
@@ -687,32 +721,31 @@ public final class QueryConversationsRequest extends com.google.protobuf.Generat
         private com.google.protobuf.Internal.LongList groupIds_ = emptyLongList();
 
         private void ensureGroupIdsIsMutable() {
-            if ((bitField0_ & 0x00000002) == 0) {
-                groupIds_ = mutableCopy(groupIds_);
-                bitField0_ |= 0x00000002;
+            if (!groupIds_.isModifiable()) {
+                groupIds_ = makeMutableCopy(groupIds_);
             }
+            bitField0_ |= 0x00000002;
         }
 
         /**
          * <pre>
          * Group conversations
          * </pre>
-         * 
+         *
          * <code>repeated int64 group_ids = 2;</code>
          *
          * @return A list containing the groupIds.
          */
         public java.util.List<java.lang.Long> getGroupIdsList() {
-            return ((bitField0_ & 0x00000002) != 0)
-                    ? java.util.Collections.unmodifiableList(groupIds_)
-                    : groupIds_;
+            groupIds_.makeImmutable();
+            return groupIds_;
         }
 
         /**
          * <pre>
          * Group conversations
          * </pre>
-         * 
+         *
          * <code>repeated int64 group_ids = 2;</code>
          *
          * @return The count of groupIds.
@@ -725,7 +758,7 @@ public final class QueryConversationsRequest extends com.google.protobuf.Generat
          * <pre>
          * Group conversations
          * </pre>
-         * 
+         *
          * <code>repeated int64 group_ids = 2;</code>
          *
          * @param index The index of the element to return.
@@ -739,7 +772,7 @@ public final class QueryConversationsRequest extends com.google.protobuf.Generat
          * <pre>
          * Group conversations
          * </pre>
-         * 
+         *
          * <code>repeated int64 group_ids = 2;</code>
          *
          * @param index The index to set the value at.
@@ -750,6 +783,7 @@ public final class QueryConversationsRequest extends com.google.protobuf.Generat
 
             ensureGroupIdsIsMutable();
             groupIds_.setLong(index, value);
+            bitField0_ |= 0x00000002;
             onChanged();
             return this;
         }
@@ -758,7 +792,7 @@ public final class QueryConversationsRequest extends com.google.protobuf.Generat
          * <pre>
          * Group conversations
          * </pre>
-         * 
+         *
          * <code>repeated int64 group_ids = 2;</code>
          *
          * @param value The groupIds to add.
@@ -768,6 +802,7 @@ public final class QueryConversationsRequest extends com.google.protobuf.Generat
 
             ensureGroupIdsIsMutable();
             groupIds_.addLong(value);
+            bitField0_ |= 0x00000002;
             onChanged();
             return this;
         }
@@ -776,7 +811,7 @@ public final class QueryConversationsRequest extends com.google.protobuf.Generat
          * <pre>
          * Group conversations
          * </pre>
-         * 
+         *
          * <code>repeated int64 group_ids = 2;</code>
          *
          * @param values The groupIds to add.
@@ -785,6 +820,7 @@ public final class QueryConversationsRequest extends com.google.protobuf.Generat
         public Builder addAllGroupIds(java.lang.Iterable<? extends java.lang.Long> values) {
             ensureGroupIdsIsMutable();
             com.google.protobuf.AbstractMessageLite.Builder.addAll(values, groupIds_);
+            bitField0_ |= 0x00000002;
             onChanged();
             return this;
         }
@@ -793,7 +829,7 @@ public final class QueryConversationsRequest extends com.google.protobuf.Generat
          * <pre>
          * Group conversations
          * </pre>
-         * 
+         *
          * <code>repeated int64 group_ids = 2;</code>
          *
          * @return This builder for chaining.

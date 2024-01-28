@@ -58,9 +58,9 @@ extension UserOnlineStatus: SwiftProtobuf.Message, SwiftProtobuf._MessageImpleme
             // allocates stack space for every case branch when no optimizations are
             // enabled. https://github.com/apple/swift-protobuf/issues/1034
             switch fieldNumber {
-            case 1: try try decoder.decodeSingularInt64Field(value: &userID)
-            case 2: try try decoder.decodeSingularEnumField(value: &userStatus)
-            case 3: try try decoder.decodeRepeatedEnumField(value: &usingDeviceTypes)
+            case 1: try decoder.decodeSingularInt64Field(value: &userID)
+            case 2: try decoder.decodeSingularEnumField(value: &userStatus)
+            case 3: try decoder.decodeRepeatedEnumField(value: &usingDeviceTypes)
             default: break
             }
         }

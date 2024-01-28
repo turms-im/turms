@@ -26,6 +26,7 @@ public final class CreateRelationshipRequest extends
         // @@protoc_insertion_point(message_implements:im.turms.proto.CreateRelationshipRequest)
         CreateRelationshipRequestOrBuilder {
     private CreateRelationshipRequest() {
+        name_ = "";
     }
 
     private int bitField0_;
@@ -132,6 +133,69 @@ public final class CreateRelationshipRequest extends
         groupIndex_ = 0;
     }
 
+    public static final int NAME_FIELD_NUMBER = 4;
+    private java.lang.String name_;
+
+    /**
+     * <code>optional string name = 4;</code>
+     *
+     * @return Whether the name field is set.
+     */
+    @java.lang.Override
+    public boolean hasName() {
+        return ((bitField0_ & 0x00000002) != 0);
+    }
+
+    /**
+     * <code>optional string name = 4;</code>
+     *
+     * @return The name.
+     */
+    @java.lang.Override
+    public java.lang.String getName() {
+        return name_;
+    }
+
+    /**
+     * <code>optional string name = 4;</code>
+     *
+     * @return The bytes for name.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString getNameBytes() {
+        return com.google.protobuf.ByteString.copyFromUtf8(name_);
+    }
+
+    /**
+     * <code>optional string name = 4;</code>
+     *
+     * @param value The name to set.
+     */
+    private void setName(java.lang.String value) {
+        java.lang.Class<?> valueClass = value.getClass();
+        bitField0_ |= 0x00000002;
+        name_ = value;
+    }
+
+    /**
+     * <code>optional string name = 4;</code>
+     */
+    private void clearName() {
+        bitField0_ &= ~0x00000002;
+        name_ = getDefaultInstance().getName();
+    }
+
+    /**
+     * <code>optional string name = 4;</code>
+     *
+     * @param value The bytes for name to set.
+     */
+    private void setNameBytes(com.google.protobuf.ByteString value) {
+        checkByteStringIsUtf8(value);
+        name_ = value.toStringUtf8();
+        bitField0_ |= 0x00000002;
+    }
+
     public static im.turms.client.model.proto.request.user.relationship.CreateRelationshipRequest parseFrom(
             java.nio.ByteBuffer data) throws com.google.protobuf.InvalidProtocolBufferException {
         return com.google.protobuf.GeneratedMessageLite.parseFrom(DEFAULT_INSTANCE, data);
@@ -211,12 +275,12 @@ public final class CreateRelationshipRequest extends
     }
 
     public static Builder newBuilder() {
-        return (Builder) DEFAULT_INSTANCE.createBuilder();
+        return DEFAULT_INSTANCE.createBuilder();
     }
 
     public static Builder newBuilder(
             im.turms.client.model.proto.request.user.relationship.CreateRelationshipRequest prototype) {
-        return (Builder) DEFAULT_INSTANCE.createBuilder(prototype);
+        return DEFAULT_INSTANCE.createBuilder(prototype);
     }
 
     /**
@@ -342,6 +406,71 @@ public final class CreateRelationshipRequest extends
             return this;
         }
 
+        /**
+         * <code>optional string name = 4;</code>
+         *
+         * @return Whether the name field is set.
+         */
+        @java.lang.Override
+        public boolean hasName() {
+            return instance.hasName();
+        }
+
+        /**
+         * <code>optional string name = 4;</code>
+         *
+         * @return The name.
+         */
+        @java.lang.Override
+        public java.lang.String getName() {
+            return instance.getName();
+        }
+
+        /**
+         * <code>optional string name = 4;</code>
+         *
+         * @return The bytes for name.
+         */
+        @java.lang.Override
+        public com.google.protobuf.ByteString getNameBytes() {
+            return instance.getNameBytes();
+        }
+
+        /**
+         * <code>optional string name = 4;</code>
+         *
+         * @param value The name to set.
+         * @return This builder for chaining.
+         */
+        public Builder setName(java.lang.String value) {
+            copyOnWrite();
+            instance.setName(value);
+            return this;
+        }
+
+        /**
+         * <code>optional string name = 4;</code>
+         *
+         * @return This builder for chaining.
+         */
+        public Builder clearName() {
+            copyOnWrite();
+            instance.clearName();
+            return this;
+        }
+
+        /**
+         * <code>optional string name = 4;</code>
+         *
+         * @param value The bytes for name to set.
+         * @return This builder for chaining.
+         */
+        public Builder setNameBytes(com.google.protobuf.ByteString value) {
+            copyOnWrite();
+            instance.setNameBytes(value);
+            return this;
+        }
+
         // @@protoc_insertion_point(builder_scope:im.turms.proto.CreateRelationshipRequest)
     }
 
@@ -359,11 +488,14 @@ public final class CreateRelationshipRequest extends
                 return new Builder();
             }
             case BUILD_MESSAGE_INFO: {
-                java.lang.Object[] objects =
-                        new java.lang.Object[]{"bitField0_", "userId_", "blocked_", "groupIndex_",};
+                java.lang.Object[] objects = new java.lang.Object[]{"bitField0_",
+                        "userId_",
+                        "blocked_",
+                        "groupIndex_",
+                        "name_",};
                 java.lang.String info =
-                        "\u0000\u0003\u0000\u0001\u0001\u0003\u0003\u0000\u0000\u0000\u0001\u0002\u0002\u0007"
-                                + "\u0003\u1004\u0000";
+                        "\u0000\u0004\u0000\u0001\u0001\u0004\u0004\u0000\u0000\u0000\u0001\u0002\u0002\u0007"
+                                + "\u0003\u1004\u0000\u0004\u1208\u0001";
                 return newMessageInfo(DEFAULT_INSTANCE, info, objects);
             }
             // fall through

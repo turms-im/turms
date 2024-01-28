@@ -36,7 +36,7 @@ public final class UpdateRelationshipGroupRequest extends
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>int32 group_index = 1;</code>
      *
      * @return The groupIndex.
@@ -50,7 +50,7 @@ public final class UpdateRelationshipGroupRequest extends
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>int32 group_index = 1;</code>
      *
      * @param value The groupIndex to set.
@@ -64,7 +64,7 @@ public final class UpdateRelationshipGroupRequest extends
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>int32 group_index = 1;</code>
      */
     private void clearGroupIndex() {
@@ -79,7 +79,7 @@ public final class UpdateRelationshipGroupRequest extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>string new_name = 2;</code>
      *
      * @return The newName.
@@ -93,7 +93,7 @@ public final class UpdateRelationshipGroupRequest extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>string new_name = 2;</code>
      *
      * @return The bytes for newName.
@@ -107,7 +107,7 @@ public final class UpdateRelationshipGroupRequest extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>string new_name = 2;</code>
      *
      * @param value The newName to set.
@@ -122,7 +122,7 @@ public final class UpdateRelationshipGroupRequest extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>string new_name = 2;</code>
      */
     private void clearNewName() {
@@ -134,7 +134,7 @@ public final class UpdateRelationshipGroupRequest extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>string new_name = 2;</code>
      *
      * @param value The bytes for newName to set.
@@ -224,12 +224,12 @@ public final class UpdateRelationshipGroupRequest extends
     }
 
     public static Builder newBuilder() {
-        return (Builder) DEFAULT_INSTANCE.createBuilder();
+        return DEFAULT_INSTANCE.createBuilder();
     }
 
     public static Builder newBuilder(
             im.turms.client.model.proto.request.user.relationship.UpdateRelationshipGroupRequest prototype) {
-        return (Builder) DEFAULT_INSTANCE.createBuilder(prototype);
+        return DEFAULT_INSTANCE.createBuilder(prototype);
     }
 
     /**
@@ -250,7 +250,7 @@ public final class UpdateRelationshipGroupRequest extends
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>int32 group_index = 1;</code>
          *
          * @return The groupIndex.
@@ -264,7 +264,7 @@ public final class UpdateRelationshipGroupRequest extends
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>int32 group_index = 1;</code>
          *
          * @param value The groupIndex to set.
@@ -280,7 +280,7 @@ public final class UpdateRelationshipGroupRequest extends
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>int32 group_index = 1;</code>
          *
          * @return This builder for chaining.
@@ -295,7 +295,7 @@ public final class UpdateRelationshipGroupRequest extends
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>string new_name = 2;</code>
          *
          * @return The newName.
@@ -309,7 +309,7 @@ public final class UpdateRelationshipGroupRequest extends
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>string new_name = 2;</code>
          *
          * @return The bytes for newName.
@@ -323,7 +323,7 @@ public final class UpdateRelationshipGroupRequest extends
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>string new_name = 2;</code>
          *
          * @param value The newName to set.
@@ -339,7 +339,7 @@ public final class UpdateRelationshipGroupRequest extends
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>string new_name = 2;</code>
          *
          * @return This builder for chaining.
@@ -354,7 +354,7 @@ public final class UpdateRelationshipGroupRequest extends
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>string new_name = 2;</code>
          *
          * @param value The bytes for newName to set.
@@ -385,8 +385,7 @@ public final class UpdateRelationshipGroupRequest extends
             case BUILD_MESSAGE_INFO: {
                 java.lang.Object[] objects = new java.lang.Object[]{"groupIndex_", "newName_",};
                 java.lang.String info =
-                        "\u0000\u0002\u0000\u0000\u0001\u0002\u0002\u0000\u0000\u0000\u0001\u0004\u0002\u0208"
-                                + "";
+                        "\u0000\u0002\u0000\u0000\u0001\u0002\u0002\u0000\u0000\u0000\u0001\u0004\u0002\u0208";
                 return newMessageInfo(DEFAULT_INSTANCE, info, objects);
             }
             // fall through

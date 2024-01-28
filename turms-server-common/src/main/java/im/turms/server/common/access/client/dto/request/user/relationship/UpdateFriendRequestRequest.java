@@ -62,7 +62,7 @@ public final class UpdateFriendRequestRequest extends com.google.protobuf.Genera
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>int64 request_id = 1;</code>
      *
      * @return The requestId.
@@ -79,7 +79,7 @@ public final class UpdateFriendRequestRequest extends com.google.protobuf.Genera
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.ResponseAction response_action = 2;</code>
      *
      * @return The enum numeric value on the wire for responseAction.
@@ -93,7 +93,7 @@ public final class UpdateFriendRequestRequest extends com.google.protobuf.Genera
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>.im.turms.proto.ResponseAction response_action = 2;</code>
      *
      * @return The responseAction.
@@ -453,6 +453,43 @@ public final class UpdateFriendRequestRequest extends com.google.protobuf.Genera
         }
 
         @java.lang.Override
+        public Builder clone() {
+            return super.clone();
+        }
+
+        @java.lang.Override
+        public Builder setField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value) {
+            return super.setField(field, value);
+        }
+
+        @java.lang.Override
+        public Builder clearField(com.google.protobuf.Descriptors.FieldDescriptor field) {
+            return super.clearField(field);
+        }
+
+        @java.lang.Override
+        public Builder clearOneof(com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+            return super.clearOneof(oneof);
+        }
+
+        @java.lang.Override
+        public Builder setRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                int index,
+                java.lang.Object value) {
+            return super.setRepeatedField(field, index, value);
+        }
+
+        @java.lang.Override
+        public Builder addRepeatedField(
+                com.google.protobuf.Descriptors.FieldDescriptor field,
+                java.lang.Object value) {
+            return super.addRepeatedField(field, value);
+        }
+
+        @java.lang.Override
         public Builder mergeFrom(com.google.protobuf.Message other) {
             if (other instanceof im.turms.server.common.access.client.dto.request.user.relationship.UpdateFriendRequestRequest) {
                 return mergeFrom(
@@ -539,7 +576,7 @@ public final class UpdateFriendRequestRequest extends com.google.protobuf.Genera
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>int64 request_id = 1;</code>
          *
          * @return The requestId.
@@ -553,7 +590,7 @@ public final class UpdateFriendRequestRequest extends com.google.protobuf.Genera
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>int64 request_id = 1;</code>
          *
          * @param value The requestId to set.
@@ -571,7 +608,7 @@ public final class UpdateFriendRequestRequest extends com.google.protobuf.Genera
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>int64 request_id = 1;</code>
          *
          * @return This builder for chaining.
@@ -589,7 +626,7 @@ public final class UpdateFriendRequestRequest extends com.google.protobuf.Genera
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.ResponseAction response_action = 2;</code>
          *
          * @return The enum numeric value on the wire for responseAction.
@@ -603,7 +640,7 @@ public final class UpdateFriendRequestRequest extends com.google.protobuf.Genera
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.ResponseAction response_action = 2;</code>
          *
          * @param value The enum numeric value on the wire for responseAction to set.
@@ -620,7 +657,7 @@ public final class UpdateFriendRequestRequest extends com.google.protobuf.Genera
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.ResponseAction response_action = 2;</code>
          *
          * @return The responseAction.
@@ -639,7 +676,7 @@ public final class UpdateFriendRequestRequest extends com.google.protobuf.Genera
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.ResponseAction response_action = 2;</code>
          *
          * @param value The responseAction to set.
@@ -660,7 +697,7 @@ public final class UpdateFriendRequestRequest extends com.google.protobuf.Genera
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>.im.turms.proto.ResponseAction response_action = 2;</code>
          *
          * @return This builder for chaining.

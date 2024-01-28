@@ -37,7 +37,7 @@ public final class UpdateMessageAttachmentInfoRequest extends
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>optional int64 attachment_id_num = 1;</code>
      *
      * @return Whether the attachmentIdNum field is set.
@@ -51,7 +51,7 @@ public final class UpdateMessageAttachmentInfoRequest extends
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>optional int64 attachment_id_num = 1;</code>
      *
      * @return The attachmentIdNum.
@@ -65,7 +65,7 @@ public final class UpdateMessageAttachmentInfoRequest extends
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>optional int64 attachment_id_num = 1;</code>
      *
      * @param value The attachmentIdNum to set.
@@ -79,7 +79,7 @@ public final class UpdateMessageAttachmentInfoRequest extends
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>optional int64 attachment_id_num = 1;</code>
      */
     private void clearAttachmentIdNum() {
@@ -157,7 +157,7 @@ public final class UpdateMessageAttachmentInfoRequest extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>optional int64 user_id_to_share_with = 3;</code>
      *
      * @return Whether the userIdToShareWith field is set.
@@ -171,7 +171,7 @@ public final class UpdateMessageAttachmentInfoRequest extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>optional int64 user_id_to_share_with = 3;</code>
      *
      * @return The userIdToShareWith.
@@ -185,7 +185,7 @@ public final class UpdateMessageAttachmentInfoRequest extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>optional int64 user_id_to_share_with = 3;</code>
      *
      * @param value The userIdToShareWith to set.
@@ -199,7 +199,7 @@ public final class UpdateMessageAttachmentInfoRequest extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>optional int64 user_id_to_share_with = 3;</code>
      */
     private void clearUserIdToShareWith() {
@@ -409,12 +409,12 @@ public final class UpdateMessageAttachmentInfoRequest extends
     }
 
     public static Builder newBuilder() {
-        return (Builder) DEFAULT_INSTANCE.createBuilder();
+        return DEFAULT_INSTANCE.createBuilder();
     }
 
     public static Builder newBuilder(
             im.turms.client.model.proto.request.storage.UpdateMessageAttachmentInfoRequest prototype) {
-        return (Builder) DEFAULT_INSTANCE.createBuilder(prototype);
+        return DEFAULT_INSTANCE.createBuilder(prototype);
     }
 
     /**
@@ -435,7 +435,7 @@ public final class UpdateMessageAttachmentInfoRequest extends
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>optional int64 attachment_id_num = 1;</code>
          *
          * @return Whether the attachmentIdNum field is set.
@@ -449,7 +449,7 @@ public final class UpdateMessageAttachmentInfoRequest extends
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>optional int64 attachment_id_num = 1;</code>
          *
          * @return The attachmentIdNum.
@@ -463,7 +463,7 @@ public final class UpdateMessageAttachmentInfoRequest extends
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>optional int64 attachment_id_num = 1;</code>
          *
          * @param value The attachmentIdNum to set.
@@ -479,7 +479,7 @@ public final class UpdateMessageAttachmentInfoRequest extends
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>optional int64 attachment_id_num = 1;</code>
          *
          * @return This builder for chaining.
@@ -559,7 +559,7 @@ public final class UpdateMessageAttachmentInfoRequest extends
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>optional int64 user_id_to_share_with = 3;</code>
          *
          * @return Whether the userIdToShareWith field is set.
@@ -573,7 +573,7 @@ public final class UpdateMessageAttachmentInfoRequest extends
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>optional int64 user_id_to_share_with = 3;</code>
          *
          * @return The userIdToShareWith.
@@ -587,7 +587,7 @@ public final class UpdateMessageAttachmentInfoRequest extends
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>optional int64 user_id_to_share_with = 3;</code>
          *
          * @param value The userIdToShareWith to set.
@@ -603,7 +603,7 @@ public final class UpdateMessageAttachmentInfoRequest extends
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>optional int64 user_id_to_share_with = 3;</code>
          *
          * @return This builder for chaining.
@@ -769,8 +769,7 @@ public final class UpdateMessageAttachmentInfoRequest extends
                         "groupIdToUnshareWith_",};
                 java.lang.String info =
                         "\u0000\u0006\u0000\u0001\u0001\u0006\u0006\u0000\u0000\u0000\u0001\u1002\u0000\u0002"
-                                + "\u1208\u0001\u0003\u1002\u0002\u0004\u1002\u0003\u0005\u1002\u0004\u0006\u1002\u0005"
-                                + "";
+                                + "\u1208\u0001\u0003\u1002\u0002\u0004\u1002\u0003\u0005\u1002\u0004\u0006\u1002\u0005";
                 return newMessageInfo(DEFAULT_INSTANCE, info, objects);
             }
             // fall through

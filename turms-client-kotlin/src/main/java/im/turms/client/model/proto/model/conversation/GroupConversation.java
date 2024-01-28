@@ -63,7 +63,7 @@ public final class GroupConversation extends
 
     private static final class MemberIdToReadDateDefaultEntryHolder {
         static final com.google.protobuf.MapEntryLite<java.lang.Long, java.lang.Long> defaultEntry =
-                com.google.protobuf.MapEntryLite.<java.lang.Long, java.lang.Long>newDefaultInstance(
+                com.google.protobuf.MapEntryLite.newDefaultInstance(
                         com.google.protobuf.WireFormat.FieldType.INT64,
                         0L,
                         com.google.protobuf.WireFormat.FieldType.INT64,
@@ -126,9 +126,7 @@ public final class GroupConversation extends
     public long getMemberIdToReadDateOrDefault(long key, long defaultValue) {
 
         java.util.Map<java.lang.Long, java.lang.Long> map = internalGetMemberIdToReadDate();
-        return map.containsKey(key)
-                ? map.get(key)
-                : defaultValue;
+        return map.getOrDefault(key, defaultValue);
     }
 
     /**
@@ -231,12 +229,12 @@ public final class GroupConversation extends
     }
 
     public static Builder newBuilder() {
-        return (Builder) DEFAULT_INSTANCE.createBuilder();
+        return DEFAULT_INSTANCE.createBuilder();
     }
 
     public static Builder newBuilder(
             im.turms.client.model.proto.model.conversation.GroupConversation prototype) {
-        return (Builder) DEFAULT_INSTANCE.createBuilder(prototype);
+        return DEFAULT_INSTANCE.createBuilder(prototype);
     }
 
     /**
@@ -348,9 +346,7 @@ public final class GroupConversation extends
         public long getMemberIdToReadDateOrDefault(long key, long defaultValue) {
 
             java.util.Map<java.lang.Long, java.lang.Long> map = instance.getMemberIdToReadDateMap();
-            return map.containsKey(key)
-                    ? map.get(key)
-                    : defaultValue;
+            return map.getOrDefault(key, defaultValue);
         }
 
         /**

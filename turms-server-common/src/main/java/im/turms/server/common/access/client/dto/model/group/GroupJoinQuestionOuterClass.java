@@ -55,15 +55,7 @@ public final class GroupJoinQuestionOuterClass {
         internal_static_im_turms_proto_GroupJoinQuestion_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
                         internal_static_im_turms_proto_GroupJoinQuestion_descriptor,
-                        new java.lang.String[]{"Id",
-                                "GroupId",
-                                "Question",
-                                "Answers",
-                                "Score",
-                                "Id",
-                                "GroupId",
-                                "Question",
-                                "Score",});
+                        new java.lang.String[]{"Id", "GroupId", "Question", "Answers", "Score",});
     }
 
     // @@protoc_insertion_point(outer_class_scope)

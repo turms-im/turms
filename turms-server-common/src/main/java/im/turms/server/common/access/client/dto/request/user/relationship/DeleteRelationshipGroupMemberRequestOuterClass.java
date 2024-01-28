@@ -55,10 +55,7 @@ public final class DeleteRelationshipGroupMemberRequestOuterClass {
         internal_static_im_turms_proto_DeleteRelationshipGroupMemberRequest_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
                         internal_static_im_turms_proto_DeleteRelationshipGroupMemberRequest_descriptor,
-                        new java.lang.String[]{"UserId",
-                                "GroupIndex",
-                                "TargetGroupIndex",
-                                "TargetGroupIndex",});
+                        new java.lang.String[]{"UserId", "GroupIndex", "TargetGroupIndex",});
     }
 
     // @@protoc_insertion_point(outer_class_scope)

@@ -37,7 +37,7 @@ public final class UpdateGroupMemberRequest extends
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>int64 group_id = 1;</code>
      *
      * @return The groupId.
@@ -51,7 +51,7 @@ public final class UpdateGroupMemberRequest extends
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>int64 group_id = 1;</code>
      *
      * @param value The groupId to set.
@@ -65,7 +65,7 @@ public final class UpdateGroupMemberRequest extends
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>int64 group_id = 1;</code>
      */
     private void clearGroupId() {
@@ -111,7 +111,7 @@ public final class UpdateGroupMemberRequest extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>optional string name = 3;</code>
      *
      * @return Whether the name field is set.
@@ -125,7 +125,7 @@ public final class UpdateGroupMemberRequest extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>optional string name = 3;</code>
      *
      * @return The name.
@@ -139,7 +139,7 @@ public final class UpdateGroupMemberRequest extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>optional string name = 3;</code>
      *
      * @return The bytes for name.
@@ -153,7 +153,7 @@ public final class UpdateGroupMemberRequest extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>optional string name = 3;</code>
      *
      * @param value The name to set.
@@ -168,7 +168,7 @@ public final class UpdateGroupMemberRequest extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>optional string name = 3;</code>
      */
     private void clearName() {
@@ -180,7 +180,7 @@ public final class UpdateGroupMemberRequest extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>optional string name = 3;</code>
      *
      * @param value The bytes for name to set.
@@ -402,7 +402,7 @@ public final class UpdateGroupMemberRequest extends
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>int64 group_id = 1;</code>
          *
          * @return The groupId.
@@ -416,7 +416,7 @@ public final class UpdateGroupMemberRequest extends
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>int64 group_id = 1;</code>
          *
          * @param value The groupId to set.
@@ -432,7 +432,7 @@ public final class UpdateGroupMemberRequest extends
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>int64 group_id = 1;</code>
          *
          * @return This builder for chaining.
@@ -480,7 +480,7 @@ public final class UpdateGroupMemberRequest extends
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>optional string name = 3;</code>
          *
          * @return Whether the name field is set.
@@ -494,7 +494,7 @@ public final class UpdateGroupMemberRequest extends
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>optional string name = 3;</code>
          *
          * @return The name.
@@ -508,7 +508,7 @@ public final class UpdateGroupMemberRequest extends
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>optional string name = 3;</code>
          *
          * @return The bytes for name.
@@ -522,7 +522,7 @@ public final class UpdateGroupMemberRequest extends
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>optional string name = 3;</code>
          *
          * @param value The name to set.
@@ -538,7 +538,7 @@ public final class UpdateGroupMemberRequest extends
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>optional string name = 3;</code>
          *
          * @return This builder for chaining.
@@ -553,7 +553,7 @@ public final class UpdateGroupMemberRequest extends
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>optional string name = 3;</code>
          *
          * @param value The bytes for name to set.

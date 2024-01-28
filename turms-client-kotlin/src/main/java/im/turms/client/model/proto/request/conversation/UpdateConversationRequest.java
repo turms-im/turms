@@ -36,7 +36,7 @@ public final class UpdateConversationRequest extends
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>optional int64 target_id = 1;</code>
      *
      * @return Whether the targetId field is set.
@@ -50,7 +50,7 @@ public final class UpdateConversationRequest extends
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>optional int64 target_id = 1;</code>
      *
      * @return The targetId.
@@ -64,7 +64,7 @@ public final class UpdateConversationRequest extends
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>optional int64 target_id = 1;</code>
      *
      * @param value The targetId to set.
@@ -78,7 +78,7 @@ public final class UpdateConversationRequest extends
      * <pre>
      * Query filter
      * </pre>
-     * 
+     *
      * <code>optional int64 target_id = 1;</code>
      */
     private void clearTargetId() {
@@ -134,7 +134,7 @@ public final class UpdateConversationRequest extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>int64 read_date = 3;</code>
      *
      * @return The readDate.
@@ -148,7 +148,7 @@ public final class UpdateConversationRequest extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>int64 read_date = 3;</code>
      *
      * @param value The readDate to set.
@@ -162,7 +162,7 @@ public final class UpdateConversationRequest extends
      * <pre>
      * Update
      * </pre>
-     * 
+     *
      * <code>int64 read_date = 3;</code>
      */
     private void clearReadDate() {
@@ -249,12 +249,12 @@ public final class UpdateConversationRequest extends
     }
 
     public static Builder newBuilder() {
-        return (Builder) DEFAULT_INSTANCE.createBuilder();
+        return DEFAULT_INSTANCE.createBuilder();
     }
 
     public static Builder newBuilder(
             im.turms.client.model.proto.request.conversation.UpdateConversationRequest prototype) {
-        return (Builder) DEFAULT_INSTANCE.createBuilder(prototype);
+        return DEFAULT_INSTANCE.createBuilder(prototype);
     }
 
     /**
@@ -275,7 +275,7 @@ public final class UpdateConversationRequest extends
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>optional int64 target_id = 1;</code>
          *
          * @return Whether the targetId field is set.
@@ -289,7 +289,7 @@ public final class UpdateConversationRequest extends
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>optional int64 target_id = 1;</code>
          *
          * @return The targetId.
@@ -303,7 +303,7 @@ public final class UpdateConversationRequest extends
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>optional int64 target_id = 1;</code>
          *
          * @param value The targetId to set.
@@ -319,7 +319,7 @@ public final class UpdateConversationRequest extends
          * <pre>
          * Query filter
          * </pre>
-         * 
+         *
          * <code>optional int64 target_id = 1;</code>
          *
          * @return This builder for chaining.
@@ -377,7 +377,7 @@ public final class UpdateConversationRequest extends
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>int64 read_date = 3;</code>
          *
          * @return The readDate.
@@ -391,7 +391,7 @@ public final class UpdateConversationRequest extends
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>int64 read_date = 3;</code>
          *
          * @param value The readDate to set.
@@ -407,7 +407,7 @@ public final class UpdateConversationRequest extends
          * <pre>
          * Update
          * </pre>
-         * 
+         *
          * <code>int64 read_date = 3;</code>
          *
          * @return This builder for chaining.

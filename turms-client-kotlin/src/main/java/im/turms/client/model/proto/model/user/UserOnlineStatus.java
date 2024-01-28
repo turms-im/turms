@@ -117,12 +117,16 @@ public final class UserOnlineStatus
     public static final int USING_DEVICE_TYPES_FIELD_NUMBER = 3;
     private com.google.protobuf.Internal.IntList usingDeviceTypes_;
     private static final com.google.protobuf.Internal.ListAdapter.Converter<java.lang.Integer, im.turms.client.model.proto.constant.DeviceType> usingDeviceTypes_converter_ =
-            from -> {
-                im.turms.client.model.proto.constant.DeviceType result =
-                        im.turms.client.model.proto.constant.DeviceType.forNumber(from);
-                return result == null
-                        ? im.turms.client.model.proto.constant.DeviceType.UNRECOGNIZED
-                        : result;
+            new com.google.protobuf.Internal.ListAdapter.Converter<java.lang.Integer, im.turms.client.model.proto.constant.DeviceType>() {
+                @java.lang.Override
+                public im.turms.client.model.proto.constant.DeviceType convert(
+                        java.lang.Integer from) {
+                    im.turms.client.model.proto.constant.DeviceType result =
+                            im.turms.client.model.proto.constant.DeviceType.forNumber(from);
+                    return result == null
+                            ? im.turms.client.model.proto.constant.DeviceType.UNRECOGNIZED
+                            : result;
+                }
             };
 
     /**
@@ -349,12 +353,12 @@ public final class UserOnlineStatus
     }
 
     public static Builder newBuilder() {
-        return (Builder) DEFAULT_INSTANCE.createBuilder();
+        return DEFAULT_INSTANCE.createBuilder();
     }
 
     public static Builder newBuilder(
             im.turms.client.model.proto.model.user.UserOnlineStatus prototype) {
-        return (Builder) DEFAULT_INSTANCE.createBuilder(prototype);
+        return DEFAULT_INSTANCE.createBuilder(prototype);
     }
 
     /**

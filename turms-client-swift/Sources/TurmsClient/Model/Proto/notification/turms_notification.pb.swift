@@ -490,14 +490,14 @@ extension TurmsNotification: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
                 // allocates stack space for every case branch when no optimizations are
                 // enabled. https://github.com/apple/swift-protobuf/issues/1034
                 switch fieldNumber {
-                case 1: try try decoder.decodeSingularInt64Field(value: &_storage._timestamp)
-                case 4: try try decoder.decodeSingularInt64Field(value: &_storage._requestID)
-                case 5: try try decoder.decodeSingularInt32Field(value: &_storage._code)
-                case 6: try try decoder.decodeSingularStringField(value: &_storage._reason)
-                case 7: try try decoder.decodeSingularMessageField(value: &_storage._data)
-                case 10: try try decoder.decodeSingularInt64Field(value: &_storage._requesterID)
-                case 11: try try decoder.decodeSingularInt32Field(value: &_storage._closeStatus)
-                case 12: try try decoder.decodeSingularMessageField(value: &_storage._relayedRequest)
+                case 1: try decoder.decodeSingularInt64Field(value: &_storage._timestamp)
+                case 4: try decoder.decodeSingularInt64Field(value: &_storage._requestID)
+                case 5: try decoder.decodeSingularInt32Field(value: &_storage._code)
+                case 6: try decoder.decodeSingularStringField(value: &_storage._reason)
+                case 7: try decoder.decodeSingularMessageField(value: &_storage._data)
+                case 10: try decoder.decodeSingularInt64Field(value: &_storage._requesterID)
+                case 11: try decoder.decodeSingularInt32Field(value: &_storage._closeStatus)
+                case 12: try decoder.decodeSingularMessageField(value: &_storage._relayedRequest)
                 default: break
                 }
             }

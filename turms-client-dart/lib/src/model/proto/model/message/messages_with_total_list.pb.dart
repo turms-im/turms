@@ -1,9 +1,13 @@
-///
+//
 //  Generated code. Do not modify.
 //  source: model/message/messages_with_total_list.proto
 //
 // @dart = 2.12
-// ignore_for_file: annotate_overrides,camel_case_types,constant_identifier_names,directives_ordering,library_prefixes,non_constant_identifier_names,prefer_final_fields,return_of_invalid_type,unnecessary_const,unnecessary_import,unnecessary_this,unused_import,unused_shown_name
+
+// ignore_for_file: annotate_overrides, camel_case_types, comment_references
+// ignore_for_file: constant_identifier_names, library_prefixes
+// ignore_for_file: non_constant_identifier_names, prefer_final_fields
+// ignore_for_file: unnecessary_import, unnecessary_this, unused_import
 
 import 'dart:core' as $core;
 
@@ -12,40 +16,32 @@ import 'package:protobuf/protobuf.dart' as $pb;
 import 'messages_with_total.pb.dart' as $0;
 
 class MessagesWithTotalList extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      const $core.bool.fromEnvironment('protobuf.omit_message_names')
-          ? ''
-          : 'MessagesWithTotalList',
-      package: const $pb.PackageName(
-          const $core.bool.fromEnvironment('protobuf.omit_message_names')
-              ? ''
-              : 'im.turms.proto'),
-      createEmptyInstance: create)
-    ..pc<$0.MessagesWithTotal>(
-        1,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'messagesWithTotalList',
-        $pb.PbFieldType.PM,
-        subBuilder: $0.MessagesWithTotal.create)
-    ..hasRequiredFields = false;
-
-  MessagesWithTotalList._() : super();
   factory MessagesWithTotalList({
     $core.Iterable<$0.MessagesWithTotal>? messagesWithTotalList,
   }) {
-    final _result = create();
+    final $result = create();
     if (messagesWithTotalList != null) {
-      _result.messagesWithTotalList.addAll(messagesWithTotalList);
+      $result.messagesWithTotalList.addAll(messagesWithTotalList);
     }
-    return _result;
+    return $result;
   }
+  MessagesWithTotalList._() : super();
   factory MessagesWithTotalList.fromBuffer($core.List<$core.int> i,
           [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(i, r);
   factory MessagesWithTotalList.fromJson($core.String i,
           [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(i, r);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'MessagesWithTotalList',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'im.turms.proto'),
+      createEmptyInstance: create)
+    ..pc<$0.MessagesWithTotal>(
+        1, _omitFieldNames ? '' : 'messagesWithTotalList', $pb.PbFieldType.PM,
+        subBuilder: $0.MessagesWithTotal.create)
+    ..hasRequiredFields = false;
+
   @$core.Deprecated('Using this can add significant overhead to your binary. '
       'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
       'Will be removed in next major version')
@@ -57,8 +53,10 @@ class MessagesWithTotalList extends $pb.GeneratedMessage {
   MessagesWithTotalList copyWith(
           void Function(MessagesWithTotalList) updates) =>
       super.copyWith((message) => updates(message as MessagesWithTotalList))
-          as MessagesWithTotalList; // ignore: deprecated_member_use
+          as MessagesWithTotalList;
+
   $pb.BuilderInfo get info_ => _i;
+
   @$core.pragma('dart2js:noInline')
   static MessagesWithTotalList create() => MessagesWithTotalList._();
   MessagesWithTotalList createEmptyInstance() => create();
@@ -72,3 +70,7 @@ class MessagesWithTotalList extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $core.List<$0.MessagesWithTotal> get messagesWithTotalList => $_getList(0);
 }
+
+const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');
+const _omitMessageNames =
+    $core.bool.fromEnvironment('protobuf.omit_message_names');

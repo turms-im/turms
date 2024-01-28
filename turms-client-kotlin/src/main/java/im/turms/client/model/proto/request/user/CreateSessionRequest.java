@@ -278,7 +278,7 @@ public final class CreateSessionRequest extends
 
     private static final class DeviceDetailsDefaultEntryHolder {
         static final com.google.protobuf.MapEntryLite<java.lang.String, java.lang.String> defaultEntry =
-                com.google.protobuf.MapEntryLite.<java.lang.String, java.lang.String>newDefaultInstance(
+                com.google.protobuf.MapEntryLite.newDefaultInstance(
                         com.google.protobuf.WireFormat.FieldType.STRING,
                         "",
                         com.google.protobuf.WireFormat.FieldType.STRING,
@@ -345,9 +345,7 @@ public final class CreateSessionRequest extends
             java.lang.String defaultValue) {
         java.lang.Class<?> keyClass = key.getClass();
         java.util.Map<java.lang.String, java.lang.String> map = internalGetDeviceDetails();
-        return map.containsKey(key)
-                ? map.get(key)
-                : defaultValue;
+        return map.getOrDefault(key, defaultValue);
     }
 
     /**
@@ -506,12 +504,12 @@ public final class CreateSessionRequest extends
     }
 
     public static Builder newBuilder() {
-        return (Builder) DEFAULT_INSTANCE.createBuilder();
+        return DEFAULT_INSTANCE.createBuilder();
     }
 
     public static Builder newBuilder(
             im.turms.client.model.proto.request.user.CreateSessionRequest prototype) {
-        return (Builder) DEFAULT_INSTANCE.createBuilder(prototype);
+        return DEFAULT_INSTANCE.createBuilder(prototype);
     }
 
     /**
@@ -845,9 +843,7 @@ public final class CreateSessionRequest extends
                 java.lang.String defaultValue) {
             java.lang.Class<?> keyClass = key.getClass();
             java.util.Map<java.lang.String, java.lang.String> map = instance.getDeviceDetailsMap();
-            return map.containsKey(key)
-                    ? map.get(key)
-                    : defaultValue;
+            return map.getOrDefault(key, defaultValue);
         }
 
         /**

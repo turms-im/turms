@@ -1,9 +1,13 @@
-///
+//
 //  Generated code. Do not modify.
 //  source: request/group/create_group_request.proto
 //
 // @dart = 2.12
-// ignore_for_file: annotate_overrides,camel_case_types,constant_identifier_names,directives_ordering,library_prefixes,non_constant_identifier_names,prefer_final_fields,return_of_invalid_type,unnecessary_const,unnecessary_import,unnecessary_this,unused_import,unused_shown_name
+
+// ignore_for_file: annotate_overrides, camel_case_types, comment_references
+// ignore_for_file: constant_identifier_names, library_prefixes
+// ignore_for_file: non_constant_identifier_names, prefer_final_fields
+// ignore_for_file: unnecessary_import, unnecessary_this, unused_import
 
 import 'dart:core' as $core;
 
@@ -11,49 +15,6 @@ import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 class CreateGroupRequest extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      const $core.bool.fromEnvironment('protobuf.omit_message_names')
-          ? ''
-          : 'CreateGroupRequest',
-      package: const $pb.PackageName(
-          const $core.bool.fromEnvironment('protobuf.omit_message_names')
-              ? ''
-              : 'im.turms.proto'),
-      createEmptyInstance: create)
-    ..aOS(
-        1,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'name')
-    ..aOS(
-        2,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'intro')
-    ..aOS(
-        3,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'announcement')
-    ..a<$core.int>(
-        4,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'minScore',
-        $pb.PbFieldType.O3)
-    ..aInt64(
-        5,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'typeId')
-    ..aInt64(
-        6,
-        const $core.bool.fromEnvironment('protobuf.omit_field_names')
-            ? ''
-            : 'muteEndDate')
-    ..hasRequiredFields = false;
-
-  CreateGroupRequest._() : super();
   factory CreateGroupRequest({
     $core.String? name,
     $core.String? intro,
@@ -62,33 +23,47 @@ class CreateGroupRequest extends $pb.GeneratedMessage {
     $fixnum.Int64? typeId,
     $fixnum.Int64? muteEndDate,
   }) {
-    final _result = create();
+    final $result = create();
     if (name != null) {
-      _result.name = name;
+      $result.name = name;
     }
     if (intro != null) {
-      _result.intro = intro;
+      $result.intro = intro;
     }
     if (announcement != null) {
-      _result.announcement = announcement;
+      $result.announcement = announcement;
     }
     if (minScore != null) {
-      _result.minScore = minScore;
+      $result.minScore = minScore;
     }
     if (typeId != null) {
-      _result.typeId = typeId;
+      $result.typeId = typeId;
     }
     if (muteEndDate != null) {
-      _result.muteEndDate = muteEndDate;
+      $result.muteEndDate = muteEndDate;
     }
-    return _result;
+    return $result;
   }
+  CreateGroupRequest._() : super();
   factory CreateGroupRequest.fromBuffer($core.List<$core.int> i,
           [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(i, r);
   factory CreateGroupRequest.fromJson($core.String i,
           [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(i, r);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'CreateGroupRequest',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'im.turms.proto'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'name')
+    ..aOS(2, _omitFieldNames ? '' : 'intro')
+    ..aOS(3, _omitFieldNames ? '' : 'announcement')
+    ..a<$core.int>(4, _omitFieldNames ? '' : 'minScore', $pb.PbFieldType.O3)
+    ..aInt64(5, _omitFieldNames ? '' : 'typeId')
+    ..aInt64(6, _omitFieldNames ? '' : 'muteEndDate')
+    ..hasRequiredFields = false;
+
   @$core.Deprecated('Using this can add significant overhead to your binary. '
       'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
       'Will be removed in next major version')
@@ -98,8 +73,10 @@ class CreateGroupRequest extends $pb.GeneratedMessage {
       'Will be removed in next major version')
   CreateGroupRequest copyWith(void Function(CreateGroupRequest) updates) =>
       super.copyWith((message) => updates(message as CreateGroupRequest))
-          as CreateGroupRequest; // ignore: deprecated_member_use
+          as CreateGroupRequest;
+
   $pb.BuilderInfo get info_ => _i;
+
   @$core.pragma('dart2js:noInline')
   static CreateGroupRequest create() => CreateGroupRequest._();
   CreateGroupRequest createEmptyInstance() => create();
@@ -182,3 +159,7 @@ class CreateGroupRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(6)
   void clearMuteEndDate() => clearField(6);
 }
+
+const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');
+const _omitMessageNames =
+    $core.bool.fromEnvironment('protobuf.omit_message_names');
