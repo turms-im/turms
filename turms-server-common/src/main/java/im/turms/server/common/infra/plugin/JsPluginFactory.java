@@ -31,6 +31,7 @@ import lombok.Data;
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Engine;
 import org.graalvm.polyglot.HostAccess;
+import org.graalvm.polyglot.SandboxPolicy;
 import org.graalvm.polyglot.Source;
 import org.graalvm.polyglot.Value;
 import org.springframework.context.ApplicationContext;
@@ -74,6 +75,7 @@ public class JsPluginFactory {
             Engine engine,
             String script,
             @Nullable Path path,
+            SandboxPolicy sandboxPolicy,
             boolean isDebugEnabled,
             String inspectHost,
             int inspectPort) {
@@ -83,6 +85,7 @@ public class JsPluginFactory {
                 .allowExperimentalOptions(true)
                 .allowHostAccess(HostAccess.ALL)
                 .allowHostClassLookup(className -> true)
+                .sandbox(sandboxPolicy)
                 .option("js.ecmascript-version", "2022")
                 .option("js.esm-eval-returns-exports", "true");
         if (isDebugEnabled) {

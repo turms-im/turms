@@ -38,6 +38,7 @@ import jakarta.annotation.Nullable;
 import io.netty.handler.codec.http.HttpStatusClass;
 import lombok.Getter;
 import org.graalvm.polyglot.Engine;
+import org.graalvm.polyglot.SandboxPolicy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
@@ -105,7 +106,8 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
      * an optional class and Spring will throw when creating the bean when it cannot find the class
      */
     @Nullable
-    private Object engine;
+    private final Object engine;
+    private final Object sandboxPolicy;
 
     public PluginManager(
             NodeType nodeType,
@@ -139,12 +141,20 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
             engine = Engine.newBuilder()
                     .option("engine.WarnInterpreterOnly", "false")
                     .build();
+            sandboxPolicy = switch (jsPluginProperties.getSandboxPolicy()) {
+                case TRUSTED -> SandboxPolicy.TRUSTED;
+                case CONSTRAINED -> SandboxPolicy.CONSTRAINED;
+                case ISOLATED -> SandboxPolicy.ISOLATED;
+                case UNTRUSTED -> SandboxPolicy.UNTRUSTED;
+            };
             loadJsPlugins(findResult.jsFiles());
         } else {
             allowSaveJsPlugins = false;
             isJsDebugEnabled = false;
             jsInspectHost = null;
             jsInspectPort = 0;
+            engine = null;
+            sandboxPolicy = null;
         }
         loadNetworkPlugins(pluginProperties.getNetwork());
         applicationContext.addShutdownHook(JobShutdownOrder.CLOSE_PLUGINS,
@@ -471,6 +481,7 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
                 (Engine) engine,
                 script,
                 path,
+                (SandboxPolicy) sandboxPolicy,
                 isJsDebugEnabled,
                 jsInspectHost,
                 jsInspectPort);

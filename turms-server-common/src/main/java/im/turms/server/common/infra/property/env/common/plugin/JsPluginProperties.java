@@ -23,6 +23,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
+import im.turms.server.common.infra.property.constant.PluginSandboxPolicy;
 import im.turms.server.common.infra.property.metadata.Description;
 
 /**
@@ -39,5 +40,8 @@ public class JsPluginProperties {
 
     @Description("Whether to allow saving plugins using HTTP API")
     private boolean allowSave;
+
+    @Description("The sandbox policy to use when running plugins")
+    private PluginSandboxPolicy sandboxPolicy = PluginSandboxPolicy.TRUSTED;
 
 }
