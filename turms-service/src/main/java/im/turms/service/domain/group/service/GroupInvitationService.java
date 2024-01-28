@@ -87,6 +87,7 @@ public class GroupInvitationService extends ExpirableEntityService<GroupInvitati
     private final UserVersionService userVersionService;
 
     private boolean allowRecallPendingInvitationByOwnerAndManager;
+    private boolean allowRecallPendingInvitationByOneself;
     private int maxContentLength;
     private boolean deleteExpiredInvitationsWhenCronTriggered;
 
@@ -136,6 +137,8 @@ public class GroupInvitationService extends ExpirableEntityService<GroupInvitati
                 .getInvitation();
         allowRecallPendingInvitationByOwnerAndManager =
                 invitationProperties.isAllowRecallPendingInvitationByOwnerAndManager();
+        allowRecallPendingInvitationByOneself =
+                invitationProperties.isAllowRecallPendingInvitationByOneself();
         int localMaxContentLength = invitationProperties.getMaxContentLength();
         maxContentLength = localMaxContentLength > 0
                 ? localMaxContentLength
@@ -258,6 +261,16 @@ public class GroupInvitationService extends ExpirableEntityService<GroupInvitati
                 .thenReturn(groupInvitation);
     }
 
+    public Mono<GroupInvitation> queryGroupIdAndInviterIdAndInviteeIdAndStatus(
+            @NotNull Long invitationId) {
+        try {
+            Validator.notNull(invitationId, "invitationId");
+        } catch (ResponseException e) {
+            return Mono.error(e);
+        }
+        return groupInvitationRepository.findGroupIdAndInviterIdAndInviteeIdAndStatus(invitationId);
+    }
+
     public Mono<GroupInvitation> queryGroupIdAndInviteeIdAndStatus(@NotNull Long invitationId) {
         try {
             Validator.notNull(invitationId, "invitationId");
@@ -279,51 +292,65 @@ public class GroupInvitationService extends ExpirableEntityService<GroupInvitati
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        // TODO: recalled by sender
-        if (!allowRecallPendingInvitationByOwnerAndManager) {
+        boolean allowRecallByOneself = allowRecallPendingInvitationByOneself;
+        if (!allowRecallPendingInvitationByOwnerAndManager && !allowRecallByOneself) {
             return Mono.error(ResponseException
                     .get(ResponseStatusCode.RECALLING_GROUP_INVITATION_IS_DISABLED));
         }
-        return queryGroupIdAndInviteeIdAndStatus(invitationId)
-                .switchIfEmpty(ResponseExceptionPublisherPool.resourceNotFound())
-                .flatMap(invitation -> groupMemberService
-                        .isOwnerOrManager(requesterId, invitation.getGroupId(), false)
-                        .flatMap(isOwnerOrManager -> {
-                            if (!isOwnerOrManager) {
-                                return Mono.error(ResponseException.get(
-                                        ResponseStatusCode.NOT_GROUP_OWNER_OR_MANAGER_TO_RECALL_GROUP_INVITATION));
-                            }
-                            RequestStatus requestStatus = invitation.getStatus();
-                            if (requestStatus != RequestStatus.PENDING) {
-                                String reason = "The invitation is under the status "
-                                        + requestStatus;
-                                return Mono.error(ResponseException.get(
-                                        ResponseStatusCode.RECALL_NON_PENDING_GROUP_INVITATION,
-                                        reason));
-                            }
-                            return groupInvitationRepository
-                                    .updateStatusIfPending(invitationId, RequestStatus.CANCELED)
-                                    .flatMap(result -> result.getModifiedCount() == 0
-                                            // Though it may be 0 because the request had been
-                                            // deleted between the status check,
-                                            // but only admins can delete them, and it is really
-                                            // rare.
-                                            // So we handle these cases as if the status of the
-                                            // request has changed.
-                                            ? Mono.error(ResponseException.get(
-                                                    ResponseStatusCode.RECALL_NON_PENDING_GROUP_INVITATION))
-                                            : groupVersionService
-                                                    .updateGroupInvitationsVersion(
-                                                            invitation.getGroupId())
-                                                    .onErrorResume(t -> {
-                                                        LOGGER.error(
-                                                                "Caught an error while updating the group invitations version of the group ({}) after recalling a pending invitation",
-                                                                invitation.getGroupId(),
-                                                                t);
-                                                        return Mono.empty();
-                                                    })
-                                                    .thenReturn(invitation));
-                        }));
+        Mono<GroupInvitation> queryInvitation = allowRecallByOneself
+                ? queryGroupIdAndInviterIdAndInviteeIdAndStatus(invitationId)
+                : queryGroupIdAndInviteeIdAndStatus(invitationId);
+        return queryInvitation.switchIfEmpty(ResponseExceptionPublisherPool.resourceNotFound())
+                .flatMap(invitation -> {
+                    Mono<Void> checkIfRequesterHasPermission =
+                            allowRecallByOneself && requesterId.equals(invitation.getInviterId())
+                                    ? Mono.empty()
+                                    : groupMemberService
+                                            .isOwnerOrManager(requesterId,
+                                                    invitation.getGroupId(),
+                                                    false)
+                                            .flatMap(isOwnerOrManager -> {
+                                                if (!isOwnerOrManager) {
+                                                    return Mono.error(ResponseException
+                                                            .get(allowRecallByOneself
+                                                                    ? ResponseStatusCode.NOT_GROUP_OWNER_OR_MANAGER_OR_SENDER_TO_RECALL_GROUP_INVITATION
+                                                                    : ResponseStatusCode.NOT_GROUP_OWNER_OR_MANAGER_TO_RECALL_GROUP_INVITATION));
+                                                }
+                                                return Mono.empty();
+                                            });
+                    return checkIfRequesterHasPermission.then(Mono.defer(() -> {
+                        RequestStatus requestStatus = invitation.getStatus();
+                        if (requestStatus != RequestStatus.PENDING) {
+                            String reason = "The invitation is under the status "
+                                    + requestStatus;
+                            return Mono.error(ResponseException.get(
+                                    ResponseStatusCode.RECALL_NON_PENDING_GROUP_INVITATION,
+                                    reason));
+                        }
+                        return groupInvitationRepository
+                                .updateStatusIfPending(invitationId, RequestStatus.CANCELED)
+                                .flatMap(result -> result.getModifiedCount() == 0
+                                        // Though it may be 0 because the request had been
+                                        // deleted between the status check,
+                                        // but only admins can delete them, and it is really
+                                        // rare.
+                                        // So we handle these cases as if the status of the
+                                        // request has changed.
+                                        ? Mono.error(ResponseException.get(
+                                                ResponseStatusCode.RECALL_NON_PENDING_GROUP_INVITATION))
+                                        : groupVersionService
+                                                .updateGroupInvitationsVersion(
+                                                        invitation.getGroupId())
+                                                .onErrorResume(t -> {
+                                                    LOGGER.error(
+                                                            "Caught an error while updating the group invitations version of the group ({}) after recalling a pending invitation",
+                                                            invitation.getGroupId(),
+                                                            t);
+                                                    return Mono.empty();
+                                                })
+                                                .thenReturn(invitation));
+                    }));
+                });
     }
 
     public Flux<GroupInvitation> queryGroupInvitationsByInviteeId(@NotNull Long inviteeId) {

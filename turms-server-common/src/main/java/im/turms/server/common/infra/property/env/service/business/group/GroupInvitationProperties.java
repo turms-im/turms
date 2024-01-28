@@ -56,6 +56,11 @@ public class GroupInvitationProperties {
     @MutableProperty
     private boolean allowRecallPendingInvitationByOwnerAndManager;
 
+    @Description("Whether to allow the sender to recall the pending group invitation sent by themselves")
+    @GlobalProperty
+    @MutableProperty
+    private boolean allowRecallPendingInvitationByOneself;
+
     @Description("Whether to delete expired group invitations when the cron expression is triggered")
     @GlobalProperty
     @MutableProperty

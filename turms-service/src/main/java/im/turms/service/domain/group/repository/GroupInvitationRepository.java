@@ -134,6 +134,17 @@ public class GroupInvitationRepository extends ExpirableEntityRepository<GroupIn
         return findExpirableDoc(filter, options);
     }
 
+    public Mono<GroupInvitation> findGroupIdAndInviterIdAndInviteeIdAndStatus(Long invitationId) {
+        Filter filter = Filter.newBuilder(1)
+                .eq(DomainFieldName.ID, invitationId);
+        QueryOptions options = QueryOptions.newBuilder(1)
+                .include(GroupInvitation.Fields.GROUP_ID,
+                        GroupInvitation.Fields.INVITER_ID,
+                        GroupInvitation.Fields.INVITEE_ID,
+                        GroupInvitation.Fields.STATUS);
+        return findExpirableDoc(filter, options);
+    }
+
     public Flux<GroupInvitation> findInvitationsByInviteeId(Long inviteeId) {
         Filter filter = Filter.newBuilder(1)
                 .eq(GroupInvitation.Fields.INVITEE_ID, inviteeId);
