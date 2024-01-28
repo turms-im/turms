@@ -1,3 +1,9 @@
+[submodule "turms-client-cpp/proto"]
+	path = turms-client-cpp/proto
+	url = https://github.com/turms-im/proto.git
+[submodule "turms-client-dart/proto"]
+	path = turms-client-dart/proto
+	url = https://github.com/turms-im/proto.git
 [submodule "turms-client-js/src/proto"]
 	path = turms-client-js/src/proto
 	url = https://github.com/turms-im/proto.git
@@ -6,9 +12,6 @@
 	url = https://github.com/turms-im/proto.git
 [submodule "turms-client-swift/Protos"]
 	path = turms-client-swift/Protos
-	url = https://github.com/turms-im/proto.git
-[submodule "turms-client-dart/proto"]
-	path = turms-client-dart/proto
 	url = https://github.com/turms-im/proto.git
 [submodule "turms-server-common/src/main/proto"]
 	path = turms-server-common/src/main/proto
