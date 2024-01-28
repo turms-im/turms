@@ -10,11 +10,14 @@ COPY . .
 
 # build in China
 #RUN cd ./turms-admin \
-#    && npm i --no-optional --force --registry=https://registry.npm.taobao.org \
+#    && npm i --force --registry=https://registry.npm.taobao.org \
 #    && npm run build
 
+# FIXME: We don't use "--no-optional" as a workaround
+# to fix the error "Cannot find module @rollup/rollup-linux-x64-gnu on Docker container".
+# Wait for https://github.com/vitejs/vite/discussions/15532 to be fixed.
 RUN cd ./turms-admin \
-    && npm i --no-optional --force \
+    && npm i --force \
     && npm run build
 
 ####################################################################
