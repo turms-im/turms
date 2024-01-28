@@ -148,11 +148,29 @@ public class MessageProperties {
     @Min(0)
     private int availableRecallDurationSeconds = 60 * 5;
 
-    @Description("The default available messages number with the \"total\" field that users request")
+    @Description("The default available messages number without the \"total\" field for a message query request")
+    @GlobalProperty
+    @MutableProperty
+    @Min(0)
+    private int defaultAvailableMessagesNumberWithoutTotal = 1000;
+
+    @Description("The max available messages number without the \"total\" field that a message query request can request")
+    @GlobalProperty
+    @MutableProperty
+    @Min(0)
+    private int maxAvailableMessagesNumberWithoutTotal = 1000;
+
+    @Description("The default available messages number with the \"total\" field for a message query request")
     @GlobalProperty
     @MutableProperty
     @Min(0)
     private int defaultAvailableMessagesNumberWithTotal = 1;
+
+    @Description("The max available messages number with the \"total\" field that a message query request can request")
+    @GlobalProperty
+    @MutableProperty
+    @Min(0)
+    private int maxAvailableMessagesNumberWithTotal = 1000;
 
     @NestedConfigurationProperty
     private CacheProperties cache = new CacheProperties();

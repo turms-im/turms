@@ -140,7 +140,14 @@ public class MessageService {
     private final boolean useSequenceIdForPrivateConversation;
 
     private int availableRecallDurationMillis;
-    private int defaultAvailableMessagesNumberWithTotal;
+    @Nullable
+    private Integer defaultAvailableMessagesNumberWithoutTotal;
+    @Nullable
+    private Integer maxAvailableMessagesNumberWithoutTotal;
+    @Nullable
+    private Integer defaultAvailableMessagesNumberWithTotal;
+    @Nullable
+    private Integer maxAvailableMessagesNumberWithTotal;
     private int maxTextLimit;
     private int maxRecordsSize;
     private int messageRetentionPeriodHours;
@@ -252,8 +259,27 @@ public class MessageService {
         MessageProperties messageProperties = serviceProperties.getMessage();
         availableRecallDurationMillis =
                 messageProperties.getAvailableRecallDurationSeconds() * 1000;
-        defaultAvailableMessagesNumberWithTotal =
+        int localDefaultAvailableMessagesNumberWithoutTotal =
+                messageProperties.getDefaultAvailableMessagesNumberWithoutTotal();
+        defaultAvailableMessagesNumberWithoutTotal =
+                localDefaultAvailableMessagesNumberWithoutTotal > 0
+                        ? localDefaultAvailableMessagesNumberWithoutTotal
+                        : null;
+        int localMaxAvailableMessagesNumberWithoutTotal =
+                messageProperties.getMaxAvailableMessagesNumberWithoutTotal();
+        maxAvailableMessagesNumberWithoutTotal = localMaxAvailableMessagesNumberWithoutTotal > 0
+                ? localMaxAvailableMessagesNumberWithoutTotal
+                : null;
+        int localDefaultAvailableMessagesNumberWithTotal =
                 messageProperties.getDefaultAvailableMessagesNumberWithTotal();
+        defaultAvailableMessagesNumberWithTotal = localDefaultAvailableMessagesNumberWithTotal > 0
+                ? localDefaultAvailableMessagesNumberWithTotal
+                : null;
+        int localMaxAvailableMessagesNumberWithTotal =
+                messageProperties.getMaxAvailableMessagesNumberWithTotal();
+        maxAvailableMessagesNumberWithTotal = localMaxAvailableMessagesNumberWithTotal > 0
+                ? localMaxAvailableMessagesNumberWithTotal
+                : null;
         maxTextLimit = messageProperties.getMaxTextLimit();
         maxRecordsSize = messageProperties.getMaxRecordsSizeBytes();
         persistPreMessageId = messageProperties.isPersistPreMessageId();
@@ -356,12 +382,13 @@ public class MessageService {
                     "\"areGroupMessages\" must be either true or false currently"));
         }
         if (maxCount == null) {
-            if (withTotal) {
-                maxCount = defaultAvailableMessagesNumberWithTotal;
-            }
+            maxCount = withTotal
+                    ? defaultAvailableMessagesNumberWithTotal
+                    : defaultAvailableMessagesNumberWithoutTotal;
         } else {
-            // TODO: make configurable
-            maxCount = Math.min(maxCount, 1000);
+            maxCount = withTotal
+                    ? Math.min(maxCount, maxAvailableMessagesNumberWithTotal)
+                    : Math.min(maxCount, maxAvailableMessagesNumberWithoutTotal);
         }
         if (areGroupMessages) {
             Integer finalMaxCount = maxCount;
