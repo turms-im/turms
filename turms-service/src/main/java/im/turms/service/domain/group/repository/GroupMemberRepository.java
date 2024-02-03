@@ -112,6 +112,12 @@ public class GroupMemberRepository extends BaseRepository<GroupMember, GroupMemb
         return mongoClient.findMany(entityClass, filter);
     }
 
+    public Flux<GroupMember> findGroupMembers(Long groupId) {
+        Filter filter = Filter.newBuilder(1)
+                .eq(GroupMember.Fields.ID_GROUP_ID, groupId);
+        return mongoClient.findMany(entityClass, filter);
+    }
+
     public Flux<GroupMember> findGroupMembers(Long groupId, Set<Long> memberIds) {
         Filter filter = Filter.newBuilder(2)
                 .eq(GroupMember.Fields.ID_GROUP_ID, groupId)

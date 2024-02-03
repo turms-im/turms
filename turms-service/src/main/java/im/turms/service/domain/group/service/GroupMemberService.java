@@ -63,6 +63,7 @@ import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.service.ServiceProperties;
 import im.turms.server.common.infra.property.env.service.business.group.GroupProperties;
 import im.turms.server.common.infra.reactor.PublisherPool;
+import im.turms.server.common.infra.recycler.ListRecycler;
 import im.turms.server.common.infra.recycler.Recyclable;
 import im.turms.server.common.infra.recycler.SetRecycler;
 import im.turms.server.common.infra.time.DateRange;
@@ -916,18 +917,28 @@ public class GroupMemberService {
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        if (preferCache && isMemberCacheEnabled) {
-            Map<GroupMember.Key, GroupMember> keyToMember =
-                    groupIdToMembersCache.getIfPresent(groupId);
-            if (keyToMember != null) {
-                Collection<GroupMember> members = keyToMember.values();
+        if (isMemberCacheEnabled) {
+            if (preferCache) {
+                Map<GroupMember.Key, GroupMember> keyToMember =
+                        groupIdToMembersCache.getIfPresent(groupId);
+                if (keyToMember != null) {
+                    Collection<GroupMember> members = keyToMember.values();
+                    Set<Long> memberIds = CollectionUtil.newSetWithExpectedSize(members.size());
+                    for (GroupMember member : members) {
+                        memberIds.add(member.getKey()
+                                .getUserId());
+                    }
+                    return Mono.just(memberIds);
+                }
+            }
+            return queryGroupMembers(groupId, false).map(members -> {
                 Set<Long> memberIds = CollectionUtil.newSetWithExpectedSize(members.size());
                 for (GroupMember member : members) {
                     memberIds.add(member.getKey()
                             .getUserId());
                 }
-                return Mono.just(memberIds);
-            }
+                return memberIds;
+            });
         }
         Recyclable<Set<Long>> recyclableSet = SetRecycler.obtain();
         return groupMemberRepository.findMemberIdsByGroupId(groupId)
@@ -1011,11 +1022,13 @@ public class GroupMemberService {
                 && userIds == null
                 && roles == null
                 && joinDateRange == null
-                && muteEndDateRange == null
-                && page == null
-                && size == null) {
+                && muteEndDateRange == null) {
             return groupsMemberFlux.collect(CollectorUtil.toChunkedList())
                     .doOnNext(members -> {
+                        if ((page != null && page != 0)
+                                || (size != null && size <= members.size())) {
+                            return;
+                        }
                         int groupCount = groupIds.size();
                         if (groupCount == 1) {
                             cacheMembers(groupIds.iterator()
@@ -1068,6 +1081,37 @@ public class GroupMemberService {
                         ? groupVersionService.updateMembersVersion()
                                 .thenReturn(result)
                         : OperationResultPublisherPool.ACKNOWLEDGED_DELETE_RESULT);
+    }
+
+    public Mono<Collection<GroupMember>> queryGroupMembers(
+            @NotNull Long groupId,
+            boolean preferCache) {
+        try {
+            Validator.notNull(groupId, "groupId");
+        } catch (ResponseException e) {
+            return Mono.error(e);
+        }
+        if (isMemberCacheEnabled) {
+            if (preferCache) {
+                Map<GroupMember.Key, GroupMember> keyToMember =
+                        groupIdToMembersCache.getIfPresent(groupId);
+                if (keyToMember != null) {
+                    return Mono.just(keyToMember.values());
+                }
+            }
+        }
+        Recyclable<List<GroupMember>> recyclableList = ListRecycler.obtain();
+        return groupMemberRepository.findGroupMembers(groupId)
+                .collect(Collectors.toCollection(recyclableList::getValue))
+                .map(groupMembers -> {
+                    if (isMemberCacheEnabled) {
+                        cacheMembers(groupMembers.getFirst()
+                                .getKey()
+                                .getGroupId(), groupMembers);
+                    }
+                    return (Collection<GroupMember>) new ArrayList<>(groupMembers);
+                })
+                .doFinally(signalType -> recyclableList.recycle());
     }
 
     public Mono<List<GroupMember>> queryGroupMembers(
@@ -1394,11 +1438,12 @@ public class GroupMemberService {
         if (!isMemberCacheEnabled) {
             return;
         }
-        Map<GroupMember.Key, GroupMember> keyAndMember =
-                groupIdToMembersCache.get(groupId, id -> new ConcurrentHashMap<>(16));
+        Map<GroupMember.Key, GroupMember> keyToGroupMember =
+                new ConcurrentHashMap<>(CollectionUtil.getMapCapability(members.size()));
         for (GroupMember member : members) {
-            keyAndMember.put(member.getKey(), member);
+            keyToGroupMember.put(member.getKey(), member);
         }
+        groupIdToMembersCache.put(groupId, keyToGroupMember);
     }
 
     private void updateMembersCache(
