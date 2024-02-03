@@ -1,6 +1,9 @@
 #!/bin/bash
 
-BASEDIR="$(dirname "$(dirname "$0")")"
+BASEDIR=$(pwd)
+if [ "$(basename "$BASEDIR")" == "tool" ]; then
+    BASEDIR="$(dirname "$BASEDIR")"
+fi
 PROTO_DIR="$BASEDIR/proto"
 DARTPROTO_DIR="$BASEDIR/lib/src/model/proto"
 echo "$BASEDIR"

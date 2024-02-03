@@ -1,6 +1,9 @@
 #!/bin/bash
 
-BASEDIR="$(dirname "$(dirname "$0")")"
+BASEDIR=$(pwd)
+if [ "$(basename "$BASEDIR")" == "tool" ]; then
+    BASEDIR="$(dirname "$BASEDIR")"
+fi
 SRC_DIR="$BASEDIR/lib/src"
 
 FILES=$(find "$SRC_DIR" -type f -name "*.dart" -printf "src/%P\n")
