@@ -658,6 +658,9 @@ public class UserRelationshipService {
             @Nullable Date establishmentDate,
             boolean upsert,
             @Nullable ClientSession session) {
+        if (blockDate != null && ownerId.equals(relatedUserId)) {
+            return Mono.error(ResponseException.get(ResponseStatusCode.CANNOT_BLOCK_ONESELF));
+        }
         if (establishmentDate == null) {
             establishmentDate = new Date();
         }

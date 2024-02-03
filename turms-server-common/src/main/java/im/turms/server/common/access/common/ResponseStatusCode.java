@@ -126,6 +126,7 @@ public enum ResponseStatusCode {
     ADD_NON_RELATED_USER_TO_GROUP(2500, "Cannot add a non-related user to a relationship group",
             403),
     CREATE_EXISTING_RELATIONSHIP(2501, "Cannot create an existing relationship", 409),
+    CANNOT_BLOCK_ONESELF(2502, "Cannot block yourself", 403),
 
     // User - Friend Request
     CREATE_EXISTING_FRIEND_REQUEST(2600, "A friend request has already existed", 409),
