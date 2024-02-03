@@ -30,6 +30,7 @@ import im.turms.service.domain.user.po.UserRelationship;
  */
 public record UserRelationshipDTO(
         Key key,
+        String name,
         Date blockDate,
         Date establishmentDate,
         Set<Integer> groupIndexes
@@ -38,10 +39,11 @@ public record UserRelationshipDTO(
     public UserRelationshipDTO(
             Long ownerId,
             Long relatedUserId,
+            String name,
             Date blockDate,
             Date establishmentDate,
             Set<Integer> groupIndexes) {
-        this(new Key(ownerId, relatedUserId), blockDate, establishmentDate, groupIndexes);
+        this(new Key(ownerId, relatedUserId), name, blockDate, establishmentDate, groupIndexes);
     }
 
     public static UserRelationshipDTO fromDomain(UserRelationship relationship) {
@@ -51,17 +53,17 @@ public record UserRelationshipDTO(
     public static UserRelationshipDTO fromDomain(
             @NotNull UserRelationship relationship,
             @Nullable Set<Integer> groupIndexes) {
+        UserRelationship.Key key = relationship.getKey();
         return new UserRelationshipDTO(
-                relationship.getKey()
-                        .getOwnerId(),
-                relationship.getKey()
-                        .getRelatedUserId(),
+                key.getOwnerId(),
+                key.getRelatedUserId(),
+                relationship.getName(),
                 relationship.getBlockDate(),
                 relationship.getEstablishmentDate(),
                 groupIndexes);
     }
 
-    public static record Key(
+    public record Key(
             Long ownerId,
             Long relatedUserId
     ) {

@@ -18,6 +18,7 @@
 package system.im.turms.service.domain.common.access.servicerequest.controller;
 
 import java.lang.reflect.ParameterizedType;
+import java.util.Set;
 import java.util.function.Consumer;
 import jakarta.annotation.Nullable;
 
@@ -94,7 +95,10 @@ public abstract class BaseServiceControllerTest<T> extends SpringAwareIntegratio
                         resultConsumer.accept(result);
                     }
                     if (recipients != null && recipients.length > 0) {
-                        assertThat(result.recipients()).containsExactlyInAnyOrder(recipients);
+                        Set<Long> recipientIds = result.notifications()
+                                .getFirst()
+                                .recipients();
+                        assertThat(recipientIds).containsExactlyInAnyOrder(recipients);
                     }
                     return true;
                 })

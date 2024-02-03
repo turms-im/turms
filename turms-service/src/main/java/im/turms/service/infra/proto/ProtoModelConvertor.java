@@ -269,6 +269,7 @@ public final class ProtoModelConvertor {
         UserRelationship.Builder builder = ClientMessagePool.getUserRelationshipBuilder();
         im.turms.service.domain.user.po.UserRelationship.Key key = relationship.getKey();
         Date establishmentDate = relationship.getEstablishmentDate();
+        String name = relationship.getName();
         Date blockDate = relationship.getBlockDate();
         if (key != null) {
             Long ownerId = key.getOwnerId();
@@ -282,6 +283,9 @@ public final class ProtoModelConvertor {
         }
         if (blockDate != null) {
             builder.setBlockDate(blockDate.getTime());
+        }
+        if (name != null) {
+            builder.setName(name);
         }
         if (establishmentDate != null) {
             builder.setEstablishmentDate(establishmentDate.getTime());

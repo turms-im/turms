@@ -70,8 +70,7 @@ class MessageServiceControllerST extends BaseServiceControllerTest<MessageServic
         Mono<RequestHandlerResult> resultMono = getController().handleCreateMessageRequest()
                 .handle(clientRequest);
         assertResultIsOkAndRecipients(resultMono,
-                result -> privateMessageId =
-                        NotificationUtil.getLongOrThrow(result.dataForRequester()),
+                result -> privateMessageId = NotificationUtil.getLongOrThrow(result.response()),
                 RECIPIENT_ID);
     }
 
@@ -89,8 +88,7 @@ class MessageServiceControllerST extends BaseServiceControllerTest<MessageServic
         Mono<RequestHandlerResult> resultMono = getController().handleCreateMessageRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono,
-                result -> groupMessageId =
-                        NotificationUtil.getLongOrThrow(result.dataForRequester()));
+                result -> groupMessageId = NotificationUtil.getLongOrThrow(result.response()));
     }
 
     @Test
@@ -106,7 +104,7 @@ class MessageServiceControllerST extends BaseServiceControllerTest<MessageServic
         Mono<RequestHandlerResult> resultMono = getController().handleCreateMessageRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono,
-                result -> assertThat(result.dataForRequester()
+                result -> assertThat(result.response()
                         .hasLong()).isTrue());
     }
 
@@ -123,7 +121,7 @@ class MessageServiceControllerST extends BaseServiceControllerTest<MessageServic
         Mono<RequestHandlerResult> resultMono = getController().handleCreateMessageRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono,
-                result -> assertThat(result.dataForRequester()
+                result -> assertThat(result.response()
                         .hasLong()).isTrue());
     }
 
@@ -175,7 +173,7 @@ class MessageServiceControllerST extends BaseServiceControllerTest<MessageServic
         Mono<RequestHandlerResult> resultMono = getController().handleQueryMessagesRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono,
-                result -> assertThat(result.dataForRequester()
+                result -> assertThat(result.response()
                         .getMessages()
                         .getMessagesList()).isNotEmpty());
     }
@@ -194,7 +192,7 @@ class MessageServiceControllerST extends BaseServiceControllerTest<MessageServic
         Mono<RequestHandlerResult> resultMono = getController().handleQueryMessagesRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono,
-                result -> assertThat(result.dataForRequester()
+                result -> assertThat(result.response()
                         .getMessagesWithTotalList()
                         .getMessagesWithTotalListList()).isNotEmpty());
     }

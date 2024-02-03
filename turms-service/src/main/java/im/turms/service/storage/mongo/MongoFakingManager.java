@@ -222,6 +222,7 @@ public final class MongoFakingManager {
                     "test-content",
                     RequestStatus.PENDING,
                     DateUtils.addDays(epoch, i),
+                    null,
                     null);
             groupRelatedObjs.add(groupInvitation);
         }
@@ -239,6 +240,7 @@ public final class MongoFakingManager {
                     "test-content",
                     RequestStatus.PENDING,
                     epoch,
+                    null,
                     null,
                     1L,
                     (long) i,
@@ -413,9 +415,9 @@ public final class MongoFakingManager {
         for (int i =
                 targetUserToBeFriendRelationshipStart; i <= targetUserToBeFriendRelationshipEnd; i++) {
             UserRelationship userRelationship1 =
-                    new UserRelationship(new UserRelationship.Key(1L, (long) i), null, epoch);
+                    new UserRelationship(new UserRelationship.Key(1L, (long) i), null, null, epoch);
             UserRelationship userRelationship2 =
-                    new UserRelationship(new UserRelationship.Key((long) i, 1L), null, epoch);
+                    new UserRelationship(new UserRelationship.Key((long) i, 1L), null, null, epoch);
             UserRelationshipGroupMember relationshipGroupMember1 =
                     new UserRelationshipGroupMember(1L, 0, (long) i, epoch);
             UserRelationshipGroupMember relationshipGroupMember2 =

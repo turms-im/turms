@@ -235,12 +235,12 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
     // Upsert
 
     @Override
-    public <T> Mono<Void> upsert(T o) {
+    public <T> Mono<UpdateResult> upsert(T o) {
         return upsert(null, o);
     }
 
     @Override
-    public <T> Mono<Void> upsert(@Nullable ClientSession session, T record) {
+    public <T> Mono<UpdateResult> upsert(@Nullable ClientSession session, T record) {
         Class<T> clazz = (Class<T>) record.getClass();
         MongoEntity<T> entity = (MongoEntity<T>) context.getEntity(record.getClass());
         MongoCollection<T> collection = context.getCollection(clazz);
@@ -259,8 +259,7 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
                 ? collection.updateOne(filter, update, DEFAULT_UPSERT_OPTIONS)
                 : collection.updateOne(session, filter, update, DEFAULT_UPSERT_OPTIONS);
         return Mono.from(result)
-                .onErrorMap(MongoExceptionUtil::translate)
-                .then();
+                .onErrorMap(MongoExceptionUtil::translate);
     }
 
     /**

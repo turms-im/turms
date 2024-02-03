@@ -22,6 +22,7 @@ import java.util.Set;
 import jakarta.annotation.Nullable;
 
 import com.mongodb.client.result.UpdateResult;
+import com.mongodb.reactivestreams.client.ClientSession;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
@@ -71,14 +72,17 @@ public class GroupJoinRequestRepository extends ExpirableEntityRepository<GroupJ
     public Mono<UpdateResult> updateStatusIfPending(
             Long requestId,
             RequestStatus status,
-            Long responderId) {
+            Long responderId,
+            @Nullable String reason,
+            @Nullable ClientSession session) {
         Filter filter = Filter.newBuilder(2)
                 .eq(DomainFieldName.ID, requestId)
                 .eq(GroupJoinRequest.Fields.STATUS, RequestStatus.PENDING);
-        Update update = Update.newBuilder(2)
+        Update update = Update.newBuilder(3)
                 .set(GroupJoinRequest.Fields.STATUS, status)
-                .set(GroupJoinRequest.Fields.RESPONDER_ID, responderId);
-        return mongoClient.updateOne(entityClass, filter, update);
+                .set(GroupJoinRequest.Fields.RESPONDER_ID, responderId)
+                .setIfNotNull(GroupJoinRequest.Fields.REASON, reason);
+        return mongoClient.updateOne(session, entityClass, filter, update);
     }
 
     public Mono<UpdateResult> updateRequests(

@@ -47,6 +47,12 @@ public abstract class ExpirableEntityRepository<T extends Expirable, K>
 
     protected abstract int getEntityExpireAfterSeconds();
 
+    public boolean isExpired(long creationDate) {
+        int expireAfterSeconds = getEntityExpireAfterSeconds();
+        return expireAfterSeconds > 0
+                && creationDate < System.currentTimeMillis() - expireAfterSeconds * 1000L;
+    }
+
     @Nullable
     public Date getEntityExpirationDate() {
         int expireAfterSeconds = getEntityExpireAfterSeconds();

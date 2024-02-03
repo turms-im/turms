@@ -25,7 +25,7 @@ import reactor.core.publisher.Sinks;
 import im.turms.server.common.infra.thread.ThreadSafe;
 
 /**
- * The class is used to run task one by one.
+ * The class is used to run tasks one by one.
  *
  * @author James Chen
  */

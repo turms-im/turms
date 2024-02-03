@@ -67,4 +67,15 @@ public class FriendRequestProperties {
     @MutableProperty
     private boolean deleteExpiredRequestsWhenCronTriggered;
 
+    @Description("Whether to allow the sender to recall the pending friend request sent by themselves")
+    @GlobalProperty
+    @MutableProperty
+    private boolean allowRecallPendingFriendRequestBySender;
+
+    @Description("The maximum allowed length for the response reason of a friend request")
+    @GlobalProperty
+    @MutableProperty
+    @Min(0)
+    private int maxResponseReasonLength = 200;
+
 }

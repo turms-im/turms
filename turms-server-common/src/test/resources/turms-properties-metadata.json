@@ -518,6 +518,7 @@
             "CREATE_FRIEND_REQUEST_REQUEST",
             "CREATE_RELATIONSHIP_GROUP_REQUEST",
             "CREATE_RELATIONSHIP_REQUEST",
+            "DELETE_FRIEND_REQUEST_REQUEST",
             "DELETE_RELATIONSHIP_GROUP_REQUEST",
             "DELETE_RELATIONSHIP_REQUEST",
             "QUERY_FRIEND_REQUESTS_REQUEST",
@@ -547,7 +548,9 @@
             "QUERY_GROUP_INVITATIONS_REQUEST",
             "QUERY_GROUP_JOIN_REQUESTS_REQUEST",
             "QUERY_GROUP_JOIN_QUESTIONS_REQUEST",
+            "UPDATE_GROUP_INVITATION_REQUEST",
             "UPDATE_GROUP_JOIN_QUESTION_REQUEST",
+            "UPDATE_GROUP_JOIN_REQUEST_REQUEST",
             "DELETE_RESOURCE_REQUEST",
             "QUERY_RESOURCE_DOWNLOAD_INFO_REQUEST",
             "QUERY_RESOURCE_UPLOAD_INFO_REQUEST",
@@ -612,6 +615,7 @@
             "CREATE_FRIEND_REQUEST_REQUEST",
             "CREATE_RELATIONSHIP_GROUP_REQUEST",
             "CREATE_RELATIONSHIP_REQUEST",
+            "DELETE_FRIEND_REQUEST_REQUEST",
             "DELETE_RELATIONSHIP_GROUP_REQUEST",
             "DELETE_RELATIONSHIP_REQUEST",
             "QUERY_FRIEND_REQUESTS_REQUEST",
@@ -641,7 +645,9 @@
             "QUERY_GROUP_INVITATIONS_REQUEST",
             "QUERY_GROUP_JOIN_REQUESTS_REQUEST",
             "QUERY_GROUP_JOIN_QUESTIONS_REQUEST",
+            "UPDATE_GROUP_INVITATION_REQUEST",
             "UPDATE_GROUP_JOIN_QUESTION_REQUEST",
+            "UPDATE_GROUP_JOIN_REQUEST_REQUEST",
             "DELETE_RESOURCE_REQUEST",
             "QUERY_RESOURCE_DOWNLOAD_INFO_REQUEST",
             "QUERY_RESOURCE_UPLOAD_INFO_REQUEST",
@@ -1986,7 +1992,7 @@
     "java": {
       "allowSave": {
         "deprecated": false,
-        "description": "Whether to allow to save plugins using HTTP API",
+        "description": "Whether to allow saving plugins using HTTP API",
         "global": false,
         "mutable": false,
         "sensitive": false,
@@ -1996,7 +2002,7 @@
     "js": {
       "allowSave": {
         "deprecated": false,
-        "description": "Whether to allow to save plugins using HTTP API",
+        "description": "Whether to allow saving plugins using HTTP API",
         "global": false,
         "mutable": false,
         "sensitive": false,
@@ -2027,6 +2033,20 @@
           "sensitive": false,
           "type": "int"
         }
+      },
+      "sandboxPolicy": {
+        "deprecated": false,
+        "description": "The sandbox policy to use when running plugins",
+        "global": false,
+        "mutable": false,
+        "options": [
+          "TRUSTED",
+          "CONSTRAINED",
+          "ISOLATED",
+          "UNTRUSTED"
+        ],
+        "sensitive": false,
+        "type": "enum"
       }
     },
     "network": {
@@ -2535,6 +2555,7 @@
           "CREATE_FRIEND_REQUEST_REQUEST",
           "CREATE_RELATIONSHIP_GROUP_REQUEST",
           "CREATE_RELATIONSHIP_REQUEST",
+          "DELETE_FRIEND_REQUEST_REQUEST",
           "DELETE_RELATIONSHIP_GROUP_REQUEST",
           "DELETE_RELATIONSHIP_REQUEST",
           "QUERY_FRIEND_REQUESTS_REQUEST",
@@ -2564,7 +2585,9 @@
           "QUERY_GROUP_INVITATIONS_REQUEST",
           "QUERY_GROUP_JOIN_REQUESTS_REQUEST",
           "QUERY_GROUP_JOIN_QUESTIONS_REQUEST",
+          "UPDATE_GROUP_INVITATION_REQUEST",
           "UPDATE_GROUP_JOIN_QUESTION_REQUEST",
+          "UPDATE_GROUP_JOIN_REQUEST_REQUEST",
           "DELETE_RESOURCE_REQUEST",
           "QUERY_RESOURCE_DOWNLOAD_INFO_REQUEST",
           "QUERY_RESOURCE_UPLOAD_INFO_REQUEST",
@@ -2630,6 +2653,7 @@
             "CREATE_FRIEND_REQUEST_REQUEST",
             "CREATE_RELATIONSHIP_GROUP_REQUEST",
             "CREATE_RELATIONSHIP_REQUEST",
+            "DELETE_FRIEND_REQUEST_REQUEST",
             "DELETE_RELATIONSHIP_GROUP_REQUEST",
             "DELETE_RELATIONSHIP_REQUEST",
             "QUERY_FRIEND_REQUESTS_REQUEST",
@@ -2659,7 +2683,9 @@
             "QUERY_GROUP_INVITATIONS_REQUEST",
             "QUERY_GROUP_JOIN_REQUESTS_REQUEST",
             "QUERY_GROUP_JOIN_QUESTIONS_REQUEST",
+            "UPDATE_GROUP_INVITATION_REQUEST",
             "UPDATE_GROUP_JOIN_QUESTION_REQUEST",
+            "UPDATE_GROUP_JOIN_REQUEST_REQUEST",
             "DELETE_RESOURCE_REQUEST",
             "QUERY_RESOURCE_DOWNLOAD_INFO_REQUEST",
             "QUERY_RESOURCE_UPLOAD_INFO_REQUEST",
@@ -2724,6 +2750,7 @@
             "CREATE_FRIEND_REQUEST_REQUEST",
             "CREATE_RELATIONSHIP_GROUP_REQUEST",
             "CREATE_RELATIONSHIP_REQUEST",
+            "DELETE_FRIEND_REQUEST_REQUEST",
             "DELETE_RELATIONSHIP_GROUP_REQUEST",
             "DELETE_RELATIONSHIP_REQUEST",
             "QUERY_FRIEND_REQUESTS_REQUEST",
@@ -2753,7 +2780,9 @@
             "QUERY_GROUP_INVITATIONS_REQUEST",
             "QUERY_GROUP_JOIN_REQUESTS_REQUEST",
             "QUERY_GROUP_JOIN_QUESTIONS_REQUEST",
+            "UPDATE_GROUP_INVITATION_REQUEST",
             "UPDATE_GROUP_JOIN_QUESTION_REQUEST",
+            "UPDATE_GROUP_JOIN_REQUEST_REQUEST",
             "DELETE_RESOURCE_REQUEST",
             "QUERY_RESOURCE_DOWNLOAD_INFO_REQUEST",
             "QUERY_RESOURCE_UPLOAD_INFO_REQUEST",
@@ -2806,7 +2835,7 @@
       "readReceipt": {
         "allowMoveReadDateForward": {
           "deprecated": false,
-          "description": "Whether to allow to move the last read date forward",
+          "description": "Whether to allow moving the last read date forward",
           "global": true,
           "mutable": true,
           "sensitive": false,
@@ -2814,7 +2843,7 @@
         },
         "enabled": {
           "deprecated": false,
-          "description": "Whether to allow to update the last read date",
+          "description": "Whether to allow updating the last read date",
           "global": true,
           "mutable": true,
           "sensitive": false,
@@ -2899,6 +2928,14 @@
         "sensitive": false,
         "type": "boolean"
       },
+      "allowGroupOwnerChangeGroupType": {
+        "deprecated": false,
+        "description": "Whether to allow the group owner to change the group type",
+        "global": true,
+        "mutable": true,
+        "sensitive": false,
+        "type": "boolean"
+      },
       "deleteGroupLogicallyByDefault": {
         "deprecated": false,
         "description": "Whether to delete groups logically by default",
@@ -2911,6 +2948,14 @@
         "allowRecallPendingInvitationByOwnerAndManager": {
           "deprecated": false,
           "description": "Whether to allow the owner and managers of a group to recall pending group invitations",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        },
+        "allowRecallPendingInvitationBySender": {
+          "deprecated": false,
+          "description": "Whether to allow the sender to recall the pending group invitation sent by themselves",
           "global": true,
           "mutable": true,
           "sensitive": false,
@@ -2947,10 +2992,18 @@
           "mutable": true,
           "sensitive": false,
           "type": "int"
+        },
+        "maxResponseReasonLength": {
+          "deprecated": false,
+          "description": "The maximum allowed length for the response reason of a group invitation",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "int"
         }
       },
       "joinRequest": {
-        "allowRecallJoinRequestSentByOneself": {
+        "allowRecallPendingJoinRequestBySender": {
           "deprecated": false,
           "description": "Whether to allow users to recall the join requests sent by themselves",
           "global": true,
@@ -2985,6 +3038,14 @@
         "maxContentLength": {
           "deprecated": false,
           "description": "The maximum allowed length for the text of a group join request",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "int"
+        },
+        "maxResponseReasonLength": {
+          "deprecated": false,
+          "description": "The maximum allowed length for the response reason of a group join request",
           "global": true,
           "mutable": true,
           "sensitive": false,
@@ -3095,7 +3156,15 @@
       },
       "defaultAvailableMessagesNumberWithTotal": {
         "deprecated": false,
-        "description": "The default available messages number with the \"total\" field that users request",
+        "description": "The default available messages number with the \"total\" field for a message query request",
+        "global": true,
+        "mutable": true,
+        "sensitive": false,
+        "type": "int"
+      },
+      "defaultAvailableMessagesNumberWithoutTotal": {
+        "deprecated": false,
+        "description": "The default available messages number without the \"total\" field for a message query request",
         "global": true,
         "mutable": true,
         "sensitive": false,
@@ -3124,6 +3193,22 @@
         "mutable": true,
         "sensitive": false,
         "type": "boolean"
+      },
+      "maxAvailableMessagesNumberWithTotal": {
+        "deprecated": false,
+        "description": "The max available messages number with the \"total\" field that a message query request can request",
+        "global": true,
+        "mutable": true,
+        "sensitive": false,
+        "type": "int"
+      },
+      "maxAvailableMessagesNumberWithoutTotal": {
+        "deprecated": false,
+        "description": "The max available messages number without the \"total\" field that a message query request can request",
+        "global": true,
+        "mutable": true,
+        "sensitive": false,
+        "type": "int"
       },
       "maxRecordsSizeBytes": {
         "deprecated": false,
@@ -3521,10 +3606,28 @@
           "type": "boolean"
         }
       },
-      "friendRequestReplied": {
-        "notifyFriendRequestRequester": {
+      "friendRequestRecalled": {
+        "notifyFriendRequestRecipient": {
           "deprecated": false,
-          "description": "Whether to notify the requester when a recipient has replied to the friend request sent by the requester",
+          "description": "Whether to notify the recipient when the requester has recalled a friend request",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        },
+        "notifyRequesterOtherOnlineSessions": {
+          "deprecated": false,
+          "description": "Whether to notify the requester's other online sessions when they have recalled a friend request",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        }
+      },
+      "friendRequestReplied": {
+        "notifyFriendRequestSender": {
+          "deprecated": false,
+          "description": "Whether to notify the sender of the friend request when the recipient has replied to the friend request sent by them",
           "global": true,
           "mutable": true,
           "sensitive": false,
@@ -3705,6 +3808,40 @@
           "type": "boolean"
         }
       },
+      "groupInvitationReplied": {
+        "notifyGroupInvitationInviter": {
+          "deprecated": false,
+          "description": "Whether to notify the inviter of the group invitation when their group invitations have been replied",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        },
+        "notifyGroupMembers": {
+          "deprecated": false,
+          "description": "Whether to notify group members when a group invitation has been replied",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        },
+        "notifyGroupOwnerAndManagers": {
+          "deprecated": false,
+          "description": "Whether to notify the group owner and managers when a group invitation has been replied",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        },
+        "notifyRequesterOtherOnlineSessions": {
+          "deprecated": false,
+          "description": "Whether to notify the requester's other online sessions when they have replied to a group invitation",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        }
+      },
       "groupJoinRequestCreated": {
         "notifyGroupMembers": {
           "deprecated": false,
@@ -3751,6 +3888,40 @@
         "notifyRequesterOtherOnlineSessions": {
           "deprecated": false,
           "description": "Whether to notify the requester's other online sessions when they have recalled a group join request",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        }
+      },
+      "groupJoinRequestReplied": {
+        "notifyGroupJoinRequestSender": {
+          "deprecated": false,
+          "description": "Whether to notify the sender of the group join request when the group owner or manager has replied to the friend request sent by them",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        },
+        "notifyGroupMembers": {
+          "deprecated": false,
+          "description": "Whether to notify group members when a group join request has been replied",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        },
+        "notifyGroupOwnerAndManagers": {
+          "deprecated": false,
+          "description": "Whether to notify the group owner and managers when a group join request has been replied",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        },
+        "notifyRequesterOtherOnlineSessions": {
+          "deprecated": false,
+          "description": "Whether to notify the requester's other online sessions when they have replied to a group join request",
           "global": true,
           "mutable": true,
           "sensitive": false,
@@ -4332,9 +4503,17 @@
         "type": "boolean"
       },
       "friendRequest": {
+        "allowRecallPendingFriendRequestBySender": {
+          "deprecated": false,
+          "description": "Whether to allow the sender to recall the pending friend request sent by themselves",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        },
         "allowSendRequestAfterDeclinedOrIgnoredOrExpired": {
           "deprecated": false,
-          "description": "Whether to allow resending a friend request after the previous request has been declined, ignored, or expired",
+          "description": "Whether to allow sending a friend request again after the previous request has been declined, ignored, or expired",
           "global": true,
           "mutable": true,
           "sensitive": false,
@@ -4367,6 +4546,14 @@
         "maxContentLength": {
           "deprecated": false,
           "description": "The maximum allowed length for the text of a friend request",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "int"
+        },
+        "maxResponseReasonLength": {
+          "deprecated": false,
+          "description": "The maximum allowed length for the response reason of a friend request",
           "global": true,
           "mutable": true,
           "sensitive": false,

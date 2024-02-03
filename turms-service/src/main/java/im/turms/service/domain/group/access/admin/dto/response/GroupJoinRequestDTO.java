@@ -41,6 +41,7 @@ public class GroupJoinRequestDTO extends GroupJoinRequest {
                 request.getStatus(),
                 request.getCreationDate(),
                 request.getResponseDate(),
+                request.getReason(),
                 request.getGroupId(),
                 request.getRequesterId(),
                 request.getResponderId());

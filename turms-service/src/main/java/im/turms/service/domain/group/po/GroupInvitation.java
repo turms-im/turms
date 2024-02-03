@@ -96,6 +96,9 @@ public class GroupInvitation extends BaseEntity implements Expirable {
                     + ":{$exists:true}}")
     private final Date responseDate;
 
+    @Field(Fields.REASON)
+    private String reason;
+
     public static final class Fields {
         public static final String GROUP_ID = "gid";
         public static final String INVITER_ID = "irid";
@@ -104,6 +107,7 @@ public class GroupInvitation extends BaseEntity implements Expirable {
         public static final String STATUS = "stat";
         public static final String CREATION_DATE = "cd";
         public static final String RESPONSE_DATE = "rd";
+        public static final String REASON = "rsn";
 
         private Fields() {
         }

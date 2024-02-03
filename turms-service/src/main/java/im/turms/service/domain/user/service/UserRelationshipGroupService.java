@@ -46,6 +46,7 @@ import im.turms.server.common.infra.exception.ResponseExceptionPublisherPool;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.random.RandomUtil;
+import im.turms.server.common.infra.reactor.PublisherPool;
 import im.turms.server.common.infra.time.DateRange;
 import im.turms.server.common.infra.time.DateUtil;
 import im.turms.server.common.infra.validation.Validator;
@@ -229,7 +230,10 @@ public class UserRelationshipGroupService {
                         .thenReturn(result));
     }
 
-    public Mono<Void> upsertRelationshipGroupMember(
+    /**
+     * @return the relationship index only if the related user is added to the group.
+     */
+    public Mono<Integer> upsertRelationshipGroupMember(
             @NotNull Long ownerId,
             @NotNull Long relatedUserId,
             @Nullable Integer newGroupIndex,
@@ -249,21 +253,28 @@ public class UserRelationshipGroupService {
                             deleteGroupIndex,
                             newGroupIndex,
                             false,
-                            session);
+                            session).thenReturn(newGroupIndex);
                 }
             } else {
                 return addRelatedUserToRelationshipGroups(ownerId,
                         newGroupIndex,
                         relatedUserId,
-                        session).then();
+                        session).flatMap(
+                                addedNewRelatedUser -> addedNewRelatedUser
+                                        ? Mono.just(newGroupIndex)
+                                        : Mono.empty());
             }
-        } else if (deleteGroupIndex != null) {
+        } else if (deleteGroupIndex != null
+                && (!deleteGroupIndex.equals(DEFAULT_RELATIONSHIP_GROUP_INDEX))) {
+            // TODO: Support specifying the behavior when a user removes a relationship from all
+            // relationship groups (delete the relationship or not)
+            // https://github.com/turms-im/turms/issues/1382
             return moveRelatedUserToNewGroup(ownerId,
                     relatedUserId,
                     deleteGroupIndex,
                     DEFAULT_RELATIONSHIP_GROUP_INDEX,
                     true,
-                    session);
+                    session).thenReturn(DEFAULT_RELATIONSHIP_GROUP_INDEX);
         }
         return Mono.empty();
     }
@@ -288,11 +299,12 @@ public class UserRelationshipGroupService {
     }
 
     /**
-     * @implNote We run this method while upserting a relationship into the owner's relationship
+     * @return true if added a new related user to the relationship group.
+     * @implNote We call this method while upserting a relationship into the owner's relationship
      *           group in a transaction currently, so we don't check whether the owner has a
      *           relationship with the related user in this method.
      */
-    public Mono<UserRelationshipGroupMember> addRelatedUserToRelationshipGroups(
+    public Mono<Boolean> addRelatedUserToRelationshipGroups(
             @NotNull Long ownerId,
             @NotNull Integer groupIndex,
             @NotNull Long relatedUserId,
@@ -305,15 +317,21 @@ public class UserRelationshipGroupService {
         UserRelationshipGroupMember member =
                 new UserRelationshipGroupMember(ownerId, groupIndex, relatedUserId, new Date());
         return userRelationshipGroupMemberRepository.upsert(member, session)
-                .flatMap(groupMember -> userVersionService.updateRelationshipGroupsVersion(ownerId)
-                        .onErrorResume(t -> {
-                            LOGGER.error(
-                                    "Caught an error while updating the relationship groups version of the owner ({}) after adding a user to the groups",
-                                    ownerId,
-                                    t);
-                            return Mono.empty();
-                        }))
-                .thenReturn(member);
+                .flatMap(updateResult -> {
+                    boolean addedNewRelatedUser = updateResult.getUpsertedId() != null;
+                    if (!addedNewRelatedUser && updateResult.getModifiedCount() <= 0) {
+                        return PublisherPool.FALSE;
+                    }
+                    return userVersionService.updateRelationshipGroupsVersion(ownerId)
+                            .onErrorResume(t -> {
+                                LOGGER.error(
+                                        "Caught an error while updating the relationship groups version of the owner ({}) after adding a user to the groups",
+                                        ownerId,
+                                        t);
+                                return Mono.empty();
+                            })
+                            .thenReturn(addedNewRelatedUser);
+                });
     }
 
     public Mono<Void> deleteRelationshipGroupAndMoveMembers(

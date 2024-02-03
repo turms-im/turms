@@ -71,7 +71,9 @@ import static im.turms.server.common.access.client.dto.request.TurmsRequest.Kind
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_USER_PROFILES_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.UPDATE_CONVERSATION_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.UPDATE_FRIEND_REQUEST_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.UPDATE_GROUP_INVITATION_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.UPDATE_GROUP_JOIN_QUESTION_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.UPDATE_GROUP_JOIN_REQUEST_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.UPDATE_GROUP_MEMBER_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.UPDATE_GROUP_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.UPDATE_MESSAGE_ATTACHMENT_INFO_REQUEST;
@@ -107,8 +109,9 @@ public enum PolicyStatementResource {
     RELATIONSHIP_GROUP(Set.of(CREATE_RELATIONSHIP_GROUP_REQUEST),
             Set.of(DELETE_RELATIONSHIP_GROUP_REQUEST), Set.of(UPDATE_RELATIONSHIP_GROUP_REQUEST),
             Set.of(QUERY_RELATIONSHIP_GROUPS_REQUEST)),
-    FRIEND_REQUEST(Set.of(KindCase.CREATE_FRIEND_REQUEST_REQUEST), Collections.emptySet(),
-            Set.of(UPDATE_FRIEND_REQUEST_REQUEST), Set.of(QUERY_FRIEND_REQUESTS_REQUEST)),
+    FRIEND_REQUEST(Set.of(KindCase.CREATE_FRIEND_REQUEST_REQUEST),
+            Set.of(KindCase.DELETE_FRIEND_REQUEST_REQUEST), Set.of(UPDATE_FRIEND_REQUEST_REQUEST),
+            Set.of(QUERY_FRIEND_REQUESTS_REQUEST)),
     // endregion
     // region group
     GROUP(Set.of(CREATE_GROUP_REQUEST), Set.of(DELETE_GROUP_REQUEST), Set.of(UPDATE_GROUP_REQUEST),
@@ -117,7 +120,7 @@ public enum PolicyStatementResource {
             Set.of(DELETE_GROUP_BLOCKED_USER_REQUEST), Collections.emptySet(),
             Set.of(QUERY_GROUP_BLOCKED_USER_IDS_REQUEST, QUERY_GROUP_BLOCKED_USER_INFOS_REQUEST)),
     GROUP_INVITATION(Set.of(CREATE_GROUP_INVITATION_REQUEST),
-            Set.of(DELETE_GROUP_INVITATION_REQUEST), Collections.emptySet(),
+            Set.of(DELETE_GROUP_INVITATION_REQUEST), Set.of(UPDATE_GROUP_INVITATION_REQUEST),
             Set.of(QUERY_GROUP_INVITATIONS_REQUEST)),
     GROUP_JOIN_QUESTION(Set.of(CREATE_GROUP_JOIN_QUESTIONS_REQUEST),
             Set.of(DELETE_GROUP_JOIN_QUESTIONS_REQUEST), Set.of(UPDATE_GROUP_JOIN_QUESTION_REQUEST),
@@ -125,7 +128,7 @@ public enum PolicyStatementResource {
     GROUP_JOIN_QUESTION_ANSWER(Collections.emptySet(), Collections.emptySet(),
             Collections.emptySet(), Set.of(CHECK_GROUP_JOIN_QUESTIONS_ANSWERS_REQUEST)),
     GROUP_JOIN_REQUEST(Set.of(CREATE_GROUP_JOIN_REQUEST_REQUEST),
-            Set.of(DELETE_GROUP_JOIN_REQUEST_REQUEST), Collections.emptySet(),
+            Set.of(DELETE_GROUP_JOIN_REQUEST_REQUEST), Set.of(UPDATE_GROUP_JOIN_REQUEST_REQUEST),
             Set.of(QUERY_GROUP_JOIN_REQUESTS_REQUEST)),
     GROUP_MEMBER(Set.of(CREATE_GROUP_MEMBERS_REQUEST), Set.of(DELETE_GROUP_MEMBERS_REQUEST),
             Set.of(UPDATE_GROUP_MEMBER_REQUEST), Set.of(QUERY_GROUP_MEMBERS_REQUEST)),

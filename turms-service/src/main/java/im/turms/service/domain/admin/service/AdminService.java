@@ -184,6 +184,7 @@ public class AdminService extends BaseAdminService {
         String finalAccount = account;
         Mono<Void> result = upsert
                 ? adminRepository.upsert(admin)
+                        .then()
                 : adminRepository.insert(admin);
         return result.then(Mono.fromCallable(() -> {
             accountToAdmin.put(finalAccount, adminInfo);

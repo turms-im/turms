@@ -112,7 +112,7 @@ class UserServiceControllerST extends BaseServiceControllerTest<UserServiceContr
         Mono<RequestHandlerResult> resultMono = getController().handleQueryUserProfilesRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono,
-                result -> assertThat(result.dataForRequester()
+                result -> assertThat(result.response()
                         .getUserInfosWithVersion()
                         .getUserInfosCount()).isEqualTo(1));
     }
@@ -132,7 +132,7 @@ class UserServiceControllerST extends BaseServiceControllerTest<UserServiceContr
         Mono<RequestHandlerResult> resultMono = getController().handleQueryNearbyUsersRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono,
-                result -> assertThat(result.dataForRequester()
+                result -> assertThat(result.response()
                         .getNearbyUsers()
                         .getNearbyUsersCount()).isPositive());
     }
@@ -150,7 +150,7 @@ class UserServiceControllerST extends BaseServiceControllerTest<UserServiceContr
                 getController().handleQueryUserOnlineStatusesRequest()
                         .handle(clientRequest);
         assertResultIsOk(resultMono,
-                result -> assertThat(result.dataForRequester()
+                result -> assertThat(result.response()
                         .getUserOnlineStatuses()
                         .getStatuses(0)
                         .getUserStatus()).isEqualTo(UserStatus.OFFLINE));

@@ -25,6 +25,7 @@ import im.turms.server.common.domain.common.access.dto.ControllerDTO;
  * @author James Chen
  */
 public record UpdateRelationshipDTO(
+        String name,
         Date blockDate,
         Date establishmentDate
 ) implements ControllerDTO {

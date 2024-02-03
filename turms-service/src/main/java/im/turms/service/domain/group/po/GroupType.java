@@ -32,7 +32,7 @@ import im.turms.service.domain.group.bo.GroupUpdateStrategy;
  * No need to shard because there are only a few (or some) group types.
  * <p>
  * Note that there is a built-in immutable group type:
- * 
+ *
  * <pre>
  * { id: 0, name: "DEFAULT" }
  * </pre>

@@ -54,7 +54,7 @@ public class GroupJoinRequestProperties {
     @Description("Whether to allow users to recall the join requests sent by themselves")
     @GlobalProperty
     @MutableProperty
-    private boolean allowRecallJoinRequestSentByOneself;
+    private boolean allowRecallPendingJoinRequestBySender;
 
     @Description("Whether to delete expired group join requests when the cron expression is triggered")
     @GlobalProperty
@@ -66,4 +66,10 @@ public class GroupJoinRequestProperties {
     @ValidCron
     private String expiredJoinRequestsCleanupCron =
             CronConst.DEFAULT_EXPIRED_GROUP_JOIN_REQUESTS_CLEANUP_CRON;
+
+    @Description("The maximum allowed length for the response reason of a group join request")
+    @GlobalProperty
+    @MutableProperty
+    @Min(0)
+    private int maxResponseReasonLength = 200;
 }

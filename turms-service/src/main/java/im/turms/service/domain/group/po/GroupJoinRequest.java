@@ -83,6 +83,9 @@ public class GroupJoinRequest extends BaseEntity implements Expirable {
                     + ":{$exists:true}}")
     private final Date responseDate;
 
+    @Field(Fields.REASON)
+    private String reason;
+
     /**
      * Used by queryGroupJoinRequestsByGroupId
      */
@@ -108,6 +111,7 @@ public class GroupJoinRequest extends BaseEntity implements Expirable {
         public static final String STATUS = "stat";
         public static final String CREATION_DATE = "cd";
         public static final String RESPONSE_DATE = "rd";
+        public static final String REASON = "rsn";
         public static final String GROUP_ID = "gid";
         public static final String REQUESTER_ID = "rqid";
         public static final String RESPONDER_ID = "rpid";

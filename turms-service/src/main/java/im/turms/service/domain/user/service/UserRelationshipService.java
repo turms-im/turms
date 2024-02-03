@@ -58,6 +58,7 @@ import im.turms.server.common.infra.validation.Validator;
 import im.turms.server.common.storage.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.storage.mongo.exception.DuplicateKeyException;
 import im.turms.service.domain.common.validation.DataValidator;
+import im.turms.service.domain.user.bo.UpsertRelationshipResult;
 import im.turms.service.domain.user.po.UserRelationship;
 import im.turms.service.domain.user.po.UserVersion;
 import im.turms.service.domain.user.repository.UserRelationshipRepository;
@@ -546,7 +547,7 @@ public class UserRelationshipService {
         return userRelationshipRepository.countRelationships(ownerIds, relatedUserIds, isBlocked);
     }
 
-    public Mono<Boolean> friendTwoUsers(
+    public Mono<Pair<UpsertRelationshipResult, UpsertRelationshipResult>> friendTwoUsers(
             @NotNull Long userOneId,
             @NotNull Long userTwoId,
             @Nullable ClientSession session) {
@@ -568,19 +569,23 @@ public class UserRelationshipService {
         return upsertOneSidedRelationship(userOneId,
                 userTwoId,
                 null,
+                null,
                 DEFAULT_RELATIONSHIP_GROUP_INDEX,
                 null,
                 now,
                 true,
                 session)
-                .then(upsertOneSidedRelationship(userTwoId,
+                .flatMap(upsertRelationshipResult1 -> upsertOneSidedRelationship(userTwoId,
                         userOneId,
+                        null,
                         null,
                         DEFAULT_RELATIONSHIP_GROUP_INDEX,
                         null,
                         now,
                         true,
-                        session))
+                        session)
+                        .map(upsertRelationshipResult2 -> Pair.of(upsertRelationshipResult1,
+                                upsertRelationshipResult2)))
                 .doOnSuccess(unused -> {
                     Pair<Long, Long> cacheKey = Pair.of(userOneId, userTwoId);
                     ownerIdAndRelatedUserIdToHasRelationshipAndNotBlockedCache.put(cacheKey, true);
@@ -588,13 +593,13 @@ public class UserRelationshipService {
                     cacheKey = Pair.of(userTwoId, userOneId);
                     ownerIdAndRelatedUserIdToHasRelationshipAndNotBlockedCache.put(cacheKey, true);
                     ownerIdAndRelatedUserIdToIsBlockedCache.put(cacheKey, false);
-                })
-                .then(PublisherPool.TRUE);
+                });
     }
 
-    public Mono<Void> upsertOneSidedRelationship(
+    public Mono<UpsertRelationshipResult> upsertOneSidedRelationship(
             @NotNull Long ownerId,
             @NotNull Long relatedUserId,
+            @Nullable String name,
             @Nullable @PastOrPresent Date blockDate,
             @Nullable Integer newGroupIndex,
             @Nullable Integer deleteGroupIndex,
@@ -606,35 +611,49 @@ public class UserRelationshipService {
             Validator.notNull(relatedUserId, "relatedUserId");
             Validator.pastOrPresent(blockDate, "blockDate");
             Validator.pastOrPresent(establishmentDate, "establishmentDate");
-            Validator.notNull(upsert, "upsert");
             Validator.notEquals(ownerId,
                     relatedUserId,
                     "The owner ID must not be equal to the related user ID");
         } catch (ResponseException e) {
             return Mono.error(e);
         }
+        if (newGroupIndex != null && newGroupIndex.equals(deleteGroupIndex)) {
+            return Mono.error(ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
+                    "\"newGroupIndex\" and \"deleteGroupIndex\" must not be equal"));
+        }
         // Notes:
         // 1. It is unnecessary to check whether the requester is in the blocklist of the related
-        // user
-        // because only a one-sided relationship will be created here
-        // 2. Upsert relationship first to ensure that the relationship exists before
-        // "upsertRelationshipGroupMember"
+        // user because only a one-sided relationship will be created here.
+        // 2. Upsert the relationship first to ensure that the relationship exists before
+        // "upsertRelationshipGroupMember".
         return upsertOneSidedRelationship(ownerId,
                 relatedUserId,
+                name,
                 blockDate,
                 establishmentDate,
                 upsert,
                 session)
-                .then(userRelationshipGroupService.upsertRelationshipGroupMember(ownerId,
-                        relatedUserId,
-                        newGroupIndex,
-                        deleteGroupIndex,
-                        session));
+                .flatMap(createdNewRelationship -> userRelationshipGroupService
+                        .upsertRelationshipGroupMember(ownerId,
+                                relatedUserId,
+                                newGroupIndex,
+                                deleteGroupIndex,
+                                session)
+                        .map(groupIndex -> new UpsertRelationshipResult(
+                                createdNewRelationship,
+                                groupIndex))
+                        .defaultIfEmpty(createdNewRelationship
+                                ? UpsertRelationshipResult.CREATED
+                                : UpsertRelationshipResult.NOT_CREATED));
     }
 
-    private Mono<Void> upsertOneSidedRelationship(
+    /**
+     * @return true if a new relationship is created.
+     */
+    private Mono<Boolean> upsertOneSidedRelationship(
             @NotNull Long ownerId,
             @NotNull Long relatedUserId,
+            @Nullable String name,
             @Nullable @PastOrPresent Date blockDate,
             @Nullable Date establishmentDate,
             boolean upsert,
@@ -643,10 +662,12 @@ public class UserRelationshipService {
             establishmentDate = new Date();
         }
         UserRelationship userRelationship =
-                new UserRelationship(ownerId, relatedUserId, blockDate, establishmentDate);
+                new UserRelationship(ownerId, relatedUserId, name, blockDate, establishmentDate);
         return (upsert
                 ? userRelationshipRepository.upsert(userRelationship, session)
+                        .map(updateResult -> updateResult.getUpsertedId() != null)
                 : userRelationshipRepository.insert(userRelationship, session)
+                        .thenReturn(true)
                         .onErrorMap(DuplicateKeyException.class,
                                 e -> ResponseException
                                         .get(ResponseStatusCode.CREATE_EXISTING_RELATIONSHIP)))
@@ -686,7 +707,7 @@ public class UserRelationshipService {
                 });
     }
 
-    public Mono<Boolean> hasNoRelationshipOrNotBlocked(
+    public Mono<Boolean> isNotBlocked(
             @NotNull Long ownerId,
             @NotNull Long relatedUserId,
             boolean preferCache) {
@@ -733,6 +754,7 @@ public class UserRelationshipService {
 
     public Mono<UpdateResult> updateUserOneSidedRelationships(
             @NotEmpty Set<UserRelationship.@ValidUserRelationshipKey Key> keys,
+            @Nullable String name,
             @Nullable @PastOrPresent Date blockDate,
             @Nullable @PastOrPresent Date establishmentDate) {
         Set<Long> ownerIds;
@@ -748,11 +770,11 @@ public class UserRelationshipService {
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        if (Validator.areAllNull(blockDate, establishmentDate)) {
+        if (Validator.areAllNull(name, blockDate, establishmentDate)) {
             return OperationResultPublisherPool.ACKNOWLEDGED_UPDATE_RESULT;
         }
         return userRelationshipRepository
-                .updateUserOneSidedRelationships(keys, blockDate, establishmentDate)
+                .updateUserOneSidedRelationships(keys, name, blockDate, establishmentDate)
                 .flatMap(result -> {
                     if (result.getModifiedCount() > 0) {
                         return userVersionService.updateRelationshipsVersion(ownerIds, null)

@@ -59,7 +59,7 @@ public class GroupInvitationProperties {
     @Description("Whether to allow the sender to recall the pending group invitation sent by themselves")
     @GlobalProperty
     @MutableProperty
-    private boolean allowRecallPendingInvitationByOneself;
+    private boolean allowRecallPendingInvitationBySender;
 
     @Description("Whether to delete expired group invitations when the cron expression is triggered")
     @GlobalProperty
@@ -71,5 +71,11 @@ public class GroupInvitationProperties {
     @ValidCron
     private String expiredInvitationsCleanupCron =
             CronConst.DEFAULT_EXPIRED_GROUP_INVITATIONS_CLEANUP_CRON;
+
+    @Description("The maximum allowed length for the response reason of a group invitation")
+    @GlobalProperty
+    @MutableProperty
+    @Min(0)
+    private int maxResponseReasonLength = 200;
 
 }

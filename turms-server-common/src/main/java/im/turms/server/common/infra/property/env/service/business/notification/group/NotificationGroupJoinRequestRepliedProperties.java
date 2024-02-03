@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.infra.property.env.service.business.notification.user;
+package im.turms.server.common.infra.property.env.service.business.notification.group;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,16 +33,26 @@ import im.turms.server.common.infra.property.metadata.MutableProperty;
 @Builder(toBuilder = true)
 @Data
 @NoArgsConstructor
-public class NotificationFriendRequestRepliedProperties {
+public class NotificationGroupJoinRequestRepliedProperties {
 
-    @Description("Whether to notify the requester's other online sessions when they have replied to a friend request")
+    @Description("Whether to notify the requester's other online sessions when they have replied to a group join request")
     @GlobalProperty
     @MutableProperty
     private boolean notifyRequesterOtherOnlineSessions = true;
 
-    @Description("Whether to notify the sender of the friend request when the recipient has replied to the friend request sent by them")
+    @Description("Whether to notify the sender of the group join request when the group owner or manager has replied to the friend request sent by them")
     @GlobalProperty
     @MutableProperty
-    private boolean notifyFriendRequestSender = true;
+    private boolean notifyGroupJoinRequestSender = true;
+
+    @Description("Whether to notify the group owner and managers when a group join request has been replied")
+    @GlobalProperty
+    @MutableProperty
+    private boolean notifyGroupOwnerAndManagers = true;
+
+    @Description("Whether to notify group members when a group join request has been replied")
+    @GlobalProperty
+    @MutableProperty
+    private boolean notifyGroupMembers;
 
 }

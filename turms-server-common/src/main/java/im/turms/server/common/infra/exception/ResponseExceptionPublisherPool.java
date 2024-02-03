@@ -32,9 +32,6 @@ public class ResponseExceptionPublisherPool {
     private static final Mono ADD_BLOCKED_USER_TO_GROUP =
             Mono.error(ResponseException.get(ResponseStatusCode.ADD_BLOCKED_USER_TO_GROUP));
 
-    private static final Mono ADD_BLOCKED_USER_TO_INACTIVE_GROUP = Mono
-            .error(ResponseException.get(ResponseStatusCode.ADD_BLOCKED_USER_TO_INACTIVE_GROUP));
-
     private static final Mono ALREADY_UP_TO_DATE =
             Mono.error(ResponseException.get(ResponseStatusCode.ALREADY_UP_TO_DATE));
 
@@ -46,6 +43,12 @@ public class ResponseExceptionPublisherPool {
 
     private static final Mono NO_CONTENT =
             Mono.error(ResponseException.get(ResponseStatusCode.NO_CONTENT));
+
+    private static final Mono NOT_FRIEND_REQUEST_SENDER_TO_RECALL_REQUEST = Mono
+            .error(ResponseException.get(ResponseStatusCode.NOT_SENDER_TO_RECALL_FRIEND_REQUEST));
+
+    private static final Mono NOT_GROUP_JOIN_REQUEST_SENDER_TO_RECALL_REQUEST = Mono.error(
+            ResponseException.get(ResponseStatusCode.NOT_SENDER_TO_RECALL_GROUP_JOIN_REQUEST));
 
     private static final Mono OK = Mono.error(ResponseException.get(ResponseStatusCode.OK));
 
@@ -79,11 +82,6 @@ public class ResponseExceptionPublisherPool {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> Mono<T> addBlockedUserToInactiveGroup() {
-        return ADD_BLOCKED_USER_TO_INACTIVE_GROUP;
-    }
-
-    @SuppressWarnings("unchecked")
     public static <T> Mono<T> alreadyUpToUpdate() {
         return ALREADY_UP_TO_DATE;
     }
@@ -101,6 +99,14 @@ public class ResponseExceptionPublisherPool {
     @SuppressWarnings("unchecked")
     public static <T> Mono<T> noContent() {
         return NO_CONTENT;
+    }
+
+    public static <T> Mono<T> notFriendRequestSenderToRecallRequest() {
+        return NOT_FRIEND_REQUEST_SENDER_TO_RECALL_REQUEST;
+    }
+
+    public static <T> Mono<T> notGroupJoinRequestSenderToRecallRequest() {
+        return NOT_GROUP_JOIN_REQUEST_SENDER_TO_RECALL_REQUEST;
     }
 
     @SuppressWarnings("unchecked")

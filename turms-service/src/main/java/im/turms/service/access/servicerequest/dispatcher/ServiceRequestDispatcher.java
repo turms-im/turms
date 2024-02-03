@@ -19,7 +19,10 @@ package im.turms.service.access.servicerequest.dispatcher;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
+import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
 
 import com.google.protobuf.CodedInputStream;
@@ -341,10 +344,9 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                         return Mono.just(RequestHandlerResult.of(info.code(), info.reason()));
                     })
                     .map(handlerResult -> {
-                        ServiceResponse response =
-                                ServiceResponse.of(handlerResult.dataForRequester(),
-                                        handlerResult.code(),
-                                        handlerResult.reason());
+                        ServiceResponse response = ServiceResponse.of(handlerResult.response(),
+                                handlerResult.code(),
+                                handlerResult.reason());
                         // 6. Log
                         if (response.code()
                                 .isServerError()
@@ -372,35 +374,57 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                         result,
                         (resultNotifier, pre) -> pre.flatMap(handlerResult -> resultNotifier
                                 .beforeNotify(handlerResult, requesterId, requesterDevice)));
-        return notify
-                .flatMap(handlerResult -> notifyRelatedUsersOfAction0(handlerResult,
+        return notify.flatMap(handlerResult -> {
+            List<RequestHandlerResult.Notification> notifications = handlerResult.notifications();
+            int size = notifications.size();
+            if (size == 0) {
+                return Mono.empty();
+            }
+            if (size == 1) {
+                RequestHandlerResult.Notification notification = notifications.getFirst();
+                return notifyRelatedUsersOfAction0(result,
+                        notification.forwardToRequesterOtherOnlineSessions(),
+                        notification.recipients(),
+                        notification.notification(),
                         requesterId,
-                        requesterDevice))
+                        requesterDevice);
+            }
+            List<Mono<Void>> notifyMonos = new ArrayList<>(size);
+            for (RequestHandlerResult.Notification notification : notifications) {
+                notifyMonos.add(
+                        notifyRelatedUsersOfAction0(result.withNotifications(List.of(notification)),
+                                notification.forwardToRequesterOtherOnlineSessions(),
+                                notification.recipients(),
+                                notification.notification(),
+                                requesterId,
+                                requesterDevice));
+            }
+            return Mono.whenDelayError(notifyMonos);
+        })
                 .then();
     }
 
     private Mono<Void> notifyRelatedUsersOfAction0(
             @NotNull RequestHandlerResult result,
+            boolean forwardNotificationToRequesterOtherOnlineSessions,
+            @NotNull Set<Long> recipients,
+            @Nullable TurmsRequest notification,
             @NotNull Long requesterId,
             @NotNull DeviceType requesterDevice) {
-        TurmsRequest dataForRecipients = result.dataForRecipients();
-        Set<Long> recipients = result.recipients();
         boolean noRecipient = recipients.isEmpty();
-        boolean forwardDataForRecipientsToRequesterOtherOnlineSessions =
-                result.forwardDataForRecipientsToRequesterOtherOnlineSessions();
-        if (dataForRecipients == null
-                || (noRecipient && !forwardDataForRecipientsToRequesterOtherOnlineSessions)) {
+        if (notification == null
+                || (noRecipient && !forwardNotificationToRequesterOtherOnlineSessions)) {
             return Mono.empty();
         }
         TurmsNotification notificationForRecipients =
                 ClientMessagePool.getTurmsNotificationBuilder()
                         .setTimestamp(System.currentTimeMillis())
-                        .setRelayedRequest(dataForRecipients)
+                        .setRelayedRequest(notification)
                         .setRequesterId(requesterId)
                         .build();
         ByteBuf notificationByteBuf = ProtoEncoder.getDirectByteBuffer(notificationForRecipients);
         Mono<Set<Long>> mono;
-        if (forwardDataForRecipientsToRequesterOtherOnlineSessions) {
+        if (forwardNotificationToRequesterOtherOnlineSessions) {
             if (noRecipient) {
                 mono = outboundMessageService.forwardNotification(notificationForRecipients,
                         notificationByteBuf,

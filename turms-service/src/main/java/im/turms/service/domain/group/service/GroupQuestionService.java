@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import jakarta.annotation.Nullable;
@@ -38,7 +39,6 @@ import reactor.core.publisher.Mono;
 
 import im.turms.server.common.access.client.dto.ClientMessagePool;
 import im.turms.server.common.access.client.dto.constant.GroupMemberRole;
-import im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsAnswerResult;
 import im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsWithVersion;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.cluster.node.Node;
@@ -57,9 +57,10 @@ import im.turms.server.common.infra.recycler.Recyclable;
 import im.turms.server.common.infra.time.DateUtil;
 import im.turms.server.common.infra.validation.Validator;
 import im.turms.server.common.storage.mongo.IMongoCollectionInitializer;
+import im.turms.server.common.storage.mongo.exception.DuplicateKeyException;
 import im.turms.service.domain.common.validation.DataValidator;
+import im.turms.service.domain.group.bo.CheckGroupQuestionAnswerResult;
 import im.turms.service.domain.group.bo.GroupJoinStrategy;
-import im.turms.service.domain.group.bo.GroupQuestionIdAndAnswer;
 import im.turms.service.domain.group.bo.NewGroupQuestion;
 import im.turms.service.domain.group.po.GroupJoinQuestion;
 import im.turms.service.domain.group.repository.GroupQuestionRepository;
@@ -139,21 +140,14 @@ public class GroupQuestionService {
     /**
      * group join questions ids -> score
      */
-    public Mono<Pair<List<Long>, Integer>> checkGroupQuestionAnswersAndCountScore(
-            @NotEmpty Set<@ValidGroupQuestionIdAndAnswer GroupQuestionIdAndAnswer> questionIdAndAnswerPairs,
+    private Mono<Pair<List<Long>, Integer>> checkGroupQuestionAnswersAndCountScore(
+            @NotNull @ValidGroupQuestionIdAndAnswer Map<Long, String> questionIdToAnswer,
             @Nullable Long groupId) {
-        try {
-            Validator.notEmpty(questionIdAndAnswerPairs, "questionIdAndAnswerPairs");
-            for (GroupQuestionIdAndAnswer idAndAnswer : questionIdAndAnswerPairs) {
-                DataValidator.validGroupQuestionIdAndAnswer(idAndAnswer);
-            }
-        } catch (ResponseException e) {
-            return Mono.error(e);
-        }
-        List<Mono<Pair<Long, Integer>>> checks = new ArrayList<>(questionIdAndAnswerPairs.size());
-        for (GroupQuestionIdAndAnswer entry : questionIdAndAnswerPairs) {
-            checks.add(checkGroupQuestionAnswerAndGetScore(entry.id(), entry.answer(), groupId)
-                    .map(score -> Pair.of(entry.id(), score)));
+        List<Mono<Pair<Long, Integer>>> checks = new ArrayList<>(questionIdToAnswer.size());
+        for (Map.Entry<Long, String> entry : questionIdToAnswer.entrySet()) {
+            Long questionId = entry.getKey();
+            checks.add(checkGroupQuestionAnswerAndGetScore(questionId, entry.getValue(), groupId)
+                    .map(score -> Pair.of(questionId, score)));
         }
         return Flux.merge(checks)
                 .collect(CollectorUtil.toList(checks.size()))
@@ -168,21 +162,22 @@ public class GroupQuestionService {
                 });
     }
 
-    public Mono<GroupJoinQuestionsAnswerResult> authAndCheckGroupQuestionAnswerAndJoin(
+    public Mono<CheckGroupQuestionAnswerResult> authAndCheckGroupQuestionAnswerAndJoin(
             @NotNull Long requesterId,
-            @NotEmpty Set<@ValidGroupQuestionIdAndAnswer GroupQuestionIdAndAnswer> questionIdAndAnswerPairs) {
+            @NotNull @ValidGroupQuestionIdAndAnswer Map<Long, String> questionIdToAnswer) {
         try {
             Validator.notNull(requesterId, "requesterId");
-            Validator.notEmpty(questionIdAndAnswerPairs, "questionIdAndAnswerPairs");
-            for (GroupQuestionIdAndAnswer idAndAnswer : questionIdAndAnswerPairs) {
+            Validator.notEmpty(questionIdToAnswer, "questionIdToAnswer");
+            for (Map.Entry<Long, String> idAndAnswer : questionIdToAnswer.entrySet()) {
                 DataValidator.validGroupQuestionIdAndAnswer(idAndAnswer);
             }
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        Long firstQuestionId = questionIdAndAnswerPairs.iterator()
+        Long firstQuestionId = questionIdToAnswer.entrySet()
+                .iterator()
                 .next()
-                .id();
+                .getKey();
         return queryGroupId(firstQuestionId).flatMap(groupId -> groupBlocklistService
                 .isBlocked(groupId, requesterId)
                 .flatMap(isBlocked -> isBlocked
@@ -196,7 +191,14 @@ public class GroupQuestionService {
                                 .switchIfEmpty(Mono.error(ResponseException.get(
                                         ResponseStatusCode.ANSWER_GROUP_QUESTION_OF_INACTIVE_GROUP))))
                 .flatMap(type -> type.getJoinStrategy() == GroupJoinStrategy.QUESTION
-                        ? checkGroupQuestionAnswersAndCountScore(questionIdAndAnswerPairs, groupId)
+                        ?
+                        // For performance reasons, we only allow a request to answer questions of a
+                        // group,
+                        // and it is always meaningless for a user to answer questions of multiple
+                        // groups in one request.
+                        // So we pass "groupId" to ensure only the questions in the same group can
+                        // be answered.
+                        checkGroupQuestionAnswersAndCountScore(questionIdToAnswer, groupId)
                         : Mono.error(ResponseException
                                 .get(ResponseStatusCode.ANSWER_INACTIVE_GROUP_QUESTION)))
                 .flatMap(idsAndScore -> groupService.queryGroupMinimumScore(groupId)
@@ -209,13 +211,16 @@ public class GroupQuestionService {
                                                 null,
                                                 null,
                                                 null)
+                                        .onErrorResume(DuplicateKeyException.class,
+                                                e -> Mono.error(ResponseException.get(
+                                                        ResponseStatusCode.GROUP_MEMBER_ANSWER_GROUP_QUESTION)))
                                         .then(PublisherPool.TRUE)
                                 : PublisherPool.FALSE)
-                        .map(joined -> ClientMessagePool.getGroupJoinQuestionsAnswerResultBuilder()
-                                .setJoined(joined)
-                                .addAllQuestionIds(idsAndScore.getKey())
-                                .setScore(idsAndScore.getRight())
-                                .build())));
+                        .map(joined -> new CheckGroupQuestionAnswerResult(
+                                joined,
+                                groupId,
+                                idsAndScore.getKey(),
+                                idsAndScore.getRight()))));
     }
 
     public Mono<List<GroupJoinQuestion>> authAndCreateGroupJoinQuestions(
@@ -376,7 +381,7 @@ public class GroupQuestionService {
         return authenticated.flatMap(isAuthenticated -> isAuthenticated != null && isAuthenticated
                 ? groupVersionService.queryGroupJoinQuestionsVersion(groupId)
                 : Mono.error(ResponseException.get(
-                        ResponseStatusCode.NOT_GROUP_OWNER_OR_MANAGER_TO_ACCESS_GROUP_QUESTION_ANSWER)))
+                        ResponseStatusCode.NOT_GROUP_OWNER_OR_MANAGER_TO_QUERY_GROUP_QUESTION_ANSWER)))
                 .flatMap(version -> {
                     if (DateUtil.isAfterOrSame(lastUpdatedDate, version)) {
                         return ResponseExceptionPublisherPool.alreadyUpToUpdate();

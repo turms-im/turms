@@ -194,7 +194,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
                 .handle(clientRequest);
         assertResultIsOk(resultMono, result -> {
             groupIdWithInvitationStrategyOwnerManager =
-                    NotificationUtil.getLongOrThrow(result.dataForRequester());
+                    NotificationUtil.getLongOrThrow(result.response());
         });
     }
 
@@ -216,7 +216,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
 
         assertResultIsOk(resultMono, result -> {
             groupIdWithInvitationStrategyOwnerManagerRequiringApproval =
-                    NotificationUtil.getLongOrThrow(result.dataForRequester());
+                    NotificationUtil.getLongOrThrow(result.response());
         });
     }
 
@@ -235,8 +235,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
         Mono<RequestHandlerResult> resultMono = getController().handleCreateGroupRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono, result -> {
-            groupIdWithJoinStrategyQuestion =
-                    NotificationUtil.getLongOrThrow(result.dataForRequester());
+            groupIdWithJoinStrategyQuestion = NotificationUtil.getLongOrThrow(result.response());
         });
     }
 
@@ -277,7 +276,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
         Mono<RequestHandlerResult> resultMono = getController().handleCreateGroupQuestionsRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono, result -> {
-            TurmsNotification.Data data = result.dataForRequester();
+            TurmsNotification.Data data = result.response();
             List<Long> ids = data.getLongsWithVersion()
                     .getLongsList();
             assertThat(ids).hasSize(1);
@@ -299,7 +298,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
                 getController().handleCreateGroupJoinRequestRequest()
                         .handle(clientRequest);
         assertResultIsOk(resultMono, result -> {
-            groupJoinRequestId = NotificationUtil.getLongOrThrow(result.dataForRequester());
+            groupJoinRequestId = NotificationUtil.getLongOrThrow(result.response());
         });
     }
 
@@ -351,7 +350,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
                 getController().handleCreateGroupInvitationRequestRequest()
                         .handle(clientRequest);
         assertResultCodes(resultMono,
-                ResponseStatusCode.SEND_GROUP_INVITATION_TO_GROUP_NOT_REQUIRE_INVITATION);
+                ResponseStatusCode.SEND_GROUP_INVITATION_TO_GROUP_NOT_REQUIRING_USERS_APPROVAL);
     }
 
     @Test
@@ -369,7 +368,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
                 getController().handleCreateGroupInvitationRequestRequest()
                         .handle(clientRequest);
         assertResultIsOk(resultMono, result -> {
-            groupInvitationId = NotificationUtil.getLongOrThrow(result.dataForRequester());
+            groupInvitationId = NotificationUtil.getLongOrThrow(result.response());
         });
     }
 
@@ -528,7 +527,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
         Mono<RequestHandlerResult> resultMono = getController().handleQueryGroupsRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono,
-                result -> assertThat(result.dataForRequester()
+                result -> assertThat(result.response()
                         .getGroupsWithVersion()
                         .getGroups(0)
                         .getId()).isEqualTo(groupIdWithInvitationStrategyOwnerManager));
@@ -546,7 +545,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
         Mono<RequestHandlerResult> resultMono = getController().handleQueryJoinedGroupIdsRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono,
-                result -> assertThat(result.dataForRequester()
+                result -> assertThat(result.response()
                         .getLongsWithVersion()
                         .getLongsList()).contains(groupIdWithInvitationStrategyOwnerManager));
     }
@@ -562,7 +561,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
         Mono<RequestHandlerResult> resultMono = getController().handleQueryJoinedGroupsRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono,
-                result -> assertThat(result.dataForRequester()
+                result -> assertThat(result.response()
                         .getGroupsWithVersion()
                         .getGroupsList())
                         .anyMatch(group -> groupIdWithInvitationStrategyOwnerManager
@@ -582,7 +581,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
                 getController().handleQueryGroupBlockedUserIdsRequest()
                         .handle(clientRequest);
         assertResultIsOk(resultMono,
-                result -> assertThat(result.dataForRequester()
+                result -> assertThat(result.response()
                         .getLongsWithVersion()
                         .getLongsList()).contains(GROUP_BLOCKED_USER_ID));
     }
@@ -600,7 +599,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
                 getController().handleQueryGroupBlockedUsersInfosRequest()
                         .handle(clientRequest);
         assertResultIsOk(resultMono,
-                result -> assertThat(result.dataForRequester()
+                result -> assertThat(result.response()
                         .getUserInfosWithVersion()
                         .getUserInfos(0)
                         .getId()).isEqualTo(GROUP_BLOCKED_USER_ID));
@@ -618,7 +617,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
         Mono<RequestHandlerResult> resultMono = getController().handleQueryGroupInvitationsRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono,
-                result -> assertThat(result.dataForRequester()
+                result -> assertThat(result.response()
                         .getGroupInvitationsWithVersion()
                         .getGroupInvitations(0)
                         .getId()).isEqualTo(groupInvitationId));
@@ -637,7 +636,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
                 getController().handleQueryGroupJoinRequestsRequest()
                         .handle(clientRequest);
         assertResultIsOk(resultMono,
-                result -> assertThat(result.dataForRequester()
+                result -> assertThat(result.response()
                         .getGroupJoinRequestsWithVersion()
                         .getGroupJoinRequests(0)
                         .getId()).isEqualTo(groupJoinRequestId));
@@ -657,7 +656,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
                 getController().handleQueryGroupJoinQuestionsRequest()
                         .handle(clientRequest);
         assertResultIsOk(resultMono,
-                result -> assertThat(result.dataForRequester()
+                result -> assertThat(result.response()
                         .getGroupJoinQuestionsWithVersion()
                         .getGroupJoinQuestions(0)
                         .getId()).isEqualTo(groupJoinQuestionId));
@@ -676,7 +675,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
         Mono<RequestHandlerResult> resultMono = getController().handleQueryGroupMembersRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono,
-                result -> assertThat(result.dataForRequester()
+                result -> assertThat(result.response()
                         .getGroupMembersWithVersion()
                         .getGroupMembersList()
                         .stream()
@@ -699,7 +698,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
         Mono<RequestHandlerResult> resultMono = getController().handleQueryGroupMembersRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono,
-                result -> assertThat(result.dataForRequester()
+                result -> assertThat(result.response()
                         .getGroupMembersWithVersion()
                         .getGroupMembers(0)
                         .getUserId()).isEqualTo(GROUP_MEMBER_ID));
@@ -719,7 +718,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
                 getController().handleCheckGroupQuestionAnswerRequest()
                         .handle(clientRequest);
         assertResult(resultMono, result -> {
-            assertThat(result.dataForRequester()
+            assertThat(result.response()
                     .getGroupJoinQuestionAnswerResult()
                     .getQuestionIdsList()).contains(groupJoinQuestionId);
         }, ResponseStatusCode.OK, ResponseStatusCode.GROUP_MEMBER_ANSWER_GROUP_QUESTION);
@@ -836,7 +835,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
         AtomicLong readyToDeleteGroupId = new AtomicLong();
         assertResultIsOk(resultMono,
                 result -> readyToDeleteGroupId
-                        .set(NotificationUtil.getLongOrThrow(result.dataForRequester())));
+                        .set(NotificationUtil.getLongOrThrow(result.response())));
 
         request = TurmsRequest.newBuilder()
                 .setDeleteGroupRequest(DeleteGroupRequest.newBuilder()

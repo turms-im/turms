@@ -56,8 +56,10 @@ import im.turms.server.common.access.client.dto.model.user.UserRelationshipGroup
 import im.turms.server.common.access.client.dto.model.user.UserRelationshipsWithVersion;
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.access.client.dto.request.TurmsRequest;
+import im.turms.server.common.access.client.dto.request.group.member.CreateGroupMembersRequest;
 import im.turms.server.common.access.client.dto.request.message.CreateMessageRequest;
 import im.turms.server.common.access.client.dto.request.user.UpdateUserOnlineStatusRequest;
+import im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipRequest;
 
 /**
  * Using cached builders is a tradeoff between code maintainability and efficiency. For better
@@ -80,11 +82,27 @@ public class ClientMessagePool {
                 }
             };
 
+    private static final FastThreadLocal<CreateGroupMembersRequest.Builder> CREATE_GROUP_MEMBERS_REQUEST =
+            new FastThreadLocal<>() {
+                @Override
+                protected CreateGroupMembersRequest.Builder initialValue() {
+                    return CreateGroupMembersRequest.newBuilder();
+                }
+            };
+
     private static final FastThreadLocal<CreateMessageRequest.Builder> CREATE_MESSAGE_REQUEST =
             new FastThreadLocal<>() {
                 @Override
                 protected CreateMessageRequest.Builder initialValue() {
                     return CreateMessageRequest.newBuilder();
+                }
+            };
+
+    private static final FastThreadLocal<CreateRelationshipRequest.Builder> CREATE_RELATIONSHIP_REQUEST =
+            new FastThreadLocal<>() {
+                @Override
+                protected CreateRelationshipRequest.Builder initialValue() {
+                    return CreateRelationshipRequest.newBuilder();
                 }
             };
 
@@ -392,8 +410,18 @@ public class ClientMessagePool {
                 .clear();
     }
 
+    public static CreateGroupMembersRequest.Builder getCreateGroupMembersRequest() {
+        return CREATE_GROUP_MEMBERS_REQUEST.get()
+                .clear();
+    }
+
     public static CreateMessageRequest.Builder getCreateMessageRequestBuilder() {
         return CREATE_MESSAGE_REQUEST.get()
+                .clear();
+    }
+
+    public static CreateRelationshipRequest.Builder getCreateRelationshipRequestBuilder() {
+        return CREATE_RELATIONSHIP_REQUEST.get()
                 .clear();
     }
 

@@ -125,7 +125,7 @@ class ConversationServiceControllerST
         Mono<RequestHandlerResult> resultMono = getController().handleQueryConversationsRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono,
-                result -> assertThat(result.dataForRequester()
+                result -> assertThat(result.response()
                         .getConversations()
                         .getPrivateConversationsCount()).isZero());
 
@@ -138,7 +138,7 @@ class ConversationServiceControllerST
         resultMono = getController().handleQueryConversationsRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono,
-                result -> assertThat(result.dataForRequester()
+                result -> assertThat(result.response()
                         .getConversations()
                         .getPrivateConversationsCount()).isPositive());
     }
@@ -155,7 +155,7 @@ class ConversationServiceControllerST
         Mono<RequestHandlerResult> resultMono = getController().handleQueryConversationsRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono,
-                result -> assertThat(result.dataForRequester()
+                result -> assertThat(result.response()
                         .getConversations()
                         .getGroupConversationsCount()).isPositive());
     }

@@ -92,7 +92,7 @@ public class UserFriendRequestRepository
         return mongoClient.updateMany(entityClass, filter, update);
     }
 
-    public Mono<UpdateResult> updatePendingFriendRequestStatus(
+    public Mono<UpdateResult> updateStatusIfPending(
             Long requestId,
             RequestStatus requestStatus,
             @Nullable String reason,
@@ -175,12 +175,25 @@ public class UserFriendRequestRepository
                 .map(UserFriendRequest::getRecipientId);
     }
 
-    public Mono<UserFriendRequest> findRequesterAndRecipient(Long requestId) {
+    public Mono<UserFriendRequest> findRequesterIdAndRecipientIdAndStatus(Long requestId) {
         Filter filter = Filter.newBuilder(1)
                 .eq(DomainFieldName.ID, requestId);
         QueryOptions options = QueryOptions.newBuilder(1)
                 .include(UserFriendRequest.Fields.REQUESTER_ID,
-                        UserFriendRequest.Fields.RECIPIENT_ID);
+                        UserFriendRequest.Fields.RECIPIENT_ID,
+                        UserFriendRequest.Fields.STATUS);
+        return mongoClient.findOne(entityClass, filter, options);
+    }
+
+    public Mono<UserFriendRequest> findRequesterIdAndRecipientIdAndCreationDateAndStatus(
+            Long requestId) {
+        Filter filter = Filter.newBuilder(1)
+                .eq(DomainFieldName.ID, requestId);
+        QueryOptions options = QueryOptions.newBuilder(1)
+                .include(UserFriendRequest.Fields.REQUESTER_ID,
+                        UserFriendRequest.Fields.RECIPIENT_ID,
+                        UserFriendRequest.Fields.CREATION_DATE,
+                        UserFriendRequest.Fields.STATUS);
         return mongoClient.findOne(entityClass, filter, options);
     }
 

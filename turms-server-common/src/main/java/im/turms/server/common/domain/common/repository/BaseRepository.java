@@ -25,6 +25,7 @@ import jakarta.annotation.Nullable;
 import com.mongodb.client.model.changestream.ChangeStreamDocument;
 import com.mongodb.client.model.changestream.FullDocument;
 import com.mongodb.client.result.DeleteResult;
+import com.mongodb.client.result.UpdateResult;
 import com.mongodb.reactivestreams.client.ClientSession;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -47,11 +48,11 @@ public abstract class BaseRepository<T, K> {
         this.entityClass = entityClass;
     }
 
-    public Mono<Void> upsert(T doc) {
+    public Mono<UpdateResult> upsert(T doc) {
         return mongoClient.upsert(doc);
     }
 
-    public Mono<Void> upsert(T doc, @Nullable ClientSession session) {
+    public Mono<UpdateResult> upsert(T doc, @Nullable ClientSession session) {
         return mongoClient.upsert(session, doc);
     }
 

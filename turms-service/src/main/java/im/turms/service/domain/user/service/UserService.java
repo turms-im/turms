@@ -44,6 +44,7 @@ import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.cluster.service.idgen.ServiceType;
 import im.turms.server.common.infra.collection.CollectorUtil;
 import im.turms.server.common.infra.exception.ResponseException;
+import im.turms.server.common.infra.exception.ResponseExceptionPublisherPool;
 import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
@@ -209,26 +210,24 @@ public class UserService {
                                 return Mono.just(ServicePermission
                                         .get(ResponseStatusCode.MESSAGE_RECIPIENT_NOT_ACTIVE));
                             }
-                            return userRelationshipService
-                                    .hasNoRelationshipOrNotBlocked(targetId, requesterId, true)
-                                    .map(isNotBlocked -> isNotBlocked
-                                            ? ServicePermission.OK
-                                            : ServicePermission.get(
-                                                    ResponseStatusCode.PRIVATE_MESSAGE_SENDER_HAS_BEEN_BLOCKED));
+                            return userRelationshipService.isBlocked(targetId, requesterId, true)
+                                    .map(isBlocked -> isBlocked
+                                            ? ServicePermission.get(
+                                                    ResponseStatusCode.BLOCKED_USER_SEND_PRIVATE_MESSAGE)
+                                            : ServicePermission.OK);
                         });
             }
-            return userRelationshipService
-                    .hasNoRelationshipOrNotBlocked(targetId, requesterId, true)
-                    .map(isNotBlocked -> isNotBlocked
-                            ? ServicePermission.OK
-                            : ServicePermission.get(
-                                    ResponseStatusCode.PRIVATE_MESSAGE_SENDER_HAS_BEEN_BLOCKED));
+            return userRelationshipService.isBlocked(targetId, requesterId, true)
+                    .map(isBlocked -> isBlocked
+                            ? ServicePermission
+                                    .get(ResponseStatusCode.BLOCKED_USER_SEND_PRIVATE_MESSAGE)
+                            : ServicePermission.OK);
         }
         return userRelationshipService.hasRelationshipAndNotBlocked(targetId, requesterId, true)
                 .map(isRelatedAndNotBlocked -> isRelatedAndNotBlocked
                         ? ServicePermission.OK
                         : ServicePermission
-                                .get(ResponseStatusCode.MESSAGE_SENDER_NOT_IN_CONTACTS_OR_BLOCKED));
+                                .get(ResponseStatusCode.NOT_FRIEND_TO_SEND_PRIVATE_MESSAGE));
     }
 
     public Mono<User> addUser(
@@ -310,10 +309,10 @@ public class UserService {
 
     /**
      * @return Possible codes: {@link ResponseStatusCode#OK}
-     *         {@link ResponseStatusCode#PROFILE_REQUESTER_NOT_IN_CONTACTS_OR_BLOCKED}
-     *         {@link ResponseStatusCode#PROFILE_REQUESTER_HAS_BEEN_BLOCKED}
+     *         {@link ResponseStatusCode#NOT_FRIEND_TO_QUERY_USER_PROFILE}
+     *         {@link ResponseStatusCode#BLOCKED_USER_TO_QUERY_USER_PROFILE}
      *         {@link ResponseStatusCode#SERVER_INTERNAL_ERROR}
-     *         {@link ResponseStatusCode#USER_PROFILE_NOT_FOUND}
+     *         {@link ResponseStatusCode#RESOURCE_NOT_FOUND}
      */
     public Mono<ServicePermission> isAllowToQueryUserProfile(
             @NotNull Long requesterId,
@@ -332,19 +331,19 @@ public class UserService {
                             .map(isRelatedAndAllowed -> isRelatedAndAllowed
                                     ? ServicePermission.OK
                                     : ServicePermission.get(
-                                            ResponseStatusCode.PROFILE_REQUESTER_NOT_IN_CONTACTS_OR_BLOCKED));
+                                            ResponseStatusCode.NOT_FRIEND_TO_QUERY_USER_PROFILE));
                     case ALL_EXCEPT_BLOCKED_USERS -> userRelationshipService
-                            .hasNoRelationshipOrNotBlocked(targetUserId, requesterId, false)
+                            .isNotBlocked(targetUserId, requesterId, false)
                             .map(isNotBlocked -> isNotBlocked
                                     ? ServicePermission.OK
                                     : ServicePermission.get(
-                                            ResponseStatusCode.PROFILE_REQUESTER_HAS_BEEN_BLOCKED));
+                                            ResponseStatusCode.BLOCKED_USER_TO_QUERY_USER_PROFILE));
                     default ->
                         Mono.error(ResponseException.get(ResponseStatusCode.SERVER_INTERNAL_ERROR,
                                 "Unexpected profile access strategy: "
                                         + strategy));
                 })
-                .defaultIfEmpty(ServicePermission.get(ResponseStatusCode.USER_PROFILE_NOT_FOUND));
+                .switchIfEmpty(ResponseExceptionPublisherPool.resourceNotFound());
     }
 
     public Mono<List<User>> authAndQueryUsersProfile(

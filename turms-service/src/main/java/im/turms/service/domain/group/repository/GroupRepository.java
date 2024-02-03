@@ -184,6 +184,14 @@ public class GroupRepository extends BaseRepository<Group, Long> {
                 .map(Group::getTypeId);
     }
 
+    public Flux<Group> findTypeIdAndGroupId(Collection<Long> groupIds) {
+        Filter filter = Filter.newBuilder(1)
+                .in(DomainFieldName.ID, groupIds);
+        QueryOptions options = QueryOptions.newBuilder(1)
+                .include(Group.Fields.TYPE_ID);
+        return mongoClient.findMany(entityClass, filter, options);
+    }
+
     public Mono<Long> findTypeIdIfActiveAndNotDeleted(Long groupId) {
         Filter filter = Filter.newBuilder(3)
                 .eq(DomainFieldName.ID, groupId)

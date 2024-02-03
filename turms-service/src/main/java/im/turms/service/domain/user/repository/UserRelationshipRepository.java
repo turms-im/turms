@@ -62,11 +62,13 @@ public class UserRelationshipRepository
 
     public Mono<UpdateResult> updateUserOneSidedRelationships(
             Set<UserRelationship.Key> keys,
+            @Nullable String name,
             @Nullable Date blockDate,
             @Nullable Date establishmentDate) {
         Filter filter = Filter.newBuilder(1)
                 .in(DomainFieldName.ID, keys);
         Update update = Update.newBuilder(2)
+                .setIfNotNull(UserRelationship.Fields.NAME, name)
                 .setIfNotNull(UserRelationship.Fields.ESTABLISHMENT_DATE, establishmentDate)
                 .setOrUnsetDate(UserRelationship.Fields.BLOCK_DATE, blockDate);
         return mongoClient.updateMany(entityClass, filter, update);

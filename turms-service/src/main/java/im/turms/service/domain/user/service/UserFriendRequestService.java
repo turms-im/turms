@@ -46,6 +46,7 @@ import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
+import im.turms.server.common.infra.property.env.service.business.user.FriendRequestProperties;
 import im.turms.server.common.infra.task.TaskManager;
 import im.turms.server.common.infra.time.DateRange;
 import im.turms.server.common.infra.time.DateUtil;
@@ -54,6 +55,7 @@ import im.turms.server.common.storage.mongo.IMongoCollectionInitializer;
 import im.turms.service.domain.common.service.ExpirableEntityService;
 import im.turms.service.domain.common.suggestion.UsesNonIndexedData;
 import im.turms.service.domain.common.validation.DataValidator;
+import im.turms.service.domain.user.bo.HandleFriendRequestResult;
 import im.turms.service.domain.user.po.UserFriendRequest;
 import im.turms.service.domain.user.repository.UserFriendRequestRepository;
 import im.turms.service.infra.proto.ProtoModelConvertor;
@@ -83,8 +85,10 @@ public class UserFriendRequestService extends ExpirableEntityService<UserFriendR
     private final UserRelationshipService userRelationshipService;
 
     private boolean allowSendRequestAfterDeclinedOrIgnoredOrExpired;
+    private boolean allowRecallPendingFriendRequestBySender;
     private int maxContentLength;
     private boolean deleteExpiredRequestsWhenCronTriggered;
+    private int maxResponseReasonLength;
 
     public UserFriendRequestService(
             Node node,
@@ -122,21 +126,28 @@ public class UserFriendRequestService extends ExpirableEntityService<UserFriendR
     }
 
     private void updateProperties(TurmsProperties properties) {
-        allowSendRequestAfterDeclinedOrIgnoredOrExpired = properties.getService()
+        FriendRequestProperties friendRequestProperties = properties.getService()
                 .getUser()
-                .getFriendRequest()
-                .isAllowSendRequestAfterDeclinedOrIgnoredOrExpired();
-        int localMaxContentLength = properties.getService()
-                .getUser()
-                .getFriendRequest()
-                .getMaxContentLength();
+                .getFriendRequest();
+
+        allowSendRequestAfterDeclinedOrIgnoredOrExpired =
+                friendRequestProperties.isAllowSendRequestAfterDeclinedOrIgnoredOrExpired();
+
+        allowRecallPendingFriendRequestBySender =
+                friendRequestProperties.isAllowRecallPendingFriendRequestBySender();
+
+        int localMaxContentLength = friendRequestProperties.getMaxContentLength();
         maxContentLength = localMaxContentLength > 0
                 ? localMaxContentLength
                 : Integer.MAX_VALUE;
-        deleteExpiredRequestsWhenCronTriggered = properties.getService()
-                .getUser()
-                .getFriendRequest()
-                .isDeleteExpiredRequestsWhenCronTriggered();
+
+        deleteExpiredRequestsWhenCronTriggered =
+                friendRequestProperties.isDeleteExpiredRequestsWhenCronTriggered();
+
+        int localMaxResponseReasonLength = friendRequestProperties.getMaxResponseReasonLength();
+        maxResponseReasonLength = localMaxResponseReasonLength > 0
+                ? localMaxResponseReasonLength
+                : Integer.MAX_VALUE;
     }
 
     public Mono<Void> removeAllExpiredFriendRequests(Date expirationDate) {
@@ -189,6 +200,7 @@ public class UserFriendRequestService extends ExpirableEntityService<UserFriendR
             Validator.notEquals(requesterId,
                     recipientId,
                     "The requester ID must not be equal to the recipient ID");
+            Validator.maxLength(reason, "reason", maxResponseReasonLength);
         } catch (ResponseException e) {
             return Mono.error(e);
         }
@@ -250,18 +262,17 @@ public class UserFriendRequestService extends ExpirableEntityService<UserFriendR
             Validator.pastOrPresent(creationDate, "creationDate");
             Validator.notEquals(requesterId,
                     recipientId,
-                    "The requester ID must not equal to the recipient ID");
+                    "The requester ID must not be equal to the recipient ID");
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        return userRelationshipService
-                .hasNoRelationshipOrNotBlocked(recipientId, requesterId, false)
+        return userRelationshipService.isNotBlocked(recipientId, requesterId, false)
                 .flatMap(isNotBlocked -> {
                     if (!isNotBlocked) {
                         return Mono.error(ResponseException
-                                .get(ResponseStatusCode.FRIEND_REQUEST_SENDER_HAS_BEEN_BLOCKED));
+                                .get(ResponseStatusCode.BLOCKED_USER_TO_SEND_FRIEND_REQUEST));
                     }
-                    // Allow to create a friend request even there is already an accepted request
+                    // Allow creating a friend request even there is already an accepted request
                     // because the relationships can be deleted and rebuilt
                     Mono<Boolean> requestExistsMono =
                             allowSendRequestAfterDeclinedOrIgnoredOrExpired
@@ -287,6 +298,85 @@ public class UserFriendRequestService extends ExpirableEntityService<UserFriendR
                 });
     }
 
+    /**
+     * @return The requester ID, recipient ID and status.
+     */
+    public Mono<UserFriendRequest> authAndRecallFriendRequest(
+            @NotNull Long requesterId,
+            @NotNull Long requestId) {
+        try {
+            Validator.notNull(requesterId, "requesterId");
+            Validator.notNull(requestId, "requestId");
+        } catch (ResponseException e) {
+            return Mono.error(e);
+        }
+        if (!allowRecallPendingFriendRequestBySender) {
+            return Mono.error(
+                    ResponseException.get(ResponseStatusCode.RECALLING_FRIEND_REQUEST_IS_DISABLED));
+        }
+        return queryRequesterIdAndRecipientIdAndCreationDateAndStatus(requestId)
+                // If the requester is not authorized to the request,
+                // they should not know the status of the request from the error code.
+                // So we should not tell if the request exists or not.
+                .switchIfEmpty(
+                        ResponseExceptionPublisherPool.notFriendRequestSenderToRecallRequest())
+                .flatMap(request -> {
+                    // If the requester is not authorized to the request,
+                    // they should not know the status of the request from the error code.
+                    // So we check whether the requester is authorized first.
+                    if (!requesterId.equals(request.getRequesterId())) {
+                        return ResponseExceptionPublisherPool
+                                .notFriendRequestSenderToRecallRequest();
+                    }
+                    RequestStatus status = request.getStatus();
+                    if (status == RequestStatus.PENDING) {
+                        if (userFriendRequestRepository.isExpired(request.getCreationDate()
+                                .getTime())) {
+                            return Mono.error(ResponseException.get(
+                                    ResponseStatusCode.RECALL_NON_PENDING_FRIEND_REQUEST,
+                                    "The request is under the status "
+                                            + RequestStatus.EXPIRED));
+                        }
+                    } else {
+                        return Mono.error(ResponseException.get(
+                                ResponseStatusCode.RECALL_NON_PENDING_FRIEND_REQUEST,
+                                "The request is under the status "
+                                        + status));
+                    }
+                    return userFriendRequestRepository
+                            .updateStatusIfPending(requestId, RequestStatus.CANCELED, null, null)
+                            .flatMap(result -> result.getModifiedCount() == 0
+                                    // Though it may return empty because the request had been
+                                    // deleted between the status check,
+                                    // but only admins can delete them, and it is really rare.
+                                    // So we handle these cases as if the status of the request has
+                                    // changed.
+                                    ? Mono.error(ResponseException.get(
+                                            ResponseStatusCode.RECALL_NON_PENDING_FRIEND_REQUEST))
+                                    : Mono.whenDelayError(userVersionService
+                                            .updateReceivedFriendRequestsVersion(
+                                                    request.getRecipientId())
+                                            .onErrorResume(t -> {
+                                                LOGGER.error(
+                                                        "Caught an error while updating the received friend requests version of the recipient ({}) after recalling a friend request",
+                                                        request.getRecipientId(),
+                                                        t);
+                                                return Mono.empty();
+                                            }),
+                                            userVersionService
+                                                    .updateSentFriendRequestsVersion(
+                                                            request.getRequesterId())
+                                                    .onErrorResume(t -> {
+                                                        LOGGER.error(
+                                                                "Caught an error while updating the sent friend requests version of the requester ({}) after recalling a friend request",
+                                                                request.getRequesterId(),
+                                                                t);
+                                                        return Mono.empty();
+                                                    })))
+                            .thenReturn(request);
+                });
+    }
+
     public Mono<UpdateResult> updatePendingFriendRequestStatus(
             @NotNull Long requestId,
             @NotNull @ValidRequestStatus RequestStatus requestStatus,
@@ -299,11 +389,12 @@ public class UserFriendRequestService extends ExpirableEntityService<UserFriendR
             Validator.notEquals(requestStatus,
                     RequestStatus.PENDING,
                     "The request status must not be PENDING");
+            Validator.maxLength(reason, "reason", maxResponseReasonLength);
         } catch (ResponseException e) {
             return Mono.error(e);
         }
         return userFriendRequestRepository
-                .updatePendingFriendRequestStatus(requestId, requestStatus, reason, session)
+                .updateStatusIfPending(requestId, requestStatus, reason, session)
                 .flatMap(result -> result.getModifiedCount() > 0
                         ? queryRecipientId(requestId).flatMap(recipientId -> userVersionService
                                 .updateReceivedFriendRequestsVersion(recipientId)
@@ -365,19 +456,28 @@ public class UserFriendRequestService extends ExpirableEntityService<UserFriendR
         return userFriendRequestRepository.findRecipientId(requestId);
     }
 
-    public Mono<UserFriendRequest> queryRequesterAndRecipient(@NotNull Long requestId) {
+    public Mono<UserFriendRequest> queryRequesterIdAndRecipientIdAndStatus(
+            @NotNull Long requestId) {
         try {
             Validator.notNull(requestId, "requestId");
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        return userFriendRequestRepository.findRequesterAndRecipient(requestId);
+        return userFriendRequestRepository.findRequesterIdAndRecipientIdAndStatus(requestId);
     }
 
-    /**
-     * @return The friend request requester ID
-     */
-    public Mono<Long> authAndHandleFriendRequest(
+    public Mono<UserFriendRequest> queryRequesterIdAndRecipientIdAndCreationDateAndStatus(
+            @NotNull Long requestId) {
+        try {
+            Validator.notNull(requestId, "requestId");
+        } catch (ResponseException e) {
+            return Mono.error(e);
+        }
+        return userFriendRequestRepository
+                .findRequesterIdAndRecipientIdAndCreationDateAndStatus(requestId);
+    }
+
+    public Mono<HandleFriendRequestResult> authAndHandleFriendRequest(
             @NotNull Long friendRequestId,
             @NotNull Long requesterId,
             @NotNull @ValidResponseAction ResponseAction action,
@@ -387,40 +487,75 @@ public class UserFriendRequestService extends ExpirableEntityService<UserFriendR
             Validator.notNull(requesterId, "requesterId");
             Validator.notNull(action, "action");
             DataValidator.validResponseAction(action);
+            Validator.maxLength(reason, "reason", maxResponseReasonLength);
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        return queryRequesterAndRecipient(friendRequestId)
-                .switchIfEmpty(ResponseExceptionPublisherPool.resourceNotFound())
+        return queryRequesterIdAndRecipientIdAndCreationDateAndStatus(friendRequestId)
+                // If the requester is not authorized to the request,
+                // they should not know the status of the request from the error code.
+                // So we should not tell if the request exists or not.
+                .switchIfEmpty(Mono.error(ResponseException
+                        .get(ResponseStatusCode.NOT_RECIPIENT_TO_UPDATE_FRIEND_REQUEST)))
                 .flatMap(request -> {
+                    // If the requester is not authorized to the request,
+                    // they should not know the status of the request from the error code.
+                    // So we check whether the requester is authorized first.
                     if (!request.getRecipientId()
                             .equals(requesterId)) {
                         return Mono.error(ResponseException
-                                .get(ResponseStatusCode.REQUESTER_NOT_FRIEND_REQUEST_RECIPIENT));
+                                .get(ResponseStatusCode.NOT_RECIPIENT_TO_UPDATE_FRIEND_REQUEST));
                     }
-                    Mono<?> result = switch (action) {
+                    RequestStatus status = request.getStatus();
+                    if (status == RequestStatus.PENDING) {
+                        if (userFriendRequestRepository.isExpired(request.getCreationDate()
+                                .getTime())) {
+                            return Mono.error(ResponseException.get(
+                                    ResponseStatusCode.UPDATE_NON_PENDING_FRIEND_REQUEST,
+                                    "The request is under the status "
+                                            + RequestStatus.EXPIRED));
+                        }
+                    } else {
+                        return Mono.error(ResponseException.get(
+                                ResponseStatusCode.UPDATE_NON_PENDING_FRIEND_REQUEST,
+                                "The request is under the status "
+                                        + status));
+                    }
+                    return switch (action) {
                         case ACCEPT -> userFriendRequestRepository
-                                .inTransaction(
-                                        session -> updatePendingFriendRequestStatus(friendRequestId,
-                                                RequestStatus.ACCEPTED,
-                                                reason,
-                                                session)
-                                                .then(userRelationshipService.friendTwoUsers(request
-                                                        .getRequesterId(), requesterId, session)))
+                                .inTransaction(session -> updatePendingFriendRequestStatus(
+                                        friendRequestId,
+                                        RequestStatus.ACCEPTED,
+                                        reason,
+                                        session)
+                                        .then(userRelationshipService
+                                                .friendTwoUsers(request.getRequesterId(),
+                                                        // Note that the client request requester is
+                                                        // the recipient
+                                                        // of the friend request.
+                                                        requesterId,
+                                                        session)
+                                                .map(pair -> new HandleFriendRequestResult(
+                                                        request,
+                                                        pair.first()
+                                                                .newRelationshipGroupIndex(),
+                                                        pair.second()
+                                                                .newRelationshipGroupIndex()))))
                                 .retryWhen(TRANSACTION_RETRY);
                         case IGNORE -> updatePendingFriendRequestStatus(friendRequestId,
                                 RequestStatus.IGNORED,
                                 reason,
-                                null);
+                                null)
+                                .thenReturn(new HandleFriendRequestResult(request, null, null));
                         case DECLINE -> updatePendingFriendRequestStatus(friendRequestId,
                                 RequestStatus.DECLINED,
                                 reason,
-                                null);
+                                null)
+                                .thenReturn(new HandleFriendRequestResult(request, null, null));
                         default ->
                             Mono.error(ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
                                     "The response action must not be UNRECOGNIZED"));
                     };
-                    return result.thenReturn(request.getRequesterId());
                 });
     }
 

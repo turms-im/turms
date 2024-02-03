@@ -17,7 +17,7 @@
 
 package unit.im.turms.gateway.access.client.common.accesscontrol.policy;
 
-import java.util.HashSet;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
@@ -47,7 +47,7 @@ class PolicyManagerTests {
                         PolicyStatementEffect.ALLOW,
                         Set.of(PolicyStatementAction.ALL),
                         Set.of(PolicyStatementResource.values())))));
-        Set<TurmsRequest.KindCase> types = new HashSet<>(Set.of(TurmsRequest.KindCase.values()));
+        Set<TurmsRequest.KindCase> types = EnumSet.allOf(TurmsRequest.KindCase.class);
         types.removeAll(Set.of(TurmsRequest.KindCase.KIND_NOT_SET,
                 TurmsRequest.KindCase.CREATE_SESSION_REQUEST,
                 TurmsRequest.KindCase.DELETE_SESSION_REQUEST));

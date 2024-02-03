@@ -17,13 +17,14 @@
 
 package im.turms.service.domain.common.validation;
 
+import java.util.Map;
+
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.constant.GroupMemberRole;
 import im.turms.server.common.access.client.dto.constant.ProfileAccessStrategy;
 import im.turms.server.common.access.client.dto.constant.RequestStatus;
 import im.turms.server.common.access.client.dto.constant.ResponseAction;
 import im.turms.server.common.infra.exception.ResponseException;
-import im.turms.service.domain.group.bo.GroupQuestionIdAndAnswer;
 import im.turms.service.domain.group.bo.NewGroupQuestion;
 import im.turms.service.domain.group.po.GroupBlockedUser;
 import im.turms.service.domain.group.po.GroupMember;
@@ -143,8 +144,10 @@ public final class DataValidator {
         }
     }
 
-    public static void validGroupQuestionIdAndAnswer(GroupQuestionIdAndAnswer value) {
-        if (value == null || value.id() == null || value.answer() == null) {
+    public static void validGroupQuestionIdAndAnswer(Map.Entry<Long, String> questionIdAndAnswer) {
+        if (questionIdAndAnswer == null
+                || questionIdAndAnswer.getKey() == null
+                || questionIdAndAnswer.getValue() == null) {
             throw ILLEGAL_GROUP_QUESTION_ID_AND_ANSWER;
         }
     }

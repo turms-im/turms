@@ -150,9 +150,10 @@ public class ConversationServiceController extends BaseServiceController {
                     .getUpdateConversationRequest();
             if (!request.hasTargetId() && !request.hasGroupId()) {
                 return Mono.just(RequestHandlerResult.of(ResponseStatusCode.ILLEGAL_ARGUMENT,
-                        "The targetId and groupId must not all null"));
+                        "The targetId and groupId must not both be null"));
             }
             Long requesterId = clientRequest.userId();
+            // todo: limit read date range
             Date readDate = new Date(request.getReadDate());
             boolean isUpdatePrivateConversationRequest = request.hasTargetId();
             long targetId;

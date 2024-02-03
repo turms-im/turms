@@ -17,6 +17,7 @@
 
 package im.turms.service.domain.user.access.servicerequest.controller;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -28,9 +29,11 @@ import reactor.core.publisher.Mono;
 
 import im.turms.server.common.access.client.dto.ClientMessagePool;
 import im.turms.server.common.access.client.dto.constant.ResponseAction;
+import im.turms.server.common.access.client.dto.request.TurmsRequest;
 import im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest;
 import im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipGroupRequest;
 import im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipRequest;
+import im.turms.server.common.access.client.dto.request.user.relationship.DeleteFriendRequestRequest;
 import im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequest;
 import im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipRequest;
 import im.turms.server.common.access.client.dto.request.user.relationship.QueryFriendRequestsRequest;
@@ -45,6 +48,7 @@ import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.service.business.notification.NotificationProperties;
 import im.turms.server.common.infra.property.env.service.business.notification.user.NotificationFriendRequestCreatedProperties;
+import im.turms.server.common.infra.property.env.service.business.notification.user.NotificationFriendRequestRecalledProperties;
 import im.turms.server.common.infra.property.env.service.business.notification.user.NotificationFriendRequestRepliedProperties;
 import im.turms.server.common.infra.property.env.service.business.notification.user.NotificationOneSidedRelationshipGroupDeletedProperties;
 import im.turms.server.common.infra.property.env.service.business.notification.user.NotificationOneSidedRelationshipGroupMemberAddedProperties;
@@ -58,6 +62,7 @@ import im.turms.service.access.servicerequest.dispatcher.ClientRequestHandler;
 import im.turms.service.access.servicerequest.dispatcher.ServiceRequestMapping;
 import im.turms.service.access.servicerequest.dto.RequestHandlerResult;
 import im.turms.service.domain.common.access.servicerequest.controller.BaseServiceController;
+import im.turms.service.domain.user.po.UserFriendRequest;
 import im.turms.service.domain.user.service.UserFriendRequestService;
 import im.turms.service.domain.user.service.UserRelationshipGroupService;
 import im.turms.service.domain.user.service.UserRelationshipService;
@@ -65,6 +70,7 @@ import im.turms.service.domain.user.service.UserRelationshipService;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.CREATE_FRIEND_REQUEST_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.CREATE_RELATIONSHIP_GROUP_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.CREATE_RELATIONSHIP_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.DELETE_FRIEND_REQUEST_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.DELETE_RELATIONSHIP_GROUP_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.DELETE_RELATIONSHIP_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_FRIEND_REQUESTS_REQUEST;
@@ -91,8 +97,11 @@ public class UserRelationshipServiceController extends BaseServiceController {
     private boolean notifyRequesterOtherOnlineSessionsOfFriendRequestCreated;
     private boolean notifyFriendRequestRecipientOfFriendRequestCreated;
 
+    private boolean notifyRequesterOtherOnlineSessionsOfFriendRequestRecalled;
+    private boolean notifyFriendRequestRecipientOfFriendRequestRecalled;
+
     private boolean notifyRequesterOtherOnlineSessionsOfFriendRequestReplied;
-    private boolean notifyFriendRequestRequesterOfFriendRequestReplied;
+    private boolean notifyFriendRequestSenderOfFriendRequestReplied;
 
     private boolean notifyRequesterOtherOnlineSessionsOfOneSidedRelationshipUpdated;
     private boolean notifyRelatedUserOfOneSidedRelationshipUpdated;
@@ -128,6 +137,7 @@ public class UserRelationshipServiceController extends BaseServiceController {
 
         NotificationProperties notificationProperties = properties.getService()
                 .getNotification();
+
         NotificationFriendRequestCreatedProperties notificationFriendRequestCreatedProperties =
                 notificationProperties.getFriendRequestCreated();
         notifyRequesterOtherOnlineSessionsOfFriendRequestCreated =
@@ -135,12 +145,19 @@ public class UserRelationshipServiceController extends BaseServiceController {
         notifyFriendRequestRecipientOfFriendRequestCreated =
                 notificationFriendRequestCreatedProperties.isNotifyFriendRequestRecipient();
 
+        NotificationFriendRequestRecalledProperties notificationFriendRequestRecalledProperties =
+                notificationProperties.getFriendRequestRecalled();
+        notifyRequesterOtherOnlineSessionsOfFriendRequestRecalled =
+                notificationFriendRequestRecalledProperties.isNotifyRequesterOtherOnlineSessions();
+        notifyFriendRequestRecipientOfFriendRequestRecalled =
+                notificationFriendRequestRecalledProperties.isNotifyFriendRequestRecipient();
+
         NotificationFriendRequestRepliedProperties notificationFriendRequestRepliedProperties =
                 notificationProperties.getFriendRequestReplied();
         notifyRequesterOtherOnlineSessionsOfFriendRequestReplied =
                 notificationFriendRequestRepliedProperties.isNotifyRequesterOtherOnlineSessions();
-        notifyFriendRequestRequesterOfFriendRequestReplied =
-                notificationFriendRequestRepliedProperties.isNotifyFriendRequestRequester();
+        notifyFriendRequestSenderOfFriendRequestReplied =
+                notificationFriendRequestRepliedProperties.isNotifyFriendRequestSender();
 
         NotificationOneSidedRelationshipUpdatedProperties notificationOneSidedRelationshipUpdatedProperties =
                 notificationProperties.getOneSidedRelationshipUpdated();
@@ -227,6 +244,9 @@ public class UserRelationshipServiceController extends BaseServiceController {
         return clientRequest -> {
             CreateRelationshipRequest request = clientRequest.turmsRequest()
                     .getCreateRelationshipRequest();
+            String name = request.hasName()
+                    ? request.getName()
+                    : null;
             int groupIndex = request.hasGroupIndex()
                     ? request.getGroupIndex()
                     : DEFAULT_RELATIONSHIP_GROUP_INDEX;
@@ -234,17 +254,55 @@ public class UserRelationshipServiceController extends BaseServiceController {
                     ? new Date()
                     : null;
             Long relatedUserId = request.getUserId();
-            return userRelationshipService.upsertOneSidedRelationship(clientRequest
-                    .userId(), relatedUserId, blockDate, groupIndex, null, new Date(), false, null)
-                    .then(Mono.fromCallable(
-                            () -> notifyNewRelationshipGroupMemberOfOneSidedRelationshipGroupMemberAdded
-                                    ? RequestHandlerResult.of(
-                                            notifyRequesterOtherOnlineSessionsOfOneSidedRelationshipGroupMemberAdded,
-                                            relatedUserId,
-                                            clientRequest.turmsRequest())
-                                    : RequestHandlerResult.of(
-                                            notifyRequesterOtherOnlineSessionsOfOneSidedRelationshipGroupMemberAdded,
-                                            clientRequest.turmsRequest())));
+            return userRelationshipService
+                    .upsertOneSidedRelationship(clientRequest.userId(),
+                            relatedUserId,
+                            name,
+                            blockDate,
+                            groupIndex,
+                            null,
+                            new Date(),
+                            false,
+                            null)
+                    .then(Mono.fromCallable(() -> {
+                        TurmsRequest notification = clientRequest.turmsRequest();
+                        if (!request.hasGroupIndex()) {
+                            TurmsRequest.Builder builder =
+                                    ClientMessagePool.getTurmsRequestBuilder()
+                                            .mergeFrom(notification);
+                            notification = builder
+                                    .setCreateRelationshipRequest(
+                                            builder.getCreateRelationshipRequestBuilder()
+                                                    .setGroupIndex(groupIndex))
+                                    .build();
+                        }
+                        return notifyNewRelationshipGroupMemberOfOneSidedRelationshipGroupMemberAdded
+                                ? RequestHandlerResult.of(
+                                        notifyRequesterOtherOnlineSessionsOfOneSidedRelationshipGroupMemberAdded,
+                                        relatedUserId,
+                                        notification)
+                                : RequestHandlerResult.of(
+                                        notifyRequesterOtherOnlineSessionsOfOneSidedRelationshipGroupMemberAdded,
+                                        notification);
+                    }));
+        };
+    }
+
+    @ServiceRequestMapping(DELETE_FRIEND_REQUEST_REQUEST)
+    public ClientRequestHandler handleDeleteFriendRequestRequest() {
+        return clientRequest -> {
+            DeleteFriendRequestRequest request = clientRequest.turmsRequest()
+                    .getDeleteFriendRequestRequest();
+            return userFriendRequestService
+                    .authAndRecallFriendRequest(clientRequest.userId(), request.getRequestId())
+                    .flatMap(friendRequest -> notifyFriendRequestRecipientOfFriendRequestRecalled
+                            ? Mono.just(RequestHandlerResult.of(
+                                    notifyRequesterOtherOnlineSessionsOfFriendRequestRecalled,
+                                    friendRequest.getRecipientId(),
+                                    clientRequest.turmsRequest()))
+                            : Mono.just(RequestHandlerResult.of(
+                                    notifyRequesterOtherOnlineSessionsOfFriendRequestRecalled,
+                                    clientRequest.turmsRequest())));
         };
     }
 
@@ -262,19 +320,44 @@ public class UserRelationshipServiceController extends BaseServiceController {
                 return userRelationshipGroupService
                         .queryRelationshipGroupMemberIds(clientRequest.userId(), groupIndex)
                         .collect(Collectors.toCollection(recyclableList::getValue))
-                        .flatMap(memberIds -> userRelationshipGroupService
-                                .deleteRelationshipGroupAndMoveMembers(clientRequest.userId(),
-                                        groupIndex,
-                                        targetGroupIndex)
-                                .then(Mono.fromCallable(() -> memberIds.isEmpty()
-                                        ? RequestHandlerResult.of(
-                                                notifyRequesterOtherOnlineSessionsOfOneSidedRelationshipGroupDeleted,
-                                                clientRequest.turmsRequest())
-                                        : RequestHandlerResult.of(
-                                                notifyRequesterOtherOnlineSessionsOfOneSidedRelationshipGroupDeleted,
-                                                CollectionUtil.newSet(memberIds),
-                                                clientRequest.turmsRequest()))))
+                        .flatMap(
+                                memberIds -> userRelationshipGroupService
+                                        .deleteRelationshipGroupAndMoveMembers(clientRequest
+                                                .userId(), groupIndex, targetGroupIndex)
+                                        .then(Mono.fromCallable(() -> {
+                                            TurmsRequest notification =
+                                                    clientRequest.turmsRequest();
+                                            if (!request.hasTargetGroupIndex()) {
+                                                TurmsRequest.Builder builder =
+                                                        ClientMessagePool.getTurmsRequestBuilder()
+                                                                .mergeFrom(notification);
+                                                notification = builder
+                                                        .setDeleteRelationshipGroupRequest(builder
+                                                                .getDeleteRelationshipGroupRequestBuilder()
+                                                                .setTargetGroupIndex(
+                                                                        targetGroupIndex))
+                                                        .build();
+                                            }
+                                            return memberIds.isEmpty()
+                                                    ? RequestHandlerResult.of(
+                                                            notifyRequesterOtherOnlineSessionsOfOneSidedRelationshipGroupDeleted,
+                                                            notification)
+                                                    : RequestHandlerResult.of(
+                                                            notifyRequesterOtherOnlineSessionsOfOneSidedRelationshipGroupDeleted,
+                                                            CollectionUtil.newSet(memberIds),
+                                                            notification);
+                                        })))
                         .doFinally(signalType -> recyclableList.recycle());
+            }
+            TurmsRequest notification = clientRequest.turmsRequest();
+            if (!request.hasTargetGroupIndex()) {
+                TurmsRequest.Builder builder = ClientMessagePool.getTurmsRequestBuilder()
+                        .mergeFrom(notification);
+                notification = builder
+                        .setDeleteRelationshipGroupRequest(
+                                builder.getDeleteRelationshipGroupRequestBuilder()
+                                        .setTargetGroupIndex(targetGroupIndex))
+                        .build();
             }
             return userRelationshipGroupService
                     .deleteRelationshipGroupAndMoveMembers(clientRequest.userId(),
@@ -282,7 +365,7 @@ public class UserRelationshipServiceController extends BaseServiceController {
                             targetGroupIndex)
                     .thenReturn(RequestHandlerResult.of(
                             notifyRequesterOtherOnlineSessionsOfOneSidedRelationshipGroupDeleted,
-                            clientRequest.turmsRequest()));
+                            notification));
         };
     }
 
@@ -427,14 +510,59 @@ public class UserRelationshipServiceController extends BaseServiceController {
                             clientRequest.userId(),
                             action,
                             reason)
-                    .map(friendRequestRequesterId -> notifyFriendRequestRequesterOfFriendRequestReplied
-                            ? RequestHandlerResult.of(
-                                    notifyRequesterOtherOnlineSessionsOfFriendRequestReplied,
-                                    friendRequestRequesterId,
-                                    clientRequest.turmsRequest())
-                            : RequestHandlerResult.of(
-                                    notifyRequesterOtherOnlineSessionsOfFriendRequestReplied,
-                                    clientRequest.turmsRequest()));
+                    .map(handleResult -> {
+                        List<RequestHandlerResult.Notification> notifications = new ArrayList<>(3);
+                        UserFriendRequest friendedRequest = handleResult.friendRequest();
+                        Long friendedRequestRequesterId = friendedRequest.getRequesterId();
+                        notifications.add(notifyFriendRequestSenderOfFriendRequestReplied
+                                ? RequestHandlerResult.Notification.of(
+                                        notifyRequesterOtherOnlineSessionsOfFriendRequestReplied,
+                                        friendedRequestRequesterId,
+                                        clientRequest.turmsRequest())
+                                : RequestHandlerResult.Notification.of(
+                                        notifyRequesterOtherOnlineSessionsOfFriendRequestReplied,
+                                        clientRequest.turmsRequest()));
+
+                        if (notifyNewRelationshipGroupMemberOfOneSidedRelationshipGroupMemberAdded) {
+                            Integer newGroupIndexForFriendRequestRequester =
+                                    handleResult.newGroupIndexForFriendRequestRequester();
+                            if (newGroupIndexForFriendRequestRequester != null) {
+                                notifications.add(RequestHandlerResult.Notification.of(
+                                        // The client request sender is always the friend request
+                                        // recipient,
+                                        // so this is always false.
+                                        false,
+                                        friendedRequestRequesterId,
+                                        ClientMessagePool.getTurmsRequestBuilder()
+                                                .setCreateRelationshipRequest(ClientMessagePool
+                                                        .getCreateRelationshipRequestBuilder()
+                                                        .setUserId(friendedRequestRequesterId)
+                                                        .setGroupIndex(
+                                                                newGroupIndexForFriendRequestRequester)
+                                                        .build())
+                                                .build()));
+                            }
+                            Integer newGroupIndexForFriendRequestRecipient =
+                                    handleResult.newGroupIndexForFriendRequestRecipient();
+                            if (newGroupIndexForFriendRequestRecipient != null) {
+                                Long recipientId = friendedRequest.getRecipientId();
+                                notifications.add(RequestHandlerResult.Notification.of(
+                                        // The client request sender is always the friend request
+                                        // recipient,
+                                        notifyRequesterOtherOnlineSessionsOfOneSidedRelationshipGroupMemberAdded,
+                                        recipientId,
+                                        ClientMessagePool.getTurmsRequestBuilder()
+                                                .setCreateRelationshipRequest(ClientMessagePool
+                                                        .getCreateRelationshipRequestBuilder()
+                                                        .setUserId(recipientId)
+                                                        .setGroupIndex(
+                                                                newGroupIndexForFriendRequestRecipient)
+                                                        .build())
+                                                .build()));
+                            }
+                        }
+                        return RequestHandlerResult.of(notifications);
+                    });
         };
     }
 
@@ -473,6 +601,9 @@ public class UserRelationshipServiceController extends BaseServiceController {
         return clientRequest -> {
             UpdateRelationshipRequest request = clientRequest.turmsRequest()
                     .getUpdateRelationshipRequest();
+            String name = request.hasName()
+                    ? request.getName()
+                    : null;
             Date blockDate = request.hasBlocked() && request.getBlocked()
                     ? new Date()
                     : null;
@@ -483,8 +614,12 @@ public class UserRelationshipServiceController extends BaseServiceController {
                     ? request.getDeleteGroupIndex()
                     : null;
             return userRelationshipService
+                    // TODO: We should update the relationship if it exists rather than upserting
+                    // so that the usages of the update request won't overlay with the create and
+                    // delete request.
                     .upsertOneSidedRelationship(clientRequest.userId(),
                             request.getUserId(),
+                            name,
                             blockDate,
                             newGroupIndex,
                             deleteGroupIndex,

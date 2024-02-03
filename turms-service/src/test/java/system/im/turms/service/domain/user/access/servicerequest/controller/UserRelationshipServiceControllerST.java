@@ -117,8 +117,7 @@ class UserRelationshipServiceControllerST
                 getController().handleCreateRelationshipGroupRequest()
                         .handle(clientRequest);
         assertResultIsOk(resultMono, result -> {
-            relationshipGroupIndex =
-                    (int) NotificationUtil.getLongOrThrow(result.dataForRequester());
+            relationshipGroupIndex = (int) NotificationUtil.getLongOrThrow(result.response());
         });
     }
 
@@ -135,7 +134,7 @@ class UserRelationshipServiceControllerST
         Mono<RequestHandlerResult> resultMono = getController().handleCreateFriendRequestRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono, result -> {
-            TurmsNotification.Data data = result.dataForRequester();
+            TurmsNotification.Data data = result.response();
             assertThat(data.hasLong()).isTrue();
             friendRequestId = data.getLong();
         });
@@ -215,7 +214,7 @@ class UserRelationshipServiceControllerST
         Mono<RequestHandlerResult> resultMono = getController().handleQueryRelationshipsRequest()
                 .handle(clientRequest);
         assertResult(resultMono, result -> {
-            List<UserRelationship> relationships = result.dataForRequester()
+            List<UserRelationship> relationships = result.response()
                     .getUserRelationshipsWithVersion()
                     .getUserRelationshipsList();
             assertThat(relationships).map(UserRelationship::getRelatedUserId)
@@ -241,7 +240,7 @@ class UserRelationshipServiceControllerST
         resultMono = getController().handleQueryRelationshipsRequest()
                 .handle(clientRequest);
         assertResult(resultMono, result -> {
-            List<UserRelationship> relationships = result.dataForRequester()
+            List<UserRelationship> relationships = result.response()
                     .getUserRelationshipsWithVersion()
                     .getUserRelationshipsList();
             assertThat(relationships).map(UserRelationship::getRelatedUserId)
@@ -267,7 +266,7 @@ class UserRelationshipServiceControllerST
         resultMono = getController().handleQueryRelationshipsRequest()
                 .handle(clientRequest);
         assertResult(resultMono, result -> {
-            List<UserRelationship> relationships = result.dataForRequester()
+            List<UserRelationship> relationships = result.response()
                     .getUserRelationshipsWithVersion()
                     .getUserRelationshipsList();
             assertThat(relationships).map(UserRelationship::getRelatedUserId)
@@ -287,7 +286,7 @@ class UserRelationshipServiceControllerST
         Mono<RequestHandlerResult> resultMono = getController().handleQueryRelationshipsRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono,
-                result -> assertThat(result.dataForRequester()
+                result -> assertThat(result.response()
                         .getUserRelationshipsWithVersion()
                         .getUserRelationshipsCount()).isPositive());
     }
@@ -303,7 +302,7 @@ class UserRelationshipServiceControllerST
         Mono<RequestHandlerResult> resultMono = getController().handleQueryRelatedUserIdsRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono,
-                result -> assertThat(result.dataForRequester()
+                result -> assertThat(result.response()
                         .getLongsWithVersion()
                         .getLongsCount()).isPositive());
     }
@@ -320,7 +319,7 @@ class UserRelationshipServiceControllerST
         Mono<RequestHandlerResult> resultMono = getController().handleQueryRelationshipsRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono,
-                result -> assertThat(result.dataForRequester()
+                result -> assertThat(result.response()
                         .getUserRelationshipsWithVersion()
                         .getUserRelationshipsCount()).isPositive());
     }
@@ -337,7 +336,7 @@ class UserRelationshipServiceControllerST
         Mono<RequestHandlerResult> resultMono = getController().handleQueryRelationshipsRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono,
-                result -> assertThat(result.dataForRequester()
+                result -> assertThat(result.response()
                         .getUserRelationshipsWithVersion()
                         .getUserRelationshipsCount()).isPositive());
     }
@@ -354,7 +353,7 @@ class UserRelationshipServiceControllerST
         Mono<RequestHandlerResult> resultMono = getController().handleQueryFriendRequestsRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono,
-                result -> assertThat(result.dataForRequester()
+                result -> assertThat(result.response()
                         .getUserFriendRequestsWithVersion()
                         .getUserFriendRequestsCount()).isPositive());
     }
@@ -371,7 +370,7 @@ class UserRelationshipServiceControllerST
                 getController().handleQueryRelationshipGroupsRequest()
                         .handle(clientRequest);
         assertResultIsOk(resultMono,
-                result -> assertThat(result.dataForRequester()
+                result -> assertThat(result.response()
                         .getUserRelationshipGroupsWithVersion()
                         .getUserRelationshipGroupsCount()).isPositive());
     }

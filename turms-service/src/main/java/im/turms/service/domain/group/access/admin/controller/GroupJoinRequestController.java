@@ -78,7 +78,8 @@ public class GroupJoinRequestController extends BaseController {
                         addGroupJoinRequestDTO.content(),
                         addGroupJoinRequestDTO.status(),
                         addGroupJoinRequestDTO.creationDate(),
-                        addGroupJoinRequestDTO.responseDate())
+                        addGroupJoinRequestDTO.responseDate(),
+                        addGroupJoinRequestDTO.responseReason())
                 .map(request -> new GroupJoinRequestDTO(
                         request,
                         groupJoinRequestService.getEntityExpirationDate()));

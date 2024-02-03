@@ -43,7 +43,8 @@ public class GroupInvitationDTO extends GroupInvitation {
                 invitation.getContent(),
                 invitation.getStatus(),
                 invitation.getCreationDate(),
-                invitation.getResponseDate());
+                invitation.getResponseDate(),
+                invitation.getReason());
         this.expirationDate = expirationDate;
     }
 

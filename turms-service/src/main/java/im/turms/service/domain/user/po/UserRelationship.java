@@ -54,6 +54,9 @@ public final class UserRelationship extends BaseEntity {
     @Id
     private final Key key;
 
+    @Field(Fields.NAME)
+    private final String name;
+
     @Field(Fields.BLOCK_DATE)
     private final Date blockDate;
 
@@ -64,9 +67,11 @@ public final class UserRelationship extends BaseEntity {
     public UserRelationship(
             Long ownerId,
             Long relatedUserId,
+            String name,
             Date blockDate,
             Date establishmentDate) {
         this.key = new Key(ownerId, relatedUserId);
+        this.name = name;
         this.blockDate = blockDate;
         this.establishmentDate = establishmentDate;
     }
@@ -98,6 +103,7 @@ public final class UserRelationship extends BaseEntity {
                 + Key.Fields.OWNER_ID;
         public static final String ID_RELATED_USER_ID = "_id."
                 + Key.Fields.RELATED_USER_ID;
+        public static final String NAME = "n";
         public static final String BLOCK_DATE = "bd";
         public static final String ESTABLISHMENT_DATE = "ed";
 

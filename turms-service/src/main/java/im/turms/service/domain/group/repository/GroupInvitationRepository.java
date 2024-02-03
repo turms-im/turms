@@ -22,6 +22,7 @@ import java.util.Set;
 import jakarta.annotation.Nullable;
 
 import com.mongodb.client.result.UpdateResult;
+import com.mongodb.reactivestreams.client.ClientSession;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
@@ -38,6 +39,7 @@ import im.turms.server.common.storage.mongo.operation.option.QueryOptions;
 import im.turms.server.common.storage.mongo.operation.option.Update;
 import im.turms.service.domain.common.repository.ExpirableEntityRepository;
 import im.turms.service.domain.group.po.GroupInvitation;
+import im.turms.service.domain.user.po.UserFriendRequest;
 
 /**
  * @author James Chen
@@ -68,13 +70,17 @@ public class GroupInvitationRepository extends ExpirableEntityRepository<GroupIn
 
     public Mono<UpdateResult> updateStatusIfPending(
             Long invitationId,
-            RequestStatus requestStatus) {
-        Filter filter = Filter.newBuilder(2)
+            RequestStatus requestStatus,
+            @Nullable String reason,
+            @Nullable ClientSession session) {
+        Filter filter = Filter.newBuilder(3)
                 .eq(DomainFieldName.ID, invitationId)
-                .eq(GroupInvitation.Fields.STATUS, RequestStatus.PENDING);
-        Update update = Update.newBuilder(1)
-                .set(GroupInvitation.Fields.STATUS, requestStatus);
-        return mongoClient.updateOne(entityClass, filter, update);
+                .eq(GroupInvitation.Fields.STATUS, RequestStatus.PENDING)
+                .isNotExpired(UserFriendRequest.Fields.CREATION_DATE, getEntityExpirationDate());
+        Update update = Update.newBuilder(2)
+                .set(GroupInvitation.Fields.STATUS, requestStatus)
+                .setIfNotNull(GroupInvitation.Fields.REASON, reason);
+        return mongoClient.updateOne(session, entityClass, filter, update);
     }
 
     public Mono<UpdateResult> updateInvitations(
@@ -163,13 +169,16 @@ public class GroupInvitationRepository extends ExpirableEntityRepository<GroupIn
         return findExpirableDocs(filter);
     }
 
-    public Mono<Long> findInviteeId(Long invitationId) {
+    public Mono<GroupInvitation> findInviteeIdAndGroupIdAndCreationDateAndStatus(
+            Long invitationId) {
         Filter filter = Filter.newBuilder(1)
                 .eq(DomainFieldName.ID, invitationId);
         QueryOptions options = QueryOptions.newBuilder(1)
-                .include(GroupInvitation.Fields.INVITEE_ID);
-        return mongoClient.findOne(entityClass, filter, options)
-                .map(GroupInvitation::getInviteeId);
+                .include(GroupInvitation.Fields.INVITEE_ID,
+                        GroupInvitation.Fields.GROUP_ID,
+                        GroupInvitation.Fields.CREATION_DATE,
+                        GroupInvitation.Fields.STATUS);
+        return mongoClient.findOne(entityClass, filter, options);
     }
 
     public Flux<GroupInvitation> findInvitations(

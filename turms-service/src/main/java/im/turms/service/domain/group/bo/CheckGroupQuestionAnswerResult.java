@@ -15,25 +15,17 @@
  * limitations under the License.
  */
 
-package im.turms.service.domain.group.access.admin.dto.request;
+package im.turms.service.domain.group.bo;
 
-import java.util.Date;
-
-import im.turms.server.common.access.client.dto.constant.RequestStatus;
-import im.turms.server.common.domain.common.access.dto.ControllerDTO;
+import java.util.List;
 
 /**
  * @author James Chen
  */
-public record AddGroupJoinRequestDTO(
-        Long id,
-        String content,
-        RequestStatus status,
-        Date creationDate,
-        Date responseDate,
-        String responseReason,
+public record CheckGroupQuestionAnswerResult(
+        boolean joined,
         Long groupId,
-        Long requesterId,
-        Long responderId
-) implements ControllerDTO {
+        List<Long> questionIds,
+        Integer score
+) {
 }

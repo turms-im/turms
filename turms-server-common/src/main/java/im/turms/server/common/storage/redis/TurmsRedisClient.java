@@ -59,11 +59,13 @@ import static io.lettuce.core.protocol.CommandType.GEORADIUSBYMEMBER;
 /**
  * @author James Chen
  * @implNote 1. For Redis commands, we MUST release the key/val buffers in "doFinally" because if a
- *           command is cancelled or fails, Lettuce won't release these buffers because it hasn't
- *           flushed the buffers. 2. Ensure encoding data in a cold publisher instead of a hot
- *           publisher, or the memory may leak because the cold finalizer will never be called if it
- *           is won't be subscribed (this may happen in the scenario: when the previous publisher
- *           fails, the next publisher will never be subscribed)
+ *           command is canceled or fails, Lettuce won't release these buffers because it hasn't
+ *           flushed the buffers.
+ *           <p>
+ *           2. Ensure encoding data in a cold publisher instead of a hot publisher, or the memory
+ *           may leak because the cold finalizer will never be called if it isn't subscribed (this
+ *           may happen in the scenario: when the previous publisher fails, the next publisher will
+ *           never be subscribed)
  * @see AbstractRedisReactiveCommands
  */
 @Data
@@ -103,7 +105,7 @@ public class TurmsRedisClient {
                      * ConnectionBuilder$PlainChannelInitializer ChannelGroupListener CommandEncoder
                      * RedisHandshakeHandler CommandHandler ConnectionEventTrigger
                      * ConnectionWatchdog
-                     * 
+                     *
                      * @see io.lettuce.core.SslConnectionBuilder.SslChannelInitializer
                      * @see io.lettuce.core.SslConnectionBuilder.PlainChannelInitializer
                      */

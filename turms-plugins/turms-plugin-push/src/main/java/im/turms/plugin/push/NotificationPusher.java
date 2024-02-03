@@ -80,7 +80,9 @@ public class NotificationPusher extends TurmsExtension implements RequestHandler
             @NotNull DeviceType requesterDevice,
             @NotNull Set<Long> offlineRecipientIds) {
         Mono<RequestHandlerResult> handlerResultMono = Mono.just(result);
-        TurmsRequest request = result.dataForRecipients();
+        TurmsRequest request = result.notifications()
+                .getFirst()
+                .notification();
         if (request == null || offlineRecipientIds.isEmpty() || deviceTokenFieldNames.isEmpty()) {
             return handlerResultMono;
         }

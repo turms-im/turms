@@ -31,8 +31,10 @@ import im.turms.server.common.infra.property.env.service.business.notification.g
 import im.turms.server.common.infra.property.env.service.business.notification.group.NotificationGroupDeletedProperties;
 import im.turms.server.common.infra.property.env.service.business.notification.group.NotificationGroupInvitationAddedProperties;
 import im.turms.server.common.infra.property.env.service.business.notification.group.NotificationGroupInvitationRecalledProperties;
+import im.turms.server.common.infra.property.env.service.business.notification.group.NotificationGroupInvitationRepliedProperties;
 import im.turms.server.common.infra.property.env.service.business.notification.group.NotificationGroupJoinRequestCreatedProperties;
 import im.turms.server.common.infra.property.env.service.business.notification.group.NotificationGroupJoinRequestRecalledProperties;
+import im.turms.server.common.infra.property.env.service.business.notification.group.NotificationGroupJoinRequestRepliedProperties;
 import im.turms.server.common.infra.property.env.service.business.notification.group.NotificationGroupMemberAddedProperties;
 import im.turms.server.common.infra.property.env.service.business.notification.group.NotificationGroupMemberInfoUpdatedProperties;
 import im.turms.server.common.infra.property.env.service.business.notification.group.NotificationGroupMemberOnlineStatusUpdatedProperties;
@@ -41,6 +43,7 @@ import im.turms.server.common.infra.property.env.service.business.notification.g
 import im.turms.server.common.infra.property.env.service.business.notification.message.NotificationMessageCreatedProperties;
 import im.turms.server.common.infra.property.env.service.business.notification.message.NotificationMessageUpdatedProperties;
 import im.turms.server.common.infra.property.env.service.business.notification.user.NotificationFriendRequestCreatedProperties;
+import im.turms.server.common.infra.property.env.service.business.notification.user.NotificationFriendRequestRecalledProperties;
 import im.turms.server.common.infra.property.env.service.business.notification.user.NotificationFriendRequestRepliedProperties;
 import im.turms.server.common.infra.property.env.service.business.notification.user.NotificationOneSidedRelationshipGroupDeletedProperties;
 import im.turms.server.common.infra.property.env.service.business.notification.user.NotificationOneSidedRelationshipGroupMemberAddedProperties;
@@ -72,6 +75,10 @@ public class NotificationProperties {
     @NestedConfigurationProperty
     private NotificationFriendRequestCreatedProperties friendRequestCreated =
             new NotificationFriendRequestCreatedProperties();
+
+    @NestedConfigurationProperty
+    private NotificationFriendRequestRecalledProperties friendRequestRecalled =
+            new NotificationFriendRequestRecalledProperties();
 
     @NestedConfigurationProperty
     private NotificationFriendRequestRepliedProperties friendRequestReplied =
@@ -145,12 +152,20 @@ public class NotificationProperties {
             new NotificationGroupInvitationRecalledProperties();
 
     @NestedConfigurationProperty
+    private NotificationGroupInvitationRepliedProperties groupInvitationReplied =
+            new NotificationGroupInvitationRepliedProperties();
+
+    @NestedConfigurationProperty
     private NotificationGroupJoinRequestCreatedProperties groupJoinRequestCreated =
             new NotificationGroupJoinRequestCreatedProperties();
 
     @NestedConfigurationProperty
     private NotificationGroupJoinRequestRecalledProperties groupJoinRequestRecalled =
             new NotificationGroupJoinRequestRecalledProperties();
+
+    @NestedConfigurationProperty
+    private NotificationGroupJoinRequestRepliedProperties groupJoinRequestReplied =
+            new NotificationGroupJoinRequestRepliedProperties();
 
     // endregion
 

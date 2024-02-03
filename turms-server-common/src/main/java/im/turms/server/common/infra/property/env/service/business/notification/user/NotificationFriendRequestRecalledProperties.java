@@ -33,16 +33,16 @@ import im.turms.server.common.infra.property.metadata.MutableProperty;
 @Builder(toBuilder = true)
 @Data
 @NoArgsConstructor
-public class NotificationFriendRequestRepliedProperties {
+public class NotificationFriendRequestRecalledProperties {
 
-    @Description("Whether to notify the requester's other online sessions when they have replied to a friend request")
+    @Description("Whether to notify the requester's other online sessions when they have recalled a friend request")
     @GlobalProperty
     @MutableProperty
     private boolean notifyRequesterOtherOnlineSessions = true;
 
-    @Description("Whether to notify the sender of the friend request when the recipient has replied to the friend request sent by them")
+    @Description("Whether to notify the recipient when the requester has recalled a friend request")
     @GlobalProperty
     @MutableProperty
-    private boolean notifyFriendRequestSender = true;
+    private boolean notifyFriendRequestRecipient = true;
 
 }

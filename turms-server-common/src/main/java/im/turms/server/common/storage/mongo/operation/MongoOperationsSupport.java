@@ -70,9 +70,9 @@ public interface MongoOperationsSupport {
 
     <T> Mono<Long> countAll(Class<T> clazz);
 
-    <T> Mono<Void> upsert(T o);
+    <T> Mono<UpdateResult> upsert(T o);
 
-    <T> Mono<Void> upsert(ClientSession session, T o);
+    <T> Mono<UpdateResult> upsert(ClientSession session, T o);
 
     <T> Mono<Void> upsert(Class<T> clazz, Filter filter, Update update);
 

@@ -514,8 +514,8 @@ public class GroupService {
                     return groupMemberService.isGroupMember(groupId, successorId, false)
                             .flatMap(isGroupMember -> isGroupMember
                                     ? queryGroupTypeId(groupId)
-                                    : Mono.error(ResponseException
-                                            .get(ResponseStatusCode.SUCCESSOR_NOT_GROUP_MEMBER)))
+                                    : Mono.error(ResponseException.get(
+                                            ResponseStatusCode.GROUP_SUCCESSOR_NOT_GROUP_MEMBER)))
                             .flatMap(groupTypeId -> isAllowedToCreateGroupAndHaveGroupType(
                                     successorId,
                                     groupTypeId).flatMap(result -> {
@@ -667,12 +667,14 @@ public class GroupService {
         } else {
             if (allowGroupOwnerChangeGroupType) {
                 checkIfAllowedToUpdateTypeId =
-                        isAllowedHaveGroupType(requesterId, typeId, null).flatMap(permission -> {
-                            ResponseStatusCode code = permission.code();
-                            return code == ResponseStatusCode.OK
-                                    ? Mono.empty()
-                                    : Mono.error(ResponseException.get(code, permission.reason()));
-                        });
+                        isAllowedUpdateGroupToGroupType(requesterId, typeId, null)
+                                .flatMap(permission -> {
+                                    ResponseStatusCode code = permission.code();
+                                    return code == ResponseStatusCode.OK
+                                            ? Mono.empty()
+                                            : Mono.error(ResponseException.get(code,
+                                                    permission.reason()));
+                                });
             } else {
                 checkIfAllowedToUpdateTypeId = Mono.error(
                         ResponseException.get(ResponseStatusCode.UPDATING_GROUP_TYPE_IS_DISABLED));
@@ -830,7 +832,9 @@ public class GroupService {
                 requesterId,
                 userPermissionGroup)
                 .flatMap(permission -> permission.code() == ResponseStatusCode.OK
-                        ? isAllowedHaveGroupType(requesterId, groupTypeId, userPermissionGroup)
+                        ? isAllowedCreateGroupWithGroupType(requesterId,
+                                groupTypeId,
+                                userPermissionGroup)
                         : Mono.just(
                                 ServicePermission.get(permission.code(), permission.reason()))));
     }
@@ -878,7 +882,7 @@ public class GroupService {
      *           requester exceeds here because it is implemented in
      *           {@link GroupService#isAllowedToCreateGroup}
      */
-    public Mono<ServicePermission> isAllowedHaveGroupType(
+    public Mono<ServicePermission> isAllowedCreateGroupWithGroupType(
             @NotNull Long requesterId,
             @NotNull Long groupTypeId,
             @Nullable UserPermissionGroup auxiliaryUserPermissionGroup) {
@@ -909,6 +913,54 @@ public class GroupService {
                                             + ids;
                             return Mono.just(ServicePermission.get(
                                     ResponseStatusCode.NO_PERMISSION_TO_CREATE_GROUP_WITH_GROUP_TYPE,
+                                    reason));
+                        }
+                        Integer ownedGroupLimit = userPermissionGroup.getGroupTypeIdToLimit()
+                                .getOrDefault(groupTypeId,
+                                        userPermissionGroup.getOwnedGroupLimitForEachGroupType());
+                        if (ownedGroupLimit == Integer.MAX_VALUE) {
+                            return Mono.just(ServicePermission.OK);
+                        }
+                        return countOwnedGroups(requesterId, groupTypeId)
+                                .map(ownedGroupCount -> ServicePermission
+                                        .get(ownedGroupCount < ownedGroupLimit
+                                                ? ResponseStatusCode.OK
+                                                : ResponseStatusCode.MAX_OWNED_GROUPS_REACHED));
+                    });
+                });
+    }
+
+    public Mono<ServicePermission> isAllowedUpdateGroupToGroupType(
+            @NotNull Long requesterId,
+            @NotNull Long groupTypeId,
+            @Nullable UserPermissionGroup auxiliaryUserPermissionGroup) {
+        try {
+            Validator.notNull(requesterId, "requesterId");
+        } catch (ResponseException e) {
+            return Mono.error(e);
+        }
+        return groupTypeService.groupTypeExists(groupTypeId)
+                .flatMap(existed -> {
+                    if (!existed) {
+                        return Mono.just(ServicePermission
+                                .get(ResponseStatusCode.UPDATE_GROUP_TO_NONEXISTENT_GROUP_TYPE));
+                    }
+                    Mono<UserPermissionGroup> groupMono = auxiliaryUserPermissionGroup != null
+                            ? Mono.just(auxiliaryUserPermissionGroup)
+                            : userPermissionGroupService
+                                    .queryUserPermissionGroupByUserId(requesterId);
+                    return groupMono.flatMap(userPermissionGroup -> {
+                        Set<Long> creatableGroupTypeIds =
+                                userPermissionGroup.getCreatableGroupTypeIds();
+                        if (!creatableGroupTypeIds.contains(groupTypeId)) {
+                            List<Long> sortedIds = new ArrayList<>(creatableGroupTypeIds);
+                            sortedIds.sort(null);
+                            String ids = StringUtil.joinLatin1(", ", sortedIds);
+                            String reason =
+                                    "The requester is only allowed to update groups to the types: "
+                                            + ids;
+                            return Mono.just(ServicePermission.get(
+                                    ResponseStatusCode.NO_PERMISSION_TO_UPDATE_GROUP_TO_GROUP_TYPE,
                                     reason));
                         }
                         Integer ownedGroupLimit = userPermissionGroup.getGroupTypeIdToLimit()

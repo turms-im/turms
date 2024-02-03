@@ -101,6 +101,15 @@ public final class Validator {
         }
     }
 
+    public static <K, V> void notEmpty(Map<K, V> map, String name) {
+        if (map.isEmpty()) {
+            throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
+                    ("\""
+                            + name
+                            + "\" must not be empty").intern());
+        }
+    }
+
     public static void notEmpty(@Nullable Object[] array, String name) {
         if (array == null || array.length == 0) {
             throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,

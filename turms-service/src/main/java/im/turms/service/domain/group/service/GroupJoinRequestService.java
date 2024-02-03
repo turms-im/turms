@@ -26,13 +26,16 @@ import jakarta.validation.constraints.PastOrPresent;
 
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
+import com.mongodb.reactivestreams.client.ClientSession;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import im.turms.server.common.access.client.dto.ClientMessagePool;
+import im.turms.server.common.access.client.dto.constant.GroupMemberRole;
 import im.turms.server.common.access.client.dto.constant.RequestStatus;
+import im.turms.server.common.access.client.dto.constant.ResponseAction;
 import im.turms.server.common.access.client.dto.model.group.GroupJoinRequestsWithVersion;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.cluster.node.Node;
@@ -50,14 +53,19 @@ import im.turms.server.common.infra.time.DateRange;
 import im.turms.server.common.infra.time.DateUtil;
 import im.turms.server.common.infra.validation.Validator;
 import im.turms.server.common.storage.mongo.IMongoCollectionInitializer;
+import im.turms.server.common.storage.mongo.exception.DuplicateKeyException;
 import im.turms.service.domain.common.service.ExpirableEntityService;
 import im.turms.service.domain.common.validation.DataValidator;
+import im.turms.service.domain.group.bo.HandleHandleGroupJoinRequestResult;
 import im.turms.service.domain.group.po.GroupJoinRequest;
 import im.turms.service.domain.group.repository.GroupJoinRequestRepository;
 import im.turms.service.domain.user.service.UserVersionService;
 import im.turms.service.infra.proto.ProtoModelConvertor;
 import im.turms.service.infra.validation.ValidRequestStatus;
+import im.turms.service.infra.validation.ValidResponseAction;
 import im.turms.service.storage.mongo.OperationResultPublisherPool;
+
+import static im.turms.service.storage.mongo.MongoOperationConst.TRANSACTION_RETRY;
 
 /**
  * @author James Chen
@@ -82,9 +90,10 @@ public class GroupJoinRequestService extends ExpirableEntityService<GroupJoinReq
     private final GroupMemberService groupMemberService;
     private final UserVersionService userVersionService;
 
-    private boolean allowRecallJoinRequestSentByOneself;
+    private boolean allowRecallPendingJoinRequestBySender;
     private int maxContentLength;
     private boolean deleteExpiredJoinRequestsWhenCronTriggered;
+    private int maxResponseReasonLength;
 
     public GroupJoinRequestService(
             Node node,
@@ -137,14 +146,22 @@ public class GroupJoinRequestService extends ExpirableEntityService<GroupJoinReq
         GroupJoinRequestProperties joinRequestProperties = properties.getService()
                 .getGroup()
                 .getJoinRequest();
-        allowRecallJoinRequestSentByOneself =
-                joinRequestProperties.isAllowRecallJoinRequestSentByOneself();
+
+        allowRecallPendingJoinRequestBySender =
+                joinRequestProperties.isAllowRecallPendingJoinRequestBySender();
+
         int localMaxContentLength = joinRequestProperties.getMaxContentLength();
         maxContentLength = localMaxContentLength > 0
                 ? localMaxContentLength
                 : Integer.MAX_VALUE;
+
         deleteExpiredJoinRequestsWhenCronTriggered =
                 joinRequestProperties.isDeleteExpiredJoinRequestsWhenCronTriggered();
+
+        int localMaxResponseReasonLength = joinRequestProperties.getMaxResponseReasonLength();
+        maxResponseReasonLength = localMaxResponseReasonLength > 0
+                ? localMaxResponseReasonLength
+                : Integer.MAX_VALUE;
     }
 
     public Mono<GroupJoinRequest> authAndCreateGroupJoinRequest(
@@ -161,7 +178,7 @@ public class GroupJoinRequestService extends ExpirableEntityService<GroupJoinReq
         return groupBlocklistService.isBlocked(groupId, requesterId)
                 .flatMap(isBlocked -> isBlocked
                         ? Mono.error(ResponseException
-                                .get(ResponseStatusCode.GROUP_JOIN_REQUEST_SENDER_HAS_BEEN_BLOCKED))
+                                .get(ResponseStatusCode.BLOCKED_USER_SEND_GROUP_JOIN_REQUEST))
                         : groupService.queryGroupTypeIdIfActiveAndNotDeleted(groupId))
                 .switchIfEmpty(Mono.error(ResponseException
                         .get(ResponseStatusCode.SEND_GROUP_JOIN_REQUEST_TO_INACTIVE_GROUP)))
@@ -183,6 +200,7 @@ public class GroupJoinRequestService extends ExpirableEntityService<GroupJoinReq
                                 finalContent,
                                 RequestStatus.PENDING,
                                 new Date(),
+                                null,
                                 null,
                                 groupId,
                                 requesterId,
@@ -232,22 +250,26 @@ public class GroupJoinRequestService extends ExpirableEntityService<GroupJoinReq
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        if (!allowRecallJoinRequestSentByOneself) {
+        if (!allowRecallPendingJoinRequestBySender) {
             return Mono.error(ResponseException
                     .get(ResponseStatusCode.RECALLING_GROUP_JOIN_REQUEST_IS_DISABLED));
         }
         return queryRequesterIdAndStatusAndGroupId(requestId)
-                .switchIfEmpty(ResponseExceptionPublisherPool.resourceNotFound())
+                // If the requester is not authorized to the join request,
+                // they should not know the status of the join request from the error code.
+                // So we should not tell if the request exists or not.
+                .switchIfEmpty(
+                        ResponseExceptionPublisherPool.notGroupJoinRequestSenderToRecallRequest())
                 .flatMap(request -> {
-                    RequestStatus status = request.getStatus();
-                    // If the requester is not authorized to the request,
-                    // it should not know the status of request from the error code.
+                    // If the requester is not authorized to the join request,
+                    // they should not know the status of the join request from the error code.
                     // So we check whether the requester is authorized first.
                     if (!request.getRequesterId()
                             .equals(requesterId)) {
-                        return Mono.error(ResponseException.get(
-                                ResponseStatusCode.NOT_GROUP_JOIN_REQUEST_SENDER_TO_RECALL_REQUEST));
+                        return ResponseExceptionPublisherPool
+                                .notGroupJoinRequestSenderToRecallRequest();
                     }
+                    RequestStatus status = request.getStatus();
                     if (status != RequestStatus.PENDING) {
                         String reason = "The request is under the status "
                                 + status;
@@ -256,7 +278,11 @@ public class GroupJoinRequestService extends ExpirableEntityService<GroupJoinReq
                                 reason));
                     }
                     return groupJoinRequestRepository
-                            .updateStatusIfPending(requestId, RequestStatus.CANCELED, requesterId)
+                            .updateStatusIfPending(requestId,
+                                    RequestStatus.CANCELED,
+                                    requesterId,
+                                    null,
+                                    null)
                             .flatMap(result -> result.getModifiedCount() == 0
                                     // Though it may return empty because the request had been
                                     // deleted between the status check,
@@ -302,7 +328,7 @@ public class GroupJoinRequestService extends ExpirableEntityService<GroupJoinReq
                         .flatMap(authenticated -> {
                             if (!authenticated) {
                                 return Mono.error(ResponseException.get(
-                                        ResponseStatusCode.NOT_GROUP_OWNER_OR_MANAGER_TO_ACCESS_GROUP_JOIN_REQUEST));
+                                        ResponseStatusCode.NOT_GROUP_OWNER_OR_MANAGER_TO_QUERY_GROUP_JOIN_REQUEST));
                             }
                             return groupVersionService.queryGroupJoinRequestsVersion(groupId);
                         })
@@ -408,6 +434,145 @@ public class GroupJoinRequestService extends ExpirableEntityService<GroupJoinReq
         return groupJoinRequestRepository.deleteByIds(ids);
     }
 
+    public Mono<HandleHandleGroupJoinRequestResult> authAndHandleJoinRequest(
+            @NotNull Long requesterId,
+            @NotNull Long joinRequestId,
+            @NotNull @ValidResponseAction ResponseAction action,
+            @Nullable String responseReason) {
+        try {
+            Validator.notNull(requesterId, "requesterId");
+            Validator.notNull(joinRequestId, "joinRequestId");
+            Validator.notNull(action, "action");
+            DataValidator.validResponseAction(action);
+            Validator.maxLength(responseReason, "responseReason", maxResponseReasonLength);
+        } catch (ResponseException e) {
+            return Mono.error(e);
+        }
+        return groupJoinRequestRepository.findById(joinRequestId)
+                // If the requester is not authorized to the join request,
+                // they should not know the status of the join request from the error code.
+                // So we should not tell if the join request exists or not.
+                .switchIfEmpty(Mono.error(ResponseException.get(
+                        ResponseStatusCode.NOT_GROUP_OWNER_OR_MANAGER_TO_UPDATE_GROUP_JOIN_REQUEST)))
+                .flatMap(joinRequest ->
+                // If the requester is not authorized to the join request,
+                // they should not know the status of the join request from the error code.
+                // So we check whether the requester is authorized first.
+                groupMemberService.isOwnerOrManager(requesterId, joinRequest.getGroupId(), false)
+                        .flatMap(isOwnerOrManager -> {
+                            if (!isOwnerOrManager) {
+                                return Mono.error(ResponseException.get(
+                                        ResponseStatusCode.NOT_GROUP_OWNER_OR_MANAGER_TO_UPDATE_GROUP_JOIN_REQUEST));
+                            }
+                            RequestStatus status = joinRequest.getStatus();
+                            if (status == RequestStatus.PENDING) {
+                                if (groupJoinRequestRepository
+                                        .isExpired(joinRequest.getCreationDate()
+                                                .getTime())) {
+                                    return Mono.error(ResponseException.get(
+                                            ResponseStatusCode.UPDATE_NON_PENDING_GROUP_JOIN_REQUEST,
+                                            "The join request is under the status "
+                                                    + RequestStatus.EXPIRED));
+                                }
+                            } else {
+                                return Mono.error(ResponseException.get(
+                                        ResponseStatusCode.UPDATE_NON_PENDING_GROUP_JOIN_REQUEST,
+                                        "The join request is under the status "
+                                                + status));
+                            }
+                            return switch (action) {
+                                case ACCEPT -> groupJoinRequestRepository
+                                        .inTransaction(session -> updatePendingJoinRequestStatus(
+                                                joinRequest.getGroupId(),
+                                                joinRequestId,
+                                                RequestStatus.ACCEPTED,
+                                                requesterId,
+                                                responseReason,
+                                                session)
+                                                .then(groupMemberService
+                                                        .addGroupMember(joinRequest.getGroupId(),
+                                                                requesterId,
+                                                                GroupMemberRole.MEMBER,
+                                                                null,
+                                                                null,
+                                                                null,
+                                                                session)
+                                                        .thenReturn(
+                                                                new HandleHandleGroupJoinRequestResult(
+                                                                        joinRequest,
+                                                                        true))
+                                                        .onErrorResume(DuplicateKeyException.class,
+                                                                e -> Mono.just(
+                                                                        new HandleHandleGroupJoinRequestResult(
+                                                                                joinRequest,
+                                                                                false)))))
+                                        .retryWhen(TRANSACTION_RETRY);
+                                case IGNORE ->
+                                    updatePendingJoinRequestStatus(joinRequest.getGroupId(),
+                                            joinRequestId,
+                                            RequestStatus.IGNORED,
+                                            requesterId,
+                                            responseReason,
+                                            null)
+                                            .thenReturn(new HandleHandleGroupJoinRequestResult(
+                                                    joinRequest,
+                                                    false));
+                                case DECLINE ->
+                                    updatePendingJoinRequestStatus(joinRequest.getGroupId(),
+                                            joinRequestId,
+                                            RequestStatus.DECLINED,
+                                            requesterId,
+                                            responseReason,
+                                            null)
+                                            .thenReturn(new HandleHandleGroupJoinRequestResult(
+                                                    joinRequest,
+                                                    false));
+                                default -> Mono.error(
+                                        ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
+                                                "The response action must not be UNRECOGNIZED"));
+                            };
+                        }));
+    }
+
+    public Mono<UpdateResult> updatePendingJoinRequestStatus(
+            @NotNull Long groupId,
+            @NotNull Long joinRequestId,
+            @NotNull @ValidRequestStatus RequestStatus requestStatus,
+            @NotNull Long responderId,
+            @Nullable String responseReason,
+            @Nullable ClientSession session) {
+        try {
+            Validator.notNull(groupId, "groupId");
+            Validator.notNull(joinRequestId, "joinRequestId");
+            Validator.notNull(requestStatus, "requestStatus");
+            DataValidator.validRequestStatus(requestStatus);
+            Validator.notEquals(requestStatus,
+                    RequestStatus.PENDING,
+                    "The request status must not be PENDING");
+            Validator.notNull(responderId, "responderId");
+            Validator.maxLength(responseReason, "responseReason", maxResponseReasonLength);
+        } catch (ResponseException e) {
+            return Mono.error(e);
+        }
+        return groupJoinRequestRepository
+                .updateStatusIfPending(joinRequestId,
+                        requestStatus,
+                        responderId,
+                        responseReason,
+                        session)
+                .flatMap(result -> result.getModifiedCount() > 0
+                        ? groupVersionService.updateGroupInvitationsVersion(groupId)
+                                .onErrorResume(t -> {
+                                    LOGGER.error(
+                                            "Caught an error while updating the invitation version of the group ({}) after updating a pending invitation",
+                                            groupId,
+                                            t);
+                                    return Mono.empty();
+                                })
+                                .thenReturn(result)
+                        : Mono.just(result));
+    }
+
     public Mono<UpdateResult> updateJoinRequests(
             @NotEmpty Set<Long> requestIds,
             @Nullable Long requesterId,
@@ -445,7 +610,8 @@ public class GroupJoinRequestService extends ExpirableEntityService<GroupJoinReq
             @Nullable String content,
             @Nullable @ValidRequestStatus RequestStatus status,
             @Nullable @PastOrPresent Date creationDate,
-            @Nullable @PastOrPresent Date responseDate) {
+            @Nullable @PastOrPresent Date responseDate,
+            @Nullable String responseReason) {
         try {
             Validator.notNull(groupId, "groupId");
             Validator.notNull(requesterId, "requesterId");
@@ -477,6 +643,7 @@ public class GroupJoinRequestService extends ExpirableEntityService<GroupJoinReq
                 status,
                 creationDate,
                 responseDate,
+                responseReason,
                 groupId,
                 requesterId,
                 responderId);

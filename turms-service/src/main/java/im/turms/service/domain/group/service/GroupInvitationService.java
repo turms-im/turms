@@ -28,13 +28,16 @@ import jakarta.validation.constraints.PastOrPresent;
 
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
+import com.mongodb.reactivestreams.client.ClientSession;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import im.turms.server.common.access.client.dto.ClientMessagePool;
+import im.turms.server.common.access.client.dto.constant.GroupMemberRole;
 import im.turms.server.common.access.client.dto.constant.RequestStatus;
+import im.turms.server.common.access.client.dto.constant.ResponseAction;
 import im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersion;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.cluster.node.Node;
@@ -54,17 +57,22 @@ import im.turms.server.common.infra.time.DateRange;
 import im.turms.server.common.infra.time.DateUtil;
 import im.turms.server.common.infra.validation.Validator;
 import im.turms.server.common.storage.mongo.IMongoCollectionInitializer;
+import im.turms.server.common.storage.mongo.exception.DuplicateKeyException;
 import im.turms.service.domain.common.permission.ServicePermission;
 import im.turms.service.domain.common.service.ExpirableEntityService;
 import im.turms.service.domain.common.suggestion.UsesNonIndexedData;
 import im.turms.service.domain.common.validation.DataValidator;
 import im.turms.service.domain.group.bo.GroupInvitationStrategy;
+import im.turms.service.domain.group.bo.HandleHandleGroupInvitationResult;
 import im.turms.service.domain.group.po.GroupInvitation;
 import im.turms.service.domain.group.repository.GroupInvitationRepository;
 import im.turms.service.domain.user.service.UserVersionService;
 import im.turms.service.infra.proto.ProtoModelConvertor;
 import im.turms.service.infra.validation.ValidRequestStatus;
+import im.turms.service.infra.validation.ValidResponseAction;
 import im.turms.service.storage.mongo.OperationResultPublisherPool;
+
+import static im.turms.service.storage.mongo.MongoOperationConst.TRANSACTION_RETRY;
 
 /**
  * @author James Chen
@@ -87,9 +95,10 @@ public class GroupInvitationService extends ExpirableEntityService<GroupInvitati
     private final UserVersionService userVersionService;
 
     private boolean allowRecallPendingInvitationByOwnerAndManager;
-    private boolean allowRecallPendingInvitationByOneself;
+    private boolean allowRecallPendingInvitationBySender;
     private int maxContentLength;
     private boolean deleteExpiredInvitationsWhenCronTriggered;
+    private int maxResponseReasonLength;
 
     public GroupInvitationService(
             Node node,
@@ -135,16 +144,25 @@ public class GroupInvitationService extends ExpirableEntityService<GroupInvitati
         GroupInvitationProperties invitationProperties = properties.getService()
                 .getGroup()
                 .getInvitation();
+
         allowRecallPendingInvitationByOwnerAndManager =
                 invitationProperties.isAllowRecallPendingInvitationByOwnerAndManager();
-        allowRecallPendingInvitationByOneself =
-                invitationProperties.isAllowRecallPendingInvitationByOneself();
+
+        allowRecallPendingInvitationBySender =
+                invitationProperties.isAllowRecallPendingInvitationBySender();
+
         int localMaxContentLength = invitationProperties.getMaxContentLength();
         maxContentLength = localMaxContentLength > 0
                 ? localMaxContentLength
                 : Integer.MAX_VALUE;
+
         deleteExpiredInvitationsWhenCronTriggered =
                 invitationProperties.isDeleteExpiredInvitationsWhenCronTriggered();
+
+        int localMaxResponseReasonLength = invitationProperties.getMaxResponseReasonLength();
+        maxResponseReasonLength = localMaxResponseReasonLength > 0
+                ? localMaxResponseReasonLength
+                : Integer.MAX_VALUE;
     }
 
     public Mono<GroupInvitation> authAndCreateGroupInvitation(
@@ -160,7 +178,7 @@ public class GroupInvitationService extends ExpirableEntityService<GroupInvitati
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        return groupMemberService.isAllowedToInviteUser(groupId, inviterId, null)
+        return groupMemberService.isAllowedToInviteUser(groupId, inviterId)
                 .flatMap(pair -> {
                     ServicePermission permission = pair.getLeft();
                     ResponseStatusCode statusCode = permission.code();
@@ -175,16 +193,15 @@ public class GroupInvitationService extends ExpirableEntityService<GroupInvitati
                                 GroupInvitationStrategy strategy = pair.getRight();
                                 if (!strategy.requiresApproval()) {
                                     return Mono.error(ResponseException.get(
-                                            ResponseStatusCode.SEND_GROUP_INVITATION_TO_GROUP_NOT_REQUIRE_INVITATION));
+                                            ResponseStatusCode.SEND_GROUP_INVITATION_TO_GROUP_NOT_REQUIRING_USERS_APPROVAL));
                                 }
-                                String finalContent = content == null
-                                        ? ""
-                                        : content;
                                 return createGroupInvitation(null,
                                         groupId,
                                         inviterId,
                                         inviteeId,
-                                        finalContent,
+                                        content == null
+                                                ? ""
+                                                : content,
                                         RequestStatus.PENDING,
                                         null,
                                         null);
@@ -232,7 +249,8 @@ public class GroupInvitationService extends ExpirableEntityService<GroupInvitati
                 content,
                 status,
                 creationDate,
-                responseDate);
+                responseDate,
+                null);
         return groupInvitationRepository.insert(groupInvitation)
                 .then(Mono.whenDelayError(groupVersionService.updateGroupInvitationsVersion(groupId)
                         .onErrorResume(t -> {
@@ -292,43 +310,56 @@ public class GroupInvitationService extends ExpirableEntityService<GroupInvitati
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        boolean allowRecallByOneself = allowRecallPendingInvitationByOneself;
-        if (!allowRecallPendingInvitationByOwnerAndManager && !allowRecallByOneself) {
+        boolean allowRecallBySender = allowRecallPendingInvitationBySender;
+        if (!allowRecallPendingInvitationByOwnerAndManager && !allowRecallBySender) {
             return Mono.error(ResponseException
                     .get(ResponseStatusCode.RECALLING_GROUP_INVITATION_IS_DISABLED));
         }
-        Mono<GroupInvitation> queryInvitation = allowRecallByOneself
-                ? queryGroupIdAndInviterIdAndInviteeIdAndStatus(invitationId)
-                : queryGroupIdAndInviteeIdAndStatus(invitationId);
-        return queryInvitation.switchIfEmpty(ResponseExceptionPublisherPool.resourceNotFound())
+        Mono<GroupInvitation> queryInvitation;
+        Mono<GroupInvitation> errorIfEmpty;
+        if (allowRecallBySender) {
+            queryInvitation = queryGroupIdAndInviterIdAndInviteeIdAndStatus(invitationId);
+            // TODO: cache
+            errorIfEmpty = Mono.error(ResponseException.get(
+                    ResponseStatusCode.NOT_GROUP_OWNER_OR_MANAGER_OR_SENDER_TO_RECALL_GROUP_INVITATION));
+        } else {
+            queryInvitation = queryGroupIdAndInviteeIdAndStatus(invitationId);
+            errorIfEmpty = Mono.error(ResponseException
+                    .get(ResponseStatusCode.NOT_GROUP_OWNER_OR_MANAGER_TO_RECALL_GROUP_INVITATION));
+        }
+        return queryInvitation.switchIfEmpty(errorIfEmpty)
                 .flatMap(invitation -> {
                     Mono<Void> checkIfRequesterHasPermission =
-                            allowRecallByOneself && requesterId.equals(invitation.getInviterId())
+                            allowRecallBySender && requesterId.equals(invitation.getInviterId())
                                     ? Mono.empty()
                                     : groupMemberService
                                             .isOwnerOrManager(requesterId,
                                                     invitation.getGroupId(),
                                                     false)
-                                            .flatMap(isOwnerOrManager -> {
-                                                if (!isOwnerOrManager) {
-                                                    return Mono.error(ResponseException
-                                                            .get(allowRecallByOneself
-                                                                    ? ResponseStatusCode.NOT_GROUP_OWNER_OR_MANAGER_OR_SENDER_TO_RECALL_GROUP_INVITATION
-                                                                    : ResponseStatusCode.NOT_GROUP_OWNER_OR_MANAGER_TO_RECALL_GROUP_INVITATION));
-                                                }
-                                                return Mono.empty();
-                                            });
+                                            .flatMap(isOwnerOrManager -> isOwnerOrManager
+                                                    ? Mono.empty()
+                                                    : errorIfEmpty.then());
                     return checkIfRequesterHasPermission.then(Mono.defer(() -> {
                         RequestStatus requestStatus = invitation.getStatus();
-                        if (requestStatus != RequestStatus.PENDING) {
-                            String reason = "The invitation is under the status "
-                                    + requestStatus;
+                        if (requestStatus == RequestStatus.PENDING) {
+                            if (groupInvitationRepository.isExpired(invitation.getCreationDate()
+                                    .getTime())) {
+                                return Mono.error(ResponseException.get(
+                                        ResponseStatusCode.RECALL_NON_PENDING_GROUP_INVITATION,
+                                        "The invitation is under the status "
+                                                + RequestStatus.EXPIRED));
+                            }
+                        } else {
                             return Mono.error(ResponseException.get(
                                     ResponseStatusCode.RECALL_NON_PENDING_GROUP_INVITATION,
-                                    reason));
+                                    "The invitation is under the status "
+                                            + requestStatus));
                         }
                         return groupInvitationRepository
-                                .updateStatusIfPending(invitationId, RequestStatus.CANCELED)
+                                .updateStatusIfPending(invitationId,
+                                        RequestStatus.CANCELED,
+                                        null,
+                                        null)
                                 .flatMap(result -> result.getModifiedCount() == 0
                                         // Though it may be 0 because the request had been
                                         // deleted between the status check,
@@ -434,7 +465,7 @@ public class GroupInvitationService extends ExpirableEntityService<GroupInvitati
                 .flatMap(authenticated -> {
                     if (!authenticated) {
                         return Mono.error(ResponseException.get(
-                                ResponseStatusCode.NOT_GROUP_OWNER_OR_MANAGER_TO_ACCESS_GROUP_INVITATION));
+                                ResponseStatusCode.NOT_GROUP_OWNER_OR_MANAGER_TO_QUERY_GROUP_INVITATION));
                     }
                     return groupVersionService.queryGroupInvitationsVersion(groupId)
                             .flatMap(version -> {
@@ -470,13 +501,15 @@ public class GroupInvitationService extends ExpirableEntityService<GroupInvitati
                 });
     }
 
-    public Mono<Long> queryInviteeIdByInvitationId(@NotNull Long invitationId) {
+    public Mono<GroupInvitation> queryInviteeIdAndGroupIdAndCreationDateAndStatusByInvitationId(
+            @NotNull Long invitationId) {
         try {
             Validator.notNull(invitationId, "invitationId");
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        return groupInvitationRepository.findInviteeId(invitationId);
+        return groupInvitationRepository
+                .findInviteeIdAndGroupIdAndCreationDateAndStatus(invitationId);
     }
 
     public Flux<GroupInvitation> queryInvitations(
@@ -523,6 +556,122 @@ public class GroupInvitationService extends ExpirableEntityService<GroupInvitati
 
     public Mono<DeleteResult> deleteInvitations(@Nullable Set<Long> ids) {
         return groupInvitationRepository.deleteByIds(ids);
+    }
+
+    public Mono<HandleHandleGroupInvitationResult> authAndHandleInvitation(
+            @NotNull Long requesterId,
+            @NotNull Long invitationId,
+            @NotNull @ValidResponseAction ResponseAction action,
+            @Nullable String reason) {
+        try {
+            Validator.notNull(requesterId, "requesterId");
+            Validator.notNull(invitationId, "invitationId");
+            Validator.notNull(action, "action");
+            DataValidator.validResponseAction(action);
+            Validator.maxLength(reason, "reason", maxResponseReasonLength);
+        } catch (ResponseException e) {
+            return Mono.error(e);
+        }
+        return queryInviteeIdAndGroupIdAndCreationDateAndStatusByInvitationId(invitationId)
+                // If the requester is not authorized to the invitation,
+                // they should not know the status of the invitation from the error code.
+                // So we should not tell if the invitation exists or not.
+                .switchIfEmpty(Mono.error(ResponseException
+                        .get(ResponseStatusCode.NOT_INVITEE_TO_UPDATE_GROUP_INVITATION)))
+                .flatMap(invitation -> {
+                    // If the requester is not authorized to the invitation,
+                    // they should not know the status of the invitation from the error code.
+                    // So we check whether the requester is authorized first.
+                    if (!invitation.getInviteeId()
+                            .equals(requesterId)) {
+                        return Mono.error(ResponseException
+                                .get(ResponseStatusCode.NOT_INVITEE_TO_UPDATE_GROUP_INVITATION));
+                    }
+                    RequestStatus status = invitation.getStatus();
+                    if (status == RequestStatus.PENDING) {
+                        if (groupInvitationRepository.isExpired(invitation.getCreationDate()
+                                .getTime())) {
+                            return Mono.error(ResponseException.get(
+                                    ResponseStatusCode.UPDATE_NON_PENDING_GROUP_INVITATION,
+                                    "The invitation is under the status "
+                                            + RequestStatus.EXPIRED));
+                        }
+                    } else {
+                        return Mono.error(ResponseException.get(
+                                ResponseStatusCode.UPDATE_NON_PENDING_GROUP_INVITATION,
+                                "The invitation is under the status "
+                                        + status));
+                    }
+                    return switch (action) {
+                        case ACCEPT -> groupInvitationRepository
+                                .inTransaction(session -> updatePendingInvitationStatus(
+                                        invitation.getGroupId(),
+                                        invitationId,
+                                        RequestStatus.ACCEPTED,
+                                        reason,
+                                        session)
+                                        .then(groupMemberService
+                                                .addGroupMember(invitation.getGroupId(),
+                                                        requesterId,
+                                                        GroupMemberRole.MEMBER,
+                                                        null,
+                                                        null,
+                                                        null,
+                                                        session)
+                                                .thenReturn(new HandleHandleGroupInvitationResult(
+                                                        invitation,
+                                                        true))
+                                                .onErrorResume(DuplicateKeyException.class,
+                                                        e -> Mono.just(
+                                                                new HandleHandleGroupInvitationResult(
+                                                                        invitation,
+                                                                        false)))))
+                                .retryWhen(TRANSACTION_RETRY);
+                        case IGNORE -> updatePendingInvitationStatus(invitation
+                                .getGroupId(), invitationId, RequestStatus.IGNORED, reason, null)
+                                .thenReturn(
+                                        new HandleHandleGroupInvitationResult(invitation, false));
+                        case DECLINE -> updatePendingInvitationStatus(invitation
+                                .getGroupId(), invitationId, RequestStatus.DECLINED, reason, null)
+                                .thenReturn(
+                                        new HandleHandleGroupInvitationResult(invitation, false));
+                        default ->
+                            Mono.error(ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
+                                    "The response action must not be UNRECOGNIZED"));
+                    };
+                });
+    }
+
+    public Mono<UpdateResult> updatePendingInvitationStatus(
+            @NotNull Long groupId,
+            @NotNull Long invitationId,
+            @NotNull @ValidRequestStatus RequestStatus requestStatus,
+            @Nullable String reason,
+            @Nullable ClientSession session) {
+        try {
+            Validator.notNull(groupId, "groupId");
+            Validator.notNull(invitationId, "invitationId");
+            Validator.notNull(requestStatus, "requestStatus");
+            DataValidator.validRequestStatus(requestStatus);
+            Validator.notEquals(requestStatus,
+                    RequestStatus.PENDING,
+                    "The request status must not be PENDING");
+        } catch (ResponseException e) {
+            return Mono.error(e);
+        }
+        return groupInvitationRepository
+                .updateStatusIfPending(invitationId, requestStatus, reason, session)
+                .flatMap(result -> result.getModifiedCount() > 0
+                        ? groupVersionService.updateGroupInvitationsVersion(groupId)
+                                .onErrorResume(t -> {
+                                    LOGGER.error(
+                                            "Caught an error while updating the invitation version of the group ({}) after updating a pending invitation",
+                                            groupId,
+                                            t);
+                                    return Mono.empty();
+                                })
+                                .thenReturn(result)
+                        : Mono.just(result));
     }
 
     public Mono<UpdateResult> updateInvitations(

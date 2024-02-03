@@ -15,13 +15,18 @@
  * limitations under the License.
  */
 
-package im.turms.service.domain.group.bo;
+package im.turms.service.domain.user.bo;
+
+import jakarta.annotation.Nullable;
+
+import im.turms.service.domain.user.po.UserFriendRequest;
 
 /**
  * @author James Chen
  */
-public record GroupQuestionIdAndAnswer(
-        Long id,
-        String answer
+public record HandleFriendRequestResult(
+        UserFriendRequest friendRequest,
+        @Nullable Integer newGroupIndexForFriendRequestRequester,
+        @Nullable Integer newGroupIndexForFriendRequestRecipient
 ) {
 }

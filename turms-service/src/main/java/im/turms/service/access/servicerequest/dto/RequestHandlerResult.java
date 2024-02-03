@@ -19,6 +19,7 @@ package im.turms.service.access.servicerequest.dto;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotEmpty;
@@ -34,26 +35,42 @@ import im.turms.server.common.infra.collection.FastEnumMap;
 import im.turms.server.common.infra.proto.ProtoFormatter;
 
 /**
+ * @param code          The status code of the response.
+ * @param reason        The reason of the response.
+ * @param response      The response to be sent to the requester.
+ * @param notifications The notifications to be sent to users.
  * @author James Chen
  */
 @With
 public record RequestHandlerResult(
         ResponseStatusCode code,
-        @Nullable TurmsNotification.Data dataForRequester,
-        boolean forwardDataForRecipientsToRequesterOtherOnlineSessions,
-        Set<Long> recipients,
-        @Nullable TurmsRequest dataForRecipients,
-        @Nullable String reason
+        @Nullable String reason,
+        @Nullable TurmsNotification.Data response,
+        List<Notification> notifications
 ) {
+
+    @Override
+    public String toString() {
+        return "RequestHandlerResult["
+                + "code="
+                + code
+                + ", reason='"
+                + reason
+                + '\''
+                + ", response="
+                + ProtoFormatter.toLogString(response)
+                + ", notifications="
+                + notifications
+                + ']';
+    }
 
     private static final FastEnumMap<ResponseStatusCode, RequestHandlerResult> POOL =
             new FastEnumMap<>(ResponseStatusCode.class);
 
     static {
-        Set<Long> recipients = Collections.emptySet();
+        List<Notification> notifications = Collections.emptyList();
         for (ResponseStatusCode code : ResponseStatusCode.VALUES) {
-            RequestHandlerResult result =
-                    new RequestHandlerResult(code, null, false, recipients, null, null);
+            RequestHandlerResult result = new RequestHandlerResult(code, null, null, notifications);
             POOL.put(code, result);
         }
     }
@@ -61,24 +78,6 @@ public record RequestHandlerResult(
     public static final RequestHandlerResult OK = of(ResponseStatusCode.OK);
 
     public static final RequestHandlerResult NO_CONTENT = of(ResponseStatusCode.NO_CONTENT);
-
-    @Override
-    public String toString() {
-        return "RequestHandlerResult["
-                + "code="
-                + code
-                + ", dataForRequester="
-                + ProtoFormatter.toLogString(dataForRequester)
-                + ", forwardDataForRecipientsToRequesterOtherOnlineSessions="
-                + forwardDataForRecipientsToRequesterOtherOnlineSessions
-                + ", recipients="
-                + recipients
-                + ", dataForRecipients="
-                + ProtoFormatter.toLogString(dataForRecipients)
-                + ", reason="
-                + reason
-                + ']';
-    }
 
     public static RequestHandlerResult of(@NotNull ResponseStatusCode code) {
         return POOL.get(code);
@@ -90,54 +89,52 @@ public record RequestHandlerResult(
         if (reason == null) {
             return POOL.get(code);
         }
-        return new RequestHandlerResult(code, null, false, Collections.emptySet(), null, reason);
+        return new RequestHandlerResult(code, reason, null, Collections.emptyList());
     }
 
-    public static RequestHandlerResult of(@NotNull TurmsNotification.Data dataForRequester) {
-        return new RequestHandlerResult(
-                ResponseStatusCode.OK,
-                dataForRequester,
-                false,
-                Collections.emptySet(),
-                null,
-                null);
-    }
-
-    public static RequestHandlerResult of(
-            boolean forwardDataForRecipientsToRequesterOtherOnlineSessions,
-            @NotNull TurmsRequest dataForRecipient) {
+    public static RequestHandlerResult of(@NotNull TurmsNotification.Data response) {
         return new RequestHandlerResult(
                 ResponseStatusCode.OK,
                 null,
-                forwardDataForRecipientsToRequesterOtherOnlineSessions,
-                Collections.emptySet(),
-                dataForRecipient,
-                null);
+                response,
+                Collections.emptyList());
     }
 
     public static RequestHandlerResult of(
-            boolean forwardDataForRecipientsToRequesterOtherOnlineSessions,
+            boolean forwardNotificationsToRequesterOtherOnlineSessions,
+            @NotNull TurmsRequest notification) {
+        return new RequestHandlerResult(
+                ResponseStatusCode.OK,
+                null,
+                null,
+                List.of(new Notification(
+                        forwardNotificationsToRequesterOtherOnlineSessions,
+                        Collections.emptySet(),
+                        notification)));
+    }
+
+    public static RequestHandlerResult of(
+            boolean forwardNotificationsToRequesterOtherOnlineSessions,
             @NotNull Long recipientId,
-            @NotNull TurmsRequest dataForRecipient) {
+            @NotNull TurmsRequest notification) {
         return new RequestHandlerResult(
                 ResponseStatusCode.OK,
                 null,
-                forwardDataForRecipientsToRequesterOtherOnlineSessions,
-                Collections.singleton(recipientId),
-                dataForRecipient,
-                null);
+                null,
+                List.of(new Notification(
+                        forwardNotificationsToRequesterOtherOnlineSessions,
+                        Set.of(recipientId),
+                        notification)));
     }
 
     public static RequestHandlerResult of(
             @NotNull Long recipientId,
-            @NotNull TurmsRequest dataForRecipient) {
+            @NotNull TurmsRequest notification) {
         return new RequestHandlerResult(
                 ResponseStatusCode.OK,
                 null,
-                false,
-                Collections.singleton(recipientId),
-                dataForRecipient,
-                null);
+                null,
+                List.of(new Notification(false, Set.of(recipientId), notification)));
     }
 
     public static RequestHandlerResult of(
@@ -146,145 +143,204 @@ public record RequestHandlerResult(
         return new RequestHandlerResult(
                 ResponseStatusCode.OK,
                 null,
-                false,
-                recipientIds,
-                dataForRecipient,
-                null);
+                null,
+                List.of(new Notification(false, recipientIds, dataForRecipient)));
     }
 
     public static RequestHandlerResult of(
-            boolean forwardDataForRecipientsToRequesterOtherOnlineSessions,
+            boolean forwardNotificationToRequesterOtherOnlineSessions,
             @NotEmpty Set<Long> recipientIds,
-            @NotNull TurmsRequest dataForRecipient) {
+            @NotNull TurmsRequest notification) {
         return new RequestHandlerResult(
                 ResponseStatusCode.OK,
                 null,
-                forwardDataForRecipientsToRequesterOtherOnlineSessions,
-                recipientIds,
-                dataForRecipient,
-                null);
+                null,
+                List.of(new Notification(
+                        forwardNotificationToRequesterOtherOnlineSessions,
+                        recipientIds,
+                        notification)));
+    }
+
+    public static RequestHandlerResult of(
+            TurmsNotification.Data response,
+            boolean forwardNotificationToRequesterOtherOnlineSessions,
+            @NotEmpty Set<Long> recipientIds,
+            @NotNull TurmsRequest notification) {
+        return new RequestHandlerResult(
+                ResponseStatusCode.OK,
+                null,
+                response,
+                List.of(new Notification(
+                        forwardNotificationToRequesterOtherOnlineSessions,
+                        recipientIds,
+                        notification)));
     }
 
     public static RequestHandlerResult of(
             @NotNull ResponseStatusCode code,
             @NotNull Long recipientId,
-            @NotNull TurmsRequest dataForRecipient) {
+            @NotNull TurmsRequest notification) {
         return new RequestHandlerResult(
                 code,
                 null,
-                false,
-                Collections.singleton(recipientId),
-                dataForRecipient,
-                null);
+                null,
+                List.of(new Notification(false, Set.of(recipientId), notification)));
     }
 
     public static RequestHandlerResult of(
             @NotNull ResponseStatusCode code,
-            boolean forwardDataForRecipientsToRequesterOtherOnlineSessions,
+            boolean forwardNotificationToRequesterOtherOnlineSessions,
             @NotNull Long recipientId,
-            @NotNull TurmsRequest dataForRecipient) {
+            @NotNull TurmsRequest notification) {
         return new RequestHandlerResult(
                 code,
                 null,
-                forwardDataForRecipientsToRequesterOtherOnlineSessions,
-                Collections.singleton(recipientId),
-                dataForRecipient,
-                null);
+                null,
+                List.of(new Notification(
+                        forwardNotificationToRequesterOtherOnlineSessions,
+                        Set.of(recipientId),
+                        notification)));
+    }
+
+    public static RequestHandlerResult of(@NotNull List<Notification> notifications) {
+        return new RequestHandlerResult(ResponseStatusCode.OK, null, null, notifications);
+    }
+
+    public static RequestHandlerResult of(@NotNull Notification notification) {
+        return new RequestHandlerResult(ResponseStatusCode.OK, null, null, List.of(notification));
     }
 
     public static RequestHandlerResult ofDataLong(@NotNull Long value) {
-        TurmsNotification.Data data = ClientMessagePool.getTurmsNotificationDataBuilder()
-                .setLong(value)
-                .build();
         return new RequestHandlerResult(
                 ResponseStatusCode.OK,
-                data,
-                false,
-                Collections.emptySet(),
                 null,
-                null);
+                ClientMessagePool.getTurmsNotificationDataBuilder()
+                        .setLong(value)
+                        .build(),
+                Collections.emptyList());
     }
 
     public static RequestHandlerResult ofDataLong(
             @NotNull Long value,
             @NotNull Long recipientId,
-            @NotNull TurmsRequest dataForRecipient) {
-        TurmsNotification.Data data = ClientMessagePool.getTurmsNotificationDataBuilder()
-                .setLong(value)
-                .build();
+            @NotNull TurmsRequest notification) {
         return new RequestHandlerResult(
                 ResponseStatusCode.OK,
-                data,
-                false,
-                Collections.singleton(recipientId),
-                dataForRecipient,
-                null);
+                null,
+                ClientMessagePool.getTurmsNotificationDataBuilder()
+                        .setLong(value)
+                        .build(),
+                List.of(new Notification(false, Collections.singleton(recipientId), notification)));
     }
 
     public static RequestHandlerResult ofDataLong(
             @NotNull Long value,
-            boolean forwardDataForRecipientsToRequesterOtherOnlineSessions,
+            boolean forwardNotificationToRequesterOtherOnlineSessions,
             @NotNull Long recipientId,
-            @NotNull TurmsRequest dataForRecipient) {
-        TurmsNotification.Data data = ClientMessagePool.getTurmsNotificationDataBuilder()
-                .setLong(value)
-                .build();
+            @NotNull TurmsRequest notification) {
         return new RequestHandlerResult(
                 ResponseStatusCode.OK,
-                data,
-                forwardDataForRecipientsToRequesterOtherOnlineSessions,
-                Collections.singleton(recipientId),
-                dataForRecipient,
-                null);
+                null,
+                ClientMessagePool.getTurmsNotificationDataBuilder()
+                        .setLong(value)
+                        .build(),
+                List.of(new Notification(
+                        forwardNotificationToRequesterOtherOnlineSessions,
+                        Set.of(recipientId),
+                        notification)));
     }
 
     public static RequestHandlerResult ofDataLong(
             @NotNull Long value,
             boolean forwardDataForRecipientsToRequesterOtherOnlineSessions,
-            @NotNull TurmsRequest dataForRecipient) {
-        TurmsNotification.Data data = ClientMessagePool.getTurmsNotificationDataBuilder()
-                .setLong(value)
-                .build();
+            @NotNull TurmsRequest notification) {
         return new RequestHandlerResult(
                 ResponseStatusCode.OK,
-                data,
-                forwardDataForRecipientsToRequesterOtherOnlineSessions,
-                Collections.emptySet(),
+                null,
+                ClientMessagePool.getTurmsNotificationDataBuilder()
+                        .setLong(value)
+                        .build(),
                 forwardDataForRecipientsToRequesterOtherOnlineSessions
-                        ? dataForRecipient
-                        : null,
-                null);
+                        ? List.of(new Notification(true, Collections.emptySet(), notification))
+                        : Collections.emptyList());
     }
 
     public static RequestHandlerResult ofDataLong(
             @NotNull Long value,
-            boolean forwardDataForRecipientsToRequesterOtherOnlineSessions,
+            boolean forwardNotificationsToRequesterOtherOnlineSessions,
             @NotEmpty Set<Long> recipients,
-            TurmsRequest dataForRecipients) {
-        TurmsNotification.Data data = ClientMessagePool.getTurmsNotificationDataBuilder()
-                .setLong(value)
-                .build();
+            TurmsRequest notification) {
         return new RequestHandlerResult(
                 ResponseStatusCode.OK,
-                data,
-                forwardDataForRecipientsToRequesterOtherOnlineSessions,
-                recipients,
-                dataForRecipients,
-                null);
+                null,
+                ClientMessagePool.getTurmsNotificationDataBuilder()
+                        .setLong(value)
+                        .build(),
+                List.of(new Notification(
+
+                        forwardNotificationsToRequesterOtherOnlineSessions,
+                        recipients,
+                        notification)));
     }
 
     public static RequestHandlerResult ofDataLongs(@NotNull Collection<Long> values) {
-        TurmsNotification.Data data = ClientMessagePool.getTurmsNotificationDataBuilder()
-                .setLongsWithVersion(ClientMessagePool.getLongsWithVersionBuilder()
-                        .addAllLongs(values))
-                .build();
         return new RequestHandlerResult(
                 ResponseStatusCode.OK,
-                data,
-                false,
-                Collections.emptySet(),
                 null,
-                null);
+                ClientMessagePool.getTurmsNotificationDataBuilder()
+                        .setLongsWithVersion(ClientMessagePool.getLongsWithVersionBuilder()
+                                .addAllLongs(values))
+                        .build(),
+                Collections.emptyList());
+    }
+
+    @With
+    public record Notification(
+            boolean forwardToRequesterOtherOnlineSessions,
+            Set<Long> recipients,
+            TurmsRequest notification
+    ) {
+
+        public static Notification of(
+                boolean forwardToRequesterOtherOnlineSessions,
+                Set<Long> recipients,
+                TurmsRequest notification) {
+            return new Notification(
+                    forwardToRequesterOtherOnlineSessions,
+                    recipients,
+                    notification);
+        }
+
+        public static Notification of(
+                boolean forwardToRequesterOtherOnlineSessions,
+                Long recipient,
+                TurmsRequest notification) {
+            return new Notification(
+                    forwardToRequesterOtherOnlineSessions,
+                    Set.of(recipient),
+                    notification);
+        }
+
+        public static Notification of(
+                boolean forwardToRequesterOtherOnlineSessions,
+                TurmsRequest notification) {
+            return new Notification(
+                    forwardToRequesterOtherOnlineSessions,
+                    Collections.emptySet(),
+                    notification);
+        }
+
+        @Override
+        public String toString() {
+            return "Notification{"
+                    + "forwardToRequesterOtherOnlineSessions="
+                    + forwardToRequesterOtherOnlineSessions
+                    + ", recipients="
+                    + recipients
+                    + ", notification="
+                    + ProtoFormatter.toLogString(notification)
+                    + '}';
+        }
     }
 
 }

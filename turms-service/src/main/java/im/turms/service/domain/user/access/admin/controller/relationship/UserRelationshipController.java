@@ -48,6 +48,7 @@ import im.turms.service.domain.common.access.admin.controller.BaseController;
 import im.turms.service.domain.user.access.admin.dto.request.AddRelationshipDTO;
 import im.turms.service.domain.user.access.admin.dto.request.UpdateRelationshipDTO;
 import im.turms.service.domain.user.access.admin.dto.response.UserRelationshipDTO;
+import im.turms.service.domain.user.bo.UpsertRelationshipResult;
 import im.turms.service.domain.user.po.UserRelationship;
 import im.turms.service.domain.user.service.UserRelationshipGroupService;
 import im.turms.service.domain.user.service.UserRelationshipService;
@@ -80,9 +81,10 @@ public class UserRelationshipController extends BaseController {
     @RequiredPermission(USER_RELATIONSHIP_CREATE)
     public Mono<HttpHandlerResult<ResponseDTO<Void>>> addRelationship(
             @RequestBody AddRelationshipDTO addRelationshipDTO) {
-        Mono<Void> upsertMono =
+        Mono<UpsertRelationshipResult> upsertMono =
                 userRelationshipService.upsertOneSidedRelationship(addRelationshipDTO.ownerId(),
                         addRelationshipDTO.relatedUserId(),
+                        addRelationshipDTO.name(),
                         addRelationshipDTO.blockDate(),
                         DEFAULT_RELATIONSHIP_GROUP_INDEX,
                         null,
@@ -150,6 +152,7 @@ public class UserRelationshipController extends BaseController {
             @RequestBody UpdateRelationshipDTO updateRelationshipDTO) {
         Mono<UpdateResultDTO> updateMono = userRelationshipService
                 .updateUserOneSidedRelationships(CollectionUtil.newSet(keys),
+                        updateRelationshipDTO.name(),
                         updateRelationshipDTO.blockDate(),
                         updateRelationshipDTO.establishmentDate())
                 .map(UpdateResultDTO::get);

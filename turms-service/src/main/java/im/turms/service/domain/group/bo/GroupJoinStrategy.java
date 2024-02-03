@@ -22,20 +22,23 @@ package im.turms.service.domain.group.bo;
  */
 public enum GroupJoinStrategy {
     /**
-     * Add the requester as a group member when the server received a membership request
+     * Add the requester as a group member when the server received a membership request.
      */
     MEMBERSHIP_REQUEST,
+
     /**
-     * A user can only join these groups via invitations
+     * A user can only join these groups via invitations.
      */
     INVITATION,
+
     /**
-     * A user is required to answer questions to join
+     * A user is required to answer questions to join.
      */
     QUESTION,
+
     /**
      * A user sends a join request to the server, and can only join the group automatically when the
-     * request is approved
+     * request is approved.
      */
     JOIN_REQUEST
 }

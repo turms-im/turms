@@ -27,6 +27,7 @@ import im.turms.server.common.domain.common.access.dto.ControllerDTO;
 public record AddRelationshipDTO(
         Long ownerId,
         Long relatedUserId,
+        String name,
         Date blockDate,
         Date establishmentDate
 ) implements ControllerDTO {

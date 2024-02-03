@@ -119,7 +119,9 @@ public class RasaResponser extends TurmsExtension implements RequestHandlerResul
             @NotNull Long requesterId,
             @NotNull DeviceType requesterDevice) {
         // 1. Validate
-        TurmsRequest request = result.dataForRecipients();
+        RequestHandlerResult.Notification notification = result.notifications()
+                .getFirst();
+        TurmsRequest request = notification.notification();
         if (request == null
                 || request.getKindCase() != TurmsRequest.KindCase.CREATE_MESSAGE_REQUEST) {
             return Mono.just(result);
@@ -129,7 +131,7 @@ public class RasaResponser extends TurmsExtension implements RequestHandlerResul
         if (StringUtil.isEmpty(text)) {
             return Mono.just(result);
         }
-        Set<Long> recipients = result.recipients();
+        Set<Long> recipients = notification.recipients();
         if (CollectionUtil.isEmpty(recipients)) {
             return Mono.just(result);
         }
@@ -187,7 +189,8 @@ public class RasaResponser extends TurmsExtension implements RequestHandlerResul
                     });
             // 4. Return final handler result
             Set<Long> recipientIds = CollectionUtil.remove(recipients, specifiedChatbotUserIds);
-            return Mono.just(result.withRecipients(recipientIds));
+            return Mono.just(
+                    result.withNotifications(List.of(notification.withRecipients(recipientIds))));
         });
     }
 

@@ -17,9 +17,13 @@
 
 package im.turms.service.domain.group.service;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
@@ -276,6 +280,29 @@ public class GroupTypeService {
                 ? groupTypeRepository.findById(groupTypeId)
                         .doOnNext(type -> idToGroupType.put(groupTypeId, type))
                 : Mono.just(groupType);
+    }
+
+    public Mono<List<GroupType>> queryGroupTypes(@NotNull Collection<Long> groupTypeIds) {
+        try {
+            Validator.notNull(groupTypeIds, "groupTypeIds");
+        } catch (ResponseException e) {
+            return Mono.error(e);
+        }
+        int count = groupTypeIds.size();
+        List<GroupType> groupTypes = new ArrayList<>(count);
+        for (Long groupTypeId : groupTypeIds) {
+            GroupType groupType = idToGroupType.get(groupTypeId);
+            if (groupType != null) {
+                groupTypes.add(groupType);
+            }
+        }
+        if (groupTypes.size() == count) {
+            return Mono.just(groupTypes);
+        }
+        groupTypes.clear();
+        return groupTypeRepository.findByIds(groupTypeIds)
+                .doOnNext(type -> idToGroupType.put(type.getId(), type))
+                .collect(Collectors.toCollection(() -> groupTypes));
     }
 
     public Mono<Boolean> groupTypeExists(@NotNull Long groupTypeId) {

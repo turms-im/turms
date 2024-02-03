@@ -154,7 +154,7 @@ public class OutboundMessageService {
             @NotNull TurmsNotification notificationForLogging,
             @NotNull ByteBuf notificationData,
             @NotNull Long recipientId,
-            @NotNull DeviceType excludedDeviceType) {
+            @Nullable DeviceType excludedDeviceType) {
         return userStatusService.getUserSessionsStatus(recipientId)
                 .doOnError(t -> notificationData.release())
                 .flatMap(sessionsStatus -> {
