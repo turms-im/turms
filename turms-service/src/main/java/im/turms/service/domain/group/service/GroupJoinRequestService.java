@@ -175,7 +175,11 @@ public class GroupJoinRequestService extends ExpirableEntityService<GroupJoinReq
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        return groupBlocklistService.isBlocked(groupId, requesterId)
+        return groupMemberService.isGroupMember(groupId, requesterId, false)
+                .flatMap(isGroupMember -> isGroupMember
+                        ? groupBlocklistService.isBlocked(groupId, requesterId)
+                        : Mono.error(ResponseException
+                                .get(ResponseStatusCode.GROUP_MEMBER_SEND_GROUP_JOIN_REQUEST)))
                 .flatMap(isBlocked -> isBlocked
                         ? Mono.error(ResponseException
                                 .get(ResponseStatusCode.BLOCKED_USER_SEND_GROUP_JOIN_REQUEST))
