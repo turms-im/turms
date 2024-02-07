@@ -81,6 +81,14 @@ public class MessageRepository extends BaseRepository<Message, Long> {
         return mongoClient.updateMany(entityClass, filterMessage, update);
     }
 
+    public Mono<Boolean> existsBySenderIdAndTargetId(Long senderId, Long targetId) {
+        Filter filter = Filter.newBuilder(3)
+                .eq(Message.Fields.SENDER_ID, senderId)
+                .eq(Message.Fields.TARGET_ID, targetId)
+                .eq(Message.Fields.IS_GROUP_MESSAGE, false);
+        return mongoClient.exists(entityClass, filter);
+    }
+
     public Mono<Long> countMessages(
             @Nullable Set<Long> messageIds,
             @Nullable Boolean areGroupMessages,

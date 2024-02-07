@@ -52,6 +52,7 @@ import im.turms.service.domain.conversation.repository.GroupConversationReposito
 import im.turms.service.domain.conversation.repository.PrivateConversationRepository;
 import im.turms.service.domain.group.service.GroupMemberService;
 import im.turms.service.domain.group.service.GroupService;
+import im.turms.service.domain.message.service.MessageService;
 import im.turms.service.domain.user.service.UserRelationshipService;
 import im.turms.service.storage.mongo.OperationResultPublisherPool;
 
@@ -65,6 +66,7 @@ public class ConversationService {
     private final UserRelationshipService userRelationshipService;
     private final GroupService groupService;
     private final GroupMemberService groupMemberService;
+    private final MessageService messageService;
 
     private final GroupConversationRepository groupConversationRepository;
     private final PrivateConversationRepository privateConversationRepository;
@@ -84,11 +86,13 @@ public class ConversationService {
             UserRelationshipService userRelationshipService,
             @Lazy GroupService groupService,
             GroupMemberService groupMemberService,
+            @Lazy MessageService messageService,
             GroupConversationRepository groupConversationRepository,
             PrivateConversationRepository privateConversationRepository) {
         this.userRelationshipService = userRelationshipService;
         this.groupService = groupService;
         this.groupMemberService = groupMemberService;
+        this.messageService = messageService;
         this.groupConversationRepository = groupConversationRepository;
         this.privateConversationRepository = privateConversationRepository;
 
@@ -138,19 +142,31 @@ public class ConversationService {
                         }));
     }
 
-    // TODO: authenticate
     public Mono<Void> authAndUpsertPrivateConversationReadDate(
             @NotNull Long ownerId,
             @NotNull Long targetId,
             @Nullable @PastOrPresent Date readDate) {
+        try {
+            Validator.notNull(ownerId, "ownerId");
+            Validator.notNull(targetId, "targetId");
+        } catch (ResponseException e) {
+            return Mono.error(e);
+        }
         if (!isReadReceiptEnabled) {
             return Mono.error(
                     ResponseException.get(ResponseStatusCode.UPDATING_READ_DATE_IS_DISABLED));
         }
-        if (useServerTime) {
-            readDate = new Date();
-        }
-        return upsertPrivateConversationReadDate(ownerId, targetId, readDate);
+        return messageService.hasPrivateMessage(targetId, ownerId)
+                // TODO: This is a simple authorization implementation,
+                // we can throw different status codes for different reasons
+                // to have a fine-grained control in the future.
+                .flatMap(hasPrivateMessage -> hasPrivateMessage
+                        ? upsertPrivateConversationReadDate(ownerId,
+                                targetId,
+                                useServerTime
+                                        ? new Date()
+                                        : readDate)
+                        : Mono.empty());
     }
 
     public Mono<Void> upsertGroupConversationReadDate(

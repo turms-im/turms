@@ -844,6 +844,16 @@ public class MessageService {
                 session);
     }
 
+    public Mono<Boolean> hasPrivateMessage(Long senderId, Long targetId) {
+        try {
+            Validator.notNull(senderId, "senderId");
+            Validator.notNull(targetId, "targetId");
+        } catch (Exception e) {
+            return Mono.error(e);
+        }
+        return messageRepository.existsBySenderIdAndTargetId(senderId, targetId);
+    }
+
     public Mono<Long> countMessages(
             @Nullable Set<Long> messageIds,
             @Nullable Boolean areGroupMessages,
