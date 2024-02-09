@@ -209,6 +209,22 @@ Turms配置分为四大类：
 
 |配置项|全局属性|可变属性|数据类型|默认值|说明|
 |----|----|----|----|----|----|
+|turms.ai-serving.admin-api.address.advertise-host||✅|string||The advertise address of the local node exposed to admins. (e.g. 100.131.251.96)|
+|turms.ai-serving.admin-api.address.advertise-strategy||✅|enum|PRIVATE_ADDRESS|The advertise strategy is used to decide which type of address should be used so that admins can access admin APIs and metrics APIs|
+|turms.ai-serving.admin-api.address.attach-port-to-host||✅|boolean|true|Whether to attach the local port to the host. e.g. The local host is 100.131.251.96, and the port is 9510 so the service address will be 100.131.251.96:9510|
+|turms.ai-serving.admin-api.enabled|||boolean|true|Whether to enable the APIs for administrators|
+|turms.ai-serving.admin-api.http.host|||string|0.0.0.0||
+|turms.ai-serving.admin-api.http.max-request-body-size-bytes|||int|10485760||
+|turms.ai-serving.admin-api.http.port|||int|5510||
+|turms.ai-serving.admin-api.log.enabled|✅|✅|boolean|true|Whether to log API calls|
+|turms.ai-serving.admin-api.log.log-request-params|✅|✅|boolean|true|Whether to log the parameters of requests|
+|turms.ai-serving.admin-api.rate-limiting.capacity|✅|✅|int|50|The maximum number of tokens that the bucket can hold|
+|turms.ai-serving.admin-api.rate-limiting.initial-tokens|✅|✅|int|50|The initial number of tokens for new session|
+|turms.ai-serving.admin-api.rate-limiting.refill-interval-millis|✅|✅|int|1000|The time interval to refill. 0 means never refill|
+|turms.ai-serving.admin-api.rate-limiting.tokens-per-period|✅|✅|int|50|Refills the bucket with the specified number of tokens per period if the bucket is not full|
+|turms.ai-serving.admin-api.use-authentication|||boolean|true|Whether to use authentication. If false, all HTTP requesters will personate the root user and all HTTP requests will be passed. You may set it to false when you want to manage authentication via security groups, NACL, etc|
+|turms.ai-serving.ocr.orientation-possibility-threshold|||float|0.8||
+|turms.ai-serving.ocr.preferred-fonts|||List-FontProperties|[<br/>  {<br/>    "familyName": "Noto Sans CJK SC",<br/>    "style": "BOLD"<br/>  },<br/>  {<br/>    "familyName": "Noto Sans",<br/>    "style": "BOLD"<br/>  }<br/>]||
 |turms.cluster.connection.client.keepalive-interval-seconds|||int|5||
 |turms.cluster.connection.client.keepalive-timeout-seconds|||int|15||
 |turms.cluster.connection.client.reconnect-interval-seconds|||int|15||
@@ -224,8 +240,9 @@ Turms配置分为四大类：
 |turms.cluster.discovery.heartbeat-timeout-seconds|||int|30||
 |turms.cluster.id|||string|turms||
 |turms.cluster.node.active-by-default|||boolean|true||
-|turms.cluster.node.id|||string||The node ID must start with a letter or underscore, and matches zero or more of characters [a-zA-Z0-9_] after the beginning. e.g. "turms001", "turms_002"|
+|turms.cluster.node.id|||string||The node ID must start with a letter or underscore, and matches zero or more of characters [a-zA-Z0-9_] after the beginning. e.g. "turms001", "turms_002". A node must have a unique ID. If not specified, Turms server will generate a random unique ID|
 |turms.cluster.node.leader-eligible|||boolean|true|Only works when it is a turms-service node|
+|turms.cluster.node.name|||string||The node name must start with a letter or underscore, and matches zero or more of characters [a-zA-Z0-9_] after the beginning. e.g. "turms001", "turms_002". The node name can be duplicate in the cluster. If not specified, Turms server will use the node ID as the node name|
 |turms.cluster.node.priority|||int|0|The priority to be a leader|
 |turms.cluster.node.zone|||string||e.g. "us-east-1" and "ap-east-1"|
 |turms.cluster.rpc.request-timeout-millis|||int|30000|The timeout for RPC requests in milliseconds|
@@ -333,6 +350,14 @@ Turms配置分为四大类：
 |turms.gateway.session.identity-access-management.jwt.verification.audience|||string|||
 |turms.gateway.session.identity-access-management.jwt.verification.custom-payload-claims|||Map|{}||
 |turms.gateway.session.identity-access-management.jwt.verification.issuer|||string|||
+|turms.gateway.session.identity-access-management.ldap.admin.host|||string|localhost|The host of LDAP server for admin|
+|turms.gateway.session.identity-access-management.ldap.admin.password|||string||The administrator's password for binding|
+|turms.gateway.session.identity-access-management.ldap.admin.port|||int|389|The port of LDAP server for admin|
+|turms.gateway.session.identity-access-management.ldap.admin.username|||string||The administrator's username for binding|
+|turms.gateway.session.identity-access-management.ldap.base-dn|||string||The base DN from which all operations originate|
+|turms.gateway.session.identity-access-management.ldap.user.host|||string|localhost|The host of LDAP server for user|
+|turms.gateway.session.identity-access-management.ldap.user.port|||int|389|The port of LDAP server for user|
+|turms.gateway.session.identity-access-management.ldap.user.search-filter|||string|uid=${userId}|The search filter to find the user entry. "${userId}" is a placeholder and will be replaced with the user ID passed in the login request|
 |turms.gateway.session.identity-access-management.type|||enum|PASSWORD|Note that if the type is not PASSWORD, turms-gateway will not connect to the MongoDB server for user records|
 |turms.gateway.session.min-heartbeat-interval-seconds|✅|✅|int|18|The minimum interval to refresh the heartbeat status by client requests to avoid refreshing the heartbeat status frequently|
 |turms.gateway.session.notify-clients-of-session-info-after-connected|✅|✅|boolean|true|Whether to notify clients of the session information after connected with the server|
@@ -342,21 +367,26 @@ Turms配置分为四大类：
 |turms.gateway.simultaneous-login.login-conflict-strategy|✅|✅|enum|DISCONNECT_LOGGED_IN_DEVICES|The login conflict strategy is used for servers to know how to behave if a device is logging in when there are conflicted and logged-in devices|
 |turms.gateway.simultaneous-login.strategy|✅|✅|enum|ALLOW_ONE_DEVICE_OF_EACH_DEVICE_TYPE_ONLINE|The simultaneous login strategy is used to control which devices can be online at the same time|
 |turms.gateway.tcp.backlog|||int|4096|The maximum number of connection requests waiting in the backlog queue. Large enough to handle bursts and GC pauses but do not set too large to prevent SYN-Flood attacks|
-|turms.gateway.tcp.close-idle-connection-after-seconds|||int|300|A TCP connection will be closed on the server side if a client has not established a user session in a specified time. Note that the developers on the client side should take the responsibility to close the TCP connection according to their business requirements|
-|turms.gateway.tcp.connection-timeout|||int|30||
+|turms.gateway.tcp.connect-timeout-millis|||int|30000|Used to mitigate the Slowloris DoS attack by lowering the timeout for the TCP connection handshake|
 |turms.gateway.tcp.enabled|||boolean|true||
 |turms.gateway.tcp.host|||string|0.0.0.0||
 |turms.gateway.tcp.port|||int|-1||
+|turms.gateway.tcp.remote-address-source.proxy-protocol-mode|||enum|OPTIONAL||
+|turms.gateway.tcp.session.close-timeout-millis|||int|120000|turms-gateway will send a TCP RST packet to the connection if the client has not closed the TCP connection within the specified time after turms-gateway has sent and flushed the session close notification. 0 means sending a TCP RST packet immediately after flushing the session close notification, and you should use 0 if you prefer fast connection close, but the client may never receive the last data sent by turms-gateway. -1 means no timeout and waiting for the client to close the connection forever. Positive value should be used when you prefer that turms-gateway waits for the client to receive within the specified time data and only close the connection when it exceeds the timeout|
+|turms.gateway.tcp.session.establish-timeout-millis|||int|300000|turms-gateway will close the TCP connection if the client has not established a user session within the specified time. 0 means no timeout|
 |turms.gateway.tcp.wiretap|||boolean|false||
 |turms.gateway.udp.enabled|||boolean|true||
 |turms.gateway.udp.host|||string|0.0.0.0||
 |turms.gateway.udp.port|||int|-1||
 |turms.gateway.websocket.backlog|||int|4096|The maximum number of connection requests waiting in the backlog queue. Large enough to handle bursts and GC pauses but do not set too large to prevent SYN-Flood attacks|
-|turms.gateway.websocket.close-idle-connection-after-seconds|||int|300|A WebSocket connection will be closed on the server side if a client has not established a user session in a specified time. Note that the developers on the client side should take the responsibility to close the WebSocket connection according to their business requirements|
-|turms.gateway.websocket.connect-timeout|||int|30|Used to mitigate the Slowloris DoS attack by lowering the timeout for the TCP connection handshake|
+|turms.gateway.websocket.connect-timeout-millis|||int|30000|Used to mitigate the Slowloris DoS attack by lowering the timeout for the TCP connection handshake|
 |turms.gateway.websocket.enabled|||boolean|true||
 |turms.gateway.websocket.host|||string|0.0.0.0||
 |turms.gateway.websocket.port|||int|-1||
+|turms.gateway.websocket.remote-address-source.http-header-mode|||enum|OPTIONAL||
+|turms.gateway.websocket.remote-address-source.proxy-protocol-mode|||enum|OPTIONAL||
+|turms.gateway.websocket.session.close-timeout-millis|||int|120000|turms-gateway will send and flush a WebSocket close frame, and then send a TCP RST packet to the connection if the client has not closed the WebSocket connection within the specified time after turms-gateway has sent and flushed the session close notification. 0 means sending and flushing a WebSocket close frame, and then sending a TCP RST packet immediately after flushing the session close notification, and you should use 0 if you prefer fast connection close, but the client may never receive the last data sent by turms-gateway. -1 means no timeout and waiting for the client to close the connection forever. Positive value should be used when you prefer that turms-gateway waits for the client to receive within the specified time data and only close the connection when it exceeds the timeout|
+|turms.gateway.websocket.session.establish-timeout-millis|||int|300000|turms-gateway will close the WebSocket connection if the client has not established a user session within the specified time. 0 means no timeout|
 |turms.health-check.check-interval-seconds|||int|3||
 |turms.health-check.cpu.retries|||int|5||
 |turms.health-check.cpu.unhealthy-load-threshold-percentage|||int|95||
@@ -381,7 +411,7 @@ Turms配置分为四大类：
 |turms.logging.console.level|||enum|INFO||
 |turms.logging.file.compression.enabled|||boolean|true||
 |turms.logging.file.enabled|||boolean|true||
-|turms.logging.file.file-path|||string|@HOME/@SERVICE_TYPE_NAME.log||
+|turms.logging.file.file-path|||string|@HOME/log/.log||
 |turms.logging.file.level|||enum|INFO||
 |turms.logging.file.max-file-size-mb|||int|32||
 |turms.logging.file.max-files|||int|320||
@@ -624,6 +654,31 @@ Turms配置分为四大类：
 |turms.service.storage.message-attachment.min-size-bytes|||int|0|The minimum size of the resource that the client can upload. 0 means no limit|
 |turms.service.storage.message-attachment.upload-url-expire-after-seconds|||int|300|The presigned URLs are valid only for the specified duration. 0 means no expiration|
 |turms.service.storage.user-profile-picture.allowed-content-type|||string|image/*|The allowed "Content-Type" of the resource that the client can upload|
+|turms.service.storage.user-profile-picture.allowed-referrers|||List-string|[]|Restrict access to the resource to only allow the specific referrers (e.g. "https://github.com/turms-im/turms/*")|
+|turms.service.storage.user-profile-picture.download-url-expire-after-seconds|||int|300|The presigned URLs are valid only for the specified duration. 0 means no expiration|
+|turms.service.storage.user-profile-picture.expire-after-days|||int|0|Delete the resource the specific days after creation. 0 means no expiration|
+|turms.service.storage.user-profile-picture.max-size-bytes|||int|1048576|The maximum size of the resource that the client can upload. 0 means no limit|
+|turms.service.storage.user-profile-picture.min-size-bytes|||int|0|The minimum size of the resource that the client can upload. 0 means no limit|
+|turms.service.storage.user-profile-picture.upload-url-expire-after-seconds|||int|300|The presigned URLs are valid only for the specified duration. 0 means no expiration|
+|turms.service.user.activate-user-when-added|✅|✅|boolean|true|Whether to activate a user when added by default|
+|turms.service.user.delete-two-sided-relationships|✅|✅|boolean|false|Whether to delete the two-sided relationships when a user requests to delete a relationship|
+|turms.service.user.delete-user-logically|✅|✅|boolean|true|Whether to delete a user logically|
+|turms.service.user.friend-request.allow-send-request-after-declined-or-ignored-or-expired|✅|✅|boolean|false|Whether to allow resending a friend request after the previous request has been declined, ignored, or expired|
+|turms.service.user.friend-request.delete-expired-requests-when-cron-triggered|✅|✅|boolean|false|Whether to delete expired when the cron expression is triggered|
+|turms.service.user.friend-request.expired-user-friend-requests-cleanup-cron|||string|0 0 2 * * *|Clean expired friend requests when the cron expression is triggered if deleteExpiredRequestsWhenCronTriggered is true|
+|turms.service.user.friend-request.friend-request-expire-after-seconds|✅|✅|int|2592000|A friend request will become expired after the specified time has elapsed|
+|turms.service.user.friend-request.max-content-length|✅|✅|int|200|The maximum allowed length for the text of a friend request|
+|turms.service.user.max-intro-length|✅|✅|int|100|The maximum allowed length for a user's intro|
+|turms.service.user.max-name-length|✅|✅|int|20|The maximum allowed length for a user's name|
+|turms.service.user.max-password-length|✅|✅|int|16|The maximum allowed length for a user's password|
+|turms.service.user.max-profile-picture-length|✅|✅|int|100|The maximum allowed length for a user's profile picture|
+|turms.service.user.min-password-length|✅|✅|int|-1|The minimum allowed length for a user's password. If 0, it means the password can be an empty string "". If -1, it means the password can be null|
+|turms.service.user.respond-offline-if-invisible|✅|✅|boolean|false|Whether to respond to client with the OFFLINE status if a user is in INVISIBLE status|
+|turms.shutdown.job-timeout-millis|||long|120000|Wait for a job 2 minutes at most for extreme cases by default. Though it is a long time, graceful shutdown is usually better than force shutdown.|
+|turms.user-status.cache-user-sessions-status|||boolean|true|Whether to cache the user sessions status|
+|turms.user-status.user-sessions-status-cache-max-size|||int|-1|The maximum size of the cache of users' sessions status|
+|turms.user-status.user-sessions-status-expire-after|||int|60|The life duration of each remote user's sessions status in the cache. Note that the cache will make the presentation of users' sessions status inconsistent during the time|
+type|||string|image/*|The allowed "Content-Type" of the resource that the client can upload|
 |turms.service.storage.user-profile-picture.allowed-referrers|||List-string|[]|Restrict access to the resource to only allow the specific referrers (e.g. "https://github.com/turms-im/turms/*")|
 |turms.service.storage.user-profile-picture.download-url-expire-after-seconds|||int|300|The presigned URLs are valid only for the specified duration. 0 means no expiration|
 |turms.service.storage.user-profile-picture.expire-after-days|||int|0|Delete the resource the specific days after creation. 0 means no expiration|
