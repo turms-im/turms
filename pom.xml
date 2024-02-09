@@ -342,6 +342,7 @@
                             <version>${spotless-maven-plugin.eclipse.version}</version>
                             <file>./codequality/eclipse.xml</file>
                         </eclipse>
+                        <trimTrailingWhitespace/>
                         <importOrder>
                             <!-- 1. An empty string for all the imports that didn't specify explicitly,
                             2. '|' for joining a group without blank line,
