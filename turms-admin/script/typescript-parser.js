@@ -1,4 +1,6 @@
-const {readFileSync} = require('fs');
+import {readFileSync} from 'fs';
+import typescript from 'typescript';
+
 const {
     createSourceFile,
     isArrayBindingPattern,
@@ -16,7 +18,7 @@ const {
     ScriptKind,
     ScriptTarget,
     SyntaxKind
-} = require('typescript');
+} = typescript;
 
 const Visibility = {
     Private: 'private',
@@ -250,7 +252,7 @@ function parseClass(node) {
     return declaration;
 }
 
-module.exports = {
+export default {
     parse(filePath) {
         const source = createSourceFile(
             filePath,

@@ -6,6 +6,7 @@
     "type": ""
   },
   "license": "Apache-2.0",
+  "type": "module",
   "scripts": {
     "build": "npm run build:admin",
     "build:admin": "vite build",

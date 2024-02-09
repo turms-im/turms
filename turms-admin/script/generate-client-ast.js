@@ -1,8 +1,10 @@
-const fs = require('fs');
-const path = require('path');
-const parser = require('./typescript-parser.js');
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'node:url';
+import parser from './typescript-parser.js';
 
-const rootDir = path.dirname(path.dirname(__filename));
+const filename = fileURLToPath(import.meta.url);
+const rootDir = path.dirname(path.dirname(filename));
 
 const declarations = parser.parse(path.join(rootDir, 'node_modules/turms-client-js/dist/turms-client.d.ts'));
 const data = `${JSON.stringify(declarations, null, 2)}`;
