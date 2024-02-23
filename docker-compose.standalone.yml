@@ -69,6 +69,9 @@ services:
       timeout: 5s
       retries: 5
     mem_limit: 2g
+#    volumes:
+#      - "./mongodb-config/data/db:/data/db"
+#      - "./mongodb-config/data/logs:/data/logs"
 #    <<: *logging-mongo
 
   mongodb-shard:
@@ -83,6 +86,9 @@ services:
       timeout: 5s
       retries: 5
     mem_limit: 2g
+#    volumes:
+#      - "./mongodb-shard/data/db:/data/db"
+#      - "./mongodb-shard/data/logs:/data/logs"
 #    <<: *logging-mongo
 
   mongodb-router:
@@ -99,6 +105,9 @@ services:
     ports:
       - "27017:27017"
     mem_limit: 2g
+#    volumes:
+#      - "./mongodb-router/data/db:/data/db"
+#      - "./mongodb-router/data/logs:/data/logs"
 #    <<: *logging-mongo
 
   mongodb-setup:
@@ -134,6 +143,9 @@ services:
       retries: 5
     ports:
       - "6379:6379"
+#    volumes:
+#      - "./redis/data:/data"
+#      - "./redis/config/redis.conf:/usr/local/redis/config/redis.conf"
 #    <<: *logging
 
   # MinIO
