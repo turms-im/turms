@@ -55,6 +55,7 @@ import im.turms.server.common.infra.exception.ThrowableUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.logging.core.model.LogLevel;
+import im.turms.server.common.infra.net.SslContextSpecType;
 import im.turms.server.common.infra.net.SslUtil;
 import im.turms.server.common.infra.property.env.common.SslProperties;
 import im.turms.server.common.infra.property.env.common.cluster.connection.ConnectionClientProperties;
@@ -253,8 +254,10 @@ public class ConnectionService implements ClusterService {
                 .metrics(true, () -> new MicrometerChannelMetricsRecorder(NODE_TCP_CLIENT, "tcp"))
                 .runOn(eventLoopGroupForClients);
         if (clientSsl.isEnabled()) {
-            client.secure(sslContextSpec -> SslUtil
-                    .configureSslContextSpec(sslContextSpec, clientSsl, false));
+            client = client.secure(sslContextSpec -> SslUtil.configureSslContextSpec(sslContextSpec,
+                    SslContextSpecType.TCP,
+                    clientSsl,
+                    false));
         }
         return client.connect();
     }

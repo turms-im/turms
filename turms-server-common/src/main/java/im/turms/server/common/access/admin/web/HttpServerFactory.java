@@ -53,7 +53,7 @@ public final class HttpServerFactory {
                 .childOption(TCP_NODELAY, true)
                 .runOn(LoopResourcesFactory.createForServer(ThreadNameConst.ADMIN_HTTP_PREFIX))
                 .metrics(true, () -> new TurmsMicrometerChannelMetricsRecorder(ADMIN_API, "http"));
-        return SslUtil.apply(http, ssl, null);
+        return SslUtil.apply(http, ssl, false);
     }
 
 }

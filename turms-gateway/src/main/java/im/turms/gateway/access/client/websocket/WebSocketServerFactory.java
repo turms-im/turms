@@ -47,6 +47,7 @@ import im.turms.server.common.domain.blocklist.service.BlocklistService;
 import im.turms.server.common.infra.healthcheck.ServerStatusManager;
 import im.turms.server.common.infra.metrics.TurmsMicrometerChannelMetricsRecorder;
 import im.turms.server.common.infra.net.BindException;
+import im.turms.server.common.infra.net.SslContextSpecType;
 import im.turms.server.common.infra.net.SslUtil;
 import im.turms.server.common.infra.property.constant.RemoteAddressSourceHttpHeaderMode;
 import im.turms.server.common.infra.property.constant.RemoteAddressSourceProxyProtocolMode;
@@ -135,7 +136,10 @@ public final class WebSocketServerFactory {
         }
         SslProperties ssl = webSocketProperties.getSsl();
         if (ssl.isEnabled()) {
-            server.secure(spec -> SslUtil.configureSslContextSpec(spec, ssl, true), true);
+            server = server.secure(
+                    spec -> SslUtil
+                            .configureSslContextSpec(spec, SslContextSpecType.HTTP11, ssl, true),
+                    true);
         }
         try {
             return server.bind()
@@ -197,7 +201,7 @@ public final class WebSocketServerFactory {
                     // Note that:
                     // 1. PingWebSocketFrame will be handled by Netty itself
                     // 2. The flatMap is called by FluxReceive, which will release buffer after
-                    // "onNext" returns
+                    // "onNext" returns.
                     .flatMap(frame -> frame instanceof BinaryWebSocketFrame
                             ? Mono.just(frame.content())
                             : Mono.empty());

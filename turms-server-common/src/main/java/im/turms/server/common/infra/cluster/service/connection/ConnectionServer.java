@@ -32,6 +32,7 @@ import im.turms.server.common.access.common.LoopResourcesFactory;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.net.BindException;
+import im.turms.server.common.infra.net.SslContextSpecType;
 import im.turms.server.common.infra.net.SslUtil;
 import im.turms.server.common.infra.property.env.common.SslProperties;
 import im.turms.server.common.infra.thread.ThreadNameConst;
@@ -92,7 +93,8 @@ public class ConnectionServer {
                         .doOnConnection(connection -> connectionConsumer
                                 .accept((ChannelOperations<?, ?>) connection));
                 if (ssl.isEnabled()) {
-                    tcpServer.secure(spec -> SslUtil.configureSslContextSpec(spec, ssl, true));
+                    tcpServer = tcpServer.secure(spec -> SslUtil
+                            .configureSslContextSpec(spec, SslContextSpecType.TCP, ssl, true));
                 }
                 server = tcpServer.bindNow(DurationConst.ONE_MINUTE);
                 LOGGER.info("The local node server started on: {}:{}", host, currentPort);

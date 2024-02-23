@@ -18,12 +18,18 @@
 package im.turms.server.common.infra.property.env.common;
 
 import io.netty.handler.ssl.ClientAuth;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 /**
  * @author James Chen
  */
+@AllArgsConstructor
+@SuperBuilder(toBuilder = true)
 @Data
+@NoArgsConstructor
 public class SslProperties {
 
     private boolean enabled;

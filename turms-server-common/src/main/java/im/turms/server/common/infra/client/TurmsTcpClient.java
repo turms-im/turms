@@ -19,7 +19,9 @@ package im.turms.server.common.infra.client;
 
 import jakarta.annotation.Nullable;
 
+import io.netty.channel.ChannelPipeline;
 import reactor.core.publisher.Mono;
+import reactor.netty.NettyPipeline;
 import reactor.netty.channel.ChannelOperations;
 import reactor.netty.resources.LoopResources;
 import reactor.netty.tcp.TcpClient;
@@ -68,22 +70,25 @@ public class TurmsTcpClient extends TurmsClient {
                 .host(host)
                 .port(port)
                 .runOn(loopResources)
+                .doOnChannelInit((connectionObserver, channel, remoteAddress) -> {
+                    ChannelPipeline pipeline = channel.pipeline();
+                    pipeline
+                            // Inbound
+                            .addBefore(NettyPipeline.ReactiveBridge,
+                                    "varintLengthBasedFrameDecoder",
+                                    CodecFactory.getVarintLengthBasedFrameDecoder())
+                            .addBefore(NettyPipeline.ReactiveBridge,
+                                    "turmsNotificationDecoder",
+                                    CodecFactory.getTurmsNotificationDecoder())
+                            // Outbound
+                            .addLast("varintLengthFieldPrepender",
+                                    CodecFactory.getVarintLengthFieldPrepender())
+                            .addLast("protobufFrameEncoder",
+                                    CodecFactory.getProtobufFrameEncoder());
+                })
                 .connect()
                 .doOnNext(conn -> {
                     connection = (ChannelOperations<?, ?>) conn;
-
-                    connection
-                            // Inbound
-                            .addHandlerLast("varintLengthBasedFrameDecoder",
-                                    CodecFactory.getVarintLengthBasedFrameDecoder())
-                            .addHandlerLast("turmsNotificationDecoder",
-                                    CodecFactory.getTurmsNotificationDecoder())
-                            // Outbound
-                            .addHandlerFirst("protobufFrameEncoder",
-                                    CodecFactory.getProtobufFrameEncoder())
-                            .addHandlerFirst("varintLengthFieldPrepender",
-                                    CodecFactory.getVarintLengthFieldPrepender());
-
                     connection.receiveObject()
                             .cast(TurmsNotification.class)
                             .subscribe(this::handleResponse,
