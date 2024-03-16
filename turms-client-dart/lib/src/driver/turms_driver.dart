@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:protobuf/protobuf.dart';
 
@@ -10,6 +9,8 @@ import 'service/connection_service.dart';
 import 'service/heartbeat_service.dart';
 import 'service/message_service.dart';
 import 'state_store.dart';
+
+final _requestMessageNameToTagNumber = <String, int>{};
 
 class TurmsDriver {
   final StateStore _stateStore = StateStore();
@@ -95,13 +96,20 @@ class TurmsDriver {
 
   Future<TurmsNotification> send(GeneratedMessage message) async {
     final name = message.info_.messageName;
-    final fieldName = name.substring(0, 1).toLowerCase() + name.substring(1);
-    final request = TurmsRequest.create();
-    final fieldInfo = request.info_.byName[fieldName];
-    if (fieldInfo == null) {
-      throw ArgumentError('Could not find the request type: $name');
+    var tagNumber = _requestMessageNameToTagNumber[name];
+    // don't use "putIfAbsent" because dart has a implementation of bad performance
+    // on closure: https://github.com/dart-lang/sdk/issues/36983.
+    if (tagNumber == null) {
+      final fieldName = name.substring(0, 1).toLowerCase() + name.substring(1);
+      final request = TurmsRequest.create();
+      final fieldInfo = request.info_.byName[fieldName];
+      if (fieldInfo == null) {
+        throw ArgumentError('Could not find the request type: $name');
+      }
+      tagNumber = fieldInfo.tagNumber;
+      _requestMessageNameToTagNumber[name] = tagNumber;
     }
-    request.setField(fieldInfo.tagNumber, message);
+    final request = TurmsRequest.create()..setField(tagNumber, message);
     final notification = await _messageService.sendRequest(request);
     if (request.hasCreateSessionRequest()) {
       _heartbeatService.start();
@@ -123,8 +131,8 @@ class TurmsDriver {
     _messageService.onDisconnected(error: error, stackTrace: stackTrace);
   }
 
-  void _onMessage(Uint8List message) {
-    if (message.lengthInBytes > 0) {
+  void _onMessage(List<int> message) {
+    if (message.isNotEmpty) {
       TurmsNotification notification;
       try {
         notification = TurmsNotification.fromBuffer(message);

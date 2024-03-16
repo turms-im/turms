@@ -1,16 +1,14 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:typed_data';
 
-import '../../exception/response_exception.dart';
-import '../../model/response_status_code.dart';
-import '../../transport/tcp_client.dart';
-import 'base_service.dart';
+import 'package:collection/collection.dart';
+
+import '../../../turms_client.dart';
 
 typedef OnConnectedListener = void Function();
 typedef OnDisconnectedListener = void Function(
     {Object? error, StackTrace? stackTrace});
-typedef MessageListener = void Function(Uint8List message);
+typedef MessageListener = void Function(List<int> message);
 
 class _MessageDecoder {
   static const int _maxReadBufferCapacity = 8 * 1024 * 1024;
@@ -21,21 +19,17 @@ class _MessageDecoder {
 
   final List<int> _readBuffer = [];
 
-  List<Uint8List> decodeMessages(List<int> bytes) {
+  final void Function(List<int> message) onDecoded;
+
+  _MessageDecoder(this.onDecoded);
+
+  void decodeMessages(List<int> bytes) {
     if ((_readBuffer.length + bytes.length) > _maxReadBufferCapacity) {
       throw Exception(
           'The read buffer has exceeded the maximum size $_maxReadBufferCapacity');
     }
     _readBuffer.addAll(bytes);
-    final messages = <Uint8List>[];
-    while (true) {
-      final message = _tryReadMessage();
-      if (message == null) {
-        break;
-      }
-      messages.add(message);
-    }
-    return messages;
+    while (_tryReadMessage()) {}
   }
 
   void clear() {
@@ -45,20 +39,21 @@ class _MessageDecoder {
     _readBuffer.clear();
   }
 
-  Uint8List? _tryReadMessage() {
+  bool _tryReadMessage() {
     _payloadLength ??= _tryReadVarInt();
     if (_payloadLength == null) {
-      return null;
+      return false;
     }
     final end = _readIndex + _payloadLength!;
     if (_readBuffer.length < end) {
-      return null;
+      return false;
     }
-    final message = _readBuffer.sublist(_readIndex, end);
+    final message = ListSlice(_readBuffer, _readIndex, end);
+    onDecoded(message);
     _readBuffer.removeRange(0, end);
     _readIndex = 0;
     _payloadLength = null;
-    return Uint8List.fromList(message);
+    return true;
   }
 
   int? _tryReadVarInt() {
@@ -89,9 +84,18 @@ class ConnectionService extends BaseService {
   final List<OnDisconnectedListener> _onDisconnectedListeners = [];
   final List<MessageListener> _messageListeners = [];
 
-  final _MessageDecoder _decoder = _MessageDecoder();
+  late _MessageDecoder _decoder;
 
-  ConnectionService(
+  factory ConnectionService(StateStore stateStore, String? host, int? port,
+      int? connectTimeoutMillis) {
+    final connectionService =
+        ConnectionService._(stateStore, host, port, connectTimeoutMillis);
+    connectionService._decoder =
+        _MessageDecoder(connectionService._notifyMessageListeners);
+    return connectionService;
+  }
+
+  ConnectionService._(
       super.stateStore, String? host, int? port, int? connectTimeoutMillis)
       : _initialHost = host ?? '127.0.0.1',
         _initialPort = port ?? 11510,
@@ -129,7 +133,7 @@ class ConnectionService extends BaseService {
     }
   }
 
-  void _notifyMessageListeners(Uint8List message) {
+  void _notifyMessageListeners(List<int> message) {
     for (final listener in _messageListeners) {
       listener.call(message);
     }
@@ -151,12 +155,7 @@ class ConnectionService extends BaseService {
             code: ResponseStatusCode.clientSessionAlreadyEstablished);
       }
     }
-    final tcp = TcpClient(_onSocketClosed, (bytes) {
-      final messages = _decoder.decodeMessages(bytes);
-      for (final message in messages) {
-        _notifyMessageListeners(message);
-      }
-    });
+    final tcp = TcpClient(_onSocketClosed, _decoder.decodeMessages);
     connectTimeoutMillis ??= _initialConnectTimeoutMillis;
     final timeout = connectTimeoutMillis > 0
         ? Duration(milliseconds: connectTimeoutMillis)
