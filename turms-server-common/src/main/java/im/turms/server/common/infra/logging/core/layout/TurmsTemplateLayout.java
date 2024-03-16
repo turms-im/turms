@@ -143,9 +143,9 @@ public class TurmsTemplateLayout extends TemplateLayout {
             boolean shouldParse,
             @Nullable byte[] className,
             LogLevel level,
-            CharSequence msg,
-            Object[] args,
-            Throwable throwable) {
+            @Nullable CharSequence msg,
+            @Nullable Object[] args,
+            @Nullable Throwable throwable) {
         byte[] timestamp = DateUtil.toBytes(System.currentTimeMillis());
 
         String threadName = Thread.currentThread()
@@ -181,7 +181,9 @@ public class TurmsTemplateLayout extends TemplateLayout {
         }
         buffer.writeBytes(COLON_SEPARATOR);
         // message
-        appendMessage(shouldParse, msg, args, buffer);
+        if (msg != null) {
+            appendMessage(shouldParse, msg, args, buffer);
+        }
         // exception
         if (throwable != null) {
             appendException(throwable, buffer);
@@ -241,7 +243,7 @@ public class TurmsTemplateLayout extends TemplateLayout {
     private void appendMessage(
             boolean shouldParse,
             CharSequence msg,
-            Object[] args,
+            @Nullable Object[] args,
             ByteBuf buffer) {
         String message = msg.toString();
         if (!shouldParse) {

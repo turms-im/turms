@@ -206,9 +206,13 @@ public final class AsyncLogger implements Logger {
         doLog(LogLevel.FATAL, message, null, null);
     }
 
+    /**
+     * @implNote We support nullable messages because libraries may pass null messages while we
+     *           should never pass null messages, and it is a bad practice.
+     */
     private void doLog(
             LogLevel level,
-            CharSequence message,
+            @Nullable CharSequence message,
             @Nullable Object[] args,
             @Nullable Throwable throwable) {
         ByteBuf buffer = null;
