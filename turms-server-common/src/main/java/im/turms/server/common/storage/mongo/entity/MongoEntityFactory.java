@@ -252,7 +252,7 @@ public final class MongoEntityFactory {
         List<ShardKey.Path> paths = new ArrayList<>(2);
         for (String shardKey : document.keySet()) {
             // Note that we split the shard key one level at most (e.g. "_id.whatever")
-            // because we don't have other cases currently
+            // because we don't have other cases currently.
             Pair<String, String> pair = StringUtil.splitLatin1(shardKey, AsciiCode.PERIOD);
             String[] path = pair == null
                     ? new String[]{shardKey}
@@ -263,11 +263,21 @@ public final class MongoEntityFactory {
     }
 
     private static <T> EntityFieldsInfo parseFields(Class<T> clazz, Constructor<T> constructor) {
+        List<Class<?>> classes = new ArrayList<>(8);
+        Class<?> currentClass = clazz;
+        do {
+            classes.add(currentClass);
+            currentClass = currentClass.getSuperclass();
+        } while (currentClass != null && currentClass != Object.class);
+        // Reverse the classes so that the child can override
+        // the parent's fields and methods when parsing.
+        classes = classes.reversed();
+
         String idField = null;
         Map<String, EntityField<?>> nameToField = null;
         List<Index> entityIndexes = null;
-        Map<String, MethodHandle> setterMethods = parseSetterMethods(clazz.getDeclaredMethods());
-        Field[] fields = clazz.getDeclaredFields();
+        List<Field> fields = parseFields(classes);
+        Map<String, MethodHandle> propertyNameToSetter = parseSetterMethods(classes);
         boolean hasParameters = constructor.getParameterCount() > 0;
         Parameter[] parameters = hasParameters
                 ? constructor.getParameters()
@@ -312,7 +322,7 @@ public final class MongoEntityFactory {
                 entityIndexes.addAll(indexes);
             }
             // Getter and Setter
-            MethodHandle setter = setterMethods.get(fieldName);
+            MethodHandle setter = propertyNameToSetter.get(fieldName);
             VarAccessor<T, ?> varAccessor = setter == null
                     ? VarAccessorFactory.get(field)
                     : VarAccessorFactory.get(field, setter);
@@ -321,7 +331,7 @@ public final class MongoEntityFactory {
                     ? parseCtorParamIndex(constructor, parameters, field)
                     : EntityField.UNSET_CTOR_PARAM_INDEX;
             if (nameToField == null) {
-                nameToField = CollectionUtil.newMapWithExpectedSize(fields.length);
+                nameToField = CollectionUtil.newMapWithExpectedSize(fields.size());
             }
             nameToField.put(fieldName,
                     new EntityField<>(
@@ -344,16 +354,40 @@ public final class MongoEntityFactory {
                         : entityIndexes);
     }
 
-    private static Map<String, MethodHandle> parseSetterMethods(Method[] methods) {
+    private static List<Field> parseFields(List<Class<?>> classes) {
+        List<Field> fields = null;
+        for (Class<?> clazz : classes) {
+            Field[] declaredFields = clazz.getDeclaredFields();
+            for (Field field : declaredFields) {
+                if (fields == null) {
+                    fields = new ArrayList<>(declaredFields.length);
+                }
+                fields.add(field);
+            }
+        }
+        return fields == null
+                ? Collections.emptyList()
+                : fields;
+    }
+
+    private static Map<String, MethodHandle> parseSetterMethods(List<Class<?>> classes) {
         Map<String, MethodHandle> setterMethods = null;
-        for (Method method : methods) {
-            if (method.isAnnotationPresent(PropertySetter.class)) {
+        for (Class<?> clazz : classes) {
+            for (Method method : clazz.getDeclaredMethods()) {
+                if (!method.isAnnotationPresent(PropertySetter.class)) {
+                    continue;
+                }
                 if (setterMethods == null) {
                     setterMethods = new HashMap<>(8);
                 }
-                String methodName = StringUtil.upperCamelToLowerCamelLatin1(method.getName()
-                        .substring(3));
-                setterMethods.put(methodName, ReflectionUtil.method2Handle(method));
+                String methodName = method.getName();
+                if (!methodName.startsWith("set")) {
+                    throw new IllegalArgumentException(
+                            "The setter method name must start with \"set\"");
+                }
+                String propertyName =
+                        StringUtil.upperCamelToLowerCamelLatin1(methodName.substring(3));
+                setterMethods.put(propertyName, ReflectionUtil.method2Handle(method));
             }
         }
         return setterMethods == null
