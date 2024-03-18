@@ -275,6 +275,14 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                     null,
                     (TurmsRequest) request));
         }
+        // Note that though we have already converted "turmsRequestBuffer"
+        // to the TurmsRequest instance, it seems like that we could release the buffer.
+        // But it will make trouble if the TurmsRequest instance declares bytes parameters
+        // because we use NioByteString to serve bytes parameters for better performance (direct
+        // buffer),
+        // while these NioByteString instances are based on this buffer.
+        // So we need to ensure the buffer is retained until we finish the workflow.
+        turmsRequestBuffer.retain();
         return clientRequestMono.flatMap(lastClientRequest -> {
             // 3. Validate ClientRequest
             TurmsRequest lastRequest = lastClientRequest.turmsRequest();
@@ -361,7 +369,8 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                         }
                         return response;
                     });
-        });
+        })
+                .doFinally(signal -> turmsRequestBuffer.release());
     }
 
     private Mono<Void> notifyRelatedUsersOfAction(
