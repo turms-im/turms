@@ -128,9 +128,10 @@ public final class ConcurrentEnumMap<K extends Enum<K>, V> implements Map<K, V> 
             return Collections.emptySet();
         }
         Set<K> set = CollectionUtil.newSetWithExpectedSize(localSize);
-        for (K key : keys) {
-            if (key != null) {
-                set.add(key);
+        for (int i = 0, length = values.length; i < length; i++) {
+            V value = values[i];
+            if (value != null) {
+                set.add(keys[i]);
             }
         }
         return set;
