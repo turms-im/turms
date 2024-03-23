@@ -3,7 +3,7 @@
 services:
   # MongoDB
   mongodb-router:
-    image: "bitnami/mongodb-sharded:6.0.6"
+    image: "bitnami/mongodb-sharded:6.0.13"
     environment:
       - MONGODB_ADVERTISED_HOSTNAME=mongodb-router
       - MONGODB_SHARDING_MODE=mongos
@@ -19,7 +19,7 @@ services:
       retries: 5
 
   mongodb-shard:
-    image: "bitnami/mongodb-sharded:6.0.6"
+    image: "bitnami/mongodb-sharded:6.0.13"
     environment:
       - MONGODB_ADVERTISED_HOSTNAME=mongodb-shard
       - MONGODB_SHARDING_MODE=shardsvr
@@ -30,7 +30,7 @@ services:
       - MONGODB_REPLICA_SET_NAME=shard01
 
   mongodb-config:
-    image: "bitnami/mongodb-sharded:6.0.6"
+    image: "bitnami/mongodb-sharded:6.0.13"
     environment:
       - MONGODB_ADVERTISED_HOSTNAME=mongodb-config
       - MONGODB_SHARDING_MODE=configsvr
@@ -41,7 +41,7 @@ services:
 
   # Redis
   redis:
-    image: redis:7.0.11-alpine
+    image: redis:7.2.4-alpine
     healthcheck:
       test: [ "CMD", "redis-cli", "ping" ]
       interval: 10s
@@ -50,13 +50,13 @@ services:
 
   # MinIO
   minio:
-    image: minio/minio:RELEASE.2023-06-16T02-41-06Z
+    image: minio/minio:RELEASE.2024-03-21T23-13-43Z
     environment:
       MINIO_ROOT_USER: minioadmin
       MINIO_ROOT_PASSWORD: minioadmin
     command: server /data
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:9000/minio/health/live" ]
+      test: mc ready local
       interval: 10s
       timeout: 5s
       retries: 5

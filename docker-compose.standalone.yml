@@ -58,7 +58,7 @@ x-logging-turms: &logging-turms
 services:
   # MongoDB
   mongodb-config:
-    image: mongo:6.0.6-jammy
+    image: mongo:6.0.13-jammy
 #    depends_on:
 #      - loki
     entrypoint: [ "mongod", "--port", "27017", "--configsvr", "--replSet", "rs-config", "--bind_ip_all" ]
@@ -75,7 +75,7 @@ services:
 #    <<: *logging-mongo
 
   mongodb-shard:
-    image: mongo:6.0.6-jammy
+    image: mongo:6.0.13-jammy
 #    depends_on:
 #      - loki
     entrypoint: [ "mongod", "--port", "27017", "--shardsvr", "--replSet", "shard01", "--bind_ip_all" ]
@@ -92,7 +92,7 @@ services:
 #    <<: *logging-mongo
 
   mongodb-router:
-    image: mongo:6.0.6-jammy
+    image: mongo:6.0.13-jammy
 #    depends_on:
 #      - loki
     entrypoint: [ "mongos", "--port", "27017", "--configdb", "rs-config/mongodb-config:27017", "--bind_ip_all" ]
@@ -111,7 +111,7 @@ services:
 #    <<: *logging-mongo
 
   mongodb-setup:
-    image: mongo:6.0.6-jammy
+    image: mongo:6.0.13-jammy
     depends_on:
       mongodb-config:
         condition: service_healthy
@@ -133,7 +133,7 @@ services:
 
   # Redis
   redis:
-    image: redis:7.0.11-alpine
+    image: redis:7.2.4-alpine
 #    depends_on:
 #      - loki
     healthcheck:
@@ -150,11 +150,11 @@ services:
 
   # MinIO
   minio:
-    image: minio/minio:RELEASE.2023-06-16T02-41-06Z
+    image: minio/minio:RELEASE.2024-03-21T23-13-43Z
     # https://min.io/docs/minio/linux/reference/minio-server/minio-server.html#environment-variables
     environment:
-      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-turms}
-      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-turms}
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-minioadmin}
     ports:
       - "9000:9000"
       - "9001:9001"
@@ -162,7 +162,10 @@ services:
       - storage
     command: server --console-address ":9001" /data
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      # Don't use the following command because minio has removed "curl" in its image
+      # (Reference: https://github.com/minio/minio/issues/18373) :
+      # test: [ "CMD", "curl", "-f", "http://localhost:9000/minio/health/live" ]
+      test: mc ready local
       interval: 10s
       timeout: 5s
       retries: 5
@@ -171,7 +174,7 @@ services:
 
   # Rasa
   rasa:
-    image: rasa/rasa:3.6.0-full
+    image: rasa/rasa:3.6.19-full
     ports:
       - 5005:5005
     profiles:
@@ -324,7 +327,7 @@ services:
   # optional services for observability - metrics
 
   grafana:
-    image: grafana/grafana:10.0.0-ubuntu
+    image: grafana/grafana:10.0.12-ubuntu
     depends_on:
       - prometheus
     environment:
@@ -339,7 +342,7 @@ services:
       - ./ops/grafana/provisioning/:/etc/grafana/provisioning/
 
   prometheus:
-    image: prom/prometheus:v2.41.0
+    image: prom/prometheus:v2.50.1
     ports:
       - "9090:9090"
     profiles:
@@ -349,7 +352,7 @@ services:
       - ./ops/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
 
   node-exporter:
-    image: prom/node-exporter:v1.5.0
+    image: prom/node-exporter:v1.7.0
     ports:
       - "9100:9100"
     profiles:
@@ -357,9 +360,9 @@ services:
 
   cadvisor:
     # If your server is in China and suffers from the network problem,
-    # try "gcr.lank8s.cn/cadvisor/cadvisor:v0.47.1"
+    # try "gcr.lank8s.cn/cadvisor/cadvisor:v0.49.1"
     # or just comment out "cadvisor"
-    image: gcr.io/cadvisor/cadvisor:v0.47.1
+    image: gcr.io/cadvisor/cadvisor:v0.49.1
     ports:
       - "8080:8080"
     profiles:
@@ -372,7 +375,7 @@ services:
       - /dev/disk/:/dev/disk:ro
 
   mongo-exporter:
-    image: percona/mongodb_exporter:0.39.0
+    image: percona/mongodb_exporter:0.40.0
     command:
       - '--mongodb.uri=mongodb://mongodb-router:27017'
     ports:
@@ -381,7 +384,7 @@ services:
       - monitoring
 
   redis-exporter:
-    image: oliver006/redis_exporter:v1.51.0
+    image: oliver006/redis_exporter:v1.58.0
     depends_on:
       - redis
     environment:
