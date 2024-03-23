@@ -22,25 +22,36 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.FileSystemUtils;
+import org.testcontainers.containers.ContainerState;
 import org.testcontainers.containers.DockerComposeContainer;
 import org.testcontainers.shaded.org.apache.commons.io.FileUtils;
 import org.yaml.snakeyaml.Yaml;
 
 import static im.turms.server.common.testing.environment.ContainerTestEnvironmentPropertyConst.DOCKER_COMPOSE_TEST_FILE;
 import static im.turms.server.common.testing.environment.ContainerTestEnvironmentPropertyConst.MINIO;
+import static im.turms.server.common.testing.environment.ContainerTestEnvironmentPropertyConst.MINIO_SERVICE_NAME;
 import static im.turms.server.common.testing.environment.ContainerTestEnvironmentPropertyConst.MONGO;
 import static im.turms.server.common.testing.environment.ContainerTestEnvironmentPropertyConst.MONGO_CONFIG;
+import static im.turms.server.common.testing.environment.ContainerTestEnvironmentPropertyConst.MONGO_SERVICE_NAME;
 import static im.turms.server.common.testing.environment.ContainerTestEnvironmentPropertyConst.MONGO_SHARD;
 import static im.turms.server.common.testing.environment.ContainerTestEnvironmentPropertyConst.REDIS;
+import static im.turms.server.common.testing.environment.ContainerTestEnvironmentPropertyConst.REDIS_SERVICE_NAME;
 import static im.turms.server.common.testing.environment.ContainerTestEnvironmentPropertyConst.TURMS_ADMIN;
 import static im.turms.server.common.testing.environment.ContainerTestEnvironmentPropertyConst.TURMS_GATEWAY;
 import static im.turms.server.common.testing.environment.ContainerTestEnvironmentPropertyConst.TURMS_GATEWAY_JVM_OPTION_NAME;
+import static im.turms.server.common.testing.environment.ContainerTestEnvironmentPropertyConst.TURMS_GATEWAY_SERVICE_NAME;
 import static im.turms.server.common.testing.environment.ContainerTestEnvironmentPropertyConst.TURMS_SERVICE;
 import static im.turms.server.common.testing.environment.ContainerTestEnvironmentPropertyConst.TURMS_SERVICE_JVM_OPTION_NAME;
+import static im.turms.server.common.testing.environment.ContainerTestEnvironmentPropertyConst.TURMS_SERVICE_SERVICE_NAME;
 
 /**
  * @author James Chen
@@ -49,9 +60,22 @@ import static im.turms.server.common.testing.environment.ContainerTestEnvironmen
 public class TestEnvironmentContainer extends DockerComposeContainer<TestEnvironmentContainer>
         implements Closeable {
 
+    private static final Path TEMP_DIR;
+
+    private final Path workingDir;
     private final String dockerComposeConfig;
     private final boolean hasContainer;
     private volatile boolean started;
+
+    static {
+        String tempDir = System.getProperty("java.io.tmpdir");
+        if (tempDir == null) {
+            throw new RuntimeException("Failed to get the temporary directory");
+        }
+        TEMP_DIR = Path.of(tempDir)
+                .toAbsolutePath()
+                .normalize();
+    }
 
     /**
      * @param dockerCompose TODO: Use InputStream instead of File once DockerComposeContainer
@@ -59,10 +83,12 @@ public class TestEnvironmentContainer extends DockerComposeContainer<TestEnviron
      *                      (https://github.com/testcontainers/testcontainers-java/issues/3431)
      */
     public TestEnvironmentContainer(
+            Path workingDir,
             File dockerCompose,
             String dockerComposeConfig,
             boolean hasContainer) {
         super(dockerCompose);
+        this.workingDir = workingDir;
         this.dockerComposeConfig = dockerComposeConfig;
         this.hasContainer = hasContainer;
     }
@@ -76,10 +102,28 @@ public class TestEnvironmentContainer extends DockerComposeContainer<TestEnviron
             List<String> turmsGatewayJvmOptions,
             boolean setupTurmsService,
             List<String> turmsServiceJvmOptions) {
+        Path workingDir = TEMP_DIR
+                // Use a subfolder in the temporary directory
+                // to avoid unnecessary file copying:
+                // "org.testcontainers.containers.GenericContainer.tryStart"
+                // will run "copyToFileContainerPathMap.forEach(this::copyFileToContainer);"
+                // to copy files under the working directory to the container.
+                .resolve(UUID.randomUUID()
+                        .toString());
+        try {
+            Files.createDirectories(workingDir);
+        } catch (Exception e) {
+            throw new RuntimeException(
+                    "Failed to create the working directory: "
+                            + workingDir,
+                    e);
+        }
         File dockerComposeFile;
         try {
-            dockerComposeFile = File.createTempFile("docker-compose", "yaml");
-        } catch (IOException e) {
+            dockerComposeFile = workingDir.resolve("docker-compose.yaml")
+                    .toFile();
+            dockerComposeFile.deleteOnExit();
+        } catch (Exception e) {
             throw new RuntimeException("Failed to create the temp docker compose file", e);
         }
         String config = buildDockerComposeConfig(setupMinio,
@@ -96,6 +140,7 @@ public class TestEnvironmentContainer extends DockerComposeContainer<TestEnviron
             throw new RuntimeException("Failed to write to the temp docker compose file", e);
         }
         return new TestEnvironmentContainer(
+                workingDir,
                 dockerComposeFile,
                 config,
                 setupMinio
@@ -215,27 +260,95 @@ public class TestEnvironmentContainer extends DockerComposeContainer<TestEnviron
 
     @Override
     public void start() {
-        if (hasContainer && !started) {
-            synchronized (this) {
-                if (!started) {
-                    log.info("The docker compose config: \n{}", dockerComposeConfig);
-                    super.start();
-                    started = true;
-                }
+        if (!hasContainer || started) {
+            return;
+        }
+        synchronized (this) {
+            if (started) {
+                return;
             }
+            log.info("The docker compose config: \n{}", dockerComposeConfig);
+            try {
+                Files.createDirectories(workingDir);
+            } catch (Exception e) {
+                throw new RuntimeException(
+                        "Failed to create the working directory: "
+                                + workingDir,
+                        e);
+            }
+            try {
+                super.start();
+            } catch (Exception e) {
+                StringBuilder builder = new StringBuilder(1024);
+                builder.append("Failed to start the docker compose: ");
+                appendContainerInfo(builder,
+                        "minio",
+                        getContainerByServiceName(MINIO_SERVICE_NAME));
+                appendContainerInfo(builder,
+                        "mongo",
+                        getContainerByServiceName(MONGO_SERVICE_NAME));
+                appendContainerInfo(builder,
+                        "redis",
+                        getContainerByServiceName(REDIS_SERVICE_NAME));
+                appendContainerInfo(builder,
+                        "turms-gateway",
+                        getContainerByServiceName(TURMS_GATEWAY_SERVICE_NAME));
+                appendContainerInfo(builder,
+                        "turms-service",
+                        getContainerByServiceName(TURMS_SERVICE_SERVICE_NAME));
+
+                throw new RuntimeException(builder.toString(), e);
+            }
+            started = true;
         }
     }
 
     @Override
     public void close() {
-        if (hasContainer && started) {
-            synchronized (this) {
-                if (started) {
-                    stop();
-                    started = false;
+        if (!hasContainer || !started) {
+            return;
+        }
+        synchronized (this) {
+            if (!started) {
+                return;
+            }
+            try {
+                stop();
+                started = false;
+            } catch (Exception e) {
+                try {
+                    FileSystemUtils.deleteRecursively(workingDir);
+                } catch (Exception exception) {
+                    e.addSuppressed(new RuntimeException(
+                            "Caught an error while deleting: "
+                                    + workingDir,
+                            exception));
                 }
+                throw e;
+            }
+            try {
+                FileSystemUtils.deleteRecursively(workingDir);
+            } catch (Exception e) {
+                throw new RuntimeException(
+                        "Caught an error while deleting: "
+                                + workingDir,
+                        e);
             }
         }
+    }
+
+    private void appendContainerInfo(
+            StringBuilder output,
+            String name,
+            Optional<ContainerState> containerState) {
+        output.append("\n")
+                .append(name)
+                .append(": ")
+                .append(containerState.isPresent()
+                        ? containerState.get()
+                                .getCurrentContainerInfo()
+                                .toString()
+                        : "not started");
     }
 
 }
