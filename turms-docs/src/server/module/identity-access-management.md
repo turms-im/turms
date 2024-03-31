@@ -11,7 +11,33 @@ Turms not only provides a built-in identity and access management mechanism, but
 | turms.gateway.session.identity-access-management.enabled | true          | Whether to enable the identity and access management mechanism. <br />If the value is `false`, turn off the Turms built-in identity and access management mechanism and user-based plug-in custom identity and access management implementation, and allow any user to log in, and authorize them to send any type of request |
 | turms.gateway.session.identity-access-management.type    | password      | The type of Turms built-in identity and access management mechanism used. The type can be `noop`, `password`, `jwt`, `http` and `ldap`. See below for details |
 
-### Built-in identity and access management mechanism
+### Built-in Identity and Access Management Mechanisms
+
+#### Hosted and Non-Hosted Identity and Access Management Mechanisms
+
+Regarding the authentication and authorization of users, there are two common and fundamental requirements:
+
+- The need for the Turms service to be able to host user data on its own, eliminating the need for Turms users to host product user data themselves.
+
+  The mechanism that meets this type of requirement is called `Hosted Identity and Access Management Mechanism`, which corresponds to the `password` mechanism. Only when using this type of mechanism will the Turms service host and store users' basic information, such as user ID and login password, and store this data in the `user` collection of MongoDB.
+
+- The need for the Turms service to perform the authentication and authorization of users without hosting user data, so that Turms users do not have to spend time and effort synchronizing product user data to the database hosted by the Turms service.
+
+  The mechanism that meets this type of requirement is called `Non-Hosted Identity and Access Management Mechanism`, which corresponds to the `jwt`, `http`, and `ldap` mechanisms.
+
+Regardless of the mechanism you use, the Turms service will always host and store data related to users, such as user relationships, group members, and other user-related data based on user ID.
+
+Additionally, since there are many possible combinations of user authentication and authorization implementations in applications, Turms cannot and does not need to implement them all at once. Therefore, if you have a requirement that Turms has not yet implemented, you can raise it in GitHub Issue, and we will schedule it for implementation based on priority.
+
+#### Authorization Check Cancellation
+
+Because the non-hosted identity and access management mechanisms don't require the Turms service to store user information, the turms-service cannot perform some authorization check operations based on user information.
+
+Specifically, when the turms-service detects, based on cluster properties, that the current cluster adopts a non-hosted identity and access management mechanism, only the following authorization check operations will be canceled:
+
+- The turms-service allows users to enable or disable the feature `Allow Sending Messages to Strangers` by configuring `turms.service.message.allow-send-messages-to-stranger`.
+
+  If configured to allow sending messages to strangers, turms-service will also decide whether to check if the message recipient exists based on the property `turms.service.message.check-if-target-active-and-not-deleted`. When a non-hosted identity and access management mechanism is in use, this property will be ignored, and turms-service will not check the existence of the message recipient.
 
 #### 1. NOOP
 
@@ -144,7 +170,6 @@ in:
 | Property                                                     | Default Value             | Description                                                  |
 | ------------------------------------------------------------ | ------------------------- | ------------------------------------------------------------ |
 | turms.gateway.session.identity-access-management.type        | password                  | Set to `jwt` to enable JWT-based identity and access management |
-| turms.service.message.check-if-target-active-and-not-deleted | true                      | When using the `JWT` mechanism, you need to set this configuration item to `false`, otherwise because it does not exist in the Turms database the user, so the user will not be able to send messages |
 | turms.gateway.session.identity-access-management.jwt.verification.issuer |                           | When the value is not empty, verify whether the issuer of the JWT is equal to this value |
 | turms.gateway.session.identity-access-management.jwt.verification.audience |                           | When the value is not empty, verify whether the receiver of the JWT contains this value |
 | turms.gateway.session.identity-access-management.jwt.verification.custom-payload-claims |                           | When the value is not empty, verify that the private claims in the JWT match this value |
@@ -218,7 +243,6 @@ The meanings of `authenticated` and `statements` fields are the same as those of
 | Property                                                     | Default Value             | Description                                                  |
 | ------------------------------------------------------------ | ------------------------- | ------------------------------------------------------------ |
 | turms.gateway.session.identity-access-management.type        | password                  | Set to `http` to enable identity and access management based on external HTTP responses |
-| turms.service.message.check-if-target-active-and-not-deleted | true                      | When using the `HTTP` mechanism, you need to set this configuration item to `false`, otherwise because it does not exist in the Turms database the user, so the user will not be able to send messages |
 | turms.gateway.session.identity-access-management.http.request.url | ""                        | Request URL                                                  |
 | turms.gateway.session.identity-access-management.http.request.headers | true                      | additional request headers                                   |
 | turms.gateway.session.identity-access-management.http.request.http-method | GET                       | request method                                               |

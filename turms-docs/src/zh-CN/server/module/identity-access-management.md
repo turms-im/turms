@@ -9,9 +9,35 @@ Turms既提供了内置的身份与访问管理机制，也支持用户基于插
 | 配置名                                                   | 默认值   | 说明                                                         |
 | -------------------------------------------------------- | -------- | ------------------------------------------------------------ |
 | turms.gateway.session.identity-access-management.enabled | true     | 是否开启身份与访问管理机制。<br />如果该值为`false`，则关闭Turms内置的身份与访问管理机制与用户基于插件自定义身份与访问管理实现，并允许任意用户登陆，与授权其发送任意请求类型 |
-| turms.gateway.session.identity-access-management.type    | password | 使用的Turms内置身份与访问管理机制类型，其类型可以为`noop`、`password`、`jwt`、`http`与`LDAP`。具体见下文 |
+| turms.gateway.session.identity-access-management.type    | password | 使用的Turms内置身份与访问管理机制类型，其类型可以为`noop`、`password`、`jwt`、`http`与`ldap`。具体见下文 |
 
 ### 内置的身份与访问管理机制
+
+#### 托管与非托管身份与访问管理机制
+
+关于用户身份的认证与授权，有两个常见的、最基本的需求：
+
+* 需要Turms服务能够自行托管用户数据，以免去Turms用户需要自行托管产品用户数据。
+
+  满足这类需求的机制叫做`托管身份与访问管理机制`，具体对应着`password`机制。只有使用这类机制时，Turms服务端才会托管存储用户的基本信息，如用户ID与登陆密码，并将这些数据存储在MongoDB的`user`集合中。
+
+* 需要Turms服务在不托管用户数据的同时，还能执行用户身份的认证与授权操作，这样Turms用户就不需要费时费力地将产品用户数据同步到Turms服务托管的数据库中。
+
+  满足这类需求的机制叫做`非托管身份与访问管理机制`，具体对应着`jwt`、`http`与`ldap`机制。
+
+但不管您使用任意机制，Turms服务端始终会基于用户ID，来托管与存储诸如用户关系（Relationship）、群成员（Group Member）等与用户相关的数据。
+
+另外，由于在实际应用中，用户的认证与授权的实现组合非常多，Turms不可能、也没必要一次性把它们全都实现了，因此如果您有相关需求是Turms尚未实现的，可以在GitHub Issue区提出，我们会根据优先级排期实现。
+
+#### 授权判断取消
+
+因为非托管身份与访问管理机制不需要Turms服务端存储用户信息，因此turms-service无法根据用户信息来执行一些授权判断操作。
+
+具体而言，当turms-service根据集群配置，检测到了当前集群采用的是非托管身份与访问管理机制时，有且仅有以下授权判断操作会被取消：
+
+* turms-service服务端允许用户通过配置`turms.service.message.check-if-target-active-and-not-deleted`来启动或关闭`允许向陌生人发送消息`功能。
+
+  如果配置为允许向陌生人发送消息，则turms-service服务端还会根据配置`turms.service.message.check-if-target-active-and-not-deleted`来决定是否要判断消息的接收用户是否存在。当采用非托管身份与访问管理机制时，该配置会被无视，turms-service不会校验消息的接收用户是否存在。
 
 #### 1. NOOP
 
@@ -21,7 +47,7 @@ Turms既提供了内置的身份与访问管理机制，也支持用户基于插
 
 * turms.gateway.session.identity-access-management.type=noop
 
-#### 2. 基于密钥认证
+#### 2. 基于密码认证
 
 基于Turms服务端自建的MongoDB中的`user`集合中的密码做用户认证。暂不支持授权实现。
 
@@ -144,7 +170,6 @@ t-->>c: OK if verified and authenticated
 | 配置名                                                       | 默认值                    | 说明                                                         |
 | ------------------------------------------------------------ | ------------------------- | ------------------------------------------------------------ |
 | turms.gateway.session.identity-access-management.type        | password                  | 设置为`jwt`以开启基于JWT的身份与访问管理机制                 |
-| turms.service.message.check-if-target-active-and-not-deleted | true                      | 使用`JWT`机制时，需要将该配置项设置成`false`，否则因为Turms的数据库中并不存在该用户，因此用户将无法发送消息 |
 | turms.gateway.session.identity-access-management.jwt.verification.issuer |                           | 该值不为空时，校验JWT的签发者是否等同于该值                  |
 | turms.gateway.session.identity-access-management.jwt.verification.audience |                           | 该值不为空时，校验JWT的接收方是否包含该值                    |
 | turms.gateway.session.identity-access-management.jwt.verification.custom-payload-claims |                           | 该值不为空时，校验JWT中的私有声明是否与该值匹配              |
@@ -218,7 +243,6 @@ t-->>c: OK if authenticated
 | 配置名                                                       | 默认值                    | 说明                                                         |
 | ------------------------------------------------------------ | ------------------------- | ------------------------------------------------------------ |
 | turms.gateway.session.identity-access-management.type        | password                  | 设置为`http`以开启基于外部HTTP响应的身份与访问管理机制       |
-| turms.service.message.check-if-target-active-and-not-deleted | true                      | 使用`HTTP`机制时，需要将该配置项设置成`false`，否则因为Turms的数据库中并不存在该用户，因此用户将无法发送消息 |
 | turms.gateway.session.identity-access-management.http.request.url | ""                        | 请求URL                                                      |
 | turms.gateway.session.identity-access-management.http.request.headers | true                      | 附加的请求头                                                 |
 | turms.gateway.session.identity-access-management.http.request.http-method | GET                       | 请求方法                                                     |
