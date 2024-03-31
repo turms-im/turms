@@ -30,6 +30,7 @@ import jakarta.validation.constraints.PastOrPresent;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import io.micrometer.core.instrument.Counter;
+import lombok.Getter;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
@@ -50,6 +51,7 @@ import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
+import im.turms.server.common.infra.property.env.gateway.GatewayProperties;
 import im.turms.server.common.infra.property.env.service.business.message.MessageProperties;
 import im.turms.server.common.infra.property.env.service.business.user.UserProperties;
 import im.turms.server.common.infra.reactor.PublisherPool;
@@ -109,6 +111,8 @@ public class UserService {
 
     private boolean allowSendMessagesToOneself;
     private boolean allowSendMessagesToStranger;
+    @Getter
+    private boolean isUserCollectionBasedAuthEnabled;
     private boolean checkIfTargetActiveAndNotDeleted;
 
     public UserService(
@@ -174,7 +178,22 @@ public class UserService {
                 .getMessage();
         allowSendMessagesToOneself = messageProperties.isAllowSendMessagesToOneself();
         allowSendMessagesToStranger = messageProperties.isAllowSendMessagesToStranger();
-        checkIfTargetActiveAndNotDeleted = messageProperties.isCheckIfTargetActiveAndNotDeleted();
+
+        GatewayProperties gatewayProperties = properties.getGateway();
+        // We need to check if it's null because "properties" comes from the global properties,
+        // this will be null if no a turms-gateway server ever started in the cluster
+        // (because if a turms-gateway server ever started in the cluster,
+        // it will store the global properties in MongoDB).
+        isUserCollectionBasedAuthEnabled = gatewayProperties != null
+                && gatewayProperties.getSession()
+                        .getIdentityAccessManagement()
+                        .getType()
+                        .isUserCollectionBasedAuthEnabled();
+
+        boolean localCheckIfTargetActiveAndNotDeleted =
+                messageProperties.isCheckIfTargetActiveAndNotDeleted();
+        checkIfTargetActiveAndNotDeleted =
+                isUserCollectionBasedAuthEnabled && localCheckIfTargetActiveAndNotDeleted;
     }
 
     public Mono<ServicePermission> isAllowedToSendMessageToTarget(
@@ -323,26 +342,30 @@ public class UserService {
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        return userRepository.findProfileAccessIfNotDeleted(targetUserId)
-                .flatMap(strategy -> switch (strategy) {
-                    case ALL -> Mono.just(ServicePermission.OK);
-                    case FRIENDS -> userRelationshipService
-                            .hasRelationshipAndNotBlocked(targetUserId, requesterId, false)
-                            .map(isRelatedAndAllowed -> isRelatedAndAllowed
-                                    ? ServicePermission.OK
-                                    : ServicePermission.get(
-                                            ResponseStatusCode.NOT_FRIEND_TO_QUERY_USER_PROFILE));
-                    case ALL_EXCEPT_BLOCKED_USERS -> userRelationshipService
-                            .isNotBlocked(targetUserId, requesterId, false)
-                            .map(isNotBlocked -> isNotBlocked
-                                    ? ServicePermission.OK
-                                    : ServicePermission.get(
-                                            ResponseStatusCode.BLOCKED_USER_TO_QUERY_USER_PROFILE));
-                    default ->
-                        Mono.error(ResponseException.get(ResponseStatusCode.SERVER_INTERNAL_ERROR,
-                                "Unexpected profile access strategy: "
-                                        + strategy));
-                })
+
+        Mono<ProfileAccessStrategy> findProfileAccess =
+                userRepository.findProfileAccessIfNotDeleted(targetUserId);
+        if (!isUserCollectionBasedAuthEnabled) {
+            findProfileAccess = findProfileAccess.defaultIfEmpty(ProfileAccessStrategy.ALL);
+        }
+        return findProfileAccess.flatMap(strategy -> switch (strategy) {
+            case ALL -> Mono.just(ServicePermission.OK);
+            case FRIENDS -> userRelationshipService
+                    .hasRelationshipAndNotBlocked(targetUserId, requesterId, false)
+                    .map(isRelatedAndAllowed -> isRelatedAndAllowed
+                            ? ServicePermission.OK
+                            : ServicePermission
+                                    .get(ResponseStatusCode.NOT_FRIEND_TO_QUERY_USER_PROFILE));
+            case ALL_EXCEPT_BLOCKED_USERS -> userRelationshipService
+                    .isNotBlocked(targetUserId, requesterId, false)
+                    .map(isNotBlocked -> isNotBlocked
+                            ? ServicePermission.OK
+                            : ServicePermission
+                                    .get(ResponseStatusCode.BLOCKED_USER_TO_QUERY_USER_PROFILE));
+            default -> Mono.error(ResponseException.get(ResponseStatusCode.SERVER_INTERNAL_ERROR,
+                    "Unexpected profile access strategy: "
+                            + strategy));
+        })
                 .switchIfEmpty(ResponseExceptionPublisherPool.resourceNotFound());
     }
 

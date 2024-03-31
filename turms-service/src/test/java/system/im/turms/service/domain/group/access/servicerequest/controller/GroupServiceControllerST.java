@@ -162,7 +162,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
                         true)
                 .block(timeout);
 
-        userPermissionGroupService.queryUserPermissionGroupByUserId(USER_ID)
+        userPermissionGroupService.queryStoredOrDefaultUserPermissionGroupByUserId(USER_ID)
                 .flatMap(permissionGroup -> userPermissionGroupService.updateUserPermissionGroups(
                         Set.of(permissionGroup.getId()),
                         Set.of(0L,

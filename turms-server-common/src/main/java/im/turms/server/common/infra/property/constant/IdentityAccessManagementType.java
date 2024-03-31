@@ -17,13 +17,22 @@
 
 package im.turms.server.common.infra.property.constant;
 
+import lombok.Getter;
+
 /**
  * @author James Chen
  */
 public enum IdentityAccessManagementType {
-    NOOP,
-    HTTP,
-    JWT,
-    PASSWORD,
-    LDAP,
+    NOOP(false),
+    HTTP(false),
+    JWT(false),
+    PASSWORD(true),
+    LDAP(false);
+
+    @Getter
+    private final boolean isUserCollectionBasedAuthEnabled;
+
+    IdentityAccessManagementType(boolean isUserCollectionBasedAuthEnabled) {
+        this.isUserCollectionBasedAuthEnabled = isUserCollectionBasedAuthEnabled;
+    }
 }

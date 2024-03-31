@@ -242,17 +242,18 @@ public class UserPermissionGroupService {
         return Mono.just(userPermissionGroup);
     }
 
-    public Mono<UserPermissionGroup> queryUserPermissionGroupByUserId(@NotNull Long userId) {
-        return userService.queryUserPermissionGroupId(userId)
+    public Mono<UserPermissionGroup> queryStoredOrDefaultUserPermissionGroupByUserId(
+            @NotNull Long userId) {
+        Mono<Long> queryUserPermissionGroupId = userService.queryUserPermissionGroupId(userId)
+                .defaultIfEmpty(DEFAULT_USER_PERMISSION_GROUP_ID);
+        return queryUserPermissionGroupId
                 .flatMap(groupId -> queryUserPermissionGroup(groupId).switchIfEmpty(
                         Mono.error(ResponseException.get(ResponseStatusCode.SERVER_INTERNAL_ERROR,
                                 "The user ("
                                         + userId
                                         + ") is in the nonexistent permission group ("
                                         + groupId
-                                        + ")"))))
-                .switchIfEmpty(Mono.error(ResponseException
-                        .get(ResponseStatusCode.QUERY_PERMISSION_OF_NONEXISTENT_USER)));
+                                        + ")"))));
     }
 
     public Mono<Long> countUserPermissionGroups() {

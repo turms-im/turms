@@ -80,7 +80,6 @@ public class UserRelationshipGroupService {
     private final UserRelationshipGroupRepository userRelationshipGroupRepository;
     private final UserRelationshipGroupMemberRepository userRelationshipGroupMemberRepository;
     private final UserVersionService userVersionService;
-    private final UserRelationshipService userRelationshipService;
 
     /**
      * @param userRelationshipService is lazy because: UserRelationshipService ->
@@ -94,7 +93,6 @@ public class UserRelationshipGroupService {
         this.userRelationshipGroupRepository = userRelationshipGroupRepository;
         this.userRelationshipGroupMemberRepository = userRelationshipGroupMemberRepository;
         this.userVersionService = userVersionService;
-        this.userRelationshipService = userRelationshipService;
     }
 
     public Mono<UserRelationshipGroup> createRelationshipGroup(

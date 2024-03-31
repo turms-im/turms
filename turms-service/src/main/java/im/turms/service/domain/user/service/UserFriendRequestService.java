@@ -299,7 +299,7 @@ public class UserFriendRequestService extends ExpirableEntityService<UserFriendR
     }
 
     /**
-     * @return The requester ID, recipient ID and status.
+     * @return The requester ID, recipient ID, creation date and status.
      */
     public Mono<UserFriendRequest> authAndRecallFriendRequest(
             @NotNull Long requesterId,

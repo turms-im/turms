@@ -826,8 +826,8 @@ public class GroupService {
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        Mono<UserPermissionGroup> userPermissionGroupMono =
-                userPermissionGroupService.queryUserPermissionGroupByUserId(requesterId);
+        Mono<UserPermissionGroup> userPermissionGroupMono = userPermissionGroupService
+                .queryStoredOrDefaultUserPermissionGroupByUserId(requesterId);
         return userPermissionGroupMono.flatMap(userPermissionGroup -> isAllowedToCreateGroup(
                 requesterId,
                 userPermissionGroup)
@@ -853,7 +853,8 @@ public class GroupService {
             return Mono.error(e);
         }
         Mono<UserPermissionGroup> userPermissionGroupMono = auxiliaryUserPermissionGroup == null
-                ? userPermissionGroupService.queryUserPermissionGroupByUserId(requesterId)
+                ? userPermissionGroupService
+                        .queryStoredOrDefaultUserPermissionGroupByUserId(requesterId)
                 : Mono.just(auxiliaryUserPermissionGroup);
         return userPermissionGroupMono.flatMap(userPermissionGroup -> {
             Integer ownedGroupLimit = userPermissionGroup.getOwnedGroupLimit();
@@ -900,7 +901,7 @@ public class GroupService {
                     Mono<UserPermissionGroup> groupMono = auxiliaryUserPermissionGroup != null
                             ? Mono.just(auxiliaryUserPermissionGroup)
                             : userPermissionGroupService
-                                    .queryUserPermissionGroupByUserId(requesterId);
+                                    .queryStoredOrDefaultUserPermissionGroupByUserId(requesterId);
                     return groupMono.flatMap(userPermissionGroup -> {
                         Set<Long> creatableGroupTypeIds =
                                 userPermissionGroup.getCreatableGroupTypeIds();
@@ -948,7 +949,7 @@ public class GroupService {
                     Mono<UserPermissionGroup> groupMono = auxiliaryUserPermissionGroup != null
                             ? Mono.just(auxiliaryUserPermissionGroup)
                             : userPermissionGroupService
-                                    .queryUserPermissionGroupByUserId(requesterId);
+                                    .queryStoredOrDefaultUserPermissionGroupByUserId(requesterId);
                     return groupMono.flatMap(userPermissionGroup -> {
                         Set<Long> creatableGroupTypeIds =
                                 userPermissionGroup.getCreatableGroupTypeIds();
