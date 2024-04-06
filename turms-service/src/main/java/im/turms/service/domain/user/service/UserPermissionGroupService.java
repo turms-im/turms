@@ -62,6 +62,7 @@ public class UserPermissionGroupService {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserPermissionGroupService.class);
 
     private final Map<Long, UserPermissionGroup> idToPermissionGroup = new ConcurrentHashMap<>(16);
+
     private final Node node;
     private final UserPermissionGroupRepository userPermissionGroupRepository;
     private final UserService userService;
@@ -82,13 +83,16 @@ public class UserPermissionGroupService {
                 .onErrorMap(t -> new RuntimeException(
                         "Caught an error while loading all user permission groups",
                         t))
-                .then(Mono.defer(
-                        () -> idToPermissionGroup.containsKey(DEFAULT_USER_PERMISSION_GROUP_ID)
-                                ? Mono.empty()
-                                : addDefaultUserPermissionGroup()
-                                        .onErrorMap(t -> new RuntimeException(
-                                                "Caught an error while adding the default user permission group",
-                                                t))))
+                .then(Mono.defer(() -> {
+                    UserPermissionGroup userPermissionGroup =
+                            idToPermissionGroup.get(DEFAULT_USER_PERMISSION_GROUP_ID);
+                    if (userPermissionGroup != null) {
+                        return Mono.empty();
+                    }
+                    return addDefaultUserPermissionGroup().onErrorMap(t -> new RuntimeException(
+                            "Caught an error while adding the default user permission group",
+                            t));
+                }))
                 .block(DurationConst.ONE_MINUTE);
         LOGGER.info(
                 "Loaded all user permission groups and added the default user permission group");

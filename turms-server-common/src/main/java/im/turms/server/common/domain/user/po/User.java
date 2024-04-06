@@ -19,6 +19,7 @@ package im.turms.server.common.domain.user.po;
 
 import java.util.Date;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import im.turms.server.common.access.client.dto.constant.ProfileAccessStrategy;
@@ -32,6 +33,7 @@ import im.turms.server.common.storage.mongo.entity.annotation.Sharded;
 /**
  * @author James Chen
  */
+@AllArgsConstructor
 @Data
 @Document(User.COLLECTION_NAME)
 @Sharded
@@ -46,7 +48,7 @@ public final class User extends BaseEntity {
     private final byte[] password;
 
     @Field(Fields.NAME)
-    private final String name;
+    private String name;
 
     @Field(Fields.INTRO)
     private final String intro;

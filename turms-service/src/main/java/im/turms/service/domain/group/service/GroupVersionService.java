@@ -20,7 +20,6 @@ package im.turms.service.domain.group.service;
 import java.util.Date;
 import java.util.Set;
 import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
 import com.mongodb.client.result.DeleteResult;
@@ -182,13 +181,8 @@ public class GroupVersionService {
     }
 
     public Mono<DeleteResult> delete(
-            @NotEmpty Set<Long> groupIds,
+            @Nullable Set<Long> groupIds,
             @Nullable ClientSession session) {
-        try {
-            Validator.notEmpty(groupIds, "groupIds");
-        } catch (ResponseException e) {
-            return Mono.error(e);
-        }
         return groupVersionRepository.deleteByIds(groupIds, session);
     }
 

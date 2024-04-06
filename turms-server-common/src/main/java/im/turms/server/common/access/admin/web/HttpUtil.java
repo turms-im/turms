@@ -45,6 +45,11 @@ public class HttpUtil {
                 && headers.contains(HttpHeaderNames.ACCESS_CONTROL_REQUEST_METHOD);
     }
 
+    public static boolean isSuccess(HttpResponseStatus status) {
+        int code = status.code();
+        return code >= 200 && code < 300;
+    }
+
     public static boolean isServerError(HttpResponseStatus status) {
         return status.code() >= 500;
     }

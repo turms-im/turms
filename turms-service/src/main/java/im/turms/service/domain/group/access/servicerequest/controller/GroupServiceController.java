@@ -417,7 +417,20 @@ public class GroupServiceController extends BaseServiceController {
                     : null;
             return groupService.authAndQueryGroups(request.getGroupIdsCount() > 0
                     ? CollectionUtil.newSet(request.getGroupIdsList())
-                    : Collections.emptySet(), lastUpdatedDate)
+                    : Collections.emptySet(),
+                    request.hasName()
+                            ? request.getName()
+                            : null,
+                    lastUpdatedDate,
+                    request.hasSkip()
+                            ? request.getSkip()
+                            : null,
+                    request.hasLimit()
+                            ? request.getLimit()
+                            : null,
+                    request.getFieldsToHighlightCount() > 0
+                            ? request.getFieldsToHighlightList()
+                            : null)
                     .map(groups -> {
                         List<im.turms.server.common.access.client.dto.model.group.Group> groupProtos =
                                 new ArrayList<>(groups.size());

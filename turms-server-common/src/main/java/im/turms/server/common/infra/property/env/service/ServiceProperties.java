@@ -34,6 +34,7 @@ import im.turms.server.common.infra.property.env.service.env.StatisticsPropertie
 import im.turms.server.common.infra.property.env.service.env.adminapi.AdminApiProperties;
 import im.turms.server.common.infra.property.env.service.env.clientapi.ClientApiProperties;
 import im.turms.server.common.infra.property.env.service.env.database.MongoProperties;
+import im.turms.server.common.infra.property.env.service.env.elasticsearch.TurmsElasticsearchProperties;
 import im.turms.server.common.infra.property.env.service.env.push.PushNotificationProperties;
 import im.turms.server.common.infra.property.env.service.env.redis.TurmsRedisProperties;
 
@@ -53,6 +54,9 @@ public class ServiceProperties {
 
     @NestedConfigurationProperty
     private ClientApiProperties clientApi = new ClientApiProperties();
+
+    @NestedConfigurationProperty
+    private TurmsElasticsearchProperties elasticsearch = new TurmsElasticsearchProperties();
 
     @NestedConfigurationProperty
     private FakeProperties fake = new FakeProperties();

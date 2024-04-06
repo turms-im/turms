@@ -167,12 +167,18 @@ public class GroupRepository extends BaseRepository<Group, Long> {
         return mongoClient.findMany(entityClass, filter, options);
     }
 
-    public Flux<Group> findNotDeletedGroups(Set<Long> ids, @Nullable Date lastUpdatedDate) {
+    public Flux<Group> findNotDeletedGroups(Collection<Long> ids, @Nullable Date lastUpdatedDate) {
         Filter filter = Filter.newBuilder(3)
                 .in(DomainFieldName.ID, ids)
                 .eq(Group.Fields.DELETION_DATE, null)
                 .gtIfNotNull(Group.Fields.LAST_UPDATED_DATE, lastUpdatedDate);
         return mongoClient.findMany(entityClass, filter);
+    }
+
+    public Flux<Group> findAllNames() {
+        QueryOptions options = QueryOptions.newBuilder(1)
+                .include(Group.Fields.NAME);
+        return mongoClient.findAll(entityClass, options);
     }
 
     public Mono<Long> findTypeId(Long groupId) {

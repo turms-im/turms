@@ -791,6 +791,20 @@
         }
       }
     },
+    "elasticsearch": {
+      "useCase": {
+        "group": {
+          "client": {},
+          "mongo": {},
+          "sync": {}
+        },
+        "user": {
+          "client": {},
+          "mongo": {},
+          "sync": {}
+        }
+      }
+    },
     "fake": {},
     "group": {
       "activateGroupWhenCreated": {

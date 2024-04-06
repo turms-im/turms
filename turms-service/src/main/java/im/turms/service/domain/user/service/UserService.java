@@ -17,10 +17,12 @@
 
 package im.turms.service.domain.user.service;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotEmpty;
@@ -29,6 +31,7 @@ import jakarta.validation.constraints.PastOrPresent;
 
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
+import com.mongodb.reactivestreams.client.ClientSession;
 import io.micrometer.core.instrument.Counter;
 import lombok.Getter;
 import org.springframework.context.annotation.DependsOn;
@@ -43,6 +46,7 @@ import im.turms.server.common.domain.session.bo.SessionCloseStatus;
 import im.turms.server.common.domain.user.po.User;
 import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.cluster.service.idgen.ServiceType;
+import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.collection.CollectorUtil;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.exception.ResponseExceptionPublisherPool;
@@ -70,6 +74,9 @@ import im.turms.service.domain.user.repository.UserRepository;
 import im.turms.service.domain.user.service.onlineuser.SessionService;
 import im.turms.service.infra.metrics.MetricNameConst;
 import im.turms.service.infra.validation.ValidProfileAccess;
+import im.turms.service.storage.elasticsearch.ElasticsearchManager;
+import im.turms.service.storage.elasticsearch.model.Hit;
+import im.turms.service.storage.elasticsearch.model.doc.UserDoc;
 import im.turms.service.storage.mongo.OperationResultPublisherPool;
 
 import static im.turms.server.common.domain.user.constant.UserConst.DEFAULT_USER_PERMISSION_GROUP_ID;
@@ -93,6 +100,7 @@ public class UserService {
     private final MessageService messageService;
 
     private final Node node;
+    private final ElasticsearchManager elasticsearchManager;
     private final PasswordManager passwordManager;
     private final UserRepository userRepository;
 
@@ -117,6 +125,7 @@ public class UserService {
 
     public UserService(
             Node node,
+            ElasticsearchManager elasticsearchManager,
             TurmsPropertiesManager propertiesManager,
             PasswordManager passwordManager,
             UserRepository userRepository,
@@ -129,6 +138,7 @@ public class UserService {
             @Lazy MessageService messageService,
             MetricsService metricsService) {
         this.node = node;
+        this.elasticsearchManager = elasticsearchManager;
         this.passwordManager = passwordManager;
         this.userRepository = userRepository;
 
@@ -190,10 +200,8 @@ public class UserService {
                         .getType()
                         .isUserCollectionBasedAuthEnabled();
 
-        boolean localCheckIfTargetActiveAndNotDeleted =
-                messageProperties.isCheckIfTargetActiveAndNotDeleted();
-        checkIfTargetActiveAndNotDeleted =
-                isUserCollectionBasedAuthEnabled && localCheckIfTargetActiveAndNotDeleted;
+        checkIfTargetActiveAndNotDeleted = isUserCollectionBasedAuthEnabled
+                && messageProperties.isCheckIfTargetActiveAndNotDeleted();
     }
 
     public Mono<ServicePermission> isAllowedToSendMessageToTarget(
@@ -310,20 +318,39 @@ public class UserService {
                 now,
                 isActive);
         Long finalId = id;
-        return userRepository.inTransaction(session -> userRepository.insert(user, session)
-                .then(userRelationshipGroupService
-                        .createRelationshipGroup(finalId, 0, "", now, session))
-                .then(userVersionService.upsertEmptyUserVersion(user.getId(), date, session)
-                        .onErrorResume(t -> {
-                            LOGGER.error(
-                                    "Caught an error while upserting a version for the user ({}) after creating the user",
-                                    user.getId(),
-                                    t);
-                            return Mono.empty();
-                        }))
-                .thenReturn(user))
-                .retryWhen(TRANSACTION_RETRY)
-                .doOnSuccess(ignored -> registeredUsersCounter.increment());
+        String finalName = name;
+        Boolean putEsDocInTransaction =
+                elasticsearchManager.isUserUseCaseEnabled() && !finalName.isBlank()
+                        ? elasticsearchManager.isTransactionWithMongoEnabledForUser()
+                        : null;
+        Mono<User> addUser = userRepository.inTransaction(session -> {
+            Mono<?> mono = userRepository.insert(user, session)
+                    .then(userRelationshipGroupService
+                            .createRelationshipGroup(finalId, 0, "", now, session));
+            if (Boolean.TRUE.equals(putEsDocInTransaction)) {
+                mono = mono.then(elasticsearchManager.putUserDoc(finalId, finalName));
+            }
+            return mono.then(userVersionService.upsertEmptyUserVersion(user.getId(), date, session)
+                    .onErrorResume(t -> {
+                        LOGGER.error(
+                                "Caught an error while upserting a version for the user ({}) after creating the user",
+                                user.getId(),
+                                t);
+                        return Mono.empty();
+                    }))
+                    .thenReturn(user)
+                    .retryWhen(TRANSACTION_RETRY);
+        });
+        return addUser.doOnSuccess(ignored -> {
+            registeredUsersCounter.increment();
+            if (Boolean.FALSE.equals(putEsDocInTransaction)) {
+                elasticsearchManager.putUserDoc(finalId, finalName)
+                        .subscribe(null,
+                                t -> LOGGER
+                                        .error("Caught an error while creating a doc for the user: "
+                                                + finalId, t));
+            }
+        });
     }
 
     /**
@@ -371,10 +398,21 @@ public class UserService {
 
     public Mono<List<User>> authAndQueryUsersProfile(
             @NotNull Long requesterId,
-            @NotNull Set<Long> userIds,
-            @Nullable Date lastUpdatedDate) {
+            @Nullable Set<Long> userIds,
+            @Nullable String name,
+            @Nullable Date lastUpdatedDate,
+            @Nullable Integer skip,
+            @Nullable Integer limit,
+            @Nullable List<Integer> fieldsToHighlight) {
         try {
             Validator.notNull(requesterId, "requesterId");
+        } catch (ResponseException e) {
+            return Mono.error(e);
+        }
+        if (StringUtil.isNotBlank(name)) {
+            return search(skip, limit, userIds, name, fieldsToHighlight);
+        }
+        try {
             Validator.notNull(userIds, "userIds");
         } catch (ResponseException e) {
             return Mono.error(e);
@@ -432,17 +470,20 @@ public class UserService {
         if (deleteLogically) {
             deleteOrUpdateMono = userRepository.updateUsersDeletionDate(userIds)
                     .map(OperationResultConvertor::update2delete);
+            // For logical deletion, we don't need to update the user doc in Elasticsearch.
         } else {
+            Boolean deleteEsDocInTransaction = elasticsearchManager.isUserUseCaseEnabled()
+                    ? elasticsearchManager.isTransactionWithMongoEnabledForUser()
+                    : null;
             deleteOrUpdateMono = userRepository
                     .inTransaction(session -> userRepository.deleteByIds(userIds, session)
                             .flatMap(result -> {
-                                long count = result.getDeletedCount();
-                                if (count > 0) {
-                                    deletedUsersCounter.increment(count);
-                                }
                                 // TODO: Remove data on Redis
-                                return userRelationshipService
-                                        .deleteAllRelationships(userIds, session, false)
+                                return (Boolean.TRUE.equals(deleteEsDocInTransaction)
+                                        ? elasticsearchManager.deleteUserDocs(userIds)
+                                        : Mono.empty())
+                                        .then(userRelationshipService
+                                                .deleteAllRelationships(userIds, session, false))
                                         .then(userRelationshipGroupService
                                                 .deleteAllRelationshipGroups(userIds,
                                                         session,
@@ -466,7 +507,22 @@ public class UserService {
                                                         t)))
                                         .thenReturn(result);
                             }))
-                    .retryWhen(TRANSACTION_RETRY);
+                    .retryWhen(TRANSACTION_RETRY)
+                    .doOnSuccess(result -> {
+                        long count = result.getDeletedCount();
+                        if (count > 0) {
+                            deletedUsersCounter.increment(count);
+                        }
+                    });
+            if (Boolean.FALSE.equals(deleteEsDocInTransaction)) {
+                deleteOrUpdateMono = deleteOrUpdateMono.doOnSuccess(result -> elasticsearchManager
+                        .deleteUserDocs(userIds)
+                        .subscribe(null,
+                                t -> LOGGER.error(
+                                        "Caught an error while deleting the docs of the users: "
+                                                + userIds,
+                                        t)));
+            }
         }
         return deleteOrUpdateMono.doOnNext(ignored -> sessionService
                 .disconnect(userIds, SessionCloseStatus.USER_IS_DELETED_OR_INACTIVATED)
@@ -592,6 +648,74 @@ public class UserService {
         byte[] password = rawPassword == null
                 ? null
                 : passwordManager.encodeUserPassword(rawPassword);
+
+        if (name == null || !elasticsearchManager.isUserUseCaseEnabled()) {
+            return updateUsers(userIds,
+                    name,
+                    intro,
+                    profilePicture,
+                    profileAccessStrategy,
+                    permissionGroupId,
+                    registrationDate,
+                    isActive,
+                    password,
+                    null);
+        }
+        if (elasticsearchManager.isTransactionWithMongoEnabledForUser()) {
+            return userRepository.inTransaction(session -> updateUsers(userIds,
+                    name,
+                    intro,
+                    profilePicture,
+                    profileAccessStrategy,
+                    permissionGroupId,
+                    registrationDate,
+                    isActive,
+                    password,
+                    session).flatMap(
+                            updateResult -> (name.isBlank()
+                                    ? elasticsearchManager.deleteUserDocs(userIds)
+                                    : elasticsearchManager.putUserDocs(userIds, name))
+                                    .thenReturn(updateResult)));
+        }
+        return updateUsers(userIds,
+                name,
+                intro,
+                profilePicture,
+                profileAccessStrategy,
+                permissionGroupId,
+                registrationDate,
+                isActive,
+                password,
+                null).doOnSuccess(ignored -> {
+                    if (name.isBlank()) {
+                        elasticsearchManager.deleteUserDocs(userIds)
+                                .subscribe(null,
+                                        t -> LOGGER.error(
+                                                "Caught an error while deleting the docs of the users {}",
+                                                userIds,
+                                                t));
+                    } else {
+                        elasticsearchManager.putUserDocs(userIds, name)
+                                .subscribe(null,
+                                        t -> LOGGER.error(
+                                                "Caught an error while updating the docs of the users {}",
+                                                userIds,
+                                                t));
+                    }
+                });
+    }
+
+    private Mono<UpdateResult> updateUsers(
+            Set<Long> userIds,
+            @Nullable String name,
+            @Nullable String intro,
+            @Nullable String profilePicture,
+            @Nullable ProfileAccessStrategy profileAccessStrategy,
+            @Nullable Long permissionGroupId,
+            @Nullable Date registrationDate,
+            @Nullable Boolean isActive,
+            byte[] password,
+            @Nullable ClientSession session) {
         return userRepository
                 .updateUsers(userIds,
                         password,
@@ -601,7 +725,8 @@ public class UserService {
                         profileAccessStrategy,
                         permissionGroupId,
                         registrationDate,
-                        isActive)
+                        isActive,
+                        session)
                 .flatMap(result -> Boolean.FALSE.equals(isActive) && result.getModifiedCount() > 0
                         ? sessionService
                                 .disconnect(userIds,
@@ -615,6 +740,74 @@ public class UserService {
                                 })
                                 .thenReturn(result)
                         : Mono.just(result));
+    }
+
+    // TODO: support PIT to ensure the result view is consistent within a specified time.
+    private Mono<List<User>> search(
+            @Nullable Integer skip,
+            @Nullable Integer limit,
+            @Nullable Set<Long> userIds,
+            @NotNull String name,
+            @Nullable List<Integer> fieldsToHighlight) {
+        if (!elasticsearchManager.isUserUseCaseEnabled()) {
+            return Mono.error(ResponseException.get(ResponseStatusCode.SEARCHING_USER_IS_DISABLED));
+        }
+        boolean highlight = CollectionUtil.isNotEmpty(fieldsToHighlight);
+        return elasticsearchManager
+                .searchUserDocs(skip, limit, name, userIds, highlight, null, null)
+                .flatMap(response -> {
+                    List<Hit<UserDoc>> hits = response.hits()
+                            .hits();
+                    int count = hits.size();
+                    if (count == 0) {
+                        return PublisherPool.emptyList();
+                    }
+                    if (highlight) {
+                        Map<Long, String> userIdToHighlightedName =
+                                CollectionUtil.newMapWithExpectedSize(count);
+                        List<Long> ids = new ArrayList<>(count);
+                        for (Hit<UserDoc> hit : hits) {
+                            Long id = Long.parseLong(hit.id());
+                            Collection<List<String>> highlightValues = hit.highlight()
+                                    .values();
+                            if (!highlightValues.isEmpty()) {
+                                List<String> values = highlightValues.iterator()
+                                        .next();
+                                if (!values.isEmpty()) {
+                                    userIdToHighlightedName.put(id, values.getFirst());
+                                }
+                            }
+                            ids.add(id);
+                        }
+                        Mono<List<User>> mono = userRepository.findNotDeletedUserProfiles(ids, null)
+                                .collect(CollectorUtil.toList(count));
+                        return mono.map(users -> {
+                            if (users.isEmpty()) {
+                                return Collections.emptyList();
+                            }
+                            Map<Long, User> userIdToUser =
+                                    CollectionUtil.newMapWithExpectedSize(users.size());
+                            for (User user : users) {
+                                userIdToUser.put(user.getId(), user);
+                            }
+                            for (Map.Entry<Long, String> entry : userIdToHighlightedName
+                                    .entrySet()) {
+                                User user = userIdToUser.get(entry.getKey());
+                                if (user != null) {
+                                    user.setName(entry.getValue());
+                                }
+                            }
+                            return users;
+                        });
+                    } else {
+                        List<Long> ids = new ArrayList<>(count);
+                        for (Hit<UserDoc> hit : hits) {
+                            ids.add(Long.parseLong(hit.id()));
+                        }
+                        return userRepository.findNotDeletedUserProfiles(ids, null)
+                                .collect(CollectorUtil.toList(count));
+                    }
+                });
     }
 
 }

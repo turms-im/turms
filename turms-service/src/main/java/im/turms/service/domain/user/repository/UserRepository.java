@@ -23,6 +23,7 @@ import java.util.Set;
 import jakarta.annotation.Nullable;
 
 import com.mongodb.client.result.UpdateResult;
+import com.mongodb.reactivestreams.client.ClientSession;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
@@ -57,7 +58,8 @@ public class UserRepository extends BaseRepository<User, Long> {
             @Nullable ProfileAccessStrategy profileAccessStrategy,
             @Nullable Long permissionGroupId,
             @Nullable Date registrationDate,
-            @Nullable Boolean isActive) {
+            @Nullable Boolean isActive,
+            @Nullable ClientSession session) {
         Filter filter = Filter.newBuilder(1)
                 .in(DomainFieldName.ID, userIds);
         Update update = Update.newBuilder(9)
@@ -70,7 +72,7 @@ public class UserRepository extends BaseRepository<User, Long> {
                 .setIfNotNull(User.Fields.REGISTRATION_DATE, registrationDate)
                 .setIfNotNull(User.Fields.IS_ACTIVE, isActive)
                 .setIfNotNull(User.Fields.LAST_UPDATED_DATE, new Date());
-        return mongoClient.updateMany(entityClass, filter, update);
+        return mongoClient.updateMany(session, entityClass, filter, update);
     }
 
     public Mono<UpdateResult> updateUsersDeletionDate(Set<Long> userIds) {
@@ -131,6 +133,12 @@ public class UserRepository extends BaseRepository<User, Long> {
                 .include(User.Fields.NAME);
         return mongoClient.findOne(entityClass, filter, options)
                 .map(User::getName);
+    }
+
+    public Flux<User> findAllNames() {
+        QueryOptions options = QueryOptions.newBuilder(1)
+                .include(User.Fields.NAME);
+        return mongoClient.findAll(entityClass, options);
     }
 
     public Mono<ProfileAccessStrategy> findProfileAccessIfNotDeleted(Long userId) {

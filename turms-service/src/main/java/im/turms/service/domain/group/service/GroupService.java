@@ -19,9 +19,11 @@ package im.turms.service.domain.group.service;
 
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import jakarta.annotation.Nullable;
@@ -81,6 +83,9 @@ import im.turms.service.domain.user.po.UserPermissionGroup;
 import im.turms.service.domain.user.service.UserPermissionGroupService;
 import im.turms.service.domain.user.service.UserVersionService;
 import im.turms.service.infra.proto.ProtoModelConvertor;
+import im.turms.service.storage.elasticsearch.ElasticsearchManager;
+import im.turms.service.storage.elasticsearch.model.Hit;
+import im.turms.service.storage.elasticsearch.model.doc.GroupDoc;
 import im.turms.service.storage.mongo.OperationResultPublisherPool;
 
 import static im.turms.server.common.domain.group.constant.GroupConst.DEFAULT_GROUP_TYPE_ID;
@@ -98,6 +103,7 @@ public class GroupService {
     private static final Logger LOGGER = LoggerFactory.getLogger(GroupService.class);
 
     private final Node node;
+    private final ElasticsearchManager elasticsearchManager;
     private final GroupRepository groupRepository;
     private final GroupTypeService groupTypeService;
     private final GroupMemberService groupMemberService;
@@ -121,6 +127,7 @@ public class GroupService {
      */
     public GroupService(
             Node node,
+            ElasticsearchManager elasticsearchManager,
             TurmsPropertiesManager propertiesManager,
             GroupRepository groupRepository,
             GroupMemberService groupMemberService,
@@ -132,6 +139,7 @@ public class GroupService {
             @Lazy MessageService messageService,
             MetricsService metricsService) {
         this.node = node;
+        this.elasticsearchManager = elasticsearchManager;
         this.groupRepository = groupRepository;
         this.groupTypeService = groupTypeService;
         this.groupMemberService = groupMemberService;
@@ -208,22 +216,42 @@ public class GroupService {
                 now,
                 muteEndDate,
                 isActive);
-        return groupRepository.inTransaction(session -> groupRepository.insert(group, session)
-                .then(groupMemberService.addGroupMember(group
-                        .getId(), creatorId, GroupMemberRole.OWNER, null, now, null, session))
-                .then(Mono.defer(() -> {
-                    createdGroupsCounter.increment();
-                    return groupVersionService.upsert(groupId, now)
-                            .onErrorResume(t -> {
-                                LOGGER.error(
-                                        "Caught an error while upserting a version for the group ({}) after creating the group",
-                                        groupId,
-                                        t);
-                                return Mono.empty();
-                            });
-                }))
-                .thenReturn(group))
+
+        Boolean putEsDocInTransaction =
+                elasticsearchManager.isGroupUseCaseEnabled() && StringUtil.isNotBlank(groupName)
+                        ? elasticsearchManager.isTransactionWithMongoEnabledForGroup()
+                        : null;
+
+        Mono<Group> addGroup = groupRepository.inTransaction(session -> {
+            Mono<Void> mono = groupRepository.insert(group, session);
+            if (Boolean.TRUE.equals(putEsDocInTransaction)) {
+                mono = mono.then(elasticsearchManager.putGroupDoc(groupId, groupName));
+            }
+            return mono
+                    .then(groupMemberService.addGroupMember(group
+                            .getId(), creatorId, GroupMemberRole.OWNER, null, now, null, session))
+                    .then(Mono.defer(() -> {
+                        createdGroupsCounter.increment();
+                        return groupVersionService.upsert(groupId, now)
+                                .onErrorResume(t -> {
+                                    LOGGER.error(
+                                            "Caught an error while upserting a version for the group ({}) after creating the group",
+                                            groupId,
+                                            t);
+                                    return Mono.empty();
+                                });
+                    }))
+                    .thenReturn(group);
+        })
                 .retryWhen(TRANSACTION_RETRY);
+        if (Boolean.FALSE.equals(putEsDocInTransaction)) {
+            addGroup = addGroup.doOnSuccess(ignored -> elasticsearchManager
+                    .putGroupDoc(groupId, groupName)
+                    .subscribe(null,
+                            t -> LOGGER.error("Caught an error while putting the doc of the group: "
+                                    + groupId, t)));
+        }
+        return addGroup;
     }
 
     /**
@@ -302,11 +330,21 @@ public class GroupService {
             deleteLogically = deleteGroupLogicallyByDefault;
         }
         boolean finalShouldDeleteLogically = deleteLogically;
-        return groupRepository.inTransaction(session -> {
-            Mono<DeleteResult> updateOrDeleteMono = finalShouldDeleteLogically
-                    ? groupRepository.updateGroupsDeletionDate(groupIds, session)
-                            .map(OperationResultConvertor::update2delete)
-                    : groupRepository.deleteByIds(groupIds, session);
+        Mono<DeleteResult> delete = groupRepository.inTransaction(session -> {
+            Mono<DeleteResult> updateOrDeleteMono;
+            if (finalShouldDeleteLogically) {
+                updateOrDeleteMono = groupRepository.updateGroupsDeletionDate(groupIds, session)
+                        .map(OperationResultConvertor::update2delete);
+                // For logical deletion, we don't need to update the group doc in Elasticsearch.
+            } else {
+                updateOrDeleteMono = groupRepository.deleteByIds(groupIds, session);
+                if (elasticsearchManager.isGroupUseCaseEnabled()
+                        && elasticsearchManager.isTransactionWithMongoEnabledForGroup()) {
+                    updateOrDeleteMono = updateOrDeleteMono.flatMap(result -> (groupIds == null
+                            ? elasticsearchManager.deleteAllGroupDocs()
+                            : elasticsearchManager.deleteGroupDocs(groupIds)).thenReturn(result));
+                }
+            }
             return updateOrDeleteMono.flatMap(result -> {
                 long count = result.getDeletedCount();
                 if (count > 0) {
@@ -326,6 +364,15 @@ public class GroupService {
             });
         })
                 .retryWhen(TRANSACTION_RETRY);
+        if (elasticsearchManager.isGroupUseCaseEnabled()
+                && !elasticsearchManager.isTransactionWithMongoEnabledForGroup()) {
+            delete = delete.doOnSuccess(result -> (groupIds == null
+                    ? elasticsearchManager.deleteAllGroupDocs()
+                    : elasticsearchManager.deleteGroupDocs(groupIds)).subscribe(null,
+                            t -> LOGGER.error("Failed to delete the docs of the groups: "
+                                    + groupIds, t)));
+        }
+        return delete;
     }
 
     public Flux<Group> queryGroups(
@@ -621,20 +668,85 @@ public class GroupService {
                 muteEndDate)) {
             return OperationResultPublisherPool.ACKNOWLEDGED_UPDATE_RESULT;
         }
-        return groupRepository.updateGroups(groupIds,
-                typeId,
-                creatorId,
-                ownerId,
-                name,
-                intro,
-                announcement,
-                minimumScore,
-                isActive,
-                creationDate,
-                deletionDate,
-                muteEndDate,
-                new Date(),
-                session);
+        if (!elasticsearchManager.isGroupUseCaseEnabled() || name == null) {
+            return groupRepository.updateGroups(groupIds,
+                    typeId,
+                    creatorId,
+                    ownerId,
+                    name,
+                    intro,
+                    announcement,
+                    minimumScore,
+                    isActive,
+                    creationDate,
+                    deletionDate,
+                    muteEndDate,
+                    new Date(),
+                    session);
+        }
+        if (elasticsearchManager.isTransactionWithMongoEnabledForGroup()) {
+            if (session == null) {
+                return groupRepository.inTransaction(clientSession -> groupRepository
+                        .updateGroups(groupIds,
+                                typeId,
+                                creatorId,
+                                ownerId,
+                                name,
+                                intro,
+                                announcement,
+                                minimumScore,
+                                isActive,
+                                creationDate,
+                                deletionDate,
+                                muteEndDate,
+                                new Date(),
+                                clientSession)
+                        .flatMap(updateResult -> (StringUtil.isBlank(name)
+                                ? elasticsearchManager.deleteGroupDocs(groupIds)
+                                : elasticsearchManager.putGroupDocs(groupIds, name))
+                                .thenReturn(updateResult)));
+            } else {
+                return groupRepository
+                        .updateGroups(groupIds,
+                                typeId,
+                                creatorId,
+                                ownerId,
+                                name,
+                                intro,
+                                announcement,
+                                minimumScore,
+                                isActive,
+                                creationDate,
+                                deletionDate,
+                                muteEndDate,
+                                new Date(),
+                                session)
+                        .flatMap(updateResult -> (StringUtil.isBlank(name)
+                                ? elasticsearchManager.deleteGroupDocs(groupIds)
+                                : elasticsearchManager.putGroupDocs(groupIds, name))
+                                .thenReturn(updateResult));
+            }
+        }
+        return groupRepository
+                .updateGroups(groupIds,
+                        typeId,
+                        creatorId,
+                        ownerId,
+                        name,
+                        intro,
+                        announcement,
+                        minimumScore,
+                        isActive,
+                        creationDate,
+                        deletionDate,
+                        muteEndDate,
+                        new Date(),
+                        session)
+                .doOnSuccess(updateResult -> (StringUtil.isBlank(name)
+                        ? elasticsearchManager.deleteGroupDocs(groupIds)
+                        : elasticsearchManager.putGroupDocs(groupIds, name)).subscribe(null,
+                                t -> LOGGER.error("Failed to update the docs of the groups: "
+                                        + groupIds, t)));
     }
 
     public Mono<Void> authAndUpdateGroupInformation(
@@ -739,8 +851,15 @@ public class GroupService {
     }
 
     public Mono<List<Group>> authAndQueryGroups(
-            @NotNull Set<Long> groupIds,
-            @Nullable Date lastUpdatedDate) {
+            @Nullable Set<Long> groupIds,
+            @Nullable String name,
+            @Nullable Date lastUpdatedDate,
+            @Nullable Integer skip,
+            @Nullable Integer limit,
+            @Nullable List<Integer> fieldsToHighlight) {
+        if (StringUtil.isNotBlank(name)) {
+            return search(skip, limit, groupIds, name, fieldsToHighlight);
+        }
         try {
             Validator.notNull(groupIds, "groupIds");
         } catch (ResponseException e) {
@@ -1069,6 +1188,74 @@ public class GroupService {
                 : joinedGroupIdListMono
                         .map(groupIdList -> CollectionUtil.newSet(groupIdList, groupIds)))
                 .doFinally(signalType -> recyclableList.recycle());
+    }
+
+    private Mono<List<Group>> search(
+            @Nullable Integer skip,
+            @Nullable Integer limit,
+            @Nullable Set<Long> groupIds,
+            @NotNull String name,
+            @Nullable List<Integer> fieldsToHighlight) {
+        if (!elasticsearchManager.isGroupUseCaseEnabled()) {
+            return Mono
+                    .error(ResponseException.get(ResponseStatusCode.SEARCHING_GROUP_IS_DISABLED));
+        }
+        boolean highlight = CollectionUtil.isNotEmpty(fieldsToHighlight);
+        return elasticsearchManager
+                .searchGroupDocs(skip, limit, name, groupIds, highlight, null, null)
+                .flatMap(response -> {
+                    List<Hit<GroupDoc>> hits = response.hits()
+                            .hits();
+                    int count = hits.size();
+                    if (count == 0) {
+                        return PublisherPool.emptyList();
+                    }
+                    if (highlight) {
+                        Map<Long, String> groupIdToHighlightedName =
+                                CollectionUtil.newMapWithExpectedSize(count);
+                        List<Long> ids = new ArrayList<>(count);
+                        for (Hit<GroupDoc> hit : hits) {
+                            Long id = Long.parseLong(hit.id());
+                            Collection<List<String>> highlightValues = hit.highlight()
+                                    .values();
+                            if (!highlightValues.isEmpty()) {
+                                List<String> values = highlightValues.iterator()
+                                        .next();
+                                if (!values.isEmpty()) {
+                                    groupIdToHighlightedName.put(id, values.getFirst());
+                                }
+                            }
+                            ids.add(id);
+                        }
+                        Mono<List<Group>> mono = groupRepository.findNotDeletedGroups(ids, null)
+                                .collect(CollectorUtil.toList(count));
+                        return mono.map(groups -> {
+                            if (groups.isEmpty()) {
+                                return Collections.emptyList();
+                            }
+                            Map<Long, Group> groupIdToGroup =
+                                    CollectionUtil.newMapWithExpectedSize(groups.size());
+                            for (Group group : groups) {
+                                groupIdToGroup.put(group.getId(), group);
+                            }
+                            for (Map.Entry<Long, String> entry : groupIdToHighlightedName
+                                    .entrySet()) {
+                                Group group = groupIdToGroup.get(entry.getKey());
+                                if (group != null) {
+                                    group.setName(entry.getValue());
+                                }
+                            }
+                            return groups;
+                        });
+                    } else {
+                        List<Long> ids = new ArrayList<>(count);
+                        for (Hit<GroupDoc> hit : hits) {
+                            ids.add(Long.parseLong(hit.id()));
+                        }
+                        return groupRepository.findNotDeletedGroups(ids, null)
+                                .collect(CollectorUtil.toList(count));
+                    }
+                });
     }
 
 }

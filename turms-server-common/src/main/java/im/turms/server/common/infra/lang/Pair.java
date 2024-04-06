@@ -17,15 +17,17 @@
 
 package im.turms.server.common.infra.lang;
 
+import jakarta.annotation.Nullable;
+
 /**
  * @author James Chen
  */
 public record Pair<T1, T2>(
-        T1 first,
-        T2 second
+        @Nullable T1 first,
+        @Nullable T2 second
 ) {
 
-    public static <T1, T2> Pair<T1, T2> of(T1 first, T2 second) {
+    public static <T1, T2> Pair<T1, T2> of(@Nullable T1 first, @Nullable T2 second) {
         return new Pair<>(first, second);
     }
 

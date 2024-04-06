@@ -156,8 +156,20 @@ public class UserServiceController extends BaseServiceController {
             return userService
                     .authAndQueryUsersProfile(clientRequest.userId(),
                             CollectionUtil.toSet(request.getUserIdsList()),
+                            request.hasName()
+                                    ? request.getName()
+                                    : null,
                             request.hasLastUpdatedDate()
                                     ? new Date(request.getLastUpdatedDate())
+                                    : null,
+                            request.hasSkip()
+                                    ? request.getSkip()
+                                    : null,
+                            request.hasLimit()
+                                    ? request.getLimit()
+                                    : null,
+                            request.getFieldsToHighlightCount() > 0
+                                    ? request.getFieldsToHighlightList()
                                     : null)
                     .map(users -> {
                         UserInfosWithVersion.Builder userInfosWithVersionBuilder =

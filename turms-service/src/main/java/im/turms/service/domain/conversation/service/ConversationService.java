@@ -351,16 +351,8 @@ public class ConversationService {
     }
 
     public Mono<DeleteResult> deleteGroupConversations(
-            @NotNull Set<Long> groupIds,
+            @Nullable Set<Long> groupIds,
             @Nullable ClientSession session) {
-        try {
-            Validator.notNull(groupIds, "groupIds");
-        } catch (ResponseException e) {
-            return Mono.error(e);
-        }
-        if (groupIds.isEmpty()) {
-            return OperationResultPublisherPool.ACKNOWLEDGED_DELETE_RESULT;
-        }
         return groupConversationRepository.deleteByIds(groupIds, session);
     }
 

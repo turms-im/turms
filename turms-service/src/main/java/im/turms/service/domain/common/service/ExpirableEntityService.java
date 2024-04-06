@@ -41,6 +41,7 @@ public abstract class ExpirableEntityService<T extends Expirable> {
         return expirableEntityRepository.getEntityExpirationDate();
     }
 
+    @Nullable
     protected Date getResponseDateBasedOnStatusForNewRecord(
             Date now,
             @Nullable RequestStatus status,

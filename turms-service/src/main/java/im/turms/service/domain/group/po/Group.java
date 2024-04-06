@@ -19,6 +19,7 @@ package im.turms.service.domain.group.po;
 
 import java.util.Date;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import im.turms.server.common.domain.common.po.BaseEntity;
@@ -36,6 +37,7 @@ import static im.turms.server.common.storage.mongo.entity.annotation.IndexedReas
 /**
  * @author James Chen
  */
+@AllArgsConstructor
 @Data
 @Document(Group.COLLECTION_NAME)
 @Sharded
@@ -62,7 +64,7 @@ public final class Group extends BaseEntity {
     private final Long ownerId;
 
     @Field(Fields.NAME)
-    private final String name;
+    private String name;
 
     @Field(Fields.INTRO)
     private final String intro;

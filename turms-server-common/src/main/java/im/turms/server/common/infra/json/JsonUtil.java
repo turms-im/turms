@@ -38,7 +38,6 @@ import org.jctools.maps.NonBlockingIdentityHashMap;
 import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
-import im.turms.server.common.infra.netty.ReferenceCountUtil;
 import im.turms.server.common.infra.time.DateUtil;
 
 /**
@@ -106,12 +105,16 @@ public final class JsonUtil {
 
     public static ByteBuf write(Object value) {
         int estimatedSize = estimateSize(value);
-        ByteBuf buffer = PooledByteBufAllocator.DEFAULT.directBuffer(estimatedSize);
+        return write(estimatedSize, value);
+    }
+
+    public static ByteBuf write(int size, Object value) {
+        ByteBuf buffer = PooledByteBufAllocator.DEFAULT.directBuffer(size);
         try (OutputStream bufferOutputStream = new ByteBufOutputStream(buffer)) {
             MAPPER.writeValue(bufferOutputStream, value);
             return buffer;
         } catch (Exception e) {
-            ReferenceCountUtil.ensureReleased(buffer);
+            buffer.release();
             throw new IllegalArgumentException(
                     "Failed to write the input object as a byte buffer",
                     e);

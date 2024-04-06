@@ -394,7 +394,11 @@ public enum ResponseStatusCode {
     NOT_FRIEND_TO_QUERY_MESSAGE_ATTACHMENT_INFO_IN_PRIVATE_CONVERSATION(6130,
             "Only friends can query message attachments in private conversations", 403),
     NOT_GROUP_MEMBER_TO_QUERY_MESSAGE_ATTACHMENT_INFO_IN_GROUP_CONVERSATION(6131,
-            "Only group members can query message attachments in group conversations", 403);
+            "Only group members can query message attachments in group conversations", 403),
+
+    // Search
+    SEARCHING_USER_IS_DISABLED(7100, "Searching users is disabled", 510),
+    SEARCHING_GROUP_IS_DISABLED(7200, "Searching groups is disabled", 510);
 
     public static final int STATUS_CODE_LENGTH = 4;
     public static final ResponseStatusCode[] VALUES = values();

@@ -24,6 +24,7 @@ import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
 
 import org.bson.BsonDocument;
+import org.bson.BsonString;
 
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.storage.mongo.BsonPool;
@@ -51,6 +52,10 @@ public final class Update extends BaseBson {
 
     public Update set(String field, Object value) {
         return appendSet(field, value);
+    }
+
+    public Update setEnumString(@NotNull String field, @NotNull Enum<?> value) {
+        return appendSetForEnumString(field, value);
     }
 
     public Update setIfNotNull(@NotNull String field, @Nullable Object value) {
@@ -103,6 +108,15 @@ public final class Update extends BaseBson {
             document.append("$set", set);
         }
         set.put(key, BsonValueEncoder.encodeValue(value));
+        return this;
+    }
+
+    private Update appendSetForEnumString(String key, Enum<?> value) {
+        if (set == null) {
+            set = new BsonDocument();
+            document.append("$set", set);
+        }
+        set.put(key, new BsonString(value.name()));
         return this;
     }
 

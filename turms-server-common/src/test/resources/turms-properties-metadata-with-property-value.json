@@ -3294,6 +3294,215 @@
         }
       }
     },
+    "elasticsearch": {
+      "enabled": {
+        "deprecated": false,
+        "description": "Whether to enable Elasticsearch",
+        "global": false,
+        "mutable": false,
+        "sensitive": false,
+        "type": "boolean",
+        "value": false
+      },
+      "useCase": {
+        "group": {
+          "client": {
+            "password": {
+              "deprecated": false,
+              "description": "Elasticsearch password",
+              "global": false,
+              "mutable": false,
+              "sensitive": false,
+              "type": "string",
+              "value": ""
+            },
+            "requestHeaders": {
+              "deprecated": false,
+              "description": "Elasticsearch HTTP request headers",
+              "elementType": "im.turms.server.common.infra.property.env.service.env.elasticsearch.HttpHeaderProperties",
+              "global": false,
+              "mutable": false,
+              "sensitive": false,
+              "type": "java.util.List",
+              "value": []
+            },
+            "uri": {
+              "deprecated": false,
+              "description": "Elasticsearch URI",
+              "global": false,
+              "mutable": false,
+              "sensitive": false,
+              "type": "string",
+              "value": "http://localhost:9200"
+            },
+            "username": {
+              "deprecated": false,
+              "description": "Elasticsearch username",
+              "global": false,
+              "mutable": false,
+              "sensitive": false,
+              "type": "string",
+              "value": "elastic"
+            }
+          },
+          "enabled": {
+            "deprecated": false,
+            "description": "Whether to enable this use case",
+            "global": false,
+            "mutable": false,
+            "sensitive": false,
+            "type": "boolean",
+            "value": true
+          },
+          "indexes": {
+            "deprecated": false,
+            "elementType": "im.turms.server.common.infra.property.env.service.env.elasticsearch.ElasticsearchIndexProperties",
+            "global": false,
+            "mutable": false,
+            "sensitive": false,
+            "type": "java.util.List",
+            "value": [
+              {
+                "code": "NONE",
+                "numberOfReplicas": -1,
+                "numberOfShards": -1,
+                "properties": {
+                  "name": {
+                    "textFields": [
+                      {
+                        "analyzer": "",
+                        "fieldName": "",
+                        "searchAnalyzer": ""
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "mongo": {
+            "enableTransaction": {
+              "deprecated": false,
+              "description": "Whether to enable transaction for MongoDB. If enabled, MongoDB will use transactions when upserting data into both MongoDB and Elasticsearch, and will roll back data if an error occurs, no matter they are MongoDB or Elasticsearch errors",
+              "global": false,
+              "mutable": false,
+              "sensitive": false,
+              "type": "boolean",
+              "value": false
+            }
+          },
+          "sync": {
+            "performFullSyncAtStartup": {
+              "deprecated": false,
+              "description": "Whether to sync existing data from MongoDB to Elasticsearch. If true and the current node is the leader, turms will run a full sync at startup if the data has not been synced yet",
+              "global": false,
+              "mutable": false,
+              "sensitive": false,
+              "type": "boolean",
+              "value": true
+            }
+          }
+        },
+        "user": {
+          "client": {
+            "password": {
+              "deprecated": false,
+              "description": "Elasticsearch password",
+              "global": false,
+              "mutable": false,
+              "sensitive": false,
+              "type": "string",
+              "value": ""
+            },
+            "requestHeaders": {
+              "deprecated": false,
+              "description": "Elasticsearch HTTP request headers",
+              "elementType": "im.turms.server.common.infra.property.env.service.env.elasticsearch.HttpHeaderProperties",
+              "global": false,
+              "mutable": false,
+              "sensitive": false,
+              "type": "java.util.List",
+              "value": []
+            },
+            "uri": {
+              "deprecated": false,
+              "description": "Elasticsearch URI",
+              "global": false,
+              "mutable": false,
+              "sensitive": false,
+              "type": "string",
+              "value": "http://localhost:9200"
+            },
+            "username": {
+              "deprecated": false,
+              "description": "Elasticsearch username",
+              "global": false,
+              "mutable": false,
+              "sensitive": false,
+              "type": "string",
+              "value": "elastic"
+            }
+          },
+          "enabled": {
+            "deprecated": false,
+            "description": "Whether to enable this use case",
+            "global": false,
+            "mutable": false,
+            "sensitive": false,
+            "type": "boolean",
+            "value": true
+          },
+          "indexes": {
+            "deprecated": false,
+            "elementType": "im.turms.server.common.infra.property.env.service.env.elasticsearch.ElasticsearchIndexProperties",
+            "global": false,
+            "mutable": false,
+            "sensitive": false,
+            "type": "java.util.List",
+            "value": [
+              {
+                "code": "NONE",
+                "numberOfReplicas": -1,
+                "numberOfShards": -1,
+                "properties": {
+                  "name": {
+                    "textFields": [
+                      {
+                        "analyzer": "",
+                        "fieldName": "",
+                        "searchAnalyzer": ""
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "mongo": {
+            "enableTransaction": {
+              "deprecated": false,
+              "description": "Whether to enable transaction for MongoDB. If enabled, MongoDB will use transactions when upserting data into both MongoDB and Elasticsearch, and will roll back data if an error occurs, no matter they are MongoDB or Elasticsearch errors",
+              "global": false,
+              "mutable": false,
+              "sensitive": false,
+              "type": "boolean",
+              "value": false
+            }
+          },
+          "sync": {
+            "performFullSyncAtStartup": {
+              "deprecated": false,
+              "description": "Whether to sync existing data from MongoDB to Elasticsearch. If true and the current node is the leader, turms will run a full sync at startup if the data has not been synced yet",
+              "global": false,
+              "mutable": false,
+              "sensitive": false,
+              "type": "boolean",
+              "value": true
+            }
+          }
+        }
+      }
+    },
     "fake": {
       "clearAllCollectionsBeforeFaking": {
         "deprecated": false,

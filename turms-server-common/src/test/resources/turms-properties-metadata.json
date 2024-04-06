@@ -2885,6 +2885,164 @@
         }
       }
     },
+    "elasticsearch": {
+      "enabled": {
+        "deprecated": false,
+        "description": "Whether to enable Elasticsearch",
+        "global": false,
+        "mutable": false,
+        "sensitive": false,
+        "type": "boolean"
+      },
+      "useCase": {
+        "group": {
+          "client": {
+            "password": {
+              "deprecated": false,
+              "description": "Elasticsearch password",
+              "global": false,
+              "mutable": false,
+              "sensitive": false,
+              "type": "string"
+            },
+            "requestHeaders": {
+              "deprecated": false,
+              "description": "Elasticsearch HTTP request headers",
+              "elementType": "im.turms.server.common.infra.property.env.service.env.elasticsearch.HttpHeaderProperties",
+              "global": false,
+              "mutable": false,
+              "sensitive": false,
+              "type": "java.util.List"
+            },
+            "uri": {
+              "deprecated": false,
+              "description": "Elasticsearch URI",
+              "global": false,
+              "mutable": false,
+              "sensitive": false,
+              "type": "string"
+            },
+            "username": {
+              "deprecated": false,
+              "description": "Elasticsearch username",
+              "global": false,
+              "mutable": false,
+              "sensitive": false,
+              "type": "string"
+            }
+          },
+          "enabled": {
+            "deprecated": false,
+            "description": "Whether to enable this use case",
+            "global": false,
+            "mutable": false,
+            "sensitive": false,
+            "type": "boolean"
+          },
+          "indexes": {
+            "deprecated": false,
+            "elementType": "im.turms.server.common.infra.property.env.service.env.elasticsearch.ElasticsearchIndexProperties",
+            "global": false,
+            "mutable": false,
+            "sensitive": false,
+            "type": "java.util.List"
+          },
+          "mongo": {
+            "enableTransaction": {
+              "deprecated": false,
+              "description": "Whether to enable transaction for MongoDB. If enabled, MongoDB will use transactions when upserting data into both MongoDB and Elasticsearch, and will roll back data if an error occurs, no matter they are MongoDB or Elasticsearch errors",
+              "global": false,
+              "mutable": false,
+              "sensitive": false,
+              "type": "boolean"
+            }
+          },
+          "sync": {
+            "performFullSyncAtStartup": {
+              "deprecated": false,
+              "description": "Whether to sync existing data from MongoDB to Elasticsearch. If true and the current node is the leader, turms will run a full sync at startup if the data has not been synced yet",
+              "global": false,
+              "mutable": false,
+              "sensitive": false,
+              "type": "boolean"
+            }
+          }
+        },
+        "user": {
+          "client": {
+            "password": {
+              "deprecated": false,
+              "description": "Elasticsearch password",
+              "global": false,
+              "mutable": false,
+              "sensitive": false,
+              "type": "string"
+            },
+            "requestHeaders": {
+              "deprecated": false,
+              "description": "Elasticsearch HTTP request headers",
+              "elementType": "im.turms.server.common.infra.property.env.service.env.elasticsearch.HttpHeaderProperties",
+              "global": false,
+              "mutable": false,
+              "sensitive": false,
+              "type": "java.util.List"
+            },
+            "uri": {
+              "deprecated": false,
+              "description": "Elasticsearch URI",
+              "global": false,
+              "mutable": false,
+              "sensitive": false,
+              "type": "string"
+            },
+            "username": {
+              "deprecated": false,
+              "description": "Elasticsearch username",
+              "global": false,
+              "mutable": false,
+              "sensitive": false,
+              "type": "string"
+            }
+          },
+          "enabled": {
+            "deprecated": false,
+            "description": "Whether to enable this use case",
+            "global": false,
+            "mutable": false,
+            "sensitive": false,
+            "type": "boolean"
+          },
+          "indexes": {
+            "deprecated": false,
+            "elementType": "im.turms.server.common.infra.property.env.service.env.elasticsearch.ElasticsearchIndexProperties",
+            "global": false,
+            "mutable": false,
+            "sensitive": false,
+            "type": "java.util.List"
+          },
+          "mongo": {
+            "enableTransaction": {
+              "deprecated": false,
+              "description": "Whether to enable transaction for MongoDB. If enabled, MongoDB will use transactions when upserting data into both MongoDB and Elasticsearch, and will roll back data if an error occurs, no matter they are MongoDB or Elasticsearch errors",
+              "global": false,
+              "mutable": false,
+              "sensitive": false,
+              "type": "boolean"
+            }
+          },
+          "sync": {
+            "performFullSyncAtStartup": {
+              "deprecated": false,
+              "description": "Whether to sync existing data from MongoDB to Elasticsearch. If true and the current node is the leader, turms will run a full sync at startup if the data has not been synced yet",
+              "global": false,
+              "mutable": false,
+              "sensitive": false,
+              "type": "boolean"
+            }
+          }
+        }
+      }
+    },
     "fake": {
       "clearAllCollectionsBeforeFaking": {
         "deprecated": false,
