@@ -20,13 +20,22 @@ package im.turms.server.common.access.client.dto.request.storage;
 /**
  * Protobuf type {@code im.turms.proto.DeleteResourceRequest}
  */
-public final class DeleteResourceRequest extends com.google.protobuf.GeneratedMessageV3 implements
+public final class DeleteResourceRequest extends com.google.protobuf.GeneratedMessage implements
         // @@protoc_insertion_point(message_implements:im.turms.proto.DeleteResourceRequest)
         DeleteResourceRequestOrBuilder {
     private static final long serialVersionUID = 0L;
+    static {
+        com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
+                com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
+                /* major= */ 4,
+                /* minor= */ 26,
+                /* patch= */ 1,
+                /* suffix= */ "",
+                DeleteResourceRequest.class.getName());
+    }
 
     // Use DeleteResourceRequest.newBuilder() to construct.
-    private DeleteResourceRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    private DeleteResourceRequest(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
         super(builder);
     }
 
@@ -35,13 +44,7 @@ public final class DeleteResourceRequest extends com.google.protobuf.GeneratedMe
         idStr_ = "";
     }
 
-    @java.lang.Override
-    @SuppressWarnings({"unused"})
-    protected java.lang.Object newInstance(UnusedPrivateParameter unused) {
-        return new DeleteResourceRequest();
-    }
-
-    public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+    public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
         return im.turms.server.common.access.client.dto.request.storage.DeleteResourceRequestOuterClass.internal_static_im_turms_proto_DeleteResourceRequest_descriptor;
     }
 
@@ -49,16 +52,16 @@ public final class DeleteResourceRequest extends com.google.protobuf.GeneratedMe
     @java.lang.Override
     protected com.google.protobuf.MapFieldReflectionAccessor internalGetMapFieldReflection(
             int number) {
-        if (number == 4) {
-            return internalGetExtra();
-        }
-        throw new RuntimeException(
-                "Invalid map field number: "
-                        + number);
+        return switch (number) {
+            case 4 -> internalGetExtra();
+            default -> throw new RuntimeException(
+                    "Invalid map field number: "
+                            + number);
+        };
     }
 
     @java.lang.Override
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internalGetFieldAccessorTable() {
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable() {
         return im.turms.server.common.access.client.dto.request.storage.DeleteResourceRequestOuterClass.internal_static_im_turms_proto_DeleteResourceRequest_fieldAccessorTable
                 .ensureFieldAccessorsInitialized(
                         im.turms.server.common.access.client.dto.request.storage.DeleteResourceRequest.class,
@@ -257,7 +260,7 @@ public final class DeleteResourceRequest extends com.google.protobuf.GeneratedMe
     private byte memoizedIsInitialized = -1;
 
     @java.lang.Override
-    public final boolean isInitialized() {
+    public boolean isInitialized() {
         byte isInitialized = memoizedIsInitialized;
         if (isInitialized == 1) {
             return true;
@@ -280,9 +283,9 @@ public final class DeleteResourceRequest extends com.google.protobuf.GeneratedMe
             output.writeInt64(2, idNum_);
         }
         if (((bitField0_ & 0x00000002) != 0)) {
-            com.google.protobuf.GeneratedMessageV3.writeString(output, 3, idStr_);
+            com.google.protobuf.GeneratedMessage.writeString(output, 3, idStr_);
         }
-        com.google.protobuf.GeneratedMessageV3.serializeStringMapTo(output,
+        com.google.protobuf.GeneratedMessage.serializeStringMapTo(output,
                 internalGetExtra(),
                 ExtraDefaultEntryHolder.defaultEntry,
                 4);
@@ -305,7 +308,7 @@ public final class DeleteResourceRequest extends com.google.protobuf.GeneratedMe
             size += com.google.protobuf.CodedOutputStream.computeInt64Size(2, idNum_);
         }
         if (((bitField0_ & 0x00000002) != 0)) {
-            size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, idStr_);
+            size += com.google.protobuf.GeneratedMessage.computeStringSize(3, idStr_);
         }
         for (java.util.Map.Entry<java.lang.String, java.lang.String> entry : internalGetExtra()
                 .getMap()
@@ -350,10 +353,8 @@ public final class DeleteResourceRequest extends com.google.protobuf.GeneratedMe
                 return false;
             }
         }
-        if (!internalGetExtra().equals(other.internalGetExtra())) {
-            return false;
-        }
-        return getUnknownFields().equals(other.getUnknownFields());
+        return internalGetExtra().equals(other.internalGetExtra())
+                && getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -422,40 +423,40 @@ public final class DeleteResourceRequest extends com.google.protobuf.GeneratedMe
 
     public static im.turms.server.common.access.client.dto.request.storage.DeleteResourceRequest parseFrom(
             java.io.InputStream input) throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3.parseWithIOException(PARSER, input);
+        return com.google.protobuf.GeneratedMessage.parseWithIOException(PARSER, input);
     }
 
     public static im.turms.server.common.access.client.dto.request.storage.DeleteResourceRequest parseFrom(
             java.io.InputStream input,
             com.google.protobuf.ExtensionRegistryLite extensionRegistry)
             throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
+        return com.google.protobuf.GeneratedMessage
                 .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
     public static im.turms.server.common.access.client.dto.request.storage.DeleteResourceRequest parseDelimitedFrom(
             java.io.InputStream input) throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3.parseDelimitedWithIOException(PARSER, input);
+        return com.google.protobuf.GeneratedMessage.parseDelimitedWithIOException(PARSER, input);
     }
 
     public static im.turms.server.common.access.client.dto.request.storage.DeleteResourceRequest parseDelimitedFrom(
             java.io.InputStream input,
             com.google.protobuf.ExtensionRegistryLite extensionRegistry)
             throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
+        return com.google.protobuf.GeneratedMessage
                 .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
 
     public static im.turms.server.common.access.client.dto.request.storage.DeleteResourceRequest parseFrom(
             com.google.protobuf.CodedInputStream input) throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3.parseWithIOException(PARSER, input);
+        return com.google.protobuf.GeneratedMessage.parseWithIOException(PARSER, input);
     }
 
     public static im.turms.server.common.access.client.dto.request.storage.DeleteResourceRequest parseFrom(
             com.google.protobuf.CodedInputStream input,
             com.google.protobuf.ExtensionRegistryLite extensionRegistry)
             throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
+        return com.google.protobuf.GeneratedMessage
                 .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
@@ -482,46 +483,45 @@ public final class DeleteResourceRequest extends com.google.protobuf.GeneratedMe
     }
 
     @java.lang.Override
-    protected Builder newBuilderForType(
-            com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+    protected Builder newBuilderForType(com.google.protobuf.GeneratedMessage.BuilderParent parent) {
         return new Builder(parent);
     }
 
     /**
      * Protobuf type {@code im.turms.proto.DeleteResourceRequest}
      */
-    public static final class Builder
-            extends com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+    public static final class Builder extends com.google.protobuf.GeneratedMessage.Builder<Builder>
+            implements
             // @@protoc_insertion_point(builder_implements:im.turms.proto.DeleteResourceRequest)
             im.turms.server.common.access.client.dto.request.storage.DeleteResourceRequestOrBuilder {
-        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+        public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
             return im.turms.server.common.access.client.dto.request.storage.DeleteResourceRequestOuterClass.internal_static_im_turms_proto_DeleteResourceRequest_descriptor;
         }
 
         @SuppressWarnings({"rawtypes"})
         protected com.google.protobuf.MapFieldReflectionAccessor internalGetMapFieldReflection(
                 int number) {
-            if (number == 4) {
-                return internalGetExtra();
-            }
-            throw new RuntimeException(
-                    "Invalid map field number: "
-                            + number);
+            return switch (number) {
+                case 4 -> internalGetExtra();
+                default -> throw new RuntimeException(
+                        "Invalid map field number: "
+                                + number);
+            };
         }
 
         @SuppressWarnings({"rawtypes"})
         protected com.google.protobuf.MapFieldReflectionAccessor internalGetMutableMapFieldReflection(
                 int number) {
-            if (number == 4) {
-                return internalGetMutableExtra();
-            }
-            throw new RuntimeException(
-                    "Invalid map field number: "
-                            + number);
+            return switch (number) {
+                case 4 -> internalGetMutableExtra();
+                default -> throw new RuntimeException(
+                        "Invalid map field number: "
+                                + number);
+            };
         }
 
         @java.lang.Override
-        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internalGetFieldAccessorTable() {
+        protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable() {
             return im.turms.server.common.access.client.dto.request.storage.DeleteResourceRequestOuterClass.internal_static_im_turms_proto_DeleteResourceRequest_fieldAccessorTable
                     .ensureFieldAccessorsInitialized(
                             im.turms.server.common.access.client.dto.request.storage.DeleteResourceRequest.class,
@@ -534,7 +534,7 @@ public final class DeleteResourceRequest extends com.google.protobuf.GeneratedMe
 
         }
 
-        private Builder(com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        private Builder(com.google.protobuf.GeneratedMessage.BuilderParent parent) {
             super(parent);
 
         }
@@ -606,43 +606,6 @@ public final class DeleteResourceRequest extends com.google.protobuf.GeneratedMe
         }
 
         @java.lang.Override
-        public Builder clone() {
-            return super.clone();
-        }
-
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index,
-                java.lang.Object value) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.addRepeatedField(field, value);
-        }
-
-        @java.lang.Override
         public Builder mergeFrom(com.google.protobuf.Message other) {
             if (other instanceof im.turms.server.common.access.client.dto.request.storage.DeleteResourceRequest) {
                 return mergeFrom(
@@ -678,7 +641,7 @@ public final class DeleteResourceRequest extends com.google.protobuf.GeneratedMe
         }
 
         @java.lang.Override
-        public final boolean isInitialized() {
+        public boolean isInitialized() {
             return true;
         }
 
@@ -1083,24 +1046,11 @@ public final class DeleteResourceRequest extends com.google.protobuf.GeneratedMe
             return this;
         }
 
-        @java.lang.Override
-        public final Builder setUnknownFields(
-                final com.google.protobuf.UnknownFieldSet unknownFields) {
-            return super.setUnknownFields(unknownFields);
-        }
-
-        @java.lang.Override
-        public final Builder mergeUnknownFields(
-                final com.google.protobuf.UnknownFieldSet unknownFields) {
-            return super.mergeUnknownFields(unknownFields);
-        }
-
         // @@protoc_insertion_point(builder_scope:im.turms.proto.DeleteResourceRequest)
     }
 
     // @@protoc_insertion_point(class_scope:im.turms.proto.DeleteResourceRequest)
     private static final im.turms.server.common.access.client.dto.request.storage.DeleteResourceRequest DEFAULT_INSTANCE;
-
     static {
         DEFAULT_INSTANCE =
                 new im.turms.server.common.access.client.dto.request.storage.DeleteResourceRequest();

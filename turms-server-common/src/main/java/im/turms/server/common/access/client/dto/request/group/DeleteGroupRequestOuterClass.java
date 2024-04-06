@@ -21,6 +21,16 @@ public final class DeleteGroupRequestOuterClass {
     private DeleteGroupRequestOuterClass() {
     }
 
+    static {
+        com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
+                com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
+                /* major= */ 4,
+                /* minor= */ 26,
+                /* patch= */ 1,
+                /* suffix= */ "",
+                DeleteGroupRequestOuterClass.class.getName());
+    }
+
     public static void registerAllExtensions(com.google.protobuf.ExtensionRegistryLite registry) {
     }
 
@@ -29,14 +39,13 @@ public final class DeleteGroupRequestOuterClass {
     }
 
     static final com.google.protobuf.Descriptors.Descriptor internal_static_im_turms_proto_DeleteGroupRequest_descriptor;
-    static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internal_static_im_turms_proto_DeleteGroupRequest_fieldAccessorTable;
+    static final com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_im_turms_proto_DeleteGroupRequest_fieldAccessorTable;
 
     public static com.google.protobuf.Descriptors.FileDescriptor getDescriptor() {
         return descriptor;
     }
 
     private static com.google.protobuf.Descriptors.FileDescriptor descriptor;
-
     static {
         java.lang.String[] descriptorData = {"\n(request/group/delete_group_request.pro"
                 + "to\022\016im.turms.proto\"&\n\022DeleteGroupRequest"
@@ -50,9 +59,10 @@ public final class DeleteGroupRequestOuterClass {
                 getDescriptor().getMessageTypes()
                         .get(0);
         internal_static_im_turms_proto_DeleteGroupRequest_fieldAccessorTable =
-                new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+                new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_DeleteGroupRequest_descriptor,
                         new java.lang.String[]{"GroupId",});
+        descriptor.resolveAllFeaturesImmutable();
     }
 
     // @@protoc_insertion_point(outer_class_scope)

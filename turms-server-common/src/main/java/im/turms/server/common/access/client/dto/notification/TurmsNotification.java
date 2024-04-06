@@ -20,13 +20,22 @@ package im.turms.server.common.access.client.dto.notification;
 /**
  * Protobuf type {@code im.turms.proto.TurmsNotification}
  */
-public final class TurmsNotification extends com.google.protobuf.GeneratedMessageV3 implements
+public final class TurmsNotification extends com.google.protobuf.GeneratedMessage implements
         // @@protoc_insertion_point(message_implements:im.turms.proto.TurmsNotification)
         TurmsNotificationOrBuilder {
     private static final long serialVersionUID = 0L;
+    static {
+        com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
+                com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
+                /* major= */ 4,
+                /* minor= */ 26,
+                /* patch= */ 1,
+                /* suffix= */ "",
+                TurmsNotification.class.getName());
+    }
 
     // Use TurmsNotification.newBuilder() to construct.
-    private TurmsNotification(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    private TurmsNotification(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
         super(builder);
     }
 
@@ -34,18 +43,12 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
         reason_ = "";
     }
 
-    @java.lang.Override
-    @SuppressWarnings({"unused"})
-    protected java.lang.Object newInstance(UnusedPrivateParameter unused) {
-        return new TurmsNotification();
-    }
-
     public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
         return im.turms.server.common.access.client.dto.notification.TurmsNotificationOuterClass.internal_static_im_turms_proto_TurmsNotification_descriptor;
     }
 
     @java.lang.Override
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internalGetFieldAccessorTable() {
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable() {
         return im.turms.server.common.access.client.dto.notification.TurmsNotificationOuterClass.internal_static_im_turms_proto_TurmsNotification_fieldAccessorTable
                 .ensureFieldAccessorsInitialized(
                         im.turms.server.common.access.client.dto.notification.TurmsNotification.class,
@@ -526,23 +529,26 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
     /**
      * Protobuf type {@code im.turms.proto.TurmsNotification.Data}
      */
-    public static final class Data extends com.google.protobuf.GeneratedMessageV3 implements
+    public static final class Data extends com.google.protobuf.GeneratedMessage implements
             // @@protoc_insertion_point(message_implements:im.turms.proto.TurmsNotification.Data)
             DataOrBuilder {
         private static final long serialVersionUID = 0L;
+        static {
+            com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
+                    com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
+                    /* major= */ 4,
+                    /* minor= */ 26,
+                    /* patch= */ 1,
+                    /* suffix= */ "",
+                    Data.class.getName());
+        }
 
         // Use Data.newBuilder() to construct.
-        private Data(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+        private Data(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
             super(builder);
         }
 
         private Data() {
-        }
-
-        @java.lang.Override
-        @SuppressWarnings({"unused"})
-        protected java.lang.Object newInstance(UnusedPrivateParameter unused) {
-            return new Data();
         }
 
         public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
@@ -550,7 +556,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
         }
 
         @java.lang.Override
-        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internalGetFieldAccessorTable() {
+        protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable() {
             return im.turms.server.common.access.client.dto.notification.TurmsNotificationOuterClass.internal_static_im_turms_proto_TurmsNotification_Data_fieldAccessorTable
                     .ensureFieldAccessorsInitialized(
                             im.turms.server.common.access.client.dto.notification.TurmsNotification.Data.class,
@@ -588,7 +594,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
 
             private final int value;
 
-            private KindCase(int value) {
+            KindCase(int value) {
                 this.value = value;
             }
 
@@ -1532,7 +1538,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
                 output.writeInt64(1, (Long) kind_);
             }
             if (kindCase_ == 2) {
-                com.google.protobuf.GeneratedMessageV3.writeString(output, 2, kind_);
+                com.google.protobuf.GeneratedMessage.writeString(output, 2, kind_);
             }
             if (kindCase_ == 3) {
                 output.writeMessage(3,
@@ -1625,7 +1631,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
                 size += com.google.protobuf.CodedOutputStream.computeInt64Size(1, (Long) kind_);
             }
             if (kindCase_ == 2) {
-                size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, kind_);
+                size += com.google.protobuf.GeneratedMessage.computeStringSize(2, kind_);
             }
             if (kindCase_ == 3) {
                 size += com.google.protobuf.CodedOutputStream.computeMessageSize(3,
@@ -1979,20 +1985,20 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
 
         public static im.turms.server.common.access.client.dto.notification.TurmsNotification.Data parseFrom(
                 java.io.InputStream input) throws java.io.IOException {
-            return com.google.protobuf.GeneratedMessageV3.parseWithIOException(PARSER, input);
+            return com.google.protobuf.GeneratedMessage.parseWithIOException(PARSER, input);
         }
 
         public static im.turms.server.common.access.client.dto.notification.TurmsNotification.Data parseFrom(
                 java.io.InputStream input,
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws java.io.IOException {
-            return com.google.protobuf.GeneratedMessageV3
+            return com.google.protobuf.GeneratedMessage
                     .parseWithIOException(PARSER, input, extensionRegistry);
         }
 
         public static im.turms.server.common.access.client.dto.notification.TurmsNotification.Data parseDelimitedFrom(
                 java.io.InputStream input) throws java.io.IOException {
-            return com.google.protobuf.GeneratedMessageV3.parseDelimitedWithIOException(PARSER,
+            return com.google.protobuf.GeneratedMessage.parseDelimitedWithIOException(PARSER,
                     input);
         }
 
@@ -2000,20 +2006,20 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
                 java.io.InputStream input,
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws java.io.IOException {
-            return com.google.protobuf.GeneratedMessageV3
+            return com.google.protobuf.GeneratedMessage
                     .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
         }
 
         public static im.turms.server.common.access.client.dto.notification.TurmsNotification.Data parseFrom(
                 com.google.protobuf.CodedInputStream input) throws java.io.IOException {
-            return com.google.protobuf.GeneratedMessageV3.parseWithIOException(PARSER, input);
+            return com.google.protobuf.GeneratedMessage.parseWithIOException(PARSER, input);
         }
 
         public static im.turms.server.common.access.client.dto.notification.TurmsNotification.Data parseFrom(
                 com.google.protobuf.CodedInputStream input,
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws java.io.IOException {
-            return com.google.protobuf.GeneratedMessageV3
+            return com.google.protobuf.GeneratedMessage
                     .parseWithIOException(PARSER, input, extensionRegistry);
         }
 
@@ -2041,7 +2047,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
 
         @java.lang.Override
         protected Builder newBuilderForType(
-                com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+                com.google.protobuf.GeneratedMessage.BuilderParent parent) {
             return new Builder(parent);
         }
 
@@ -2049,7 +2055,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
          * Protobuf type {@code im.turms.proto.TurmsNotification.Data}
          */
         public static final class Builder
-                extends com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+                extends com.google.protobuf.GeneratedMessage.Builder<Builder> implements
                 // @@protoc_insertion_point(builder_implements:im.turms.proto.TurmsNotification.Data)
                 im.turms.server.common.access.client.dto.notification.TurmsNotification.DataOrBuilder {
             public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
@@ -2057,7 +2063,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
             }
 
             @java.lang.Override
-            protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internalGetFieldAccessorTable() {
+            protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable() {
                 return im.turms.server.common.access.client.dto.notification.TurmsNotificationOuterClass.internal_static_im_turms_proto_TurmsNotification_Data_fieldAccessorTable
                         .ensureFieldAccessorsInitialized(
                                 im.turms.server.common.access.client.dto.notification.TurmsNotification.Data.class,
@@ -2070,7 +2076,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
 
             }
 
-            private Builder(com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+            private Builder(com.google.protobuf.GeneratedMessage.BuilderParent parent) {
                 super(parent);
 
             }
@@ -2241,43 +2247,6 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
                 if (kindCase_ == 50 && storageResourceInfosBuilder_ != null) {
                     result.kind_ = storageResourceInfosBuilder_.build();
                 }
-            }
-
-            @java.lang.Override
-            public Builder clone() {
-                return super.clone();
-            }
-
-            @java.lang.Override
-            public Builder setField(
-                    com.google.protobuf.Descriptors.FieldDescriptor field,
-                    java.lang.Object value) {
-                return super.setField(field, value);
-            }
-
-            @java.lang.Override
-            public Builder clearField(com.google.protobuf.Descriptors.FieldDescriptor field) {
-                return super.clearField(field);
-            }
-
-            @java.lang.Override
-            public Builder clearOneof(com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-                return super.clearOneof(oneof);
-            }
-
-            @java.lang.Override
-            public Builder setRepeatedField(
-                    com.google.protobuf.Descriptors.FieldDescriptor field,
-                    int index,
-                    java.lang.Object value) {
-                return super.setRepeatedField(field, index, value);
-            }
-
-            @java.lang.Override
-            public Builder addRepeatedField(
-                    com.google.protobuf.Descriptors.FieldDescriptor field,
-                    java.lang.Object value) {
-                return super.addRepeatedField(field, value);
             }
 
             @java.lang.Override
@@ -2709,7 +2678,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
                 return this;
             }
 
-            private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.model.common.LongsWithVersion, im.turms.server.common.access.client.dto.model.common.LongsWithVersion.Builder, im.turms.server.common.access.client.dto.model.common.LongsWithVersionOrBuilder> longsWithVersionBuilder_;
+            private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.model.common.LongsWithVersion, im.turms.server.common.access.client.dto.model.common.LongsWithVersion.Builder, im.turms.server.common.access.client.dto.model.common.LongsWithVersionOrBuilder> longsWithVersionBuilder_;
 
             /**
              * <code>.im.turms.proto.LongsWithVersion longs_with_version = 3;</code>
@@ -2851,13 +2820,13 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
             /**
              * <code>.im.turms.proto.LongsWithVersion longs_with_version = 3;</code>
              */
-            private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.model.common.LongsWithVersion, im.turms.server.common.access.client.dto.model.common.LongsWithVersion.Builder, im.turms.server.common.access.client.dto.model.common.LongsWithVersionOrBuilder> getLongsWithVersionFieldBuilder() {
+            private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.model.common.LongsWithVersion, im.turms.server.common.access.client.dto.model.common.LongsWithVersion.Builder, im.turms.server.common.access.client.dto.model.common.LongsWithVersionOrBuilder> getLongsWithVersionFieldBuilder() {
                 if (longsWithVersionBuilder_ == null) {
                     if (!(kindCase_ == 3)) {
                         kind_ = im.turms.server.common.access.client.dto.model.common.LongsWithVersion
                                 .getDefaultInstance();
                     }
-                    longsWithVersionBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
+                    longsWithVersionBuilder_ = new com.google.protobuf.SingleFieldBuilder<>(
                             (im.turms.server.common.access.client.dto.model.common.LongsWithVersion) kind_,
                             getParentForChildren(),
                             isClean());
@@ -2868,7 +2837,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
                 return longsWithVersionBuilder_;
             }
 
-            private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.model.common.StringsWithVersion, im.turms.server.common.access.client.dto.model.common.StringsWithVersion.Builder, im.turms.server.common.access.client.dto.model.common.StringsWithVersionOrBuilder> stringsWithVersionBuilder_;
+            private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.model.common.StringsWithVersion, im.turms.server.common.access.client.dto.model.common.StringsWithVersion.Builder, im.turms.server.common.access.client.dto.model.common.StringsWithVersionOrBuilder> stringsWithVersionBuilder_;
 
             /**
              * <code>.im.turms.proto.StringsWithVersion strings_with_version = 4;</code>
@@ -3010,13 +2979,13 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
             /**
              * <code>.im.turms.proto.StringsWithVersion strings_with_version = 4;</code>
              */
-            private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.model.common.StringsWithVersion, im.turms.server.common.access.client.dto.model.common.StringsWithVersion.Builder, im.turms.server.common.access.client.dto.model.common.StringsWithVersionOrBuilder> getStringsWithVersionFieldBuilder() {
+            private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.model.common.StringsWithVersion, im.turms.server.common.access.client.dto.model.common.StringsWithVersion.Builder, im.turms.server.common.access.client.dto.model.common.StringsWithVersionOrBuilder> getStringsWithVersionFieldBuilder() {
                 if (stringsWithVersionBuilder_ == null) {
                     if (!(kindCase_ == 4)) {
                         kind_ = im.turms.server.common.access.client.dto.model.common.StringsWithVersion
                                 .getDefaultInstance();
                     }
-                    stringsWithVersionBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
+                    stringsWithVersionBuilder_ = new com.google.protobuf.SingleFieldBuilder<>(
                             (im.turms.server.common.access.client.dto.model.common.StringsWithVersion) kind_,
                             getParentForChildren(),
                             isClean());
@@ -3027,7 +2996,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
                 return stringsWithVersionBuilder_;
             }
 
-            private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.model.conversation.Conversations, im.turms.server.common.access.client.dto.model.conversation.Conversations.Builder, im.turms.server.common.access.client.dto.model.conversation.ConversationsOrBuilder> conversationsBuilder_;
+            private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.model.conversation.Conversations, im.turms.server.common.access.client.dto.model.conversation.Conversations.Builder, im.turms.server.common.access.client.dto.model.conversation.ConversationsOrBuilder> conversationsBuilder_;
 
             /**
              * <pre>
@@ -3205,13 +3174,13 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
              *
              * <code>.im.turms.proto.Conversations conversations = 5;</code>
              */
-            private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.model.conversation.Conversations, im.turms.server.common.access.client.dto.model.conversation.Conversations.Builder, im.turms.server.common.access.client.dto.model.conversation.ConversationsOrBuilder> getConversationsFieldBuilder() {
+            private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.model.conversation.Conversations, im.turms.server.common.access.client.dto.model.conversation.Conversations.Builder, im.turms.server.common.access.client.dto.model.conversation.ConversationsOrBuilder> getConversationsFieldBuilder() {
                 if (conversationsBuilder_ == null) {
                     if (!(kindCase_ == 5)) {
                         kind_ = im.turms.server.common.access.client.dto.model.conversation.Conversations
                                 .getDefaultInstance();
                     }
-                    conversationsBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
+                    conversationsBuilder_ = new com.google.protobuf.SingleFieldBuilder<>(
                             (im.turms.server.common.access.client.dto.model.conversation.Conversations) kind_,
                             getParentForChildren(),
                             isClean());
@@ -3222,7 +3191,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
                 return conversationsBuilder_;
             }
 
-            private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.model.message.Messages, im.turms.server.common.access.client.dto.model.message.Messages.Builder, im.turms.server.common.access.client.dto.model.message.MessagesOrBuilder> messagesBuilder_;
+            private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.model.message.Messages, im.turms.server.common.access.client.dto.model.message.Messages.Builder, im.turms.server.common.access.client.dto.model.message.MessagesOrBuilder> messagesBuilder_;
 
             /**
              * <pre>
@@ -3400,13 +3369,13 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
              *
              * <code>.im.turms.proto.Messages messages = 6;</code>
              */
-            private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.model.message.Messages, im.turms.server.common.access.client.dto.model.message.Messages.Builder, im.turms.server.common.access.client.dto.model.message.MessagesOrBuilder> getMessagesFieldBuilder() {
+            private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.model.message.Messages, im.turms.server.common.access.client.dto.model.message.Messages.Builder, im.turms.server.common.access.client.dto.model.message.MessagesOrBuilder> getMessagesFieldBuilder() {
                 if (messagesBuilder_ == null) {
                     if (!(kindCase_ == 6)) {
                         kind_ = im.turms.server.common.access.client.dto.model.message.Messages
                                 .getDefaultInstance();
                     }
-                    messagesBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
+                    messagesBuilder_ = new com.google.protobuf.SingleFieldBuilder<>(
                             (im.turms.server.common.access.client.dto.model.message.Messages) kind_,
                             getParentForChildren(),
                             isClean());
@@ -3417,7 +3386,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
                 return messagesBuilder_;
             }
 
-            private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.model.message.MessagesWithTotalList, im.turms.server.common.access.client.dto.model.message.MessagesWithTotalList.Builder, im.turms.server.common.access.client.dto.model.message.MessagesWithTotalListOrBuilder> messagesWithTotalListBuilder_;
+            private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.model.message.MessagesWithTotalList, im.turms.server.common.access.client.dto.model.message.MessagesWithTotalList.Builder, im.turms.server.common.access.client.dto.model.message.MessagesWithTotalListOrBuilder> messagesWithTotalListBuilder_;
 
             /**
              * <code>.im.turms.proto.MessagesWithTotalList messages_with_total_list = 7;</code>
@@ -3559,13 +3528,13 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
             /**
              * <code>.im.turms.proto.MessagesWithTotalList messages_with_total_list = 7;</code>
              */
-            private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.model.message.MessagesWithTotalList, im.turms.server.common.access.client.dto.model.message.MessagesWithTotalList.Builder, im.turms.server.common.access.client.dto.model.message.MessagesWithTotalListOrBuilder> getMessagesWithTotalListFieldBuilder() {
+            private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.model.message.MessagesWithTotalList, im.turms.server.common.access.client.dto.model.message.MessagesWithTotalList.Builder, im.turms.server.common.access.client.dto.model.message.MessagesWithTotalListOrBuilder> getMessagesWithTotalListFieldBuilder() {
                 if (messagesWithTotalListBuilder_ == null) {
                     if (!(kindCase_ == 7)) {
                         kind_ = im.turms.server.common.access.client.dto.model.message.MessagesWithTotalList
                                 .getDefaultInstance();
                     }
-                    messagesWithTotalListBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
+                    messagesWithTotalListBuilder_ = new com.google.protobuf.SingleFieldBuilder<>(
                             (im.turms.server.common.access.client.dto.model.message.MessagesWithTotalList) kind_,
                             getParentForChildren(),
                             isClean());
@@ -3576,7 +3545,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
                 return messagesWithTotalListBuilder_;
             }
 
-            private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.model.user.UserSession, im.turms.server.common.access.client.dto.model.user.UserSession.Builder, im.turms.server.common.access.client.dto.model.user.UserSessionOrBuilder> userSessionBuilder_;
+            private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.model.user.UserSession, im.turms.server.common.access.client.dto.model.user.UserSession.Builder, im.turms.server.common.access.client.dto.model.user.UserSessionOrBuilder> userSessionBuilder_;
 
             /**
              * <pre>
@@ -3754,13 +3723,13 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
              *
              * <code>.im.turms.proto.UserSession user_session = 8;</code>
              */
-            private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.model.user.UserSession, im.turms.server.common.access.client.dto.model.user.UserSession.Builder, im.turms.server.common.access.client.dto.model.user.UserSessionOrBuilder> getUserSessionFieldBuilder() {
+            private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.model.user.UserSession, im.turms.server.common.access.client.dto.model.user.UserSession.Builder, im.turms.server.common.access.client.dto.model.user.UserSessionOrBuilder> getUserSessionFieldBuilder() {
                 if (userSessionBuilder_ == null) {
                     if (!(kindCase_ == 8)) {
                         kind_ = im.turms.server.common.access.client.dto.model.user.UserSession
                                 .getDefaultInstance();
                     }
-                    userSessionBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
+                    userSessionBuilder_ = new com.google.protobuf.SingleFieldBuilder<>(
                             (im.turms.server.common.access.client.dto.model.user.UserSession) kind_,
                             getParentForChildren(),
                             isClean());
@@ -3771,7 +3740,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
                 return userSessionBuilder_;
             }
 
-            private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.model.user.UserInfosWithVersion, im.turms.server.common.access.client.dto.model.user.UserInfosWithVersion.Builder, im.turms.server.common.access.client.dto.model.user.UserInfosWithVersionOrBuilder> userInfosWithVersionBuilder_;
+            private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.model.user.UserInfosWithVersion, im.turms.server.common.access.client.dto.model.user.UserInfosWithVersion.Builder, im.turms.server.common.access.client.dto.model.user.UserInfosWithVersionOrBuilder> userInfosWithVersionBuilder_;
 
             /**
              * <code>.im.turms.proto.UserInfosWithVersion user_infos_with_version = 9;</code>
@@ -3913,13 +3882,13 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
             /**
              * <code>.im.turms.proto.UserInfosWithVersion user_infos_with_version = 9;</code>
              */
-            private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.model.user.UserInfosWithVersion, im.turms.server.common.access.client.dto.model.user.UserInfosWithVersion.Builder, im.turms.server.common.access.client.dto.model.user.UserInfosWithVersionOrBuilder> getUserInfosWithVersionFieldBuilder() {
+            private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.model.user.UserInfosWithVersion, im.turms.server.common.access.client.dto.model.user.UserInfosWithVersion.Builder, im.turms.server.common.access.client.dto.model.user.UserInfosWithVersionOrBuilder> getUserInfosWithVersionFieldBuilder() {
                 if (userInfosWithVersionBuilder_ == null) {
                     if (!(kindCase_ == 9)) {
                         kind_ = im.turms.server.common.access.client.dto.model.user.UserInfosWithVersion
                                 .getDefaultInstance();
                     }
-                    userInfosWithVersionBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
+                    userInfosWithVersionBuilder_ = new com.google.protobuf.SingleFieldBuilder<>(
                             (im.turms.server.common.access.client.dto.model.user.UserInfosWithVersion) kind_,
                             getParentForChildren(),
                             isClean());
@@ -3930,7 +3899,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
                 return userInfosWithVersionBuilder_;
             }
 
-            private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.model.user.UserOnlineStatuses, im.turms.server.common.access.client.dto.model.user.UserOnlineStatuses.Builder, im.turms.server.common.access.client.dto.model.user.UserOnlineStatusesOrBuilder> userOnlineStatusesBuilder_;
+            private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.model.user.UserOnlineStatuses, im.turms.server.common.access.client.dto.model.user.UserOnlineStatuses.Builder, im.turms.server.common.access.client.dto.model.user.UserOnlineStatusesOrBuilder> userOnlineStatusesBuilder_;
 
             /**
              * <code>.im.turms.proto.UserOnlineStatuses user_online_statuses = 10;</code>
@@ -4072,13 +4041,13 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
             /**
              * <code>.im.turms.proto.UserOnlineStatuses user_online_statuses = 10;</code>
              */
-            private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.model.user.UserOnlineStatuses, im.turms.server.common.access.client.dto.model.user.UserOnlineStatuses.Builder, im.turms.server.common.access.client.dto.model.user.UserOnlineStatusesOrBuilder> getUserOnlineStatusesFieldBuilder() {
+            private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.model.user.UserOnlineStatuses, im.turms.server.common.access.client.dto.model.user.UserOnlineStatuses.Builder, im.turms.server.common.access.client.dto.model.user.UserOnlineStatusesOrBuilder> getUserOnlineStatusesFieldBuilder() {
                 if (userOnlineStatusesBuilder_ == null) {
                     if (!(kindCase_ == 10)) {
                         kind_ = im.turms.server.common.access.client.dto.model.user.UserOnlineStatuses
                                 .getDefaultInstance();
                     }
-                    userOnlineStatusesBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
+                    userOnlineStatusesBuilder_ = new com.google.protobuf.SingleFieldBuilder<>(
                             (im.turms.server.common.access.client.dto.model.user.UserOnlineStatuses) kind_,
                             getParentForChildren(),
                             isClean());
@@ -4089,7 +4058,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
                 return userOnlineStatusesBuilder_;
             }
 
-            private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.model.user.UserFriendRequestsWithVersion, im.turms.server.common.access.client.dto.model.user.UserFriendRequestsWithVersion.Builder, im.turms.server.common.access.client.dto.model.user.UserFriendRequestsWithVersionOrBuilder> userFriendRequestsWithVersionBuilder_;
+            private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.model.user.UserFriendRequestsWithVersion, im.turms.server.common.access.client.dto.model.user.UserFriendRequestsWithVersion.Builder, im.turms.server.common.access.client.dto.model.user.UserFriendRequestsWithVersionOrBuilder> userFriendRequestsWithVersionBuilder_;
 
             /**
              * <code>.im.turms.proto.UserFriendRequestsWithVersion user_friend_requests_with_version = 11;</code>
@@ -4231,14 +4200,14 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
             /**
              * <code>.im.turms.proto.UserFriendRequestsWithVersion user_friend_requests_with_version = 11;</code>
              */
-            private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.model.user.UserFriendRequestsWithVersion, im.turms.server.common.access.client.dto.model.user.UserFriendRequestsWithVersion.Builder, im.turms.server.common.access.client.dto.model.user.UserFriendRequestsWithVersionOrBuilder> getUserFriendRequestsWithVersionFieldBuilder() {
+            private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.model.user.UserFriendRequestsWithVersion, im.turms.server.common.access.client.dto.model.user.UserFriendRequestsWithVersion.Builder, im.turms.server.common.access.client.dto.model.user.UserFriendRequestsWithVersionOrBuilder> getUserFriendRequestsWithVersionFieldBuilder() {
                 if (userFriendRequestsWithVersionBuilder_ == null) {
                     if (!(kindCase_ == 11)) {
                         kind_ = im.turms.server.common.access.client.dto.model.user.UserFriendRequestsWithVersion
                                 .getDefaultInstance();
                     }
                     userFriendRequestsWithVersionBuilder_ =
-                            new com.google.protobuf.SingleFieldBuilderV3<>(
+                            new com.google.protobuf.SingleFieldBuilder<>(
                                     (im.turms.server.common.access.client.dto.model.user.UserFriendRequestsWithVersion) kind_,
                                     getParentForChildren(),
                                     isClean());
@@ -4249,7 +4218,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
                 return userFriendRequestsWithVersionBuilder_;
             }
 
-            private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.model.user.UserRelationshipGroupsWithVersion, im.turms.server.common.access.client.dto.model.user.UserRelationshipGroupsWithVersion.Builder, im.turms.server.common.access.client.dto.model.user.UserRelationshipGroupsWithVersionOrBuilder> userRelationshipGroupsWithVersionBuilder_;
+            private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.model.user.UserRelationshipGroupsWithVersion, im.turms.server.common.access.client.dto.model.user.UserRelationshipGroupsWithVersion.Builder, im.turms.server.common.access.client.dto.model.user.UserRelationshipGroupsWithVersionOrBuilder> userRelationshipGroupsWithVersionBuilder_;
 
             /**
              * <code>.im.turms.proto.UserRelationshipGroupsWithVersion user_relationship_groups_with_version = 12;</code>
@@ -4391,14 +4360,14 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
             /**
              * <code>.im.turms.proto.UserRelationshipGroupsWithVersion user_relationship_groups_with_version = 12;</code>
              */
-            private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.model.user.UserRelationshipGroupsWithVersion, im.turms.server.common.access.client.dto.model.user.UserRelationshipGroupsWithVersion.Builder, im.turms.server.common.access.client.dto.model.user.UserRelationshipGroupsWithVersionOrBuilder> getUserRelationshipGroupsWithVersionFieldBuilder() {
+            private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.model.user.UserRelationshipGroupsWithVersion, im.turms.server.common.access.client.dto.model.user.UserRelationshipGroupsWithVersion.Builder, im.turms.server.common.access.client.dto.model.user.UserRelationshipGroupsWithVersionOrBuilder> getUserRelationshipGroupsWithVersionFieldBuilder() {
                 if (userRelationshipGroupsWithVersionBuilder_ == null) {
                     if (!(kindCase_ == 12)) {
                         kind_ = im.turms.server.common.access.client.dto.model.user.UserRelationshipGroupsWithVersion
                                 .getDefaultInstance();
                     }
                     userRelationshipGroupsWithVersionBuilder_ =
-                            new com.google.protobuf.SingleFieldBuilderV3<>(
+                            new com.google.protobuf.SingleFieldBuilder<>(
                                     (im.turms.server.common.access.client.dto.model.user.UserRelationshipGroupsWithVersion) kind_,
                                     getParentForChildren(),
                                     isClean());
@@ -4409,7 +4378,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
                 return userRelationshipGroupsWithVersionBuilder_;
             }
 
-            private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.model.user.UserRelationshipsWithVersion, im.turms.server.common.access.client.dto.model.user.UserRelationshipsWithVersion.Builder, im.turms.server.common.access.client.dto.model.user.UserRelationshipsWithVersionOrBuilder> userRelationshipsWithVersionBuilder_;
+            private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.model.user.UserRelationshipsWithVersion, im.turms.server.common.access.client.dto.model.user.UserRelationshipsWithVersion.Builder, im.turms.server.common.access.client.dto.model.user.UserRelationshipsWithVersionOrBuilder> userRelationshipsWithVersionBuilder_;
 
             /**
              * <code>.im.turms.proto.UserRelationshipsWithVersion user_relationships_with_version = 13;</code>
@@ -4551,14 +4520,14 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
             /**
              * <code>.im.turms.proto.UserRelationshipsWithVersion user_relationships_with_version = 13;</code>
              */
-            private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.model.user.UserRelationshipsWithVersion, im.turms.server.common.access.client.dto.model.user.UserRelationshipsWithVersion.Builder, im.turms.server.common.access.client.dto.model.user.UserRelationshipsWithVersionOrBuilder> getUserRelationshipsWithVersionFieldBuilder() {
+            private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.model.user.UserRelationshipsWithVersion, im.turms.server.common.access.client.dto.model.user.UserRelationshipsWithVersion.Builder, im.turms.server.common.access.client.dto.model.user.UserRelationshipsWithVersionOrBuilder> getUserRelationshipsWithVersionFieldBuilder() {
                 if (userRelationshipsWithVersionBuilder_ == null) {
                     if (!(kindCase_ == 13)) {
                         kind_ = im.turms.server.common.access.client.dto.model.user.UserRelationshipsWithVersion
                                 .getDefaultInstance();
                     }
                     userRelationshipsWithVersionBuilder_ =
-                            new com.google.protobuf.SingleFieldBuilderV3<>(
+                            new com.google.protobuf.SingleFieldBuilder<>(
                                     (im.turms.server.common.access.client.dto.model.user.UserRelationshipsWithVersion) kind_,
                                     getParentForChildren(),
                                     isClean());
@@ -4569,7 +4538,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
                 return userRelationshipsWithVersionBuilder_;
             }
 
-            private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.model.user.NearbyUsers, im.turms.server.common.access.client.dto.model.user.NearbyUsers.Builder, im.turms.server.common.access.client.dto.model.user.NearbyUsersOrBuilder> nearbyUsersBuilder_;
+            private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.model.user.NearbyUsers, im.turms.server.common.access.client.dto.model.user.NearbyUsers.Builder, im.turms.server.common.access.client.dto.model.user.NearbyUsersOrBuilder> nearbyUsersBuilder_;
 
             /**
              * <code>.im.turms.proto.NearbyUsers nearby_users = 14;</code>
@@ -4711,13 +4680,13 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
             /**
              * <code>.im.turms.proto.NearbyUsers nearby_users = 14;</code>
              */
-            private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.model.user.NearbyUsers, im.turms.server.common.access.client.dto.model.user.NearbyUsers.Builder, im.turms.server.common.access.client.dto.model.user.NearbyUsersOrBuilder> getNearbyUsersFieldBuilder() {
+            private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.model.user.NearbyUsers, im.turms.server.common.access.client.dto.model.user.NearbyUsers.Builder, im.turms.server.common.access.client.dto.model.user.NearbyUsersOrBuilder> getNearbyUsersFieldBuilder() {
                 if (nearbyUsersBuilder_ == null) {
                     if (!(kindCase_ == 14)) {
                         kind_ = im.turms.server.common.access.client.dto.model.user.NearbyUsers
                                 .getDefaultInstance();
                     }
-                    nearbyUsersBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
+                    nearbyUsersBuilder_ = new com.google.protobuf.SingleFieldBuilder<>(
                             (im.turms.server.common.access.client.dto.model.user.NearbyUsers) kind_,
                             getParentForChildren(),
                             isClean());
@@ -4728,7 +4697,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
                 return nearbyUsersBuilder_;
             }
 
-            private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersion, im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersion.Builder, im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersionOrBuilder> groupInvitationsWithVersionBuilder_;
+            private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersion, im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersion.Builder, im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersionOrBuilder> groupInvitationsWithVersionBuilder_;
 
             /**
              * <pre>
@@ -4906,14 +4875,14 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
              *
              * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 15;</code>
              */
-            private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersion, im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersion.Builder, im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersionOrBuilder> getGroupInvitationsWithVersionFieldBuilder() {
+            private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersion, im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersion.Builder, im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersionOrBuilder> getGroupInvitationsWithVersionFieldBuilder() {
                 if (groupInvitationsWithVersionBuilder_ == null) {
                     if (!(kindCase_ == 15)) {
                         kind_ = im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersion
                                 .getDefaultInstance();
                     }
                     groupInvitationsWithVersionBuilder_ =
-                            new com.google.protobuf.SingleFieldBuilderV3<>(
+                            new com.google.protobuf.SingleFieldBuilder<>(
                                     (im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersion) kind_,
                                     getParentForChildren(),
                                     isClean());
@@ -4924,7 +4893,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
                 return groupInvitationsWithVersionBuilder_;
             }
 
-            private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsAnswerResult, im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsAnswerResult.Builder, im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsAnswerResultOrBuilder> groupJoinQuestionAnswerResultBuilder_;
+            private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsAnswerResult, im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsAnswerResult.Builder, im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsAnswerResultOrBuilder> groupJoinQuestionAnswerResultBuilder_;
 
             /**
              * <code>.im.turms.proto.GroupJoinQuestionsAnswerResult group_join_question_answer_result = 16;</code>
@@ -5066,14 +5035,14 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
             /**
              * <code>.im.turms.proto.GroupJoinQuestionsAnswerResult group_join_question_answer_result = 16;</code>
              */
-            private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsAnswerResult, im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsAnswerResult.Builder, im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsAnswerResultOrBuilder> getGroupJoinQuestionAnswerResultFieldBuilder() {
+            private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsAnswerResult, im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsAnswerResult.Builder, im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsAnswerResultOrBuilder> getGroupJoinQuestionAnswerResultFieldBuilder() {
                 if (groupJoinQuestionAnswerResultBuilder_ == null) {
                     if (!(kindCase_ == 16)) {
                         kind_ = im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsAnswerResult
                                 .getDefaultInstance();
                     }
                     groupJoinQuestionAnswerResultBuilder_ =
-                            new com.google.protobuf.SingleFieldBuilderV3<>(
+                            new com.google.protobuf.SingleFieldBuilder<>(
                                     (im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsAnswerResult) kind_,
                                     getParentForChildren(),
                                     isClean());
@@ -5084,7 +5053,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
                 return groupJoinQuestionAnswerResultBuilder_;
             }
 
-            private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.model.group.GroupJoinRequestsWithVersion, im.turms.server.common.access.client.dto.model.group.GroupJoinRequestsWithVersion.Builder, im.turms.server.common.access.client.dto.model.group.GroupJoinRequestsWithVersionOrBuilder> groupJoinRequestsWithVersionBuilder_;
+            private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.model.group.GroupJoinRequestsWithVersion, im.turms.server.common.access.client.dto.model.group.GroupJoinRequestsWithVersion.Builder, im.turms.server.common.access.client.dto.model.group.GroupJoinRequestsWithVersionOrBuilder> groupJoinRequestsWithVersionBuilder_;
 
             /**
              * <code>.im.turms.proto.GroupJoinRequestsWithVersion group_join_requests_with_version = 17;</code>
@@ -5226,14 +5195,14 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
             /**
              * <code>.im.turms.proto.GroupJoinRequestsWithVersion group_join_requests_with_version = 17;</code>
              */
-            private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.model.group.GroupJoinRequestsWithVersion, im.turms.server.common.access.client.dto.model.group.GroupJoinRequestsWithVersion.Builder, im.turms.server.common.access.client.dto.model.group.GroupJoinRequestsWithVersionOrBuilder> getGroupJoinRequestsWithVersionFieldBuilder() {
+            private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.model.group.GroupJoinRequestsWithVersion, im.turms.server.common.access.client.dto.model.group.GroupJoinRequestsWithVersion.Builder, im.turms.server.common.access.client.dto.model.group.GroupJoinRequestsWithVersionOrBuilder> getGroupJoinRequestsWithVersionFieldBuilder() {
                 if (groupJoinRequestsWithVersionBuilder_ == null) {
                     if (!(kindCase_ == 17)) {
                         kind_ = im.turms.server.common.access.client.dto.model.group.GroupJoinRequestsWithVersion
                                 .getDefaultInstance();
                     }
                     groupJoinRequestsWithVersionBuilder_ =
-                            new com.google.protobuf.SingleFieldBuilderV3<>(
+                            new com.google.protobuf.SingleFieldBuilder<>(
                                     (im.turms.server.common.access.client.dto.model.group.GroupJoinRequestsWithVersion) kind_,
                                     getParentForChildren(),
                                     isClean());
@@ -5244,7 +5213,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
                 return groupJoinRequestsWithVersionBuilder_;
             }
 
-            private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsWithVersion, im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsWithVersion.Builder, im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsWithVersionOrBuilder> groupJoinQuestionsWithVersionBuilder_;
+            private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsWithVersion, im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsWithVersion.Builder, im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsWithVersionOrBuilder> groupJoinQuestionsWithVersionBuilder_;
 
             /**
              * <code>.im.turms.proto.GroupJoinQuestionsWithVersion group_join_questions_with_version = 18;</code>
@@ -5386,14 +5355,14 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
             /**
              * <code>.im.turms.proto.GroupJoinQuestionsWithVersion group_join_questions_with_version = 18;</code>
              */
-            private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsWithVersion, im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsWithVersion.Builder, im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsWithVersionOrBuilder> getGroupJoinQuestionsWithVersionFieldBuilder() {
+            private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsWithVersion, im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsWithVersion.Builder, im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsWithVersionOrBuilder> getGroupJoinQuestionsWithVersionFieldBuilder() {
                 if (groupJoinQuestionsWithVersionBuilder_ == null) {
                     if (!(kindCase_ == 18)) {
                         kind_ = im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsWithVersion
                                 .getDefaultInstance();
                     }
                     groupJoinQuestionsWithVersionBuilder_ =
-                            new com.google.protobuf.SingleFieldBuilderV3<>(
+                            new com.google.protobuf.SingleFieldBuilder<>(
                                     (im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsWithVersion) kind_,
                                     getParentForChildren(),
                                     isClean());
@@ -5404,7 +5373,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
                 return groupJoinQuestionsWithVersionBuilder_;
             }
 
-            private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.model.group.GroupMembersWithVersion, im.turms.server.common.access.client.dto.model.group.GroupMembersWithVersion.Builder, im.turms.server.common.access.client.dto.model.group.GroupMembersWithVersionOrBuilder> groupMembersWithVersionBuilder_;
+            private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.model.group.GroupMembersWithVersion, im.turms.server.common.access.client.dto.model.group.GroupMembersWithVersion.Builder, im.turms.server.common.access.client.dto.model.group.GroupMembersWithVersionOrBuilder> groupMembersWithVersionBuilder_;
 
             /**
              * <code>.im.turms.proto.GroupMembersWithVersion group_members_with_version = 19;</code>
@@ -5546,17 +5515,16 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
             /**
              * <code>.im.turms.proto.GroupMembersWithVersion group_members_with_version = 19;</code>
              */
-            private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.model.group.GroupMembersWithVersion, im.turms.server.common.access.client.dto.model.group.GroupMembersWithVersion.Builder, im.turms.server.common.access.client.dto.model.group.GroupMembersWithVersionOrBuilder> getGroupMembersWithVersionFieldBuilder() {
+            private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.model.group.GroupMembersWithVersion, im.turms.server.common.access.client.dto.model.group.GroupMembersWithVersion.Builder, im.turms.server.common.access.client.dto.model.group.GroupMembersWithVersionOrBuilder> getGroupMembersWithVersionFieldBuilder() {
                 if (groupMembersWithVersionBuilder_ == null) {
                     if (!(kindCase_ == 19)) {
                         kind_ = im.turms.server.common.access.client.dto.model.group.GroupMembersWithVersion
                                 .getDefaultInstance();
                     }
-                    groupMembersWithVersionBuilder_ =
-                            new com.google.protobuf.SingleFieldBuilderV3<>(
-                                    (im.turms.server.common.access.client.dto.model.group.GroupMembersWithVersion) kind_,
-                                    getParentForChildren(),
-                                    isClean());
+                    groupMembersWithVersionBuilder_ = new com.google.protobuf.SingleFieldBuilder<>(
+                            (im.turms.server.common.access.client.dto.model.group.GroupMembersWithVersion) kind_,
+                            getParentForChildren(),
+                            isClean());
                     kind_ = null;
                 }
                 kindCase_ = 19;
@@ -5564,7 +5532,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
                 return groupMembersWithVersionBuilder_;
             }
 
-            private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.model.group.GroupsWithVersion, im.turms.server.common.access.client.dto.model.group.GroupsWithVersion.Builder, im.turms.server.common.access.client.dto.model.group.GroupsWithVersionOrBuilder> groupsWithVersionBuilder_;
+            private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.model.group.GroupsWithVersion, im.turms.server.common.access.client.dto.model.group.GroupsWithVersion.Builder, im.turms.server.common.access.client.dto.model.group.GroupsWithVersionOrBuilder> groupsWithVersionBuilder_;
 
             /**
              * <code>.im.turms.proto.GroupsWithVersion groups_with_version = 20;</code>
@@ -5706,13 +5674,13 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
             /**
              * <code>.im.turms.proto.GroupsWithVersion groups_with_version = 20;</code>
              */
-            private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.model.group.GroupsWithVersion, im.turms.server.common.access.client.dto.model.group.GroupsWithVersion.Builder, im.turms.server.common.access.client.dto.model.group.GroupsWithVersionOrBuilder> getGroupsWithVersionFieldBuilder() {
+            private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.model.group.GroupsWithVersion, im.turms.server.common.access.client.dto.model.group.GroupsWithVersion.Builder, im.turms.server.common.access.client.dto.model.group.GroupsWithVersionOrBuilder> getGroupsWithVersionFieldBuilder() {
                 if (groupsWithVersionBuilder_ == null) {
                     if (!(kindCase_ == 20)) {
                         kind_ = im.turms.server.common.access.client.dto.model.group.GroupsWithVersion
                                 .getDefaultInstance();
                     }
-                    groupsWithVersionBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
+                    groupsWithVersionBuilder_ = new com.google.protobuf.SingleFieldBuilder<>(
                             (im.turms.server.common.access.client.dto.model.group.GroupsWithVersion) kind_,
                             getParentForChildren(),
                             isClean());
@@ -5723,7 +5691,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
                 return groupsWithVersionBuilder_;
             }
 
-            private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.model.storage.StorageResourceInfos, im.turms.server.common.access.client.dto.model.storage.StorageResourceInfos.Builder, im.turms.server.common.access.client.dto.model.storage.StorageResourceInfosOrBuilder> storageResourceInfosBuilder_;
+            private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.model.storage.StorageResourceInfos, im.turms.server.common.access.client.dto.model.storage.StorageResourceInfos.Builder, im.turms.server.common.access.client.dto.model.storage.StorageResourceInfosOrBuilder> storageResourceInfosBuilder_;
 
             /**
              * <pre>
@@ -5901,13 +5869,13 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
              *
              * <code>.im.turms.proto.StorageResourceInfos storage_resource_infos = 50;</code>
              */
-            private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.model.storage.StorageResourceInfos, im.turms.server.common.access.client.dto.model.storage.StorageResourceInfos.Builder, im.turms.server.common.access.client.dto.model.storage.StorageResourceInfosOrBuilder> getStorageResourceInfosFieldBuilder() {
+            private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.model.storage.StorageResourceInfos, im.turms.server.common.access.client.dto.model.storage.StorageResourceInfos.Builder, im.turms.server.common.access.client.dto.model.storage.StorageResourceInfosOrBuilder> getStorageResourceInfosFieldBuilder() {
                 if (storageResourceInfosBuilder_ == null) {
                     if (!(kindCase_ == 50)) {
                         kind_ = im.turms.server.common.access.client.dto.model.storage.StorageResourceInfos
                                 .getDefaultInstance();
                     }
-                    storageResourceInfosBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
+                    storageResourceInfosBuilder_ = new com.google.protobuf.SingleFieldBuilder<>(
                             (im.turms.server.common.access.client.dto.model.storage.StorageResourceInfos) kind_,
                             getParentForChildren(),
                             isClean());
@@ -5918,24 +5886,11 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
                 return storageResourceInfosBuilder_;
             }
 
-            @java.lang.Override
-            public final Builder setUnknownFields(
-                    final com.google.protobuf.UnknownFieldSet unknownFields) {
-                return super.setUnknownFields(unknownFields);
-            }
-
-            @java.lang.Override
-            public final Builder mergeUnknownFields(
-                    final com.google.protobuf.UnknownFieldSet unknownFields) {
-                return super.mergeUnknownFields(unknownFields);
-            }
-
             // @@protoc_insertion_point(builder_scope:im.turms.proto.TurmsNotification.Data)
         }
 
         // @@protoc_insertion_point(class_scope:im.turms.proto.TurmsNotification.Data)
         private static final im.turms.server.common.access.client.dto.notification.TurmsNotification.Data DEFAULT_INSTANCE;
-
         static {
             DEFAULT_INSTANCE =
                     new im.turms.server.common.access.client.dto.notification.TurmsNotification.Data();
@@ -6270,7 +6225,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
             output.writeInt32(5, code_);
         }
         if (((bitField0_ & 0x00000004) != 0)) {
-            com.google.protobuf.GeneratedMessageV3.writeString(output, 6, reason_);
+            com.google.protobuf.GeneratedMessage.writeString(output, 6, reason_);
         }
         if (((bitField0_ & 0x00000008) != 0)) {
             output.writeMessage(7, getData());
@@ -6305,7 +6260,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
             size += com.google.protobuf.CodedOutputStream.computeInt32Size(5, code_);
         }
         if (((bitField0_ & 0x00000004) != 0)) {
-            size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, reason_);
+            size += com.google.protobuf.GeneratedMessage.computeStringSize(6, reason_);
         }
         if (((bitField0_ & 0x00000008) != 0)) {
             size += com.google.protobuf.CodedOutputStream.computeMessageSize(7, getData());
@@ -6477,40 +6432,40 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
 
     public static im.turms.server.common.access.client.dto.notification.TurmsNotification parseFrom(
             java.io.InputStream input) throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3.parseWithIOException(PARSER, input);
+        return com.google.protobuf.GeneratedMessage.parseWithIOException(PARSER, input);
     }
 
     public static im.turms.server.common.access.client.dto.notification.TurmsNotification parseFrom(
             java.io.InputStream input,
             com.google.protobuf.ExtensionRegistryLite extensionRegistry)
             throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
+        return com.google.protobuf.GeneratedMessage
                 .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
     public static im.turms.server.common.access.client.dto.notification.TurmsNotification parseDelimitedFrom(
             java.io.InputStream input) throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3.parseDelimitedWithIOException(PARSER, input);
+        return com.google.protobuf.GeneratedMessage.parseDelimitedWithIOException(PARSER, input);
     }
 
     public static im.turms.server.common.access.client.dto.notification.TurmsNotification parseDelimitedFrom(
             java.io.InputStream input,
             com.google.protobuf.ExtensionRegistryLite extensionRegistry)
             throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
+        return com.google.protobuf.GeneratedMessage
                 .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
 
     public static im.turms.server.common.access.client.dto.notification.TurmsNotification parseFrom(
             com.google.protobuf.CodedInputStream input) throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3.parseWithIOException(PARSER, input);
+        return com.google.protobuf.GeneratedMessage.parseWithIOException(PARSER, input);
     }
 
     public static im.turms.server.common.access.client.dto.notification.TurmsNotification parseFrom(
             com.google.protobuf.CodedInputStream input,
             com.google.protobuf.ExtensionRegistryLite extensionRegistry)
             throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
+        return com.google.protobuf.GeneratedMessage
                 .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
@@ -6537,16 +6492,15 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
     }
 
     @java.lang.Override
-    protected Builder newBuilderForType(
-            com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+    protected Builder newBuilderForType(com.google.protobuf.GeneratedMessage.BuilderParent parent) {
         return new Builder(parent);
     }
 
     /**
      * Protobuf type {@code im.turms.proto.TurmsNotification}
      */
-    public static final class Builder
-            extends com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+    public static final class Builder extends com.google.protobuf.GeneratedMessage.Builder<Builder>
+            implements
             // @@protoc_insertion_point(builder_implements:im.turms.proto.TurmsNotification)
             im.turms.server.common.access.client.dto.notification.TurmsNotificationOrBuilder {
         public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
@@ -6554,7 +6508,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
         }
 
         @java.lang.Override
-        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internalGetFieldAccessorTable() {
+        protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable() {
             return im.turms.server.common.access.client.dto.notification.TurmsNotificationOuterClass.internal_static_im_turms_proto_TurmsNotification_fieldAccessorTable
                     .ensureFieldAccessorsInitialized(
                             im.turms.server.common.access.client.dto.notification.TurmsNotification.class,
@@ -6567,13 +6521,13 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
             maybeForceBuilderInitialization();
         }
 
-        private Builder(com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        private Builder(com.google.protobuf.GeneratedMessage.BuilderParent parent) {
             super(parent);
             maybeForceBuilderInitialization();
         }
 
         private void maybeForceBuilderInitialization() {
-            if (com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders) {
+            if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
                 getDataFieldBuilder();
                 getRelayedRequestFieldBuilder();
             }
@@ -6675,43 +6629,6 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
                 to_bitField0_ |= 0x00000040;
             }
             result.bitField0_ |= to_bitField0_;
-        }
-
-        @java.lang.Override
-        public Builder clone() {
-            return super.clone();
-        }
-
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index,
-                java.lang.Object value) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.addRepeatedField(field, value);
         }
 
         @java.lang.Override
@@ -7093,7 +7010,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
         }
 
         private im.turms.server.common.access.client.dto.notification.TurmsNotification.Data data_;
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.notification.TurmsNotification.Data, im.turms.server.common.access.client.dto.notification.TurmsNotification.Data.Builder, im.turms.server.common.access.client.dto.notification.TurmsNotification.DataOrBuilder> dataBuilder_;
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.notification.TurmsNotification.Data, im.turms.server.common.access.client.dto.notification.TurmsNotification.Data.Builder, im.turms.server.common.access.client.dto.notification.TurmsNotification.DataOrBuilder> dataBuilder_;
 
         /**
          * <code>.im.turms.proto.TurmsNotification.Data data = 7;</code>
@@ -7217,9 +7134,9 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
         /**
          * <code>.im.turms.proto.TurmsNotification.Data data = 7;</code>
          */
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.notification.TurmsNotification.Data, im.turms.server.common.access.client.dto.notification.TurmsNotification.Data.Builder, im.turms.server.common.access.client.dto.notification.TurmsNotification.DataOrBuilder> getDataFieldBuilder() {
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.notification.TurmsNotification.Data, im.turms.server.common.access.client.dto.notification.TurmsNotification.Data.Builder, im.turms.server.common.access.client.dto.notification.TurmsNotification.DataOrBuilder> getDataFieldBuilder() {
             if (dataBuilder_ == null) {
-                dataBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
+                dataBuilder_ = new com.google.protobuf.SingleFieldBuilder<>(
                         getData(),
                         getParentForChildren(),
                         isClean());
@@ -7353,7 +7270,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
         }
 
         private im.turms.server.common.access.client.dto.request.TurmsRequest relayedRequest_;
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.TurmsRequest, im.turms.server.common.access.client.dto.request.TurmsRequest.Builder, im.turms.server.common.access.client.dto.request.TurmsRequestOrBuilder> relayedRequestBuilder_;
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.TurmsRequest, im.turms.server.common.access.client.dto.request.TurmsRequest.Builder, im.turms.server.common.access.client.dto.request.TurmsRequestOrBuilder> relayedRequestBuilder_;
 
         /**
          * <code>.im.turms.proto.TurmsRequest relayed_request = 12;</code>
@@ -7477,9 +7394,9 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
         /**
          * <code>.im.turms.proto.TurmsRequest relayed_request = 12;</code>
          */
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.TurmsRequest, im.turms.server.common.access.client.dto.request.TurmsRequest.Builder, im.turms.server.common.access.client.dto.request.TurmsRequestOrBuilder> getRelayedRequestFieldBuilder() {
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.TurmsRequest, im.turms.server.common.access.client.dto.request.TurmsRequest.Builder, im.turms.server.common.access.client.dto.request.TurmsRequestOrBuilder> getRelayedRequestFieldBuilder() {
             if (relayedRequestBuilder_ == null) {
-                relayedRequestBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
+                relayedRequestBuilder_ = new com.google.protobuf.SingleFieldBuilder<>(
                         getRelayedRequest(),
                         getParentForChildren(),
                         isClean());
@@ -7488,24 +7405,11 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
             return relayedRequestBuilder_;
         }
 
-        @java.lang.Override
-        public final Builder setUnknownFields(
-                final com.google.protobuf.UnknownFieldSet unknownFields) {
-            return super.setUnknownFields(unknownFields);
-        }
-
-        @java.lang.Override
-        public final Builder mergeUnknownFields(
-                final com.google.protobuf.UnknownFieldSet unknownFields) {
-            return super.mergeUnknownFields(unknownFields);
-        }
-
         // @@protoc_insertion_point(builder_scope:im.turms.proto.TurmsNotification)
     }
 
     // @@protoc_insertion_point(class_scope:im.turms.proto.TurmsNotification)
     private static final im.turms.server.common.access.client.dto.notification.TurmsNotification DEFAULT_INSTANCE;
-
     static {
         DEFAULT_INSTANCE =
                 new im.turms.server.common.access.client.dto.notification.TurmsNotification();

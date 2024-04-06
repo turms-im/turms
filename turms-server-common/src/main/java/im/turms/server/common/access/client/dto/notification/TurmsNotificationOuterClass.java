@@ -21,6 +21,16 @@ public final class TurmsNotificationOuterClass {
     private TurmsNotificationOuterClass() {
     }
 
+    static {
+        com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
+                com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
+                /* major= */ 4,
+                /* minor= */ 26,
+                /* patch= */ 1,
+                /* suffix= */ "",
+                TurmsNotificationOuterClass.class.getName());
+    }
+
     public static void registerAllExtensions(com.google.protobuf.ExtensionRegistryLite registry) {
     }
 
@@ -29,21 +39,20 @@ public final class TurmsNotificationOuterClass {
     }
 
     static final com.google.protobuf.Descriptors.Descriptor internal_static_im_turms_proto_TurmsNotification_descriptor;
-    static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internal_static_im_turms_proto_TurmsNotification_fieldAccessorTable;
+    static final com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_im_turms_proto_TurmsNotification_fieldAccessorTable;
     static final com.google.protobuf.Descriptors.Descriptor internal_static_im_turms_proto_TurmsNotification_Data_descriptor;
-    static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internal_static_im_turms_proto_TurmsNotification_Data_fieldAccessorTable;
+    static final com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_im_turms_proto_TurmsNotification_Data_fieldAccessorTable;
 
     public static com.google.protobuf.Descriptors.FileDescriptor getDescriptor() {
         return descriptor;
     }
 
-    private static com.google.protobuf.Descriptors.FileDescriptor descriptor;
-
+    private static final com.google.protobuf.Descriptors.FileDescriptor descriptor;
     static {
         java.lang.String[] descriptorData = {"\n%notification/turms_notification.proto\022"
                 + "\016im.turms.proto\032\033request/turms_request.p"
                 + "roto\032%model/common/longs_with_version.pr"
-                + "oto\032\'model/common/strings_with_version.p"
+                + "oto\032'model/common/strings_with_version.p"
                 + "roto\0320model/group/group_invitations_with"
                 + "_version.proto\0324model/group/group_join_q"
                 + "uestions_answer_result.proto\0323model/grou"
@@ -101,7 +110,7 @@ public final class TurmsNotificationOuterClass {
                 + "uestsWithVersionH\000\022Z\n!group_join_questio"
                 + "ns_with_version\030\022 \001(\0132-.im.turms.proto.G"
                 + "roupJoinQuestionsWithVersionH\000\022M\n\032group_"
-                + "members_with_version\030\023 \001(\0132\'.im.turms.pr"
+                + "members_with_version\030\023 \001(\0132'.im.turms.pr"
                 + "oto.GroupMembersWithVersionH\000\022@\n\023groups_"
                 + "with_version\030\024 \001(\0132!.im.turms.proto.Grou"
                 + "psWithVersionH\000\022F\n\026storage_resource_info"
@@ -157,7 +166,7 @@ public final class TurmsNotificationOuterClass {
                 getDescriptor().getMessageTypes()
                         .get(0);
         internal_static_im_turms_proto_TurmsNotification_fieldAccessorTable =
-                new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+                new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_TurmsNotification_descriptor,
                         new java.lang.String[]{"Timestamp",
                                 "RequestId",
@@ -171,7 +180,7 @@ public final class TurmsNotificationOuterClass {
                 internal_static_im_turms_proto_TurmsNotification_descriptor.getNestedTypes()
                         .get(0);
         internal_static_im_turms_proto_TurmsNotification_Data_fieldAccessorTable =
-                new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+                new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_TurmsNotification_Data_descriptor,
                         new java.lang.String[]{"Long",
                                 "String",
@@ -195,6 +204,7 @@ public final class TurmsNotificationOuterClass {
                                 "GroupsWithVersion",
                                 "StorageResourceInfos",
                                 "Kind",});
+        descriptor.resolveAllFeaturesImmutable();
         im.turms.server.common.access.client.dto.request.TurmsRequestOuterClass.getDescriptor();
         im.turms.server.common.access.client.dto.model.common.LongsWithVersionOuterClass
                 .getDescriptor();

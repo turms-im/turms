@@ -21,6 +21,16 @@ public final class UserInfosWithVersionOuterClass {
     private UserInfosWithVersionOuterClass() {
     }
 
+    static {
+        com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
+                com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
+                /* major= */ 4,
+                /* minor= */ 26,
+                /* patch= */ 1,
+                /* suffix= */ "",
+                UserInfosWithVersionOuterClass.class.getName());
+    }
+
     public static void registerAllExtensions(com.google.protobuf.ExtensionRegistryLite registry) {
     }
 
@@ -29,14 +39,13 @@ public final class UserInfosWithVersionOuterClass {
     }
 
     static final com.google.protobuf.Descriptors.Descriptor internal_static_im_turms_proto_UserInfosWithVersion_descriptor;
-    static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internal_static_im_turms_proto_UserInfosWithVersion_fieldAccessorTable;
+    static final com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_im_turms_proto_UserInfosWithVersion_fieldAccessorTable;
 
     public static com.google.protobuf.Descriptors.FileDescriptor getDescriptor() {
         return descriptor;
     }
 
-    private static com.google.protobuf.Descriptors.FileDescriptor descriptor;
-
+    private static final com.google.protobuf.Descriptors.FileDescriptor descriptor;
     static {
         java.lang.String[] descriptorData = {"\n(model/user/user_infos_with_version.pro"
                 + "to\022\016im.turms.proto\032\032model/user/user_info"
@@ -54,9 +63,10 @@ public final class UserInfosWithVersionOuterClass {
                 getDescriptor().getMessageTypes()
                         .get(0);
         internal_static_im_turms_proto_UserInfosWithVersion_fieldAccessorTable =
-                new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+                new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_UserInfosWithVersion_descriptor,
                         new java.lang.String[]{"UserInfos", "LastUpdatedDate",});
+        descriptor.resolveAllFeaturesImmutable();
         im.turms.server.common.access.client.dto.model.user.UserInfoOuterClass.getDescriptor();
     }
 

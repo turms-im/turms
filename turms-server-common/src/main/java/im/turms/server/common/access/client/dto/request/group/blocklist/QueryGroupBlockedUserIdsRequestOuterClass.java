@@ -21,6 +21,16 @@ public final class QueryGroupBlockedUserIdsRequestOuterClass {
     private QueryGroupBlockedUserIdsRequestOuterClass() {
     }
 
+    static {
+        com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
+                com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
+                /* major= */ 4,
+                /* minor= */ 26,
+                /* patch= */ 1,
+                /* suffix= */ "",
+                QueryGroupBlockedUserIdsRequestOuterClass.class.getName());
+    }
+
     public static void registerAllExtensions(com.google.protobuf.ExtensionRegistryLite registry) {
     }
 
@@ -29,14 +39,13 @@ public final class QueryGroupBlockedUserIdsRequestOuterClass {
     }
 
     static final com.google.protobuf.Descriptors.Descriptor internal_static_im_turms_proto_QueryGroupBlockedUserIdsRequest_descriptor;
-    static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internal_static_im_turms_proto_QueryGroupBlockedUserIdsRequest_fieldAccessorTable;
+    static final com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_im_turms_proto_QueryGroupBlockedUserIdsRequest_fieldAccessorTable;
 
     public static com.google.protobuf.Descriptors.FileDescriptor getDescriptor() {
         return descriptor;
     }
 
     private static com.google.protobuf.Descriptors.FileDescriptor descriptor;
-
     static {
         java.lang.String[] descriptorData = {"\nBrequest/group/blocklist/query_group_bl"
                 + "ocked_user_ids_request.proto\022\016im.turms.p"
@@ -52,9 +61,10 @@ public final class QueryGroupBlockedUserIdsRequestOuterClass {
                 getDescriptor().getMessageTypes()
                         .get(0);
         internal_static_im_turms_proto_QueryGroupBlockedUserIdsRequest_fieldAccessorTable =
-                new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+                new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_QueryGroupBlockedUserIdsRequest_descriptor,
                         new java.lang.String[]{"GroupId", "LastUpdatedDate",});
+        descriptor.resolveAllFeaturesImmutable();
     }
 
     // @@protoc_insertion_point(outer_class_scope)

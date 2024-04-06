@@ -21,6 +21,16 @@ public final class UserInfoOuterClass {
     private UserInfoOuterClass() {
     }
 
+    static {
+        com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
+                com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
+                /* major= */ 4,
+                /* minor= */ 26,
+                /* patch= */ 1,
+                /* suffix= */ "",
+                UserInfoOuterClass.class.getName());
+    }
+
     public static void registerAllExtensions(com.google.protobuf.ExtensionRegistryLite registry) {
     }
 
@@ -29,14 +39,13 @@ public final class UserInfoOuterClass {
     }
 
     static final com.google.protobuf.Descriptors.Descriptor internal_static_im_turms_proto_UserInfo_descriptor;
-    static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internal_static_im_turms_proto_UserInfo_fieldAccessorTable;
+    static final com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_im_turms_proto_UserInfo_fieldAccessorTable;
 
     public static com.google.protobuf.Descriptors.FileDescriptor getDescriptor() {
         return descriptor;
     }
 
     private static com.google.protobuf.Descriptors.FileDescriptor descriptor;
-
     static {
         java.lang.String[] descriptorData = {"\n\032model/user/user_info.proto\022\016im.turms.p"
                 + "roto\032&constant/profile_access_strategy.p"
@@ -60,7 +69,7 @@ public final class UserInfoOuterClass {
         internal_static_im_turms_proto_UserInfo_descriptor = getDescriptor().getMessageTypes()
                 .get(0);
         internal_static_im_turms_proto_UserInfo_fieldAccessorTable =
-                new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+                new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_UserInfo_descriptor,
                         new java.lang.String[]{"Id",
                                 "Name",
@@ -70,6 +79,7 @@ public final class UserInfoOuterClass {
                                 "RegistrationDate",
                                 "LastUpdatedDate",
                                 "Active",});
+        descriptor.resolveAllFeaturesImmutable();
         im.turms.server.common.access.client.dto.constant.ProfileAccessStrategyOuterClass
                 .getDescriptor();
     }

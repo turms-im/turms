@@ -21,6 +21,16 @@ public final class DeleteGroupBlockedUserRequestOuterClass {
     private DeleteGroupBlockedUserRequestOuterClass() {
     }
 
+    static {
+        com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
+                com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
+                /* major= */ 4,
+                /* minor= */ 26,
+                /* patch= */ 1,
+                /* suffix= */ "",
+                DeleteGroupBlockedUserRequestOuterClass.class.getName());
+    }
+
     public static void registerAllExtensions(com.google.protobuf.ExtensionRegistryLite registry) {
     }
 
@@ -29,14 +39,13 @@ public final class DeleteGroupBlockedUserRequestOuterClass {
     }
 
     static final com.google.protobuf.Descriptors.Descriptor internal_static_im_turms_proto_DeleteGroupBlockedUserRequest_descriptor;
-    static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internal_static_im_turms_proto_DeleteGroupBlockedUserRequest_fieldAccessorTable;
+    static final com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_im_turms_proto_DeleteGroupBlockedUserRequest_fieldAccessorTable;
 
     public static com.google.protobuf.Descriptors.FileDescriptor getDescriptor() {
         return descriptor;
     }
 
     private static com.google.protobuf.Descriptors.FileDescriptor descriptor;
-
     static {
         java.lang.String[] descriptorData = {"\n?request/group/blocklist/delete_group_b"
                 + "locked_user_request.proto\022\016im.turms.prot"
@@ -51,9 +60,10 @@ public final class DeleteGroupBlockedUserRequestOuterClass {
                 getDescriptor().getMessageTypes()
                         .get(0);
         internal_static_im_turms_proto_DeleteGroupBlockedUserRequest_fieldAccessorTable =
-                new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+                new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_DeleteGroupBlockedUserRequest_descriptor,
                         new java.lang.String[]{"GroupId", "UserId",});
+        descriptor.resolveAllFeaturesImmutable();
     }
 
     // @@protoc_insertion_point(outer_class_scope)

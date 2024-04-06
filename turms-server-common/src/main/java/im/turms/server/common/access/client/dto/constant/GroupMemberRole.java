@@ -43,6 +43,15 @@ public enum GroupMemberRole implements com.google.protobuf.ProtocolMessageEnum {
     ANONYMOUS_GUEST(4),
     UNRECOGNIZED(-1),;
 
+    static {
+        com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
+                com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
+                /* major= */ 4,
+                /* minor= */ 26,
+                /* patch= */ 1,
+                /* suffix= */ "",
+                GroupMemberRole.class.getName());
+    }
     /**
      * <code>OWNER = 0;</code>
      */
@@ -102,11 +111,7 @@ public enum GroupMemberRole implements com.google.protobuf.ProtocolMessageEnum {
     }
 
     private static final com.google.protobuf.Internal.EnumLiteMap<GroupMemberRole> internalValueMap =
-            new com.google.protobuf.Internal.EnumLiteMap<>() {
-                public GroupMemberRole findValueByNumber(int number) {
-                    return GroupMemberRole.forNumber(number);
-                }
-            };
+            number -> GroupMemberRole.forNumber(number);
 
     public final com.google.protobuf.Descriptors.EnumValueDescriptor getValueDescriptor() {
         if (this == UNRECOGNIZED) {
@@ -144,7 +149,7 @@ public enum GroupMemberRole implements com.google.protobuf.ProtocolMessageEnum {
 
     private final int value;
 
-    private GroupMemberRole(int value) {
+    GroupMemberRole(int value) {
         this.value = value;
     }
 

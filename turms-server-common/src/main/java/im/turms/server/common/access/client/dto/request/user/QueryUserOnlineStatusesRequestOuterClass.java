@@ -21,6 +21,16 @@ public final class QueryUserOnlineStatusesRequestOuterClass {
     private QueryUserOnlineStatusesRequestOuterClass() {
     }
 
+    static {
+        com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
+                com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
+                /* major= */ 4,
+                /* minor= */ 26,
+                /* patch= */ 1,
+                /* suffix= */ "",
+                QueryUserOnlineStatusesRequestOuterClass.class.getName());
+    }
+
     public static void registerAllExtensions(com.google.protobuf.ExtensionRegistryLite registry) {
     }
 
@@ -29,14 +39,13 @@ public final class QueryUserOnlineStatusesRequestOuterClass {
     }
 
     static final com.google.protobuf.Descriptors.Descriptor internal_static_im_turms_proto_QueryUserOnlineStatusesRequest_descriptor;
-    static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internal_static_im_turms_proto_QueryUserOnlineStatusesRequest_fieldAccessorTable;
+    static final com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_im_turms_proto_QueryUserOnlineStatusesRequest_fieldAccessorTable;
 
     public static com.google.protobuf.Descriptors.FileDescriptor getDescriptor() {
         return descriptor;
     }
 
-    private static com.google.protobuf.Descriptors.FileDescriptor descriptor;
-
+    private static final com.google.protobuf.Descriptors.FileDescriptor descriptor;
     static {
         java.lang.String[] descriptorData = {"\n5request/user/query_user_online_statuse"
                 + "s_request.proto\022\016im.turms.proto\"2\n\036Query"
@@ -50,9 +59,10 @@ public final class QueryUserOnlineStatusesRequestOuterClass {
                 getDescriptor().getMessageTypes()
                         .get(0);
         internal_static_im_turms_proto_QueryUserOnlineStatusesRequest_fieldAccessorTable =
-                new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+                new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_QueryUserOnlineStatusesRequest_descriptor,
                         new java.lang.String[]{"UserIds",});
+        descriptor.resolveAllFeaturesImmutable();
     }
 
     // @@protoc_insertion_point(outer_class_scope)

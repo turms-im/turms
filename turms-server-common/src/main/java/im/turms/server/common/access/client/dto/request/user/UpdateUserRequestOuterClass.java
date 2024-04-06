@@ -21,6 +21,16 @@ public final class UpdateUserRequestOuterClass {
     private UpdateUserRequestOuterClass() {
     }
 
+    static {
+        com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
+                com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
+                /* major= */ 4,
+                /* minor= */ 26,
+                /* patch= */ 1,
+                /* suffix= */ "",
+                UpdateUserRequestOuterClass.class.getName());
+    }
+
     public static void registerAllExtensions(com.google.protobuf.ExtensionRegistryLite registry) {
     }
 
@@ -29,14 +39,13 @@ public final class UpdateUserRequestOuterClass {
     }
 
     static final com.google.protobuf.Descriptors.Descriptor internal_static_im_turms_proto_UpdateUserRequest_descriptor;
-    static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internal_static_im_turms_proto_UpdateUserRequest_fieldAccessorTable;
+    static final com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_im_turms_proto_UpdateUserRequest_fieldAccessorTable;
 
     public static com.google.protobuf.Descriptors.FileDescriptor getDescriptor() {
         return descriptor;
     }
 
-    private static com.google.protobuf.Descriptors.FileDescriptor descriptor;
-
+    private static final com.google.protobuf.Descriptors.FileDescriptor descriptor;
     static {
         java.lang.String[] descriptorData = {"\n&request/user/update_user_request.proto"
                 + "\022\016im.turms.proto\032&constant/profile_acces"
@@ -58,13 +67,14 @@ public final class UpdateUserRequestOuterClass {
                 getDescriptor().getMessageTypes()
                         .get(0);
         internal_static_im_turms_proto_UpdateUserRequest_fieldAccessorTable =
-                new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+                new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_UpdateUserRequest_descriptor,
                         new java.lang.String[]{"Password",
                                 "Name",
                                 "Intro",
                                 "ProfilePicture",
                                 "ProfileAccessStrategy",});
+        descriptor.resolveAllFeaturesImmutable();
         im.turms.server.common.access.client.dto.constant.ProfileAccessStrategyOuterClass
                 .getDescriptor();
     }

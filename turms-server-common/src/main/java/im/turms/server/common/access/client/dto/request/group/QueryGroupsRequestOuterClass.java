@@ -21,6 +21,16 @@ public final class QueryGroupsRequestOuterClass {
     private QueryGroupsRequestOuterClass() {
     }
 
+    static {
+        com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
+                com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
+                /* major= */ 4,
+                /* minor= */ 26,
+                /* patch= */ 1,
+                /* suffix= */ "",
+                QueryGroupsRequestOuterClass.class.getName());
+    }
+
     public static void registerAllExtensions(com.google.protobuf.ExtensionRegistryLite registry) {
     }
 
@@ -29,21 +39,23 @@ public final class QueryGroupsRequestOuterClass {
     }
 
     static final com.google.protobuf.Descriptors.Descriptor internal_static_im_turms_proto_QueryGroupsRequest_descriptor;
-    static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internal_static_im_turms_proto_QueryGroupsRequest_fieldAccessorTable;
+    static final com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_im_turms_proto_QueryGroupsRequest_fieldAccessorTable;
 
     public static com.google.protobuf.Descriptors.FileDescriptor getDescriptor() {
         return descriptor;
     }
 
-    private static com.google.protobuf.Descriptors.FileDescriptor descriptor;
-
+    private static final com.google.protobuf.Descriptors.FileDescriptor descriptor;
     static {
         java.lang.String[] descriptorData = {"\n(request/group/query_groups_request.pro"
-                + "to\022\016im.turms.proto\"]\n\022QueryGroupsRequest"
-                + "\022\021\n\tgroup_ids\030\001 \003(\003\022\036\n\021last_updated_date"
-                + "\030\002 \001(\003H\000\210\001\001B\024\n\022_last_updated_dateB=\n6im."
-                + "turms.server.common.access.client.dto.re"
-                + "quest.groupP\001\272\002\000b\006proto3"};
+                + "to\022\016im.turms.proto\"\320\001\n\022QueryGroupsReques"
+                + "t\022\021\n\tgroup_ids\030\001 \003(\003\022\036\n\021last_updated_dat"
+                + "e\030\002 \001(\003H\000\210\001\001\022\021\n\004name\030\003 \001(\tH\001\210\001\001\022\021\n\004skip\030"
+                + "\n \001(\005H\002\210\001\001\022\022\n\005limit\030\013 \001(\005H\003\210\001\001\022\033\n\023fields"
+                + "_to_highlight\030\014 \003(\005B\024\n\022_last_updated_dat"
+                + "eB\007\n\005_nameB\007\n\005_skipB\010\n\006_limitB=\n6im.turm"
+                + "s.server.common.access.client.dto.reques"
+                + "t.groupP\001\272\002\000b\006proto3"};
         descriptor = com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(
                 descriptorData,
                 new com.google.protobuf.Descriptors.FileDescriptor[]{});
@@ -51,9 +63,15 @@ public final class QueryGroupsRequestOuterClass {
                 getDescriptor().getMessageTypes()
                         .get(0);
         internal_static_im_turms_proto_QueryGroupsRequest_fieldAccessorTable =
-                new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+                new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_QueryGroupsRequest_descriptor,
-                        new java.lang.String[]{"GroupIds", "LastUpdatedDate",});
+                        new java.lang.String[]{"GroupIds",
+                                "LastUpdatedDate",
+                                "Name",
+                                "Skip",
+                                "Limit",
+                                "FieldsToHighlight",});
+        descriptor.resolveAllFeaturesImmutable();
     }
 
     // @@protoc_insertion_point(outer_class_scope)

@@ -20,15 +20,24 @@ package im.turms.server.common.access.client.dto.model.user;
 /**
  * Protobuf type {@code im.turms.proto.UserRelationshipGroupsWithVersion}
  */
-public final class UserRelationshipGroupsWithVersion extends com.google.protobuf.GeneratedMessageV3
+public final class UserRelationshipGroupsWithVersion extends com.google.protobuf.GeneratedMessage
         implements
         // @@protoc_insertion_point(message_implements:im.turms.proto.UserRelationshipGroupsWithVersion)
         UserRelationshipGroupsWithVersionOrBuilder {
     private static final long serialVersionUID = 0L;
+    static {
+        com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
+                com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
+                /* major= */ 4,
+                /* minor= */ 26,
+                /* patch= */ 1,
+                /* suffix= */ "",
+                UserRelationshipGroupsWithVersion.class.getName());
+    }
 
     // Use UserRelationshipGroupsWithVersion.newBuilder() to construct.
     private UserRelationshipGroupsWithVersion(
-            com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+            com.google.protobuf.GeneratedMessage.Builder<?> builder) {
         super(builder);
     }
 
@@ -36,18 +45,12 @@ public final class UserRelationshipGroupsWithVersion extends com.google.protobuf
         userRelationshipGroups_ = java.util.Collections.emptyList();
     }
 
-    @java.lang.Override
-    @SuppressWarnings({"unused"})
-    protected java.lang.Object newInstance(UnusedPrivateParameter unused) {
-        return new UserRelationshipGroupsWithVersion();
-    }
-
     public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
         return im.turms.server.common.access.client.dto.model.user.UserRelationshipGroupsWithVersionOuterClass.internal_static_im_turms_proto_UserRelationshipGroupsWithVersion_descriptor;
     }
 
     @java.lang.Override
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internalGetFieldAccessorTable() {
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable() {
         return im.turms.server.common.access.client.dto.model.user.UserRelationshipGroupsWithVersionOuterClass.internal_static_im_turms_proto_UserRelationshipGroupsWithVersion_fieldAccessorTable
                 .ensureFieldAccessorsInitialized(
                         im.turms.server.common.access.client.dto.model.user.UserRelationshipGroupsWithVersion.class,
@@ -253,40 +256,40 @@ public final class UserRelationshipGroupsWithVersion extends com.google.protobuf
 
     public static im.turms.server.common.access.client.dto.model.user.UserRelationshipGroupsWithVersion parseFrom(
             java.io.InputStream input) throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3.parseWithIOException(PARSER, input);
+        return com.google.protobuf.GeneratedMessage.parseWithIOException(PARSER, input);
     }
 
     public static im.turms.server.common.access.client.dto.model.user.UserRelationshipGroupsWithVersion parseFrom(
             java.io.InputStream input,
             com.google.protobuf.ExtensionRegistryLite extensionRegistry)
             throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
+        return com.google.protobuf.GeneratedMessage
                 .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
     public static im.turms.server.common.access.client.dto.model.user.UserRelationshipGroupsWithVersion parseDelimitedFrom(
             java.io.InputStream input) throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3.parseDelimitedWithIOException(PARSER, input);
+        return com.google.protobuf.GeneratedMessage.parseDelimitedWithIOException(PARSER, input);
     }
 
     public static im.turms.server.common.access.client.dto.model.user.UserRelationshipGroupsWithVersion parseDelimitedFrom(
             java.io.InputStream input,
             com.google.protobuf.ExtensionRegistryLite extensionRegistry)
             throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
+        return com.google.protobuf.GeneratedMessage
                 .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
 
     public static im.turms.server.common.access.client.dto.model.user.UserRelationshipGroupsWithVersion parseFrom(
             com.google.protobuf.CodedInputStream input) throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3.parseWithIOException(PARSER, input);
+        return com.google.protobuf.GeneratedMessage.parseWithIOException(PARSER, input);
     }
 
     public static im.turms.server.common.access.client.dto.model.user.UserRelationshipGroupsWithVersion parseFrom(
             com.google.protobuf.CodedInputStream input,
             com.google.protobuf.ExtensionRegistryLite extensionRegistry)
             throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
+        return com.google.protobuf.GeneratedMessage
                 .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
@@ -313,16 +316,15 @@ public final class UserRelationshipGroupsWithVersion extends com.google.protobuf
     }
 
     @java.lang.Override
-    protected Builder newBuilderForType(
-            com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+    protected Builder newBuilderForType(com.google.protobuf.GeneratedMessage.BuilderParent parent) {
         return new Builder(parent);
     }
 
     /**
      * Protobuf type {@code im.turms.proto.UserRelationshipGroupsWithVersion}
      */
-    public static final class Builder
-            extends com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+    public static final class Builder extends com.google.protobuf.GeneratedMessage.Builder<Builder>
+            implements
             // @@protoc_insertion_point(builder_implements:im.turms.proto.UserRelationshipGroupsWithVersion)
             im.turms.server.common.access.client.dto.model.user.UserRelationshipGroupsWithVersionOrBuilder {
         public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
@@ -330,7 +332,7 @@ public final class UserRelationshipGroupsWithVersion extends com.google.protobuf
         }
 
         @java.lang.Override
-        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internalGetFieldAccessorTable() {
+        protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable() {
             return im.turms.server.common.access.client.dto.model.user.UserRelationshipGroupsWithVersionOuterClass.internal_static_im_turms_proto_UserRelationshipGroupsWithVersion_fieldAccessorTable
                     .ensureFieldAccessorsInitialized(
                             im.turms.server.common.access.client.dto.model.user.UserRelationshipGroupsWithVersion.class,
@@ -343,7 +345,7 @@ public final class UserRelationshipGroupsWithVersion extends com.google.protobuf
 
         }
 
-        private Builder(com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        private Builder(com.google.protobuf.GeneratedMessage.BuilderParent parent) {
             super(parent);
 
         }
@@ -423,43 +425,6 @@ public final class UserRelationshipGroupsWithVersion extends com.google.protobuf
         }
 
         @java.lang.Override
-        public Builder clone() {
-            return super.clone();
-        }
-
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index,
-                java.lang.Object value) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.addRepeatedField(field, value);
-        }
-
-        @java.lang.Override
         public Builder mergeFrom(com.google.protobuf.Message other) {
             if (other instanceof im.turms.server.common.access.client.dto.model.user.UserRelationshipGroupsWithVersion) {
                 return mergeFrom(
@@ -495,7 +460,7 @@ public final class UserRelationshipGroupsWithVersion extends com.google.protobuf
                         userRelationshipGroups_ = other.userRelationshipGroups_;
                         bitField0_ &= ~0x00000001;
                         userRelationshipGroupsBuilder_ =
-                                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders
+                                com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders
                                         ? getUserRelationshipGroupsFieldBuilder()
                                         : null;
                     } else {
@@ -572,7 +537,7 @@ public final class UserRelationshipGroupsWithVersion extends com.google.protobuf
             }
         }
 
-        private com.google.protobuf.RepeatedFieldBuilderV3<im.turms.server.common.access.client.dto.model.user.UserRelationshipGroup, im.turms.server.common.access.client.dto.model.user.UserRelationshipGroup.Builder, im.turms.server.common.access.client.dto.model.user.UserRelationshipGroupOrBuilder> userRelationshipGroupsBuilder_;
+        private com.google.protobuf.RepeatedFieldBuilder<im.turms.server.common.access.client.dto.model.user.UserRelationshipGroup, im.turms.server.common.access.client.dto.model.user.UserRelationshipGroup.Builder, im.turms.server.common.access.client.dto.model.user.UserRelationshipGroupOrBuilder> userRelationshipGroupsBuilder_;
 
         /**
          * <code>repeated .im.turms.proto.UserRelationshipGroup user_relationship_groups = 1;</code>
@@ -812,9 +777,9 @@ public final class UserRelationshipGroupsWithVersion extends com.google.protobuf
             return getUserRelationshipGroupsFieldBuilder().getBuilderList();
         }
 
-        private com.google.protobuf.RepeatedFieldBuilderV3<im.turms.server.common.access.client.dto.model.user.UserRelationshipGroup, im.turms.server.common.access.client.dto.model.user.UserRelationshipGroup.Builder, im.turms.server.common.access.client.dto.model.user.UserRelationshipGroupOrBuilder> getUserRelationshipGroupsFieldBuilder() {
+        private com.google.protobuf.RepeatedFieldBuilder<im.turms.server.common.access.client.dto.model.user.UserRelationshipGroup, im.turms.server.common.access.client.dto.model.user.UserRelationshipGroup.Builder, im.turms.server.common.access.client.dto.model.user.UserRelationshipGroupOrBuilder> getUserRelationshipGroupsFieldBuilder() {
             if (userRelationshipGroupsBuilder_ == null) {
-                userRelationshipGroupsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<>(
+                userRelationshipGroupsBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<>(
                         userRelationshipGroups_,
                         ((bitField0_ & 0x00000001) != 0),
                         getParentForChildren(),
@@ -872,24 +837,11 @@ public final class UserRelationshipGroupsWithVersion extends com.google.protobuf
             return this;
         }
 
-        @java.lang.Override
-        public final Builder setUnknownFields(
-                final com.google.protobuf.UnknownFieldSet unknownFields) {
-            return super.setUnknownFields(unknownFields);
-        }
-
-        @java.lang.Override
-        public final Builder mergeUnknownFields(
-                final com.google.protobuf.UnknownFieldSet unknownFields) {
-            return super.mergeUnknownFields(unknownFields);
-        }
-
         // @@protoc_insertion_point(builder_scope:im.turms.proto.UserRelationshipGroupsWithVersion)
     }
 
     // @@protoc_insertion_point(class_scope:im.turms.proto.UserRelationshipGroupsWithVersion)
     private static final im.turms.server.common.access.client.dto.model.user.UserRelationshipGroupsWithVersion DEFAULT_INSTANCE;
-
     static {
         DEFAULT_INSTANCE =
                 new im.turms.server.common.access.client.dto.model.user.UserRelationshipGroupsWithVersion();

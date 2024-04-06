@@ -21,6 +21,16 @@ public final class MessageOuterClass {
     private MessageOuterClass() {
     }
 
+    static {
+        com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
+                com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
+                /* major= */ 4,
+                /* minor= */ 26,
+                /* patch= */ 1,
+                /* suffix= */ "",
+                MessageOuterClass.class.getName());
+    }
+
     public static void registerAllExtensions(com.google.protobuf.ExtensionRegistryLite registry) {
     }
 
@@ -29,14 +39,13 @@ public final class MessageOuterClass {
     }
 
     static final com.google.protobuf.Descriptors.Descriptor internal_static_im_turms_proto_Message_descriptor;
-    static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internal_static_im_turms_proto_Message_fieldAccessorTable;
+    static final com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_im_turms_proto_Message_fieldAccessorTable;
 
     public static com.google.protobuf.Descriptors.FileDescriptor getDescriptor() {
         return descriptor;
     }
 
     private static com.google.protobuf.Descriptors.FileDescriptor descriptor;
-
     static {
         java.lang.String[] descriptorData = {"\n\033model/message/message.proto\022\016im.turms."
                 + "proto\"\270\003\n\007Message\022\017\n\002id\030\001 \001(\003H\000\210\001\001\022\032\n\rde"
@@ -58,7 +67,7 @@ public final class MessageOuterClass {
         internal_static_im_turms_proto_Message_descriptor = getDescriptor().getMessageTypes()
                 .get(0);
         internal_static_im_turms_proto_Message_fieldAccessorTable =
-                new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+                new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_Message_descriptor,
                         new java.lang.String[]{"Id",
                                 "DeliveryDate",
@@ -71,6 +80,7 @@ public final class MessageOuterClass {
                                 "Records",
                                 "SequenceId",
                                 "PreMessageId",});
+        descriptor.resolveAllFeaturesImmutable();
     }
 
     // @@protoc_insertion_point(outer_class_scope)

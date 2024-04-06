@@ -21,6 +21,16 @@ public final class GroupInvitationsWithVersionOuterClass {
     private GroupInvitationsWithVersionOuterClass() {
     }
 
+    static {
+        com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
+                com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
+                /* major= */ 4,
+                /* minor= */ 26,
+                /* patch= */ 1,
+                /* suffix= */ "",
+                GroupInvitationsWithVersionOuterClass.class.getName());
+    }
+
     public static void registerAllExtensions(com.google.protobuf.ExtensionRegistryLite registry) {
     }
 
@@ -29,14 +39,13 @@ public final class GroupInvitationsWithVersionOuterClass {
     }
 
     static final com.google.protobuf.Descriptors.Descriptor internal_static_im_turms_proto_GroupInvitationsWithVersion_descriptor;
-    static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internal_static_im_turms_proto_GroupInvitationsWithVersion_fieldAccessorTable;
+    static final com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_im_turms_proto_GroupInvitationsWithVersion_fieldAccessorTable;
 
     public static com.google.protobuf.Descriptors.FileDescriptor getDescriptor() {
         return descriptor;
     }
 
     private static com.google.protobuf.Descriptors.FileDescriptor descriptor;
-
     static {
         java.lang.String[] descriptorData = {"\n0model/group/group_invitations_with_ver"
                 + "sion.proto\022\016im.turms.proto\032\"model/group/"
@@ -55,9 +64,10 @@ public final class GroupInvitationsWithVersionOuterClass {
                 getDescriptor().getMessageTypes()
                         .get(0);
         internal_static_im_turms_proto_GroupInvitationsWithVersion_fieldAccessorTable =
-                new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+                new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_GroupInvitationsWithVersion_descriptor,
                         new java.lang.String[]{"GroupInvitations", "LastUpdatedDate",});
+        descriptor.resolveAllFeaturesImmutable();
         im.turms.server.common.access.client.dto.model.group.GroupInvitationOuterClass
                 .getDescriptor();
     }

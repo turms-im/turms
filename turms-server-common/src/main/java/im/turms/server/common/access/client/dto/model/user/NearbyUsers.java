@@ -20,13 +20,22 @@ package im.turms.server.common.access.client.dto.model.user;
 /**
  * Protobuf type {@code im.turms.proto.NearbyUsers}
  */
-public final class NearbyUsers extends com.google.protobuf.GeneratedMessageV3 implements
+public final class NearbyUsers extends com.google.protobuf.GeneratedMessage implements
         // @@protoc_insertion_point(message_implements:im.turms.proto.NearbyUsers)
         NearbyUsersOrBuilder {
     private static final long serialVersionUID = 0L;
+    static {
+        com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
+                com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
+                /* major= */ 4,
+                /* minor= */ 26,
+                /* patch= */ 1,
+                /* suffix= */ "",
+                NearbyUsers.class.getName());
+    }
 
     // Use NearbyUsers.newBuilder() to construct.
-    private NearbyUsers(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    private NearbyUsers(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
         super(builder);
     }
 
@@ -34,18 +43,12 @@ public final class NearbyUsers extends com.google.protobuf.GeneratedMessageV3 im
         nearbyUsers_ = java.util.Collections.emptyList();
     }
 
-    @java.lang.Override
-    @SuppressWarnings({"unused"})
-    protected java.lang.Object newInstance(UnusedPrivateParameter unused) {
-        return new NearbyUsers();
-    }
-
     public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
         return im.turms.server.common.access.client.dto.model.user.NearbyUsersOuterClass.internal_static_im_turms_proto_NearbyUsers_descriptor;
     }
 
     @java.lang.Override
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internalGetFieldAccessorTable() {
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable() {
         return im.turms.server.common.access.client.dto.model.user.NearbyUsersOuterClass.internal_static_im_turms_proto_NearbyUsers_fieldAccessorTable
                 .ensureFieldAccessorsInitialized(
                         im.turms.server.common.access.client.dto.model.user.NearbyUsers.class,
@@ -208,40 +211,40 @@ public final class NearbyUsers extends com.google.protobuf.GeneratedMessageV3 im
 
     public static im.turms.server.common.access.client.dto.model.user.NearbyUsers parseFrom(
             java.io.InputStream input) throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3.parseWithIOException(PARSER, input);
+        return com.google.protobuf.GeneratedMessage.parseWithIOException(PARSER, input);
     }
 
     public static im.turms.server.common.access.client.dto.model.user.NearbyUsers parseFrom(
             java.io.InputStream input,
             com.google.protobuf.ExtensionRegistryLite extensionRegistry)
             throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
+        return com.google.protobuf.GeneratedMessage
                 .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
     public static im.turms.server.common.access.client.dto.model.user.NearbyUsers parseDelimitedFrom(
             java.io.InputStream input) throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3.parseDelimitedWithIOException(PARSER, input);
+        return com.google.protobuf.GeneratedMessage.parseDelimitedWithIOException(PARSER, input);
     }
 
     public static im.turms.server.common.access.client.dto.model.user.NearbyUsers parseDelimitedFrom(
             java.io.InputStream input,
             com.google.protobuf.ExtensionRegistryLite extensionRegistry)
             throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
+        return com.google.protobuf.GeneratedMessage
                 .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
 
     public static im.turms.server.common.access.client.dto.model.user.NearbyUsers parseFrom(
             com.google.protobuf.CodedInputStream input) throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3.parseWithIOException(PARSER, input);
+        return com.google.protobuf.GeneratedMessage.parseWithIOException(PARSER, input);
     }
 
     public static im.turms.server.common.access.client.dto.model.user.NearbyUsers parseFrom(
             com.google.protobuf.CodedInputStream input,
             com.google.protobuf.ExtensionRegistryLite extensionRegistry)
             throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
+        return com.google.protobuf.GeneratedMessage
                 .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
@@ -268,16 +271,15 @@ public final class NearbyUsers extends com.google.protobuf.GeneratedMessageV3 im
     }
 
     @java.lang.Override
-    protected Builder newBuilderForType(
-            com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+    protected Builder newBuilderForType(com.google.protobuf.GeneratedMessage.BuilderParent parent) {
         return new Builder(parent);
     }
 
     /**
      * Protobuf type {@code im.turms.proto.NearbyUsers}
      */
-    public static final class Builder
-            extends com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+    public static final class Builder extends com.google.protobuf.GeneratedMessage.Builder<Builder>
+            implements
             // @@protoc_insertion_point(builder_implements:im.turms.proto.NearbyUsers)
             im.turms.server.common.access.client.dto.model.user.NearbyUsersOrBuilder {
         public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
@@ -285,7 +287,7 @@ public final class NearbyUsers extends com.google.protobuf.GeneratedMessageV3 im
         }
 
         @java.lang.Override
-        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internalGetFieldAccessorTable() {
+        protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable() {
             return im.turms.server.common.access.client.dto.model.user.NearbyUsersOuterClass.internal_static_im_turms_proto_NearbyUsers_fieldAccessorTable
                     .ensureFieldAccessorsInitialized(
                             im.turms.server.common.access.client.dto.model.user.NearbyUsers.class,
@@ -298,7 +300,7 @@ public final class NearbyUsers extends com.google.protobuf.GeneratedMessageV3 im
 
         }
 
-        private Builder(com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        private Builder(com.google.protobuf.GeneratedMessage.BuilderParent parent) {
             super(parent);
 
         }
@@ -368,43 +370,6 @@ public final class NearbyUsers extends com.google.protobuf.GeneratedMessageV3 im
         }
 
         @java.lang.Override
-        public Builder clone() {
-            return super.clone();
-        }
-
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index,
-                java.lang.Object value) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.addRepeatedField(field, value);
-        }
-
-        @java.lang.Override
         public Builder mergeFrom(com.google.protobuf.Message other) {
             if (other instanceof im.turms.server.common.access.client.dto.model.user.NearbyUsers) {
                 return mergeFrom(
@@ -440,7 +405,7 @@ public final class NearbyUsers extends com.google.protobuf.GeneratedMessageV3 im
                         nearbyUsers_ = other.nearbyUsers_;
                         bitField0_ &= ~0x00000001;
                         nearbyUsersBuilder_ =
-                                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders
+                                com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders
                                         ? getNearbyUsersFieldBuilder()
                                         : null;
                     } else {
@@ -509,7 +474,7 @@ public final class NearbyUsers extends com.google.protobuf.GeneratedMessageV3 im
             }
         }
 
-        private com.google.protobuf.RepeatedFieldBuilderV3<im.turms.server.common.access.client.dto.model.user.NearbyUser, im.turms.server.common.access.client.dto.model.user.NearbyUser.Builder, im.turms.server.common.access.client.dto.model.user.NearbyUserOrBuilder> nearbyUsersBuilder_;
+        private com.google.protobuf.RepeatedFieldBuilder<im.turms.server.common.access.client.dto.model.user.NearbyUser, im.turms.server.common.access.client.dto.model.user.NearbyUser.Builder, im.turms.server.common.access.client.dto.model.user.NearbyUserOrBuilder> nearbyUsersBuilder_;
 
         /**
          * <code>repeated .im.turms.proto.NearbyUser nearby_users = 1;</code>
@@ -748,9 +713,9 @@ public final class NearbyUsers extends com.google.protobuf.GeneratedMessageV3 im
             return getNearbyUsersFieldBuilder().getBuilderList();
         }
 
-        private com.google.protobuf.RepeatedFieldBuilderV3<im.turms.server.common.access.client.dto.model.user.NearbyUser, im.turms.server.common.access.client.dto.model.user.NearbyUser.Builder, im.turms.server.common.access.client.dto.model.user.NearbyUserOrBuilder> getNearbyUsersFieldBuilder() {
+        private com.google.protobuf.RepeatedFieldBuilder<im.turms.server.common.access.client.dto.model.user.NearbyUser, im.turms.server.common.access.client.dto.model.user.NearbyUser.Builder, im.turms.server.common.access.client.dto.model.user.NearbyUserOrBuilder> getNearbyUsersFieldBuilder() {
             if (nearbyUsersBuilder_ == null) {
-                nearbyUsersBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<>(
+                nearbyUsersBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<>(
                         nearbyUsers_,
                         ((bitField0_ & 0x00000001) != 0),
                         getParentForChildren(),
@@ -760,24 +725,11 @@ public final class NearbyUsers extends com.google.protobuf.GeneratedMessageV3 im
             return nearbyUsersBuilder_;
         }
 
-        @java.lang.Override
-        public final Builder setUnknownFields(
-                final com.google.protobuf.UnknownFieldSet unknownFields) {
-            return super.setUnknownFields(unknownFields);
-        }
-
-        @java.lang.Override
-        public final Builder mergeUnknownFields(
-                final com.google.protobuf.UnknownFieldSet unknownFields) {
-            return super.mergeUnknownFields(unknownFields);
-        }
-
         // @@protoc_insertion_point(builder_scope:im.turms.proto.NearbyUsers)
     }
 
     // @@protoc_insertion_point(class_scope:im.turms.proto.NearbyUsers)
     private static final im.turms.server.common.access.client.dto.model.user.NearbyUsers DEFAULT_INSTANCE;
-
     static {
         DEFAULT_INSTANCE = new im.turms.server.common.access.client.dto.model.user.NearbyUsers();
     }

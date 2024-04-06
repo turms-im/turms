@@ -21,6 +21,16 @@ public final class UserFriendRequestOuterClass {
     private UserFriendRequestOuterClass() {
     }
 
+    static {
+        com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
+                com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
+                /* major= */ 4,
+                /* minor= */ 26,
+                /* patch= */ 1,
+                /* suffix= */ "",
+                UserFriendRequestOuterClass.class.getName());
+    }
+
     public static void registerAllExtensions(com.google.protobuf.ExtensionRegistryLite registry) {
     }
 
@@ -29,14 +39,13 @@ public final class UserFriendRequestOuterClass {
     }
 
     static final com.google.protobuf.Descriptors.Descriptor internal_static_im_turms_proto_UserFriendRequest_descriptor;
-    static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internal_static_im_turms_proto_UserFriendRequest_fieldAccessorTable;
+    static final com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_im_turms_proto_UserFriendRequest_fieldAccessorTable;
 
     public static com.google.protobuf.Descriptors.FileDescriptor getDescriptor() {
         return descriptor;
     }
 
     private static com.google.protobuf.Descriptors.FileDescriptor descriptor;
-
     static {
         java.lang.String[] descriptorData = {"\n$model/user/user_friend_request.proto\022\016"
                 + "im.turms.proto\032\035constant/request_status."
@@ -61,7 +70,7 @@ public final class UserFriendRequestOuterClass {
                 getDescriptor().getMessageTypes()
                         .get(0);
         internal_static_im_turms_proto_UserFriendRequest_fieldAccessorTable =
-                new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+                new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_UserFriendRequest_descriptor,
                         new java.lang.String[]{"Id",
                                 "CreationDate",
@@ -71,6 +80,7 @@ public final class UserFriendRequestOuterClass {
                                 "ExpirationDate",
                                 "RequesterId",
                                 "RecipientId",});
+        descriptor.resolveAllFeaturesImmutable();
         im.turms.server.common.access.client.dto.constant.RequestStatusOuterClass.getDescriptor();
     }
 

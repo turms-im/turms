@@ -35,6 +35,15 @@ public enum ResponseAction implements com.google.protobuf.ProtocolMessageEnum {
     IGNORE(2),
     UNRECOGNIZED(-1),;
 
+    static {
+        com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
+                com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
+                /* major= */ 4,
+                /* minor= */ 26,
+                /* patch= */ 1,
+                /* suffix= */ "",
+                ResponseAction.class.getName());
+    }
     /**
      * <code>ACCEPT = 0;</code>
      */
@@ -84,11 +93,7 @@ public enum ResponseAction implements com.google.protobuf.ProtocolMessageEnum {
     }
 
     private static final com.google.protobuf.Internal.EnumLiteMap<ResponseAction> internalValueMap =
-            new com.google.protobuf.Internal.EnumLiteMap<>() {
-                public ResponseAction findValueByNumber(int number) {
-                    return ResponseAction.forNumber(number);
-                }
-            };
+            number -> ResponseAction.forNumber(number);
 
     public final com.google.protobuf.Descriptors.EnumValueDescriptor getValueDescriptor() {
         if (this == UNRECOGNIZED) {
@@ -125,7 +130,7 @@ public enum ResponseAction implements com.google.protobuf.ProtocolMessageEnum {
 
     private final int value;
 
-    private ResponseAction(int value) {
+    ResponseAction(int value) {
         this.value = value;
     }
 

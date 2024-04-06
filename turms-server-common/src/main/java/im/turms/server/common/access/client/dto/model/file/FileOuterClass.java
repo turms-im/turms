@@ -21,6 +21,16 @@ public final class FileOuterClass {
     private FileOuterClass() {
     }
 
+    static {
+        com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
+                com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
+                /* major= */ 4,
+                /* minor= */ 26,
+                /* patch= */ 1,
+                /* suffix= */ "",
+                FileOuterClass.class.getName());
+    }
+
     public static void registerAllExtensions(com.google.protobuf.ExtensionRegistryLite registry) {
     }
 
@@ -29,16 +39,15 @@ public final class FileOuterClass {
     }
 
     static final com.google.protobuf.Descriptors.Descriptor internal_static_im_turms_proto_File_descriptor;
-    static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internal_static_im_turms_proto_File_fieldAccessorTable;
+    static final com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_im_turms_proto_File_fieldAccessorTable;
     static final com.google.protobuf.Descriptors.Descriptor internal_static_im_turms_proto_File_Description_descriptor;
-    static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internal_static_im_turms_proto_File_Description_fieldAccessorTable;
+    static final com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_im_turms_proto_File_Description_fieldAccessorTable;
 
     public static com.google.protobuf.Descriptors.FileDescriptor getDescriptor() {
         return descriptor;
     }
 
-    private static com.google.protobuf.Descriptors.FileDescriptor descriptor;
-
+    private static final com.google.protobuf.Descriptors.FileDescriptor descriptor;
     static {
         java.lang.String[] descriptorData = {"\n\025model/file/file.proto\022\016im.turms.proto\""
                 + "\306\001\n\004File\022:\n\013description\030\001 \001(\0132 .im.turms"
@@ -54,16 +63,17 @@ public final class FileOuterClass {
         internal_static_im_turms_proto_File_descriptor = getDescriptor().getMessageTypes()
                 .get(0);
         internal_static_im_turms_proto_File_fieldAccessorTable =
-                new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+                new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_File_descriptor,
                         new java.lang.String[]{"Description", "Data",});
         internal_static_im_turms_proto_File_Description_descriptor =
                 internal_static_im_turms_proto_File_descriptor.getNestedTypes()
                         .get(0);
         internal_static_im_turms_proto_File_Description_fieldAccessorTable =
-                new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+                new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_File_Description_descriptor,
                         new java.lang.String[]{"Url", "Size", "Format",});
+        descriptor.resolveAllFeaturesImmutable();
     }
 
     // @@protoc_insertion_point(outer_class_scope)

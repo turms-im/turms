@@ -21,6 +21,16 @@ public final class UserLocationOuterClass {
     private UserLocationOuterClass() {
     }
 
+    static {
+        com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
+                com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
+                /* major= */ 4,
+                /* minor= */ 26,
+                /* patch= */ 1,
+                /* suffix= */ "",
+                UserLocationOuterClass.class.getName());
+    }
+
     public static void registerAllExtensions(com.google.protobuf.ExtensionRegistryLite registry) {
     }
 
@@ -29,16 +39,15 @@ public final class UserLocationOuterClass {
     }
 
     static final com.google.protobuf.Descriptors.Descriptor internal_static_im_turms_proto_UserLocation_descriptor;
-    static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internal_static_im_turms_proto_UserLocation_fieldAccessorTable;
+    static final com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_im_turms_proto_UserLocation_fieldAccessorTable;
     static final com.google.protobuf.Descriptors.Descriptor internal_static_im_turms_proto_UserLocation_DetailsEntry_descriptor;
-    static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internal_static_im_turms_proto_UserLocation_DetailsEntry_fieldAccessorTable;
+    static final com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_im_turms_proto_UserLocation_DetailsEntry_fieldAccessorTable;
 
     public static com.google.protobuf.Descriptors.FileDescriptor getDescriptor() {
         return descriptor;
     }
 
     private static com.google.protobuf.Descriptors.FileDescriptor descriptor;
-
     static {
         java.lang.String[] descriptorData = {"\n\036model/user/user_location.proto\022\016im.tur"
                 + "ms.proto\"\305\001\n\014UserLocation\022\020\n\010latitude\030\001 "
@@ -54,16 +63,17 @@ public final class UserLocationOuterClass {
         internal_static_im_turms_proto_UserLocation_descriptor = getDescriptor().getMessageTypes()
                 .get(0);
         internal_static_im_turms_proto_UserLocation_fieldAccessorTable =
-                new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+                new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_UserLocation_descriptor,
                         new java.lang.String[]{"Latitude", "Longitude", "Timestamp", "Details",});
         internal_static_im_turms_proto_UserLocation_DetailsEntry_descriptor =
                 internal_static_im_turms_proto_UserLocation_descriptor.getNestedTypes()
                         .get(0);
         internal_static_im_turms_proto_UserLocation_DetailsEntry_fieldAccessorTable =
-                new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+                new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_UserLocation_DetailsEntry_descriptor,
                         new java.lang.String[]{"Key", "Value",});
+        descriptor.resolveAllFeaturesImmutable();
     }
 
     // @@protoc_insertion_point(outer_class_scope)

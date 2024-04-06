@@ -20,14 +20,22 @@ package im.turms.server.common.access.client.dto.request.group.member;
 /**
  * Protobuf type {@code im.turms.proto.CreateGroupMembersRequest}
  */
-public final class CreateGroupMembersRequest extends com.google.protobuf.GeneratedMessageV3
-        implements
+public final class CreateGroupMembersRequest extends com.google.protobuf.GeneratedMessage implements
         // @@protoc_insertion_point(message_implements:im.turms.proto.CreateGroupMembersRequest)
         CreateGroupMembersRequestOrBuilder {
     private static final long serialVersionUID = 0L;
+    static {
+        com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
+                com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
+                /* major= */ 4,
+                /* minor= */ 26,
+                /* patch= */ 1,
+                /* suffix= */ "",
+                CreateGroupMembersRequest.class.getName());
+    }
 
     // Use CreateGroupMembersRequest.newBuilder() to construct.
-    private CreateGroupMembersRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    private CreateGroupMembersRequest(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
         super(builder);
     }
 
@@ -37,18 +45,12 @@ public final class CreateGroupMembersRequest extends com.google.protobuf.Generat
         role_ = 0;
     }
 
-    @java.lang.Override
-    @SuppressWarnings({"unused"})
-    protected java.lang.Object newInstance(UnusedPrivateParameter unused) {
-        return new CreateGroupMembersRequest();
-    }
-
     public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
         return im.turms.server.common.access.client.dto.request.group.member.CreateGroupMembersRequestOuterClass.internal_static_im_turms_proto_CreateGroupMembersRequest_descriptor;
     }
 
     @java.lang.Override
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internalGetFieldAccessorTable() {
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable() {
         return im.turms.server.common.access.client.dto.request.group.member.CreateGroupMembersRequestOuterClass.internal_static_im_turms_proto_CreateGroupMembersRequest_fieldAccessorTable
                 .ensureFieldAccessorsInitialized(
                         im.turms.server.common.access.client.dto.request.group.member.CreateGroupMembersRequest.class,
@@ -244,7 +246,7 @@ public final class CreateGroupMembersRequest extends com.google.protobuf.Generat
             output.writeInt64NoTag(userIds_.getLong(i));
         }
         if (((bitField0_ & 0x00000001) != 0)) {
-            com.google.protobuf.GeneratedMessageV3.writeString(output, 3, name_);
+            com.google.protobuf.GeneratedMessage.writeString(output, 3, name_);
         }
         if (((bitField0_ & 0x00000002) != 0)) {
             output.writeEnum(4, role_);
@@ -280,7 +282,7 @@ public final class CreateGroupMembersRequest extends com.google.protobuf.Generat
             userIdsMemoizedSerializedSize = dataSize;
         }
         if (((bitField0_ & 0x00000001) != 0)) {
-            size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, name_);
+            size += com.google.protobuf.GeneratedMessage.computeStringSize(3, name_);
         }
         if (((bitField0_ & 0x00000002) != 0)) {
             size += com.google.protobuf.CodedOutputStream.computeEnumSize(4, role_);
@@ -404,40 +406,40 @@ public final class CreateGroupMembersRequest extends com.google.protobuf.Generat
 
     public static im.turms.server.common.access.client.dto.request.group.member.CreateGroupMembersRequest parseFrom(
             java.io.InputStream input) throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3.parseWithIOException(PARSER, input);
+        return com.google.protobuf.GeneratedMessage.parseWithIOException(PARSER, input);
     }
 
     public static im.turms.server.common.access.client.dto.request.group.member.CreateGroupMembersRequest parseFrom(
             java.io.InputStream input,
             com.google.protobuf.ExtensionRegistryLite extensionRegistry)
             throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
+        return com.google.protobuf.GeneratedMessage
                 .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
     public static im.turms.server.common.access.client.dto.request.group.member.CreateGroupMembersRequest parseDelimitedFrom(
             java.io.InputStream input) throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3.parseDelimitedWithIOException(PARSER, input);
+        return com.google.protobuf.GeneratedMessage.parseDelimitedWithIOException(PARSER, input);
     }
 
     public static im.turms.server.common.access.client.dto.request.group.member.CreateGroupMembersRequest parseDelimitedFrom(
             java.io.InputStream input,
             com.google.protobuf.ExtensionRegistryLite extensionRegistry)
             throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
+        return com.google.protobuf.GeneratedMessage
                 .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
 
     public static im.turms.server.common.access.client.dto.request.group.member.CreateGroupMembersRequest parseFrom(
             com.google.protobuf.CodedInputStream input) throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3.parseWithIOException(PARSER, input);
+        return com.google.protobuf.GeneratedMessage.parseWithIOException(PARSER, input);
     }
 
     public static im.turms.server.common.access.client.dto.request.group.member.CreateGroupMembersRequest parseFrom(
             com.google.protobuf.CodedInputStream input,
             com.google.protobuf.ExtensionRegistryLite extensionRegistry)
             throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
+        return com.google.protobuf.GeneratedMessage
                 .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
@@ -464,16 +466,15 @@ public final class CreateGroupMembersRequest extends com.google.protobuf.Generat
     }
 
     @java.lang.Override
-    protected Builder newBuilderForType(
-            com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+    protected Builder newBuilderForType(com.google.protobuf.GeneratedMessage.BuilderParent parent) {
         return new Builder(parent);
     }
 
     /**
      * Protobuf type {@code im.turms.proto.CreateGroupMembersRequest}
      */
-    public static final class Builder
-            extends com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+    public static final class Builder extends com.google.protobuf.GeneratedMessage.Builder<Builder>
+            implements
             // @@protoc_insertion_point(builder_implements:im.turms.proto.CreateGroupMembersRequest)
             im.turms.server.common.access.client.dto.request.group.member.CreateGroupMembersRequestOrBuilder {
         public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
@@ -481,7 +482,7 @@ public final class CreateGroupMembersRequest extends com.google.protobuf.Generat
         }
 
         @java.lang.Override
-        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internalGetFieldAccessorTable() {
+        protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable() {
             return im.turms.server.common.access.client.dto.request.group.member.CreateGroupMembersRequestOuterClass.internal_static_im_turms_proto_CreateGroupMembersRequest_fieldAccessorTable
                     .ensureFieldAccessorsInitialized(
                             im.turms.server.common.access.client.dto.request.group.member.CreateGroupMembersRequest.class,
@@ -494,7 +495,7 @@ public final class CreateGroupMembersRequest extends com.google.protobuf.Generat
 
         }
 
-        private Builder(com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        private Builder(com.google.protobuf.GeneratedMessage.BuilderParent parent) {
             super(parent);
 
         }
@@ -568,43 +569,6 @@ public final class CreateGroupMembersRequest extends com.google.protobuf.Generat
                 to_bitField0_ |= 0x00000004;
             }
             result.bitField0_ |= to_bitField0_;
-        }
-
-        @java.lang.Override
-        public Builder clone() {
-            return super.clone();
-        }
-
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index,
-                java.lang.Object value) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.addRepeatedField(field, value);
         }
 
         @java.lang.Override
@@ -1070,24 +1034,11 @@ public final class CreateGroupMembersRequest extends com.google.protobuf.Generat
             return this;
         }
 
-        @java.lang.Override
-        public final Builder setUnknownFields(
-                final com.google.protobuf.UnknownFieldSet unknownFields) {
-            return super.setUnknownFields(unknownFields);
-        }
-
-        @java.lang.Override
-        public final Builder mergeUnknownFields(
-                final com.google.protobuf.UnknownFieldSet unknownFields) {
-            return super.mergeUnknownFields(unknownFields);
-        }
-
         // @@protoc_insertion_point(builder_scope:im.turms.proto.CreateGroupMembersRequest)
     }
 
     // @@protoc_insertion_point(class_scope:im.turms.proto.CreateGroupMembersRequest)
     private static final im.turms.server.common.access.client.dto.request.group.member.CreateGroupMembersRequest DEFAULT_INSTANCE;
-
     static {
         DEFAULT_INSTANCE =
                 new im.turms.server.common.access.client.dto.request.group.member.CreateGroupMembersRequest();

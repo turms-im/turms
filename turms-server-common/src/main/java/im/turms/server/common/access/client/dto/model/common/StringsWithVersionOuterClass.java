@@ -21,6 +21,16 @@ public final class StringsWithVersionOuterClass {
     private StringsWithVersionOuterClass() {
     }
 
+    static {
+        com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
+                com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
+                /* major= */ 4,
+                /* minor= */ 26,
+                /* patch= */ 1,
+                /* suffix= */ "",
+                StringsWithVersionOuterClass.class.getName());
+    }
+
     public static void registerAllExtensions(com.google.protobuf.ExtensionRegistryLite registry) {
     }
 
@@ -29,16 +39,15 @@ public final class StringsWithVersionOuterClass {
     }
 
     static final com.google.protobuf.Descriptors.Descriptor internal_static_im_turms_proto_StringsWithVersion_descriptor;
-    static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internal_static_im_turms_proto_StringsWithVersion_fieldAccessorTable;
+    static final com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_im_turms_proto_StringsWithVersion_fieldAccessorTable;
 
     public static com.google.protobuf.Descriptors.FileDescriptor getDescriptor() {
         return descriptor;
     }
 
-    private static com.google.protobuf.Descriptors.FileDescriptor descriptor;
-
+    private static final com.google.protobuf.Descriptors.FileDescriptor descriptor;
     static {
-        java.lang.String[] descriptorData = {"\n\'model/common/strings_with_version.prot"
+        java.lang.String[] descriptorData = {"\n'model/common/strings_with_version.prot"
                 + "o\022\016im.turms.proto\"[\n\022StringsWithVersion\022"
                 + "\017\n\007strings\030\001 \003(\t\022\036\n\021last_updated_date\030\002 "
                 + "\001(\003H\000\210\001\001B\024\n\022_last_updated_dateB<\n5im.tur"
@@ -51,9 +60,10 @@ public final class StringsWithVersionOuterClass {
                 getDescriptor().getMessageTypes()
                         .get(0);
         internal_static_im_turms_proto_StringsWithVersion_fieldAccessorTable =
-                new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+                new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_StringsWithVersion_descriptor,
                         new java.lang.String[]{"Strings", "LastUpdatedDate",});
+        descriptor.resolveAllFeaturesImmutable();
     }
 
     // @@protoc_insertion_point(outer_class_scope)

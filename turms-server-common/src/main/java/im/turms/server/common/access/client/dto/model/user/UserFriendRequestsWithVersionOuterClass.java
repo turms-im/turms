@@ -21,6 +21,16 @@ public final class UserFriendRequestsWithVersionOuterClass {
     private UserFriendRequestsWithVersionOuterClass() {
     }
 
+    static {
+        com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
+                com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
+                /* major= */ 4,
+                /* minor= */ 26,
+                /* patch= */ 1,
+                /* suffix= */ "",
+                UserFriendRequestsWithVersionOuterClass.class.getName());
+    }
+
     public static void registerAllExtensions(com.google.protobuf.ExtensionRegistryLite registry) {
     }
 
@@ -29,14 +39,13 @@ public final class UserFriendRequestsWithVersionOuterClass {
     }
 
     static final com.google.protobuf.Descriptors.Descriptor internal_static_im_turms_proto_UserFriendRequestsWithVersion_descriptor;
-    static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internal_static_im_turms_proto_UserFriendRequestsWithVersion_fieldAccessorTable;
+    static final com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_im_turms_proto_UserFriendRequestsWithVersion_fieldAccessorTable;
 
     public static com.google.protobuf.Descriptors.FileDescriptor getDescriptor() {
         return descriptor;
     }
 
     private static com.google.protobuf.Descriptors.FileDescriptor descriptor;
-
     static {
         java.lang.String[] descriptorData = {"\n2model/user/user_friend_requests_with_v"
                 + "ersion.proto\022\016im.turms.proto\032$model/user"
@@ -56,9 +65,10 @@ public final class UserFriendRequestsWithVersionOuterClass {
                 getDescriptor().getMessageTypes()
                         .get(0);
         internal_static_im_turms_proto_UserFriendRequestsWithVersion_fieldAccessorTable =
-                new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+                new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_UserFriendRequestsWithVersion_descriptor,
                         new java.lang.String[]{"UserFriendRequests", "LastUpdatedDate",});
+        descriptor.resolveAllFeaturesImmutable();
         im.turms.server.common.access.client.dto.model.user.UserFriendRequestOuterClass
                 .getDescriptor();
     }

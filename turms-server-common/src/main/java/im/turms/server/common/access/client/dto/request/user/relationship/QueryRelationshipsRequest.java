@@ -20,34 +20,37 @@ package im.turms.server.common.access.client.dto.request.user.relationship;
 /**
  * Protobuf type {@code im.turms.proto.QueryRelationshipsRequest}
  */
-public final class QueryRelationshipsRequest extends com.google.protobuf.GeneratedMessageV3
-        implements
+public final class QueryRelationshipsRequest extends com.google.protobuf.GeneratedMessage implements
         // @@protoc_insertion_point(message_implements:im.turms.proto.QueryRelationshipsRequest)
         QueryRelationshipsRequestOrBuilder {
     private static final long serialVersionUID = 0L;
+    static {
+        com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
+                com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
+                /* major= */ 4,
+                /* minor= */ 26,
+                /* patch= */ 1,
+                /* suffix= */ "",
+                QueryRelationshipsRequest.class.getName());
+    }
 
     // Use QueryRelationshipsRequest.newBuilder() to construct.
-    private QueryRelationshipsRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    private QueryRelationshipsRequest(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
         super(builder);
     }
 
     private QueryRelationshipsRequest() {
         userIds_ = emptyLongList();
         groupIndexes_ = emptyIntList();
+        name_ = "";
     }
 
-    @java.lang.Override
-    @SuppressWarnings({"unused"})
-    protected java.lang.Object newInstance(UnusedPrivateParameter unused) {
-        return new QueryRelationshipsRequest();
-    }
-
-    public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+    public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
         return im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequestOuterClass.internal_static_im_turms_proto_QueryRelationshipsRequest_descriptor;
     }
 
     @java.lang.Override
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internalGetFieldAccessorTable() {
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable() {
         return im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequestOuterClass.internal_static_im_turms_proto_QueryRelationshipsRequest_fieldAccessorTable
                 .ensureFieldAccessorsInitialized(
                         im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequest.class,
@@ -171,10 +174,60 @@ public final class QueryRelationshipsRequest extends com.google.protobuf.Generat
         return lastUpdatedDate_;
     }
 
+    public static final int NAME_FIELD_NUMBER = 5;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object name_ = "";
+
+    /**
+     * <code>optional string name = 5;</code>
+     *
+     * @return Whether the name field is set.
+     */
+    @java.lang.Override
+    public boolean hasName() {
+        return ((bitField0_ & 0x00000004) != 0);
+    }
+
+    /**
+     * <code>optional string name = 5;</code>
+     *
+     * @return The name.
+     */
+    @java.lang.Override
+    public java.lang.String getName() {
+        java.lang.Object ref = name_;
+        if (ref instanceof java.lang.String) {
+            return (java.lang.String) ref;
+        } else {
+            com.google.protobuf.ByteString bs = (com.google.protobuf.ByteString) ref;
+            java.lang.String s = bs.toStringUtf8();
+            name_ = s;
+            return s;
+        }
+    }
+
+    /**
+     * <code>optional string name = 5;</code>
+     *
+     * @return The bytes for name.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString getNameBytes() {
+        java.lang.Object ref = name_;
+        if (ref instanceof java.lang.String) {
+            com.google.protobuf.ByteString b =
+                    com.google.protobuf.ByteString.copyFromUtf8((java.lang.String) ref);
+            name_ = b;
+            return b;
+        } else {
+            return (com.google.protobuf.ByteString) ref;
+        }
+    }
+
     private byte memoizedIsInitialized = -1;
 
     @java.lang.Override
-    public final boolean isInitialized() {
+    public boolean isInitialized() {
         byte isInitialized = memoizedIsInitialized;
         if (isInitialized == 1) {
             return true;
@@ -209,6 +262,9 @@ public final class QueryRelationshipsRequest extends com.google.protobuf.Generat
         }
         if (((bitField0_ & 0x00000002) != 0)) {
             output.writeInt64(4, lastUpdatedDate_);
+        }
+        if (((bitField0_ & 0x00000004) != 0)) {
+            com.google.protobuf.GeneratedMessage.writeString(output, 5, name_);
         }
         getUnknownFields().writeTo(output);
     }
@@ -253,6 +309,9 @@ public final class QueryRelationshipsRequest extends com.google.protobuf.Generat
         if (((bitField0_ & 0x00000002) != 0)) {
             size += com.google.protobuf.CodedOutputStream.computeInt64Size(4, lastUpdatedDate_);
         }
+        if (((bitField0_ & 0x00000004) != 0)) {
+            size += com.google.protobuf.GeneratedMessage.computeStringSize(5, name_);
+        }
         size += getUnknownFields().getSerializedSize();
         memoizedSize = size;
         return size;
@@ -289,6 +348,14 @@ public final class QueryRelationshipsRequest extends com.google.protobuf.Generat
                 return false;
             }
         }
+        if (hasName() != other.hasName()) {
+            return false;
+        }
+        if (hasName()) {
+            if (!getName().equals(other.getName())) {
+                return false;
+            }
+        }
         return getUnknownFields().equals(other.getUnknownFields());
     }
 
@@ -314,6 +381,10 @@ public final class QueryRelationshipsRequest extends com.google.protobuf.Generat
         if (hasLastUpdatedDate()) {
             hash = (37 * hash) + LAST_UPDATED_DATE_FIELD_NUMBER;
             hash = (53 * hash) + com.google.protobuf.Internal.hashLong(getLastUpdatedDate());
+        }
+        if (hasName()) {
+            hash = (37 * hash) + NAME_FIELD_NUMBER;
+            hash = (53 * hash) + getName().hashCode();
         }
         hash = (29 * hash) + getUnknownFields().hashCode();
         memoizedHashCode = hash;
@@ -359,40 +430,40 @@ public final class QueryRelationshipsRequest extends com.google.protobuf.Generat
 
     public static im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequest parseFrom(
             java.io.InputStream input) throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3.parseWithIOException(PARSER, input);
+        return com.google.protobuf.GeneratedMessage.parseWithIOException(PARSER, input);
     }
 
     public static im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequest parseFrom(
             java.io.InputStream input,
             com.google.protobuf.ExtensionRegistryLite extensionRegistry)
             throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
+        return com.google.protobuf.GeneratedMessage
                 .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
     public static im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequest parseDelimitedFrom(
             java.io.InputStream input) throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3.parseDelimitedWithIOException(PARSER, input);
+        return com.google.protobuf.GeneratedMessage.parseDelimitedWithIOException(PARSER, input);
     }
 
     public static im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequest parseDelimitedFrom(
             java.io.InputStream input,
             com.google.protobuf.ExtensionRegistryLite extensionRegistry)
             throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
+        return com.google.protobuf.GeneratedMessage
                 .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
 
     public static im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequest parseFrom(
             com.google.protobuf.CodedInputStream input) throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3.parseWithIOException(PARSER, input);
+        return com.google.protobuf.GeneratedMessage.parseWithIOException(PARSER, input);
     }
 
     public static im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequest parseFrom(
             com.google.protobuf.CodedInputStream input,
             com.google.protobuf.ExtensionRegistryLite extensionRegistry)
             throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
+        return com.google.protobuf.GeneratedMessage
                 .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
@@ -419,24 +490,23 @@ public final class QueryRelationshipsRequest extends com.google.protobuf.Generat
     }
 
     @java.lang.Override
-    protected Builder newBuilderForType(
-            com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+    protected Builder newBuilderForType(com.google.protobuf.GeneratedMessage.BuilderParent parent) {
         return new Builder(parent);
     }
 
     /**
      * Protobuf type {@code im.turms.proto.QueryRelationshipsRequest}
      */
-    public static final class Builder
-            extends com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+    public static final class Builder extends com.google.protobuf.GeneratedMessage.Builder<Builder>
+            implements
             // @@protoc_insertion_point(builder_implements:im.turms.proto.QueryRelationshipsRequest)
             im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequestOrBuilder {
-        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+        public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
             return im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequestOuterClass.internal_static_im_turms_proto_QueryRelationshipsRequest_descriptor;
         }
 
         @java.lang.Override
-        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internalGetFieldAccessorTable() {
+        protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable() {
             return im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequestOuterClass.internal_static_im_turms_proto_QueryRelationshipsRequest_fieldAccessorTable
                     .ensureFieldAccessorsInitialized(
                             im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequest.class,
@@ -449,7 +519,7 @@ public final class QueryRelationshipsRequest extends com.google.protobuf.Generat
 
         }
 
-        private Builder(com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        private Builder(com.google.protobuf.GeneratedMessage.BuilderParent parent) {
             super(parent);
 
         }
@@ -462,6 +532,7 @@ public final class QueryRelationshipsRequest extends com.google.protobuf.Generat
             blocked_ = false;
             groupIndexes_ = emptyIntList();
             lastUpdatedDate_ = 0L;
+            name_ = "";
             return this;
         }
 
@@ -518,44 +589,11 @@ public final class QueryRelationshipsRequest extends com.google.protobuf.Generat
                 result.lastUpdatedDate_ = lastUpdatedDate_;
                 to_bitField0_ |= 0x00000002;
             }
+            if (((from_bitField0_ & 0x00000010) != 0)) {
+                result.name_ = name_;
+                to_bitField0_ |= 0x00000004;
+            }
             result.bitField0_ |= to_bitField0_;
-        }
-
-        @java.lang.Override
-        public Builder clone() {
-            return super.clone();
-        }
-
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index,
-                java.lang.Object value) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.addRepeatedField(field, value);
         }
 
         @java.lang.Override
@@ -603,13 +641,18 @@ public final class QueryRelationshipsRequest extends com.google.protobuf.Generat
             if (other.hasLastUpdatedDate()) {
                 setLastUpdatedDate(other.getLastUpdatedDate());
             }
+            if (other.hasName()) {
+                name_ = other.name_;
+                bitField0_ |= 0x00000010;
+                onChanged();
+            }
             this.mergeUnknownFields(other.getUnknownFields());
             onChanged();
             return this;
         }
 
         @java.lang.Override
-        public final boolean isInitialized() {
+        public boolean isInitialized() {
             return true;
         }
 
@@ -663,6 +706,10 @@ public final class QueryRelationshipsRequest extends com.google.protobuf.Generat
                             lastUpdatedDate_ = input.readInt64();
                             bitField0_ |= 0x00000008;
                         } // case 32
+                        case 42 -> {
+                            name_ = input.readStringRequireUtf8();
+                            bitField0_ |= 0x00000010;
+                        } // case 42
                         default -> {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
@@ -966,16 +1013,94 @@ public final class QueryRelationshipsRequest extends com.google.protobuf.Generat
             return this;
         }
 
-        @java.lang.Override
-        public final Builder setUnknownFields(
-                final com.google.protobuf.UnknownFieldSet unknownFields) {
-            return super.setUnknownFields(unknownFields);
+        private java.lang.Object name_ = "";
+
+        /**
+         * <code>optional string name = 5;</code>
+         *
+         * @return Whether the name field is set.
+         */
+        public boolean hasName() {
+            return ((bitField0_ & 0x00000010) != 0);
         }
 
-        @java.lang.Override
-        public final Builder mergeUnknownFields(
-                final com.google.protobuf.UnknownFieldSet unknownFields) {
-            return super.mergeUnknownFields(unknownFields);
+        /**
+         * <code>optional string name = 5;</code>
+         *
+         * @return The name.
+         */
+        public java.lang.String getName() {
+            java.lang.Object ref = name_;
+            if (!(ref instanceof java.lang.String)) {
+                com.google.protobuf.ByteString bs = (com.google.protobuf.ByteString) ref;
+                java.lang.String s = bs.toStringUtf8();
+                name_ = s;
+                return s;
+            } else {
+                return (java.lang.String) ref;
+            }
+        }
+
+        /**
+         * <code>optional string name = 5;</code>
+         *
+         * @return The bytes for name.
+         */
+        public com.google.protobuf.ByteString getNameBytes() {
+            java.lang.Object ref = name_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8((java.lang.String) ref);
+                name_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        /**
+         * <code>optional string name = 5;</code>
+         *
+         * @param value The name to set.
+         * @return This builder for chaining.
+         */
+        public Builder setName(java.lang.String value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+            name_ = value;
+            bitField0_ |= 0x00000010;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <code>optional string name = 5;</code>
+         *
+         * @return This builder for chaining.
+         */
+        public Builder clearName() {
+            name_ = getDefaultInstance().getName();
+            bitField0_ &= ~0x00000010;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <code>optional string name = 5;</code>
+         *
+         * @param value The bytes for name to set.
+         * @return This builder for chaining.
+         */
+        public Builder setNameBytes(com.google.protobuf.ByteString value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+            checkByteStringIsUtf8(value);
+            name_ = value;
+            bitField0_ |= 0x00000010;
+            onChanged();
+            return this;
         }
 
         // @@protoc_insertion_point(builder_scope:im.turms.proto.QueryRelationshipsRequest)
@@ -983,7 +1108,6 @@ public final class QueryRelationshipsRequest extends com.google.protobuf.Generat
 
     // @@protoc_insertion_point(class_scope:im.turms.proto.QueryRelationshipsRequest)
     private static final im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequest DEFAULT_INSTANCE;
-
     static {
         DEFAULT_INSTANCE =
                 new im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequest();

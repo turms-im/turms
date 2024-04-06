@@ -21,6 +21,16 @@ public final class MessagesWithTotalOuterClass {
     private MessagesWithTotalOuterClass() {
     }
 
+    static {
+        com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
+                com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
+                /* major= */ 4,
+                /* minor= */ 26,
+                /* patch= */ 1,
+                /* suffix= */ "",
+                MessagesWithTotalOuterClass.class.getName());
+    }
+
     public static void registerAllExtensions(com.google.protobuf.ExtensionRegistryLite registry) {
     }
 
@@ -29,16 +39,15 @@ public final class MessagesWithTotalOuterClass {
     }
 
     static final com.google.protobuf.Descriptors.Descriptor internal_static_im_turms_proto_MessagesWithTotal_descriptor;
-    static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internal_static_im_turms_proto_MessagesWithTotal_fieldAccessorTable;
+    static final com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_im_turms_proto_MessagesWithTotal_fieldAccessorTable;
 
     public static com.google.protobuf.Descriptors.FileDescriptor getDescriptor() {
         return descriptor;
     }
 
     private static com.google.protobuf.Descriptors.FileDescriptor descriptor;
-
     static {
-        java.lang.String[] descriptorData = {"\n\'model/message/messages_with_total.prot"
+        java.lang.String[] descriptorData = {"\n'model/message/messages_with_total.prot"
                 + "o\022\016im.turms.proto\032\033model/message/message"
                 + ".proto\"x\n\021MessagesWithTotal\022\r\n\005total\030\001 \001"
                 + "(\005\022\030\n\020is_group_message\030\002 \001(\010\022\017\n\007from_id\030"
@@ -54,9 +63,10 @@ public final class MessagesWithTotalOuterClass {
                 getDescriptor().getMessageTypes()
                         .get(0);
         internal_static_im_turms_proto_MessagesWithTotal_fieldAccessorTable =
-                new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+                new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_MessagesWithTotal_descriptor,
                         new java.lang.String[]{"Total", "IsGroupMessage", "FromId", "Messages",});
+        descriptor.resolveAllFeaturesImmutable();
         im.turms.server.common.access.client.dto.model.message.MessageOuterClass.getDescriptor();
     }
 

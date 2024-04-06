@@ -21,34 +21,37 @@ package im.turms.server.common.access.client.dto.request;
  * <pre>
  * Client -&gt; Server -&gt; Client
  * </pre>
- * <p>
+ *
  * Protobuf type {@code im.turms.proto.TurmsRequest}
  */
-public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 implements
+public final class TurmsRequest extends com.google.protobuf.GeneratedMessage implements
         // @@protoc_insertion_point(message_implements:im.turms.proto.TurmsRequest)
         TurmsRequestOrBuilder {
     private static final long serialVersionUID = 0L;
+    static {
+        com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
+                com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
+                /* major= */ 4,
+                /* minor= */ 26,
+                /* patch= */ 1,
+                /* suffix= */ "",
+                TurmsRequest.class.getName());
+    }
 
     // Use TurmsRequest.newBuilder() to construct.
-    private TurmsRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    private TurmsRequest(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
         super(builder);
     }
 
     private TurmsRequest() {
     }
 
-    @java.lang.Override
-    @SuppressWarnings({"unused"})
-    protected java.lang.Object newInstance(UnusedPrivateParameter unused) {
-        return new TurmsRequest();
-    }
-
-    public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+    public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
         return im.turms.server.common.access.client.dto.request.TurmsRequestOuterClass.internal_static_im_turms_proto_TurmsRequest_descriptor;
     }
 
     @java.lang.Override
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internalGetFieldAccessorTable() {
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable() {
         return im.turms.server.common.access.client.dto.request.TurmsRequestOuterClass.internal_static_im_turms_proto_TurmsRequest_fieldAccessorTable
                 .ensureFieldAccessorsInitialized(
                         im.turms.server.common.access.client.dto.request.TurmsRequest.class,
@@ -125,7 +128,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
 
         private final int value;
 
-        private KindCase(int value) {
+        KindCase(int value) {
             this.value = value;
         }
 
@@ -2612,7 +2615,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
     private byte memoizedIsInitialized = -1;
 
     @java.lang.Override
-    public final boolean isInitialized() {
+    public boolean isInitialized() {
         byte isInitialized = memoizedIsInitialized;
         if (isInitialized == 1) {
             return true;
@@ -3772,40 +3775,40 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
 
     public static im.turms.server.common.access.client.dto.request.TurmsRequest parseFrom(
             java.io.InputStream input) throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3.parseWithIOException(PARSER, input);
+        return com.google.protobuf.GeneratedMessage.parseWithIOException(PARSER, input);
     }
 
     public static im.turms.server.common.access.client.dto.request.TurmsRequest parseFrom(
             java.io.InputStream input,
             com.google.protobuf.ExtensionRegistryLite extensionRegistry)
             throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
+        return com.google.protobuf.GeneratedMessage
                 .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
     public static im.turms.server.common.access.client.dto.request.TurmsRequest parseDelimitedFrom(
             java.io.InputStream input) throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3.parseDelimitedWithIOException(PARSER, input);
+        return com.google.protobuf.GeneratedMessage.parseDelimitedWithIOException(PARSER, input);
     }
 
     public static im.turms.server.common.access.client.dto.request.TurmsRequest parseDelimitedFrom(
             java.io.InputStream input,
             com.google.protobuf.ExtensionRegistryLite extensionRegistry)
             throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
+        return com.google.protobuf.GeneratedMessage
                 .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
 
     public static im.turms.server.common.access.client.dto.request.TurmsRequest parseFrom(
             com.google.protobuf.CodedInputStream input) throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3.parseWithIOException(PARSER, input);
+        return com.google.protobuf.GeneratedMessage.parseWithIOException(PARSER, input);
     }
 
     public static im.turms.server.common.access.client.dto.request.TurmsRequest parseFrom(
             com.google.protobuf.CodedInputStream input,
             com.google.protobuf.ExtensionRegistryLite extensionRegistry)
             throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
+        return com.google.protobuf.GeneratedMessage
                 .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
@@ -3832,8 +3835,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
     }
 
     @java.lang.Override
-    protected Builder newBuilderForType(
-            com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+    protected Builder newBuilderForType(com.google.protobuf.GeneratedMessage.BuilderParent parent) {
         return new Builder(parent);
     }
 
@@ -3841,19 +3843,19 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
      * <pre>
      * Client -&gt; Server -&gt; Client
      * </pre>
-     * <p>
+     *
      * Protobuf type {@code im.turms.proto.TurmsRequest}
      */
-    public static final class Builder
-            extends com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+    public static final class Builder extends com.google.protobuf.GeneratedMessage.Builder<Builder>
+            implements
             // @@protoc_insertion_point(builder_implements:im.turms.proto.TurmsRequest)
             im.turms.server.common.access.client.dto.request.TurmsRequestOrBuilder {
-        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+        public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
             return im.turms.server.common.access.client.dto.request.TurmsRequestOuterClass.internal_static_im_turms_proto_TurmsRequest_descriptor;
         }
 
         @java.lang.Override
-        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internalGetFieldAccessorTable() {
+        protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable() {
             return im.turms.server.common.access.client.dto.request.TurmsRequestOuterClass.internal_static_im_turms_proto_TurmsRequest_fieldAccessorTable
                     .ensureFieldAccessorsInitialized(
                             im.turms.server.common.access.client.dto.request.TurmsRequest.class,
@@ -3866,7 +3868,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
 
         }
 
-        private Builder(com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        private Builder(com.google.protobuf.GeneratedMessage.BuilderParent parent) {
             super(parent);
 
         }
@@ -4294,43 +4296,6 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         }
 
         @java.lang.Override
-        public Builder clone() {
-            return super.clone();
-        }
-
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index,
-                java.lang.Object value) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.addRepeatedField(field, value);
-        }
-
-        @java.lang.Override
         public Builder mergeFrom(com.google.protobuf.Message other) {
             if (other instanceof im.turms.server.common.access.client.dto.request.TurmsRequest) {
                 return mergeFrom(
@@ -4545,7 +4510,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         }
 
         @java.lang.Override
-        public final boolean isInitialized() {
+        public boolean isInitialized() {
             return true;
         }
 
@@ -5012,7 +4977,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             return this;
         }
 
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.user.CreateSessionRequest, im.turms.server.common.access.client.dto.request.user.CreateSessionRequest.Builder, im.turms.server.common.access.client.dto.request.user.CreateSessionRequestOrBuilder> createSessionRequestBuilder_;
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.user.CreateSessionRequest, im.turms.server.common.access.client.dto.request.user.CreateSessionRequest.Builder, im.turms.server.common.access.client.dto.request.user.CreateSessionRequestOrBuilder> createSessionRequestBuilder_;
 
         /**
          * <pre>
@@ -5190,13 +5155,13 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          *
          * <code>.im.turms.proto.CreateSessionRequest create_session_request = 3;</code>
          */
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.user.CreateSessionRequest, im.turms.server.common.access.client.dto.request.user.CreateSessionRequest.Builder, im.turms.server.common.access.client.dto.request.user.CreateSessionRequestOrBuilder> getCreateSessionRequestFieldBuilder() {
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.user.CreateSessionRequest, im.turms.server.common.access.client.dto.request.user.CreateSessionRequest.Builder, im.turms.server.common.access.client.dto.request.user.CreateSessionRequestOrBuilder> getCreateSessionRequestFieldBuilder() {
             if (createSessionRequestBuilder_ == null) {
                 if (!(kindCase_ == 3)) {
                     kind_ = im.turms.server.common.access.client.dto.request.user.CreateSessionRequest
                             .getDefaultInstance();
                 }
-                createSessionRequestBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
+                createSessionRequestBuilder_ = new com.google.protobuf.SingleFieldBuilder<>(
                         (im.turms.server.common.access.client.dto.request.user.CreateSessionRequest) kind_,
                         getParentForChildren(),
                         isClean());
@@ -5207,7 +5172,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             return createSessionRequestBuilder_;
         }
 
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.user.DeleteSessionRequest, im.turms.server.common.access.client.dto.request.user.DeleteSessionRequest.Builder, im.turms.server.common.access.client.dto.request.user.DeleteSessionRequestOrBuilder> deleteSessionRequestBuilder_;
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.user.DeleteSessionRequest, im.turms.server.common.access.client.dto.request.user.DeleteSessionRequest.Builder, im.turms.server.common.access.client.dto.request.user.DeleteSessionRequestOrBuilder> deleteSessionRequestBuilder_;
 
         /**
          * <code>.im.turms.proto.DeleteSessionRequest delete_session_request = 4;</code>
@@ -5349,13 +5314,13 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         /**
          * <code>.im.turms.proto.DeleteSessionRequest delete_session_request = 4;</code>
          */
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.user.DeleteSessionRequest, im.turms.server.common.access.client.dto.request.user.DeleteSessionRequest.Builder, im.turms.server.common.access.client.dto.request.user.DeleteSessionRequestOrBuilder> getDeleteSessionRequestFieldBuilder() {
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.user.DeleteSessionRequest, im.turms.server.common.access.client.dto.request.user.DeleteSessionRequest.Builder, im.turms.server.common.access.client.dto.request.user.DeleteSessionRequestOrBuilder> getDeleteSessionRequestFieldBuilder() {
             if (deleteSessionRequestBuilder_ == null) {
                 if (!(kindCase_ == 4)) {
                     kind_ = im.turms.server.common.access.client.dto.request.user.DeleteSessionRequest
                             .getDefaultInstance();
                 }
-                deleteSessionRequestBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
+                deleteSessionRequestBuilder_ = new com.google.protobuf.SingleFieldBuilder<>(
                         (im.turms.server.common.access.client.dto.request.user.DeleteSessionRequest) kind_,
                         getParentForChildren(),
                         isClean());
@@ -5366,7 +5331,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             return deleteSessionRequestBuilder_;
         }
 
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.conversation.QueryConversationsRequest, im.turms.server.common.access.client.dto.request.conversation.QueryConversationsRequest.Builder, im.turms.server.common.access.client.dto.request.conversation.QueryConversationsRequestOrBuilder> queryConversationsRequestBuilder_;
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.conversation.QueryConversationsRequest, im.turms.server.common.access.client.dto.request.conversation.QueryConversationsRequest.Builder, im.turms.server.common.access.client.dto.request.conversation.QueryConversationsRequestOrBuilder> queryConversationsRequestBuilder_;
 
         /**
          * <pre>
@@ -5544,13 +5509,13 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          *
          * <code>.im.turms.proto.QueryConversationsRequest query_conversations_request = 5;</code>
          */
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.conversation.QueryConversationsRequest, im.turms.server.common.access.client.dto.request.conversation.QueryConversationsRequest.Builder, im.turms.server.common.access.client.dto.request.conversation.QueryConversationsRequestOrBuilder> getQueryConversationsRequestFieldBuilder() {
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.conversation.QueryConversationsRequest, im.turms.server.common.access.client.dto.request.conversation.QueryConversationsRequest.Builder, im.turms.server.common.access.client.dto.request.conversation.QueryConversationsRequestOrBuilder> getQueryConversationsRequestFieldBuilder() {
             if (queryConversationsRequestBuilder_ == null) {
                 if (!(kindCase_ == 5)) {
                     kind_ = im.turms.server.common.access.client.dto.request.conversation.QueryConversationsRequest
                             .getDefaultInstance();
                 }
-                queryConversationsRequestBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
+                queryConversationsRequestBuilder_ = new com.google.protobuf.SingleFieldBuilder<>(
                         (im.turms.server.common.access.client.dto.request.conversation.QueryConversationsRequest) kind_,
                         getParentForChildren(),
                         isClean());
@@ -5561,7 +5526,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             return queryConversationsRequestBuilder_;
         }
 
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.conversation.UpdateConversationRequest, im.turms.server.common.access.client.dto.request.conversation.UpdateConversationRequest.Builder, im.turms.server.common.access.client.dto.request.conversation.UpdateConversationRequestOrBuilder> updateConversationRequestBuilder_;
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.conversation.UpdateConversationRequest, im.turms.server.common.access.client.dto.request.conversation.UpdateConversationRequest.Builder, im.turms.server.common.access.client.dto.request.conversation.UpdateConversationRequestOrBuilder> updateConversationRequestBuilder_;
 
         /**
          * <code>.im.turms.proto.UpdateConversationRequest update_conversation_request = 6;</code>
@@ -5703,13 +5668,13 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         /**
          * <code>.im.turms.proto.UpdateConversationRequest update_conversation_request = 6;</code>
          */
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.conversation.UpdateConversationRequest, im.turms.server.common.access.client.dto.request.conversation.UpdateConversationRequest.Builder, im.turms.server.common.access.client.dto.request.conversation.UpdateConversationRequestOrBuilder> getUpdateConversationRequestFieldBuilder() {
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.conversation.UpdateConversationRequest, im.turms.server.common.access.client.dto.request.conversation.UpdateConversationRequest.Builder, im.turms.server.common.access.client.dto.request.conversation.UpdateConversationRequestOrBuilder> getUpdateConversationRequestFieldBuilder() {
             if (updateConversationRequestBuilder_ == null) {
                 if (!(kindCase_ == 6)) {
                     kind_ = im.turms.server.common.access.client.dto.request.conversation.UpdateConversationRequest
                             .getDefaultInstance();
                 }
-                updateConversationRequestBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
+                updateConversationRequestBuilder_ = new com.google.protobuf.SingleFieldBuilder<>(
                         (im.turms.server.common.access.client.dto.request.conversation.UpdateConversationRequest) kind_,
                         getParentForChildren(),
                         isClean());
@@ -5720,7 +5685,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             return updateConversationRequestBuilder_;
         }
 
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.conversation.UpdateTypingStatusRequest, im.turms.server.common.access.client.dto.request.conversation.UpdateTypingStatusRequest.Builder, im.turms.server.common.access.client.dto.request.conversation.UpdateTypingStatusRequestOrBuilder> updateTypingStatusRequestBuilder_;
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.conversation.UpdateTypingStatusRequest, im.turms.server.common.access.client.dto.request.conversation.UpdateTypingStatusRequest.Builder, im.turms.server.common.access.client.dto.request.conversation.UpdateTypingStatusRequestOrBuilder> updateTypingStatusRequestBuilder_;
 
         /**
          * <code>.im.turms.proto.UpdateTypingStatusRequest update_typing_status_request = 7;</code>
@@ -5862,13 +5827,13 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         /**
          * <code>.im.turms.proto.UpdateTypingStatusRequest update_typing_status_request = 7;</code>
          */
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.conversation.UpdateTypingStatusRequest, im.turms.server.common.access.client.dto.request.conversation.UpdateTypingStatusRequest.Builder, im.turms.server.common.access.client.dto.request.conversation.UpdateTypingStatusRequestOrBuilder> getUpdateTypingStatusRequestFieldBuilder() {
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.conversation.UpdateTypingStatusRequest, im.turms.server.common.access.client.dto.request.conversation.UpdateTypingStatusRequest.Builder, im.turms.server.common.access.client.dto.request.conversation.UpdateTypingStatusRequestOrBuilder> getUpdateTypingStatusRequestFieldBuilder() {
             if (updateTypingStatusRequestBuilder_ == null) {
                 if (!(kindCase_ == 7)) {
                     kind_ = im.turms.server.common.access.client.dto.request.conversation.UpdateTypingStatusRequest
                             .getDefaultInstance();
                 }
-                updateTypingStatusRequestBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
+                updateTypingStatusRequestBuilder_ = new com.google.protobuf.SingleFieldBuilder<>(
                         (im.turms.server.common.access.client.dto.request.conversation.UpdateTypingStatusRequest) kind_,
                         getParentForChildren(),
                         isClean());
@@ -5879,7 +5844,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             return updateTypingStatusRequestBuilder_;
         }
 
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.message.CreateMessageRequest, im.turms.server.common.access.client.dto.request.message.CreateMessageRequest.Builder, im.turms.server.common.access.client.dto.request.message.CreateMessageRequestOrBuilder> createMessageRequestBuilder_;
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.message.CreateMessageRequest, im.turms.server.common.access.client.dto.request.message.CreateMessageRequest.Builder, im.turms.server.common.access.client.dto.request.message.CreateMessageRequestOrBuilder> createMessageRequestBuilder_;
 
         /**
          * <pre>
@@ -6057,13 +6022,13 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          *
          * <code>.im.turms.proto.CreateMessageRequest create_message_request = 8;</code>
          */
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.message.CreateMessageRequest, im.turms.server.common.access.client.dto.request.message.CreateMessageRequest.Builder, im.turms.server.common.access.client.dto.request.message.CreateMessageRequestOrBuilder> getCreateMessageRequestFieldBuilder() {
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.message.CreateMessageRequest, im.turms.server.common.access.client.dto.request.message.CreateMessageRequest.Builder, im.turms.server.common.access.client.dto.request.message.CreateMessageRequestOrBuilder> getCreateMessageRequestFieldBuilder() {
             if (createMessageRequestBuilder_ == null) {
                 if (!(kindCase_ == 8)) {
                     kind_ = im.turms.server.common.access.client.dto.request.message.CreateMessageRequest
                             .getDefaultInstance();
                 }
-                createMessageRequestBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
+                createMessageRequestBuilder_ = new com.google.protobuf.SingleFieldBuilder<>(
                         (im.turms.server.common.access.client.dto.request.message.CreateMessageRequest) kind_,
                         getParentForChildren(),
                         isClean());
@@ -6074,7 +6039,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             return createMessageRequestBuilder_;
         }
 
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.message.QueryMessagesRequest, im.turms.server.common.access.client.dto.request.message.QueryMessagesRequest.Builder, im.turms.server.common.access.client.dto.request.message.QueryMessagesRequestOrBuilder> queryMessagesRequestBuilder_;
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.message.QueryMessagesRequest, im.turms.server.common.access.client.dto.request.message.QueryMessagesRequest.Builder, im.turms.server.common.access.client.dto.request.message.QueryMessagesRequestOrBuilder> queryMessagesRequestBuilder_;
 
         /**
          * <code>.im.turms.proto.QueryMessagesRequest query_messages_request = 9;</code>
@@ -6216,13 +6181,13 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         /**
          * <code>.im.turms.proto.QueryMessagesRequest query_messages_request = 9;</code>
          */
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.message.QueryMessagesRequest, im.turms.server.common.access.client.dto.request.message.QueryMessagesRequest.Builder, im.turms.server.common.access.client.dto.request.message.QueryMessagesRequestOrBuilder> getQueryMessagesRequestFieldBuilder() {
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.message.QueryMessagesRequest, im.turms.server.common.access.client.dto.request.message.QueryMessagesRequest.Builder, im.turms.server.common.access.client.dto.request.message.QueryMessagesRequestOrBuilder> getQueryMessagesRequestFieldBuilder() {
             if (queryMessagesRequestBuilder_ == null) {
                 if (!(kindCase_ == 9)) {
                     kind_ = im.turms.server.common.access.client.dto.request.message.QueryMessagesRequest
                             .getDefaultInstance();
                 }
-                queryMessagesRequestBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
+                queryMessagesRequestBuilder_ = new com.google.protobuf.SingleFieldBuilder<>(
                         (im.turms.server.common.access.client.dto.request.message.QueryMessagesRequest) kind_,
                         getParentForChildren(),
                         isClean());
@@ -6233,7 +6198,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             return queryMessagesRequestBuilder_;
         }
 
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.message.UpdateMessageRequest, im.turms.server.common.access.client.dto.request.message.UpdateMessageRequest.Builder, im.turms.server.common.access.client.dto.request.message.UpdateMessageRequestOrBuilder> updateMessageRequestBuilder_;
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.message.UpdateMessageRequest, im.turms.server.common.access.client.dto.request.message.UpdateMessageRequest.Builder, im.turms.server.common.access.client.dto.request.message.UpdateMessageRequestOrBuilder> updateMessageRequestBuilder_;
 
         /**
          * <code>.im.turms.proto.UpdateMessageRequest update_message_request = 10;</code>
@@ -6375,13 +6340,13 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         /**
          * <code>.im.turms.proto.UpdateMessageRequest update_message_request = 10;</code>
          */
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.message.UpdateMessageRequest, im.turms.server.common.access.client.dto.request.message.UpdateMessageRequest.Builder, im.turms.server.common.access.client.dto.request.message.UpdateMessageRequestOrBuilder> getUpdateMessageRequestFieldBuilder() {
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.message.UpdateMessageRequest, im.turms.server.common.access.client.dto.request.message.UpdateMessageRequest.Builder, im.turms.server.common.access.client.dto.request.message.UpdateMessageRequestOrBuilder> getUpdateMessageRequestFieldBuilder() {
             if (updateMessageRequestBuilder_ == null) {
                 if (!(kindCase_ == 10)) {
                     kind_ = im.turms.server.common.access.client.dto.request.message.UpdateMessageRequest
                             .getDefaultInstance();
                 }
-                updateMessageRequestBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
+                updateMessageRequestBuilder_ = new com.google.protobuf.SingleFieldBuilder<>(
                         (im.turms.server.common.access.client.dto.request.message.UpdateMessageRequest) kind_,
                         getParentForChildren(),
                         isClean());
@@ -6392,7 +6357,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             return updateMessageRequestBuilder_;
         }
 
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.group.member.CreateGroupMembersRequest, im.turms.server.common.access.client.dto.request.group.member.CreateGroupMembersRequest.Builder, im.turms.server.common.access.client.dto.request.group.member.CreateGroupMembersRequestOrBuilder> createGroupMembersRequestBuilder_;
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.group.member.CreateGroupMembersRequest, im.turms.server.common.access.client.dto.request.group.member.CreateGroupMembersRequest.Builder, im.turms.server.common.access.client.dto.request.group.member.CreateGroupMembersRequestOrBuilder> createGroupMembersRequestBuilder_;
 
         /**
          * <pre>
@@ -6570,13 +6535,13 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          *
          * <code>.im.turms.proto.CreateGroupMembersRequest create_group_members_request = 11;</code>
          */
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.group.member.CreateGroupMembersRequest, im.turms.server.common.access.client.dto.request.group.member.CreateGroupMembersRequest.Builder, im.turms.server.common.access.client.dto.request.group.member.CreateGroupMembersRequestOrBuilder> getCreateGroupMembersRequestFieldBuilder() {
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.group.member.CreateGroupMembersRequest, im.turms.server.common.access.client.dto.request.group.member.CreateGroupMembersRequest.Builder, im.turms.server.common.access.client.dto.request.group.member.CreateGroupMembersRequestOrBuilder> getCreateGroupMembersRequestFieldBuilder() {
             if (createGroupMembersRequestBuilder_ == null) {
                 if (!(kindCase_ == 11)) {
                     kind_ = im.turms.server.common.access.client.dto.request.group.member.CreateGroupMembersRequest
                             .getDefaultInstance();
                 }
-                createGroupMembersRequestBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
+                createGroupMembersRequestBuilder_ = new com.google.protobuf.SingleFieldBuilder<>(
                         (im.turms.server.common.access.client.dto.request.group.member.CreateGroupMembersRequest) kind_,
                         getParentForChildren(),
                         isClean());
@@ -6587,7 +6552,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             return createGroupMembersRequestBuilder_;
         }
 
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequest, im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequest.Builder, im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequestOrBuilder> deleteGroupMembersRequestBuilder_;
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequest, im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequest.Builder, im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequestOrBuilder> deleteGroupMembersRequestBuilder_;
 
         /**
          * <code>.im.turms.proto.DeleteGroupMembersRequest delete_group_members_request = 12;</code>
@@ -6729,13 +6694,13 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         /**
          * <code>.im.turms.proto.DeleteGroupMembersRequest delete_group_members_request = 12;</code>
          */
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequest, im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequest.Builder, im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequestOrBuilder> getDeleteGroupMembersRequestFieldBuilder() {
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequest, im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequest.Builder, im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequestOrBuilder> getDeleteGroupMembersRequestFieldBuilder() {
             if (deleteGroupMembersRequestBuilder_ == null) {
                 if (!(kindCase_ == 12)) {
                     kind_ = im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequest
                             .getDefaultInstance();
                 }
-                deleteGroupMembersRequestBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
+                deleteGroupMembersRequestBuilder_ = new com.google.protobuf.SingleFieldBuilder<>(
                         (im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequest) kind_,
                         getParentForChildren(),
                         isClean());
@@ -6746,7 +6711,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             return deleteGroupMembersRequestBuilder_;
         }
 
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.group.member.QueryGroupMembersRequest, im.turms.server.common.access.client.dto.request.group.member.QueryGroupMembersRequest.Builder, im.turms.server.common.access.client.dto.request.group.member.QueryGroupMembersRequestOrBuilder> queryGroupMembersRequestBuilder_;
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.group.member.QueryGroupMembersRequest, im.turms.server.common.access.client.dto.request.group.member.QueryGroupMembersRequest.Builder, im.turms.server.common.access.client.dto.request.group.member.QueryGroupMembersRequestOrBuilder> queryGroupMembersRequestBuilder_;
 
         /**
          * <code>.im.turms.proto.QueryGroupMembersRequest query_group_members_request = 13;</code>
@@ -6888,13 +6853,13 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         /**
          * <code>.im.turms.proto.QueryGroupMembersRequest query_group_members_request = 13;</code>
          */
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.group.member.QueryGroupMembersRequest, im.turms.server.common.access.client.dto.request.group.member.QueryGroupMembersRequest.Builder, im.turms.server.common.access.client.dto.request.group.member.QueryGroupMembersRequestOrBuilder> getQueryGroupMembersRequestFieldBuilder() {
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.group.member.QueryGroupMembersRequest, im.turms.server.common.access.client.dto.request.group.member.QueryGroupMembersRequest.Builder, im.turms.server.common.access.client.dto.request.group.member.QueryGroupMembersRequestOrBuilder> getQueryGroupMembersRequestFieldBuilder() {
             if (queryGroupMembersRequestBuilder_ == null) {
                 if (!(kindCase_ == 13)) {
                     kind_ = im.turms.server.common.access.client.dto.request.group.member.QueryGroupMembersRequest
                             .getDefaultInstance();
                 }
-                queryGroupMembersRequestBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
+                queryGroupMembersRequestBuilder_ = new com.google.protobuf.SingleFieldBuilder<>(
                         (im.turms.server.common.access.client.dto.request.group.member.QueryGroupMembersRequest) kind_,
                         getParentForChildren(),
                         isClean());
@@ -6905,7 +6870,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             return queryGroupMembersRequestBuilder_;
         }
 
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.group.member.UpdateGroupMemberRequest, im.turms.server.common.access.client.dto.request.group.member.UpdateGroupMemberRequest.Builder, im.turms.server.common.access.client.dto.request.group.member.UpdateGroupMemberRequestOrBuilder> updateGroupMemberRequestBuilder_;
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.group.member.UpdateGroupMemberRequest, im.turms.server.common.access.client.dto.request.group.member.UpdateGroupMemberRequest.Builder, im.turms.server.common.access.client.dto.request.group.member.UpdateGroupMemberRequestOrBuilder> updateGroupMemberRequestBuilder_;
 
         /**
          * <code>.im.turms.proto.UpdateGroupMemberRequest update_group_member_request = 14;</code>
@@ -7047,13 +7012,13 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         /**
          * <code>.im.turms.proto.UpdateGroupMemberRequest update_group_member_request = 14;</code>
          */
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.group.member.UpdateGroupMemberRequest, im.turms.server.common.access.client.dto.request.group.member.UpdateGroupMemberRequest.Builder, im.turms.server.common.access.client.dto.request.group.member.UpdateGroupMemberRequestOrBuilder> getUpdateGroupMemberRequestFieldBuilder() {
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.group.member.UpdateGroupMemberRequest, im.turms.server.common.access.client.dto.request.group.member.UpdateGroupMemberRequest.Builder, im.turms.server.common.access.client.dto.request.group.member.UpdateGroupMemberRequestOrBuilder> getUpdateGroupMemberRequestFieldBuilder() {
             if (updateGroupMemberRequestBuilder_ == null) {
                 if (!(kindCase_ == 14)) {
                     kind_ = im.turms.server.common.access.client.dto.request.group.member.UpdateGroupMemberRequest
                             .getDefaultInstance();
                 }
-                updateGroupMemberRequestBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
+                updateGroupMemberRequestBuilder_ = new com.google.protobuf.SingleFieldBuilder<>(
                         (im.turms.server.common.access.client.dto.request.group.member.UpdateGroupMemberRequest) kind_,
                         getParentForChildren(),
                         isClean());
@@ -7064,7 +7029,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             return updateGroupMemberRequestBuilder_;
         }
 
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest, im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest.Builder, im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequestOrBuilder> queryUserProfilesRequestBuilder_;
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest, im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest.Builder, im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequestOrBuilder> queryUserProfilesRequestBuilder_;
 
         /**
          * <pre>
@@ -7242,13 +7207,13 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          *
          * <code>.im.turms.proto.QueryUserProfilesRequest query_user_profiles_request = 100;</code>
          */
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest, im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest.Builder, im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequestOrBuilder> getQueryUserProfilesRequestFieldBuilder() {
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest, im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest.Builder, im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequestOrBuilder> getQueryUserProfilesRequestFieldBuilder() {
             if (queryUserProfilesRequestBuilder_ == null) {
                 if (!(kindCase_ == 100)) {
                     kind_ = im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest
                             .getDefaultInstance();
                 }
-                queryUserProfilesRequestBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
+                queryUserProfilesRequestBuilder_ = new com.google.protobuf.SingleFieldBuilder<>(
                         (im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRequest) kind_,
                         getParentForChildren(),
                         isClean());
@@ -7259,7 +7224,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             return queryUserProfilesRequestBuilder_;
         }
 
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.user.QueryNearbyUsersRequest, im.turms.server.common.access.client.dto.request.user.QueryNearbyUsersRequest.Builder, im.turms.server.common.access.client.dto.request.user.QueryNearbyUsersRequestOrBuilder> queryNearbyUsersRequestBuilder_;
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.user.QueryNearbyUsersRequest, im.turms.server.common.access.client.dto.request.user.QueryNearbyUsersRequest.Builder, im.turms.server.common.access.client.dto.request.user.QueryNearbyUsersRequestOrBuilder> queryNearbyUsersRequestBuilder_;
 
         /**
          * <code>.im.turms.proto.QueryNearbyUsersRequest query_nearby_users_request = 101;</code>
@@ -7401,13 +7366,13 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         /**
          * <code>.im.turms.proto.QueryNearbyUsersRequest query_nearby_users_request = 101;</code>
          */
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.user.QueryNearbyUsersRequest, im.turms.server.common.access.client.dto.request.user.QueryNearbyUsersRequest.Builder, im.turms.server.common.access.client.dto.request.user.QueryNearbyUsersRequestOrBuilder> getQueryNearbyUsersRequestFieldBuilder() {
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.user.QueryNearbyUsersRequest, im.turms.server.common.access.client.dto.request.user.QueryNearbyUsersRequest.Builder, im.turms.server.common.access.client.dto.request.user.QueryNearbyUsersRequestOrBuilder> getQueryNearbyUsersRequestFieldBuilder() {
             if (queryNearbyUsersRequestBuilder_ == null) {
                 if (!(kindCase_ == 101)) {
                     kind_ = im.turms.server.common.access.client.dto.request.user.QueryNearbyUsersRequest
                             .getDefaultInstance();
                 }
-                queryNearbyUsersRequestBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
+                queryNearbyUsersRequestBuilder_ = new com.google.protobuf.SingleFieldBuilder<>(
                         (im.turms.server.common.access.client.dto.request.user.QueryNearbyUsersRequest) kind_,
                         getParentForChildren(),
                         isClean());
@@ -7418,7 +7383,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             return queryNearbyUsersRequestBuilder_;
         }
 
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.user.QueryUserOnlineStatusesRequest, im.turms.server.common.access.client.dto.request.user.QueryUserOnlineStatusesRequest.Builder, im.turms.server.common.access.client.dto.request.user.QueryUserOnlineStatusesRequestOrBuilder> queryUserOnlineStatusesRequestBuilder_;
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.user.QueryUserOnlineStatusesRequest, im.turms.server.common.access.client.dto.request.user.QueryUserOnlineStatusesRequest.Builder, im.turms.server.common.access.client.dto.request.user.QueryUserOnlineStatusesRequestOrBuilder> queryUserOnlineStatusesRequestBuilder_;
 
         /**
          * <code>.im.turms.proto.QueryUserOnlineStatusesRequest query_user_online_statuses_request = 102;</code>
@@ -7560,14 +7525,14 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         /**
          * <code>.im.turms.proto.QueryUserOnlineStatusesRequest query_user_online_statuses_request = 102;</code>
          */
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.user.QueryUserOnlineStatusesRequest, im.turms.server.common.access.client.dto.request.user.QueryUserOnlineStatusesRequest.Builder, im.turms.server.common.access.client.dto.request.user.QueryUserOnlineStatusesRequestOrBuilder> getQueryUserOnlineStatusesRequestFieldBuilder() {
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.user.QueryUserOnlineStatusesRequest, im.turms.server.common.access.client.dto.request.user.QueryUserOnlineStatusesRequest.Builder, im.turms.server.common.access.client.dto.request.user.QueryUserOnlineStatusesRequestOrBuilder> getQueryUserOnlineStatusesRequestFieldBuilder() {
             if (queryUserOnlineStatusesRequestBuilder_ == null) {
                 if (!(kindCase_ == 102)) {
                     kind_ = im.turms.server.common.access.client.dto.request.user.QueryUserOnlineStatusesRequest
                             .getDefaultInstance();
                 }
                 queryUserOnlineStatusesRequestBuilder_ =
-                        new com.google.protobuf.SingleFieldBuilderV3<>(
+                        new com.google.protobuf.SingleFieldBuilder<>(
                                 (im.turms.server.common.access.client.dto.request.user.QueryUserOnlineStatusesRequest) kind_,
                                 getParentForChildren(),
                                 isClean());
@@ -7578,7 +7543,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             return queryUserOnlineStatusesRequestBuilder_;
         }
 
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.user.UpdateUserLocationRequest, im.turms.server.common.access.client.dto.request.user.UpdateUserLocationRequest.Builder, im.turms.server.common.access.client.dto.request.user.UpdateUserLocationRequestOrBuilder> updateUserLocationRequestBuilder_;
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.user.UpdateUserLocationRequest, im.turms.server.common.access.client.dto.request.user.UpdateUserLocationRequest.Builder, im.turms.server.common.access.client.dto.request.user.UpdateUserLocationRequestOrBuilder> updateUserLocationRequestBuilder_;
 
         /**
          * <code>.im.turms.proto.UpdateUserLocationRequest update_user_location_request = 103;</code>
@@ -7720,13 +7685,13 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         /**
          * <code>.im.turms.proto.UpdateUserLocationRequest update_user_location_request = 103;</code>
          */
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.user.UpdateUserLocationRequest, im.turms.server.common.access.client.dto.request.user.UpdateUserLocationRequest.Builder, im.turms.server.common.access.client.dto.request.user.UpdateUserLocationRequestOrBuilder> getUpdateUserLocationRequestFieldBuilder() {
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.user.UpdateUserLocationRequest, im.turms.server.common.access.client.dto.request.user.UpdateUserLocationRequest.Builder, im.turms.server.common.access.client.dto.request.user.UpdateUserLocationRequestOrBuilder> getUpdateUserLocationRequestFieldBuilder() {
             if (updateUserLocationRequestBuilder_ == null) {
                 if (!(kindCase_ == 103)) {
                     kind_ = im.turms.server.common.access.client.dto.request.user.UpdateUserLocationRequest
                             .getDefaultInstance();
                 }
-                updateUserLocationRequestBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
+                updateUserLocationRequestBuilder_ = new com.google.protobuf.SingleFieldBuilder<>(
                         (im.turms.server.common.access.client.dto.request.user.UpdateUserLocationRequest) kind_,
                         getParentForChildren(),
                         isClean());
@@ -7737,7 +7702,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             return updateUserLocationRequestBuilder_;
         }
 
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.user.UpdateUserOnlineStatusRequest, im.turms.server.common.access.client.dto.request.user.UpdateUserOnlineStatusRequest.Builder, im.turms.server.common.access.client.dto.request.user.UpdateUserOnlineStatusRequestOrBuilder> updateUserOnlineStatusRequestBuilder_;
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.user.UpdateUserOnlineStatusRequest, im.turms.server.common.access.client.dto.request.user.UpdateUserOnlineStatusRequest.Builder, im.turms.server.common.access.client.dto.request.user.UpdateUserOnlineStatusRequestOrBuilder> updateUserOnlineStatusRequestBuilder_;
 
         /**
          * <code>.im.turms.proto.UpdateUserOnlineStatusRequest update_user_online_status_request = 104;</code>
@@ -7879,14 +7844,14 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         /**
          * <code>.im.turms.proto.UpdateUserOnlineStatusRequest update_user_online_status_request = 104;</code>
          */
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.user.UpdateUserOnlineStatusRequest, im.turms.server.common.access.client.dto.request.user.UpdateUserOnlineStatusRequest.Builder, im.turms.server.common.access.client.dto.request.user.UpdateUserOnlineStatusRequestOrBuilder> getUpdateUserOnlineStatusRequestFieldBuilder() {
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.user.UpdateUserOnlineStatusRequest, im.turms.server.common.access.client.dto.request.user.UpdateUserOnlineStatusRequest.Builder, im.turms.server.common.access.client.dto.request.user.UpdateUserOnlineStatusRequestOrBuilder> getUpdateUserOnlineStatusRequestFieldBuilder() {
             if (updateUserOnlineStatusRequestBuilder_ == null) {
                 if (!(kindCase_ == 104)) {
                     kind_ = im.turms.server.common.access.client.dto.request.user.UpdateUserOnlineStatusRequest
                             .getDefaultInstance();
                 }
                 updateUserOnlineStatusRequestBuilder_ =
-                        new com.google.protobuf.SingleFieldBuilderV3<>(
+                        new com.google.protobuf.SingleFieldBuilder<>(
                                 (im.turms.server.common.access.client.dto.request.user.UpdateUserOnlineStatusRequest) kind_,
                                 getParentForChildren(),
                                 isClean());
@@ -7897,7 +7862,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             return updateUserOnlineStatusRequestBuilder_;
         }
 
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.user.UpdateUserRequest, im.turms.server.common.access.client.dto.request.user.UpdateUserRequest.Builder, im.turms.server.common.access.client.dto.request.user.UpdateUserRequestOrBuilder> updateUserRequestBuilder_;
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.user.UpdateUserRequest, im.turms.server.common.access.client.dto.request.user.UpdateUserRequest.Builder, im.turms.server.common.access.client.dto.request.user.UpdateUserRequestOrBuilder> updateUserRequestBuilder_;
 
         /**
          * <code>.im.turms.proto.UpdateUserRequest update_user_request = 105;</code>
@@ -8039,13 +8004,13 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         /**
          * <code>.im.turms.proto.UpdateUserRequest update_user_request = 105;</code>
          */
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.user.UpdateUserRequest, im.turms.server.common.access.client.dto.request.user.UpdateUserRequest.Builder, im.turms.server.common.access.client.dto.request.user.UpdateUserRequestOrBuilder> getUpdateUserRequestFieldBuilder() {
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.user.UpdateUserRequest, im.turms.server.common.access.client.dto.request.user.UpdateUserRequest.Builder, im.turms.server.common.access.client.dto.request.user.UpdateUserRequestOrBuilder> getUpdateUserRequestFieldBuilder() {
             if (updateUserRequestBuilder_ == null) {
                 if (!(kindCase_ == 105)) {
                     kind_ = im.turms.server.common.access.client.dto.request.user.UpdateUserRequest
                             .getDefaultInstance();
                 }
-                updateUserRequestBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
+                updateUserRequestBuilder_ = new com.google.protobuf.SingleFieldBuilder<>(
                         (im.turms.server.common.access.client.dto.request.user.UpdateUserRequest) kind_,
                         getParentForChildren(),
                         isClean());
@@ -8056,7 +8021,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             return updateUserRequestBuilder_;
         }
 
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest, im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequestOrBuilder> createFriendRequestRequestBuilder_;
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest, im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequestOrBuilder> createFriendRequestRequestBuilder_;
 
         /**
          * <pre>
@@ -8234,13 +8199,13 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          *
          * <code>.im.turms.proto.CreateFriendRequestRequest create_friend_request_request = 200;</code>
          */
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest, im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequestOrBuilder> getCreateFriendRequestRequestFieldBuilder() {
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest, im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequestOrBuilder> getCreateFriendRequestRequestFieldBuilder() {
             if (createFriendRequestRequestBuilder_ == null) {
                 if (!(kindCase_ == 200)) {
                     kind_ = im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest
                             .getDefaultInstance();
                 }
-                createFriendRequestRequestBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
+                createFriendRequestRequestBuilder_ = new com.google.protobuf.SingleFieldBuilder<>(
                         (im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest) kind_,
                         getParentForChildren(),
                         isClean());
@@ -8251,7 +8216,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             return createFriendRequestRequestBuilder_;
         }
 
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipGroupRequest, im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipGroupRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipGroupRequestOrBuilder> createRelationshipGroupRequestBuilder_;
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipGroupRequest, im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipGroupRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipGroupRequestOrBuilder> createRelationshipGroupRequestBuilder_;
 
         /**
          * <code>.im.turms.proto.CreateRelationshipGroupRequest create_relationship_group_request = 201;</code>
@@ -8393,14 +8358,14 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         /**
          * <code>.im.turms.proto.CreateRelationshipGroupRequest create_relationship_group_request = 201;</code>
          */
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipGroupRequest, im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipGroupRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipGroupRequestOrBuilder> getCreateRelationshipGroupRequestFieldBuilder() {
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipGroupRequest, im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipGroupRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipGroupRequestOrBuilder> getCreateRelationshipGroupRequestFieldBuilder() {
             if (createRelationshipGroupRequestBuilder_ == null) {
                 if (!(kindCase_ == 201)) {
                     kind_ = im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipGroupRequest
                             .getDefaultInstance();
                 }
                 createRelationshipGroupRequestBuilder_ =
-                        new com.google.protobuf.SingleFieldBuilderV3<>(
+                        new com.google.protobuf.SingleFieldBuilder<>(
                                 (im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipGroupRequest) kind_,
                                 getParentForChildren(),
                                 isClean());
@@ -8411,7 +8376,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             return createRelationshipGroupRequestBuilder_;
         }
 
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipRequest, im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipRequestOrBuilder> createRelationshipRequestBuilder_;
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipRequest, im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipRequestOrBuilder> createRelationshipRequestBuilder_;
 
         /**
          * <code>.im.turms.proto.CreateRelationshipRequest create_relationship_request = 202;</code>
@@ -8553,13 +8518,13 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         /**
          * <code>.im.turms.proto.CreateRelationshipRequest create_relationship_request = 202;</code>
          */
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipRequest, im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipRequestOrBuilder> getCreateRelationshipRequestFieldBuilder() {
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipRequest, im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipRequestOrBuilder> getCreateRelationshipRequestFieldBuilder() {
             if (createRelationshipRequestBuilder_ == null) {
                 if (!(kindCase_ == 202)) {
                     kind_ = im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipRequest
                             .getDefaultInstance();
                 }
-                createRelationshipRequestBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
+                createRelationshipRequestBuilder_ = new com.google.protobuf.SingleFieldBuilder<>(
                         (im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipRequest) kind_,
                         getParentForChildren(),
                         isClean());
@@ -8570,7 +8535,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             return createRelationshipRequestBuilder_;
         }
 
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.user.relationship.DeleteFriendRequestRequest, im.turms.server.common.access.client.dto.request.user.relationship.DeleteFriendRequestRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.DeleteFriendRequestRequestOrBuilder> deleteFriendRequestRequestBuilder_;
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.user.relationship.DeleteFriendRequestRequest, im.turms.server.common.access.client.dto.request.user.relationship.DeleteFriendRequestRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.DeleteFriendRequestRequestOrBuilder> deleteFriendRequestRequestBuilder_;
 
         /**
          * <code>.im.turms.proto.DeleteFriendRequestRequest delete_friend_request_request = 203;</code>
@@ -8712,13 +8677,13 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         /**
          * <code>.im.turms.proto.DeleteFriendRequestRequest delete_friend_request_request = 203;</code>
          */
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.user.relationship.DeleteFriendRequestRequest, im.turms.server.common.access.client.dto.request.user.relationship.DeleteFriendRequestRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.DeleteFriendRequestRequestOrBuilder> getDeleteFriendRequestRequestFieldBuilder() {
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.user.relationship.DeleteFriendRequestRequest, im.turms.server.common.access.client.dto.request.user.relationship.DeleteFriendRequestRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.DeleteFriendRequestRequestOrBuilder> getDeleteFriendRequestRequestFieldBuilder() {
             if (deleteFriendRequestRequestBuilder_ == null) {
                 if (!(kindCase_ == 203)) {
                     kind_ = im.turms.server.common.access.client.dto.request.user.relationship.DeleteFriendRequestRequest
                             .getDefaultInstance();
                 }
-                deleteFriendRequestRequestBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
+                deleteFriendRequestRequestBuilder_ = new com.google.protobuf.SingleFieldBuilder<>(
                         (im.turms.server.common.access.client.dto.request.user.relationship.DeleteFriendRequestRequest) kind_,
                         getParentForChildren(),
                         isClean());
@@ -8729,7 +8694,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             return deleteFriendRequestRequestBuilder_;
         }
 
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequest, im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequestOrBuilder> deleteRelationshipGroupRequestBuilder_;
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequest, im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequestOrBuilder> deleteRelationshipGroupRequestBuilder_;
 
         /**
          * <code>.im.turms.proto.DeleteRelationshipGroupRequest delete_relationship_group_request = 204;</code>
@@ -8871,14 +8836,14 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         /**
          * <code>.im.turms.proto.DeleteRelationshipGroupRequest delete_relationship_group_request = 204;</code>
          */
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequest, im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequestOrBuilder> getDeleteRelationshipGroupRequestFieldBuilder() {
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequest, im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequestOrBuilder> getDeleteRelationshipGroupRequestFieldBuilder() {
             if (deleteRelationshipGroupRequestBuilder_ == null) {
                 if (!(kindCase_ == 204)) {
                     kind_ = im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequest
                             .getDefaultInstance();
                 }
                 deleteRelationshipGroupRequestBuilder_ =
-                        new com.google.protobuf.SingleFieldBuilderV3<>(
+                        new com.google.protobuf.SingleFieldBuilder<>(
                                 (im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequest) kind_,
                                 getParentForChildren(),
                                 isClean());
@@ -8889,7 +8854,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             return deleteRelationshipGroupRequestBuilder_;
         }
 
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipRequest, im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipRequestOrBuilder> deleteRelationshipRequestBuilder_;
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipRequest, im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipRequestOrBuilder> deleteRelationshipRequestBuilder_;
 
         /**
          * <code>.im.turms.proto.DeleteRelationshipRequest delete_relationship_request = 205;</code>
@@ -9031,13 +8996,13 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         /**
          * <code>.im.turms.proto.DeleteRelationshipRequest delete_relationship_request = 205;</code>
          */
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipRequest, im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipRequestOrBuilder> getDeleteRelationshipRequestFieldBuilder() {
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipRequest, im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipRequestOrBuilder> getDeleteRelationshipRequestFieldBuilder() {
             if (deleteRelationshipRequestBuilder_ == null) {
                 if (!(kindCase_ == 205)) {
                     kind_ = im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipRequest
                             .getDefaultInstance();
                 }
-                deleteRelationshipRequestBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
+                deleteRelationshipRequestBuilder_ = new com.google.protobuf.SingleFieldBuilder<>(
                         (im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipRequest) kind_,
                         getParentForChildren(),
                         isClean());
@@ -9048,7 +9013,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             return deleteRelationshipRequestBuilder_;
         }
 
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.user.relationship.QueryFriendRequestsRequest, im.turms.server.common.access.client.dto.request.user.relationship.QueryFriendRequestsRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.QueryFriendRequestsRequestOrBuilder> queryFriendRequestsRequestBuilder_;
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.user.relationship.QueryFriendRequestsRequest, im.turms.server.common.access.client.dto.request.user.relationship.QueryFriendRequestsRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.QueryFriendRequestsRequestOrBuilder> queryFriendRequestsRequestBuilder_;
 
         /**
          * <code>.im.turms.proto.QueryFriendRequestsRequest query_friend_requests_request = 206;</code>
@@ -9190,13 +9155,13 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         /**
          * <code>.im.turms.proto.QueryFriendRequestsRequest query_friend_requests_request = 206;</code>
          */
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.user.relationship.QueryFriendRequestsRequest, im.turms.server.common.access.client.dto.request.user.relationship.QueryFriendRequestsRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.QueryFriendRequestsRequestOrBuilder> getQueryFriendRequestsRequestFieldBuilder() {
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.user.relationship.QueryFriendRequestsRequest, im.turms.server.common.access.client.dto.request.user.relationship.QueryFriendRequestsRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.QueryFriendRequestsRequestOrBuilder> getQueryFriendRequestsRequestFieldBuilder() {
             if (queryFriendRequestsRequestBuilder_ == null) {
                 if (!(kindCase_ == 206)) {
                     kind_ = im.turms.server.common.access.client.dto.request.user.relationship.QueryFriendRequestsRequest
                             .getDefaultInstance();
                 }
-                queryFriendRequestsRequestBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
+                queryFriendRequestsRequestBuilder_ = new com.google.protobuf.SingleFieldBuilder<>(
                         (im.turms.server.common.access.client.dto.request.user.relationship.QueryFriendRequestsRequest) kind_,
                         getParentForChildren(),
                         isClean());
@@ -9207,7 +9172,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             return queryFriendRequestsRequestBuilder_;
         }
 
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.user.relationship.QueryRelatedUserIdsRequest, im.turms.server.common.access.client.dto.request.user.relationship.QueryRelatedUserIdsRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.QueryRelatedUserIdsRequestOrBuilder> queryRelatedUserIdsRequestBuilder_;
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.user.relationship.QueryRelatedUserIdsRequest, im.turms.server.common.access.client.dto.request.user.relationship.QueryRelatedUserIdsRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.QueryRelatedUserIdsRequestOrBuilder> queryRelatedUserIdsRequestBuilder_;
 
         /**
          * <code>.im.turms.proto.QueryRelatedUserIdsRequest query_related_user_ids_request = 207;</code>
@@ -9349,13 +9314,13 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         /**
          * <code>.im.turms.proto.QueryRelatedUserIdsRequest query_related_user_ids_request = 207;</code>
          */
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.user.relationship.QueryRelatedUserIdsRequest, im.turms.server.common.access.client.dto.request.user.relationship.QueryRelatedUserIdsRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.QueryRelatedUserIdsRequestOrBuilder> getQueryRelatedUserIdsRequestFieldBuilder() {
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.user.relationship.QueryRelatedUserIdsRequest, im.turms.server.common.access.client.dto.request.user.relationship.QueryRelatedUserIdsRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.QueryRelatedUserIdsRequestOrBuilder> getQueryRelatedUserIdsRequestFieldBuilder() {
             if (queryRelatedUserIdsRequestBuilder_ == null) {
                 if (!(kindCase_ == 207)) {
                     kind_ = im.turms.server.common.access.client.dto.request.user.relationship.QueryRelatedUserIdsRequest
                             .getDefaultInstance();
                 }
-                queryRelatedUserIdsRequestBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
+                queryRelatedUserIdsRequestBuilder_ = new com.google.protobuf.SingleFieldBuilder<>(
                         (im.turms.server.common.access.client.dto.request.user.relationship.QueryRelatedUserIdsRequest) kind_,
                         getParentForChildren(),
                         isClean());
@@ -9366,7 +9331,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             return queryRelatedUserIdsRequestBuilder_;
         }
 
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipGroupsRequest, im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipGroupsRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipGroupsRequestOrBuilder> queryRelationshipGroupsRequestBuilder_;
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipGroupsRequest, im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipGroupsRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipGroupsRequestOrBuilder> queryRelationshipGroupsRequestBuilder_;
 
         /**
          * <code>.im.turms.proto.QueryRelationshipGroupsRequest query_relationship_groups_request = 208;</code>
@@ -9508,14 +9473,14 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         /**
          * <code>.im.turms.proto.QueryRelationshipGroupsRequest query_relationship_groups_request = 208;</code>
          */
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipGroupsRequest, im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipGroupsRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipGroupsRequestOrBuilder> getQueryRelationshipGroupsRequestFieldBuilder() {
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipGroupsRequest, im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipGroupsRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipGroupsRequestOrBuilder> getQueryRelationshipGroupsRequestFieldBuilder() {
             if (queryRelationshipGroupsRequestBuilder_ == null) {
                 if (!(kindCase_ == 208)) {
                     kind_ = im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipGroupsRequest
                             .getDefaultInstance();
                 }
                 queryRelationshipGroupsRequestBuilder_ =
-                        new com.google.protobuf.SingleFieldBuilderV3<>(
+                        new com.google.protobuf.SingleFieldBuilder<>(
                                 (im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipGroupsRequest) kind_,
                                 getParentForChildren(),
                                 isClean());
@@ -9526,7 +9491,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             return queryRelationshipGroupsRequestBuilder_;
         }
 
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequest, im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequestOrBuilder> queryRelationshipsRequestBuilder_;
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequest, im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequestOrBuilder> queryRelationshipsRequestBuilder_;
 
         /**
          * <code>.im.turms.proto.QueryRelationshipsRequest query_relationships_request = 209;</code>
@@ -9668,13 +9633,13 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         /**
          * <code>.im.turms.proto.QueryRelationshipsRequest query_relationships_request = 209;</code>
          */
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequest, im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequestOrBuilder> getQueryRelationshipsRequestFieldBuilder() {
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequest, im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequestOrBuilder> getQueryRelationshipsRequestFieldBuilder() {
             if (queryRelationshipsRequestBuilder_ == null) {
                 if (!(kindCase_ == 209)) {
                     kind_ = im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequest
                             .getDefaultInstance();
                 }
-                queryRelationshipsRequestBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
+                queryRelationshipsRequestBuilder_ = new com.google.protobuf.SingleFieldBuilder<>(
                         (im.turms.server.common.access.client.dto.request.user.relationship.QueryRelationshipsRequest) kind_,
                         getParentForChildren(),
                         isClean());
@@ -9685,7 +9650,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             return queryRelationshipsRequestBuilder_;
         }
 
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.user.relationship.UpdateFriendRequestRequest, im.turms.server.common.access.client.dto.request.user.relationship.UpdateFriendRequestRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.UpdateFriendRequestRequestOrBuilder> updateFriendRequestRequestBuilder_;
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.user.relationship.UpdateFriendRequestRequest, im.turms.server.common.access.client.dto.request.user.relationship.UpdateFriendRequestRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.UpdateFriendRequestRequestOrBuilder> updateFriendRequestRequestBuilder_;
 
         /**
          * <code>.im.turms.proto.UpdateFriendRequestRequest update_friend_request_request = 210;</code>
@@ -9827,13 +9792,13 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         /**
          * <code>.im.turms.proto.UpdateFriendRequestRequest update_friend_request_request = 210;</code>
          */
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.user.relationship.UpdateFriendRequestRequest, im.turms.server.common.access.client.dto.request.user.relationship.UpdateFriendRequestRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.UpdateFriendRequestRequestOrBuilder> getUpdateFriendRequestRequestFieldBuilder() {
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.user.relationship.UpdateFriendRequestRequest, im.turms.server.common.access.client.dto.request.user.relationship.UpdateFriendRequestRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.UpdateFriendRequestRequestOrBuilder> getUpdateFriendRequestRequestFieldBuilder() {
             if (updateFriendRequestRequestBuilder_ == null) {
                 if (!(kindCase_ == 210)) {
                     kind_ = im.turms.server.common.access.client.dto.request.user.relationship.UpdateFriendRequestRequest
                             .getDefaultInstance();
                 }
-                updateFriendRequestRequestBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
+                updateFriendRequestRequestBuilder_ = new com.google.protobuf.SingleFieldBuilder<>(
                         (im.turms.server.common.access.client.dto.request.user.relationship.UpdateFriendRequestRequest) kind_,
                         getParentForChildren(),
                         isClean());
@@ -9844,7 +9809,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             return updateFriendRequestRequestBuilder_;
         }
 
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipGroupRequest, im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipGroupRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipGroupRequestOrBuilder> updateRelationshipGroupRequestBuilder_;
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipGroupRequest, im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipGroupRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipGroupRequestOrBuilder> updateRelationshipGroupRequestBuilder_;
 
         /**
          * <code>.im.turms.proto.UpdateRelationshipGroupRequest update_relationship_group_request = 211;</code>
@@ -9986,14 +9951,14 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         /**
          * <code>.im.turms.proto.UpdateRelationshipGroupRequest update_relationship_group_request = 211;</code>
          */
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipGroupRequest, im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipGroupRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipGroupRequestOrBuilder> getUpdateRelationshipGroupRequestFieldBuilder() {
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipGroupRequest, im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipGroupRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipGroupRequestOrBuilder> getUpdateRelationshipGroupRequestFieldBuilder() {
             if (updateRelationshipGroupRequestBuilder_ == null) {
                 if (!(kindCase_ == 211)) {
                     kind_ = im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipGroupRequest
                             .getDefaultInstance();
                 }
                 updateRelationshipGroupRequestBuilder_ =
-                        new com.google.protobuf.SingleFieldBuilderV3<>(
+                        new com.google.protobuf.SingleFieldBuilder<>(
                                 (im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipGroupRequest) kind_,
                                 getParentForChildren(),
                                 isClean());
@@ -10004,7 +9969,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             return updateRelationshipGroupRequestBuilder_;
         }
 
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipRequest, im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipRequestOrBuilder> updateRelationshipRequestBuilder_;
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipRequest, im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipRequestOrBuilder> updateRelationshipRequestBuilder_;
 
         /**
          * <code>.im.turms.proto.UpdateRelationshipRequest update_relationship_request = 212;</code>
@@ -10146,13 +10111,13 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         /**
          * <code>.im.turms.proto.UpdateRelationshipRequest update_relationship_request = 212;</code>
          */
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipRequest, im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipRequestOrBuilder> getUpdateRelationshipRequestFieldBuilder() {
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipRequest, im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipRequestOrBuilder> getUpdateRelationshipRequestFieldBuilder() {
             if (updateRelationshipRequestBuilder_ == null) {
                 if (!(kindCase_ == 212)) {
                     kind_ = im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipRequest
                             .getDefaultInstance();
                 }
-                updateRelationshipRequestBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
+                updateRelationshipRequestBuilder_ = new com.google.protobuf.SingleFieldBuilder<>(
                         (im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipRequest) kind_,
                         getParentForChildren(),
                         isClean());
@@ -10163,7 +10128,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             return updateRelationshipRequestBuilder_;
         }
 
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.group.CreateGroupRequest, im.turms.server.common.access.client.dto.request.group.CreateGroupRequest.Builder, im.turms.server.common.access.client.dto.request.group.CreateGroupRequestOrBuilder> createGroupRequestBuilder_;
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.group.CreateGroupRequest, im.turms.server.common.access.client.dto.request.group.CreateGroupRequest.Builder, im.turms.server.common.access.client.dto.request.group.CreateGroupRequestOrBuilder> createGroupRequestBuilder_;
 
         /**
          * <pre>
@@ -10341,13 +10306,13 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          *
          * <code>.im.turms.proto.CreateGroupRequest create_group_request = 300;</code>
          */
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.group.CreateGroupRequest, im.turms.server.common.access.client.dto.request.group.CreateGroupRequest.Builder, im.turms.server.common.access.client.dto.request.group.CreateGroupRequestOrBuilder> getCreateGroupRequestFieldBuilder() {
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.group.CreateGroupRequest, im.turms.server.common.access.client.dto.request.group.CreateGroupRequest.Builder, im.turms.server.common.access.client.dto.request.group.CreateGroupRequestOrBuilder> getCreateGroupRequestFieldBuilder() {
             if (createGroupRequestBuilder_ == null) {
                 if (!(kindCase_ == 300)) {
                     kind_ = im.turms.server.common.access.client.dto.request.group.CreateGroupRequest
                             .getDefaultInstance();
                 }
-                createGroupRequestBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
+                createGroupRequestBuilder_ = new com.google.protobuf.SingleFieldBuilder<>(
                         (im.turms.server.common.access.client.dto.request.group.CreateGroupRequest) kind_,
                         getParentForChildren(),
                         isClean());
@@ -10358,7 +10323,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             return createGroupRequestBuilder_;
         }
 
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.group.DeleteGroupRequest, im.turms.server.common.access.client.dto.request.group.DeleteGroupRequest.Builder, im.turms.server.common.access.client.dto.request.group.DeleteGroupRequestOrBuilder> deleteGroupRequestBuilder_;
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.group.DeleteGroupRequest, im.turms.server.common.access.client.dto.request.group.DeleteGroupRequest.Builder, im.turms.server.common.access.client.dto.request.group.DeleteGroupRequestOrBuilder> deleteGroupRequestBuilder_;
 
         /**
          * <code>.im.turms.proto.DeleteGroupRequest delete_group_request = 301;</code>
@@ -10500,13 +10465,13 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         /**
          * <code>.im.turms.proto.DeleteGroupRequest delete_group_request = 301;</code>
          */
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.group.DeleteGroupRequest, im.turms.server.common.access.client.dto.request.group.DeleteGroupRequest.Builder, im.turms.server.common.access.client.dto.request.group.DeleteGroupRequestOrBuilder> getDeleteGroupRequestFieldBuilder() {
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.group.DeleteGroupRequest, im.turms.server.common.access.client.dto.request.group.DeleteGroupRequest.Builder, im.turms.server.common.access.client.dto.request.group.DeleteGroupRequestOrBuilder> getDeleteGroupRequestFieldBuilder() {
             if (deleteGroupRequestBuilder_ == null) {
                 if (!(kindCase_ == 301)) {
                     kind_ = im.turms.server.common.access.client.dto.request.group.DeleteGroupRequest
                             .getDefaultInstance();
                 }
-                deleteGroupRequestBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
+                deleteGroupRequestBuilder_ = new com.google.protobuf.SingleFieldBuilder<>(
                         (im.turms.server.common.access.client.dto.request.group.DeleteGroupRequest) kind_,
                         getParentForChildren(),
                         isClean());
@@ -10517,7 +10482,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             return deleteGroupRequestBuilder_;
         }
 
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.group.QueryGroupsRequest, im.turms.server.common.access.client.dto.request.group.QueryGroupsRequest.Builder, im.turms.server.common.access.client.dto.request.group.QueryGroupsRequestOrBuilder> queryGroupsRequestBuilder_;
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.group.QueryGroupsRequest, im.turms.server.common.access.client.dto.request.group.QueryGroupsRequest.Builder, im.turms.server.common.access.client.dto.request.group.QueryGroupsRequestOrBuilder> queryGroupsRequestBuilder_;
 
         /**
          * <code>.im.turms.proto.QueryGroupsRequest query_groups_request = 302;</code>
@@ -10659,13 +10624,13 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         /**
          * <code>.im.turms.proto.QueryGroupsRequest query_groups_request = 302;</code>
          */
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.group.QueryGroupsRequest, im.turms.server.common.access.client.dto.request.group.QueryGroupsRequest.Builder, im.turms.server.common.access.client.dto.request.group.QueryGroupsRequestOrBuilder> getQueryGroupsRequestFieldBuilder() {
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.group.QueryGroupsRequest, im.turms.server.common.access.client.dto.request.group.QueryGroupsRequest.Builder, im.turms.server.common.access.client.dto.request.group.QueryGroupsRequestOrBuilder> getQueryGroupsRequestFieldBuilder() {
             if (queryGroupsRequestBuilder_ == null) {
                 if (!(kindCase_ == 302)) {
                     kind_ = im.turms.server.common.access.client.dto.request.group.QueryGroupsRequest
                             .getDefaultInstance();
                 }
-                queryGroupsRequestBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
+                queryGroupsRequestBuilder_ = new com.google.protobuf.SingleFieldBuilder<>(
                         (im.turms.server.common.access.client.dto.request.group.QueryGroupsRequest) kind_,
                         getParentForChildren(),
                         isClean());
@@ -10676,7 +10641,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             return queryGroupsRequestBuilder_;
         }
 
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.group.QueryJoinedGroupIdsRequest, im.turms.server.common.access.client.dto.request.group.QueryJoinedGroupIdsRequest.Builder, im.turms.server.common.access.client.dto.request.group.QueryJoinedGroupIdsRequestOrBuilder> queryJoinedGroupIdsRequestBuilder_;
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.group.QueryJoinedGroupIdsRequest, im.turms.server.common.access.client.dto.request.group.QueryJoinedGroupIdsRequest.Builder, im.turms.server.common.access.client.dto.request.group.QueryJoinedGroupIdsRequestOrBuilder> queryJoinedGroupIdsRequestBuilder_;
 
         /**
          * <code>.im.turms.proto.QueryJoinedGroupIdsRequest query_joined_group_ids_request = 303;</code>
@@ -10818,13 +10783,13 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         /**
          * <code>.im.turms.proto.QueryJoinedGroupIdsRequest query_joined_group_ids_request = 303;</code>
          */
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.group.QueryJoinedGroupIdsRequest, im.turms.server.common.access.client.dto.request.group.QueryJoinedGroupIdsRequest.Builder, im.turms.server.common.access.client.dto.request.group.QueryJoinedGroupIdsRequestOrBuilder> getQueryJoinedGroupIdsRequestFieldBuilder() {
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.group.QueryJoinedGroupIdsRequest, im.turms.server.common.access.client.dto.request.group.QueryJoinedGroupIdsRequest.Builder, im.turms.server.common.access.client.dto.request.group.QueryJoinedGroupIdsRequestOrBuilder> getQueryJoinedGroupIdsRequestFieldBuilder() {
             if (queryJoinedGroupIdsRequestBuilder_ == null) {
                 if (!(kindCase_ == 303)) {
                     kind_ = im.turms.server.common.access.client.dto.request.group.QueryJoinedGroupIdsRequest
                             .getDefaultInstance();
                 }
-                queryJoinedGroupIdsRequestBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
+                queryJoinedGroupIdsRequestBuilder_ = new com.google.protobuf.SingleFieldBuilder<>(
                         (im.turms.server.common.access.client.dto.request.group.QueryJoinedGroupIdsRequest) kind_,
                         getParentForChildren(),
                         isClean());
@@ -10835,7 +10800,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             return queryJoinedGroupIdsRequestBuilder_;
         }
 
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.group.QueryJoinedGroupInfosRequest, im.turms.server.common.access.client.dto.request.group.QueryJoinedGroupInfosRequest.Builder, im.turms.server.common.access.client.dto.request.group.QueryJoinedGroupInfosRequestOrBuilder> queryJoinedGroupInfosRequestBuilder_;
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.group.QueryJoinedGroupInfosRequest, im.turms.server.common.access.client.dto.request.group.QueryJoinedGroupInfosRequest.Builder, im.turms.server.common.access.client.dto.request.group.QueryJoinedGroupInfosRequestOrBuilder> queryJoinedGroupInfosRequestBuilder_;
 
         /**
          * <code>.im.turms.proto.QueryJoinedGroupInfosRequest query_joined_group_infos_request = 304;</code>
@@ -10977,17 +10942,16 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         /**
          * <code>.im.turms.proto.QueryJoinedGroupInfosRequest query_joined_group_infos_request = 304;</code>
          */
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.group.QueryJoinedGroupInfosRequest, im.turms.server.common.access.client.dto.request.group.QueryJoinedGroupInfosRequest.Builder, im.turms.server.common.access.client.dto.request.group.QueryJoinedGroupInfosRequestOrBuilder> getQueryJoinedGroupInfosRequestFieldBuilder() {
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.group.QueryJoinedGroupInfosRequest, im.turms.server.common.access.client.dto.request.group.QueryJoinedGroupInfosRequest.Builder, im.turms.server.common.access.client.dto.request.group.QueryJoinedGroupInfosRequestOrBuilder> getQueryJoinedGroupInfosRequestFieldBuilder() {
             if (queryJoinedGroupInfosRequestBuilder_ == null) {
                 if (!(kindCase_ == 304)) {
                     kind_ = im.turms.server.common.access.client.dto.request.group.QueryJoinedGroupInfosRequest
                             .getDefaultInstance();
                 }
-                queryJoinedGroupInfosRequestBuilder_ =
-                        new com.google.protobuf.SingleFieldBuilderV3<>(
-                                (im.turms.server.common.access.client.dto.request.group.QueryJoinedGroupInfosRequest) kind_,
-                                getParentForChildren(),
-                                isClean());
+                queryJoinedGroupInfosRequestBuilder_ = new com.google.protobuf.SingleFieldBuilder<>(
+                        (im.turms.server.common.access.client.dto.request.group.QueryJoinedGroupInfosRequest) kind_,
+                        getParentForChildren(),
+                        isClean());
                 kind_ = null;
             }
             kindCase_ = 304;
@@ -10995,7 +10959,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             return queryJoinedGroupInfosRequestBuilder_;
         }
 
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.group.UpdateGroupRequest, im.turms.server.common.access.client.dto.request.group.UpdateGroupRequest.Builder, im.turms.server.common.access.client.dto.request.group.UpdateGroupRequestOrBuilder> updateGroupRequestBuilder_;
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.group.UpdateGroupRequest, im.turms.server.common.access.client.dto.request.group.UpdateGroupRequest.Builder, im.turms.server.common.access.client.dto.request.group.UpdateGroupRequestOrBuilder> updateGroupRequestBuilder_;
 
         /**
          * <code>.im.turms.proto.UpdateGroupRequest update_group_request = 305;</code>
@@ -11137,13 +11101,13 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         /**
          * <code>.im.turms.proto.UpdateGroupRequest update_group_request = 305;</code>
          */
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.group.UpdateGroupRequest, im.turms.server.common.access.client.dto.request.group.UpdateGroupRequest.Builder, im.turms.server.common.access.client.dto.request.group.UpdateGroupRequestOrBuilder> getUpdateGroupRequestFieldBuilder() {
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.group.UpdateGroupRequest, im.turms.server.common.access.client.dto.request.group.UpdateGroupRequest.Builder, im.turms.server.common.access.client.dto.request.group.UpdateGroupRequestOrBuilder> getUpdateGroupRequestFieldBuilder() {
             if (updateGroupRequestBuilder_ == null) {
                 if (!(kindCase_ == 305)) {
                     kind_ = im.turms.server.common.access.client.dto.request.group.UpdateGroupRequest
                             .getDefaultInstance();
                 }
-                updateGroupRequestBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
+                updateGroupRequestBuilder_ = new com.google.protobuf.SingleFieldBuilder<>(
                         (im.turms.server.common.access.client.dto.request.group.UpdateGroupRequest) kind_,
                         getParentForChildren(),
                         isClean());
@@ -11154,7 +11118,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             return updateGroupRequestBuilder_;
         }
 
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.group.blocklist.CreateGroupBlockedUserRequest, im.turms.server.common.access.client.dto.request.group.blocklist.CreateGroupBlockedUserRequest.Builder, im.turms.server.common.access.client.dto.request.group.blocklist.CreateGroupBlockedUserRequestOrBuilder> createGroupBlockedUserRequestBuilder_;
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.group.blocklist.CreateGroupBlockedUserRequest, im.turms.server.common.access.client.dto.request.group.blocklist.CreateGroupBlockedUserRequest.Builder, im.turms.server.common.access.client.dto.request.group.blocklist.CreateGroupBlockedUserRequestOrBuilder> createGroupBlockedUserRequestBuilder_;
 
         /**
          * <pre>
@@ -11332,14 +11296,14 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          *
          * <code>.im.turms.proto.CreateGroupBlockedUserRequest create_group_blocked_user_request = 400;</code>
          */
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.group.blocklist.CreateGroupBlockedUserRequest, im.turms.server.common.access.client.dto.request.group.blocklist.CreateGroupBlockedUserRequest.Builder, im.turms.server.common.access.client.dto.request.group.blocklist.CreateGroupBlockedUserRequestOrBuilder> getCreateGroupBlockedUserRequestFieldBuilder() {
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.group.blocklist.CreateGroupBlockedUserRequest, im.turms.server.common.access.client.dto.request.group.blocklist.CreateGroupBlockedUserRequest.Builder, im.turms.server.common.access.client.dto.request.group.blocklist.CreateGroupBlockedUserRequestOrBuilder> getCreateGroupBlockedUserRequestFieldBuilder() {
             if (createGroupBlockedUserRequestBuilder_ == null) {
                 if (!(kindCase_ == 400)) {
                     kind_ = im.turms.server.common.access.client.dto.request.group.blocklist.CreateGroupBlockedUserRequest
                             .getDefaultInstance();
                 }
                 createGroupBlockedUserRequestBuilder_ =
-                        new com.google.protobuf.SingleFieldBuilderV3<>(
+                        new com.google.protobuf.SingleFieldBuilder<>(
                                 (im.turms.server.common.access.client.dto.request.group.blocklist.CreateGroupBlockedUserRequest) kind_,
                                 getParentForChildren(),
                                 isClean());
@@ -11350,7 +11314,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             return createGroupBlockedUserRequestBuilder_;
         }
 
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.group.blocklist.DeleteGroupBlockedUserRequest, im.turms.server.common.access.client.dto.request.group.blocklist.DeleteGroupBlockedUserRequest.Builder, im.turms.server.common.access.client.dto.request.group.blocklist.DeleteGroupBlockedUserRequestOrBuilder> deleteGroupBlockedUserRequestBuilder_;
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.group.blocklist.DeleteGroupBlockedUserRequest, im.turms.server.common.access.client.dto.request.group.blocklist.DeleteGroupBlockedUserRequest.Builder, im.turms.server.common.access.client.dto.request.group.blocklist.DeleteGroupBlockedUserRequestOrBuilder> deleteGroupBlockedUserRequestBuilder_;
 
         /**
          * <code>.im.turms.proto.DeleteGroupBlockedUserRequest delete_group_blocked_user_request = 401;</code>
@@ -11492,14 +11456,14 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         /**
          * <code>.im.turms.proto.DeleteGroupBlockedUserRequest delete_group_blocked_user_request = 401;</code>
          */
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.group.blocklist.DeleteGroupBlockedUserRequest, im.turms.server.common.access.client.dto.request.group.blocklist.DeleteGroupBlockedUserRequest.Builder, im.turms.server.common.access.client.dto.request.group.blocklist.DeleteGroupBlockedUserRequestOrBuilder> getDeleteGroupBlockedUserRequestFieldBuilder() {
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.group.blocklist.DeleteGroupBlockedUserRequest, im.turms.server.common.access.client.dto.request.group.blocklist.DeleteGroupBlockedUserRequest.Builder, im.turms.server.common.access.client.dto.request.group.blocklist.DeleteGroupBlockedUserRequestOrBuilder> getDeleteGroupBlockedUserRequestFieldBuilder() {
             if (deleteGroupBlockedUserRequestBuilder_ == null) {
                 if (!(kindCase_ == 401)) {
                     kind_ = im.turms.server.common.access.client.dto.request.group.blocklist.DeleteGroupBlockedUserRequest
                             .getDefaultInstance();
                 }
                 deleteGroupBlockedUserRequestBuilder_ =
-                        new com.google.protobuf.SingleFieldBuilderV3<>(
+                        new com.google.protobuf.SingleFieldBuilder<>(
                                 (im.turms.server.common.access.client.dto.request.group.blocklist.DeleteGroupBlockedUserRequest) kind_,
                                 getParentForChildren(),
                                 isClean());
@@ -11510,7 +11474,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             return deleteGroupBlockedUserRequestBuilder_;
         }
 
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequest, im.turms.server.common.access.client.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequest.Builder, im.turms.server.common.access.client.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequestOrBuilder> queryGroupBlockedUserIdsRequestBuilder_;
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequest, im.turms.server.common.access.client.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequest.Builder, im.turms.server.common.access.client.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequestOrBuilder> queryGroupBlockedUserIdsRequestBuilder_;
 
         /**
          * <code>.im.turms.proto.QueryGroupBlockedUserIdsRequest query_group_blocked_user_ids_request = 402;</code>
@@ -11652,14 +11616,14 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         /**
          * <code>.im.turms.proto.QueryGroupBlockedUserIdsRequest query_group_blocked_user_ids_request = 402;</code>
          */
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequest, im.turms.server.common.access.client.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequest.Builder, im.turms.server.common.access.client.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequestOrBuilder> getQueryGroupBlockedUserIdsRequestFieldBuilder() {
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequest, im.turms.server.common.access.client.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequest.Builder, im.turms.server.common.access.client.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequestOrBuilder> getQueryGroupBlockedUserIdsRequestFieldBuilder() {
             if (queryGroupBlockedUserIdsRequestBuilder_ == null) {
                 if (!(kindCase_ == 402)) {
                     kind_ = im.turms.server.common.access.client.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequest
                             .getDefaultInstance();
                 }
                 queryGroupBlockedUserIdsRequestBuilder_ =
-                        new com.google.protobuf.SingleFieldBuilderV3<>(
+                        new com.google.protobuf.SingleFieldBuilder<>(
                                 (im.turms.server.common.access.client.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequest) kind_,
                                 getParentForChildren(),
                                 isClean());
@@ -11670,7 +11634,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             return queryGroupBlockedUserIdsRequestBuilder_;
         }
 
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.group.blocklist.QueryGroupBlockedUserInfosRequest, im.turms.server.common.access.client.dto.request.group.blocklist.QueryGroupBlockedUserInfosRequest.Builder, im.turms.server.common.access.client.dto.request.group.blocklist.QueryGroupBlockedUserInfosRequestOrBuilder> queryGroupBlockedUserInfosRequestBuilder_;
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.group.blocklist.QueryGroupBlockedUserInfosRequest, im.turms.server.common.access.client.dto.request.group.blocklist.QueryGroupBlockedUserInfosRequest.Builder, im.turms.server.common.access.client.dto.request.group.blocklist.QueryGroupBlockedUserInfosRequestOrBuilder> queryGroupBlockedUserInfosRequestBuilder_;
 
         /**
          * <code>.im.turms.proto.QueryGroupBlockedUserInfosRequest query_group_blocked_user_infos_request = 403;</code>
@@ -11812,14 +11776,14 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         /**
          * <code>.im.turms.proto.QueryGroupBlockedUserInfosRequest query_group_blocked_user_infos_request = 403;</code>
          */
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.group.blocklist.QueryGroupBlockedUserInfosRequest, im.turms.server.common.access.client.dto.request.group.blocklist.QueryGroupBlockedUserInfosRequest.Builder, im.turms.server.common.access.client.dto.request.group.blocklist.QueryGroupBlockedUserInfosRequestOrBuilder> getQueryGroupBlockedUserInfosRequestFieldBuilder() {
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.group.blocklist.QueryGroupBlockedUserInfosRequest, im.turms.server.common.access.client.dto.request.group.blocklist.QueryGroupBlockedUserInfosRequest.Builder, im.turms.server.common.access.client.dto.request.group.blocklist.QueryGroupBlockedUserInfosRequestOrBuilder> getQueryGroupBlockedUserInfosRequestFieldBuilder() {
             if (queryGroupBlockedUserInfosRequestBuilder_ == null) {
                 if (!(kindCase_ == 403)) {
                     kind_ = im.turms.server.common.access.client.dto.request.group.blocklist.QueryGroupBlockedUserInfosRequest
                             .getDefaultInstance();
                 }
                 queryGroupBlockedUserInfosRequestBuilder_ =
-                        new com.google.protobuf.SingleFieldBuilderV3<>(
+                        new com.google.protobuf.SingleFieldBuilder<>(
                                 (im.turms.server.common.access.client.dto.request.group.blocklist.QueryGroupBlockedUserInfosRequest) kind_,
                                 getParentForChildren(),
                                 isClean());
@@ -11830,7 +11794,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             return queryGroupBlockedUserInfosRequestBuilder_;
         }
 
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequest, im.turms.server.common.access.client.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequestOrBuilder> checkGroupJoinQuestionsAnswersRequestBuilder_;
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequest, im.turms.server.common.access.client.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequestOrBuilder> checkGroupJoinQuestionsAnswersRequestBuilder_;
 
         /**
          * <pre>
@@ -12008,14 +11972,14 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          *
          * <code>.im.turms.proto.CheckGroupJoinQuestionsAnswersRequest check_group_join_questions_answers_request = 500;</code>
          */
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequest, im.turms.server.common.access.client.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequestOrBuilder> getCheckGroupJoinQuestionsAnswersRequestFieldBuilder() {
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequest, im.turms.server.common.access.client.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequestOrBuilder> getCheckGroupJoinQuestionsAnswersRequestFieldBuilder() {
             if (checkGroupJoinQuestionsAnswersRequestBuilder_ == null) {
                 if (!(kindCase_ == 500)) {
                     kind_ = im.turms.server.common.access.client.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequest
                             .getDefaultInstance();
                 }
                 checkGroupJoinQuestionsAnswersRequestBuilder_ =
-                        new com.google.protobuf.SingleFieldBuilderV3<>(
+                        new com.google.protobuf.SingleFieldBuilder<>(
                                 (im.turms.server.common.access.client.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequest) kind_,
                                 getParentForChildren(),
                                 isClean());
@@ -12026,7 +11990,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             return checkGroupJoinQuestionsAnswersRequestBuilder_;
         }
 
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupInvitationRequest, im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupInvitationRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupInvitationRequestOrBuilder> createGroupInvitationRequestBuilder_;
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupInvitationRequest, im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupInvitationRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupInvitationRequestOrBuilder> createGroupInvitationRequestBuilder_;
 
         /**
          * <code>.im.turms.proto.CreateGroupInvitationRequest create_group_invitation_request = 501;</code>
@@ -12168,17 +12132,16 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         /**
          * <code>.im.turms.proto.CreateGroupInvitationRequest create_group_invitation_request = 501;</code>
          */
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupInvitationRequest, im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupInvitationRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupInvitationRequestOrBuilder> getCreateGroupInvitationRequestFieldBuilder() {
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupInvitationRequest, im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupInvitationRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupInvitationRequestOrBuilder> getCreateGroupInvitationRequestFieldBuilder() {
             if (createGroupInvitationRequestBuilder_ == null) {
                 if (!(kindCase_ == 501)) {
                     kind_ = im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupInvitationRequest
                             .getDefaultInstance();
                 }
-                createGroupInvitationRequestBuilder_ =
-                        new com.google.protobuf.SingleFieldBuilderV3<>(
-                                (im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupInvitationRequest) kind_,
-                                getParentForChildren(),
-                                isClean());
+                createGroupInvitationRequestBuilder_ = new com.google.protobuf.SingleFieldBuilder<>(
+                        (im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupInvitationRequest) kind_,
+                        getParentForChildren(),
+                        isClean());
                 kind_ = null;
             }
             kindCase_ = 501;
@@ -12186,7 +12149,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             return createGroupInvitationRequestBuilder_;
         }
 
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinRequestRequest, im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinRequestRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinRequestRequestOrBuilder> createGroupJoinRequestRequestBuilder_;
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinRequestRequest, im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinRequestRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinRequestRequestOrBuilder> createGroupJoinRequestRequestBuilder_;
 
         /**
          * <code>.im.turms.proto.CreateGroupJoinRequestRequest create_group_join_request_request = 502;</code>
@@ -12328,14 +12291,14 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         /**
          * <code>.im.turms.proto.CreateGroupJoinRequestRequest create_group_join_request_request = 502;</code>
          */
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinRequestRequest, im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinRequestRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinRequestRequestOrBuilder> getCreateGroupJoinRequestRequestFieldBuilder() {
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinRequestRequest, im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinRequestRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinRequestRequestOrBuilder> getCreateGroupJoinRequestRequestFieldBuilder() {
             if (createGroupJoinRequestRequestBuilder_ == null) {
                 if (!(kindCase_ == 502)) {
                     kind_ = im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinRequestRequest
                             .getDefaultInstance();
                 }
                 createGroupJoinRequestRequestBuilder_ =
-                        new com.google.protobuf.SingleFieldBuilderV3<>(
+                        new com.google.protobuf.SingleFieldBuilder<>(
                                 (im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinRequestRequest) kind_,
                                 getParentForChildren(),
                                 isClean());
@@ -12346,7 +12309,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             return createGroupJoinRequestRequestBuilder_;
         }
 
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequest, im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequestOrBuilder> createGroupJoinQuestionsRequestBuilder_;
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequest, im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequestOrBuilder> createGroupJoinQuestionsRequestBuilder_;
 
         /**
          * <code>.im.turms.proto.CreateGroupJoinQuestionsRequest create_group_join_questions_request = 503;</code>
@@ -12488,14 +12451,14 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         /**
          * <code>.im.turms.proto.CreateGroupJoinQuestionsRequest create_group_join_questions_request = 503;</code>
          */
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequest, im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequestOrBuilder> getCreateGroupJoinQuestionsRequestFieldBuilder() {
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequest, im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequestOrBuilder> getCreateGroupJoinQuestionsRequestFieldBuilder() {
             if (createGroupJoinQuestionsRequestBuilder_ == null) {
                 if (!(kindCase_ == 503)) {
                     kind_ = im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequest
                             .getDefaultInstance();
                 }
                 createGroupJoinQuestionsRequestBuilder_ =
-                        new com.google.protobuf.SingleFieldBuilderV3<>(
+                        new com.google.protobuf.SingleFieldBuilder<>(
                                 (im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupJoinQuestionsRequest) kind_,
                                 getParentForChildren(),
                                 isClean());
@@ -12506,7 +12469,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             return createGroupJoinQuestionsRequestBuilder_;
         }
 
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupInvitationRequest, im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupInvitationRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupInvitationRequestOrBuilder> deleteGroupInvitationRequestBuilder_;
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupInvitationRequest, im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupInvitationRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupInvitationRequestOrBuilder> deleteGroupInvitationRequestBuilder_;
 
         /**
          * <code>.im.turms.proto.DeleteGroupInvitationRequest delete_group_invitation_request = 504;</code>
@@ -12648,17 +12611,16 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         /**
          * <code>.im.turms.proto.DeleteGroupInvitationRequest delete_group_invitation_request = 504;</code>
          */
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupInvitationRequest, im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupInvitationRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupInvitationRequestOrBuilder> getDeleteGroupInvitationRequestFieldBuilder() {
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupInvitationRequest, im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupInvitationRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupInvitationRequestOrBuilder> getDeleteGroupInvitationRequestFieldBuilder() {
             if (deleteGroupInvitationRequestBuilder_ == null) {
                 if (!(kindCase_ == 504)) {
                     kind_ = im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupInvitationRequest
                             .getDefaultInstance();
                 }
-                deleteGroupInvitationRequestBuilder_ =
-                        new com.google.protobuf.SingleFieldBuilderV3<>(
-                                (im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupInvitationRequest) kind_,
-                                getParentForChildren(),
-                                isClean());
+                deleteGroupInvitationRequestBuilder_ = new com.google.protobuf.SingleFieldBuilder<>(
+                        (im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupInvitationRequest) kind_,
+                        getParentForChildren(),
+                        isClean());
                 kind_ = null;
             }
             kindCase_ = 504;
@@ -12666,7 +12628,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             return deleteGroupInvitationRequestBuilder_;
         }
 
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinRequestRequest, im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinRequestRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinRequestRequestOrBuilder> deleteGroupJoinRequestRequestBuilder_;
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinRequestRequest, im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinRequestRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinRequestRequestOrBuilder> deleteGroupJoinRequestRequestBuilder_;
 
         /**
          * <code>.im.turms.proto.DeleteGroupJoinRequestRequest delete_group_join_request_request = 505;</code>
@@ -12808,14 +12770,14 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         /**
          * <code>.im.turms.proto.DeleteGroupJoinRequestRequest delete_group_join_request_request = 505;</code>
          */
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinRequestRequest, im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinRequestRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinRequestRequestOrBuilder> getDeleteGroupJoinRequestRequestFieldBuilder() {
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinRequestRequest, im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinRequestRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinRequestRequestOrBuilder> getDeleteGroupJoinRequestRequestFieldBuilder() {
             if (deleteGroupJoinRequestRequestBuilder_ == null) {
                 if (!(kindCase_ == 505)) {
                     kind_ = im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinRequestRequest
                             .getDefaultInstance();
                 }
                 deleteGroupJoinRequestRequestBuilder_ =
-                        new com.google.protobuf.SingleFieldBuilderV3<>(
+                        new com.google.protobuf.SingleFieldBuilder<>(
                                 (im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinRequestRequest) kind_,
                                 getParentForChildren(),
                                 isClean());
@@ -12826,7 +12788,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             return deleteGroupJoinRequestRequestBuilder_;
         }
 
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionsRequest, im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionsRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionsRequestOrBuilder> deleteGroupJoinQuestionsRequestBuilder_;
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionsRequest, im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionsRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionsRequestOrBuilder> deleteGroupJoinQuestionsRequestBuilder_;
 
         /**
          * <code>.im.turms.proto.DeleteGroupJoinQuestionsRequest delete_group_join_questions_request = 506;</code>
@@ -12968,14 +12930,14 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         /**
          * <code>.im.turms.proto.DeleteGroupJoinQuestionsRequest delete_group_join_questions_request = 506;</code>
          */
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionsRequest, im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionsRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionsRequestOrBuilder> getDeleteGroupJoinQuestionsRequestFieldBuilder() {
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionsRequest, im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionsRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionsRequestOrBuilder> getDeleteGroupJoinQuestionsRequestFieldBuilder() {
             if (deleteGroupJoinQuestionsRequestBuilder_ == null) {
                 if (!(kindCase_ == 506)) {
                     kind_ = im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionsRequest
                             .getDefaultInstance();
                 }
                 deleteGroupJoinQuestionsRequestBuilder_ =
-                        new com.google.protobuf.SingleFieldBuilderV3<>(
+                        new com.google.protobuf.SingleFieldBuilder<>(
                                 (im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionsRequest) kind_,
                                 getParentForChildren(),
                                 isClean());
@@ -12986,7 +12948,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             return deleteGroupJoinQuestionsRequestBuilder_;
         }
 
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.group.enrollment.QueryGroupInvitationsRequest, im.turms.server.common.access.client.dto.request.group.enrollment.QueryGroupInvitationsRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.QueryGroupInvitationsRequestOrBuilder> queryGroupInvitationsRequestBuilder_;
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.group.enrollment.QueryGroupInvitationsRequest, im.turms.server.common.access.client.dto.request.group.enrollment.QueryGroupInvitationsRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.QueryGroupInvitationsRequestOrBuilder> queryGroupInvitationsRequestBuilder_;
 
         /**
          * <code>.im.turms.proto.QueryGroupInvitationsRequest query_group_invitations_request = 507;</code>
@@ -13128,17 +13090,16 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         /**
          * <code>.im.turms.proto.QueryGroupInvitationsRequest query_group_invitations_request = 507;</code>
          */
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.group.enrollment.QueryGroupInvitationsRequest, im.turms.server.common.access.client.dto.request.group.enrollment.QueryGroupInvitationsRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.QueryGroupInvitationsRequestOrBuilder> getQueryGroupInvitationsRequestFieldBuilder() {
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.group.enrollment.QueryGroupInvitationsRequest, im.turms.server.common.access.client.dto.request.group.enrollment.QueryGroupInvitationsRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.QueryGroupInvitationsRequestOrBuilder> getQueryGroupInvitationsRequestFieldBuilder() {
             if (queryGroupInvitationsRequestBuilder_ == null) {
                 if (!(kindCase_ == 507)) {
                     kind_ = im.turms.server.common.access.client.dto.request.group.enrollment.QueryGroupInvitationsRequest
                             .getDefaultInstance();
                 }
-                queryGroupInvitationsRequestBuilder_ =
-                        new com.google.protobuf.SingleFieldBuilderV3<>(
-                                (im.turms.server.common.access.client.dto.request.group.enrollment.QueryGroupInvitationsRequest) kind_,
-                                getParentForChildren(),
-                                isClean());
+                queryGroupInvitationsRequestBuilder_ = new com.google.protobuf.SingleFieldBuilder<>(
+                        (im.turms.server.common.access.client.dto.request.group.enrollment.QueryGroupInvitationsRequest) kind_,
+                        getParentForChildren(),
+                        isClean());
                 kind_ = null;
             }
             kindCase_ = 507;
@@ -13146,7 +13107,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             return queryGroupInvitationsRequestBuilder_;
         }
 
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.group.enrollment.QueryGroupJoinRequestsRequest, im.turms.server.common.access.client.dto.request.group.enrollment.QueryGroupJoinRequestsRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.QueryGroupJoinRequestsRequestOrBuilder> queryGroupJoinRequestsRequestBuilder_;
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.group.enrollment.QueryGroupJoinRequestsRequest, im.turms.server.common.access.client.dto.request.group.enrollment.QueryGroupJoinRequestsRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.QueryGroupJoinRequestsRequestOrBuilder> queryGroupJoinRequestsRequestBuilder_;
 
         /**
          * <code>.im.turms.proto.QueryGroupJoinRequestsRequest query_group_join_requests_request = 508;</code>
@@ -13288,14 +13249,14 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         /**
          * <code>.im.turms.proto.QueryGroupJoinRequestsRequest query_group_join_requests_request = 508;</code>
          */
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.group.enrollment.QueryGroupJoinRequestsRequest, im.turms.server.common.access.client.dto.request.group.enrollment.QueryGroupJoinRequestsRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.QueryGroupJoinRequestsRequestOrBuilder> getQueryGroupJoinRequestsRequestFieldBuilder() {
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.group.enrollment.QueryGroupJoinRequestsRequest, im.turms.server.common.access.client.dto.request.group.enrollment.QueryGroupJoinRequestsRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.QueryGroupJoinRequestsRequestOrBuilder> getQueryGroupJoinRequestsRequestFieldBuilder() {
             if (queryGroupJoinRequestsRequestBuilder_ == null) {
                 if (!(kindCase_ == 508)) {
                     kind_ = im.turms.server.common.access.client.dto.request.group.enrollment.QueryGroupJoinRequestsRequest
                             .getDefaultInstance();
                 }
                 queryGroupJoinRequestsRequestBuilder_ =
-                        new com.google.protobuf.SingleFieldBuilderV3<>(
+                        new com.google.protobuf.SingleFieldBuilder<>(
                                 (im.turms.server.common.access.client.dto.request.group.enrollment.QueryGroupJoinRequestsRequest) kind_,
                                 getParentForChildren(),
                                 isClean());
@@ -13306,7 +13267,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             return queryGroupJoinRequestsRequestBuilder_;
         }
 
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.group.enrollment.QueryGroupJoinQuestionsRequest, im.turms.server.common.access.client.dto.request.group.enrollment.QueryGroupJoinQuestionsRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.QueryGroupJoinQuestionsRequestOrBuilder> queryGroupJoinQuestionsRequestBuilder_;
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.group.enrollment.QueryGroupJoinQuestionsRequest, im.turms.server.common.access.client.dto.request.group.enrollment.QueryGroupJoinQuestionsRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.QueryGroupJoinQuestionsRequestOrBuilder> queryGroupJoinQuestionsRequestBuilder_;
 
         /**
          * <code>.im.turms.proto.QueryGroupJoinQuestionsRequest query_group_join_questions_request = 509;</code>
@@ -13448,14 +13409,14 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         /**
          * <code>.im.turms.proto.QueryGroupJoinQuestionsRequest query_group_join_questions_request = 509;</code>
          */
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.group.enrollment.QueryGroupJoinQuestionsRequest, im.turms.server.common.access.client.dto.request.group.enrollment.QueryGroupJoinQuestionsRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.QueryGroupJoinQuestionsRequestOrBuilder> getQueryGroupJoinQuestionsRequestFieldBuilder() {
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.group.enrollment.QueryGroupJoinQuestionsRequest, im.turms.server.common.access.client.dto.request.group.enrollment.QueryGroupJoinQuestionsRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.QueryGroupJoinQuestionsRequestOrBuilder> getQueryGroupJoinQuestionsRequestFieldBuilder() {
             if (queryGroupJoinQuestionsRequestBuilder_ == null) {
                 if (!(kindCase_ == 509)) {
                     kind_ = im.turms.server.common.access.client.dto.request.group.enrollment.QueryGroupJoinQuestionsRequest
                             .getDefaultInstance();
                 }
                 queryGroupJoinQuestionsRequestBuilder_ =
-                        new com.google.protobuf.SingleFieldBuilderV3<>(
+                        new com.google.protobuf.SingleFieldBuilder<>(
                                 (im.turms.server.common.access.client.dto.request.group.enrollment.QueryGroupJoinQuestionsRequest) kind_,
                                 getParentForChildren(),
                                 isClean());
@@ -13466,7 +13427,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             return queryGroupJoinQuestionsRequestBuilder_;
         }
 
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupInvitationRequest, im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupInvitationRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupInvitationRequestOrBuilder> updateGroupInvitationRequestBuilder_;
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupInvitationRequest, im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupInvitationRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupInvitationRequestOrBuilder> updateGroupInvitationRequestBuilder_;
 
         /**
          * <code>.im.turms.proto.UpdateGroupInvitationRequest update_group_invitation_request = 510;</code>
@@ -13608,17 +13569,16 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         /**
          * <code>.im.turms.proto.UpdateGroupInvitationRequest update_group_invitation_request = 510;</code>
          */
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupInvitationRequest, im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupInvitationRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupInvitationRequestOrBuilder> getUpdateGroupInvitationRequestFieldBuilder() {
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupInvitationRequest, im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupInvitationRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupInvitationRequestOrBuilder> getUpdateGroupInvitationRequestFieldBuilder() {
             if (updateGroupInvitationRequestBuilder_ == null) {
                 if (!(kindCase_ == 510)) {
                     kind_ = im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupInvitationRequest
                             .getDefaultInstance();
                 }
-                updateGroupInvitationRequestBuilder_ =
-                        new com.google.protobuf.SingleFieldBuilderV3<>(
-                                (im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupInvitationRequest) kind_,
-                                getParentForChildren(),
-                                isClean());
+                updateGroupInvitationRequestBuilder_ = new com.google.protobuf.SingleFieldBuilder<>(
+                        (im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupInvitationRequest) kind_,
+                        getParentForChildren(),
+                        isClean());
                 kind_ = null;
             }
             kindCase_ = 510;
@@ -13626,7 +13586,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             return updateGroupInvitationRequestBuilder_;
         }
 
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest, im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequestOrBuilder> updateGroupJoinQuestionRequestBuilder_;
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest, im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequestOrBuilder> updateGroupJoinQuestionRequestBuilder_;
 
         /**
          * <code>.im.turms.proto.UpdateGroupJoinQuestionRequest update_group_join_question_request = 511;</code>
@@ -13768,14 +13728,14 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         /**
          * <code>.im.turms.proto.UpdateGroupJoinQuestionRequest update_group_join_question_request = 511;</code>
          */
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest, im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequestOrBuilder> getUpdateGroupJoinQuestionRequestFieldBuilder() {
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest, im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequestOrBuilder> getUpdateGroupJoinQuestionRequestFieldBuilder() {
             if (updateGroupJoinQuestionRequestBuilder_ == null) {
                 if (!(kindCase_ == 511)) {
                     kind_ = im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest
                             .getDefaultInstance();
                 }
                 updateGroupJoinQuestionRequestBuilder_ =
-                        new com.google.protobuf.SingleFieldBuilderV3<>(
+                        new com.google.protobuf.SingleFieldBuilder<>(
                                 (im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest) kind_,
                                 getParentForChildren(),
                                 isClean());
@@ -13786,7 +13746,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             return updateGroupJoinQuestionRequestBuilder_;
         }
 
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinRequestRequest, im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinRequestRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinRequestRequestOrBuilder> updateGroupJoinRequestRequestBuilder_;
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinRequestRequest, im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinRequestRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinRequestRequestOrBuilder> updateGroupJoinRequestRequestBuilder_;
 
         /**
          * <code>.im.turms.proto.UpdateGroupJoinRequestRequest update_group_join_request_request = 512;</code>
@@ -13928,14 +13888,14 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         /**
          * <code>.im.turms.proto.UpdateGroupJoinRequestRequest update_group_join_request_request = 512;</code>
          */
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinRequestRequest, im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinRequestRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinRequestRequestOrBuilder> getUpdateGroupJoinRequestRequestFieldBuilder() {
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinRequestRequest, im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinRequestRequest.Builder, im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinRequestRequestOrBuilder> getUpdateGroupJoinRequestRequestFieldBuilder() {
             if (updateGroupJoinRequestRequestBuilder_ == null) {
                 if (!(kindCase_ == 512)) {
                     kind_ = im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinRequestRequest
                             .getDefaultInstance();
                 }
                 updateGroupJoinRequestRequestBuilder_ =
-                        new com.google.protobuf.SingleFieldBuilderV3<>(
+                        new com.google.protobuf.SingleFieldBuilder<>(
                                 (im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinRequestRequest) kind_,
                                 getParentForChildren(),
                                 isClean());
@@ -13946,7 +13906,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             return updateGroupJoinRequestRequestBuilder_;
         }
 
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.storage.DeleteResourceRequest, im.turms.server.common.access.client.dto.request.storage.DeleteResourceRequest.Builder, im.turms.server.common.access.client.dto.request.storage.DeleteResourceRequestOrBuilder> deleteResourceRequestBuilder_;
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.storage.DeleteResourceRequest, im.turms.server.common.access.client.dto.request.storage.DeleteResourceRequest.Builder, im.turms.server.common.access.client.dto.request.storage.DeleteResourceRequestOrBuilder> deleteResourceRequestBuilder_;
 
         /**
          * <pre>
@@ -14124,13 +14084,13 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
          *
          * <code>.im.turms.proto.DeleteResourceRequest delete_resource_request = 1000;</code>
          */
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.storage.DeleteResourceRequest, im.turms.server.common.access.client.dto.request.storage.DeleteResourceRequest.Builder, im.turms.server.common.access.client.dto.request.storage.DeleteResourceRequestOrBuilder> getDeleteResourceRequestFieldBuilder() {
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.storage.DeleteResourceRequest, im.turms.server.common.access.client.dto.request.storage.DeleteResourceRequest.Builder, im.turms.server.common.access.client.dto.request.storage.DeleteResourceRequestOrBuilder> getDeleteResourceRequestFieldBuilder() {
             if (deleteResourceRequestBuilder_ == null) {
                 if (!(kindCase_ == 1000)) {
                     kind_ = im.turms.server.common.access.client.dto.request.storage.DeleteResourceRequest
                             .getDefaultInstance();
                 }
-                deleteResourceRequestBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<>(
+                deleteResourceRequestBuilder_ = new com.google.protobuf.SingleFieldBuilder<>(
                         (im.turms.server.common.access.client.dto.request.storage.DeleteResourceRequest) kind_,
                         getParentForChildren(),
                         isClean());
@@ -14141,7 +14101,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             return deleteResourceRequestBuilder_;
         }
 
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.storage.QueryResourceDownloadInfoRequest, im.turms.server.common.access.client.dto.request.storage.QueryResourceDownloadInfoRequest.Builder, im.turms.server.common.access.client.dto.request.storage.QueryResourceDownloadInfoRequestOrBuilder> queryResourceDownloadInfoRequestBuilder_;
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.storage.QueryResourceDownloadInfoRequest, im.turms.server.common.access.client.dto.request.storage.QueryResourceDownloadInfoRequest.Builder, im.turms.server.common.access.client.dto.request.storage.QueryResourceDownloadInfoRequestOrBuilder> queryResourceDownloadInfoRequestBuilder_;
 
         /**
          * <code>.im.turms.proto.QueryResourceDownloadInfoRequest query_resource_download_info_request = 1001;</code>
@@ -14283,14 +14243,14 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         /**
          * <code>.im.turms.proto.QueryResourceDownloadInfoRequest query_resource_download_info_request = 1001;</code>
          */
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.storage.QueryResourceDownloadInfoRequest, im.turms.server.common.access.client.dto.request.storage.QueryResourceDownloadInfoRequest.Builder, im.turms.server.common.access.client.dto.request.storage.QueryResourceDownloadInfoRequestOrBuilder> getQueryResourceDownloadInfoRequestFieldBuilder() {
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.storage.QueryResourceDownloadInfoRequest, im.turms.server.common.access.client.dto.request.storage.QueryResourceDownloadInfoRequest.Builder, im.turms.server.common.access.client.dto.request.storage.QueryResourceDownloadInfoRequestOrBuilder> getQueryResourceDownloadInfoRequestFieldBuilder() {
             if (queryResourceDownloadInfoRequestBuilder_ == null) {
                 if (!(kindCase_ == 1001)) {
                     kind_ = im.turms.server.common.access.client.dto.request.storage.QueryResourceDownloadInfoRequest
                             .getDefaultInstance();
                 }
                 queryResourceDownloadInfoRequestBuilder_ =
-                        new com.google.protobuf.SingleFieldBuilderV3<>(
+                        new com.google.protobuf.SingleFieldBuilder<>(
                                 (im.turms.server.common.access.client.dto.request.storage.QueryResourceDownloadInfoRequest) kind_,
                                 getParentForChildren(),
                                 isClean());
@@ -14301,7 +14261,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             return queryResourceDownloadInfoRequestBuilder_;
         }
 
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest, im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest.Builder, im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequestOrBuilder> queryResourceUploadInfoRequestBuilder_;
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest, im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest.Builder, im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequestOrBuilder> queryResourceUploadInfoRequestBuilder_;
 
         /**
          * <code>.im.turms.proto.QueryResourceUploadInfoRequest query_resource_upload_info_request = 1002;</code>
@@ -14443,14 +14403,14 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         /**
          * <code>.im.turms.proto.QueryResourceUploadInfoRequest query_resource_upload_info_request = 1002;</code>
          */
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest, im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest.Builder, im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequestOrBuilder> getQueryResourceUploadInfoRequestFieldBuilder() {
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest, im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest.Builder, im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequestOrBuilder> getQueryResourceUploadInfoRequestFieldBuilder() {
             if (queryResourceUploadInfoRequestBuilder_ == null) {
                 if (!(kindCase_ == 1002)) {
                     kind_ = im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest
                             .getDefaultInstance();
                 }
                 queryResourceUploadInfoRequestBuilder_ =
-                        new com.google.protobuf.SingleFieldBuilderV3<>(
+                        new com.google.protobuf.SingleFieldBuilder<>(
                                 (im.turms.server.common.access.client.dto.request.storage.QueryResourceUploadInfoRequest) kind_,
                                 getParentForChildren(),
                                 isClean());
@@ -14461,7 +14421,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             return queryResourceUploadInfoRequestBuilder_;
         }
 
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.storage.QueryMessageAttachmentInfosRequest, im.turms.server.common.access.client.dto.request.storage.QueryMessageAttachmentInfosRequest.Builder, im.turms.server.common.access.client.dto.request.storage.QueryMessageAttachmentInfosRequestOrBuilder> queryMessageAttachmentInfosRequestBuilder_;
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.storage.QueryMessageAttachmentInfosRequest, im.turms.server.common.access.client.dto.request.storage.QueryMessageAttachmentInfosRequest.Builder, im.turms.server.common.access.client.dto.request.storage.QueryMessageAttachmentInfosRequestOrBuilder> queryMessageAttachmentInfosRequestBuilder_;
 
         /**
          * <code>.im.turms.proto.QueryMessageAttachmentInfosRequest query_message_attachment_infos_request = 1003;</code>
@@ -14603,14 +14563,14 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         /**
          * <code>.im.turms.proto.QueryMessageAttachmentInfosRequest query_message_attachment_infos_request = 1003;</code>
          */
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.storage.QueryMessageAttachmentInfosRequest, im.turms.server.common.access.client.dto.request.storage.QueryMessageAttachmentInfosRequest.Builder, im.turms.server.common.access.client.dto.request.storage.QueryMessageAttachmentInfosRequestOrBuilder> getQueryMessageAttachmentInfosRequestFieldBuilder() {
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.storage.QueryMessageAttachmentInfosRequest, im.turms.server.common.access.client.dto.request.storage.QueryMessageAttachmentInfosRequest.Builder, im.turms.server.common.access.client.dto.request.storage.QueryMessageAttachmentInfosRequestOrBuilder> getQueryMessageAttachmentInfosRequestFieldBuilder() {
             if (queryMessageAttachmentInfosRequestBuilder_ == null) {
                 if (!(kindCase_ == 1003)) {
                     kind_ = im.turms.server.common.access.client.dto.request.storage.QueryMessageAttachmentInfosRequest
                             .getDefaultInstance();
                 }
                 queryMessageAttachmentInfosRequestBuilder_ =
-                        new com.google.protobuf.SingleFieldBuilderV3<>(
+                        new com.google.protobuf.SingleFieldBuilder<>(
                                 (im.turms.server.common.access.client.dto.request.storage.QueryMessageAttachmentInfosRequest) kind_,
                                 getParentForChildren(),
                                 isClean());
@@ -14621,7 +14581,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             return queryMessageAttachmentInfosRequestBuilder_;
         }
 
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.storage.UpdateMessageAttachmentInfoRequest, im.turms.server.common.access.client.dto.request.storage.UpdateMessageAttachmentInfoRequest.Builder, im.turms.server.common.access.client.dto.request.storage.UpdateMessageAttachmentInfoRequestOrBuilder> updateMessageAttachmentInfoRequestBuilder_;
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.storage.UpdateMessageAttachmentInfoRequest, im.turms.server.common.access.client.dto.request.storage.UpdateMessageAttachmentInfoRequest.Builder, im.turms.server.common.access.client.dto.request.storage.UpdateMessageAttachmentInfoRequestOrBuilder> updateMessageAttachmentInfoRequestBuilder_;
 
         /**
          * <code>.im.turms.proto.UpdateMessageAttachmentInfoRequest update_message_attachment_info_request = 1004;</code>
@@ -14763,14 +14723,14 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
         /**
          * <code>.im.turms.proto.UpdateMessageAttachmentInfoRequest update_message_attachment_info_request = 1004;</code>
          */
-        private com.google.protobuf.SingleFieldBuilderV3<im.turms.server.common.access.client.dto.request.storage.UpdateMessageAttachmentInfoRequest, im.turms.server.common.access.client.dto.request.storage.UpdateMessageAttachmentInfoRequest.Builder, im.turms.server.common.access.client.dto.request.storage.UpdateMessageAttachmentInfoRequestOrBuilder> getUpdateMessageAttachmentInfoRequestFieldBuilder() {
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.storage.UpdateMessageAttachmentInfoRequest, im.turms.server.common.access.client.dto.request.storage.UpdateMessageAttachmentInfoRequest.Builder, im.turms.server.common.access.client.dto.request.storage.UpdateMessageAttachmentInfoRequestOrBuilder> getUpdateMessageAttachmentInfoRequestFieldBuilder() {
             if (updateMessageAttachmentInfoRequestBuilder_ == null) {
                 if (!(kindCase_ == 1004)) {
                     kind_ = im.turms.server.common.access.client.dto.request.storage.UpdateMessageAttachmentInfoRequest
                             .getDefaultInstance();
                 }
                 updateMessageAttachmentInfoRequestBuilder_ =
-                        new com.google.protobuf.SingleFieldBuilderV3<>(
+                        new com.google.protobuf.SingleFieldBuilder<>(
                                 (im.turms.server.common.access.client.dto.request.storage.UpdateMessageAttachmentInfoRequest) kind_,
                                 getParentForChildren(),
                                 isClean());
@@ -14781,24 +14741,11 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessageV3 i
             return updateMessageAttachmentInfoRequestBuilder_;
         }
 
-        @java.lang.Override
-        public final Builder setUnknownFields(
-                final com.google.protobuf.UnknownFieldSet unknownFields) {
-            return super.setUnknownFields(unknownFields);
-        }
-
-        @java.lang.Override
-        public final Builder mergeUnknownFields(
-                final com.google.protobuf.UnknownFieldSet unknownFields) {
-            return super.mergeUnknownFields(unknownFields);
-        }
-
         // @@protoc_insertion_point(builder_scope:im.turms.proto.TurmsRequest)
     }
 
     // @@protoc_insertion_point(class_scope:im.turms.proto.TurmsRequest)
     private static final im.turms.server.common.access.client.dto.request.TurmsRequest DEFAULT_INSTANCE;
-
     static {
         DEFAULT_INSTANCE = new im.turms.server.common.access.client.dto.request.TurmsRequest();
     }

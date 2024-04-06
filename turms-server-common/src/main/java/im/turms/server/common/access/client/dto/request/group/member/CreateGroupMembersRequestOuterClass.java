@@ -21,6 +21,16 @@ public final class CreateGroupMembersRequestOuterClass {
     private CreateGroupMembersRequestOuterClass() {
     }
 
+    static {
+        com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
+                com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
+                /* major= */ 4,
+                /* minor= */ 26,
+                /* patch= */ 1,
+                /* suffix= */ "",
+                CreateGroupMembersRequestOuterClass.class.getName());
+    }
+
     public static void registerAllExtensions(com.google.protobuf.ExtensionRegistryLite registry) {
     }
 
@@ -29,14 +39,13 @@ public final class CreateGroupMembersRequestOuterClass {
     }
 
     static final com.google.protobuf.Descriptors.Descriptor internal_static_im_turms_proto_CreateGroupMembersRequest_descriptor;
-    static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internal_static_im_turms_proto_CreateGroupMembersRequest_fieldAccessorTable;
+    static final com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_im_turms_proto_CreateGroupMembersRequest_fieldAccessorTable;
 
     public static com.google.protobuf.Descriptors.FileDescriptor getDescriptor() {
         return descriptor;
     }
 
     private static com.google.protobuf.Descriptors.FileDescriptor descriptor;
-
     static {
         java.lang.String[] descriptorData = {"\n7request/group/member/create_group_memb"
                 + "ers_request.proto\022\016im.turms.proto\032 const"
@@ -57,13 +66,14 @@ public final class CreateGroupMembersRequestOuterClass {
                 getDescriptor().getMessageTypes()
                         .get(0);
         internal_static_im_turms_proto_CreateGroupMembersRequest_fieldAccessorTable =
-                new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+                new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_CreateGroupMembersRequest_descriptor,
                         new java.lang.String[]{"GroupId",
                                 "UserIds",
                                 "Name",
                                 "Role",
                                 "MuteEndDate",});
+        descriptor.resolveAllFeaturesImmutable();
         im.turms.server.common.access.client.dto.constant.GroupMemberRoleOuterClass.getDescriptor();
     }
 

@@ -51,6 +51,15 @@ public enum RequestStatus implements com.google.protobuf.ProtocolMessageEnum {
     CANCELED(6),
     UNRECOGNIZED(-1),;
 
+    static {
+        com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
+                com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
+                /* major= */ 4,
+                /* minor= */ 26,
+                /* patch= */ 1,
+                /* suffix= */ "",
+                RequestStatus.class.getName());
+    }
     /**
      * <code>PENDING = 0;</code>
      */
@@ -120,11 +129,7 @@ public enum RequestStatus implements com.google.protobuf.ProtocolMessageEnum {
     }
 
     private static final com.google.protobuf.Internal.EnumLiteMap<RequestStatus> internalValueMap =
-            new com.google.protobuf.Internal.EnumLiteMap<>() {
-                public RequestStatus findValueByNumber(int number) {
-                    return RequestStatus.forNumber(number);
-                }
-            };
+            number -> RequestStatus.forNumber(number);
 
     public final com.google.protobuf.Descriptors.EnumValueDescriptor getValueDescriptor() {
         if (this == UNRECOGNIZED) {
@@ -161,7 +166,7 @@ public enum RequestStatus implements com.google.protobuf.ProtocolMessageEnum {
 
     private final int value;
 
-    private RequestStatus(int value) {
+    RequestStatus(int value) {
         this.value = value;
     }
 

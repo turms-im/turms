@@ -21,6 +21,16 @@ public final class MessagesWithTotalListOuterClass {
     private MessagesWithTotalListOuterClass() {
     }
 
+    static {
+        com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
+                com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
+                /* major= */ 4,
+                /* minor= */ 26,
+                /* patch= */ 1,
+                /* suffix= */ "",
+                MessagesWithTotalListOuterClass.class.getName());
+    }
+
     public static void registerAllExtensions(com.google.protobuf.ExtensionRegistryLite registry) {
     }
 
@@ -29,17 +39,16 @@ public final class MessagesWithTotalListOuterClass {
     }
 
     static final com.google.protobuf.Descriptors.Descriptor internal_static_im_turms_proto_MessagesWithTotalList_descriptor;
-    static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internal_static_im_turms_proto_MessagesWithTotalList_fieldAccessorTable;
+    static final com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_im_turms_proto_MessagesWithTotalList_fieldAccessorTable;
 
     public static com.google.protobuf.Descriptors.FileDescriptor getDescriptor() {
         return descriptor;
     }
 
     private static com.google.protobuf.Descriptors.FileDescriptor descriptor;
-
     static {
         java.lang.String[] descriptorData = {"\n,model/message/messages_with_total_list"
-                + ".proto\022\016im.turms.proto\032\'model/message/me"
+                + ".proto\022\016im.turms.proto\032'model/message/me"
                 + "ssages_with_total.proto\"\\\n\025MessagesWithT"
                 + "otalList\022C\n\030messages_with_total_list\030\001 \003"
                 + "(\0132!.im.turms.proto.MessagesWithTotalB=\n"
@@ -54,9 +63,10 @@ public final class MessagesWithTotalListOuterClass {
                 getDescriptor().getMessageTypes()
                         .get(0);
         internal_static_im_turms_proto_MessagesWithTotalList_fieldAccessorTable =
-                new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+                new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_MessagesWithTotalList_descriptor,
                         new java.lang.String[]{"MessagesWithTotalList",});
+        descriptor.resolveAllFeaturesImmutable();
         im.turms.server.common.access.client.dto.model.message.MessagesWithTotalOuterClass
                 .getDescriptor();
     }

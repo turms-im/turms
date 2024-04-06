@@ -20,33 +20,36 @@ package im.turms.server.common.access.client.dto.request.group.blocklist;
 /**
  * Protobuf type {@code im.turms.proto.QueryGroupBlockedUserIdsRequest}
  */
-public final class QueryGroupBlockedUserIdsRequest extends com.google.protobuf.GeneratedMessageV3
+public final class QueryGroupBlockedUserIdsRequest extends com.google.protobuf.GeneratedMessage
         implements
         // @@protoc_insertion_point(message_implements:im.turms.proto.QueryGroupBlockedUserIdsRequest)
         QueryGroupBlockedUserIdsRequestOrBuilder {
     private static final long serialVersionUID = 0L;
+    static {
+        com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
+                com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
+                /* major= */ 4,
+                /* minor= */ 26,
+                /* patch= */ 1,
+                /* suffix= */ "",
+                QueryGroupBlockedUserIdsRequest.class.getName());
+    }
 
     // Use QueryGroupBlockedUserIdsRequest.newBuilder() to construct.
     private QueryGroupBlockedUserIdsRequest(
-            com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+            com.google.protobuf.GeneratedMessage.Builder<?> builder) {
         super(builder);
     }
 
     private QueryGroupBlockedUserIdsRequest() {
     }
 
-    @java.lang.Override
-    @SuppressWarnings({"unused"})
-    protected java.lang.Object newInstance(UnusedPrivateParameter unused) {
-        return new QueryGroupBlockedUserIdsRequest();
-    }
-
-    public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+    public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
         return im.turms.server.common.access.client.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequestOuterClass.internal_static_im_turms_proto_QueryGroupBlockedUserIdsRequest_descriptor;
     }
 
     @java.lang.Override
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internalGetFieldAccessorTable() {
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable() {
         return im.turms.server.common.access.client.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequestOuterClass.internal_static_im_turms_proto_QueryGroupBlockedUserIdsRequest_fieldAccessorTable
                 .ensureFieldAccessorsInitialized(
                         im.turms.server.common.access.client.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequest.class,
@@ -93,7 +96,7 @@ public final class QueryGroupBlockedUserIdsRequest extends com.google.protobuf.G
     private byte memoizedIsInitialized = -1;
 
     @java.lang.Override
-    public final boolean isInitialized() {
+    public boolean isInitialized() {
         byte isInitialized = memoizedIsInitialized;
         if (isInitialized == 1) {
             return true;
@@ -216,40 +219,40 @@ public final class QueryGroupBlockedUserIdsRequest extends com.google.protobuf.G
 
     public static im.turms.server.common.access.client.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequest parseFrom(
             java.io.InputStream input) throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3.parseWithIOException(PARSER, input);
+        return com.google.protobuf.GeneratedMessage.parseWithIOException(PARSER, input);
     }
 
     public static im.turms.server.common.access.client.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequest parseFrom(
             java.io.InputStream input,
             com.google.protobuf.ExtensionRegistryLite extensionRegistry)
             throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
+        return com.google.protobuf.GeneratedMessage
                 .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
     public static im.turms.server.common.access.client.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequest parseDelimitedFrom(
             java.io.InputStream input) throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3.parseDelimitedWithIOException(PARSER, input);
+        return com.google.protobuf.GeneratedMessage.parseDelimitedWithIOException(PARSER, input);
     }
 
     public static im.turms.server.common.access.client.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequest parseDelimitedFrom(
             java.io.InputStream input,
             com.google.protobuf.ExtensionRegistryLite extensionRegistry)
             throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
+        return com.google.protobuf.GeneratedMessage
                 .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
 
     public static im.turms.server.common.access.client.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequest parseFrom(
             com.google.protobuf.CodedInputStream input) throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3.parseWithIOException(PARSER, input);
+        return com.google.protobuf.GeneratedMessage.parseWithIOException(PARSER, input);
     }
 
     public static im.turms.server.common.access.client.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequest parseFrom(
             com.google.protobuf.CodedInputStream input,
             com.google.protobuf.ExtensionRegistryLite extensionRegistry)
             throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
+        return com.google.protobuf.GeneratedMessage
                 .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
@@ -276,24 +279,23 @@ public final class QueryGroupBlockedUserIdsRequest extends com.google.protobuf.G
     }
 
     @java.lang.Override
-    protected Builder newBuilderForType(
-            com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+    protected Builder newBuilderForType(com.google.protobuf.GeneratedMessage.BuilderParent parent) {
         return new Builder(parent);
     }
 
     /**
      * Protobuf type {@code im.turms.proto.QueryGroupBlockedUserIdsRequest}
      */
-    public static final class Builder
-            extends com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+    public static final class Builder extends com.google.protobuf.GeneratedMessage.Builder<Builder>
+            implements
             // @@protoc_insertion_point(builder_implements:im.turms.proto.QueryGroupBlockedUserIdsRequest)
             im.turms.server.common.access.client.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequestOrBuilder {
-        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+        public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
             return im.turms.server.common.access.client.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequestOuterClass.internal_static_im_turms_proto_QueryGroupBlockedUserIdsRequest_descriptor;
         }
 
         @java.lang.Override
-        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internalGetFieldAccessorTable() {
+        protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable() {
             return im.turms.server.common.access.client.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequestOuterClass.internal_static_im_turms_proto_QueryGroupBlockedUserIdsRequest_fieldAccessorTable
                     .ensureFieldAccessorsInitialized(
                             im.turms.server.common.access.client.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequest.class,
@@ -306,7 +308,7 @@ public final class QueryGroupBlockedUserIdsRequest extends com.google.protobuf.G
 
         }
 
-        private Builder(com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        private Builder(com.google.protobuf.GeneratedMessage.BuilderParent parent) {
             super(parent);
 
         }
@@ -368,43 +370,6 @@ public final class QueryGroupBlockedUserIdsRequest extends com.google.protobuf.G
         }
 
         @java.lang.Override
-        public Builder clone() {
-            return super.clone();
-        }
-
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index,
-                java.lang.Object value) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.addRepeatedField(field, value);
-        }
-
-        @java.lang.Override
         public Builder mergeFrom(com.google.protobuf.Message other) {
             if (other instanceof im.turms.server.common.access.client.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequest) {
                 return mergeFrom(
@@ -433,7 +398,7 @@ public final class QueryGroupBlockedUserIdsRequest extends com.google.protobuf.G
         }
 
         @java.lang.Override
-        public final boolean isInitialized() {
+        public boolean isInitialized() {
             return true;
         }
 
@@ -562,24 +527,11 @@ public final class QueryGroupBlockedUserIdsRequest extends com.google.protobuf.G
             return this;
         }
 
-        @java.lang.Override
-        public final Builder setUnknownFields(
-                final com.google.protobuf.UnknownFieldSet unknownFields) {
-            return super.setUnknownFields(unknownFields);
-        }
-
-        @java.lang.Override
-        public final Builder mergeUnknownFields(
-                final com.google.protobuf.UnknownFieldSet unknownFields) {
-            return super.mergeUnknownFields(unknownFields);
-        }
-
         // @@protoc_insertion_point(builder_scope:im.turms.proto.QueryGroupBlockedUserIdsRequest)
     }
 
     // @@protoc_insertion_point(class_scope:im.turms.proto.QueryGroupBlockedUserIdsRequest)
     private static final im.turms.server.common.access.client.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequest DEFAULT_INSTANCE;
-
     static {
         DEFAULT_INSTANCE =
                 new im.turms.server.common.access.client.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequest();

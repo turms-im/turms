@@ -21,6 +21,16 @@ public final class GroupMemberOuterClass {
     private GroupMemberOuterClass() {
     }
 
+    static {
+        com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
+                com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
+                /* major= */ 4,
+                /* minor= */ 26,
+                /* patch= */ 1,
+                /* suffix= */ "",
+                GroupMemberOuterClass.class.getName());
+    }
+
     public static void registerAllExtensions(com.google.protobuf.ExtensionRegistryLite registry) {
     }
 
@@ -29,14 +39,13 @@ public final class GroupMemberOuterClass {
     }
 
     static final com.google.protobuf.Descriptors.Descriptor internal_static_im_turms_proto_GroupMember_descriptor;
-    static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internal_static_im_turms_proto_GroupMember_fieldAccessorTable;
+    static final com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_im_turms_proto_GroupMember_fieldAccessorTable;
 
     public static com.google.protobuf.Descriptors.FileDescriptor getDescriptor() {
         return descriptor;
     }
 
-    private static com.google.protobuf.Descriptors.FileDescriptor descriptor;
-
+    private static final com.google.protobuf.Descriptors.FileDescriptor descriptor;
     static {
         java.lang.String[] descriptorData = {"\n\036model/group/group_member.proto\022\016im.tur"
                 + "ms.proto\032 constant/group_member_role.pro"
@@ -65,7 +74,7 @@ public final class GroupMemberOuterClass {
         internal_static_im_turms_proto_GroupMember_descriptor = getDescriptor().getMessageTypes()
                 .get(0);
         internal_static_im_turms_proto_GroupMember_fieldAccessorTable =
-                new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+                new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_GroupMember_descriptor,
                         new java.lang.String[]{"GroupId",
                                 "UserId",
@@ -75,6 +84,7 @@ public final class GroupMemberOuterClass {
                                 "MuteEndDate",
                                 "UserStatus",
                                 "UsingDeviceTypes",});
+        descriptor.resolveAllFeaturesImmutable();
         im.turms.server.common.access.client.dto.constant.GroupMemberRoleOuterClass.getDescriptor();
         im.turms.server.common.access.client.dto.constant.UserStatusOuterClass.getDescriptor();
         im.turms.server.common.access.client.dto.constant.DeviceTypeOuterClass.getDescriptor();

@@ -20,23 +20,26 @@ package im.turms.server.common.access.client.dto.model.conversation;
 /**
  * Protobuf type {@code im.turms.proto.GroupConversation}
  */
-public final class GroupConversation extends com.google.protobuf.GeneratedMessageV3 implements
+public final class GroupConversation extends com.google.protobuf.GeneratedMessage implements
         // @@protoc_insertion_point(message_implements:im.turms.proto.GroupConversation)
         GroupConversationOrBuilder {
     private static final long serialVersionUID = 0L;
+    static {
+        com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
+                com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
+                /* major= */ 4,
+                /* minor= */ 26,
+                /* patch= */ 1,
+                /* suffix= */ "",
+                GroupConversation.class.getName());
+    }
 
     // Use GroupConversation.newBuilder() to construct.
-    private GroupConversation(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    private GroupConversation(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
         super(builder);
     }
 
     private GroupConversation() {
-    }
-
-    @java.lang.Override
-    @SuppressWarnings({"unused"})
-    protected java.lang.Object newInstance(UnusedPrivateParameter unused) {
-        return new GroupConversation();
     }
 
     public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
@@ -47,16 +50,16 @@ public final class GroupConversation extends com.google.protobuf.GeneratedMessag
     @java.lang.Override
     protected com.google.protobuf.MapFieldReflectionAccessor internalGetMapFieldReflection(
             int number) {
-        if (number == 2) {
-            return internalGetMemberIdToReadDate();
-        }
-        throw new RuntimeException(
-                "Invalid map field number: "
-                        + number);
+        return switch (number) {
+            case 2 -> internalGetMemberIdToReadDate();
+            default -> throw new RuntimeException(
+                    "Invalid map field number: "
+                            + number);
+        };
     }
 
     @java.lang.Override
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internalGetFieldAccessorTable() {
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable() {
         return im.turms.server.common.access.client.dto.model.conversation.GroupConversationOuterClass.internal_static_im_turms_proto_GroupConversation_fieldAccessorTable
                 .ensureFieldAccessorsInitialized(
                         im.turms.server.common.access.client.dto.model.conversation.GroupConversation.class,
@@ -177,7 +180,7 @@ public final class GroupConversation extends com.google.protobuf.GeneratedMessag
         if (groupId_ != 0L) {
             output.writeInt64(1, groupId_);
         }
-        com.google.protobuf.GeneratedMessageV3.serializeLongMapTo(output,
+        com.google.protobuf.GeneratedMessage.serializeLongMapTo(output,
                 internalGetMemberIdToReadDate(),
                 MemberIdToReadDateDefaultEntryHolder.defaultEntry,
                 2);
@@ -287,40 +290,40 @@ public final class GroupConversation extends com.google.protobuf.GeneratedMessag
 
     public static im.turms.server.common.access.client.dto.model.conversation.GroupConversation parseFrom(
             java.io.InputStream input) throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3.parseWithIOException(PARSER, input);
+        return com.google.protobuf.GeneratedMessage.parseWithIOException(PARSER, input);
     }
 
     public static im.turms.server.common.access.client.dto.model.conversation.GroupConversation parseFrom(
             java.io.InputStream input,
             com.google.protobuf.ExtensionRegistryLite extensionRegistry)
             throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
+        return com.google.protobuf.GeneratedMessage
                 .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
     public static im.turms.server.common.access.client.dto.model.conversation.GroupConversation parseDelimitedFrom(
             java.io.InputStream input) throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3.parseDelimitedWithIOException(PARSER, input);
+        return com.google.protobuf.GeneratedMessage.parseDelimitedWithIOException(PARSER, input);
     }
 
     public static im.turms.server.common.access.client.dto.model.conversation.GroupConversation parseDelimitedFrom(
             java.io.InputStream input,
             com.google.protobuf.ExtensionRegistryLite extensionRegistry)
             throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
+        return com.google.protobuf.GeneratedMessage
                 .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
 
     public static im.turms.server.common.access.client.dto.model.conversation.GroupConversation parseFrom(
             com.google.protobuf.CodedInputStream input) throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3.parseWithIOException(PARSER, input);
+        return com.google.protobuf.GeneratedMessage.parseWithIOException(PARSER, input);
     }
 
     public static im.turms.server.common.access.client.dto.model.conversation.GroupConversation parseFrom(
             com.google.protobuf.CodedInputStream input,
             com.google.protobuf.ExtensionRegistryLite extensionRegistry)
             throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
+        return com.google.protobuf.GeneratedMessage
                 .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
@@ -347,16 +350,15 @@ public final class GroupConversation extends com.google.protobuf.GeneratedMessag
     }
 
     @java.lang.Override
-    protected Builder newBuilderForType(
-            com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+    protected Builder newBuilderForType(com.google.protobuf.GeneratedMessage.BuilderParent parent) {
         return new Builder(parent);
     }
 
     /**
      * Protobuf type {@code im.turms.proto.GroupConversation}
      */
-    public static final class Builder
-            extends com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+    public static final class Builder extends com.google.protobuf.GeneratedMessage.Builder<Builder>
+            implements
             // @@protoc_insertion_point(builder_implements:im.turms.proto.GroupConversation)
             im.turms.server.common.access.client.dto.model.conversation.GroupConversationOrBuilder {
         public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
@@ -366,27 +368,27 @@ public final class GroupConversation extends com.google.protobuf.GeneratedMessag
         @SuppressWarnings({"rawtypes"})
         protected com.google.protobuf.MapFieldReflectionAccessor internalGetMapFieldReflection(
                 int number) {
-            if (number == 2) {
-                return internalGetMemberIdToReadDate();
-            }
-            throw new RuntimeException(
-                    "Invalid map field number: "
-                            + number);
+            return switch (number) {
+                case 2 -> internalGetMemberIdToReadDate();
+                default -> throw new RuntimeException(
+                        "Invalid map field number: "
+                                + number);
+            };
         }
 
         @SuppressWarnings({"rawtypes"})
         protected com.google.protobuf.MapFieldReflectionAccessor internalGetMutableMapFieldReflection(
                 int number) {
-            if (number == 2) {
-                return internalGetMutableMemberIdToReadDate();
-            }
-            throw new RuntimeException(
-                    "Invalid map field number: "
-                            + number);
+            return switch (number) {
+                case 2 -> internalGetMutableMemberIdToReadDate();
+                default -> throw new RuntimeException(
+                        "Invalid map field number: "
+                                + number);
+            };
         }
 
         @java.lang.Override
-        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internalGetFieldAccessorTable() {
+        protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable() {
             return im.turms.server.common.access.client.dto.model.conversation.GroupConversationOuterClass.internal_static_im_turms_proto_GroupConversation_fieldAccessorTable
                     .ensureFieldAccessorsInitialized(
                             im.turms.server.common.access.client.dto.model.conversation.GroupConversation.class,
@@ -399,7 +401,7 @@ public final class GroupConversation extends com.google.protobuf.GeneratedMessag
 
         }
 
-        private Builder(com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        private Builder(com.google.protobuf.GeneratedMessage.BuilderParent parent) {
             super(parent);
 
         }
@@ -456,43 +458,6 @@ public final class GroupConversation extends com.google.protobuf.GeneratedMessag
                 result.memberIdToReadDate_ = internalGetMemberIdToReadDate();
                 result.memberIdToReadDate_.makeImmutable();
             }
-        }
-
-        @java.lang.Override
-        public Builder clone() {
-            return super.clone();
-        }
-
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index,
-                java.lang.Object value) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.addRepeatedField(field, value);
         }
 
         @java.lang.Override
@@ -739,24 +704,11 @@ public final class GroupConversation extends com.google.protobuf.GeneratedMessag
             return this;
         }
 
-        @java.lang.Override
-        public final Builder setUnknownFields(
-                final com.google.protobuf.UnknownFieldSet unknownFields) {
-            return super.setUnknownFields(unknownFields);
-        }
-
-        @java.lang.Override
-        public final Builder mergeUnknownFields(
-                final com.google.protobuf.UnknownFieldSet unknownFields) {
-            return super.mergeUnknownFields(unknownFields);
-        }
-
         // @@protoc_insertion_point(builder_scope:im.turms.proto.GroupConversation)
     }
 
     // @@protoc_insertion_point(class_scope:im.turms.proto.GroupConversation)
     private static final im.turms.server.common.access.client.dto.model.conversation.GroupConversation DEFAULT_INSTANCE;
-
     static {
         DEFAULT_INSTANCE =
                 new im.turms.server.common.access.client.dto.model.conversation.GroupConversation();

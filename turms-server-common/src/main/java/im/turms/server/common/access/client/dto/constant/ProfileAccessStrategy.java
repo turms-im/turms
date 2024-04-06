@@ -35,6 +35,15 @@ public enum ProfileAccessStrategy implements com.google.protobuf.ProtocolMessage
     FRIENDS(2),
     UNRECOGNIZED(-1),;
 
+    static {
+        com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
+                com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
+                /* major= */ 4,
+                /* minor= */ 26,
+                /* patch= */ 1,
+                /* suffix= */ "",
+                ProfileAccessStrategy.class.getName());
+    }
     /**
      * <code>ALL = 0;</code>
      */
@@ -84,11 +93,7 @@ public enum ProfileAccessStrategy implements com.google.protobuf.ProtocolMessage
     }
 
     private static final com.google.protobuf.Internal.EnumLiteMap<ProfileAccessStrategy> internalValueMap =
-            new com.google.protobuf.Internal.EnumLiteMap<>() {
-                public ProfileAccessStrategy findValueByNumber(int number) {
-                    return ProfileAccessStrategy.forNumber(number);
-                }
-            };
+            number -> ProfileAccessStrategy.forNumber(number);
 
     public final com.google.protobuf.Descriptors.EnumValueDescriptor getValueDescriptor() {
         if (this == UNRECOGNIZED) {
@@ -126,7 +131,7 @@ public enum ProfileAccessStrategy implements com.google.protobuf.ProtocolMessage
 
     private final int value;
 
-    private ProfileAccessStrategy(int value) {
+    ProfileAccessStrategy(int value) {
         this.value = value;
     }
 

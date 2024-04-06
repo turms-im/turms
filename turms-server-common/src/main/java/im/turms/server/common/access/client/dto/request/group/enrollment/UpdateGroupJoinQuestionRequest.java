@@ -20,15 +20,24 @@ package im.turms.server.common.access.client.dto.request.group.enrollment;
 /**
  * Protobuf type {@code im.turms.proto.UpdateGroupJoinQuestionRequest}
  */
-public final class UpdateGroupJoinQuestionRequest extends com.google.protobuf.GeneratedMessageV3
+public final class UpdateGroupJoinQuestionRequest extends com.google.protobuf.GeneratedMessage
         implements
         // @@protoc_insertion_point(message_implements:im.turms.proto.UpdateGroupJoinQuestionRequest)
         UpdateGroupJoinQuestionRequestOrBuilder {
     private static final long serialVersionUID = 0L;
+    static {
+        com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
+                com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
+                /* major= */ 4,
+                /* minor= */ 26,
+                /* patch= */ 1,
+                /* suffix= */ "",
+                UpdateGroupJoinQuestionRequest.class.getName());
+    }
 
     // Use UpdateGroupJoinQuestionRequest.newBuilder() to construct.
     private UpdateGroupJoinQuestionRequest(
-            com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+            com.google.protobuf.GeneratedMessage.Builder<?> builder) {
         super(builder);
     }
 
@@ -37,18 +46,12 @@ public final class UpdateGroupJoinQuestionRequest extends com.google.protobuf.Ge
         answers_ = com.google.protobuf.LazyStringArrayList.emptyList();
     }
 
-    @java.lang.Override
-    @SuppressWarnings({"unused"})
-    protected java.lang.Object newInstance(UnusedPrivateParameter unused) {
-        return new UpdateGroupJoinQuestionRequest();
-    }
-
     public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
         return im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequestOuterClass.internal_static_im_turms_proto_UpdateGroupJoinQuestionRequest_descriptor;
     }
 
     @java.lang.Override
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internalGetFieldAccessorTable() {
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable() {
         return im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequestOuterClass.internal_static_im_turms_proto_UpdateGroupJoinQuestionRequest_fieldAccessorTable
                 .ensureFieldAccessorsInitialized(
                         im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest.class,
@@ -223,10 +226,10 @@ public final class UpdateGroupJoinQuestionRequest extends com.google.protobuf.Ge
             output.writeInt64(1, questionId_);
         }
         if (((bitField0_ & 0x00000001) != 0)) {
-            com.google.protobuf.GeneratedMessageV3.writeString(output, 2, question_);
+            com.google.protobuf.GeneratedMessage.writeString(output, 2, question_);
         }
         for (int i = 0; i < answers_.size(); i++) {
-            com.google.protobuf.GeneratedMessageV3.writeString(output, 3, answers_.getRaw(i));
+            com.google.protobuf.GeneratedMessage.writeString(output, 3, answers_.getRaw(i));
         }
         if (((bitField0_ & 0x00000002) != 0)) {
             output.writeInt32(4, score_);
@@ -246,7 +249,7 @@ public final class UpdateGroupJoinQuestionRequest extends com.google.protobuf.Ge
             size += com.google.protobuf.CodedOutputStream.computeInt64Size(1, questionId_);
         }
         if (((bitField0_ & 0x00000001) != 0)) {
-            size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, question_);
+            size += com.google.protobuf.GeneratedMessage.computeStringSize(2, question_);
         }
         {
             int dataSize = 0;
@@ -363,40 +366,40 @@ public final class UpdateGroupJoinQuestionRequest extends com.google.protobuf.Ge
 
     public static im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest parseFrom(
             java.io.InputStream input) throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3.parseWithIOException(PARSER, input);
+        return com.google.protobuf.GeneratedMessage.parseWithIOException(PARSER, input);
     }
 
     public static im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest parseFrom(
             java.io.InputStream input,
             com.google.protobuf.ExtensionRegistryLite extensionRegistry)
             throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
+        return com.google.protobuf.GeneratedMessage
                 .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
     public static im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest parseDelimitedFrom(
             java.io.InputStream input) throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3.parseDelimitedWithIOException(PARSER, input);
+        return com.google.protobuf.GeneratedMessage.parseDelimitedWithIOException(PARSER, input);
     }
 
     public static im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest parseDelimitedFrom(
             java.io.InputStream input,
             com.google.protobuf.ExtensionRegistryLite extensionRegistry)
             throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
+        return com.google.protobuf.GeneratedMessage
                 .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
 
     public static im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest parseFrom(
             com.google.protobuf.CodedInputStream input) throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3.parseWithIOException(PARSER, input);
+        return com.google.protobuf.GeneratedMessage.parseWithIOException(PARSER, input);
     }
 
     public static im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest parseFrom(
             com.google.protobuf.CodedInputStream input,
             com.google.protobuf.ExtensionRegistryLite extensionRegistry)
             throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
+        return com.google.protobuf.GeneratedMessage
                 .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
@@ -423,16 +426,15 @@ public final class UpdateGroupJoinQuestionRequest extends com.google.protobuf.Ge
     }
 
     @java.lang.Override
-    protected Builder newBuilderForType(
-            com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+    protected Builder newBuilderForType(com.google.protobuf.GeneratedMessage.BuilderParent parent) {
         return new Builder(parent);
     }
 
     /**
      * Protobuf type {@code im.turms.proto.UpdateGroupJoinQuestionRequest}
      */
-    public static final class Builder
-            extends com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+    public static final class Builder extends com.google.protobuf.GeneratedMessage.Builder<Builder>
+            implements
             // @@protoc_insertion_point(builder_implements:im.turms.proto.UpdateGroupJoinQuestionRequest)
             im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequestOrBuilder {
         public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
@@ -440,7 +442,7 @@ public final class UpdateGroupJoinQuestionRequest extends com.google.protobuf.Ge
         }
 
         @java.lang.Override
-        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internalGetFieldAccessorTable() {
+        protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable() {
             return im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequestOuterClass.internal_static_im_turms_proto_UpdateGroupJoinQuestionRequest_fieldAccessorTable
                     .ensureFieldAccessorsInitialized(
                             im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest.class,
@@ -453,7 +455,7 @@ public final class UpdateGroupJoinQuestionRequest extends com.google.protobuf.Ge
 
         }
 
-        private Builder(com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        private Builder(com.google.protobuf.GeneratedMessage.BuilderParent parent) {
             super(parent);
 
         }
@@ -522,43 +524,6 @@ public final class UpdateGroupJoinQuestionRequest extends com.google.protobuf.Ge
                 to_bitField0_ |= 0x00000002;
             }
             result.bitField0_ |= to_bitField0_;
-        }
-
-        @java.lang.Override
-        public Builder clone() {
-            return super.clone();
-        }
-
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index,
-                java.lang.Object value) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.addRepeatedField(field, value);
         }
 
         @java.lang.Override
@@ -997,24 +962,11 @@ public final class UpdateGroupJoinQuestionRequest extends com.google.protobuf.Ge
             return this;
         }
 
-        @java.lang.Override
-        public final Builder setUnknownFields(
-                final com.google.protobuf.UnknownFieldSet unknownFields) {
-            return super.setUnknownFields(unknownFields);
-        }
-
-        @java.lang.Override
-        public final Builder mergeUnknownFields(
-                final com.google.protobuf.UnknownFieldSet unknownFields) {
-            return super.mergeUnknownFields(unknownFields);
-        }
-
         // @@protoc_insertion_point(builder_scope:im.turms.proto.UpdateGroupJoinQuestionRequest)
     }
 
     // @@protoc_insertion_point(class_scope:im.turms.proto.UpdateGroupJoinQuestionRequest)
     private static final im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest DEFAULT_INSTANCE;
-
     static {
         DEFAULT_INSTANCE =
                 new im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest();

@@ -21,6 +21,16 @@ public final class NearbyUserOuterClass {
     private NearbyUserOuterClass() {
     }
 
+    static {
+        com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
+                com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
+                /* major= */ 4,
+                /* minor= */ 26,
+                /* patch= */ 1,
+                /* suffix= */ "",
+                NearbyUserOuterClass.class.getName());
+    }
+
     public static void registerAllExtensions(com.google.protobuf.ExtensionRegistryLite registry) {
     }
 
@@ -29,14 +39,13 @@ public final class NearbyUserOuterClass {
     }
 
     static final com.google.protobuf.Descriptors.Descriptor internal_static_im_turms_proto_NearbyUser_descriptor;
-    static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internal_static_im_turms_proto_NearbyUser_fieldAccessorTable;
+    static final com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_im_turms_proto_NearbyUser_fieldAccessorTable;
 
     public static com.google.protobuf.Descriptors.FileDescriptor getDescriptor() {
         return descriptor;
     }
 
     private static com.google.protobuf.Descriptors.FileDescriptor descriptor;
-
     static {
         java.lang.String[] descriptorData = {"\n\034model/user/nearby_user.proto\022\016im.turms"
                 + ".proto\032\032constant/device_type.proto\032\036mode"
@@ -62,13 +71,14 @@ public final class NearbyUserOuterClass {
         internal_static_im_turms_proto_NearbyUser_descriptor = getDescriptor().getMessageTypes()
                 .get(0);
         internal_static_im_turms_proto_NearbyUser_fieldAccessorTable =
-                new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+                new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_NearbyUser_descriptor,
                         new java.lang.String[]{"UserId",
                                 "DeviceType",
                                 "Info",
                                 "Distance",
                                 "Location",});
+        descriptor.resolveAllFeaturesImmutable();
         im.turms.server.common.access.client.dto.constant.DeviceTypeOuterClass.getDescriptor();
         im.turms.server.common.access.client.dto.model.user.UserLocationOuterClass.getDescriptor();
         im.turms.server.common.access.client.dto.model.user.UserInfoOuterClass.getDescriptor();

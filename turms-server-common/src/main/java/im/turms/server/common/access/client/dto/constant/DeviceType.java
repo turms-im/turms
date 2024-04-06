@@ -47,6 +47,15 @@ public enum DeviceType implements com.google.protobuf.ProtocolMessageEnum {
     UNKNOWN(5),
     UNRECOGNIZED(-1),;
 
+    static {
+        com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
+                com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
+                /* major= */ 4,
+                /* minor= */ 26,
+                /* patch= */ 1,
+                /* suffix= */ "",
+                DeviceType.class.getName());
+    }
     /**
      * <code>DESKTOP = 0;</code>
      */
@@ -111,11 +120,7 @@ public enum DeviceType implements com.google.protobuf.ProtocolMessageEnum {
     }
 
     private static final com.google.protobuf.Internal.EnumLiteMap<DeviceType> internalValueMap =
-            new com.google.protobuf.Internal.EnumLiteMap<>() {
-                public DeviceType findValueByNumber(int number) {
-                    return DeviceType.forNumber(number);
-                }
-            };
+            number -> DeviceType.forNumber(number);
 
     public final com.google.protobuf.Descriptors.EnumValueDescriptor getValueDescriptor() {
         if (this == UNRECOGNIZED) {
@@ -152,7 +157,7 @@ public enum DeviceType implements com.google.protobuf.ProtocolMessageEnum {
 
     private final int value;
 
-    private DeviceType(int value) {
+    DeviceType(int value) {
         this.value = value;
     }
 

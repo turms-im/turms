@@ -21,6 +21,16 @@ public final class QueryResourceUploadInfoRequestOuterClass {
     private QueryResourceUploadInfoRequestOuterClass() {
     }
 
+    static {
+        com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
+                com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
+                /* major= */ 4,
+                /* minor= */ 26,
+                /* patch= */ 1,
+                /* suffix= */ "",
+                QueryResourceUploadInfoRequestOuterClass.class.getName());
+    }
+
     public static void registerAllExtensions(com.google.protobuf.ExtensionRegistryLite registry) {
     }
 
@@ -29,16 +39,15 @@ public final class QueryResourceUploadInfoRequestOuterClass {
     }
 
     static final com.google.protobuf.Descriptors.Descriptor internal_static_im_turms_proto_QueryResourceUploadInfoRequest_descriptor;
-    static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internal_static_im_turms_proto_QueryResourceUploadInfoRequest_fieldAccessorTable;
+    static final com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_im_turms_proto_QueryResourceUploadInfoRequest_fieldAccessorTable;
     static final com.google.protobuf.Descriptors.Descriptor internal_static_im_turms_proto_QueryResourceUploadInfoRequest_ExtraEntry_descriptor;
-    static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internal_static_im_turms_proto_QueryResourceUploadInfoRequest_ExtraEntry_fieldAccessorTable;
+    static final com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_im_turms_proto_QueryResourceUploadInfoRequest_ExtraEntry_fieldAccessorTable;
 
     public static com.google.protobuf.Descriptors.FileDescriptor getDescriptor() {
         return descriptor;
     }
 
     private static com.google.protobuf.Descriptors.FileDescriptor descriptor;
-
     static {
         java.lang.String[] descriptorData = {"\n8request/storage/query_resource_upload_"
                 + "info_request.proto\022\016im.turms.proto\032$cons"
@@ -63,7 +72,7 @@ public final class QueryResourceUploadInfoRequestOuterClass {
                 getDescriptor().getMessageTypes()
                         .get(0);
         internal_static_im_turms_proto_QueryResourceUploadInfoRequest_fieldAccessorTable =
-                new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+                new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_QueryResourceUploadInfoRequest_descriptor,
                         new java.lang.String[]{"Type",
                                 "IdNum",
@@ -76,9 +85,10 @@ public final class QueryResourceUploadInfoRequestOuterClass {
                         .getNestedTypes()
                         .get(0);
         internal_static_im_turms_proto_QueryResourceUploadInfoRequest_ExtraEntry_fieldAccessorTable =
-                new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+                new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_QueryResourceUploadInfoRequest_ExtraEntry_descriptor,
                         new java.lang.String[]{"Key", "Value",});
+        descriptor.resolveAllFeaturesImmutable();
         im.turms.server.common.access.client.dto.constant.StorageResourceTypeOuterClass
                 .getDescriptor();
     }

@@ -51,6 +51,15 @@ public enum UserStatus implements com.google.protobuf.ProtocolMessageEnum {
     BE_RIGHT_BACK(6),
     UNRECOGNIZED(-1),;
 
+    static {
+        com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
+                com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
+                /* major= */ 4,
+                /* minor= */ 26,
+                /* patch= */ 1,
+                /* suffix= */ "",
+                UserStatus.class.getName());
+    }
     /**
      * <code>AVAILABLE = 0;</code>
      */
@@ -120,11 +129,7 @@ public enum UserStatus implements com.google.protobuf.ProtocolMessageEnum {
     }
 
     private static final com.google.protobuf.Internal.EnumLiteMap<UserStatus> internalValueMap =
-            new com.google.protobuf.Internal.EnumLiteMap<>() {
-                public UserStatus findValueByNumber(int number) {
-                    return UserStatus.forNumber(number);
-                }
-            };
+            number -> UserStatus.forNumber(number);
 
     public final com.google.protobuf.Descriptors.EnumValueDescriptor getValueDescriptor() {
         if (this == UNRECOGNIZED) {
@@ -161,7 +166,7 @@ public enum UserStatus implements com.google.protobuf.ProtocolMessageEnum {
 
     private final int value;
 
-    private UserStatus(int value) {
+    UserStatus(int value) {
         this.value = value;
     }
 

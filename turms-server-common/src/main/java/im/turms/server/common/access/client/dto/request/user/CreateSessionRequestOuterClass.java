@@ -21,6 +21,16 @@ public final class CreateSessionRequestOuterClass {
     private CreateSessionRequestOuterClass() {
     }
 
+    static {
+        com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
+                com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
+                /* major= */ 4,
+                /* minor= */ 26,
+                /* patch= */ 1,
+                /* suffix= */ "",
+                CreateSessionRequestOuterClass.class.getName());
+    }
+
     public static void registerAllExtensions(com.google.protobuf.ExtensionRegistryLite registry) {
     }
 
@@ -29,16 +39,15 @@ public final class CreateSessionRequestOuterClass {
     }
 
     static final com.google.protobuf.Descriptors.Descriptor internal_static_im_turms_proto_CreateSessionRequest_descriptor;
-    static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internal_static_im_turms_proto_CreateSessionRequest_fieldAccessorTable;
+    static final com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_im_turms_proto_CreateSessionRequest_fieldAccessorTable;
     static final com.google.protobuf.Descriptors.Descriptor internal_static_im_turms_proto_CreateSessionRequest_DeviceDetailsEntry_descriptor;
-    static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internal_static_im_turms_proto_CreateSessionRequest_DeviceDetailsEntry_fieldAccessorTable;
+    static final com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_im_turms_proto_CreateSessionRequest_DeviceDetailsEntry_fieldAccessorTable;
 
     public static com.google.protobuf.Descriptors.FileDescriptor getDescriptor() {
         return descriptor;
     }
 
-    private static com.google.protobuf.Descriptors.FileDescriptor descriptor;
-
+    private static final com.google.protobuf.Descriptors.FileDescriptor descriptor;
     static {
         java.lang.String[] descriptorData = {"\n)request/user/create_session_request.pr"
                 + "oto\022\016im.turms.proto\032\032constant/device_typ"
@@ -69,7 +78,7 @@ public final class CreateSessionRequestOuterClass {
                 getDescriptor().getMessageTypes()
                         .get(0);
         internal_static_im_turms_proto_CreateSessionRequest_fieldAccessorTable =
-                new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+                new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_CreateSessionRequest_descriptor,
                         new java.lang.String[]{"Version",
                                 "UserId",
@@ -82,9 +91,10 @@ public final class CreateSessionRequestOuterClass {
                 internal_static_im_turms_proto_CreateSessionRequest_descriptor.getNestedTypes()
                         .get(0);
         internal_static_im_turms_proto_CreateSessionRequest_DeviceDetailsEntry_fieldAccessorTable =
-                new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+                new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_CreateSessionRequest_DeviceDetailsEntry_descriptor,
                         new java.lang.String[]{"Key", "Value",});
+        descriptor.resolveAllFeaturesImmutable();
         im.turms.server.common.access.client.dto.constant.DeviceTypeOuterClass.getDescriptor();
         im.turms.server.common.access.client.dto.constant.UserStatusOuterClass.getDescriptor();
         im.turms.server.common.access.client.dto.model.user.UserLocationOuterClass.getDescriptor();

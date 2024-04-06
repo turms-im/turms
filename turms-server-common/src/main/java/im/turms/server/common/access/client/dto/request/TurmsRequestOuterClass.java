@@ -21,6 +21,16 @@ public final class TurmsRequestOuterClass {
     private TurmsRequestOuterClass() {
     }
 
+    static {
+        com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
+                com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
+                /* major= */ 4,
+                /* minor= */ 26,
+                /* patch= */ 1,
+                /* suffix= */ "",
+                TurmsRequestOuterClass.class.getName());
+    }
+
     public static void registerAllExtensions(com.google.protobuf.ExtensionRegistryLite registry) {
     }
 
@@ -29,14 +39,13 @@ public final class TurmsRequestOuterClass {
     }
 
     static final com.google.protobuf.Descriptors.Descriptor internal_static_im_turms_proto_TurmsRequest_descriptor;
-    static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internal_static_im_turms_proto_TurmsRequest_fieldAccessorTable;
+    static final com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_im_turms_proto_TurmsRequest_fieldAccessorTable;
 
     public static com.google.protobuf.Descriptors.FileDescriptor getDescriptor() {
         return descriptor;
     }
 
-    private static com.google.protobuf.Descriptors.FileDescriptor descriptor;
-
+    private static final com.google.protobuf.Descriptors.FileDescriptor descriptor;
     static {
         java.lang.String[] descriptorData = {"\n\033request/turms_request.proto\022\016im.turms."
                 + "proto\032-request/storage/delete_resource_r"
@@ -152,7 +161,7 @@ public final class TurmsRequestOuterClass {
                 + "oupMemberRequestH\000\022O\n\033query_user_profile"
                 + "s_request\030d \001(\0132(.im.turms.proto.QueryUs"
                 + "erProfilesRequestH\000\022M\n\032query_nearby_user"
-                + "s_request\030e \001(\0132\'.im.turms.proto.QueryNe"
+                + "s_request\030e \001(\0132'.im.turms.proto.QueryNe"
                 + "arbyUsersRequestH\000\022\\\n\"query_user_online_"
                 + "statuses_request\030f \001(\0132..im.turms.proto."
                 + "QueryUserOnlineStatusesRequestH\000\022Q\n\034upda"
@@ -381,7 +390,7 @@ public final class TurmsRequestOuterClass {
         internal_static_im_turms_proto_TurmsRequest_descriptor = getDescriptor().getMessageTypes()
                 .get(0);
         internal_static_im_turms_proto_TurmsRequest_fieldAccessorTable =
-                new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+                new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_TurmsRequest_descriptor,
                         new java.lang.String[]{"RequestId",
                                 "CreateSessionRequest",
@@ -444,6 +453,7 @@ public final class TurmsRequestOuterClass {
                                 "QueryMessageAttachmentInfosRequest",
                                 "UpdateMessageAttachmentInfoRequest",
                                 "Kind",});
+        descriptor.resolveAllFeaturesImmutable();
         im.turms.server.common.access.client.dto.request.storage.DeleteResourceRequestOuterClass
                 .getDescriptor();
         im.turms.server.common.access.client.dto.request.storage.QueryResourceDownloadInfoRequestOuterClass

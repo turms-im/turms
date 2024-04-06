@@ -35,6 +35,15 @@ public enum StorageResourceType implements com.google.protobuf.ProtocolMessageEn
     MESSAGE_ATTACHMENT(2),
     UNRECOGNIZED(-1),;
 
+    static {
+        com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
+                com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
+                /* major= */ 4,
+                /* minor= */ 26,
+                /* patch= */ 1,
+                /* suffix= */ "",
+                StorageResourceType.class.getName());
+    }
     /**
      * <code>USER_PROFILE_PICTURE = 0;</code>
      */
@@ -84,11 +93,7 @@ public enum StorageResourceType implements com.google.protobuf.ProtocolMessageEn
     }
 
     private static final com.google.protobuf.Internal.EnumLiteMap<StorageResourceType> internalValueMap =
-            new com.google.protobuf.Internal.EnumLiteMap<>() {
-                public StorageResourceType findValueByNumber(int number) {
-                    return StorageResourceType.forNumber(number);
-                }
-            };
+            number -> StorageResourceType.forNumber(number);
 
     public final com.google.protobuf.Descriptors.EnumValueDescriptor getValueDescriptor() {
         if (this == UNRECOGNIZED) {
@@ -126,7 +131,7 @@ public enum StorageResourceType implements com.google.protobuf.ProtocolMessageEn
 
     private final int value;
 
-    private StorageResourceType(int value) {
+    StorageResourceType(int value) {
         this.value = value;
     }
 

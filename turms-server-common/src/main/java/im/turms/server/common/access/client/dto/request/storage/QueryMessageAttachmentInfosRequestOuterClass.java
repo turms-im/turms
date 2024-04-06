@@ -21,6 +21,16 @@ public final class QueryMessageAttachmentInfosRequestOuterClass {
     private QueryMessageAttachmentInfosRequestOuterClass() {
     }
 
+    static {
+        com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
+                com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
+                /* major= */ 4,
+                /* minor= */ 26,
+                /* patch= */ 1,
+                /* suffix= */ "",
+                QueryMessageAttachmentInfosRequestOuterClass.class.getName());
+    }
+
     public static void registerAllExtensions(com.google.protobuf.ExtensionRegistryLite registry) {
     }
 
@@ -29,14 +39,13 @@ public final class QueryMessageAttachmentInfosRequestOuterClass {
     }
 
     static final com.google.protobuf.Descriptors.Descriptor internal_static_im_turms_proto_QueryMessageAttachmentInfosRequest_descriptor;
-    static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internal_static_im_turms_proto_QueryMessageAttachmentInfosRequest_fieldAccessorTable;
+    static final com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_im_turms_proto_QueryMessageAttachmentInfosRequest_fieldAccessorTable;
 
     public static com.google.protobuf.Descriptors.FileDescriptor getDescriptor() {
         return descriptor;
     }
 
     private static com.google.protobuf.Descriptors.FileDescriptor descriptor;
-
     static {
         java.lang.String[] descriptorData = {"\n<request/storage/query_message_attachme"
                 + "nt_infos_request.proto\022\016im.turms.proto\"\257"
@@ -57,7 +66,7 @@ public final class QueryMessageAttachmentInfosRequestOuterClass {
                 getDescriptor().getMessageTypes()
                         .get(0);
         internal_static_im_turms_proto_QueryMessageAttachmentInfosRequest_fieldAccessorTable =
-                new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+                new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_QueryMessageAttachmentInfosRequest_descriptor,
                         new java.lang.String[]{"UserIds",
                                 "GroupIds",
@@ -65,6 +74,7 @@ public final class QueryMessageAttachmentInfosRequestOuterClass {
                                 "CreationDateEnd",
                                 "InPrivateConversation",
                                 "AreSharedByMe",});
+        descriptor.resolveAllFeaturesImmutable();
     }
 
     // @@protoc_insertion_point(outer_class_scope)

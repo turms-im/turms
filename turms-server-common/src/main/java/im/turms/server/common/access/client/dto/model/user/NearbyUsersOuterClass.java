@@ -21,6 +21,16 @@ public final class NearbyUsersOuterClass {
     private NearbyUsersOuterClass() {
     }
 
+    static {
+        com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
+                com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
+                /* major= */ 4,
+                /* minor= */ 26,
+                /* patch= */ 1,
+                /* suffix= */ "",
+                NearbyUsersOuterClass.class.getName());
+    }
+
     public static void registerAllExtensions(com.google.protobuf.ExtensionRegistryLite registry) {
     }
 
@@ -29,14 +39,13 @@ public final class NearbyUsersOuterClass {
     }
 
     static final com.google.protobuf.Descriptors.Descriptor internal_static_im_turms_proto_NearbyUsers_descriptor;
-    static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internal_static_im_turms_proto_NearbyUsers_fieldAccessorTable;
+    static final com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_im_turms_proto_NearbyUsers_fieldAccessorTable;
 
     public static com.google.protobuf.Descriptors.FileDescriptor getDescriptor() {
         return descriptor;
     }
 
     private static com.google.protobuf.Descriptors.FileDescriptor descriptor;
-
     static {
         java.lang.String[] descriptorData = {"\n\035model/user/nearby_users.proto\022\016im.turm"
                 + "s.proto\032\034model/user/nearby_user.proto\"?\n"
@@ -52,9 +61,10 @@ public final class NearbyUsersOuterClass {
         internal_static_im_turms_proto_NearbyUsers_descriptor = getDescriptor().getMessageTypes()
                 .get(0);
         internal_static_im_turms_proto_NearbyUsers_fieldAccessorTable =
-                new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+                new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_NearbyUsers_descriptor,
                         new java.lang.String[]{"NearbyUsers",});
+        descriptor.resolveAllFeaturesImmutable();
         im.turms.server.common.access.client.dto.model.user.NearbyUserOuterClass.getDescriptor();
     }
 

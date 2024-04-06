@@ -20,14 +20,23 @@ package im.turms.server.common.access.client.dto.model.group;
 /**
  * Protobuf type {@code im.turms.proto.GroupInvitationsWithVersion}
  */
-public final class GroupInvitationsWithVersion extends com.google.protobuf.GeneratedMessageV3
+public final class GroupInvitationsWithVersion extends com.google.protobuf.GeneratedMessage
         implements
         // @@protoc_insertion_point(message_implements:im.turms.proto.GroupInvitationsWithVersion)
         GroupInvitationsWithVersionOrBuilder {
     private static final long serialVersionUID = 0L;
+    static {
+        com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
+                com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
+                /* major= */ 4,
+                /* minor= */ 26,
+                /* patch= */ 1,
+                /* suffix= */ "",
+                GroupInvitationsWithVersion.class.getName());
+    }
 
     // Use GroupInvitationsWithVersion.newBuilder() to construct.
-    private GroupInvitationsWithVersion(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    private GroupInvitationsWithVersion(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
         super(builder);
     }
 
@@ -35,18 +44,12 @@ public final class GroupInvitationsWithVersion extends com.google.protobuf.Gener
         groupInvitations_ = java.util.Collections.emptyList();
     }
 
-    @java.lang.Override
-    @SuppressWarnings({"unused"})
-    protected java.lang.Object newInstance(UnusedPrivateParameter unused) {
-        return new GroupInvitationsWithVersion();
-    }
-
     public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
         return im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersionOuterClass.internal_static_im_turms_proto_GroupInvitationsWithVersion_descriptor;
     }
 
     @java.lang.Override
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internalGetFieldAccessorTable() {
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable() {
         return im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersionOuterClass.internal_static_im_turms_proto_GroupInvitationsWithVersion_fieldAccessorTable
                 .ensureFieldAccessorsInitialized(
                         im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersion.class,
@@ -251,40 +254,40 @@ public final class GroupInvitationsWithVersion extends com.google.protobuf.Gener
 
     public static im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersion parseFrom(
             java.io.InputStream input) throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3.parseWithIOException(PARSER, input);
+        return com.google.protobuf.GeneratedMessage.parseWithIOException(PARSER, input);
     }
 
     public static im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersion parseFrom(
             java.io.InputStream input,
             com.google.protobuf.ExtensionRegistryLite extensionRegistry)
             throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
+        return com.google.protobuf.GeneratedMessage
                 .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
     public static im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersion parseDelimitedFrom(
             java.io.InputStream input) throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3.parseDelimitedWithIOException(PARSER, input);
+        return com.google.protobuf.GeneratedMessage.parseDelimitedWithIOException(PARSER, input);
     }
 
     public static im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersion parseDelimitedFrom(
             java.io.InputStream input,
             com.google.protobuf.ExtensionRegistryLite extensionRegistry)
             throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
+        return com.google.protobuf.GeneratedMessage
                 .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
 
     public static im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersion parseFrom(
             com.google.protobuf.CodedInputStream input) throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3.parseWithIOException(PARSER, input);
+        return com.google.protobuf.GeneratedMessage.parseWithIOException(PARSER, input);
     }
 
     public static im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersion parseFrom(
             com.google.protobuf.CodedInputStream input,
             com.google.protobuf.ExtensionRegistryLite extensionRegistry)
             throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
+        return com.google.protobuf.GeneratedMessage
                 .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
@@ -311,16 +314,15 @@ public final class GroupInvitationsWithVersion extends com.google.protobuf.Gener
     }
 
     @java.lang.Override
-    protected Builder newBuilderForType(
-            com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+    protected Builder newBuilderForType(com.google.protobuf.GeneratedMessage.BuilderParent parent) {
         return new Builder(parent);
     }
 
     /**
      * Protobuf type {@code im.turms.proto.GroupInvitationsWithVersion}
      */
-    public static final class Builder
-            extends com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+    public static final class Builder extends com.google.protobuf.GeneratedMessage.Builder<Builder>
+            implements
             // @@protoc_insertion_point(builder_implements:im.turms.proto.GroupInvitationsWithVersion)
             im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersionOrBuilder {
         public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
@@ -328,7 +330,7 @@ public final class GroupInvitationsWithVersion extends com.google.protobuf.Gener
         }
 
         @java.lang.Override
-        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internalGetFieldAccessorTable() {
+        protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable() {
             return im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersionOuterClass.internal_static_im_turms_proto_GroupInvitationsWithVersion_fieldAccessorTable
                     .ensureFieldAccessorsInitialized(
                             im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersion.class,
@@ -341,7 +343,7 @@ public final class GroupInvitationsWithVersion extends com.google.protobuf.Gener
 
         }
 
-        private Builder(com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        private Builder(com.google.protobuf.GeneratedMessage.BuilderParent parent) {
             super(parent);
 
         }
@@ -420,43 +422,6 @@ public final class GroupInvitationsWithVersion extends com.google.protobuf.Gener
         }
 
         @java.lang.Override
-        public Builder clone() {
-            return super.clone();
-        }
-
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index,
-                java.lang.Object value) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.addRepeatedField(field, value);
-        }
-
-        @java.lang.Override
         public Builder mergeFrom(com.google.protobuf.Message other) {
             if (other instanceof im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersion) {
                 return mergeFrom(
@@ -492,7 +457,7 @@ public final class GroupInvitationsWithVersion extends com.google.protobuf.Gener
                         groupInvitations_ = other.groupInvitations_;
                         bitField0_ &= ~0x00000001;
                         groupInvitationsBuilder_ =
-                                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders
+                                com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders
                                         ? getGroupInvitationsFieldBuilder()
                                         : null;
                     } else {
@@ -568,7 +533,7 @@ public final class GroupInvitationsWithVersion extends com.google.protobuf.Gener
             }
         }
 
-        private com.google.protobuf.RepeatedFieldBuilderV3<im.turms.server.common.access.client.dto.model.group.GroupInvitation, im.turms.server.common.access.client.dto.model.group.GroupInvitation.Builder, im.turms.server.common.access.client.dto.model.group.GroupInvitationOrBuilder> groupInvitationsBuilder_;
+        private com.google.protobuf.RepeatedFieldBuilder<im.turms.server.common.access.client.dto.model.group.GroupInvitation, im.turms.server.common.access.client.dto.model.group.GroupInvitation.Builder, im.turms.server.common.access.client.dto.model.group.GroupInvitationOrBuilder> groupInvitationsBuilder_;
 
         /**
          * <code>repeated .im.turms.proto.GroupInvitation group_invitations = 1;</code>
@@ -807,9 +772,9 @@ public final class GroupInvitationsWithVersion extends com.google.protobuf.Gener
             return getGroupInvitationsFieldBuilder().getBuilderList();
         }
 
-        private com.google.protobuf.RepeatedFieldBuilderV3<im.turms.server.common.access.client.dto.model.group.GroupInvitation, im.turms.server.common.access.client.dto.model.group.GroupInvitation.Builder, im.turms.server.common.access.client.dto.model.group.GroupInvitationOrBuilder> getGroupInvitationsFieldBuilder() {
+        private com.google.protobuf.RepeatedFieldBuilder<im.turms.server.common.access.client.dto.model.group.GroupInvitation, im.turms.server.common.access.client.dto.model.group.GroupInvitation.Builder, im.turms.server.common.access.client.dto.model.group.GroupInvitationOrBuilder> getGroupInvitationsFieldBuilder() {
             if (groupInvitationsBuilder_ == null) {
-                groupInvitationsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<>(
+                groupInvitationsBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<>(
                         groupInvitations_,
                         ((bitField0_ & 0x00000001) != 0),
                         getParentForChildren(),
@@ -867,24 +832,11 @@ public final class GroupInvitationsWithVersion extends com.google.protobuf.Gener
             return this;
         }
 
-        @java.lang.Override
-        public final Builder setUnknownFields(
-                final com.google.protobuf.UnknownFieldSet unknownFields) {
-            return super.setUnknownFields(unknownFields);
-        }
-
-        @java.lang.Override
-        public final Builder mergeUnknownFields(
-                final com.google.protobuf.UnknownFieldSet unknownFields) {
-            return super.mergeUnknownFields(unknownFields);
-        }
-
         // @@protoc_insertion_point(builder_scope:im.turms.proto.GroupInvitationsWithVersion)
     }
 
     // @@protoc_insertion_point(class_scope:im.turms.proto.GroupInvitationsWithVersion)
     private static final im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersion DEFAULT_INSTANCE;
-
     static {
         DEFAULT_INSTANCE =
                 new im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersion();

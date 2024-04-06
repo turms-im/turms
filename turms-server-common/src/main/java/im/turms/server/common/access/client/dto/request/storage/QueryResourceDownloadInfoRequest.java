@@ -20,27 +20,30 @@ package im.turms.server.common.access.client.dto.request.storage;
 /**
  * Protobuf type {@code im.turms.proto.QueryResourceDownloadInfoRequest}
  */
-public final class QueryResourceDownloadInfoRequest extends com.google.protobuf.GeneratedMessageV3
+public final class QueryResourceDownloadInfoRequest extends com.google.protobuf.GeneratedMessage
         implements
         // @@protoc_insertion_point(message_implements:im.turms.proto.QueryResourceDownloadInfoRequest)
         QueryResourceDownloadInfoRequestOrBuilder {
     private static final long serialVersionUID = 0L;
+    static {
+        com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
+                com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
+                /* major= */ 4,
+                /* minor= */ 26,
+                /* patch= */ 1,
+                /* suffix= */ "",
+                QueryResourceDownloadInfoRequest.class.getName());
+    }
 
     // Use QueryResourceDownloadInfoRequest.newBuilder() to construct.
     private QueryResourceDownloadInfoRequest(
-            com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+            com.google.protobuf.GeneratedMessage.Builder<?> builder) {
         super(builder);
     }
 
     private QueryResourceDownloadInfoRequest() {
         type_ = 0;
         idStr_ = "";
-    }
-
-    @java.lang.Override
-    @SuppressWarnings({"unused"})
-    protected java.lang.Object newInstance(UnusedPrivateParameter unused) {
-        return new QueryResourceDownloadInfoRequest();
     }
 
     public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
@@ -51,16 +54,16 @@ public final class QueryResourceDownloadInfoRequest extends com.google.protobuf.
     @java.lang.Override
     protected com.google.protobuf.MapFieldReflectionAccessor internalGetMapFieldReflection(
             int number) {
-        if (number == 4) {
-            return internalGetExtra();
-        }
-        throw new RuntimeException(
-                "Invalid map field number: "
-                        + number);
+        return switch (number) {
+            case 4 -> internalGetExtra();
+            default -> throw new RuntimeException(
+                    "Invalid map field number: "
+                            + number);
+        };
     }
 
     @java.lang.Override
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internalGetFieldAccessorTable() {
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable() {
         return im.turms.server.common.access.client.dto.request.storage.QueryResourceDownloadInfoRequestOuterClass.internal_static_im_turms_proto_QueryResourceDownloadInfoRequest_fieldAccessorTable
                 .ensureFieldAccessorsInitialized(
                         im.turms.server.common.access.client.dto.request.storage.QueryResourceDownloadInfoRequest.class,
@@ -282,9 +285,9 @@ public final class QueryResourceDownloadInfoRequest extends com.google.protobuf.
             output.writeInt64(2, idNum_);
         }
         if (((bitField0_ & 0x00000002) != 0)) {
-            com.google.protobuf.GeneratedMessageV3.writeString(output, 3, idStr_);
+            com.google.protobuf.GeneratedMessage.writeString(output, 3, idStr_);
         }
-        com.google.protobuf.GeneratedMessageV3.serializeStringMapTo(output,
+        com.google.protobuf.GeneratedMessage.serializeStringMapTo(output,
                 internalGetExtra(),
                 ExtraDefaultEntryHolder.defaultEntry,
                 4);
@@ -307,7 +310,7 @@ public final class QueryResourceDownloadInfoRequest extends com.google.protobuf.
             size += com.google.protobuf.CodedOutputStream.computeInt64Size(2, idNum_);
         }
         if (((bitField0_ & 0x00000002) != 0)) {
-            size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, idStr_);
+            size += com.google.protobuf.GeneratedMessage.computeStringSize(3, idStr_);
         }
         for (java.util.Map.Entry<java.lang.String, java.lang.String> entry : internalGetExtra()
                 .getMap()
@@ -424,40 +427,40 @@ public final class QueryResourceDownloadInfoRequest extends com.google.protobuf.
 
     public static im.turms.server.common.access.client.dto.request.storage.QueryResourceDownloadInfoRequest parseFrom(
             java.io.InputStream input) throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3.parseWithIOException(PARSER, input);
+        return com.google.protobuf.GeneratedMessage.parseWithIOException(PARSER, input);
     }
 
     public static im.turms.server.common.access.client.dto.request.storage.QueryResourceDownloadInfoRequest parseFrom(
             java.io.InputStream input,
             com.google.protobuf.ExtensionRegistryLite extensionRegistry)
             throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
+        return com.google.protobuf.GeneratedMessage
                 .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
     public static im.turms.server.common.access.client.dto.request.storage.QueryResourceDownloadInfoRequest parseDelimitedFrom(
             java.io.InputStream input) throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3.parseDelimitedWithIOException(PARSER, input);
+        return com.google.protobuf.GeneratedMessage.parseDelimitedWithIOException(PARSER, input);
     }
 
     public static im.turms.server.common.access.client.dto.request.storage.QueryResourceDownloadInfoRequest parseDelimitedFrom(
             java.io.InputStream input,
             com.google.protobuf.ExtensionRegistryLite extensionRegistry)
             throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
+        return com.google.protobuf.GeneratedMessage
                 .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
 
     public static im.turms.server.common.access.client.dto.request.storage.QueryResourceDownloadInfoRequest parseFrom(
             com.google.protobuf.CodedInputStream input) throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3.parseWithIOException(PARSER, input);
+        return com.google.protobuf.GeneratedMessage.parseWithIOException(PARSER, input);
     }
 
     public static im.turms.server.common.access.client.dto.request.storage.QueryResourceDownloadInfoRequest parseFrom(
             com.google.protobuf.CodedInputStream input,
             com.google.protobuf.ExtensionRegistryLite extensionRegistry)
             throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
+        return com.google.protobuf.GeneratedMessage
                 .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
@@ -484,16 +487,15 @@ public final class QueryResourceDownloadInfoRequest extends com.google.protobuf.
     }
 
     @java.lang.Override
-    protected Builder newBuilderForType(
-            com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+    protected Builder newBuilderForType(com.google.protobuf.GeneratedMessage.BuilderParent parent) {
         return new Builder(parent);
     }
 
     /**
      * Protobuf type {@code im.turms.proto.QueryResourceDownloadInfoRequest}
      */
-    public static final class Builder
-            extends com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+    public static final class Builder extends com.google.protobuf.GeneratedMessage.Builder<Builder>
+            implements
             // @@protoc_insertion_point(builder_implements:im.turms.proto.QueryResourceDownloadInfoRequest)
             im.turms.server.common.access.client.dto.request.storage.QueryResourceDownloadInfoRequestOrBuilder {
         public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
@@ -503,27 +505,27 @@ public final class QueryResourceDownloadInfoRequest extends com.google.protobuf.
         @SuppressWarnings({"rawtypes"})
         protected com.google.protobuf.MapFieldReflectionAccessor internalGetMapFieldReflection(
                 int number) {
-            if (number == 4) {
-                return internalGetExtra();
-            }
-            throw new RuntimeException(
-                    "Invalid map field number: "
-                            + number);
+            return switch (number) {
+                case 4 -> internalGetExtra();
+                default -> throw new RuntimeException(
+                        "Invalid map field number: "
+                                + number);
+            };
         }
 
         @SuppressWarnings({"rawtypes"})
         protected com.google.protobuf.MapFieldReflectionAccessor internalGetMutableMapFieldReflection(
                 int number) {
-            if (number == 4) {
-                return internalGetMutableExtra();
-            }
-            throw new RuntimeException(
-                    "Invalid map field number: "
-                            + number);
+            return switch (number) {
+                case 4 -> internalGetMutableExtra();
+                default -> throw new RuntimeException(
+                        "Invalid map field number: "
+                                + number);
+            };
         }
 
         @java.lang.Override
-        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internalGetFieldAccessorTable() {
+        protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable() {
             return im.turms.server.common.access.client.dto.request.storage.QueryResourceDownloadInfoRequestOuterClass.internal_static_im_turms_proto_QueryResourceDownloadInfoRequest_fieldAccessorTable
                     .ensureFieldAccessorsInitialized(
                             im.turms.server.common.access.client.dto.request.storage.QueryResourceDownloadInfoRequest.class,
@@ -536,7 +538,7 @@ public final class QueryResourceDownloadInfoRequest extends com.google.protobuf.
 
         }
 
-        private Builder(com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        private Builder(com.google.protobuf.GeneratedMessage.BuilderParent parent) {
             super(parent);
 
         }
@@ -605,43 +607,6 @@ public final class QueryResourceDownloadInfoRequest extends com.google.protobuf.
                 result.extra_.makeImmutable();
             }
             result.bitField0_ |= to_bitField0_;
-        }
-
-        @java.lang.Override
-        public Builder clone() {
-            return super.clone();
-        }
-
-        @java.lang.Override
-        public Builder setField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.setField(field, value);
-        }
-
-        @java.lang.Override
-        public Builder clearField(com.google.protobuf.Descriptors.FieldDescriptor field) {
-            return super.clearField(field);
-        }
-
-        @java.lang.Override
-        public Builder clearOneof(com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-            return super.clearOneof(oneof);
-        }
-
-        @java.lang.Override
-        public Builder setRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                int index,
-                java.lang.Object value) {
-            return super.setRepeatedField(field, index, value);
-        }
-
-        @java.lang.Override
-        public Builder addRepeatedField(
-                com.google.protobuf.Descriptors.FieldDescriptor field,
-                java.lang.Object value) {
-            return super.addRepeatedField(field, value);
         }
 
         @java.lang.Override
@@ -1085,24 +1050,11 @@ public final class QueryResourceDownloadInfoRequest extends com.google.protobuf.
             return this;
         }
 
-        @java.lang.Override
-        public final Builder setUnknownFields(
-                final com.google.protobuf.UnknownFieldSet unknownFields) {
-            return super.setUnknownFields(unknownFields);
-        }
-
-        @java.lang.Override
-        public final Builder mergeUnknownFields(
-                final com.google.protobuf.UnknownFieldSet unknownFields) {
-            return super.mergeUnknownFields(unknownFields);
-        }
-
         // @@protoc_insertion_point(builder_scope:im.turms.proto.QueryResourceDownloadInfoRequest)
     }
 
     // @@protoc_insertion_point(class_scope:im.turms.proto.QueryResourceDownloadInfoRequest)
     private static final im.turms.server.common.access.client.dto.request.storage.QueryResourceDownloadInfoRequest DEFAULT_INSTANCE;
-
     static {
         DEFAULT_INSTANCE =
                 new im.turms.server.common.access.client.dto.request.storage.QueryResourceDownloadInfoRequest();
