@@ -13,7 +13,7 @@
         <fontDirectory>${project.basedir}/dist/font</fontDirectory>
         <modelDirectory>${project.basedir}/dist/model</modelDirectory>
 
-        <djl.version>0.26.0</djl.version>
+        <djl.version>0.27.0</djl.version>
         <paddlepaddle-native.version>2.3.2</paddlepaddle-native.version>
         <pytorch-native.version>2.1.1</pytorch-native.version>
 
@@ -77,7 +77,7 @@
             <dependency>
                 <groupId>ai.djl</groupId>
                 <artifactId>bom</artifactId>
-                <version>0.23.0</version>
+                <version>${djl.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>

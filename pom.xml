@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.2</version>
+        <version>3.2.4</version>
     </parent>
 
     <groupId>im.turms</groupId>
@@ -31,26 +31,26 @@
         <revision>0.10.0-SNAPSHOT</revision>
 
         <!-- Runtime Deps -->
-        <awssdk.version>2.23.10</awssdk.version>
+        <awssdk.version>2.25.10</awssdk.version>
         <blockhound.version>1.0.8.RELEASE</blockhound.version>
         <disruptor.version>4.0.0</disruptor.version>
         <eclipse-collections.version>11.1.0</eclipse-collections.version>
-        <graalvm.version>23.0.2</graalvm.version>
+        <graalvm.version>23.0.3</graalvm.version>
         <icu4j.version>74.2</icu4j.version>
-        <jctools-core.version>4.0.2</jctools-core.version>
-        <log4j.version>2.22.1</log4j.version>
-        <protobuf.version>3.25.2</protobuf.version>
+        <jctools-core.version>4.0.3</jctools-core.version>
+        <log4j.version>2.23.1</log4j.version>
+        <protobuf.version>4.26.1</protobuf.version>
         <swagger.version>2.2.20</swagger.version>
-        <swagger-ui.version>5.10.3</swagger-ui.version>
+        <swagger-ui.version>5.11.10</swagger-ui.version>
 
         <!-- Runtime Deps for Testing -->
         <jmh.version>1.37</jmh.version>
-        <testcontainers.version>1.19.5</testcontainers.version>
+        <testcontainers.version>1.19.7</testcontainers.version>
 
         <!-- Maven plugins -->
         <checkstyle.version>10.12.7</checkstyle.version>
         <flatten-maven-plugin.version>1.6.0</flatten-maven-plugin.version>
-        <git-commit-id-maven-plugin.version>7.0.0</git-commit-id-maven-plugin.version>
+        <git-commit-id-maven-plugin.version>8.0.1</git-commit-id-maven-plugin.version>
         <maven-checkstyle-plugin.version>3.3.1</maven-checkstyle-plugin.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
@@ -62,7 +62,7 @@
         <maven-failsafe-plugin.version>3.2.5</maven-failsafe-plugin.version>
         <os-maven-plugin.version>1.7.1</os-maven-plugin.version>
         <protobuf-maven-plugin.version>0.6.1</protobuf-maven-plugin.version>
-        <spotbugs-maven-plugin.version>4.8.3.0</spotbugs-maven-plugin.version>
+        <spotbugs-maven-plugin.version>4.8.3.1</spotbugs-maven-plugin.version>
         <spotless-maven-plugin.version>2.43.0</spotless-maven-plugin.version>
         <spotless-maven-plugin.eclipse.version>4.30</spotless-maven-plugin.eclipse.version>
         <spring-boot-thin-layout.version>1.0.31.RELEASE</spring-boot-thin-layout.version>
