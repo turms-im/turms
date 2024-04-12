@@ -206,6 +206,23 @@ class UserService : private boost::noncopyable, private std::enable_shared_from_
         -> boost::future<Response<std::vector<UserInfo>>>;
 
     /**
+     * Search for user profiles.
+     *
+     * @param name search for user profiles whose name matches name.
+     * @param highlight whether to highlight the name.
+     * If true, the highlighted parts of the name will be paired with '\u0002' and '\u0003'.
+     * @param skip the number of user profiles to skip.
+     * @param limit the max number of user profiles to return.
+     * @return a list of user profiles sorted in descending relevance.
+     * @throws ResponseException if an error occurs.
+     */
+    auto searchUserProfiles(const std::string& name,
+                            bool highlight = false,
+                            const boost::optional<int>& skip = boost::none,
+                            const boost::optional<int>& limit = boost::none)
+        -> boost::future<Response<std::vector<UserInfo>>>;
+
+    /**
      * Find nearby users.
      *
      * @param latitude the latitude.
@@ -531,8 +548,8 @@ class UserService : private boost::noncopyable, private std::enable_shared_from_
      * @param newName the new name of the group.
      * @throws ResponseException if an error occurs.
      */
-    auto updateRelationshipGroup(int groupIndex, const absl::string_view& newName)
-        -> boost::future<Response<void>>;
+    auto updateRelationshipGroup(int groupIndex,
+                                 const absl::string_view& newName) -> boost::future<Response<void>>;
 
     /**
      * Find relationship groups.
@@ -560,8 +577,8 @@ class UserService : private boost::noncopyable, private std::enable_shared_from_
      * @param groupIndex the target group index to which move the user.
      * @throws ResponseException if an error occurs.
      */
-    auto moveRelatedUserToGroup(int64_t relatedUserId, int groupIndex)
-        -> boost::future<Response<void>>;
+    auto moveRelatedUserToGroup(int64_t relatedUserId,
+                                int groupIndex) -> boost::future<Response<void>>;
 
     /**
      * Update the location of the logged-in user.

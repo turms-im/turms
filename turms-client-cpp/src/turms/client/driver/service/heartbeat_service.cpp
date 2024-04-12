@@ -26,8 +26,7 @@ void HeartbeatService::start() {
     if (isRunning()) {
         return;
     }
-    heartbeatTimer_ =
-        boost::asio::steady_timer{ioContext_, heartbeatTimerInterval_};
+    heartbeatTimer_ = boost::asio::steady_timer{ioContext_, heartbeatTimerInterval_};
     sendHeartbeatForever();
 }
 
@@ -77,7 +76,8 @@ auto HeartbeatService::send() -> boost::future<void> {
     return future;
 }
 
-auto HeartbeatService::rejectHeartbeatRequests(const boost::optional<std::exception>& exception) -> void {
+auto HeartbeatService::rejectHeartbeatRequests(const boost::optional<std::exception>& exception)
+    -> void {
     while (!heartbeatPromises_.empty()) {
         boost::promise<void>& promise = heartbeatPromises_.back();
         heartbeatPromises_.pop_back();

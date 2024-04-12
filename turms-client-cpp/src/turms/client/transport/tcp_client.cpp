@@ -11,8 +11,9 @@ namespace turms {
 namespace client {
 namespace transport {
 
-auto TcpClient::connect(const std::string& host, int port, int connectTimeoutMillis)
-    -> boost::future<void> {
+auto TcpClient::connect(const std::string& host,
+                        int port,
+                        int connectTimeoutMillis) -> boost::future<void> {
     if (socket_.is_open()) {
         return boost::make_exceptional_future<void>(
             std::runtime_error("The TCP client has connected"));

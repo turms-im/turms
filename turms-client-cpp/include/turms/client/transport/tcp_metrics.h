@@ -13,8 +13,8 @@ struct TcpMetrics {
     size_t dataReceived{0};
     size_t dataSent{0};
 };
-} // namespace transport
-} // namespace client
-} // namespace turms
+}  // namespace transport
+}  // namespace client
+}  // namespace turms
 
-#endif // TURMS_CLIENT_TRANSPORT_TCP_METRICS_H
+#endif  // TURMS_CLIENT_TRANSPORT_TCP_METRICS_H

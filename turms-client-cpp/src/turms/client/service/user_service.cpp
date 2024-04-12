@@ -412,9 +412,8 @@ auto UserService::createFriendRelationship(int64_t userId, const boost::optional
     return createRelationship(userId, false, groupIndex);
 }
 
-auto UserService::createBlockedUserRelationship(int64_t userId,
-                                                const boost::optional<int>& groupIndex)
-    -> boost::future<Response<void>> {
+auto UserService::createBlockedUserRelationship(
+    int64_t userId, const boost::optional<int>& groupIndex) -> boost::future<Response<void>> {
     return createRelationship(userId, true, groupIndex);
 }
 
@@ -590,8 +589,8 @@ auto UserService::queryRelationshipGroups(const boost::optional<time_point>& las
         });
 }
 
-auto UserService::moveRelatedUserToGroup(int64_t relatedUserId, int groupIndex)
-    -> boost::future<Response<void>> {
+auto UserService::moveRelatedUserToGroup(int64_t relatedUserId,
+                                         int groupIndex) -> boost::future<Response<void>> {
     TurmsRequest turmsRequest;
     auto* request = turmsRequest.mutable_update_relationship_request();
     request->set_user_id(relatedUserId);

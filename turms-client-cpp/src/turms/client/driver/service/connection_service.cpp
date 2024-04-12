@@ -126,8 +126,8 @@ auto ConnectionService::onDisconnected(const boost::optional<std::exception>& ex
 }
 
 template <typename T>
-auto ConnectionService::decodeMessages(boost::asio::streambuf& readBuffer, T&& messageHandler)
-    -> void {
+auto ConnectionService::decodeMessages(boost::asio::streambuf& readBuffer,
+                                       T&& messageHandler) -> void {
     if (payloadLength_ == -1) {
         payloadLength_ = tryReadVarInt(readBuffer);
         if (payloadLength_ == -1) {

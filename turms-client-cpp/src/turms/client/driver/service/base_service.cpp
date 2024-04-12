@@ -5,8 +5,7 @@ namespace client {
 namespace driver {
 namespace service {
 
-BaseService::BaseService(boost::asio::io_context& ioContext,
-                         StateStore& stateStore)
+BaseService::BaseService(boost::asio::io_context& ioContext, StateStore& stateStore)
     : ioContext_(ioContext),
       stateStore_(stateStore) {
 }

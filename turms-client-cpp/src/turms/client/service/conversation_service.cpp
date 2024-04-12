@@ -50,8 +50,8 @@ auto ConversationService::queryGroupConversations(const std::unordered_set<int64
 }
 
 auto ConversationService::updatePrivateConversationReadDate(
-    int64_t targetId, const ConversationService::time_point& readDate)
-    -> boost::future<Response<void>> {
+    int64_t targetId,
+    const ConversationService::time_point& readDate) -> boost::future<Response<void>> {
     TurmsRequest turmsRequest;
     auto* request = turmsRequest.mutable_update_conversation_request();
     request->set_target_id(targetId);
@@ -64,8 +64,8 @@ auto ConversationService::updatePrivateConversationReadDate(
 }
 
 auto ConversationService::updateGroupConversationReadDate(
-    int64_t groupId, const ConversationService::time_point& readDate)
-    -> boost::future<Response<void>> {
+    int64_t groupId,
+    const ConversationService::time_point& readDate) -> boost::future<Response<void>> {
     TurmsRequest turmsRequest;
     auto* request = turmsRequest.mutable_update_conversation_request();
     request->set_group_id(groupId);

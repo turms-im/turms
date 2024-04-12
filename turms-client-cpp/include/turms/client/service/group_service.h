@@ -900,8 +900,9 @@ class GroupService : private boost::noncopyable {
      * @param muteEndDate the new mute end date of the group member.
      * @throws ResponseException if an error occurs.
      */
-    auto muteGroupMember(int64_t groupId, int64_t memberId, const time_point& muteEndDate)
-        -> boost::future<Response<void>>;
+    auto muteGroupMember(int64_t groupId,
+                         int64_t memberId,
+                         const time_point& muteEndDate) -> boost::future<Response<void>>;
 
     /**
      * Unmute group member.

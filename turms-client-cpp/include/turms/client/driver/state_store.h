@@ -21,8 +21,8 @@ struct StateStore {
     auto reset() -> void;
 };
 
-} // namespace driver
-} // namespace client
-} // namespace turms
+}  // namespace driver
+}  // namespace client
+}  // namespace turms
 
-#endif // TURMS_CLIENT_DRIVER_STATE_STORE_H
+#endif  // TURMS_CLIENT_DRIVER_STATE_STORE_H
