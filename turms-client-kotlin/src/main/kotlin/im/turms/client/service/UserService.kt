@@ -367,6 +367,41 @@ class UserService(private val turmsClient: TurmsClient) {
         }
 
     /**
+     * Search for user profiles.
+     *
+     * @param name search for user profiles whose name matches [name].
+     * @param highlight whether to highlight the name.
+     * If true, the highlighted parts of the name will be paired with '\u0002' and '\u0003'.
+     * @param skip the number of user profiles to skip.
+     * @param limit the max number of user profiles to return.
+     * @return a list of user profiles sorted in descending relevance.
+     * @throws ResponseException if an error occurs.
+     */
+    suspend fun searchUserProfiles(
+        name: String,
+        highlight: Boolean = false,
+        skip: Int? = null,
+        limit: Int? = null,
+    ): Response<List<UserInfo>> =
+        if (name.isBlank()) {
+            Response.emptyList()
+        } else {
+            turmsClient.driver
+                .send(
+                    QueryUserProfilesRequest.newBuilder().apply {
+                        this.name = name
+                        if (highlight) {
+                            addFieldsToHighlight(1)
+                        }
+                        skip?.let { this.skip = it }
+                        limit?.let { this.limit = it }
+                    },
+                ).toResponse {
+                    it.userInfosWithVersion.userInfosList
+                }
+        }
+
+    /**
      * Find nearby users.
      *
      * @param latitude the latitude.

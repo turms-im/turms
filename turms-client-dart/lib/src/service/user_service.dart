@@ -271,6 +271,31 @@ class UserService {
     return n.toResponse((data) => data.userInfosWithVersion.userInfos);
   }
 
+  /// Search for user profiles.
+  ///
+  /// **Params**:
+  /// * `name`: Search for user profiles whose name matches [name].
+  /// * `highlight`: Whether to highlight the name.
+  /// If true, the highlighted parts of the name will be paired with '\u0002' and '\u0003'.
+  /// * `skip`: The number of user profiles to skip.
+  /// * `limit`: The max number of user profiles to return.
+  ///
+  /// **Returns**: A list of user profiles sorted in descending relevance.
+  ///
+  /// **Throws**: [ResponseException] if an error occurs.
+  Future<Response<List<UserInfo>>> searchUserProfiles(String name,
+      {bool highlight = false, int? skip, int? limit}) async {
+    if (name.isEmpty) {
+      return Future.value(Response.emptyList());
+    }
+    final n = await _turmsClient.driver.send(QueryUserProfilesRequest(
+        name: name,
+        fieldsToHighlight: highlight ? [1] : null,
+        skip: skip,
+        limit: limit));
+    return n.toResponse((data) => data.userInfosWithVersion.userInfos);
+  }
+
   /// Find nearby users.
   ///
   /// **Params**:

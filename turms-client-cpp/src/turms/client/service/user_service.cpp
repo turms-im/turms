@@ -260,6 +260,37 @@ auto UserService::queryUserProfiles(const std::unordered_set<int64_t>& userIds,
         });
 }
 
+auto UserService::searchUserProfiles(const std::string& name,
+                                     bool highlight = false,
+                                     const boost::optional<int>& skip = boost::none,
+                                     const boost::optional<int>& limit = boost::none)
+    -> boost::future<Response<std::vector<UserInfo>>> {
+    if (name.empty()) {
+        return boost::make_ready_future<>(Response<UserInfo>::emptyList());
+    }
+    TurmsRequest turmsRequest;
+    auto* request = turmsRequest.mutable_query_user_profiles_request();
+    request->set_name(name);
+    if (highlight) {
+        request->add_fields_to_highlight(1);
+    }
+    if (skip) {
+        request->set_skip(*skip);
+    }
+    if (limit) {
+        request->set_limit(*limit);
+    }
+    return turmsClient_.driver()
+        .send(turmsRequest)
+        .then([](boost::future<TurmsNotification> response) {
+            return Response<std::vector<UserInfo>>{
+                response.get(), [](const TurmsNotification::Data& data) {
+                    const auto& userInfos = data.user_infos_with_version().user_infos();
+                    return std::vector<UserInfo>{userInfos.cbegin(), userInfos.cend()};
+                }};
+        });
+}
+
 auto UserService::queryNearbyUsers(float latitude,
                                    float longitude,
                                    const boost::optional<int>& maxCount,

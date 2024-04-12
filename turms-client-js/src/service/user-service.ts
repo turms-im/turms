@@ -486,10 +486,43 @@ export default class UserService {
         return this._turmsClient.driver.send({
             queryUserProfilesRequest: {
                 userIds: CollectionUtil.uniqueArray(userIds),
-                lastUpdatedDate: DataParser.getDateTimeStr(lastUpdatedDate)
+                lastUpdatedDate: DataParser.getDateTimeStr(lastUpdatedDate),
+                fieldsToHighlight: []
             }
         }).then(n => Response.fromNotification(n, data =>
             NotificationUtil.transformOrEmpty(data.userInfosWithVersion?.userInfos)));
+    }
+
+    /**
+     * Search for user profiles.
+     *
+     * @param name - search for user profiles whose name matches {@link name}.
+     * @param highlight - whether to highlight the name.
+     * If true, the highlighted parts of the name will be paired with '\u0002' and '\u0003'.
+     * @param skip - the number of user profiles to skip.
+     * @param limit - the max number of user profiles to return.
+     * @returns a list of user profiles sorted in descending relevance.
+     * @throws {@link ResponseError} if an error occurs.
+     */
+    searchUserProfiles({
+                     name, highlight, skip, limit
+                 }: {
+        name: string,
+        highlight?: boolean, skip?: number, limit?: number
+    }): Promise<Response<ParsedModel.UserInfo[]>> {
+        if (!name) {
+            return Promise.resolve(Response.emptyList());
+        }
+        return this._turmsClient.driver.send({
+            queryUserProfilesRequest: {
+                userIds: [],
+                name: name,
+                fieldsToHighlight: highlight ? [1] : [],
+                skip: skip,
+                limit: limit
+            }
+        }).then(n => Response.fromNotification(n, (data) =>
+            NotificationUtil.transform(data.userInfosWithVersion?.userInfos)));
     }
 
     /**

@@ -284,6 +284,31 @@ class GroupService {
     return n.toResponse((data) => data.groupsWithVersion.groups);
   }
 
+  /// Search for groups.
+  ///
+  /// **Params**:
+  /// * `name`: Search for groups whose name matches [name].
+  /// * `highlight`: Whether to highlight the name.
+  /// If true, the highlighted parts of the name will be paired with '\u0002' and '\u0003'.
+  /// * `skip`: The number of groups to skip.
+  /// * `limit`: The max number of groups to return.
+  ///
+  /// **Returns**: A list of groups sorted in descending relevance.
+  ///
+  /// **Throws**: [ResponseException] if an error occurs.
+  Future<Response<List<Group>>> searchGroups(String name,
+      {bool highlight = false, int? skip, int? limit}) async {
+    if (name.isEmpty) {
+      return Future.value(Response.emptyList());
+    }
+    final n = await _turmsClient.driver.send(QueryGroupsRequest(
+        name: name,
+        fieldsToHighlight: highlight ? [1] : null,
+        skip: skip,
+        limit: limit));
+    return n.toResponse((data) => data.groupsWithVersion.groups);
+  }
+
   /// Find group IDs that the logged-in user has joined.
   ///
   /// **Params**:

@@ -369,6 +369,48 @@ public class GroupService {
             }
     }
 
+    /// Search for groups.
+    ///
+    /// - Parameters:
+    ///   - name: Search for groups whose name matches `name`.
+    ///   - highlight: Whether to highlight the name.
+    ///     If true, the highlighted parts of the name will be paired with '\u0002' and '\u0003'.
+    ///   - skip: The number of groups to skip.
+    ///   - limit: The max number of groups to return.
+    ///
+    /// - Returns: A list of groups sorted in descending relevance.
+    ///
+    /// - Throws: ``ResponseError`` if an error occurs.
+    public func searchGroups(name: String,
+                             highlight: Bool = false,
+                             skip: Int32? = nil,
+                             limit: Int32? = nil) -> Promise<Response<[Group]>>
+    {
+        if name.isEmpty {
+            return Promise.value(Response.emptyArray())
+        }
+        return turmsClient.driver
+            .send {
+                $0.queryGroupsRequest = .with {
+                    $0.name = name
+                    if highlight {
+                        $0.fieldsToHighlight = [1]
+                    }
+                    if let v = skip {
+                        $0.skip = v
+                    }
+                    if let v = limit {
+                        $0.limit = v
+                    }
+                }
+            }
+            .map {
+                try $0.toResponse {
+                    $0.groupsWithVersion.groups
+                }
+            }
+    }
+
     /// Find group IDs that the logged-in user has joined.
     ///
     /// - Parameters:

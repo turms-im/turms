@@ -288,6 +288,23 @@ class GroupService : private boost::noncopyable {
         -> boost::future<Response<std::vector<Group>>>;
 
     /**
+     * Search for groups.
+     *
+     * @param name search for groups whose name matches name.
+     * @param highlight whether to highlight the name.
+     * If true, the highlighted parts of the name will be paired with '\u0002' and '\u0003'.
+     * @param skip the number of groups to skip.
+     * @param limit the max number of groups to return.
+     * @return a list of groups sorted in descending relevance.
+     * @throws ResponseException if an error occurs.
+     */
+    auto searchGroups(const std::string& name,
+                      bool highlight = false,
+                      const boost::optional<int>& skip = boost::none,
+                      const boost::optional<int>& limit = boost::none)
+        -> boost::future<Response<std::vector<Group>>>;
+
+    /**
      * Find group IDs that the logged-in user has joined.
      *
      * @param lastUpdatedDate the last updated date of group IDs that the logged-in user has joined stored locally.

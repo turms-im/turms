@@ -378,6 +378,41 @@ class GroupService(private val turmsClient: TurmsClient) {
         }
 
     /**
+     * Search for groups.
+     *
+     * @param name search for groups whose name matches [name].
+     * @param highlight whether to highlight the name.
+     * If true, the highlighted parts of the name will be paired with '\u0002' and '\u0003'.
+     * @param skip the number of groups to skip.
+     * @param limit the max number of groups to return.
+     * @return a list of groups sorted in descending relevance.
+     * @throws ResponseException if an error occurs.
+     */
+    suspend fun searchGroups(
+        name: String,
+        highlight: Boolean = false,
+        skip: Int? = null,
+        limit: Int? = null,
+    ): Response<List<Group>> =
+        if (name.isBlank()) {
+            Response.emptyList()
+        } else {
+            turmsClient.driver
+                .send(
+                    QueryGroupsRequest.newBuilder().apply {
+                        this.name = name
+                        if (highlight) {
+                            addFieldsToHighlight(1)
+                        }
+                        skip?.let { this.skip = it }
+                        limit?.let { this.limit = it }
+                    },
+                ).toResponse {
+                    it.groupsWithVersion.groupsList
+                }
+        }
+
+    /**
      * Find group IDs that the logged-in user has joined.
      *
      * @param lastUpdatedDate the last updated date of group IDs that the logged-in user has joined stored locally.

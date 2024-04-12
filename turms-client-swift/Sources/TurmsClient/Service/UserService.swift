@@ -304,6 +304,48 @@ public class UserService {
             }
     }
 
+    /// Search for user profiles.
+    ///
+    /// - Parameters:
+    ///   - name: Search for user profiles whose name matches `name`.
+    ///   - highlight: Whether to highlight the name.
+    ///     If true, the highlighted parts of the name will be paired with '\u0002' and '\u0003'.
+    ///   - skip: The number of user profiles to skip.
+    ///   - limit: The max number of user profiles to return.
+    ///
+    /// - Returns: A list of user profiles sorted in descending relevance.
+    ///
+    /// - Throws: ``ResponseError`` if an error occurs.
+    public func searchUserProfiles(name: String,
+                                   highlight: Bool = false,
+                                   skip: Int32? = nil,
+                                   limit: Int32? = nil) -> Promise<Response<[UserInfo]>>
+    {
+        if name.isEmpty {
+            return Promise.value(Response.emptyArray())
+        }
+        return turmsClient.driver
+            .send {
+                $0.queryUserProfilesRequest = .with {
+                    $0.name = name
+                    if highlight {
+                        $0.fieldsToHighlight = [1]
+                    }
+                    if let v = skip {
+                        $0.skip = v
+                    }
+                    if let v = limit {
+                        $0.limit = v
+                    }
+                }
+            }
+            .map {
+                try $0.toResponse {
+                    $0.userInfosWithVersion.userInfos
+                }
+            }
+    }
+
     /// Find nearby users.
     ///
     /// - Parameters:

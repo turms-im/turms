@@ -148,6 +148,37 @@ auto GroupService::queryGroups(const std::unordered_set<int64_t>& groupIds,
         });
 }
 
+auto UserService::searchGroups(const std::string& name,
+                               bool highlight = false,
+                               const boost::optional<int>& skip = boost::none,
+                               const boost::optional<int>& limit = boost::none)
+    -> boost::future<Response<std::vector<Group>>> {
+    if (name.empty()) {
+        return boost::make_ready_future<>(Response<Group>::emptyList());
+    }
+    TurmsRequest turmsRequest;
+    auto* request = turmsRequest.mutable_query_groups_request();
+    request->set_name(name);
+    if (highlight) {
+        request->add_fields_to_highlight(1);
+    }
+    if (skip) {
+        request->set_skip(*skip);
+    }
+    if (limit) {
+        request->set_limit(*limit);
+    }
+    return turmsClient_.driver()
+        .send(turmsRequest)
+        .then([](boost::future<TurmsNotification> response) {
+            return Response<std::vector<Group>>{
+                response.get(), [](const TurmsNotification::Data& data) {
+                    const auto& groups = data.groups_with_version().groups();
+                    return std::vector<Group>{groups.cbegin(), groups.cend()};
+                }};
+        });
+}
+
 auto GroupService::queryJoinedGroupIds(const boost::optional<time_point>& lastUpdatedDate)
     -> boost::future<Response<boost::optional<LongsWithVersion>>> {
     TurmsRequest turmsRequest;

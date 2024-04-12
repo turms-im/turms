@@ -382,7 +382,40 @@ export default class GroupService {
         return this._turmsClient.driver.send({
             queryGroupsRequest: {
                 groupIds: CollectionUtil.uniqueArray(groupIds),
-                lastUpdatedDate: DataParser.getDateTimeStr(lastUpdatedDate)
+                lastUpdatedDate: DataParser.getDateTimeStr(lastUpdatedDate),
+                fieldsToHighlight: []
+            }
+        }).then(n => Response.fromNotification(n, (data) =>
+            NotificationUtil.transform(data.groupsWithVersion?.groups)));
+    }
+
+    /**
+     * Search for groups.
+     *
+     * @param name - search for groups whose name matches {@link name}.
+     * @param highlight - whether to highlight the name.
+     * If true, the highlighted parts of the name will be paired with '\u0002' and '\u0003'.
+     * @param skip - the number of groups to skip.
+     * @param limit - the max number of groups to return.
+     * @returns a list of groups sorted in descending relevance.
+     * @throws {@link ResponseError} if an error occurs.
+     */
+    searchGroups({
+        name, highlight, skip, limit
+    }: {
+        name: string,
+        highlight?: boolean, skip?: number, limit?: number
+    }): Promise<Response<ParsedModel.Group[]>> {
+        if (!name) {
+            return Promise.resolve(Response.emptyList());
+        }
+        return this._turmsClient.driver.send({
+            queryGroupsRequest: {
+                groupIds: [],
+                name: name,
+                fieldsToHighlight: highlight ? [1] : [],
+                skip: skip,
+                limit: limit
             }
         }).then(n => Response.fromNotification(n, (data) =>
             NotificationUtil.transform(data.groupsWithVersion?.groups)));
