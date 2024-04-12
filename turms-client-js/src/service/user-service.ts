@@ -79,25 +79,41 @@ export default class UserService {
         return info && info.onlineStatus >= 0 && info.onlineStatus !== UserStatus.OFFLINE;
     }
 
+    /**
+     * Add an online listener that will be called when the user becomes online.
+     * A session is considered online when it has a TCP connection with the server,
+     * and the user is logged in by {@link login}.
+     */
     addOnOnlineListener(listener: () => void): void {
         this._onOnlineListeners.push(listener);
     }
 
+    /**
+     * Add an offline listener that will be called when the user becomes offline.
+     * A session is considered offline when it has no TCP connection with the server,
+     * or has a connected TCP connection with the server, but the user is not logged in by {@link login}.
+     */
     addOnOfflineListener(listener: (sessionCloseInfo: SessionCloseInfo) => void): void {
         this._onOfflineListeners.push(listener);
     }
 
+    /**
+     * Remove an online listener.
+     */
     removeOnOnlineListener(listener: () => void): void {
         this._onOnlineListeners = this._onOnlineListeners.filter(cur => cur !== listener);
     }
 
+    /**
+     * Remove an offline listener.
+     */
     removeOnOfflineListener(listener: () => void): void {
         this._onOfflineListeners = this._onOfflineListeners.filter(cur => cur !== listener);
     }
 
     /**
      * Note: Because of user privacy policies, most modern browsers request Geolocation APIs to run in HTTPS,
-     * getUserLocation() cannot get the location of users in insecure sites.
+     * this method cannot get the location of users in insecure sites.
      * FYI: https://stackoverflow.com/questions/37835805/http-sites-does-not-detect-the-location-in-chrome-issue
      * https://caniuse.com/#search=Geolocation
      */
@@ -111,6 +127,39 @@ export default class UserService {
         });
     }
 
+    /**
+     * Log in.
+     *
+     * @remarks
+     * * If the underlying TCP connection is not connected,
+     *   the method will connect it first under the hood.
+     * * If log in successfully, the session is considered online.
+     *   And the listener registered by {@link addOnOnlineListener} will be called.
+     *
+     * Related docs:
+     * * {@link https://turms-im.github.io/docs/server/module/identity-access-management.html | Turms Identity and Access Management}
+     *
+     * @param userId - the user ID
+     * @param password - the user password.
+     * @param deviceType - the device type.
+     * If null, the detected device type will be used.
+     * Note: The device types of online session that conflicts with {@link deviceType}
+     * will be closed by the server if logged in successfully.
+     * @param deviceDetails - the device details.
+     * Some plugins use this to pass additional information about the device.
+     * e.g. Push notification token.
+     * @param onlineStatus - the online status.
+     * @param location - the location of the user.
+     * @param storePassword - whether to store the password in {@link userInfo}.
+     * @throws {@link ResponseError} if an error occurs.
+     * 1. If the client is not compatible with the server, throws
+     * with the code {@link ResponseStatusCode#UNSUPPORTED_CLIENT_VERSION}.
+     * 2. Depending on the server property `turms.gateway.simultaneous-login.strategy`,
+     * throws with the code {@link ResponseStatusCode#LOGIN_FROM_FORBIDDEN_DEVICE_TYPE}
+     * if the specified device type is forbidden.
+     * 3. If provided credentials are invalid,
+     * throws with the code {@link ResponseStatusCode#LOGIN_AUTHENTICATION_FAILED}.
+     */
     login({
         userId,
         password,
@@ -233,6 +282,17 @@ export default class UserService {
         return connect;
     }
 
+    /**
+     * Log out.
+     *
+     * @remarks
+     * After logging out, the session is considered offline.
+     * And the listener registered by {@link addOnOfflineListener} will be called.
+     *
+     * @param disconnect - whether to close the underlying TCP connection immediately
+     * rather than sending a delete session request first and then closing the connection.
+     * @throws {@link ResponseError} if an error occurs.
+     */
     logout({
         immediate = true
     }: {
@@ -258,6 +318,21 @@ export default class UserService {
         });
     }
 
+    /**
+     * Update the online status of the logged-in user.
+     *
+     * @remarks
+     * Notifications:
+     * * If the server property `turms.service.notification.user-online-status-updated.notify-requester-other-online-sessions`
+     *   is true （true by default）,
+     *   the server will send an update online status notification to all other online sessions of the logged-in user actively.
+     * * If the server property `turms.service.notification.user-online-status-updated.notify-non-blocked-related-users`,
+     *   is true (false by default),
+     *   the server will send an update online status notification to all non-blocked related users of the logged-in user actively.
+     *
+     * @param onlineStatus - the new online status.
+     * @throws {@link ResponseError} if an error occurs.
+     */
     updateOnlineStatus({
         onlineStatus
     }: {
@@ -283,6 +358,16 @@ export default class UserService {
         });
     }
 
+    /**
+     * Disconnect the online devices of the logged-in user.
+     *
+     * @remarks
+     * If the specified device types are not online, nothing will happen and
+     * no exception will be thrown.
+     *
+     * @param deviceTypes - the device types to disconnect.
+     * @throws {@link ResponseError} if an error occurs.
+     */
     disconnectOnlineDevices({
         deviceTypes
     }: {
@@ -304,6 +389,12 @@ export default class UserService {
         }).then(n => Response.fromNotification(n));
     }
 
+    /**
+     * Update the password of the logged-in user.
+     *
+     * @param password - the new password.
+     * @throws {@link ResponseError} if an error occurs.
+     */
     updatePassword({
         password
     }: {
@@ -325,6 +416,23 @@ export default class UserService {
         });
     }
 
+    /**
+     * Update the profile of the logged-in user.
+     *
+     * @param name - the new name.
+     * If null, the name will not be updated.
+     * @param intro - the new intro.
+     * If null, the intro will not be updated.
+     * @param profilePicture - the new profile picture.
+     * If null, the profile picture will not be updated.
+     * The profile picture can be anything you want.
+     * e.g. an image URL or a base64 encoded string.
+     * Note: You can use {@link StorageService#uploadUserProfilePicture}
+     * to upload the profile picture and use the returned URL as {@link profilePicture}.
+     * @param profileAccessStrategy - the new profile access strategy.
+     * If null, the profile access strategy will not be updated.
+     * @throws {@link ResponseError} if an error occurs.
+     */
     updateProfile({
         name,
         intro,
@@ -355,6 +463,16 @@ export default class UserService {
         }).then(n => Response.fromNotification(n));
     }
 
+    /**
+     * Find user profiles.
+     *
+     * @param userIds - the target user IDs.
+     * @param lastUpdatedDate - the last updated date of user profiles stored locally.
+     * The server will only return user profiles that are updated after {@link lastUpdatedDate}.
+     * If null, all user profiles will be returned.
+     * @returns a list of user profiles.
+     * @throws {@link ResponseError} if an error occurs.
+     */
     queryUserProfiles({
         userIds,
         lastUpdatedDate
@@ -374,6 +492,19 @@ export default class UserService {
             NotificationUtil.transformOrEmpty(data.userInfosWithVersion?.userInfos)));
     }
 
+    /**
+     * Find nearby users.
+     *
+     * @param latitude - the latitude.
+     * @param longitude - the longitude.
+     * @param maxCount - the max count.
+     * @param maxDistance - the max distance.
+     * @param withCoordinates - whether to include coordinates.
+     * @param withDistance - whether to include distance.
+     * @param withUserInfo - whether to include user info.
+     * @returns a list of nearby users.
+     * @throws {@link ResponseError} if an error occurs.
+     */
     queryNearbyUsers({
         latitude,
         longitude,
@@ -410,6 +541,13 @@ export default class UserService {
         }).then(n => Response.fromNotification(n, data => NotificationUtil.transformOrEmpty(data.nearbyUsers?.nearbyUsers)));
     }
 
+    /**
+     * Find online status of users.
+     *
+     * @param userIds - the target user IDs.
+     * @returns a list of online status of users.
+     * @throws {@link ResponseError} if an error occurs.
+     */
     queryOnlineStatusesRequest({
         userIds
     }: {
@@ -428,6 +566,22 @@ export default class UserService {
 
     // Relationship
 
+    /**
+     * Find relationships.
+     *
+     * @param relatedUserIds - the target related user IDs.
+     * @param isBlocked - whether to query blocked relationships.
+     * If null, all relationships will be returned.
+     * If true, only blocked relationships will be returned.
+     * If false, only non-blocked relationships will be returned.
+     * @param groupIndexes - the target group indexes for querying.
+     * @param lastUpdatedDate - the last updated date of user relationships stored locally.
+     * The server will only return relationships that are created after {@link lastUpdatedDate}.
+     * If null, all relationships will be returned.
+     * @returns relationships and the version.
+     * Note: The version can be used to update the last updated date stored locally.
+     * @throws {@link ResponseError} if an error occurs.
+     */
     queryRelationships({
         relatedUserIds,
         isBlocked,
@@ -449,6 +603,21 @@ export default class UserService {
         }).then(n => Response.fromNotification(n, data => NotificationUtil.transform(data.userRelationshipsWithVersion)));
     }
 
+    /**
+     * Find related user IDs.
+     *
+     * @param isBlocked - whether to query blocked relationships.
+     * If null, all relationships will be returned.
+     * If true, only blocked relationships will be returned.
+     * If false, only non-blocked relationships will be returned.
+     * @param groupIndexes - the target group indexes for querying.
+     * @param lastUpdatedDate - the last updated date of related user IDs stored locally.
+     * The server will only return related user IDs that are created after {@link lastUpdatedDate}.
+     * If null, all related user IDs will be returned.
+     * @returns related user IDs and the version.
+     * Note: The version can be used to update the last updated date stored locally.
+     * @throws {@link ResponseError} if an error occurs.
+     */
     queryRelatedUserIds({
         isBlocked,
         groupIndexes,
@@ -467,6 +636,17 @@ export default class UserService {
         }).then(n => Response.fromNotification(n, data => NotificationUtil.getLongsWithVersion(data)));
     }
 
+    /**
+     * Find friends.
+     *
+     * @param groupIndexes - the target group indexes for finding.
+     * @param lastUpdatedDate - the last updated date of friends stored locally.
+     * The server will only return friends that are created after {@link lastUpdatedDate}.
+     * If null, all friends will be returned.
+     * @returns friends and the version.
+     * Note: The version can be used to update the last updated date stored locally.
+     * @throws {@link ResponseError} if an error occurs.
+     */
     queryFriends({
         groupIndexes,
         lastUpdatedDate
@@ -481,6 +661,17 @@ export default class UserService {
         });
     }
 
+    /**
+     * Find blocked users.
+     *
+     * @param groupIndexes - the target group indexes for finding.
+     * @param lastUpdatedDate - the last updated date of blocked users stored locally.
+     * The server will only return friends that are created after {@link lastUpdatedDate}.
+     * If null, all blocked users will be returned.
+     * @returns blocked users and the version.
+     * Note: The version can be used to update the last updated date stored locally.
+     * @throws {@link ResponseError} if an error occurs.
+     */
     queryBlockedUsers({
         groupIndexes,
         lastUpdatedDate
@@ -495,6 +686,24 @@ export default class UserService {
         });
     }
 
+    /**
+     * Create a relationship.
+     *
+     * @remarks
+     * Notifications:
+     * * If the server property `turms.service.notification.one-sided-relationship-group-member-added.notify-requester-other-online-sessions`
+     *   is true (true by default), the server will send a new relationship notification to all other online sessions of the logged-in user actively.
+     * * If the server property `turms.service.notification.one-sided-relationship-group-member-added.notify-new-relationship-group-member`,
+     *   is true (false by default), the server will send a new relationship notification to {@link userId} actively.
+     *
+     * @param userId - the target user ID.
+     * @param isBlocked - whether to create a blocked relationship.
+     * If true, a blocked relationship will be created,
+     * and the target user will not be able to send messages to the logged-in user.
+     * @param groupIndex - the target group index in which create the relationship.
+     * If null, the relationship will be created in the default group.
+     * @throws {@link ResponseError} if an error occurs.
+     */
     createRelationship({
         userId,
         isBlocked,
@@ -519,6 +728,21 @@ export default class UserService {
         }).then(n => Response.fromNotification(n));
     }
 
+    /**
+     * Create a friend (non-blocked) relationship.
+     *
+     * @remarks
+     * Notifications:
+     * * If the server property `turms.service.notification.one-sided-relationship-group-member-added.notify-requester-other-online-sessions`
+     *   is true (true by default), the server will send a new relationship notification to all other online sessions of the logged-in user actively.
+     * * If the server property `turms.service.notification.one-sided-relationship-group-member-added.notify-new-relationship-group-member`,
+     *   is true (false by default), the server will send a new relationship notification to {@link userId} actively.
+     *
+     * @param userId - the target user ID.
+     * @param groupIndex - the target group index in which create the relationship.
+     * If null, the relationship will be created in the default group.
+     * @throws {@link ResponseError} if an error occurs.
+     */
     createFriendRelationship({
         userId,
         groupIndex
@@ -533,6 +757,21 @@ export default class UserService {
         });
     }
 
+    /**
+     * Create a blocked user relationship.
+     *
+     * @remarks
+     * Notifications:
+     * * If the server property `turms.service.notification.one-sided-relationship-group-member-added.notify-requester-other-online-sessions`
+     *   is true (true by default), the server will send a new relationship notification to all other online sessions of the logged-in user actively.
+     * * If the server property `turms.service.notification.one-sided-relationship-group-member-added.notify-new-relationship-group-member`,
+     *   is true (false by default), the server will send a new relationship notification to {@link userId} actively.
+     *
+     * @param userId - the target user ID.
+     * @param groupIndex - the target group index in which create the relationship.
+     * If null, the relationship will be created in the default group.
+     * @throws {@link ResponseError} if an error occurs.
+     */
     createBlockedUserRelationship({
         userId,
         groupIndex
@@ -547,6 +786,22 @@ export default class UserService {
         });
     }
 
+    /**
+     * Delete a relationship.
+     *
+     * @remarks
+     * Notifications:
+     * * If the server property `turms.service.notification.group-deleted.notify-requester-other-online-sessions`
+     *   is true (true by default), the server will send a delete relationship notification to all other online sessions of the logged-in user actively.
+     * * If the server property `turms.service.notification.group-deleted.notify-group-members`,
+     *   is true (true by default), the server will send a delete relationship notification to all group members in groups.
+     *
+     * @param relatedUserId - the target user ID.
+     * @param deleteGroupIndex - the target group index in which delete the relationship.
+     * If null, the relationship will be deleted in all groups.
+     * @param targetGroupIndex - TODO: not implemented yet.
+     * @throws {@link ResponseError} if an error occurs.
+     */
     deleteRelationship({
         relatedUserId,
         deleteGroupIndex,
@@ -568,6 +823,21 @@ export default class UserService {
         }).then(n => Response.fromNotification(n));
     }
 
+    /**
+     * Update a relationship.
+     *
+     * @remarks
+     * Notifications:
+     * * If the server property `turms.service.notification.one-sided-relationship-updated.notify-requester-other-online-sessions`
+     *   is true (true by default), the server will send a update relationship notification to all other online sessions of the logged-in user actively.
+     * * If the server property `turms.service.notification.one-sided-relationship-updated.notify-related-user`,
+     *   is true (false by default), the server will send a update relationship notification to {@link relatedUserId} actively.
+     *
+     * @param relatedUserId - the target user ID.
+     * @param isBlocked - whether to update a blocked relationship.
+     * If null, the relationship will not be updated.
+     * @throws {@link ResponseError} if an error occurs.
+     */
     updateRelationship({
         relatedUserId,
         isBlocked,
@@ -592,6 +862,21 @@ export default class UserService {
         }).then(n => Response.fromNotification(n));
     }
 
+    /**
+     * Send a friend request.
+     *
+     * @remarks
+     * Notifications:
+     * * If the server property `turms.service.notification.friend-request-created.notify-requester-other-online-sessions`,
+     *   is true (true by default), the server will send a new friend request notification to all other online sessions of the logged-in user actively.
+     * * If the server property `turms.service.notification.friend-request-created.notify-friend-request-recipient`,
+     *   is true (true by default), the server will send a new friend request notification to {@link recipientId} actively.
+     *
+     * @param recipientId - the target user ID.
+     * @param content - the content of the friend request.
+     * @returns the request ID.
+     * @throws {@link ResponseError} if an error occurs.
+     */
     sendFriendRequest({
         recipientId,
         content
@@ -613,6 +898,30 @@ export default class UserService {
         }).then(n => Response.fromNotification(n, data => NotificationUtil.getLongOrThrow(data)));
     }
 
+    /**
+     * Reply to a friend request.
+     *
+     * @remarks
+     * If the logged-in user accepts a friend request sent by another user,
+     * the server will create a relationship between the logged-in user and the friend request sender.
+     *
+     * Authorization:
+     * * If the logged-in user is not the recipient of the friend request,
+     *   throws {@link {@link ResponseError}} with the code {@link ResponseStatusCode#NOT_RECIPIENT_TO_UPDATE_FRIEND_REQUEST}.
+     * * If the friend request is not pending (e.g. expired, accepted, deleted, etc),
+     *   throws {@link {@link ResponseError}} with the code {@link ResponseStatusCode#UPDATE_NON_PENDING_FRIEND_REQUEST}.
+     *
+     * Notifications:
+     * * If the server property `turms.service.notification.friend-request-replied.notify-requester-other-online-sessions`,
+     *   is true (true by default), the server will send a reply friend request notification to all other online sessions of the logged-in user actively.
+     * * If the server property `turms.service.notification.friend-request-replied.notify-friend-request-sender`,
+     *   is true (true by default), the server will send a reply friend request notification to the friend request sender actively.
+     *
+     * @param requestId - the target friend request ID.
+     * @param responseAction - the response action.
+     * @param reason - the reason of the response.
+     * @throws {@link ResponseError} if an error occurs.
+     */
     replyFriendRequest({
         requestId,
         responseAction,
@@ -643,6 +952,19 @@ export default class UserService {
         }).then(n => Response.fromNotification(n));
     }
 
+    /**
+     * Find friend requests.
+     *
+     * @param areSentByMe - whether to find the friend requests sent by the logged-in user.
+     * If true, find the friend requests sent by the logged-in user.
+     * If false, find the friend requests not sent to the logged-in user.
+     * @param lastUpdatedDate - the last updated date of friend requests stored locally.
+     * The server will only return friend requests that are updated after {@link lastUpdatedDate}.
+     * If null, all friend requests will be returned.
+     * @returns friend requests and the version.
+     * Note: The version can be used to update the last updated date stored locally.
+     * @throws {@link ResponseError} if an error occurs.
+     */
     queryFriendRequests({
         areSentByMe,
         lastUpdatedDate
@@ -658,6 +980,13 @@ export default class UserService {
         }).then(n => Response.fromNotification(n, data => NotificationUtil.transform(data.userFriendRequestsWithVersion)));
     }
 
+    /**
+     * Create a relationship group.
+     *
+     * @param name - the name of the group.
+     * @returns the index of the created group.
+     * @throws {@link ResponseError} if an error occurs.
+     */
     createRelationshipGroup({
         name
     }: {
@@ -673,6 +1002,22 @@ export default class UserService {
         }).then(n => Response.fromNotification(n, data => parseInt(NotificationUtil.getLongOrThrow(data))));
     }
 
+    /**
+     * Delete relationship groups.
+     *
+     * @remarks
+     * Notifications:
+     * * If the server property `turms.service.notification.one-sided-relationship-group-deleted.notify-requester-other-online-sessions`,
+     *   is true (true by default), the server will send a delete relationship groups relationship notification to all other online sessions of the logged-in user actively.
+     * * If the server property `turms.service.notification.one-sided-relationship-group-deleted.notify-relationship-group-members`,
+     *   is true (false by default), the server will send a delete relationship groups relationship notification to all group members in groups.
+     *
+     * @param groupIndex - the target group index to delete.
+     * @param targetGroupIndex - move the group members of {@link groupIndex} to {@link targetGroupIndex}
+     * when the group is deleted.
+     * If null, the group members of {@link groupIndex} will be moved to the default group.
+     * @throws {@link ResponseError} if an error occurs.
+     */
     deleteRelationshipGroups({
         groupIndex,
         targetGroupIndex
@@ -691,6 +1036,20 @@ export default class UserService {
         }).then(n => Response.fromNotification(n));
     }
 
+    /**
+     * Update a relationship group.
+     *
+     * @remarks
+     * Notifications:
+     * * If the server property `turms.service.notification.one-sided-relationship-group-updated.notify-requester-other-online-sessions`,
+     *   is true (true by default), the server will send a updated relationship groups relationship notification to all other online sessions of the logged-in user actively.
+     * * If the server property `turms.service.notification.one-sided-relationship-group-updated.notify-relationship-group-members`,
+     *   is true (false by default), the server will send a updated relationship groups relationship notification to all group members in groups.
+     *
+     * @param groupIndex - the target group index.
+     * @param newName - the new name of the group.
+     * @throws {@link ResponseError} if an error occurs.
+     */
     updateRelationshipGroup({
         groupIndex,
         newName
@@ -712,6 +1071,16 @@ export default class UserService {
         }).then(n => Response.fromNotification(n));
     }
 
+    /**
+     * Find relationship groups.
+     *
+     * @param lastUpdatedDate - the last updated date of relationship groups stored locally.
+     * The server will only return relationship groups that are updated after {@link lastUpdatedDate}.
+     * If null, all relationship groups will be returned.
+     * @returns relationship groups and the version.
+     * Note: The version can be used to update the last updated date stored locally.
+     * @throws {@link ResponseError} if an error occurs.
+     */
     queryRelationshipGroups({
         lastUpdatedDate
     }: {
@@ -724,6 +1093,20 @@ export default class UserService {
         }).then(n => Response.fromNotification(n, data => NotificationUtil.transform(data.userRelationshipGroupsWithVersion)));
     }
 
+    /**
+     * Move a related user to a group.
+     *
+     * @remarks
+     * Notifications:
+     * * If the server property `turms.service.notification.one-sided-relationship-updated.notify-requester-other-online-sessions`,
+     *   is true (true by default), the server will send a update relationship notification to all other online sessions of the logged-in user actively.
+     * * If the server property `turms.service.notification.one-sided-relationship-updated.notify-related-user`,
+     *   is true (false by default), the server will send a update relationship notification to {@link relatedUserId} actively.
+     *
+     * @param relatedUserId - the target user ID.
+     * @param groupIndex - the target group index to which move the user.
+     * @throws {@link ResponseError} if an error occurs.
+     */
     moveRelatedUserToGroup({
         relatedUserId,
         groupIndex
@@ -746,9 +1129,21 @@ export default class UserService {
     }
 
     /**
-     * updateLocation() in UserService is different from sendMessage() with records of location in MessageService
-     * updateLocation() in UserService sends the location of user to the server only.
-     * sendMessage() with records of location sends user's location to both server and its recipients.
+     * Update the location of the logged-in user.
+     *
+     * @remarks
+     * Note:
+     * * {@link UserService#updateLocation} is different from
+     *   {@link MessageService#sendMessage} with records of location.
+     *   {@link UserService#updateLocation} sends the location of user to
+     *   the server only.
+     *   {@link MessageService#sendMessage} with records of location sends the user's location
+     *   to both server and its recipients.
+     *
+     * @param latitude - the latitude.
+     * @param longitude - the longitude.
+     * @param details - the location details
+     * @throws {@link ResponseError} if an error occurs.
      */
     updateLocation({
         latitude,
