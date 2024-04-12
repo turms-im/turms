@@ -20,6 +20,7 @@ class QueryRelationshipsRequest extends $pb.GeneratedMessage {
     $core.bool? blocked,
     $core.Iterable<$core.int>? groupIndexes,
     $fixnum.Int64? lastUpdatedDate,
+    $core.String? name,
   }) {
     final $result = create();
     if (userIds != null) {
@@ -33,6 +34,9 @@ class QueryRelationshipsRequest extends $pb.GeneratedMessage {
     }
     if (lastUpdatedDate != null) {
       $result.lastUpdatedDate = lastUpdatedDate;
+    }
+    if (name != null) {
+      $result.name = name;
     }
     return $result;
   }
@@ -52,6 +56,7 @@ class QueryRelationshipsRequest extends $pb.GeneratedMessage {
     ..aOB(2, _omitFieldNames ? '' : 'blocked')
     ..p<$core.int>(3, _omitFieldNames ? '' : 'groupIndexes', $pb.PbFieldType.K3)
     ..aInt64(4, _omitFieldNames ? '' : 'lastUpdatedDate')
+    ..aOS(5, _omitFieldNames ? '' : 'name')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('Using this can add significant overhead to your binary. '
@@ -108,6 +113,18 @@ class QueryRelationshipsRequest extends $pb.GeneratedMessage {
   $core.bool hasLastUpdatedDate() => $_has(3);
   @$pb.TagNumber(4)
   void clearLastUpdatedDate() => clearField(4);
+
+  @$pb.TagNumber(5)
+  $core.String get name => $_getSZ(4);
+  @$pb.TagNumber(5)
+  set name($core.String v) {
+    $_setString(4, v);
+  }
+
+  @$pb.TagNumber(5)
+  $core.bool hasName() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearName() => clearField(5);
 }
 
 const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');

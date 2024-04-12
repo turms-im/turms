@@ -18,6 +18,10 @@ class QueryGroupsRequest extends $pb.GeneratedMessage {
   factory QueryGroupsRequest({
     $core.Iterable<$fixnum.Int64>? groupIds,
     $fixnum.Int64? lastUpdatedDate,
+    $core.String? name,
+    $core.int? skip,
+    $core.int? limit,
+    $core.Iterable<$core.int>? fieldsToHighlight,
   }) {
     final $result = create();
     if (groupIds != null) {
@@ -25,6 +29,18 @@ class QueryGroupsRequest extends $pb.GeneratedMessage {
     }
     if (lastUpdatedDate != null) {
       $result.lastUpdatedDate = lastUpdatedDate;
+    }
+    if (name != null) {
+      $result.name = name;
+    }
+    if (skip != null) {
+      $result.skip = skip;
+    }
+    if (limit != null) {
+      $result.limit = limit;
+    }
+    if (fieldsToHighlight != null) {
+      $result.fieldsToHighlight.addAll(fieldsToHighlight);
     }
     return $result;
   }
@@ -42,6 +58,11 @@ class QueryGroupsRequest extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..p<$fixnum.Int64>(1, _omitFieldNames ? '' : 'groupIds', $pb.PbFieldType.K6)
     ..aInt64(2, _omitFieldNames ? '' : 'lastUpdatedDate')
+    ..aOS(3, _omitFieldNames ? '' : 'name')
+    ..a<$core.int>(10, _omitFieldNames ? '' : 'skip', $pb.PbFieldType.O3)
+    ..a<$core.int>(11, _omitFieldNames ? '' : 'limit', $pb.PbFieldType.O3)
+    ..p<$core.int>(
+        12, _omitFieldNames ? '' : 'fieldsToHighlight', $pb.PbFieldType.K3)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('Using this can add significant overhead to your binary. '
@@ -81,6 +102,45 @@ class QueryGroupsRequest extends $pb.GeneratedMessage {
   $core.bool hasLastUpdatedDate() => $_has(1);
   @$pb.TagNumber(2)
   void clearLastUpdatedDate() => clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get name => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set name($core.String v) {
+    $_setString(2, v);
+  }
+
+  @$pb.TagNumber(3)
+  $core.bool hasName() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearName() => clearField(3);
+
+  @$pb.TagNumber(10)
+  $core.int get skip => $_getIZ(3);
+  @$pb.TagNumber(10)
+  set skip($core.int v) {
+    $_setSignedInt32(3, v);
+  }
+
+  @$pb.TagNumber(10)
+  $core.bool hasSkip() => $_has(3);
+  @$pb.TagNumber(10)
+  void clearSkip() => clearField(10);
+
+  @$pb.TagNumber(11)
+  $core.int get limit => $_getIZ(4);
+  @$pb.TagNumber(11)
+  set limit($core.int v) {
+    $_setSignedInt32(4, v);
+  }
+
+  @$pb.TagNumber(11)
+  $core.bool hasLimit() => $_has(4);
+  @$pb.TagNumber(11)
+  void clearLimit() => clearField(11);
+
+  @$pb.TagNumber(12)
+  $core.List<$core.int> get fieldsToHighlight => $_getList(5);
 }
 
 const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');

@@ -27,14 +27,29 @@ const QueryGroupsRequest$json = {
       '10': 'lastUpdatedDate',
       '17': true
     },
+    {'1': 'name', '3': 3, '4': 1, '5': 9, '9': 1, '10': 'name', '17': true},
+    {'1': 'skip', '3': 10, '4': 1, '5': 5, '9': 2, '10': 'skip', '17': true},
+    {'1': 'limit', '3': 11, '4': 1, '5': 5, '9': 3, '10': 'limit', '17': true},
+    {
+      '1': 'fields_to_highlight',
+      '3': 12,
+      '4': 3,
+      '5': 5,
+      '10': 'fieldsToHighlight'
+    },
   ],
   '8': [
     {'1': '_last_updated_date'},
+    {'1': '_name'},
+    {'1': '_skip'},
+    {'1': '_limit'},
   ],
 };
 
 /// Descriptor for `QueryGroupsRequest`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List queryGroupsRequestDescriptor = $convert.base64Decode(
     'ChJRdWVyeUdyb3Vwc1JlcXVlc3QSGwoJZ3JvdXBfaWRzGAEgAygDUghncm91cElkcxIvChFsYX'
-    'N0X3VwZGF0ZWRfZGF0ZRgCIAEoA0gAUg9sYXN0VXBkYXRlZERhdGWIAQFCFAoSX2xhc3RfdXBk'
-    'YXRlZF9kYXRl');
+    'N0X3VwZGF0ZWRfZGF0ZRgCIAEoA0gAUg9sYXN0VXBkYXRlZERhdGWIAQESFwoEbmFtZRgDIAEo'
+    'CUgBUgRuYW1liAEBEhcKBHNraXAYCiABKAVIAlIEc2tpcIgBARIZCgVsaW1pdBgLIAEoBUgDUg'
+    'VsaW1pdIgBARIuChNmaWVsZHNfdG9faGlnaGxpZ2h0GAwgAygFUhFmaWVsZHNUb0hpZ2hsaWdo'
+    'dEIUChJfbGFzdF91cGRhdGVkX2RhdGVCBwoFX25hbWVCBwoFX3NraXBCCAoGX2xpbWl0');

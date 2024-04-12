@@ -7,10 +7,21 @@ export const protobufPackage = "im.turms.proto";
 export interface QueryUserProfilesRequest {
   userIds: string[];
   lastUpdatedDate?: string | undefined;
+  name?: string | undefined;
+  skip?: number | undefined;
+  limit?: number | undefined;
+  fieldsToHighlight: number[];
 }
 
 function createBaseQueryUserProfilesRequest(): QueryUserProfilesRequest {
-  return { userIds: [], lastUpdatedDate: undefined };
+  return {
+    userIds: [],
+    lastUpdatedDate: undefined,
+    name: undefined,
+    skip: undefined,
+    limit: undefined,
+    fieldsToHighlight: [],
+  };
 }
 
 export const QueryUserProfilesRequest = {
@@ -23,6 +34,20 @@ export const QueryUserProfilesRequest = {
     if (message.lastUpdatedDate !== undefined) {
       writer.uint32(16).int64(message.lastUpdatedDate);
     }
+    if (message.name !== undefined) {
+      writer.uint32(26).string(message.name);
+    }
+    if (message.skip !== undefined) {
+      writer.uint32(80).int32(message.skip);
+    }
+    if (message.limit !== undefined) {
+      writer.uint32(88).int32(message.limit);
+    }
+    writer.uint32(98).fork();
+    for (const v of message.fieldsToHighlight) {
+      writer.int32(v);
+    }
+    writer.ldelim();
     return writer;
   },
 
@@ -57,6 +82,44 @@ export const QueryUserProfilesRequest = {
 
           message.lastUpdatedDate = longToString(reader.int64() as Long);
           continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.name = reader.string();
+          continue;
+        case 10:
+          if (tag !== 80) {
+            break;
+          }
+
+          message.skip = reader.int32();
+          continue;
+        case 11:
+          if (tag !== 88) {
+            break;
+          }
+
+          message.limit = reader.int32();
+          continue;
+        case 12:
+          if (tag === 96) {
+            message.fieldsToHighlight.push(reader.int32());
+
+            continue;
+          }
+
+          if (tag === 98) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.fieldsToHighlight.push(reader.int32());
+            }
+
+            continue;
+          }
+
+          break;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;

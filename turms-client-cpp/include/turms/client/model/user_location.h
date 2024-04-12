@@ -10,8 +10,8 @@ struct UserLocation {
     float latitude;
 };
 
-} // namespace model
-} // namespace client
-} // namespace turms
+}  // namespace model
+}  // namespace client
+}  // namespace turms
 
-#endif // TURMS_CLIENT_MODEL_USER_LOCATION_H
+#endif  // TURMS_CLIENT_MODEL_USER_LOCATION_H

@@ -27,14 +27,30 @@ const QueryUserProfilesRequest$json = {
       '10': 'lastUpdatedDate',
       '17': true
     },
+    {'1': 'name', '3': 3, '4': 1, '5': 9, '9': 1, '10': 'name', '17': true},
+    {'1': 'skip', '3': 10, '4': 1, '5': 5, '9': 2, '10': 'skip', '17': true},
+    {'1': 'limit', '3': 11, '4': 1, '5': 5, '9': 3, '10': 'limit', '17': true},
+    {
+      '1': 'fields_to_highlight',
+      '3': 12,
+      '4': 3,
+      '5': 5,
+      '10': 'fieldsToHighlight'
+    },
   ],
   '8': [
     {'1': '_last_updated_date'},
+    {'1': '_name'},
+    {'1': '_skip'},
+    {'1': '_limit'},
   ],
 };
 
 /// Descriptor for `QueryUserProfilesRequest`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List queryUserProfilesRequestDescriptor = $convert.base64Decode(
     'ChhRdWVyeVVzZXJQcm9maWxlc1JlcXVlc3QSGQoIdXNlcl9pZHMYASADKANSB3VzZXJJZHMSLw'
-    'oRbGFzdF91cGRhdGVkX2RhdGUYAiABKANIAFIPbGFzdFVwZGF0ZWREYXRliAEBQhQKEl9sYXN0'
-    'X3VwZGF0ZWRfZGF0ZQ==');
+    'oRbGFzdF91cGRhdGVkX2RhdGUYAiABKANIAFIPbGFzdFVwZGF0ZWREYXRliAEBEhcKBG5hbWUY'
+    'AyABKAlIAVIEbmFtZYgBARIXCgRza2lwGAogASgFSAJSBHNraXCIAQESGQoFbGltaXQYCyABKA'
+    'VIA1IFbGltaXSIAQESLgoTZmllbGRzX3RvX2hpZ2hsaWdodBgMIAMoBVIRZmllbGRzVG9IaWdo'
+    'bGlnaHRCFAoSX2xhc3RfdXBkYXRlZF9kYXRlQgcKBV9uYW1lQgcKBV9za2lwQggKBl9saW1pdA'
+    '==');

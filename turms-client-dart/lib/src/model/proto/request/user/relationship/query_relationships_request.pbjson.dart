@@ -37,10 +37,12 @@ const QueryRelationshipsRequest$json = {
       '10': 'lastUpdatedDate',
       '17': true
     },
+    {'1': 'name', '3': 5, '4': 1, '5': 9, '9': 2, '10': 'name', '17': true},
   ],
   '8': [
     {'1': '_blocked'},
     {'1': '_last_updated_date'},
+    {'1': '_name'},
   ],
 };
 
@@ -49,4 +51,5 @@ final $typed_data.Uint8List queryRelationshipsRequestDescriptor = $convert.base6
     'ChlRdWVyeVJlbGF0aW9uc2hpcHNSZXF1ZXN0EhkKCHVzZXJfaWRzGAEgAygDUgd1c2VySWRzEh'
     '0KB2Jsb2NrZWQYAiABKAhIAFIHYmxvY2tlZIgBARIjCg1ncm91cF9pbmRleGVzGAMgAygFUgxn'
     'cm91cEluZGV4ZXMSLwoRbGFzdF91cGRhdGVkX2RhdGUYBCABKANIAVIPbGFzdFVwZGF0ZWREYX'
-    'RliAEBQgoKCF9ibG9ja2VkQhQKEl9sYXN0X3VwZGF0ZWRfZGF0ZQ==');
+    'RliAEBEhcKBG5hbWUYBSABKAlIAlIEbmFtZYgBAUIKCghfYmxvY2tlZEIUChJfbGFzdF91cGRh'
+    'dGVkX2RhdGVCBwoFX25hbWU=');

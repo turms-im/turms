@@ -12,6 +12,6 @@ auto ResponseStatusCode::isErrorCode(int businessCode) -> bool {
     return !isSuccessCode(businessCode);
 }
 
-} // namespace model
-} // namespace client
-} // namespace turms
+}  // namespace model
+}  // namespace client
+}  // namespace turms

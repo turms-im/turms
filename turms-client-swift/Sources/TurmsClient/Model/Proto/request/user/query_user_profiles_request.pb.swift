@@ -37,11 +37,46 @@ public struct QueryUserProfilesRequest {
     /// Clears the value of `lastUpdatedDate`. Subsequent reads from it will return its default value.
     public mutating func clearLastUpdatedDate() { _lastUpdatedDate = nil }
 
+    public var name: String {
+        get { return _name ?? String() }
+        set { _name = newValue }
+    }
+
+    /// Returns true if `name` has been explicitly set.
+    public var hasName: Bool { return _name != nil }
+    /// Clears the value of `name`. Subsequent reads from it will return its default value.
+    public mutating func clearName() { _name = nil }
+
+    public var skip: Int32 {
+        get { return _skip ?? 0 }
+        set { _skip = newValue }
+    }
+
+    /// Returns true if `skip` has been explicitly set.
+    public var hasSkip: Bool { return _skip != nil }
+    /// Clears the value of `skip`. Subsequent reads from it will return its default value.
+    public mutating func clearSkip() { _skip = nil }
+
+    public var limit: Int32 {
+        get { return _limit ?? 0 }
+        set { _limit = newValue }
+    }
+
+    /// Returns true if `limit` has been explicitly set.
+    public var hasLimit: Bool { return _limit != nil }
+    /// Clears the value of `limit`. Subsequent reads from it will return its default value.
+    public mutating func clearLimit() { _limit = nil }
+
+    public var fieldsToHighlight: [Int32] = []
+
     public var unknownFields = SwiftProtobuf.UnknownStorage()
 
     public init() {}
 
     fileprivate var _lastUpdatedDate: Int64?
+    fileprivate var _name: String?
+    fileprivate var _skip: Int32?
+    fileprivate var _limit: Int32?
 }
 
 #if swift(>=5.5) && canImport(_Concurrency)
@@ -57,6 +92,10 @@ extension QueryUserProfilesRequest: SwiftProtobuf.Message, SwiftProtobuf._Messag
     public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
         1: .standard(proto: "user_ids"),
         2: .standard(proto: "last_updated_date"),
+        3: .same(proto: "name"),
+        10: .same(proto: "skip"),
+        11: .same(proto: "limit"),
+        12: .standard(proto: "fields_to_highlight"),
     ]
 
     public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -67,6 +106,10 @@ extension QueryUserProfilesRequest: SwiftProtobuf.Message, SwiftProtobuf._Messag
             switch fieldNumber {
             case 1: try decoder.decodeRepeatedInt64Field(value: &userIds)
             case 2: try decoder.decodeSingularInt64Field(value: &_lastUpdatedDate)
+            case 3: try decoder.decodeSingularStringField(value: &_name)
+            case 10: try decoder.decodeSingularInt32Field(value: &_skip)
+            case 11: try decoder.decodeSingularInt32Field(value: &_limit)
+            case 12: try decoder.decodeRepeatedInt32Field(value: &fieldsToHighlight)
             default: break
             }
         }
@@ -83,12 +126,28 @@ extension QueryUserProfilesRequest: SwiftProtobuf.Message, SwiftProtobuf._Messag
         try { if let v = self._lastUpdatedDate {
             try visitor.visitSingularInt64Field(value: v, fieldNumber: 2)
         } }()
+        try { if let v = self._name {
+            try visitor.visitSingularStringField(value: v, fieldNumber: 3)
+        } }()
+        try { if let v = self._skip {
+            try visitor.visitSingularInt32Field(value: v, fieldNumber: 10)
+        } }()
+        try { if let v = self._limit {
+            try visitor.visitSingularInt32Field(value: v, fieldNumber: 11)
+        } }()
+        if !fieldsToHighlight.isEmpty {
+            try visitor.visitPackedInt32Field(value: fieldsToHighlight, fieldNumber: 12)
+        }
         try unknownFields.traverse(visitor: &visitor)
     }
 
     public static func == (lhs: QueryUserProfilesRequest, rhs: QueryUserProfilesRequest) -> Bool {
         if lhs.userIds != rhs.userIds { return false }
         if lhs._lastUpdatedDate != rhs._lastUpdatedDate { return false }
+        if lhs._name != rhs._name { return false }
+        if lhs._skip != rhs._skip { return false }
+        if lhs._limit != rhs._limit { return false }
+        if lhs.fieldsToHighlight != rhs.fieldsToHighlight { return false }
         if lhs.unknownFields != rhs.unknownFields { return false }
         return true
     }

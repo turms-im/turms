@@ -27,6 +27,8 @@ public final class QueryUserProfilesRequest extends
         QueryUserProfilesRequestOrBuilder {
     private QueryUserProfilesRequest() {
         userIds_ = emptyLongList();
+        name_ = "";
+        fieldsToHighlight_ = emptyIntList();
     }
 
     private int bitField0_;
@@ -150,6 +152,232 @@ public final class QueryUserProfilesRequest extends
     private void clearLastUpdatedDate() {
         bitField0_ &= ~0x00000001;
         lastUpdatedDate_ = 0L;
+    }
+
+    public static final int NAME_FIELD_NUMBER = 3;
+    private java.lang.String name_;
+
+    /**
+     * <code>optional string name = 3;</code>
+     *
+     * @return Whether the name field is set.
+     */
+    @java.lang.Override
+    public boolean hasName() {
+        return ((bitField0_ & 0x00000002) != 0);
+    }
+
+    /**
+     * <code>optional string name = 3;</code>
+     *
+     * @return The name.
+     */
+    @java.lang.Override
+    public java.lang.String getName() {
+        return name_;
+    }
+
+    /**
+     * <code>optional string name = 3;</code>
+     *
+     * @return The bytes for name.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString getNameBytes() {
+        return com.google.protobuf.ByteString.copyFromUtf8(name_);
+    }
+
+    /**
+     * <code>optional string name = 3;</code>
+     *
+     * @param value The name to set.
+     */
+    private void setName(java.lang.String value) {
+        java.lang.Class<?> valueClass = value.getClass();
+        bitField0_ |= 0x00000002;
+        name_ = value;
+    }
+
+    /**
+     * <code>optional string name = 3;</code>
+     */
+    private void clearName() {
+        bitField0_ &= ~0x00000002;
+        name_ = getDefaultInstance().getName();
+    }
+
+    /**
+     * <code>optional string name = 3;</code>
+     *
+     * @param value The bytes for name to set.
+     */
+    private void setNameBytes(com.google.protobuf.ByteString value) {
+        checkByteStringIsUtf8(value);
+        name_ = value.toStringUtf8();
+        bitField0_ |= 0x00000002;
+    }
+
+    public static final int SKIP_FIELD_NUMBER = 10;
+    private int skip_;
+
+    /**
+     * <code>optional int32 skip = 10;</code>
+     *
+     * @return Whether the skip field is set.
+     */
+    @java.lang.Override
+    public boolean hasSkip() {
+        return ((bitField0_ & 0x00000004) != 0);
+    }
+
+    /**
+     * <code>optional int32 skip = 10;</code>
+     *
+     * @return The skip.
+     */
+    @java.lang.Override
+    public int getSkip() {
+        return skip_;
+    }
+
+    /**
+     * <code>optional int32 skip = 10;</code>
+     *
+     * @param value The skip to set.
+     */
+    private void setSkip(int value) {
+        bitField0_ |= 0x00000004;
+        skip_ = value;
+    }
+
+    /**
+     * <code>optional int32 skip = 10;</code>
+     */
+    private void clearSkip() {
+        bitField0_ &= ~0x00000004;
+        skip_ = 0;
+    }
+
+    public static final int LIMIT_FIELD_NUMBER = 11;
+    private int limit_;
+
+    /**
+     * <code>optional int32 limit = 11;</code>
+     *
+     * @return Whether the limit field is set.
+     */
+    @java.lang.Override
+    public boolean hasLimit() {
+        return ((bitField0_ & 0x00000008) != 0);
+    }
+
+    /**
+     * <code>optional int32 limit = 11;</code>
+     *
+     * @return The limit.
+     */
+    @java.lang.Override
+    public int getLimit() {
+        return limit_;
+    }
+
+    /**
+     * <code>optional int32 limit = 11;</code>
+     *
+     * @param value The limit to set.
+     */
+    private void setLimit(int value) {
+        bitField0_ |= 0x00000008;
+        limit_ = value;
+    }
+
+    /**
+     * <code>optional int32 limit = 11;</code>
+     */
+    private void clearLimit() {
+        bitField0_ &= ~0x00000008;
+        limit_ = 0;
+    }
+
+    public static final int FIELDS_TO_HIGHLIGHT_FIELD_NUMBER = 12;
+    private com.google.protobuf.Internal.IntList fieldsToHighlight_;
+
+    /**
+     * <code>repeated int32 fields_to_highlight = 12;</code>
+     *
+     * @return A list containing the fieldsToHighlight.
+     */
+    @java.lang.Override
+    public java.util.List<java.lang.Integer> getFieldsToHighlightList() {
+        return fieldsToHighlight_;
+    }
+
+    /**
+     * <code>repeated int32 fields_to_highlight = 12;</code>
+     *
+     * @return The count of fieldsToHighlight.
+     */
+    @java.lang.Override
+    public int getFieldsToHighlightCount() {
+        return fieldsToHighlight_.size();
+    }
+
+    /**
+     * <code>repeated int32 fields_to_highlight = 12;</code>
+     *
+     * @param index The index of the element to return.
+     * @return The fieldsToHighlight at the given index.
+     */
+    @java.lang.Override
+    public int getFieldsToHighlight(int index) {
+        return fieldsToHighlight_.getInt(index);
+    }
+
+    private int fieldsToHighlightMemoizedSerializedSize = -1;
+
+    private void ensureFieldsToHighlightIsMutable() {
+        com.google.protobuf.Internal.IntList tmp = fieldsToHighlight_;
+        if (!tmp.isModifiable()) {
+            fieldsToHighlight_ = com.google.protobuf.GeneratedMessageLite.mutableCopy(tmp);
+        }
+    }
+
+    /**
+     * <code>repeated int32 fields_to_highlight = 12;</code>
+     *
+     * @param index The index to set the value at.
+     * @param value The fieldsToHighlight to set.
+     */
+    private void setFieldsToHighlight(int index, int value) {
+        ensureFieldsToHighlightIsMutable();
+        fieldsToHighlight_.setInt(index, value);
+    }
+
+    /**
+     * <code>repeated int32 fields_to_highlight = 12;</code>
+     *
+     * @param value The fieldsToHighlight to add.
+     */
+    private void addFieldsToHighlight(int value) {
+        ensureFieldsToHighlightIsMutable();
+        fieldsToHighlight_.addInt(value);
+    }
+
+    /**
+     * <code>repeated int32 fields_to_highlight = 12;</code>
+     *
+     * @param values The fieldsToHighlight to add.
+     */
+    private void addAllFieldsToHighlight(java.lang.Iterable<? extends java.lang.Integer> values) {
+        ensureFieldsToHighlightIsMutable();
+        com.google.protobuf.AbstractMessageLite.addAll(values, fieldsToHighlight_);
+    }
+
+    /**
+     * <code>repeated int32 fields_to_highlight = 12;</code>
+     */
+    private void clearFieldsToHighlight() {
+        fieldsToHighlight_ = emptyIntList();
     }
 
     public static im.turms.client.model.proto.request.user.QueryUserProfilesRequest parseFrom(
@@ -374,6 +602,236 @@ public final class QueryUserProfilesRequest extends
             return this;
         }
 
+        /**
+         * <code>optional string name = 3;</code>
+         *
+         * @return Whether the name field is set.
+         */
+        @java.lang.Override
+        public boolean hasName() {
+            return instance.hasName();
+        }
+
+        /**
+         * <code>optional string name = 3;</code>
+         *
+         * @return The name.
+         */
+        @java.lang.Override
+        public java.lang.String getName() {
+            return instance.getName();
+        }
+
+        /**
+         * <code>optional string name = 3;</code>
+         *
+         * @return The bytes for name.
+         */
+        @java.lang.Override
+        public com.google.protobuf.ByteString getNameBytes() {
+            return instance.getNameBytes();
+        }
+
+        /**
+         * <code>optional string name = 3;</code>
+         *
+         * @param value The name to set.
+         * @return This builder for chaining.
+         */
+        public Builder setName(java.lang.String value) {
+            copyOnWrite();
+            instance.setName(value);
+            return this;
+        }
+
+        /**
+         * <code>optional string name = 3;</code>
+         *
+         * @return This builder for chaining.
+         */
+        public Builder clearName() {
+            copyOnWrite();
+            instance.clearName();
+            return this;
+        }
+
+        /**
+         * <code>optional string name = 3;</code>
+         *
+         * @param value The bytes for name to set.
+         * @return This builder for chaining.
+         */
+        public Builder setNameBytes(com.google.protobuf.ByteString value) {
+            copyOnWrite();
+            instance.setNameBytes(value);
+            return this;
+        }
+
+        /**
+         * <code>optional int32 skip = 10;</code>
+         *
+         * @return Whether the skip field is set.
+         */
+        @java.lang.Override
+        public boolean hasSkip() {
+            return instance.hasSkip();
+        }
+
+        /**
+         * <code>optional int32 skip = 10;</code>
+         *
+         * @return The skip.
+         */
+        @java.lang.Override
+        public int getSkip() {
+            return instance.getSkip();
+        }
+
+        /**
+         * <code>optional int32 skip = 10;</code>
+         *
+         * @param value The skip to set.
+         * @return This builder for chaining.
+         */
+        public Builder setSkip(int value) {
+            copyOnWrite();
+            instance.setSkip(value);
+            return this;
+        }
+
+        /**
+         * <code>optional int32 skip = 10;</code>
+         *
+         * @return This builder for chaining.
+         */
+        public Builder clearSkip() {
+            copyOnWrite();
+            instance.clearSkip();
+            return this;
+        }
+
+        /**
+         * <code>optional int32 limit = 11;</code>
+         *
+         * @return Whether the limit field is set.
+         */
+        @java.lang.Override
+        public boolean hasLimit() {
+            return instance.hasLimit();
+        }
+
+        /**
+         * <code>optional int32 limit = 11;</code>
+         *
+         * @return The limit.
+         */
+        @java.lang.Override
+        public int getLimit() {
+            return instance.getLimit();
+        }
+
+        /**
+         * <code>optional int32 limit = 11;</code>
+         *
+         * @param value The limit to set.
+         * @return This builder for chaining.
+         */
+        public Builder setLimit(int value) {
+            copyOnWrite();
+            instance.setLimit(value);
+            return this;
+        }
+
+        /**
+         * <code>optional int32 limit = 11;</code>
+         *
+         * @return This builder for chaining.
+         */
+        public Builder clearLimit() {
+            copyOnWrite();
+            instance.clearLimit();
+            return this;
+        }
+
+        /**
+         * <code>repeated int32 fields_to_highlight = 12;</code>
+         *
+         * @return A list containing the fieldsToHighlight.
+         */
+        @java.lang.Override
+        public java.util.List<java.lang.Integer> getFieldsToHighlightList() {
+            return java.util.Collections.unmodifiableList(instance.getFieldsToHighlightList());
+        }
+
+        /**
+         * <code>repeated int32 fields_to_highlight = 12;</code>
+         *
+         * @return The count of fieldsToHighlight.
+         */
+        @java.lang.Override
+        public int getFieldsToHighlightCount() {
+            return instance.getFieldsToHighlightCount();
+        }
+
+        /**
+         * <code>repeated int32 fields_to_highlight = 12;</code>
+         *
+         * @param index The index of the element to return.
+         * @return The fieldsToHighlight at the given index.
+         */
+        @java.lang.Override
+        public int getFieldsToHighlight(int index) {
+            return instance.getFieldsToHighlight(index);
+        }
+
+        /**
+         * <code>repeated int32 fields_to_highlight = 12;</code>
+         *
+         * @param value The fieldsToHighlight to set.
+         * @return This builder for chaining.
+         */
+        public Builder setFieldsToHighlight(int index, int value) {
+            copyOnWrite();
+            instance.setFieldsToHighlight(index, value);
+            return this;
+        }
+
+        /**
+         * <code>repeated int32 fields_to_highlight = 12;</code>
+         *
+         * @param value The fieldsToHighlight to add.
+         * @return This builder for chaining.
+         */
+        public Builder addFieldsToHighlight(int value) {
+            copyOnWrite();
+            instance.addFieldsToHighlight(value);
+            return this;
+        }
+
+        /**
+         * <code>repeated int32 fields_to_highlight = 12;</code>
+         *
+         * @param values The fieldsToHighlight to add.
+         * @return This builder for chaining.
+         */
+        public Builder addAllFieldsToHighlight(
+                java.lang.Iterable<? extends java.lang.Integer> values) {
+            copyOnWrite();
+            instance.addAllFieldsToHighlight(values);
+            return this;
+        }
+
+        /**
+         * <code>repeated int32 fields_to_highlight = 12;</code>
+         *
+         * @return This builder for chaining.
+         */
+        public Builder clearFieldsToHighlight() {
+            copyOnWrite();
+            instance.clearFieldsToHighlight();
+            return this;
+        }
+
         // @@protoc_insertion_point(builder_scope:im.turms.proto.QueryUserProfilesRequest)
     }
 
@@ -391,10 +849,16 @@ public final class QueryUserProfilesRequest extends
                 return new Builder();
             }
             case BUILD_MESSAGE_INFO: {
-                java.lang.Object[] objects =
-                        new java.lang.Object[]{"bitField0_", "userIds_", "lastUpdatedDate_",};
+                java.lang.Object[] objects = new java.lang.Object[]{"bitField0_",
+                        "userIds_",
+                        "lastUpdatedDate_",
+                        "name_",
+                        "skip_",
+                        "limit_",
+                        "fieldsToHighlight_",};
                 java.lang.String info =
-                        "\u0000\u0002\u0000\u0001\u0001\u0002\u0002\u0000\u0001\u0000\u0001%\u0002\u1002\u0000";
+                        "\u0000\u0006\u0000\u0001\u0001\f\u0006\u0000\u0002\u0000\u0001%\u0002\u1002\u0000"
+                                + "\u0003\u1208\u0001\n\u1004\u0002\u000b\u1004\u0003\f\'";
                 return newMessageInfo(DEFAULT_INSTANCE, info, objects);
             }
             // fall through

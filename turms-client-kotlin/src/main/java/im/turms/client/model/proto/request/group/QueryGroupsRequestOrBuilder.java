@@ -56,4 +56,75 @@ public interface QueryGroupsRequestOrBuilder extends
      * @return The lastUpdatedDate.
      */
     long getLastUpdatedDate();
+
+    /**
+     * <code>optional string name = 3;</code>
+     *
+     * @return Whether the name field is set.
+     */
+    boolean hasName();
+
+    /**
+     * <code>optional string name = 3;</code>
+     *
+     * @return The name.
+     */
+    java.lang.String getName();
+
+    /**
+     * <code>optional string name = 3;</code>
+     *
+     * @return The bytes for name.
+     */
+    com.google.protobuf.ByteString getNameBytes();
+
+    /**
+     * <code>optional int32 skip = 10;</code>
+     *
+     * @return Whether the skip field is set.
+     */
+    boolean hasSkip();
+
+    /**
+     * <code>optional int32 skip = 10;</code>
+     *
+     * @return The skip.
+     */
+    int getSkip();
+
+    /**
+     * <code>optional int32 limit = 11;</code>
+     *
+     * @return Whether the limit field is set.
+     */
+    boolean hasLimit();
+
+    /**
+     * <code>optional int32 limit = 11;</code>
+     *
+     * @return The limit.
+     */
+    int getLimit();
+
+    /**
+     * <code>repeated int32 fields_to_highlight = 12;</code>
+     *
+     * @return A list containing the fieldsToHighlight.
+     */
+    java.util.List<java.lang.Integer> getFieldsToHighlightList();
+
+    /**
+     * <code>repeated int32 fields_to_highlight = 12;</code>
+     *
+     * @return The count of fieldsToHighlight.
+     */
+    int getFieldsToHighlightCount();
+
+    /**
+     * <code>repeated int32 fields_to_highlight = 12;</code>
+     *
+     * @param index The index of the element to return.
+     * @return The fieldsToHighlight at the given index.
+     */
+    int getFieldsToHighlight(int index);
 }

@@ -85,12 +85,7 @@ public enum StorageResourceType implements com.google.protobuf.Internal.EnumLite
     }
 
     private static final com.google.protobuf.Internal.EnumLiteMap<StorageResourceType> internalValueMap =
-            new com.google.protobuf.Internal.EnumLiteMap<StorageResourceType>() {
-                @java.lang.Override
-                public StorageResourceType findValueByNumber(int number) {
-                    return StorageResourceType.forNumber(number);
-                }
-            };
+            number -> StorageResourceType.forNumber(number);
 
     public static com.google.protobuf.Internal.EnumVerifier internalGetVerifier() {
         return StorageResourceTypeVerifier.INSTANCE;

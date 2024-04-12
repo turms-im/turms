@@ -390,16 +390,12 @@ public final class GroupMember extends
     public static final int USING_DEVICE_TYPES_FIELD_NUMBER = 8;
     private com.google.protobuf.Internal.IntList usingDeviceTypes_;
     private static final com.google.protobuf.Internal.ListAdapter.Converter<java.lang.Integer, im.turms.client.model.proto.constant.DeviceType> usingDeviceTypes_converter_ =
-            new com.google.protobuf.Internal.ListAdapter.Converter<java.lang.Integer, im.turms.client.model.proto.constant.DeviceType>() {
-                @java.lang.Override
-                public im.turms.client.model.proto.constant.DeviceType convert(
-                        java.lang.Integer from) {
-                    im.turms.client.model.proto.constant.DeviceType result =
-                            im.turms.client.model.proto.constant.DeviceType.forNumber(from);
-                    return result == null
-                            ? im.turms.client.model.proto.constant.DeviceType.UNRECOGNIZED
-                            : result;
-                }
+            from -> {
+                im.turms.client.model.proto.constant.DeviceType result =
+                        im.turms.client.model.proto.constant.DeviceType.forNumber(from);
+                return result == null
+                        ? im.turms.client.model.proto.constant.DeviceType.UNRECOGNIZED
+                        : result;
             };
 
     /**

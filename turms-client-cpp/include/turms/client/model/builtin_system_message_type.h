@@ -10,8 +10,8 @@ enum class BuiltinSystemMessageType {
     kRecallMessage = 1,
 };
 
-} // namespace model
-} // namespace client
-} // namespace turms
+}  // namespace model
+}  // namespace client
+}  // namespace turms
 
-#endif // TURMS_CLIENT_MODEL_BUILTIN_SYSTEM_MESSAGE_TYPE_H
+#endif  // TURMS_CLIENT_MODEL_BUILTIN_SYSTEM_MESSAGE_TYPE_H

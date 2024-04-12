@@ -125,12 +125,7 @@ public enum UserStatus implements com.google.protobuf.Internal.EnumLite {
     }
 
     private static final com.google.protobuf.Internal.EnumLiteMap<UserStatus> internalValueMap =
-            new com.google.protobuf.Internal.EnumLiteMap<UserStatus>() {
-                @java.lang.Override
-                public UserStatus findValueByNumber(int number) {
-                    return UserStatus.forNumber(number);
-                }
-            };
+            number -> UserStatus.forNumber(number);
 
     public static com.google.protobuf.Internal.EnumVerifier internalGetVerifier() {
         return UserStatusVerifier.INSTANCE;

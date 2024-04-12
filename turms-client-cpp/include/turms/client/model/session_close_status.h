@@ -26,10 +26,10 @@ const int kDisconnectedByAdmin = 600;
 
 const int kUserIsDeletedOrInactivated = 700;
 const int kUserIsBlocked = 701;
-} // namespace SessionCloseStatus
+}  // namespace SessionCloseStatus
 
-} // namespace model
-} // namespace client
-} // namespace turms
+}  // namespace model
+}  // namespace client
+}  // namespace turms
 
-#endif // TURMS_CLIENT_MODEL_SESSION_CLOSE_STATUS_H
+#endif  // TURMS_CLIENT_MODEL_SESSION_CLOSE_STATUS_H

@@ -1,11 +1,12 @@
 #ifndef TURMS_CLIENT_MODEL_USER_H
 #define TURMS_CLIENT_MODEL_USER_H
 
+#include <boost/optional.hpp>
+#include <unordered_map>
+
 #include "turms/client/model/proto/constant/device_type.pb.h"
 #include "turms/client/model/proto/constant/user_status.pb.h"
 #include "user_location.h"
-#include <boost/optional.hpp>
-#include <unordered_map>
 
 namespace turms {
 namespace client {
@@ -20,8 +21,8 @@ struct User {
     boost::optional<UserLocation> location;
 };
 
-} // namespace model
-} // namespace client
-} // namespace turms
+}  // namespace model
+}  // namespace client
+}  // namespace turms
 
-#endif // TURMS_CLIENT_MODEL_USER_H
+#endif  // TURMS_CLIENT_MODEL_USER_H

@@ -23,19 +23,22 @@ class Response {
         : timestamp_(timestamp),
           requestId_(requestId),
           code_(code),
-          data_(data) {}
+          data_(data) {
+    }
 
     explicit Response(const T& data)
         : timestamp_(std::chrono::system_clock::now()),
           requestId_(boost::none),
           code_(ResponseStatusCode::kOk),
-          data_(data) {}
+          data_(data) {
+    }
 
     explicit Response(T&& data)
         : timestamp_(std::chrono::system_clock::now()),
           requestId_(boost::none),
           code_(ResponseStatusCode::kOk),
-          data_(std::move(data)) {}
+          data_(std::move(data)) {
+    }
 
     Response(const proto::TurmsNotification& notification,
              const std::function<T(const proto::TurmsNotification_Data&)>& dataTransformer)
@@ -59,9 +62,15 @@ class Response {
         }
     }
 
-    auto timestamp() -> std::chrono::time_point<std::chrono::system_clock>& { return timestamp_; }
-    auto requestId() -> boost::optional<int64_t>& { return requestId_; }
-    auto code() const -> int { return code_; }
+    auto timestamp() -> std::chrono::time_point<std::chrono::system_clock>& {
+        return timestamp_;
+    }
+    auto requestId() -> boost::optional<int64_t>& {
+        return requestId_;
+    }
+    auto code() const -> int {
+        return code_;
+    }
 
     static auto emptyList() -> Response<std::vector<T>> {
         return Response<std::vector<T>>(
@@ -80,15 +89,23 @@ class Response<void> {
    public:
     Response()
         : timestamp_(std::chrono::system_clock::now()),
-          requestId_(boost::none) {}
+          requestId_(boost::none) {
+    }
     explicit Response(const proto::TurmsNotification& notification)
         : timestamp_(std::chrono::system_clock::from_time_t(notification.timestamp())),
           requestId_(notification.has_request_id() ? boost::make_optional(notification.request_id())
-                                                   : boost::none) {}
+                                                   : boost::none) {
+    }
 
-    auto timestamp() -> std::chrono::time_point<std::chrono::system_clock>& { return timestamp_; }
-    auto requestId() -> boost::optional<int64_t>& { return requestId_; }
-    auto code() const -> int { return code_; }
+    auto timestamp() -> std::chrono::time_point<std::chrono::system_clock>& {
+        return timestamp_;
+    }
+    auto requestId() -> boost::optional<int64_t>& {
+        return requestId_;
+    }
+    auto code() const -> int {
+        return code_;
+    }
 
    private:
     std::chrono::time_point<std::chrono::system_clock> timestamp_;

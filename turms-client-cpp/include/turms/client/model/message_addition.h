@@ -13,8 +13,8 @@ struct MessageAddition {
     std::set<int64_t> recalledMessageIds;
 };
 
-} // namespace model
-} // namespace client
-} // namespace turms
+}  // namespace model
+}  // namespace client
+}  // namespace turms
 
-#endif // TURMS_CLIENT_MODEL_MESSAGE_ADDITION_H
+#endif  // TURMS_CLIENT_MODEL_MESSAGE_ADDITION_H
