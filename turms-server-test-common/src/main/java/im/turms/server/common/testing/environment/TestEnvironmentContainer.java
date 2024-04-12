@@ -29,12 +29,12 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.FileSystemUtils;
 import org.testcontainers.containers.ContainerState;
 import org.testcontainers.containers.DockerComposeContainer;
 import org.testcontainers.shaded.org.apache.commons.io.FileUtils;
-import org.yaml.snakeyaml.Yaml;
 
 import static im.turms.server.common.testing.environment.ContainerTestEnvironmentPropertyConst.DOCKER_COMPOSE_TEST_FILE;
 import static im.turms.server.common.testing.environment.ContainerTestEnvironmentPropertyConst.MINIO;
@@ -167,8 +167,14 @@ public class TestEnvironmentContainer extends DockerComposeContainer<TestEnviron
                     "Could not find the resource: "
                             + DOCKER_COMPOSE_TEST_FILE);
         }
-        Yaml yaml = new Yaml();
-        Map<String, Object> config = yaml.load(resource);
+        YAMLMapper yamlMapper = YAMLMapper.builder()
+                .build();
+        Map<String, Object> config;
+        try {
+            config = yamlMapper.readValue(resource, Map.class);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to parse the docker compose config", e);
+        }
         Map<String, Object> services = (Map<String, Object>) config.get("services");
         if (!setupMinio) {
             removeService(services, MINIO);
@@ -200,7 +206,11 @@ public class TestEnvironmentContainer extends DockerComposeContainer<TestEnviron
         } else {
             removeService(services, TURMS_SERVICE);
         }
-        return yaml.dump(config);
+        try {
+            return yamlMapper.writeValueAsString(config);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to serialize the docker compose config", e);
+        }
     }
 
     private static void appendCustomJvmOptions(
