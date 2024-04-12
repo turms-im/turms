@@ -21,6 +21,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import im.turms.server.common.infra.property.env.service.env.database.TurmsMongoProperties;
 import im.turms.server.common.infra.property.metadata.Description;
@@ -29,7 +30,7 @@ import im.turms.server.common.infra.property.metadata.Description;
  * @author James Chen
  */
 @AllArgsConstructor
-@Builder(toBuilder = true)
+@SuperBuilder(toBuilder = true)
 @Data
 @NoArgsConstructor
 public class ElasticsearchMongoProperties extends TurmsMongoProperties {

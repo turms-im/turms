@@ -19,12 +19,14 @@ package im.turms.server.common.infra.property.env.service.env.database;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 /**
  * @author James Chen
  */
 @Data
 @NoArgsConstructor
+@SuperBuilder(toBuilder = true)
 public class TurmsMongoProperties {
 
     private transient String uri = "mongodb://localhost:27017/turms";

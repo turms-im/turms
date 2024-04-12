@@ -23,16 +23,17 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 /**
  * @author James Chen
  */
 @AllArgsConstructor
-@Builder(toBuilder = true)
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
+@SuperBuilder(toBuilder = true)
 public class UserMongoProperties extends TurmsMongoProperties {
 
     @NestedConfigurationProperty
