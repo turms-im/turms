@@ -172,6 +172,57 @@ services:
 #    volumes:
 #      - ./minio_storage:/data
 
+  elasticsearch:
+    image: 'elasticsearch:8.13.0'
+    profiles:
+      - elasticsearch
+    environment:
+      discovery.type: single-node
+      network.host: 0.0.0.0
+      http.port: 9200
+      bootstrap.memory_lock: true
+#      ES_JAVA_OPTS: -Xms1g -Xmx1g
+#      xpack.security.enabled: false
+
+    # Add the following commands under the "command" block
+    # to install optional analysis plugins.
+
+    # Plugins for Chinese analysis
+    # echo "${PLUGINS}" | grep -q analysis-ik || bin/elasticsearch-plugin install --batch "https://get.infini.cloud/elasticsearch/analysis-ik/8.13.0"
+
+    # Plugins for Japanese analysis
+    # echo "${PLUGINS}" | grep -q analysis-icu || bin/elasticsearch-plugin install analysis-icu
+    # echo "${PLUGINS}" | grep -q analysis-kuromoji || bin/elasticsearch-plugin install analysis-kuromoji
+    command:
+      - /bin/bash
+      - -c
+      - |
+        PLUGINS=$(bin/elasticsearch-plugin list)
+        echo "Installed plugins: ${PLUGINS}"
+        /usr/local/bin/docker-entrypoint.sh
+    ports:
+      - "9200:9200"
+#    volumes:
+#      - ./elasticsearch/plugins:/usr/share/elasticsearch/plugins
+#      - ./elasticsearch/data:/usr/share/elasticsearch/data
+#      - ./elasticsearch/logs:/usr/share/elasticsearch/logs
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    healthcheck:
+      test: [
+        "CMD-SHELL",
+        "curl -fsSL http://localhost:9200/_cat/health?h=status | grep -q -E 'green|yellow'"
+      ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 1m
+
   # Rasa
   rasa:
     image: rasa/rasa:3.6.19-full
