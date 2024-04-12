@@ -899,6 +899,41 @@ export default class UserService {
     }
 
     /**
+     * Delete/Recall a friend request.
+     *
+     * @remarks
+     * Authorization:
+     * * If the server property `turms.service.user.friend-request.allow-recall-pending-friend-request-by-sender`
+     *   is true (false by default), the logged-in user can recall pending friend requests sent by themselves.
+     *   Otherwise, throws {@link {@link ResponseError}} with the code {@link ResponseStatusCode#RECALLING_FRIEND_REQUEST_IS_DISABLED}.
+     * * If the logged-in user is not the sender of the friend request,
+     *   throws {@link {@link ResponseError}} with the code {@link ResponseStatusCode#NOT_SENDER_TO_RECALL_FRIEND_REQUEST}.
+     * * If the friend request is not pending (e.g. expired, accepted, deleted, etc),
+     *   throws {@link {@link ResponseError}} with the code {@link ResponseStatusCode#RECALL_NON_PENDING_FRIEND_REQUEST}.
+     *
+     * Notifications:
+     * * If the server property `turms.service.notification.friend-request-recalled.notify-requester-other-online-sessions`
+     *   is true (true by default), the server will send a delete friend request notification to all other online sessions of the logged-in user actively.
+     * * If the server property `turms.service.notification.friend-request-recalled.notify-friend-request-recipient`
+     *   is true (true by default), the server will send a delete friend request notification to the recipient of the friend request actively.
+     * @throws {@link ResponseError} if an error occurs.
+     */
+    deleteFriendRequest({
+        requestId
+    }: {
+        requestId: string
+    }): Promise<Response<void>> {
+        if (Validator.isFalsy(requestId)) {
+            return ResponseError.notFalsyPromise('requestId');
+        }
+        return this._turmsClient.driver.send({
+            deleteFriendRequestRequest: {
+                requestId
+            }
+        }).then(n => Response.fromNotification(n));
+    }
+
+    /**
      * Reply to a friend request.
      *
      * @remarks
