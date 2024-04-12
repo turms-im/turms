@@ -159,11 +159,12 @@ class ConnectionService(
         onSocketOpened()
         tcp.startReading {
             while (stateStore.isConnected) {
-                val length = try {
-                    tcp.readVarInt()
-                } catch (e: SocketException) {
-                    return@startReading
-                }
+                val length =
+                    try {
+                        tcp.readVarInt()
+                    } catch (e: SocketException) {
+                        return@startReading
+                    }
                 if (length == 0) {
                     notifyMessageListeners(EMPTY_BUFFER)
                 } else {

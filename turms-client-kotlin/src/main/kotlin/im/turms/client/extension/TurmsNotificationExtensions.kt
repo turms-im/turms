@@ -31,9 +31,8 @@ val TurmsNotification.isSuccess: Boolean
 val TurmsNotification.isError: Boolean
     get() = hasCode() && ResponseStatusCode.isErrorCode(code)
 
-fun <T> TurmsNotification.toResponse(
-    dataTransformer: ((TurmsNotification.Data) -> T)? = null,
-): Response<T> = Response.fromNotification(this, dataTransformer)
+fun <T> TurmsNotification.toResponse(dataTransformer: ((TurmsNotification.Data) -> T)? = null): Response<T> =
+    Response.fromNotification(this, dataTransformer)
 
 fun TurmsNotification.Data.getLongOrThrow(): Long {
     if (!hasLong()) {

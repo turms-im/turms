@@ -54,38 +54,41 @@ class HeartbeatService(
         if (isRunning) {
             return
         }
-        heartbeatTimerDeferred = async {
-            while (isActive) {
-                val now = System.currentTimeMillis()
-                val difference = (now - stateStore.lastRequestDate)
-                    .coerceAtMost(now - lastHeartbeatRequestDate)
-                if (difference > heartbeatInterval) {
-                    send()
-                    lastHeartbeatRequestDate = now
+        heartbeatTimerDeferred =
+            async {
+                while (isActive) {
+                    val now = System.currentTimeMillis()
+                    val difference =
+                        (now - stateStore.lastRequestDate)
+                            .coerceAtMost(now - lastHeartbeatRequestDate)
+                    if (difference > heartbeatInterval) {
+                        send()
+                        lastHeartbeatRequestDate = now
+                    }
+                    delay(heartbeatTimerInterval)
                 }
-                delay(heartbeatTimerInterval)
             }
-        }
     }
 
     fun stop(throwable: Throwable? = null) {
         heartbeatTimerDeferred?.cancel(CancellationException(throwable))
     }
 
-    suspend fun send() = suspendCoroutine { cont ->
-        if (!stateStore.isConnected || !stateStore.isSessionOpen) {
-            cont.resumeWithException(ResponseException.from(ResponseStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED))
-            return@suspendCoroutine
-        }
-        launch {
-            try {
-                stateStore.tcp!!.write(HEARTBEAT)
-            } catch (e: Exception) {
-                cont.resumeWithException(e)
+    suspend fun send() =
+        suspendCoroutine { cont ->
+            if (!stateStore.isConnected || !stateStore.isSessionOpen) {
+                cont.resumeWithException(ResponseException.from(ResponseStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED))
+                return@suspendCoroutine
             }
+            launch {
+                try {
+                    stateStore.tcp!!.write(HEARTBEAT)
+                } catch (e: Exception) {
+                    cont.resumeWithException(e)
+                }
+            }
+            heartbeatContinuationQueue.offer(cont)
         }
-        heartbeatContinuationQueue.offer(cont)
-    }
 
     fun completeHeartbeatFutures() {
         while (true) {

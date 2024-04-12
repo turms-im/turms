@@ -29,13 +29,11 @@ data class Response<T>(
     val code: Int,
     val data: T,
 ) {
-
     fun <T> withData(data: T): Response<T> {
         return Response(timestamp, requestId, code, data)
     }
 
     companion object {
-
         @JvmStatic
         fun <T> value(data: T): Response<T> = Response(Date(), null, ResponseStatusCode.OK, data)
 
@@ -62,18 +60,19 @@ data class Response<T>(
                     "Could not parse a success response from non-success notification",
                 )
             }
-            val data = if (dataTransformer == null) {
-                Unit as T
-            } else {
-                try {
-                    dataTransformer.invoke(notification.data)
-                } catch (e: Exception) {
-                    throw ResponseException.from(
-                        ResponseStatusCode.INVALID_NOTIFICATION,
-                        "Failed to transform notification data: ${notification.data}. Error: ${e.message}",
-                    )
+            val data =
+                if (dataTransformer == null) {
+                    Unit as T
+                } else {
+                    try {
+                        dataTransformer.invoke(notification.data)
+                    } catch (e: Exception) {
+                        throw ResponseException.from(
+                            ResponseStatusCode.INVALID_NOTIFICATION,
+                            "Failed to transform notification data: ${notification.data}. Error: ${e.message}",
+                        )
+                    }
                 }
-            }
             return Response(
                 Date(notification.timestamp),
                 if (notification.hasRequestId()) notification.requestId else null,

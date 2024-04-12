@@ -47,7 +47,6 @@ import kotlin.properties.Delegates
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(OrderAnnotation::class)
 internal class UserServiceET {
-
     @BeforeAll
     fun setup() {
         turmsClient = TurmsClient(HOST)
@@ -55,10 +54,11 @@ internal class UserServiceET {
 
     @AfterAll
     @Timeout(5)
-    fun tearDown() = runBlocking {
-        turmsClient.driver.disconnect()
-        return@runBlocking
-    }
+    fun tearDown() =
+        runBlocking {
+            turmsClient.driver.disconnect()
+            return@runBlocking
+        }
 
     /** Constructor */
 
@@ -73,267 +73,320 @@ internal class UserServiceET {
     @Test
     @Order(ORDER_HIGHEST_PRIORITY)
     @Timeout(5)
-    fun login_shouldSucceed() = runBlocking {
-        val result = turmsClient.userService.login(1, "123")
-            .data
-        assertNotNull(result)
-    }
+    fun login_shouldSucceed() =
+        runBlocking {
+            val result =
+                turmsClient.userService.login(1, "123")
+                    .data
+            assertNotNull(result)
+        }
 
     /** Logout */
 
     @Test
     @Order(ORDER_LAST)
     @Timeout(5)
-    fun logout_shouldSucceed() = runBlocking {
-        val result = turmsClient.userService.logout()
-            .data
-        assertNotNull(result)
-    }
+    fun logout_shouldSucceed() =
+        runBlocking {
+            val result =
+                turmsClient.userService.logout()
+                    .data
+            assertNotNull(result)
+        }
 
     /** Create */
 
     @Test
     @Order(ORDER_HIGH_PRIORITY)
     @Timeout(5)
-    fun createRelationship_shouldSucceed() = runBlocking {
-        try {
-            val result = turmsClient.userService.createRelationship(10L, true)
-                .data
-            assertNotNull(result)
-        } catch (e: ExecutionException) {
-            assertTrue(isResponseStatusCode(e, ResponseStatusCode.CREATE_EXISTING_RELATIONSHIP))
+    fun createRelationship_shouldSucceed() =
+        runBlocking {
+            try {
+                val result =
+                    turmsClient.userService.createRelationship(10L, true)
+                        .data
+                assertNotNull(result)
+            } catch (e: ExecutionException) {
+                assertTrue(isResponseStatusCode(e, ResponseStatusCode.CREATE_EXISTING_RELATIONSHIP))
+            }
         }
-    }
 
     @Test
     @Order(ORDER_HIGH_PRIORITY)
     @Timeout(5)
-    fun createFriendRelationship_shouldSucceed() = runBlocking {
-        try {
-            val result = turmsClient.userService.createFriendRelationship(10L)
-                .data
-            assertNotNull(result)
-        } catch (e: ExecutionException) {
-            assertTrue(isResponseStatusCode(e, ResponseStatusCode.CREATE_EXISTING_RELATIONSHIP))
+    fun createFriendRelationship_shouldSucceed() =
+        runBlocking {
+            try {
+                val result =
+                    turmsClient.userService.createFriendRelationship(10L)
+                        .data
+                assertNotNull(result)
+            } catch (e: ExecutionException) {
+                assertTrue(isResponseStatusCode(e, ResponseStatusCode.CREATE_EXISTING_RELATIONSHIP))
+            }
         }
-    }
 
     @Test
     @Order(ORDER_HIGH_PRIORITY)
     @Timeout(5)
-    fun createBlockedUserRelationship_shouldSucceed() = runBlocking {
-        try {
-            val result = turmsClient.userService.createBlockedUserRelationship(10L)
-                .data
-            assertNotNull(result)
-        } catch (e: ExecutionException) {
-            assertTrue(isResponseStatusCode(e, ResponseStatusCode.CREATE_EXISTING_RELATIONSHIP))
+    fun createBlockedUserRelationship_shouldSucceed() =
+        runBlocking {
+            try {
+                val result =
+                    turmsClient.userService.createBlockedUserRelationship(10L)
+                        .data
+                assertNotNull(result)
+            } catch (e: ExecutionException) {
+                assertTrue(isResponseStatusCode(e, ResponseStatusCode.CREATE_EXISTING_RELATIONSHIP))
+            }
         }
-    }
 
     @Test
     @Order(ORDER_HIGH_PRIORITY)
     @Timeout(5)
-    fun sendFriendRequest_shouldReturnFriendRequestId() = runBlocking {
-        try {
-            val friendRequestId = turmsClient.userService.sendFriendRequest(11L, "content")
-                .data
-            assertNotNull(friendRequestId)
-        } catch (e: ExecutionException) {
-            assertTrue(isResponseStatusCode(e, ResponseStatusCode.CREATE_EXISTING_FRIEND_REQUEST))
+    fun sendFriendRequest_shouldReturnFriendRequestId() =
+        runBlocking {
+            try {
+                val friendRequestId =
+                    turmsClient.userService.sendFriendRequest(11L, "content")
+                        .data
+                assertNotNull(friendRequestId)
+            } catch (e: ExecutionException) {
+                assertTrue(isResponseStatusCode(e, ResponseStatusCode.CREATE_EXISTING_FRIEND_REQUEST))
+            }
         }
-    }
 
     @Test
     @Order(ORDER_HIGH_PRIORITY)
     @Timeout(5)
-    fun createRelationshipGroup_shouldReturnRelationshipGroupIndex() = runBlocking {
-        relationshipGroupIndex = turmsClient.userService.createRelationshipGroup("newGroup")
-            .data
-        assertNotNull(relationshipGroupIndex)
-    }
+    fun createRelationshipGroup_shouldReturnRelationshipGroupIndex() =
+        runBlocking {
+            relationshipGroupIndex =
+                turmsClient.userService.createRelationshipGroup("newGroup")
+                    .data
+            assertNotNull(relationshipGroupIndex)
+        }
 
     /** Update */
 
     @Test
     @Order(ORDER_MIDDLE_PRIORITY)
     @Timeout(5)
-    fun updateUserOnlineStatus_shouldSucceed() = runBlocking {
-        val result = turmsClient.userService.updateOnlineStatus(userStatus)
-            .data
-        assertNotNull(result)
-    }
+    fun updateUserOnlineStatus_shouldSucceed() =
+        runBlocking {
+            val result =
+                turmsClient.userService.updateOnlineStatus(userStatus)
+                    .data
+            assertNotNull(result)
+        }
 
     @Test
     @Order(ORDER_MIDDLE_PRIORITY)
     @Timeout(5)
-    fun updatePassword_shouldSucceed() = runBlocking {
-        val result = turmsClient.userService.updatePassword("123")
-            .data
-        assertNotNull(result)
-    }
+    fun updatePassword_shouldSucceed() =
+        runBlocking {
+            val result =
+                turmsClient.userService.updatePassword("123")
+                    .data
+            assertNotNull(result)
+        }
 
     @Test
     @Order(ORDER_MIDDLE_PRIORITY)
     @Timeout(5)
-    fun updateProfile_shouldSucceed() = runBlocking {
-        val result = turmsClient.userService.updateProfile("123", "123")
-            .data
-        assertNotNull(result)
-    }
+    fun updateProfile_shouldSucceed() =
+        runBlocking {
+            val result =
+                turmsClient.userService.updateProfile("123", "123")
+                    .data
+            assertNotNull(result)
+        }
 
     @Test
     @Order(ORDER_MIDDLE_PRIORITY)
     @Timeout(5)
-    fun updateRelationship_shouldSucceed() = runBlocking {
-        val result = turmsClient.userService.updateRelationship(10L, null, 1)
-            .data
-        assertNotNull(result)
-    }
+    fun updateRelationship_shouldSucceed() =
+        runBlocking {
+            val result =
+                turmsClient.userService.updateRelationship(10L, null, 1)
+                    .data
+            assertNotNull(result)
+        }
 
     @Test
     @Order(ORDER_MIDDLE_PRIORITY)
     @Timeout(5)
-    fun replyFriendRequest_shouldSucceed() = runBlocking {
-        val result = turmsClient.userService.replyFriendRequest(10L, ResponseAction.ACCEPT, "reason")
-            .data
-        assertNotNull(result)
-    }
+    fun replyFriendRequest_shouldSucceed() =
+        runBlocking {
+            val result =
+                turmsClient.userService.replyFriendRequest(10L, ResponseAction.ACCEPT, "reason")
+                    .data
+            assertNotNull(result)
+        }
 
     @Test
     @Order(ORDER_MIDDLE_PRIORITY)
     @Timeout(5)
-    fun updateRelationshipGroup_shouldSucceed() = runBlocking {
-        val result = turmsClient.userService.updateRelationshipGroup(relationshipGroupIndex, "newGroupName")
-            .data
-        assertNotNull(result)
-    }
+    fun updateRelationshipGroup_shouldSucceed() =
+        runBlocking {
+            val result =
+                turmsClient.userService.updateRelationshipGroup(relationshipGroupIndex, "newGroupName")
+                    .data
+            assertNotNull(result)
+        }
 
     @Test
     @Order(ORDER_MIDDLE_PRIORITY)
     @Timeout(5)
-    fun moveRelatedUserToGroup_shouldSucceed() = runBlocking {
-        var result = turmsClient.userService.moveRelatedUserToGroup(2L, 1)
-            .data
-        assertNotNull(result)
-        result = turmsClient.userService.moveRelatedUserToGroup(2L, 0)
-            .data
-        assertNotNull(result)
-    }
+    fun moveRelatedUserToGroup_shouldSucceed() =
+        runBlocking {
+            var result =
+                turmsClient.userService.moveRelatedUserToGroup(2L, 1)
+                    .data
+            assertNotNull(result)
+            result =
+                turmsClient.userService.moveRelatedUserToGroup(2L, 0)
+                    .data
+            assertNotNull(result)
+        }
 
     @Test
     @Order(ORDER_MIDDLE_PRIORITY)
     @Timeout(5)
-    fun updateLocation_shouldSucceed() = runBlocking {
-        val result = turmsClient.userService.updateLocation(2f, 2f)
-            .data
-        assertNotNull(result)
-    }
+    fun updateLocation_shouldSucceed() =
+        runBlocking {
+            val result =
+                turmsClient.userService.updateLocation(2f, 2f)
+                    .data
+            assertNotNull(result)
+        }
 
     /** Query */
 
     @Test
     @Order(ORDER_LOW_PRIORITY)
     @Timeout(5)
-    fun queryUserProfiles_shouldReturnUserInfos() = runBlocking {
-        val result = turmsClient.userService.queryUserProfiles(setOf(1))
-            .data
-        assertNotNull(result)
-    }
+    fun queryUserProfiles_shouldReturnUserInfos() =
+        runBlocking {
+            val result =
+                turmsClient.userService.queryUserProfiles(setOf(1))
+                    .data
+            assertNotNull(result)
+        }
 
     @Test
     @Order(ORDER_LOW_PRIORITY)
     @Timeout(5)
-    fun queryNearbyUsers_shouldReturnNearbyUsers() = runBlocking {
-        val nearbyUsers = turmsClient.userService.queryNearbyUsers(1f, 1f)
-            .data
-        assertNotNull(nearbyUsers)
-    }
+    fun queryNearbyUsers_shouldReturnNearbyUsers() =
+        runBlocking {
+            val nearbyUsers =
+                turmsClient.userService.queryNearbyUsers(1f, 1f)
+                    .data
+            assertNotNull(nearbyUsers)
+        }
 
     @Test
     @Order(ORDER_LOW_PRIORITY)
     @Timeout(5)
-    fun queryUserOnlineStatusesRequest_shouldUsersOnlineStatuses() = runBlocking {
-        val set = setOf(1L)
-        val result = turmsClient.userService.queryOnlineStatusesRequest(set)
-            .data
-        assertEquals(userStatus, result[0].userStatus)
-    }
+    fun queryUserOnlineStatusesRequest_shouldUsersOnlineStatuses() =
+        runBlocking {
+            val set = setOf(1L)
+            val result =
+                turmsClient.userService.queryOnlineStatusesRequest(set)
+                    .data
+            assertEquals(userStatus, result[0].userStatus)
+        }
 
     @Test
     @Order(ORDER_LOW_PRIORITY)
     @Timeout(5)
-    fun queryRelationships_shouldReturnUserRelationshipsWithVersion() = runBlocking {
-        val set = setOf(2L)
-        val result = turmsClient.userService.queryRelationships(set)
-            .data
-        assertNotNull(result)
-    }
+    fun queryRelationships_shouldReturnUserRelationshipsWithVersion() =
+        runBlocking {
+            val set = setOf(2L)
+            val result =
+                turmsClient.userService.queryRelationships(set)
+                    .data
+            assertNotNull(result)
+        }
 
     @Test
     @Order(ORDER_LOW_PRIORITY)
     @Timeout(5)
-    fun queryRelatedUserIds_shouldReturnRelatedUserIds() = runBlocking {
-        val result = turmsClient.userService.queryRelatedUserIds()
-            .data
-        assertNotNull(result)
-    }
+    fun queryRelatedUserIds_shouldReturnRelatedUserIds() =
+        runBlocking {
+            val result =
+                turmsClient.userService.queryRelatedUserIds()
+                    .data
+            assertNotNull(result)
+        }
 
     @Test
     @Order(ORDER_LOW_PRIORITY)
     @Timeout(5)
-    fun queryFriends_shouldReturnFriendRelationships() = runBlocking {
-        val result = turmsClient.userService.queryFriends()
-            .data
-        assertNotNull(result)
-    }
+    fun queryFriends_shouldReturnFriendRelationships() =
+        runBlocking {
+            val result =
+                turmsClient.userService.queryFriends()
+                    .data
+            assertNotNull(result)
+        }
 
     @Test
     @Order(ORDER_LOW_PRIORITY)
     @Timeout(5)
-    fun queryBlockedUsers_shouldReturnRelationshipsWithBlockedUsers() = runBlocking {
-        val result = turmsClient.userService.queryBlockedUsers()
-            .data
-        assertNotNull(result)
-    }
+    fun queryBlockedUsers_shouldReturnRelationshipsWithBlockedUsers() =
+        runBlocking {
+            val result =
+                turmsClient.userService.queryBlockedUsers()
+                    .data
+            assertNotNull(result)
+        }
 
     @Test
     @Order(ORDER_LOW_PRIORITY)
     @Timeout(5)
-    fun queryFriendRequests_shouldReturnFriendRequests() = runBlocking {
-        val result = turmsClient.userService.queryFriendRequests(true)
-            .data
-        assertNotNull(result)
-    }
+    fun queryFriendRequests_shouldReturnFriendRequests() =
+        runBlocking {
+            val result =
+                turmsClient.userService.queryFriendRequests(true)
+                    .data
+            assertNotNull(result)
+        }
 
     @Test
     @Order(ORDER_LOW_PRIORITY)
     @Timeout(5)
-    fun queryRelationshipGroups_shouldReturnRelationshipGroups() = runBlocking {
-        val result = turmsClient.userService.queryRelationshipGroups()
-            .data
-        assertNotNull(result)
-    }
+    fun queryRelationshipGroups_shouldReturnRelationshipGroups() =
+        runBlocking {
+            val result =
+                turmsClient.userService.queryRelationshipGroups()
+                    .data
+            assertNotNull(result)
+        }
 
     /** Delete */
 
     @Test
     @Order(ORDER_LOWEST_PRIORITY)
     @Timeout(5)
-    fun deleteRelationship_shouldSucceed() = runBlocking {
-        val result = turmsClient.userService.deleteRelationship(10L)
-            .data
-        assertNotNull(result)
-    }
+    fun deleteRelationship_shouldSucceed() =
+        runBlocking {
+            val result =
+                turmsClient.userService.deleteRelationship(10L)
+                    .data
+            assertNotNull(result)
+        }
 
     @Test
     @Order(ORDER_LOWEST_PRIORITY)
     @Timeout(5)
-    fun deleteRelationshipGroups_shouldSucceed() = runBlocking {
-        val result = turmsClient.userService.deleteRelationshipGroups(relationshipGroupIndex)
-            .data
-        assertNotNull(result)
-    }
+    fun deleteRelationshipGroups_shouldSucceed() =
+        runBlocking {
+            val result =
+                turmsClient.userService.deleteRelationshipGroups(relationshipGroupIndex)
+                    .data
+            assertNotNull(result)
+        }
 
     companion object {
         private val userStatus = UserStatus.AWAY

@@ -51,7 +51,6 @@ class TurmsDriver(
     heartbeatIntervalMillis: Int?,
     context: CoroutineContext?,
 ) : CoroutineScope {
-
     override val coroutineContext: CoroutineContext =
         context ?: ScheduledThreadPoolExecutor(2) { r -> Thread(r, "turms-scheduler") }.asCoroutineDispatcher()
     internal val stateStore: StateStore = StateStore()
@@ -68,14 +67,15 @@ class TurmsDriver(
 
     // Close
 
-    suspend fun close() = coroutineScope {
-        val closeConnectionService = async { connectionService.close() }
-        val closeHeartbeatService = async { heartbeatService.close() }
-        val closeMessageService = async { messageService.close() }
-        closeConnectionService.await()
-        closeHeartbeatService.await()
-        closeMessageService.await()
-    }
+    suspend fun close() =
+        coroutineScope {
+            val closeConnectionService = async { connectionService.close() }
+            val closeHeartbeatService = async { heartbeatService.close() }
+            val closeMessageService = async { messageService.close() }
+            closeConnectionService.await()
+            closeHeartbeatService.await()
+            closeMessageService.await()
+        }
 
     // Heartbeat Service
 
@@ -110,17 +110,13 @@ class TurmsDriver(
 
     // Connection Listeners
 
-    fun addOnConnectedListener(listener: () -> Unit) =
-        connectionService.addOnConnectedListener(listener)
+    fun addOnConnectedListener(listener: () -> Unit) = connectionService.addOnConnectedListener(listener)
 
-    fun addOnDisconnectedListener(listener: (Throwable?) -> Unit) =
-        connectionService.addOnDisconnectedListener(listener)
+    fun addOnDisconnectedListener(listener: (Throwable?) -> Unit) = connectionService.addOnDisconnectedListener(listener)
 
-    fun removeOnConnectedListener(listener: () -> Unit) =
-        connectionService.removeOnConnectedListener(listener)
+    fun removeOnConnectedListener(listener: () -> Unit) = connectionService.removeOnConnectedListener(listener)
 
-    fun removeOnDisconnectedListener(listener: (Throwable?) -> Unit) =
-        connectionService.removeOnDisconnectedListener(listener)
+    fun removeOnDisconnectedListener(listener: (Throwable?) -> Unit) = connectionService.removeOnDisconnectedListener(listener)
 
     // Message Service
 
@@ -137,21 +133,20 @@ class TurmsDriver(
         val instanceClass = builder.defaultInstanceForType.javaClass
         var method = REQUEST_CLASS_TO_SET_METHOD[instanceClass]
         if (method == null) {
-            method = requestBuilder.javaClass.getDeclaredMethod(
-                "set${instanceClass.simpleName}",
-                builder.javaClass,
-            )
+            method =
+                requestBuilder.javaClass.getDeclaredMethod(
+                    "set${instanceClass.simpleName}",
+                    builder.javaClass,
+                )
             REQUEST_CLASS_TO_SET_METHOD.putIfAbsent(instanceClass, method)
         }
         method!!.invoke(requestBuilder, builder)
         return send(requestBuilder)
     }
 
-    fun addNotificationListener(listener: (TurmsNotification) -> Unit) =
-        messageService.addNotificationListener(listener)
+    fun addNotificationListener(listener: (TurmsNotification) -> Unit) = messageService.addNotificationListener(listener)
 
-    fun removeNotificationListener(listener: (TurmsNotification) -> Unit) =
-        messageService.removeNotificationListener(listener)
+    fun removeNotificationListener(listener: (TurmsNotification) -> Unit) = messageService.removeNotificationListener(listener)
 
     // Intermediary functions as a mediator between services
 
@@ -163,12 +158,13 @@ class TurmsDriver(
 
     private fun onMessage(byteBuffer: ByteBuffer) {
         if (byteBuffer.hasRemaining()) {
-            val notification: TurmsNotification = try {
-                TurmsNotification.parseFrom(byteBuffer)
-            } catch (e: InvalidProtocolBufferException) {
-                LOGGER.log(Level.SEVERE, "Failed to parse TurmsNotification", e)
-                return
-            }
+            val notification: TurmsNotification =
+                try {
+                    TurmsNotification.parseFrom(byteBuffer)
+                } catch (e: InvalidProtocolBufferException) {
+                    LOGGER.log(Level.SEVERE, "Failed to parse TurmsNotification", e)
+                    return
+                }
             if (heartbeatService.rejectHeartbeatPromisesIfFail(notification)) {
                 return
             }

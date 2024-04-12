@@ -179,19 +179,20 @@ class MessageService(private val turmsClient: TurmsClient) {
         messageId: Long,
         isGroupMessage: Boolean,
         targetId: Long,
-    ): Response<Long> = turmsClient.driver
-        .send(
-            CreateMessageRequest.newBuilder().apply {
-                this.messageId = messageId
-                if (isGroupMessage) {
-                    groupId = targetId
-                } else {
-                    recipientId = targetId
-                }
-            },
-        ).toResponse {
-            it.getLongOrThrow()
-        }
+    ): Response<Long> =
+        turmsClient.driver
+            .send(
+                CreateMessageRequest.newBuilder().apply {
+                    this.messageId = messageId
+                    if (isGroupMessage) {
+                        groupId = targetId
+                    } else {
+                        recipientId = targetId
+                    }
+                },
+            ).toResponse {
+                it.getLongOrThrow()
+            }
 
     /**
      * Update a sent message.
@@ -225,19 +226,20 @@ class MessageService(private val turmsClient: TurmsClient) {
         messageId: Long,
         text: String? = null,
         records: List<ByteBuffer>? = null,
-    ): Response<Unit> = if (Validator.areAllFalsy(text, records)) {
-        Response.unitValue()
-    } else {
-        turmsClient.driver
-            .send(
-                UpdateMessageRequest.newBuilder().apply {
-                    this.messageId = messageId
-                    text?.let { this.text = it }
-                    records?.let { this.addAllRecords(it.map { buffer -> ByteString.copyFrom(buffer) }) }
-                },
-            )
-            .toResponse()
-    }
+    ): Response<Unit> =
+        if (Validator.areAllFalsy(text, records)) {
+            Response.unitValue()
+        } else {
+            turmsClient.driver
+                .send(
+                    UpdateMessageRequest.newBuilder().apply {
+                        this.messageId = messageId
+                        text?.let { this.text = it }
+                        records?.let { this.addAllRecords(it.map { buffer -> ByteString.copyFrom(buffer) }) }
+                    },
+                )
+                .toResponse()
+        }
 
     /**
      * Find messages.
@@ -272,22 +274,23 @@ class MessageService(private val turmsClient: TurmsClient) {
         deliveryDateEnd: Date? = null,
         maxCount: Int = 50,
         descending: Boolean? = null,
-    ): Response<List<Message>> = turmsClient.driver
-        .send(
-            QueryMessagesRequest.newBuilder().apply {
-                ids?.let { this.addAllIds(it) }
-                areGroupMessages?.let { this.areGroupMessages = it }
-                areSystemMessages?.let { this.areSystemMessages = it }
-                fromIds?.let { this.addAllFromIds(it) }
-                deliveryDateStart?.let { this.deliveryDateStart = it.time }
-                deliveryDateEnd?.let { this.deliveryDateEnd = it.time }
-                this.maxCount = maxCount
-                descending?.let { this.descending = it }
-                withTotal = false
-            },
-        ).toResponse {
-            it.messages.messagesList
-        }
+    ): Response<List<Message>> =
+        turmsClient.driver
+            .send(
+                QueryMessagesRequest.newBuilder().apply {
+                    ids?.let { this.addAllIds(it) }
+                    areGroupMessages?.let { this.areGroupMessages = it }
+                    areSystemMessages?.let { this.areSystemMessages = it }
+                    fromIds?.let { this.addAllFromIds(it) }
+                    deliveryDateStart?.let { this.deliveryDateStart = it.time }
+                    deliveryDateEnd?.let { this.deliveryDateEnd = it.time }
+                    this.maxCount = maxCount
+                    descending?.let { this.descending = it }
+                    withTotal = false
+                },
+            ).toResponse {
+                it.messages.messagesList
+            }
 
     /**
      * Find the pair of messages and the total count for each conversation.
@@ -322,22 +325,23 @@ class MessageService(private val turmsClient: TurmsClient) {
         deliveryDateEnd: Date? = null,
         maxCount: Int = 1,
         descending: Boolean? = null,
-    ): Response<List<MessagesWithTotal>> = turmsClient.driver
-        .send(
-            QueryMessagesRequest.newBuilder().apply {
-                ids?.let { this.addAllIds(it) }
-                areGroupMessages?.let { this.areGroupMessages = it }
-                areSystemMessages?.let { this.areSystemMessages = it }
-                fromIds?.let { this.addAllFromIds(it) }
-                deliveryDateStart?.let { this.deliveryDateStart = it.time }
-                deliveryDateEnd?.let { this.deliveryDateEnd = it.time }
-                this.maxCount = maxCount
-                descending?.let { this.descending = it }
-                withTotal = true
-            },
-        ).toResponse {
-            it.messagesWithTotalList.messagesWithTotalListList
-        }
+    ): Response<List<MessagesWithTotal>> =
+        turmsClient.driver
+            .send(
+                QueryMessagesRequest.newBuilder().apply {
+                    ids?.let { this.addAllIds(it) }
+                    areGroupMessages?.let { this.areGroupMessages = it }
+                    areSystemMessages?.let { this.areSystemMessages = it }
+                    fromIds?.let { this.addAllFromIds(it) }
+                    deliveryDateStart?.let { this.deliveryDateStart = it.time }
+                    deliveryDateEnd?.let { this.deliveryDateEnd = it.time }
+                    this.maxCount = maxCount
+                    descending?.let { this.descending = it }
+                    withTotal = true
+                },
+            ).toResponse {
+                it.messagesWithTotalList.messagesWithTotalListList
+            }
 
     /**
      * Recall a message.
@@ -360,14 +364,18 @@ class MessageService(private val turmsClient: TurmsClient) {
      * If null, the current date will be used.
      * @throws ResponseException if an error occurs.
      */
-    suspend fun recallMessage(messageId: Long, recallDate: Date = Date()): Response<Unit> = turmsClient.driver
-        .send(
-            UpdateMessageRequest.newBuilder().apply {
-                this.messageId = messageId
-                this.recallDate = recallDate.time
-            },
-        )
-        .toResponse()
+    suspend fun recallMessage(
+        messageId: Long,
+        recallDate: Date = Date(),
+    ): Response<Unit> =
+        turmsClient.driver
+            .send(
+                UpdateMessageRequest.newBuilder().apply {
+                    this.messageId = messageId
+                    this.recallDate = recallDate.time
+                },
+            )
+            .toResponse()
 
     /**
      * Check if the mention feature is enabled.
@@ -396,20 +404,24 @@ class MessageService(private val turmsClient: TurmsClient) {
                 systemMessageType = BuiltinSystemMessageType[bytes.byteAt(0).toInt()]
             }
         }
-        val recalledMessageIds: Set<Long> = if (systemMessageType === BuiltinSystemMessageType.RECALL_MESSAGE) {
-            mutableSetOf<Long>().apply {
-                for (i in 1 until size) {
-                    val id = message.getRecords(i).asReadOnlyByteBuffer().long
-                    add(id)
+        val recalledMessageIds: Set<Long> =
+            if (systemMessageType === BuiltinSystemMessageType.RECALL_MESSAGE) {
+                mutableSetOf<Long>().apply {
+                    for (i in 1 until size) {
+                        val id = message.getRecords(i).asReadOnlyByteBuffer().long
+                        add(id)
+                    }
                 }
+            } else {
+                emptySet()
             }
-        } else {
-            emptySet()
-        }
         return MessageAddition(isMentioned, mentionedUserIds, recalledMessageIds)
     }
 
-    private fun createMessageRequest2Message(requesterId: Long, request: CreateMessageRequest): Message =
+    private fun createMessageRequest2Message(
+        requesterId: Long,
+        request: CreateMessageRequest,
+    ): Message =
         Message.newBuilder()
             .run {
                 if (request.hasMessageId()) {
@@ -464,12 +476,13 @@ class MessageService(private val turmsClient: TurmsClient) {
             latitude: Float,
             longitude: Float,
             details: Map<String, String>? = null,
-        ): ByteBuffer = UserLocation.newBuilder().run {
-            setLatitude(latitude)
-            setLongitude(longitude)
-            details?.let { putAllDetails(it) }
-            build().toByteString().asReadOnlyByteBuffer()
-        }
+        ): ByteBuffer =
+            UserLocation.newBuilder().run {
+                setLatitude(latitude)
+                setLongitude(longitude)
+                details?.let { putAllDetails(it) }
+                build().toByteString().asReadOnlyByteBuffer()
+            }
 
         @JvmStatic
         fun generateAudioRecordByDescription(
@@ -477,27 +490,29 @@ class MessageService(private val turmsClient: TurmsClient) {
             duration: Int? = null,
             format: String? = null,
             size: Int? = null,
-        ): ByteBuffer = AudioFile.newBuilder().run {
-            setDescription(
-                AudioFile.Description.newBuilder().apply {
-                    this.url = url
-                    duration?.let { this.duration = it }
-                    format?.let { this.format = it }
-                    size?.let { this.size = it }
-                },
-            )
-                .build()
-                .toByteString()
-                .asReadOnlyByteBuffer()
-        }
+        ): ByteBuffer =
+            AudioFile.newBuilder().run {
+                setDescription(
+                    AudioFile.Description.newBuilder().apply {
+                        this.url = url
+                        duration?.let { this.duration = it }
+                        format?.let { this.format = it }
+                        size?.let { this.size = it }
+                    },
+                )
+                    .build()
+                    .toByteString()
+                    .asReadOnlyByteBuffer()
+            }
 
         @JvmStatic
-        fun generateAudioRecordByData(data: ByteArray): ByteBuffer = AudioFile.newBuilder().run {
-            setData(ByteString.copyFrom(data))
-                .build()
-                .toByteString()
-                .asReadOnlyByteBuffer()
-        }
+        fun generateAudioRecordByData(data: ByteArray): ByteBuffer =
+            AudioFile.newBuilder().run {
+                setData(ByteString.copyFrom(data))
+                    .build()
+                    .toByteString()
+                    .asReadOnlyByteBuffer()
+            }
 
         @JvmStatic
         fun generateVideoRecordByDescription(
@@ -505,33 +520,36 @@ class MessageService(private val turmsClient: TurmsClient) {
             duration: Int? = null,
             format: String? = null,
             size: Int? = null,
-        ): ByteBuffer = VideoFile.newBuilder().run {
-            setDescription(
-                VideoFile.Description.newBuilder().apply {
-                    this.url = url
-                    duration?.let { this.duration = it }
-                    format?.let { this.format = it }
-                    size?.let { this.size = it }
-                },
-            )
+        ): ByteBuffer =
+            VideoFile.newBuilder().run {
+                setDescription(
+                    VideoFile.Description.newBuilder().apply {
+                        this.url = url
+                        duration?.let { this.duration = it }
+                        format?.let { this.format = it }
+                        size?.let { this.size = it }
+                    },
+                )
+                    .build()
+                    .toByteString()
+                    .asReadOnlyByteBuffer()
+            }
+
+        @JvmStatic
+        fun generateVideoRecordByData(data: ByteArray): ByteBuffer =
+            VideoFile.newBuilder()
+                .setData(ByteString.copyFrom(data))
                 .build()
                 .toByteString()
                 .asReadOnlyByteBuffer()
-        }
 
         @JvmStatic
-        fun generateVideoRecordByData(data: ByteArray): ByteBuffer = VideoFile.newBuilder()
-            .setData(ByteString.copyFrom(data))
-            .build()
-            .toByteString()
-            .asReadOnlyByteBuffer()
-
-        @JvmStatic
-        fun generateImageRecordByData(data: ByteArray): ByteBuffer = ImageFile.newBuilder()
-            .setData(ByteString.copyFrom(data))
-            .build()
-            .toByteString()
-            .asReadOnlyByteBuffer()
+        fun generateImageRecordByData(data: ByteArray): ByteBuffer =
+            ImageFile.newBuilder()
+                .setData(ByteString.copyFrom(data))
+                .build()
+                .toByteString()
+                .asReadOnlyByteBuffer()
 
         @JvmStatic
         fun generateImageRecordByDescription(
@@ -539,42 +557,45 @@ class MessageService(private val turmsClient: TurmsClient) {
             fileSize: Int? = null,
             imageSize: Int? = null,
             original: Boolean? = null,
-        ): ByteBuffer = ImageFile.newBuilder()
-            .setDescription(
-                ImageFile.Description.newBuilder().apply {
-                    setUrl(url)
-                    fileSize?.let { this.fileSize = it }
-                    imageSize?.let { this.imageSize = it }
-                    original?.let { this.original = it }
-                },
-            )
-            .build()
-            .toByteString()
-            .asReadOnlyByteBuffer()
+        ): ByteBuffer =
+            ImageFile.newBuilder()
+                .setDescription(
+                    ImageFile.Description.newBuilder().apply {
+                        setUrl(url)
+                        fileSize?.let { this.fileSize = it }
+                        imageSize?.let { this.imageSize = it }
+                        original?.let { this.original = it }
+                    },
+                )
+                .build()
+                .toByteString()
+                .asReadOnlyByteBuffer()
 
         @JvmStatic
-        fun generateFileRecordByDate(data: ByteArray): ByteBuffer = File.newBuilder()
-            .setData(ByteString.copyFrom(data))
-            .build()
-            .toByteString()
-            .asReadOnlyByteBuffer()
+        fun generateFileRecordByDate(data: ByteArray): ByteBuffer =
+            File.newBuilder()
+                .setData(ByteString.copyFrom(data))
+                .build()
+                .toByteString()
+                .asReadOnlyByteBuffer()
 
         @JvmStatic
         fun generateFileRecordByDescription(
             url: String,
             format: String? = null,
             size: Int? = null,
-        ): ByteBuffer = File.newBuilder()
-            .setDescription(
-                File.Description.newBuilder().apply {
-                    setUrl(url)
-                    format?.let { this.format = it }
-                    size?.let { this.size = it }
-                },
-            )
-            .build()
-            .toByteString()
-            .asReadOnlyByteBuffer()
+        ): ByteBuffer =
+            File.newBuilder()
+                .setDescription(
+                    File.Description.newBuilder().apply {
+                        setUrl(url)
+                        format?.let { this.format = it }
+                        size?.let { this.size = it }
+                    },
+                )
+                .build()
+                .toByteString()
+                .asReadOnlyByteBuffer()
     }
 
     init {

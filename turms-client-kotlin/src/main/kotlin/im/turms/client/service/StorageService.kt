@@ -77,11 +77,14 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
         val uploadInfo = queryUserProfilePictureUploadInfo(name, mediaType, extra)
         val responseData = uploadInfo.data.toMutableMap()
         val url = getAndRemoveResourceUrl(responseData, urlKeyName)
-        val id = responseData.remove(RESOURCE_ID_KEY_NAME)
-            ?: throw ResponseException.from(
-                code = ResponseStatusCode.DATA_NOT_FOUND,
-                reason = "Could not get the resource ID because the key \"$RESOURCE_ID_KEY_NAME\" does not exist in the data: ${uploadInfo.data}",
-            )
+        val id =
+            responseData.remove(RESOURCE_ID_KEY_NAME)
+                ?: throw ResponseException.from(
+                    code = ResponseStatusCode.DATA_NOT_FOUND,
+                    reason =
+                        "Could not get the resource ID because the key \"$RESOURCE_ID_KEY_NAME\" " +
+                            "does not exist in the data: ${uploadInfo.data}",
+                )
         return upload(url, responseData, data, id, name, type)
     }
 
@@ -94,12 +97,13 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
         fetchDownloadInfo: Boolean = false,
         urlKeyName: String = DEFAULT_URL_KEY_NAME,
     ): Response<StorageResource> {
-        val downloadInfo = queryUserProfilePictureDownloadInfo(
-            userId,
-            extra,
-            fetchDownloadInfo,
-            urlKeyName,
-        )
+        val downloadInfo =
+            queryUserProfilePictureDownloadInfo(
+                userId,
+                extra,
+                fetchDownloadInfo,
+                urlKeyName,
+            )
         val url = getResourceUrl(downloadInfo.data, urlKeyName)
         return queryResource(url)
     }
@@ -155,11 +159,14 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
         val uploadInfo = queryGroupProfilePictureUploadInfo(groupId, name, mediaType, extra)
         val responseData = uploadInfo.data.toMutableMap()
         val url = getAndRemoveResourceUrl(responseData, urlKeyName)
-        val id = responseData.remove(RESOURCE_ID_KEY_NAME)
-            ?: throw ResponseException.from(
-                code = ResponseStatusCode.DATA_NOT_FOUND,
-                reason = "Could not get the resource ID because the key \"$RESOURCE_ID_KEY_NAME\" does not exist in the data: ${uploadInfo.data}",
-            )
+        val id =
+            responseData.remove(RESOURCE_ID_KEY_NAME)
+                ?: throw ResponseException.from(
+                    code = ResponseStatusCode.DATA_NOT_FOUND,
+                    reason =
+                        "Could not get the resource ID because the key \"$RESOURCE_ID_KEY_NAME\" " +
+                            "does not exist in the data: ${uploadInfo.data}",
+                )
         return upload(url, responseData, data, id, name, type)
     }
 
@@ -283,11 +290,12 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
         val type = if (mediaType == null) null else parseMediaType(mediaType)
         val uploadInfo: Response<Map<String, String>>
         if (userId == null && groupId == null) {
-            uploadInfo = queryMessageAttachmentUploadInfo(
-                name,
-                mediaType,
-                extra,
-            )
+            uploadInfo =
+                queryMessageAttachmentUploadInfo(
+                    name,
+                    mediaType,
+                    extra,
+                )
         } else if (userId != null) {
             if (groupId != null) {
                 throw ResponseException.from(
@@ -295,27 +303,32 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
                     reason = "The user ID and the group ID must not both be non-null",
                 )
             }
-            uploadInfo = queryMessageAttachmentUploadInfoInPrivateConversation(
-                userId,
-                name,
-                mediaType,
-                extra,
-            )
+            uploadInfo =
+                queryMessageAttachmentUploadInfoInPrivateConversation(
+                    userId,
+                    name,
+                    mediaType,
+                    extra,
+                )
         } else {
-            uploadInfo = queryMessageAttachmentUploadInfoInGroupConversation(
-                groupId!!,
-                name,
-                mediaType,
-                extra,
-            )
+            uploadInfo =
+                queryMessageAttachmentUploadInfoInGroupConversation(
+                    groupId!!,
+                    name,
+                    mediaType,
+                    extra,
+                )
         }
         val responseData = uploadInfo.data.toMutableMap()
         val url = getAndRemoveResourceUrl(responseData, urlKeyName)
-        val id = responseData.remove(RESOURCE_ID_KEY_NAME)
-            ?: throw ResponseException.from(
-                code = ResponseStatusCode.DATA_NOT_FOUND,
-                reason = "Could not get the resource ID because the key \"$RESOURCE_ID_KEY_NAME\" does not exist in the data: ${uploadInfo.data}",
-            )
+        val id =
+            responseData.remove(RESOURCE_ID_KEY_NAME)
+                ?: throw ResponseException.from(
+                    code = ResponseStatusCode.DATA_NOT_FOUND,
+                    reason =
+                        "Could not get the resource ID because the key \"$RESOURCE_ID_KEY_NAME\" " +
+                            "does not exist in the data: ${uploadInfo.data}",
+                )
         return upload(url, responseData, data, id, name, type)
     }
 
@@ -344,12 +357,13 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
                 reason = "One and only one attachment ID must be specified",
             )
         }
-        val request = UpdateMessageAttachmentInfoRequest.newBuilder()
-            .apply {
-                attachmentIdNum?.let { this.attachmentIdNum = it }
-                attachmentIdStr?.let { this.attachmentIdStr = it }
-                userIdToShareWith = userId
-            }
+        val request =
+            UpdateMessageAttachmentInfoRequest.newBuilder()
+                .apply {
+                    attachmentIdNum?.let { this.attachmentIdNum = it }
+                    attachmentIdStr?.let { this.attachmentIdStr = it }
+                    userIdToShareWith = userId
+                }
         return turmsClient.driver.send(request)
             .toResponse()
     }
@@ -365,12 +379,13 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
                 reason = "One and only one attachment ID must be specified",
             )
         }
-        val request = UpdateMessageAttachmentInfoRequest.newBuilder()
-            .apply {
-                attachmentIdNum?.let { this.attachmentIdNum = it }
-                attachmentIdStr?.let { this.attachmentIdStr = it }
-                groupIdToShareWith = groupId
-            }
+        val request =
+            UpdateMessageAttachmentInfoRequest.newBuilder()
+                .apply {
+                    attachmentIdNum?.let { this.attachmentIdNum = it }
+                    attachmentIdStr?.let { this.attachmentIdStr = it }
+                    groupIdToShareWith = groupId
+                }
         return turmsClient.driver.send(request)
             .toResponse()
     }
@@ -386,12 +401,13 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
                 reason = "One and only one attachment ID must be specified",
             )
         }
-        val request = UpdateMessageAttachmentInfoRequest.newBuilder()
-            .apply {
-                attachmentIdNum?.let { this.attachmentIdNum = it }
-                attachmentIdStr?.let { this.attachmentIdStr = it }
-                userIdToUnshareWith = userId
-            }
+        val request =
+            UpdateMessageAttachmentInfoRequest.newBuilder()
+                .apply {
+                    attachmentIdNum?.let { this.attachmentIdNum = it }
+                    attachmentIdStr?.let { this.attachmentIdStr = it }
+                    userIdToUnshareWith = userId
+                }
         return turmsClient.driver.send(request)
             .toResponse()
     }
@@ -407,12 +423,13 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
                 reason = "One and only one attachment ID must be specified",
             )
         }
-        val request = UpdateMessageAttachmentInfoRequest.newBuilder()
-            .apply {
-                attachmentIdNum?.let { this.attachmentIdNum = it }
-                attachmentIdStr?.let { this.attachmentIdStr = it }
-                groupIdToUnshareWith = groupId
-            }
+        val request =
+            UpdateMessageAttachmentInfoRequest.newBuilder()
+                .apply {
+                    attachmentIdNum?.let { this.attachmentIdNum = it }
+                    attachmentIdStr?.let { this.attachmentIdStr = it }
+                    groupIdToUnshareWith = groupId
+                }
         return turmsClient.driver.send(request)
             .toResponse()
     }
@@ -447,26 +464,28 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
         name: String? = null,
         mediaType: String? = null,
         extra: Map<String, String>? = null,
-    ): Response<Map<String, String>> = queryResourceUploadInfo(
-        StorageResourceType.MESSAGE_ATTACHMENT,
-        userId,
-        name = name,
-        mediaType = mediaType,
-        extra = extra,
-    )
+    ): Response<Map<String, String>> =
+        queryResourceUploadInfo(
+            StorageResourceType.MESSAGE_ATTACHMENT,
+            userId,
+            name = name,
+            mediaType = mediaType,
+            extra = extra,
+        )
 
     suspend fun queryMessageAttachmentUploadInfoInGroupConversation(
         groupId: Long,
         name: String? = null,
         mediaType: String? = null,
         extra: Map<String, String>? = null,
-    ): Response<Map<String, String>> = queryResourceUploadInfo(
-        StorageResourceType.MESSAGE_ATTACHMENT,
-        -groupId,
-        name = name,
-        mediaType = mediaType,
-        extra = extra,
-    )
+    ): Response<Map<String, String>> =
+        queryResourceUploadInfo(
+            StorageResourceType.MESSAGE_ATTACHMENT,
+            -groupId,
+            name = name,
+            mediaType = mediaType,
+            extra = extra,
+        )
 
     suspend fun queryMessageAttachmentDownloadInfo(
         attachmentIdNum: Long? = null,
@@ -485,7 +504,9 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
             return queryResourceDownloadInfo(StorageResourceType.MESSAGE_ATTACHMENT, attachmentIdNum, attachmentIdStr, extra)
         }
         return Response.value(
-            mapOf(urlKeyName to "$serverUrl/${getBucketName(StorageResourceType.MESSAGE_ATTACHMENT)}/${attachmentIdNum ?: attachmentIdStr}"),
+            mapOf(
+                urlKeyName to "$serverUrl/${getBucketName(StorageResourceType.MESSAGE_ATTACHMENT)}/${attachmentIdNum ?: attachmentIdStr}",
+            ),
         )
     }
 
@@ -493,13 +514,14 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
         creationDateStart: Date? = null,
         creationDateEnd: Date? = null,
     ): Response<List<StorageResourceInfo>> {
-        val n = turmsClient.driver.send(
-            QueryMessageAttachmentInfosRequest.newBuilder()
-                .apply {
-                    creationDateStart?.let { this.creationDateStart = it.time }
-                    creationDateEnd?.let { this.creationDateEnd = it.time }
-                },
-        )
+        val n =
+            turmsClient.driver.send(
+                QueryMessageAttachmentInfosRequest.newBuilder()
+                    .apply {
+                        creationDateStart?.let { this.creationDateStart = it.time }
+                        creationDateEnd?.let { this.creationDateEnd = it.time }
+                    },
+            )
         return n.toResponse { it.storageResourceInfos.infosList }
     }
 
@@ -509,15 +531,16 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
         creationDateStart: Date? = null,
         creationDateEnd: Date? = null,
     ): Response<List<StorageResourceInfo>> {
-        val n = turmsClient.driver.send(
-            QueryMessageAttachmentInfosRequest.newBuilder()
-                .addAllUserIds(userIds)
-                .apply {
-                    areSharedByMe?.let { this.areSharedByMe = it }
-                    creationDateStart?.let { this.creationDateStart = it.time }
-                    creationDateEnd?.let { this.creationDateEnd = it.time }
-                },
-        )
+        val n =
+            turmsClient.driver.send(
+                QueryMessageAttachmentInfosRequest.newBuilder()
+                    .addAllUserIds(userIds)
+                    .apply {
+                        areSharedByMe?.let { this.areSharedByMe = it }
+                        creationDateStart?.let { this.creationDateStart = it.time }
+                        creationDateEnd?.let { this.creationDateEnd = it.time }
+                    },
+            )
         return n.toResponse { it.storageResourceInfos.infosList }
     }
 
@@ -527,17 +550,18 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
         creationDateStart: Date? = null,
         creationDateEnd: Date? = null,
     ): Response<List<StorageResourceInfo>> {
-        val n = turmsClient.driver.send(
-            QueryMessageAttachmentInfosRequest.newBuilder()
-                .addAllGroupIds(groupIds)
-                .apply {
-                    userIds?.let {
-                        addAllUserIds(it)
-                    }
-                    creationDateStart?.let { this.creationDateStart = it.time }
-                    creationDateEnd?.let { this.creationDateEnd = it.time }
-                },
-        )
+        val n =
+            turmsClient.driver.send(
+                QueryMessageAttachmentInfosRequest.newBuilder()
+                    .addAllGroupIds(groupIds)
+                    .apply {
+                        userIds?.let {
+                            addAllUserIds(it)
+                        }
+                        creationDateStart?.let { this.creationDateStart = it.time }
+                        creationDateEnd?.let { this.creationDateEnd = it.time }
+                    },
+            )
         return n.toResponse { it.storageResourceInfos.infosList }
     }
 
@@ -569,70 +593,80 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
                 e,
             )
         }
-        val requestBody = MultipartBody.Builder()
-            .setType(MultipartBody.FORM)
-            .apply {
-                for (entry in formData.entries) {
-                    addFormDataPart(entry.key, entry.value)
-                }
-                mediaType?.let {
-                    addFormDataPart("Content-Type", it.toString())
-                }
-            }
-            .addFormDataPart("key", id)
-            .addFormDataPart("file", name ?: id, data.toRequestBody(mediaType))
-            .build()
-        val request: Request = Request.Builder()
-            .url(httpUrl)
-            .post(requestBody)
-            .build()
-        httpClient.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                it.resumeWithException(
-                    ResponseException.from(
-                        ResponseStatusCode.HTTP_ERROR,
-                        "Caught an error while sending an HTTP POST request to update the resource",
-                        e,
-                    ),
-                )
-            }
-
-            override fun onResponse(call: Call, response: okhttp3.Response) {
-                if (response.isSuccessful) {
-                    try {
-                        val responseData = response.body?.string() ?: ""
-                        val idNum = id.toLongOrNull()
-                        val idStr = if (idNum == null) id else null
-                        it.resume(
-                            Response.value(
-                                StorageUploadResult(
-                                    uri,
-                                    response.headers.toMap(),
-                                    responseData,
-                                    resourceIdNum = idNum,
-                                    resourceIdStr = idStr,
-                                ),
-                            ),
-                        )
-                    } catch (e: Exception) {
-                        it.resumeWithException(
-                            ResponseException.from(
-                                ResponseStatusCode.INVALID_RESPONSE,
-                                "Failed to get the response body as a string",
-                                e,
-                            ),
-                        )
+        val requestBody =
+            MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .apply {
+                    for (entry in formData.entries) {
+                        addFormDataPart(entry.key, entry.value)
                     }
-                } else {
+                    mediaType?.let {
+                        addFormDataPart("Content-Type", it.toString())
+                    }
+                }
+                .addFormDataPart("key", id)
+                .addFormDataPart("file", name ?: id, data.toRequestBody(mediaType))
+                .build()
+        val request: Request =
+            Request.Builder()
+                .url(httpUrl)
+                .post(requestBody)
+                .build()
+        httpClient.newCall(request).enqueue(
+            object : Callback {
+                override fun onFailure(
+                    call: Call,
+                    e: IOException,
+                ) {
                     it.resumeWithException(
                         ResponseException.from(
-                            ResponseStatusCode.HTTP_NOT_SUCCESSFUL_RESPONSE,
-                            "Failed to retrieve the resource because the HTTP response status code is: ${response.code}",
+                            ResponseStatusCode.HTTP_ERROR,
+                            "Caught an error while sending an HTTP POST request to update the resource",
+                            e,
                         ),
                     )
                 }
-            }
-        })
+
+                override fun onResponse(
+                    call: Call,
+                    response: okhttp3.Response,
+                ) {
+                    if (response.isSuccessful) {
+                        try {
+                            val responseData = response.body?.string() ?: ""
+                            val idNum = id.toLongOrNull()
+                            val idStr = if (idNum == null) id else null
+                            it.resume(
+                                Response.value(
+                                    StorageUploadResult(
+                                        uri,
+                                        response.headers.toMap(),
+                                        responseData,
+                                        resourceIdNum = idNum,
+                                        resourceIdStr = idStr,
+                                    ),
+                                ),
+                            )
+                        } catch (e: Exception) {
+                            it.resumeWithException(
+                                ResponseException.from(
+                                    ResponseStatusCode.INVALID_RESPONSE,
+                                    "Failed to get the response body as a string",
+                                    e,
+                                ),
+                            )
+                        }
+                    } else {
+                        it.resumeWithException(
+                            ResponseException.from(
+                                ResponseStatusCode.HTTP_NOT_SUCCESSFUL_RESPONSE,
+                                "Failed to retrieve the resource because the HTTP response status code is: ${response.code}",
+                            ),
+                        )
+                    }
+                }
+            },
+        )
     }
 
     private suspend fun deleteResource(
@@ -641,61 +675,72 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
         idStr: String? = null,
         extra: Map<String, String>? = null,
     ): Response<Unit> {
-        val request = DeleteResourceRequest.newBuilder()
-            .setType(type)
-            .apply {
-                idNum?.let { this.idNum = it }
-                idStr?.let { this.idStr = it }
-                extra?.let { extraMap.putAll(extra) }
-            }
+        val request =
+            DeleteResourceRequest.newBuilder()
+                .setType(type)
+                .apply {
+                    idNum?.let { this.idNum = it }
+                    idStr?.let { this.idStr = it }
+                    extra?.let { extraMap.putAll(extra) }
+                }
         return turmsClient.driver
             .send(request)
             .toResponse()
     }
 
-    private suspend fun queryResource(url: String) = suspendCoroutine {
-        val httpUrl: HttpUrl
-        try {
-            httpUrl = url.toHttpUrl()
-        } catch (e: Exception) {
-            throw ResponseException.from(
-                ResponseStatusCode.ILLEGAL_ARGUMENT,
-                "The URL is illegal: $url",
-                e,
-            )
-        }
-        val request = Request.Builder()
-            .url(httpUrl)
-            .build()
-        httpClient.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                it.tryResumeWithException(
-                    ResponseException.from(
-                        ResponseStatusCode.HTTP_ERROR,
-                        "Caught an error while sending an HTTP GET request to retrieve the resource",
-                        e,
-                    ),
+    private suspend fun queryResource(url: String) =
+        suspendCoroutine {
+            val httpUrl: HttpUrl
+            try {
+                httpUrl = url.toHttpUrl()
+            } catch (e: Exception) {
+                throw ResponseException.from(
+                    ResponseStatusCode.ILLEGAL_ARGUMENT,
+                    "The URL is illegal: $url",
+                    e,
                 )
             }
+            val request =
+                Request.Builder()
+                    .url(httpUrl)
+                    .build()
+            httpClient.newCall(request).enqueue(
+                object : Callback {
+                    override fun onFailure(
+                        call: Call,
+                        e: IOException,
+                    ) {
+                        it.tryResumeWithException(
+                            ResponseException.from(
+                                ResponseStatusCode.HTTP_ERROR,
+                                "Caught an error while sending an HTTP GET request to retrieve the resource",
+                                e,
+                            ),
+                        )
+                    }
 
-            override fun onResponse(call: Call, response: okhttp3.Response) {
-                return if (response.isSuccessful) {
-                    it.resume(
-                        Response.value(
-                            StorageResource(httpUrl.toString(), response.headers.toMap(), response.body!!.bytes()),
-                        ),
-                    )
-                } else {
-                    it.resumeWithException(
-                        ResponseException.from(
-                            ResponseStatusCode.HTTP_NOT_SUCCESSFUL_RESPONSE,
-                            "Failed to retrieve the resource because the HTTP response status code is: ${response.code}",
-                        ),
-                    )
-                }
-            }
-        })
-    }
+                    override fun onResponse(
+                        call: Call,
+                        response: okhttp3.Response,
+                    ) {
+                        return if (response.isSuccessful) {
+                            it.resume(
+                                Response.value(
+                                    StorageResource(httpUrl.toString(), response.headers.toMap(), response.body!!.bytes()),
+                                ),
+                            )
+                        } else {
+                            it.resumeWithException(
+                                ResponseException.from(
+                                    ResponseStatusCode.HTTP_NOT_SUCCESSFUL_RESPONSE,
+                                    "Failed to retrieve the resource because the HTTP response status code is: ${response.code}",
+                                ),
+                            )
+                        }
+                    }
+                },
+            )
+        }
 
     private suspend fun queryResourceUploadInfo(
         type: StorageResourceType,
@@ -705,15 +750,16 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
         mediaType: String? = null,
         extra: Map<String, String>? = null,
     ): Response<Map<String, String>> {
-        val request = QueryResourceUploadInfoRequest.newBuilder()
-            .setType(type)
-            .apply {
-                idNum?.let { this.idNum = it }
-                idStr?.let { this.idStr = it }
-                name?.let { this.name = it }
-                mediaType?.let { this.mediaType = it }
-                extra?.let { extraMap.putAll(it) }
-            }
+        val request =
+            QueryResourceUploadInfoRequest.newBuilder()
+                .setType(type)
+                .apply {
+                    idNum?.let { this.idNum = it }
+                    idStr?.let { this.idStr = it }
+                    name?.let { this.name = it }
+                    mediaType?.let { this.mediaType = it }
+                    extra?.let { extraMap.putAll(it) }
+                }
         return turmsClient.driver.send(request)
             .toResponse { it.stringsWithVersion.stringsList.toMap() }
     }
@@ -724,13 +770,14 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
         idStr: String? = null,
         extra: Map<String, String>? = null,
     ): Response<Map<String, String>> {
-        val request = QueryResourceDownloadInfoRequest.newBuilder()
-            .setType(type)
-            .apply {
-                idNum?.let { this.idNum = it }
-                idStr?.let { this.idStr = it }
-                extra?.let { extraMap.putAll(it) }
-            }
+        val request =
+            QueryResourceDownloadInfoRequest.newBuilder()
+                .setType(type)
+                .apply {
+                    idNum?.let { this.idNum = it }
+                    idStr?.let { this.idStr = it }
+                    extra?.let { extraMap.putAll(it) }
+                }
         return turmsClient.driver.send(request)
             .toResponse { it.stringsWithVersion.stringsList.toMap() }
     }
@@ -751,7 +798,10 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
         }
     }
 
-    private fun getResourceUrl(data: Map<String, String>, urlKeyName: String): String {
+    private fun getResourceUrl(
+        data: Map<String, String>,
+        urlKeyName: String,
+    ): String {
         return data[urlKeyName]
             ?: throw ResponseException.from(
                 ResponseStatusCode.DATA_NOT_FOUND,
@@ -759,7 +809,10 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
             )
     }
 
-    private fun getAndRemoveResourceUrl(data: MutableMap<String, String>, urlKeyName: String): String {
+    private fun getAndRemoveResourceUrl(
+        data: MutableMap<String, String>,
+        urlKeyName: String,
+    ): String {
         return data.remove(urlKeyName)
             ?: throw ResponseException.from(
                 ResponseStatusCode.DATA_NOT_FOUND,
@@ -770,10 +823,11 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
     companion object {
         private const val RESOURCE_ID_KEY_NAME = "id"
         private const val DEFAULT_URL_KEY_NAME = "url"
-        private val RESOURCE_TYPE_TO_BUCKET_NAME = EnumMap(
-            StorageResourceType.values()
-                .filter { it !== StorageResourceType.UNRECOGNIZED }
-                .associateBy({ it }, { it.name.lowercase().replace('_', '-') }),
-        )
+        private val RESOURCE_TYPE_TO_BUCKET_NAME =
+            EnumMap(
+                StorageResourceType.values()
+                    .filter { it !== StorageResourceType.UNRECOGNIZED }
+                    .associateBy({ it }, { it.name.lowercase().replace('_', '-') }),
+            )
     }
 }

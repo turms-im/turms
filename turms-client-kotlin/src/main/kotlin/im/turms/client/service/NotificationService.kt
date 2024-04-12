@@ -25,15 +25,15 @@ import java.util.LinkedList
  * @author James Chen
  */
 class NotificationService(turmsClient: TurmsClient) {
-
     private var notificationListeners: MutableList<((Notification) -> Unit)> = LinkedList()
 
     init {
         turmsClient.driver
             .addNotificationListener { notification ->
-                val isBusinessNotification = notification.hasRelayedRequest() &&
-                    !notification.relayedRequest.hasCreateMessageRequest() &&
-                    !notification.hasCloseStatus()
+                val isBusinessNotification =
+                    notification.hasRelayedRequest() &&
+                        !notification.relayedRequest.hasCreateMessageRequest() &&
+                        !notification.hasCloseStatus()
                 if (isBusinessNotification) {
                     val n = Notification(Date(notification.timestamp), notification.requesterId, notification.relayedRequest)
                     notificationListeners.forEach { it(n) }
@@ -46,12 +46,10 @@ class NotificationService(turmsClient: TurmsClient) {
      * Note: This listener will receive all kinds of notifications excluding messages.
      * To listen to messages, use [MessageService.addMessageListener] instead.
      */
-    fun addNotificationListener(listener: ((Notification) -> Unit)) =
-        this.notificationListeners.add(listener)
+    fun addNotificationListener(listener: ((Notification) -> Unit)) = this.notificationListeners.add(listener)
 
     /**
      * Remove a notification listener.
      */
-    fun removeNotificationListener(listener: ((Notification) -> Unit)) =
-        this.notificationListeners.remove(listener)
+    fun removeNotificationListener(listener: ((Notification) -> Unit)) = this.notificationListeners.remove(listener)
 }

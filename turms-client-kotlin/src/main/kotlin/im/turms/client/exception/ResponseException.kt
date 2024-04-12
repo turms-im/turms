@@ -27,9 +27,11 @@ data class ResponseException internal constructor(
     val reason: String? = null,
     override val cause: Throwable? = null,
 ) : RuntimeException(formatMessage(code, reason), cause) {
-
     companion object {
-        private fun formatMessage(code: Int, reason: String?): String {
+        private fun formatMessage(
+            code: Int,
+            reason: String?,
+        ): String {
             return if (reason != null) {
                 "code: $code, reason: $reason"
             } else {
@@ -47,7 +49,11 @@ data class ResponseException internal constructor(
             }
         }
 
-        fun from(code: Int, reason: String? = null, cause: Throwable? = null): ResponseException {
+        fun from(
+            code: Int,
+            reason: String? = null,
+            cause: Throwable? = null,
+        ): ResponseException {
             return ResponseException(null, code, reason, cause)
         }
     }

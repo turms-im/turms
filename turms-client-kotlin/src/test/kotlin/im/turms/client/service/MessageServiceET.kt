@@ -49,27 +49,28 @@ import kotlin.properties.Delegates
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(OrderAnnotation::class)
 internal class MessageServiceET {
-
     @BeforeAll
     @Timeout(5)
-    fun setup() = runBlocking {
-        senderClient = TurmsClient(HOST)
-        recipientClient = TurmsClient(HOST)
-        groupMemberClient = TurmsClient(HOST)
-        senderClient.userService.login(SENDER_ID, "123")
-        recipientClient.userService.login(RECIPIENT_ID, "123")
-        groupMemberClient.userService.login(GROUP_MEMBER_ID, "123")
-        return@runBlocking
-    }
+    fun setup() =
+        runBlocking {
+            senderClient = TurmsClient(HOST)
+            recipientClient = TurmsClient(HOST)
+            groupMemberClient = TurmsClient(HOST)
+            senderClient.userService.login(SENDER_ID, "123")
+            recipientClient.userService.login(RECIPIENT_ID, "123")
+            groupMemberClient.userService.login(GROUP_MEMBER_ID, "123")
+            return@runBlocking
+        }
 
     @AfterAll
     @Timeout(5)
-    fun tearDown() = runBlocking {
-        senderClient.driver.disconnect()
-        recipientClient.driver.disconnect()
-        groupMemberClient.driver.disconnect()
-        return@runBlocking
-    }
+    fun tearDown() =
+        runBlocking {
+            senderClient.driver.disconnect()
+            recipientClient.driver.disconnect()
+            groupMemberClient.driver.disconnect()
+            return@runBlocking
+        }
 
     /** Constructor */
 
@@ -86,92 +87,108 @@ internal class MessageServiceET {
     @Test
     @Order(ORDER_HIGHEST_PRIORITY)
     @Timeout(5)
-    fun sendPrivateMessage_shouldReturnMessageId() = runBlocking {
-        privateMessageId = senderClient.messageService.sendMessage(false, RECIPIENT_ID, Date(), "hello")
-            .data
-        assertNotNull(privateMessageId)
-    }
+    fun sendPrivateMessage_shouldReturnMessageId() =
+        runBlocking {
+            privateMessageId =
+                senderClient.messageService.sendMessage(false, RECIPIENT_ID, Date(), "hello")
+                    .data
+            assertNotNull(privateMessageId)
+        }
 
     @Test
     @Order(ORDER_HIGHEST_PRIORITY)
     @Timeout(5)
-    fun sendGroupMessage_shouldReturnMessageId() = runBlocking {
-        groupMessageId = senderClient.messageService.sendMessage(true, TARGET_GROUP_ID, Date(), "hello")
-            .data
-        assertNotNull(groupMessageId)
-    }
+    fun sendGroupMessage_shouldReturnMessageId() =
+        runBlocking {
+            groupMessageId =
+                senderClient.messageService.sendMessage(true, TARGET_GROUP_ID, Date(), "hello")
+                    .data
+            assertNotNull(groupMessageId)
+        }
 
     @Test
     @Order(ORDER_HIGH_PRIORITY)
     @Timeout(5)
-    fun forwardPrivateMessage_shouldReturnForwardedMessageId() = runBlocking {
-        val messageId = senderClient.messageService.forwardMessage(privateMessageId, false, RECIPIENT_ID)
-            .data
-        assertNotNull(messageId)
-    }
+    fun forwardPrivateMessage_shouldReturnForwardedMessageId() =
+        runBlocking {
+            val messageId =
+                senderClient.messageService.forwardMessage(privateMessageId, false, RECIPIENT_ID)
+                    .data
+            assertNotNull(messageId)
+        }
 
     @Test
     @Order(ORDER_HIGH_PRIORITY)
     @Timeout(5)
-    fun forwardGroupMessage_shouldReturnForwardedMessageId() = runBlocking {
-        val messageId = senderClient.messageService.forwardMessage(groupMessageId, true, TARGET_GROUP_ID)
-            .data
-        assertNotNull(messageId)
-    }
+    fun forwardGroupMessage_shouldReturnForwardedMessageId() =
+        runBlocking {
+            val messageId =
+                senderClient.messageService.forwardMessage(groupMessageId, true, TARGET_GROUP_ID)
+                    .data
+            assertNotNull(messageId)
+        }
 
     /** Update */
 
     @Test
     @Order(ORDER_MIDDLE_PRIORITY)
     @Timeout(5)
-    fun recallMessage_shouldSucceed() = runBlocking {
-        val result = senderClient.messageService.recallMessage(groupMessageId)
-            .data
-        assertNotNull(result)
-    }
+    fun recallMessage_shouldSucceed() =
+        runBlocking {
+            val result =
+                senderClient.messageService.recallMessage(groupMessageId)
+                    .data
+            assertNotNull(result)
+        }
 
     @Test
     @Order(ORDER_MIDDLE_PRIORITY)
     @Timeout(5)
-    fun updateSentMessage_shouldSucceed() = runBlocking {
-        val result = senderClient.messageService.updateSentMessage(privateMessageId, "I have modified the message")
-            .data
-        assertNotNull(result)
-    }
+    fun updateSentMessage_shouldSucceed() =
+        runBlocking {
+            val result =
+                senderClient.messageService.updateSentMessage(privateMessageId, "I have modified the message")
+                    .data
+            assertNotNull(result)
+        }
 
     /** Query */
 
     @Test
     @Order(ORDER_LOW_PRIORITY)
     @Timeout(5)
-    fun queryMessages_shouldReturnNotEmptyMessages() = runBlocking {
-        val messages =
-            recipientClient.messageService.queryMessages(areGroupMessages = false, fromIds = setOf(SENDER_ID), maxCount = 10)
-                .data
-        assertTrue(messages.isNotEmpty())
-    }
+    fun queryMessages_shouldReturnNotEmptyMessages() =
+        runBlocking {
+            val messages =
+                recipientClient.messageService.queryMessages(areGroupMessages = false, fromIds = setOf(SENDER_ID), maxCount = 10)
+                    .data
+            assertTrue(messages.isNotEmpty())
+        }
 
     @Test
     @Order(ORDER_LOW_PRIORITY)
     @Timeout(5)
-    fun queryMessagesWithTotal_shouldReturnNotEmptyMessagesWithTotal() = runBlocking {
-        val messagesWithTotals = senderClient.messageService.queryMessagesWithTotal(maxCount = 1)
-            .data
-        assertTrue(messagesWithTotals.isNotEmpty())
-    }
+    fun queryMessagesWithTotal_shouldReturnNotEmptyMessagesWithTotal() =
+        runBlocking {
+            val messagesWithTotals =
+                senderClient.messageService.queryMessagesWithTotal(maxCount = 1)
+                    .data
+            assertTrue(messagesWithTotals.isNotEmpty())
+        }
 
     /** Util */
 
     @Test
     fun generateLocationRecord() {
-        val data = generateLocationRecord(
-            1.0f,
-            1.0f,
-            mapOf(
-                "name" to "value1",
-                "address" to "value2",
-            ),
-        )
+        val data =
+            generateLocationRecord(
+                1.0f,
+                1.0f,
+                mapOf(
+                    "name" to "value1",
+                    "address" to "value2",
+                ),
+            )
         assertNotNull(data)
     }
 

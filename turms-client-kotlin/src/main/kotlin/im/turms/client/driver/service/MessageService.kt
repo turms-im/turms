@@ -67,54 +67,56 @@ class MessageService(
 
     // Request and notification
 
-    suspend fun sendRequest(requestBuilder: TurmsRequest.Builder): TurmsNotification = suspendCoroutine { cont ->
-        if (requestBuilder.hasCreateSessionRequest()) {
-            if (stateStore.isSessionOpen) {
-                cont.resumeWithException(ResponseException.from(ResponseStatusCode.CLIENT_SESSION_ALREADY_ESTABLISHED))
+    suspend fun sendRequest(requestBuilder: TurmsRequest.Builder): TurmsNotification =
+        suspendCoroutine { cont ->
+            if (requestBuilder.hasCreateSessionRequest()) {
+                if (stateStore.isSessionOpen) {
+                    cont.resumeWithException(ResponseException.from(ResponseStatusCode.CLIENT_SESSION_ALREADY_ESTABLISHED))
+                    return@suspendCoroutine
+                }
+            } else if (!stateStore.isConnected || !stateStore.isSessionOpen) {
+                cont.resumeWithException(ResponseException.from(ResponseStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED))
                 return@suspendCoroutine
             }
-        } else if (!stateStore.isConnected || !stateStore.isSessionOpen) {
-            cont.resumeWithException(ResponseException.from(ResponseStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED))
-            return@suspendCoroutine
-        }
-        val now = Date()
-        val difference = now.time - stateStore.lastRequestDate
-        val isFrequent = minRequestInterval > 0 && difference <= minRequestInterval
-        if (isFrequent) {
-            cont.resumeWithException(ResponseException.from(ResponseStatusCode.CLIENT_REQUESTS_TOO_FREQUENT))
-            return@suspendCoroutine
-        }
-        val requestContext = TurmsRequestContext(cont, null)
-        while (true) {
-            val requestId = generateRandomId()
-            val wasRequestAbsent = requestMap.putIfAbsent(requestId, requestContext) == null
-            if (!wasRequestAbsent) continue
-            stateStore.lastRequestDate = now.time
-            launch {
-                try {
-                    val payload = requestBuilder
-                        .setRequestId(requestId)
-                        .build()
-                        .toByteArray()
-                    val tcp = stateStore.tcp!!
-                    tcp.writeVarIntLengthAndBytes(payload)
-                } catch (e: Exception) {
-                    cont.resumeWithException(e)
-                }
+            val now = Date()
+            val difference = now.time - stateStore.lastRequestDate
+            val isFrequent = minRequestInterval > 0 && difference <= minRequestInterval
+            if (isFrequent) {
+                cont.resumeWithException(ResponseException.from(ResponseStatusCode.CLIENT_REQUESTS_TOO_FREQUENT))
+                return@suspendCoroutine
             }
-            if (requestTimeout > 0) {
-                requestContext.timeoutDeferred = async {
-                    delay(requestTimeout.toLong())
-                    requestMap.remove(requestId)?.let {
-                        if (!requestContext.timeoutDeferred!!.isCompleted) {
-                            cont.tryResumeWithException(ResponseException.from(ResponseStatusCode.REQUEST_TIMEOUT))
-                        }
+            val requestContext = TurmsRequestContext(cont, null)
+            while (true) {
+                val requestId = generateRandomId()
+                val wasRequestAbsent = requestMap.putIfAbsent(requestId, requestContext) == null
+                if (!wasRequestAbsent) continue
+                stateStore.lastRequestDate = now.time
+                launch {
+                    try {
+                        val payload =
+                            requestBuilder
+                                .setRequestId(requestId)
+                                .build()
+                        val tcp = stateStore.tcp!!
+                        tcp.writeVarIntLengthAndBytes(payload)
+                    } catch (e: Exception) {
+                        cont.resumeWithException(e)
                     }
                 }
+                if (requestTimeout > 0) {
+                    requestContext.timeoutDeferred =
+                        async {
+                            delay(requestTimeout.toLong())
+                            requestMap.remove(requestId)?.let {
+                                if (!requestContext.timeoutDeferred!!.isCompleted) {
+                                    cont.tryResumeWithException(ResponseException.from(ResponseStatusCode.REQUEST_TIMEOUT))
+                                }
+                            }
+                        }
+                }
+                return@suspendCoroutine
             }
-            return@suspendCoroutine
         }
-    }
 
     fun didReceiveNotification(notification: TurmsNotification) {
         val isResponse = !notification.hasRelayedRequest() && notification.hasRequestId()

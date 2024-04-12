@@ -20,12 +20,18 @@ import im.turms.client.exception.ResponseException
 import java.util.concurrent.ExecutionException
 
 object ExceptionUtil {
-    fun isResponseStatusCode(throwable: ExecutionException, code: Int): Boolean {
+    fun isResponseStatusCode(
+        throwable: ExecutionException,
+        code: Int,
+    ): Boolean {
         val cause = throwable.cause
         return isResponseException(cause, code)
     }
 
-    fun isResponseException(throwable: Throwable?, code: Int): Boolean {
+    fun isResponseException(
+        throwable: Throwable?,
+        code: Int,
+    ): Boolean {
         return if (throwable is ResponseException) {
             throwable.code == code
         } else {

@@ -38,15 +38,16 @@ class TurmsClient constructor(
     storageServerUrl: String? = null,
     coroutineContext: CoroutineContext? = null,
 ) {
-    val driver: TurmsDriver = TurmsDriver(
-        host,
-        port,
-        connectTimeoutMillis,
-        requestTimeoutMillis,
-        minRequestIntervalMillis,
-        heartbeatIntervalMillis,
-        coroutineContext,
-    )
+    val driver: TurmsDriver =
+        TurmsDriver(
+            host,
+            port,
+            connectTimeoutMillis,
+            requestTimeoutMillis,
+            minRequestIntervalMillis,
+            heartbeatIntervalMillis,
+            coroutineContext,
+        )
     val userService: UserService = UserService(this)
     val groupService: GroupService = GroupService(this)
     val conversationService: ConversationService = ConversationService(this)

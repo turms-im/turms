@@ -17,6 +17,7 @@
 
 package im.turms.client.transport
 
+import com.google.protobuf.MessageLite
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -46,7 +47,6 @@ import kotlin.coroutines.CoroutineContext
  * @author James Chen
  */
 class TcpClient(override val coroutineContext: CoroutineContext) : CoroutineScope {
-
     var port: Int? = null
     lateinit var host: String
 
@@ -117,9 +117,10 @@ class TcpClient(override val coroutineContext: CoroutineContext) : CoroutineScop
         hostname: String?,
         pins: List<Pin>?,
     ) {
-        val sslContext = getSslContext("TLSv1.3")
-            ?: getSslContext("TLSv1.2")
-            ?: throw SSLProtocolException("TLSv1.2 and TLSv1.3 are not supported")
+        val sslContext =
+            getSslContext("TLSv1.3")
+                ?: getSslContext("TLSv1.2")
+                ?: throw SSLProtocolException("TLSv1.2 and TLSv1.3 are not supported")
         sslContext.init(null, trustManager?.let { arrayOf(it) }, SecureRandom())
         val socketFactory = sslContext.socketFactory
         val ssl = socketFactory.createSocket(socket, host, port, true) as SSLSocket
@@ -163,10 +164,11 @@ class TcpClient(override val coroutineContext: CoroutineContext) : CoroutineScop
         if (pins?.isNotEmpty() == true) {
             val builder = CertificatePinner.Builder()
             pins.forEach {
-                val algorithm = when (it.algorithm) {
-                    PinHashAlgorithm.SHA1 -> "sha1"
-                    PinHashAlgorithm.SHA256 -> "sha256"
-                }
+                val algorithm =
+                    when (it.algorithm) {
+                        PinHashAlgorithm.SHA1 -> "sha1"
+                        PinHashAlgorithm.SHA256 -> "sha256"
+                    }
                 builder.add(it.pattern, "$algorithm/${it.hash}")
             }
             builder.build().check(hostname ?: host, peerCertificates.toList())
@@ -212,7 +214,10 @@ class TcpClient(override val coroutineContext: CoroutineContext) : CoroutineScop
         }
     }
 
-    fun read(exact: Int, consumer: (ByteBuffer) -> Unit) {
+    fun read(
+        exact: Int,
+        consumer: (ByteBuffer) -> Unit,
+    ) {
         try {
             repeat(exact) {
                 val data = input.read()
@@ -235,9 +240,10 @@ class TcpClient(override val coroutineContext: CoroutineContext) : CoroutineScop
                     }
                     throw exception
                 } else {
-                    readBuffer = ByteBuffer.allocate(readBuffer.capacity() * 2)
-                        .put(readBuffer.flip() as ByteBuffer)
-                        .put(data.toByte())
+                    readBuffer =
+                        ByteBuffer.allocate(readBuffer.capacity() * 2)
+                            .put(readBuffer.flip() as ByteBuffer)
+                            .put(data.toByte())
                 }
             }
             readBuffer.flip()
@@ -270,35 +276,59 @@ class TcpClient(override val coroutineContext: CoroutineContext) : CoroutineScop
         }
     }
 
-    suspend fun write(src: ByteArray) = withContext(coroutineContext) {
-        try {
-            synchronized(output) {
-                output.write(src)
-                metrics.dataSent += src.size
+    suspend fun write(src: ByteArray) =
+        withContext(coroutineContext) {
+            try {
+                synchronized(output) {
+                    output.write(src)
+                    metrics.dataSent += src.size
+                }
+            } catch (e: Exception) {
+                onClose(e)
             }
-        } catch (e: Exception) {
-            onClose(e)
         }
-    }
 
-    suspend fun writeVarIntLengthAndBytes(bytes: ByteArray) = withContext(coroutineContext) {
-        var currentValue = bytes.size.toUInt()
-        synchronized(output) {
-            while (true) {
-                val maskedValue = currentValue.and(0x7FU)
-                currentValue = currentValue.shr(7)
-                if (currentValue == 0U) {
-                    output.write(maskedValue.toInt())
-                    output.write(bytes)
-                    metrics.dataSent += bytes.size + 1
-                    return@withContext
-                } else {
-                    output.write(maskedValue.or(0x80U).toInt())
-                    metrics.dataSent++
+    suspend fun writeVarIntLengthAndBytes(bytes: ByteArray) =
+        withContext(coroutineContext) {
+            val size = bytes.size
+            var currentValue = size.toUInt()
+            synchronized(output) {
+                while (true) {
+                    val maskedValue = currentValue.and(0x7FU)
+                    currentValue = currentValue.shr(7)
+                    if (currentValue == 0U) {
+                        output.write(maskedValue.toInt())
+                        output.write(bytes)
+                        metrics.dataSent += size + 1
+                        return@withContext
+                    } else {
+                        output.write(maskedValue.or(0x80U).toInt())
+                        metrics.dataSent++
+                    }
                 }
             }
         }
-    }
+
+    suspend fun writeVarIntLengthAndBytes(message: MessageLite) =
+        withContext(coroutineContext) {
+            val size = message.serializedSize
+            var currentValue = size.toUInt()
+            synchronized(output) {
+                while (true) {
+                    val maskedValue = currentValue.and(0x7FU)
+                    currentValue = currentValue.shr(7)
+                    if (currentValue == 0U) {
+                        output.write(maskedValue.toInt())
+                        message.writeTo(output)
+                        metrics.dataSent += size + 1
+                        return@withContext
+                    } else {
+                        output.write(maskedValue.or(0x80U).toInt())
+                        metrics.dataSent++
+                    }
+                }
+            }
+        }
 
     private fun getSslContext(protocol: String): SSLContext? {
         return try {
@@ -311,15 +341,17 @@ class TcpClient(override val coroutineContext: CoroutineContext) : CoroutineScop
     companion object {
         const val INITIAL_READ_BUFFER_CAPACITY: Int = 1024 * 1024
         const val MAX_READ_BUFFER_CAPACITY: Int = 8 * 1024 * 1024
-        val setServerNames: Method? = try {
-            SSLParameters::class.java.getMethod("setServerNames", List::class.java)
-        } catch (exception: NoSuchMethodException) {
-            null
-        }
-        val setHostname: Method? = try {
-            SSLSocket::class.java.getMethod("setHostname", String::class.java)
-        } catch (exception: NoSuchMethodException) {
-            null
-        }
+        val setServerNames: Method? =
+            try {
+                SSLParameters::class.java.getMethod("setServerNames", List::class.java)
+            } catch (exception: NoSuchMethodException) {
+                null
+            }
+        val setHostname: Method? =
+            try {
+                SSLSocket::class.java.getMethod("setHostname", String::class.java)
+            } catch (exception: NoSuchMethodException) {
+                null
+            }
     }
 }

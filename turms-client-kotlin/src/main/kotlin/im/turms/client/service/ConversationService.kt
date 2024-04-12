@@ -27,13 +27,12 @@ import im.turms.client.model.proto.request.conversation.QueryConversationsReques
 import im.turms.client.model.proto.request.conversation.UpdateConversationRequest
 import im.turms.client.model.proto.request.conversation.UpdateTypingStatusRequest
 import im.turms.client.util.Validator
-import java.util.*
+import java.util.Date
 
 /**
  * @author James Chen
  */
 class ConversationService(private val turmsClient: TurmsClient) {
-
     /**
      * Find private conversations between the logged-in user and another user.
      *
@@ -128,7 +127,10 @@ class ConversationService(private val turmsClient: TurmsClient) {
      * If null, the current time is used.
      * @throws ResponseException if an error occurs.
      */
-    suspend fun updatePrivateConversationReadDate(targetId: Long, readDate: Date? = null): Response<Unit> =
+    suspend fun updatePrivateConversationReadDate(
+        targetId: Long,
+        readDate: Date? = null,
+    ): Response<Unit> =
         turmsClient.driver
             .send(
                 UpdateConversationRequest.newBuilder().apply {
@@ -165,7 +167,10 @@ class ConversationService(private val turmsClient: TurmsClient) {
      * If null, the current time is used.
      * @throws ResponseException if an error occurs.
      */
-    suspend fun updateGroupConversationReadDate(groupId: Long, readDate: Date? = null): Response<Unit> =
+    suspend fun updateGroupConversationReadDate(
+        groupId: Long,
+        readDate: Date? = null,
+    ): Response<Unit> =
         turmsClient.driver
             .send(
                 UpdateConversationRequest.newBuilder().apply {

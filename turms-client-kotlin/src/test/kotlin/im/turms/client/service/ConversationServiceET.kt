@@ -38,21 +38,22 @@ import org.junit.jupiter.api.Timeout
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(OrderAnnotation::class)
 internal class ConversationServiceET {
-
     @BeforeAll
     @Timeout(5)
-    fun setup() = runBlocking {
-        client = TurmsClient(HOST)
-        client.userService.login(USER_ID, "123")
-        return@runBlocking
-    }
+    fun setup() =
+        runBlocking {
+            client = TurmsClient(HOST)
+            client.userService.login(USER_ID, "123")
+            return@runBlocking
+        }
 
     @AfterAll
     @Timeout(5)
-    fun tearDown() = runBlocking {
-        client.driver.disconnect()
-        return@runBlocking
-    }
+    fun tearDown() =
+        runBlocking {
+            client.driver.disconnect()
+            return@runBlocking
+        }
 
     /** Constructor */
 
@@ -67,53 +68,60 @@ internal class ConversationServiceET {
     @Test
     @Order(ORDER_MIDDLE_PRIORITY)
     @Timeout(5)
-    fun updatePrivateConversationReadDate_shouldSucceed() = runBlocking {
-        client.conversationService.updatePrivateConversationReadDate(RELATED_USER_ID)
-    }
+    fun updatePrivateConversationReadDate_shouldSucceed() =
+        runBlocking {
+            client.conversationService.updatePrivateConversationReadDate(RELATED_USER_ID)
+        }
 
     @Test
     @Order(ORDER_MIDDLE_PRIORITY)
     @Timeout(5)
-    fun updateGroupConversationReadDate_shouldSucceed() = runBlocking {
-        client.conversationService.updateGroupConversationReadDate(GROUP_ID)
-    }
+    fun updateGroupConversationReadDate_shouldSucceed() =
+        runBlocking {
+            client.conversationService.updateGroupConversationReadDate(GROUP_ID)
+        }
 
     @Test
     @Order(ORDER_MIDDLE_PRIORITY)
     @Timeout(5)
-    fun updatePrivateConversationTypingStatus_shouldSucceed() = runBlocking {
-        client.conversationService.updatePrivateConversationTypingStatus(RELATED_USER_ID)
-    }
+    fun updatePrivateConversationTypingStatus_shouldSucceed() =
+        runBlocking {
+            client.conversationService.updatePrivateConversationTypingStatus(RELATED_USER_ID)
+        }
 
     @Test
     @Order(ORDER_MIDDLE_PRIORITY)
     @Timeout(5)
-    fun updateGroupConversationTypingStatus_shouldSucceed() = runBlocking {
-        client.conversationService.updateGroupConversationTypingStatus(GROUP_ID)
-    }
+    fun updateGroupConversationTypingStatus_shouldSucceed() =
+        runBlocking {
+            client.conversationService.updateGroupConversationTypingStatus(GROUP_ID)
+        }
 
     /** Query */
 
     @Test
     @Order(ORDER_LOW_PRIORITY)
     @Timeout(5)
-    fun queryPrivateConversations_shouldReturnNotEmptyConversations() = runBlocking {
-        val targetIds = setOf(RELATED_USER_ID)
-        val conversations: List<PrivateConversation> =
-            client.conversationService.queryPrivateConversations(targetIds)
-                .data
-        assertTrue(conversations.isNotEmpty())
-    }
+    fun queryPrivateConversations_shouldReturnNotEmptyConversations() =
+        runBlocking {
+            val targetIds = setOf(RELATED_USER_ID)
+            val conversations: List<PrivateConversation> =
+                client.conversationService.queryPrivateConversations(targetIds)
+                    .data
+            assertTrue(conversations.isNotEmpty())
+        }
 
     @Test
     @Order(ORDER_LOW_PRIORITY)
     @Timeout(5)
-    fun queryGroupConversations_shouldReturnNotEmptyConversations() = runBlocking {
-        val groupIds = setOf(GROUP_ID)
-        val conversations: List<GroupConversation> = client.conversationService.queryGroupConversations(groupIds)
-            .data
-        assertTrue(conversations.isNotEmpty())
-    }
+    fun queryGroupConversations_shouldReturnNotEmptyConversations() =
+        runBlocking {
+            val groupIds = setOf(GROUP_ID)
+            val conversations: List<GroupConversation> =
+                client.conversationService.queryGroupConversations(groupIds)
+                    .data
+            assertTrue(conversations.isNotEmpty())
+        }
 
     companion object {
         private const val USER_ID: Long = 1

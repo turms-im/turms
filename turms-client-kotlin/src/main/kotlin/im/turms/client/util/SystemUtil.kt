@@ -22,12 +22,13 @@ import im.turms.client.model.proto.constant.DeviceType
  * @author James Chen
  */
 object SystemUtil {
-    val isAndroid: Boolean = try {
-        Class.forName("android.os.Build")
-        true
-    } catch (e: ClassNotFoundException) {
-        false
-    }
+    val isAndroid: Boolean =
+        try {
+            Class.forName("android.os.Build")
+            true
+        } catch (e: ClassNotFoundException) {
+            false
+        }
 
     val deviceType: DeviceType = if (isAndroid) DeviceType.ANDROID else DeviceType.DESKTOP
 }

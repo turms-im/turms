@@ -61,13 +61,13 @@ import im.turms.client.model.proto.request.user.relationship.UpdateRelationshipG
 import im.turms.client.model.proto.request.user.relationship.UpdateRelationshipRequest
 import im.turms.client.util.SystemUtil
 import im.turms.client.util.Validator
-import java.util.*
+import java.util.Date
+import java.util.LinkedList
 
 /**
  * @author James Chen
  */
 class UserService(private val turmsClient: TurmsClient) {
-
     /**
      * The user information of the logged-in user.
      */
@@ -78,9 +78,10 @@ class UserService(private val turmsClient: TurmsClient) {
     private val onOfflineListeners: MutableList<((SessionCloseInfo) -> Unit)> = LinkedList()
 
     val isLoggedIn: Boolean
-        get() = userInfo?.onlineStatus != null &&
-            userInfo?.onlineStatus != UserStatus.UNRECOGNIZED &&
-            userInfo?.onlineStatus != UserStatus.OFFLINE
+        get() =
+            userInfo?.onlineStatus != null &&
+                userInfo?.onlineStatus != UserStatus.UNRECOGNIZED &&
+                userInfo?.onlineStatus != UserStatus.OFFLINE
 
     init {
         turmsClient.driver.addOnDisconnectedListener { t ->
@@ -88,11 +89,12 @@ class UserService(private val turmsClient: TurmsClient) {
         }
         turmsClient.driver.addNotificationListener {
             if (it.hasCloseStatus() && isLoggedIn) {
-                val info = SessionCloseInfo(
-                    it.closeStatus,
-                    if (it.hasCode()) it.code else null,
-                    if (it.hasReason()) it.reason else null,
-                )
+                val info =
+                    SessionCloseInfo(
+                        it.closeStatus,
+                        if (it.hasCode()) it.code else null,
+                        if (it.hasReason()) it.reason else null,
+                    )
                 changeToOffline(info)
             }
         }
@@ -173,22 +175,24 @@ class UserService(private val turmsClient: TurmsClient) {
         if (!turmsClient.driver.isConnected) {
             turmsClient.driver.connect()
         }
-        val notification = turmsClient.driver.send(
-            CreateSessionRequest.newBuilder().apply {
-                this.version = 1
-                this.userId = userId
-                password?.let { this.password = it }
-                deviceType.let { this.deviceType = it }
-                deviceDetails?.let { this.putAllDeviceDetails(it) }
-                onlineStatus.let { this.userStatus = it }
-                location?.let {
-                    this.location = im.turms.client.model.proto.model.user.UserLocation.newBuilder().apply {
-                        this.longitude = it.longitude
-                        this.latitude = it.latitude
-                    }.build()
-                }
-            },
-        )
+        val notification =
+            turmsClient.driver.send(
+                CreateSessionRequest.newBuilder().apply {
+                    this.version = 1
+                    this.userId = userId
+                    password?.let { this.password = it }
+                    deviceType.let { this.deviceType = it }
+                    deviceDetails?.let { this.putAllDeviceDetails(it) }
+                    onlineStatus.let { this.userStatus = it }
+                    location?.let {
+                        this.location =
+                            im.turms.client.model.proto.model.user.UserLocation.newBuilder().apply {
+                                this.longitude = it.longitude
+                                this.latitude = it.latitude
+                            }.build()
+                    }
+                },
+            )
         changeToOnline()
         this.storePassword = storePassword
         userInfo = user
@@ -262,7 +266,9 @@ class UserService(private val turmsClient: TurmsClient) {
      * @param deviceTypes the device types to disconnect.
      * @throws ResponseException if an error occurs.
      */
-    suspend fun disconnectOnlineDevices(@NotEmpty deviceTypes: Set<DeviceType>): Response<Unit> =
+    suspend fun disconnectOnlineDevices(
+        @NotEmpty deviceTypes: Set<DeviceType>,
+    ): Response<Unit> =
         if (deviceTypes.isEmpty()) {
             throw ResponseException.from(ResponseStatusCode.ILLEGAL_ARGUMENT, "\"deviceTypes\" must not be null or empty")
         } else {
@@ -281,17 +287,18 @@ class UserService(private val turmsClient: TurmsClient) {
      * @param password the new password.
      * @throws ResponseException if an error occurs.
      */
-    suspend fun updatePassword(password: String): Response<Unit> = turmsClient.driver
-        .send(
-            UpdateUserRequest.newBuilder().apply {
-                this.password = password
-            },
-        ).toResponse<Unit>()
-        .apply {
-            if (storePassword) {
-                userInfo?.password = password
+    suspend fun updatePassword(password: String): Response<Unit> =
+        turmsClient.driver
+            .send(
+                UpdateUserRequest.newBuilder().apply {
+                    this.password = password
+                },
+            ).toResponse<Unit>()
+            .apply {
+                if (storePassword) {
+                    userInfo?.password = password
+                }
             }
-        }
 
     /**
      * Update the profile of the logged-in user.
@@ -315,20 +322,21 @@ class UserService(private val turmsClient: TurmsClient) {
         intro: String? = null,
         profilePicture: String? = null,
         profileAccessStrategy: ProfileAccessStrategy? = null,
-    ): Response<Unit> = if (Validator.areAllNull(name, intro, profileAccessStrategy)) {
-        Response.unitValue()
-    } else {
-        turmsClient.driver
-            .send(
-                UpdateUserRequest.newBuilder().apply {
-                    name?.let { this.name = it }
-                    intro?.let { this.intro = it }
-                    profilePicture?.let { this.profilePicture = it }
-                    profileAccessStrategy?.let { this.profileAccessStrategy = it }
-                },
-            )
-            .toResponse()
-    }
+    ): Response<Unit> =
+        if (Validator.areAllNull(name, intro, profileAccessStrategy)) {
+            Response.unitValue()
+        } else {
+            turmsClient.driver
+                .send(
+                    UpdateUserRequest.newBuilder().apply {
+                        name?.let { this.name = it }
+                        intro?.let { this.intro = it }
+                        profilePicture?.let { this.profilePicture = it }
+                        profileAccessStrategy?.let { this.profileAccessStrategy = it }
+                    },
+                )
+                .toResponse()
+        }
 
     /**
      * Find user profiles.
@@ -343,19 +351,20 @@ class UserService(private val turmsClient: TurmsClient) {
     suspend fun queryUserProfiles(
         userIds: Set<Long>,
         lastUpdatedDate: Date? = null,
-    ): Response<List<UserInfo>> = if (userIds.isEmpty()) {
-        Response.emptyList()
-    } else {
-        turmsClient.driver
-            .send(
-                QueryUserProfilesRequest.newBuilder().apply {
-                    addAllUserIds(userIds)
-                    lastUpdatedDate?.let { this.lastUpdatedDate = it.time }
-                },
-            ).toResponse {
-                it.userInfosWithVersion.userInfosList
-            }
-    }
+    ): Response<List<UserInfo>> =
+        if (userIds.isEmpty()) {
+            Response.emptyList()
+        } else {
+            turmsClient.driver
+                .send(
+                    QueryUserProfilesRequest.newBuilder().apply {
+                        addAllUserIds(userIds)
+                        lastUpdatedDate?.let { this.lastUpdatedDate = it.time }
+                    },
+                ).toResponse {
+                    it.userInfosWithVersion.userInfosList
+                }
+        }
 
     /**
      * Find nearby users.
@@ -378,20 +387,21 @@ class UserService(private val turmsClient: TurmsClient) {
         withCoordinates: Boolean? = null,
         withDistance: Boolean? = null,
         withUserInfo: Boolean? = null,
-    ): Response<List<NearbyUser>> = turmsClient.driver
-        .send(
-            QueryNearbyUsersRequest.newBuilder().apply {
-                this.latitude = latitude
-                this.longitude = longitude
-                maxCount?.let { this.maxCount = it }
-                maxDistance?.let { this.maxDistance = it }
-                withCoordinates?.let { this.withCoordinates = it }
-                withDistance?.let { this.withDistance = it }
-                withUserInfo?.let { this.withUserInfo = it }
-            },
-        ).toResponse {
-            it.nearbyUsers.nearbyUsersList
-        }
+    ): Response<List<NearbyUser>> =
+        turmsClient.driver
+            .send(
+                QueryNearbyUsersRequest.newBuilder().apply {
+                    this.latitude = latitude
+                    this.longitude = longitude
+                    maxCount?.let { this.maxCount = it }
+                    maxDistance?.let { this.maxDistance = it }
+                    withCoordinates?.let { this.withCoordinates = it }
+                    withDistance?.let { this.withDistance = it }
+                    withUserInfo?.let { this.withUserInfo = it }
+                },
+            ).toResponse {
+                it.nearbyUsers.nearbyUsersList
+            }
 
     /**
      * Find online status of users.
@@ -400,7 +410,9 @@ class UserService(private val turmsClient: TurmsClient) {
      * @return a list of online status of users.
      * @throws ResponseException if an error occurs.
      */
-    suspend fun queryOnlineStatusesRequest(@NotEmpty userIds: Set<Long>): Response<List<UserOnlineStatus>> =
+    suspend fun queryOnlineStatusesRequest(
+        @NotEmpty userIds: Set<Long>,
+    ): Response<List<UserOnlineStatus>> =
         if (userIds.isEmpty()) {
             Response.emptyList()
         } else {
@@ -437,17 +449,18 @@ class UserService(private val turmsClient: TurmsClient) {
         isBlocked: Boolean? = null,
         groupIndexes: Set<Int>? = null,
         lastUpdatedDate: Date? = null,
-    ): Response<UserRelationshipsWithVersion?> = turmsClient.driver
-        .send(
-            QueryRelationshipsRequest.newBuilder().apply {
-                relatedUserIds?.let { addAllUserIds(it) }
-                isBlocked?.let { this.blocked = it }
-                groupIndexes?.let { this.addAllGroupIndexes(it) }
-                lastUpdatedDate?.let { this.lastUpdatedDate = it.time }
-            },
-        ).toResponse {
-            if (it.hasUserRelationshipsWithVersion()) it.userRelationshipsWithVersion else null
-        }
+    ): Response<UserRelationshipsWithVersion?> =
+        turmsClient.driver
+            .send(
+                QueryRelationshipsRequest.newBuilder().apply {
+                    relatedUserIds?.let { addAllUserIds(it) }
+                    isBlocked?.let { this.blocked = it }
+                    groupIndexes?.let { this.addAllGroupIndexes(it) }
+                    lastUpdatedDate?.let { this.lastUpdatedDate = it.time }
+                },
+            ).toResponse {
+                if (it.hasUserRelationshipsWithVersion()) it.userRelationshipsWithVersion else null
+            }
 
     /**
      * Find related user IDs.
@@ -468,16 +481,17 @@ class UserService(private val turmsClient: TurmsClient) {
         isBlocked: Boolean? = null,
         groupIndexes: Set<Int>? = null,
         lastUpdatedDate: Date? = null,
-    ): Response<LongsWithVersion?> = turmsClient.driver
-        .send(
-            QueryRelatedUserIdsRequest.newBuilder().apply {
-                isBlocked?.let { this.blocked = it }
-                groupIndexes?.let { this.addAllGroupIndexes(it) }
-                lastUpdatedDate?.let { this.lastUpdatedDate = it.time }
-            },
-        ).toResponse {
-            if (it.hasLongsWithVersion()) it.longsWithVersion else null
-        }
+    ): Response<LongsWithVersion?> =
+        turmsClient.driver
+            .send(
+                QueryRelatedUserIdsRequest.newBuilder().apply {
+                    isBlocked?.let { this.blocked = it }
+                    groupIndexes?.let { this.addAllGroupIndexes(it) }
+                    lastUpdatedDate?.let { this.lastUpdatedDate = it.time }
+                },
+            ).toResponse {
+                if (it.hasLongsWithVersion()) it.longsWithVersion else null
+            }
 
     /**
      * Find friends.
@@ -534,15 +548,16 @@ class UserService(private val turmsClient: TurmsClient) {
         userId: Long,
         isBlocked: Boolean,
         groupIndex: Int? = null,
-    ): Response<Unit> = turmsClient.driver
-        .send(
-            CreateRelationshipRequest.newBuilder().apply {
-                this.userId = userId
-                this.blocked = isBlocked
-                groupIndex?.let { this.groupIndex = it }
-            },
-        )
-        .toResponse()
+    ): Response<Unit> =
+        turmsClient.driver
+            .send(
+                CreateRelationshipRequest.newBuilder().apply {
+                    this.userId = userId
+                    this.blocked = isBlocked
+                    groupIndex?.let { this.groupIndex = it }
+                },
+            )
+            .toResponse()
 
     /**
      * Create a friend (non-blocked) relationship.
@@ -601,15 +616,16 @@ class UserService(private val turmsClient: TurmsClient) {
         relatedUserId: Long,
         deleteGroupIndex: Int? = null,
         targetGroupIndex: Int? = null,
-    ): Response<Unit> = turmsClient.driver
-        .send(
-            DeleteRelationshipRequest.newBuilder().apply {
-                this.userId = relatedUserId
-                deleteGroupIndex?.let { this.groupIndex = it }
-                targetGroupIndex?.let { this.targetGroupIndex = it }
-            },
-        )
-        .toResponse()
+    ): Response<Unit> =
+        turmsClient.driver
+            .send(
+                DeleteRelationshipRequest.newBuilder().apply {
+                    this.userId = relatedUserId
+                    deleteGroupIndex?.let { this.groupIndex = it }
+                    targetGroupIndex?.let { this.targetGroupIndex = it }
+                },
+            )
+            .toResponse()
 
     /**
      * Update a relationship.
@@ -629,19 +645,20 @@ class UserService(private val turmsClient: TurmsClient) {
         relatedUserId: Long,
         isBlocked: Boolean? = null,
         groupIndex: Int? = null,
-    ): Response<Unit> = if (Validator.areAllFalsy(isBlocked, groupIndex)) {
-        Response.unitValue()
-    } else {
-        turmsClient.driver
-            .send(
-                UpdateRelationshipRequest.newBuilder().apply {
-                    this.userId = relatedUserId
-                    isBlocked?.let { this.blocked = it }
-                    groupIndex?.let { this.newGroupIndex = it }
-                },
-            )
-            .toResponse()
-    }
+    ): Response<Unit> =
+        if (Validator.areAllFalsy(isBlocked, groupIndex)) {
+            Response.unitValue()
+        } else {
+            turmsClient.driver
+                .send(
+                    UpdateRelationshipRequest.newBuilder().apply {
+                        this.userId = relatedUserId
+                        isBlocked?.let { this.blocked = it }
+                        groupIndex?.let { this.newGroupIndex = it }
+                    },
+                )
+                .toResponse()
+        }
 
     /**
      * Send a friend request.
@@ -660,15 +677,16 @@ class UserService(private val turmsClient: TurmsClient) {
     suspend fun sendFriendRequest(
         recipientId: Long,
         content: String,
-    ): Response<Long> = turmsClient.driver
-        .send(
-            CreateFriendRequestRequest.newBuilder().apply {
-                this.recipientId = recipientId
-                this.content = content
-            },
-        ).toResponse {
-            it.getLongOrThrow()
-        }
+    ): Response<Long> =
+        turmsClient.driver
+            .send(
+                CreateFriendRequestRequest.newBuilder().apply {
+                    this.recipientId = recipientId
+                    this.content = content
+                },
+            ).toResponse {
+                it.getLongOrThrow()
+            }
 
     /**
      * Delete/Recall a friend request.
@@ -690,13 +708,14 @@ class UserService(private val turmsClient: TurmsClient) {
      *
      * @throws ResponseException if an error occurs.
      */
-    suspend fun deleteFriendRequest(requestId: Long): Response<Unit> = turmsClient.driver
-        .send(
-            DeleteFriendRequestRequest.newBuilder().apply {
-                this.requestId = requestId
-            },
-        )
-        .toResponse()
+    suspend fun deleteFriendRequest(requestId: Long): Response<Unit> =
+        turmsClient.driver
+            .send(
+                DeleteFriendRequestRequest.newBuilder().apply {
+                    this.requestId = requestId
+                },
+            )
+            .toResponse()
 
     /**
      * Reply to a friend request.
@@ -725,15 +744,16 @@ class UserService(private val turmsClient: TurmsClient) {
         requestId: Long,
         responseAction: ResponseAction,
         reason: String? = null,
-    ): Response<Unit> = turmsClient.driver
-        .send(
-            UpdateFriendRequestRequest.newBuilder().apply {
-                this.requestId = requestId
-                this.responseAction = responseAction
-                reason?.let { this.reason = it }
-            },
-        )
-        .toResponse()
+    ): Response<Unit> =
+        turmsClient.driver
+            .send(
+                UpdateFriendRequestRequest.newBuilder().apply {
+                    this.requestId = requestId
+                    this.responseAction = responseAction
+                    reason?.let { this.reason = it }
+                },
+            )
+            .toResponse()
 
     /**
      * Find friend requests.
@@ -751,15 +771,16 @@ class UserService(private val turmsClient: TurmsClient) {
     suspend fun queryFriendRequests(
         areSentByMe: Boolean,
         lastUpdatedDate: Date? = null,
-    ): Response<UserFriendRequestsWithVersion?> = turmsClient.driver
-        .send(
-            QueryFriendRequestsRequest.newBuilder().apply {
-                this.areSentByMe = areSentByMe
-                lastUpdatedDate?.let { this.lastUpdatedDate = it.time }
-            },
-        ).toResponse {
-            if (it.hasUserFriendRequestsWithVersion()) it.userFriendRequestsWithVersion else null
-        }
+    ): Response<UserFriendRequestsWithVersion?> =
+        turmsClient.driver
+            .send(
+                QueryFriendRequestsRequest.newBuilder().apply {
+                    this.areSentByMe = areSentByMe
+                    lastUpdatedDate?.let { this.lastUpdatedDate = it.time }
+                },
+            ).toResponse {
+                if (it.hasUserFriendRequestsWithVersion()) it.userFriendRequestsWithVersion else null
+            }
 
     /**
      * Create a relationship group.
@@ -768,14 +789,15 @@ class UserService(private val turmsClient: TurmsClient) {
      * @return the index of the created group.
      * @throws ResponseException if an error occurs.
      */
-    suspend fun createRelationshipGroup(name: String): Response<Int> = turmsClient.driver
-        .send(
-            CreateRelationshipGroupRequest.newBuilder().apply {
-                this.name = name
-            },
-        ).toResponse {
-            it.getLongOrThrow().toInt()
-        }
+    suspend fun createRelationshipGroup(name: String): Response<Int> =
+        turmsClient.driver
+            .send(
+                CreateRelationshipGroupRequest.newBuilder().apply {
+                    this.name = name
+                },
+            ).toResponse {
+                it.getLongOrThrow().toInt()
+            }
 
     /**
      * Delete relationship groups.
@@ -795,14 +817,15 @@ class UserService(private val turmsClient: TurmsClient) {
     suspend fun deleteRelationshipGroups(
         groupIndex: Int,
         targetGroupIndex: Int? = null,
-    ): Response<Unit> = turmsClient.driver
-        .send(
-            DeleteRelationshipGroupRequest.newBuilder().apply {
-                this.groupIndex = groupIndex
-                targetGroupIndex?.let { this.targetGroupIndex = it }
-            },
-        )
-        .toResponse()
+    ): Response<Unit> =
+        turmsClient.driver
+            .send(
+                DeleteRelationshipGroupRequest.newBuilder().apply {
+                    this.groupIndex = groupIndex
+                    targetGroupIndex?.let { this.targetGroupIndex = it }
+                },
+            )
+            .toResponse()
 
     /**
      * Update a relationship group.
@@ -820,14 +843,15 @@ class UserService(private val turmsClient: TurmsClient) {
     suspend fun updateRelationshipGroup(
         groupIndex: Int,
         newName: String,
-    ): Response<Unit> = turmsClient.driver
-        .send(
-            UpdateRelationshipGroupRequest.newBuilder().apply {
-                this.groupIndex = groupIndex
-                this.newName = newName
-            },
-        )
-        .toResponse()
+    ): Response<Unit> =
+        turmsClient.driver
+            .send(
+                UpdateRelationshipGroupRequest.newBuilder().apply {
+                    this.groupIndex = groupIndex
+                    this.newName = newName
+                },
+            )
+            .toResponse()
 
     /**
      * Find relationship groups.
@@ -865,14 +889,15 @@ class UserService(private val turmsClient: TurmsClient) {
     suspend fun moveRelatedUserToGroup(
         relatedUserId: Long,
         groupIndex: Int,
-    ): Response<Unit> = turmsClient.driver
-        .send(
-            UpdateRelationshipRequest.newBuilder().apply {
-                this.userId = relatedUserId
-                this.newGroupIndex = groupIndex
-            },
-        )
-        .toResponse()
+    ): Response<Unit> =
+        turmsClient.driver
+            .send(
+                UpdateRelationshipRequest.newBuilder().apply {
+                    this.userId = relatedUserId
+                    this.newGroupIndex = groupIndex
+                },
+            )
+            .toResponse()
 
     /**
      * Update the location of the logged-in user.
@@ -894,15 +919,16 @@ class UserService(private val turmsClient: TurmsClient) {
         latitude: Float,
         longitude: Float,
         details: Map<String, String>? = null,
-    ): Response<Unit> = turmsClient.driver
-        .send(
-            UpdateUserLocationRequest.newBuilder().apply {
-                this.latitude = latitude
-                this.longitude = longitude
-                details?.let { putAllDetails(it) }
-            },
-        )
-        .toResponse()
+    ): Response<Unit> =
+        turmsClient.driver
+            .send(
+                UpdateUserLocationRequest.newBuilder().apply {
+                    this.latitude = latitude
+                    this.longitude = longitude
+                    details?.let { putAllDetails(it) }
+                },
+            )
+            .toResponse()
 
     private fun changeToOnline() {
         if (!isLoggedIn) {

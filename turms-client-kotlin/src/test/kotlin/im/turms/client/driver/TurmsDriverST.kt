@@ -40,7 +40,6 @@ import org.junit.jupiter.api.Timeout
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
 internal class TurmsDriverST {
-
     @Test
     @Order(ORDER_FIRST)
     fun constructor_shouldReturnNotNullDriverInstance() {
@@ -50,47 +49,54 @@ internal class TurmsDriverST {
     @Test
     @Order(ORDER_HIGHEST_PRIORITY)
     @Timeout(5)
-    fun connect_shouldSucceed() = runBlocking {
-        driver.connect()
-        assertTrue(driver.isConnected)
-    }
+    fun connect_shouldSucceed() =
+        runBlocking {
+            driver.connect()
+            assertTrue(driver.isConnected)
+        }
 
     @Test
     @Order(ORDER_HIGH_PRIORITY)
     @Timeout(5)
-    fun login_shouldSucceed() = runBlocking {
-        client.userService.login(1L, "123")
-        assertTrue(client.userService.isLoggedIn)
-    }
+    fun login_shouldSucceed() =
+        runBlocking {
+            client.userService.login(1L, "123")
+            assertTrue(client.userService.isLoggedIn)
+        }
 
     @Test
     @Order(ORDER_MIDDLE_PRIORITY)
     @Timeout(5)
-    fun sendHeartbeat_shouldSucceed() = runBlocking {
-        val result = driver.sendHeartbeat()
-        assertNotNull(result)
-    }
+    fun sendHeartbeat_shouldSucceed() =
+        runBlocking {
+            val result = driver.sendHeartbeat()
+            assertNotNull(result)
+        }
 
     @Test
     @Order(ORDER_MIDDLE_PRIORITY)
     @Timeout(5)
-    fun sendTurmsRequest_shouldSucceed() = runBlocking {
-        val profileRequest = QueryUserProfilesRequest.newBuilder()
-            .addUserIds(1)
-            .build()
-        val builder = TurmsRequest.newBuilder()
-            .setQueryUserProfilesRequest(profileRequest)
-        val result = driver.send(builder)
-        assertTrue(result.isSuccess)
-    }
+    fun sendTurmsRequest_shouldSucceed() =
+        runBlocking {
+            val profileRequest =
+                QueryUserProfilesRequest.newBuilder()
+                    .addUserIds(1)
+                    .build()
+            val builder =
+                TurmsRequest.newBuilder()
+                    .setQueryUserProfilesRequest(profileRequest)
+            val result = driver.send(builder)
+            assertTrue(result.isSuccess)
+        }
 
     @Test
     @Order(ORDER_LOWEST_PRIORITY)
     @Timeout(5)
-    fun disconnect_shouldSucceed() = runBlocking {
-        driver.disconnect()
-        assertFalse(driver.isConnected)
-    }
+    fun disconnect_shouldSucceed() =
+        runBlocking {
+            driver.disconnect()
+            assertFalse(driver.isConnected)
+        }
 
     companion object {
         private lateinit var client: TurmsClient
@@ -106,8 +112,9 @@ internal class TurmsDriverST {
         @AfterAll
         @JvmStatic
         @Timeout(5)
-        fun tearDown() = runBlocking {
-            driver.disconnect()
-        }
+        fun tearDown() =
+            runBlocking {
+                driver.disconnect()
+            }
     }
 }
