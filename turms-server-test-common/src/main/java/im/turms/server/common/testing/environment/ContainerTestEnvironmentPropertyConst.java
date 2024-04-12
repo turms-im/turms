@@ -24,6 +24,10 @@ public final class ContainerTestEnvironmentPropertyConst {
 
     public static final String DOCKER_COMPOSE_TEST_FILE = "docker-compose.test.yml";
 
+    public static final String ELASTICSEARCH = "elasticsearch";
+    public static final String ELASTICSEARCH_SERVICE_NAME = "elasticsearch-1";
+    public static final int ELASTICSEARCH_SERVICE_PORT = 9200;
+
     public static final String MINIO = "minio";
     public static final String MINIO_SERVICE_NAME = "minio-1";
     public static final int MINIO_SERVICE_PORT = 9000;

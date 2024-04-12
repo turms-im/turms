@@ -25,6 +25,9 @@ import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.service.ServiceProperties;
 import im.turms.server.common.infra.property.env.service.env.database.MongoProperties;
+import im.turms.server.common.infra.property.env.service.env.elasticsearch.ElasticsearchClientProperties;
+import im.turms.server.common.infra.property.env.service.env.elasticsearch.ElasticsearchUseCasesProperties;
+import im.turms.server.common.infra.property.env.service.env.elasticsearch.TurmsElasticsearchProperties;
 import im.turms.server.common.infra.property.env.service.env.redis.TurmsRedisProperties;
 import im.turms.server.common.testing.BaseIntegrationTest;
 import im.turms.server.common.testing.environment.TestEnvironmentManager;
@@ -50,6 +53,7 @@ public class TestEnvironmentConfig {
         TurmsProperties localProperties = propertiesManager.getLocalProperties();
         ServiceProperties serviceProperties = localProperties.getService();
 
+        String elasticsearchUri = testEnvironmentManager.getElasticsearchUri();
         String mongoUri = testEnvironmentManager.getMongoUri();
         String redisUri = testEnvironmentManager.getRedisUri();
 
@@ -58,6 +62,18 @@ public class TestEnvironmentConfig {
                 .getSharedConfig()
                 .getMongo()
                 .setUri(mongoUri);
+
+        // Elasticsearch
+        TurmsElasticsearchProperties elasticsearchProperties = serviceProperties.getElasticsearch();
+        ElasticsearchUseCasesProperties useCasesProperties = elasticsearchProperties.getUseCase();
+        ElasticsearchClientProperties elasticsearchClientProperties =
+                ElasticsearchClientProperties.builder()
+                        .uri(elasticsearchUri)
+                        .build();
+        useCasesProperties.getUser()
+                .setClient(elasticsearchClientProperties);
+        useCasesProperties.getGroup()
+                .setClient(elasticsearchClientProperties);
 
         // Mongo
         MongoProperties mongoProperties = serviceProperties.getMongo();

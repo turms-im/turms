@@ -37,6 +37,8 @@ import org.testcontainers.containers.ContainerState;
 import org.testcontainers.shaded.org.apache.commons.io.FileUtils;
 
 import static im.turms.server.common.testing.environment.ContainerTestEnvironmentPropertyConst.DOCKER_COMPOSE_TEST_FILE;
+import static im.turms.server.common.testing.environment.ContainerTestEnvironmentPropertyConst.ELASTICSEARCH;
+import static im.turms.server.common.testing.environment.ContainerTestEnvironmentPropertyConst.ELASTICSEARCH_SERVICE_NAME;
 import static im.turms.server.common.testing.environment.ContainerTestEnvironmentPropertyConst.MINIO;
 import static im.turms.server.common.testing.environment.ContainerTestEnvironmentPropertyConst.MINIO_SERVICE_NAME;
 import static im.turms.server.common.testing.environment.ContainerTestEnvironmentPropertyConst.MONGO;
@@ -93,6 +95,7 @@ public class TestEnvironmentContainer extends ComposeContainer implements Closea
     }
 
     public static TestEnvironmentContainer create(
+            boolean setupElasticsearch,
             boolean setupMinio,
             boolean setupMongo,
             boolean setupRedis,
@@ -125,7 +128,8 @@ public class TestEnvironmentContainer extends ComposeContainer implements Closea
         } catch (Exception e) {
             throw new RuntimeException("Failed to create the temp docker compose file", e);
         }
-        String config = buildDockerComposeConfig(setupMinio,
+        String config = buildDockerComposeConfig(setupElasticsearch,
+                setupMinio,
                 setupMongo,
                 setupRedis,
                 setupTurmsAdmin,
@@ -142,7 +146,8 @@ public class TestEnvironmentContainer extends ComposeContainer implements Closea
                 workingDir,
                 dockerComposeFile,
                 config,
-                setupMinio
+                setupElasticsearch
+                        || setupMinio
                         || setupMongo
                         || setupRedis
                         || setupTurmsAdmin
@@ -151,6 +156,7 @@ public class TestEnvironmentContainer extends ComposeContainer implements Closea
     }
 
     private static String buildDockerComposeConfig(
+            boolean setupElasticsearch,
             boolean setupMinio,
             boolean setupMongo,
             boolean setupRedis,
@@ -175,6 +181,9 @@ public class TestEnvironmentContainer extends ComposeContainer implements Closea
             throw new RuntimeException("Failed to parse the docker compose config", e);
         }
         Map<String, Object> services = (Map<String, Object>) config.get("services");
+        if (!setupElasticsearch) {
+            removeService(services, ELASTICSEARCH);
+        }
         if (!setupMinio) {
             removeService(services, MINIO);
         }
@@ -299,6 +308,9 @@ public class TestEnvironmentContainer extends ComposeContainer implements Closea
                 appendContainerInfo(builder,
                         "redis",
                         getContainerByServiceName(REDIS_SERVICE_NAME));
+                appendContainerInfo(builder,
+                        "elasticsearch",
+                        getContainerByServiceName(ELASTICSEARCH_SERVICE_NAME));
                 appendContainerInfo(builder,
                         "turms-gateway",
                         getContainerByServiceName(TURMS_GATEWAY_SERVICE_NAME));

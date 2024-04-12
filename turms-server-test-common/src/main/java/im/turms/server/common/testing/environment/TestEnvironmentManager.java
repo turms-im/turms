@@ -30,6 +30,8 @@ import lombok.experimental.Delegate;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 
+import im.turms.server.common.testing.environment.elasticsearch.ElasticsearchTestEnvironmentAware;
+import im.turms.server.common.testing.environment.elasticsearch.ElasticsearchTestEnvironmentManager;
 import im.turms.server.common.testing.environment.minio.MinioTestEnvironmentAware;
 import im.turms.server.common.testing.environment.minio.MinioTestEnvironmentManager;
 import im.turms.server.common.testing.environment.mongo.MongoTestEnvironmentAware;
@@ -40,6 +42,7 @@ import im.turms.server.common.testing.environment.turmsgateway.TurmsGatewayTestE
 import im.turms.server.common.testing.environment.turmsgateway.TurmsGatewayTestEnvironmentManager;
 import im.turms.server.common.testing.environment.turmsservice.TurmsServiceTestEnvironmentAware;
 import im.turms.server.common.testing.environment.turmsservice.TurmsServiceTestEnvironmentManager;
+import im.turms.server.common.testing.properties.ElasticsearchTestEnvironmentProperties;
 import im.turms.server.common.testing.properties.MinioTestEnvironmentProperties;
 import im.turms.server.common.testing.properties.MongoTestEnvironmentProperties;
 import im.turms.server.common.testing.properties.RedisTestEnvironmentProperties;
@@ -54,14 +57,16 @@ import im.turms.server.common.testing.properties.TurmsServiceTestEnvironmentProp
  *           implementation does NOT fully support just because we don't have these test cases.
  */
 @Slf4j
-public class TestEnvironmentManager implements Closeable, MinioTestEnvironmentAware,
-        MongoTestEnvironmentAware, RedisTestEnvironmentAware, TurmsGatewayTestEnvironmentAware,
-        TurmsServiceTestEnvironmentAware {
+public class TestEnvironmentManager implements Closeable, ElasticsearchTestEnvironmentAware,
+        MinioTestEnvironmentAware, MongoTestEnvironmentAware, RedisTestEnvironmentAware,
+        TurmsGatewayTestEnvironmentAware, TurmsServiceTestEnvironmentAware {
 
     public static final String DEFAULT_PROPERTIES_FILE = "application-test.yaml";
 
     private final TestEnvironmentContainer testEnvironmentContainer;
 
+    @Delegate
+    private final ElasticsearchTestEnvironmentManager elasticsearchTestEnvironmentManager;
     @Delegate
     private final MinioTestEnvironmentManager minioTestEnvironmentManager;
     @Delegate
@@ -74,6 +79,8 @@ public class TestEnvironmentManager implements Closeable, MinioTestEnvironmentAw
     private final TurmsServiceTestEnvironmentManager turmsServiceTestEnvironmentManager;
 
     private TestEnvironmentManager(TestProperties testProperties) {
+        ElasticsearchTestEnvironmentProperties elasticsearchTestEnvironmentProperties =
+                testProperties.getElasticsearch();
         MinioTestEnvironmentProperties minioTestEnvironmentProperties = testProperties.getMinio();
         MongoTestEnvironmentProperties mongoTestEnvironmentProperties = testProperties.getMongo();
         RedisTestEnvironmentProperties redisTestEnvironmentProperties = testProperties.getRedis();
@@ -85,6 +92,8 @@ public class TestEnvironmentManager implements Closeable, MinioTestEnvironmentAw
                 testProperties.getTurmsService();
 
         testEnvironmentContainer = TestEnvironmentContainer.create(
+                elasticsearchTestEnvironmentProperties.getType()
+                        .equals(ServiceTestEnvironmentType.CONTAINER),
                 minioTestEnvironmentProperties.getType()
                         .equals(ServiceTestEnvironmentType.CONTAINER),
                 mongoTestEnvironmentProperties.getType()
@@ -101,6 +110,9 @@ public class TestEnvironmentManager implements Closeable, MinioTestEnvironmentAw
                 turmsServiceTestEnvironmentProperties.getContainer()
                         .getJvmOptions());
 
+        elasticsearchTestEnvironmentManager = new ElasticsearchTestEnvironmentManager(
+                elasticsearchTestEnvironmentProperties,
+                testEnvironmentContainer);
         minioTestEnvironmentManager = new MinioTestEnvironmentManager(
                 minioTestEnvironmentProperties,
                 testEnvironmentContainer);
@@ -167,6 +179,10 @@ public class TestEnvironmentManager implements Closeable, MinioTestEnvironmentAw
     public void start() {
         testEnvironmentContainer.start();
         // TODO: Support checking the running state of local services
+        if (getElasticsearchTestEnvironmentType().equals(ServiceTestEnvironmentType.CONTAINER)
+                && !isElasticsearchRunning()) {
+            throw new IllegalStateException("The Elasticsearch container is not running");
+        }
         if (getMinioTestEnvironmentType().equals(ServiceTestEnvironmentType.CONTAINER)
                 && !isMongoRunning()) {
             throw new IllegalStateException("The MinIO container is not running");
@@ -179,6 +195,7 @@ public class TestEnvironmentManager implements Closeable, MinioTestEnvironmentAw
                 && !isRedisRunning()) {
             throw new IllegalStateException("The Redis container is not running");
         }
+        log.info("Elasticsearch server URI: \"{}\"", getElasticsearchUri());
         log.info("MinIO server URI: \"{}\"", getMinioUri());
         log.info("MongoDB server URI: \"{}\"", getMongoUri());
         log.info("Redis server URI: \"{}\"", getRedisUri());

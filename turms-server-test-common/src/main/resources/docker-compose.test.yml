@@ -61,6 +61,33 @@ services:
       timeout: 5s
       retries: 5
 
+  # Elasticsearch
+  elasticsearch:
+    image: 'elasticsearch:8.13.0'
+    environment:
+      cluster.routing.allocation.disk.threshold_enabled: false
+      discovery.type: single-node
+      xpack.security.enabled: false
+    command:
+      - /bin/bash
+      - -c
+      - |
+        PLUGINS=$(bin/elasticsearch-plugin list)
+        echo "Installed plugins: ${PLUGINS}"
+        echo "${PLUGINS}" | grep -q analysis-ik || bin/elasticsearch-plugin install --batch "https://get.infini.cloud/elasticsearch/analysis-ik/8.13.0"
+        echo "${PLUGINS}" | grep -q analysis-icu || bin/elasticsearch-plugin install analysis-icu
+        echo "${PLUGINS}" | grep -q analysis-kuromoji || bin/elasticsearch-plugin install analysis-kuromoji
+        /usr/local/bin/docker-entrypoint.sh
+    healthcheck:
+      test: [
+        "CMD-SHELL",
+        "curl -fsSL http://localhost:9200/_cat/health?h=status | grep -q -E 'green|yellow'",
+      ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 1m
+
   # turms servers
   turms-admin:
     image: "ghcr.io/turms-im/turms-admin"

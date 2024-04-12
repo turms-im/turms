@@ -36,6 +36,10 @@ public class TestProperties {
     public static final String PREFIX = "turms-test";
 
     @NestedConfigurationProperty
+    private ElasticsearchTestEnvironmentProperties elasticsearch =
+            new ElasticsearchTestEnvironmentProperties();
+
+    @NestedConfigurationProperty
     private MinioTestEnvironmentProperties minio = new MinioTestEnvironmentProperties();
 
     @NestedConfigurationProperty
