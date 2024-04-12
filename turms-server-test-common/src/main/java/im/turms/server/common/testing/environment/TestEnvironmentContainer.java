@@ -32,8 +32,8 @@ import java.util.UUID;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.FileSystemUtils;
+import org.testcontainers.containers.ComposeContainer;
 import org.testcontainers.containers.ContainerState;
-import org.testcontainers.containers.DockerComposeContainer;
 import org.testcontainers.shaded.org.apache.commons.io.FileUtils;
 
 import static im.turms.server.common.testing.environment.ContainerTestEnvironmentPropertyConst.DOCKER_COMPOSE_TEST_FILE;
@@ -57,8 +57,7 @@ import static im.turms.server.common.testing.environment.ContainerTestEnvironmen
  * @author James Chen
  */
 @Slf4j
-public class TestEnvironmentContainer extends DockerComposeContainer<TestEnvironmentContainer>
-        implements Closeable {
+public class TestEnvironmentContainer extends ComposeContainer implements Closeable {
 
     private static final Path TEMP_DIR;
 
