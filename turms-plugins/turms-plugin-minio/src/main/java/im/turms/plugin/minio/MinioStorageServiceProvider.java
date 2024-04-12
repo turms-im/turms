@@ -445,7 +445,9 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
                         .plusSeconds(expireAfterSeconds));
         policy.addEqualsCondition("key", objectKey);
         MediaType mediaType = MediaType.create(allowedContentType);
-        if (!mediaType.isWildcardType()) {
+        if (mediaType.isWildcardType()) {
+            policy.addStartsWithCondition(HTTP_HEADER_CONTENT_TYPE, "");
+        } else {
             if (mediaType.isWildcardSubtype()) {
                 policy.addStartsWithCondition(HTTP_HEADER_CONTENT_TYPE,
                         mediaType.type()
