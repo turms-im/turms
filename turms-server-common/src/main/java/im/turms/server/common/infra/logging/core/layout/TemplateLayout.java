@@ -69,7 +69,7 @@ public class TemplateLayout {
         String message = e.getMessage();
         if (message != null) {
             buffer.writeBytes(COLON)
-                    .writeBytes(StringUtil.getBytes(message));
+                    .writeBytes(StringUtil.getUtf8Bytes(message));
         }
 
         StackTraceElement[] stacks = e.getStackTrace();
