@@ -148,10 +148,10 @@ auto GroupService::queryGroups(const std::unordered_set<int64_t>& groupIds,
         });
 }
 
-auto UserService::searchGroups(const std::string& name,
-                               bool highlight = false,
-                               const boost::optional<int>& skip = boost::none,
-                               const boost::optional<int>& limit = boost::none)
+auto GroupService::searchGroups(const std::string& name,
+                                bool highlight = false,
+                                const boost::optional<int>& skip = boost::none,
+                                const boost::optional<int>& limit = boost::none)
     -> boost::future<Response<std::vector<Group>>> {
     if (name.empty()) {
         return boost::make_ready_future<>(Response<Group>::emptyList());
