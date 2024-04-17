@@ -35,6 +35,16 @@ import im.turms.server.common.infra.property.env.common.logging.FileLoggingCompr
 import im.turms.server.common.infra.property.env.common.logging.FileLoggingProperties;
 import im.turms.server.common.infra.property.env.common.logging.LoggingProperties;
 
+import static im.turms.server.common.infra.property.HardcodedPropertyNameConst.TURMS_CLUSTER_NODE_ID;
+import static im.turms.server.common.infra.property.HardcodedPropertyNameConst.TURMS_LOGGING_CONSOLE_ENABLED;
+import static im.turms.server.common.infra.property.HardcodedPropertyNameConst.TURMS_LOGGING_CONSOLE_LEVEL;
+import static im.turms.server.common.infra.property.HardcodedPropertyNameConst.TURMS_LOGGING_FILE_COMPRESSION_ENABLED;
+import static im.turms.server.common.infra.property.HardcodedPropertyNameConst.TURMS_LOGGING_FILE_ENABLED;
+import static im.turms.server.common.infra.property.HardcodedPropertyNameConst.TURMS_LOGGING_FILE_FILE_PATH;
+import static im.turms.server.common.infra.property.HardcodedPropertyNameConst.TURMS_LOGGING_FILE_LEVEL;
+import static im.turms.server.common.infra.property.HardcodedPropertyNameConst.TURMS_LOGGING_FILE_MAX_FILES;
+import static im.turms.server.common.infra.property.HardcodedPropertyNameConst.TURMS_LOGGING_FILE_MAX_FILE_SIZE_MB;
+
 /**
  * @author James Chen
  */
@@ -99,34 +109,34 @@ public class ApplicationEnvironmentEventListener
                                 + applicationClassName);
             }
         };
-        Node.initNodeId(env.getProperty("turms.cluster.node.id", String.class));
+        Node.initNodeId(env.getProperty(TURMS_CLUSTER_NODE_ID, String.class));
 
         ConsoleLoggingProperties consoleLoggingProperties = ConsoleLoggingProperties.builder()
-                .enabled(env.getProperty("turms.logging.console.enabled",
+                .enabled(env.getProperty(TURMS_LOGGING_CONSOLE_ENABLED,
                         Boolean.class,
                         ConsoleLoggingProperties.DEFAULT_VALUE_ENABLED))
-                .level(env.getProperty("turms.logging.console.level",
+                .level(env.getProperty(TURMS_LOGGING_CONSOLE_LEVEL,
                         LogLevel.class,
                         ConsoleLoggingProperties.DEFAULT_VALUE_LEVEL))
                 .build();
         FileLoggingProperties fileLoggingProperties = FileLoggingProperties.builder()
-                .enabled(env.getProperty("turms.logging.file.enabled",
+                .enabled(env.getProperty(TURMS_LOGGING_FILE_ENABLED,
                         Boolean.class,
                         FileLoggingProperties.DEFAULT_VALUE_ENABLED))
-                .level(env.getProperty("turms.logging.file.level",
+                .level(env.getProperty(TURMS_LOGGING_FILE_LEVEL,
                         LogLevel.class,
                         FileLoggingProperties.DEFAULT_VALUE_LEVEL))
-                .filePath(env.getProperty("turms.logging.file.filePath",
+                .filePath(env.getProperty(TURMS_LOGGING_FILE_FILE_PATH,
                         String.class,
                         FileLoggingProperties.DEFAULT_VALUE_FILE_PATH))
-                .maxFiles(env.getProperty("turms.logging.file.maxFiles",
+                .maxFiles(env.getProperty(TURMS_LOGGING_FILE_MAX_FILES,
                         Integer.class,
                         FileLoggingProperties.DEFAULT_VALUE_MAX_FILES))
-                .maxFileSizeMb(env.getProperty("turms.logging.file.maxFileSizeMb",
+                .maxFileSizeMb(env.getProperty(TURMS_LOGGING_FILE_MAX_FILE_SIZE_MB,
                         Integer.class,
                         FileLoggingProperties.DEFAULT_VALUE_FILE_SIZE_MB))
                 .compression(new FileLoggingCompressionProperties(
-                        env.getProperty("turms.logging.file.compression.enabled",
+                        env.getProperty(TURMS_LOGGING_FILE_COMPRESSION_ENABLED,
                                 Boolean.class,
                                 FileLoggingCompressionProperties.DEFAULT_VALUE_ENABLED)))
                 .build();
