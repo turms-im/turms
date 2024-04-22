@@ -147,11 +147,11 @@
                         <configuration>
                             <target>
                                 <mkdir dir="${modelDirectory}"/>
-                                <get src="https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/dygraph/ppocr/utils/ppocr_keys_v1.txt"
+                                <get src="https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/v2.7.5/ppocr/utils/ppocr_keys_v1.txt"
                                      dest="${modelDirectory}/dict.txt"
                                      verbose="true"
                                      usetimestamp="true"/>
-                                <!-- https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.6/doc/doc_en/models_list_en.md -->
+                                <!-- https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.7/doc/doc_en/models_list_en.md -->
                                 <get src="https://paddleocr.bj.bcebos.com/PP-OCRv3/chinese/ch_PP-OCRv3_det_infer.tar"
                                      dest="${modelDirectory}/detection.tar"
                                      verbose="true"
