@@ -18,6 +18,7 @@
 package im.turms.server.common.infra.plugin;
 
 import java.util.List;
+import jakarta.annotation.Nullable;
 
 import lombok.Getter;
 import org.graalvm.polyglot.Value;
@@ -35,9 +36,14 @@ public class JsTurmsExtensionAdaptor extends TurmsExtension {
     private final ExtensionPoint proxy;
     @Getter
     private final List<Class<? extends ExtensionPoint>> extensionPointClasses;
+
+    @Nullable
     private final Value onStarted;
+    @Nullable
     private final Value onStopped;
+    @Nullable
     private final Value onResumed;
+    @Nullable
     private final Value onPaused;
 
     public JsTurmsExtensionAdaptor(
@@ -77,7 +83,7 @@ public class JsTurmsExtensionAdaptor extends TurmsExtension {
         return execute(onPaused);
     }
 
-    private Mono<Void> execute(Value callback) {
+    private Mono<Void> execute(@Nullable Value callback) {
         if (callback == null) {
             return Mono.empty();
         }

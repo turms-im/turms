@@ -224,7 +224,9 @@ public class JsPluginFactory {
             ExtensionPoint extensionPointProxy =
                     (ExtensionPoint) Proxy.newProxyInstance(JsPluginFactory.class.getClassLoader(),
                             info.extensionPointClasses.toArray(new Class[0]),
-                            new JsExtensionPointInvocationHandler(info.functions));
+                            new JsExtensionPointInvocationHandler(
+                                    extensionClass.getMetaQualifiedName(),
+                                    info.functions));
             JsTurmsExtensionAdaptor adaptor = new JsTurmsExtensionAdaptor(
                     extensionPointProxy,
                     info.extensionPointClasses,
@@ -292,7 +294,7 @@ public class JsPluginFactory {
         }
     }
 
-    private static record ExtensionClassInfo(
+    private record ExtensionClassInfo(
             List<Class<? extends ExtensionPoint>> extensionPointClasses,
             Map<Class<? extends ExtensionPoint>, Map<String, Value>> functions
     ) {

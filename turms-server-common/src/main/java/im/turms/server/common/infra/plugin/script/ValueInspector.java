@@ -17,6 +17,8 @@
 
 package im.turms.server.common.infra.plugin.script;
 
+import jakarta.annotation.Nullable;
+
 import org.graalvm.polyglot.Value;
 
 /**
@@ -35,6 +37,7 @@ public class ValueInspector {
         return !isTrue(bool);
     }
 
+    @Nullable
     public static Value returnIfFunction(Value value) {
         return value != null && value.canExecute()
                 ? value

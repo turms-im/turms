@@ -20,7 +20,6 @@ package im.turms.server.common.infra.plugin;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.Map;
-import java.util.Set;
 import jakarta.annotation.Nullable;
 
 import org.graalvm.polyglot.Value;
@@ -35,45 +34,52 @@ import im.turms.server.common.infra.plugin.script.ValueDecoder;
  */
 public class JsExtensionPointInvocationHandler implements InvocationHandler {
 
-    private static final Set<String> OBJECT_METHODS = Set.of("equals", "hashCode", "toString");
-
+    private final String className;
     private final Map<Class<? extends ExtensionPoint>, Map<String, Value>> extensionPointToFunction;
 
     public JsExtensionPointInvocationHandler(
+            String className,
             Map<Class<? extends ExtensionPoint>, Map<String, Value>> extensionPointToFunction) {
+        this.className = className;
         this.extensionPointToFunction = extensionPointToFunction;
     }
 
     @Nullable
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        if (OBJECT_METHODS.contains(method.getName())) {
-            return method.invoke(proxy, args);
-        }
         Map<String, Value> nameToFunction =
                 extensionPointToFunction.get(method.getDeclaringClass());
+        Value function = null;
         Class<?> returnType = method.getReturnType();
-        // We only check Mono because we never use Flux
-        // for the interfaces of extension points
-        boolean isAsync = returnType.isAssignableFrom(Mono.class);
-        if (nameToFunction == null) {
-            return isAsync
-                    ? Mono.empty()
-                    : null;
+        String methodName = method.getName();
+        if (nameToFunction != null) {
+            function = nameToFunction.get(methodName);
         }
-        Value function = nameToFunction.get(method.getName());
+        // We only check if it is Mono because we
+        // never use Flux for the interfaces of extension points.
+        boolean isAsync = returnType.isAssignableFrom(Mono.class);
         if (function == null) {
-            if (isAsync) {
-                // Keep it simple because we only use
-                // the return type of Mono currently.
-                return Mono.empty();
-            } else if (void.class == returnType) {
-                return null;
-            } else {
-                String message = "Could not find a default return value for the return type: "
-                        + returnType.getName();
-                throw new ScriptExecutionException(message, ScriptExceptionSource.HOST);
-            }
+            return switch (methodName) {
+                case "equals" -> args.length >= 1 && proxy == args[0];
+                case "hashCode" -> System.identityHashCode(proxy);
+                case "toString" -> className
+                        + "@"
+                        + Integer.toHexString(System.identityHashCode(proxy));
+                default -> {
+                    if (isAsync) {
+                        // Keep it simple because we only use
+                        // the return type of Mono currently.
+                        yield Mono.empty();
+                    } else if (void.class == returnType) {
+                        yield null;
+                    } else {
+                        String message =
+                                "Could not find a default return value for the return type: "
+                                        + returnType.getName();
+                        throw new ScriptExecutionException(message, ScriptExceptionSource.HOST);
+                    }
+                }
+            };
         }
         Value returnValue;
         try {
@@ -82,7 +88,7 @@ public class JsExtensionPointInvocationHandler implements InvocationHandler {
                     : function.execute(args);
         } catch (Exception e) {
             String message = "Failed to execute the function \""
-                    + method.getName()
+                    + methodName
                     + "\" in the class: "
                     + method.getDeclaringClass()
                             .getName();

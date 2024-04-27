@@ -56,6 +56,27 @@ import static org.mockito.Mockito.when;
 class JsPluginManagerTests {
 
     @Test
+    void testEquals() {
+        MyExtensionPointForJs extensionPoint = createExtensionPoint();
+        assertThat(extensionPoint.equals(null)).isFalse();
+        assertThat(extensionPoint.equals(new Object())).isFalse();
+        assertThat(extensionPoint.equals(this)).isFalse();
+        assertThat(extensionPoint.equals(extensionPoint)).isTrue();
+    }
+
+    @Test
+    void testHashCode() {
+        MyExtensionPointForJs extensionPoint = createExtensionPoint();
+        assertThat(extensionPoint.hashCode()).isPositive();
+    }
+
+    @Test
+    void testToString() {
+        MyExtensionPointForJs extensionPoint = createExtensionPoint();
+        assertThat(extensionPoint.toString()).isNotEmpty();
+    }
+
+    @Test
     void testBool_forPlainValue() {
         MyExtensionPointForJs extensionPoint = createExtensionPoint();
         assertThat(extensionPoint.testBool()).isTrue();
