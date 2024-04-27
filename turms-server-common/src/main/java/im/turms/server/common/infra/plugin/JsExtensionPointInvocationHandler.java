@@ -25,6 +25,7 @@ import jakarta.annotation.Nullable;
 import org.graalvm.polyglot.Value;
 import reactor.core.publisher.Mono;
 
+import im.turms.server.common.infra.lang.PrimitiveUtil;
 import im.turms.server.common.infra.plugin.script.ScriptExceptionSource;
 import im.turms.server.common.infra.plugin.script.ScriptExecutionException;
 import im.turms.server.common.infra.plugin.script.ValueDecoder;
@@ -68,16 +69,19 @@ public class JsExtensionPointInvocationHandler implements InvocationHandler {
                 default -> {
                     if (isAsync) {
                         // Keep it simple because we only use
-                        // the return type of Mono currently.
+                        // Mono as the async return type of interfaces.
                         yield Mono.empty();
-                    } else if (void.class == returnType) {
+                    } else if (void.class == returnType
+                            || Object.class.isAssignableFrom(returnType)) {
                         yield null;
-                    } else {
-                        String message =
-                                "Could not find a default return value for the return type: "
-                                        + returnType.getName();
-                        throw new ScriptExecutionException(message, ScriptExceptionSource.HOST);
                     }
+                    Object defaultValue = PrimitiveUtil.getDefaultValue(returnType);
+                    if (defaultValue != null) {
+                        yield defaultValue;
+                    }
+                    String message = "Could not find a default return value for the return type: "
+                            + returnType.getName();
+                    throw new ScriptExecutionException(message, ScriptExceptionSource.HOST);
                 }
             };
         }
