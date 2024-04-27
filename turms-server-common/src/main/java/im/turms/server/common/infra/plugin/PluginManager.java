@@ -169,7 +169,7 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
     public void onApplicationEvent(ContextRefreshedEvent event) {
         if (enabled) {
             startPlugins().timeout(Duration.ofMinutes(10))
-                    .subscribe(unused -> LOGGER.info("All plugins are started"), LOGGER::error);
+                    .subscribe(null, LOGGER::error, () -> LOGGER.info("All plugins are started"));
         }
     }
 

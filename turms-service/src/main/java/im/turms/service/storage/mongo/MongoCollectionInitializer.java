@@ -160,10 +160,10 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
             taskManager.reschedule("tieredStorageZoneUpdater", autoRangeUpdater.getCron(), () -> {
                 if (isQualifiedToRotateZones()) {
                     LOGGER.info("Updating the zone range for tiered storage");
-                    ensureZones().subscribe(
-                            unused -> LOGGER.info("Updated the zone range for tiered storage"),
+                    ensureZones().subscribe(null,
                             t -> LOGGER.error("Failed to update the zone range for tiered storage",
-                                    t));
+                                    t),
+                            () -> LOGGER.info("Updated the zone range for tiered storage"));
                 }
             });
         }

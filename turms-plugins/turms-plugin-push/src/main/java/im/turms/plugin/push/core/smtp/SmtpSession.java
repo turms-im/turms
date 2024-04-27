@@ -150,14 +150,14 @@ public class SmtpSession {
         LOGGER.info("Trying to establish the SMTP session: "
                 + session.id);
         session.establish(ehloHostname, username, password, accessToken, startTls)
-                .subscribe(unused -> {
-                    LOGGER.info("Established the SMTP session: "
-                            + session.id);
-                    connectSink.tryEmitValue(session);
-                }, t -> {
+                .subscribe(null, t -> {
                     LOGGER.error("Failed to establish the SMTP session: "
                             + session.id);
                     session.onClose(connectSink, t);
+                }, () -> {
+                    LOGGER.info("Established the SMTP session: "
+                            + session.id);
+                    connectSink.tryEmitValue(session);
                 });
         return connection.onDispose()
                 .doOnSuccess(unused -> connectSink.tryEmitEmpty())

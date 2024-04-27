@@ -573,7 +573,7 @@ public class ConnectionService implements ClusterService {
                     memberIdAndAddress,
                     reconnectInterval.toMillis());
             Mono.delay(reconnectInterval)
-                    .subscribe(ignored -> {
+                    .subscribe(null, null, () -> {
                         Member memberToConnect = discoveryService.getAllKnownMembers()
                                 .get(nodeId);
                         if (memberToConnect == null) {

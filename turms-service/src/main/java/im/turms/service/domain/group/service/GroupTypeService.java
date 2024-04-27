@@ -107,11 +107,11 @@ public class GroupTypeService {
                             if (groupTypeId == DEFAULT_GROUP_TYPE_ID) {
                                 LOGGER.warn(
                                         "Adding the default group type because it is deleted unexpectedly");
-                                addDefaultGroupType().subscribe(
-                                        unused -> LOGGER.warn("Added the default group type"),
+                                addDefaultGroupType().subscribe(null,
                                         t -> LOGGER.error(
                                                 "Caught an error while adding the default group type",
-                                                t));
+                                                t),
+                                        () -> LOGGER.warn("Added the default group type"));
                             }
                         }
                         case INVALIDATE -> idToGroupType.clear();

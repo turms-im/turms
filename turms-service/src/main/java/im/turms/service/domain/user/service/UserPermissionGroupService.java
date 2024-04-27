@@ -110,12 +110,12 @@ public class UserPermissionGroupService {
                             if (groupTypeId == DEFAULT_USER_PERMISSION_GROUP_ID) {
                                 LOGGER.warn(
                                         "Adding the default user permission group because it is deleted unexpectedly");
-                                addDefaultUserPermissionGroup().subscribe(
-                                        unused -> LOGGER
-                                                .warn("Added the default user permission group"),
+                                addDefaultUserPermissionGroup().subscribe(null,
                                         t -> LOGGER.error(
                                                 "Caught an error while adding the default user permission group",
-                                                t));
+                                                t),
+                                        () -> LOGGER
+                                                .warn("Added the default user permission group"));
                             }
                         }
                         case INVALIDATE -> idToPermissionGroup.clear();
