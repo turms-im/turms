@@ -17,6 +17,7 @@
 
 package integration.im.turms.service.storage.elasticsearch;
 
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -63,40 +64,22 @@ import static org.mockito.Mockito.when;
 class ElasticsearchManagerTests extends SpringAwareIntegrationTest {
 
     private static final List<String> NAMES = List.of("hello world", "你好，世界", "こんにちは、世界");
-    private static final List<TestCase> TEST_CASES = List.of(
-            new TestCase(
-                    "world",
-                    List.of(new ExpectedHit(
-                            "hello world",
-                            "hello %sworld%s".formatted(ElasticsearchManager.PRE_TAG,
-                                    ElasticsearchManager.POST_TAG)))),
+    private static final List<TestCase> TEST_CASES = List.of(new TestCase(
+            "world",
+            List.of(new ExpectedHit("hello world", formatExpectedHighlight("hello {0}world{1}")))),
             new TestCase(
                     "世界",
-                    List.of(new ExpectedHit(
-                            "你好，世界",
-                            "你好，%s世界%s".formatted(ElasticsearchManager.PRE_TAG,
-                                    ElasticsearchManager.POST_TAG)),
+                    List.of(new ExpectedHit("你好，世界", formatExpectedHighlight("你好，{0}世界{1}")),
                             new ExpectedHit(
                                     "こんにちは、世界",
-                                    "こんにちは、%s世界%s".formatted(ElasticsearchManager.PRE_TAG,
-                                            ElasticsearchManager.POST_TAG)))),
+                                    formatExpectedHighlight("こんにちは、{0}世界{1}")))),
             new TestCase(
                     "こんにちは",
                     List.of(new ExpectedHit(
                             "こんにちは、世界",
                             // TODO: The expected result should be:
-                            // "%sこんにちは%s、世界".formatted(ElasticsearchManager.PRE_TAG,
-                            // ElasticsearchManager.POST_TAG)
-                            "%sこ%s%sん%s%sに%s%sち%s%sは%s、世界".formatted(ElasticsearchManager.PRE_TAG,
-                                    ElasticsearchManager.POST_TAG,
-                                    ElasticsearchManager.PRE_TAG,
-                                    ElasticsearchManager.POST_TAG,
-                                    ElasticsearchManager.PRE_TAG,
-                                    ElasticsearchManager.POST_TAG,
-                                    ElasticsearchManager.PRE_TAG,
-                                    ElasticsearchManager.POST_TAG,
-                                    ElasticsearchManager.PRE_TAG,
-                                    ElasticsearchManager.POST_TAG)))));
+                            // "{0}こんにちは{1}、世界"
+                            formatExpectedHighlight("{0}こ{1}{0}ん{1}{0}に{1}{0}ち{1}{0}は{1}、世界")))));
 
     @BeforeAll
     static void setup() {
@@ -246,6 +229,11 @@ class ElasticsearchManagerTests extends SpringAwareIntegrationTest {
                 null,
                 null,
                 null);
+    }
+
+    private static String formatExpectedHighlight(String pattern) {
+        return MessageFormat
+                .format(pattern, ElasticsearchManager.PRE_TAG, ElasticsearchManager.POST_TAG);
     }
 
     private static void waitForElasticsearch() throws InterruptedException {
